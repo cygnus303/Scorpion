@@ -1,0 +1,110 @@
+.yes-no {
+ display: inline-block;
+ width: 46px; // smaller toggle width
+ height: 18px; // smaller toggle height
+ position: relative;
+
+
+ &:before,
+ &:after {
+  color: #fff;
+  font-size: 7px; // smaller text
+  cursor: pointer;
+  z-index: 1;
+  position: absolute;
+  bottom: 3px;
+ }
+
+
+ &:before {
+  content: 'YES';
+  left: 4px;
+ }
+
+
+ &:after {
+  content: 'NO';
+  right: 4px;
+ }
+
+
+ input {
+  opacity: 0.5;
+
+
+  &:checked + .slider {
+   background: #f44336;
+  }
+
+
+  &:checked + .slider:before {
+   transform: translateX(-22px); // adjust based on new knob width
+  }
+ }
+
+
+ .slider {
+  background: #4caf50;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  cursor: pointer;
+  transition: 0.4s;
+  border-radius: 0;
+
+
+  &:before {
+   content: "";
+   width: 22px; // smaller knob
+   height: 16px;
+   background: #fff;
+   position: absolute;
+   right: 1px;
+   bottom: 1px;
+   transition: 0.4s;
+   border-radius: 0;
+  }
+ }
+}
+
+label:has(input[type='radio'][name='ani']) {
+  line-height: 1.1;
+  display: grid;
+  grid-template-columns: 1em auto;
+  gap: 0.5em;
+  cursor: pointer;
+
+  > input[type='radio'].radio {
+  appearance: none;
+  width: 1.15em;
+  height: 1.15em;
+  border: 0.15em solid var(--md-sys-color-on-surface-variant);
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  position: relative;
+  cursor: pointer;
+
+  &::before {
+    content: "";
+    width: 0.58em;
+    height: 0.58em;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    background-color: transparent; // no background by default
+  }
+
+  &:checked {
+    border-color: #d4d4d4; // Bootstrap blue or any other color
+
+    &::before {
+      transform: scale(1);
+      background-color: #a1a1a1; // <== This is the color of the inner dot
+    }
+  }
+}
+
+}
