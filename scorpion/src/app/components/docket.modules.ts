@@ -8,7 +8,7 @@ import { BasicDetailsComponent } from './docket-list/basic-details/basic-details
 import { ConsignorDetailComponent } from './docket-list/consignor-detail/consignor-detail.component';
 import { FreightDetailsComponent } from './docket-list/freight-details/freight-details.component';
 import { InvoiceDetailsComponent } from './docket-list/invoice-details/invoice-details.component';
-
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
     declarations: [
@@ -23,6 +23,7 @@ import { InvoiceDetailsComponent } from './docket-list/invoice-details/invoice-d
         ReactiveFormsModule,
         CommonModule,
         FormsModule,
+        NgSelectModule,
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

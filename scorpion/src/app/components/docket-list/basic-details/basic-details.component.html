@@ -1,1 +1,172 @@
-<p>basic-details works!</p>
+<div class="cnote-entry-container px-1">
+    <div class="card-header text-start">
+        <i class="fa fa-edit mr-2"></i>
+        <strong>CNote Entry - Basic Details</strong>
+    </div>
+    <div class="form-grid p-3">
+        <form class="row">
+            <div class="form-column col-md-4 ">
+                <div class="form-group">
+                    <label>Entry Type</label>
+                    <div class="radio-group">
+                        <input type="radio" id="normal" name="entryType" checked />
+                        <label for="normal">Normal</label>
+                    </div>
+                </div>
+
+                <div class="form-group"><label>CNote No</label><input type="text" /></div>
+                <div class="form-group"><label>Billing Type</label><select></select></div>
+                <div class="form-group"><label>Billing Party</label><select></select></div>
+                <div class="form-group"><label>Origin</label><input type="text" disabled value="HQTR" /></div>
+                <div class="form-group"><label>Destination</label><input type="text" /></div>
+                <div class="form-group"><label>Transit Mode</label><select></select></div>
+                <div class="form-group"><label>Pickup/Delivery</label><select></select></div>
+                <div class="form-group"><label>Contents</label><input type="text" /></div>
+                <div class="form-group"><label>Special Instruction</label><textarea></textarea></div>
+
+                <div class="form-group toggle-line">
+                    <label for="refDkt">Apply Reference DKT</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="refDkt" />
+                        <label for="refDkt" class="toggle-label">
+                            <span class="yes">YES</span>
+                            <span class="no">NO</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group"><label>Sac Code</label><input type="text" /></div>
+                <div class="form-group toggle-line">
+                    <label for="appointment">Appointment Delivery</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="appointment" />
+                        <label for="appointment" class="toggle-label">
+                            <span class="yes">YES</span>
+                            <span class="no">NO</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group toggle-line">
+                    <label for="ODA">ODA Applicable</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="ODA" />
+                        <label for="ODA" class="toggle-label">
+                            <span class="yes">YES</span>
+                            <span class="no">NO</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-column col-md-4 ">
+                <div class="form-group"><label>EwayBill Number</label><input type="text" /></div>
+                <div class="form-group"><label>CNote Date</label><input type="date" /></div>
+                <div class="form-group"><label>Pincode</label><select></select></div>
+                <div class="form-group"><label>Billing Name</label><input type="text" disabled /></div>
+                <div class="form-group"><label>Origin State Name</label><input type="text" disabled /></div>
+                <div class="form-group"><label>Dest State Name</label><input type="text" disabled /></div>
+                <div class="form-group"><label>From City</label><select></select></div>
+                <div class="form-group"><label>Service Type</label><select></select></div>
+                <div class="form-group"><label>Packaging Type</label><select></select></div>
+                <div class="form-group"><label>Exempt Services</label><select></select></div>
+                <div class="form-group"><label>Sac Code Description</label><input type="text" disabled /></div>
+                <div class="form-group toggle-line">
+                    <label for="CSD">CSD Delivery</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="CSD" />
+                        <label for="CSD" class="toggle-label">
+                            <span class="yes">YES</span>
+                            <span class="no">NO</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="blue-label">
+                        Is Local CNote?
+                        <input type="checkbox" />
+                    </label>
+                    <span class="same-tag">(Same Origin-Destination)</span>
+                </div>
+
+            </div>
+
+            <div class="form-column col-md-4 ">
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+
+                <div class="form-group"><label>To City</label><input type="text" /></div>
+                <div class="form-group"><label>Type of Movement</label><select></select></div>
+                <div class="form-group"><label>Business Type</label><select></select></div>
+                <div class="form-group toggle-line">
+                    <label for="maildelivery">Mail Delivery</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="maildelivery" />
+                        <label for="maildelivery" class="toggle-label">
+                            <span class="yes">YES</span>
+                            <span class="no">NO</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="appointment ">
+                <h5 class="pb-4 text-start">Appointment Details</h5>
+                <div class="p-3">
+                    <div class="row">
+                        <div class="col-md-3 form-column">
+                            <div class="form-group"><label>Appointment</label><input type="text" placeholder="EDD" />
+                            </div>
+                        </div>
+                        <div class="col-md-3 form-column">
+                            <div class="form-group"><label> Name Of Person</label><input type="text"
+                                    placeholder="Name Of Person" />
+                            </div>
+                        </div>
+                        <div class="col-md-3 form-column">
+                            <div class="form-group"><label> Contact Number</label><input type="text"
+                                    placeholder="Contact Number" />
+                            </div>
+                        </div>
+                        <div class="col-md-3 form-column">
+                            <div class="form-group"><label> Remarks</label><input type="text" placeholder="Remarks" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-3 form-column">
+                            <div class="form-group"><label> From Time</label><input type="time"
+                                    placeholder="From Time" /></div>
+                        </div>
+                        <div class="col-md-3 form-column">
+                            <div class="form-group"><label> To Time</label><input type="time" placeholder="To Time" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
