@@ -1,1 +1,87 @@
-<p>freight-details works!</p>
+
+  <div class="freight-container">
+    <div class="header">📄 CNote Entry – Freight Details</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Freight Charges</label>
+        <input type="number" value="0" min="1" class="error" />
+        <small class="error-msg">Please enter a value greater than or equal to 1.</small>
+      </div>
+      <div class="form-group">
+        <label>Flat (in RS)</label>
+        <select>
+          <option selected>Flat(in RS)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Value</label>
+        <input type="number" value="0" />
+      </div>
+      <div class="form-group">
+        <label>EDD</label>
+        <input type="text" placeholder="EDD" disabled />
+      </div>
+      <div class="form-group">
+        <label>GST Paid By</label>
+        <input type="text" placeholder="GST Paid By" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>FOV Rate (% of Invoice)</label>
+        <input type="number" value="0" />
+      </div>
+      <div class="form-group">
+        <label>FOV Calculated</label>
+        <input type="number" value="0" />
+      </div>
+      <div class="form-group">
+        <label>Billed At</label>
+        <input type="text" placeholder="Billed At" />
+      </div>
+      <div class="form-group">
+        <label>Billing State</label>
+        <input type="text" placeholder="Billing State" />
+      </div>
+      <div class="form-group">
+        <label>FOV Charged</label>
+        <input type="number" value="0" />
+      </div>
+    </div>
+
+    <div class="section-title">Charges Details</div>
+
+    <div class="charges-grid">
+      <!-- Column 1 -->
+      <div class="charges-column">
+        <div class="control-label"><label>TO PAY CHARGES</label><div><input type="number" value="0.00" /><button>+</button></div></div>
+        <div class="control-label"><label>Extra Handling Charges</label><div><input type="number" value="0.00" /><button>+</button></div></div>
+        <div class="control-label"><label>Covid Surcharge</label><div><input type="number" value="0.00" /><button>+</button></div></div>
+        <div class="control-label"><label>Physical POD</label><div><input type="number" value="0.00" /><button>+</button></div></div>
+        <div class="control-label"><label>Extra Delivery Charges</label><div><input type="number" value="0.00" /><button>+</button></div></div>
+        <div class="control-label"><label>Detention Charges (After 12 hrs)</label><div><input type="number" value="0.00" /><button>+</button></div></div>
+      </div>
+
+      <!-- Column 2 -->
+      <div class="charges-column">
+        <div class="control-label"><label>Document Charges</label><div><input type="number" value="0.00" /><button>+</button></div></div>
+        <div class="control-label"><label>ODA Charges</label><div><input type="number" value="0" /><button>+</button></div></div>
+        <div class="control-label"><label>Demmurage Charges</label><div><input type="number" value="0.00" /><button>+</button></div></div>
+        <div class="control-label"><label>Mall Delivery Charges</label><div><input type="number" value="0.00" /><button>+</button></div></div>
+        <div class="control-label"><label>FuelSurcharge Charges</label><div><input type="number" value="0.00" /><button>+</button></div></div>
+        <div class="control-label"><label>West Bengal Delivery Charges</label><div><input type="number" value="0.00" /><button>+</button></div></div>
+      </div>
+
+      <!-- Column 3 -->
+      <div class="charges-column">
+        <div class="control-label"><label>SUB-TOTAL</label><input type="number" value="0.00" disabled /></div>
+        <div class="control-label"><label>GST Rate</label><select><option>18</option></select></div>
+        <div class="control-label"><label>IGST (%)</label><input type="number" value="0" /></div>
+        <div class="control-label"><label>IGST COLLECTED</label><input type="number" value="0" /></div>
+        <div class="control-label"><label>CGST ON SUB TOTAL</label><input type="number" value="0" /></div>
+        <div class="control-label"><label>SGST ON SUB TOTAL</label><input type="number" value="0" /></div>
+      </div>
+    </div>
+  </div>
