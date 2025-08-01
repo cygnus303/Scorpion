@@ -1,67 +1,251 @@
-<div class="invoice-section">
-  <div class="header">
-    <label>
-      <input type="checkbox" /> CNote Entry - Invoice Details
-    </label>
+<div class="cnote-entry-container px-1">
+  <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+    <i class="fa fa-edit me-2"></i>
+   CNote Entry - Invoice Details
   </div>
+  <div class="form-grid p-4">
+    <form>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label col-md-5">CFT Ratio </label>
+            <div class="col-md-7">
+              <input class="form-control" placeholder="CNote No" type="text" >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label col-md-5">CFT Total </label>
+            <div class="col-md-7">
+              <input class="required2 form-control required" placeholder="CFT Total"type="text" >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label col-md-5">No Of Rows </label>
+            <div class="col-md-7">
+              <input ype="number" class="input-small required2 form-control required" [(ngModel)]="noOfRows" [ngModelOptions]="{standalone: true}" min="1" placeholder="Private Mark" >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-1">
+          <a class="btn btn-primary right" (click)="addRows()">
+            <i class="fas fa-plus"></i> Add New Row
+          </a>
+        </div>
+        <div class="col-md-5">
+        </div>
+      </div>
 
-  <div class="row-input">
-    <label>No Of Rows</label>
-    <input type="number" [(ngModel)]="noOfRows" min="1" />
-    <button class="add-btn" (click)="addRows()">+ Add New Row</button>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="portlet-body table-scrollable">
+          <table id="container" class="table table-bordered table-striped table-condensed flip-content">
+            <thead class="flip-content">
+              <tr>
+                <th class="center">
+                  Sr. No.
+                </th>
+                <th class="cente">
+                  E-Way Bill No
+                </th>
+                <th class="cente">
+                  E-Way Bill Expiry Date
+                </th>
+                <th class="center evalue" style="display: none;">
+                  E-Way Bill Invoice Value
+                </th>
+                <th class="cente">
+                  E-Way Bill Invoice Date
+                </th>
+                <th class="center">
+                  Invoice No
+                </th>
+                <th class="center">
+                  Invoice Date
+                </th>
+                <th class="center clsItem" style="display: none;">
+                  Contents
+                </th>
+                <th class="center" style="display:none;">
+                  Rate
+                </th>
+                <th class="center" style="display:none;">
+                  Piece Weight
+                </th>
+                <th class="center" style="display:none;">
+                  Piece Qty.
+                </th>
+                <th class="center clsVolumetric" style="display: none;">
+                  Length (Inches)
+                </th>
+                <th class="center clsVolumetric" style="display: none;">
+                  Breadth (Inches)
+                </th>
+                <th class="center clsVolumetric" style="display: none;">
+                  Height (Inches)
+                </th>
+                <th class="center">
+                  Declared Value
+                </th>
+    
+                <th class="center">
+                  No of Pkgs.
+                </th>
+    
+                <th class="center clsVolumetric" style="display: none;">
+                  Cubic Weight
+                </th>
+                <th class="center">
+                  Actual Weight
+                </th>
+    
+                <th class="center">X</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="editorRow" *ngFor="let row of invoiceRows; let i = index">
+                <input class="iHidden" type="hidden" value="1">
+                <input type="hidden"  value="1">
+                <td class="center">
+                  {{ i + 1 }}
+                </td>
+                <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
+                  <input class="form-control rounded-0 " maxlength="12" placeholder="E-Way Bill No" type="text" >
+                </td>
+                <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
+                  <input class="form-control rounded-0" 
+                    placeholder="dd MM yyyy" type="text" value="01 Jan 0001" disabled="disabled">
+                </td>
+                <td class="center" style="padding-bottom: 2px; padding-top: 2px; display:none;">
+                  <input class="form-control rounded-0" placeholder="E-Way Invoice value" type="number" >
+                </td>
+                <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
+                  <input class="form-control rounded-0" placeholder="dd MM yyyy" type="text" value="01 Jan 0001" readonly="readonly">
+                </td>
+                <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
+                  <input class="form-control rounded-0 required required2" placeholder="Invoice No" type="text" >
+                </td>
+                <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
+                  <input class="form-control rounded-0 required2" placeholder="dd/MMM/yyyy" type="text"
+                    value="01 Aug 2025">
+                </td>
+                <td class="center  clsItem" style="padding-bottom: 2px; padding-top: 2px; display: none;">
+                  <select class="form-control rounded-0 required2 " placeholder="Select Product">
+                    <option value=""></option>
+                  </select>
+                </td>
+                <td class="center " style="padding-bottom: 2px; padding-top: 2px;display:none">
+                  <input class="form-control rounded-0 required required2" placeholder="Item Rate" type="text">
+                </td>
+                <td class="center " style="padding-bottom: 2px; padding-top: 2px; display: none;">
+                  <input class="form-control rounded-0 required required2" placeholder="Item Weight" type="text">
+                </td>
+                <td class="center " style="padding-bottom: 2px; padding-top: 2px; display: none;">
+                  <input class="form-control rounded-0 clsAmount required2" placeholder="Piece" type="number" value="0">
+                </td>
+                <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px; display: none;">
+                  <input class="form-control rounded-0 clsAmount required2 " min="1" type="number"value="0">
+                </td>
+                <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px; display: none;">
+                  <input class="form-control rounded-0 clsAmount required2"  min="1" type="number" value="0">
+                </td>
+                <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px; display: none;">
+                  <input class="form-control rounded-0 clsAmount required2"  min="1" type="number" value="0">
+                </td>
+                <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
+                  <input class="form-control rounded-0 clsAmount required2 text-end"  min="0" placeholder="Invoice value" type="number" value="0">
+                </td>
+                <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
+                  <input class="form-control rounded-0 clsAmount required2 text-end" placeholder="No of Pkgs." type="number" value="0">
+                </td>
+                <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px; display: none;">
+                  <input class="form-control rounded-0 clsAmount required2 " min="0" type="number" >
+                </td>
+                <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
+                  <input class="form-control rounded-0 clsAmount required2 text-end"
+                    placeholder="Actual Weight" type="number" value="0">
+                </td>
+                <td class="center">
+                      <a *ngIf="i !== 0" href="#" (click)="removeRow(i)" style="color: Maroon; font-size: 14px; font-weight: bolder; text-decoration: none;" >X</a>
+                </td>
+              </tr>
+            </tbody>
+            <tbody>
+              <tr class="editorRow">
+                <td colspan="3" class="evalue" style="display: none;"></td>
+                <td class="center  evalue" style="padding-bottom: 2px; padding-top: 2px; display: none;">
+                  <input class="form-control rounded-0 clsAmount required2 required" type="number" >
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="clsItem" style="display: none;"></td>
+                <td class="clsItem" style="display: none;"></td>
+    
+                <td style="display:none">
+                  <input class="form-control rounded-0 clsAmount required2 required"
+                    placeholder="Total Piece" readonly="true" type="number" value="">
+                 
+                </td>
+                <td colspan="3" class="clsVolumetric" style="display: none;"></td>
+                <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
+                  <input class="form-control rounded-0 clsAmount required2 required"
+                    type="number" value="">
+                </td>
+    
+                <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
+                  <input class="form-control rounded-0 clsAmount required2 required"
+                    type="number" value="">
+                </td>
+    
+                <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px; display: none;">
+                  <input class="form-control rounded-0 clsAmount required2 required"
+                    type="number" value="0">
+                </td>
+                <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
+                  <input class="form-control rounded-0 clsAmount required2 required text-end"
+                    type="number" value="0">
+                </td>
+    
+              </tr>
+              <tr class="editorRow">
+                <td colspan="3"></td>
+                <td colspan="3"></td>
+                <td colspan="2" class="clsItem" style="display: none;"></td>
+                <td colspan="3" class="clsVolumetric" style="display: none;"></td>
+                <td class="center " style="padding-bottom: 2px; padding-top: 2px;"><b>Charge Weight/Pkgs.</b></td>
+    
+                <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
+                  <div class="" style="margin-bottom: 0px;">
+                    <div class="col-md-11">
+                      <input class="form-control rounded-0 clsAmount required2 required text-end" type="number" value="">
+                    </div>
+                  </div>
+                </td>
+                <td class="clsVolumetric" style="display: none;"></td>
+                <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
+                  <div class="" style="margin-bottom: 0px;">
+                    <div class="col-md-11">
+                      <input class="form-control rounded-0 clsAmount required2 required text-end" type="number"
+                        value="0">
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    </form>
   </div>
-
-  <table class="invoice-table">
-    <thead>
-      <tr>
-        <th>Sr. No.</th>
-        <th>E-Way Bill No</th>
-        <th>E-Way Bill Expiry Date</th>
-        <th>E-Way Bill Invoice Date</th>
-        <th>Invoice No</th>
-        <th>Invoice Date</th>
-        <th>Declared Value</th>
-        <th>No of Pkgs.</th>
-        <th>Actual Weight</th>
-        <th>X</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let row of invoiceRows; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td><input type="text" placeholder="E-Way Bill No" /></td>
-        <td><input type="text" placeholder="dd MM yyyy" /></td>
-        <td><input type="text" placeholder="dd MM yyyy" /></td>
-        <td><input type="text" placeholder="Invoice No" /></td>
-        <td><input type="text" value="31 Jul 2025" readonly /></td>
-        <td><input type="number" value="0" /></td>
-        <td><input type="number" value="0" /></td>
-        <td><input type="number" value="0" /></td>
-        <td>
-          <span class="remove-btn" (click)="removeRow(i)" *ngIf="invoiceRows.length > 1">X</span>
-        </td>
-      </tr>
-      <tr class="fixed-row">
-    <td colspan="1"><input type="text" disabled/></td>
-    <td colspan="1"><input type="text" disabled/></td>
-    <td colspan="1"><input type="text" disabled/></td>
-    <td colspan="1"><input type="text" disabled/></td>
-    <td colspan="1"><input type="text" disabled/></td>
-    <td colspan="1"><input type="text" disabled/></td>
-    <td colspan="1"><input type="number" value="0" /></td>
-    <td colspan="1"><input type="number" value="0" /></td>
-    <td colspan="1"><input type="number" value="0" /></td>
-
-  </tr>
-
-  <!-- ✅ 2nd Fixed Row -->
-  <tr class="fixed-row">
-    <td colspan="3"><input type="text" disabled/></td>
-    <td colspan="3"><input type="text" disabled/></td>
-    <td colspan="1" class="text-right"><b>Charge Weight/Pkgs.</b></td>
-    <td colspan="1"><input type="number" value="0" /></td>
-    <td colspan="1"><input type="number" value="0" /></td>
-  </tr>
-    </tbody>
-  </table>
 </div>

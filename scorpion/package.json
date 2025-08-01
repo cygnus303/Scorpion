@@ -21,6 +21,7 @@
     "@angular/platform-server": "^18.2.0",
     "@angular/router": "^18.2.0",
     "@angular/ssr": "^18.2.12",
+    "@fortawesome/fontawesome-free": "^7.0.0",
     "@ng-bootstrap/ng-bootstrap": "^17.0.1",
     "@ng-select/ng-select": "^13.9.1",
     "bootstrap": "^5.3.3",
