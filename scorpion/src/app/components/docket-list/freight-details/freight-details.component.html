@@ -5,36 +5,20 @@
   </div>
   <div class="form-grid p-4">
     <form>
-      <div class="portlet-body">
-        <div id="divStep5">
-          <label class="control-label clsContractMessage"
-            style="font-family:Verdana;font-weight:bold;color:red;"></label>
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
                 <label class="control-label col-md-5 clsHideCharge">Freight Charges</label>
                 <div class="col-md-7">
-                  <input class="required2 clsAmount form-control required clsHideCharge" data-val="true"
-                    data-val-number="The field FREIGHT must be a number." id="WMDC_FREIGHT" min="1" name="WMDC.FREIGHT"
+                  <input class="required2 form-control required" 
                     placeholder="Freight Charges" type="number" value="0">
-
                 </div>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label class="control-label col-md-5" style="padding-top: 0px;padding-right: 1px;padding-left: 49px;">
-                  <div class="select2-container form-control required required2 select2 dropdown2 clsHideCharge"
-                    id="s2id_WMDC_RATE_TYPE"><a href="javascript:void(0)" onclick="return false;" class="select2-choice"
-                      tabindex="-1"> <span class="select2-chosen">% of Basic Freight</span><abbr
-                        class="select2-search-choice-close"></abbr> <span class="select2-arrow"><b></b></span></a><input
-                      class="select2-focusser select2-offscreen" type="text" id="s2id_autogen27">
-                    <div class="select2-drop select2-display-none select2-with-searchbox">
-                      <div class="select2-search"> <input type="text" autocomplete="off" autocorrect="off"
-                          autocapitalize="off" spellcheck="false" class="select2-input"> </div>
-                      <ul class="select2-results"> </ul>
-                    </div>
-                  </div><select
+                 <select
                     class="form-control required required2 select2 dropdown2 clsHideCharge select2-offscreen"
                     id="WMDC_RATE_TYPE" name="WMDC.RATE_TYPE" placeholder="Rate Type" tabindex="-1">
                     <option value="%">% of Basic Freight</option>
@@ -46,17 +30,11 @@
                   </select>
                 </label>
                 <div class="col-md-4">
-                  <input class="clsAmount form-control clsHideCharge" data-val="true"
-                    data-val-number="The field FREIGHT_CALC must be a number." id="WMDC_FREIGHT_CALC" min="1"
-                    name="WMDC.FREIGHT_CALC" placeholder="Freight Rate" type="number" value="0">
-                  <input data-val="true" data-val-number="The field TRDays must be a number."
+                  <input class="clsAmount form-control" min="1" placeholder="Freight Rate" type="number" value="0">
+                  <!-- <input data-val="true" data-val-number="The field TRDays must be a number."
                     data-val-required="The TRDays field is required." id="WMD_TRDays" name="WMD.TRDays" type="hidden"
-                    value="0">
+                    value="0"> -->
                 </div>
-
-
-
-
               </div>
             </div>
 
@@ -68,36 +46,24 @@
                 <div class="form-group">
                   <label class="control-label col-md-5">GST Paid By</label>
                   <div class="col-md-7">
-                    <div class="select2-container form-control select2 required2 required" id="s2id_WMD_stax_paidby"><a
-                        href="javascript:void(0)" onclick="return false;" class="select2-choice select2-default"
-                        tabindex="-1"> <span class="select2-chosen">GST Paid By</span><abbr
-                          class="select2-search-choice-close"></abbr> <span
-                          class="select2-arrow"><b></b></span></a><input class="select2-focusser select2-offscreen"
-                        type="text" id="s2id_autogen28">
-                      <div class="select2-drop select2-display-none select2-with-searchbox">
-                        <div class="select2-search"> <input type="text" autocomplete="off" autocorrect="off"
-                            autocapitalize="off" spellcheck="false" class="select2-input"> </div>
-                        <ul class="select2-results"> </ul>
-                      </div>
-                    </div><select class="form-control select2 required2 required select2-offscreen" id="WMD_stax_paidby"
-                      name="WMD.stax_paidby" placeholder="GST Paid By" tabindex="-1">
+                   <select class="form-control required2 required " 
+                      placeholder="GST Paid By" tabindex="-1">
                       <option value=""></option>
                     </select>
                   </div>
                 </div>
               </div>
-              <input id="WMD_stax_paidby" name="WMD.stax_paidby" type="hidden" value=""><input id="WMD_stax_exmpt_yn"
+              <!-- <input id="WMD_stax_paidby" name="WMD.stax_paidby" type="hidden" value=""><input id="WMD_stax_exmpt_yn"
                 name="WMD.stax_exmpt_yn" type="hidden" value="N"><input data-val="true"
                 data-val-number="The field StaxExceedLimit must be a number." id="WMD_StaxExceedLimit"
                 name="WMD.StaxExceedLimit" type="hidden" value=""><input id="WMD_fincmplbr" name="WMD.fincmplbr"
-                type="hidden" value="" readonly="readonly">
+                type="hidden" value="" readonly="readonly"> -->
               <div class="col-md-2">
-                <div class="form-group" id="gstexempted" style="display: none;">
+                <div class="form-group" style="display: none;">
                   <label class="control-label col-md-10" style="padding-top:1px;">GST Exempted</label>
                   <div class="col-md-2 chkactive">
-                    <input data-val="true" data-val-required="The IsStaxExemp field is required." id="WMD_IsStaxExemp"
-                      name="WMD.IsStaxExemp" type="hidden" value="False">
-                    <div class="checker"><span>
+                    <input type="hidden">
+                    <!-- <div class="checker"><span>
                         <div
                           class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-animate bootstrap-switch-mini">
                           <div class="bootstrap-switch-container"><span
@@ -106,7 +72,7 @@
                               class="bootstrap-switch-handle-off bootstrap-switch-default">NO</span><input
                               type="checkbox" class="WMD_IsStaxExempN WMD_IsStaxExempChange" value="false"></div>
                         </div>
-                      </span></div>
+                      </span></div> -->
                   </div>
                 </div>
               </div>
@@ -115,10 +81,8 @@
                   <label class="control-label col-md-5">EDD </label>
                   <div class="col-md-7">
                     <div class="input-group @*date ftdate-picker*@">
-                      <input class="required2 form-control required clsROFixed" data-val="true"
-                        data-val-date="The field CDELDT must be a date."
-                        data-val-required="The CDELDT field is required." id="WMD_CDELDT" name="WMD.CDELDT"
-                        placeholder="EDD" readonly="True" type="text" value="1/1/0001 12:00:00 AM">
+                      <input class="required2 form-control required"
+                        placeholder="EDD"  type="text" value="1/1/0001 12:00:00 AM">
                       <span class="input-group-btn">
                         <button class="btn default date-set clsVehicle1" type="button" style="display: none;"><i
                             class="fa fa-calendar"></i></button>
@@ -1497,8 +1461,6 @@
             </div>
 
           </div>
-        </div>
-      </div>
     </form>
   </div>
 </div>
