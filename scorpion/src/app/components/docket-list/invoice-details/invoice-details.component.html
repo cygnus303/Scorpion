@@ -171,7 +171,7 @@
                     placeholder="Actual Weight" type="number" value="0">
                 </td>
                 <td class="center">
-                      <a *ngIf="i !== 0" href="#" (click)="removeRow(i)" style="color: Maroon; font-size: 14px; font-weight: bolder; text-decoration: none;" >X</a>
+                      <div *ngIf="i !== 0" (click)="removeRow(i)" style="color: Maroon; font-size: 14px; font-weight: bolder; text-decoration: none;" class="cursor-pointer" >X</div>
                 </td>
               </tr>
             </tbody>
