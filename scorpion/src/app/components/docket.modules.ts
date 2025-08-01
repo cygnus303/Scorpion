@@ -25,6 +25,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
         FormsModule,
         NgSelectModule,
     ],
+    exports: [ RouterModule ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class DocketModule { }

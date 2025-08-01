@@ -3,7 +3,7 @@ import { DocketListComponent } from './docket-list/docket-list.component';
 
 export const DocketRoutes: Routes = [
   {
-    path: '',
+    path: '**',
     component: DocketListComponent
   },
 ];
