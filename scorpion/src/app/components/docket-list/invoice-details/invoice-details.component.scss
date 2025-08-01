@@ -1,0 +1,78 @@
+.invoice-section {
+  font-family: Segoe UI, sans-serif;
+  font-size: 13px;
+  background: white;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+
+  .header {
+    background: #1d2b63;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    label {
+      font-weight: 500;
+    }
+
+    .row-input {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      label {
+        margin-right: 5px;
+      }
+
+      input {
+        width: 60px;
+        padding: 3px 6px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+      }
+
+      .add-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 5px 12px;
+        font-size: 12px;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+
+    th, td {
+      border: 1px solid #ccc;
+      text-align: center;
+      padding: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 4px;
+      font-size: 13px;
+      border: 1px solid #ccc;
+      border-radius: 2px;
+    }
+
+    .remove-btn {
+      color: red;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .footer-label {
+      text-align: right;
+      font-weight: 600;
+    }
+  }
+}
