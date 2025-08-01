@@ -3,9 +3,9 @@
     <i class="fa fa-edit me-2"></i>
     CNote Entry - Consignor & Consignee Details
   </div>
-<div class="form-grid p-3">
-  <form class="row">
-     <div class="form-column col-md-4">
+<div class="form-grid p-4">
+  <form>
+     <!-- <div class="form-column col-md-4">
        <h4>Consignor</h4>
    
        <div class="form-group">
@@ -154,7 +154,421 @@
          <label>TP Number</label>
          <input type="text" placeholder="TP Number" />
        </div>
-     </div>
+     </div> -->
+
+      <div class="row">
+        <div class="col-md-3">
+          <div class="row">
+            <div class="col-md-5"></div>
+            <div class="col-md-2">
+              <h5><b>Consignor </b></h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Consignor GST No.</label>
+                <div class="col-md-7">
+                  <input class="form-control GSTNo clsGST"  maxlength="15" 
+                    placeholder="Consignor GST No." type="text" >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Select Consignor </label>
+                <div class="col-md-7 radio-list d-flex align-items-center">
+                  <label class="radio-inline p-0">
+                    <div class="radio"><span class="checked"><input type="radio"
+                         class="clsCnor"></span></div> From Master
+                  </label>
+                  <label class="radio-inline">
+                    <div class="radio" ><span><input type="radio" 
+                         class="clsCnor"></span></div> Walk-In
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Select Name </label>
+                <div class="col-md-7">
+                <select class="form-control required2" placeholder="Select Name"></select>
+    
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5"></label>
+                <div class="col-md-7">
+                  <input class="required2 form-control required clsCnor" 
+                    placeholder="Consignor Name" type="text" value="">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Address </label>
+                <div class="col-md-7">
+               <select class="form-control required2" placeholder="Address"></select>
+                  <textarea class="required2 form-control-textarea required clsCnor" cols="20" 
+                    placeholder="Address" rows="2"></textarea>
+    
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">City </label>
+                <div class="col-md-7">
+                  <input class="required2 form-control required clsCnor" 
+                    placeholder="City" type="text" >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Pincode </label>
+                <div class="col-md-7">
+                 <select class="form-control required2" placeholder="Pincode"></select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Mobile No </label>
+                <div class="col-md-7">
+                  <input class="form-control required required2 clsCnor" 
+                    maxlength="10"  placeholder="Mobile No">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Email Id </label>
+                <div class="col-md-7">
+                  <input class="form-control"  placeholder="Email Id" type="email">
+                </div>
+              </div>
+            </div>
+          </div>
+    
+        </div>
+    
+        <div class="col-md-3">
+          <div class="row">
+            <div class="col-md-5"></div>
+            <div class="col-md-2">
+              <h5><b>Consignee </b></h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Consignee GST No.</label>
+                <div class="col-md-7">
+                  <input class="required2 form-control"  maxlength="15"
+                     placeholder="Consignee GST No." type="text" >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group ">
+                <label class="control-label col-md-5">Select Consignee</label>
+                <div class="col-md-7 radio-list d-flex align-items-center">
+                  <label class="radio-inline p-0">
+                    <div class="radio"><span class="checked"><input type="radio" class="clsCnor"></span></div> From Master
+                  </label>
+                  <label class="radio-inline">
+                    <div class="radio"><span><input type="radio" class="clsCnor"></span></div> Walk-In
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Select Name </label>
+                <div class="col-md-7">
+                <select class="form-control required2" placeholder="Select Name"></select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5"></label>
+                <div class="col-md-7">
+                  <input class="required2 form-control required clsCnee"
+                    placeholder="Consignee Name" type="text" >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Address </label>
+                <div class="col-md-7">
+                  <!-- <select class="form-control required2" placeholder="Address"></select> -->
+                  <textarea class="required2 form-control-textarea required clsCnee" cols="20" 
+                    placeholder="Address" rows="2"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+    
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">City </label>
+                <div class="col-md-7">
+                  <input class="required2 form-control required clsCnee"
+                    placeholder="City" type="text" >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Pincode </label>
+                <div class="col-md-7">
+                  <select class="form-control required2" placeholder="Pincode"></select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Mobile No </label>
+                <div class="col-md-7">
+                  <input class="form-control required required2" maxlength="10"
+                    placeholder="Mobile No" type="text" >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Email Id </label>
+                <div class="col-md-7">
+                  <input class="form-control"  placeholder="Email Id" type="text">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+        <div class="col-md-3">
+          <div class="row">
+            <div class="col-md-5"></div>
+            <div class="col-md-3">
+              <h5><b>Third Party </b></h5>
+            </div>
+          </div>
+    
+          <div id="divDocument" class="col-md-12">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Third Party GST No.</label>
+                <div class="col-md-7">
+                  <input class="form-control"  maxlength="15"
+                     placeholder="Third Party GST No." type="text">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                 <div class="form-group">
+                <label class="control-label col-md-5">Select Third Party </label>
+                  <div class="col-md-7 radio-list d-flex align-items-center">
+                  <label class="radio-inline p-0">
+                    <div class="radio"><span class="checked"><input type="radio"
+                         class="clsCnor"></span></div>  From Master
+                  </label>
+                </div>
+                </div>
+              </div>
+            </div>
+    
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Select Name </label>
+                <div class="col-md-7">
+                  <input class="form-control" placeholder="Third Party Code"type="text" >
+                </div>
+              </div>
+            </div>
+    
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5"></label>
+                <div class="col-md-7">
+                  <input class="form-control clsTP" placeholder="Third Party Name"
+                    type="text">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Address</label>
+                <div class="col-md-7">
+                  <textarea class="form-control-textarea clsTP" cols="20" 
+                    placeholder="Third Party Address" rows="2"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">City </label>
+                <div class="col-md-7">
+                  <input class="form-control clsTP"placeholder="City" 
+                    type="text" >
+                </div>
+              </div>
+            </div>
+    
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Pincode </label>
+                <div class="col-md-7">
+                  <input class="form-control" placeholder="PinCode" type="text">
+                </div>
+              </div>
+            </div>
+    
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Mobile No </label>
+                <div class="col-md-7">
+                  <input class="form-control" maxlength="10" placeholder="Mobile No">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+        <div class="col-md-3">
+          <div class="row">
+            <div class="col-md-5"></div>
+            <div class="col-md-3">
+              <h5><b>Documents </b></h5>
+            </div>
+          </div>
+          <div class="portlet-body ">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="control-label col-md-5">Risk Type </label>
+                  <div class="col-md-7 radio-list d-flex align-items-center">
+                    <label class="radio-inline p-0">
+                      <div class="radio"><span class="checked"><input type="radio" class="clsCnor"></span></div>  Carrier's Risk 
+                    </label>
+                    <label class="radio-inline">
+                      <div class="radio"><span><input type="radio" class="clsCnor"></span></div>  Owner's Risk
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-11">
+                <div class="form-group">
+                  <label class="control-label col-md-5">Policy No</label>
+                  <div class="col-md-7">
+                    <input class="form-control " placeholder="Policy No" type="text">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-11">
+                <div class="form-group">
+                  <label class="control-label col-md-5">Policy Date </label>
+                  <div class="col-md-7">
+                    <input class="form-control" placeholder="Policy Date" type="text" value="1/1/0001 12:00:00 AM">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-11">
+                <div class="form-group">
+                  <label class="control-label col-md-5"> Internal Covers </label>
+                  <div class="col-md-7">
+                    <input class="form-control " placeholder="Internal Covers" type="text" >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-11">
+                <div class="form-group">
+                  <label class="control-label col-md-5">Modvat Covers </label>
+                  <div class="col-md-7">
+                    <input class="form-control " placeholder="Modvat Covers" type="text">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-11">
+                <div class="form-group">
+                  <label class="control-label col-md-5">Customer Ref No </label>
+                  <div class="col-md-7">
+                    <input class="form-control " placeholder="Customer Ref No" type="text">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-11">
+                <div class="form-group">
+                  <label class="control-label col-md-5">Private Mark </label>
+                  <div class="col-md-7">
+                    <input class="form-control " placeholder="Private Mark" type="text">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-11">
+                <div class="form-group">
+                  <label class="control-label col-md-5">TP Number </label>
+                  <div class="col-md-7">
+                    <input class="form-control "placeholder="TP Number " type="text">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
   </form>
 </div>
 

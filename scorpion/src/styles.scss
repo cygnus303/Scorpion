@@ -53,6 +53,20 @@
                     background-image: none;
                     border-radius: 0px;
             }
+            .form-control-textarea{
+               transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+                    box-shadow: none;
+                    border: 1px solid #e5e5e5;
+                    font-size: 11px !important;
+                    font-weight: normal;
+                    color: #333333;
+                    display: block;
+                        width: 100%;
+                    padding: 2px 6px;
+                    line-height: 1.42857143;
+                    background-image: none;
+                    border-radius: 0px;
+            }
         
             .radio-inline {
               margin-right: 20px;

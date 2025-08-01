@@ -1,6 +1,1512 @@
+<div class="cnote-entry-container px-1">
+  <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+    <i class="fa fa-edit me-2"></i>
+    CNote Entry - Consignor & Consignee Details
+  </div>
+  <div class="form-grid p-4">
+    <form>
+      <div class="portlet-body">
+        <div id="divStep5">
+          <label class="control-label clsContractMessage"
+            style="font-family:Verdana;font-weight:bold;color:red;"></label>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label col-md-5 clsHideCharge">Freight Charges</label>
+                <div class="col-md-7">
+                  <input class="required2 clsAmount form-control required clsHideCharge" data-val="true"
+                    data-val-number="The field FREIGHT must be a number." id="WMDC_FREIGHT" min="1" name="WMDC.FREIGHT"
+                    placeholder="Freight Charges" type="number" value="0">
 
-  <div class="freight-container">
-    <div class="header">📄 CNote Entry – Freight Details</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label col-md-5" style="padding-top: 0px;padding-right: 1px;padding-left: 49px;">
+                  <div class="select2-container form-control required required2 select2 dropdown2 clsHideCharge"
+                    id="s2id_WMDC_RATE_TYPE"><a href="javascript:void(0)" onclick="return false;" class="select2-choice"
+                      tabindex="-1"> <span class="select2-chosen">% of Basic Freight</span><abbr
+                        class="select2-search-choice-close"></abbr> <span class="select2-arrow"><b></b></span></a><input
+                      class="select2-focusser select2-offscreen" type="text" id="s2id_autogen27">
+                    <div class="select2-drop select2-display-none select2-with-searchbox">
+                      <div class="select2-search"> <input type="text" autocomplete="off" autocorrect="off"
+                          autocapitalize="off" spellcheck="false" class="select2-input"> </div>
+                      <ul class="select2-results"> </ul>
+                    </div>
+                  </div><select
+                    class="form-control required required2 select2 dropdown2 clsHideCharge select2-offscreen"
+                    id="WMDC_RATE_TYPE" name="WMDC.RATE_TYPE" placeholder="Rate Type" tabindex="-1">
+                    <option value="%">% of Basic Freight</option>
+                    <option value="F">Flat(in RS)</option>
+                    <option value="I">% of Invoice</option>
+                    <option value="P">Per PKG</option>
+                    <option value="T">Per TON</option>
+                    <option value="W">Per KG</option>
+                  </select>
+                </label>
+                <div class="col-md-4">
+                  <input class="clsAmount form-control clsHideCharge" data-val="true"
+                    data-val-number="The field FREIGHT_CALC must be a number." id="WMDC_FREIGHT_CALC" min="1"
+                    name="WMDC.FREIGHT_CALC" placeholder="Freight Rate" type="number" value="0">
+                  <input data-val="true" data-val-number="The field TRDays must be a number."
+                    data-val-required="The TRDays field is required." id="WMD_TRDays" name="WMD.TRDays" type="hidden"
+                    value="0">
+                </div>
+
+
+
+
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div class="form-body">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label col-md-5">GST Paid By</label>
+                  <div class="col-md-7">
+                    <div class="select2-container form-control select2 required2 required" id="s2id_WMD_stax_paidby"><a
+                        href="javascript:void(0)" onclick="return false;" class="select2-choice select2-default"
+                        tabindex="-1"> <span class="select2-chosen">GST Paid By</span><abbr
+                          class="select2-search-choice-close"></abbr> <span
+                          class="select2-arrow"><b></b></span></a><input class="select2-focusser select2-offscreen"
+                        type="text" id="s2id_autogen28">
+                      <div class="select2-drop select2-display-none select2-with-searchbox">
+                        <div class="select2-search"> <input type="text" autocomplete="off" autocorrect="off"
+                            autocapitalize="off" spellcheck="false" class="select2-input"> </div>
+                        <ul class="select2-results"> </ul>
+                      </div>
+                    </div><select class="form-control select2 required2 required select2-offscreen" id="WMD_stax_paidby"
+                      name="WMD.stax_paidby" placeholder="GST Paid By" tabindex="-1">
+                      <option value=""></option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <input id="WMD_stax_paidby" name="WMD.stax_paidby" type="hidden" value=""><input id="WMD_stax_exmpt_yn"
+                name="WMD.stax_exmpt_yn" type="hidden" value="N"><input data-val="true"
+                data-val-number="The field StaxExceedLimit must be a number." id="WMD_StaxExceedLimit"
+                name="WMD.StaxExceedLimit" type="hidden" value=""><input id="WMD_fincmplbr" name="WMD.fincmplbr"
+                type="hidden" value="" readonly="readonly">
+              <div class="col-md-2">
+                <div class="form-group" id="gstexempted" style="display: none;">
+                  <label class="control-label col-md-10" style="padding-top:1px;">GST Exempted</label>
+                  <div class="col-md-2 chkactive">
+                    <input data-val="true" data-val-required="The IsStaxExemp field is required." id="WMD_IsStaxExemp"
+                      name="WMD.IsStaxExemp" type="hidden" value="False">
+                    <div class="checker"><span>
+                        <div
+                          class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-animate bootstrap-switch-mini">
+                          <div class="bootstrap-switch-container"><span
+                              class="bootstrap-switch-handle-on bootstrap-switch-primary">YES</span><label
+                              class="bootstrap-switch-label">&nbsp;</label><span
+                              class="bootstrap-switch-handle-off bootstrap-switch-default">NO</span><input
+                              type="checkbox" class="WMD_IsStaxExempN WMD_IsStaxExempChange" value="false"></div>
+                        </div>
+                      </span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label class="control-label col-md-5">EDD </label>
+                  <div class="col-md-7">
+                    <div class="input-group @*date ftdate-picker*@">
+                      <input class="required2 form-control required clsROFixed" data-val="true"
+                        data-val-date="The field CDELDT must be a date."
+                        data-val-required="The CDELDT field is required." id="WMD_CDELDT" name="WMD.CDELDT"
+                        placeholder="EDD" readonly="True" type="text" value="1/1/0001 12:00:00 AM">
+                      <span class="input-group-btn">
+                        <button class="btn default date-set clsVehicle1" type="button" style="display: none;"><i
+                            class="fa fa-calendar"></i></button>
+                      </span>
+                      <input id="WMD_CDELDT_Original" name="WMD_CDELDT_Original" type="hidden" value="">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label col-md-5">Billed At</label>
+                  <div class="col-md-7">
+                    <input class="required2 form-control required" id="WMD_fincmplbrDisplay" name="WMD.fincmplbrDisplay"
+                      placeholder="Billed At" type="text" value="" readonly="readonly">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-body">
+              <div class="col-md-offset-8 col-md-4">
+                <div class="form-group">
+                  <label class="control-label col-md-5">Billing State</label>
+                  <div class="col-md-7">
+                    <input class="required2 form-control required" id="WMD_BillingState" name="WMD.BillingState"
+                      placeholder="Billing State" readonly="True" type="text" value="">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-body clsHideCharge">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">FOV Rate (% of Invoice)</label>
+                    <div class="col-md-7">
+                      <input class="required2 clsAmount form-control required" data-val="true"
+                        data-val-number="The field FovRate must be a number." id="WMDC_FovRate" name="WMDC.FovRate"
+                        placeholder="FOV Rate " readonly="True" type="text" value="0">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">FOV Calculated</label>
+                    <div class="col-md-7">
+                      <input class="required2 clsAmount form-control required clsPayment" data-val="true"
+                        data-val-number="The field FOVCalculated must be a number." id="WMDC_FOVCalculated"
+                        name="WMDC.FOVCalculated" placeholder="FOV" readonly="True" type="text" value="0">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">FOV Charged </label>
+                    <div class="col-md-7">
+                      <input class="required2 form-control clsAmount required clsPayment" data-val="true"
+                        data-val-number="The field FOV must be a number." id="WMDC_FOV" name="WMDC.FOV"
+                        placeholder="FOV Charged" type="text" value="0">
+                      <input id="WMD_CODRateType" name="WMD.CODRateType" type="hidden" value="">
+                      <input data-val="true" data-val-number="The field Min_CODCharged must be a number."
+                        data-val-required="The Min_CODCharged field is required." id="WMD_Min_CODCharged"
+                        name="WMD.Min_CODCharged" type="hidden" value="0">
+                      <input data-val="true" data-val-number="The field CODCharged must be a number."
+                        data-val-required="The CODCharged field is required." id="WMD_CODCharged" name="WMD.CODCharged"
+                        type="hidden" value="0">
+                      <input id="WMD_DACCRateType" name="WMD.DACCRateType" type="hidden" value="">
+                      <input data-val="true" data-val-number="The field DACCCharged must be a number."
+                        data-val-required="The DACCCharged field is required." id="WMD_DACCCharged"
+                        name="WMD.DACCCharged" type="hidden" value="0">
+                      <input data-val="true" data-val-number="The field Min_DACCCharged must be a number."
+                        data-val-required="The Min_DACCCharged field is required." id="WMD_Min_DACCCharged"
+                        name="WMD.Min_DACCCharged" type="hidden" value="0">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row clsCODDOD" style="display: none;">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">COD/DOD Charged</label>
+                    <div class="col-md-7">
+                      <input class="required2 form-control clsAmount required clsPayment" data-val="true"
+                        data-val-number="The field Codchrg must be a number." id="WMD_Codchrg" name="WMD.Codchrg"
+                        placeholder="COD/DOD Charged " readonly="true" type="text" value="0">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">COD/DOD To be Collected</label>
+                    <div class="col-md-7">
+                      <input class="required2 clsAmount form-control required" data-val="true"
+                        data-val-number="The field codamt must be a number." id="WMD_codamt" name="WMD.codamt"
+                        placeholder="COD/DOD Amount" type="text" value="0">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row clsDACC" style="display: none;">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">DACC Charged</label>
+                    <div class="col-md-7">
+                      <input class="required2 clsAmount form-control required clsPayment" data-val="true"
+                        data-val-number="The field DKTDACCCharges must be a number."
+                        data-val-required="The DKTDACCCharges field is required." id="WMD_DKTDACCCharges"
+                        name="WMD.DKTDACCCharges" placeholder="DACC Charged " readonly="true" type="text" value="0">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">DACC To be Collected</label>
+                    <div class="col-md-7">
+                      <input class="required2 clsAmount form-control required" data-val="true"
+                        data-val-number="The field DKTDACCAmount must be a number."
+                        data-val-required="The DKTDACCAmount field is required." id="WMD_DKTDACCAmount"
+                        name="WMD.DKTDACCAmount" placeholder="DACC Amount" type="text" value="0">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <h4 class="form-body form-section clsHideCharge">Charges Details</h4>
+
+
+            <div class="form-body">
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">TO PAY CHARGES </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG02">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG02__ChargeAmount" name="DocketChargesList[SCHG02].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="TO PAY CHARGES" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG02__ChargeCode" name="DocketChargesList[SCHG02].ChargeCode"
+                        type="hidden" value="SCHG02"><input id="DocketChargesList_SCHG02__Operator"
+                        name="DocketChargesList[SCHG02].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG02__Acccode" name="DocketChargesList[SCHG02].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Other Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG03">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG03__ChargeAmount" name="DocketChargesList[SCHG03].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Other Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG03__ChargeCode" name="DocketChargesList[SCHG03].ChargeCode"
+                        type="hidden" value="SCHG03"><input id="DocketChargesList_SCHG03__Operator"
+                        name="DocketChargesList[SCHG03].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG03__Acccode" name="DocketChargesList[SCHG03].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Document Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG04">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG04__ChargeAmount" name="DocketChargesList[SCHG04].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Document Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG04__ChargeCode" name="DocketChargesList[SCHG04].ChargeCode"
+                        type="hidden" value="SCHG04"><input id="DocketChargesList_SCHG04__Operator"
+                        name="DocketChargesList[SCHG04].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG04__Acccode" name="DocketChargesList[SCHG04].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+            <div class="form-body">
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Extra Handling Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG05">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG05__ChargeAmount" name="DocketChargesList[SCHG05].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Extra Handling Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG05__ChargeCode" name="DocketChargesList[SCHG05].ChargeCode"
+                        type="hidden" value="SCHG05"><input id="DocketChargesList_SCHG05__Operator"
+                        name="DocketChargesList[SCHG05].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG05__Acccode" name="DocketChargesList[SCHG05].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Special Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG06">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG06__ChargeAmount" name="DocketChargesList[SCHG06].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Special Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG06__ChargeCode" name="DocketChargesList[SCHG06].ChargeCode"
+                        type="hidden" value="SCHG06"><input id="DocketChargesList_SCHG06__Operator"
+                        name="DocketChargesList[SCHG06].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG06__Acccode" name="DocketChargesList[SCHG06].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">ODA Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG08">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG08__ChargeAmount" name="DocketChargesList[SCHG08].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="ODA Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG08__ChargeCode" name="DocketChargesList[SCHG08].ChargeCode"
+                        type="hidden" value="SCHG08"><input id="DocketChargesList_SCHG08__Operator"
+                        name="DocketChargesList[SCHG08].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG08__Acccode" name="DocketChargesList[SCHG08].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+            <div class="form-body">
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Covid Surcharge </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG09">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG09__ChargeAmount" name="DocketChargesList[SCHG09].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Covid Surcharge" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG09__ChargeCode" name="DocketChargesList[SCHG09].ChargeCode"
+                        type="hidden" value="SCHG09"><input id="DocketChargesList_SCHG09__Operator"
+                        name="DocketChargesList[SCHG09].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG09__Acccode" name="DocketChargesList[SCHG09].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">CSD Delivery Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG10">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG10__ChargeAmount" name="DocketChargesList[SCHG10].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="CSD Delivery Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG10__ChargeCode" name="DocketChargesList[SCHG10].ChargeCode"
+                        type="hidden" value="SCHG10"><input id="DocketChargesList_SCHG10__Operator"
+                        name="DocketChargesList[SCHG10].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG10__Acccode" name="DocketChargesList[SCHG10].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Demmurage Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG14">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG14__ChargeAmount" name="DocketChargesList[SCHG14].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Demmurage Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG14__ChargeCode" name="DocketChargesList[SCHG14].ChargeCode"
+                        type="hidden" value="SCHG14"><input id="DocketChargesList_SCHG14__Operator"
+                        name="DocketChargesList[SCHG14].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG14__Acccode" name="DocketChargesList[SCHG14].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+            <div class="form-body">
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Physical POD </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG15">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG15__ChargeAmount" name="DocketChargesList[SCHG15].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Physical POD" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG15__ChargeCode" name="DocketChargesList[SCHG15].ChargeCode"
+                        type="hidden" value="SCHG15"><input id="DocketChargesList_SCHG15__Operator"
+                        name="DocketChargesList[SCHG15].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG15__Acccode" name="DocketChargesList[SCHG15].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Cartage Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG16">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG16__ChargeAmount" name="DocketChargesList[SCHG16].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Cartage Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG16__ChargeCode" name="DocketChargesList[SCHG16].ChargeCode"
+                        type="hidden" value="SCHG16"><input id="DocketChargesList_SCHG16__Operator"
+                        name="DocketChargesList[SCHG16].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG16__Acccode" name="DocketChargesList[SCHG16].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Mall Delivery Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG17">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG17__ChargeAmount" name="DocketChargesList[SCHG17].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Mall Delivery Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG17__ChargeCode" name="DocketChargesList[SCHG17].ChargeCode"
+                        type="hidden" value="SCHG17"><input id="DocketChargesList_SCHG17__Operator"
+                        name="DocketChargesList[SCHG17].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG17__Acccode" name="DocketChargesList[SCHG17].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+            <div class="form-body">
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Extra Delivery Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG18">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG18__ChargeAmount" name="DocketChargesList[SCHG18].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Extra Delivery Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG18__ChargeCode" name="DocketChargesList[SCHG18].ChargeCode"
+                        type="hidden" value="SCHG18"><input id="DocketChargesList_SCHG18__Operator"
+                        name="DocketChargesList[SCHG18].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG18__Acccode" name="DocketChargesList[SCHG18].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Late Delivery </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG19">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG19__ChargeAmount" name="DocketChargesList[SCHG19].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Late Delivery" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG19__ChargeCode" name="DocketChargesList[SCHG19].ChargeCode"
+                        type="hidden" value="SCHG19"><input id="DocketChargesList_SCHG19__Operator"
+                        name="DocketChargesList[SCHG19].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG19__Acccode" name="DocketChargesList[SCHG19].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">FuelSurcharge Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG20">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG20__ChargeAmount" name="DocketChargesList[SCHG20].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="FuelSurcharge Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG20__ChargeCode" name="DocketChargesList[SCHG20].ChargeCode"
+                        type="hidden" value="SCHG20"><input id="DocketChargesList_SCHG20__Operator"
+                        name="DocketChargesList[SCHG20].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG20__Acccode" name="DocketChargesList[SCHG20].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+            <div class="form-body">
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Detention Charges (Applicable After 12 hrs) </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG21">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG21__ChargeAmount" name="DocketChargesList[SCHG21].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Detention Charges (Applicable After 12 hrs)" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG21__ChargeCode" name="DocketChargesList[SCHG21].ChargeCode"
+                        type="hidden" value="SCHG21"><input id="DocketChargesList_SCHG21__Operator"
+                        name="DocketChargesList[SCHG21].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG21__Acccode" name="DocketChargesList[SCHG21].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Varai Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG22">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG22__ChargeAmount" name="DocketChargesList[SCHG22].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Varai Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG22__ChargeCode" name="DocketChargesList[SCHG22].ChargeCode"
+                        type="hidden" value="SCHG22"><input id="DocketChargesList_SCHG22__Operator"
+                        name="DocketChargesList[SCHG22].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG22__Acccode" name="DocketChargesList[SCHG22].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">West Bengal Delivery Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG23">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG23__ChargeAmount" name="DocketChargesList[SCHG23].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="West Bengal Delivery Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG23__ChargeCode" name="DocketChargesList[SCHG23].ChargeCode"
+                        type="hidden" value="SCHG23"><input id="DocketChargesList_SCHG23__Operator"
+                        name="DocketChargesList[SCHG23].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG23__Acccode" name="DocketChargesList[SCHG23].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+            <div class="form-body">
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Diesel Hike (Additional FSC) </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG24">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG24__ChargeAmount" name="DocketChargesList[SCHG24].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Diesel Hike (Additional FSC)" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG24__ChargeCode" name="DocketChargesList[SCHG24].ChargeCode"
+                        type="hidden" value="SCHG24"><input id="DocketChargesList_SCHG24__Operator"
+                        name="DocketChargesList[SCHG24].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG24__Acccode" name="DocketChargesList[SCHG24].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Green Tax Charges Booking </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG25">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG25__ChargeAmount" name="DocketChargesList[SCHG25].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Green Tax Charges Booking" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG25__ChargeCode" name="DocketChargesList[SCHG25].ChargeCode"
+                        type="hidden" value="SCHG25"><input id="DocketChargesList_SCHG25__Operator"
+                        name="DocketChargesList[SCHG25].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG25__Acccode" name="DocketChargesList[SCHG25].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">In Sikkim Sikkim Tax (SNT) Delivery </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG28">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_SCHG28__ChargeAmount" name="DocketChargesList[SCHG28].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="In Sikkim Sikkim Tax (SNT) Delivery" type="text" value="0.00"><input
+                        id="DocketChargesList_SCHG28__ChargeCode" name="DocketChargesList[SCHG28].ChargeCode"
+                        type="hidden" value="SCHG28"><input id="DocketChargesList_SCHG28__Operator"
+                        name="DocketChargesList[SCHG28].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_SCHG28__Acccode" name="DocketChargesList[SCHG28].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+            <div class="form-body">
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">For Kerala Charges Delivery </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG01">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_UCHG01__ChargeAmount" name="DocketChargesList[UCHG01].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="For Kerala Charges Delivery" type="text" value="0.00"><input
+                        id="DocketChargesList_UCHG01__ChargeCode" name="DocketChargesList[UCHG01].ChargeCode"
+                        type="hidden" value="UCHG01"><input id="DocketChargesList_UCHG01__Operator"
+                        name="DocketChargesList[UCHG01].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_UCHG01__Acccode" name="DocketChargesList[UCHG01].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Unloading Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG02">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_UCHG02__ChargeAmount" name="DocketChargesList[UCHG02].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Unloading Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_UCHG02__ChargeCode" name="DocketChargesList[UCHG02].ChargeCode"
+                        type="hidden" value="UCHG02"><input id="DocketChargesList_UCHG02__Operator"
+                        name="DocketChargesList[UCHG02].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_UCHG02__Acccode" name="DocketChargesList[UCHG02].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">For J &amp; K Charges Delivery </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG03">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_UCHG03__ChargeAmount" name="DocketChargesList[UCHG03].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="For J &amp; K Charges Delivery" type="text" value="0.00"><input
+                        id="DocketChargesList_UCHG03__ChargeCode" name="DocketChargesList[UCHG03].ChargeCode"
+                        type="hidden" value="UCHG03"><input id="DocketChargesList_UCHG03__Operator"
+                        name="DocketChargesList[UCHG03].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_UCHG03__Acccode" name="DocketChargesList[UCHG03].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+            <div class="form-body">
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Loading Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG04">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_UCHG04__ChargeAmount" name="DocketChargesList[UCHG04].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Loading Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_UCHG04__ChargeCode" name="DocketChargesList[UCHG04].ChargeCode"
+                        type="hidden" value="UCHG04"><input id="DocketChargesList_UCHG04__Operator"
+                        name="DocketChargesList[UCHG04].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_UCHG04__Acccode" name="DocketChargesList[UCHG04].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Loading Detention Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG05">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_UCHG05__ChargeAmount" name="DocketChargesList[UCHG05].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Loading Detention Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_UCHG05__ChargeCode" name="DocketChargesList[UCHG05].ChargeCode"
+                        type="hidden" value="UCHG05"><input id="DocketChargesList_UCHG05__Operator"
+                        name="DocketChargesList[UCHG05].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_UCHG05__Acccode" name="DocketChargesList[UCHG05].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Green Tax Charges Delivery </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG06">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_UCHG06__ChargeAmount" name="DocketChargesList[UCHG06].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Green Tax Charges Delivery" type="text" value="0.00"><input
+                        id="DocketChargesList_UCHG06__ChargeCode" name="DocketChargesList[UCHG06].ChargeCode"
+                        type="hidden" value="UCHG06"><input id="DocketChargesList_UCHG06__Operator"
+                        name="DocketChargesList[UCHG06].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_UCHG06__Acccode" name="DocketChargesList[UCHG06].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+            <div class="form-body">
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Pickup Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG07">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_UCHG07__ChargeAmount" name="DocketChargesList[UCHG07].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Pickup Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_UCHG07__ChargeCode" name="DocketChargesList[UCHG07].ChargeCode"
+                        type="hidden" value="UCHG07"><input id="DocketChargesList_UCHG07__Operator"
+                        name="DocketChargesList[UCHG07].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_UCHG07__Acccode" name="DocketChargesList[UCHG07].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Appointment Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG08">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_UCHG08__ChargeAmount" name="DocketChargesList[UCHG08].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Appointment Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_UCHG08__ChargeCode" name="DocketChargesList[UCHG08].ChargeCode"
+                        type="hidden" value="UCHG08"><input id="DocketChargesList_UCHG08__Operator"
+                        name="DocketChargesList[UCHG08].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_UCHG08__Acccode" name="DocketChargesList[UCHG08].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Second Attempt Delivery Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG09">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_UCHG09__ChargeAmount" name="DocketChargesList[UCHG09].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Second Attempt Delivery Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_UCHG09__ChargeCode" name="DocketChargesList[UCHG09].ChargeCode"
+                        type="hidden" value="UCHG09"><input id="DocketChargesList_UCHG09__Operator"
+                        name="DocketChargesList[UCHG09].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_UCHG09__Acccode" name="DocketChargesList[UCHG09].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+            <div class="form-body">
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">For North East </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG10">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_UCHG10__ChargeAmount" name="DocketChargesList[UCHG10].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="For North East" type="text" value="0.00"><input
+                        id="DocketChargesList_UCHG10__ChargeCode" name="DocketChargesList[UCHG10].ChargeCode"
+                        type="hidden" value="UCHG10"><input id="DocketChargesList_UCHG10__Operator"
+                        name="DocketChargesList[UCHG10].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_UCHG10__Acccode" name="DocketChargesList[UCHG10].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Multipickup Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG11">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_UCHG11__ChargeAmount" name="DocketChargesList[UCHG11].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Multipickup Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_UCHG11__ChargeCode" name="DocketChargesList[UCHG11].ChargeCode"
+                        type="hidden" value="UCHG11"><input id="DocketChargesList_UCHG11__Operator"
+                        name="DocketChargesList[UCHG11].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_UCHG11__Acccode" name="DocketChargesList[UCHG11].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">Multidelivery Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG12">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_UCHG12__ChargeAmount" name="DocketChargesList[UCHG12].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="Multidelivery Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_UCHG12__ChargeCode" name="DocketChargesList[UCHG12].ChargeCode"
+                        type="hidden" value="UCHG12"><input id="DocketChargesList_UCHG12__Operator"
+                        name="DocketChargesList[UCHG12].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_UCHG12__Acccode" name="DocketChargesList[UCHG12].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+            <div class="form-body">
+              <div class="col-md-4 clsHideCharge">
+
+                <div class="form-group">
+                  <label class="control-label col-md-5">DPH Billing Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon right">
+                      <i class="fa fa-plus"></i>
+                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG13">
+                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
+                        data-val="true" data-val-number="The field ChargeAmount must be a number."
+                        data-val-required="The ChargeAmount field is required."
+                        id="DocketChargesList_UCHG13__ChargeAmount" name="DocketChargesList[UCHG13].ChargeAmount"
+                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
+                        placeholder="DPH Billing Charges" type="text" value="0.00"><input
+                        id="DocketChargesList_UCHG13__ChargeCode" name="DocketChargesList[UCHG13].ChargeCode"
+                        type="hidden" value="UCHG13"><input id="DocketChargesList_UCHG13__Operator"
+                        name="DocketChargesList[UCHG13].Operator" type="hidden" value="+"><input
+                        id="DocketChargesList_UCHG13__Acccode" name="DocketChargesList[UCHG13].Acccode" type="hidden"
+                        value="">
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+
+            <div class="form-body clsHideCharge">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label col-md-5"><b>GST Rate</b></label>
+                  <div class="col-md-7">
+                    <input id="WMD_GSTRate" name="WMD.GSTRate" type="hidden" value="">
+                    <input id="WMD_GTASacCode" name="WMD.GTASacCode" type="hidden" value="">
+                    <input id="WMD_GTASacCodeDesc" name="WMD.GTASacCodeDesc" type="hidden" value="">
+                    <div class="select2-container form-control select2 required2 required" id="s2id_WMD_GSTRateType"><a
+                        href="javascript:void(0)" onclick="return false;" class="select2-choice" tabindex="-1"> <span
+                          class="select2-chosen">18</span><abbr class="select2-search-choice-close"></abbr> <span
+                          class="select2-arrow"><b></b></span></a><input class="select2-focusser select2-offscreen"
+                        type="text" id="s2id_autogen29">
+                      <div class="select2-drop select2-display-none select2-with-searchbox">
+                        <div class="select2-search"> <input type="text" autocomplete="off" autocorrect="off"
+                            autocapitalize="off" spellcheck="false" class="select2-input"> </div>
+                        <ul class="select2-results"> </ul>
+                      </div>
+                    </div><select class="form-control select2 required2 required select2-offscreen" id="WMD_GSTRateType"
+                      name="WMD.GSTRateType" placeholder="Select GST Percentage" tabindex="-1">
+                      <option value=""></option>
+                      <option value="0">0</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="10">10</option>
+                      <option value="12">12</option>
+                      <option selected="selected" value="18">18</option>
+                      <option value="28">28</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4"></div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label col-md-5"><b>SUB-TOTAL</b></label>
+                  <div class="col-md-7">
+                    <input class="required2 clsAmount form-control required clsROFixed" data-val="true"
+                      data-val-number="The field SubTotal must be a number." id="WMDC_SubTotal" name="WMDC.SubTotal"
+                      placeholder="SUB-TOTAL" readonly="true" type="text" value="">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-body clsHideCharge">
+              <div class="row clsGSTApply">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">IGST(%)<span id="lbl_IGSTRate"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon right">
+                        <i class="fa fa-plus"></i>
+                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="IGSTRate">
+                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
+                          data-val-number="The field ChargeAmount must be a number."
+                          data-val-required="The ChargeAmount field is required."
+                          id="DynamicList_IGSTRate__ChargeAmount" name="DynamicList[IGSTRate].ChargeAmount"
+                          placeholder="IGST(%)" readonly="True" type="text" value="0.00"><input
+                          id="DynamicList_IGSTRate__ChargeCode" name="DynamicList[IGSTRate].ChargeCode" type="hidden"
+                          value="IGSTRate"><input id="DynamicList_IGSTRate__Operator"
+                          name="DynamicList[IGSTRate].Operator" type="hidden" value="+"><input
+                          id="DynamicList_IGSTRate__Acccode" name="DynamicList[IGSTRate].Acccode" type="hidden"
+                          value="">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">IGST ON SUB TOTAL<span id="lbl_IGSTAmount"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon right">
+                        <i class="fa fa-plus"></i>
+                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="IGSTAmount">
+                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
+                          data-val-number="The field ChargeAmount must be a number."
+                          data-val-required="The ChargeAmount field is required."
+                          id="DynamicList_IGSTAmount__ChargeAmount" name="DynamicList[IGSTAmount].ChargeAmount"
+                          placeholder="IGST ON SUB TOTAL" readonly="True" type="text" value="0.00"><input
+                          id="DynamicList_IGSTAmount__ChargeCode" name="DynamicList[IGSTAmount].ChargeCode"
+                          type="hidden" value="IGSTAmount"><input id="DynamicList_IGSTAmount__Operator"
+                          name="DynamicList[IGSTAmount].Operator" type="hidden" value="+"><input
+                          id="DynamicList_IGSTAmount__Acccode" name="DynamicList[IGSTAmount].Acccode" type="hidden"
+                          value="">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">IGST COLLECTED<span id="lbl_IGSTCOLLECTED"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon right">
+                        <i class="fa fa-plus"></i>
+                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="IGSTCOLLECTED">
+                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
+                          data-val-number="The field ChargeAmount must be a number."
+                          data-val-required="The ChargeAmount field is required."
+                          id="DynamicList_IGSTCOLLECTED__ChargeAmount" name="DynamicList[IGSTCOLLECTED].ChargeAmount"
+                          placeholder="IGST COLLECTED" readonly="True" type="text" value="0.00"><input
+                          id="DynamicList_IGSTCOLLECTED__ChargeCode" name="DynamicList[IGSTCOLLECTED].ChargeCode"
+                          type="hidden" value="IGSTCOLLECTED"><input id="DynamicList_IGSTCOLLECTED__Operator"
+                          name="DynamicList[IGSTCOLLECTED].Operator" type="hidden" value="+"><input
+                          id="DynamicList_IGSTCOLLECTED__Acccode" name="DynamicList[IGSTCOLLECTED].Acccode"
+                          type="hidden" value="">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+              <div class="row clsGSTApply">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">CGST(%)<span id="lbl_CGSTRate"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon right">
+                        <i class="fa fa-plus"></i>
+                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="CGSTRate">
+                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
+                          data-val-number="The field ChargeAmount must be a number."
+                          data-val-required="The ChargeAmount field is required."
+                          id="DynamicList_CGSTRate__ChargeAmount" name="DynamicList[CGSTRate].ChargeAmount"
+                          placeholder="CGST(%)" readonly="True" type="text" value="0.00"><input
+                          id="DynamicList_CGSTRate__ChargeCode" name="DynamicList[CGSTRate].ChargeCode" type="hidden"
+                          value="CGSTRate"><input id="DynamicList_CGSTRate__Operator"
+                          name="DynamicList[CGSTRate].Operator" type="hidden" value="+"><input
+                          id="DynamicList_CGSTRate__Acccode" name="DynamicList[CGSTRate].Acccode" type="hidden"
+                          value="">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">CGST ON SUB TOTAL<span id="lbl_CGSTAmount"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon right">
+                        <i class="fa fa-plus"></i>
+                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="CGSTAmount">
+                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
+                          data-val-number="The field ChargeAmount must be a number."
+                          data-val-required="The ChargeAmount field is required."
+                          id="DynamicList_CGSTAmount__ChargeAmount" name="DynamicList[CGSTAmount].ChargeAmount"
+                          placeholder="CGST ON SUB TOTAL" readonly="True" type="text" value="0.00"><input
+                          id="DynamicList_CGSTAmount__ChargeCode" name="DynamicList[CGSTAmount].ChargeCode"
+                          type="hidden" value="CGSTAmount"><input id="DynamicList_CGSTAmount__Operator"
+                          name="DynamicList[CGSTAmount].Operator" type="hidden" value="+"><input
+                          id="DynamicList_CGSTAmount__Acccode" name="DynamicList[CGSTAmount].Acccode" type="hidden"
+                          value="">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">CGST COLLECTED<span id="lbl_CGSTCOLLECTED"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon right">
+                        <i class="fa fa-plus"></i>
+                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="CGSTCOLLECTED">
+                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
+                          data-val-number="The field ChargeAmount must be a number."
+                          data-val-required="The ChargeAmount field is required."
+                          id="DynamicList_CGSTCOLLECTED__ChargeAmount" name="DynamicList[CGSTCOLLECTED].ChargeAmount"
+                          placeholder="CGST COLLECTED" readonly="True" type="text" value="0.00"><input
+                          id="DynamicList_CGSTCOLLECTED__ChargeCode" name="DynamicList[CGSTCOLLECTED].ChargeCode"
+                          type="hidden" value="CGSTCOLLECTED"><input id="DynamicList_CGSTCOLLECTED__Operator"
+                          name="DynamicList[CGSTCOLLECTED].Operator" type="hidden" value="+"><input
+                          id="DynamicList_CGSTCOLLECTED__Acccode" name="DynamicList[CGSTCOLLECTED].Acccode"
+                          type="hidden" value="">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+              <div class="row clsGSTApply">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">SGST(%)<span id="lbl_SGSTRate"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon right">
+                        <i class="fa fa-plus"></i>
+                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="SGSTRate">
+                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
+                          data-val-number="The field ChargeAmount must be a number."
+                          data-val-required="The ChargeAmount field is required."
+                          id="DynamicList_SGSTRate__ChargeAmount" name="DynamicList[SGSTRate].ChargeAmount"
+                          placeholder="SGST(%)" readonly="True" type="text" value="0.00"><input
+                          id="DynamicList_SGSTRate__ChargeCode" name="DynamicList[SGSTRate].ChargeCode" type="hidden"
+                          value="SGSTRate"><input id="DynamicList_SGSTRate__Operator"
+                          name="DynamicList[SGSTRate].Operator" type="hidden" value="+"><input
+                          id="DynamicList_SGSTRate__Acccode" name="DynamicList[SGSTRate].Acccode" type="hidden"
+                          value="">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">SGST ON SUB TOTAL<span id="lbl_SGSTAmount"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon right">
+                        <i class="fa fa-plus"></i>
+                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="SGSTAmount">
+                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
+                          data-val-number="The field ChargeAmount must be a number."
+                          data-val-required="The ChargeAmount field is required."
+                          id="DynamicList_SGSTAmount__ChargeAmount" name="DynamicList[SGSTAmount].ChargeAmount"
+                          placeholder="SGST ON SUB TOTAL" readonly="True" type="text" value="0.00"><input
+                          id="DynamicList_SGSTAmount__ChargeCode" name="DynamicList[SGSTAmount].ChargeCode"
+                          type="hidden" value="SGSTAmount"><input id="DynamicList_SGSTAmount__Operator"
+                          name="DynamicList[SGSTAmount].Operator" type="hidden" value="+"><input
+                          id="DynamicList_SGSTAmount__Acccode" name="DynamicList[SGSTAmount].Acccode" type="hidden"
+                          value="">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">SGST COLLECTED<span id="lbl_SGSTCOLLECTED"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon right">
+                        <i class="fa fa-plus"></i>
+                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="SGSTCOLLECTED">
+                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
+                          data-val-number="The field ChargeAmount must be a number."
+                          data-val-required="The ChargeAmount field is required."
+                          id="DynamicList_SGSTCOLLECTED__ChargeAmount" name="DynamicList[SGSTCOLLECTED].ChargeAmount"
+                          placeholder="SGST COLLECTED" readonly="True" type="text" value="0.00"><input
+                          id="DynamicList_SGSTCOLLECTED__ChargeCode" name="DynamicList[SGSTCOLLECTED].ChargeCode"
+                          type="hidden" value="SGSTCOLLECTED"><input id="DynamicList_SGSTCOLLECTED__Operator"
+                          name="DynamicList[SGSTCOLLECTED].Operator" type="hidden" value="+"><input
+                          id="DynamicList_SGSTCOLLECTED__Acccode" name="DynamicList[SGSTCOLLECTED].Acccode"
+                          type="hidden" value="">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+              <div class="row clsGSTApply">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">UTGST(%)<span id="lbl_UTGSTRate"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon right">
+                        <i class="fa fa-plus"></i>
+                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="UTGSTRate">
+                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
+                          data-val-number="The field ChargeAmount must be a number."
+                          data-val-required="The ChargeAmount field is required."
+                          id="DynamicList_UTGSTRate__ChargeAmount" name="DynamicList[UTGSTRate].ChargeAmount"
+                          placeholder="UTGST(%)" readonly="True" type="text" value="0.00"><input
+                          id="DynamicList_UTGSTRate__ChargeCode" name="DynamicList[UTGSTRate].ChargeCode" type="hidden"
+                          value="UTGSTRate"><input id="DynamicList_UTGSTRate__Operator"
+                          name="DynamicList[UTGSTRate].Operator" type="hidden" value="+"><input
+                          id="DynamicList_UTGSTRate__Acccode" name="DynamicList[UTGSTRate].Acccode" type="hidden"
+                          value="">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">UTGST ON SUB TOTAL<span id="lbl_UTGSTAmount"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon right">
+                        <i class="fa fa-plus"></i>
+                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="UTGSTAmount">
+                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
+                          data-val-number="The field ChargeAmount must be a number."
+                          data-val-required="The ChargeAmount field is required."
+                          id="DynamicList_UTGSTAmount__ChargeAmount" name="DynamicList[UTGSTAmount].ChargeAmount"
+                          placeholder="UTGST ON SUB TOTAL" readonly="True" type="text" value="0.00"><input
+                          id="DynamicList_UTGSTAmount__ChargeCode" name="DynamicList[UTGSTAmount].ChargeCode"
+                          type="hidden" value="UTGSTAmount"><input id="DynamicList_UTGSTAmount__Operator"
+                          name="DynamicList[UTGSTAmount].Operator" type="hidden" value="+"><input
+                          id="DynamicList_UTGSTAmount__Acccode" name="DynamicList[UTGSTAmount].Acccode" type="hidden"
+                          value="">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">UTGST COLLECTED<span id="lbl_UTGSTCOLLECTED"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon right">
+                        <i class="fa fa-plus"></i>
+                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="UTGSTCOLLECTED">
+                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
+                          data-val-number="The field ChargeAmount must be a number."
+                          data-val-required="The ChargeAmount field is required."
+                          id="DynamicList_UTGSTCOLLECTED__ChargeAmount" name="DynamicList[UTGSTCOLLECTED].ChargeAmount"
+                          placeholder="UTGST COLLECTED" readonly="True" type="text" value="0.00"><input
+                          id="DynamicList_UTGSTCOLLECTED__ChargeCode" name="DynamicList[UTGSTCOLLECTED].ChargeCode"
+                          type="hidden" value="UTGSTCOLLECTED"><input id="DynamicList_UTGSTCOLLECTED__Operator"
+                          name="DynamicList[UTGSTCOLLECTED].Operator" type="hidden" value="+"><input
+                          id="DynamicList_UTGSTCOLLECTED__Acccode" name="DynamicList[UTGSTCOLLECTED].Acccode"
+                          type="hidden" value="">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+            <div class="form-body clsHideCharge">
+              <div class="col-md-4 clsdis" style="display: none;">
+                <div class="form-group">
+                  <label class="control-label col-md-5">Discount(%)</label>
+                  <div class="col-md-7">
+                    <input class="form-control clsAmount" data-val="true"
+                      data-val-number="The field Discount must be a number." id="WMD_Discount" name="WMD.Discount"
+                      placeholder="Discount" type="number" value="0">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 clsdis" style="display: none;">
+                <div class="form-group">
+                  <label class="control-label col-md-5">Discount Amount</label>
+                  <div class="col-md-7">
+                    <input class="form-control clsAmount" id="WMD_DiscountAmount" name="WMD.DiscountAmount"
+                      placeholder="Discount" readonly="true" type="number" value="">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label col-md-5"><b>TOTAL</b></label>
+                  <div class="col-md-7">
+                    <input class="required2 form-control clsAmount required clsROFixed" data-val="true"
+                      data-val-number="The field DKTTOT must be a number."
+                      data-val-required="The DKTTOT field is required." id="WMDC_DKTTOT" name="WMDC.DKTTOT"
+                      placeholder="TOTAL" readonly="true" type="text" value="0" min="1">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+  
+  
+  <!-- <div class="freight-container">
+    <div class="header">📄 CNote Entry - Freight Details</div>
 
     <div class="form-row">
       <div class="form-group">
@@ -54,7 +1560,6 @@
     <div class="section-title">Charges Details</div>
 
     <div class="charges-grid">
-      <!-- Column 1 -->
       <div class="charges-column">
         <div class="control-label"><label>TO PAY CHARGES</label><div><input type="number" value="0.00" /><button>+</button></div></div>
         <div class="control-label"><label>Extra Handling Charges</label><div><input type="number" value="0.00" /><button>+</button></div></div>
@@ -64,7 +1569,6 @@
         <div class="control-label"><label>Detention Charges (After 12 hrs)</label><div><input type="number" value="0.00" /><button>+</button></div></div>
       </div>
 
-      <!-- Column 2 -->
       <div class="charges-column">
         <div class="control-label"><label>Document Charges</label><div><input type="number" value="0.00" /><button>+</button></div></div>
         <div class="control-label"><label>ODA Charges</label><div><input type="number" value="0" /><button>+</button></div></div>
@@ -74,7 +1578,6 @@
         <div class="control-label"><label>West Bengal Delivery Charges</label><div><input type="number" value="0.00" /><button>+</button></div></div>
       </div>
 
-      <!-- Column 3 -->
       <div class="charges-column">
         <div class="control-label"><label>SUB-TOTAL</label><input type="number" value="0.00" disabled /></div>
         <div class="control-label"><label>GST Rate</label><select><option>18</option></select></div>
@@ -84,4 +1587,4 @@
         <div class="control-label"><label>SGST ON SUB TOTAL</label><input type="number" value="0" /></div>
       </div>
     </div>
-  </div>
+  </div> -->
