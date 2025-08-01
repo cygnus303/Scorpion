@@ -4,7 +4,7 @@
         CNote Entry - Basic Details
     </div>
     <div class="form-grid p-4">
-        <form>
+        <form [formGroup]="basicDetailForm">
             <div class="row">
                 <div class="col-md-4 form-column ">
                     <div class="form-group">
@@ -21,7 +21,7 @@
                     <div class="form-group">
                         <label class="col-md-5">EwayBill Number</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="EwayBill Number" />
+                            <input type="text" class="form-control " placeholder="EwayBill Number" formControlName="ewayBillNo"/>
                         </div>
                     </div>
                 </div>
@@ -29,12 +29,12 @@
             <div class="row">
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">CNote No</label>
-                        <div class="col-md-7"><input type="text" class="form-control" placeholder="CNote No"/></div>
+                        <div class="col-md-7"><input type="text" class="form-control" placeholder="CNote No" formControlName="cNoteNo"/></div>
                     </div>
                 </div>
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">CNote Date</label>
-                        <div class="col-md-7"><input type="date" class="form-control required2" placeholder="CNote Date"/></div>
+                        <div class="col-md-7"><input type="date" class="form-control required2" placeholder="CNote Date" formControlName="cNoteDate"/></div>
                     </div>
                 </div>
             </div>
@@ -43,101 +43,117 @@
                     <div class="form-group"><label class="col-md-5">Billing Type</label>
                         <div class="col-md-7">
                             <ng-select class="required2 control-select" [items]="billingTypeData" bindLabel="codeDesc" bindValue="codeId"
-                                placeholder="Select Billing Type">
+                                placeholder="Select Billing Type" formControlName="billingType">
                             </ng-select>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">Pincode</label>
-                        <div class="col-md-7"><select class="form-control required2" placeholder="Pincode"></select></div>
+                        <div class="col-md-7"><select class="form-control required2" placeholder="Pincode" formControlName="pincode"></select></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-column ">
+                    <div class="form-group"><label class="col-md-5">Billing Party</label>
+                        <div class="col-md-7">
+                            <ng-select class="required2 control-select"  bindLabel="codeDesc" bindValue="codeId" (input)="onBillingPartyChange($event)"
+                                placeholder="Select Billing Party" formControlName="billingParty">
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column ">
+                    <div class="form-group"><label class="col-md-5">Billing Name</label>
+                        <div class="col-md-7"><select class="form-control required2" placeholder="Billing Name" formControlName="billingName"></select></div>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">Origin</label>
-                        <div class="col-md-7"><input type="text" disabled value="HQTR" class="form-control"  placeholder="Origin"/></div>
+                        <div class="col-md-7"><input type="text"  value="HQTR" class="form-control"  placeholder="Origin" formControlName="origin" readonly/></div>
                     </div>
                 </div>
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">Origin State Name</label>
-                        <div class="col-md-7"><input type="text" disabled class="form-control required2"  placeholder="Origin State Name"/></div>
+                        <div class="col-md-7"><input type="text"  class="form-control required2"  placeholder="Origin State Name" formControlName="originState" readonly/></div>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">Destination</label>
-                        <div class="col-md-7"><input type="text" class="form-control required2"  placeholder="Destination"/></div>
+                        <div class="col-md-7"><input type="text" class="form-control required2"  placeholder="Destination" formControlName="destination"/></div>
                     </div>
                 </div>
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">Dest State Name</label>
-                        <div class="col-md-7"><input type="text" disabled class="form-control required2"  placeholder="Dest State Name"/></div>
+                        <div class="col-md-7"><input type="text" class="form-control required2"  placeholder="Dest State Name" formControlName="destinationState" readonly/></div>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">Transit Mode</label>
-                        <div class="col-md-7"><select class="form-control required2" placeholder="Transit Mode"></select></div>
+                        <div class="col-md-7"><select class="form-control required2" placeholder="Transit Mode" formControlName="mode"></select></div>
                     </div>
                 </div>
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">From City</label>
-                        <div class="col-md-7"><select class="form-control required2" placeholder="From City"></select></div>
+                        <div class="col-md-7"><select class="form-control required2" placeholder="From City" formControlName="fromCity"></select></div>
                     </div>
                 </div>
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">To City</label>
-                        <div class="col-md-7"><input type="text" class="form-control required2" placeholder="To City"/></div>
+                        <div class="col-md-7"><input type="text" class="form-control required2" placeholder="To City" formControlName="toCity"/></div>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">Pickup/Delivery</label>
-                        <div class="col-md-7"><select class="form-control required2" placeholder="Pickup/Delivery"></select></div>
+                        <div class="col-md-7"><select class="form-control required2" placeholder="Pickup/Delivery" formControlName="pickup"></select></div>
                     </div>
                 </div>
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">Service Type</label>
-                        <div class="col-md-7"><select class="form-control required2" placeholder="Service Type"></select></div>
+                        <div class="col-md-7"><select class="form-control required2" placeholder="Service Type" formControlName="serviceType"></select></div>
                     </div>
                 </div>
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">Type of Movement</label>
-                        <div class="col-md-7"><select class="form-control" placeholder="Type of Movement"></select></div>
+                        <div class="col-md-7"><select class="form-control" placeholder="Type of Movement" formControlName="typeMovement"></select></div>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">Contents</label>
-                        <div class="col-md-7"><input type="text" class="form-control required2" placeholder="Contents"/></div>
+                        <div class="col-md-7"><input type="text" class="form-control required2" placeholder="Contents" formControlName="contents"/></div>
                     </div>
                 </div>
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">Packaging Type</label>
-                        <div class="col-md-7"><select class="form-control required2" placeholder="Packaging Type"></select></div>
+                        <div class="col-md-7"><select class="form-control required2" placeholder="Packaging Type" formControlName="packingType"></select></div>
                     </div>
                 </div>
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">Business Type</label>
-                        <div class="col-md-7"><select class="form-control required2" placeholder="Business Type"></select></div>
+                        <div class="col-md-7"><select class="form-control required2" placeholder="Business Type" formControlName="businessType"></select></div>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">Special Instruction</label>
-                        <div class="col-md-7"><textarea class="form-control"  placeholder="Special Instruction"></textarea></div>
+                        <div class="col-md-7"><textarea class="form-control"  placeholder="Special Instruction" formControlName="specialInstruction"></textarea></div>
                     </div>
                 </div>
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">Exempt Services</label>
-                        <div class="col-md-7"><select class="form-control"  placeholder="Exempt Services"></select></div>
+                        <div class="col-md-7"><select class="form-control"  placeholder="Exempt Services" formControlName="exemptServices"></select></div>
                     </div>
                 </div>
             </div>
@@ -147,7 +163,7 @@
                         <label for="refDkt" class="col-md-5">Apply Reference DKT</label>
                         <div class="col-md-7 text-start">
                             <label class="yes-no">
-                                <input type="checkbox"><span class="slider"></span>
+                                <input type="checkbox" formControlName="referenceDKT"><span class="slider"></span>
                             </label>
                         </div>
                     </div>
@@ -156,12 +172,12 @@
             <div class="row">
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">Sac Code</label>
-                        <div class="col-md-7"><input type="text" class="form-control"  placeholder="Sac Code"/></div>
+                        <div class="col-md-7"><input type="text" class="form-control"  placeholder="Sac Code" formControlName="sacCode"/></div>
                     </div>
                 </div>
                 <div class="col-md-4 form-column ">
                     <div class="form-group"><label class="col-md-5">Sac Code Description</label>
-                        <div class="col-md-7"><input type="text" disabled class="form-control" placeholder="Sac Code Description"/></div>
+                        <div class="col-md-7"><input type="text"  class="form-control" placeholder="Sac Code Description" formControlName="sacDescription" readonly/></div>
                     </div>
                 </div>
             </div>
@@ -171,7 +187,7 @@
                         <label for="appointment" class="col-md-5">Appointment Delivery</label>
                         <div class="col-md-7 text-start">
                             <label class="yes-no">
-                                <input type="checkbox"><span class="slider"></span>
+                                <input type="checkbox" formControlName="appointmentDelivery"><span class="slider"></span>
                             </label>
                         </div>
                     </div>
@@ -181,7 +197,7 @@
                         <label for="CSD" class="col-md-5">CSD Delivery</label>
                         <div class="col-md-7 text-start">
                             <label class="yes-no">
-                                <input type="checkbox"><span class="slider"></span>
+                                <input type="checkbox" formControlName="csdDelivery"><span class="slider"></span>
                             </label>
                         </div>
                     </div>
@@ -193,7 +209,7 @@
                         <label for="ODA" class="col-md-5">ODA Applicable</label>
                         <div class="col-md-7 text-start">
                             <label class="yes-no">
-                                <input type="checkbox"><span class="slider"></span>
+                                <input type="checkbox" formControlName="ODAApplicable"><span class="slider"></span>
                             </label>
                         </div>
                     </div>
@@ -203,7 +219,7 @@
                     <div class="form-group">
                         <label class="control-label col-md-5 text-primary bold">Is Local CNote?</label>
                         <div class="col-md-2 chkactive">
-                            <input type="checkbox" />
+                            <input type="checkbox" formControlName="localNote"/>
                         </div>
                         <div class="col-md-4 text-danger bold" style="margin-top:5px;">(Same Origin-Destination)</div>
                     </div>
@@ -216,25 +232,25 @@
                         <div class="col-md-3 form-column">
                             <div class="form-group"><label class="col-md-5">Appointment</label>
                                 <div class="col-md-5"><input type="text" placeholder="Appointment"
-                                        class="form-control col-md-5" /></div>
+                                        class="form-control col-md-5" formControlName="appointmentDetails"/></div>
                             </div>
                         </div>
                         <div class="col-md-3 form-column">
                             <div class="form-group"><label class="col-md-5"> Name Of Person</label>
                                 <div class="col-md-5"><input type="text" class="form-control col-md-5"
-                                        placeholder="Name Of Person" /></div>
+                                        placeholder="Name Of Person" formControlName="personName"/></div>
                             </div>
                         </div>
                         <div class="col-md-3 form-column">
                             <div class="form-group"><label class="col-md-5"> Contact Number</label>
                                 <div class="col-md-5"><input type="text" class="form-control col-md-5"
-                                        placeholder="Contact Number" /></div>
+                                        placeholder="Contact Number" formControlName="contactNo"/></div>
                             </div>
                         </div>
                         <div class="col-md-3 form-column">
                             <div class="form-group"><label class="col-md-5"> Remarks</label>
                                 <div class="col-md-5"><input type="text" placeholder="Remarks"
-                                        class="form-control col-md-5" /></div>
+                                        class="form-control col-md-5" formControlName="remarks"/></div>
                             </div>
                         </div>
                     </div>
@@ -242,12 +258,12 @@
                         <div class="col-md-3 form-column">
                             <div class="form-group"><label class="col-md-5"> From Time</label>
                                 <div class="col-md-5"><input type="time" placeholder="From Time"
-                                        class="form-control col-md-5" /></div>
+                                        class="form-control col-md-5" formControlName="fromTime"/></div>
                             </div>
                         </div>
                         <div class="col-md-3 form-column">
                             <div class="form-group"><label class="col-md-5"> To Time</label>
-                                <div class="col-md-5"><input type="time" placeholder="To Time" class="form-control " />
+                                <div class="col-md-5"><input type="time" placeholder="To Time" class="form-control " formControlName="toTime"/>
                                 </div>
                             </div>
                         </div>

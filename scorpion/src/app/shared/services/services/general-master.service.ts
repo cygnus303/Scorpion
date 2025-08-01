@@ -14,4 +14,8 @@ export class GeneralMasterService {
     getBillingTypeList(codeType:string): Observable<IApiBaseResponse<billingTypeResponse[]>> {
     return this.apiHandlerService.Get(`Master/GetGeneralMasterData?CodeType=${codeType}`);
   }
+
+    getBillingParty(searchTerm:string,location:string,paybs:string): Observable<IApiBaseResponse<any[]>> {
+    return this.apiHandlerService.Get(`Master/GetCustomerList?Search=${searchTerm}&Location=${location}&Paybas=${paybs}`);
+  }
 }
