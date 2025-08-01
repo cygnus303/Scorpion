@@ -1,1 +1,67 @@
-<p>invoice-details works!</p>
+<div class="invoice-section">
+  <div class="header">
+    <label>
+      <input type="checkbox" /> CNote Entry - Invoice Details
+    </label>
+  </div>
+
+  <div class="row-input">
+    <label>No Of Rows</label>
+    <input type="number" [(ngModel)]="noOfRows" min="1" />
+    <button class="add-btn" (click)="addRows()">+ Add New Row</button>
+  </div>
+
+  <table class="invoice-table">
+    <thead>
+      <tr>
+        <th>Sr. No.</th>
+        <th>E-Way Bill No</th>
+        <th>E-Way Bill Expiry Date</th>
+        <th>E-Way Bill Invoice Date</th>
+        <th>Invoice No</th>
+        <th>Invoice Date</th>
+        <th>Declared Value</th>
+        <th>No of Pkgs.</th>
+        <th>Actual Weight</th>
+        <th>X</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of invoiceRows; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td><input type="text" placeholder="E-Way Bill No" /></td>
+        <td><input type="text" placeholder="dd MM yyyy" /></td>
+        <td><input type="text" placeholder="dd MM yyyy" /></td>
+        <td><input type="text" placeholder="Invoice No" /></td>
+        <td><input type="text" value="31 Jul 2025" readonly /></td>
+        <td><input type="number" value="0" /></td>
+        <td><input type="number" value="0" /></td>
+        <td><input type="number" value="0" /></td>
+        <td>
+          <span class="remove-btn" (click)="removeRow(i)" *ngIf="invoiceRows.length > 1">X</span>
+        </td>
+      </tr>
+      <tr class="fixed-row">
+    <td colspan="1"><input type="text" disabled/></td>
+    <td colspan="1"><input type="text" disabled/></td>
+    <td colspan="1"><input type="text" disabled/></td>
+    <td colspan="1"><input type="text" disabled/></td>
+    <td colspan="1"><input type="text" disabled/></td>
+    <td colspan="1"><input type="text" disabled/></td>
+    <td colspan="1"><input type="number" value="0" /></td>
+    <td colspan="1"><input type="number" value="0" /></td>
+    <td colspan="1"><input type="number" value="0" /></td>
+
+  </tr>
+
+  <!-- ✅ 2nd Fixed Row -->
+  <tr class="fixed-row">
+    <td colspan="3"><input type="text" disabled/></td>
+    <td colspan="3"><input type="text" disabled/></td>
+    <td colspan="1" class="text-right"><b>Charge Weight/Pkgs.</b></td>
+    <td colspan="1"><input type="number" value="0" /></td>
+    <td colspan="1"><input type="number" value="0" /></td>
+  </tr>
+    </tbody>
+  </table>
+</div>

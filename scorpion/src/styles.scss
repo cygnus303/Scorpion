@@ -15,6 +15,53 @@
     border-radius: 4px 4px 0 0;
   }
 
+  .ng-select {
+    display: block; // Ensure it takes up its own line
+    width: 100%; // Full width of the container
+
+    &.ng-select-multiple {
+        .ng-value {
+          display: inline-flex; // Inline layout for text and icon
+          align-items: center; // Align items vertically
+          background-color: #f8f9fa; // Light gray background
+          border: 1px solid #007bff; // Blue border
+          border-radius: 4px; // Rounded corners
+          padding: 5px 8px; // Padding for each ng-value
+          margin-right: 8px; // Margin between selected items
+          margin-bottom: 8px; // Add margin to prevent overlapping rows
+    
+          // Ensure the remove icon is after the text
+          .ng-value-icon {
+            color: #007bff;
+            cursor: pointer;
+    
+            &:hover {
+              color: #dc3545; // Red color on hover
+            }
+          }
+        }
+      }
+      
+    .ng-select-container {
+        padding: 0.375rem 0.75rem; // Bootstrap default padding
+        border-radius: 0.25rem; // Rounded borders
+        border: 1px solid #eeeeee; // Consistent border with Bootstrap styles
+        position: relative; // Ensure dropdown is positioned relative to this
+    }
+  }
+
+    .ng-option {
+        padding: 0.5rem; // Ensure spacing within each option
+        white-space: nowrap; // Prevent text wrapping
+        overflow: hidden; // Hide any overflowing content
+        text-overflow: ellipsis; // Show ellipsis for long text
+    }
+
+    .ng-select-searchable input {
+        padding: 0.375rem 0.75rem; // Consistent padding for the search input
+        font-size: 1rem; // Consistent font size with Bootstrap
+    }
+
   .form-grid {
       form{
          display: flex;
@@ -25,30 +72,44 @@
            display: flex;
            flex-direction: column;
            gap: 10px;
-     
-        .form-group {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-        
-                label {
-                    width: 160px; // You can adjust based on label size
-                        text-align: right;
-                        margin-right: 12px;
-                        font-weight: 500;
-                        font-size: 13px;
-                }
-        
-                input,
-                select,
-                textarea {
-                    flex: 1;
-                    padding: 6px 10px;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    font-size: 13px;
-                }
-            }
+     .form-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  label {
+    width: 160px;
+    text-align: right;
+    margin-right: 12px;
+    font-weight: 500;
+    font-size: 13px;
+  }
+
+  // This targets native input/select/textarea but NOT ng-select properly
+  input,
+  select,
+  textarea {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+
+  // ✅ This correctly targets ng-select's internal element
+  ng-select {
+    flex: 1;
+
+    ::ng-deep .ng-select-container {
+      height: 32px;
+      font-size: 13px;
+      padding: 2px 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  }
+}
+
 
      
            .radio-group {
