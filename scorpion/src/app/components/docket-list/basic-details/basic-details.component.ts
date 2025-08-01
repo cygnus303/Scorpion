@@ -24,7 +24,6 @@ getBillingTypeData(){
   this.generalMasterService.getBillingTypeList('PAYTYP').subscribe({
       next: (response) => {
         if (response.status===200) {
-          
           this.billingTypeData=response.data;
         }
       },
