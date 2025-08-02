@@ -171,7 +171,6 @@
 
               <h3 class="pb-4 text-start appointment mt-5">Charges Details</h3>
 
-            <div >
               <div class="col-md-4">
                 <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">TO PAY CHARGES</label>
@@ -194,11 +193,10 @@
 
 
               <div class="col-md-4">
-
                 <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Other Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                    <div class="input-icon">
                     <input
                         type="text"
                         class="form-control clsAmount required2"
@@ -211,16 +209,15 @@
                       <i class="fas fa-plus"></i>
                     </div>
                   </div>
-
                 </div>
-
               </div>
+
               <div class="col-md-4">
 
                 <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Document Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                    <div class="input-icon">
                      <input
                         type="text"
                         class="form-control clsAmount required2"
@@ -237,51 +234,45 @@
                 </div>
 
               </div>
-            </div>
+
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Extra Handling Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                    <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Extra Handling Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG05">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_SCHG05__ChargeAmount" name="DocketChargesList[SCHG05].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Extra Handling Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_SCHG05__ChargeCode" name="DocketChargesList[SCHG05].ChargeCode"
-                        type="hidden" value="SCHG05"><input id="DocketChargesList_SCHG05__Operator"
-                        name="DocketChargesList[SCHG05].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_SCHG05__Acccode" name="DocketChargesList[SCHG05].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
                 </div>
 
               </div>
-              <div class="col-md-4">
 
-                <div class="form-group">
+              <div class="col-md-4">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Special Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                   <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Special Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG06">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_SCHG06__ChargeAmount" name="DocketChargesList[SCHG06].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Special Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_SCHG06__ChargeCode" name="DocketChargesList[SCHG06].ChargeCode"
-                        type="hidden" value="SCHG06"><input id="DocketChargesList_SCHG06__Operator"
-                        name="DocketChargesList[SCHG06].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_SCHG06__Acccode" name="DocketChargesList[SCHG06].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -290,23 +281,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">ODA Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                  <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="ODA Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG08">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_SCHG08__ChargeAmount" name="DocketChargesList[SCHG08].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="ODA Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_SCHG08__ChargeCode" name="DocketChargesList[SCHG08].ChargeCode"
-                        type="hidden" value="SCHG08"><input id="DocketChargesList_SCHG08__Operator"
-                        name="DocketChargesList[SCHG08].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_SCHG08__Acccode" name="DocketChargesList[SCHG08].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -315,23 +303,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Covid Surcharge </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                   <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Covid Surcharge"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG09">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_SCHG09__ChargeAmount" name="DocketChargesList[SCHG09].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Covid Surcharge" type="text" value="0.00"><input
-                        id="DocketChargesList_SCHG09__ChargeCode" name="DocketChargesList[SCHG09].ChargeCode"
-                        type="hidden" value="SCHG09"><input id="DocketChargesList_SCHG09__Operator"
-                        name="DocketChargesList[SCHG09].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_SCHG09__Acccode" name="DocketChargesList[SCHG09].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -340,23 +325,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">CSD Delivery Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="CSD Delivery Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG10">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_SCHG10__ChargeAmount" name="DocketChargesList[SCHG10].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="CSD Delivery Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_SCHG10__ChargeCode" name="DocketChargesList[SCHG10].ChargeCode"
-                        type="hidden" value="SCHG10"><input id="DocketChargesList_SCHG10__Operator"
-                        name="DocketChargesList[SCHG10].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_SCHG10__Acccode" name="DocketChargesList[SCHG10].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -365,23 +347,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Demmurage Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                 <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Demmurage Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG14">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_SCHG14__ChargeAmount" name="DocketChargesList[SCHG14].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Demmurage Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_SCHG14__ChargeCode" name="DocketChargesList[SCHG14].ChargeCode"
-                        type="hidden" value="SCHG14"><input id="DocketChargesList_SCHG14__Operator"
-                        name="DocketChargesList[SCHG14].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_SCHG14__Acccode" name="DocketChargesList[SCHG14].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -390,23 +369,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Physical POD </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                   <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Physical POD"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG15">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_SCHG15__ChargeAmount" name="DocketChargesList[SCHG15].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Physical POD" type="text" value="0.00"><input
-                        id="DocketChargesList_SCHG15__ChargeCode" name="DocketChargesList[SCHG15].ChargeCode"
-                        type="hidden" value="SCHG15"><input id="DocketChargesList_SCHG15__Operator"
-                        name="DocketChargesList[SCHG15].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_SCHG15__Acccode" name="DocketChargesList[SCHG15].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -415,23 +391,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Cartage Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                   <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Cartage Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG16">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_SCHG16__ChargeAmount" name="DocketChargesList[SCHG16].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Cartage Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_SCHG16__ChargeCode" name="DocketChargesList[SCHG16].ChargeCode"
-                        type="hidden" value="SCHG16"><input id="DocketChargesList_SCHG16__Operator"
-                        name="DocketChargesList[SCHG16].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_SCHG16__Acccode" name="DocketChargesList[SCHG16].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -440,23 +413,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Mall Delivery Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                  <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Mall Delivery Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG17">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_SCHG17__ChargeAmount" name="DocketChargesList[SCHG17].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Mall Delivery Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_SCHG17__ChargeCode" name="DocketChargesList[SCHG17].ChargeCode"
-                        type="hidden" value="SCHG17"><input id="DocketChargesList_SCHG17__Operator"
-                        name="DocketChargesList[SCHG17].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_SCHG17__Acccode" name="DocketChargesList[SCHG17].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -465,23 +435,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Extra Delivery Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                    <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Extra Delivery Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG18">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_SCHG18__ChargeAmount" name="DocketChargesList[SCHG18].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Extra Delivery Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_SCHG18__ChargeCode" name="DocketChargesList[SCHG18].ChargeCode"
-                        type="hidden" value="SCHG18"><input id="DocketChargesList_SCHG18__Operator"
-                        name="DocketChargesList[SCHG18].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_SCHG18__Acccode" name="DocketChargesList[SCHG18].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -490,23 +457,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Late Delivery </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Late Delivery"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG19">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_SCHG19__ChargeAmount" name="DocketChargesList[SCHG19].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Late Delivery" type="text" value="0.00"><input
-                        id="DocketChargesList_SCHG19__ChargeCode" name="DocketChargesList[SCHG19].ChargeCode"
-                        type="hidden" value="SCHG19"><input id="DocketChargesList_SCHG19__Operator"
-                        name="DocketChargesList[SCHG19].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_SCHG19__Acccode" name="DocketChargesList[SCHG19].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -515,23 +479,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">FuelSurcharge Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                    <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="FuelSurcharge Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG20">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_SCHG20__ChargeAmount" name="DocketChargesList[SCHG20].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="FuelSurcharge Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_SCHG20__ChargeCode" name="DocketChargesList[SCHG20].ChargeCode"
-                        type="hidden" value="SCHG20"><input id="DocketChargesList_SCHG20__Operator"
-                        name="DocketChargesList[SCHG20].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_SCHG20__Acccode" name="DocketChargesList[SCHG20].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -540,23 +501,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Detention Charges (Applicable After 12 hrs) </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Detention Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG21">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_SCHG21__ChargeAmount" name="DocketChargesList[SCHG21].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Detention Charges (Applicable After 12 hrs)" type="text" value="0.00"><input
-                        id="DocketChargesList_SCHG21__ChargeCode" name="DocketChargesList[SCHG21].ChargeCode"
-                        type="hidden" value="SCHG21"><input id="DocketChargesList_SCHG21__Operator"
-                        name="DocketChargesList[SCHG21].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_SCHG21__Acccode" name="DocketChargesList[SCHG21].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -565,23 +523,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Varai Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Varai Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG22">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_SCHG22__ChargeAmount" name="DocketChargesList[SCHG22].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Varai Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_SCHG22__ChargeCode" name="DocketChargesList[SCHG22].ChargeCode"
-                        type="hidden" value="SCHG22"><input id="DocketChargesList_SCHG22__Operator"
-                        name="DocketChargesList[SCHG22].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_SCHG22__Acccode" name="DocketChargesList[SCHG22].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -590,23 +545,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">West Bengal Delivery Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Varai Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG23">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_SCHG23__ChargeAmount" name="DocketChargesList[SCHG23].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="West Bengal Delivery Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_SCHG23__ChargeCode" name="DocketChargesList[SCHG23].ChargeCode"
-                        type="hidden" value="SCHG23"><input id="DocketChargesList_SCHG23__Operator"
-                        name="DocketChargesList[SCHG23].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_SCHG23__Acccode" name="DocketChargesList[SCHG23].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -615,23 +567,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Diesel Hike (Additional FSC) </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                 <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Diesel Hike (Additional FSC)"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG24">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_SCHG24__ChargeAmount" name="DocketChargesList[SCHG24].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Diesel Hike (Additional FSC)" type="text" value="0.00"><input
-                        id="DocketChargesList_SCHG24__ChargeCode" name="DocketChargesList[SCHG24].ChargeCode"
-                        type="hidden" value="SCHG24"><input id="DocketChargesList_SCHG24__Operator"
-                        name="DocketChargesList[SCHG24].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_SCHG24__Acccode" name="DocketChargesList[SCHG24].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -640,23 +589,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Green Tax Charges Booking </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                    <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Green Tax Charges Booking"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG25">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_SCHG25__ChargeAmount" name="DocketChargesList[SCHG25].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Green Tax Charges Booking" type="text" value="0.00"><input
-                        id="DocketChargesList_SCHG25__ChargeCode" name="DocketChargesList[SCHG25].ChargeCode"
-                        type="hidden" value="SCHG25"><input id="DocketChargesList_SCHG25__Operator"
-                        name="DocketChargesList[SCHG25].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_SCHG25__Acccode" name="DocketChargesList[SCHG25].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -665,23 +611,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">In Sikkim Sikkim Tax (SNT) Delivery </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                    <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="In Sikkim Sikkim Tax"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="SCHG28">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_SCHG28__ChargeAmount" name="DocketChargesList[SCHG28].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="In Sikkim Sikkim Tax (SNT) Delivery" type="text" value="0.00"><input
-                        id="DocketChargesList_SCHG28__ChargeCode" name="DocketChargesList[SCHG28].ChargeCode"
-                        type="hidden" value="SCHG28"><input id="DocketChargesList_SCHG28__Operator"
-                        name="DocketChargesList[SCHG28].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_SCHG28__Acccode" name="DocketChargesList[SCHG28].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -690,23 +633,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">For Kerala Charges Delivery </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                    <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="For Kerala Charges Delivery"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG01">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_UCHG01__ChargeAmount" name="DocketChargesList[UCHG01].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="For Kerala Charges Delivery" type="text" value="0.00"><input
-                        id="DocketChargesList_UCHG01__ChargeCode" name="DocketChargesList[UCHG01].ChargeCode"
-                        type="hidden" value="UCHG01"><input id="DocketChargesList_UCHG01__Operator"
-                        name="DocketChargesList[UCHG01].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_UCHG01__Acccode" name="DocketChargesList[UCHG01].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -715,23 +655,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Unloading Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                    <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Unloading Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG02">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_UCHG02__ChargeAmount" name="DocketChargesList[UCHG02].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Unloading Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_UCHG02__ChargeCode" name="DocketChargesList[UCHG02].ChargeCode"
-                        type="hidden" value="UCHG02"><input id="DocketChargesList_UCHG02__Operator"
-                        name="DocketChargesList[UCHG02].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_UCHG02__Acccode" name="DocketChargesList[UCHG02].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -740,23 +677,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">For J &amp; K Charges Delivery </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                    <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="For J K Charges Delivery"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG03">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_UCHG03__ChargeAmount" name="DocketChargesList[UCHG03].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="For J &amp; K Charges Delivery" type="text" value="0.00"><input
-                        id="DocketChargesList_UCHG03__ChargeCode" name="DocketChargesList[UCHG03].ChargeCode"
-                        type="hidden" value="UCHG03"><input id="DocketChargesList_UCHG03__Operator"
-                        name="DocketChargesList[UCHG03].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_UCHG03__Acccode" name="DocketChargesList[UCHG03].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -765,23 +699,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Loading Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Loading Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG04">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_UCHG04__ChargeAmount" name="DocketChargesList[UCHG04].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Loading Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_UCHG04__ChargeCode" name="DocketChargesList[UCHG04].ChargeCode"
-                        type="hidden" value="UCHG04"><input id="DocketChargesList_UCHG04__Operator"
-                        name="DocketChargesList[UCHG04].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_UCHG04__Acccode" name="DocketChargesList[UCHG04].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -790,23 +721,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Loading Detention Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Loading Detention Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG05">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_UCHG05__ChargeAmount" name="DocketChargesList[UCHG05].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Loading Detention Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_UCHG05__ChargeCode" name="DocketChargesList[UCHG05].ChargeCode"
-                        type="hidden" value="UCHG05"><input id="DocketChargesList_UCHG05__Operator"
-                        name="DocketChargesList[UCHG05].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_UCHG05__Acccode" name="DocketChargesList[UCHG05].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -815,23 +743,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Green Tax Charges Delivery </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Green Tax Charges Delivery"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG06">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_UCHG06__ChargeAmount" name="DocketChargesList[UCHG06].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Green Tax Charges Delivery" type="text" value="0.00"><input
-                        id="DocketChargesList_UCHG06__ChargeCode" name="DocketChargesList[UCHG06].ChargeCode"
-                        type="hidden" value="UCHG06"><input id="DocketChargesList_UCHG06__Operator"
-                        name="DocketChargesList[UCHG06].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_UCHG06__Acccode" name="DocketChargesList[UCHG06].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -840,23 +765,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Pickup Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Pickup Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG07">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_UCHG07__ChargeAmount" name="DocketChargesList[UCHG07].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Pickup Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_UCHG07__ChargeCode" name="DocketChargesList[UCHG07].ChargeCode"
-                        type="hidden" value="UCHG07"><input id="DocketChargesList_UCHG07__Operator"
-                        name="DocketChargesList[UCHG07].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_UCHG07__Acccode" name="DocketChargesList[UCHG07].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -865,23 +787,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Appointment Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Appointment Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG08">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_UCHG08__ChargeAmount" name="DocketChargesList[UCHG08].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Appointment Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_UCHG08__ChargeCode" name="DocketChargesList[UCHG08].ChargeCode"
-                        type="hidden" value="UCHG08"><input id="DocketChargesList_UCHG08__Operator"
-                        name="DocketChargesList[UCHG08].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_UCHG08__Acccode" name="DocketChargesList[UCHG08].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -890,23 +809,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Second Attempt Delivery Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Second Attempt Delivery Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG09">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_UCHG09__ChargeAmount" name="DocketChargesList[UCHG09].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Second Attempt Delivery Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_UCHG09__ChargeCode" name="DocketChargesList[UCHG09].ChargeCode"
-                        type="hidden" value="UCHG09"><input id="DocketChargesList_UCHG09__Operator"
-                        name="DocketChargesList[UCHG09].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_UCHG09__Acccode" name="DocketChargesList[UCHG09].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -915,23 +831,21 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">For North East </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                    <i class="fas fa-plus"></i>
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="For North East"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG10">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_UCHG10__ChargeAmount" name="DocketChargesList[UCHG10].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="For North East" type="text" value="0.00"><input
-                        id="DocketChargesList_UCHG10__ChargeCode" name="DocketChargesList[UCHG10].ChargeCode"
-                        type="hidden" value="UCHG10"><input id="DocketChargesList_UCHG10__Operator"
-                        name="DocketChargesList[UCHG10].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_UCHG10__Acccode" name="DocketChargesList[UCHG10].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -940,23 +854,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Multipickup Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Multipickup Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG11">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_UCHG11__ChargeAmount" name="DocketChargesList[UCHG11].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Multipickup Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_UCHG11__ChargeCode" name="DocketChargesList[UCHG11].ChargeCode"
-                        type="hidden" value="UCHG11"><input id="DocketChargesList_UCHG11__Operator"
-                        name="DocketChargesList[UCHG11].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_UCHG11__Acccode" name="DocketChargesList[UCHG11].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -965,23 +876,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">Multidelivery Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Multidelivery Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG12">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_UCHG12__ChargeAmount" name="DocketChargesList[UCHG12].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="Multidelivery Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_UCHG12__ChargeCode" name="DocketChargesList[UCHG12].ChargeCode"
-                        type="hidden" value="UCHG12"><input id="DocketChargesList_UCHG12__Operator"
-                        name="DocketChargesList[UCHG12].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_UCHG12__Acccode" name="DocketChargesList[UCHG12].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -990,23 +898,20 @@
               </div>
               <div class="col-md-4">
 
-                <div class="form-group">
+                <div class="form-group to-pay-group">
                   <label class="control-label col-md-5">DPH Billing Charges </label>
                   <div class="col-md-7">
-                    <div class="input-icon right">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="DPH Billing Charges "
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
                       <i class="fas fa-plus"></i>
-                      <input type="hidden" name="DocketChargesList.index" autocomplete="off" value="UCHG13">
-                      <input class="required2 clsAmount form-control required clsDKTCharge cls_Set_Remove_Zero"
-                        data-val="true" data-val-number="The field ChargeAmount must be a number."
-                        data-val-required="The ChargeAmount field is required."
-                        id="DocketChargesList_UCHG13__ChargeAmount" name="DocketChargesList[UCHG13].ChargeAmount"
-                        onkeypress="javascript:return validFloat(event,this.getAttribute('id'))"
-                        placeholder="DPH Billing Charges" type="text" value="0.00"><input
-                        id="DocketChargesList_UCHG13__ChargeCode" name="DocketChargesList[UCHG13].ChargeCode"
-                        type="hidden" value="UCHG13"><input id="DocketChargesList_UCHG13__Operator"
-                        name="DocketChargesList[UCHG13].Operator" type="hidden" value="+"><input
-                        id="DocketChargesList_UCHG13__Acccode" name="DocketChargesList[UCHG13].Acccode" type="hidden"
-                        value="">
                     </div>
                   </div>
 
@@ -1045,23 +950,21 @@
 
               <div class="row clsGSTApply">
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="form-group to-pay-group">
                     <label class="control-label col-md-5">IGST(%)<span id="lbl_IGSTRate"></span></label>
                     <div class="col-md-7">
-                      <div class="input-icon right">
-                        <i class="fas fa-plus"></i>
-                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="IGSTRate">
-                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
-                          data-val-number="The field ChargeAmount must be a number."
-                          data-val-required="The ChargeAmount field is required."
-                          id="DynamicList_IGSTRate__ChargeAmount" name="DynamicList[IGSTRate].ChargeAmount"
-                          placeholder="IGST(%)" readonly="True" type="text" value="0.00"><input
-                          id="DynamicList_IGSTRate__ChargeCode" name="DynamicList[IGSTRate].ChargeCode" type="hidden"
-                          value="IGSTRate"><input id="DynamicList_IGSTRate__Operator"
-                          name="DynamicList[IGSTRate].Operator" type="hidden" value="+"><input
-                          id="DynamicList_IGSTRate__Acccode" name="DynamicList[IGSTRate].Acccode" type="hidden"
-                          value="">
-                      </div>
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="IGST(%) "
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -1069,23 +972,21 @@
 
 
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="form-group to-pay-group">
                     <label class="control-label col-md-5">IGST ON SUB TOTAL<span id="lbl_IGSTAmount"></span></label>
                     <div class="col-md-7">
-                      <div class="input-icon right">
-                        <i class="fas fa-plus"></i>
-                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="IGSTAmount">
-                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
-                          data-val-number="The field ChargeAmount must be a number."
-                          data-val-required="The ChargeAmount field is required."
-                          id="DynamicList_IGSTAmount__ChargeAmount" name="DynamicList[IGSTAmount].ChargeAmount"
-                          placeholder="IGST ON SUB TOTAL" readonly="True" type="text" value="0.00"><input
-                          id="DynamicList_IGSTAmount__ChargeCode" name="DynamicList[IGSTAmount].ChargeCode"
-                          type="hidden" value="IGSTAmount"><input id="DynamicList_IGSTAmount__Operator"
-                          name="DynamicList[IGSTAmount].Operator" type="hidden" value="+"><input
-                          id="DynamicList_IGSTAmount__Acccode" name="DynamicList[IGSTAmount].Acccode" type="hidden"
-                          value="">
-                      </div>
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="IGST ON SUB TOTAL"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -1093,23 +994,21 @@
 
 
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="form-group to-pay-group">
                     <label class="control-label col-md-5">IGST COLLECTED<span id="lbl_IGSTCOLLECTED"></span></label>
                     <div class="col-md-7">
-                      <div class="input-icon right">
-                        <i class="fas fa-plus"></i>
-                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="IGSTCOLLECTED">
-                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
-                          data-val-number="The field ChargeAmount must be a number."
-                          data-val-required="The ChargeAmount field is required."
-                          id="DynamicList_IGSTCOLLECTED__ChargeAmount" name="DynamicList[IGSTCOLLECTED].ChargeAmount"
-                          placeholder="IGST COLLECTED" readonly="True" type="text" value="0.00"><input
-                          id="DynamicList_IGSTCOLLECTED__ChargeCode" name="DynamicList[IGSTCOLLECTED].ChargeCode"
-                          type="hidden" value="IGSTCOLLECTED"><input id="DynamicList_IGSTCOLLECTED__Operator"
-                          name="DynamicList[IGSTCOLLECTED].Operator" type="hidden" value="+"><input
-                          id="DynamicList_IGSTCOLLECTED__Acccode" name="DynamicList[IGSTCOLLECTED].Acccode"
-                          type="hidden" value="">
-                      </div>
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="IGST COLLECTED "
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -1118,23 +1017,21 @@
               </div>
               <div class="row clsGSTApply">
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="form-group to-pay-group">
                     <label class="control-label col-md-5">CGST(%)<span id="lbl_CGSTRate"></span></label>
                     <div class="col-md-7">
-                      <div class="input-icon right">
-                        <i class="fas fa-plus"></i>
-                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="CGSTRate">
-                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
-                          data-val-number="The field ChargeAmount must be a number."
-                          data-val-required="The ChargeAmount field is required."
-                          id="DynamicList_CGSTRate__ChargeAmount" name="DynamicList[CGSTRate].ChargeAmount"
-                          placeholder="CGST(%)" readonly="True" type="text" value="0.00"><input
-                          id="DynamicList_CGSTRate__ChargeCode" name="DynamicList[CGSTRate].ChargeCode" type="hidden"
-                          value="CGSTRate"><input id="DynamicList_CGSTRate__Operator"
-                          name="DynamicList[CGSTRate].Operator" type="hidden" value="+"><input
-                          id="DynamicList_CGSTRate__Acccode" name="DynamicList[CGSTRate].Acccode" type="hidden"
-                          value="">
-                      </div>
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="CGST(%)"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -1142,23 +1039,21 @@
 
 
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="form-group to-pay-group">
                     <label class="control-label col-md-5">CGST ON SUB TOTAL<span id="lbl_CGSTAmount"></span></label>
                     <div class="col-md-7">
-                      <div class="input-icon right">
-                        <i class="fas fa-plus"></i>
-                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="CGSTAmount">
-                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
-                          data-val-number="The field ChargeAmount must be a number."
-                          data-val-required="The ChargeAmount field is required."
-                          id="DynamicList_CGSTAmount__ChargeAmount" name="DynamicList[CGSTAmount].ChargeAmount"
-                          placeholder="CGST ON SUB TOTAL" readonly="True" type="text" value="0.00"><input
-                          id="DynamicList_CGSTAmount__ChargeCode" name="DynamicList[CGSTAmount].ChargeCode"
-                          type="hidden" value="CGSTAmount"><input id="DynamicList_CGSTAmount__Operator"
-                          name="DynamicList[CGSTAmount].Operator" type="hidden" value="+"><input
-                          id="DynamicList_CGSTAmount__Acccode" name="DynamicList[CGSTAmount].Acccode" type="hidden"
-                          value="">
-                      </div>
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="CGST ON SUB TOTAL"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -1166,23 +1061,21 @@
 
 
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="form-group to-pay-group">
                     <label class="control-label col-md-5">CGST COLLECTED<span id="lbl_CGSTCOLLECTED"></span></label>
                     <div class="col-md-7">
-                      <div class="input-icon right">
-                        <i class="fas fa-plus"></i>
-                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="CGSTCOLLECTED">
-                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
-                          data-val-number="The field ChargeAmount must be a number."
-                          data-val-required="The ChargeAmount field is required."
-                          id="DynamicList_CGSTCOLLECTED__ChargeAmount" name="DynamicList[CGSTCOLLECTED].ChargeAmount"
-                          placeholder="CGST COLLECTED" readonly="True" type="text" value="0.00"><input
-                          id="DynamicList_CGSTCOLLECTED__ChargeCode" name="DynamicList[CGSTCOLLECTED].ChargeCode"
-                          type="hidden" value="CGSTCOLLECTED"><input id="DynamicList_CGSTCOLLECTED__Operator"
-                          name="DynamicList[CGSTCOLLECTED].Operator" type="hidden" value="+"><input
-                          id="DynamicList_CGSTCOLLECTED__Acccode" name="DynamicList[CGSTCOLLECTED].Acccode"
-                          type="hidden" value="">
-                      </div>
+                      <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="CGST COLLECTED "
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -1191,23 +1084,21 @@
               </div>
               <div class="row clsGSTApply">
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="form-group to-pay-group">
                     <label class="control-label col-md-5">SGST(%)<span id="lbl_SGSTRate"></span></label>
                     <div class="col-md-7">
-                      <div class="input-icon right">
-                        <i class="fas fa-plus"></i>
-                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="SGSTRate">
-                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
-                          data-val-number="The field ChargeAmount must be a number."
-                          data-val-required="The ChargeAmount field is required."
-                          id="DynamicList_SGSTRate__ChargeAmount" name="DynamicList[SGSTRate].ChargeAmount"
-                          placeholder="SGST(%)" readonly="True" type="text" value="0.00"><input
-                          id="DynamicList_SGSTRate__ChargeCode" name="DynamicList[SGSTRate].ChargeCode" type="hidden"
-                          value="SGSTRate"><input id="DynamicList_SGSTRate__Operator"
-                          name="DynamicList[SGSTRate].Operator" type="hidden" value="+"><input
-                          id="DynamicList_SGSTRate__Acccode" name="DynamicList[SGSTRate].Acccode" type="hidden"
-                          value="">
-                      </div>
+                      <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="SGST(%)"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -1215,23 +1106,21 @@
 
 
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="form-group to-pay-group">
                     <label class="control-label col-md-5">SGST ON SUB TOTAL<span id="lbl_SGSTAmount"></span></label>
                     <div class="col-md-7">
-                      <div class="input-icon right">
-                        <i class="fas fa-plus"></i>
-                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="SGSTAmount">
-                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
-                          data-val-number="The field ChargeAmount must be a number."
-                          data-val-required="The ChargeAmount field is required."
-                          id="DynamicList_SGSTAmount__ChargeAmount" name="DynamicList[SGSTAmount].ChargeAmount"
-                          placeholder="SGST ON SUB TOTAL" readonly="True" type="text" value="0.00"><input
-                          id="DynamicList_SGSTAmount__ChargeCode" name="DynamicList[SGSTAmount].ChargeCode"
-                          type="hidden" value="SGSTAmount"><input id="DynamicList_SGSTAmount__Operator"
-                          name="DynamicList[SGSTAmount].Operator" type="hidden" value="+"><input
-                          id="DynamicList_SGSTAmount__Acccode" name="DynamicList[SGSTAmount].Acccode" type="hidden"
-                          value="">
-                      </div>
+                      <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="SGST ON SUB TOTAL"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -1239,23 +1128,21 @@
 
 
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="form-group to-pay-group">
                     <label class="control-label col-md-5">SGST COLLECTED<span id="lbl_SGSTCOLLECTED"></span></label>
                     <div class="col-md-7">
-                      <div class="input-icon right">
-                        <i class="fas fa-plus"></i>
-                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="SGSTCOLLECTED">
-                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
-                          data-val-number="The field ChargeAmount must be a number."
-                          data-val-required="The ChargeAmount field is required."
-                          id="DynamicList_SGSTCOLLECTED__ChargeAmount" name="DynamicList[SGSTCOLLECTED].ChargeAmount"
-                          placeholder="SGST COLLECTED" readonly="True" type="text" value="0.00"><input
-                          id="DynamicList_SGSTCOLLECTED__ChargeCode" name="DynamicList[SGSTCOLLECTED].ChargeCode"
-                          type="hidden" value="SGSTCOLLECTED"><input id="DynamicList_SGSTCOLLECTED__Operator"
-                          name="DynamicList[SGSTCOLLECTED].Operator" type="hidden" value="+"><input
-                          id="DynamicList_SGSTCOLLECTED__Acccode" name="DynamicList[SGSTCOLLECTED].Acccode"
-                          type="hidden" value="">
-                      </div>
+                      <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="SGST COLLECTED"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -1264,23 +1151,21 @@
               </div>
               <div class="row clsGSTApply">
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="form-group to-pay-group">
                     <label class="control-label col-md-5">UTGST(%)<span id="lbl_UTGSTRate"></span></label>
                     <div class="col-md-7">
-                      <div class="input-icon right">
-                        <i class="fas fa-plus"></i>
-                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="UTGSTRate">
-                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
-                          data-val-number="The field ChargeAmount must be a number."
-                          data-val-required="The ChargeAmount field is required."
-                          id="DynamicList_UTGSTRate__ChargeAmount" name="DynamicList[UTGSTRate].ChargeAmount"
-                          placeholder="UTGST(%)" readonly="True" type="text" value="0.00"><input
-                          id="DynamicList_UTGSTRate__ChargeCode" name="DynamicList[UTGSTRate].ChargeCode" type="hidden"
-                          value="UTGSTRate"><input id="DynamicList_UTGSTRate__Operator"
-                          name="DynamicList[UTGSTRate].Operator" type="hidden" value="+"><input
-                          id="DynamicList_UTGSTRate__Acccode" name="DynamicList[UTGSTRate].Acccode" type="hidden"
-                          value="">
-                      </div>
+                      <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="UTGST(%)"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -1288,23 +1173,21 @@
 
 
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="form-group to-pay-group">
                     <label class="control-label col-md-5">UTGST ON SUB TOTAL<span id="lbl_UTGSTAmount"></span></label>
                     <div class="col-md-7">
-                      <div class="input-icon right">
-                        <i class="fas fa-plus"></i>
-                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="UTGSTAmount">
-                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
-                          data-val-number="The field ChargeAmount must be a number."
-                          data-val-required="The ChargeAmount field is required."
-                          id="DynamicList_UTGSTAmount__ChargeAmount" name="DynamicList[UTGSTAmount].ChargeAmount"
-                          placeholder="UTGST ON SUB TOTAL" readonly="True" type="text" value="0.00"><input
-                          id="DynamicList_UTGSTAmount__ChargeCode" name="DynamicList[UTGSTAmount].ChargeCode"
-                          type="hidden" value="UTGSTAmount"><input id="DynamicList_UTGSTAmount__Operator"
-                          name="DynamicList[UTGSTAmount].Operator" type="hidden" value="+"><input
-                          id="DynamicList_UTGSTAmount__Acccode" name="DynamicList[UTGSTAmount].Acccode" type="hidden"
-                          value="">
-                      </div>
+                      <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="UTGST ON SUB TOTAL"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -1312,23 +1195,21 @@
 
 
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="form-group to-pay-group">
                     <label class="control-label col-md-5">UTGST COLLECTED<span id="lbl_UTGSTCOLLECTED"></span></label>
                     <div class="col-md-7">
-                      <div class="input-icon right">
-                        <i class="fas fa-plus"></i>
-                        <input type="hidden" name="DynamicList.index" autocomplete="off" value="UTGSTCOLLECTED">
-                        <input class="required2 clsGSTAmt clsAmount form-control required" data-val="true"
-                          data-val-number="The field ChargeAmount must be a number."
-                          data-val-required="The ChargeAmount field is required."
-                          id="DynamicList_UTGSTCOLLECTED__ChargeAmount" name="DynamicList[UTGSTCOLLECTED].ChargeAmount"
-                          placeholder="UTGST COLLECTED" readonly="True" type="text" value="0.00"><input
-                          id="DynamicList_UTGSTCOLLECTED__ChargeCode" name="DynamicList[UTGSTCOLLECTED].ChargeCode"
-                          type="hidden" value="UTGSTCOLLECTED"><input id="DynamicList_UTGSTCOLLECTED__Operator"
-                          name="DynamicList[UTGSTCOLLECTED].Operator" type="hidden" value="+"><input
-                          id="DynamicList_UTGSTCOLLECTED__Acccode" name="DynamicList[UTGSTCOLLECTED].Acccode"
-                          type="hidden" value="">
-                      </div>
+                      <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="UTGST COLLECTED"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
                     </div>
                   </div>
                 </div>

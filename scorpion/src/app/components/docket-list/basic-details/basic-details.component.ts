@@ -4,6 +4,7 @@ import { GeneralMasterService } from '../../../shared/services/services/general-
 import { billingTypeResponse } from '../../../shared/services/models/general-master.model';
 import { debounceTime, distinctUntilChanged, filter, Subject } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'basic-details',
@@ -21,8 +22,7 @@ export class BasicDetailsComponent {
     public docketService: DocketService,
     private generalMasterService: GeneralMasterService
   ) {
-    this.billingTypeInput.pipe(debounceTime(500), distinctUntilChanged(), filter(value => value.length >= 3)).subscribe(billingParty => {
-      debugger
+    this.billingTypeInput.pipe(debounceTime(500), distinctUntilChanged(), filter(value => value.length >= 2)).subscribe(billingParty => {
       this.getBillingParty(billingParty);
     });
   }
@@ -80,7 +80,6 @@ export class BasicDetailsComponent {
         }
       },
       error: (response: any) => {
-        // this.sweetAlertService.error(response.error.message);
       },
     });
   }
@@ -91,8 +90,12 @@ export class BasicDetailsComponent {
   }
 
   getBillingParty(getBillingParty: string) {
-    debugger
-    this.generalMasterService.getBillingParty(getBillingParty, 'HQTR', this.basicDetailForm.value.billingType).subscribe({
+      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IkNZR05VU1RFQU0iLCJVc2VyVHlwZSI6IkFETUlOSVNUUkFUT1IiLCJqdGkiOiI2MjBkMjI2Yi0zMjE0LTQxNTktOWY3Yy0wZmFkNzRlMDllZWIiLCJlbWFpbCI6InJvaGl0dm9yYTExNEBnbWFpbC5jb20iLCJleHAiOjE4MTcxMjU3MjEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAzMjQiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMzI0In0.7t3mm1B_9EAxWBZUTgzfQ8-Q-k85EVO5nJaKqWiOQlo';
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`
+  });
+    this.generalMasterService.getBillingParty(getBillingParty, 'HQTR', this.basicDetailForm.value.billingType,headers).subscribe({
       next: (response) => {
         if (response.status === 200) {
 
