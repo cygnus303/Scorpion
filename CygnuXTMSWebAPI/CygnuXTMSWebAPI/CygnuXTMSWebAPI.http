@@ -1,0 +1,6 @@
+@CygnuXTMSWebAPI_HostAddress = http://localhost:5000
+
+GET {{CygnuXTMSWebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
