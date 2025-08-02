@@ -1,0 +1,1252 @@
+<div class="cnote-entry-container px-1">
+  <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+    <i class="fa fa-edit me-2"></i>
+   CNote Entry - Freight Details
+  </div>
+  <div class="form-grid p-4">
+    <form>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label col-md-5">Freight Charges</label>
+                <div class="col-md-7">
+                  <input class="required2 form-control required text-end" 
+                    placeholder="Freight Charges" type="number" value="0">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label col-md-5" style="padding-top: 0px;padding-right: 1px;padding-left: 49px;">
+                 <select
+                    class="form-control required required2 select2 dropdown2 select2-offscreen"
+                    id="WMDC_RATE_TYPE" name="WMDC.RATE_TYPE" placeholder="Rate Type" tabindex="-1">
+                    <option value="%">% of Basic Freight</option>
+                    <option value="F">Flat(in RS)</option>
+                    <option value="I">% of Invoice</option>
+                    <option value="P">Per PKG</option>
+                    <option value="T">Per TON</option>
+                    <option value="W">Per KG</option>
+                  </select>
+                </label>
+                <div class="col-md-4">
+                  <input class="clsAmount form-control text-end" min="1" placeholder="Freight Rate" type="number" value="0">
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label col-md-5">GST Paid By</label>
+                  <div class="col-md-7">
+                   <select class="form-control required2 required " 
+                      placeholder="GST Paid By" tabindex="-1">
+                      <option value=""></option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group" style="display: none;">
+                  <label class="control-label col-md-10" style="padding-top:1px;">GST Exempted</label>
+                  <div class="col-md-2 chkactive">
+                    <input type="hidden">
+                    <!-- <div class="checker"><span>
+                        <div
+                          class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-animate bootstrap-switch-mini">
+                          <div class="bootstrap-switch-container"><span
+                              class="bootstrap-switch-handle-on bootstrap-switch-primary">YES</span><label
+                              class="bootstrap-switch-label">&nbsp;</label><span
+                              class="bootstrap-switch-handle-off bootstrap-switch-default">NO</span><input
+                              type="checkbox" class="WMD_IsStaxExempN WMD_IsStaxExempChange" value="false"></div>
+                        </div>
+                      </span></div> -->
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label class="control-label col-md-5">EDD </label>
+                  <div class="col-md-7">
+                    <div class="input-group @*date ftdate-picker*@">
+                      <input class="required2 form-control required"
+                        placeholder="EDD"  type="text" value="1/1/0001 12:00:00 AM">
+                      <span class="input-group-btn">
+                        <button class="btn default date-set clsVehicle1" type="button" style="display: none;"><i
+                            class="fa fa-calendar"></i></button>
+                      </span>
+                      <input id="WMD_CDELDT_Original" name="WMD_CDELDT_Original" type="hidden" value="">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label col-md-5">Billed At</label>
+                  <div class="col-md-7">
+                    <input class="required2 form-control required" id="WMD_fincmplbrDisplay" name="WMD.fincmplbrDisplay"
+                      placeholder="Billed At" type="text" value="" readonly="readonly">
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-offset-8 col-md-4">
+                <div class="form-group">
+                  <label class="control-label col-md-5">Billing State</label>
+                  <div class="col-md-7">
+                    <input class="required2 form-control required" id="WMD_BillingState" name="WMD.BillingState"
+                      placeholder="Billing State" readonly="True" type="text" value="">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">FOV Rate (% of Invoice)</label>
+                    <div class="col-md-7">
+                      <input class="required2 clsAmount form-control required text-end"  placeholder="FOV Rate " type="text" >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">FOV Calculated</label>
+                    <div class="col-md-7">
+                      <input class="required2 clsAmount form-control required text-end" placeholder="FOV" type="text" >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">FOV Charged </label>
+                    <div class="col-md-7">
+                      <input class="required2 form-control clsAmount required text-end"
+                        placeholder="FOV Charged" type="text">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">COD/DOD Charged</label>
+                    <div class="col-md-7">
+                      <input class="required2 form-control clsAmount required clsPayment" placeholder="COD/DOD Charged ">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">COD/DOD To be Collected</label>
+                    <div class="col-md-7">
+                      <input class="required2 clsAmount form-control required" 
+                        placeholder="COD/DOD Amount" type="text">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row clsDACC" style="display: none;">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">DACC Charged</label>
+                    <div class="col-md-7">
+                      <input class="required2 clsAmount form-control required clsPayment" 
+                         placeholder="DACC Charged "type="text" >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">DACC To be Collected</label>
+                    <div class="col-md-7">
+                      <input class="required2 clsAmount form-control required"placeholder="DACC Amount" type="text" value="0">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <h3 class="pb-4 text-start appointment mt-5">Charges Details</h3>
+
+              <div class="col-md-4">
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">TO PAY CHARGES</label>
+                  <div class="col-md-7">
+                    <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="TO PAY CHARGES"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="col-md-4">
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Other Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon">
+                    <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Other Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Document Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon">
+                     <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Document Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Extra Handling Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Extra Handling Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Special Charges </label>
+                  <div class="col-md-7">
+                   <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Special Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">ODA Charges </label>
+                  <div class="col-md-7">
+                  <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="ODA Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Covid Surcharge </label>
+                  <div class="col-md-7">
+                   <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Covid Surcharge"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">CSD Delivery Charges </label>
+                  <div class="col-md-7">
+                <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="CSD Delivery Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Demmurage Charges </label>
+                  <div class="col-md-7">
+                 <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Demmurage Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Physical POD </label>
+                  <div class="col-md-7">
+                   <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Physical POD"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Cartage Charges </label>
+                  <div class="col-md-7">
+                   <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Cartage Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Mall Delivery Charges </label>
+                  <div class="col-md-7">
+                  <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Mall Delivery Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Extra Delivery Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Extra Delivery Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Late Delivery </label>
+                  <div class="col-md-7">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Late Delivery"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">FuelSurcharge Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="FuelSurcharge Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Detention Charges (Applicable After 12 hrs) </label>
+                  <div class="col-md-7">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Detention Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Varai Charges </label>
+                  <div class="col-md-7">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Varai Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">West Bengal Delivery Charges </label>
+                  <div class="col-md-7">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Varai Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Diesel Hike (Additional FSC) </label>
+                  <div class="col-md-7">
+                 <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Diesel Hike (Additional FSC)"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Green Tax Charges Booking </label>
+                  <div class="col-md-7">
+                    <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Green Tax Charges Booking"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">In Sikkim Sikkim Tax (SNT) Delivery </label>
+                  <div class="col-md-7">
+                    <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="In Sikkim Sikkim Tax"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">For Kerala Charges Delivery </label>
+                  <div class="col-md-7">
+                    <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="For Kerala Charges Delivery"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Unloading Charges </label>
+                  <div class="col-md-7">
+                    <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Unloading Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">For J &amp; K Charges Delivery </label>
+                  <div class="col-md-7">
+                    <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="For J K Charges Delivery"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Loading Charges </label>
+                  <div class="col-md-7">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Loading Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Loading Detention Charges </label>
+                  <div class="col-md-7">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Loading Detention Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Green Tax Charges Delivery </label>
+                  <div class="col-md-7">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Green Tax Charges Delivery"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Pickup Charges </label>
+                  <div class="col-md-7">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Pickup Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Appointment Charges </label>
+                  <div class="col-md-7">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Appointment Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Second Attempt Delivery Charges </label>
+                  <div class="col-md-7">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Second Attempt Delivery Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">For North East </label>
+                  <div class="col-md-7">
+                    <i class="fas fa-plus"></i>
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="For North East"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Multipickup Charges </label>
+                  <div class="col-md-7">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Multipickup Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">Multidelivery Charges </label>
+                  <div class="col-md-7">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="Multidelivery Charges"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col-md-4">
+
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">DPH Billing Charges </label>
+                  <div class="col-md-7">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="DPH Billing Charges "
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label col-md-5"><b>GST Rate</b></label>
+                  <div class="col-md-7">
+                  <select class="form-control select2 required2 required select2-offscreen" placeholder="Select GST Percentage" tabindex="-1">
+                      <option value=""></option>
+                      <option value="0">0</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="10">10</option>
+                      <option value="12">12</option>
+                      <option selected="selected" value="18">18</option>
+                      <option value="28">28</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4"></div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label col-md-5"><b>SUB-TOTAL</b></label>
+                  <div class="col-md-7">
+                    <input class="required2 clsAmount form-control required clsROFixed" data-val="true"
+                      data-val-number="The field SubTotal must be a number." id="WMDC_SubTotal" name="WMDC.SubTotal"
+                      placeholder="SUB-TOTAL" readonly="true" type="text" value="">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row clsGSTApply">
+                <div class="col-md-4">
+                  <div class="form-group to-pay-group">
+                    <label class="control-label col-md-5">IGST(%)<span id="lbl_IGSTRate"></span></label>
+                    <div class="col-md-7">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="IGST(%) "
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                  <div class="form-group to-pay-group">
+                    <label class="control-label col-md-5">IGST ON SUB TOTAL<span id="lbl_IGSTAmount"></span></label>
+                    <div class="col-md-7">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="IGST ON SUB TOTAL"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                  <div class="form-group to-pay-group">
+                    <label class="control-label col-md-5">IGST COLLECTED<span id="lbl_IGSTCOLLECTED"></span></label>
+                    <div class="col-md-7">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="IGST COLLECTED "
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+              <div class="row clsGSTApply">
+                <div class="col-md-4">
+                  <div class="form-group to-pay-group">
+                    <label class="control-label col-md-5">CGST(%)<span id="lbl_CGSTRate"></span></label>
+                    <div class="col-md-7">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="CGST(%)"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                  <div class="form-group to-pay-group">
+                    <label class="control-label col-md-5">CGST ON SUB TOTAL<span id="lbl_CGSTAmount"></span></label>
+                    <div class="col-md-7">
+                     <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="CGST ON SUB TOTAL"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                  <div class="form-group to-pay-group">
+                    <label class="control-label col-md-5">CGST COLLECTED<span id="lbl_CGSTCOLLECTED"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="CGST COLLECTED "
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+              <div class="row clsGSTApply">
+                <div class="col-md-4">
+                  <div class="form-group to-pay-group">
+                    <label class="control-label col-md-5">SGST(%)<span id="lbl_SGSTRate"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="SGST(%)"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                  <div class="form-group to-pay-group">
+                    <label class="control-label col-md-5">SGST ON SUB TOTAL<span id="lbl_SGSTAmount"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="SGST ON SUB TOTAL"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                  <div class="form-group to-pay-group">
+                    <label class="control-label col-md-5">SGST COLLECTED<span id="lbl_SGSTCOLLECTED"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="SGST COLLECTED"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+              <div class="row clsGSTApply">
+                <div class="col-md-4">
+                  <div class="form-group to-pay-group">
+                    <label class="control-label col-md-5">UTGST(%)<span id="lbl_UTGSTRate"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="UTGST(%)"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                  <div class="form-group to-pay-group">
+                    <label class="control-label col-md-5">UTGST ON SUB TOTAL<span id="lbl_UTGSTAmount"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="UTGST ON SUB TOTAL"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-4">
+                  <div class="form-group to-pay-group">
+                    <label class="control-label col-md-5">UTGST COLLECTED<span id="lbl_UTGSTCOLLECTED"></span></label>
+                    <div class="col-md-7">
+                      <div class="input-icon">
+                      <input
+                        type="text"
+                        class="form-control clsAmount required2"
+                        placeholder="UTGST COLLECTED"
+                        [(ngModel)]="toPayAmount"
+                        [ngModelOptions]="{ standalone: true }"
+                        (focus)="onFocus()"
+                        (blur)="onBlur()"
+                      />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+              <div class="col-md-4 clsdis" style="display: none;">
+                <div class="form-group">
+                  <label class="control-label col-md-5">Discount(%)</label>
+                  <div class="col-md-7">
+                    <input class="form-control clsAmount" data-val="true"
+                      data-val-number="The field Discount must be a number." id="WMD_Discount" name="WMD.Discount"
+                      placeholder="Discount" type="number" value="0">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 clsdis" style="display: none;">
+                <div class="form-group">
+                  <label class="control-label col-md-5">Discount Amount</label>
+                  <div class="col-md-7">
+                    <input class="form-control clsAmount" id="WMD_DiscountAmount" name="WMD.DiscountAmount"
+                      placeholder="Discount" readonly="true" type="number" value="">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label col-md-5"><b>TOTAL</b></label>
+                  <div class="col-md-7">
+                    <input class="required2 form-control clsAmount required clsROFixed" data-val="true"
+                      data-val-number="The field DKTTOT must be a number."
+                      data-val-required="The DKTTOT field is required." id="WMDC_DKTTOT" name="WMDC.DKTTOT"
+                      placeholder="TOTAL" readonly="true" type="text" value="0" min="1">
+                  </div>
+                </div>
+              </div>
+          </div>
+    </form>
+  </div>
+</div>
