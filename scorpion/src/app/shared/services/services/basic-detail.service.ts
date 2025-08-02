@@ -8,7 +8,7 @@ import { HttpHeaders } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class GeneralMasterService {
+export class BasicDetailService {
 
   constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService) { }
 
@@ -19,4 +19,5 @@ export class GeneralMasterService {
     getBillingParty(searchTerm:string,location:string,paybs:string,header:HttpHeaders): Observable<IApiBaseResponse<any[]>> {
     return this.apiHandlerService.Get(`Master/GetCustomerList?Search=${searchTerm}&Location=${location}&Paybas=${paybs}&${header}`);
   }
+
 }
