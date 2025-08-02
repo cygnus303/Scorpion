@@ -237,3 +237,9 @@
      .cursor-pointer {
        cursor: pointer;
      }
+
+input[readonly] {
+  background-color: #e9ecef !important; // light grey (Bootstrap-style)
+  color: #495057; // optional: text color
+  cursor: not-allowed; // optional: show disabled cursor
+}
