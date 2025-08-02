@@ -9,6 +9,7 @@ import { ConsignorDetailComponent } from './docket-list/consignor-detail/consign
 import { FreightDetailsComponent } from './docket-list/freight-details/freight-details.component';
 import { InvoiceDetailsComponent } from './docket-list/invoice-details/invoice-details.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { HeaderComponent } from '../layouts/header/header.component';
 
 @NgModule({
     declarations: [
@@ -16,7 +17,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
         BasicDetailsComponent,
         ConsignorDetailComponent,
         FreightDetailsComponent,
-        InvoiceDetailsComponent
+        InvoiceDetailsComponent,
+        HeaderComponent
     ],
     imports: [
         RouterModule.forChild(DocketRoutes),
