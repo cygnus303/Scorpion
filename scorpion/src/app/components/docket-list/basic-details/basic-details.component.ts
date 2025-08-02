@@ -67,8 +67,8 @@ export class BasicDetailsComponent {
       remarks: new FormControl(''),
       fromTime: new FormControl(''),
       toTime: new FormControl(''),
-      billingType: new FormControl(''),
-      billingParty: new FormControl('')
+      billingType: new FormControl(null),
+      billingParty: new FormControl(null)
     })
   }
 
