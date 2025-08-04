@@ -15,7 +15,7 @@ export interface IApiBaseActions {
 }
 
 export interface IApiBaseResponse<T> {
-  status: number;
+  success: boolean;
   data: T;
   totalCount: number;
   error: ErrorResponse;

@@ -12,8 +12,8 @@ export class BasicDetailService {
 
   constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService) { }
 
-    getBillingTypeList(codeType:string): Observable<IApiBaseResponse<billingTypeResponse[]>> {
-    return this.apiHandlerService.Get(`Master/GetGeneralMasterData?CodeType=${codeType}`);
+    getBillingTypeList(codeType:string,searchText:string | null): Observable<IApiBaseResponse<billingTypeResponse[]>> {
+    return this.apiHandlerService.Get(`External/${codeType}?searchText=${searchText}`);
   }
 
     getBillingParty(searchTerm:string,location:string,paybs:string,header:HttpHeaders): Observable<IApiBaseResponse<any[]>> {

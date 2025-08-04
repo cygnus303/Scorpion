@@ -37,14 +37,14 @@ export class BasicDetailsComponent {
     const now = new Date();
     this.today = now.toISOString().split('T')[0];
     this.basicDetailForm = new FormGroup({
-      ewayBillNo: new FormControl(''),
-      cNoteNo: new FormControl(''),
+      ewayBillNo: new FormControl(null),
+      cNoteNo: new FormControl(null),
       pincode: new FormControl(null),
-      billingName: new FormControl(''),
+      billingName: new FormControl(null),
       origin: new FormControl(null),
-      originState: new FormControl(''),
+      originState: new FormControl(null),
       destination: new FormControl(null),
-      destinationState: new FormControl(''),
+      destinationState: new FormControl(null),
       mode: new FormControl(null),
       toCity: new FormControl(null),
       fromCity: new FormControl(null),
@@ -53,25 +53,25 @@ export class BasicDetailsComponent {
       typeMovement: new FormControl(null),
       contents: new FormControl(null),
       cNoteDate: new FormControl(this.today),
-      packingType: new FormControl(''),
-      businessType: new FormControl(''),
-      specialInstruction: new FormControl(''),
-      exemptServices: new FormControl(''),
+      packingType: new FormControl(null),
+      businessType: new FormControl(null),
+      specialInstruction: new FormControl(null),
+      exemptServices: new FormControl(null),
       isreferenceDKT: new FormControl(false),
-      referenceDocket: new FormControl(''),
+      referenceDocket: new FormControl(null),
       isDocketPayment: new FormControl(false),
-      sacCode: new FormControl(''),
-      sacDescription: new FormControl(''),
+      sacCode: new FormControl(null),
+      sacDescription: new FormControl(null),
       isAppointmentDelivery: new FormControl(false),
       iscsdDelivery: new FormControl(false),
       isODAApplicable: new FormControl(false),
       isLocalNote: new FormControl(false),
-      appointmentDetails: new FormControl(''),
-      personName: new FormControl(''),
-      contactNo: new FormControl(''),
-      remarks: new FormControl(''),
-      fromTime: new FormControl(''),
-      toTime: new FormControl(''),
+      appointmentDetails: new FormControl(null),
+      personName: new FormControl(null),
+      contactNo: new FormControl(null),
+      remarks: new FormControl(null),
+      fromTime: new FormControl(null),
+      toTime: new FormControl(null),
       billingType: new FormControl(null),
       billingParty: new FormControl(null),
       vehicleno:new FormControl(null)
@@ -79,9 +79,9 @@ export class BasicDetailsComponent {
   }
 
   getBillingTypeData() {
-    this.basicDetailService.getBillingTypeList('PAYTYP').subscribe({
+    this.basicDetailService.getBillingTypeList('PAYTYP',null).subscribe({
       next: (response) => {
-        if (response.status === 200) {
+        if (response.success) {
           this.billingTypeData = response.data;
         }
       },
@@ -101,21 +101,21 @@ export class BasicDetailsComponent {
   }
 
   getBillingParty(getBillingParty: string) {
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IkNZR05VU1RFQU0iLCJVc2VyVHlwZSI6IkFETUlOSVNUUkFUT1IiLCJqdGkiOiI2MjBkMjI2Yi0zMjE0LTQxNTktOWY3Yy0wZmFkNzRlMDllZWIiLCJlbWFpbCI6InJvaGl0dm9yYTExNEBnbWFpbC5jb20iLCJleHAiOjE4MTcxMjU3MjEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAzMjQiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMzI0In0.7t3mm1B_9EAxWBZUTgzfQ8-Q-k85EVO5nJaKqWiOQlo';
+  //   const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IkNZR05VU1RFQU0iLCJVc2VyVHlwZSI6IkFETUlOSVNUUkFUT1IiLCJqdGkiOiI2MjBkMjI2Yi0zMjE0LTQxNTktOWY3Yy0wZmFkNzRlMDllZWIiLCJlbWFpbCI6InJvaGl0dm9yYTExNEBnbWFpbC5jb20iLCJleHAiOjE4MTcxMjU3MjEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAzMjQiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMzI0In0.7t3mm1B_9EAxWBZUTgzfQ8-Q-k85EVO5nJaKqWiOQlo';
 
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-    this.basicDetailService.getBillingParty(getBillingParty, 'HQTR', this.basicDetailForm.value.billingType, headers).subscribe({
-      next: (response) => {
-        if (response.status === 200) {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${token}`
+  //   });
+  //   this.basicDetailService.getBillingParty(getBillingParty, 'HQTR', this.basicDetailForm.value.billingType, headers).subscribe({
+  //     next: (response) => {
+  //       if (response.status === 200) {
 
-          this.billingPartyData = response.data;
-        }
-      },
-      error: (response: any) => {
-      },
-    });
+  //         this.billingPartyData = response.data;
+  //       }
+  //     },
+  //     error: (response: any) => {
+  //     },
+  //   });
   }
 
 
