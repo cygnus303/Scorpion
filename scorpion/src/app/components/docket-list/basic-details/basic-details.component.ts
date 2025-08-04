@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { DocketService } from '../../../shared/services/services/docket.service';
-import { BasicDetailService } from '../../../shared/services/services/basic-detail.service';
-import { billingTypeResponse } from '../../../shared/services/models/general-master.model';
+import { DocketService } from '../../../shared/services/docket.service';
+import { BasicDetailService } from '../../../shared/services/basic-detail.service';
+import { billingTypeResponse } from '../../../shared/models/general-master.model';
 import { debounceTime, distinctUntilChanged, filter, Subject } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
 import { HttpHeaders } from '@angular/common/http';

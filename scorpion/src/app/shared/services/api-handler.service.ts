@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IApiBaseResponse, ParamsType } from '../interface/api-base-action-response';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { ResponseMessages } from '../constants/response-message';

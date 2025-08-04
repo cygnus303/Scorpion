@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { CommonService } from './shared/services/services/common.service';
+import { CommonService } from './shared/services/common.service';
 
 @Component({
   selector: 'app-root',
