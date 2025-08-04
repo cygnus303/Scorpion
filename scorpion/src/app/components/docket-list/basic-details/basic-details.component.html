@@ -48,7 +48,7 @@
           <div class="form-group"><label class="col-md-5">Billing Type</label>
             <div class="col-md-7">
               <ng-select class="uppercase-input" [items]="billingTypeData" bindLabel="codeDesc" bindValue="codeId"
-                placeholder="Select Billing Type" formControlName="billingType">
+                placeholder="Billing Type" formControlName="billingType">
               </ng-select>
             </div>
           </div>
@@ -64,9 +64,9 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Billing Party</label>
             <div class="col-md-7">
-              <ng-select  class="uppercase-input" bindLabel="codeDesc" bindValue="codeId"
-                (input)="onBillingPartyChange($event)" placeholder="Select Billing Party"
-                formControlName="billingParty">
+              <ng-select class="uppercase-input" bindLabel="codeDesc" bindValue="codeId"
+                (input)="onBillingPartyChange($event)" placeholder="Billing Party" [searchable]="true"
+                formControlName="billingParty"  notFoundText="Please enter 2 more characters">
               </ng-select>
             </div>
           </div>

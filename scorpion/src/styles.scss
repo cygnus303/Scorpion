@@ -82,6 +82,14 @@
   }
 }
 
+.ng-select .ng-placeholder {
+  text-transform: none !important; 
+}
+
+.noFoundTextColor .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-disabled {
+    color: #8c3a3a !important;
+}
+
 // Dropdown panel styling
 .ng-dropdown-panel {
   text-align: left;
