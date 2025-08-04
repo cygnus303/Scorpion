@@ -47,7 +47,7 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Billing Type</label>
             <div class="col-md-7">
-              <ng-select class="uppercase-input" [items]="billingTypeData" bindLabel="codeDesc" bindValue="codeId"
+              <ng-select class="noFoundTextColor" [items]="billingTypeData" bindLabel="codeDesc" bindValue="codeId"
                 placeholder="Billing Type" formControlName="billingType">
               </ng-select>
             </div>
@@ -55,8 +55,8 @@
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Pincode</label>
-            <div class="col-md-7"><select class="form-control required2" placeholder="Pincode"
-                formControlName="pincode"></select></div>
+            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Pincode"
+                formControlName="pincode" notFoundText="Please enter atleast 1 characters"></ng-select></div>
           </div>
         </div>
       </div>
@@ -95,8 +95,8 @@
       <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Destination</label>
-            <div class="col-md-7">
-              <select class="form-control required2" placeholder="Destination" formControlName="destination"></select>
+            <div class="col-md-7" >
+              <ng-select class="noFoundTextColor" placeholder="Destination" formControlName="destination" notFoundText="Please enter atleast 3 characters"></ng-select >
             </div>
           </div>
         </div>
@@ -110,14 +110,18 @@
       <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Transit Mode</label>
-            <div class="col-md-7"><select class="form-control required2" placeholder="Transit Mode"
-                formControlName="mode"></select></div>
+            <div class="col-md-7">
+              <ng-select class="noFoundTextColor" placeholder="Transit Mode"
+                formControlName="mode"></ng-select>
+              </div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">From City</label>
-            <div class="col-md-7"><select class="form-control required2" placeholder="From City"
-                formControlName="fromCity"></select></div>
+            <div class="col-md-7">
+              <ng-select  class="noFoundTextColor" placeholder="From City"
+                formControlName="fromCity" notFoundText="Please enter atleast 1 characters"></ng-select>
+              </div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
@@ -130,20 +134,20 @@
       <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Pickup/Delivery</label>
-            <div class="col-md-7"><select class="form-control required2" placeholder="Pickup/Delivery"
-                formControlName="pickup"></select></div>
+            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Pickup/Delivery"
+                formControlName="pickup"></ng-select></div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Service Type</label>
-            <div class="col-md-7"><select class="form-control required2" placeholder="Service Type"
-                formControlName="serviceType"></select></div>
+            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Service Type"
+                formControlName="serviceType" notFoundText="Please enter atleast 1 characters"></ng-select></div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Type of Movement</label>
-            <div class="col-md-7"><select class="form-control" placeholder="Type of Movement"
-                formControlName="typeMovement"></select></div>
+            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Type of Movement"
+                formControlName="typeMovement"></ng-select></div>
           </div>
         </div>
       </div>
@@ -156,14 +160,14 @@
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Packaging Type</label>
-            <div class="col-md-7"><select class="form-control required2" placeholder="Packaging Type"
-                formControlName="packingType"></select></div>
+            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Packaging Type"
+                formControlName="packingType"></ng-select></div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Business Type</label>
-            <div class="col-md-7"><select class="form-control required2" placeholder="Business Type"
-                formControlName="businessType"></select></div>
+            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Business Type"
+                formControlName="businessType"></ng-select></div>
           </div>
         </div>
       </div>
@@ -176,8 +180,8 @@
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Exempt Services</label>
-            <div class="col-md-7"><select class="form-control" placeholder="Exempt Services"
-                formControlName="exemptServices"></select></div>
+            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Exempt Services"
+                formControlName="exemptServices"></ng-select></div>
           </div>
         </div>
       </div>
