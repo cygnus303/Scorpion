@@ -82,13 +82,15 @@
   }
 }
 
-.ng-select .ng-placeholder {
-  text-transform: none !important; 
+ng-select .ng-input input[type='text'] {
+  text-transform: uppercase !important;
 }
 
 .noFoundTextColor .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-disabled {
-    color: #8c3a3a !important;
+    text-transform: none !important;
+    color:  black !important;
 }
+
 
 // Dropdown panel styling
 .ng-dropdown-panel {
@@ -173,9 +175,9 @@
       border-radius: 0px;
     }
 
-    .uppercase-input {
-      text-transform: uppercase;
-    }
+    // .uppercase-input {
+    //   text-transform: uppercase;
+    // }
 
     .radio-inline {
       margin-right: 20px;

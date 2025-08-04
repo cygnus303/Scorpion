@@ -64,9 +64,9 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Billing Party</label>
             <div class="col-md-7">
-              <ng-select class="uppercase-input" bindLabel="codeDesc" bindValue="codeId"
+              <ng-select  bindLabel="codeDesc" bindValue="codeId" class="noFoundTextColor"
                 (input)="onBillingPartyChange($event)" placeholder="Billing Party" [searchable]="true"
-                formControlName="billingParty"  notFoundText="Please enter 2 more characters">
+                formControlName="billingParty"  notFoundText="Please enter atleast 3 characters">
               </ng-select>
             </div>
           </div>
