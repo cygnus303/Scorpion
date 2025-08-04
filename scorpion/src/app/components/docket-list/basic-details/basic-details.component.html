@@ -182,6 +182,29 @@
         </div>
       </div>
       <div class="row">
+        <div class="col-md-4 form-column ">
+          <div class="form-group">
+            <label class="control-label col-md-5">Select Vehicle</label>
+            <div class="col-md-7 d-flex align-items-center gap-4">
+              <label class="d-flex align-items-center gap-2 mb-0">
+                <input type="radio" name="vehicle" value="own">
+                Own
+              </label>
+              <label class="d-flex align-items-center gap-2 mb-0">
+                <input type="radio" name="vehicle" value="market">
+                Market
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 form-column ">
+          <div class="form-group"><label class="col-md-5">Vehicle No</label>
+            <div class="col-md-7"><input type="text" class="form-control" placeholder="Vehicle No"
+                formControlName="vehicleno" /></div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-md-4 form-column">
           <div class="form-group">
             <label for="refDkt" class="col-md-5">Apply Reference DKT</label>
@@ -227,6 +250,11 @@
           <div class="form-group"><label class="col-md-5">Sac Code Description</label>
             <div class="col-md-7"><input type="text" class="form-control" placeholder="Sac Code Description"
                 formControlName="sacDescription" readonly /></div>
+          </div>
+        </div>
+        <div class="col-md-4 form-column ">
+          <div class="form-group"><label class="col-md-5">Upload GST Declaraion</label>
+            <div class="col-md-7 text-start"><input type="file" /></div>
           </div>
         </div>
       </div>

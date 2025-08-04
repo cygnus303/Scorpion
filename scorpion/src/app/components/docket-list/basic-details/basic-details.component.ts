@@ -39,19 +39,19 @@ export class BasicDetailsComponent {
     this.basicDetailForm = new FormGroup({
       ewayBillNo: new FormControl(''),
       cNoteNo: new FormControl(''),
-      pincode: new FormControl(''),
+      pincode: new FormControl(null),
       billingName: new FormControl(''),
-      origin: new FormControl(''),
+      origin: new FormControl(null),
       originState: new FormControl(''),
-      destination: new FormControl(''),
+      destination: new FormControl(null),
       destinationState: new FormControl(''),
-      mode: new FormControl(''),
-      toCity: new FormControl(''),
-      fromCity: new FormControl(''),
-      pickup: new FormControl(''),
-      serviceType: new FormControl(''),
-      typeMovement: new FormControl(''),
-      contents: new FormControl(''),
+      mode: new FormControl(null),
+      toCity: new FormControl(null),
+      fromCity: new FormControl(null),
+      pickup: new FormControl(null),
+      serviceType: new FormControl(null),
+      typeMovement: new FormControl(null),
+      contents: new FormControl(null),
       cNoteDate: new FormControl(this.today),
       packingType: new FormControl(''),
       businessType: new FormControl(''),
@@ -73,7 +73,8 @@ export class BasicDetailsComponent {
       fromTime: new FormControl(''),
       toTime: new FormControl(''),
       billingType: new FormControl(null),
-      billingParty: new FormControl(null)
+      billingParty: new FormControl(null),
+      vehicleno:new FormControl(null)
     })
   }
 

@@ -82,6 +82,10 @@
   }
 }
 
+input::placeholder {
+  text-transform: none !important; 
+}
+
 ng-select .ng-input input[type='text'] {
   text-transform: uppercase !important;
 }
