@@ -1,0 +1,471 @@
+<div class="header navbar navbar-fixed-top mega-menu">
+    <div class="header-inner">
+        <a class="navbar-brand" href="/Home/Index">
+            <img src="/assets/img/logos/logo_login.jpg" loading="lazy" class="navbar-logo">
+        </a>
+        <!-- <a href="javascript:;" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <img src="/assets/img/sidebar-toggler.jpg" alt="" loading="lazy">
+        </a> -->
+
+        <div class="hor-menu hidden-sm hidden-xs">
+            <ul class="nav navbar-nav">
+                <li class="nav-item dropdown classic-menu-dropdown"><a data-close-others="true" data-hover="dropdown"
+                        href="javascript:;">Operations<i class="fas fa-angle-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-submenu"><a href="javascript:;">Booking</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/Operation/Docket"><span class="fa fa-star " data-id="5048"></span> CNote
+                                        Entry</a></li>
+                                <li><a href="/Operation/Index?TYP=2"><span class="fa fa-star " data-id="5049"></span>
+                                        PRS</a></li>
+                                <li><a href="/Operation/PRSArrival"><span class="fa fa-star " data-id="5273"></span> PRS
+                                        Arrival</a></li>
+                                <li><a href="/Operation/LoadingSheet?Type=LS"><span class="fa fa-star "
+                                            data-id="5044"></span> Loading Tally Sheet</a></li>
+                                <li><a href="/Operation/UpdateLoadingSheet?Type=ULS"><span class="fa fa-star "
+                                            data-id="5045"></span> Update Loading Sheet</a></li>
+                                <li><a href="/Operation/Challan?TYP=1"><span class="fa fa-star " data-id="5050"></span>
+                                        THC With Fin Details</a></li>
+                                <li><a href="/Operation/InternalMovement"><span class="fa fa-star "
+                                            data-id="5410"></span> Internal Movement</a></li>
+                                <li><a href="/operation/AppointmentGenerationCriteria?Type=A"><span class="fa fa-star "
+                                            data-id="7507"></span> Appointment Generate</a></li>
+                                <li><a href="/operation/AppointmentGenerationCriteria?Type=E"><span class="fa fa-star "
+                                            data-id="7508"></span> Appointment Update</a></li>
+                                <li><a href="/operation/CSDMalldelivery"><span class="fa fa-star "
+                                            data-id="7511"></span> CSD/Mall Delivery Generation</a></li>
+                                <li><a href="/Exceptions/ApmCSDMallDelReport"><span class="fa fa-star "
+                                            data-id="7541"></span> Appointment/CSD/Mall Report</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu"><a href="javascript:;">Transhipment</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/Operation/ArrivalUpdate/1"><span class="fa fa-star "
+                                            data-id="5051"></span> Arrival</a></li>
+                                <li><a href="/Operation/ArrivalUpdate/2"><span class="fa fa-star "
+                                            data-id="5052"></span> Stock Update</a></li>
+                                <li><a href="/Operation/THCDepartures"><span class="fa fa-star " data-id="5054"></span>
+                                        THC Departure</a></li>
+                                <li><a href="/Operation/THCStatusUpdate"><span class="fa fa-star "
+                                            data-id="7354"></span> THC Status Update</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu"><a href="javascript:;">Delivery</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/Operation/Index?TYP=3"><span class="fa fa-star " data-id="5056"></span>
+                                        DRS</a></li>
+                                <li><a href="/Operation/CounterDeliveryCriteria"><span class="fa fa-star "
+                                            data-id="5419"></span> CNote Godown Delivery</a></li>
+                                <li><a href="/Operation/DRSUpdate"><span class="fa fa-star " data-id="5057"></span> DRS
+                                        Update</a></li>
+                                <li><a href="/Operation/SingleCNoteUpdateInDRS"><span class="fa fa-star "
+                                            data-id="5126"></span> Single CNote Update in DRS</a></li>
+                                <li><a href="/Operation/DeliveryMR_Criteria"><span class="fa fa-star "
+                                            data-id="7376"></span> Gate Pass</a></li>
+                                <li><a href="/Operation/DirectDeliveryCriteria"><span class="fa fa-star "
+                                            data-id="7347"></span> Direct Docket Delivery</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu"><a href="javascript:;">DFM</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/Document/ScanFMDocuments"><span class="fa fa-star " data-id="5177"></span>
+                                        Scan Document</a></li>
+                                <li><a href="/Document/ForwardFMDocumentsQuery"><span class="fa fa-star "
+                                            data-id="5178"></span> Forward Document</a></li>
+                                <li><a href="/Document/AcknowledgeFMDocumentsQuery"><span class="fa fa-star "
+                                            data-id="5179"></span> Acknowledge Documents</a></li>
+                                <li><a href="/Document/FMReportQuery "><span class="fa fa-star " data-id="5180"></span>
+                                        View / Print</a></li>
+                                <li><a href="/Document/DocumentsTrack"><span class="fa fa-star " data-id="5181"></span>
+                                        Track Document</a></li>
+                                <li><a href="/Document/PendingScanReportQuery"><span class="fa fa-star "
+                                            data-id="5182"></span> Document Yet To Scan</a></li>
+                                <li><a href="/Document/PODPFMCriteria
+"><span class="fa fa-star " data-id="5342"></span> POD Report</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu"><a href="javascript:;">PRQ</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/Operation/PRQViewCriteria?type=N"><span class="fa fa-star "
+                                            data-id="7528"></span> PRQ Generate</a></li>
+                                <li><a href="/Operation/PRQViewCriteria?type=Y"><span class="fa fa-star "
+                                            data-id="7529"></span> PRQ Update/Close</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu"><a href="javascript:;">Hold Docket Series</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/Operation/PRQCriteria/F"><span class="fa fa-star " data-id="5416"></span>
+                                        Hold Docket Status</a></li>
+                                <li><a href="/Operation/HoldDocketSeries"><span class="fa fa-star "
+                                            data-id="5417"></span> Add Hold Docket Series</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu"><a href="javascript:;">VAM</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/Fleet/UserBidding"><span class="fa fa-star " data-id="7524"></span>
+                                        Vehicle Bidding</a></li>
+                                <li><a href="/Fleet/VehicleBiddingList"><span class="fa fa-star " data-id="7525"></span>
+                                        HO Approval Bidding List</a></li>
+                                <li><a href="/Fleet/VehicleBIDCriteria"><span class="fa fa-star " data-id="7526"></span>
+                                        Vendor Proposal List</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-submenu"><a href="javascript:;">Quick Cnote</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/Operation/QuicketDocketGeneration"><span class="fa fa-star "
+                                            data-id="7432"></span> Quick Cnote Entry</a></li>
+                                <li><a href="/Operation/QDocketCompletionCriteria"><span class="fa fa-star "
+                                            data-id="7434"></span> Quick Cnote List</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="/Operation/DocketUpload"><span class="fa fa-star " data-id="7543"></span> LR
+                                Upload</a></li>
+                        <li class="dropdown-submenu"><a href="javascript:;">DEPS</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/Operation/DepsUpdate?TYP=1"><span class="fa fa-star "
+                                            data-id="7568"></span> DEPS Update</a></li>
+                                <li><a href="/Operation/DepsUpdate?TYP=2"><span class="fa fa-star "
+                                            data-id="7569"></span> DEPS Close</a></li>
+                                <li><a href="/operation/DepsDeclaration"><span class="fa fa-star "
+                                            data-id="7570"></span> DEPS Declaration</a></li>
+                                <li><a href="/Reports/Index/257"><span class="fa fa-star " data-id="7577"></span> DEPS
+                                        Reports</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                
+            </ul>
+        </div>
+
+        <ul class="nav navbar-nav pull-right">
+
+
+            <li style="padding: 7px 0px 6px 6px;">
+
+
+                <div class="select2-container form-control" id="s2id_SearchURL" style="width: 240px;"><a
+                        href="javascript:void(0)" onclick="return false;" class="select2-choice select2-default"
+                        tabindex="-1"> <span class="select2-chosen">Search for Menu</span><abbr
+                            class="select2-search-choice-close"></abbr> <span
+                            class="select2-arrow"><b></b></span></a><input class="select2-focusser select2-offscreen"
+                        type="text" id="s2id_autogen1">
+                    <div class="select2-drop select2-display-none select2-with-searchbox">
+                        <div class="select2-search"> <input type="text" autocomplete="off" autocorrect="off"
+                                autocapitalize="off" spellcheck="false" class="select2-input"> </div>
+                        <ul class="select2-results"> </ul>
+                    </div>
+                </div><input class="form-control select2-offscreen" id="SearchURL" name="Search"
+                    placeholder="Search for Menu" style="width: 240px;" type="text" value="" tabindex="-1">
+            </li>
+
+
+
+            <li class="dropdown user">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
+                    data-close-others="true">
+                    <img alt="" src="/assets/img/UserBlankImage.png" style="width:29px;" loading="lazy">
+
+                    <span class="username">CYGNUSTEAM</span>
+                    <i class="fas fa-angle-down"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="/ChangeSetting"><i class="fa fa-cogs"></i> Change Setting</a></li>
+                    <li>
+                        <a href="javascript:;" id="trigger_fullscreen">
+                            <i class="fa fa-arrows"></i> Full Screen
+                        </a>
+                    </li>
+                    <li><a href="/ChangeSetting/ChangePassword"><i class="fa fa-lock"></i> Change Password</a></li>
+                    <li>
+                        <a href="/Account/LogOff">
+                            <i class="fa fa-key"></i>&nbsp;Log off
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="col-md-12 mb-0">
+    <!-- <ul class="page-breadcrumb breadcrumb visible-phone visible-tablet" style="margin-top: 0px;">
+                            <li><b>HQTR</b> || <b>2025-2026</b></li>
+                            <li> || <b>C003</b></li>
+                        </ul> -->
+    <ul class="page-breadcrumb breadcrumb hidden-phone" style="margin-top: 0px;">
+        <li><b>HQTR</b> : - CORPORATE OFFICE MUMBAI &nbsp;&nbsp; ||&nbsp;&nbsp; <b>Year</b> : - 2025-2026</li>
+        <li>&nbsp;&nbsp; || &nbsp;&nbsp; <b>C003 </b>: SCORPION EXPRESS PVT LTD</li>
+    </ul>
+</div>
+
+
+
+
+ <div class="sticky">
+        <header>
+            <div class="sigma_header-middle">
+                <nav class="header-div d-flex">
+                    <div class="sigma_header col-auto">
+                        <ul class=" span-toggler toggle">
+                            <li class="aside-toggler ">
+                                <div class="d-flex">
+                                    <span></span>
+                                    <span class="color-bg"></span>
+                                    <span></span>
+                                </div>
+
+                                <div class="d-flex">
+                                    <span class="color-bg"></span>
+                                    <span class="opacity"></span>
+                                    <span class="color-bg"></span>
+                                </div>
+
+
+                                <div class="d-flex">
+                                    <span></span>
+                                    <span class="color-bg"></span>
+                                    <span></span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                    <aside class="  position">
+
+                        <div class="d-lg-none d-block">
+
+                            <ul class="mod-nav-div list-unstyled close">
+                                <a href="#" class="mod-logo">
+                                    <img src="ima/asset 2.png" alt="">
+                                </a>
+                                <li>
+                                    <a href="index.html">Home</a>
+                                    <ul class="mod-nav-div-ul list-unstyled">
+                                        <li><a href="index.html">home v1</a></li>
+                                        <li><a href="#">home v2</a></li>
+                                        <li><a href="#">home v3</a></li>
+
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="pages.html">pages</a>
+                                    <ul class="mod-nav-div-ul list-unstyled">
+                                        <li><a href="#">About Us</a></li>
+                                        <li><a href="#">Blog </a>
+
+                                            <ul class="mod-nav-ul-li list-unstyled">
+                                                <li><a href="blog-grid.html">Blog Archive</a></li>
+                                                <li><a href="#">Blog Details</a></li>
+                                            </ul>
+
+                                        </li>
+                                        <li><a href="#">Shop</a>
+
+                                            <ul class="mod-nav-ul-li list-unstyled">
+                                                <li><a href="#">Shop</a></li>
+                                                <li><a href="#">Product Details</a></li>
+                                                <li><a href="#">Cart</a></li>
+                                                <li><a href="#">Checkout</a></li>
+                                                <li><a href="#">Wishlist</a></li>
+                                            </ul>
+
+                                        </li>
+                                        <li><a href="service.html">Service</a>
+
+                                            <ul class="mod-nav-ul-li list-unstyled">
+                                                <li><a href="service.html">Service Style 1</a></li>
+                                                <li><a href="Service 2.html">Service Style 2</a></li>
+                                            </ul>
+
+                                        </li>
+                                        <li><a href="#">Broadcast</a></li>
+                                        <li><a href="#">Contact Us</a></li>
+                                        <li><a href="#">Volunteers</a>
+
+                                            <ul class="mod-modnav-ul-li list-unstyled">
+                                                <li><a href="#">Volunteers</a></li>
+                                                <li><a href="#">Volunteer Details</a></li>
+                                            </ul>
+
+                                        </li>
+                                        <li><a href="#">FAQ</a></li>
+
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">event</a>
+
+                                    <ul class="mod-nav-div-ul list-unstyled">
+                                        <li><a href="#">Event</a></li>
+                                        <li><a href="#">Event Detail</a></li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="#">holis</a>
+
+                                    <ul class="mod-nav-div-ul list-unstyled">
+                                        <li><a href="#">Holi</a></li>
+                                        <li><a href="#">Holi Details</a></li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="puja.html">puja</a>
+
+                                    <ul class="mod-nav-div-ul list-unstyled">
+                                        <li><a href="#">Puja</a></li>
+                                        <li><a href="#">Puja Details</a></li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="#">dination</a>
+
+                                    <ul class="mod-nav-div-ul list-unstyled">
+                                        <li><a href="#">Donation</a></li>
+                                        <li><a href="#">Donation Archive</a></li>
+                                    </ul>
+
+                                </li>
+                            </ul>
+                        </div>
+
+
+
+
+
+                        <div class="d-none d-lg-block">
+                            <ul class="d-flex  nav-div ">
+                                <li>
+                                    <a href="index.html">Home<i class="fa-solid fa-plus icon"></i></a>
+                                    <ul class="nav-div-ul">
+                                        <li><a href="index.html">home v1</a></li>
+                                        <li><a href="#">home v2</a></li>
+                                        <li><a href="#">home v3</a></li>
+
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="pages.html">pages<i class="fa-solid fa-plus icon"></i></a>
+                                    <ul class="nav-div-ul">
+                                        <li><a href="#">About Us</a></li>
+                                        <li><a href="#">Blog <i class="fa-solid fa-angle-right icon2"></i></a>
+
+                                            <ul class="nav-ul-li">
+                                                <li><a href="blog-grid.html">Blog Archive</a></li>
+                                                <li><a href="#">Blog Details</a></li>
+                                            </ul>
+
+                                        </li>
+                                        <li><a href="#">Shop<i class="fa-solid fa-angle-right icon2"></i></a>
+
+                                            <ul class="nav-ul-li">
+                                                <li><a href="#">Shop</a></li>
+                                                <li><a href="#">Product Details</a></li>
+                                                <li><a href="#">Cart</a></li>
+                                                <li><a href="#">Checkout</a></li>
+                                                <li><a href="#">Wishlist</a></li>
+                                            </ul>
+
+                                        </li>
+                                        <li><a href="service.html">Service<i class="fa-solid fa-angle-right icon2"></i></a>
+
+                                            <ul class="nav-ul-li">
+                                                <li><a href="service.html">Service Style 1</a></li>
+                                                <li><a href="Service 2.html">Service Style 2</a></li>
+                                            </ul>
+
+                                        </li>
+                                        <li><a href="#">Broadcast</a></li>
+                                        <li><a href="#">Contact Us</a></li>
+                                        <li><a href="#">Volunteers<i class="fa-solid fa-angle-right icon2"></i></a>
+
+                                            <ul class="nav-ul-li">
+                                                <li><a href="#">Volunteers</a></li>
+                                                <li><a href="#">Volunteer Details</a></li>
+                                            </ul>
+
+                                        </li>
+                                        <li><a href="#">FAQ</a></li>
+
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">event<i class="fa-solid fa-plus icon"></i></a>
+
+                                    <ul class="nav-div-ul">
+                                        <li><a href="#">Event</a></li>
+                                        <li><a href="#">Event Detail</a></li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="#">holis<i class="fa-solid fa-plus icon"></i></a>
+
+                                    <ul class="nav-div-ul">
+                                        <li><a href="#">Holi</a></li>
+                                        <li><a href="#">Holi Details</a></li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="puja.html">puja<i class="fa-solid fa-plus icon"></i></a>
+
+                                    <ul class="nav-div-ul">
+                                        <li><a href="#">Puja</a></li>
+                                        <li><a href="#">Puja Details</a></li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="#">dination<i class="fa-solid fa-plus icon"></i></a>
+
+                                    <ul class="nav-div-ul">
+                                        <li><a href="#">Donation</a></li>
+                                        <li><a href="#">Donation Archive</a></li>
+                                    </ul>
+
+                                </li>
+                            </ul>
+                        </div>
+                    </aside>
+                    <div class="d-lg-none d-block">
+                        <a href="#" class="logo-aaa">
+                            <img src="ima/asset 2.png" alt="">
+                        </a>
+                    </div>
+                    <div class="col-auto  text-md-right  d-none d-lg-block">
+                        <div class="sigma-logo">
+                            <a href="#" class="logo-a">
+                                <img src="ima/asset 2.png" alt="">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-auto ms-auto align-items text-md-right d-lg-block">
+
+                        <div class="button d-flex d-block">
+                            <!-- <div class="d-md-none d-lg-block "> -->
+                            <a href="#" class="button-div">
+                                <i class="fa-solid fa-phone-flip icon1"></i>
+                            </a>
+                            <!-- </div> -->
+                            <a href="#" class="sigma-button d-none d-lg-block">
+                                <span>
+                                    Donate Now
+                                </span>
+                            </a>
+                        </div>
+
+                    </div>
+                    <div class="col-auto d-flex align-item-center d-none d-md-block">
+                        <a href="#" class="search-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </header>
+    </div>

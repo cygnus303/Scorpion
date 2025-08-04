@@ -26,16 +26,16 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="form-group">
-                <label class="control-label col-md-5">Select Consignor </label>
-                <div class="col-md-7 radio-list d-flex align-items-center">
-                  <label class="radio-inline p-0">
-                    <div class="radio"><span class="checked"><input type="radio"
-                         class="clsCnor"></span></div> From Master
+             <div class="form-group">
+                <label class="control-label col-md-5">Select Consignor</label>
+                <div class="col-md-7 d-flex align-items-center gap-4">
+                  <label class="d-flex align-items-center gap-2 mb-0">
+                    <input type="radio" name="consigneeOption" value="master">
+                    From Master
                   </label>
-                  <label class="radio-inline">
-                    <div class="radio" ><span><input type="radio" 
-                         class="clsCnor"></span></div> Walk-In
+                  <label class="d-flex align-items-center gap-2 mb-0">
+                    <input type="radio" name="consigneeOption" value="walkin">
+                    Walk-In
                   </label>
                 </div>
               </div>
@@ -139,20 +139,21 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="form-group ">
+              <div class="form-group">
                 <label class="control-label col-md-5">Select Consignee</label>
-                <div class="col-md-7 radio-list d-flex align-items-center">
-                  <label class="radio-inline p-0">
-                    <div class="radio"><span class="checked"><input type="radio" class="clsCnor"></span></div> From Master
+                <div class="col-md-7 d-flex align-items-center gap-4">
+                  <label class="d-flex align-items-center gap-2 mb-0">
+                    <input type="radio" name="consigneeOption" value="master">
+                    From Master
                   </label>
-                  <label class="radio-inline">
-                    <div class="radio"><span><input type="radio" class="clsCnor"></span></div> Walk-In
+                  <label class="d-flex align-items-center gap-2 mb-0">
+                    <input type="radio" name="consigneeOption" value="walkin">
+                    Walk-In
                   </label>
                 </div>
               </div>
             </div>
           </div>
-
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
@@ -251,15 +252,15 @@
             </div>
             <div class="row">
               <div class="col-md-12">
-                 <div class="form-group">
-                <label class="control-label col-md-5">Select Third Party </label>
-                  <div class="col-md-7 radio-list d-flex align-items-center">
-                  <label class="radio-inline p-0">
-                    <div class="radio"><span class="checked"><input type="radio"
-                         class="clsCnor"></span></div>  From Master
+               <div class="form-group">
+                <label class="control-label col-md-5">Select Third Party</label>
+                <div class="col-md-7 d-flex align-items-center gap-4">
+                  <label class="d-flex align-items-center gap-2 mb-0">
+                    <input type="radio" name="consigneeOption" value="master">
+                    From Master
                   </label>
                 </div>
-                </div>
+              </div>
               </div>
             </div>
     
@@ -331,16 +332,18 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
-                  <label class="control-label col-md-5">Risk Type </label>
-                  <div class="col-md-7 radio-list d-flex align-items-center">
-                    <label class="radio-inline p-0">
-                      <div class="radio"><span class="checked"><input type="radio" class="clsCnor"></span></div>  Carrier's Risk 
-                    </label>
-                    <label class="radio-inline">
-                      <div class="radio"><span><input type="radio" class="clsCnor"></span></div>  Owner's Risk
-                    </label>
-                  </div>
+                <label class="control-label col-md-5">Risk Type</label>
+                <div class="col-md-7 d-flex align-items-center gap-4">
+                  <label class="d-flex align-items-center gap-2 mb-0">
+                    <input type="radio" name="riskType" value="carrier">
+                    Carrier's Risk
+                  </label>
+                  <label class="d-flex align-items-center gap-2 mb-0">
+                    <input type="radio" name="riskType" value="owner">
+                    Owner's Risk
+                  </label>
                 </div>
+              </div>
               </div>
             </div>
             <div class="row">
