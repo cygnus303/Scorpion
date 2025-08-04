@@ -256,3 +256,12 @@ input[readonly] {
   color: #495057; // optional: text color
   cursor: not-allowed; // optional: show disabled cursor
 }
+
+@media (max-width: 783px) {
+ .cnote-entry-container .form-group{
+    text-align: left !important;
+    align-items: center !important;
+    display: block !important;
+    width: 90%;
+  }
+}
