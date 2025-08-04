@@ -33,6 +33,9 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
+              "D:\\SCORPIONNEW\\Scorpion\\CygnuXTMSWebAPI\\CygnuXTMSWebAPI.External\\CygnuXTMSWebAPI.External.csproj": {
+                "projectPath": "D:\\SCORPIONNEW\\Scorpion\\CygnuXTMSWebAPI\\CygnuXTMSWebAPI.External\\CygnuXTMSWebAPI.External.csproj"
+              },
               "D:\\SCORPIONNEW\\Scorpion\\CygnuXTMSWebAPI\\CygnuXTMSWebAPI.Infrastructure\\CygnuXTMSWebAPI.Infrastructure.csproj": {
                 "projectPath": "D:\\SCORPIONNEW\\Scorpion\\CygnuXTMSWebAPI\\CygnuXTMSWebAPI.Infrastructure\\CygnuXTMSWebAPI.Infrastructure.csproj"
               }
@@ -57,7 +60,7 @@
           "dependencies": {
             "Microsoft.Extensions.Configuration": {
               "target": "Package",
-              "version": "[8.0.0, )"
+              "version": "[9.0.7, )"
             },
             "Microsoft.Extensions.Configuration.Abstractions": {
               "target": "Package",
@@ -65,11 +68,15 @@
             },
             "Microsoft.Extensions.DependencyInjection": {
               "target": "Package",
-              "version": "[8.0.0, )"
+              "version": "[9.0.7, )"
             },
             "Microsoft.Extensions.DependencyInjection.Abstractions": {
               "target": "Package",
-              "version": "[8.0.0, )"
+              "version": "[9.0.7, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
             }
           },
           "imports": [
@@ -138,6 +145,54 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.AspNet.Identity.EntityFramework": {
+              "target": "Package",
+              "version": "[2.2.4, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.18, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.7, )"
+            },
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[9.0.7, )"
+            },
+            "Microsoft.Extensions.Configuration.Binder": {
+              "target": "Package",
+              "version": "[9.0.7, )"
+            },
+            "Microsoft.Extensions.Http": {
+              "target": "Package",
+              "version": "[9.0.7, )"
+            },
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[8.13.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.6.1, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -186,7 +241,11 @@
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "D:\\SCORPIONNEW\\Scorpion\\CygnuXTMSWebAPI\\CygnuXTMSWebAPI.External\\CygnuXTMSWebAPI.External.csproj": {
+                "projectPath": "D:\\SCORPIONNEW\\Scorpion\\CygnuXTMSWebAPI\\CygnuXTMSWebAPI.External\\CygnuXTMSWebAPI.External.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
@@ -205,9 +264,13 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.1.66, )"
+            },
             "Microsoft.Data.SqlClient": {
               "target": "Package",
-              "version": "[5.2.3, )"
+              "version": "[6.1.0, )"
             },
             "Microsoft.Extensions.Configuration.Abstractions": {
               "target": "Package",
@@ -215,7 +278,7 @@
             },
             "Microsoft.Extensions.DependencyInjection.Abstractions": {
               "target": "Package",
-              "version": "[8.0.0, )"
+              "version": "[9.0.7, )"
             },
             "Microsoft.Graph": {
               "target": "Package",
@@ -306,6 +369,10 @@
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[8.0.18, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.7, )"
             },
             "Microsoft.IdentityModel.Tokens": {
               "target": "Package",

@@ -1,5 +1,147 @@
 [
   {
+    "ContainingType": "CygnuXTMSWebAPI.Controllers.AuthController",
+    "Method": "GenerateRefreshToken",
+    "RelativePath": "api/v{version}/Auth/generate-refresh-token",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "CygnuXTMSWebAPI.Application.Models.Request.Auth.TokenRequest",
+        "IsRequired": true
+      },
+      {
+        "Name": "version",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CygnuXTMSWebAPI.Controllers.AuthController",
+    "Method": "RefreshToken",
+    "RelativePath": "api/v{version}/Auth/refresh-token",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "CygnuXTMSWebAPI.Application.Models.Request.Auth.TokenRequest",
+        "IsRequired": true
+      },
+      {
+        "Name": "version",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CygnuXTMSWebAPI.Controllers.AuthController",
+    "Method": "ValidateToken",
+    "RelativePath": "api/v{version}/Auth/validate",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "CygnuXTMSWebAPI.Application.Models.Request.Auth.TokenRequest",
+        "IsRequired": true
+      },
+      {
+        "Name": "version",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CygnuXTMSWebAPI.Controllers.ExternalController",
+    "Method": "GetGeneralMaster",
+    "RelativePath": "api/v{version}/External/{codeType}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "codeType",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "searchText",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "version",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CygnuXTMSWebAPI.Controllers.ExternalController",
+    "Method": "GetCity",
+    "RelativePath": "api/v{version}/External/city",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "version",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CygnuXTMSWebAPI.Controllers.ExternalController",
+    "Method": "GetLocationMaster",
+    "RelativePath": "api/v{version}/External/location",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "version",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CygnuXTMSWebAPI.Controllers.ExternalController",
+    "Method": "Login",
+    "RelativePath": "api/v{version}/External/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "loginRequest",
+        "Type": "CygnuXTMSWebAPI.Models.UserLogin",
+        "IsRequired": true
+      },
+      {
+        "Name": "version",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "CygnuXTMSWebAPI.Controllers.OperationController",
     "Method": "GetWelcomeMessage",
     "RelativePath": "api/v{version}/Operation/welcome",

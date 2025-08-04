@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CygnuXTMSWebAPI.External")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1a7e8e1003bb069e7a5cc066f5ad125376c27d63")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7cb8feac68c637bbd083d25bc9d4c1e15f67b8c7")]
 [assembly: System.Reflection.AssemblyProductAttribute("CygnuXTMSWebAPI.External")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CygnuXTMSWebAPI.External")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

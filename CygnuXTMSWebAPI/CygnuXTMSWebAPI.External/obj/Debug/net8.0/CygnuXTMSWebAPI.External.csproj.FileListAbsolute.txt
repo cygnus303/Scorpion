@@ -21,3 +21,6 @@ D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.External\obj\Debug\net8.
 D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.External\obj\Debug\net8.0\refint\CygnuXTMSWebAPI.External.dll
 D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.External\obj\Debug\net8.0\CygnuXTMSWebAPI.External.pdb
 D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.External\obj\Debug\net8.0\ref\CygnuXTMSWebAPI.External.dll
+D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.External\bin\Debug\net8.0\CygnuXTMSWebAPI.External.runtimeconfig.json
+D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.External\obj\Debug\net8.0\CygnuXTMSWebAPI.External.csproj.AssemblyReference.cache
+D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.External\obj\Debug\net8.0\CygnuXTMSWebAPI.External.genruntimeconfig.cache

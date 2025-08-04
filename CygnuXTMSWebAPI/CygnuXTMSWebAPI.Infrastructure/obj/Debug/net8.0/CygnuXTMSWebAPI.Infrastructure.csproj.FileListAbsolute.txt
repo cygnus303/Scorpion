@@ -23,3 +23,6 @@ D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.Infrastructure\obj\Debug
 D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.Infrastructure\obj\Debug\net8.0\refint\CygnuXTMSWebAPI.Infrastructure.dll
 D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.Infrastructure\obj\Debug\net8.0\CygnuXTMSWebAPI.Infrastructure.pdb
 D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.Infrastructure\obj\Debug\net8.0\ref\CygnuXTMSWebAPI.Infrastructure.dll
+D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.Infrastructure\bin\Debug\net8.0\CygnuXTMSWebAPI.External.dll
+D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.Infrastructure\bin\Debug\net8.0\CygnuXTMSWebAPI.External.pdb
+D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.Infrastructure\obj\Debug\net8.0\CygnuXTM.3A350FC4.Up2Date

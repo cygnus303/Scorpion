@@ -29,3 +29,5 @@ D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.Application\obj\Debug\ne
 D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.Application\obj\Debug\net8.0\refint\CygnuXTMSWebAPI.Application.dll
 D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.Application\obj\Debug\net8.0\CygnuXTMSWebAPI.Application.pdb
 D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.Application\obj\Debug\net8.0\ref\CygnuXTMSWebAPI.Application.dll
+D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.Application\bin\Debug\net8.0\CygnuXTMSWebAPI.External.dll
+D:\SCORPIONNEW\Scorpion\CygnuXTMSWebAPI\CygnuXTMSWebAPI.Application\bin\Debug\net8.0\CygnuXTMSWebAPI.External.pdb
