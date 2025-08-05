@@ -3,6 +3,7 @@ import { ApiHandlerService } from './api-handler.service';
 import { Observable } from 'rxjs';
 import { IApiBaseResponse } from '../interface/api-base-action-response';
 import {  generalMasterResponse } from '../models/general-master.model';
+import { billingTypeResponse, cityResponse, pinCodeResponse } from '../models/general-master.model';
 import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
@@ -22,5 +23,14 @@ export class BasicDetailService {
   //   getBillingParty(searchTerm:string,location:string,paybs:string,header:HttpHeaders): Observable<IApiBaseResponse<any[]>> {
   //   return this.apiHandlerService.Get(`Master/GetCustomerList?Search=${searchTerm}&Location=${location}&Paybas=${paybs}&${header}`);
   // }
+
+  getpincodeData(searchTerm: string): Observable<IApiBaseResponse<pinCodeResponse[]>> {
+    return this.apiHandlerService.Get(`Operation/pincode?prefix=${searchTerm}`);
+  }
+
+  getCityData(locCode: string, searchTerm: string): Observable<IApiBaseResponse<cityResponse[]>> {
+    return this.apiHandlerService.Get(`Operation/citymaster-by-location?LocCode=${locCode}&Prefix=${searchTerm}`);
+  }
+
 
 }

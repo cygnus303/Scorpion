@@ -55,8 +55,10 @@
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Pincode</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Pincode"
-                formControlName="pincode" notFoundText="Please enter atleast 1 characters"></ng-select></div>
+            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="pincodeList" bindLabel="text"
+                bindValue="value" placeholder="Pincode" formControlName="pincode"
+                notFoundText="Please enter atleast 1 characters" (search)="getpincodeData($event)"
+                (change)="onChangePinCode($event)"></ng-select></div>
           </div>
         </div>
       </div>
@@ -95,8 +97,9 @@
       <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Destination</label>
-            <div class="col-md-7" >
-              <ng-select class="noFoundTextColor" placeholder="Destination" formControlName="destination" notFoundText="Please enter atleast 3 characters"></ng-select >
+            <div class="col-md-7">
+              <ng-select class="noFoundTextColor" placeholder="Destination" formControlName="destination"
+                notFoundText="Please enter atleast 3 characters"></ng-select>
             </div>
           </div>
         </div>
@@ -119,19 +122,25 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">From City</label>
             <div class="col-md-7">
-              <ng-select  class="noFoundTextColor" placeholder="From City"
-                formControlName="fromCity" notFoundText="Please enter atleast 1 characters"></ng-select>
-              </div>
+              <ng-select class="noFoundTextColor" placeholder="From City" formControlName="fromCity"
+                notFoundText="Please enter atleast 1 characters"></ng-select>
+            </div>
           </div>
         </div>
-        <div class="col-md-4 form-column ">
+        <div class="col-md-4 form-column " *ngIf="!basicDetailForm.get('destination')?.value">
           <div class="form-group"><label class="col-md-5">To City</label>
             <div class="col-md-7">
-              <input type="text" class="form-control required2" placeholder="To City"
-                formControlName="toCity" />
-                <!-- <ng-select  class="noFoundTextColor" placeholder="To City"
-                formControlName="toCity" notFoundText="Please enter atleast 1 characters"></ng-select> -->
-              </div>
+              <input type="text" class="form-control required2" placeholder="To City" formControlName="toCity" />
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 form-column " *ngIf="basicDetailForm.get('destination')?.value">
+          <div class="form-group"><label class="col-md-5">To City</label>
+            <div class="col-md-7">
+              <ng-select class="noFoundTextColor" placeholder="To City" [items]="cityList" bindLabel="location" (search)="getCityList($event)"
+                bindValue="location" formControlName="toCity" notFoundText="Please enter atleast 1 characters">
+              </ng-select>
+            </div>
           </div>
         </div>
       </div>
@@ -192,6 +201,29 @@
         </div>
       </div>
       <div class="row">
+        <div class="col-md-4 form-column ">
+          <div class="form-group">
+            <label class="control-label col-md-5">Select Vehicle</label>
+            <div class="col-md-7 d-flex align-items-center gap-4">
+              <label class="d-flex align-items-center gap-2 mb-0">
+                <input type="radio" name="vehicle" value="own">
+                Own
+              </label>
+              <label class="d-flex align-items-center gap-2 mb-0">
+                <input type="radio" name="vehicle" value="market">
+                Market
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 form-column ">
+          <div class="form-group"><label class="col-md-5">Vehicle No</label>
+            <div class="col-md-7"><input type="text" class="form-control" placeholder="Vehicle No"
+                formControlName="vehicleno" /></div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-md-4 form-column">
           <div class="form-group">
             <label for="refDkt" class="col-md-5">Apply Reference DKT</label>
@@ -237,6 +269,11 @@
           <div class="form-group"><label class="col-md-5">Sac Code Description</label>
             <div class="col-md-7"><input type="text" class="form-control" placeholder="Sac Code Description"
                 formControlName="sacDescription" readonly /></div>
+          </div>
+        </div>
+        <div class="col-md-4 form-column ">
+          <div class="form-group"><label class="col-md-5">Upload GST Declaraion</label>
+            <div class="col-md-7 text-start"><input type="file" /></div>
           </div>
         </div>
       </div>

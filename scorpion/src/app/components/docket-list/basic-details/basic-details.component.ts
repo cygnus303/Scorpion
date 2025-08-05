@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { DocketService } from '../../../shared/services/docket.service';
 import { BasicDetailService } from '../../../shared/services/basic-detail.service';
 import { generalMasterResponse } from '../../../shared/models/general-master.model';
+import { billingTypeResponse, cityResponse, pinCodeResponse } from '../../../shared/models/general-master.model';
 import { debounceTime, distinctUntilChanged, filter, Subject } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
 import { HttpHeaders } from '@angular/common/http';
@@ -22,6 +23,9 @@ export class BasicDetailsComponent {
   public serviceData: generalMasterResponse[] = [];
   public packagingTypeData : generalMasterResponse[] = [];
 
+  public billingTypeInput = new Subject<string>();
+  public pincodeList: pinCodeResponse[] = [];
+  public cityList:cityResponse[]=[];
   today: string = '';
 
   constructor(
@@ -75,8 +79,9 @@ export class BasicDetailsComponent {
       fromTime: new FormControl(null),
       toTime: new FormControl(null),
       billingType: new FormControl(null),
-      billingParty: new FormControl(null)
-    });
+      billingParty: new FormControl(null),
+      vehicleno: new FormControl(null)
+    })
   }
 
   getBillingTypeData() {
@@ -141,6 +146,57 @@ export class BasicDetailsComponent {
         }
       },
     });
+  }
+  getpincodeData(event: any) {
+    const searchText = event.term;
+
+    if (!searchText || searchText.length < 1) {
+      this.pincodeList = [];
+      return;
+    }
+    this.basicDetailService.getpincodeData(searchText).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.pincodeList = response.data;
+        } else {
+          this.pincodeList = [];
+        }
+      },
+      error: () => {
+        this.pincodeList = [];
+      }
+    });
+  }
+  onChangePinCode(event: any) {
+    this.basicDetailForm.patchValue({
+      destination: event.destination
+    });
+  }
+
+  getCityList(event?: any){
+      const searchText = event.term;
+
+    if (!searchText || searchText.length < 1) {
+      this.pincodeList = [];
+      return;
+    }
+    this.basicDetailService.getCityData(this.basicDetailForm.get('destination')?.value,searchText).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.cityList = response.data;
+        } else {
+          this.cityList = [];
+        }
+      },
+      error: () => {
+        this.cityList = [];
+      }
+    });
+  }
+
+  onBillingPartyChange(event: any) {
+    const billingParty = event.target.value;
+    this.billingTypeInput.next(billingParty);
   }
 
   openDatePicker(event: Event): void {
