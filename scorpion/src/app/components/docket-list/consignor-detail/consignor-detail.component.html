@@ -4,7 +4,7 @@
   CNote Entry - Consignor & Consignee Details
   </div>
 <div class="form-grid p-4">
-  <form>
+  <form [formGroup]="docketService.consignorForm">
       <div class="row">
         <div class="col-md-3">
           <div class="row">
@@ -18,7 +18,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Consignor GST No.</label>
                 <div class="col-md-7">
-                  <input class="form-control GSTNo clsGST"  maxlength="15" 
+                  <input class="form-control GSTNo clsGST" formControlName="consignorGSTNo"  maxlength="15" 
                     placeholder="Consignor GST No." type="text" >
                 </div>
               </div>
@@ -30,11 +30,11 @@
                 <label class="control-label col-md-5">Select Consignor</label>
                 <div class="col-md-7 d-flex align-items-center gap-4">
                   <label class="d-flex align-items-center gap-2 mb-0">
-                    <input type="radio" name="consigneeOption" value="master">
+                    <input type="radio" name="consignorSelection" formControlName="consignorSelection" value="master">
                     From Master
                   </label>
                   <label class="d-flex align-items-center gap-2 mb-0">
-                    <input type="radio" name="consigneeOption" value="walkin">
+                    <input type="radio" name="consignorSelection" value="walkin" formControlName="consignorSelection">
                     Walk-In
                   </label>
                 </div>
@@ -46,7 +46,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Select Name </label>
                 <div class="col-md-7">
-                <ng-select class="noFoundTextColor" placeholder="Select Name" notFoundText="Please enter atleast 3 characters"></ng-select>
+                <ng-select class="noFoundTextColor" placeholder="Select Name" formControlName="consignorName" notFoundText="Please enter atleast 3 characters"></ng-select>
                 </div>
               </div>
             </div>
@@ -56,7 +56,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5"></label>
                 <div class="col-md-7">
-                  <input class="required2 form-control required clsCnor" 
+                  <input class="required2 form-control required clsCnor" formControlName="consignorMasterName" 
                     placeholder="Consignor Name" type="text" value="">
                 </div>
               </div>
@@ -68,7 +68,7 @@
                 <label class="control-label col-md-5">Address </label>
                 <div class="col-md-7">
                <ng-select class="noFoundTextColor" placeholder="Address"></ng-select>
-                  <textarea class="required2 form-control-textarea required clsCnor" cols="20" 
+                  <textarea class="required2 form-control-textarea required clsCnor" formControlName="consignorAddress" cols="20" 
                     placeholder="Address" rows="2"></textarea>
                 </div>
               </div>
@@ -79,7 +79,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">City </label>
                 <div class="col-md-7">
-                  <input class="required2 form-control required clsCnor" 
+                  <input class="required2 form-control required clsCnor"  formControlName="consignorCity"
                     placeholder="City" type="text" >
                 </div>
               </div>
@@ -90,7 +90,9 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Pincode </label>
                 <div class="col-md-7">
-                 <ng-select class="noFoundTextColor" placeholder="Pincode" notFoundText="Please enter atleast 3 characters"></ng-select>
+                 <ng-select class="noFoundTextColor" [items]="docketService.pincodeList" bindLabel="text"
+                bindValue="value" placeholder="Pincode" formControlName="consignorPincode"
+                notFoundText="Please enter atleast 3 characters" (search)="docketService.getpincodeData($event)"></ng-select>
                 </div>
               </div>
             </div>
@@ -100,7 +102,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Mobile No </label>
                 <div class="col-md-7">
-                  <input class="form-control required required2 clsCnor" 
+                  <input class="form-control required required2 clsCnor"  formControlName="consignorMobile"
                     maxlength="10"  placeholder="Mobile No">
                 </div>
               </div>
@@ -111,7 +113,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Email Id </label>
                 <div class="col-md-7">
-                  <input class="form-control"  placeholder="Email Id" type="email">
+                  <input class="form-control"  placeholder="Email Id" formControlName="consignorEmail" type="email">
                 </div>
               </div>
             </div>
@@ -131,7 +133,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Consignee GST No.</label>
                 <div class="col-md-7">
-                  <input class="required2 form-control"  maxlength="15"
+                  <input class="required2 form-control" formControlName="consigneeGSTNo"  maxlength="15"
                      placeholder="Consignee GST No." type="text" >
                 </div>
               </div>
@@ -143,11 +145,11 @@
                 <label class="control-label col-md-5">Select Consignee</label>
                 <div class="col-md-7 d-flex align-items-center gap-4">
                   <label class="d-flex align-items-center gap-2 mb-0">
-                    <input type="radio" name="consigneeOption" value="master">
+                    <input type="radio" name="consigneeSelection" formControlName="consigneeSelection" value="master">
                     From Master
                   </label>
                   <label class="d-flex align-items-center gap-2 mb-0">
-                    <input type="radio" name="consigneeOption" value="walkin">
+                    <input type="radio" name="consigneeSelection"  formControlName=""formControlName="consigneeSelection" value="walkin">
                     Walk-In
                   </label>
                 </div>
@@ -159,7 +161,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Select Name </label>
                 <div class="col-md-7">
-                <ng-select class="noFoundTextColor" placeholder="Select Name" notFoundText="Please enter atleast 3 characters"></ng-select>
+                <ng-select class="noFoundTextColor" placeholder="Select Name" formControlName="consigneeName" notFoundText="Please enter atleast 3 characters"></ng-select>
                 </div>
               </div>
             </div>
@@ -169,7 +171,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5"></label>
                 <div class="col-md-7">
-                  <input class="required2 form-control required clsCnee"
+                  <input class="required2 form-control required clsCnee" formControlName="consigneeMasterName"
                     placeholder="Consignee Name" type="text" >
                 </div>
               </div>
@@ -181,7 +183,7 @@
                 <label class="control-label col-md-5">Address </label>
                 <div class="col-md-7">
                   <!-- <select class="form-control required2" placeholder="Address"></select> -->
-                  <textarea class="required2 form-control-textarea required clsCnee" cols="20" 
+                  <textarea class="required2 form-control-textarea required clsCnee" formControlName="consigneeAddress" cols="20" 
                     placeholder="Address" rows="2"></textarea>
                 </div>
               </div>
@@ -193,7 +195,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">City </label>
                 <div class="col-md-7">
-                  <input class="required2 form-control required clsCnee"
+                  <input class="required2 form-control required clsCnee" formControlName="consigneeCity"
                     placeholder="City" type="text" >
                 </div>
               </div>
@@ -204,7 +206,9 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Pincode </label>
                 <div class="col-md-7">
-                  <ng-select class="noFoundTextColor" placeholder="Pincode"></ng-select>
+                  <ng-select class="noFoundTextColor" [items]="docketService.pincodeList" bindLabel="text"
+                bindValue="value" placeholder="Pincode" formControlName="consigneePincode"
+                notFoundText="Please enter atleast 3 characters" (search)="docketService.getpincodeData($event)"></ng-select>
                 </div>
               </div>
             </div>
@@ -214,7 +218,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Mobile No </label>
                 <div class="col-md-7">
-                  <input class="form-control required required2" maxlength="10"
+                  <input class="form-control required required2" formControlName="consigneeMobile" maxlength="10"
                     placeholder="Mobile No" type="text" >
                 </div>
               </div>
@@ -225,7 +229,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Email Id </label>
                 <div class="col-md-7">
-                  <input class="form-control"  placeholder="Email Id" type="text">
+                  <input class="form-control" formControlName="consigneeEmail"  placeholder="Email Id" type="text">
                 </div>
               </div>
             </div>
@@ -245,7 +249,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Third Party GST No.</label>
                 <div class="col-md-7">
-                  <input class="form-control"  maxlength="15"
+                  <input class="form-control"  maxlength="15" formControlName="thirdPartyGSTNo"
                      placeholder="Third Party GST No." type="text">
                 </div>
               </div>
@@ -256,7 +260,7 @@
                 <label class="control-label col-md-5">Select Third Party</label>
                 <div class="col-md-7 d-flex align-items-center gap-4">
                   <label class="d-flex align-items-center gap-2 mb-0">
-                    <input type="radio" name="consigneeOption" value="master">
+                    <input type="radio" name="thirdPartySelection" value="master" formControlName="thirdPartySelection">
                     From Master
                   </label>
                 </div>
@@ -268,7 +272,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Select Name </label>
                 <div class="col-md-7">
-                  <input class="form-control" placeholder="Third Party Code"type="text" >
+                  <input class="form-control" placeholder="Third Party Code"type="text" formControlName="thirdPartyCode" >
                 </div>
               </div>
             </div>
@@ -277,7 +281,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5"></label>
                 <div class="col-md-7">
-                  <input class="form-control clsTP" placeholder="Third Party Name"
+                  <input class="form-control clsTP" placeholder="Third Party Name" formControlName="thirdPartyName"
                     type="text">
                 </div>
               </div>
@@ -286,7 +290,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Address</label>
                 <div class="col-md-7">
-                  <textarea class="form-control-textarea clsTP" cols="20" 
+                  <textarea class="form-control-textarea clsTP" formControlName="thirdPartyAddress" cols="20" 
                     placeholder="Third Party Address" rows="2"></textarea>
                 </div>
               </div>
@@ -295,7 +299,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">City </label>
                 <div class="col-md-7">
-                  <input class="form-control clsTP"placeholder="City" 
+                  <input class="form-control clsTP"placeholder="City"  formControlName="thirdPartyCity"
                     type="text" >
                 </div>
               </div>
@@ -305,7 +309,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Pincode </label>
                 <div class="col-md-7">
-                  <input class="form-control" placeholder="PinCode" type="text">
+                  <input class="form-control" placeholder="PinCode" formControlName="thirdPartyPincode" type="text">
                 </div>
               </div>
             </div>
@@ -314,7 +318,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Mobile No </label>
                 <div class="col-md-7">
-                  <input class="form-control" maxlength="10" placeholder="Mobile No">
+                  <input class="form-control" maxlength="10" formControlName="thirdPartyMobile" placeholder="Mobile No">
                 </div>
               </div>
             </div>
@@ -335,11 +339,11 @@
                 <label class="control-label col-md-5">Risk Type</label>
                 <div class="col-md-7 d-flex align-items-center gap-4">
                   <label class="d-flex align-items-center gap-2 mb-0">
-                    <input type="radio" name="riskType" value="carrier">
+                    <input type="radio" name="riskType" formControlName="riskType" value="carrier">
                     Carrier's Risk
                   </label>
                   <label class="d-flex align-items-center gap-2 mb-0">
-                    <input type="radio" name="riskType" value="owner">
+                    <input type="radio" name="riskType" formControlName="riskType" value="owner">
                     Owner's Risk
                   </label>
                 </div>
@@ -351,7 +355,7 @@
                 <div class="form-group">
                   <label class="control-label col-md-5">Policy No</label>
                   <div class="col-md-7">
-                    <input class="form-control " placeholder="Policy No" type="text">
+                    <input class="form-control " formControlName="policyNo" placeholder="Policy No" type="text">
                   </div>
                 </div>
               </div>
@@ -361,7 +365,7 @@
                 <div class="form-group">
                   <label class="control-label col-md-5">Policy Date </label>
                   <div class="col-md-7">
-                    <input class="form-control" placeholder="Policy Date" type="text" value="1/1/0001 12:00:00 AM">
+                    <input class="form-control" formControlName="policyDate" placeholder="Policy Date" type="text" value="1/1/0001 12:00:00 AM">
                   </div>
                 </div>
               </div>
@@ -371,7 +375,7 @@
                 <div class="form-group">
                   <label class="control-label col-md-5"> Internal Covers </label>
                   <div class="col-md-7">
-                    <input class="form-control " placeholder="Internal Covers" type="text" >
+                    <input class="form-control " formControlName="internalCovers" placeholder="Internal Covers" type="text" >
                   </div>
                 </div>
               </div>
@@ -381,7 +385,7 @@
                 <div class="form-group">
                   <label class="control-label col-md-5">Modvat Covers </label>
                   <div class="col-md-7">
-                    <input class="form-control " placeholder="Modvat Covers" type="text">
+                    <input class="form-control " formControlName="modvatCovers" placeholder="Modvat Covers" type="text">
                   </div>
                 </div>
               </div>
@@ -391,7 +395,7 @@
                 <div class="form-group">
                   <label class="control-label col-md-5">Customer Ref No </label>
                   <div class="col-md-7">
-                    <input class="form-control " placeholder="Customer Ref No" type="text">
+                    <input class="form-control " formControlName="customerRefNo" placeholder="Customer Ref No" type="text">
                   </div>
                 </div>
               </div>
@@ -401,7 +405,7 @@
                 <div class="form-group">
                   <label class="control-label col-md-5">Private Mark </label>
                   <div class="col-md-7">
-                    <input class="form-control " placeholder="Private Mark" type="text">
+                    <input class="form-control " formControlName="privateMark" placeholder="Private Mark" type="text">
                   </div>
                 </div>
               </div>
@@ -411,7 +415,7 @@
                 <div class="form-group">
                   <label class="control-label col-md-5">TP Number </label>
                   <div class="col-md-7">
-                    <input class="form-control "placeholder="TP Number " type="text">
+                    <input class="form-control " formControlName="tpNumber" placeholder="TP Number " type="text">
                   </div>
                 </div>
               </div>

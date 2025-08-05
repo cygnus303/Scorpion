@@ -4,7 +4,7 @@
     CNote Entry - Basic Details
   </div>
   <div class="form-grid p-4">
-    <form [formGroup]="basicDetailForm">
+    <form [formGroup]="docketService.basicDetailForm">
       <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group">
@@ -38,7 +38,7 @@
             <label class="col-md-5">CNote Date</label>
             <div class="col-md-7">
               <input type="date" class="form-control required2" placeholder="CNote Date" formControlName="cNoteDate"
-                [max]="today" (click)="openDatePicker($event)" />
+                [max]="docketService.today" (click)="openDatePicker($event)" />
             </div>
           </div>
         </div>
@@ -55,10 +55,10 @@
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Pincode</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="pincodeList" bindLabel="text"
+            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="docketService.pincodeList" bindLabel="text"
                 bindValue="value" placeholder="Pincode" formControlName="pincode"
-                notFoundText="Please enter atleast 1 characters" (search)="getpincodeData($event)"
-                (change)="onChangePinCode($event)"></ng-select></div>
+                notFoundText="Please enter atleast 1 characters" (search)="docketService.getpincodeData($event)"
+                (change)="docketService.onChangePinCode($event)"></ng-select></div>
           </div>
         </div>
       </div>
@@ -114,7 +114,7 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Transit Mode</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" placeholder="Transit Mode" [items]="transportModeData" bindLabel="codeDesc" bindValue="codeId"
+              <ng-select class="noFoundTextColor" placeholder="Transit Mode" [items]="transportModeData" (search)="getTransportModeData($event)" bindLabel="codeDesc" bindValue="codeId"
                 formControlName="mode"></ng-select>
               </div>
           </div>
@@ -127,14 +127,14 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4 form-column " *ngIf="!basicDetailForm.get('destination')?.value">
+        <div class="col-md-4 form-column " *ngIf="!docketService.basicDetailForm.get('destination')?.value">
           <div class="form-group"><label class="col-md-5">To City</label>
             <div class="col-md-7">
               <input type="text" class="form-control required2" placeholder="To City" formControlName="toCity" />
             </div>
           </div>
         </div>
-        <div class="col-md-4 form-column " *ngIf="basicDetailForm.get('destination')?.value">
+        <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('destination')?.value">
           <div class="form-group"><label class="col-md-5">To City</label>
             <div class="col-md-7">
               <ng-select class="noFoundTextColor" placeholder="To City" [items]="cityList" bindLabel="location" (search)="getCityList($event)"
@@ -237,7 +237,7 @@
         </div>
 
         <!-- Show only if checkbox is checked -->
-        <div class="col-md-4 form-column" *ngIf="basicDetailForm.get('isreferenceDKT')?.value">
+        <div class="col-md-4 form-column" *ngIf="docketService.basicDetailForm.get('isreferenceDKT')?.value">
           <div class="form-group">
             <label for="refDkt" class="col-md-5">Reference Docket</label>
             <div class="col-md-7">
@@ -246,7 +246,7 @@
           </div>
         </div>
 
-        <div class="col-md-4 form-column" *ngIf="basicDetailForm.get('isreferenceDKT')?.value">
+        <div class="col-md-4 form-column" *ngIf="docketService.basicDetailForm.get('isreferenceDKT')?.value">
           <div class="form-group">
             <label for="refDkt" class="col-md-5">Is Docket Payment</label>
             <div class="col-md-7 text-start">
@@ -321,7 +321,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="basicDetailForm.get('isAppointmentDelivery')?.value">
+      <div *ngIf="docketService.basicDetailForm.get('isAppointmentDelivery')?.value">
         <h3 class="pb-4 text-start appointment bold">Appointment Details</h3>
         <div class="p-3">
           <div class="row">
