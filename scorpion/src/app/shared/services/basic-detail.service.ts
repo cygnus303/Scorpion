@@ -2,9 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { ApiHandlerService } from './api-handler.service';
 import { Observable } from 'rxjs';
 import { IApiBaseResponse } from '../interface/api-base-action-response';
-import {  generalMasterResponse } from '../models/general-master.model';
-import { billingTypeResponse, cityResponse, pinCodeResponse } from '../models/general-master.model';
-import { HttpHeaders } from '@angular/common/http';
+import {  billingPartyRequest, cityResponse, pinCodeResponse } from '../models/general-master.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,15 +12,14 @@ export class BasicDetailService {
   constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService) { }
 
   getGeneralMasterList(codeType: string, searchText: string | null): Observable<IApiBaseResponse<any[]>> {
-  return this.apiHandlerService.Get(`External/${codeType}`, {
-    searchText: searchText || ''
-  });
-}
+    return this.apiHandlerService.Get(`External/${codeType}`, {
+      searchText: searchText || ''
+    });
+  }
 
-
-  //   getBillingParty(searchTerm:string,location:string,paybs:string,header:HttpHeaders): Observable<IApiBaseResponse<any[]>> {
-  //   return this.apiHandlerService.Get(`Master/GetCustomerList?Search=${searchTerm}&Location=${location}&Paybas=${paybs}&${header}`);
-  // }
+  getBillingParty(payload:billingPartyRequest): Observable<IApiBaseResponse<any[]>> {
+    return this.apiHandlerService.Get(`Operation/billing-party?PartyName=${payload.searchTerm}&Paybas=${payload.paybs}&Location=${payload.location}`);
+  }
 
   getpincodeData(searchTerm: string): Observable<IApiBaseResponse<pinCodeResponse[]>> {
     return this.apiHandlerService.Get(`Operation/pincode?prefix=${searchTerm}`);

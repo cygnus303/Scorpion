@@ -18,7 +18,7 @@ export class BasicDetailsComponent {
   public contentsData: generalMasterResponse[] = [];
   public serviceData: generalMasterResponse[] = [];
   public packagingTypeData : generalMasterResponse[] = [];
- 
+  public billingPartyData:any[]=[];
   public cityList:cityResponse[]=[];  
 
   constructor(
@@ -133,5 +133,39 @@ export class BasicDetailsComponent {
   openDatePicker(event: Event): void {
     const input = event.target as HTMLInputElement;
     input.showPicker?.(); 
+  }
+
+  getBillingPartyData(event: any) {
+    const searchText = event.term;
+
+    if (!searchText || searchText.length < 3) {
+      this.billingPartyData = [];
+      return;
+    }
+
+    const payload = {
+      searchTerm: searchText,
+      paybs: this.docketService.basicDetailForm.get('billingType')?.value ? this.docketService.basicDetailForm.get('billingType')?.value : 'P01',
+      location: "HQTR"
+    }
+    this.basicDetailService.getBillingParty(payload).subscribe({
+      next: (response) => {
+        if (response.success) {
+         this.billingPartyData=response.data;
+        } else {
+          this.billingPartyData = [];
+        }
+      },
+      error: () => {
+        this.billingPartyData = [];
+      }
+    });
+  }
+
+  onChangeBillingParty(event: any) {
+    this.docketService.basicDetailForm.patchValue({
+      billingParty:event.custcd,
+      billingName:event.custnm
+    })
   }
 }

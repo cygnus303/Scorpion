@@ -24,3 +24,9 @@ export interface pinCodeResponse {
 export interface cityResponse {
    location: string
 }
+
+export interface billingPartyRequest{
+   searchTerm: string, 
+   paybs: string, 
+   location: string
+}

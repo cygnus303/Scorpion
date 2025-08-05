@@ -66,9 +66,12 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Billing Party</label>
             <div class="col-md-7">
-              <ng-select  bindLabel="codeDesc" bindValue="codeId" class="noFoundTextColor"
-                placeholder="Billing Party" [searchable]="true"
+              <ng-select class="noFoundTextColor" 
+                placeholder="Billing Party" [searchable]="true" (search)="getBillingPartyData($event)"  (change)="onChangeBillingParty($event)"
                 formControlName="billingParty"  notFoundText="Please enter atleast 3 characters">
+                <ng-option *ngFor="let item of billingPartyData" [value]="item">
+                   {{ item.custcd }} : {{ item.custnm }}
+                </ng-option>
               </ng-select>
             </div>
           </div>
