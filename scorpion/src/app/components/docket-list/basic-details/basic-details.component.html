@@ -70,7 +70,7 @@
                 placeholder="Billing Party" [searchable]="true" (search)="getBillingPartyData($event)"  (change)="onChangeBillingParty($event)"
                 formControlName="billingParty"  [notFoundText]="notFoundTextValue">
                 <ng-option *ngFor="let item of billingPartyData" [value]="item">
-                   {{ item.custcd }} : {{ item.custnm }}
+                    <strong>{{ item.custcd }}</strong> : {{ item.custnm }}
                 </ng-option>
               </ng-select>
             </div>
@@ -101,10 +101,10 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Destination</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" [searchable]="true" (search)="getDestinationsList($event)" placeholder="Destination" formControlName="destination" 
+              <ng-select class="noFoundTextColor" [searchable]="true" (search)="getDestinationsList($event)" (change)="onChangedestinationsList($event)" placeholder="Destination" formControlName="destination" 
                 notFoundText="Please enter atleast 3 characters">
                 <ng-option *ngFor="let item of destinationsList" [value]="item">
-                   {{ item.locCode }} : {{ item.locName }}
+                    <strong>{{ item.locCode }}</strong> : {{ item.locName }}
                 </ng-option>
               </ng-select>
             </div>
@@ -129,9 +129,13 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">From City</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" placeholder="From City"  [items]="cityList" bindLabel="location" (search)="getCityList($event)"
-                bindValue="location"  formControlName="fromCity"
-                notFoundText="Please enter atleast 1 characters"></ng-select>
+              <ng-select class="noFoundTextColor" placeholder="From City"   (search)="getCityList($event)" (change)="onChangeCityListList($event,'from')"
+               formControlName="fromCity"
+                notFoundText="Please enter atleast 1 characters">
+               <ng-option *ngFor="let item of cityList" [value]="item.location">
+                    <strong>{{ item.location }}</strong> : {{ item.location }}
+                </ng-option>
+              </ng-select>
             </div>
           </div>
         </div>
@@ -145,8 +149,11 @@
         <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('destination')?.value">
           <div class="form-group"><label class="col-md-5">To City</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" placeholder="To City" [items]="cityList" bindLabel="location" (search)="getCityList($event)"
-                bindValue="location" formControlName="toCity" notFoundText="Please enter atleast 1 characters">
+              <ng-select class="noFoundTextColor" placeholder="To City" (search)="getCityList($event)" (change)="onChangeCityListList($event,'to')"
+                formControlName="toCity" notFoundText="Please enter atleast 1 characters">
+                 <ng-option *ngFor="let item of cityList" [value]="item.location">
+                    <strong>{{ item.location }}</strong> : {{ item.location }}
+                </ng-option>
               </ng-select>
             </div>
           </div>
@@ -165,7 +172,7 @@
                 formControlName="serviceType" notFoundText="No matches found"></ng-select></div>
           </div>
         </div>
-        <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('serviceType')?.value==='FTL'">
+        <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('serviceType')?.value==='2'">
           <div class="form-group"><label class="col-md-5">Type of Movement</label>
             <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="typeofMovementList" bindLabel="codeDesc" bindValue="codeId" placeholder="Type of Movement"
                 formControlName="typeMovement" notFoundText="No matches found"></ng-select></div>
@@ -208,33 +215,36 @@
           </div>
         </div>
       </div>
-      <div class="row" *ngIf="docketService.basicDetailForm.get('serviceType')?.value==='FTL'">
+      <div class="row" *ngIf="docketService.basicDetailForm.get('serviceType')?.value === '2'">
         <div class="col-md-4 form-column ">
           <div class="form-group">
             <label class="control-label col-md-5">Select Vehicle</label>
             <div class="col-md-7 d-flex align-items-center gap-4">
               <label class="d-flex align-items-center gap-2 mb-0">
-                <input type="radio" name="vehicle" value="own" formControlName="vehicleType">
+                <input type="radio" name="vehicleType" value="own" formControlName="vehicleType" >
                 Own
               </label>
               <label class="d-flex align-items-center gap-2 mb-0">
-                <input type="radio" name="vehicle" value="market" formControlName="vehicleType">
+                <input type="radio" name="vehicleType" value="market" formControlName="vehicleType" (change)="docketService.basicDetailForm.get('vehicleno')?.reset()">
                 Market
               </label>
             </div>
           </div>
         </div>
-        <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('vehicleType')?.value!=='own'">
+        <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('vehicleType')?.value !== 'own'">
           <div class="form-group"><label class="col-md-5">Vehicle No</label>
             <div class="col-md-7"><input type="text" class="form-control" placeholder="Vehicle No"
                 formControlName="vehicleno" /></div>
           </div>
         </div>
-         <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('vehicleType')?.value==='own'">
+         <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('vehicleType')?.value === 'own'">
           <div class="form-group"><label class="col-md-5">Vehicle No</label>
             <div class="col-md-7">
-              <ng-select  class="noFoundTextColor" placeholder="Vehicle No"
+              <ng-select  class="noFoundTextColor" [searchable]="true" (search)="getVehicleNumbersList($event)" (change)="onChangeVehicleNo($event)" placeholder="Vehicle No"
                 formControlName="vehicleno" >
+                <ng-option *ngFor="let item of vehicleNumbersList" [value]="item.vehno">
+                <strong>{{ item.vehno }}</strong> : {{ item.vehno }}
+                </ng-option>
             </ng-select>
               </div>
           </div>

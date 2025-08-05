@@ -40,3 +40,7 @@ export interface billingPartyResponse {
    custnm: string,
    vol_yn: string
 }
+
+export interface VehicleNumbersResponse {
+ vehno:string;
+}

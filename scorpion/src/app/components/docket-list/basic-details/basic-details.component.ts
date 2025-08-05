@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DocketService } from '../../../shared/services/docket.service';
 import { BasicDetailService } from '../../../shared/services/basic-detail.service';
-import { DestinationsList, generalMasterResponse ,billingPartyResponse} from '../../../shared/models/general-master.model';
+import { DestinationsList, generalMasterResponse ,billingPartyResponse, VehicleNumbersResponse} from '../../../shared/models/general-master.model';
 import { cityResponse } from '../../../shared/models/general-master.model';
 import { combineLatest, filter, startWith } from 'rxjs';
 
@@ -24,6 +24,7 @@ export class BasicDetailsComponent {
   public billingPartyData: billingPartyResponse[] = [];
   public cityList:cityResponse[]=[];  
   public destinationsList:DestinationsList[]=[];
+  public vehicleNumbersList:VehicleNumbersResponse[]=[];
   public notFoundTextValue = 'Please enter at least 3 characters';
   constructor(
     public docketService: DocketService,
@@ -209,11 +210,57 @@ export class BasicDetailsComponent {
     });
   }
 
+  getVehicleNumbersList(event?: any){
+   const searchText = event.term;
+    if (!searchText || searchText.length < 1) {
+      this.vehicleNumbersList = [];
+      return;
+    }
+    this.basicDetailService.getGetVehicleNumbers(searchText).subscribe({
+      next: (response) => {
+        if (response) {
+          this.vehicleNumbersList = response;
+        } else {
+          this.vehicleNumbersList = [];
+        }
+      },
+      error: () => {
+        this.vehicleNumbersList = [];
+      }
+    });
+  }
+
   onChangeBillingParty(event: any) {
     this.docketService.basicDetailForm.patchValue({
       billingParty: event.custcd,
       billingName: event.custnm
     })
+  }
+
+  onChangedestinationsList(event: any){
+     this.docketService.basicDetailForm.patchValue({
+      destination: event.locCode,
+    });
+    this.destinationsList = [];
+  }
+
+  onChangeCityListList(event: any, type:any){
+    if(type === 'from'){
+      this.docketService.basicDetailForm.patchValue({
+       fromCity: event +':'+ event,
+     });
+    }else if(type === 'to'){
+       this.docketService.basicDetailForm.patchValue({
+       toCity: event +':'+ event,
+     });
+    }
+    this.cityList = [];
+  }
+  onChangeVehicleNo(event: any){
+    this.docketService.basicDetailForm.patchValue({
+       vehicleno: event +':'+event,
+     });
+     this.vehicleNumbersList = [];
   }
 
   onChangeBillingType() {

@@ -55,7 +55,7 @@ export class DocketService {
       billingType: new FormControl(null),
       billingParty: new FormControl(null),
       vehicleno: new FormControl(null),
-      vehicleType:new FormControl(null),
+      vehicleType:new FormControl('own'),
       
     });
   }
