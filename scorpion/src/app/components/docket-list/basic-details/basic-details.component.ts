@@ -21,11 +21,11 @@ export class BasicDetailsComponent {
   public pickUpData: generalMasterResponse[] = [];
   public contentsData: generalMasterResponse[] = [];
   public serviceData: generalMasterResponse[] = [];
-  public packagingTypeData : generalMasterResponse[] = [];
+  public packagingTypeData: generalMasterResponse[] = [];
 
   public billingTypeInput = new Subject<string>();
   public pincodeList: pinCodeResponse[] = [];
-  public cityList:cityResponse[]=[];
+  public cityList: cityResponse[] = [];
   today: string = '';
 
   constructor(
@@ -114,13 +114,13 @@ export class BasicDetailsComponent {
     });
   }
 
-  getContentsData(event:any){
+  getContentsData(event: any) {
     const searchText = event.term;
     if (!searchText || searchText.length < 1) {
       this.contentsData = [];
       return;
     }
-     this.basicDetailService.getGeneralMasterList('PROD', '').subscribe({
+    this.basicDetailService.getGeneralMasterList('PROD', '').subscribe({
       next: (response) => {
         if (response.success) {
           this.contentsData = response.data;
@@ -129,7 +129,7 @@ export class BasicDetailsComponent {
     });
   }
 
-  getServiceTypeData(){
+  getServiceTypeData() {
     this.basicDetailService.getGeneralMasterList('SVCTYP', '').subscribe({
       next: (response) => {
         if (response.success) {
@@ -138,8 +138,8 @@ export class BasicDetailsComponent {
       },
     });
   }
-    getPackagingTypeData(){
-    this.basicDetailService.getGeneralMasterList('PKGS','').subscribe({
+  getPackagingTypeData() {
+    this.basicDetailService.getGeneralMasterList('PKGS', '').subscribe({
       next: (response) => {
         if (response.success) {
           this.packagingTypeData = response.data;
@@ -173,14 +173,14 @@ export class BasicDetailsComponent {
     });
   }
 
-  getCityList(event?: any){
-      const searchText = event.term;
+  getCityList(event?: any) {
+    const searchText = event.term;
 
     if (!searchText || searchText.length < 1) {
       this.pincodeList = [];
       return;
     }
-    this.basicDetailService.getCityData(this.basicDetailForm.get('destination')?.value,searchText).subscribe({
+    this.basicDetailService.getCityData(this.basicDetailForm.get('destination')?.value, searchText).subscribe({
       next: (response) => {
         if (response.success) {
           this.cityList = response.data;
@@ -202,5 +202,39 @@ export class BasicDetailsComponent {
   openDatePicker(event: Event): void {
     const input = event.target as HTMLInputElement;
     input.showPicker?.(); // Show native picker if supported
+  }
+
+  getBillingPartyData(event: any) {
+    const searchText = event.term;
+
+    if (!searchText || searchText.length < 3) {
+      this.billingPartyData = [];
+      return;
+    }
+
+    const payload = {
+      searchTerm: searchText,
+      paybs: this.basicDetailForm.get('billingType')?.value ? this.basicDetailForm.get('billingType')?.value : 'P01',
+      location: "HQTR"
+    }
+    this.basicDetailService.getBillingParty(payload).subscribe({
+      next: (response) => {
+        if (response.success) {
+         this.billingPartyData=response.data;
+        } else {
+          this.billingPartyData = [];
+        }
+      },
+      error: () => {
+        this.billingPartyData = [];
+      }
+    });
+  }
+
+  onChangeBillingParty(event: any) {
+    this.basicDetailForm.patchValue({
+      billingParty:event.custcd,
+      billingName:event.custnm
+    })
   }
 }
