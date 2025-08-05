@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DocketService } from '../../../shared/services/docket.service';
 import { BasicDetailService } from '../../../shared/services/basic-detail.service';
-import { billingTypeResponse } from '../../../shared/models/general-master.model';
+import { generalMasterResponse } from '../../../shared/models/general-master.model';
 import { debounceTime, distinctUntilChanged, filter, Subject } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
 import { HttpHeaders } from '@angular/common/http';
@@ -14,23 +14,25 @@ import { HttpHeaders } from '@angular/common/http';
 })
 export class BasicDetailsComponent {
   public basicDetailForm!: FormGroup;
-  public billingTypeData: billingTypeResponse[] = [];
+  public billingTypeData: generalMasterResponse[] = [];
   public billingPartyData: any[] = [];
-  public billingTypeInput = new Subject<string>();
+  public transportModeData: generalMasterResponse[] = [];
+  public pickUpData: generalMasterResponse[] = [];
+  public contentsData: generalMasterResponse[] = [];
+  public serviceData: generalMasterResponse[] = [];
+  public packagingTypeData : generalMasterResponse[] = [];
+
   today: string = '';
 
   constructor(
     public docketService: DocketService,
     private basicDetailService: BasicDetailService
   ) {
-    this.billingTypeInput.pipe(debounceTime(500), distinctUntilChanged(), filter(value => value.length >= 2)).subscribe(billingParty => {
-      this.getBillingParty(billingParty);
-    });
   }
 
   ngOnInit() {
+    this.buildForm();
     this.getBillingTypeData();
-    this.buildForm()
   }
 
   buildForm() {
@@ -74,48 +76,75 @@ export class BasicDetailsComponent {
       toTime: new FormControl(null),
       billingType: new FormControl(null),
       billingParty: new FormControl(null)
-    })
+    });
   }
 
   getBillingTypeData() {
-    this.basicDetailService.getBillingTypeList('PAYTYP',null).subscribe({
+    this.basicDetailService.getGeneralMasterList('PAYTYP', null).subscribe({
       next: (response) => {
         if (response.success) {
           this.billingTypeData = response.data;
         }
-      },
-      error: (response: any) => {
+      }
+    });
+  }
+
+  getTransportModeData() {
+    this.basicDetailService.getGeneralMasterList('TRN', null).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.transportModeData = response.data;
+        }
       },
     });
   }
 
-  onBillingPartyChange(event: any) {
-    const billingParty = event.target.value;
-    this.billingTypeInput.next(billingParty);
+  getPickUpData() {
+    this.basicDetailService.getGeneralMasterList('PKPDL', '').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.pickUpData = response.data;
+        }
+      },
+    });
+  }
+
+  getContentsData(event:any){
+    const searchText = event.term;
+    if (!searchText || searchText.length < 1) {
+      this.contentsData = [];
+      return;
+    }
+     this.basicDetailService.getGeneralMasterList('PROD', '').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.contentsData = response.data;
+        }
+      },
+    });
+  }
+
+  getServiceTypeData(){
+    this.basicDetailService.getGeneralMasterList('SVCTYP', '').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.serviceData = response.data;
+        }
+      },
+    });
+  }
+    getPackagingTypeData(){
+    this.basicDetailService.getGeneralMasterList('PKGS','').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.packagingTypeData = response.data;
+        }
+      },
+    });
   }
 
   openDatePicker(event: Event): void {
     const input = event.target as HTMLInputElement;
     input.showPicker?.(); // Show native picker if supported
   }
-
-  getBillingParty(getBillingParty: string) {
-  //   const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IkNZR05VU1RFQU0iLCJVc2VyVHlwZSI6IkFETUlOSVNUUkFUT1IiLCJqdGkiOiI2MjBkMjI2Yi0zMjE0LTQxNTktOWY3Yy0wZmFkNzRlMDllZWIiLCJlbWFpbCI6InJvaGl0dm9yYTExNEBnbWFpbC5jb20iLCJleHAiOjE4MTcxMjU3MjEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAzMjQiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMzI0In0.7t3mm1B_9EAxWBZUTgzfQ8-Q-k85EVO5nJaKqWiOQlo';
-
-  //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${token}`
-  //   });
-  //   this.basicDetailService.getBillingParty(getBillingParty, 'HQTR', this.basicDetailForm.value.billingType, headers).subscribe({
-  //     next: (response) => {
-  //       if (response.status === 200) {
-
-  //         this.billingPartyData = response.data;
-  //       }
-  //     },
-  //     error: (response: any) => {
-  //     },
-  //   });
-  }
-
-
 }

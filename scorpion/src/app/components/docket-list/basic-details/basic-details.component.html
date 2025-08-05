@@ -12,7 +12,7 @@
             <div class="col-md-7">
               <div class="radio-group ">
                 <label for="radio2" class="d-flex"><input id="radio2" name="radio" type="radio" class="radio me-2"
-                    checked />Normal</label>
+                    checked/>Normal</label>
               </div>
             </div>
           </div>
@@ -65,7 +65,7 @@
           <div class="form-group"><label class="col-md-5">Billing Party</label>
             <div class="col-md-7">
               <ng-select  bindLabel="codeDesc" bindValue="codeId" class="noFoundTextColor"
-                (input)="onBillingPartyChange($event)" placeholder="Billing Party" [searchable]="true"
+                placeholder="Billing Party" [searchable]="true"
                 formControlName="billingParty"  notFoundText="Please enter atleast 3 characters">
               </ng-select>
             </div>
@@ -111,7 +111,7 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Transit Mode</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" placeholder="Transit Mode"
+              <ng-select class="noFoundTextColor" placeholder="Transit Mode" [items]="transportModeData" bindLabel="codeDesc" bindValue="codeId"
                 formControlName="mode"></ng-select>
               </div>
           </div>
@@ -126,21 +126,25 @@
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">To City</label>
-            <div class="col-md-7"><input type="text" class="form-control required2" placeholder="To City"
-                formControlName="toCity" /></div>
+            <div class="col-md-7">
+              <input type="text" class="form-control required2" placeholder="To City"
+                formControlName="toCity" />
+                <!-- <ng-select  class="noFoundTextColor" placeholder="To City"
+                formControlName="toCity" notFoundText="Please enter atleast 1 characters"></ng-select> -->
+              </div>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Pickup/Delivery</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Pickup/Delivery"
+            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Pickup/Delivery" [items]="pickUpData" bindLabel="codeDesc" bindValue="codeId"
                 formControlName="pickup"></ng-select></div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Service Type</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Service Type"
+            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Service Type" [items]="serviceData" bindLabel="codeDesc" bindValue="codeId"
                 formControlName="serviceType" notFoundText="Please enter atleast 1 characters"></ng-select></div>
           </div>
         </div>
@@ -154,13 +158,15 @@
       <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Contents</label>
-            <div class="col-md-7"><input type="text" class="form-control required2" placeholder="Contents"
-                formControlName="contents" /></div>
+            <div class="col-md-7">
+              <ng-select class="noFoundTextColor" type="text"  placeholder="Contents" [items]="contentsData" bindLabel="codeDesc" bindValue="codeId"
+                formControlName="contents" (search)="getContentsData($event)"></ng-select>
+              </div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Packaging Type</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Packaging Type"
+            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Packaging Type" [items]="packagingTypeData" bindLabel="codeDesc" bindValue="codeId"
                 formControlName="packingType"></ng-select></div>
           </div>
         </div>

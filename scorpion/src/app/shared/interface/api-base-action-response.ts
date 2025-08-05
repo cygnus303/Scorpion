@@ -18,7 +18,6 @@ export interface IApiBaseResponse<T> {
   success: boolean;
   data: T;
   totalCount: number;
-  error: ErrorResponse;
 }
 
 export interface 	ErrorResponse{
