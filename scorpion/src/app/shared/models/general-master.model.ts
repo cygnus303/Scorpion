@@ -30,3 +30,8 @@ export interface billingPartyRequest{
    paybs: string, 
    location: string
 }
+export interface DestinationsList{
+   locCode: string,
+   locName: string,
+   locRegion: string,
+}

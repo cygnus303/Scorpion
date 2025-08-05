@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DocketService } from '../../../shared/services/docket.service';
 import { BasicDetailService } from '../../../shared/services/basic-detail.service';
-import { generalMasterResponse } from '../../../shared/models/general-master.model';
+import { DestinationsList, generalMasterResponse } from '../../../shared/models/general-master.model';
 import { cityResponse } from '../../../shared/models/general-master.model';
 import { combineLatest, filter, startWith } from 'rxjs';
 
@@ -18,9 +18,13 @@ export class BasicDetailsComponent {
   public contentsData: generalMasterResponse[] = [];
   public serviceData: generalMasterResponse[] = [];
   public packagingTypeData : generalMasterResponse[] = [];
+  public typeofMovementList : generalMasterResponse[] = [];
+  public businessTypeList : generalMasterResponse[] = [];
+  public exemptServicesList : generalMasterResponse[] = [];
   public billingPartyData:any[]=[];
   public cityList:cityResponse[]=[];  
-
+  public destinationsList:DestinationsList[]=[];
+  public notFoundTextValue = 'Please enter at least 3 characters';
   constructor(
     public docketService: DocketService,
     private basicDetailService: BasicDetailService) {}
@@ -42,6 +46,9 @@ export class BasicDetailsComponent {
           this.getPickUpData();
           this.getContentsData();
           this.getServiceTypeData();
+          this.getTypeofMovementData();
+          this.getbusinessTypeData();
+          this.getexemptServicesData();
         });
     }
   }
@@ -55,13 +62,8 @@ export class BasicDetailsComponent {
     });
   }
 
-  getTransportModeData(event?: any) {
-      const searchText = event.term || null;
-    if (!searchText || searchText.length < 1) {
-      this.cityList = [];
-      return;
-    }
-    this.basicDetailService.getGeneralMasterList('TRN', searchText).subscribe({ next: (response) => {
+  getTransportModeData() {
+    this.basicDetailService.getGeneralMasterList('TRN', '').subscribe({ next: (response) => {
         if (response.success) {
           this.transportModeData = response.data;
         }
@@ -78,12 +80,7 @@ export class BasicDetailsComponent {
     });
   }
 
-  getContentsData(event?:any){
-    const searchText = event.term || null;
-    if (!searchText || searchText.length < 1) {
-      this.contentsData = [];
-      return;
-    }
+  getContentsData(){
      this.basicDetailService.getGeneralMasterList('PROD', '').subscribe({next: (response) => {
         if (response.success) {
           this.contentsData = response.data;
@@ -110,6 +107,33 @@ export class BasicDetailsComponent {
     });
   }
 
+   getTypeofMovementData(){
+    this.basicDetailService.getGeneralMasterList('FTLTYP ','').subscribe({next: (response) => {
+        if (response.success) {
+          this.typeofMovementList = response.data;
+        }
+      },
+    });
+  }
+
+  getbusinessTypeData(){
+    this.basicDetailService.getGeneralMasterList('BUT ','').subscribe({next: (response) => {
+        if (response.success) {
+          this.businessTypeList = response.data;
+        }
+      },
+    });
+  }
+
+   getexemptServicesData(){
+    this.basicDetailService.getGeneralMasterList('EXMPTSRV ','').subscribe({next: (response) => {
+        if (response.success) {
+          this.exemptServicesList = response.data;
+        }
+      },
+    });
+  }
+
   getCityList(event?: any){
       const searchText = event.term;
     if (!searchText || searchText.length < 1) {
@@ -130,6 +154,26 @@ export class BasicDetailsComponent {
     });
   }
 
+  getDestinationsList(event?: any){
+      const searchText = event.term;
+    if (!searchText || searchText.length < 1) {
+      this.destinationsList = [];
+      return;
+    }
+    this.basicDetailService.getGCDestinations(searchText).subscribe({
+      next: (response) => {
+        if (response) {
+          this.destinationsList = response;
+        } else {
+          this.destinationsList = [];
+        }
+      },
+      error: () => {
+        this.destinationsList = [];
+      }
+    });
+  }
+
   openDatePicker(event: Event): void {
     const input = event.target as HTMLInputElement;
     input.showPicker?.(); 
@@ -137,12 +181,10 @@ export class BasicDetailsComponent {
 
   getBillingPartyData(event: any) {
     const searchText = event.term;
-
     if (!searchText || searchText.length < 3) {
       this.billingPartyData = [];
       return;
     }
-
     const payload = {
       searchTerm: searchText,
       paybs: this.docketService.basicDetailForm.get('billingType')?.value ? this.docketService.basicDetailForm.get('billingType')?.value : 'P01',
@@ -152,6 +194,7 @@ export class BasicDetailsComponent {
       next: (response) => {
         if (response.success) {
          this.billingPartyData=response.data;
+          this.notFoundTextValue = 'No matches found';
         } else {
           this.billingPartyData = [];
         }

@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { ApiHandlerService } from './api-handler.service';
 import { Observable } from 'rxjs';
 import { IApiBaseResponse } from '../interface/api-base-action-response';
-import {  billingPartyRequest, cityResponse, pinCodeResponse } from '../models/general-master.model';
+import {  billingPartyRequest, cityResponse, DestinationsList, pinCodeResponse } from '../models/general-master.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,5 +29,12 @@ export class BasicDetailService {
     return this.apiHandlerService.Get(`Operation/citymaster-by-location?LocCode=${locCode}&Prefix=${searchTerm}`);
   }
 
+ getGCDestinations(searchTerm: string): Observable<any> {
+    return this.apiHandlerService.Get(`Operation/GetGCDestinations?prefix=${searchTerm}`);
+  }
+
+  getGetVehicleNumbers(searchTerm: string): Observable<any> {
+    return this.apiHandlerService.Get(`Operation/GetVehicleNumbers?prefix=${searchTerm}`);
+  }
 
 }
