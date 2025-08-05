@@ -1,7 +1,7 @@
 export interface generalMasterResponse {
-            codeType: string,
-            codeId: string,
-            codeDesc: string
+   codeType: string,
+   codeId: string,
+   codeDesc: string
 }
 
 export interface billingTypeResponse {
@@ -25,13 +25,18 @@ export interface cityResponse {
    location: string
 }
 
-export interface billingPartyRequest{
-   searchTerm: string, 
-   paybs: string, 
+export interface billingPartyRequest {
+   searchTerm: string,
+   paybs: string,
    location: string
 }
 export interface DestinationsList{
    locCode: string,
    locName: string,
    locRegion: string,
+}
+export interface billingPartyResponse {
+   custcd: string,
+   custnm: string,
+   vol_yn: string
 }
