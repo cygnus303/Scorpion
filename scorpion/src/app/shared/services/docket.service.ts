@@ -13,7 +13,7 @@ export class DocketService {
   public today: string = '';
   constructor( private basicDetailService: BasicDetailService) {}
 
-   buildForm() {
+   detailForm() {
     const now = new Date();
     this.today = now.toISOString().split('T')[0];
     this.basicDetailForm = new FormGroup({
@@ -55,6 +55,8 @@ export class DocketService {
       billingType: new FormControl(null),
       billingParty: new FormControl(null),
       vehicleno: new FormControl(null),
+      vehicleType:new FormControl(null),
+      
     });
   }
 

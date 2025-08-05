@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DocketService } from '../../../shared/services/docket.service';
 import { BasicDetailService } from '../../../shared/services/basic-detail.service';
-import { generalMasterResponse } from '../../../shared/models/general-master.model';
+import { billingPartyResponse, generalMasterResponse } from '../../../shared/models/general-master.model';
 import { cityResponse } from '../../../shared/models/general-master.model';
 import { combineLatest, filter, startWith } from 'rxjs';
 
@@ -17,16 +17,16 @@ export class BasicDetailsComponent {
   public pickUpData: generalMasterResponse[] = [];
   public contentsData: generalMasterResponse[] = [];
   public serviceData: generalMasterResponse[] = [];
-  public packagingTypeData : generalMasterResponse[] = [];
-  public billingPartyData:any[]=[];
-  public cityList:cityResponse[]=[];  
+  public packagingTypeData: generalMasterResponse[] = [];
+  public billingPartyData: billingPartyResponse[] = [];
+  public cityList: cityResponse[] = [];
 
   constructor(
     public docketService: DocketService,
-    private basicDetailService: BasicDetailService) {}
+    private basicDetailService: BasicDetailService) { }
 
   ngOnInit() {
-    this.docketService.buildForm();
+    this.docketService.detailForm();
     this.getBillingTypeData();
 
     const billingPartyControl = this.docketService.basicDetailForm.get('billingParty');
@@ -36,7 +36,7 @@ export class BasicDetailsComponent {
         billingPartyControl.valueChanges.pipe(startWith(billingPartyControl.value)),
         pincodeControl.valueChanges.pipe(startWith(pincodeControl.value))
       ]).pipe(
-          filter(([billingParty, pincode]) => !!billingParty && !!pincode)).subscribe(([billingParty, pincode]) => {
+        filter(([billingParty, pincode]) => !!billingParty && !!pincode)).subscribe(([billingParty, pincode]) => {
           this.getPackagingTypeData();
           this.getTransportModeData();
           this.getPickUpData();
@@ -47,7 +47,8 @@ export class BasicDetailsComponent {
   }
 
   getBillingTypeData() {
-    this.basicDetailService.getGeneralMasterList('PAYTYP', null).subscribe({next: (response) => {
+    this.basicDetailService.getGeneralMasterList('PAYTYP', null).subscribe({
+      next: (response) => {
         if (response.success) {
           this.billingTypeData = response.data;
         }
@@ -56,12 +57,13 @@ export class BasicDetailsComponent {
   }
 
   getTransportModeData(event?: any) {
-      const searchText = event.term || null;
+    const searchText = event.term || null;
     if (!searchText || searchText.length < 1) {
       this.cityList = [];
       return;
     }
-    this.basicDetailService.getGeneralMasterList('TRN', searchText).subscribe({ next: (response) => {
+    this.basicDetailService.getGeneralMasterList('TRN', searchText).subscribe({
+      next: (response) => {
         if (response.success) {
           this.transportModeData = response.data;
         }
@@ -70,7 +72,8 @@ export class BasicDetailsComponent {
   }
 
   getPickUpData() {
-    this.basicDetailService.getGeneralMasterList('PKPDL', '').subscribe({next: (response) => {
+    this.basicDetailService.getGeneralMasterList('PKPDL', '').subscribe({
+      next: (response) => {
         if (response.success) {
           this.pickUpData = response.data;
         }
@@ -78,13 +81,14 @@ export class BasicDetailsComponent {
     });
   }
 
-  getContentsData(event?:any){
+  getContentsData(event?: any) {
     const searchText = event.term || null;
     if (!searchText || searchText.length < 1) {
       this.contentsData = [];
       return;
     }
-     this.basicDetailService.getGeneralMasterList('PROD', '').subscribe({next: (response) => {
+    this.basicDetailService.getGeneralMasterList('PROD', '').subscribe({
+      next: (response) => {
         if (response.success) {
           this.contentsData = response.data;
         }
@@ -92,8 +96,9 @@ export class BasicDetailsComponent {
     });
   }
 
-  getServiceTypeData(){
-    this.basicDetailService.getGeneralMasterList('SVCTYP', '').subscribe({next: (response) => {
+  getServiceTypeData() {
+    this.basicDetailService.getGeneralMasterList('SVCTYP', '').subscribe({
+      next: (response) => {
         if (response.success) {
           this.serviceData = response.data;
         }
@@ -101,8 +106,9 @@ export class BasicDetailsComponent {
     });
   }
 
-    getPackagingTypeData(){
-    this.basicDetailService.getGeneralMasterList('PKGS','').subscribe({next: (response) => {
+  getPackagingTypeData() {
+    this.basicDetailService.getGeneralMasterList('PKGS', '').subscribe({
+      next: (response) => {
         if (response.success) {
           this.packagingTypeData = response.data;
         }
@@ -110,13 +116,13 @@ export class BasicDetailsComponent {
     });
   }
 
-  getCityList(event?: any){
-      const searchText = event.term;
+  getCityList(event?: any) {
+    const searchText = event.term;
     if (!searchText || searchText.length < 1) {
       this.cityList = [];
       return;
     }
-    this.basicDetailService.getCityData(this.docketService.basicDetailForm.get('destination')?.value,searchText).subscribe({
+    this.basicDetailService.getCityData(this.docketService.basicDetailForm.get('destination')?.value, searchText).subscribe({
       next: (response) => {
         if (response.success) {
           this.cityList = response.data;
@@ -132,7 +138,7 @@ export class BasicDetailsComponent {
 
   openDatePicker(event: Event): void {
     const input = event.target as HTMLInputElement;
-    input.showPicker?.(); 
+    input.showPicker?.();
   }
 
   getBillingPartyData(event: any) {
@@ -151,7 +157,7 @@ export class BasicDetailsComponent {
     this.basicDetailService.getBillingParty(payload).subscribe({
       next: (response) => {
         if (response.success) {
-         this.billingPartyData=response.data;
+          this.billingPartyData = response.data;
         } else {
           this.billingPartyData = [];
         }
@@ -164,8 +170,15 @@ export class BasicDetailsComponent {
 
   onChangeBillingParty(event: any) {
     this.docketService.basicDetailForm.patchValue({
-      billingParty:event.custcd,
-      billingName:event.custnm
+      billingParty: event.custcd,
+      billingName: event.custnm
+    })
+  }
+
+  onChangeBillingType() {
+    this.docketService.basicDetailForm.patchValue({
+      billingParty: null,
+      billingName: null
     })
   }
 }

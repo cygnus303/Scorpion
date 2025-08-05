@@ -48,7 +48,7 @@
           <div class="form-group"><label class="col-md-5">Billing Type</label>
             <div class="col-md-7">
               <ng-select class="noFoundTextColor" [items]="billingTypeData" bindLabel="codeDesc" bindValue="codeId"
-                placeholder="Billing Type" formControlName="billingType">
+                placeholder="Billing Type" formControlName="billingType" (change)="onChangeBillingType()">
               </ng-select>
             </div>
           </div>
@@ -160,7 +160,7 @@
                 formControlName="serviceType" notFoundText="Please enter atleast 1 characters"></ng-select></div>
           </div>
         </div>
-        <div class="col-md-4 form-column ">
+        <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('serviceType')?.value==='FTL'">
           <div class="form-group"><label class="col-md-5">Type of Movement</label>
             <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Type of Movement"
                 formControlName="typeMovement"></ng-select></div>
@@ -203,26 +203,35 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row" *ngIf="docketService.basicDetailForm.get('serviceType')?.value==='FTL'">
         <div class="col-md-4 form-column ">
           <div class="form-group">
             <label class="control-label col-md-5">Select Vehicle</label>
             <div class="col-md-7 d-flex align-items-center gap-4">
               <label class="d-flex align-items-center gap-2 mb-0">
-                <input type="radio" name="vehicle" value="own">
+                <input type="radio" name="vehicle" value="own" formControlName="vehicleType">
                 Own
               </label>
               <label class="d-flex align-items-center gap-2 mb-0">
-                <input type="radio" name="vehicle" value="market">
+                <input type="radio" name="vehicle" value="market" formControlName="vehicleType">
                 Market
               </label>
             </div>
           </div>
         </div>
-        <div class="col-md-4 form-column ">
+        <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('vehicleType')?.value!=='own'">
           <div class="form-group"><label class="col-md-5">Vehicle No</label>
             <div class="col-md-7"><input type="text" class="form-control" placeholder="Vehicle No"
                 formControlName="vehicleno" /></div>
+          </div>
+        </div>
+         <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('vehicleType')?.value==='own'">
+          <div class="form-group"><label class="col-md-5">Vehicle No</label>
+            <div class="col-md-7">
+              <ng-select  class="noFoundTextColor" placeholder="Vehicle No"
+                formControlName="vehicleno" >
+            </ng-select>
+              </div>
           </div>
         </div>
       </div>
