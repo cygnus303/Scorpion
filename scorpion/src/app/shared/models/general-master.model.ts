@@ -65,3 +65,38 @@ export interface DKTChargesResponse{
     chargeAmount: number,
     fixCharge: number
 }
+
+export interface GSTDetailResponse{
+    status: number,
+    message: string,
+    partyCode: string,
+    partyName:string,
+    invno: string,
+    invdt: string,
+    decval: number,
+    eWayBillExpiredDate:string,
+    eWayInvoicevalue: number,
+    eWayBillInvoiceDate: string,
+    consignor: string,
+    consignee: string,
+    fromCity:string,
+    toCity: string,
+    paybas: string,
+    pincode: number,
+    area: string,
+    csgncd: string,
+    csgnm: string,
+    csgnAdd: string,
+    csgecd: string,
+    csgenm: string,
+    csgeAdd: string,
+    toPincode: number
+}
+
+export interface ChargingRepsonse{
+    chargeCode: string,
+    chargeName: string,
+    operator: string,
+    chargeAmount: number,
+    fixCharge: number
+}

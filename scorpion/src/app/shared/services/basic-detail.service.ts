@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { ApiHandlerService } from './api-handler.service';
 import { Observable } from 'rxjs';
 import { IApiBaseResponse } from '../interface/api-base-action-response';
-import {  billingPartyRequest, cityResponse, DestinationsList, DKTChargesResponse, GSTNOListResponse, pinCodeResponse } from '../models/general-master.model';
+import {  billingPartyRequest, ChargingRepsonse, cityResponse, DestinationsList, DKTChargesResponse, GSTDetailResponse, GSTNOListResponse, pinCodeResponse } from '../models/general-master.model';
 
 @Injectable({
   providedIn: 'root'
@@ -47,7 +47,7 @@ export class BasicDetailService {
     return this.apiHandlerService.Get(`Operation/GetStep2Details`,data);
   }
 
-  getChargeDetail(): Observable<IApiBaseResponse<DKTChargesResponse>>{
+  getChargeDetail(): Observable<any>{
     return this.apiHandlerService.Get(`Operation/dkt-charges`);
   }
 
