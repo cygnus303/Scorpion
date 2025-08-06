@@ -44,3 +44,24 @@ export interface billingPartyResponse {
 export interface VehicleNumbersResponse {
  vehno:string;
 }
+
+export interface GSTNOListResponse {
+    lgnm: string;
+    tradeNam: string;
+    address: string;
+    location: string;
+    bno: string;
+    dst: string;
+    stcd: string;
+    flno: string;
+    pncd: string;
+    dty: string;
+}
+
+export interface DKTChargesResponse{
+    chargeCode: string,
+    chargeName: string,
+    operator: string,
+    chargeAmount: number,
+    fixCharge: number
+}

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { pinCodeResponse } from '../models/general-master.model';
 import { BasicDetailService } from './basic-detail.service';
+import { DatePipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,9 @@ export class DocketService {
  public consignorForm!: FormGroup;
   public pincodeList: pinCodeResponse[] = [];
   public today: string = '';
-  constructor( private basicDetailService: BasicDetailService) {}
+  public HQTR = 'HQTR';
+  public step2DetailsList:any;
+  constructor( private basicDetailService: BasicDetailService,private datePipe: DatePipe) {}
 
    detailForm() {
     const now = new Date();
@@ -131,5 +134,26 @@ export class DocketService {
     this.basicDetailForm.patchValue({ destination: event.destination});
     this.consignorForm.patchValue({consigneePincode:event.value});
     this.pincodeList = [];
+   this.getStep2Details();
+  }
+
+    getStep2Details() {
+      const rawDate = new Date(); // or your API date
+      const formattedDate = this.datePipe.transform(rawDate, 'dd MMMM yyyy');
+      const payload = {
+        PartyCode: this.basicDetailForm.value.billingParty,
+        Destination: this.basicDetailForm.value.destination,
+        Paybas: this.basicDetailForm.value.billingType,
+        Doctype: 'DKT',
+        DOCKDT: formattedDate,
+        orgncd: this.HQTR
+      }
+      this.basicDetailService.GetStep2Details(payload).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.step2DetailsList = response.data;
+          }
+        }
+      });
   }
 }

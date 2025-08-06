@@ -193,7 +193,7 @@ export class BasicDetailsComponent {
     const payload = {
       searchTerm: searchText,
       paybs: this.docketService.basicDetailForm.get('billingType')?.value ? this.docketService.basicDetailForm.get('billingType')?.value : 'P01',
-      location: "HQTR"
+      location: this.docketService.HQTR
     }
     this.basicDetailService.getBillingParty(payload).subscribe({
       next: (response) => {

@@ -18,7 +18,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Consignor GST No.</label>
                 <div class="col-md-7">
-                  <input class="form-control GSTNo clsGST" formControlName="consignorGSTNo" maxlength="15" 
+                  <input class="form-control GSTNo clsGST" formControlName="consignorGSTNo" (blur)="getGSTNODetails($event,'Conr')" maxlength="15" 
                     placeholder="Consignor GST No." type="text" >
                 </div>
               </div>
@@ -133,7 +133,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Consignee GST No.</label>
                 <div class="col-md-7">
-                  <input class="required2 form-control" formControlName="consigneeGSTNo"  maxlength="15"
+                  <input class="required2 form-control" formControlName="consigneeGSTNo"  maxlength="15"  (input)="getGSTNODetails($event ,'Conee')"
                      placeholder="Consignee GST No." type="text" >
                 </div>
               </div>

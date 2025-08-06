@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { ApiHandlerService } from './api-handler.service';
 import { Observable } from 'rxjs';
 import { IApiBaseResponse } from '../interface/api-base-action-response';
-import {  billingPartyRequest, cityResponse, DestinationsList, pinCodeResponse } from '../models/general-master.model';
+import {  billingPartyRequest, cityResponse, DestinationsList, DKTChargesResponse, GSTNOListResponse, pinCodeResponse } from '../models/general-master.model';
 
 @Injectable({
   providedIn: 'root'
@@ -39,5 +39,19 @@ export class BasicDetailService {
 
   getGSTNODetailsList(searchTerm: string): Observable<any> {
     return this.apiHandlerService.Get(`Operation/GetGSTNODetails?ewbNo=${searchTerm}`);
+  }
+  getGSTNOList(searchTerm: string): Observable<IApiBaseResponse<GSTNOListResponse>> {
+    return this.apiHandlerService.Get(`Operation/gst-details?gstNo=${searchTerm}&baseCompanyCode=${'C003'}`);
+  }
+  GetStep2Details(data: any): Observable<IApiBaseResponse<GSTNOListResponse>> {
+    return this.apiHandlerService.Get(`Operation/GetStep2Details`,data);
+  }
+
+  getChargeDetail(): Observable<IApiBaseResponse<DKTChargesResponse>>{
+    return this.apiHandlerService.Get(`Operation/dkt-charges`);
+  }
+
+  get(): Observable<IApiBaseResponse<DKTChargesResponse>>{
+    return this.apiHandlerService.Get(`Operation/CYGNUS-Modules-Rules`);
   }
 }
