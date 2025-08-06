@@ -47,7 +47,7 @@ export class BasicDetailService {
     return this.apiHandlerService.Get(`Operation/GetStep2Details`,data);
   }
 
-  getChargeDetail(): Observable<IApiBaseResponse<DKTChargesResponse>>{
+  getChargeDetail(): Observable<any>{
     return this.apiHandlerService.Get(`Operation/dkt-charges`);
   }
 
