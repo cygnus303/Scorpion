@@ -8,15 +8,17 @@ import { DatePipe } from '@angular/common';
   providedIn: 'root'
 })
 export class DocketService {
- public basicDetailForm!: FormGroup;
- public consignorForm!: FormGroup;
+  public basicDetailForm!: FormGroup;
+  public consignorForm!: FormGroup;
   public pincodeList: pinCodeResponse[] = [];
   public today: string = '';
   public HQTR = 'HQTR';
   public step2DetailsList:any;
   constructor( private basicDetailService: BasicDetailService,private datePipe: DatePipe) {}
+  public getGSTNODetailsList: any;
 
-   detailForm() {
+
+  detailForm() {
     const now = new Date();
     this.today = now.toISOString().split('T')[0];
     this.basicDetailForm = new FormGroup({
@@ -58,13 +60,13 @@ export class DocketService {
       billingType: new FormControl(null),
       billingParty: new FormControl(null),
       vehicleno: new FormControl(null),
-      vehicleType:new FormControl('own'),
-      
+      vehicleType: new FormControl('own'),
+
     });
   }
 
-  consignorbuild(){
-    this.consignorForm=new FormGroup({
+  consignorbuild() {
+    this.consignorForm = new FormGroup({
       // Consignor
       consignorGSTNo: new FormControl(null),
       consignorSelection: new FormControl('walkin'),
@@ -111,7 +113,7 @@ export class DocketService {
 
 
   getpincodeData(event: any) {
-    const searchText = event.term;
+    const searchText = event.term ||event;
     if (!searchText || searchText.length < 1) {
       this.pincodeList = [];
       return;
@@ -130,9 +132,10 @@ export class DocketService {
     });
   }
 
-   onChangePinCode(event: any) {
-    this.basicDetailForm.patchValue({ destination: event.destination});
-    this.consignorForm.patchValue({consigneePincode:event.value});
+  onChangePinCode(event: any) {
+    if (!event) return;
+    this.basicDetailForm.patchValue({ destination: event.destination });
+    this.consignorForm.patchValue({ consigneePincode: event.value });
     this.pincodeList = [];
    this.getStep2Details();
   }
@@ -156,4 +159,34 @@ export class DocketService {
         }
       });
   }
-}
+
+  getGSTNODetails(event: any) {
+    const searchText = event.target.value;
+    this.basicDetailService.getGSTNODetailsList(searchText).subscribe({
+      next: (response) => {
+        if (response) {
+          this.getGSTNODetailsList = response;
+          this.consignorForm.patchValue({
+            consignorGSTNo: response.consignor,
+            consignorName: response.csgncd,
+            consignorCity: response.toCity,
+            consignorMasterName: response.csgenm,
+            consignorPincode:response.pincode,
+            consignorAddress:response.csgnAdd,
+            consigneeGSTNo: response.consignee,
+            consigneeName: response.csgecd,
+            consigneeCity: response.fromCity,
+            consigneeMasterName: response.csgnm,
+            consigneePincode:`${response.toPincode} - ${response.area}`,
+            consigneeAddress:response.csgeAdd,
+          });
+          this.basicDetailForm.patchValue({
+            pincode:`${response.toPincode} - ${response.area}`
+          })
+        }
+      }
+    });
+  }
+
+  }
+

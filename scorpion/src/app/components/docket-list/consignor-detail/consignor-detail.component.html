@@ -90,9 +90,9 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Pincode </label>
                 <div class="col-md-7">
-                 <ng-select class="noFoundTextColor" [items]="docketService.pincodeList" bindLabel="text"
-                bindValue="value" placeholder="Pincode" formControlName="consignorPincode"
-                notFoundText="Please enter atleast 3 characters" (search)="docketService.getpincodeData($event)"></ng-select>
+                 <ng-select class="noFoundTextColor" [items]="docketService.pincodeList" bindLabel="pinArea"
+                bindValue="pinArea" placeholder="Pincode" formControlName="consignorPincode"
+                notFoundText="Please enter atleast 3 characters" (search)="docketService.getpincodeData($event)" ></ng-select>
                 </div>
               </div>
             </div>
@@ -206,8 +206,8 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Pincode </label>
                 <div class="col-md-7">
-                  <ng-select class="noFoundTextColor" [items]="docketService.pincodeList" bindLabel="text"
-                bindValue="value" placeholder="Pincode" formControlName="consigneePincode"
+                  <ng-select class="noFoundTextColor" [items]="docketService.pincodeList" bindLabel="pinArea"
+                bindValue="pinArea" placeholder="Pincode" formControlName="consigneePincode"
                 notFoundText="Please enter atleast 3 characters" (search)="docketService.getpincodeData($event)"></ng-select>
                 </div>
               </div>
