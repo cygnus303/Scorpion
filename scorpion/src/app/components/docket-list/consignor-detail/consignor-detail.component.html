@@ -18,7 +18,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Consignor GST No.</label>
                 <div class="col-md-7">
-                  <input class="form-control GSTNo clsGST" formControlName="consignorGSTNo"  maxlength="15" 
+                  <input class="form-control GSTNo clsGST" formControlName="consignorGSTNo" maxlength="15" 
                     placeholder="Consignor GST No." type="text" >
                 </div>
               </div>
@@ -29,10 +29,10 @@
              <div class="form-group">
                 <label class="control-label col-md-5">Select Consignor</label>
                 <div class="col-md-7 d-flex align-items-center gap-4">
-                  <label class="d-flex align-items-center gap-2 mb-0">
+                  <!-- <label class="d-flex align-items-center gap-2 mb-0">
                     <input type="radio" name="consignorSelection" formControlName="consignorSelection" value="master">
                     From Master
-                  </label>
+                  </label> -->
                   <label class="d-flex align-items-center gap-2 mb-0">
                     <input type="radio" name="consignorSelection" value="walkin" formControlName="consignorSelection">
                     Walk-In
@@ -46,7 +46,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Select Name </label>
                 <div class="col-md-7">
-                <ng-select class="noFoundTextColor" placeholder="Select Name" formControlName="consignorName" notFoundText="Please enter atleast 3 characters"></ng-select>
+                <ng-select class="noFoundTextColor" placeholder="Select Name" formControlName="consignorName" notFoundText="Please enter atleast 3 characters" readonly></ng-select>
                 </div>
               </div>
             </div>
@@ -67,7 +67,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Address </label>
                 <div class="col-md-7">
-               <ng-select class="noFoundTextColor" placeholder="Address"></ng-select>
+               <!-- <ng-select class="noFoundTextColor" placeholder="Address"></ng-select> -->
                   <textarea class="required2 form-control-textarea required clsCnor" formControlName="consignorAddress" cols="20" 
                     placeholder="Address" rows="2"></textarea>
                 </div>
@@ -144,12 +144,12 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Select Consignee</label>
                 <div class="col-md-7 d-flex align-items-center gap-4">
-                  <label class="d-flex align-items-center gap-2 mb-0">
+                  <!-- <label class="d-flex align-items-center gap-2 mb-0">
                     <input type="radio" name="consigneeSelection" formControlName="consigneeSelection" value="master">
                     From Master
-                  </label>
+                  </label> -->
                   <label class="d-flex align-items-center gap-2 mb-0">
-                    <input type="radio" name="consigneeSelection"  formControlName=""formControlName="consigneeSelection" value="walkin">
+                    <input type="radio" name="consigneeSelection" formControlName="consigneeSelection" value="walkin">
                     Walk-In
                   </label>
                 </div>
@@ -161,7 +161,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Select Name </label>
                 <div class="col-md-7">
-                <ng-select class="noFoundTextColor" placeholder="Select Name" formControlName="consigneeName" notFoundText="Please enter atleast 3 characters"></ng-select>
+                <ng-select class="noFoundTextColor" placeholder="Select Name" formControlName="consigneeName" notFoundText="Please enter atleast 3 characters" readonly></ng-select>
                 </div>
               </div>
             </div>
@@ -236,7 +236,7 @@
           </div>
         </div>
     
-        <div class="col-md-3">
+        <!-- <div class="col-md-3">
           <div class="row">
             <div class="col-md-5"></div>
             <div class="col-md-3">
@@ -323,7 +323,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
     
         <div class="col-md-3">
           <div class="row">

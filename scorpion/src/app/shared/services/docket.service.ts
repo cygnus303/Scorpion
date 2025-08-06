@@ -64,7 +64,7 @@ export class DocketService {
     this.consignorForm=new FormGroup({
       // Consignor
       consignorGSTNo: new FormControl(null),
-      consignorSelection: new FormControl('From Master'),
+      consignorSelection: new FormControl('walkin'),
       consignorName: new FormControl(null),
       consignorMasterName: new FormControl(null),
       consignorAddress: new FormControl(null),
@@ -75,7 +75,7 @@ export class DocketService {
 
       // Consignee
       consigneeGSTNo: new FormControl(null),
-      consigneeSelection: new FormControl('From Master'),
+      consigneeSelection: new FormControl('walkin'),
       consigneeName: new FormControl(null),
       consigneeMasterName: new FormControl(null),
       consigneeAddress: new FormControl(null),
@@ -85,17 +85,17 @@ export class DocketService {
       consigneeEmail: new FormControl(null),
 
       // Third Party
-      thirdPartyGSTNo: new FormControl(null),
-      thirdPartySelection: new FormControl('From Master'),
-      thirdPartyCode: new FormControl(null),
-      thirdPartyName: new FormControl(null),
-      thirdPartyAddress: new FormControl(null),
-      thirdPartyCity: new FormControl(null),
-      thirdPartyPincode: new FormControl(null),
-      thirdPartyMobile: new FormControl(null),
+      // thirdPartyGSTNo: new FormControl(null),
+      // thirdPartySelection: new FormControl('From Master'),
+      // thirdPartyCode: new FormControl(null),
+      // thirdPartyName: new FormControl(null),
+      // thirdPartyAddress: new FormControl(null),
+      // thirdPartyCity: new FormControl(null),
+      // thirdPartyPincode: new FormControl(null),
+      // thirdPartyMobile: new FormControl(null),
 
       // Risk & Documents
-      riskType: new FormControl('Carrier\'s Risk'),
+      riskType: new FormControl('owner'),
       policyNo: new FormControl(null),
       policyDate: new FormControl(null),
       internalCovers: new FormControl(null),

@@ -253,9 +253,13 @@ export class BasicDetailsComponent {
        this.docketService.basicDetailForm.patchValue({
        toCity: event +':'+ event,
      });
+     this.docketService.consignorForm.patchValue({
+      consigneeCity:event
+     });
     }
     this.cityList = [];
   }
+  
   onChangeVehicleNo(event: any){
     this.docketService.basicDetailForm.patchValue({
        vehicleno: event +':'+event,

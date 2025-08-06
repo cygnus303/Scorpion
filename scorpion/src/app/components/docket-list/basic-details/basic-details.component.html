@@ -129,7 +129,7 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">From City</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" placeholder="From City"   (search)="getCityList($event)" (change)="onChangeCityListList($event,'from')"
+              <ng-select class="noFoundTextColor" placeholder="From City" (search)="getCityList($event)" (change)="onChangeCityListList($event,'from')"
                formControlName="fromCity"
                 notFoundText="Please enter atleast 1 characters">
                <ng-option *ngFor="let item of cityList" [value]="item.location">

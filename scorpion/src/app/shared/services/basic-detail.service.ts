@@ -37,4 +37,7 @@ export class BasicDetailService {
     return this.apiHandlerService.Get(`Operation/GetVehicleNumbers?prefix=${searchTerm}`);
   }
 
+  getGSTNODetailsList(searchTerm: string): Observable<any> {
+    return this.apiHandlerService.Get(`Operation/GetGSTNODetails?ewbNo=${searchTerm}`);
+  }
 }
