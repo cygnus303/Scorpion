@@ -65,3 +65,20 @@ export interface DKTChargesResponse{
     chargeAmount: number,
     fixCharge: number
 }
+
+export interface IGSTchargesDetailResponse{
+    id:number
+    ids:number
+    tempId:number
+    chargeName: string;
+    chargeCode: string;
+    chargeType: string;
+    operator: string;
+    effectiveStartDate: string;
+    percentage: number;
+    chargeAmount: number;
+    tmpChargeAmount: number;
+    isDDL: boolean;
+    isActive: boolean;
+    entryDate: string;
+}

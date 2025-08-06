@@ -137,8 +137,16 @@ export class DocketService {
     this.basicDetailForm.patchValue({ destination: event.destination });
     this.consignorForm.patchValue({ consigneePincode: event.value });
     this.pincodeList = [];
-   this.getStep2Details();
   }
+    onFormFieldChange() {
+      const billingParty = this.basicDetailForm.value.billingParty;
+      const destination = this.basicDetailForm.value.destination;
+      const billingType = this.basicDetailForm.value.billingType;
+
+      if (billingParty && destination && billingType) {
+        this.getStep2Details();
+      }
+    }
 
     getStep2Details() {
       const rawDate = new Date(); // or your API date

@@ -947,274 +947,34 @@
                 </div>
               </div>
 
-              <div class="row clsGSTApply">
-                <div class="col-md-4">
-                  <div class="form-group to-pay-group">
-                    <label class="control-label col-md-5">IGST(%)<span id="lbl_IGSTRate"></span></label>
-                    <div class="col-md-7">
-                     <div class="input-icon">
-                      <input
-                        type="text"
-                        class="form-control clsAmount required2"
-                        placeholder="IGST(%) "
-                        [(ngModel)]="toPayAmount"
-                        [ngModelOptions]="{ standalone: true }"
-                        (focus)="onFocus()"
-                        (blur)="onBlur()"
-                      />
-                      <i class="fas fa-plus"></i>
-                    </div>
-                    </div>
-                  </div>
-                </div>
+<div *ngFor="let entry of groupedCharges | keyvalue">
+  <div class="row clsGSTApply">
+    <div class="col-md-4" *ngFor="let charge of entry.value">
+      <div class="form-group to-pay-group">
+        <label class="control-label col-md-5">
+          {{ charge.chargeName }}
+          <span [id]="'lbl_' + charge.chargeCode"></span>
+        </label>
+        <div class="col-md-7">
+          <div class="input-icon">
+            <input
+              type="text"
+              class="form-control clsAmount required2"
+              [placeholder]="charge.chargeName"
+              [(ngModel)]="charge.chargeAmount"
+              [ngModelOptions]="{ standalone: true }"
+              (focus)="onFocus()"
+              (blur)="onBlur()"
+            />
+            <i class="fas fa-plus"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 
-
-                <div class="col-md-4">
-                  <div class="form-group to-pay-group">
-                    <label class="control-label col-md-5">IGST ON SUB TOTAL<span id="lbl_IGSTAmount"></span></label>
-                    <div class="col-md-7">
-                     <div class="input-icon">
-                      <input
-                        type="text"
-                        class="form-control clsAmount required2"
-                        placeholder="IGST ON SUB TOTAL"
-                        [(ngModel)]="toPayAmount"
-                        [ngModelOptions]="{ standalone: true }"
-                        (focus)="onFocus()"
-                        (blur)="onBlur()"
-                      />
-                      <i class="fas fa-plus"></i>
-                    </div>
-                    </div>
-                  </div>
-                </div>
-
-
-
-                <div class="col-md-4">
-                  <div class="form-group to-pay-group">
-                    <label class="control-label col-md-5">IGST COLLECTED<span id="lbl_IGSTCOLLECTED"></span></label>
-                    <div class="col-md-7">
-                     <div class="input-icon">
-                      <input
-                        type="text"
-                        class="form-control clsAmount required2"
-                        placeholder="IGST COLLECTED "
-                        [(ngModel)]="toPayAmount"
-                        [ngModelOptions]="{ standalone: true }"
-                        (focus)="onFocus()"
-                        (blur)="onBlur()"
-                      />
-                      <i class="fas fa-plus"></i>
-                    </div>
-                    </div>
-                  </div>
-                </div>
-
-
-              </div>
-              <div class="row clsGSTApply">
-                <div class="col-md-4">
-                  <div class="form-group to-pay-group">
-                    <label class="control-label col-md-5">CGST(%)<span id="lbl_CGSTRate"></span></label>
-                    <div class="col-md-7">
-                     <div class="input-icon">
-                      <input
-                        type="text"
-                        class="form-control clsAmount required2"
-                        placeholder="CGST(%)"
-                        [(ngModel)]="toPayAmount"
-                        [ngModelOptions]="{ standalone: true }"
-                        (focus)="onFocus()"
-                        (blur)="onBlur()"
-                      />
-                      <i class="fas fa-plus"></i>
-                    </div>
-                    </div>
-                  </div>
-                </div>
-
-
-
-                <div class="col-md-4">
-                  <div class="form-group to-pay-group">
-                    <label class="control-label col-md-5">CGST ON SUB TOTAL<span id="lbl_CGSTAmount"></span></label>
-                    <div class="col-md-7">
-                     <div class="input-icon">
-                      <input
-                        type="text"
-                        class="form-control clsAmount required2"
-                        placeholder="CGST ON SUB TOTAL"
-                        [(ngModel)]="toPayAmount"
-                        [ngModelOptions]="{ standalone: true }"
-                        (focus)="onFocus()"
-                        (blur)="onBlur()"
-                      />
-                      <i class="fas fa-plus"></i>
-                    </div>
-                    </div>
-                  </div>
-                </div>
-
-
-
-                <div class="col-md-4">
-                  <div class="form-group to-pay-group">
-                    <label class="control-label col-md-5">CGST COLLECTED<span id="lbl_CGSTCOLLECTED"></span></label>
-                    <div class="col-md-7">
-                      <div class="input-icon">
-                      <input
-                        type="text"
-                        class="form-control clsAmount required2"
-                        placeholder="CGST COLLECTED "
-                        [(ngModel)]="toPayAmount"
-                        [ngModelOptions]="{ standalone: true }"
-                        (focus)="onFocus()"
-                        (blur)="onBlur()"
-                      />
-                      <i class="fas fa-plus"></i>
-                    </div>
-                    </div>
-                  </div>
-                </div>
-
-
-              </div>
-              <div class="row clsGSTApply">
-                <div class="col-md-4">
-                  <div class="form-group to-pay-group">
-                    <label class="control-label col-md-5">SGST(%)<span id="lbl_SGSTRate"></span></label>
-                    <div class="col-md-7">
-                      <div class="input-icon">
-                      <input
-                        type="text"
-                        class="form-control clsAmount required2"
-                        placeholder="SGST(%)"
-                        [(ngModel)]="toPayAmount"
-                        [ngModelOptions]="{ standalone: true }"
-                        (focus)="onFocus()"
-                        (blur)="onBlur()"
-                      />
-                      <i class="fas fa-plus"></i>
-                    </div>
-                    </div>
-                  </div>
-                </div>
-
-
-
-                <div class="col-md-4">
-                  <div class="form-group to-pay-group">
-                    <label class="control-label col-md-5">SGST ON SUB TOTAL<span id="lbl_SGSTAmount"></span></label>
-                    <div class="col-md-7">
-                      <div class="input-icon">
-                      <input
-                        type="text"
-                        class="form-control clsAmount required2"
-                        placeholder="SGST ON SUB TOTAL"
-                        [(ngModel)]="toPayAmount"
-                        [ngModelOptions]="{ standalone: true }"
-                        (focus)="onFocus()"
-                        (blur)="onBlur()"
-                      />
-                      <i class="fas fa-plus"></i>
-                    </div>
-                    </div>
-                  </div>
-                </div>
-
-
-
-                <div class="col-md-4">
-                  <div class="form-group to-pay-group">
-                    <label class="control-label col-md-5">SGST COLLECTED<span id="lbl_SGSTCOLLECTED"></span></label>
-                    <div class="col-md-7">
-                      <div class="input-icon">
-                      <input
-                        type="text"
-                        class="form-control clsAmount required2"
-                        placeholder="SGST COLLECTED"
-                        [(ngModel)]="toPayAmount"
-                        [ngModelOptions]="{ standalone: true }"
-                        (focus)="onFocus()"
-                        (blur)="onBlur()"
-                      />
-                      <i class="fas fa-plus"></i>
-                    </div>
-                    </div>
-                  </div>
-                </div>
-
-
-              </div>
-              <div class="row clsGSTApply">
-                <div class="col-md-4">
-                  <div class="form-group to-pay-group">
-                    <label class="control-label col-md-5">UTGST(%)<span id="lbl_UTGSTRate"></span></label>
-                    <div class="col-md-7">
-                      <div class="input-icon">
-                      <input
-                        type="text"
-                        class="form-control clsAmount required2"
-                        placeholder="UTGST(%)"
-                        [(ngModel)]="toPayAmount"
-                        [ngModelOptions]="{ standalone: true }"
-                        (focus)="onFocus()"
-                        (blur)="onBlur()"
-                      />
-                      <i class="fas fa-plus"></i>
-                    </div>
-                    </div>
-                  </div>
-                </div>
-
-
-
-                <div class="col-md-4">
-                  <div class="form-group to-pay-group">
-                    <label class="control-label col-md-5">UTGST ON SUB TOTAL<span id="lbl_UTGSTAmount"></span></label>
-                    <div class="col-md-7">
-                      <div class="input-icon">
-                      <input
-                        type="text"
-                        class="form-control clsAmount required2"
-                        placeholder="UTGST ON SUB TOTAL"
-                        [(ngModel)]="toPayAmount"
-                        [ngModelOptions]="{ standalone: true }"
-                        (focus)="onFocus()"
-                        (blur)="onBlur()"
-                      />
-                      <i class="fas fa-plus"></i>
-                    </div>
-                    </div>
-                  </div>
-                </div>
-
-
-
-                <div class="col-md-4">
-                  <div class="form-group to-pay-group">
-                    <label class="control-label col-md-5">UTGST COLLECTED<span id="lbl_UTGSTCOLLECTED"></span></label>
-                    <div class="col-md-7">
-                      <div class="input-icon">
-                      <input
-                        type="text"
-                        class="form-control clsAmount required2"
-                        placeholder="UTGST COLLECTED"
-                        [(ngModel)]="toPayAmount"
-                        [ngModelOptions]="{ standalone: true }"
-                        (focus)="onFocus()"
-                        (blur)="onBlur()"
-                      />
-                      <i class="fas fa-plus"></i>
-                    </div>
-                    </div>
-                  </div>
-                </div>
-
-
-              </div>
               <div class="col-md-4 clsdis" style="display: none;">
                 <div class="form-group">
                   <label class="control-label col-md-5">Discount(%)</label>

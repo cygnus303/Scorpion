@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { ApiHandlerService } from './api-handler.service';
 import { Observable } from 'rxjs';
 import { IApiBaseResponse } from '../interface/api-base-action-response';
-import {  billingPartyRequest, cityResponse, DestinationsList, DKTChargesResponse, GSTNOListResponse, pinCodeResponse } from '../models/general-master.model';
+import {  billingPartyRequest, cityResponse, DestinationsList, DKTChargesResponse, GSTNOListResponse, IGSTchargesDetailResponse, pinCodeResponse } from '../models/general-master.model';
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +50,11 @@ export class BasicDetailService {
   getChargeDetail(): Observable<IApiBaseResponse<DKTChargesResponse>>{
     return this.apiHandlerService.Get(`Operation/dkt-charges`);
   }
+
+   getIGSTchargesDetail(): Observable<any>{
+    return this.apiHandlerService.Get(`Operation/get-charges?DocumentType=${'DKT'}`);
+  }
+
 
   get(): Observable<IApiBaseResponse<DKTChargesResponse>>{
     return this.apiHandlerService.Get(`Operation/CYGNUS-Modules-Rules`);
