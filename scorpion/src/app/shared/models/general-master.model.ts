@@ -56,6 +56,7 @@ export interface GSTNOListResponse {
     flno: string;
     pncd: string;
     dty: string;
+    code:string
 }
 
 export interface DKTChargesResponse{

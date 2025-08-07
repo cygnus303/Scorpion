@@ -27,7 +27,7 @@ export class ConsignorDetailComponent {
           this.getGSTNOList = response.data;
           if(type === 'Conr'){
             this.docketService.consignorForm.patchValue({
-              // consignorName: ,
+              consignorName:this.getGSTNOList.code ,
               consignorMasterName: this.getGSTNOList.tradeNam,
               consignorAddress: this.getGSTNOList.address,
               consignorCity: this.getGSTNOList.dst,
@@ -37,7 +37,7 @@ export class ConsignorDetailComponent {
             });
           }else if(type === 'Conee'){
              this.docketService.consignorForm.patchValue({
-              //  consigneeName:
+               consigneeName:this.getGSTNOList.code ,
                consigneeMasterName:  this.getGSTNOList.tradeNam,
                consigneeAddress: this.getGSTNOList.address,
                consigneeCity:  this.getGSTNOList.dst,

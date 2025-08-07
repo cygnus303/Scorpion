@@ -75,6 +75,23 @@
     }
   }
 }
+.yes-no input:disabled + .slider {
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.yes-no input:disabled {
+  cursor: not-allowed;
+}
+
+.yes-no input:checked:disabled + .slider::before {
+  transform: translateX(22px) !important;
+}
+
+.yes-no input:not(:checked):disabled + .slider::before {
+  transform: translateX(0) !important;
+}
+
 
 label:has(input[type='radio'][name='ani']) {
   line-height: 1.1;

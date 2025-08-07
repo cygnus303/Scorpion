@@ -11,9 +11,9 @@ export class BasicDetailService {
 
   constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService) { }
 
-  getGeneralMasterList(codeType: string, searchText: string | null): Observable<IApiBaseResponse<any[]>> {
+  getGeneralMasterList(codeType: string, searchText: string | null,codeId: string | number | null): Observable<IApiBaseResponse<any[]>> {
     return this.apiHandlerService.Get(`External/${codeType}`, {
-      searchText: searchText || ''
+      searchText: searchText || '',codeId: codeId ?? ''
     });
   }
 
@@ -58,5 +58,10 @@ export class BasicDetailService {
 
   get(): Observable<IApiBaseResponse<DKTChargesResponse>>{
     return this.apiHandlerService.Get(`Operation/CYGNUS-Modules-Rules`);
+  }
+
+  getOtherChargesDetail(){
+    return this.apiHandlerService.Get(`Operation/GetOtherChargesDetails`);
+
   }
 }

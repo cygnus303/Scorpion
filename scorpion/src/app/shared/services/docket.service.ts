@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { pinCodeResponse } from '../models/general-master.model';
 import { BasicDetailService } from './basic-detail.service';
 import { DatePipe } from '@angular/common';
+import { GeneralMasterService } from './general-master.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +11,12 @@ import { DatePipe } from '@angular/common';
 export class DocketService {
   public basicDetailForm!: FormGroup;
   public consignorForm!: FormGroup;
+  public freightForm!:FormGroup;
   public pincodeList: pinCodeResponse[] = [];
   public today: string = '';
   public HQTR = 'HQTR';
   public step2DetailsList:any;
-  constructor( private basicDetailService: BasicDetailService,private datePipe: DatePipe) {}
+  constructor( private basicDetailService: BasicDetailService,private datePipe: DatePipe,private generalMasterService:GeneralMasterService) {}
   public getGSTNODetailsList: any;
 
 
@@ -26,7 +28,7 @@ export class DocketService {
       cNoteNo: new FormControl(null),
       pincode: new FormControl(null),
       billingName: new FormControl(null),
-      origin: new FormControl(null),
+      origin: new FormControl('HQTR'),
       originState: new FormControl(null),
       destination: new FormControl(null),
       destinationState: new FormControl(null),
@@ -43,6 +45,7 @@ export class DocketService {
       specialInstruction: new FormControl(null),
       exemptServices: new FormControl(null),
       isreferenceDKT: new FormControl(false),
+      IsCODDOD: new FormControl(false),
       referenceDocket: new FormControl(null),
       isDocketPayment: new FormControl(false),
       sacCode: new FormControl(null),
@@ -51,7 +54,7 @@ export class DocketService {
       iscsdDelivery: new FormControl(false),
       isODAApplicable: new FormControl(false),
       isLocalNote: new FormControl(false),
-      appointmentDetails: new FormControl(null),
+      appointmentDate: new FormControl(this.today),
       personName: new FormControl(null),
       contactNo: new FormControl(null),
       remarks: new FormControl(null),
@@ -70,7 +73,7 @@ export class DocketService {
       // Consignor
       consignorGSTNo: new FormControl(null),
       consignorSelection: new FormControl('walkin'),
-      consignorName: new FormControl(null),
+      consignorName: new FormControl('8888'),
       consignorMasterName: new FormControl(null),
       consignorAddress: new FormControl(null),
       consignorCity: new FormControl(null),
@@ -81,7 +84,7 @@ export class DocketService {
       // Consignee
       consigneeGSTNo: new FormControl(null),
       consigneeSelection: new FormControl('walkin'),
-      consigneeName: new FormControl(null),
+      consigneeName: new FormControl('8888'),
       consigneeMasterName: new FormControl(null),
       consigneeAddress: new FormControl(null),
       consigneeCity: new FormControl(null),
@@ -100,7 +103,7 @@ export class DocketService {
       // thirdPartyMobile: new FormControl(null),
 
       // Risk & Documents
-      riskType: new FormControl('owner'),
+      riskType: new FormControl('o'),
       policyNo: new FormControl(null),
       policyDate: new FormControl(null),
       internalCovers: new FormControl(null),
@@ -108,6 +111,28 @@ export class DocketService {
       customerRefNo: new FormControl(null),
       privateMark: new FormControl(null),
       tpNumber: new FormControl(null)
+    })
+  }
+
+  freightbuild(){
+    this.freightForm = new FormGroup({
+      freightCharges:new FormControl(),
+      GSTPaidBy:new FormControl(),
+      rateType:new FormControl(),
+      freightRate:new FormControl(),
+      EDD:new FormControl(),
+      billedAt:new FormControl(),
+      billingState:new FormControl(),
+      fovRate:new FormControl(),
+      fovCalculated:new FormControl(),
+      fovCharged:new FormControl(),
+      coddodCharged:new FormControl(),
+      coddodCollected:new FormControl(),
+      gstRate:new FormControl(),
+      subTotal:new FormControl(),
+      total:new FormControl(),
+      discountAmount:new FormControl(),
+      discount:new FormControl(),
     })
   }
 
@@ -149,6 +174,7 @@ export class DocketService {
     }
 
     getStep2Details() {
+      debugger
       const rawDate = new Date(); // or your API date
       const formattedDate = this.datePipe.transform(rawDate, 'dd MMMM yyyy');
       const payload = {
@@ -161,8 +187,22 @@ export class DocketService {
       }
       this.basicDetailService.GetStep2Details(payload).subscribe({
         next: (response) => {
-          if (response.success) {
-            this.step2DetailsList = response.data;
+          if (response) {
+            this.step2DetailsList = response;
+            this.freightForm.patchValue({
+              billedAt: this.step2DetailsList.billingLocation
+            });
+            this.consignorForm.patchValue({
+              riskType:this.step2DetailsList.risktype
+            });
+            this.generalMasterService.getTransportModeData(this.step2DetailsList.transMode);
+            this.generalMasterService.getPickUpData(this.step2DetailsList.pkgDelyType);
+            this.generalMasterService.getContentsData();
+            this.generalMasterService.getServiceTypeData(this.step2DetailsList.serviceType);
+            this.generalMasterService.getPackagingTypeData();
+            this.generalMasterService.getTypeofMovementData();
+            this.generalMasterService.getbusinessTypeData();
+            this.generalMasterService.getexemptServicesData();
           }
         }
       });

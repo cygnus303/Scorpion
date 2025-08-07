@@ -121,7 +121,7 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Transit Mode</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" placeholder="Transit Mode" notFoundText="No matches found" [items]="transportModeData" bindLabel="codeDesc" bindValue="codeId"
+              <ng-select class="noFoundTextColor" placeholder="Transit Mode" notFoundText="No matches found" [items]="generalMasterService.transportModeData" bindLabel="codeDesc" bindValue="codeId"
                 formControlName="mode"></ng-select>
               </div>
           </div>
@@ -162,19 +162,19 @@
       <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Pickup/Delivery</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Pickup/Delivery" [items]="pickUpData" bindLabel="codeDesc" bindValue="codeId"
+            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Pickup/Delivery" [items]="generalMasterService.pickUpData" bindLabel="codeDesc" bindValue="codeId"
                 formControlName="pickup" notFoundText="No matches found"></ng-select></div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Service Type</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Service Type" [items]="serviceData" bindLabel="codeDesc" bindValue="codeId"
+            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Service Type" [items]="generalMasterService.serviceData" bindLabel="codeDesc" bindValue="codeId"
                 formControlName="serviceType" notFoundText="No matches found"></ng-select></div>
           </div>
         </div>
         <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('serviceType')?.value==='2'">
           <div class="form-group"><label class="col-md-5">Type of Movement</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="typeofMovementList" bindLabel="codeDesc" bindValue="codeId" placeholder="Type of Movement"
+            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="generalMasterService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId" placeholder="Type of Movement"
                 formControlName="typeMovement" notFoundText="No matches found"></ng-select></div>
           </div>
         </div>
@@ -183,21 +183,34 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Contents</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" type="text"  placeholder="Contents" [items]="contentsData" bindLabel="codeDesc" bindValue="codeId"
+              <ng-select class="noFoundTextColor" type="text"  placeholder="Contents" [items]="generalMasterService.contentsData" bindLabel="codeDesc" bindValue="codeId"
                 formControlName="contents" notFoundText="No matches found"></ng-select>
               </div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Packaging Type</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Packaging Type" [items]="packagingTypeData" bindLabel="codeDesc" bindValue="codeId"
+            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Packaging Type" [items]="generalMasterService.packagingTypeData" bindLabel="codeDesc" bindValue="codeId"
                 formControlName="packingType" notFoundText="No matches found"></ng-select></div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Business Type</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="businessTypeList" bindLabel="codeDesc" bindValue="codeId" placeholder="Business Type"
+            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="generalMasterService.businessTypeList" bindLabel="codeDesc" bindValue="codeId" placeholder="Business Type"
                 formControlName="businessType"  notFoundText="No matches found"></ng-select></div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 form-column">
+          <div class="form-group" *ngIf="this.docketService?.step2DetailsList?.isCODDOD === 'Y'">
+            <label for="refDkt" class="col-md-5">COD/DOD</label>
+            <div class="col-md-7 text-start">
+              <label class="yes-no">
+                <input type="checkbox" formControlName="IsCODDOD" />
+                <span class="slider"></span>
+              </label>
+            </div>
           </div>
         </div>
       </div>
@@ -210,7 +223,7 @@
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Exempt Services</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="exemptServicesList" bindLabel="codeDesc" bindValue="codeId" placeholder="Exempt Services"
+            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="generalMasterService.exemptServicesList" bindLabel="codeDesc" bindValue="codeId" placeholder="Exempt Services"
                 formControlName="exemptServices"></ng-select></div>
           </div>
         </div>
@@ -332,7 +345,8 @@
             <label for="ODA" class="col-md-5">ODA Applicable</label>
             <div class="col-md-7 text-start">
               <label class="yes-no">
-                <input type="checkbox" formControlName="isODAApplicable"><span class="slider"></span>
+                <input type="checkbox" formControlName="isODAApplicable" [disabled]="true" />
+        <span class="slider"></span>
               </label>
             </div>
           </div>
@@ -353,9 +367,9 @@
         <div class="p-3">
           <div class="row">
             <div class="col-md-3 form-column">
-              <div class="form-group"><label class="col-md-5">Appointment</label>
+              <div class="form-group"><label class="col-md-5">Appointment Date</label>
                 <div class="col-md-5"><input type="text" placeholder="Appointment" class="form-control col-md-5"
-                    formControlName="appointmentDetails" /></div>
+                    formControlName="appointmentDate" [max]="docketService.today" (click)="openDatePicker($event)" /></div>
               </div>
             </div>
             <div class="col-md-3 form-column">

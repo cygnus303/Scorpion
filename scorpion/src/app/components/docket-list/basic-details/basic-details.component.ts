@@ -4,6 +4,7 @@ import { BasicDetailService } from '../../../shared/services/basic-detail.servic
 import { DestinationsList, generalMasterResponse ,billingPartyResponse, VehicleNumbersResponse} from '../../../shared/models/general-master.model';
 import { cityResponse } from '../../../shared/models/general-master.model';
 import { combineLatest, filter, startWith } from 'rxjs';
+import { GeneralMasterService } from '../../../shared/services/general-master.service';
 
 @Component({
   selector: 'basic-details',
@@ -13,14 +14,7 @@ import { combineLatest, filter, startWith } from 'rxjs';
 })
 export class BasicDetailsComponent {
   public billingTypeData: generalMasterResponse[] = [];
-  public transportModeData: generalMasterResponse[] = [];
-  public pickUpData: generalMasterResponse[] = [];
-  public contentsData: generalMasterResponse[] = [];
-  public serviceData: generalMasterResponse[] = [];
-  public packagingTypeData : generalMasterResponse[] = [];
-  public typeofMovementList : generalMasterResponse[] = [];
-  public businessTypeList : generalMasterResponse[] = [];
-  public exemptServicesList : generalMasterResponse[] = [];
+ 
   public billingPartyData: billingPartyResponse[] = [];
   public cityList:cityResponse[]=[];  
   public destinationsList:DestinationsList[]=[];
@@ -28,34 +22,34 @@ export class BasicDetailsComponent {
   public notFoundTextValue = 'Please enter at least 3 characters';
   constructor(
     public docketService: DocketService,
-    private basicDetailService: BasicDetailService) { }
+    private basicDetailService: BasicDetailService,public generalMasterService:GeneralMasterService) { }
 
   ngOnInit() {
     this.docketService.detailForm();
     this.getBillingTypeData();
 
-    const billingPartyControl = this.docketService.basicDetailForm.get('billingParty');
-    const pincodeControl = this.docketService.basicDetailForm.get('pincode');
-    if (billingPartyControl && pincodeControl) {
-      combineLatest([
-        billingPartyControl.valueChanges.pipe(startWith(billingPartyControl.value)),
-        pincodeControl.valueChanges.pipe(startWith(pincodeControl.value))
-      ]).pipe(
-        filter(([billingParty, pincode]) => !!billingParty && !!pincode)).subscribe(([billingParty, pincode]) => {
-          this.getPackagingTypeData();
-          this.getTransportModeData();
-          this.getPickUpData();
-          this.getContentsData();
-          this.getServiceTypeData();
-          this.getTypeofMovementData();
-          this.getbusinessTypeData();
-          this.getexemptServicesData();
-        });
-    }
+    // const billingPartyControl = this.docketService.basicDetailForm.get('billingParty');
+    // const pincodeControl = this.docketService.basicDetailForm.get('pincode');
+    // if (billingPartyControl && pincodeControl) {
+    //   combineLatest([
+    //     billingPartyControl.valueChanges.pipe(startWith(billingPartyControl.value)),
+    //     pincodeControl.valueChanges.pipe(startWith(pincodeControl.value))
+    //   ]).pipe(
+    //     filter(([billingParty, pincode]) => !!billingParty && !!pincode)).subscribe(([billingParty, pincode]) => {
+    //       this.getPackagingTypeData();
+    //       this.getTransportModeData();
+    //       this.getPickUpData();
+    //       this.getContentsData();
+    //       this.getServiceTypeData();
+    //       this.getTypeofMovementData();
+    //       this.getbusinessTypeData();
+    //       this.getexemptServicesData();
+    //     });
+    // }
   }
 
   getBillingTypeData() {
-    this.basicDetailService.getGeneralMasterList('PAYTYP', null).subscribe({
+    this.basicDetailService.getGeneralMasterList('PAYTYP', null,null).subscribe({
       next: (response) => {
         if (response.success) {
           this.billingTypeData = response.data;
@@ -64,80 +58,6 @@ export class BasicDetailsComponent {
     });
   }
 
-  getTransportModeData() {
-    this.basicDetailService.getGeneralMasterList('TRN', '').subscribe({ next: (response) => {
-        if (response.success) {
-          this.transportModeData = response.data;
-        }
-      },
-    });
-  }
-
-  getPickUpData() {
-    this.basicDetailService.getGeneralMasterList('PKPDL', '').subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.pickUpData = response.data;
-        }
-      },
-    });
-  }
-
-  getContentsData(){
-     this.basicDetailService.getGeneralMasterList('PROD', '').subscribe({next: (response) => {
-        if (response.success) {
-          this.contentsData = response.data;
-        }
-      },
-    });
-  }
-
-  getServiceTypeData() {
-    this.basicDetailService.getGeneralMasterList('SVCTYP', '').subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.serviceData = response.data;
-        }
-      },
-    });
-  }
-
-  getPackagingTypeData() {
-    this.basicDetailService.getGeneralMasterList('PKGS', '').subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.packagingTypeData = response.data;
-        }
-      },
-    });
-  }
-
-   getTypeofMovementData(){
-    this.basicDetailService.getGeneralMasterList('FTLTYP ','').subscribe({next: (response) => {
-        if (response.success) {
-          this.typeofMovementList = response.data;
-        }
-      },
-    });
-  }
-
-  getbusinessTypeData(){
-    this.basicDetailService.getGeneralMasterList('BUT ','').subscribe({next: (response) => {
-        if (response.success) {
-          this.businessTypeList = response.data;
-        }
-      },
-    });
-  }
-
-   getexemptServicesData(){
-    this.basicDetailService.getGeneralMasterList('EXMPTSRV ','').subscribe({next: (response) => {
-        if (response.success) {
-          this.exemptServicesList = response.data;
-        }
-      },
-    });
-  }
 
   getCityList(event?: any){
       const searchText = event.term;
