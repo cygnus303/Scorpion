@@ -249,6 +249,19 @@ export class DocketService {
       });
   }
 
+  GetGSTFromTrnMode(event:any){
+    this.basicDetailService.GetGSTFromTrnMode(event?.codeId).subscribe({
+        next: (response:any) => {
+          if (response) {
+              this.basicDetailForm.patchValue({
+              sacCode:response.sacCode,
+              sacDescription:response.sacCodeDesc,
+             })
+          }
+        }
+      });
+  }
+
   getGSTNODetails(event: any) {
     const searchText = event.target.value;
     this.basicDetailService.getGSTNODetailsList(searchText).subscribe({

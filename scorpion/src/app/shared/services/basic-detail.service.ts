@@ -73,4 +73,9 @@ export class BasicDetailService {
     return this.apiHandlerService.Post(`Operation/GetDKTGSTForGTA`,data);
 
   }
+
+     GetGSTFromTrnMode(data: any){
+    return this.apiHandlerService.Get(`Operation/GetGSTFromTrnMode?trnMode=${data}`);
+
+  }
 }
