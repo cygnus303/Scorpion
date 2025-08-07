@@ -18,6 +18,7 @@ export class DocketService {
   public step2DetailsList:any;
   constructor( private basicDetailService: BasicDetailService,private datePipe: DatePipe,private generalMasterService:GeneralMasterService) {}
   public getGSTNODetailsList: any;
+  public GetPincodeOriginList!:any;
 
 
   detailForm() {
@@ -203,6 +204,46 @@ export class DocketService {
             this.generalMasterService.getTypeofMovementData();
             this.generalMasterService.getbusinessTypeData();
             this.generalMasterService.getexemptServicesData();
+            this.GetPincodeOrigin();
+            this.GetDKTGSTForGTA();
+          }
+        }
+      });
+  }
+
+  GetPincodeOrigin(){
+    const payload = {
+        customerCode: this.basicDetailForm.value.billingParty,
+        location: this.basicDetailForm.value.destination,
+        pincode: this.basicDetailForm.value.pincode,
+      }
+      this.basicDetailService.GetPincodeOrigin(payload).subscribe({
+        next: (response) => {
+          if (response) {
+            this.GetPincodeOriginList = response;
+             this.basicDetailForm.patchValue({
+              destinationState:this.GetPincodeOriginList.stnm
+             })
+          }
+        }
+      });
+  }
+
+    GetDKTGSTForGTA(){
+    const payload = {
+        customerId: this.basicDetailForm.value.billingParty,
+        transType: '',
+        exemptServices: '',
+      }
+      this.basicDetailService.GetDKTGSTForGTA(payload).subscribe({
+        next: (response:any) => {
+          if (response) {
+            // this.GetPincodeOriginList = response;
+             this.basicDetailForm.patchValue({
+              sacCode:response.sacCode,
+              sacDescription:response.sacCodeDesc,
+              mode:response.transType
+             })
           }
         }
       });

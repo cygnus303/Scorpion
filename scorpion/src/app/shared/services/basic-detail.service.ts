@@ -64,4 +64,13 @@ export class BasicDetailService {
     return this.apiHandlerService.Get(`Operation/GetOtherChargesDetails`);
 
   }
+   GetPincodeOrigin(data: any){
+    return this.apiHandlerService.Get(`Operation/GetPincodeOrigin`,data);
+
+  }
+
+   GetDKTGSTForGTA(data: any){
+    return this.apiHandlerService.Post(`Operation/GetDKTGSTForGTA`,data);
+
+  }
 }

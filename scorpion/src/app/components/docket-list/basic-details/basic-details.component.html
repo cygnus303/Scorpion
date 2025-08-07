@@ -56,7 +56,7 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Pincode</label>
             <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="docketService.pincodeList" bindLabel="pinArea"
-                bindValue="pinArea" placeholder="Pincode" formControlName="pincode"
+                bindValue="value" placeholder="Pincode" formControlName="pincode"
                 notFoundText="Please enter atleast 1 characters" (search)="docketService.getpincodeData($event)"
                 (change)="docketService.onChangePinCode($event);docketService.onFormFieldChange();"></ng-select></div>
           </div>
@@ -343,11 +343,13 @@
         <div class="col-md-4 form-column ">
           <div class="form-group">
             <label for="ODA" class="col-md-5">ODA Applicable</label>
-            <div class="col-md-7 text-start">
-              <label class="yes-no">
-                <input type="checkbox" formControlName="isODAApplicable" [disabled]="true" />
-        <span class="slider"></span>
-              </label>
+            <div class="col-md-7 text-start" >
+              <div class="disabled">
+                <label class="yes-no ">
+                  <input type="checkbox" formControlName="isODAApplicable" class="cursor-pointer"/>
+                  <span class="slider"></span>
+                </label>
+              </div>
             </div>
           </div>
         </div>

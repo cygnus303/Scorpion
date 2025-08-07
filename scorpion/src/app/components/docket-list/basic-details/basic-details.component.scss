@@ -33,7 +33,6 @@
     top: 0;
     left: 0;
     z-index: 2;
-    cursor: pointer;
   }
 
   .slider {
@@ -75,21 +74,11 @@
     }
   }
 }
-.yes-no input:disabled + .slider {
-  cursor: not-allowed;
-  opacity: 1;
-}
 
-.yes-no input:disabled {
-  cursor: not-allowed;
-}
-
-.yes-no input:checked:disabled + .slider::before {
-  transform: translateX(22px) !important;
-}
-
-.yes-no input:not(:checked):disabled + .slider::before {
-  transform: translateX(0) !important;
+::ng-deep.disabled{
+  opacity: 0.2;
+  cursor: not-allowed !important;
+   pointer-events: all !important;
 }
 
 
@@ -98,7 +87,6 @@ label:has(input[type='radio'][name='ani']) {
   display: grid;
   grid-template-columns: 1em auto;
   gap: 0.5em;
-  cursor: pointer;
 
   > input[type='radio'].radio {
   appearance: none;
@@ -109,7 +97,6 @@ label:has(input[type='radio'][name='ani']) {
   display: grid;
   place-content: center;
   position: relative;
-  cursor: pointer;
 
   &::before {
     content: "";
