@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { BasicDetailService } from '../../../shared/services/basic-detail.service';
+import { DocketService } from '../../../shared/services/docket.service';
 
 @Component({
   selector: 'invoice-details',
@@ -9,7 +11,10 @@ import { Component } from '@angular/core';
 export class InvoiceDetailsComponent {
  noOfRows: number = 1;
   invoiceRows: any[] = [{}]; // default 2 rows
-
+ constructor(
+    public docketService: DocketService,
+    public basicDetailService: BasicDetailService
+  ) { }
   addRows() {
     for (let i = 0; i < this.noOfRows; i++) {
       this.invoiceRows.push({});

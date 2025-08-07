@@ -5,8 +5,8 @@
   </div>
   <div class="form-grid p-4">
     <form>
-      <div class="row">
-        <div class="col-md-4">
+      <div class="row" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
+        <div class="col-md-4" >
           <div class="form-group">
             <label class="control-label col-md-5">CFT Ratio </label>
             <div class="col-md-7">
@@ -80,13 +80,13 @@
                 <th class="center" style="display:none;">
                   Piece Qty.
                 </th>
-                <th class="center clsVolumetric" style="display: none;">
+                <th class="center clsVolumetric" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
                   Length (Inches)
                 </th>
-                <th class="center clsVolumetric" style="display: none;">
+                <th class="center clsVolumetric" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
                   Breadth (Inches)
                 </th>
-                <th class="center clsVolumetric" style="display: none;">
+                <th class="center clsVolumetric" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
                   Height (Inches)
                 </th>
                 <th class="center">
@@ -148,13 +148,13 @@
                 <td class="center " style="padding-bottom: 2px; padding-top: 2px; display: none;">
                   <input class="form-control rounded-0 clsAmount required2" placeholder="Piece" type="number" value="0">
                 </td>
-                <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px; display: none;">
+                <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
                   <input class="form-control rounded-0 clsAmount required2 " min="1" type="number"value="0">
                 </td>
-                <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px; display: none;">
+                <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px; " *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
                   <input class="form-control rounded-0 clsAmount required2"  min="1" type="number" value="0">
                 </td>
-                <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px; display: none;">
+                <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px; " *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
                   <input class="form-control rounded-0 clsAmount required2"  min="1" type="number" value="0">
                 </td>
                 <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
@@ -195,7 +195,7 @@
                     placeholder="Total Piece" readonly="true" type="number" value="">
                  
                 </td>
-                <td colspan="3" class="clsVolumetric" style="display: none;"></td>
+                <td colspan="3" class="clsVolumetric" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'"></td>
                 <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
                   <input class="form-control rounded-0 clsAmount required2 required"
                     type="number" value="">
@@ -220,7 +220,7 @@
                 <td colspan="3"></td>
                 <td colspan="3"></td>
                 <td colspan="2" class="clsItem" style="display: none;"></td>
-                <td colspan="3" class="clsVolumetric" style="display: none;"></td>
+                <td colspan="3" class="clsVolumetric" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'"></td>
                 <td class="center " style="padding-bottom: 2px; padding-top: 2px;"><b>Charge Weight/Pkgs.</b></td>
     
                 <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
