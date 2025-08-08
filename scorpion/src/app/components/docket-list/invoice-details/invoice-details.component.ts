@@ -11,8 +11,9 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
 })
 export class InvoiceDetailsComponent {
   invoiceform!: FormGroup;
- noOfRows: number = 1;
- constructor(
+  noOfRows: number = 1;
+  public freightData: any;
+  constructor(
     public docketService: DocketService,
     public basicDetailService: BasicDetailService
   ) { }
@@ -26,18 +27,18 @@ export class InvoiceDetailsComponent {
     this.invoiceRows.removeAt(index);
   }
 
-   ngOnInit(): void {
+  ngOnInit(): void {
     this.invoiceform = new FormGroup({
       invoiceRows: new FormArray([]),
-        // Summary row 1
-    totalDeclaredValue: new FormControl(0),
-    totalNoOfPkgs: new FormControl(0),
-    totalCubicWeight: new FormControl(0),
-    totalActualWeight: new FormControl(0),
+      // Summary row 1
+      totalDeclaredValue: new FormControl(0),
+      totalNoOfPkgs: new FormControl(0),
+      totalCubicWeight: new FormControl(0),
+      totalActualWeight: new FormControl(0),
 
-    // Summary row 2
-    chargeWeightPerPkg: new FormControl(0),
-    finalActualWeight: new FormControl(0)
+      // Summary row 2
+      chargeWeightPerPkg: new FormControl(0),
+      finalActualWeight: new FormControl(0)
     });
 
     // Add default 1 row
@@ -48,7 +49,7 @@ export class InvoiceDetailsComponent {
     return this.invoiceform.get('invoiceRows') as FormArray;
   }
 
-   createInvoiceRow(): FormGroup {
+  createInvoiceRow(): FormGroup {
     return new FormGroup({
       ewayBillNo: new FormControl(''),
       ewayBillExpiry: new FormControl(''),
@@ -62,29 +63,29 @@ export class InvoiceDetailsComponent {
       breadth: new FormControl(0),
       height: new FormControl(0),
       cubicWeight: new FormControl(0),
-      invoicedate:new FormControl(0),
-      declaredvalue:new FormControl(0),
-      cubicweight:new FormControl(0),
+      invoicedate: new FormControl(0),
+      declaredvalue: new FormControl(0),
+      cubicweight: new FormControl(0),
     });
   }
 
-//   calculateSummary() {
-//   const rows = this.invoiceRows.value;
+  //   calculateSummary() {
+  //   const rows = this.invoiceRows.value;
 
-//   const totalDeclaredValue = rows.reduce((sum, r) => sum + (+r.declaredValue || 0), 0);
-//   const totalNoOfPkgs = rows.reduce((sum, r) => sum + (+r.noOfPkgs || 0), 0);
-//   const totalCubicWeight = rows.reduce((sum, r) => sum + (+r.cubicWeight || 0), 0);
-//   const totalActualWeight = rows.reduce((sum, r) => sum + (+r.actualWeight || 0), 0);
+  //   const totalDeclaredValue = rows.reduce((sum, r) => sum + (+r.declaredValue || 0), 0);
+  //   const totalNoOfPkgs = rows.reduce((sum, r) => sum + (+r.noOfPkgs || 0), 0);
+  //   const totalCubicWeight = rows.reduce((sum, r) => sum + (+r.cubicWeight || 0), 0);
+  //   const totalActualWeight = rows.reduce((sum, r) => sum + (+r.actualWeight || 0), 0);
 
-//   this.invoiceform.patchValue({
-//     totalDeclaredValue,
-//     totalNoOfPkgs,
-//     totalCubicWeight,
-//     totalActualWeight,
-//     chargeWeightPerPkg: totalNoOfPkgs ? totalActualWeight / totalNoOfPkgs : 0,
-//     finalActualWeight: totalActualWeight
-//   });
-// }
+  //   this.invoiceform.patchValue({
+  //     totalDeclaredValue,
+  //     totalNoOfPkgs,
+  //     totalCubicWeight,
+  //     totalActualWeight,
+  //     chargeWeightPerPkg: totalNoOfPkgs ? totalActualWeight / totalNoOfPkgs : 0,
+  //     finalActualWeight: totalActualWeight
+  //   });
+  // }
 
 
   GetFreightContractDetails(event: any) {
@@ -102,7 +103,7 @@ export class InvoiceDetailsComponent {
       fromCity: this.docketService.basicDetailForm.value.fromCity,
       ftlType: '67',
       noOfPkgs: noOfPkgs,
-      chargedWeright:' 20.66',
+      chargedWeright: ' 20.66',
       origin: this.docketService.basicDetailForm.value.origin,
       payBase: this.docketService.basicDetailForm.value.billingType,
       serviceType: this.docketService.basicDetailForm.value.serviceType,
@@ -116,9 +117,49 @@ export class InvoiceDetailsComponent {
     }
 
     this.basicDetailService.GetFreightContractDetails(data).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.freightData = response.result[0];
+          this.getOtherChargesDetail(this.freightData)
+        }
+      },
+    });
+  }
+
+  getOtherChargesDetail(freightData: any) {
+    const payload = {
+      "chargeRule": 'NONE',
+      "baseCode1": 'NONE',
+      "chargeSubRule": "NONE",
+      "baseCode2": "NONE",
+      "chargedWeight": freightData?.chargedWeight.toString(),
+      "contractID": "string",
+      "destination": this.docketService.basicDetailForm.value.destination,
+      "depth": "string",
+      "flagProceed": "string",
+      "fromCity": this.docketService.basicDetailForm.value.fromCity,
+      "ftlType": "string",
+      "noOfPkgs": freightData?.noOfPkgs.toString(),
+      "origin": this.docketService.basicDetailForm.value.origin,
+      "payBase": this.docketService.basicDetailForm.value.billingType,
+      "serviceType": this.docketService.basicDetailForm.value.serviceType,
+      "toCity": this.docketService.basicDetailForm.value.toCity,
+      "transMode": this.docketService.basicDetailForm.value.mode,
+      "orderID": "string",
+      "invAmt": "string",
+      "dockdt": this.docketService.basicDetailForm.value.cNoteDate,
+      "prodType": "string",
+      "packType": this.docketService.basicDetailForm.value.packingType,
+      "riskType": "string",
+      "originPincode": 0,
+      "destPincode": 0,
+      "floorNo": 0
+    }
+    debugger
+    this.basicDetailService.getOtherChargesDetail(payload).subscribe({
       next: (response) => {
         if (response.success) {
-          // this.serviceData = response.data;
+
         }
       },
     });

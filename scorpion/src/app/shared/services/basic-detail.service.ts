@@ -60,8 +60,8 @@ export class BasicDetailService {
     return this.apiHandlerService.Get(`Operation/CYGNUS-Modules-Rules`);
   }
 
-  getOtherChargesDetail(){
-    return this.apiHandlerService.Get(`Operation/GetOtherChargesDetails`);
+  getOtherChargesDetail(payload:any){
+    return this.apiHandlerService.Post(`Operation/GetOtherChargesDetails`,payload);
   }
 
    GetPincodeOrigin(data: any){

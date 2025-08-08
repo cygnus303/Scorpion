@@ -418,5 +418,44 @@ export class DocketService {
       },
     });
   }
+
+//   getOtherChargesDetail(freightData:any){
+// const payload={
+//   "chargeRule": "string",
+//   "baseCode1": "string",
+//   "chargeSubRule": "string",
+//   "baseCode2": "string",
+//   "chargedWeight": "string",
+//   "contractID": "string",
+//   "destination": "string",
+//   "depth": "string",
+//   "flagProceed": "string",
+//   "fromCity": "string",
+//   "ftlType": "string",
+//   "noOfPkgs": "string",
+//   "origin": "string",
+//   "payBase": "string",
+//   "serviceType": "string",
+//   "toCity": "string",
+//   "transMode": "string",
+//   "orderID": "string",
+//   "invAmt": "string",
+//   "dockdt": "2025-08-08T12:04:19.598Z",
+//   "prodType": "string",
+//   "packType": "string",
+//   "riskType": "string",
+//   "originPincode": 0,
+//   "destPincode": 0,
+//   "floorNo": 0
+// }
+// this.basicDetailService.getOtherChargesDetail(payload).subscribe({
+//      next: (response) => {
+//        if (response.success) {
+         
+//        }
+//      },
+//    });
+//   }
+
 }
 
