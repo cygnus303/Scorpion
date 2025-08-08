@@ -44,204 +44,165 @@
     <div class="row">
       <div class="col-md-12">
         <div class="portlet-body table-scrollable">
-          <table id="container" class="table table-bordered table-striped table-condensed flip-content">
-            <thead class="flip-content">
-              <tr>
-                <th class="center">
-                  Sr. No.
-                </th>
-                <th class="cente">
-                  E-Way Bill No
-                </th>
-                <th class="cente">
-                  E-Way Bill Expiry Date
-                </th>
-                <th class="center evalue" style="display: none;">
-                  E-Way Bill Invoice Value
-                </th>
-                <th class="cente">
-                  E-Way Bill Invoice Date
-                </th>
-                <th class="center">
-                  Invoice No
-                </th>
-                <th class="center">
-                  Invoice Date
-                </th>
-                <th class="center clsItem" style="display: none;">
-                  Contents
-                </th>
-                <th class="center" style="display:none;">
-                  Rate
-                </th>
-                <th class="center" style="display:none;">
-                  Piece Weight
-                </th>
-                <th class="center" style="display:none;">
-                  Piece Qty.
-                </th>
-                <th class="center clsVolumetric" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
-                  Length (Inches)
-                </th>
-                <th class="center clsVolumetric" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
-                  Breadth (Inches)
-                </th>
-                <th class="center clsVolumetric" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
-                  Height (Inches)
-                </th>
-                <th class="center">
-                  Declared Value
-                </th>
-    
-                <th class="center">
-                  No of Pkgs.
-                </th>
-    
-                <th class="center clsVolumetric" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
-                  Cubic Weight
-                </th>
-                <th class="center">
-                  Actual Weight
-                </th>
-    
-                <th class="center">X</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="editorRow" *ngFor="let row of invoiceRows; let i = index">
-                <input class="iHidden" type="hidden" value="1">
-                <input type="hidden"  value="1">
-                <td class="center">
-                  {{ i + 1 }}
-                </td>
-                <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
-                  <input class="form-control rounded-0 " maxlength="12" placeholder="E-Way Bill No" type="text" >
-                </td>
-                <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
-                  <input class="form-control rounded-0" 
-                    placeholder="dd-MM-yyyy" type="text"  disabled="disabled">
-                </td>
-                <td class="center" style="padding-bottom: 2px; padding-top: 2px; display:none;">
-                  <input class="form-control rounded-0" placeholder="E-Way Invoice value" type="number" >
-                </td>
-                <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
-                  <input class="form-control rounded-0" placeholder="dd-MM-yyyy" type="text"  readonly="readonly">
-                </td>
-                <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
-                  <input class="form-control rounded-0 required required2" placeholder="Invoice No" type="text" >
-                </td>
-                <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
-                  <input class="form-control rounded-0 required2" placeholder="dd/MMM/yyyy" type="text"
-                    value="01 Aug 2025">
-                </td>
-                <td class="center  clsItem" style="padding-bottom: 2px; padding-top: 2px; display: none;">
-                  <select class="form-control rounded-0 required2 " placeholder="Select Product">
-                    <option value=""></option>
-                  </select>
-                </td>
-                <td class="center " style="padding-bottom: 2px; padding-top: 2px;display:none">
-                  <input class="form-control rounded-0 required required2" placeholder="Item Rate" type="text">
-                </td>
-                <td class="center " style="padding-bottom: 2px; padding-top: 2px; display: none;">
-                  <input class="form-control rounded-0 required required2" placeholder="Item Weight" type="text">
-                </td>
-                <td class="center " style="padding-bottom: 2px; padding-top: 2px; display: none;">
-                  <input class="form-control rounded-0 clsAmount required2" placeholder="Piece" type="number" value="0">
-                </td>
-                <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
-                  <input class="form-control rounded-0 clsAmount required2 " min="1" type="number"value="0">
-                </td>
-                <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px; " *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
-                  <input class="form-control rounded-0 clsAmount required2"  min="1" type="number" value="0">
-                </td>
-                <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px; " *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
-                  <input class="form-control rounded-0 clsAmount required2"  min="1" type="number" value="0">
-                </td>
-                <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
-                  <input class="form-control rounded-0 clsAmount required2 text-end"  min="0" placeholder="Invoice value" type="number" value="0">
-                </td>
-                <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
-                  <input class="form-control rounded-0 clsAmount required2 text-end" placeholder="No of Pkgs." type="number" value="0">
-                </td>
-                <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px;" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
-                  <input class="form-control rounded-0 clsAmount required2  text-end" min="0" type="number" value="0" readonly>
-                </td>
-                <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
-                  <input class="form-control rounded-0 clsAmount required2 text-end"
-                    placeholder="Actual Weight" type="number" value="0">
-                </td>
-                <td class="center">
-                      <div *ngIf="i !== 0" (click)="removeRow(i)" style="color: Maroon; font-size: 14px; font-weight: bolder; text-decoration: none;" class="cursor-pointer" >X</div>
-                </td>
-              </tr>
-            </tbody>
-            <tbody>
-              <tr class="editorRow">
-                <td colspan="3" class="evalue" style="display: none;"></td>
-                <td class="center  evalue" style="padding-bottom: 2px; padding-top: 2px; display: none;">
-                  <input class="form-control rounded-0 clsAmount required2 required" type="number" >
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="clsItem" style="display: none;"></td>
-                <td class="clsItem" style="display: none;"></td>
-    
-                <td style="display:none">
-                  <input class="form-control rounded-0 clsAmount required2 required"
-                    placeholder="Total Piece" readonly="true" type="number" value="">
+          <form action="" [formGroup]="invoiceform" >
+            <table id="container" class="table table-bordered table-striped table-condensed flip-content">
+              <thead class="flip-content">
+                <tr>
+                  <th class="center">
+                    Sr. No.
+                  </th>
+                  <th class="cente">
+                    E-Way Bill No
+                  </th>
+                  <th class="cente">
+                    E-Way Bill Expiry Date
+                  </th>
                  
-                </td>
+                  <th class="cente">
+                    E-Way Bill Invoice Date
+                  </th>
+                  <th class="center">
+                    Invoice No
+                  </th>
+                  <th class="center">
+                    Invoice Date
+                  </th>
+                  <th class="center clsVolumetric" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
+                    Length (Inches)
+                  </th>
+                  <th class="center clsVolumetric" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
+                    Breadth (Inches)
+                  </th>
+                  <th class="center clsVolumetric" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
+                    Height (Inches)
+                  </th>
+                  <th class="center">
+                    Declared Value
+                  </th>
+      
+                  <th class="center">
+                    No of Pkgs.
+                  </th>
+      
+                  <th class="center clsVolumetric" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
+                    Cubic Weight
+                  </th>
+                  <th class="center">
+                    Actual Weight
+                  </th>
+      
+                  <th class="center">X</th>
+                </tr>
+              </thead>
+              <tbody formArrayName="invoiceRows">
+                <tr class="editorRow" *ngFor="let row of invoiceRows.controls; let i = index" [formGroupName]="i">
+                  <input class="iHidden" type="hidden" value="1">
+                  <input type="hidden"  value="1">
+                  <td class="center">
+                    {{ i + 1 }}
+                  </td>
+                  <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
+                    <input class="form-control rounded-0 " maxlength="12" placeholder="E-Way Bill No" formControlName="ewayBillNo" type="text" >
+                  </td>
+                  <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
+                    <input class="form-control rounded-0" 
+                      placeholder="dd-MM-yyyy" type="text" formControlName="ewayBillExpiry" readonly>
+                  </td>
+                  <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
+                    <input class="form-control rounded-0" placeholder="dd-MM-yyyy" type="text"  readonly="readonly" formControlName="invoiceDate">
+                  </td>
+                  <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
+                    <input class="form-control rounded-0 required required2" placeholder="Invoice No" type="text" formControlName="invoiceNo">
+                  </td>
+                  <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
+                    <input class="form-control rounded-0 required2" placeholder="dd/MMM/yyyy" type="text"
+                      value="01 Aug 2025"  formControlName="invoicedate" >
+                  </td>
+                  <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
+                    <input class="form-control rounded-0 clsAmount required2 " min="1" type="number"value="0" formControlName="length">
+                  </td>
+                  <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px; " *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
+                    <input class="form-control rounded-0 clsAmount required2"  min="1" type="number" value="0" formControlName="breadth" >
+                  </td>
+                  <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px; " *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
+                    <input class="form-control rounded-0 clsAmount required2"  min="1" type="number" value="0" formControlName="height">
+                  </td>
+                  <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
+                    <input class="form-control rounded-0 clsAmount required2 text-end"  min="0" placeholder="Invoice value" type="number" value="0" formControlName="declaredvalue">
+                  </td>
+                  <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
+                    <input class="form-control rounded-0 clsAmount required2 text-end" placeholder="No of Pkgs." (blur)="GetFreightContractDetails($event)" type="number" formControlName="noOfPkgs">
+                  </td>
+                  <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px;" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
+                    <input class="form-control rounded-0 clsAmount required2  text-end" min="0" type="number" value="0" readonly formControlName="cubicweight">
+                  </td>
+                  <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
+                    <input class="form-control rounded-0 clsAmount required2 text-end"
+                      placeholder="Actual Weight" type="number" value="0" formControlName="actualWeight">
+                  </td>
+                  <td class="center">
+                        <div *ngIf="i !== 0" (click)="removeRow(i)" style="color: Maroon; font-size: 14px; font-weight: bolder; text-decoration: none;" class="cursor-pointer" >X</div>
+                  </td>
+                </tr>
+              </tbody>
+            <tbody>
+              <tr class="editorRow">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td colspan="3" class="clsVolumetric" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'"></td>
-                <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
-                  <input class="form-control rounded-0 clsAmount required2 required  text-end"
-                    type="number" value=""readonly>
+            
+                <td class="center">
+                  <input formControlName="totalDeclaredValue" class="form-control rounded-0 clsAmount required2 required text-end"
+                    type="number" readonly>
                 </td>
-    
-                <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
-                  <input class="form-control rounded-0 clsAmount required2 required  text-end"
-                    type="number" value=""readonly>
+            
+                <td class="center">
+                  <input formControlName="totalNoOfPkgs" class="form-control rounded-0 clsAmount required2 required text-end"
+                    type="number" readonly>
                 </td>
-    
-                <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px;"  *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
-                  <input class="form-control rounded-0 clsAmount required2 required  text-end"
-                    type="number" value="0" readonly>
+            
+                <td class="center clsVolumetric" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
+                  <input formControlName="totalCubicWeight" class="form-control rounded-0 clsAmount required2 required text-end"
+                    type="number" readonly>
                 </td>
-                <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
-                  <input class="form-control rounded-0 clsAmount required2 required text-end"
-                    type="number" value="0"readonly>
+            
+                <td class="center">
+                  <input formControlName="totalActualWeight" class="form-control rounded-0 clsAmount required2 required text-end"
+                    type="number" readonly>
                 </td>
-    
               </tr>
+            
               <tr class="editorRow">
                 <td colspan="3"></td>
                 <td colspan="3"></td>
-                <td colspan="2" class="clsItem" style="display: none;"></td>
                 <td colspan="3" class="clsVolumetric" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'"></td>
-                <td class="center " style="padding-bottom: 2px; padding-top: 2px;"><b>Charge Weight/Pkgs.</b></td>
-    
-                <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
-                  <div class="" style="margin-bottom: 0px;">
-                    <div class="col-md-11">
-                      <input class="form-control rounded-0 clsAmount required2 required text-end" type="number" value="" readonly>
-                    </div>
+            
+                <td class="center"><b>Charge Weight/Pkgs.</b></td>
+            
+                <td class="center">
+                  <div class="col-md-11">
+                    <input formControlName="chargeWeightPerPkg" class="form-control rounded-0 clsAmount required2 required text-end"
+                      type="number" readonly>
                   </div>
                 </td>
-                <td class="clsVolumetric"  *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'"></td>
-                <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
-                  <div class="" style="margin-bottom: 0px;">
-                    <div class="col-md-11">
-                      <input class="form-control rounded-0 clsAmount required2 required text-end" type="number"
-                        value="0">
-                    </div>
+            
+                <td class="clsVolumetric" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'"></td>
+            
+                <td class="center">
+                  <div class="col-md-11">
+                    <input formControlName="finalActualWeight" class="form-control rounded-0 clsAmount required2 required text-end"
+                      type="number" readonly>
                   </div>
                 </td>
               </tr>
             </tbody>
-          </table>
+
+            </table>
+          </form>
         </div>
       </div>
     </div>

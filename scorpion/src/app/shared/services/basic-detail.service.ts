@@ -62,20 +62,20 @@ export class BasicDetailService {
 
   getOtherChargesDetail(){
     return this.apiHandlerService.Get(`Operation/GetOtherChargesDetails`);
-
   }
+
    GetPincodeOrigin(data: any){
     return this.apiHandlerService.Get(`Operation/GetPincodeOrigin`,data);
-
   }
 
    GetDKTGSTForGTA(data: any){
     return this.apiHandlerService.Post(`Operation/GetDKTGSTForGTA`,data);
-
   }
 
      GetGSTFromTrnMode(data: any){
     return this.apiHandlerService.Get(`Operation/GetGSTFromTrnMode?trnMode=${data}`);
-
+  }
+ GetFreightContractDetails(data: any){
+    return this.apiHandlerService.Post(`Operation/GetFreightContractDetails`, data);
   }
 }
