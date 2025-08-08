@@ -10,82 +10,74 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
   styleUrl: './invoice-details.component.scss'
 })
 export class InvoiceDetailsComponent {
-  invoiceform!: FormGroup;
-  noOfRows: number = 1;
-  public freightData: any;
-  constructor(
+  public freightData:any;
+ 
+ constructor(
     public docketService: DocketService,
     public basicDetailService: BasicDetailService
   ) { }
-  addRows(): void {
-    for (let i = 0; i < this.noOfRows; i++) {
-      this.invoiceRows.push(this.createInvoiceRow());
-    }
+ 
+  ngOnInit() {
+   this.docketService.invoicebuild()
   }
 
   removeRow(index: number): void {
-    this.invoiceRows.removeAt(index);
+    this.docketService.invoiceRows.removeAt(index);
   }
 
-  ngOnInit(): void {
-    this.invoiceform = new FormGroup({
-      invoiceRows: new FormArray([]),
-      // Summary row 1
-      totalDeclaredValue: new FormControl(0),
-      totalNoOfPkgs: new FormControl(0),
-      totalCubicWeight: new FormControl(0),
-      totalActualWeight: new FormControl(0),
+// calculateSummary() {
+//   const volMeasureType = this.docketService.contractservicecharge; // 'INCHES' | 'CM' | 'FEET'
+//   const cftWtRatio = +this.docketService.CFTWtRatio || 0; // you can bind from service
+//   const rows = this.docketService.invoiceRows.value;
 
-      // Summary row 2
-      chargeWeightPerPkg: new FormControl(0),
-      finalActualWeight: new FormControl(0)
-    });
+//   let totalDeclaredValue = 0;
+//   let totalNoOfPkgs = 0;
+//   let totalCubicWeight = 0;
+//   let totalActualWeight = 0;
 
-    // Add default 1 row
-    this.addRows();
-  }
+//   const updatedRows = rows.map((r: any) => {
+//     const length = +r.length || 0;
+//     const width = +r.width || 0;
+//     const height = +r.height || 0;
+//     const pkgsNo = +r.noOfPkgs || 0;
 
-  get invoiceRows(): FormArray {
-    return this.invoiceform.get('invoiceRows') as FormArray;
-  }
+//     let volume = 0;
 
-  createInvoiceRow(): FormGroup {
-    return new FormGroup({
-      ewayBillNo: new FormControl(''),
-      ewayBillExpiry: new FormControl(''),
-      invoiceValue: new FormControl(0),
-      invoiceDate: new FormControl(''),
-      invoiceNo: new FormControl(''),
-      declaredValue: new FormControl(0),
-      noOfPkgs: new FormControl(0),
-      actualWeight: new FormControl(0),
-      length: new FormControl(0),
-      breadth: new FormControl(0),
-      height: new FormControl(0),
-      cubicWeight: new FormControl(0),
-      invoicedate: new FormControl(0),
-      declaredvalue: new FormControl(0),
-      cubicweight: new FormControl(0),
-    });
-  }
+//     if (volMeasureType === 'INCHES') {
+//       volume = (length * width * height * cftWtRatio) / 1728;
+//     } else if (volMeasureType === 'CM') {
+//       volume = (length * width * height * cftWtRatio) / 27000;
+//     } else if (volMeasureType === 'FEET') {
+//       volume = length * width * height * cftWtRatio;
+//     }
 
-  //   calculateSummary() {
-  //   const rows = this.invoiceRows.value;
+//     const cubicWeight = +(volume * pkgsNo).toFixed(2);
 
-  //   const totalDeclaredValue = rows.reduce((sum, r) => sum + (+r.declaredValue || 0), 0);
-  //   const totalNoOfPkgs = rows.reduce((sum, r) => sum + (+r.noOfPkgs || 0), 0);
-  //   const totalCubicWeight = rows.reduce((sum, r) => sum + (+r.cubicWeight || 0), 0);
-  //   const totalActualWeight = rows.reduce((sum, r) => sum + (+r.actualWeight || 0), 0);
+//     totalDeclaredValue += +r.declaredValue || 0;
+//     totalNoOfPkgs += pkgsNo;
+//     totalCubicWeight += cubicWeight;
+//     totalActualWeight += +r.actualWeight || 0;
 
-  //   this.invoiceform.patchValue({
-  //     totalDeclaredValue,
-  //     totalNoOfPkgs,
-  //     totalCubicWeight,
-  //     totalActualWeight,
-  //     chargeWeightPerPkg: totalNoOfPkgs ? totalActualWeight / totalNoOfPkgs : 0,
-  //     finalActualWeight: totalActualWeight
-  //   });
-  // }
+//     return {
+//       ...r,
+//       cubicWeight // update cubic weight in row
+//     };
+//   });
+
+//   // Push updated cubic weights back to form array
+//   this.docketService.invoiceRows.patchValue(updatedRows);
+
+//   // Patch totals to the form
+//   this.docketService.invoiceform.patchValue({
+//     totalDeclaredValue,
+//     totalNoOfPkgs,
+//     totalCubicWeight,
+//     totalActualWeight,
+//     chargeWeightPerPkg: totalNoOfPkgs ? totalActualWeight / totalNoOfPkgs : 0,
+//     finalActualWeight: totalActualWeight
+//   });
+// }
+
 
 
   GetFreightContractDetails(event: any) {
