@@ -27,25 +27,6 @@ export class BasicDetailsComponent {
   ngOnInit() {
     this.docketService.detailForm();
     this.getBillingTypeData();
-
-    // const billingPartyControl = this.docketService.basicDetailForm.get('billingParty');
-    // const pincodeControl = this.docketService.basicDetailForm.get('pincode');
-    // if (billingPartyControl && pincodeControl) {
-    //   combineLatest([
-    //     billingPartyControl.valueChanges.pipe(startWith(billingPartyControl.value)),
-    //     pincodeControl.valueChanges.pipe(startWith(pincodeControl.value))
-    //   ]).pipe(
-    //     filter(([billingParty, pincode]) => !!billingParty && !!pincode)).subscribe(([billingParty, pincode]) => {
-    //       this.getPackagingTypeData();
-    //       this.getTransportModeData();
-    //       this.getPickUpData();
-    //       this.getContentsData();
-    //       this.getServiceTypeData();
-    //       this.getTypeofMovementData();
-    //       this.getbusinessTypeData();
-    //       this.getexemptServicesData();
-    //     });
-    // }
   }
 
   getBillingTypeData() {
@@ -122,10 +103,12 @@ export class BasicDetailsComponent {
           this.notFoundTextValue = 'No matches found';
         } else {
           this.billingPartyData = [];
+          this.notFoundTextValue = ''
         }
       },
       error: () => {
         this.billingPartyData = [];
+         this.notFoundTextValue = ''
       }
     });
   }

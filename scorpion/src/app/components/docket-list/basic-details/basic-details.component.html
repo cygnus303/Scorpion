@@ -47,7 +47,7 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Billing Type</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" [items]="billingTypeData" bindLabel="codeDesc" bindValue="codeId"
+              <ng-select class="noFoundTextColor required2" [items]="billingTypeData" bindLabel="codeDesc" bindValue="codeId"
                 placeholder="Billing Type" formControlName="billingType" (change)="onChangeBillingType()">
               </ng-select>
             </div>
@@ -55,7 +55,7 @@
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Pincode</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="docketService.pincodeList" bindLabel="pinArea"
+            <div class="col-md-7"><ng-select class="noFoundTextColor required2" [items]="docketService.pincodeList" bindLabel="pinArea"
                 bindValue="value" placeholder="Pincode" formControlName="pincode"
                 notFoundText="Please enter atleast 1 characters" (search)="docketService.getpincodeData($event)"
                 (change)="docketService.onChangePinCode($event);docketService.onFormFieldChange();"></ng-select></div>
@@ -66,7 +66,7 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Billing Party</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" 
+              <ng-select class="noFoundTextColor required2" 
                 placeholder="Billing Party" [searchable]="true" (search)="getBillingPartyData($event)"  (change)="onChangeBillingParty($event);docketService.onFormFieldChange()"
                 formControlName="billingParty"  [notFoundText]="notFoundTextValue">
                 <ng-option *ngFor="let item of billingPartyData" [value]="item">
@@ -101,7 +101,7 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Destination</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" [searchable]="true" (search)="getDestinationsList($event)" (change)="onChangedestinationsList($event);docketService.onFormFieldChange()" placeholder="Destination" formControlName="destination" 
+              <ng-select class="noFoundTextColor required2" [searchable]="true" (search)="getDestinationsList($event)" (change)="onChangedestinationsList($event);docketService.onFormFieldChange()" placeholder="Destination" formControlName="destination" 
                 notFoundText="Please enter atleast 3 characters">
                 <ng-option *ngFor="let item of destinationsList" [value]="item">
                     <strong>{{ item.locCode }}</strong> : {{ item.locName }}
@@ -121,7 +121,7 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Transit Mode</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" placeholder="Transit Mode" notFoundText="No matches found" [items]="generalMasterService.transportModeData" bindLabel="codeDesc" bindValue="codeId" (change)="docketService.GetGSTFromTrnMode($event)"
+              <ng-select class="noFoundTextColor required2" placeholder="Transit Mode" notFoundText="No matches found" [items]="docketService.transportModeData" bindLabel="codeDesc" bindValue="codeId" (change)="docketService.GetGSTFromTrnMode($event)"
                 formControlName="mode"></ng-select>
               </div>
           </div>
@@ -129,7 +129,7 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">From City</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" placeholder="From City" (search)="getCityList($event)" (change)="onChangeCityListList($event,'from')"
+              <ng-select class="noFoundTextColor required2" placeholder="From City" (search)="getCityList($event)" (change)="onChangeCityListList($event,'from')"
                formControlName="fromCity"
                 notFoundText="Please enter atleast 1 characters">
                <ng-option *ngFor="let item of cityList" [value]="item.location">
@@ -162,19 +162,19 @@
       <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Pickup/Delivery</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Pickup/Delivery" [items]="generalMasterService.pickUpData" bindLabel="codeDesc" bindValue="codeId"
+            <div class="col-md-7"><ng-select class="noFoundTextColor required2" placeholder="Pickup/Delivery" [items]="docketService.pickUpData" bindLabel="codeDesc" bindValue="codeId"
                 formControlName="pickup" notFoundText="No matches found"></ng-select></div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Service Type</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Service Type" [items]="generalMasterService.serviceData" bindLabel="codeDesc" bindValue="codeId"
+            <div class="col-md-7"><ng-select class="noFoundTextColor required2" placeholder="Service Type" [items]="docketService.serviceData" bindLabel="codeDesc" bindValue="codeId"
                 formControlName="serviceType" notFoundText="No matches found"></ng-select></div>
           </div>
         </div>
         <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('serviceType')?.value==='2'">
           <div class="form-group"><label class="col-md-5">Type of Movement</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="generalMasterService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId" placeholder="Type of Movement"
+            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId" placeholder="Type of Movement"
                 formControlName="typeMovement" notFoundText="No matches found"></ng-select></div>
           </div>
         </div>
@@ -183,27 +183,27 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Contents</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" type="text"  placeholder="Contents" [items]="generalMasterService.contentsData" bindLabel="codeDesc" bindValue="codeId"
+              <ng-select class="noFoundTextColor required2" type="text"  placeholder="Contents" [items]="docketService.contentsData" bindLabel="codeDesc" bindValue="codeId"
                 formControlName="contents" notFoundText="No matches found"></ng-select>
               </div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Packaging Type</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" placeholder="Packaging Type" [items]="generalMasterService.packagingTypeData" bindLabel="codeDesc" bindValue="codeId"
+            <div class="col-md-7"><ng-select class="noFoundTextColor required2" placeholder="Packaging Type" [items]="docketService.packagingTypeData" bindLabel="codeDesc" bindValue="codeId"
                 formControlName="packingType" notFoundText="No matches found"></ng-select></div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Business Type</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="generalMasterService.businessTypeList" bindLabel="codeDesc" bindValue="codeId" placeholder="Business Type"
+            <div class="col-md-7"><ng-select class="noFoundTextColor required2" [items]="docketService.businessTypeList" bindLabel="codeDesc" bindValue="codeId" placeholder="Business Type"
                 formControlName="businessType"  notFoundText="No matches found"></ng-select></div>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-4 form-column">
-          <div class="form-group" *ngIf="this.docketService?.step2DetailsList?.isCODDOD === 'Y'">
+          <div class="form-group">
             <label for="refDkt" class="col-md-5">COD/DOD</label>
             <div class="col-md-7 text-start">
               <label class="yes-no">
@@ -223,7 +223,7 @@
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Exempt Services</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="generalMasterService.exemptServicesList" bindLabel="codeDesc" bindValue="codeId" placeholder="Exempt Services"
+            <div class="col-md-7"><ng-select class="noFoundTextColor required2" [items]="docketService.exemptServicesList" bindLabel="codeDesc" bindValue="codeId" placeholder="Exempt Services"
                 formControlName="exemptServices"></ng-select></div>
           </div>
         </div>
@@ -370,25 +370,25 @@
           <div class="row">
             <div class="col-md-3 form-column">
               <div class="form-group"><label class="col-md-5">Appointment Date</label>
-                <div class="col-md-5"><input type="text" placeholder="Appointment" class="form-control col-md-5"
+                <div class="col-md-5"><input type="text" placeholder="Appointment" class="form-control col-md-5 required2"
                     formControlName="appointmentDate" [max]="docketService.today" (click)="openDatePicker($event)" /></div>
               </div>
             </div>
             <div class="col-md-3 form-column">
               <div class="form-group"><label class="col-md-5"> Name Of Person</label>
-                <div class="col-md-5"><input type="text" class="form-control col-md-5" placeholder="Name Of Person"
+                <div class="col-md-5"><input type="text" class="form-control col-md-5 required2" placeholder="Name Of Person"
                     formControlName="personName" /></div>
               </div>
             </div>
             <div class="col-md-3 form-column">
               <div class="form-group"><label class="col-md-5"> Contact Number</label>
-                <div class="col-md-5"><input type="text" class="form-control col-md-5" placeholder="Contact Number"
+                <div class="col-md-5"><input type="text" class="form-control col-md-5 required2" placeholder="Contact Number"
                     formControlName="contactNo" /></div>
               </div>
             </div>
             <div class="col-md-3 form-column">
               <div class="form-group"><label class="col-md-5"> Remarks</label>
-                <div class="col-md-5"><input type="text" placeholder="Remarks" class="form-control col-md-5"
+                <div class="col-md-5"><input type="text" placeholder="Remarks required2" class="form-control col-md-5"
                     formControlName="remarks" /></div>
               </div>
             </div>
