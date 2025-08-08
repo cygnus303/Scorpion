@@ -78,4 +78,8 @@ export class BasicDetailService {
  GetFreightContractDetails(data: any){
     return this.apiHandlerService.Post(`Operation/GetFreightContractDetails`, data);
   }
+
+  getGSTCalculation(data:any){
+    return this.apiHandlerService.Post(`Operation/GetDocketGSTCalculation`,data);
+  }
 }

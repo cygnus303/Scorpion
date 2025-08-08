@@ -17,18 +17,18 @@ export class DocketService {
   public pickUpData: generalMasterResponse[] = [];
   public contentsData: generalMasterResponse[] = [];
   public serviceData: generalMasterResponse[] = [];
-  public packagingTypeData : generalMasterResponse[] = [];
-  public typeofMovementList : generalMasterResponse[] = [];
-  public businessTypeList : generalMasterResponse[] = [];
-  public exemptServicesList : generalMasterResponse[] = [];
+  public packagingTypeData: generalMasterResponse[] = [];
+  public typeofMovementList: generalMasterResponse[] = [];
+  public businessTypeList: generalMasterResponse[] = [];
+  public exemptServicesList: generalMasterResponse[] = [];
   public today: string = '';
   public HQTR = 'NIDA';
-  public step2DetailsList:any;
+  public step2DetailsList: any;
   public getGSTNODetailsList: any;
-  public GetPincodeOriginList!:any;
-   public isBillingTBB: boolean = false;
-  public isLocalNote : boolean = false;
-  constructor( private basicDetailService: BasicDetailService) {}
+  public GetPincodeOriginList!: any;
+  public isBillingTBB: boolean = false;
+  public isLocalNote: boolean = false;
+  constructor(private basicDetailService: BasicDetailService) { }
 
   detailForm() {
     const now = new Date();
@@ -88,7 +88,7 @@ export class DocketService {
       consignorAddress: new FormControl(null),
       consignorCity: new FormControl(null),
       consignorPincode: new FormControl(null),
-      consignorMobile: new FormControl(null,[Validators.pattern(mobileNo)]),
+      consignorMobile: new FormControl(null, [Validators.pattern(mobileNo)]),
       consignorEmail: new FormControl(null),
 
       // Consignee
@@ -99,7 +99,7 @@ export class DocketService {
       consigneeAddress: new FormControl(null),
       consigneeCity: new FormControl(null),
       consigneePincode: new FormControl(null),
-      consigneeMobile: new FormControl(null,[Validators.pattern(mobileNo)]),
+      consigneeMobile: new FormControl(null, [Validators.pattern(mobileNo)]),
       consigneeEmail: new FormControl(null),
 
       // Third Party
@@ -182,47 +182,47 @@ export class DocketService {
       this.getStep2Details();
     }
   }
-    getStep2Details() {
-      const rawDate = new Date(); // or from your API
-      const formattedDate = rawDate.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric'
-      });
-      const payload = {
-        PartyCode: this.basicDetailForm.value.billingParty,
-        Destination: this.basicDetailForm.value.destination,
-        Paybas: this.basicDetailForm.value.billingType,
-        Doctype: 'DKT',
-        DOCKDT: formattedDate,
-        orgncd: this.HQTR
-      }
-      this.basicDetailService.GetStep2Details(payload).subscribe({
-        next: (response) => {
-          if (response) {
-            this.step2DetailsList = response;
-            this.freightForm.patchValue({
-              billedAt: this.step2DetailsList.billingLocation
-            });
-            this.consignorForm.patchValue({
-              riskType:this.step2DetailsList?.risktype,
-            });
-            // this.basicDetailForm.patchValue({
-            //  IsCODDOD:this.step2DetailsList?.isCODDOD
-            // })
-            this.getTransportModeData(this.step2DetailsList.transMode);
-            this.getPickUpData(this.step2DetailsList.pkgDelyType);
-            this.getContentsData();
-            this.getServiceTypeData(this.step2DetailsList.serviceType);
-            this.getPackagingTypeData();
-            this.getTypeofMovementData();
-            this.getbusinessTypeData();
-            this.getexemptServicesData();
-            this.GetPincodeOrigin();
-            this.GetDKTGSTForGTA();
-          }
+  getStep2Details() {
+    const rawDate = new Date(); // or from your API
+    const formattedDate = rawDate.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
+    });
+    const payload = {
+      PartyCode: this.basicDetailForm.value.billingParty,
+      Destination: this.basicDetailForm.value.destination,
+      Paybas: this.basicDetailForm.value.billingType,
+      Doctype: 'DKT',
+      DOCKDT: formattedDate,
+      orgncd: this.HQTR
+    }
+    this.basicDetailService.GetStep2Details(payload).subscribe({
+      next: (response) => {
+        if (response) {
+          this.step2DetailsList = response;
+          this.freightForm.patchValue({
+            billedAt: this.step2DetailsList.billingLocation
+          });
+          this.consignorForm.patchValue({
+            riskType: this.step2DetailsList?.risktype,
+          });
+          // this.basicDetailForm.patchValue({
+          //  IsCODDOD:this.step2DetailsList?.isCODDOD
+          // })
+          this.getTransportModeData(this.step2DetailsList.transMode);
+          this.getPickUpData(this.step2DetailsList.pkgDelyType);
+          this.getContentsData();
+          this.getServiceTypeData(this.step2DetailsList.serviceType);
+          this.getPackagingTypeData();
+          this.getTypeofMovementData();
+          this.getbusinessTypeData();
+          this.getexemptServicesData();
+          this.GetPincodeOrigin();
+          this.GetDKTGSTForGTA();
         }
-      });
+      }
+    });
   }
 
 
@@ -306,8 +306,9 @@ export class DocketService {
     });
   }
 
-   getTransportModeData(codeId:any) {
-    this.basicDetailService.getGeneralMasterList('TRN', '',codeId).subscribe({ next: (response) => {
+  getTransportModeData(codeId: any) {
+    this.basicDetailService.getGeneralMasterList('TRN', '', codeId).subscribe({
+      next: (response) => {
         if (response.success) {
           this.transportModeData = response.data;
         }
@@ -315,8 +316,8 @@ export class DocketService {
     });
   }
 
-  getPickUpData(codeId:any) {
-    this.basicDetailService.getGeneralMasterList('PKPDL', '',codeId).subscribe({
+  getPickUpData(codeId: any) {
+    this.basicDetailService.getGeneralMasterList('PKPDL', '', codeId).subscribe({
       next: (response) => {
         if (response.success) {
           this.pickUpData = response.data;
@@ -325,8 +326,9 @@ export class DocketService {
     });
   }
 
-  getContentsData(){
-     this.basicDetailService.getGeneralMasterList('PROD', '','').subscribe({next: (response) => {
+  getContentsData() {
+    this.basicDetailService.getGeneralMasterList('PROD', '', '').subscribe({
+      next: (response) => {
         if (response.success) {
           this.contentsData = response.data;
         }
@@ -334,8 +336,8 @@ export class DocketService {
     });
   }
 
-  getServiceTypeData(codeId:any) {
-    this.basicDetailService.getGeneralMasterList('SVCTYP', '',codeId).subscribe({
+  getServiceTypeData(codeId: any) {
+    this.basicDetailService.getGeneralMasterList('SVCTYP', '', codeId).subscribe({
       next: (response) => {
         if (response.success) {
           this.serviceData = response.data;
@@ -345,7 +347,7 @@ export class DocketService {
   }
 
   getPackagingTypeData() {
-    this.basicDetailService.getGeneralMasterList('PKGS', '','').subscribe({
+    this.basicDetailService.getGeneralMasterList('PKGS', '', '').subscribe({
       next: (response) => {
         if (response.success) {
           this.packagingTypeData = response.data;
@@ -354,8 +356,9 @@ export class DocketService {
     });
   }
 
-   getTypeofMovementData(){
-    this.basicDetailService.getGeneralMasterList('FTLTYP ','','').subscribe({next: (response) => {
+  getTypeofMovementData() {
+    this.basicDetailService.getGeneralMasterList('FTLTYP ', '', '').subscribe({
+      next: (response) => {
         if (response.success) {
           this.typeofMovementList = response.data;
         }
@@ -363,8 +366,9 @@ export class DocketService {
     });
   }
 
-  getbusinessTypeData(){
-    this.basicDetailService.getGeneralMasterList('BUT ','','').subscribe({next: (response) => {
+  getbusinessTypeData() {
+    this.basicDetailService.getGeneralMasterList('BUT ', '', '').subscribe({
+      next: (response) => {
         if (response.success) {
           this.businessTypeList = response.data;
           this.basicDetailForm?.patchValue({
@@ -375,8 +379,9 @@ export class DocketService {
     });
   }
 
-   getexemptServicesData(){
-    this.basicDetailService.getGeneralMasterList('EXMPTSRV ','','').subscribe({next: (response) => {
+  getexemptServicesData() {
+    this.basicDetailService.getGeneralMasterList('EXMPTSRV ', '', '').subscribe({
+      next: (response) => {
         if (response.success) {
           this.exemptServicesList = response.data;
         }
@@ -384,5 +389,34 @@ export class DocketService {
     });
   }
 
+  getGSTCalculation() {
+    const payload = {
+      "custcode": this.basicDetailForm.value.billingParty,
+      "payBas": this.basicDetailForm.value.businessType,
+      "baseLocation": this.basicDetailForm.value.origin,
+      "destCd": this.basicDetailForm.value.destination,
+      "subTotal": 0,
+      "csgngstNo": "string",
+      "csgegstNo": "string",
+      "transMode": this.basicDetailForm.value.mode,
+      "docketDate":  this.basicDetailForm.value.cNoteDate,
+      "billingPartyAS": "string",
+      "csgngstState": "string",
+      "csgegstState": "string",
+      "gstRateType": "string",
+      "isGstApplied": 1,
+      "billingState": "string"
+    }
+    this.basicDetailService.getGSTCalculation(payload).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.businessTypeList = response.data;
+          this.basicDetailForm?.patchValue({
+            businessType: response.data[0].codeId
+          })
+        }
+      },
+    });
   }
+}
 
