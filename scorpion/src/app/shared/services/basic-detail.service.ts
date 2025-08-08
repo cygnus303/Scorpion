@@ -78,4 +78,8 @@ export class BasicDetailService {
     return this.apiHandlerService.Get(`Operation/GetGSTFromTrnMode?trnMode=${data}`);
 
   }
+
+  getGSTCalculation(data:any){
+    return this.apiHandlerService.Post(`Operation/GetDocketGSTCalculation`,data);
+  }
 }
