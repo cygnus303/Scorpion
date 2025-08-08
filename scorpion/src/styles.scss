@@ -94,7 +94,9 @@ ng-select .ng-input input[type='text'] {
     text-transform: none !important;
     color:  black !important;
 }
-
+.border-danger{
+  border-color: red;
+}
 
 // Dropdown panel styling
 .ng-dropdown-panel {

@@ -104,6 +104,12 @@
                 <div class="col-md-7">
                   <input class="form-control required required2 clsCnor"  formControlName="consignorMobile"
                     maxlength="10"  placeholder="Mobile No">
+                    <!-- <div *ngIf="docketService.consignorForm.get('consignorMobile')?.touched && docketService.consignorForm.get('consignorMobile')?.invalid"
+                      class="text-danger">
+                      <div *ngIf="docketService.consignorForm.get('consignorMobile')?.errors?.['pattern']">
+                        Please enter a valid Indian mobile number.
+                      </div>
+                    </div> -->
                 </div>
               </div>
             </div>
@@ -219,7 +225,14 @@
                 <label class="control-label col-md-5">Mobile No </label>
                 <div class="col-md-7">
                   <input class="form-control required required2" formControlName="consigneeMobile" maxlength="10"
-                    placeholder="Mobile No" type="text" >
+                    placeholder="Mobile No" type="text" 
+                   >
+                    <!-- <div *ngIf="docketService?.consignorForm?.get('consigneeMobile')?.touched && docketService.consignorForm.get('consigneeMobile')?.invalid"
+                      class="text-danger">
+                      <div *ngIf="docketService?.consignorForm?.get('consigneeMobile')?.errors?.['pattern']">
+                        Please enter a valid Indian mobile number.
+                      </div>
+                    </div> -->
                 </div>
               </div>
             </div>

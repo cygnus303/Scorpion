@@ -1,60 +1,60 @@
 <div class="cnote-entry-container px-1">
   <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
     <i class="fa fa-edit me-2"></i>
-   CNote Entry - Freight Details
+    CNote Entry - Freight Details
   </div>
   <div class="form-grid p-4">
     <form [formGroup]="docketService.freightForm">
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label class="control-label col-md-5">Freight Charges</label>
-                <div class="col-md-7">
-                  <input class="required2 form-control required text-end" 
-                    placeholder="Freight Charges" type="number" value="0" formControlName="freightCharges">
-                </div>
-              </div>
+      <div class="row" *ngIf="!docketService.isBillingTBB">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label col-md-5">Freight Charges</label>
+            <div class="col-md-7">
+              <input class="required2 form-control required text-end" placeholder="Freight Charges" type="number"
+                value="0" formControlName="freightCharges">
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label class="control-label col-md-5" style="padding-top: 0px;padding-right: 1px;padding-left: 49px;">
-                 <select
-                    class="form-control required required2 select2 dropdown2 select2-offscreen"
-                    id="WMDC_RATE_TYPE" name="WMDC.RATE_TYPE" placeholder="Rate Type" tabindex="-1" formControlName="rateType">
-                    <option value="%">% of Basic Freight</option>
-                    <option value="F">Flat(in RS)</option>
-                    <option value="I">% of Invoice</option>
-                    <option value="P">Per PKG</option>
-                    <option value="T">Per TON</option>
-                    <option value="W">Per KG</option>
-                  </select>
-                </label>
-                <div class="col-md-4">
-                  <input class="clsAmount form-control text-end" min="1" placeholder="Freight Rate" formControlName="freightRate" type="number" value="0">
-                </div>
-              </div>
-            </div>
-
           </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label col-md-5" style="padding-top: 0px;padding-right: 1px;padding-left: 49px;">
+              <select class="form-control required required2 select2 dropdown2 select2-offscreen" id="WMDC_RATE_TYPE"
+                name="WMDC.RATE_TYPE" placeholder="Rate Type" tabindex="-1" formControlName="rateType">
+                <option value="%">% of Basic Freight</option>
+                <option value="F">Flat(in RS)</option>
+                <option value="I">% of Invoice</option>
+                <option value="P">Per PKG</option>
+                <option value="T">Per TON</option>
+                <option value="W">Per KG</option>
+              </select>
+            </label>
+            <div class="col-md-4">
+              <input class="clsAmount form-control text-end" min="1" placeholder="Freight Rate"
+                formControlName="freightRate" type="number" value="0">
+            </div>
+          </div>
+        </div>
 
-          <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="control-label col-md-5">GST Paid By</label>
-                  <div class="col-md-7">
-                   <select class="form-control required2 required "  formControlName="GSTPaidBy"
-                      placeholder="GST Paid By" tabindex="-1">
-                      <option value=""></option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-2">
-                <div class="form-group" style="display: none;">
-                  <label class="control-label col-md-10" style="padding-top:1px;">GST Exempted</label>
-                  <div class="col-md-2 chkactive">
-                    <input type="hidden">
-                    <!-- <div class="checker"><span>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label col-md-5">GST Paid By</label>
+            <div class="col-md-7">
+              <select class="form-control required2 required " formControlName="GSTPaidBy" placeholder="GST Paid By"
+                tabindex="-1">
+                <option value=""></option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2" *ngIf="!docketService.isBillingTBB">
+          <div class="form-group" style="display: none;">
+            <label class="control-label col-md-10" style="padding-top:1px;">GST Exempted</label>
+            <div class="col-md-2 chkactive">
+              <input type="hidden">
+              <!-- <div class="checker"><span>
                         <div
                           class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-animate bootstrap-switch-mini">
                           <div class="bootstrap-switch-container"><span
@@ -64,227 +64,220 @@
                               type="checkbox" class="WMD_IsStaxExempN WMD_IsStaxExempChange" value="false"></div>
                         </div>
                       </span></div> -->
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-2">
-                <div class="form-group">
-                  <label class="control-label col-md-5">EDD </label>
-                  <div class="col-md-7">
-                    <div class="input-group @*date ftdate-picker*@">
-                      <input class="required2 form-control required"
-                        placeholder="EDD"  type="text" value="1/1/0001 12:00:00 AM" formControlName="EDD" readonly>
-                      <span class="input-group-btn">
-                        <button class="btn default date-set clsVehicle1" type="button" style="display: none;"><i
-                            class="fa fa-calendar"></i></button>
-                      </span>
-                      <input id="WMD_CDELDT_Original" name="WMD_CDELDT_Original" type="hidden" value="">
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="control-label col-md-5">Billed At</label>
-                  <div class="col-md-7">
-                    <input class="required2 form-control required" id="WMD_fincmplbrDisplay" formControlName="billedAt" name="WMD.fincmplbrDisplay"
-                      placeholder="Billed At" type="text" value="" readonly="readonly">
-                  </div>
-                </div>
-              </div>
-            <div class="col-md-8">
             </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="control-label col-md-5">Billing State</label>
-                  <div class="col-md-7">
-                    <input class="required2 form-control required" id="WMD_BillingState" formControlName="billingState" name="WMD.BillingState"
-                      placeholder="Billing State" readonly="True" type="text" value="">
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="control-label col-md-5">FOV Rate (% of Invoice)</label>
-                    <div class="col-md-7">
-                      <input class="required2 clsAmount form-control required text-end"  formControlName="fovRate" placeholder="FOV Rate " type="text" readonly>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="control-label col-md-5">FOV Calculated</label>
-                    <div class="col-md-7">
-                      <input class="required2 clsAmount form-control required text-end" formControlName="fovCalculated" placeholder="FOV" type="text" readonly>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="control-label col-md-5">FOV Charged </label>
-                    <div class="col-md-7">
-                      <input class="required2 form-control clsAmount required text-end" formControlName="fovCharged"
-                        placeholder="FOV Charged" type="text" readonly>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="control-label col-md-5">COD/DOD Charged</label>
-                    <div class="col-md-7">
-                      <input class="required2 form-control clsAmount required clsPayment" formControlName="coddodCharged" placeholder="COD/DOD Charged ">
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="control-label col-md-5">COD/DOD To be Collected</label>
-                    <div class="col-md-7">
-                      <input class="required2 clsAmount form-control required"  formControlName="coddodCollected"
-                        placeholder="COD/DOD Amount" type="text">
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row clsDACC" style="display: none;">
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="control-label col-md-5">DACC Charged</label>
-                    <div class="col-md-7">
-                      <input class="required2 clsAmount form-control required clsPayment" 
-                         placeholder="DACC Charged "type="text" >
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label class="control-label col-md-5">DACC To be Collected</label>
-                    <div class="col-md-7">
-                      <input class="required2 clsAmount form-control required"placeholder="DACC Amount" type="text" value="0">
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <h3 class="pb-4 text-start appointment mt-5">Charges Details</h3>
-
-
-                    <div class="row">
-                <div class="col-md-4" *ngFor="let charge of chargingData">
-                  <div class="form-group to-pay-group">
-                    <label class="control-label col-md-5">{{ charge.chargeName }}</label>
-                    <div class="col-md-7">
-                      <div class="input-icon">
-                        <input
-                          type="text"
-                          class="form-control clsAmount required2"
-                          [placeholder]="charge.chargeName"
-                          [ngModel]="chargeAmounts[charge.chargeCode]"
-                          (ngModelChange)="chargeAmounts[charge.chargeCode] = $event"
-                          (focus)="onFocus(charge.chargeCode)"
-                          (blur)="onBlur(charge.chargeCode)"
-                          [ngModelOptions]="{ standalone: true }"
-                        />
-                        <i class="fas fa-plus"></i>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-
-
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="control-label col-md-5"><b>GST Rate</b></label>
-                  <div class="col-md-7">
-                  <select class="form-control select2 required2 required select2-offscreen" placeholder="Select GST Percentage"  formControlName="gstRate" tabindex="-1">
-                      <option value=""></option>
-                      <option value="0">0</option>
-                      <option value="5">5</option>
-                      <option value="6">6</option>
-                      <option value="10">10</option>
-                      <option value="12">12</option>
-                      <option selected="selected" value="18">18</option>
-                      <option value="28">28</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="control-label col-md-5"><b>SUB-TOTAL</b></label>
-                  <div class="col-md-7">
-                    <input class="required2 clsAmount form-control required clsROFixed" data-val="true" formControlName="subTotal"
-                      data-val-number="The field SubTotal must be a number." id="WMDC_SubTotal" name="WMDC.SubTotal"
-                      placeholder="SUB-TOTAL" readonly="true" type="text" value="">
-                  </div>
-                </div>
-              </div>
-
-              <div *ngFor="let entry of groupedCharges | keyvalue">
-                <div class="row clsGSTApply">
-                  <div class="col-md-4" *ngFor="let charge of entry.value">
-                    <div class="form-group to-pay-group">
-                      <label class="control-label col-md-5">
-                        {{ charge.chargeName }}
-                        <!-- <span [id]="'lbl_' + charge.chargeCode"></span> -->
-                      </label>
-                      <div class="col-md-7">
-                        <div class="input-icon">
-                          <input
-                            type="text"
-                            class="form-control clsAmount required2"
-                            [placeholder]="charge.chargeName"
-                            [(ngModel)]="charge.chargeAmount"
-                            [ngModelOptions]="{ standalone: true }"
-                            readonly
-                          />
-                          <i class="fas fa-plus"></i>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-              <div class="col-md-4 clsdis" style="display: none;">
-                <div class="form-group">
-                  <label class="control-label col-md-5">Discount(%)</label>
-                  <div class="col-md-7">
-                    <input class="form-control clsAmount" data-val="true"
-                      data-val-number="The field Discount must be a number." id="WMD_Discount" name="WMD.Discount"
-                      placeholder="Discount" type="number" value="0" formControlName="discount">
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4 clsdis" style="display: none;">
-                <div class="form-group">
-                  <label class="control-label col-md-5">Discount Amount</label>
-                  <div class="col-md-7">
-                    <input class="form-control clsAmount" id="WMD_DiscountAmount" name="WMD.DiscountAmount"
-                      placeholder="Discount" readonly="true" type="number" value="" formControlName="discountAmount">
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="control-label col-md-5"><b>TOTAL</b></label>
-                  <div class="col-md-7">
-                    <input class="required2 form-control clsAmount required clsROFixed" formControlName="total" data-val="true"
-                      data-val-number="The field DKTTOT must be a number."
-                      data-val-required="The DKTTOT field is required." id="WMDC_DKTTOT" name="WMDC.DKTTOT"
-                      placeholder="TOTAL" readonly="true" type="text" value="0" min="1">
-                  </div>
-                </div>
-              </div> -
           </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label class="control-label col-md-5">EDD </label>
+            <div class="col-md-7">
+              <div class="input-group @*date ftdate-picker*@">
+                <input class="required2 form-control required" placeholder="EDD" type="text"
+                  value="1/1/0001 12:00:00 AM" formControlName="EDD" readonly>
+                <span class="input-group-btn">
+                  <button class="btn default date-set clsVehicle1" type="button" style="display: none;"><i
+                      class="fa fa-calendar"></i></button>
+                </span>
+                <input id="WMD_CDELDT_Original" name="WMD_CDELDT_Original" type="hidden" value="">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label col-md-5">Billed At</label>
+            <div class="col-md-7">
+              <input class="required2 form-control required" id="WMD_fincmplbrDisplay" formControlName="billedAt"
+                name="WMD.fincmplbrDisplay" placeholder="Billed At" type="text" value="" readonly="readonly">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label col-md-5">Billing State</label>
+            <div class="col-md-7">
+              <input class="required2 form-control required" id="WMD_BillingState" formControlName="billingState"
+                name="WMD.BillingState" placeholder="Billing State" readonly="True" type="text" value="">
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="!docketService.isBillingTBB">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="control-label col-md-5">FOV Rate (% of Invoice)</label>
+              <div class="col-md-7">
+                <input class="required2 clsAmount form-control required text-end" formControlName="fovRate"
+                  placeholder="FOV Rate " type="text" readonly>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="control-label col-md-5">FOV Calculated</label>
+              <div class="col-md-7">
+                <input class="required2 clsAmount form-control required text-end" formControlName="fovCalculated"
+                  placeholder="FOV" type="text" readonly>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="control-label col-md-5">FOV Charged </label>
+              <div class="col-md-7">
+                <input class="required2 form-control clsAmount required text-end" formControlName="fovCharged"
+                  placeholder="FOV Charged" type="text" readonly>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" *ngIf="!docketService.isBillingTBB">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="control-label col-md-5">COD/DOD Charged</label>
+              <div class="col-md-7">
+                <input class="required2 form-control clsAmount required clsPayment" formControlName="coddodCharged"
+                  placeholder="COD/DOD Charged ">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="control-label col-md-5">COD/DOD To be Collected</label>
+              <div class="col-md-7">
+                <input class="required2 clsAmount form-control required" formControlName="coddodCollected"
+                  placeholder="COD/DOD Amount" type="text">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row clsDACC" style="display: none;" *ngIf="!docketService.isBillingTBB">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="control-label col-md-5">DACC Charged</label>
+              <div class="col-md-7">
+                <input class="required2 clsAmount form-control required clsPayment" placeholder="DACC Charged "
+                  type="text">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="control-label col-md-5">DACC To be Collected</label>
+              <div class="col-md-7">
+                <input class="required2 clsAmount form-control required" placeholder="DACC Amount" type="text"
+                  value="0">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="pb-4 text-start appointment mt-5" *ngIf="!docketService.isBillingTBB">Charges Details</h3>
+
+
+        <div class="row" *ngIf="!docketService.isBillingTBB">
+          <div class="col-md-4" *ngFor="let charge of chargingData">
+            <div class="form-group to-pay-group">
+              <label class="control-label col-md-5">{{ charge.chargeName }}</label>
+              <div class="col-md-7">
+                <div class="input-icon">
+                  <input type="text" class="form-control clsAmount required2" [placeholder]="charge.chargeName"
+                    [ngModel]="chargeAmounts[charge.chargeCode]"
+                    (ngModelChange)="chargeAmounts[charge.chargeCode] = $event" (focus)="onFocus(charge.chargeCode)"
+                    (blur)="onBlur(charge.chargeCode)" [ngModelOptions]="{ standalone: true }" />
+                  <i class="fas fa-plus"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+        <div class="col-md-4" *ngIf="!docketService.isBillingTBB">
+          <div class="form-group">
+            <label class="control-label col-md-5"><b>GST Rate</b></label>
+            <div class="col-md-7">
+              <select class="form-control select2 required2 required select2-offscreen"
+                placeholder="Select GST Percentage" formControlName="gstRate" tabindex="-1">
+                <option value=""></option>
+                <option value="0">0</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="10">10</option>
+                <option value="12">12</option>
+                <option selected="selected" value="18">18</option>
+                <option value="28">28</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4" *ngIf="!docketService.isBillingTBB">
+          <div class="form-group">
+            <label class="control-label col-md-5"><b>SUB-TOTAL</b></label>
+            <div class="col-md-7">
+              <input class="required2 clsAmount form-control required clsROFixed" data-val="true"
+                formControlName="subTotal" data-val-number="The field SubTotal must be a number." id="WMDC_SubTotal"
+                name="WMDC.SubTotal" placeholder="SUB-TOTAL" readonly="true" type="text" value="">
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!docketService.isBillingTBB">
+          <div *ngFor="let entry of groupedCharges | keyvalue">
+            <div class="row clsGSTApply">
+              <div class="col-md-4" *ngFor="let charge of entry.value">
+                <div class="form-group to-pay-group">
+                  <label class="control-label col-md-5">
+                    {{ charge.chargeName }}
+                    <!-- <span [id]="'lbl_' + charge.chargeCode"></span> -->
+                  </label>
+                  <div class="col-md-7">
+                    <div class="input-icon">
+                      <input type="text" class="form-control clsAmount required2" [placeholder]="charge.chargeName"
+                        [(ngModel)]="charge.chargeAmount" [ngModelOptions]="{ standalone: true }" readonly />
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 clsdis" style="display: none;" *ngIf="!docketService.isBillingTBB">
+          <div class="form-group">
+            <label class="control-label col-md-5">Discount(%)</label>
+            <div class="col-md-7">
+              <input class="form-control clsAmount" data-val="true"
+                data-val-number="The field Discount must be a number." id="WMD_Discount" name="WMD.Discount"
+                placeholder="Discount" type="number" value="0" formControlName="discount">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 clsdis" style="display: none;">
+          <div class="form-group">
+            <label class="control-label col-md-5">Discount Amount</label>
+            <div class="col-md-7">
+              <input class="form-control clsAmount" id="WMD_DiscountAmount" name="WMD.DiscountAmount"
+                placeholder="Discount" readonly="true" type="number" value="" formControlName="discountAmount">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4" *ngIf="!docketService.isBillingTBB">
+          <div class="form-group">
+            <label class="control-label col-md-5"><b>TOTAL</b></label>
+            <div class="col-md-7">
+              <input class="required2 form-control clsAmount required clsROFixed" formControlName="total"
+                data-val="true" data-val-number="The field DKTTOT must be a number."
+                data-val-required="The DKTTOT field is required." id="WMDC_DKTTOT" name="WMDC.DKTTOT"
+                placeholder="TOTAL" readonly="true" type="text" value="0" min="1">
+            </div>
+          </div>
+        </div> -
+      </div>
     </form>
   </div>
 </div>

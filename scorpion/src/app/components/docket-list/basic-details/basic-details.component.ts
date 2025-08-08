@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DocketService } from '../../../shared/services/docket.service';
 import { BasicDetailService } from '../../../shared/services/basic-detail.service';
-import { DestinationsList, generalMasterResponse ,billingPartyResponse, VehicleNumbersResponse} from '../../../shared/models/general-master.model';
+import { DestinationsList, generalMasterResponse, billingPartyResponse, VehicleNumbersResponse } from '../../../shared/models/general-master.model';
 import { cityResponse } from '../../../shared/models/general-master.model';
 import { combineLatest, filter, startWith } from 'rxjs';
 import { GeneralMasterService } from '../../../shared/services/general-master.service';
@@ -14,42 +14,31 @@ import { GeneralMasterService } from '../../../shared/services/general-master.se
 })
 export class BasicDetailsComponent {
   public billingTypeData: generalMasterResponse[] = [];
- 
+  public isLocalNoteReadOnly = false;
   public billingPartyData: billingPartyResponse[] = [];
-  public cityList:cityResponse[]=[];  
-  public destinationsList:DestinationsList[]=[];
-  public vehicleNumbersList:VehicleNumbersResponse[]=[];
+  public cityList: cityResponse[] = [];
+  public destinationsList: DestinationsList[] = [];
+  public vehicleNumbersList: VehicleNumbersResponse[] = [];
   public notFoundTextValue = 'Please enter at least 3 characters';
   constructor(
     public docketService: DocketService,
-    private basicDetailService: BasicDetailService,public generalMasterService:GeneralMasterService) { }
+    private basicDetailService: BasicDetailService, public generalMasterService: GeneralMasterService) { }
 
   ngOnInit() {
     this.docketService.detailForm();
     this.getBillingTypeData();
-
-    // const billingPartyControl = this.docketService.basicDetailForm.get('billingParty');
-    // const pincodeControl = this.docketService.basicDetailForm.get('pincode');
-    // if (billingPartyControl && pincodeControl) {
-    //   combineLatest([
-    //     billingPartyControl.valueChanges.pipe(startWith(billingPartyControl.value)),
-    //     pincodeControl.valueChanges.pipe(startWith(pincodeControl.value))
-    //   ]).pipe(
-    //     filter(([billingParty, pincode]) => !!billingParty && !!pincode)).subscribe(([billingParty, pincode]) => {
-    //       this.getPackagingTypeData();
-    //       this.getTransportModeData();
-    //       this.getPickUpData();
-    //       this.getContentsData();
-    //       this.getServiceTypeData();
-    //       this.getTypeofMovementData();
-    //       this.getbusinessTypeData();
-    //       this.getexemptServicesData();
-    //     });
-    // }
+    
+    this.docketService?.basicDetailForm?.get('destination')?.valueChanges.subscribe(() => {
+      this.toggleLocalNote();
+    });
+    this.docketService?.basicDetailForm?.get('origin')?.valueChanges.subscribe(() => {
+      this.toggleLocalNote();
+    });
+    this.toggleLocalNote();
   }
 
   getBillingTypeData() {
-    this.basicDetailService.getGeneralMasterList('PAYTYP', null,null).subscribe({
+    this.basicDetailService.getGeneralMasterList('PAYTYP', null, null).subscribe({
       next: (response) => {
         if (response.success) {
           this.billingTypeData = response.data;
@@ -59,8 +48,8 @@ export class BasicDetailsComponent {
   }
 
 
-  getCityList(event?: any){
-      const searchText = event.term;
+  getCityList(event?: any) {
+    const searchText = event.term;
     if (!searchText || searchText.length < 1) {
       this.cityList = [];
       return;
@@ -79,8 +68,8 @@ export class BasicDetailsComponent {
     });
   }
 
-  getDestinationsList(event?: any){
-      const searchText = event.term;
+  getDestinationsList(event?: any) {
+    const searchText = event.term;
     if (!searchText || searchText.length < 1) {
       this.destinationsList = [];
       return;
@@ -118,7 +107,7 @@ export class BasicDetailsComponent {
     this.basicDetailService.getBillingParty(payload).subscribe({
       next: (response) => {
         if (response.success) {
-         this.billingPartyData=response.data;
+          this.billingPartyData = response.data;
           this.notFoundTextValue = 'No matches found';
         } else {
           this.billingPartyData = [];
@@ -130,8 +119,8 @@ export class BasicDetailsComponent {
     });
   }
 
-  getVehicleNumbersList(event?: any){
-   const searchText = event.term;
+  getVehicleNumbersList(event?: any) {
+    const searchText = event.term;
     if (!searchText || searchText.length < 1) {
       this.vehicleNumbersList = [];
       return;
@@ -157,37 +146,55 @@ export class BasicDetailsComponent {
     })
   }
 
-  onChangedestinationsList(event: any){
-     this.docketService.basicDetailForm.patchValue({
-      destination: event.locCode,
-    });
-    this.destinationsList = [];
-  }
+onChangedestinationsList(event: any) {
+  this.docketService.basicDetailForm.patchValue({
+    destination: event.locCode,
+  });
+  this.destinationsList = [];
+}
 
-  onChangeCityListList(event: any, type:any){
-    if(type === 'from'){
+toggleLocalNote() {
+  const destination = this.docketService?.basicDetailForm?.get('destination')?.value;
+  const origin = this.docketService?.basicDetailForm?.get('origin')?.value;
+  const localNoteControl = this.docketService?.basicDetailForm?.get('isLocalNote');
+  if (destination && origin && destination === origin) {
+    localNoteControl?.enable();
+    this.docketService.basicDetailForm.value.isLocalNote = false;
+  } else {
+    localNoteControl?.disable();
+    this.docketService.basicDetailForm.value.isLocalNote = false;
+  }
+}
+
+  onChangeCityListList(event: any, type: any) {
+    if (type === 'from') {
       this.docketService.basicDetailForm.patchValue({
-       fromCity: event +':'+ event,
-     });
-    }else if(type === 'to'){
-       this.docketService.basicDetailForm.patchValue({
-       toCity: event +':'+ event,
-     });
-     this.docketService.consignorForm.patchValue({
-      consigneeCity:event
-     });
+        fromCity: event + ':' + event,
+      });
+    } else if (type === 'to') {
+      this.docketService.basicDetailForm.patchValue({
+        toCity: event + ':' + event,
+      });
+      this.docketService.consignorForm.patchValue({
+        consigneeCity: event
+      });
     }
     this.cityList = [];
   }
-  
-  onChangeVehicleNo(event: any){
+
+  onChangeVehicleNo(event: any) {
     this.docketService.basicDetailForm.patchValue({
-       vehicleno: event +':'+event,
-     });
-     this.vehicleNumbersList = [];
+      vehicleno: event + ':' + event,
+    });
+    this.vehicleNumbersList = [];
   }
 
-  onChangeBillingType() {
+  onChangeBillingType(event: any) {
+    if (event.codeId === 'P02') {
+      this.docketService.isBillingTBB = true;
+    } else {
+      this.docketService.isBillingTBB = false;
+    }
     this.docketService.basicDetailForm.patchValue({
       billingParty: null,
       billingName: null

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { pinCodeResponse } from '../models/general-master.model';
 import { BasicDetailService } from './basic-detail.service';
 import { DatePipe } from '@angular/common';
 import { GeneralMasterService } from './general-master.service';
+import { mobileNo } from '../constants/common';
 
 @Injectable({
   providedIn: 'root'
@@ -11,14 +12,16 @@ import { GeneralMasterService } from './general-master.service';
 export class DocketService {
   public basicDetailForm!: FormGroup;
   public consignorForm!: FormGroup;
-  public freightForm!:FormGroup;
+  public freightForm!: FormGroup;
   public pincodeList: pinCodeResponse[] = [];
   public today: string = '';
-  public HQTR = 'HQTR';
-  public step2DetailsList:any;
-  constructor( private basicDetailService: BasicDetailService,private datePipe: DatePipe,private generalMasterService:GeneralMasterService) {}
+  public HQTR = 'NIDA';
+  public step2DetailsList: any;
+  public isBillingTBB: boolean = false;
+  public isLocalNote : boolean = false;
+  constructor(private basicDetailService: BasicDetailService, private datePipe: DatePipe, private generalMasterService: GeneralMasterService) { }
   public getGSTNODetailsList: any;
-  public GetPincodeOriginList!:any;
+  public GetPincodeOriginList!: any;
 
 
   detailForm() {
@@ -29,7 +32,7 @@ export class DocketService {
       cNoteNo: new FormControl(null),
       pincode: new FormControl(null),
       billingName: new FormControl(null),
-      origin: new FormControl('HQTR'),
+      origin: new FormControl('NIDA'),
       originState: new FormControl(null),
       destination: new FormControl(null),
       destinationState: new FormControl(null),
@@ -79,7 +82,7 @@ export class DocketService {
       consignorAddress: new FormControl(null),
       consignorCity: new FormControl(null),
       consignorPincode: new FormControl(null),
-      consignorMobile: new FormControl(null),
+      consignorMobile: new FormControl(null,[Validators.pattern(mobileNo)]),
       consignorEmail: new FormControl(null),
 
       // Consignee
@@ -90,7 +93,7 @@ export class DocketService {
       consigneeAddress: new FormControl(null),
       consigneeCity: new FormControl(null),
       consigneePincode: new FormControl(null),
-      consigneeMobile: new FormControl(null),
+      consigneeMobile: new FormControl(null,[Validators.pattern(mobileNo)]),
       consigneeEmail: new FormControl(null),
 
       // Third Party
@@ -115,31 +118,31 @@ export class DocketService {
     })
   }
 
-  freightbuild(){
+  freightbuild() {
     this.freightForm = new FormGroup({
-      freightCharges:new FormControl(),
-      GSTPaidBy:new FormControl(),
-      rateType:new FormControl(),
-      freightRate:new FormControl(),
-      EDD:new FormControl(),
-      billedAt:new FormControl(),
-      billingState:new FormControl(),
-      fovRate:new FormControl(),
-      fovCalculated:new FormControl(),
-      fovCharged:new FormControl(),
-      coddodCharged:new FormControl(),
-      coddodCollected:new FormControl(),
-      gstRate:new FormControl(),
-      subTotal:new FormControl(),
-      total:new FormControl(),
-      discountAmount:new FormControl(),
-      discount:new FormControl(),
+      freightCharges: new FormControl(),
+      GSTPaidBy: new FormControl(),
+      rateType: new FormControl(),
+      freightRate: new FormControl(),
+      EDD: new FormControl(),
+      billedAt: new FormControl(),
+      billingState: new FormControl(),
+      fovRate: new FormControl(),
+      fovCalculated: new FormControl(),
+      fovCharged: new FormControl(),
+      coddodCharged: new FormControl(),
+      coddodCollected: new FormControl(),
+      gstRate: new FormControl(),
+      subTotal: new FormControl(),
+      total: new FormControl(),
+      discountAmount: new FormControl(),
+      discount: new FormControl(),
     })
   }
 
 
   getpincodeData(event: any) {
-    const searchText = event.term ||event;
+    const searchText = event.term || event;
     if (!searchText || searchText.length < 1) {
       this.pincodeList = [];
       return;
@@ -164,102 +167,102 @@ export class DocketService {
     this.consignorForm.patchValue({ consigneePincode: event.value });
     this.pincodeList = [];
   }
-    onFormFieldChange() {
-      const billingParty = this.basicDetailForm.value.billingParty;
-      const destination = this.basicDetailForm.value.destination;
-      const billingType = this.basicDetailForm.value.billingType;
+  onFormFieldChange() {
+    const billingParty = this.basicDetailForm.value.billingParty;
+    const destination = this.basicDetailForm.value.destination;
+    const billingType = this.basicDetailForm.value.billingType;
 
-      if (billingParty && destination && billingType) {
-        this.getStep2Details();
-      }
+    if (billingParty && destination && billingType) {
+      this.getStep2Details();
     }
-
-    getStep2Details() {
-      debugger
-      const rawDate = new Date(); // or your API date
-      const formattedDate = this.datePipe.transform(rawDate, 'dd MMMM yyyy');
-      const payload = {
-        PartyCode: this.basicDetailForm.value.billingParty,
-        Destination: this.basicDetailForm.value.destination,
-        Paybas: this.basicDetailForm.value.billingType,
-        Doctype: 'DKT',
-        DOCKDT: formattedDate,
-        orgncd: this.HQTR
-      }
-      this.basicDetailService.GetStep2Details(payload).subscribe({
-        next: (response) => {
-          if (response) {
-            this.step2DetailsList = response;
-            this.freightForm.patchValue({
-              billedAt: this.step2DetailsList.billingLocation
-            });
-            this.consignorForm.patchValue({
-              riskType:this.step2DetailsList.risktype
-            });
-            this.generalMasterService.getTransportModeData(this.step2DetailsList.transMode);
-            this.generalMasterService.getPickUpData(this.step2DetailsList.pkgDelyType);
-            this.generalMasterService.getContentsData();
-            this.generalMasterService.getServiceTypeData(this.step2DetailsList.serviceType);
-            this.generalMasterService.getPackagingTypeData();
-            this.generalMasterService.getTypeofMovementData();
-            this.generalMasterService.getbusinessTypeData();
-            this.generalMasterService.getexemptServicesData();
-            this.GetPincodeOrigin();
-            this.GetDKTGSTForGTA();
-          }
-        }
-      });
   }
 
-  GetPincodeOrigin(){
+  getStep2Details() {
+    debugger
+    const rawDate = new Date(); // or your API date
+    const formattedDate = this.datePipe.transform(rawDate, 'dd MMMM yyyy');
     const payload = {
-        customerCode: this.basicDetailForm.value.billingParty,
-        location: this.basicDetailForm.value.destination,
-        pincode: this.basicDetailForm.value.pincode,
-      }
-      this.basicDetailService.GetPincodeOrigin(payload).subscribe({
-        next: (response) => {
-          if (response) {
-            this.GetPincodeOriginList = response;
-             this.basicDetailForm.patchValue({
-              destinationState:this.GetPincodeOriginList.stnm
-             })
-          }
+      PartyCode: this.basicDetailForm.value.billingParty,
+      Destination: this.basicDetailForm.value.destination,
+      Paybas: this.basicDetailForm.value.billingType,
+      Doctype: 'DKT',
+      DOCKDT: formattedDate,
+      orgncd: this.HQTR
+    }
+    this.basicDetailService.GetStep2Details(payload).subscribe({
+      next: (response) => {
+        if (response) {
+          this.step2DetailsList = response;
+          this.freightForm.patchValue({
+            billedAt: this.step2DetailsList.billingLocation
+          });
+          this.consignorForm.patchValue({
+            riskType: this.step2DetailsList.risktype
+          });
+          this.generalMasterService.getTransportModeData(this.step2DetailsList.transMode);
+          this.generalMasterService.getPickUpData(this.step2DetailsList.pkgDelyType);
+          this.generalMasterService.getContentsData();
+          this.generalMasterService.getServiceTypeData(this.step2DetailsList.serviceType);
+          this.generalMasterService.getPackagingTypeData();
+          this.generalMasterService.getTypeofMovementData();
+          this.generalMasterService.getbusinessTypeData();
+          this.generalMasterService.getexemptServicesData();
+          this.GetPincodeOrigin();
+          this.GetDKTGSTForGTA();
         }
-      });
+      }
+    });
   }
 
-    GetDKTGSTForGTA(){
+  GetPincodeOrigin() {
     const payload = {
-        customerId: this.basicDetailForm.value.billingParty,
-        transType: '',
-        exemptServices: '',
-      }
-      this.basicDetailService.GetDKTGSTForGTA(payload).subscribe({
-        next: (response:any) => {
-          if (response) {
-            // this.GetPincodeOriginList = response;
-             this.basicDetailForm.patchValue({
-              sacCode:response.sacCode,
-              sacDescription:response.sacCodeDesc,
-              mode:response.transType
-             })
-          }
+      customerCode: this.basicDetailForm.value.billingParty,
+      location: this.basicDetailForm.value.destination,
+      pincode: this.basicDetailForm.value.pincode,
+    }
+    this.basicDetailService.GetPincodeOrigin(payload).subscribe({
+      next: (response) => {
+        if (response) {
+          this.GetPincodeOriginList = response;
+          this.basicDetailForm.patchValue({
+            destinationState: this.GetPincodeOriginList.stnm
+          })
         }
-      });
+      }
+    });
   }
 
-  GetGSTFromTrnMode(event:any){
+  GetDKTGSTForGTA() {
+    const payload = {
+      customerId: this.basicDetailForm.value.billingParty,
+      transType: '',
+      exemptServices: '',
+    }
+    this.basicDetailService.GetDKTGSTForGTA(payload).subscribe({
+      next: (response: any) => {
+        if (response) {
+          // this.GetPincodeOriginList = response;
+          this.basicDetailForm.patchValue({
+            sacCode: response.sacCode,
+            sacDescription: response.sacCodeDesc,
+            mode: response.transType
+          })
+        }
+      }
+    });
+  }
+
+  GetGSTFromTrnMode(event: any) {
     this.basicDetailService.GetGSTFromTrnMode(event?.codeId).subscribe({
-        next: (response:any) => {
-          if (response) {
-              this.basicDetailForm.patchValue({
-              sacCode:response.sacCode,
-              sacDescription:response.sacCodeDesc,
-             })
-          }
+      next: (response: any) => {
+        if (response) {
+          this.basicDetailForm.patchValue({
+            sacCode: response.sacCode,
+            sacDescription: response.sacCodeDesc,
+          })
         }
-      });
+      }
+    });
   }
 
   getGSTNODetails(event: any) {
@@ -273,22 +276,22 @@ export class DocketService {
             consignorName: response.csgncd,
             consignorCity: response.toCity,
             consignorMasterName: response.csgenm,
-            consignorPincode:response.pincode,
-            consignorAddress:response.csgnAdd,
+            consignorPincode: response.pincode,
+            consignorAddress: response.csgnAdd,
             consigneeGSTNo: response.consignee,
             consigneeName: response.csgecd,
             consigneeCity: response.fromCity,
             consigneeMasterName: response.csgnm,
-            consigneePincode:`${response.toPincode} - ${response.area}`,
-            consigneeAddress:response.csgeAdd,
+            consigneePincode: `${response.toPincode} - ${response.area}`,
+            consigneeAddress: response.csgeAdd,
           });
           this.basicDetailForm.patchValue({
-            pincode:`${response.toPincode} - ${response.area}`
+            pincode: `${response.toPincode} - ${response.area}`
           })
         }
       }
     });
   }
 
-  }
+}
 
