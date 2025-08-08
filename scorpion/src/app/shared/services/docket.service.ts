@@ -193,7 +193,7 @@ export class DocketService {
       breadth: new FormControl(0),
       height: new FormControl(0),
       cubicWeight: new FormControl(0),
-      invoicedate:new FormControl(0),
+      invoicedate:new FormControl(),
       declaredvalue:new FormControl(0),
       cubicweight:new FormControl(0),
     });

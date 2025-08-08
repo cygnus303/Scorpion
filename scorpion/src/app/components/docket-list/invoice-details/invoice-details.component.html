@@ -118,13 +118,13 @@
                       value="01 Aug 2025"  formControlName="invoicedate" >
                   </td>
                   <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
-                    <input class="form-control rounded-0 clsAmount required2 " min="1" type="number"value="0" formControlName="length">
+                    <input class="form-control rounded-0 clsAmount required2 text-end" min="1" type="number"value="0" formControlName="length">
                   </td>
                   <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px; " *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
-                    <input class="form-control rounded-0 clsAmount required2"  min="1" type="number" value="0" formControlName="breadth" >
+                    <input class="form-control rounded-0 clsAmount required2 text-end"  min="1" type="number" value="0" formControlName="breadth" >
                   </td>
                   <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px; " *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
-                    <input class="form-control rounded-0 clsAmount required2"  min="1" type="number" value="0" formControlName="height">
+                    <input class="form-control rounded-0 clsAmount required2 text-end"  min="1" type="number" value="0" formControlName="height">
                   </td>
                   <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
                     <input class="form-control rounded-0 clsAmount required2 text-end"  min="0" placeholder="Invoice value" type="number" value="0" formControlName="declaredvalue">
