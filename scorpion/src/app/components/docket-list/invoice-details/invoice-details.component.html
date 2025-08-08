@@ -4,13 +4,13 @@
    CNote Entry - Invoice Details
   </div>
   <div class="form-grid p-4">
-    <form>
+    <form [formGroup]="docketService.invoiceform">
       <div class="row" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
         <div class="col-md-4" >
           <div class="form-group">
             <label class="control-label col-md-5">CFT Ratio </label>
             <div class="col-md-7">
-              <input class="form-control" placeholder="CNote No" type="text" >
+              <input class="form-control" placeholder="CNote No" type="text" formControlName="cft_Ratio">
             </div>
           </div>
         </div>
@@ -28,12 +28,12 @@
           <div class="form-group">
             <label class="control-label col-md-5">No Of Rows </label>
             <div class="col-md-7">
-              <input type="number" class="input-small required2 form-control required" [(ngModel)]="noOfRows" [ngModelOptions]="{standalone: true}" min="1" placeholder="Private Mark" >
+              <input type="number" class="input-small required2 form-control required" [(ngModel)]="docketService.noOfRows" [ngModelOptions]="{standalone: true}" min="1" placeholder="Private Mark" >
             </div>
           </div>
         </div>
         <div class="col-md-1">
-          <a class="btn btn-primary right" (click)="addRows()">
+          <a class="btn btn-primary right" (click)="docketService.addRows()">
             <i class="fas fa-plus"></i> Add New Row
           </a>
         </div>
@@ -44,7 +44,6 @@
     <div class="row">
       <div class="col-md-12">
         <div class="portlet-body table-scrollable">
-          <form action="" [formGroup]="invoiceform" >
             <table id="container" class="table table-bordered table-striped table-condensed flip-content">
               <thead class="flip-content">
                 <tr>
@@ -95,7 +94,7 @@
                 </tr>
               </thead>
               <tbody formArrayName="invoiceRows">
-                <tr class="editorRow" *ngFor="let row of invoiceRows.controls; let i = index" [formGroupName]="i">
+                <tr class="editorRow" *ngFor="let row of docketService.invoiceRows.controls; let i = index" [formGroupName]="i">
                   <input class="iHidden" type="hidden" value="1">
                   <input type="hidden"  value="1">
                   <td class="center">
@@ -202,7 +201,6 @@
             </tbody>
 
             </table>
-          </form>
         </div>
       </div>
     </div>

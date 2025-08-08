@@ -82,4 +82,8 @@ export class BasicDetailService {
   getGSTCalculation(data:any){
     return this.apiHandlerService.Post(`Operation/GetDocketGSTCalculation`,data);
   }
+
+   contractservicecharge(contractId:any,transType:any){
+    return this.apiHandlerService.Get(`Operation/contract-service-charges?contractId=${contractId}&transType=${transType}`);
+  }
 }
