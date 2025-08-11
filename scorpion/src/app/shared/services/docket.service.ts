@@ -36,6 +36,8 @@ export class DocketService {
   public GSTFromTrnMode: any;
   public depth:string='';
   public flagprocedd:string='';
+  public contractMessage:string='';
+
   constructor(private basicDetailService: BasicDetailService) { }
 
   detailForm() {
@@ -158,6 +160,7 @@ export class DocketService {
     this.invoiceform = new FormGroup({
       invoiceRows: new FormArray([]),
       // Summary row 1
+      cftTotal:new FormControl(),
       totalDeclaredValue: new FormControl(0),
       totalNoOfPkgs: new FormControl(0),
       totalCubicWeight: new FormControl(0),
