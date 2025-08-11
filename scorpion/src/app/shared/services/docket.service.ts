@@ -462,25 +462,28 @@ export class DocketService {
       "payBas": this.basicDetailForm.value.businessType,
       "baseLocation": this.basicDetailForm.value.origin,
       "destCd": this.basicDetailForm.value.destination,
-      "subTotal": 0,
-      "csgngstNo": "string",
-      "csgegstNo": "string",
+      "subTotal": 0.00,
+      "csgngstNo": "",
+      "csgegstNo": "",
       "transMode": this.basicDetailForm.value.mode,
       "docketDate":  this.basicDetailForm.value.cNoteDate,
-      "billingPartyAS": "string",
-      "csgngstState": "string",
-      "csgegstState": "string",
-      "gstRateType": "string",
-      "isGstApplied": 1,
-      "billingState": "string"
+      "billingPartyAS": "CSGN",
+      "csgngstState": "27",
+      "csgegstState": "02",
+      "gstRateType": "18",
+      "isGstApplied": "1",
+      "billingState": "GJ"
     }
     this.basicDetailService.getGSTCalculation(payload).subscribe({
       next: (response) => {
         if (response.success) {
-          this.businessTypeList = response.data;
+          this.businessTypeList = response.data[0];
           this.basicDetailForm?.patchValue({
             businessType: response.data[0].codeId
-          })
+          });
+          this.freightForm.patchValue({
+          gstRate:response.data[0].igstRate,
+          });
         }
       },
     });

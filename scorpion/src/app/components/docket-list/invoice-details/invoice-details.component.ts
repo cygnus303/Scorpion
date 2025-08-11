@@ -83,16 +83,16 @@ calculateSummary(i:number) {
       depth: 'CLRMS',
       flagProceed: 'p',
       fromCity: this.docketService.basicDetailForm.value.fromCity,
-      ftlType: '67',
+      ftlType: this.docketService.step2DetailsList.ftlType,
       noOfPkgs: noOfPkgs,
-      chargedWeright: ' 20.66',
+      chargedWeright:  Math.max(this.docketService.invoiceform.value.finalActualWeight || 0, this.docketService.invoiceform.value.totalCubicWeight || 0).toString(),
       origin: this.docketService.basicDetailForm.value.origin,
       payBase: this.docketService.basicDetailForm.value.billingType,
       serviceType: this.docketService.basicDetailForm.value.serviceType,
       toCity: this.docketService.basicDetailForm.value.toCity,
       transMode: this.docketService.basicDetailForm.value.mode,
       orderID: this.docketService.step2DetailsList.contractid,
-      invAmt: '88',
+      invAmt: this.docketService.invoiceform.value.totalDeclaredValue.toString(),
       dockdt: new Date().toISOString(),
       prodcd: '',
       isPerPieceRate: false
@@ -140,7 +140,6 @@ calculateSummary(i:number) {
     this.basicDetailService.getOtherChargesDetail(payload).subscribe({
       next: (response) => {
         if (response.success) {
-
         }
       },
     });
