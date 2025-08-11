@@ -299,8 +299,8 @@ export class DocketService {
   GetDKTGSTForGTA() {
     const payload = {
       customerId: this.basicDetailForm.value.billingParty,
-      transType: '',
-      exemptServices: '',
+      transType: this.basicDetailForm.value.mode,
+      exemptServices: this.basicDetailForm.value.exemptServices,
     }
     this.basicDetailService.GetDKTGSTForGTA(payload).subscribe({
       next: (response: any) => {

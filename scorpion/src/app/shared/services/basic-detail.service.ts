@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { ApiHandlerService } from './api-handler.service';
 import { Observable } from 'rxjs';
 import { IApiBaseResponse } from '../interface/api-base-action-response';
-import {  billingPartyRequest, cityResponse, DestinationsList, DKTChargesResponse, GSTNOListResponse, IGSTchargesDetailResponse, pinCodeResponse } from '../models/general-master.model';
+import { billingPartyRequest, cityResponse, DestinationsList, DKTChargesResponse, GSTNOListResponse, IGSTchargesDetailResponse, pinCodeResponse } from '../models/general-master.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,13 +11,13 @@ export class BasicDetailService {
 
   constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService) { }
 
-  getGeneralMasterList(codeType: string, searchText: string | null,codeId: string | number | null): Observable<IApiBaseResponse<any[]>> {
+  getGeneralMasterList(codeType: string, searchText: string | null, codeId: string | number | null): Observable<IApiBaseResponse<any[]>> {
     return this.apiHandlerService.Get(`External/${codeType}`, {
-      searchText: searchText || '',codeId: codeId ?? ''
+      searchText: searchText || '', codeId: codeId ?? ''
     });
   }
 
-  getBillingParty(payload:billingPartyRequest): Observable<IApiBaseResponse<any[]>> {
+  getBillingParty(payload: billingPartyRequest): Observable<IApiBaseResponse<any[]>> {
     return this.apiHandlerService.Get(`Operation/billing-party?PartyName=${payload.searchTerm}&Paybas=${payload.paybs}&Location=${payload.location}`);
   }
 
@@ -29,7 +29,7 @@ export class BasicDetailService {
     return this.apiHandlerService.Get(`Operation/citymaster-by-location?LocCode=${locCode}&Prefix=${searchTerm}`);
   }
 
- getGCDestinations(searchTerm: string): Observable<any> {
+  getGCDestinations(searchTerm: string): Observable<any> {
     return this.apiHandlerService.Get(`Operation/GetGCDestinations?prefix=${searchTerm}`);
   }
 
@@ -44,46 +44,46 @@ export class BasicDetailService {
     return this.apiHandlerService.Get(`Operation/gst-details?gstNo=${searchTerm}&baseCompanyCode=${'C003'}`);
   }
   GetStep2Details(data: any): Observable<IApiBaseResponse<GSTNOListResponse>> {
-    return this.apiHandlerService.Get(`Operation/GetStep2Details`,data);
+    return this.apiHandlerService.Get(`Operation/GetStep2Details`, data);
   }
 
-  getChargeDetail(): Observable<any>{
+  getChargeDetail(): Observable<any> {
     return this.apiHandlerService.Get(`Operation/dkt-charges`);
   }
 
-   getIGSTchargesDetail(): Observable<any>{
+  getIGSTchargesDetail(): Observable<any> {
     return this.apiHandlerService.Get(`Operation/get-charges?DocumentType=${'DKT'}`);
   }
 
 
-  get(): Observable<IApiBaseResponse<DKTChargesResponse>>{
+  get(): Observable<IApiBaseResponse<DKTChargesResponse>> {
     return this.apiHandlerService.Get(`Operation/CYGNUS-Modules-Rules`);
   }
 
-  getOtherChargesDetail(payload:any){
-    return this.apiHandlerService.Post(`Operation/GetOtherChargesDetails`,payload);
+  getOtherChargesDetail(payload: any) {
+    return this.apiHandlerService.Post(`Operation/GetOtherChargesDetails`, payload);
   }
 
-   GetPincodeOrigin(data: any){
-    return this.apiHandlerService.Get(`Operation/GetPincodeOrigin`,data);
+  GetPincodeOrigin(data: any) {
+    return this.apiHandlerService.Get(`Operation/GetPincodeOrigin`, data);
   }
 
-   GetDKTGSTForGTA(data: any){
-    return this.apiHandlerService.Post(`Operation/GetDKTGSTForGTA`,data);
+  GetDKTGSTForGTA(data: any) {
+    return this.apiHandlerService.Post(`Operation/GetDKTGSTForGTA`, data);
   }
 
-     GetGSTFromTrnMode(data: any){
+  GetGSTFromTrnMode(data: any) {
     return this.apiHandlerService.Get(`Operation/GetGSTFromTrnMode?trnMode=${data}`);
   }
- GetFreightContractDetails(data: any){
+  GetFreightContractDetails(data: any) {
     return this.apiHandlerService.Post(`Operation/GetFreightContractDetails`, data);
   }
 
-  getGSTCalculation(data:any){
-    return this.apiHandlerService.Post(`Operation/GetDocketGSTCalculation`,data);
+  getGSTCalculation(data: any) {
+    return this.apiHandlerService.Post(`Operation/GetDocketGSTCalculation`, data);
   }
 
-   contractservicecharge(contractId:any,transType:any){
+  contractservicecharge(contractId: any, transType: any) {
     return this.apiHandlerService.Get(`Operation/contract-service-charges?contractId=${contractId}&transType=${transType}`);
   }
 }
