@@ -3,6 +3,7 @@ import { BasicDetailService } from '../../../shared/services/basic-detail.servic
 import { IGSTchargesDetailResponse } from '../../../shared/models/general-master.model';
 import { DocketService } from '../../../shared/services/docket.service';
 import { ChargingRepsonse } from '../../../shared/models/general-master.model';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'freight-details',
@@ -40,38 +41,36 @@ export class FreightDetailsComponent {
   //   });
   // }
 
-  getChargesData() {
-  this.basicDetailService.getChargeDetail().subscribe({
-    next: (response) => {
-      if (response) {
-        this.chargingData = response;
-        // Keep values null so placeholder is visible initially
-        response.forEach((item: any) => {
-          this.chargeAmounts[item.chargeCode] = 0; // <-- Default null
-        });
-      }
+getChargesData() {
+ this.basicDetailService.getChargeDetail().subscribe({
+  next: (response) => {
+    if (response) {
+      this.chargingData = response;
+      // Loop through charges and add controls dynamically
+      response.forEach((item: any) => {
+        if (!this.docketService.freightForm.contains(item.chargeCode)) {
+          this.docketService.freightForm.addControl(
+            item.chargeCode,
+            new FormControl(0)
+          );
+        }
+      });
     }
-  });
+  }
+});
 }
 
 onFocus(chargeCode: string) {
-  this.focusedCharge = chargeCode;
-  if (this.chargeAmounts[chargeCode] === 0) {
-    this.chargeAmounts[chargeCode] = null; // Clear on focus if zero
+  const control = this.docketService.freightForm.get(chargeCode);
+  if (control?.value === 0) {
+    control.setValue(null);
   }
 }
 
-
-
-
 onBlur(chargeCode: string) {
-  if (
-    this.chargeAmounts[chargeCode] === 0 ||
-    this.chargeAmounts[chargeCode] === null ||
-    isNaN(this.chargeAmounts[chargeCode])
-  ) {
-    this.chargeAmounts[chargeCode] = 0; // Set 0 if empty
+  const control = this.docketService.freightForm.get(chargeCode);
+  if (control && (control.value === null || control.value === '' || isNaN(control.value))) {
+    control.setValue(0);
   }
-  this.focusedCharge = 0;
 }
 }

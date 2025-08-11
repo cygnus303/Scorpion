@@ -145,7 +145,7 @@ export class DocketService {
       coddodCollected: new FormControl(),
       gstRate: new FormControl(),
       subTotal: new FormControl(),
-      dkttotal: new FormControl(),
+      dktTotal: new FormControl(),
       discountAmount: new FormControl(),
       discount: new FormControl(),
     })
@@ -376,12 +376,12 @@ export class DocketService {
     this.basicDetailService.getGeneralMasterList('TRN', '', codeId).subscribe({
       next: (response) => {
         if (response.success) {
-          debugger
           this.transportModeData = response.data;
           this.basicDetailForm.patchValue({
             mode:response.data[0].codeId
           });
           this.GetDKTGSTForGTA()
+          this.GetGSTFromTrnMode(response.data[0])
         }
       },
     });
@@ -499,7 +499,10 @@ export class DocketService {
           acc[key.toLowerCase()] = response[key];
           return acc;
         }, {});
-        this.freightForm.patchValue(this.gstCalculationList)
+          this.freightForm.patchValue({
+            ...this.gstCalculationList,
+            dktTotal: this.gstCalculationList.dkttotal ?? null
+          });
         }
       },
     });

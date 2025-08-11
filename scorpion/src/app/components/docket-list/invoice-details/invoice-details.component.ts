@@ -11,6 +11,7 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
 })
 export class InvoiceDetailsComponent {
   public freightData:any;
+  public chargingData:any;
   public pincodeMatrixData:any;
  
  constructor(
@@ -140,7 +141,15 @@ calculateSummary(i:number) {
     }
     this.basicDetailService.getOtherChargesDetail(payload).subscribe({
       next: (response) => {
-        if (response.success) {
+        if (response) {
+          this.chargingData = response;
+          this.chargingData.forEach((item: any) => {
+            if (this.docketService.freightForm.contains(item.chargecode)) {
+              this.docketService.freightForm.patchValue({
+                [item.chargecode]: item.charge
+              });
+            }
+          });
         }
       },
     });

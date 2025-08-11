@@ -183,10 +183,12 @@
               <label class="control-label col-md-5">{{ charge.chargeName }}</label>
               <div class="col-md-7">
                 <div class="input-icon">
-                  <input type="text" class="form-control clsAmount required2" [placeholder]="charge.chargeName"
-                    [ngModel]="chargeAmounts[charge.chargeCode]"
-                    (ngModelChange)="chargeAmounts[charge.chargeCode] = $event" (focus)="onFocus(charge.chargeCode)"
-                    (blur)="onBlur(charge.chargeCode)" [ngModelOptions]="{ standalone: true }" />
+                     <input type="text"
+                   class="form-control clsAmount required2"
+                   [placeholder]="charge.chargeName"
+                   formControlName="{{ charge.chargeCode }}"
+                   (focus)="onFocus(charge.chargeCode)"
+                   (blur)="onBlur(charge.chargeCode)" />
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
@@ -271,8 +273,8 @@
           <div class="form-group">
             <label class="control-label col-md-5"><b>TOTAL</b></label>
             <div class="col-md-7">
-              <input class="required2 form-control clsAmount required clsROFixed" formControlName="dkttotal"
-                placeholder="TOTAL" readonly="true" type="text" value="0" min="1">
+              <input class="required2 form-control clsAmount required clsROFixed" formControlName="dktTotal"
+                placeholder="TOTAL" type="text" value="0" readonly>
             </div>
           </div>
         </div> -
