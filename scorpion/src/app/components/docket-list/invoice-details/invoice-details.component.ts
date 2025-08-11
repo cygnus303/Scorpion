@@ -134,7 +134,7 @@ calculateSummary(i:number) {
       "packType": this.docketService.basicDetailForm.value.packingType,
       "riskType": this.docketService.step2DetailsList.risktype,
       "originPincode": 0,
-      "destPincode": 0,
+      "destPincode": this.docketService.step2DetailsList.pincode,
       "floorNo": 0
     }
     this.basicDetailService.getOtherChargesDetail(payload).subscribe({
