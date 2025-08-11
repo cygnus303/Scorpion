@@ -82,8 +82,8 @@ export class InvoiceDetailsComponent {
       chargedWeight: 'NONE',
       contractID: this.docketService.step2DetailsList.contractid,
       destination: this.docketService.basicDetailForm.value.destination,
-      depth: 'CLRMS',
-      flagProceed: 'p',
+      depth: this.docketService.depth,
+      flagProceed: this.docketService.flagprocedd,
       fromCity: this.docketService.basicDetailForm.value.fromCity,
       ftlType: this.docketService.step2DetailsList.ftlType,
       noOfPkgs: noOfPkgs,
@@ -99,7 +99,6 @@ export class InvoiceDetailsComponent {
       prodcd: '',
       isPerPieceRate: false
     }
-
     this.basicDetailService.GetFreightContractDetails(data).subscribe({
       next: (response: any) => {
         if (response) {
@@ -169,8 +168,8 @@ export class InvoiceDetailsComponent {
       "chargedWeight": chargedWeight,
       "contractID": this.docketService.step2DetailsList.contractid,
       "destination": this.docketService.basicDetailForm.value.destination,
-      "depth": "string",
-      "flagProceed": "string",
+      "depth":this.docketService.depth,
+      "flagProceed": this.docketService.flagprocedd,
       "fromCity": this.docketService.basicDetailForm.value.fromCity,
       "ftlType": this.docketService.step2DetailsList.ftlType,
       "noOfPkgs": event?.target?.value?.toString(),
@@ -218,17 +217,17 @@ export class InvoiceDetailsComponent {
   }
 
 
-  getPincodeMatrixData() {
-    const payload = {
-      KM_From_Location: 0,
-      CHRGWT: 1
-    }
-    this.basicDetailService.getPincodematrix(payload).subscribe({
-      next: (response) => {
-        if (response) {
-          this.pincodeMatrixData = response
-        }
-      },
-    });
-  }
+  // getPincodeMatrixData() {
+  //   const payload = {
+  //     KM_From_Location: 0,
+  //     CHRGWT: 1
+  //   }
+  //   this.basicDetailService.getPincodematrix(payload).subscribe({
+  //     next: (response) => {
+  //       if (response) {
+  //         this.pincodeMatrixData = response
+  //       }
+  //     },
+  //   });
+  // }
 }
