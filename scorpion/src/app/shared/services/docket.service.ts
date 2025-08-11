@@ -488,7 +488,6 @@ getRuleDetail(){
   getGSTCalculation() {
   const originalDate = this.basicDetailForm.value.cNoteDate;
   
-  // જરૂરી ફીલ્ડ્સ ચેક કરવા
   const requiredFieldsFilled =
     this.basicDetailForm.value.billingParty &&
     this.basicDetailForm.value.businessType &&
@@ -502,7 +501,6 @@ getRuleDetail(){
     // this.consignorForm.value.consigneeGSTNo &&
     // this.basicDetailForm.value.originState;
 
-  // જો બધું ભરેલું ન હોય તો સીધું return
   if (!requiredFieldsFilled) {
     return;
   }

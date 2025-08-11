@@ -104,7 +104,15 @@ export class InvoiceDetailsComponent {
       next: (response: any) => {
         if (response) {
           this.freightData = response.result[0];
-          // this.getOtherChargesDetail(this.freightData)
+          this.docketService.freightForm.patchValue({
+            freightCharges: this.freightData.freightCharge,
+            rateType:this.freightData.rateType,
+            freightRate:this.freightData.freightRate,
+            EDD:new Date(this.freightData.edd)
+  .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+  .toUpperCase()
+  .replace(/ /g, '-')
+          })
         }
       },
     });
