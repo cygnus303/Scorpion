@@ -177,8 +177,8 @@ export class InvoiceDetailsComponent {
       "prodType": this.docketService.basicDetailForm.value.contents,
       "packType": this.docketService.basicDetailForm.value.packingType,
       "riskType": this.docketService.step2DetailsList.risktype,
-      "originPincode": this.docketService.consignorForm.value.consignorPincode ? this.docketService.consignorForm.value.consignorPincode : 0,
-      "destPincode": this.docketService.consignorForm.value.consigneePincode,
+      "originPincode": this.docketService.consignorForm.value.consignorPincode || 0,
+      "destPincode":this.docketService.basicDetailForm.value.pincode || 0,
       "floorNo": 0
     };
 

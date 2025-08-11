@@ -496,11 +496,11 @@ getRuleDetail(){
     this.basicDetailForm.value.destination &&
     this.basicDetailForm.value.mode &&
     originalDate &&
-    this.freightForm.value.billingState &&
-    this.GSTFromTrnMode?.codeDesc &&
+    // this.freightForm.value.billingState &&
+    this.GSTFromTrnMode?.codeDesc ;
     // this.consignorForm.value.consignorGSTNo &&
     // this.consignorForm.value.consigneeGSTNo &&
-    this.basicDetailForm.value.originState;
+    // this.basicDetailForm.value.originState;
 
   // જો બધું ભરેલું ન હોય તો સીધું return
   if (!requiredFieldsFilled) {
@@ -516,19 +516,19 @@ getRuleDetail(){
   });
 
   const payload = {
-    "custcode": this.basicDetailForm.value.billingParty,
-    "payBas": this.basicDetailForm.value.businessType,
-    "baseLocation": this.basicDetailForm.value.origin,
-    "destCd": this.basicDetailForm.value.destination,
+    "custcode": this.basicDetailForm.value.billingParty || '',
+    "payBas": this.basicDetailForm.value.businessType || '',
+    "baseLocation": this.basicDetailForm.value.origin || '',
+    "destCd": this.basicDetailForm.value.destination || '',
     "subTotal": 4625.00,
-    "csgngstNo": this.consignorForm.value.consignorGSTNo,
-    "csgegstNo": this.consignorForm.value.consigneeGSTNo,
-    "transMode": this.basicDetailForm.value.mode,
-    "docketDate": formattedDate,
+    "csgngstNo": this.consignorForm.value.consignorGSTNo || '',
+    "csgegstNo": this.consignorForm.value.consigneeGSTNo || '',
+    "transMode": this.basicDetailForm.value.mode || '',
+    "docketDate": formattedDate || '',
     "billingPartyAS": (this.basicDetailForm.value.businessType === 'P01' || this.basicDetailForm.value.businessType === 'P02') ? 'CSGN' : 'CSGE',
-    "csgngstState": this.basicDetailForm.value.originState,
-    "csgegstState": this.basicDetailForm.value.originState,
-    "gstRateType": this.GSTFromTrnMode.codeDesc,
+    "csgngstState": this.basicDetailForm.value.originState || '',
+    "csgegstState": this.basicDetailForm.value.originState || '',
+    "gstRateType": this.GSTFromTrnMode.codeDesc || '',
     "isGstApplied": "1",
     "billingState": this.freightForm.value.billingState || 'MH'
   };

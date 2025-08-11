@@ -91,7 +91,7 @@
                 <label class="control-label col-md-5">Pincode </label>
                 <div class="col-md-7">
                  <ng-select class="noFoundTextColor required2" [items]="docketService.pincodeList" bindLabel="pinArea"
-                bindValue="pinArea" placeholder="Pincode" formControlName="consignorPincode"
+                bindValue="value" placeholder="Pincode" formControlName="consignorPincode"
                 notFoundText="Please enter atleast 3 characters" (search)="docketService.getpincodeData($event)" ></ng-select>
                 </div>
               </div>
