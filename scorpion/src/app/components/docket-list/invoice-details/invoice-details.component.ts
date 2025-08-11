@@ -24,61 +24,51 @@ export class InvoiceDetailsComponent {
   removeRow(index: number): void {
     this.docketService.invoiceRows.removeAt(index);
   }
-
-// calculateSummary() {
-//   const volMeasureType = this.docketService.contractservicecharge; // 'INCHES' | 'CM' | 'FEET'
-//   const cftWtRatio = +this.docketService.CFTWtRatio || 0; // you can bind from service
-//   const rows = this.docketService.invoiceRows.value;
-
-//   let totalDeclaredValue = 0;
-//   let totalNoOfPkgs = 0;
-//   let totalCubicWeight = 0;
-//   let totalActualWeight = 0;
-
-//   const updatedRows = rows.map((r: any) => {
-//     const length = +r.length || 0;
-//     const width = +r.width || 0;
-//     const height = +r.height || 0;
-//     const pkgsNo = +r.noOfPkgs || 0;
-
-//     let volume = 0;
-
-//     if (volMeasureType === 'INCHES') {
-//       volume = (length * width * height * cftWtRatio) / 1728;
-//     } else if (volMeasureType === 'CM') {
-//       volume = (length * width * height * cftWtRatio) / 27000;
-//     } else if (volMeasureType === 'FEET') {
-//       volume = length * width * height * cftWtRatio;
-//     }
-
-//     const cubicWeight = +(volume * pkgsNo).toFixed(2);
-
-//     totalDeclaredValue += +r.declaredValue || 0;
-//     totalNoOfPkgs += pkgsNo;
-//     totalCubicWeight += cubicWeight;
-//     totalActualWeight += +r.actualWeight || 0;
-
-//     return {
-//       ...r,
-//       cubicWeight // update cubic weight in row
-//     };
-//   });
-
-//   // Push updated cubic weights back to form array
-//   this.docketService.invoiceRows.patchValue(updatedRows);
-
-//   // Patch totals to the form
-//   this.docketService.invoiceform.patchValue({
-//     totalDeclaredValue,
-//     totalNoOfPkgs,
-//     totalCubicWeight,
-//     totalActualWeight,
-//     chargeWeightPerPkg: totalNoOfPkgs ? totalActualWeight / totalNoOfPkgs : 0,
-//     finalActualWeight: totalActualWeight
-//   });
-// }
-
-
+calculateSummary(i:number) {
+  const volMeasureType = this.docketService.contractservicecharge[0].cft_Measure; // 'INCHES' | 'CM' | 'FEET'
+  const cftWtRatio = +this.docketService.contractservicecharge[0].cft_Ratio || 0; // you can bind from service
+  const rows = this.docketService.invoiceRows.value;
+ 
+  let totalDeclaredValue = 0;
+  let totalNoOfPkgs = 0;
+  let totalCubicWeight = 0;
+  let totalActualWeight = 0;
+ 
+  const updatedRows = rows.map((r: any) => {
+    const length = +r.length || 0;
+    const breadth = +r.breadth || 0;
+    const height = +r.height || 0;
+    const pkgsNo = +r.noOfPkgs || 0;
+ 
+    let volume = 0;
+ 
+    if (volMeasureType === 'INCHES') {
+      volume = (length * breadth * height * cftWtRatio) / 1728;
+    } else if (volMeasureType === 'CM') {
+      volume = (length * breadth * height * cftWtRatio) / 27000;
+    } else if (volMeasureType === 'FEET') {
+      volume = length * breadth * height * cftWtRatio;
+    }
+ 
+    const cubicweight = +(volume * pkgsNo).toFixed(2);
+    this.docketService.invoiceRows.controls[i].patchValue({
+      cubicweight:cubicweight
+    });
+    totalDeclaredValue += +r.declaredvalue || 0;
+    totalNoOfPkgs += pkgsNo;
+    totalCubicWeight += cubicweight;
+    totalActualWeight += +r.actualWeight || 0;
+  });
+  this.docketService.invoiceRows.patchValue(updatedRows);
+  this.docketService.invoiceform.patchValue({
+    totalDeclaredValue,
+    totalNoOfPkgs,
+    totalCubicWeight,
+    totalActualWeight,
+    chargeWeightPerPkg: totalNoOfPkgs,
+    finalActualWeight: totalActualWeight
+  });
+}
 
   GetFreightContractDetails(event: any) {
     const noOfPkgs = event.target.value;
