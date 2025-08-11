@@ -92,7 +92,7 @@ export class BasicDetailService {
   }
 
   getRuleDetail(payload:any){
-    return this.apiHandlerService.Get(`Operation/GetRuleDetails?key=${payload.key}&paybas=${payload.paybas}}`)
+    return this.apiHandlerService.Get(`Operation/GetRuleDetails?key=${payload.key}&paybas=${payload.paybas}`)
 
   }
 }

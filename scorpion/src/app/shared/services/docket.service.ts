@@ -34,6 +34,8 @@ export class DocketService {
   public noOfRows: number = 1;
   public groupedCharges: { [ids: number]: any[] } = {};
   public GSTFromTrnMode: any;
+  public depth:string='';
+  public flagprocedd:string='';
   constructor(private basicDetailService: BasicDetailService) { }
 
   detailForm() {
@@ -227,26 +229,39 @@ export class DocketService {
     this.basicDetailForm.patchValue({ destination: event.destination });
     this.consignorForm.patchValue({ consigneePincode: event.pinArea });
     this.pincodeList = [];
-    this.getRuleDetail()
+    this.getRuleDetailForDepth();
+    this.getRuleDetailForProceed()
   }
 
 
-getRuleDetail(){
+getRuleDetailForDepth(){
   const payload={
-    key:'',
+    key:this.basicDetailForm.value.billingType + 'DEPTH',
     paybas:this.basicDetailForm.value.billingType
   }
   this.basicDetailService.getRuleDetail(payload).subscribe({
-      next: (response) => {
+      next: (response:any) => {
         if (response) {
-          this.GetPincodeOriginList = response;
-          this.basicDetailForm.patchValue({
-            destinationState: this.GetPincodeOriginList.stnm
-          })
+         this.depth=response.result.defaultvalue
         }
       }
     });
 }
+
+getRuleDetailForProceed(){
+  const payload={
+    key:this.basicDetailForm.value.billingType + 'PROCEED',
+    paybas:this.basicDetailForm.value.billingType
+  }
+  this.basicDetailService.getRuleDetail(payload).subscribe({
+      next: (response:any) => {
+        if (response) {
+         this.flagprocedd=response.result.defaultvalue
+        }
+      }
+    });
+}
+
 
   onFormFieldChange() {
     const billingParty = this.basicDetailForm.value.billingParty;
