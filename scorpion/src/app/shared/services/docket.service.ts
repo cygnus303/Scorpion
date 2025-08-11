@@ -273,7 +273,7 @@ export class DocketService {
           this.getbusinessTypeData();
           this.getexemptServicesData();
           this.GetPincodeOrigin();
-          this.GetDKTGSTForGTA();
+          // this.GetDKTGSTForGTA();
         }
       }
     });
@@ -302,7 +302,7 @@ export class DocketService {
     const payload = {
       customerId: this.basicDetailForm.value.billingParty,
       transType: this.basicDetailForm.value.mode,
-      exemptServices: this.basicDetailForm.value.exemptServices,
+      exemptServices: this.basicDetailForm.value.exemptServices ?  this.basicDetailForm.value.exemptServices:'',
     }
     this.basicDetailService.GetDKTGSTForGTA(payload).subscribe({
       next: (response: any) => {
@@ -376,10 +376,12 @@ export class DocketService {
     this.basicDetailService.getGeneralMasterList('TRN', '', codeId).subscribe({
       next: (response) => {
         if (response.success) {
+          debugger
           this.transportModeData = response.data;
           this.basicDetailForm.patchValue({
             mode:response.data[0].codeId
           });
+          this.GetDKTGSTForGTA()
         }
       },
     });
@@ -462,6 +464,17 @@ export class DocketService {
   }
 
   getGSTCalculation() {
+    const originalDate = this.basicDetailForm.value.cNoteDate;
+  
+  // Date object બનાવવું
+  const dateObj = new Date(originalDate);
+
+  // Format "DD Month YYYY"
+  const formattedDate = dateObj.toLocaleDateString('en-GB', { 
+    day: '2-digit', 
+    month: 'long', 
+    year: 'numeric' 
+  });
     const payload = {
       "custcode": this.basicDetailForm.value.billingParty,
       "payBas": this.basicDetailForm.value.businessType,
@@ -471,7 +484,7 @@ export class DocketService {
       "csgngstNo": "",
       "csgegstNo": "",
       "transMode": this.basicDetailForm.value.mode,
-      "docketDate":  this.basicDetailForm.value.cNoteDate,
+      "docketDate": formattedDate,
       "billingPartyAS": "CSGN",
       "csgngstState": "27",
       "csgegstState": "03",

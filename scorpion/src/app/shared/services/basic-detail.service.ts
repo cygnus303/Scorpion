@@ -86,4 +86,8 @@ export class BasicDetailService {
   contractservicecharge(contractId: any, transType: any) {
     return this.apiHandlerService.Get(`Operation/contract-service-charges?contractId=${contractId}&transType=${transType}`);
   }
+
+  getPincodematrix(payload:any){
+    return this.apiHandlerService.Get(`Operation/GetPincodeMatrixRate?kmFromLocation=${payload.kmFromLocation}&chrgwt=${payload.chrgwt}`)
+  }
 }
