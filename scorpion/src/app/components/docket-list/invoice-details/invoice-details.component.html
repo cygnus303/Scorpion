@@ -130,7 +130,7 @@
                     <input class="form-control rounded-0 clsAmount required2 text-end"  min="0" placeholder="Invoice value" type="number" value="0" formControlName="declaredvalue" (input)="calculateSummary(i)" (blur)="docketService.getGSTCalculation()">
                   </td>
                   <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
-                    <input class="form-control rounded-0 clsAmount required2 text-end" placeholder="No of Pkgs." (blur)="GetFreightContractDetails($event);docketService.getGSTCalculation()" type="number" formControlName="noOfPkgs" (input)="calculateSummary(i)" (change)="getPincodeMatrixData();docketService.GetDKTGSTForGTA()">
+                    <input class="form-control rounded-0 clsAmount required2 text-end" placeholder="No of Pkgs." (blur)="GetFreightContractDetails($event);getOtherChargesDetail($event);docketService.getGSTCalculation()" type="number" formControlName="noOfPkgs" (input)="calculateSummary(i)" (change)="getPincodeMatrixData();docketService.GetDKTGSTForGTA()">
                   </td>
                   <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px;" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
                     <input class="form-control rounded-0 clsAmount required2  text-end" min="0" type="number" value="0" readonly formControlName="cubicweight">
