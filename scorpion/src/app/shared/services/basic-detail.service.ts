@@ -90,4 +90,9 @@ export class BasicDetailService {
   getPincodematrix(payload:any){
     return this.apiHandlerService.Get(`Operation/GetPincodeMatrixRate?kmFromLocation=${payload.kmFromLocation}&chrgwt=${payload.chrgwt}`)
   }
+
+  getRuleDetail(payload:any){
+    return this.apiHandlerService.Get(`Operation/GetRuleDetails?key=${payload.key}&paybas=${payload.paybas}}`)
+
+  }
 }

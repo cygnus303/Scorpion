@@ -9,7 +9,7 @@ import { mobileNo } from '../constants/common';
   providedIn: 'root',
 })
 export class DocketService {
-   invoiceform!: FormGroup;
+  invoiceform!: FormGroup;
   public basicDetailForm!: FormGroup;
   public consignorForm!: FormGroup;
   public freightForm!: FormGroup;
@@ -27,12 +27,13 @@ export class DocketService {
   public step2DetailsList: any;
   public getGSTNODetailsList: any;
   public GetPincodeOriginList!: any;
-  public contractservicecharge:any;
-  public gstCalculationList:any;
+  public contractservicecharge: any;
+  public gstCalculationList: any;
   public isBillingTBB: boolean = false;
   public isLocalNote: boolean = false;
   public noOfRows: number = 1;
   public groupedCharges: { [ids: number]: any[] } = {};
+  public GSTFromTrnMode: any;
   constructor(private basicDetailService: BasicDetailService) { }
 
   detailForm() {
@@ -151,37 +152,37 @@ export class DocketService {
     })
   }
 
-    invoicebuild() {
-      this.invoiceform = new FormGroup({
-        invoiceRows: new FormArray([]),
-          // Summary row 1
+  invoicebuild() {
+    this.invoiceform = new FormGroup({
+      invoiceRows: new FormArray([]),
+      // Summary row 1
       totalDeclaredValue: new FormControl(0),
       totalNoOfPkgs: new FormControl(0),
       totalCubicWeight: new FormControl(0),
       totalActualWeight: new FormControl(0),
-  
+
       // Summary row 2
       chargeWeightPerPkg: new FormControl(0),
       finalActualWeight: new FormControl(0),
-  
-      cft_Ratio:new FormControl()
-      });
-  
-      // Add default 1 row
-      this.addRows();
-    }
-  
- get invoiceRows(): FormArray {
+
+      cft_Ratio: new FormControl()
+    });
+
+    // Add default 1 row
+    this.addRows();
+  }
+
+  get invoiceRows(): FormArray {
     return this.invoiceform.get('invoiceRows') as FormArray;
   }
 
-   addRows(): void {
+  addRows(): void {
     for (let i = 0; i < this.noOfRows; i++) {
       this.invoiceRows.push(this.createInvoiceRow());
     }
   }
 
-     createInvoiceRow(): FormGroup {
+  createInvoiceRow(): FormGroup {
     return new FormGroup({
       ewayBillNo: new FormControl(''),
       ewayBillExpiry: new FormControl(''),
@@ -195,9 +196,9 @@ export class DocketService {
       breadth: new FormControl(0),
       height: new FormControl(0),
       cubicWeight: new FormControl(0),
-      invoicedate:new FormControl(),
-      declaredvalue:new FormControl(0),
-      cubicweight:new FormControl(0),
+      invoicedate: new FormControl(),
+      declaredvalue: new FormControl(0),
+      cubicweight: new FormControl(0),
     });
   }
 
@@ -226,7 +227,27 @@ export class DocketService {
     this.basicDetailForm.patchValue({ destination: event.destination });
     this.consignorForm.patchValue({ consigneePincode: event.pinArea });
     this.pincodeList = [];
+    this.getRuleDetail()
   }
+
+
+getRuleDetail(){
+  const payload={
+    key:'',
+    paybas:this.basicDetailForm.value.billingType
+  }
+  this.basicDetailService.getRuleDetail(payload).subscribe({
+      next: (response) => {
+        if (response) {
+          this.GetPincodeOriginList = response;
+          this.basicDetailForm.patchValue({
+            destinationState: this.GetPincodeOriginList.stnm
+          })
+        }
+      }
+    });
+}
+
   onFormFieldChange() {
     const billingParty = this.basicDetailForm.value.billingParty;
     const destination = this.basicDetailForm.value.destination;
@@ -302,7 +323,7 @@ export class DocketService {
     const payload = {
       customerId: this.basicDetailForm.value.billingParty,
       transType: this.basicDetailForm.value.mode,
-      exemptServices: this.basicDetailForm.value.exemptServices ?  this.basicDetailForm.value.exemptServices:'',
+      exemptServices: this.basicDetailForm.value.exemptServices ? this.basicDetailForm.value.exemptServices : '',
     }
     this.basicDetailService.GetDKTGSTForGTA(payload).subscribe({
       next: (response: any) => {
@@ -329,15 +350,16 @@ export class DocketService {
           this.freightForm.patchValue({
             gstRate: response.codeDesc
           });
+          this.GSTFromTrnMode = response;
         }
       }
     });
-    this.basicDetailService.contractservicecharge(this.step2DetailsList.contractid,event?.codeId).subscribe({
+    this.basicDetailService.contractservicecharge(this.step2DetailsList.contractid, event?.codeId).subscribe({
       next: (response: any) => {
         if (response) {
           this.contractservicecharge = response;
           this.invoiceform.patchValue({
-            cft_Ratio:this.contractservicecharge[0].cft_Ratio
+            cft_Ratio: this.contractservicecharge[0].cft_Ratio
           });
         }
       }
@@ -379,7 +401,7 @@ export class DocketService {
           debugger
           this.transportModeData = response.data;
           this.basicDetailForm.patchValue({
-            mode:response.data[0].codeId
+            mode: response.data[0].codeId
           });
           this.GetDKTGSTForGTA()
         }
@@ -413,7 +435,7 @@ export class DocketService {
         if (response.success) {
           this.serviceData = response.data;
           this.basicDetailForm.patchValue({
-            serviceType:response.data[0].codeId
+            serviceType: response.data[0].codeId
           })
         }
       },
@@ -464,116 +486,136 @@ export class DocketService {
   }
 
   getGSTCalculation() {
-    const originalDate = this.basicDetailForm.value.cNoteDate;
+  const originalDate = this.basicDetailForm.value.cNoteDate;
   
-  // Date object બનાવવું
-  const dateObj = new Date(originalDate);
+  // જરૂરી ફીલ્ડ્સ ચેક કરવા
+  const requiredFieldsFilled =
+    this.basicDetailForm.value.billingParty &&
+    this.basicDetailForm.value.businessType &&
+    this.basicDetailForm.value.origin &&
+    this.basicDetailForm.value.destination &&
+    this.basicDetailForm.value.mode &&
+    originalDate &&
+    this.freightForm.value.billingState &&
+    this.GSTFromTrnMode?.codeDesc &&
+    // this.consignorForm.value.consignorGSTNo &&
+    // this.consignorForm.value.consigneeGSTNo &&
+    this.basicDetailForm.value.originState;
 
-  // Format "DD Month YYYY"
-  const formattedDate = dateObj.toLocaleDateString('en-GB', { 
-    day: '2-digit', 
-    month: 'long', 
-    year: 'numeric' 
+  // જો બધું ભરેલું ન હોય તો સીધું return
+  if (!requiredFieldsFilled) {
+    return;
+  }
+
+  // Date format "DD Month YYYY"
+  const dateObj = new Date(originalDate);
+  const formattedDate = dateObj.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric'
   });
-    const payload = {
-      "custcode": this.basicDetailForm.value.billingParty,
-      "payBas": this.basicDetailForm.value.businessType,
-      "baseLocation": this.basicDetailForm.value.origin,
-      "destCd": this.basicDetailForm.value.destination,
-      "subTotal": 4625.00,
-      "csgngstNo": "",
-      "csgegstNo": "",
-      "transMode": this.basicDetailForm.value.mode,
-      "docketDate": formattedDate,
-      "billingPartyAS": "CSGN",
-      "csgngstState": "27",
-      "csgegstState": "03",
-      "gstRateType": "18",
-      "isGstApplied": "1",
-      "billingState": "MH"
-    }
-    this.basicDetailService.getGSTCalculation(payload).subscribe({
-      next: (response :any) => {
-        if (response) {
-         this.gstCalculationList = Object.keys(response).reduce((acc: any, key) => {
+
+  const payload = {
+    "custcode": this.basicDetailForm.value.billingParty,
+    "payBas": this.basicDetailForm.value.businessType,
+    "baseLocation": this.basicDetailForm.value.origin,
+    "destCd": this.basicDetailForm.value.destination,
+    "subTotal": 4625.00,
+    "csgngstNo": this.consignorForm.value.consignorGSTNo,
+    "csgegstNo": this.consignorForm.value.consigneeGSTNo,
+    "transMode": this.basicDetailForm.value.mode,
+    "docketDate": formattedDate,
+    "billingPartyAS": (this.basicDetailForm.value.businessType === 'P01' || this.basicDetailForm.value.businessType === 'P02') ? 'CSGN' : 'CSGE',
+    "csgngstState": this.basicDetailForm.value.originState,
+    "csgegstState": this.basicDetailForm.value.originState,
+    "gstRateType": this.GSTFromTrnMode.codeDesc,
+    "isGstApplied": "1",
+    "billingState": this.freightForm.value.billingState || 'MH'
+  };
+
+  this.basicDetailService.getGSTCalculation(payload).subscribe({
+    next: (response: any) => {
+      if (response) {
+        this.gstCalculationList = Object.keys(response).reduce((acc: any, key) => {
           acc[key.toLowerCase()] = response[key];
           return acc;
         }, {});
-        this.freightForm.patchValue(this.gstCalculationList)
-        }
-      },
-    });
-  }
-
- getIGSTchargesDetail() {
-  this.basicDetailService.getIGSTchargesDetail().subscribe({
-    next: (response) => {
-      if (!response) return;
-
-      // Group by ids & convert chargeCode to camelCase
-      this.groupedCharges = response.reduce((acc: any, item: any) => {
-        const camelCaseCode = item.chargeCode.toLowerCase();
-        item.camelCaseCode = camelCaseCode; // store for template use
-
-        if (!acc[item.ids]) acc[item.ids] = [];
-        acc[item.ids].push(item);
-
-        return acc;
-      }, {} as { [ids: number]: any[] });
-
-      // Add dynamic form controls for each charge
-      Object.values(this.groupedCharges).forEach((charges: any[]) => {
-        charges.forEach((charge) => {
-          if (!this.freightForm.contains(charge.camelCaseCode)) {
-            this.freightForm.addControl(
-              charge.camelCaseCode,
-              new FormControl(charge.percentage || 0)
-            );
-          }
-        });
-      });
+        this.freightForm.patchValue(this.gstCalculationList);
+      }
     },
   });
 }
 
 
-//   getOtherChargesDetail(freightData:any){
-// const payload={
-//   "chargeRule": "string",
-//   "baseCode1": "string",
-//   "chargeSubRule": "string",
-//   "baseCode2": "string",
-//   "chargedWeight": "string",
-//   "contractID": "string",
-//   "destination": "string",
-//   "depth": "string",
-//   "flagProceed": "string",
-//   "fromCity": "string",
-//   "ftlType": "string",
-//   "noOfPkgs": "string",
-//   "origin": "string",
-//   "payBase": "string",
-//   "serviceType": "string",
-//   "toCity": "string",
-//   "transMode": "string",
-//   "orderID": "string",
-//   "invAmt": "string",
-//   "dockdt": "2025-08-08T12:04:19.598Z",
-//   "prodType": "string",
-//   "packType": "string",
-//   "riskType": "string",
-//   "originPincode": 0,
-//   "destPincode": 0,
-//   "floorNo": 0
-// }
-// this.basicDetailService.getOtherChargesDetail(payload).subscribe({
-//      next: (response) => {
-//        if (response.success) {
-         
-//        }
-//      },
-//    });
-//   }
+  getIGSTchargesDetail() {
+    this.basicDetailService.getIGSTchargesDetail().subscribe({
+      next: (response) => {
+        if (!response) return;
+
+        // Group by ids & convert chargeCode to camelCase
+        this.groupedCharges = response.reduce((acc: any, item: any) => {
+          const camelCaseCode = item.chargeCode.toLowerCase();
+          item.camelCaseCode = camelCaseCode; // store for template use
+
+          if (!acc[item.ids]) acc[item.ids] = [];
+          acc[item.ids].push(item);
+
+          return acc;
+        }, {} as { [ids: number]: any[] });
+
+        // Add dynamic form controls for each charge
+        Object.values(this.groupedCharges).forEach((charges: any[]) => {
+          charges.forEach((charge) => {
+            if (!this.freightForm.contains(charge.camelCaseCode)) {
+              this.freightForm.addControl(
+                charge.camelCaseCode,
+                new FormControl(charge.percentage || 0)
+              );
+            }
+          });
+        });
+      },
+    });
+  }
+
+
+  //   getOtherChargesDetail(freightData:any){
+  // const payload={
+  //   "chargeRule": "string",
+  //   "baseCode1": "string",
+  //   "chargeSubRule": "string",
+  //   "baseCode2": "string",
+  //   "chargedWeight": "string",
+  //   "contractID": "string",
+  //   "destination": "string",
+  //   "depth": "string",
+  //   "flagProceed": "string",
+  //   "fromCity": "string",
+  //   "ftlType": "string",
+  //   "noOfPkgs": "string",
+  //   "origin": "string",
+  //   "payBase": "string",
+  //   "serviceType": "string",
+  //   "toCity": "string",
+  //   "transMode": "string",
+  //   "orderID": "string",
+  //   "invAmt": "string",
+  //   "dockdt": "2025-08-08T12:04:19.598Z",
+  //   "prodType": "string",
+  //   "packType": "string",
+  //   "riskType": "string",
+  //   "originPincode": 0,
+  //   "destPincode": 0,
+  //   "floorNo": 0
+  // }
+  // this.basicDetailService.getOtherChargesDetail(payload).subscribe({
+  //      next: (response) => {
+  //        if (response.success) {
+
+  //        }
+  //      },
+  //    });
+  //   }
 
 }
 
