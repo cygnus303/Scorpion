@@ -28,9 +28,11 @@ export class DocketService {
   public getGSTNODetailsList: any;
   public GetPincodeOriginList!: any;
   public contractservicecharge:any;
+  public gstCalculationList:any;
   public isBillingTBB: boolean = false;
   public isLocalNote: boolean = false;
   public noOfRows: number = 1;
+  public groupedCharges: { [ids: number]: any[] } = {};
   constructor(private basicDetailService: BasicDetailService) { }
 
   detailForm() {
@@ -143,7 +145,7 @@ export class DocketService {
       coddodCollected: new FormControl(),
       gstRate: new FormControl(),
       subTotal: new FormControl(),
-      total: new FormControl(),
+      dkttotal: new FormControl(),
       discountAmount: new FormControl(),
       discount: new FormControl(),
     })
@@ -323,7 +325,10 @@ export class DocketService {
           this.basicDetailForm.patchValue({
             sacCode: response.sacCode,
             sacDescription: response.sacCodeDesc,
-          })
+          });
+          this.freightForm.patchValue({
+            gstRate: response.codeDesc
+          });
         }
       }
     });
@@ -462,32 +467,62 @@ export class DocketService {
       "payBas": this.basicDetailForm.value.businessType,
       "baseLocation": this.basicDetailForm.value.origin,
       "destCd": this.basicDetailForm.value.destination,
-      "subTotal": 0.00,
+      "subTotal": 4625.00,
       "csgngstNo": "",
       "csgegstNo": "",
       "transMode": this.basicDetailForm.value.mode,
       "docketDate":  this.basicDetailForm.value.cNoteDate,
       "billingPartyAS": "CSGN",
       "csgngstState": "27",
-      "csgegstState": "02",
+      "csgegstState": "03",
       "gstRateType": "18",
       "isGstApplied": "1",
-      "billingState": "GJ"
+      "billingState": "MH"
     }
     this.basicDetailService.getGSTCalculation(payload).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.businessTypeList = response.data[0];
-          this.basicDetailForm?.patchValue({
-            businessType: response.data[0].codeId
-          });
-          this.freightForm.patchValue({
-          gstRate:response.data[0].igstRate,
-          });
+      next: (response :any) => {
+        if (response) {
+         this.gstCalculationList = Object.keys(response).reduce((acc: any, key) => {
+          acc[key.toLowerCase()] = response[key];
+          return acc;
+        }, {});
+        this.freightForm.patchValue(this.gstCalculationList)
         }
       },
     });
   }
+
+ getIGSTchargesDetail() {
+  this.basicDetailService.getIGSTchargesDetail().subscribe({
+    next: (response) => {
+      if (!response) return;
+
+      // Group by ids & convert chargeCode to camelCase
+      this.groupedCharges = response.reduce((acc: any, item: any) => {
+        const camelCaseCode = item.chargeCode.toLowerCase();
+        item.camelCaseCode = camelCaseCode; // store for template use
+
+        if (!acc[item.ids]) acc[item.ids] = [];
+        acc[item.ids].push(item);
+
+        return acc;
+      }, {} as { [ids: number]: any[] });
+
+      // Add dynamic form controls for each charge
+      Object.values(this.groupedCharges).forEach((charges: any[]) => {
+        charges.forEach((charge) => {
+          if (!this.freightForm.contains(charge.camelCaseCode)) {
+            this.freightForm.addControl(
+              charge.camelCaseCode,
+              new FormControl(charge.percentage || 0)
+            );
+          }
+        });
+      });
+    },
+  });
+}
+
 
 //   getOtherChargesDetail(freightData:any){
 // const payload={

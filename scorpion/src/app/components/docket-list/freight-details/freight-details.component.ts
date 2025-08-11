@@ -12,7 +12,7 @@ import { ChargingRepsonse } from '../../../shared/models/general-master.model';
 })
 export class FreightDetailsComponent {
   toPayAmount: string = '0.00';
-  groupedCharges: { [ids: number]: any[] } = {};
+
   chargingData: any[] = [];
   chargeAmounts: { [key: string]: any } = {};
   focusedCharge: any;
@@ -23,7 +23,7 @@ export class FreightDetailsComponent {
 
   ngOnInit() {
     this.getChargesData();
-    this.getIGSTchargesDetail();
+    this.docketService.getIGSTchargesDetail();
     this.docketService.freightbuild()
   }
 
@@ -61,19 +61,7 @@ onFocus(chargeCode: string) {
   }
 }
 
-   getIGSTchargesDetail() {
-  this.basicDetailService.getIGSTchargesDetail().subscribe({
-    next: (response) => {
-      if (response) {
-        this.groupedCharges = response.reduce((acc:any, item:any) => {
-          if (!acc[item.ids]) acc[item.ids] = [];
-          acc[item.ids].push(item);
-          return acc;
-        }, {} as { [ids: number]: any[] });
-      }
-    }
-  });
-}
+
 
 
 onBlur(chargeCode: string) {

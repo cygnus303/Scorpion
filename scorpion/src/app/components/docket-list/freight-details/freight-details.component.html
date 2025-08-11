@@ -215,6 +215,7 @@
             </div>
           </div>
         </div>
+        <div class="col-md-4"></div>
         <div class="col-md-4" *ngIf="!docketService.isBillingTBB">
           <div class="form-group">
             <label class="control-label col-md-5"><b>SUB-TOTAL</b></label>
@@ -226,7 +227,7 @@
           </div>
         </div>
         <div *ngIf="!docketService.isBillingTBB">
-          <div *ngFor="let entry of groupedCharges | keyvalue">
+          <div *ngFor="let entry of docketService.groupedCharges | keyvalue">
             <div class="row clsGSTApply">
               <div class="col-md-4" *ngFor="let charge of entry.value">
                 <div class="form-group to-pay-group">
@@ -237,7 +238,7 @@
                   <div class="col-md-7">
                     <div class="input-icon">
                       <input type="text" class="form-control clsAmount required2" [placeholder]="charge.chargeName"
-                        [(ngModel)]="charge.chargeAmount" [ngModelOptions]="{ standalone: true }" readonly />
+                         formControlName="{{ charge.camelCaseCode }}" readonly />
                       <i class="fas fa-plus"></i>
                     </div>
                   </div>
@@ -270,9 +271,7 @@
           <div class="form-group">
             <label class="control-label col-md-5"><b>TOTAL</b></label>
             <div class="col-md-7">
-              <input class="required2 form-control clsAmount required clsROFixed" formControlName="total"
-                data-val="true" data-val-number="The field DKTTOT must be a number."
-                data-val-required="The DKTTOT field is required." id="WMDC_DKTTOT" name="WMDC.DKTTOT"
+              <input class="required2 form-control clsAmount required clsROFixed" formControlName="dkttotal"
                 placeholder="TOTAL" readonly="true" type="text" value="0" min="1">
             </div>
           </div>
