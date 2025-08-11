@@ -117,6 +117,11 @@ export class InvoiceDetailsComponent {
     });
   }
 
+    openDatePicker(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    input.showPicker?.();
+  }
+  
   // getOtherChargesDetail(event: any) {
   //   const payload = {
   //     "chargeRule": 'NONE',

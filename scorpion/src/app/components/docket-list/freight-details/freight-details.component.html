@@ -189,7 +189,7 @@
                    formControlName="{{ charge.chargeCode }}"
                    (focus)="onFocus(charge.chargeCode)"
                    (blur)="onBlur(charge.chargeCode)" />
-                  <i class="fas fa-plus"></i>
+                  <i class="bold">{{charge.operator}}</i>
                 </div>
               </div>
             </div>
@@ -241,7 +241,7 @@
                     <div class="input-icon">
                       <input type="text" class="form-control clsAmount required2" [placeholder]="charge.chargeName"
                          formControlName="{{ charge.camelCaseCode }}" readonly />
-                      <i class="fas fa-plus"></i>
+                      <i class="bold">{{charge.operator}}</i>
                     </div>
                   </div>
                 </div>

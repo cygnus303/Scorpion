@@ -70,7 +70,7 @@ export class DocketService {
       sacDescription: new FormControl(null),
       isAppointmentDelivery: new FormControl(false),
       iscsdDelivery: new FormControl(false),
-      isODAApplicable: new FormControl(false),
+      isODAApplicable: new FormControl({ value: true, disabled: true }),
       isLocalNote: new FormControl(false),
       appointmentDate: new FormControl(this.today),
       personName: new FormControl(null),
@@ -83,7 +83,7 @@ export class DocketService {
       vehicleno: new FormControl(null),
       vehicleType: new FormControl('own'),
 
-    });
+    });   
   }
 
   consignorbuild() {
@@ -189,7 +189,7 @@ export class DocketService {
       ewayBillNo: new FormControl(''),
       ewayBillExpiry: new FormControl(''),
       invoiceValue: new FormControl(0),
-      invoiceDate: new FormControl(''),
+      ewayinvoiceDate: new FormControl(''),
       invoiceNo: new FormControl(''),
       declaredValue: new FormControl(0),
       noOfPkgs: new FormControl(0),
@@ -198,7 +198,7 @@ export class DocketService {
       breadth: new FormControl(0),
       height: new FormControl(0),
       cubicWeight: new FormControl(0),
-      invoicedate: new FormControl(),
+      invoicedate: new FormControl(this.today),
       declaredvalue: new FormControl(0),
       cubicweight: new FormControl(0),
     });

@@ -8,7 +8,6 @@
   &:after {
     color: #fff;
     font-size: 9px;
-    cursor: pointer;
     z-index: 3;
     position: absolute;
     bottom: 3px;
@@ -41,9 +40,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #e02222; // 🔴 default for "YES" (false)
+    background-color: #e02222; // NO side (default)
     transition: 0.4s;
-    border-radius: 0;
     z-index: 1;
 
     &:before {
@@ -59,26 +57,18 @@
   }
 
   input:checked + .slider {
-    background-color: #4caf50; // ✅ green for true value (NO side)
+    background-color: #4caf50; // YES (green)
 
     &:before {
-      transform: translateX(22px); // move knob to right
+      transform: translateX(22px);
     }
   }
 
-  input:not(:checked) + .slider {
-    background-color: #e02222; // 🔴 red for false value
-
-    &:before {
-      transform: translateX(0); // knob on left
-    }
+  /* Disabled look */
+  input:disabled + .slider {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
-}
-
-::ng-deep.disabled{
-  opacity: 0.2;
-  cursor: not-allowed !important;
-   pointer-events: all !important;
 }
 
 
