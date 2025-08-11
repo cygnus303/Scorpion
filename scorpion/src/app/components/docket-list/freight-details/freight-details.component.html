@@ -3,6 +3,9 @@
     <i class="fa fa-edit me-2"></i>
     CNote Entry - Freight Details
   </div>
+  <div *ngIf="docketService.contractMessage!=='-'" class="text-danger">
+    {{docketService.contractMessage}}
+  </div>
   <div class="form-grid p-4">
     <form [formGroup]="docketService.freightForm">
       <div class="row" *ngIf="!docketService.isBillingTBB">

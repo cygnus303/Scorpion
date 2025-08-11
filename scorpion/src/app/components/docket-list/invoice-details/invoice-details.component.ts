@@ -10,11 +10,11 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
   styleUrl: './invoice-details.component.scss'
 })
 export class InvoiceDetailsComponent {
-  public freightData:any;
-  public chargingData:any;
-  public pincodeMatrixData:any;
- 
- constructor(
+  public freightData: any;
+  public chargingData: any;
+  public pincodeMatrixData: any;
+
+  constructor(
     public docketService: DocketService,
     public basicDetailService: BasicDetailService
   ) { }
@@ -26,24 +26,25 @@ export class InvoiceDetailsComponent {
   removeRow(index: number): void {
     this.docketService.invoiceRows.removeAt(index);
   }
-  calculateSummary(i: number) {
-    const volMeasureType = this.docketService?.contractservicecharge[0]?.cft_Measure; // 'INCHES' | 'CM' | 'FEET'
-    const cftWtRatio = +this.docketService?.contractservicecharge[0]?.cft_Ratio || 0; // you can bind from service
-    const rows = this.docketService?.invoiceRows?.value;
+  calculateSummary(i: number, changedField?: string) {
+    const volMeasureType = this.docketService?.contractservicecharge[0]?.cft_Measure;
+    const cftWtRatio = +this.docketService?.contractservicecharge[0]?.cft_Ratio || 0;
 
     let totalDeclaredValue = 0;
     let totalNoOfPkgs = 0;
     let totalCubicWeight = 0;
     let totalActualWeight = 0;
 
-    const updatedRows = rows.map((r: any) => {
-      const length = +r.length || 0;
-      const breadth = +r.breadth || 0;
-      const height = +r.height || 0;
-      const pkgsNo = +r.noOfPkgs || 0;
+    const updatedRows = this.docketService.invoiceRows.controls.map((ctrl, index) => {
+      const length = +ctrl.get('length')?.value || 0;
+      const breadth = +ctrl.get('breadth')?.value || 0;
+      const height = +ctrl.get('height')?.value || 0;
+      const pkgsNo = +ctrl.get('noOfPkgs')?.value || 0;
+      const actualWeight = +ctrl.get('actualWeight')?.value || 0;
+      const declaredValue = +ctrl.get('declaredvalue')?.value || 0;
 
+      // Volume calculation
       let volume = 0;
-
       if (volMeasureType === 'INCHES') {
         volume = (length * breadth * height * cftWtRatio) / 1728;
       } else if (volMeasureType === 'CM') {
@@ -53,24 +54,81 @@ export class InvoiceDetailsComponent {
       }
 
       const cubicweight = +(volume * pkgsNo).toFixed(2);
-      this.docketService.invoiceRows.controls[i].patchValue({
-        cubicweight: cubicweight
-      });
-      totalDeclaredValue += +r.declaredvalue || 0;
+      ctrl.patchValue({ cubicweight }, { emitEvent: false });
+
+      // Always update these totals
+      totalDeclaredValue += declaredValue;
       totalNoOfPkgs += pkgsNo;
       totalCubicWeight += cubicweight;
-      totalActualWeight += +r.actualWeight || 0;
+
+      // Actual weight total only if NOT declaredvalue change
+      if (changedField !== 'declaredvalue') {
+        totalActualWeight += actualWeight;
+      }
+
+      return {
+        ...ctrl.value,
+        cubicweight
+      };
     });
-    this.docketService.invoiceRows.patchValue(updatedRows);
-    this.docketService.invoiceform.patchValue({
+
+    // Minimum check only when updating actual weight
+    let finalActualWeight = null;
+    if (changedField !== 'declaredvalue') {
+      finalActualWeight = totalActualWeight < 20 ? 20 : totalActualWeight;
+    }
+
+    // Patch rows
+    this.docketService.invoiceRows.patchValue(updatedRows, { emitEvent: false });
+
+    // Prepare patch data
+    const patchData: any = {
       totalDeclaredValue,
       totalNoOfPkgs,
       totalCubicWeight,
-      totalActualWeight,
-      chargeWeightPerPkg: totalNoOfPkgs,
-      finalActualWeight: totalActualWeight
-    });
+      chargeWeightPerPkg: totalNoOfPkgs
+    };
+    if (changedField !== 'declaredvalue') {
+      patchData.totalActualWeight = totalActualWeight;
+      patchData.finalActualWeight = finalActualWeight;
+    }
+
+    // Patch totals to form
+    this.docketService.invoiceform.patchValue(patchData, { emitEvent: false });
   }
+
+getCFTCalculation(i: number) {
+  let totalCFT = 0;
+
+  // Get CFT ratio from main form
+  const cftRatio = +this.docketService.invoiceform?.get('cft_Ratio')?.value || 0;
+
+  this.docketService.invoiceRows.controls.forEach((ctrl) => {
+    const length = Number(ctrl.get('length')?.value) || 0;
+    const breadth = Number(ctrl.get('breadth')?.value) || 0;
+    const height = Number(ctrl.get('height')?.value) || 0;
+    const noOfPkgs = Number(ctrl.get('noOfPkgs')?.value) || 0;
+
+    // Row CFT calculation
+    const cftTotal = length * breadth * height * cftRatio * noOfPkgs;
+    totalCFT += cftTotal;
+
+    // Update row CFT without rounding
+    ctrl.patchValue({ cftTotal }, { emitEvent: false });
+  });
+
+  // Update grand total without rounding
+  this.docketService.invoiceform.patchValue(
+    { cftTotal: totalCFT },
+    { emitEvent: false }
+  );
+
+  console.log("Grand total CFT:", totalCFT);
+}
+
+
+
+
 
   GetFreightContractDetails(event: any) {
     const noOfPkgs = event.target.value;
@@ -103,14 +161,15 @@ export class InvoiceDetailsComponent {
       next: (response: any) => {
         if (response) {
           this.freightData = response.result[0];
+          this.docketService.contractMessage = this.freightData.contractMessage
           this.docketService.freightForm.patchValue({
             freightCharges: this.freightData.freightCharge,
-            rateType:this.freightData.rateType,
-            freightRate:this.freightData.freightRate,
-            EDD:new Date(this.freightData.edd)
-  .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
-  .toUpperCase()
-  .replace(/ /g, '-')
+            rateType: this.freightData.rateType,
+            freightRate: this.freightData.freightRate,
+            EDD: new Date(this.freightData.edd)
+              .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+              .toUpperCase()
+              .replace(/ /g, '-')
           })
         }
       },
@@ -168,7 +227,7 @@ export class InvoiceDetailsComponent {
       "chargedWeight": chargedWeight,
       "contractID": this.docketService.step2DetailsList.contractid,
       "destination": this.docketService.basicDetailForm.value.destination,
-      "depth":this.docketService.depth,
+      "depth": this.docketService.depth,
       "flagProceed": this.docketService.flagprocedd,
       "fromCity": this.docketService.basicDetailForm.value.fromCity,
       "ftlType": this.docketService.step2DetailsList.ftlType,
@@ -185,7 +244,7 @@ export class InvoiceDetailsComponent {
       "packType": this.docketService.basicDetailForm.value.packingType,
       "riskType": this.docketService.step2DetailsList.risktype,
       "originPincode": this.docketService.consignorForm.value.consignorPincode || 0,
-      "destPincode":this.docketService.basicDetailForm.value.pincode || 0,
+      "destPincode": this.docketService.basicDetailForm.value.pincode || 0,
       "floorNo": 0
     };
 
