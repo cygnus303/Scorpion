@@ -11,6 +11,7 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
 })
 export class InvoiceDetailsComponent {
   public freightData:any;
+  public pincodeMatrixData:any;
  
  constructor(
     public docketService: DocketService,
@@ -25,9 +26,9 @@ export class InvoiceDetailsComponent {
     this.docketService.invoiceRows.removeAt(index);
   }
 calculateSummary(i:number) {
-  const volMeasureType = this.docketService.contractservicecharge[0].cft_Measure; // 'INCHES' | 'CM' | 'FEET'
-  const cftWtRatio = +this.docketService.contractservicecharge[0].cft_Ratio || 0; // you can bind from service
-  const rows = this.docketService.invoiceRows.value;
+  const volMeasureType = this.docketService?.contractservicecharge[0]?.cft_Measure; // 'INCHES' | 'CM' | 'FEET'
+  const cftWtRatio = +this.docketService?.contractservicecharge[0]?.cft_Ratio || 0; // you can bind from service
+  const rows = this.docketService?.invoiceRows?.value;
  
   let totalDeclaredValue = 0;
   let totalNoOfPkgs = 0;
@@ -140,6 +141,20 @@ calculateSummary(i:number) {
     this.basicDetailService.getOtherChargesDetail(payload).subscribe({
       next: (response) => {
         if (response.success) {
+        }
+      },
+    });
+  }
+
+  getPincodeMatrixData(){
+    const payload={
+      KM_From_Location:0,
+      CHRGWT:1
+    }
+    this.basicDetailService.getPincodematrix(payload).subscribe({
+      next: (response) => {
+        if (response) {
+          this.pincodeMatrixData=response
         }
       },
     });
