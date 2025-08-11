@@ -372,6 +372,9 @@ export class DocketService {
       next: (response) => {
         if (response.success) {
           this.transportModeData = response.data;
+          this.basicDetailForm.patchValue({
+            mode:response.data[0].codeId
+          });
         }
       },
     });
@@ -402,6 +405,9 @@ export class DocketService {
       next: (response) => {
         if (response.success) {
           this.serviceData = response.data;
+          this.basicDetailForm.patchValue({
+            serviceType:response.data[0].codeId
+          })
         }
       },
     });

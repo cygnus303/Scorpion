@@ -138,7 +138,7 @@ export class InvoiceDetailsComponent {
       "toCity": this.docketService.basicDetailForm.value.toCity,
       "transMode": this.docketService.basicDetailForm.value.mode,
       "orderID": this.docketService.step2DetailsList.contractid,
-      "invAmt": "string",
+      "invAmt": this.docketService.invoiceform.value.totalDeclaredValue.toString(),
       "dockdt": this.docketService.basicDetailForm.value.cNoteDate,
       "prodType": "string",
       "packType": this.docketService.basicDetailForm.value.packingType,
@@ -147,7 +147,6 @@ export class InvoiceDetailsComponent {
       "destPincode": 0,
       "floorNo": 0
     }
-    debugger
     this.basicDetailService.getOtherChargesDetail(payload).subscribe({
       next: (response) => {
         if (response.success) {
