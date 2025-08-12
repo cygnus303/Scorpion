@@ -23,7 +23,7 @@ export class DocketService {
   public businessTypeList: generalMasterResponse[] = [];
   public exemptServicesList: generalMasterResponse[] = [];
   public today: string = '';
-  public Location = 'NIDA';
+  public Location = 'PIM';
   public step2DetailsList: any;
   public getGSTNODetailsList: any;
   public GetPincodeOriginList!: any;
@@ -389,6 +389,7 @@ export class DocketService {
           this.invoiceform.patchValue({
             cft_Ratio: this.contractservicecharge[0].cft_Ratio
           });
+          this.getStaxPaidBy()
         }
       }
     });
@@ -500,6 +501,18 @@ export class DocketService {
       next: (response) => {
         if (response.success) {
           this.exemptServicesList = response.data;
+        }
+      },
+    });
+  }
+
+   getStaxPaidBy() {
+    this.basicDetailService.getStaxPaidBy(this.contractservicecharge[0].gstPaidBy || 0).subscribe({
+      next: (response:any) => {
+        if (response) {
+          this.freightForm.patchValue({
+            GSTPaidBy:response.result[0].text
+          })
         }
       },
     });
@@ -617,7 +630,6 @@ export class DocketService {
     });
   }
   GetFreightContractDetails() {
-    debugger
     const data = {
       chargeRule: 'NONE',
       baseCode1: 'NONE',
