@@ -58,7 +58,7 @@
           <div class="form-group"><label class="col-md-5">Pincode</label>
             <div class="col-md-7"><ng-select class="noFoundTextColor required2" [items]="docketService.pincodeList" bindLabel="pinArea"
                 bindValue="value" placeholder="Pincode" formControlName="pincode"
-                notFoundText="Please enter atleast 1 characters" (search)="docketService.getpincodeData($event)"
+                 [notFoundText]="docketService.notPincodeValue" (search)="docketService.getpincodeData($event)"
                 (change)="docketService.onChangePinCode($event);docketService.onFormFieldChange();"></ng-select></div>
           </div>
         </div>
@@ -103,7 +103,7 @@
           <div class="form-group"><label class="col-md-5">Destination</label>
             <div class="col-md-7">
               <ng-select class="noFoundTextColor required2" [searchable]="true" (search)="getDestinationsList($event)" (change)="onChangedestinationsList($event);docketService.onFormFieldChange()" placeholder="Destination" formControlName="destination" 
-                notFoundText="Please enter atleast 3 characters">
+               [notFoundText]="notDestinationValue">
                 <ng-option *ngFor="let item of destinationsList" [value]="item">
                   <strong>{{ item.locCode }}</strong> : {{ item.locName }}
                 </ng-option>
@@ -130,10 +130,10 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">From City</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor required2" placeholder="From City" (search)="getCityList($event)" (change)="onChangeCityListList($event,'from')"
+              <ng-select class="noFoundTextColor required2" placeholder="From City" (search)="getCityList($event,this.docketService.Location,'from')" (change)="onChangeCityListList($event,'from')"
                formControlName="fromCity"
-                notFoundText="Please enter atleast 1 characters">
-                <ng-option *ngFor="let item of cityList" [value]="item.location">
+               [notFoundText]="notFromCityValue">
+                <ng-option *ngFor="let item of fromCityList" [value]="item.location">
                   <strong>{{ item.location }}</strong> : {{ item.location }}
                 </ng-option>
               </ng-select>
@@ -150,10 +150,10 @@
         <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('destination')?.value">
           <div class="form-group"><label class="col-md-5">To City</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" placeholder="To City" (search)="getCityList($event)"
+              <ng-select class="noFoundTextColor" placeholder="To City" (search)="getCityList($event,this.docketService.basicDetailForm.get('destination')?.value,'to')"
                 (change)="onChangeCityListList($event,'to')" formControlName="toCity"
-                notFoundText="Please enter atleast 1 characters">
-                <ng-option *ngFor="let item of cityList" [value]="item.location">
+                [notFoundText]="notToCityValue">
+                <ng-option *ngFor="let item of toCityList" [value]="item.location">
                   <strong>{{ item.location }}</strong> : {{ item.location }}
                 </ng-option>
               </ng-select>

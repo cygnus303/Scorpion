@@ -17,9 +17,15 @@ export class BasicDetailsComponent {
   public isLocalNoteReadOnly = false;
   public billingPartyData: billingPartyResponse[] = [];
   public cityList: cityResponse[] = [];
+  public fromCityList: cityResponse[] = [];
+  public toCityList: cityResponse[] = [];
   public destinationsList: DestinationsList[] = [];
   public vehicleNumbersList: VehicleNumbersResponse[] = [];
   public notFoundTextValue = 'Please enter at least 3 characters';
+  public notDestinationValue = 'Please enter at least 3 characters';
+  public notFromCityValue = 'Please enter at least 1 characters';
+  public notToCityValue = 'Please enter at least 1 characters';
+
   constructor(
     public docketService: DocketService,
     private basicDetailService: BasicDetailService, public generalMasterService: GeneralMasterService) { }
@@ -47,26 +53,45 @@ export class BasicDetailsComponent {
     });
   }
 
-
-  getCityList(event?: any) {
-    const searchText = event.term;
-    if (!searchText || searchText.length < 1) {
-      this.cityList = [];
-      return;
-    }
-    this.basicDetailService.getCityData(this.docketService.basicDetailForm.get('destination')?.value, searchText).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.cityList = response.data;
-        } else {
-          this.cityList = [];
-        }
-      },
-      error: () => {
-        this.cityList = [];
-      }
-    });
+getCityList(event?: any, locCode?: any, type?: 'from' | 'to') {
+  const searchText = event.term;
+  if (!searchText || searchText.length < 1) {
+    if (type === 'from') this.fromCityList = [];
+    else this.toCityList = [];
+    return;
   }
+
+  this.basicDetailService.getCityData(locCode, searchText).subscribe({
+    next: (response) => {
+      if (response.success) {
+        if (type === 'from') {
+          this.fromCityList = response.data;
+          this.notFromCityValue = 'No matches found';
+        } else {
+          this.toCityList = response.data;
+          this.notToCityValue = 'No matches found';
+        }
+      } else {
+        if (type === 'from') {
+          this.fromCityList = [];
+          this.notFromCityValue = '';
+        } else {
+          this.toCityList = [];
+          this.notToCityValue = '';
+        }
+      }
+    },
+    error: () => {
+      if (type === 'from') {
+        this.fromCityList = [];
+        this.notFromCityValue = '';
+      } else {
+        this.toCityList = [];
+        this.notToCityValue = '';
+      }
+    }
+  });
+}
 
   getDestinationsList(event?: any) {
     const searchText = event.term;
@@ -78,12 +103,15 @@ export class BasicDetailsComponent {
       next: (response) => {
         if (response) {
           this.destinationsList = response;
+          this.notDestinationValue = 'No matches found';
         } else {
           this.destinationsList = [];
+          this.notDestinationValue = '';
         }
       },
       error: () => {
         this.destinationsList = [];
+        this.notDestinationValue = '';
       }
     });
   }
@@ -102,7 +130,7 @@ export class BasicDetailsComponent {
     const payload = {
       searchTerm: searchText,
       paybs: this.docketService.basicDetailForm.get('billingType')?.value ? this.docketService.basicDetailForm.get('billingType')?.value : 'P01',
-      location: this.docketService.HQTR
+      location: this.docketService.Location
     }
     this.basicDetailService.getBillingParty(payload).subscribe({
       next: (response) => {

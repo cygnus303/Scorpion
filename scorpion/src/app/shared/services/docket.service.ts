@@ -23,7 +23,7 @@ export class DocketService {
   public businessTypeList: generalMasterResponse[] = [];
   public exemptServicesList: generalMasterResponse[] = [];
   public today: string = '';
-  public HQTR = 'NIDA';
+  public Location = 'HQTR';
   public step2DetailsList: any;
   public getGSTNODetailsList: any;
   public GetPincodeOriginList!: any;
@@ -37,9 +37,9 @@ export class DocketService {
   public depth:string='';
   public flagprocedd:string='';
   public contractMessage:string='';
-   public freightData: any;
+  public freightData: any;
   public chargingData: any;
-
+  public notPincodeValue = 'Please enter at least 1 characters';
   constructor(private basicDetailService: BasicDetailService) { }
 
   detailForm() {
@@ -101,7 +101,7 @@ export class DocketService {
       consignorCity: new FormControl(null),
       consignorPincode: new FormControl(null),
       consignorMobile: new FormControl(null, [Validators.pattern(mobileNo)]),
-      consignorEmail: new FormControl(null),
+      consignorEmail: new FormControl(null, [Validators.required, Validators.email]),
 
       // Consignee
       consigneeGSTNo: new FormControl(null),
@@ -219,12 +219,15 @@ export class DocketService {
       next: (response) => {
         if (response.success) {
           this.pincodeList = response.data;
+          this.notPincodeValue = 'No matches found';
         } else {
           this.pincodeList = [];
+          this.notPincodeValue = '';
         }
       },
       error: () => {
         this.pincodeList = [];
+         this.notPincodeValue = '';
       }
     });
   }
@@ -290,7 +293,7 @@ getRuleDetailForProceed(){
       Paybas: this.basicDetailForm.value.billingType,
       Doctype: 'DKT',
       DOCKDT: formattedDate,
-      orgncd: this.HQTR
+      orgncd: this.Location
     }
     this.basicDetailService.GetStep2Details(payload).subscribe({
       next: (response) => {
