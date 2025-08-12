@@ -37,6 +37,8 @@ export class DocketService {
   public depth:string='';
   public flagprocedd:string='';
   public contractMessage:string='';
+   public freightData: any;
+  public chargingData: any;
 
   constructor(private basicDetailService: BasicDetailService) { }
 
@@ -595,6 +597,132 @@ getRuleDetailForProceed(){
     },
   });
 }
+  GetFreightContractDetails(event: any) {
+    const noOfPkgs = event.target.value;
+    const data = {
+      chargeRule: 'NONE',
+      baseCode1: 'NONE',
+      chargeSubRule: 'NONE',
+      baseCode2: 'NONE',
+      chargedWeight: 'NONE',
+      contractID: this.step2DetailsList.contractid,
+      destination: this.basicDetailForm.value.destination,
+      depth: this.depth,
+      flagProceed: this.flagprocedd,
+      fromCity: this.basicDetailForm.value.fromCity,
+      ftlType: this.step2DetailsList.ftlType,
+      noOfPkgs: noOfPkgs,
+      chargedWeright: Math.max(this.invoiceform.value.finalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0).toString(),
+      origin: this.basicDetailForm.value.origin,
+      payBase: this.basicDetailForm.value.billingType,
+      serviceType: this.basicDetailForm.value.serviceType,
+      toCity: this.basicDetailForm.value.toCity,
+      transMode: this.basicDetailForm.value.mode,
+      orderID: this.step2DetailsList.contractid,
+      invAmt: this.invoiceform.value.totalDeclaredValue.toString(),
+      dockdt: new Date().toISOString(),
+      prodcd: this.basicDetailForm.value.contents,
+      isPerPieceRate: this.step2DetailsList.isPerPieceRate
+    }
+    this.basicDetailService.GetFreightContractDetails(data).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.freightData = response.result[0];
+          this.contractMessage = this.freightData.contractMessage
+          this.freightForm.patchValue({
+            freightCharges: this.freightData.freightCharge,
+            rateType: this.freightData.rateType,
+            freightRate: this.freightData.freightRate,
+            EDD: new Date(this.freightData.edd)
+              .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+              .toUpperCase()
+              .replace(/ /g, '-')
+          })
+        }
+      },
+    });
+  }
 
+    getOtherChargesDetail(event: any) {
+    const chargedWeight = Math.max(
+      this.invoiceform.value.finalActualWeight || 0,
+      this.invoiceform.value.totalCubicWeight || 0
+    ).toString();
+
+    const payload = {
+      "chargeRule": 'NONE',
+      "baseCode1": 'NONE',
+      "chargeSubRule": "NONE",
+      "baseCode2": "NONE",
+      "chargedWeight": chargedWeight,
+      "contractID": this.step2DetailsList.contractid,
+      "destination": this.basicDetailForm.value.destination,
+      "depth": this.depth,
+      "flagProceed": this.flagprocedd,
+      "fromCity": this.basicDetailForm.value.fromCity,
+      "ftlType": this.step2DetailsList.ftlType,
+      "noOfPkgs": event?.target?.value?.toString(),
+      "origin": this.basicDetailForm.value.origin,
+      "payBase": this.basicDetailForm.value.billingType,
+      "serviceType": this.basicDetailForm.value.serviceType,
+      "toCity": this.basicDetailForm.value.toCity,
+      "transMode": this.basicDetailForm.value.mode,
+      "orderID": this.step2DetailsList.contractid,
+      "invAmt": this.invoiceform.value.totalDeclaredValue?.toString(),
+      "dockdt": this.basicDetailForm.value.cNoteDate,
+      "prodType": this.basicDetailForm.value.contents,
+      "packType": this.basicDetailForm.value.packingType,
+      "riskType": this.step2DetailsList.risktype,
+      "originPincode": this.consignorForm.value.consignorPincode || 0,
+      "destPincode": this.basicDetailForm.value.pincode || 0,
+      "floorNo": 0
+    };
+
+    // Required fields check
+    const allFieldsFilled = Object.values(payload).every(
+      value => value !== null && value !== undefined && value !== '' && value !== '0'
+    );
+
+    if (!allFieldsFilled) {
+      console.warn('Required fields are missing. Skipping API call.');
+      return;
+    }
+
+    // Call API only if all fields are filled
+    this.basicDetailService.getOtherChargesDetail(payload).subscribe({
+      next: (response) => {
+        if (response) {
+          this.chargingData = response;
+          this.chargingData.forEach((item: any) => {
+            if (this.freightForm.contains(item.chargecode)) {
+              this.freightForm.patchValue({
+                [item.chargecode]: item.charge
+              });
+            }
+          });
+          let totalSubTotal = 0;
+
+          // Freight charge from freightForm
+          const freightCharges = Number(this.freightForm?.get('freightCharges')?.value) || 0;
+          totalSubTotal += freightCharges;
+
+          // Charges from API response
+          if (this.chargingData && Array.isArray(this.chargingData)) {
+            this.chargingData.forEach((item: any) => {
+              totalSubTotal += Number(item.charge) || 0;
+            });
+          }
+
+          // Patch subtotal in freightForm
+          this.freightForm.patchValue(
+            { subTotal: totalSubTotal },
+            { emitEvent: false }
+          );
+
+          console.log("Subtotal (Freight + API charges):", totalSubTotal);
+        }
+      },
+    });
+  }
 }
 

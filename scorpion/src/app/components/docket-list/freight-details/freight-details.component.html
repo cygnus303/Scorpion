@@ -191,7 +191,7 @@
                    [placeholder]="charge.chargeName"
                    formControlName="{{ charge.chargeCode }}"
                    (focus)="onFocus(charge.chargeCode)"
-                   (blur)="onBlur(charge.chargeCode)" />
+                   (blur)="onBlur(charge.chargeCode);docketService.getOtherChargesDetail($event)" />
                   <i class="bold">{{charge.operator}}</i>
                 </div>
               </div>
