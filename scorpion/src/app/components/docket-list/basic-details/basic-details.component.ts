@@ -201,6 +201,23 @@ toggleLocalNote() {
       this.docketService.basicDetailForm.patchValue({
         fromCity: event + ':' + event,
       });
+      const payload = {
+          locCode:event,
+          baseUserCode:this.docketService.BaseUserCode,
+          baseLocation:this.docketService.Location,
+          baseCompany:'C003',
+          baseFinYear:'2025-2026'
+      }
+      this.basicDetailService.fromOperation(payload).subscribe({
+        next: (response:any) => {
+          if (response) {
+            this.docketService.basicDetailForm.patchValue({
+              originState: response.stnm,
+            });
+          }
+        }
+      });
+
     } else if (type === 'to') {
       this.docketService.basicDetailForm.patchValue({
         toCity: event + ':' + event,
@@ -208,6 +225,7 @@ toggleLocalNote() {
       this.docketService.consignorForm.patchValue({
         consigneeCity: event
       });
+      this.docketService.GetPincodeOrigin()
     }
     this.cityList = [];
   }
@@ -229,5 +247,7 @@ toggleLocalNote() {
       billingParty: null,
       billingName: null
     })
+      this.docketService.getRuleDetailForDepth();
+    this.docketService.getRuleDetailForProceed()
   }
 }

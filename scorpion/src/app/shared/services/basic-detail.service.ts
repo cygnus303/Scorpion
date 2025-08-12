@@ -98,4 +98,7 @@ export class BasicDetailService {
   GetProRataCharge(payload:any){
     return this.apiHandlerService.Get(`Operation/GetProRataCharge`,payload)
   }
+   fromOperation(payload:any){
+    return this.apiHandlerService.Get(`Operation`,payload)
+  }
 }

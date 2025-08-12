@@ -40,6 +40,7 @@ export class DocketService {
   public freightData: any;
   public chargingData: any;
   public totalSubTotal: any;
+  public BaseUserCode = 'CYGNUSTEAM'
   public notPincodeValue = 'Please enter at least 1 characters';
   constructor(private basicDetailService: BasicDetailService) { }
 
@@ -238,8 +239,7 @@ export class DocketService {
     this.basicDetailForm.patchValue({ destination: event.destination });
     this.consignorForm.patchValue({ consigneePincode: event.pinArea });
     this.pincodeList = [];
-    this.getRuleDetailForDepth();
-    this.getRuleDetailForProceed()
+  
   }
 
 
@@ -314,7 +314,7 @@ export class DocketService {
           this.getContentsData();
           this.getServiceTypeData(this.step2DetailsList.serviceType);
           this.getPackagingTypeData();
-          this.getTypeofMovementData();
+          this.getTypeofMovementData(this.step2DetailsList.ftlType);
           this.getbusinessTypeData();
           this.getexemptServicesData();
           this.GetPincodeOrigin();
@@ -360,7 +360,7 @@ export class DocketService {
           this.basicDetailForm.patchValue({
             sacCode: response.sacCode,
             sacDescription: response.sacCodeDesc,
-            mode: response.transType
+            // mode: response.transType
           })
         }
       }
@@ -472,8 +472,8 @@ export class DocketService {
     });
   }
 
-  getTypeofMovementData() {
-    this.basicDetailService.getGeneralMasterList('FTLTYP ', '', '').subscribe({
+  getTypeofMovementData(codeId: any) {
+    this.basicDetailService.getGeneralMasterList('FTLTYP ', '', codeId).subscribe({
       next: (response) => {
         if (response.success) {
           this.typeofMovementList = response.data;
@@ -616,23 +616,25 @@ export class DocketService {
       },
     });
   }
-  GetFreightContractDetails(event: any) {
+  GetFreightContractDetails() {
     debugger
-    const noOfPkgs = event.target.value;
     const data = {
       chargeRule: 'NONE',
       baseCode1: 'NONE',
       chargeSubRule: 'NONE',
       baseCode2: 'NONE',
-      chargedWeight: 'NONE',
+      chargedWeight:Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0).toString(),
       contractID: this.step2DetailsList.contractid,
       destination: this.basicDetailForm.value.destination,
       depth: this.depth,
       flagProceed: this.flagprocedd,
       fromCity: this.basicDetailForm.value.fromCity,
-      ftlType: this.step2DetailsList.ftlType,
-      noOfPkgs: noOfPkgs,
-      chargedWeright: Math.max(this.invoiceform.value.finalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0).toString(),
+      fromstate:this.basicDetailForm.value.originState,
+      tostate:this.basicDetailForm.value.destinationState,
+      itemCode:'',
+      ftlType: this.basicDetailForm.value.typeMovement,
+      noOfPkgs: this.freightForm.value.totalNoOfPkgs,
+      chargedWeright: Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0).toString(),
       origin: this.basicDetailForm.value.origin,
       payBase: this.basicDetailForm.value.billingType,
       serviceType: this.basicDetailForm.value.serviceType,
