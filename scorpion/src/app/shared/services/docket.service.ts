@@ -51,7 +51,7 @@ export class DocketService {
       cNoteNo: new FormControl(null),
       pincode: new FormControl(null),
       billingName: new FormControl(null),
-      origin: new FormControl('NIDA'),
+      origin: new FormControl(this.Location),
       originState: new FormControl(null),
       destination: new FormControl(null),
       destinationState: new FormControl(null),
@@ -126,7 +126,7 @@ export class DocketService {
       // thirdPartyMobile: new FormControl(null),
 
       // Risk & Documents
-      riskType: new FormControl('o'),
+      riskType: new FormControl('O'),
       policyNo: new FormControl(null),
       policyDate: new FormControl(null),
       internalCovers: new FormControl(null),
@@ -617,6 +617,7 @@ export class DocketService {
     });
   }
   GetFreightContractDetails(event: any) {
+    debugger
     const noOfPkgs = event.target.value;
     const data = {
       chargeRule: 'NONE',
