@@ -87,7 +87,7 @@
       <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Origin</label>
-            <div class="col-md-7"><input type="text" value="HQTR" class="form-control" placeholder="Origin"
+            <div class="col-md-7"><input type="text"  class="form-control" placeholder="Origin"
                 formControlName="origin" readonly /></div>
           </div>
         </div>
@@ -314,7 +314,7 @@
                 formControlName="sacDescription" readonly /></div>
           </div>
         </div>
-        <div class="col-md-4 form-column ">
+        <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('exemptServices')?.value">
           <div class="form-group"><label class="col-md-5">Upload GST Declaraion</label>
             <div class="col-md-7 text-start"><input type="file" /></div>
           </div>
