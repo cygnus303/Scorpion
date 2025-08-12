@@ -253,7 +253,7 @@
           </div>
         </div>
 
-        <div class="col-md-4 clsdis" style="display: none;" *ngIf="!docketService.isBillingTBB">
+        <div class="col-md-4 clsdis" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
           <div class="form-group">
             <label class="control-label col-md-5">Discount(%)</label>
             <div class="col-md-7">
@@ -263,7 +263,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4 clsdis" style="display: none;">
+        <div class="col-md-4 clsdis" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
           <div class="form-group">
             <label class="control-label col-md-5">Discount Amount</label>
             <div class="col-md-7">

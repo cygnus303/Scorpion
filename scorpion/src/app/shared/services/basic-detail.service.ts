@@ -56,7 +56,7 @@ export class BasicDetailService {
   }
 
 
-  get(): Observable<IApiBaseResponse<DKTChargesResponse>> {
+  getModulesRule(): Observable<IApiBaseResponse<DKTChargesResponse>> {
     return this.apiHandlerService.Get(`Operation/CYGNUS-Modules-Rules`);
   }
 
