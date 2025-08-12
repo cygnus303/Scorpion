@@ -220,7 +220,7 @@ toggleLocalNote() {
   }
 
   onChangeBillingType(event: any) {
-    if (event.codeId === 'P02') {
+    if (event?.codeId === 'P02') {
       this.docketService.isBillingTBB = true;
     } else {
       this.docketService.isBillingTBB = false;

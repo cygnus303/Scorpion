@@ -68,7 +68,7 @@
           <div class="form-group"><label class="col-md-5">Billing Party</label>
             <div class="col-md-7">
               <ng-select class="noFoundTextColor required2" 
-                placeholder="Billing Party" [searchable]="true" (search)="getBillingPartyData($event)"  (change)="onChangeBillingParty($event);docketService.onFormFieldChange()"
+                placeholder="Billing Party" [searchable]="true"   [clearable]="true"  (search)="getBillingPartyData($event)"  (change)="onChangeBillingParty($event);docketService.onFormFieldChange()"
                 formControlName="billingParty"  [notFoundText]="notFoundTextValue">
                 <ng-option *ngFor="let item of billingPartyData" [value]="item">
                   <strong>{{ item.custcd }}</strong> : {{ item.custnm }}
