@@ -503,6 +503,25 @@ getRuleDetailForProceed(){
     });
   }
 
+  getProRataCharge() {
+    const payload = {
+      FLAG_PRORATA:this.step2DetailsList.flaG_PERMIT,
+      RateType:this.freightForm.value.rateType,
+      CHRGWT:this.invoiceform.value.finalActualWeight,
+      FTLType:this.step2DetailsList.ftlType,
+      FREIGHT:this.freightForm.value.freightCharges,
+      ServiceType:this.basicDetailForm.value.serviceType,
+      FREIGHTRate:this.freightForm.value.freightRate
+    }
+    this.basicDetailService.GetProRataCharge(payload).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.exemptServicesList = response.data;
+        }
+      },
+    });
+  }
+
   getGSTCalculation() {
   const originalDate = this.basicDetailForm.value.cNoteDate;
   
