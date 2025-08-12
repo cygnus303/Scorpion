@@ -336,6 +336,10 @@ getRuleDetailForProceed(){
           this.GetPincodeOriginList = response;
           this.basicDetailForm.patchValue({
             destinationState: this.GetPincodeOriginList.stnm
+          });
+          this.freightForm.patchValue({
+            billedAt:this.GetPincodeOriginList.handling_Location,
+            billingState:this.GetPincodeOriginList.statePrefix
           })
         }
       }
