@@ -93,6 +93,9 @@ export class BasicDetailService {
 
   getRuleDetail(payload:any){
     return this.apiHandlerService.Get(`Operation/GetRuleDetails?key=${payload.key}&paybas=${payload.paybas}`)
+  }
 
+  GetProRataCharge(payload:any){
+    return this.apiHandlerService.Get(`Operation/GetProRataCharge`,payload)
   }
 }

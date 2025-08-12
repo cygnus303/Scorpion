@@ -10,7 +10,7 @@
           <div class="form-group">
             <label class="control-label col-md-5">CFT Ratio </label>
             <div class="col-md-7">
-              <input class="form-control" placeholder="CNote No" type="text" formControlName="cft_Ratio">
+              <input class="form-control" placeholder="CNote No" type="text" formControlName="cft_Ratio" readonly>
             </div>
           </div>
         </div>
@@ -18,7 +18,7 @@
           <div class="form-group">
             <label class="control-label col-md-5">CFT Total </label>
             <div class="col-md-7">
-              <input class="required2 form-control required" placeholder="CFT Total" type="text" formControlName="cftTotal">
+              <input class="required2 form-control required" placeholder="CFT Total" type="text" formControlName="cftTotal" readonly>
             </div>
           </div>
         </div>
@@ -194,7 +194,7 @@
                 <td class="center">
                   <div class="col-md-11">
                     <input formControlName="finalActualWeight" class="form-control rounded-0 clsAmount required2 required text-end"
-                      type="number" (blur)="docketService.GetFreightContractDetails($event);docketService.getOtherChargesDetail($event);docketService.getGSTCalculation()">
+                      type="number" (blur)="docketService.GetFreightContractDetails($event);docketService.getOtherChargesDetail($event);docketService.getGSTCalculation();docketService.getProRataCharge()">
                   </div>
                 </td>
               </tr>
