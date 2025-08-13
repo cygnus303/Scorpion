@@ -198,9 +198,9 @@ toggleLocalNote() {
 
   onChangeCityListList(event: any, type: any) {
     if (type === 'from') {
-      this.docketService.basicDetailForm.patchValue({
-        fromCity: event + ':' + event,
-      });
+      // this.docketService.basicDetailForm.patchValue({
+      //   fromCity: event + ':' + event,
+      // });
       const payload = {
           locCode:event,
           baseUserCode:this.docketService.BaseUserCode,
@@ -219,9 +219,9 @@ toggleLocalNote() {
       });
 
     } else if (type === 'to') {
-      this.docketService.basicDetailForm.patchValue({
-        toCity: event + ':' + event,
-      });
+      // this.docketService.basicDetailForm.patchValue({
+      //   toCity: event + ':' + event,
+      // });
       this.docketService.consignorForm.patchValue({
         consigneeCity: event
       });

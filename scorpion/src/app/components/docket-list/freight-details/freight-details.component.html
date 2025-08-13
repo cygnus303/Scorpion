@@ -14,15 +14,14 @@
             <label class="control-label col-md-5">Freight Charges</label>
             <div class="col-md-7">
               <input class="required2 form-control required text-end" placeholder="Freight Charges" type="number"
-                value="0" formControlName="freightCharges">
+                value="0" formControlName="freightCharges" readonly>
             </div>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label col-md-5" style="padding-top: 0px;padding-right: 1px;padding-left: 49px;">
-              <select class="form-control required required2 select2 dropdown2 select2-offscreen" id="WMDC_RATE_TYPE"
-                name="WMDC.RATE_TYPE" placeholder="Rate Type" tabindex="-1" formControlName="rateType">
+              <select class="form-control required required2 select2 dropdown2 select2-offscreen"  placeholder="Rate Type" formControlName="rateType" >
                 <option value="%">% of Basic Freight</option>
                 <option value="F">Flat(in RS)</option>
                 <option value="I">% of Invoice</option>
@@ -33,7 +32,7 @@
             </label>
             <div class="col-md-4">
               <input class="clsAmount form-control text-end" min="1" placeholder="Freight Rate"
-                formControlName="freightRate" type="number" value="0">
+                formControlName="freightRate" type="number" value="0" readonly>
             </div>
           </div>
         </div>
@@ -192,7 +191,7 @@
                    [placeholder]="charge.chargeName"
                    formControlName="{{ charge.chargeCode }}"
                    (focus)="onFocus(charge.chargeCode)"
-                   (blur)="onBlur(charge.chargeCode);docketService.getOtherChargesDetail($event)" />
+                   (blur)="onBlur(charge.chargeCode);this.docketService.subTotalCalculation()" />
                   <i class="bold">{{charge.operator}}</i>
                 </div>
               </div>
