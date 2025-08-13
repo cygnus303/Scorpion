@@ -101,4 +101,8 @@ export class BasicDetailService {
    fromOperation(payload:any){
     return this.apiHandlerService.Get(`Operation`,payload)
   }
+
+   getStaxPaidBy(id:any){
+    return this.apiHandlerService.Get(`Operation/GetStaxPaidBy/${id}`)
+  }
 }

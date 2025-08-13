@@ -23,7 +23,7 @@ export class DocketService {
   public businessTypeList: generalMasterResponse[] = [];
   public exemptServicesList: generalMasterResponse[] = [];
   public today: string = '';
-  public Location = 'NIDA';
+  public Location = 'LKO';
   public step2DetailsList: any;
   public getGSTNODetailsList: any;
   public GetPincodeOriginList!: any;
@@ -390,6 +390,7 @@ export class DocketService {
           this.invoiceform.patchValue({
             cft_Ratio: this.contractservicecharge[0].cft_Ratio
           });
+          this.getStaxPaidBy()
         }
       }
     });
@@ -501,6 +502,18 @@ export class DocketService {
       next: (response) => {
         if (response.success) {
           this.exemptServicesList = response.data;
+        }
+      },
+    });
+  }
+
+   getStaxPaidBy() {
+    this.basicDetailService.getStaxPaidBy(this.contractservicecharge[0].gstPaidBy || 0).subscribe({
+      next: (response:any) => {
+        if (response) {
+          this.freightForm.patchValue({
+            GSTPaidBy:response.result[0].text
+          })
         }
       },
     });
@@ -721,28 +734,6 @@ export class DocketService {
               });
             }
           });
-      //     let totalSubTotal = 0;
-
-      //     // Freight charge from freightForm
-      //     const freightCharges = Number(this.freightForm?.get('freightCharges')?.value) || 0;
-      //     totalSubTotal += freightCharges;
-
-      //     // Charges from API response
-      //     if (this.chargingData && Array.isArray(this.chargingData)) {
-      //       this.chargingData.forEach((item: any) => {
-      //         totalSubTotal += Number(item.charge) || 0;
-      //         console.log('charging data',item.charge)
-
-      //       });
-      //     }
-
-      //     // Patch subtotal in freightForm
-      //     this.freightForm.patchValue(
-      //       { subTotal: totalSubTotal },
-      //       { emitEvent: false }
-      //     );
-      //     this.totalSubTotal = totalSubTotal;
-      //     console.log("Subtotal (Freight + API charges):", totalSubTotal);
       this.subTotalCalculation()
         }
       },

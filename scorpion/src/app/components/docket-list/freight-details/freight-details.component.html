@@ -14,15 +14,14 @@
             <label class="control-label col-md-5">Freight Charges</label>
             <div class="col-md-7">
               <input class="required2 form-control required text-end" placeholder="Freight Charges" type="number"
-                value="0" formControlName="freightCharges">
+                value="0" formControlName="freightCharges" readonly>
             </div>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label col-md-5" style="padding-top: 0px;padding-right: 1px;padding-left: 49px;">
-              <select class="form-control required required2 select2 dropdown2 select2-offscreen" id="WMDC_RATE_TYPE"
-                name="WMDC.RATE_TYPE" placeholder="Rate Type" tabindex="-1" formControlName="rateType">
+              <select class="form-control required required2 select2 dropdown2 select2-offscreen"  placeholder="Rate Type" formControlName="rateType" >
                 <option value="%">% of Basic Freight</option>
                 <option value="F">Flat(in RS)</option>
                 <option value="I">% of Invoice</option>
@@ -33,7 +32,7 @@
             </label>
             <div class="col-md-4">
               <input class="clsAmount form-control text-end" min="1" placeholder="Freight Rate"
-                formControlName="freightRate" type="number" value="0">
+                formControlName="freightRate" type="number" value="0" readonly>
             </div>
           </div>
         </div>
@@ -45,10 +44,11 @@
           <div class="form-group">
             <label class="control-label col-md-5">GST Paid By</label>
             <div class="col-md-7">
-              <select class="form-control required2 required " formControlName="GSTPaidBy" placeholder="GST Paid By"
+              <!-- <select class="form-control required2 required " formControlName="GSTPaidBy" placeholder="GST Paid By"
                 tabindex="-1">
                 <option value=""></option>
-              </select>
+              </select> -->
+              <input type="text" formControlName="GSTPaidBy" class="clsAmount form-control" placeholder="GST Paid By">
             </div>
           </div>
         </div>
