@@ -318,7 +318,8 @@ export class DocketService {
           this.getbusinessTypeData();
           this.getexemptServicesData();
           this.GetPincodeOrigin();
-          this.GetDKTGSTForGTA();
+          // this.GetDKTGSTForGTA();
+          // this.GetGSTFromTrnMode()
         }
       }
     });
@@ -367,8 +368,8 @@ export class DocketService {
     });
   }
 
-  GetGSTFromTrnMode(event: any) {
-    this.basicDetailService.GetGSTFromTrnMode(event?.codeId).subscribe({
+  GetGSTFromTrnMode() {
+    this.basicDetailService.GetGSTFromTrnMode(this.basicDetailForm.value.mode || '').subscribe({
       next: (response: any) => {
         if (response) {
           this.basicDetailForm.patchValue({
@@ -382,7 +383,7 @@ export class DocketService {
         }
       }
     });
-    this.basicDetailService.contractservicecharge(this.step2DetailsList.contractid, event?.codeId).subscribe({
+    this.basicDetailService.contractservicecharge(this.step2DetailsList.contractid, this.basicDetailForm.value.mode).subscribe({
       next: (response: any) => {
         if (response) {
           this.contractservicecharge = response;
@@ -617,7 +618,6 @@ export class DocketService {
     });
   }
   GetFreightContractDetails() {
-    debugger
     const data = {
       chargeRule: 'NONE',
       baseCode1: 'NONE',
@@ -670,7 +670,6 @@ export class DocketService {
       this.invoiceform.value.finalActualWeight || 0,
       this.invoiceform.value.totalCubicWeight || 0
     ).toString();
-
     const payload = {
       "chargeRule": 'NONE',
       "baseCode1": 'NONE',
@@ -705,10 +704,10 @@ export class DocketService {
       value => value !== null && value !== undefined && value !== '' && value !== '0'
     );
 
-    if (!allFieldsFilled) {
-      console.warn('Required fields are missing. Skipping API call.');
-      return;
-    }
+    // if (!allFieldsFilled) {
+    //   console.warn('Required fields are missing. Skipping API call.');
+    //   return;
+    // }
 
     // Call API only if all fields are filled
     this.basicDetailService.getOtherChargesDetail(payload).subscribe({
@@ -722,29 +721,78 @@ export class DocketService {
               });
             }
           });
-          let totalSubTotal = 0;
+      //     let totalSubTotal = 0;
 
-          // Freight charge from freightForm
-          const freightCharges = Number(this.freightForm?.get('freightCharges')?.value) || 0;
-          totalSubTotal += freightCharges;
+      //     // Freight charge from freightForm
+      //     const freightCharges = Number(this.freightForm?.get('freightCharges')?.value) || 0;
+      //     totalSubTotal += freightCharges;
 
-          // Charges from API response
-          if (this.chargingData && Array.isArray(this.chargingData)) {
-            this.chargingData.forEach((item: any) => {
-              totalSubTotal += Number(item.charge) || 0;
-            });
-          }
+      //     // Charges from API response
+      //     if (this.chargingData && Array.isArray(this.chargingData)) {
+      //       this.chargingData.forEach((item: any) => {
+      //         totalSubTotal += Number(item.charge) || 0;
+      //         console.log('charging data',item.charge)
 
-          // Patch subtotal in freightForm
-          this.freightForm.patchValue(
-            { subTotal: totalSubTotal },
-            { emitEvent: false }
-          );
-          this.totalSubTotal = totalSubTotal;
-          console.log("Subtotal (Freight + API charges):", totalSubTotal);
+      //       });
+      //     }
+
+      //     // Patch subtotal in freightForm
+      //     this.freightForm.patchValue(
+      //       { subTotal: totalSubTotal },
+      //       { emitEvent: false }
+      //     );
+      //     this.totalSubTotal = totalSubTotal;
+      //     console.log("Subtotal (Freight + API charges):", totalSubTotal);
+      this.subTotalCalculation()
         }
       },
     });
+  }
+
+  subTotalCalculation(){
+    //  let totalSubTotal = 0;
+
+    //       // Freight charge from freightForm
+    //       const freightCharges = Number(this.freightForm?.get('freightCharges')?.value) || 0;
+    //       totalSubTotal += freightCharges;
+
+    //       // Charges from API response
+    //       if (this.chargingData && Array.isArray(this.chargingData)) {
+    //         this.chargingData.forEach((item: any) => {
+    //           totalSubTotal += Number(item.charge) || 0;
+    //           console.log('charging data',item.charge)
+
+    //         });
+    //       }
+
+    //       // Patch subtotal in freightForm
+    //       this.freightForm.patchValue(
+    //         { subTotal: totalSubTotal },
+    //         { emitEvent: false }
+    //       );
+    //       this.totalSubTotal = totalSubTotal;
+    //       console.log("Subtotal (Freight + API charges):", totalSubTotal);
+    let totalSubTotal = 0;
+
+  // Freight charge from freightForm
+  const freightCharges = Number(this.freightForm?.get('freightCharges')?.value) || 0;
+  totalSubTotal += freightCharges;
+
+  // Charges from freightForm (not old chargingData array)
+  if (this.chargingData && Array.isArray(this.chargingData)) {
+    this.chargingData.forEach((item: any) => {
+      const controlValue = Number(this.freightForm?.get(item.chargecode)?.value) || 0;
+      totalSubTotal += controlValue;
+    });
+  }
+
+  // Patch subtotal
+  this.freightForm.patchValue(
+    { subTotal: totalSubTotal },
+    { emitEvent: false }
+  );
+  this.totalSubTotal = totalSubTotal;
+  console.log("Subtotal (Freight + API charges):", totalSubTotal);
   }
 }
 

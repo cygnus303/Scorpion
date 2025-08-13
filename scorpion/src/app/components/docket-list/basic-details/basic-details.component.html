@@ -122,7 +122,7 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Transit Mode</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor required2" placeholder="Transit Mode" notFoundText="No matches found" [items]="docketService.transportModeData" bindLabel="codeDesc" bindValue="codeId" (change)="docketService.GetGSTFromTrnMode($event)"
+              <ng-select class="noFoundTextColor required2" placeholder="Transit Mode" notFoundText="No matches found" [items]="docketService.transportModeData" bindLabel="codeDesc" bindValue="codeId" (change)="docketService.GetGSTFromTrnMode()"
                 formControlName="mode"></ng-select>
               </div>
           </div>

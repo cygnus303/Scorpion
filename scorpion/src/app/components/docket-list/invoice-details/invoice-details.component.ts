@@ -28,14 +28,14 @@ export class InvoiceDetailsComponent {
   }
   calculateSummary(i: number, changedField?: string) {
     const volMeasureType = this.docketService?.contractservicecharge[0]?.cft_Measure;
-    const cftWtRatio = +this.docketService?.contractservicecharge[0]?.cft_Ratio || 0;
+  const cftWtRatio = +this.docketService?.contractservicecharge[0]?.cft_Ratio || 0;
 
-    let totalDeclaredValue = 0;
-    let totalNoOfPkgs = 0;
-    let totalCubicWeight = 0;
-    let totalActualWeight = 0;
+  let totalDeclaredValue = 0;
+  let totalNoOfPkgs = 0;
+  let totalCubicWeight = 0;
+  let totalActualWeight = 0;
 
-    const updatedRows = this.docketService.invoiceRows.controls.map((ctrl, index) => {
+  const updatedRows = this.docketService.invoiceRows.controls.map((ctrl, index) => {
       const length = +ctrl.get('length')?.value || 0;
       const breadth = +ctrl.get('breadth')?.value || 0;
       const height = +ctrl.get('height')?.value || 0;
@@ -44,58 +44,58 @@ export class InvoiceDetailsComponent {
       const declaredValue = +ctrl.get('declaredvalue')?.value || 0;
 
       // Volume calculation
-      let volume = 0;
-      if (volMeasureType === 'INCHES') {
-        volume = (length * breadth * height * cftWtRatio) / 1728;
-      } else if (volMeasureType === 'CM') {
-        volume = (length * breadth * height * cftWtRatio) / 27000;
-      } else if (volMeasureType === 'FEET') {
-        volume = length * breadth * height * cftWtRatio;
-      }
+    let volume = 0;
+    if (volMeasureType === 'INCHES') {
+      volume = (length * breadth * height * cftWtRatio) / 1728;
+    } else if (volMeasureType === 'CM') {
+      volume = (length * breadth * height * cftWtRatio) / 27000;
+    } else if (volMeasureType === 'FEET') {
+      volume = length * breadth * height * cftWtRatio;
+    }
 
       const cubicweight = +(volume * pkgsNo).toFixed(2);
-      ctrl.patchValue({ cubicweight }, { emitEvent: false });
+    ctrl.patchValue({ cubicweight }, { emitEvent: false });
 
       // Always update these totals
-      totalDeclaredValue += declaredValue;
-      totalNoOfPkgs += pkgsNo;
-      totalCubicWeight += cubicweight;
+    totalDeclaredValue += declaredValue;
+    totalNoOfPkgs += pkgsNo;
+    totalCubicWeight += cubicweight;
 
       // Actual weight total only if NOT declaredvalue change
-      if (changedField !== 'declaredvalue') {
-        totalActualWeight += actualWeight;
-      }
+    if (changedField !== 'declaredvalue') {
+      totalActualWeight += actualWeight;
+    }
 
-      return {
-        ...ctrl.value,
-        cubicweight
-      };
-    });
+    return {
+      ...ctrl.value,
+      cubicweight
+    };
+  });
 
     // Minimum check only when updating actual weight
-    let finalActualWeight = null;
-    if (changedField !== 'declaredvalue') {
-      finalActualWeight = totalActualWeight < 20 ? 20 : totalActualWeight;
-    }
+  let finalActualWeight = null;
+  if (changedField !== 'declaredvalue') {
+    finalActualWeight = totalActualWeight < 20 ? 20 : totalActualWeight;
+  }
 
     // Patch rows
-    this.docketService.invoiceRows.patchValue(updatedRows, { emitEvent: false });
+  this.docketService.invoiceRows.patchValue(updatedRows, { emitEvent: false });
 
     // Prepare patch data
-    const patchData: any = {
-      totalDeclaredValue,
-      totalNoOfPkgs,
-      totalCubicWeight,
-      chargeWeightPerPkg: totalNoOfPkgs
-    };
-    if (changedField !== 'declaredvalue') {
-      patchData.totalActualWeight = totalActualWeight;
-      patchData.finalActualWeight = finalActualWeight;
-    }
+  const patchData: any = {
+    totalDeclaredValue,
+    totalNoOfPkgs,
+    totalCubicWeight,
+    chargeWeightPerPkg: totalNoOfPkgs
+  };
+  if (changedField !== 'declaredvalue') {
+    patchData.totalActualWeight = totalActualWeight;
+    patchData.finalActualWeight = finalActualWeight;
+  }
 
     // Patch totals to form
-    this.docketService.invoiceform.patchValue(patchData, { emitEvent: false });
-  }
+  this.docketService.invoiceform.patchValue(patchData, { emitEvent: false });
+}
 
   getCFTCalculation(i: number) {
     let totalCFT = 0;
