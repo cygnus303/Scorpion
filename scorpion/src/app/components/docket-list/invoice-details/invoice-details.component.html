@@ -130,14 +130,14 @@
                     <input class="form-control rounded-0 clsAmount required2 text-end"  min="0" placeholder="Invoice value" type="number" value="0" formControlName="declaredvalue" (input)="calculateSummary(i);" (blur)="docketService.getGSTCalculation()">
                   </td>
                   <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
-                    <input class="form-control rounded-0 clsAmount required2 text-end" placeholder="No of Pkgs." (blur)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();" type="number" formControlName="noOfPkgs" (input)="calculateSummary(i);getCFTCalculation(i)" (change)="docketService.GetDKTGSTForGTA()">
+                    <input class="form-control rounded-0 clsAmount required2 text-end" placeholder="No of Pkgs." (blur)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();this.docketService.getFovContractDetails();" type="number" formControlName="noOfPkgs" (input)="calculateSummary(i);getCFTCalculation(i)" (change)="docketService.GetDKTGSTForGTA();">
                   </td>
                   <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px;" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
                     <input class="form-control rounded-0 clsAmount required2  text-end" min="0" type="number" value="0" readonly formControlName="cubicweight">
                   </td>
                   <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
                     <input class="form-control rounded-0 clsAmount required2 text-end"
-                      placeholder="Actual Weight" type="number" value="0" formControlName="actualWeight" (input)="calculateSummary(i)"  (blur)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();">
+                      placeholder="Actual Weight" type="number" value="0" formControlName="actualWeight" (input)="calculateSummary(i)"  (blur)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();this.docketService.getFovContractDetails();">
                   </td>
                   <td class="center">
                         <div *ngIf="i !== 0" (click)="removeRow(i)" style="color: Maroon; font-size: 14px; font-weight: bolder; text-decoration: none;" class="cursor-pointer" >X</div>
@@ -194,7 +194,7 @@
                 <td class="center">
                   <div class="col-md-11">
                     <input formControlName="finalActualWeight" class="form-control rounded-0 clsAmount required2 required text-end"
-                      type="number" (blur)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.getProRataCharge()">
+                      type="number" (blur)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.getProRataCharge();this.docketService.getFovContractDetails();">
                   </div>
                 </td>
               </tr>

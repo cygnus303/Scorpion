@@ -730,6 +730,28 @@ export class DocketService {
     });
   }
 
+  getFovContractDetails(){
+    const payload = {
+      chargeRule:"NONE",
+      baseCode1: "NONE",
+      contractID:  this.step2DetailsList.contractid,
+      riskType:this.step2DetailsList.risktype,
+      invAmt:this.invoiceform.value.totalDeclaredValue.toString(),
+      serviceType:  this.basicDetailForm.value.serviceType
+    }
+      this.basicDetailService.getFovContractDetails(payload).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.freightForm.patchValue({
+           fovCharged:response.fovCharged,
+           fovCalculated:response.fovRateType,
+           fovRate:response.fovRate
+          })
+        }
+      },
+    });
+  }
+
   getOtherChargesDetail() {
     const chargedWeight = Math.max(
       this.invoiceform.value.finalActualWeight || 0,

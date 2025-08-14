@@ -105,4 +105,8 @@ export class BasicDetailService {
    getStaxPaidBy(id:any){
     return this.apiHandlerService.Get(`Operation/GetStaxPaidBy/${id}`)
   }
+
+   getFovContractDetails(payload:any){
+    return this.apiHandlerService.Post(`Operation/GetFovContractDetails`,payload)
+  }
 }
