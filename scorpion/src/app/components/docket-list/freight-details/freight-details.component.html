@@ -21,14 +21,8 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label col-md-5" style="padding-top: 0px;padding-right: 1px;padding-left: 49px;">
-              <select class="form-control required required2 select2 dropdown2 select2-offscreen"  placeholder="Rate Type" formControlName="rateType" >
-                <option value="%">% of Basic Freight</option>
-                <option value="F">Flat(in RS)</option>
-                <option value="I">% of Invoice</option>
-                <option value="P">Per PKG</option>
-                <option value="T">Per TON</option>
-                <option value="W">Per KG</option>
-              </select>
+              <ng-select class="noFoundTextColor required2" placeholder="Rate Type" notFoundText="No matches found" [items]="docketService.rateList" bindLabel="codeDesc" bindValue="codeId" (change)="docketService.onchangeRateType($event)"
+                formControlName="rateType" [readonly]="docketService.basicDetailForm.get('serviceType')?.value ==='1'"></ng-select>
             </label>
             <div class="col-md-4">
               <input class="clsAmount form-control text-end" min="1" placeholder="Freight Rate"
