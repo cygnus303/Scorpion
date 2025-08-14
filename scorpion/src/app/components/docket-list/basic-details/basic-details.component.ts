@@ -213,7 +213,11 @@ toggleLocalNote() {
           if (response) {
             this.docketService.basicDetailForm.patchValue({
               originState: response.stnm,
+              csgngstState:response.statePrefix
             });
+            this.docketService.freightForm.patchValue({
+            billedAt: response.statePrefix,
+          })
           }
         }
       });

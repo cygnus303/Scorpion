@@ -24,7 +24,7 @@ export class DocketService {
   public exemptServicesList: generalMasterResponse[] = [];
   public rateList: generalMasterResponse[] = [];
   public today: string = '';
-  public Location = 'NAG';
+  public Location = 'NIDA';
   public step2DetailsList: any;
   public getGSTNODetailsList: any;
   public GetPincodeOriginList!: any;
@@ -89,6 +89,8 @@ export class DocketService {
       billingParty: new FormControl(null),
       vehicleno: new FormControl(null),
       vehicleType: new FormControl('own'),
+      csgegstState:new FormControl(''),
+      csgngstState:new FormControl(''),
 
       volumetric : new FormControl(false),
       IsLocalDocket : new FormControl(false),
@@ -353,7 +355,8 @@ export class DocketService {
         if (response) {
           this.GetPincodeOriginList = response;
           this.basicDetailForm.patchValue({
-            destinationState: this.GetPincodeOriginList.stnm
+            destinationState: this.GetPincodeOriginList.stnm,
+            csgegstState:this.GetPincodeOriginList.stateCode
           });
           this.freightForm.patchValue({
             billedAt: this.GetPincodeOriginList.handling_Location,
@@ -623,8 +626,8 @@ export class DocketService {
       "transMode": this.basicDetailForm.value.mode || '',
       "docketDate": formattedDate || '',
       "billingPartyAS": (this.basicDetailForm.value.billingType === 'P01' || this.basicDetailForm.value.billingType === 'P02') ? 'CSGN' : 'CSGE',
-      "csgngstState": this.basicDetailForm.value.originState || '',
-      "csgegstState": this.basicDetailForm.value.destinationState || '',
+      "csgngstState": this.basicDetailForm.value.csgngstState || '',
+      "csgegstState": this.basicDetailForm.value.csgegstState || '',
       "gstRateType": this.GSTFromTrnMode.codeDesc || '',
       "isGstApplied": "1",
       "billingState": this.freightForm.value.billingState || 'MH'
@@ -639,7 +642,9 @@ export class DocketService {
           }, {});
           this.freightForm.patchValue({
             ...this.gstCalculationList,
-            dktTotal: this.gstCalculationList.dkttotal ?? null
+            dktTotal: this.gstCalculationList.dkttotal ?? null,
+            billedAt: this.gstCalculationList.rcplbillgenloc,
+            billingState: this.gstCalculationList.customerbillgenstate,
           });
         }
       },
@@ -717,8 +722,9 @@ export class DocketService {
             EDD: new Date(this.freightData.edd)
               .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
               .toUpperCase()
-              .replace(/ /g, '-')
-          })
+              .replace(/ /g, '-'),
+              billingState: this.freightData.billingState
+          });
         }
       },
     });
