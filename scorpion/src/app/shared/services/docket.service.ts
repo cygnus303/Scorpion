@@ -79,7 +79,7 @@ export class DocketService {
       iscsdDelivery: new FormControl(false),
       isODAApplicable: new FormControl({ value: true, disabled: true }),
       isLocalNote: new FormControl(false),
-      appointmentDate: new FormControl(this.today),
+      appointmentDT: new FormControl(this.today),
       personName: new FormControl(null),
       contactNo: new FormControl(null),
       remarks: new FormControl(null),
