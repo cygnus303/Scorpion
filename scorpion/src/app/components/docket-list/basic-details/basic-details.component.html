@@ -215,18 +215,67 @@
             </div>
           </div>
         </div>
-           <div class="col-md-4 form-column">
+           <!-- <div class="col-md-4 form-column" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
           <div class="form-group">
-            <label for="refDkt" class="col-md-5">COD/DOD</label>
+            <label for="refDkt" class="col-md-5">Volumetric</label>
             <div class="col-md-7 text-start">
               <label class="yes-no">
-                <input type="checkbox" formControlName="IsCODDOD" />
+                <input type="checkbox" formControlName="volumetric" />
                 <span class="slider"></span>
               </label>
             </div>
           </div>
         </div>
+         <div class="col-md-4 form-column">
+          <div class="form-group">
+            <label for="refDkt" class="col-md-5">ODA</label>
+            <div class="col-md-7 text-start">
+              <label class="yes-no">
+                <input type="checkbox" formControlName="IsODA" />
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div> -->
       </div>
+      <!-- <div class="row"> -->
+        <!-- <div class="col-md-4 form-column" *ngIf="this.docketService?.step2DetailsList?.isDACC === 'Y'">
+          <div class="form-group">
+            <label for="refDkt" class="col-md-5">DACC</label>
+            <div class="col-md-7 text-start">
+              <label class="yes-no">
+                <input type="checkbox" formControlName="isDACC" />
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div> -->
+           <!-- <div class="col-md-4 form-column">
+          <div class="form-group">
+            <label for="refDkt" class="col-md-5">Local CNote</label>
+            <div class="col-md-7 text-start">
+              <label class="yes-no">
+                <input type="checkbox" formControlName="IsLocalDocket" />
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div> -->
+      <!-- </div> -->
+        <!-- <div class="row">
+        <div class="col-md-4 form-column ">
+          <div class="form-group"><label class="col-md-5">Customer GST State.</label>
+            <div class="col-md-7"><textarea class="form-control-textarea" placeholder="Special Instruction"
+                formControlName="gststate" rows="2" cols="47"></textarea></div>
+          </div>
+        </div>
+        <div class="col-md-4 form-column ">
+          <div class="form-group"><label class="col-md-5">Consignee Customer GST State.</label>
+            <div class="col-md-7"><ng-select class="noFoundTextColor required2" [items]="docketService.exemptServicesList" bindLabel="codeDesc" bindValue="codeId" placeholder="Exempt Services"
+                formControlName="consigneegstdtate"></ng-select></div>
+          </div>
+        </div>
+      </div> -->
       <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Special Instruction</label>
@@ -312,6 +361,31 @@
           </div>
         </div>
       </div>
+        <!-- <div class="row">
+        <div class="col-md-4 form-column">
+          <div class="form-group">
+            <label for="refDkt" class="col-md-5">Counter Pick Up</label>
+            <div class="col-md-7 text-start">
+              <label class="yes-no">
+                <input type="checkbox" formControlName="ISCounterPickUpPRS" />
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+           <div class="col-md-4 form-column">
+          <div class="form-group">
+            <label for="refDkt" class="col-md-5">Counter Delivery</label>
+            <div class="col-md-7 text-start">
+              <label class="yes-no">
+                <input type="checkbox" formControlName="ISCounterDelivery" />
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
       <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Sac Code</label>
@@ -352,6 +426,16 @@
             </div>
           </div>
         </div>
+         <!-- <div class="col-md-4 form-column ">
+          <div class="form-group ">
+            <label for="CSD" class="col-md-5">Mall Delivery</label>
+            <div class="col-md-7 text-start">
+              <label class="yes-no">
+                <input type="checkbox" formControlName="IsMAllDeliveryN"><span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div> -->
       </div>
       <div class="row">
         <div class="col-md-4 form-column ">

@@ -23,7 +23,7 @@ export class DocketService {
   public businessTypeList: generalMasterResponse[] = [];
   public exemptServicesList: generalMasterResponse[] = [];
   public today: string = '';
-  public Location = 'LKO';
+  public Location = 'NAG';
   public step2DetailsList: any;
   public getGSTNODetailsList: any;
   public GetPincodeOriginList!: any;
@@ -89,6 +89,16 @@ export class DocketService {
       vehicleno: new FormControl(null),
       vehicleType: new FormControl('own'),
 
+      volumetric : new FormControl(false),
+      IsLocalDocket : new FormControl(false),
+      isDACC : new FormControl(false),
+      gststate : new FormControl(),
+      consigneegstdtate : new FormControl(),
+      ISCounterDelivery : new FormControl(false),
+      applyreferencedktT : new FormControl(false),
+      ISCounterPickUpPRS : new FormControl(false),
+      IsMAllDeliveryN : new FormControl(false),
+      IsODA : new FormControl(false),
     });
   }
 
@@ -305,6 +315,10 @@ export class DocketService {
           });
           this.consignorForm.patchValue({
             riskType: this.step2DetailsList?.risktype,
+          });
+           this.basicDetailForm.patchValue({
+            volumetric:this.step2DetailsList?.isVolumentric === 'Y' ? true:false,
+            isDACC:this.step2DetailsList?.isDACC === 'Y' ? true:false,
           });
           // this.basicDetailForm.patchValue({
           //  IsCODDOD:this.step2DetailsList?.isCODDOD
@@ -568,7 +582,7 @@ export class DocketService {
 
     const payload = {
       "custcode": this.basicDetailForm.value.billingParty || '',
-      "payBas": this.basicDetailForm.value.businessType || '',
+      "payBas": this.basicDetailForm.value.billingType || '',
       "baseLocation": this.basicDetailForm.value.origin || '',
       "destCd": this.basicDetailForm.value.destination || '',
       "subTotal": this.totalSubTotal,
@@ -576,9 +590,9 @@ export class DocketService {
       "csgegstNo": this.consignorForm.value.consigneeGSTNo || '',
       "transMode": this.basicDetailForm.value.mode || '',
       "docketDate": formattedDate || '',
-      "billingPartyAS": (this.basicDetailForm.value.businessType === 'P01' || this.basicDetailForm.value.businessType === 'P02') ? 'CSGN' : 'CSGE',
+      "billingPartyAS": (this.basicDetailForm.value.billingType === 'P01' || this.basicDetailForm.value.billingType === 'P02') ? 'CSGN' : 'CSGE',
       "csgngstState": this.basicDetailForm.value.originState || '',
-      "csgegstState": this.basicDetailForm.value.originState || '',
+      "csgegstState": this.basicDetailForm.value.destinationState || '',
       "gstRateType": this.GSTFromTrnMode.codeDesc || '',
       "isGstApplied": "1",
       "billingState": this.freightForm.value.billingState || 'MH'
@@ -678,7 +692,7 @@ export class DocketService {
     });
   }
 
-  getOtherChargesDetail(event: any) {
+  getOtherChargesDetail() {
     const chargedWeight = Math.max(
       this.invoiceform.value.finalActualWeight || 0,
       this.invoiceform.value.totalCubicWeight || 0
@@ -695,7 +709,7 @@ export class DocketService {
       "flagProceed": this.flagprocedd,
       "fromCity": this.basicDetailForm.value.fromCity,
       "ftlType": this.basicDetailForm.value.typeMovement || '',
-      "noOfPkgs": event?.target?.value?.toString(),
+      "noOfPkgs": this.invoiceform.value.chargeWeightPerPkg.toString(),
       "origin": this.basicDetailForm.value.origin,
       "payBase": this.basicDetailForm.value.billingType,
       "serviceType": this.basicDetailForm.value.serviceType,
