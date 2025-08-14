@@ -22,6 +22,7 @@ export class DocketService {
   public typeofMovementList: generalMasterResponse[] = [];
   public businessTypeList: generalMasterResponse[] = [];
   public exemptServicesList: generalMasterResponse[] = [];
+  public rateList: generalMasterResponse[] = [];
   public today: string = '';
   public Location = 'NAG';
   public step2DetailsList: any;
@@ -249,7 +250,7 @@ export class DocketService {
     this.basicDetailForm.patchValue({ destination: event.destination });
     this.consignorForm.patchValue({ consigneePincode: event.pinArea });
     this.pincodeList = [];
-  
+
   }
 
 
@@ -332,6 +333,7 @@ export class DocketService {
           this.getbusinessTypeData();
           this.getexemptServicesData();
           this.GetPincodeOrigin();
+          this.getRateData()
           // this.GetDKTGSTForGTA();
           // this.GetGSTFromTrnMode()
         }
@@ -364,7 +366,7 @@ export class DocketService {
 
   GetDKTGSTForGTA() {
     const payload = {
-      customerId: this.basicDetailForm.value.billingParty ||'',
+      customerId: this.basicDetailForm.value.billingParty || '',
       transType: this.basicDetailForm.value.mode || '',
       exemptServices: this.basicDetailForm.value.exemptServices ? this.basicDetailForm.value.exemptServices : '',
     }
@@ -521,16 +523,46 @@ export class DocketService {
     });
   }
 
-   getStaxPaidBy() {
+  getRateData() {
+    this.basicDetailService.getGeneralMasterList('RATETYPE ', '', '').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.rateList = response.data;
+        }
+      },
+    });
+  }
+
+  getStaxPaidBy() {
     this.basicDetailService.getStaxPaidBy(this.contractservicecharge[0].gstPaidBy || 0).subscribe({
-      next: (response:any) => {
+      next: (response: any) => {
         if (response) {
           this.freightForm.patchValue({
-            GSTPaidBy:response.result[0].text
+            GSTPaidBy: response.result[0].text
           })
         }
       },
     });
+  }
+
+  onchangeRateType(event: any) {
+    let rateId = event.codeId;
+    let actualWeight = this.invoiceform.value.finalActualWeight;
+    let noOfpackages = this.invoiceform.value.totalNoOfPkgs;
+    let freightCharges = this.freightForm.value.freightCharges;
+    if (rateId === 'P') {
+      this.freightForm.patchValue({
+        freightRate: (freightCharges / noOfpackages)
+      })
+    } else if (rateId === 'W') {
+      this.freightForm.patchValue({
+        freightRate: (freightCharges / actualWeight)
+      })
+    } else {
+      this.freightForm.patchValue({
+        freightRate: freightCharges
+      })
+    }
   }
 
   getProRataCharge() {
@@ -650,15 +682,15 @@ export class DocketService {
       baseCode1: 'NONE',
       chargeSubRule: 'NONE',
       baseCode2: 'NONE',
-      chargedWeight:Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0).toString(),
+      chargedWeight: Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0).toString(),
       contractID: this.step2DetailsList.contractid,
       destination: this.basicDetailForm.value.destination,
       depth: this.depth,
       flagProceed: this.flagprocedd,
       fromCity: this.basicDetailForm.value.fromCity,
-      fromstate:this.basicDetailForm.value.originState,
-      tostate:this.basicDetailForm.value.destinationState,
-      itemCode:'',
+      fromstate: this.basicDetailForm.value.originState,
+      tostate: this.basicDetailForm.value.destinationState,
+      itemCode: '',
       ftlType: this.basicDetailForm.value.typeMovement || '',
       noOfPkgs: this.invoiceform.value.totalNoOfPkgs.toString(),
       chargedWeright: Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0).toString(),
@@ -748,13 +780,13 @@ export class DocketService {
               });
             }
           });
-      this.subTotalCalculation()
+          this.subTotalCalculation()
         }
       },
     });
   }
 
-  subTotalCalculation(){
+  subTotalCalculation() {
     //  let totalSubTotal = 0;
 
     //       // Freight charge from freightForm
@@ -779,25 +811,25 @@ export class DocketService {
     //       console.log("Subtotal (Freight + API charges):", totalSubTotal);
     let totalSubTotal = 0;
 
-  // Freight charge from freightForm
-  const freightCharges = Number(this.freightForm?.get('freightCharges')?.value) || 0;
-  totalSubTotal += freightCharges;
+    // Freight charge from freightForm
+    const freightCharges = Number(this.freightForm?.get('freightCharges')?.value) || 0;
+    totalSubTotal += freightCharges;
 
-  // Charges from freightForm (not old chargingData array)
-  if (this.chargingData && Array.isArray(this.chargingData)) {
-    this.chargingData.forEach((item: any) => {
-      const controlValue = Number(this.freightForm?.get(item.chargecode)?.value) || 0;
-      totalSubTotal += controlValue;
-    });
-  }
+    // Charges from freightForm (not old chargingData array)
+    if (this.chargingData && Array.isArray(this.chargingData)) {
+      this.chargingData.forEach((item: any) => {
+        const controlValue = Number(this.freightForm?.get(item.chargecode)?.value) || 0;
+        totalSubTotal += controlValue;
+      });
+    }
 
-  // Patch subtotal
-  this.freightForm.patchValue(
-    { subTotal: totalSubTotal },
-    { emitEvent: false }
-  );
-  this.totalSubTotal = totalSubTotal;
-  console.log("Subtotal (Freight + API charges):", totalSubTotal);
+    // Patch subtotal
+    this.freightForm.patchValue(
+      { subTotal: totalSubTotal },
+      { emitEvent: false }
+    );
+    this.totalSubTotal = totalSubTotal;
+    console.log("Subtotal (Freight + API charges):", totalSubTotal);
   }
 }
 
