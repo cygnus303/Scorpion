@@ -421,7 +421,7 @@ export class DocketListComponent {
           "igstAmount": this.docketService.freightForm.value.igstamount,
           "igstRate": this.docketService.freightForm.value.igstrate,
           "subTotal": this.docketService.freightForm.value.subTotal,
-          "dkttot": 0,//pucchvanau   total fright form nu
+          "dkttot": this.docketService.freightForm.value.dktTotal,  //total fright form nu
           "cgstRate": this.docketService.freightForm.value.cgstrate,//pucchvanau
           "cgstAmount": this.docketService.freightForm.value.cgstamount,//pucchvanau
           "sgstRate": this.docketService.freightForm.value.sgstrate,//pucchvanau
