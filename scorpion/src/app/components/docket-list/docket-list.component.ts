@@ -3,6 +3,7 @@ import { DocketService } from '../../shared/services/docket.service';
 import { BasicDetailService } from '../../shared/services/basic-detail.service';
 import Swal from 'sweetalert2';
 import { json } from 'stream/consumers';
+import { formatDate } from '@angular/common';
 @Component({
   selector: 'app-docket-list',
   standalone: false,
@@ -64,16 +65,17 @@ export class DocketListComponent {
         "wmd": {
           "dockno": this.docketService.basicDetailForm.value.cNoteNo,
           "docksf": ".",
-          "dockdt": this.docketService.basicDetailForm.value.cNoteDate
-  ? new Date(this.docketService.basicDetailForm.value.cNoteDate).toISOString()
-  : null,
+  //         "dockdt": this.docketService.basicDetailForm.value.cNoteDate
+  // ? new Date(this.docketService.basicDetailForm.value.cNoteDate).toISOString()
+  // : null,
           "orgncd": this.docketService.basicDetailForm.value.origin,
           "destcd": this.docketService.basicDetailForm.value.destination,
           "reassigN_DESTCD": this.docketService.basicDetailForm.value.destination,
           "from_loc": this.docketService.basicDetailForm.value.fromCity,
           "to_loc": this.docketService.basicDetailForm.value.toCity,
           "dly_loc": "",
-          "cdeldt": this.docketService.freightData.edd,
+          // "cdeldt": this.docketService.freightData.edd,
+          // "cdeldt": '2025-08-18T05:45:05.992Z',
           "paybas": this.docketService.basicDetailForm.value.billingType,
           "pkgsno": this.docketService.invoiceform.value.totalNoOfPkgs,
           "actuwt": this.docketService.invoiceform.value.finalActualWeight,
@@ -118,7 +120,8 @@ export class DocketListComponent {
           "ugc": "",
           "permit_yn": "",// api baki chhe
           "permit_recvd_at": "",
-          "permitdt": new Date().toISOString(),
+          // "permitdt": new Date().toISOString(),
+          // "permitdt": '2025-08-18T05:45:05.992Z',
           "permit_recvd_dt": "",
           "permit_No": "",
           "permit_validity_dt": "",
@@ -130,13 +133,14 @@ export class DocketListComponent {
           "pkgsty": this.docketService.basicDetailForm.value.packingType,
           "insuyn": this.docketService.consignorForm.value.riskType,  // jo Carrier's Risk hoy to c ,owener hoy to 'o'
           "insupl": this.docketService.consignorForm.value.policyNo,
-          "insupldt": this.docketService.consignorForm.value.policyDate || null,
+          // "insupldt": this.docketService.consignorForm.value.policyDate || null,
+          // "insupldt": '2025-08-18T05:45:05.992Z',
           "codno": "",
           "ctr_no": this.docketService.consignorForm.value.customerRefNo,
           "modvat_encl": '',
           "modvat_no": "",
-          "tot_modvat": this.docketService.consignorForm.value.internalCovers || '',
-          "tot_covers": this.docketService.consignorForm.value.modvatCovers || '',
+          "tot_modvat":Number(this.docketService.consignorForm.value.internalCovers)||0,
+          "tot_covers": Number(this.docketService.consignorForm.value.modvatCovers) || 0,
           "codchrg": this.docketService.step2DetailsList.codCharged,
           "codamt": this.docketService.step2DetailsList.codCharged,
           "businesstype": this.docketService.basicDetailForm.value.businessType,
@@ -256,9 +260,10 @@ export class DocketListComponent {
          "isDACC":this.docketService.step2DetailsList.isDACC ==='Y'?true:false,
           "isLocalDocket": this.docketService.basicDetailForm.value.IsLocalDocket?true:false,
            "isStaxExemp": this.docketService.basicDetailForm.value.exemptServices === 'Y'?true:false,
-          "appointmentDT":  this.docketService.basicDetailForm.value.appointmentDT ? 
-          new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString()
-          : null,
+          // "appointmentDT":  this.docketService.basicDetailForm.value.appointmentDT ? 
+          // new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString()
+          // : null,
+            // "appointmentDT": new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString(),
           "person": this.docketService.basicDetailForm.value.personName,
           "apmtMobile": this.docketService.basicDetailForm.value.contactNo,
           "apmtRemark": this.docketService.basicDetailForm.value.remarks,
@@ -319,7 +324,9 @@ export class DocketListComponent {
           "reasonCode": "",
           "id": 0,
           "edD_Date": "",
-          "sdD_Date": new Date().toISOString(),
+          // "sdD_Date": new Date().toISOString(),
+          // "sdD_Date": '2025-08-18T05:45:05.992Z',
+
           "kM_From_Location": 0,
           "is_ODA_Apply": this.docketService.basicDetailForm.value.isODAApplicable,
           "cod": 0,
@@ -482,10 +489,10 @@ export class DocketListComponent {
       // },
       wmdc: {
         "dockno": this.docketService.basicDetailForm.value.cNoteNo,
-        "ratE_TYPE": this.docketService.freightForm.value.rateType,
-        "frT_RATE": this.docketService.freightForm.value.freightRate,
-        "freighT_CALC": this.docketService.freightForm.value.freightCharges,
-        "freight": this.docketService.freightForm.value.freightCharges,
+        "ratE_TYPE": Number(this.docketService.freightForm.value.rateType)||0,
+        "frT_RATE": Number(this.docketService.freightForm.value.freightRate)||0,
+        "freighT_CALC": Number(this.docketService.freightForm.value.freightCharges)||0,
+        "freight": Number(this.docketService.freightForm.value.freightCharges)||0,
         "fov": this.docketService.freightForm.value.fovRate,
         "schG01": this.docketService.freightForm.value.SCHG01,
         "schG02": this.docketService.freightForm.value.SCHG02,
@@ -534,7 +541,7 @@ export class DocketListComponent {
         "savedby": "",
         "savingdate": "",
         "editModule": "",
-        "discount": this.docketService.freightForm.value.discount,
+        "discount": Number(this.docketService.freightForm.value.discount)||0,
         "surChgExcludefrom27dec14": true,
         "isAdditionalAmountAdd": true,
         "addtionalCharge": 0,
@@ -794,7 +801,8 @@ export class DocketListComponent {
         "chequeNo": "",
         "cashLedgerName": "",
         "bankLedgerName": "",
-        "chequeDate":new Date().toISOString(),
+        // "chequeDate":new Date().toISOString(),
+        // "chequeDate":'2025-08-18T05:45:05.992Z',
         "chequeAmount_Fromcheque": "",
         "tdsType": "",
         "isDepositedInBank": true,
@@ -847,7 +855,7 @@ export class DocketListComponent {
 
     const docketInvoiceList = [
       {
-        "srNo": 0,
+        // "srNo": 0,
         "dockno": "",
         "invno": "",
         "invdt": "",
@@ -857,7 +865,7 @@ export class DocketListComponent {
         "voL_L": 0,
         "voL_B": 0,
         "voL_H": 0,
-        "toT_CFT": 0,
+        // "toT_CFT": 0,
         "vol_cft": 0,
         "part_No": "",
         "eWayBillNo": "",
@@ -871,7 +879,7 @@ export class DocketListComponent {
         "piece": 0,
         "pieceAmount": 0,
         "pieceWeight": 0,
-        "volumetricBox": "",
+        // "volumetricBox": "",
         "pieceRateType": "",
         "chrgwt": 0
       }
@@ -911,7 +919,16 @@ export class DocketListComponent {
     this.appendObjectToFormData(formData, payload.wmd, "DVM.WMD");
     formData.append("DVM.OLDPayBas", this.docketService.basicDetailForm.value.billingParty)
     formData.append("DVM.OLDPayBas", "0");
-    this.appendObjectToFormData(formData, payload.wmdc, "DVM");
+    formData.append("DVM.WMD.insupldt",new Date(this.docketService.consignorForm.value.policyDate).toISOString()),
+     formData.append("DVM.PC.chequeDate",new Date().toISOString()),
+     formData.append("DVM.WMD.permitdt",new Date().toISOString()),
+     formData.append("DVM.WMD.sdD_Date",new Date().toISOString()),
+   formData.append("DVM.WMD.dockdt",this.docketService.basicDetailForm.value.cNoteDate? new Date(this.docketService.basicDetailForm.value.cNoteDate).toISOString(): '');
+formData.append( "DVM.WMD.cdeldt", new Date(this.docketService.freightData.edd).toISOString()),
+
+    formData.append("DVM.WMD.AppointmentDT",new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString()),
+
+    this.appendObjectToFormData(formData, payload.wmdc, "DVM.WMDC");
     formData.append("DVM.Delivered", "");
     formData.append("DVM.PRSDONE", "");
     formData.append("DVM.DRSDONE", "");
