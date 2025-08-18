@@ -13,6 +13,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class FreightDetailsComponent {
   toPayAmount: string = '0.00';
+  public originalCharges: any[] = [];
 
  
   chargeAmounts: { [key: string]: any } = {};
@@ -23,9 +24,40 @@ export class FreightDetailsComponent {
   ) { }
 
   ngOnInit() {
-    this.getChargesData();
+   
     this.docketService.getIGSTchargesDetail();
-    this.docketService.freightbuild()
+    this.docketService.freightbuild();
+
+    this.docketService.basicDetailForm.get('IsMAllDeliveryN')?.valueChanges.subscribe(value => {
+    // this.updateCharge('SCHG17', value); // Mall Delivery Charges
+    this.docketService.freightForm.patchValue({SCHG17:0})
+    if(value){
+      this.docketService.getOtherChargesDetail();
+    }
+    this.docketService.getGSTCalculation();
+    this.docketService.subTotalCalculation();
+  });
+
+  this.docketService.basicDetailForm.get('iscsdDelivery')?.valueChanges.subscribe(value => {
+    // this.updateCharge('SCHG10', value); // CSD Delivery Charges
+     this.docketService.freightForm.patchValue({SCHG10:0})
+    if(value){
+      this.docketService.getOtherChargesDetail();
+    }
+    this.docketService.getGSTCalculation();
+    this.docketService.subTotalCalculation();
+  });
+
+  this.docketService.basicDetailForm.get('isAppointmentDelivery')?.valueChanges.subscribe(value => {
+    // this.updateCharge('UCHG08', value); // Appointment Charges
+     this.docketService.freightForm.patchValue({UCHG08:0})
+    if(value){
+      this.docketService.getOtherChargesDetail();
+    }
+    this.docketService.getGSTCalculation();
+    this.docketService.subTotalCalculation();
+  });
+   this.getChargesData();
   }
 
   // getChargesData() {
@@ -46,7 +78,7 @@ getChargesData() {
     next: (response) => {
       if (response) {
         this.docketService.freightchargingData = response;
-
+       this.originalCharges = JSON.parse(JSON.stringify(response));
         // Form controls banavva
         this.docketService.freightchargingData.forEach((item: any) => {
           if (!this.docketService.freightForm.contains(item.chargeCode)) {
@@ -65,6 +97,16 @@ getChargesData() {
     }
   });
 }
+
+updateCharge(chargeCode: string, isSelected: boolean) {
+  // Get original charge from originalCharges array
+  const originalItem = this.originalCharges.find(c => c.chargeCode === chargeCode);
+  if (originalItem) {
+    const amount = isSelected ? originalItem.chargeAmount : 0;
+    this.docketService.freightForm.get(chargeCode)?.setValue(amount);
+  }
+}
+
 
 
 onFocus(chargeCode: string) {
