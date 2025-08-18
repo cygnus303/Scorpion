@@ -401,7 +401,7 @@
         </div>
         <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('exemptServices')?.value">
           <div class="form-group"><label class="col-md-5">Upload GST Declaraion</label>
-            <div class="col-md-7 text-start"><input type="file" /></div>
+            <div class="col-md-7 text-start"><input type="file" formControlName="GSTDeclaration"  (change)="onFileSelect($event)"/></div>
           </div>
         </div>
       </div>

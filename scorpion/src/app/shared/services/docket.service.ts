@@ -91,6 +91,7 @@ export class DocketService {
       vehicleType: new FormControl('own'),
       csgegstState:new FormControl(''),
       csgngstState:new FormControl(''),
+      GSTDeclaration: new FormControl(null),
 
       volumetric : new FormControl(false),
       IsLocalDocket : new FormControl(false),
