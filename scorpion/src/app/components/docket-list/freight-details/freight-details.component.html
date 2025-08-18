@@ -175,7 +175,7 @@
 
 
         <div class="row" *ngIf="!docketService.isBillingTBB">
-          <div class="col-md-4" *ngFor="let charge of chargingData">
+          <div class="col-md-4" *ngFor="let charge of docketService.freightchargingData">
             <div class="form-group to-pay-group">
               <label class="control-label col-md-5">{{ charge.chargeName }}</label>
               <div class="col-md-7">

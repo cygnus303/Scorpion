@@ -109,4 +109,8 @@ export class BasicDetailService {
    getFovContractDetails(payload:any){
     return this.apiHandlerService.Post(`Operation/GetFovContractDetails`,payload)
   }
+
+    onSubmit(data: any) {
+    return this.apiHandlerService.Post(`Operation/submit`, data);
+  }
 }

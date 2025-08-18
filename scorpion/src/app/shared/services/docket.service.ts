@@ -31,7 +31,6 @@ export class DocketService {
   public contractservicecharge: any;
   public gstCalculationList: any;
   public isBillingTBB: boolean = false;
-  public isLocalNote: boolean = false;
   public noOfRows: number = 1;
   public groupedCharges: { [ids: number]: any[] } = {};
   public GSTFromTrnMode: any;
@@ -41,6 +40,7 @@ export class DocketService {
   public freightData: any;
   public chargingData: any;
   public totalSubTotal: any;
+  public freightchargingData: any[] = [];
   public BaseUserCode = 'CYGNUSTEAM'
   public notPincodeValue = 'Please enter at least 1 characters';
   constructor(private basicDetailService: BasicDetailService) { }
@@ -200,12 +200,13 @@ export class DocketService {
 
   addRows(): void {
     for (let i = 0; i < this.noOfRows; i++) {
-      this.invoiceRows.push(this.createInvoiceRow());
+      this.invoiceRows.push(this.createInvoiceRow(this.invoiceRows.length + 1));
     }
   }
 
-  createInvoiceRow(): FormGroup {
+  createInvoiceRow(srNo: number): FormGroup {
     return new FormGroup({
+      srNo: new FormControl(srNo),
       ewayBillNo: new FormControl(''),
       ewayBillExpiry: new FormControl(''),
       invoiceValue: new FormControl(0),

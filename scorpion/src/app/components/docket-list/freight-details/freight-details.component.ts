@@ -14,7 +14,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class FreightDetailsComponent {
   toPayAmount: string = '0.00';
 
-  chargingData: any[] = [];
+ 
   chargeAmounts: { [key: string]: any } = {};
   focusedCharge: any;
   constructor(
@@ -42,23 +42,30 @@ export class FreightDetailsComponent {
   // }
 
 getChargesData() {
- this.basicDetailService.getChargeDetail().subscribe({
-  next: (response) => {
-    if (response) {
-      this.chargingData = response;
-      // Loop through charges and add controls dynamically
-      response.forEach((item: any) => {
-        if (!this.docketService.freightForm.contains(item.chargeCode)) {
-          this.docketService.freightForm.addControl(
-            item.chargeCode,
-            new FormControl(0)
-          );
-        }
-      });
+  this.basicDetailService.getChargeDetail().subscribe({
+    next: (response) => {
+      if (response) {
+        this.docketService.freightchargingData = response;
+
+        // Form controls banavva
+        this.docketService.freightchargingData.forEach((item: any) => {
+          if (!this.docketService.freightForm.contains(item.chargeCode)) {
+            this.docketService.freightForm.addControl(
+              item.chargeCode,
+              new FormControl(item.chargeAmount || 0)
+            );
+          } else {
+            // Already control hoy to value update karvi
+            this.docketService.freightForm
+              .get(item.chargeCode)
+              ?.setValue(item.chargeAmount || 0);
+          }
+        });
+      }
     }
-  }
-});
+  });
 }
+
 
 onFocus(chargeCode: string) {
   const control = this.docketService.freightForm.get(chargeCode);
