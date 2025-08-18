@@ -309,7 +309,8 @@ export class DocketListComponent {
     this.appendObjectToFormData(formData, payload.wmd, "DVM.WMD");
     this.appendObjectToFormData(formData, payload.wmdc, "DVM.WMDC");
     formData.append("DVM.isCompletion", "false")
-    formData.append("docketInvoiceList", JSON.stringify(payload.docketInvoiceList));
+    formData.append("docketInvoiceList", JSON.stringify(invoiceList));
+    //  formData.append("docketInvoiceList", JSON.stringify(payload.docketInvoiceList));
     formData.append("docketChargesList", JSON.stringify(listCCH));
     formData.append("DOCTYP", "DKT");
     formData.append("DynamicList", JSON.stringify(listCCH));
