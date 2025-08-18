@@ -27,14 +27,12 @@ export class FreightDetailsComponent {
    
     this.docketService.getIGSTchargesDetail();
     this.docketService.freightbuild();
-
     this.docketService.basicDetailForm.get('IsMAllDeliveryN')?.valueChanges.subscribe(value => {
     // this.updateCharge('SCHG17', value); // Mall Delivery Charges
     this.docketService.freightForm.patchValue({SCHG17:0})
     if(value){
       this.docketService.getOtherChargesDetail();
     }
-    this.docketService.getGSTCalculation();
     this.docketService.subTotalCalculation();
   });
 
@@ -44,7 +42,6 @@ export class FreightDetailsComponent {
     if(value){
       this.docketService.getOtherChargesDetail();
     }
-    this.docketService.getGSTCalculation();
     this.docketService.subTotalCalculation();
   });
 
@@ -54,7 +51,6 @@ export class FreightDetailsComponent {
     if(value){
       this.docketService.getOtherChargesDetail();
     }
-    this.docketService.getGSTCalculation();
     this.docketService.subTotalCalculation();
   });
    this.getChargesData();

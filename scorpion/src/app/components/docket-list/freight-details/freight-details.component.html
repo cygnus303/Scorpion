@@ -8,7 +8,7 @@
   </div>
   <div class="form-grid p-4">
     <form [formGroup]="docketService.freightForm">
-      <div class="row" *ngIf="!docketService.isBillingTBB">
+      <div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label col-md-5">Freight Charges</label>
@@ -46,7 +46,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-2" *ngIf="!docketService.isBillingTBB">
+        <div class="col-md-2" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
           <div class="form-group" style="display: none;">
             <label class="control-label col-md-10" style="padding-top:1px;">GST Exempted</label>
             <div class="col-md-2 chkactive">
@@ -100,7 +100,7 @@
             </div>
           </div>
         </div>
-        <div class="row" *ngIf="!docketService.isBillingTBB">
+        <div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
           <div class="col-md-4">
             <div class="form-group">
               <label class="control-label col-md-5">FOV Rate (% of Invoice)</label>
@@ -150,7 +150,7 @@
             </div>
           </div>
         </div>
-        <div class="row clsDACC" style="display: none;" *ngIf="!docketService.isBillingTBB">
+        <div class="row clsDACC" style="display: none;" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
           <div class="col-md-4">
             <div class="form-group">
               <label class="control-label col-md-5">DACC Charged</label>
@@ -171,10 +171,10 @@
           </div>
         </div>
 
-        <h3 class="pb-4 text-start appointment mt-5" *ngIf="!docketService.isBillingTBB">Charges Details</h3>
+        <h3 class="pb-4 text-start appointment mt-5" [ngClass]="{ 'hidden': docketService.isBillingTBB }">Charges Details</h3>
 
 
-        <div class="row" *ngIf="!docketService.isBillingTBB">
+        <div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
           <div class="col-md-4" *ngFor="let charge of docketService.freightchargingData">
             <div class="form-group to-pay-group">
               <label class="control-label col-md-5">{{ charge.chargeName }}</label>
@@ -196,7 +196,7 @@
 
 
 
-        <div class="col-md-4" *ngIf="!docketService.isBillingTBB">
+        <div class="col-md-4" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
           <div class="form-group">
             <label class="control-label col-md-5"><b>GST Rate</b></label>
             <div class="col-md-7">
@@ -215,17 +215,16 @@
           </div>
         </div>
         <div class="col-md-4"></div>
-        <div class="col-md-4" *ngIf="!docketService.isBillingTBB">
+        <div class="col-md-4" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
           <div class="form-group">
             <label class="control-label col-md-5"><b>SUB-TOTAL</b></label>
             <div class="col-md-7">
-              <input class="required2 clsAmount form-control required clsROFixed" data-val="true"
-                formControlName="subTotal" data-val-number="The field SubTotal must be a number." id="WMDC_SubTotal"
-                name="WMDC.SubTotal" placeholder="SUB-TOTAL" readonly="true" type="text" value="">
+              <input class="required2 clsAmount form-control required clsROFixed" 
+                formControlName="subTotal" placeholder="SUB-TOTAL" readonly="true" type="text" value="">
             </div>
           </div>
         </div>
-        <div *ngIf="!docketService.isBillingTBB">
+        <div [ngClass]="{ 'hidden': docketService.isBillingTBB }">
           <div *ngFor="let entry of docketService.groupedCharges | keyvalue">
             <div class="row clsGSTApply">
               <div class="col-md-4" *ngFor="let charge of entry.value">
@@ -266,7 +265,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4" *ngIf="!docketService.isBillingTBB">
+        <div class="col-md-4" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
           <div class="form-group">
             <label class="control-label col-md-5"><b>TOTAL</b></label>
             <div class="col-md-7">

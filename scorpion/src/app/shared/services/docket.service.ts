@@ -621,7 +621,7 @@ export class DocketService {
       "payBas": this.basicDetailForm.value.billingType || '',
       "baseLocation": this.basicDetailForm.value.origin || '',
       "destCd": this.basicDetailForm.value.destination || '',
-      "subTotal": this.totalSubTotal,
+      "subTotal": this.freightForm.value.subTotal,
       "csgngstNo": this.consignorForm.value.consignorGSTNo || '',
       "csgegstNo": this.consignorForm.value.consigneeGSTNo || '',
       "transMode": this.basicDetailForm.value.mode || '',
@@ -906,6 +906,7 @@ subTotalCalculation() {
       { emitEvent: false }
     );
     this.totalSubTotal = totalSubTotal;
+    this.getGSTCalculation();
     console.log("Subtotal (Freight + API charges):", totalSubTotal);
   }
 }
