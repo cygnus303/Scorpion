@@ -185,7 +185,7 @@
                    [placeholder]="charge.chargeName"
                    formControlName="{{ charge.chargeCode }}"
                    (focus)="onFocus(charge.chargeCode)"
-                   (blur)="onBlur(charge.chargeCode);docketService.subTotalCalculation()" />
+                   (blur)="onBlur(charge.chargeCode);docketService.subTotalCalculation();docketService.getGSTCalculation()" />
                   <i class="bold">{{charge.operator}}</i>
                 </div>
               </div>

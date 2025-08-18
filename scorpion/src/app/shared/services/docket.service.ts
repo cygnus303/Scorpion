@@ -744,7 +744,7 @@ export class DocketService {
         if (response) {
           this.freightForm.patchValue({
            fovCharged:response.fovCharged,
-           fovCalculated:response.fovRateType,
+           fovCalculated:response.fovCharged,
            fovRate:response.fovRate
           })
         }
@@ -806,15 +806,64 @@ export class DocketService {
               this.freightForm.patchValue({
                 [item.chargecode]: item.charge
               });
+              if(!this.basicDetailForm.get('IsMAllDeliveryN')?.value){
+                this.freightForm.patchValue({SCHG17:0})
+              }
+               if(!this.basicDetailForm.get('isAppointmentDelivery')?.value){
+                 this.freightForm.patchValue({UCHG08:0})
+              }
+              if(!this.basicDetailForm.get('iscsdDelivery')?.value){
+                 this.freightForm.patchValue({SCHG10:0})
+              }
             }
           });
-          this.subTotalCalculation()
+          this.getFuelSurcharge()
+          this.subTotalCalculation();
         }
       },
     });
   }
 
-  subTotalCalculation() {
+  getFuelSurcharge(){
+  const fuelRateType=this.contractservicecharge[0].fuelSurchrgBas;  // %, W, F
+  const fuelRate=this.contractservicecharge[0].fuelSurchrg;
+  const minFuelCharge=this.contractservicecharge[0].min_FuelSurchrg;
+  const maxFuelCharge=this.contractservicecharge[0].max_FuelSurchrg;
+  const chargedWeight= this.invoiceform.value.finalActualWeight;
+  const freight= this.freightForm.value.freightCharges;
+ 
+  let  fuelSurcharge = 0;
+    let surcharge = 0;
+ 
+    switch (fuelRateType) {
+      case '%':
+        surcharge = freight * fuelRate / 100;
+        break;
+      case 'W':
+        surcharge = chargedWeight * fuelRate / 100;
+        break;
+      case 'F':
+        surcharge = fuelRate;
+        break;
+    }
+ 
+    if (surcharge < minFuelCharge) {
+      surcharge = minFuelCharge;
+    }
+ 
+    if (surcharge > maxFuelCharge) {
+      surcharge = maxFuelCharge;
+    }
+    fuelSurcharge = parseFloat(surcharge.toFixed(2));
+    this.freightForm.patchValue({
+      SCHG20:fuelSurcharge
+    })
+
+    console.log('SCHG20',this.freightForm.value.SCHG20)
+  
+}
+
+subTotalCalculation() {
     //  let totalSubTotal = 0;
 
     //       // Freight charge from freightForm
@@ -838,7 +887,6 @@ export class DocketService {
     //       this.totalSubTotal = totalSubTotal;
     //       console.log("Subtotal (Freight + API charges):", totalSubTotal);
     let totalSubTotal = 0;
-
     // Freight charge from freightForm
     const freightCharges = Number(this.freightForm?.get('freightCharges')?.value) || 0;
     totalSubTotal += freightCharges;

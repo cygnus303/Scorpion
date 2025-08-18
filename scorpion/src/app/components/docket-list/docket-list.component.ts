@@ -812,15 +812,15 @@ createPayload() {
       // "isLessChargeApplied": true
     }
   ],
-  "listDocument": [
-    {
-      "dockno": "string",
-      // "comments": "string",
-      // "docksf": "string",
-      // "srno": 0,
-      // "documentno": "string"
-    }
-  ],
+  // "listDocument": [
+  //   {
+  //     "dockno": "string",
+  //     // "comments": "string",
+  //     // "docksf": "string",
+  //     // "srno": 0,
+  //     // "documentno": "string"
+  //   }
+  // ],
   "listBarCode": [
     {
       "dockNo": "string",
