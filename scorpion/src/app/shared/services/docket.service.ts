@@ -43,6 +43,7 @@ export class DocketService {
   public freightchargingData: any[] = [];
   public BaseUserCode = 'CYGNUSTEAM'
   public notPincodeValue = 'Please enter at least 1 characters';
+  public weightErrorMsg: string = '';
   constructor(private basicDetailService: BasicDetailService) { }
 
   detailForm() {
@@ -89,20 +90,20 @@ export class DocketService {
       billingParty: new FormControl(null),
       vehicleno: new FormControl(null),
       vehicleType: new FormControl('own'),
-      csgegstState:new FormControl(''),
-      csgngstState:new FormControl(''),
+      csgegstState: new FormControl(''),
+      csgngstState: new FormControl(''),
       GSTDeclaration: new FormControl(null),
 
-      volumetric : new FormControl(false),
-      IsLocalDocket : new FormControl(false),
-      isDACC : new FormControl(false),
-      gststate : new FormControl(),
-      consigneegstdtate : new FormControl(),
-      ISCounterDelivery : new FormControl(false),
-      applyreferencedktT : new FormControl(false),
-      ISCounterPickUpPRS : new FormControl(false),
-      IsMAllDeliveryN : new FormControl(false),
-      IsODA : new FormControl(false),
+      volumetric: new FormControl(false),
+      IsLocalDocket: new FormControl(false),
+      isDACC: new FormControl(false),
+      gststate: new FormControl(),
+      consigneegstdtate: new FormControl(),
+      ISCounterDelivery: new FormControl(false),
+      applyreferencedktT: new FormControl(false),
+      ISCounterPickUpPRS: new FormControl(false),
+      IsMAllDeliveryN: new FormControl(false),
+      IsODA: new FormControl(false),
     });
   }
 
@@ -321,9 +322,9 @@ export class DocketService {
           this.consignorForm.patchValue({
             riskType: this.step2DetailsList?.risktype,
           });
-           this.basicDetailForm.patchValue({
-            volumetric:this.step2DetailsList?.isVolumentric === 'Y' ? true:false,
-            isDACC:this.step2DetailsList?.isDACC === 'Y' ? true:false,
+          this.basicDetailForm.patchValue({
+            volumetric: this.step2DetailsList?.isVolumentric === 'Y' ? true : false,
+            isDACC: this.step2DetailsList?.isDACC === 'Y' ? true : false,
           });
           // this.basicDetailForm.patchValue({
           //  IsCODDOD:this.step2DetailsList?.isCODDOD
@@ -358,7 +359,7 @@ export class DocketService {
           this.GetPincodeOriginList = response;
           this.basicDetailForm.patchValue({
             destinationState: this.GetPincodeOriginList.stnm,
-            csgegstState:this.GetPincodeOriginList.stateCode
+            csgegstState: this.GetPincodeOriginList.stateCode
           });
           this.freightForm.patchValue({
             billedAt: this.GetPincodeOriginList.handling_Location,
@@ -725,29 +726,29 @@ export class DocketService {
               .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
               .toUpperCase()
               .replace(/ /g, '-'),
-              billingState: this.freightData.billingState
+            billingState: this.freightData.billingState
           });
         }
       },
     });
   }
 
-  getFovContractDetails(){
+  getFovContractDetails() {
     const payload = {
-      chargeRule:"NONE",
+      chargeRule: "NONE",
       baseCode1: "NONE",
-      contractID:  this.step2DetailsList.contractid,
-      riskType:this.step2DetailsList.risktype,
-      invAmt:this.invoiceform.value.totalDeclaredValue.toString(),
-      serviceType:  this.basicDetailForm.value.serviceType
+      contractID: this.step2DetailsList.contractid,
+      riskType: this.step2DetailsList.risktype,
+      invAmt: this.invoiceform.value.totalDeclaredValue.toString(),
+      serviceType: this.basicDetailForm.value.serviceType
     }
-      this.basicDetailService.getFovContractDetails(payload).subscribe({
+    this.basicDetailService.getFovContractDetails(payload).subscribe({
       next: (response: any) => {
         if (response) {
           this.freightForm.patchValue({
-           fovCharged:response.fovCharged,
-           fovCalculated:response.fovCharged,
-           fovRate:response.fovRate
+            fovCharged: response.fovCharged,
+            fovCalculated: response.fovCharged,
+            fovRate: response.fovRate
           })
         }
       },
@@ -808,14 +809,14 @@ export class DocketService {
               this.freightForm.patchValue({
                 [item.chargecode]: item.charge
               });
-              if(!this.basicDetailForm.get('IsMAllDeliveryN')?.value){
-                this.freightForm.patchValue({SCHG17:0})
+              if (!this.basicDetailForm.get('IsMAllDeliveryN')?.value) {
+                this.freightForm.patchValue({ SCHG17: 0 })
               }
-               if(!this.basicDetailForm.get('isAppointmentDelivery')?.value){
-                 this.freightForm.patchValue({UCHG08:0})
+              if (!this.basicDetailForm.get('isAppointmentDelivery')?.value) {
+                this.freightForm.patchValue({ UCHG08: 0 })
               }
-              if(!this.basicDetailForm.get('iscsdDelivery')?.value){
-                 this.freightForm.patchValue({SCHG10:0})
+              if (!this.basicDetailForm.get('iscsdDelivery')?.value) {
+                this.freightForm.patchValue({ SCHG10: 0 })
               }
             }
           });
@@ -826,17 +827,17 @@ export class DocketService {
     });
   }
 
-  getFuelSurcharge(){
-  const fuelRateType=this.contractservicecharge[0].fuelSurchrgBas;  // %, W, F
-  const fuelRate=this.contractservicecharge[0].fuelSurchrg;
-  const minFuelCharge=this.contractservicecharge[0].min_FuelSurchrg;
-  const maxFuelCharge=this.contractservicecharge[0].max_FuelSurchrg;
-  const chargedWeight= this.invoiceform.value.finalActualWeight;
-  const freight= this.freightForm.value.freightCharges;
- 
-  let  fuelSurcharge = 0;
+  getFuelSurcharge() {
+    const fuelRateType = this.contractservicecharge[0].fuelSurchrgBas;  // %, W, F
+    const fuelRate = this.contractservicecharge[0].fuelSurchrg;
+    const minFuelCharge = this.contractservicecharge[0].min_FuelSurchrg;
+    const maxFuelCharge = this.contractservicecharge[0].max_FuelSurchrg;
+    const chargedWeight = this.invoiceform.value.finalActualWeight;
+    const freight = this.freightForm.value.freightCharges;
+
+    let fuelSurcharge = 0;
     let surcharge = 0;
- 
+
     switch (fuelRateType) {
       case '%':
         surcharge = freight * fuelRate / 100;
@@ -848,24 +849,24 @@ export class DocketService {
         surcharge = fuelRate;
         break;
     }
- 
+
     if (surcharge < minFuelCharge) {
       surcharge = minFuelCharge;
     }
- 
+
     if (surcharge > maxFuelCharge) {
       surcharge = maxFuelCharge;
     }
     fuelSurcharge = parseFloat(surcharge.toFixed(2));
     this.freightForm.patchValue({
-      SCHG20:fuelSurcharge
+      SCHG20: fuelSurcharge
     })
 
-    console.log('SCHG20',this.freightForm.value.SCHG20)
-  
-}
+    console.log('SCHG20', this.freightForm.value.SCHG20)
 
-subTotalCalculation() {
+  }
+
+  subTotalCalculation() {
     //  let totalSubTotal = 0;
 
     //       // Freight charge from freightForm
@@ -910,5 +911,65 @@ subTotalCalculation() {
     this.getGSTCalculation();
     console.log("Subtotal (Freight + API charges):", totalSubTotal);
   }
+
+  allowNumericDecimal(event: KeyboardEvent) {
+    const pattern = /[0-9\.]/;   // allow digits & dot
+    const inputChar = String.fromCharCode(event.charCode);
+
+    // Prevent if not number or more than 1 decimal
+    if (!pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+
+    // Prevent more than one dot
+    if (inputChar === '.' && (event.target as HTMLInputElement).value.includes('.')) {
+      event.preventDefault();
+    }
+  }
+
+
+
+actualWeightvalidation() {
+  var CFTWeightType = this.step2DetailsList.cftWeightType;
+  var CHRGWT: number = Math.max(
+  Number(this.invoiceform.value.finalActualWeight) || 0,
+  Number(this.invoiceform.value.totalCubicWeight) || 0
+);
+
+  var ACTUWT = this.invoiceform.value.totalActualWeight;
+  var CFTWeight = this.invoiceform.value.totalCubicWeight;
+
+  this.weightErrorMsg = ''; // reset
+
+  if (this.step2DetailsList.isVolumentric == 'Y') {
+    if (CFTWeightType == "A") {
+      if (CHRGWT < ACTUWT) {
+        this.weightErrorMsg = "Charged Weight must not be less than Actual Weight.";
+        return false;
+      }
+    } else if (CFTWeightType == "V") {
+      if (CHRGWT < CFTWeight) {
+        this.weightErrorMsg = "Charged Weight must not be less than CFT Weight.";
+        return false;
+      }
+    } else if (CFTWeightType == "H") {
+      if (CHRGWT < ACTUWT || CHRGWT < CFTWeight) {
+        this.weightErrorMsg = "Charged Weight must be higher than CFT Weight and Actual Weight.";
+        return false;
+      }
+    }
+  } else {
+    if (CHRGWT < ACTUWT) {
+      this.weightErrorMsg = "Charged Weight must not be less than Actual Weight.";
+      return false;
+    }
+  }
+ this.weightErrorMsg = '';
+  // this.invoiceform.patchValue({
+  //   finalActualWeight: this.freightData.chargedWeight ? this.freightData.chargedWeight : this.invoiceform.value.totalActualWeight
+  // });
+  return true;
+}
+
 }
 
