@@ -43,6 +43,7 @@ export class DocketService {
   public BaseUserCode = 'CYGNUSTEAM'
   public notPincodeValue = 'Please enter at least 1 characters';
   public weightErrorMsg: string = '';
+  public submitErrorMsg : string ='';
   constructor(private basicDetailService: BasicDetailService) { }
 
   detailForm() {

@@ -14,7 +14,7 @@ export class DocketListComponent {
     public docketService: DocketService, private basicDetailService: BasicDetailService
   ) { }
 
-  createPayload() {
+  onSubmit() {
     if (this.docketService.basicDetailForm.valid && this.docketService.consignorForm.valid) {
       const listCCH = this.docketService.freightchargingData.map(charge => ({
         ChargeCode: charge.chargeCode,
@@ -325,20 +325,14 @@ export class DocketListComponent {
            this.isSubmitting = false;
         },
         error: (error) => {
-          console.log(error)
+      this.docketService.submitErrorMsg =error?.error?.Error?.Message || 'You have some form errors. Please check below.';
         this.isSubmitting = false; // ✅ loader stop on error
-          Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: error?.error?.Error?.Message || "Something went wrong!",
-              timer: 2000,
-              showConfirmButton: false
-            });
       }
       });
     } else {
       this.docketService.basicDetailForm.markAllAsTouched();
       this.docketService.consignorForm.markAllAsTouched();
+       window.scrollTo({ top: 0, behavior: 'smooth' }); 
     }
   }
 
