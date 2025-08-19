@@ -19,7 +19,7 @@ export class DocketListComponent {
       const listCCH = this.docketService.freightchargingData.map(charge => ({
         ChargeCode: charge.chargeCode,
         ChargeName: charge.chargeName,
-        operator: charge.operator,
+        Operator: charge.operator,
         ChargeAmount: this.docketService.freightForm.get(charge.chargeCode)?.value || 0
       }));
 

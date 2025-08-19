@@ -33,7 +33,7 @@ export class BasicDetailsComponent {
   ngOnInit() {
     this.docketService.detailForm();
     this.getBillingTypeData();
-    
+
     this.docketService?.basicDetailForm?.get('destination')?.valueChanges.subscribe(() => {
       this.toggleLocalNote();
     });
@@ -53,25 +53,40 @@ export class BasicDetailsComponent {
     });
   }
 
-getCityList(event?: any, locCode?: any, type?: 'from' | 'to') {
-  const searchText = event.term;
-  if (!searchText || searchText.length < 1) {
-    if (type === 'from') this.fromCityList = [];
-    else this.toCityList = [];
-    return;
-  }
+  getCityList(event?: any, locCode?: any, type?: 'from' | 'to') {
+    const searchText = event.term;
+    if (!searchText || searchText.length < 1) {
+      if (type === 'from') {
+        this.fromCityList = [];
+         this.notFromCityValue = 'Please enter at least 1 characters';
+      }else {
+        this.toCityList = [];
+         this.notToCityValue = 'Please enter at least 1 characters';
+      }
+      return;
+    }
 
-  this.basicDetailService.getCityData(locCode, searchText).subscribe({
-    next: (response) => {
-      if (response.success) {
-        if (type === 'from') {
-          this.fromCityList = response.data;
-          this.notFromCityValue = 'No matches found';
+    this.basicDetailService.getCityData(locCode, searchText).subscribe({
+      next: (response) => {
+        if (response.success) {
+          if (type === 'from') {
+            this.fromCityList = response.data;
+            this.notFromCityValue = 'No matches found';
+          } else {
+            this.toCityList = response.data;
+            this.notToCityValue = 'No matches found';
+          }
         } else {
-          this.toCityList = response.data;
-          this.notToCityValue = 'No matches found';
+          if (type === 'from') {
+            this.fromCityList = [];
+            this.notFromCityValue = '';
+          } else {
+            this.toCityList = [];
+            this.notToCityValue = '';
+          }
         }
-      } else {
+      },
+      error: () => {
         if (type === 'from') {
           this.fromCityList = [];
           this.notFromCityValue = '';
@@ -80,25 +95,27 @@ getCityList(event?: any, locCode?: any, type?: 'from' | 'to') {
           this.notToCityValue = '';
         }
       }
-    },
-    error: () => {
-      if (type === 'from') {
-        this.fromCityList = [];
-        this.notFromCityValue = '';
-      } else {
-        this.toCityList = [];
-        this.notToCityValue = '';
-      }
-    }
-  });
+    });
+  }
+
+  resetCityDropdown(type: 'from' | 'to') {
+  if (type === 'from') {
+    this.fromCityList = [];
+    this.notFromCityValue = 'Please enter at least 1 characters';
+  } else {
+    this.toCityList = [];
+    this.notToCityValue = 'Please enter at least 1 characters';
+  }
 }
 
   getDestinationsList(event?: any) {
     const searchText = event.term;
-    if (!searchText || searchText.length < 1) {
+    if (!searchText || searchText.length < 3) {
       this.destinationsList = [];
+      this.notDestinationValue = 'Please enter at least 3 characters';
       return;
     }
+     this.notDestinationValue = 'Searching...';
     this.basicDetailService.getGCDestinations(searchText).subscribe({
       next: (response) => {
         if (response) {
@@ -116,6 +133,10 @@ getCityList(event?: any, locCode?: any, type?: 'from' | 'to') {
     });
   }
 
+  resetDestinationDropdown() {
+  this.destinationsList = [];
+  this.notDestinationValue = 'Please enter at least 3 characters';
+}
   openDatePicker(event: Event): void {
     const input = event.target as HTMLInputElement;
     input.showPicker?.();
@@ -125,6 +146,7 @@ getCityList(event?: any, locCode?: any, type?: 'from' | 'to') {
     const searchText = event.term;
     if (!searchText || searchText.length < 3) {
       this.billingPartyData = [];
+      this.notFoundTextValue = 'Enter at least 3 characters';
       return;
     }
     const payload = {
@@ -132,6 +154,7 @@ getCityList(event?: any, locCode?: any, type?: 'from' | 'to') {
       paybs: this.docketService.basicDetailForm.get('billingType')?.value ? this.docketService.basicDetailForm.get('billingType')?.value : 'P01',
       location: this.docketService.Location
     }
+    this.notFoundTextValue = 'Searching...';
     this.basicDetailService.getBillingParty(payload).subscribe({
       next: (response) => {
         if (response.success) {
@@ -144,10 +167,16 @@ getCityList(event?: any, locCode?: any, type?: 'from' | 'to') {
       },
       error: () => {
         this.billingPartyData = [];
-         this.notFoundTextValue = ''
+        this.notFoundTextValue = ''
       }
     });
   }
+
+  resetBillingPartyDropdown() {
+  // Clear list when dropdown opens again
+  this.billingPartyData = [];
+  this.notFoundTextValue = 'Enter at least 3 characters';
+}
 
   getVehicleNumbersList(event?: any) {
     const searchText = event.term;
@@ -176,33 +205,33 @@ getCityList(event?: any, locCode?: any, type?: 'from' | 'to') {
     })
   }
 
-onChangedestinationsList(event: any) {
-  this.docketService.basicDetailForm.patchValue({
-    destination: event.locCode,
-  });
-  this.destinationsList = [];
-}
-
-toggleLocalNote() {
-  const destination = this.docketService?.basicDetailForm?.get('destination')?.value;
-  const origin = this.docketService?.basicDetailForm?.get('origin')?.value;
-  const localNoteControl = this.docketService?.basicDetailForm?.get('isLocalNote');
-  if (destination && origin && destination === origin) {
-    localNoteControl?.enable();
-    this.docketService.basicDetailForm.value.isLocalNote = false;
-  } else {
-    localNoteControl?.disable();
-    this.docketService.basicDetailForm.value.isLocalNote = false;
+  onChangedestinationsList(event: any) {
+    this.docketService.basicDetailForm.patchValue({
+      destination: event.locCode,
+    });
+    this.destinationsList = [];
   }
-}
 
-onFileSelect(event: any) {
-  if (event.target.files && event.target.files.length > 0) {
-    const file = event.target.files[0];
-    // set file in form control
-    this.docketService.basicDetailForm.get("GSTDeclaration")?.setValue(file);
+  toggleLocalNote() {
+    const destination = this.docketService?.basicDetailForm?.get('destination')?.value;
+    const origin = this.docketService?.basicDetailForm?.get('origin')?.value;
+    const localNoteControl = this.docketService?.basicDetailForm?.get('isLocalNote');
+    if (destination && origin && destination === origin) {
+      localNoteControl?.enable();
+      this.docketService.basicDetailForm.value.isLocalNote = false;
+    } else {
+      localNoteControl?.disable();
+      this.docketService.basicDetailForm.value.isLocalNote = false;
+    }
   }
-}
+
+  onFileSelect(event: any) {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      // set file in form control
+      this.docketService.basicDetailForm.get("GSTDeclaration")?.setValue(file);
+    }
+  }
 
   onChangeCityListList(event: any, type: any) {
     if (type === 'from') {
@@ -210,22 +239,22 @@ onFileSelect(event: any) {
       //   fromCity: event + ':' + event,
       // });
       const payload = {
-          locCode:event,
-          baseUserCode:this.docketService.BaseUserCode,
-          baseLocation:this.docketService.Location,
-          baseCompany:'C003',
-          baseFinYear:'2025-2026'
+        locCode: event,
+        baseUserCode: this.docketService.BaseUserCode,
+        baseLocation: this.docketService.Location,
+        baseCompany: 'C003',
+        baseFinYear: '2025-2026'
       }
       this.basicDetailService.fromOperation(payload).subscribe({
-        next: (response:any) => {
+        next: (response: any) => {
           if (response) {
             this.docketService.basicDetailForm.patchValue({
               originState: response.stnm,
-              csgngstState:response.statePrefix
+              csgngstState: response.statePrefix
             });
             this.docketService.freightForm.patchValue({
-            billedAt: response.statePrefix,
-          })
+              billedAt: response.statePrefix,
+            })
           }
         }
       });
@@ -259,7 +288,7 @@ onFileSelect(event: any) {
       billingParty: null,
       billingName: null
     })
-      this.docketService.getRuleDetailForDepth();
+    this.docketService.getRuleDetailForDepth();
     this.docketService.getRuleDetailForProceed()
   }
 }

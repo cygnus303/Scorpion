@@ -103,9 +103,9 @@
                 <label class="control-label col-md-5">Pincode </label>
                 <div class="col-md-7">
                  <ng-select class="noFoundTextColor required2" [items]="docketService.pincodeList" bindLabel="pinArea"
-                bindValue="value" placeholder="Pincode" formControlName="consignorPincode"  required
+                bindValue="value" placeholder="Pincode" formControlName="consignorPincode"  required (open)="docketService.resetPincodeDropdown()"
                 [ngClass]="{ 'border-danger': docketService.consignorForm.get('consignorPincode')?.invalid  && docketService.consignorForm.get('consignorPincode')?.touched}"
-                notFoundText="Please enter atleast 3 characters" (search)="docketService.getpincodeData($event)" ></ng-select>
+                notFoundText="Please enter atleast 1 characters" (search)="docketService.getpincodeData($event)" ></ng-select>
                 <div *ngIf="docketService.consignorForm.get('consignorPincode')?.invalid  && docketService.consignorForm.get('consignorPincode')?.touched"
                   class="text-danger text-start">
                   This field is required.
@@ -248,9 +248,9 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Pincode </label>
                 <div class="col-md-7">
-                  <ng-select class="noFoundTextColor required2" [items]="docketService.pincodeList" bindLabel="pinArea" required
+                  <ng-select class="noFoundTextColor required2" [items]="docketService.pincodeList" bindLabel="pinArea" required (open)="docketService.resetPincodeDropdown()"
                 bindValue="pinArea" placeholder="Pincode" formControlName="consigneePincode"  [ngClass]="{ 'border-danger': docketService.consignorForm.get('consigneePincode')?.invalid  && docketService.consignorForm.get('consigneePincode')?.touched}"
-                notFoundText="Please enter atleast 3 characters" (search)="docketService.getpincodeData($event)"></ng-select>
+                notFoundText="Please enter atleast 1 characters" (search)="docketService.getpincodeData($event)"></ng-select>
                 <div *ngIf="docketService.consignorForm.get('consigneePincode')?.invalid  && docketService.consignorForm.get('consigneePincode')?.touched"
                   class="text-danger text-start">
                   This field is required.
