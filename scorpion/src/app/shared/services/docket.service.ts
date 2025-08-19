@@ -44,6 +44,7 @@ export class DocketService {
   public notPincodeValue = 'Please enter at least 1 characters';
   public weightErrorMsg: string = '';
   public submitErrorMsg : string ='';
+  public successMsg:string='';
   constructor(private basicDetailService: BasicDetailService) { }
 
   detailForm() {
@@ -690,7 +691,7 @@ export class DocketService {
       baseCode1: 'NONE',
       chargeSubRule: 'NONE',
       baseCode2: 'NONE',
-      chargedWeight: Math.max(this.invoiceform.value.finalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0).toString(),
+      chargedWeight: Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0).toString(),
       contractID: this.step2DetailsList.contractid,
       destination: this.basicDetailForm.value.destination,
       depth: this.depth,
@@ -701,7 +702,7 @@ export class DocketService {
       itemCode: '',
       ftlType: this.basicDetailForm.value.typeMovement || '',
       noOfPkgs: this.invoiceform.value.totalNoOfPkgs.toString(),
-      chargedWeright: Math.max(this.invoiceform.value.finalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0).toString(),
+      chargedWeright: Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0).toString(),
       origin: this.basicDetailForm.value.origin,
       payBase: this.basicDetailForm.value.billingType,
       serviceType: this.basicDetailForm.value.serviceType,
@@ -728,9 +729,11 @@ export class DocketService {
               .replace(/ /g, '-'),
             billingState: this.freightData.billingState
           });
+          this.getFuelSurcharge(this.freightData.freightCharge);
         }
       },
     });
+    this.getFovContractDetails()
   }
 
   getFovContractDetails() {
@@ -756,7 +759,7 @@ export class DocketService {
   }
 
   getOtherChargesDetail() {
-    const chargedWeight = Math.max(this.invoiceform.value.finalActualWeight || 0,this.invoiceform.value.totalCubicWeight || 0).toString();
+    const chargedWeight = Math.max(this.invoiceform.value.totalActualWeight || 0,this.invoiceform.value.totalCubicWeight || 0).toString();
     const payload = {
       "chargeRule": 'NONE',
       "baseCode1": 'NONE',
@@ -817,20 +820,20 @@ export class DocketService {
               }
             }
           });
-          this.getFuelSurcharge()
           this.subTotalCalculation();
+
         }
       },
     });
   }
 
-  getFuelSurcharge() {
+  getFuelSurcharge(data:any) {
     const fuelRateType = this.contractservicecharge[0].fuelSurchrgBas;  // %, W, F
     const fuelRate = this.contractservicecharge[0].fuelSurchrg;
     const minFuelCharge = this.contractservicecharge[0].min_FuelSurchrg;
     const maxFuelCharge = this.contractservicecharge[0].max_FuelSurchrg;
     const chargedWeight = this.invoiceform.value.finalActualWeight;
-    const freight = this.freightForm.value.freightCharges;
+    const freight =  Number(data);
 
     let fuelSurcharge = 0;
     let surcharge = 0;
@@ -858,8 +861,7 @@ export class DocketService {
     this.freightForm.patchValue({
       SCHG20: fuelSurcharge
     })
-
-    console.log('SCHG20', this.freightForm.value.SCHG20)
+   this.subTotalCalculation()
 
   }
 

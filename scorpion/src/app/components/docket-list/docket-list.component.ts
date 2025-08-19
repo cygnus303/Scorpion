@@ -314,18 +314,14 @@ export class DocketListComponent {
       this.basicDetailService.onSubmit(formData).subscribe({
         next: (response: any) => {
           if (response) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Saved!',
-              text: 'Docket saved successfully.',
-              timer: 2000,
-              showConfirmButton: false
-            });
+       window.scrollTo({ top: 0, behavior: 'smooth' }); 
+
+            this.docketService.successMsg='Docket submitted successfully.'
           }
            this.isSubmitting = false;
         },
         error: (error) => {
-      this.docketService.submitErrorMsg =error?.error?.Error?.Message || 'You have some form errors. Please check below.';
+      this.docketService.submitErrorMsg =error?.error?.Error?.Message;
         this.isSubmitting = false; // ✅ loader stop on error
       }
       });
@@ -346,7 +342,7 @@ export class DocketListComponent {
           // Recursive call if nested object
           this.appendObjectToFormData(formData, value, formKey);
         } else {
-          formData.append(formKey, JSON.stringify(value ?? ""));
+        formData.append(formKey, value !== null && value !== undefined ? String(value) : "");
         }
       }
     }

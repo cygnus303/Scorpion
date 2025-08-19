@@ -1,7 +1,11 @@
 <!-- <app-header></app-header> -->
-<div class="alert alert-danger display-hide" style="display: block;" *ngIf="docketService.submitErrorMsg">
-    <button class="close" data-close="alert"></button>
+<div class="alert alert-danger display-hide d-flex justify-content-between" *ngIf="docketService.submitErrorMsg">
     {{ docketService.submitErrorMsg }}
+    <i class="fas fa-times cursor-pointer" (click)="docketService.submitErrorMsg =''"></i>
+</div>
+<div class="alert alert-success display-hide d-flex justify-content-between" *ngIf="docketService.successMsg">
+    {{ docketService.successMsg }}
+    <i class="fas fa-times cursor-pointer" (click)="docketService.successMsg =''"></i>
 </div>
 <div class="p-2 mt-0">
     <basic-details></basic-details>
