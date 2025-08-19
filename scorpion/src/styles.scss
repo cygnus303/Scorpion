@@ -95,7 +95,7 @@ ng-select .ng-input input[type='text'] {
     color:  black !important;
 }
 .border-danger{
-  border-color: red;
+  border-color: red !important;
 }
 
 // Dropdown panel styling
@@ -195,7 +195,9 @@ ng-select .ng-input input[type='text'] {
     }
   }
 }
-
+  .uppercase-none {
+      text-transform: none !important;
+    }
 
 .appointment {
   border-bottom: 1px solid #eee;
