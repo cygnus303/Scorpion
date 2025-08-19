@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { generalMasterResponse, pinCodeResponse } from '../models/general-master.model';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BasicDetailService } from './basic-detail.service';
-import { GeneralMasterService } from './general-master.service';
-import { mobileNo } from '../constants/common';
+import { EmailRegex, mobileNo } from '../constants/common';
 
 @Injectable({
   providedIn: 'root',
@@ -117,7 +116,7 @@ export class DocketService {
       consignorCity: new FormControl(null),
       consignorPincode: new FormControl(null),
       consignorMobile: new FormControl(null, [Validators.pattern(mobileNo)]),
-      consignorEmail: new FormControl(null, [Validators.required, Validators.email]),
+      consignorEmail: new FormControl(null, [Validators.required, Validators.pattern(EmailRegex)]),
 
       // Consignee
       consigneeGSTNo: new FormControl(null),
@@ -128,7 +127,7 @@ export class DocketService {
       consigneeCity: new FormControl(null),
       consigneePincode: new FormControl(null),
       consigneeMobile: new FormControl(null, [Validators.pattern(mobileNo)]),
-      consigneeEmail: new FormControl(null),
+      consigneeEmail: new FormControl(null,[Validators.required, Validators.pattern(EmailRegex)]),
 
       // Third Party
       // thirdPartyGSTNo: new FormControl(null),
@@ -689,7 +688,7 @@ export class DocketService {
       baseCode1: 'NONE',
       chargeSubRule: 'NONE',
       baseCode2: 'NONE',
-      chargedWeight: Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0).toString(),
+      chargedWeight: Math.max(this.invoiceform.value.finalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0).toString(),
       contractID: this.step2DetailsList.contractid,
       destination: this.basicDetailForm.value.destination,
       depth: this.depth,
@@ -700,7 +699,7 @@ export class DocketService {
       itemCode: '',
       ftlType: this.basicDetailForm.value.typeMovement || '',
       noOfPkgs: this.invoiceform.value.totalNoOfPkgs.toString(),
-      chargedWeright: Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0).toString(),
+      chargedWeright: Math.max(this.invoiceform.value.finalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0).toString(),
       origin: this.basicDetailForm.value.origin,
       payBase: this.basicDetailForm.value.billingType,
       serviceType: this.basicDetailForm.value.serviceType,
@@ -755,10 +754,7 @@ export class DocketService {
   }
 
   getOtherChargesDetail() {
-    const chargedWeight = Math.max(
-      this.invoiceform.value.finalActualWeight || 0,
-      this.invoiceform.value.totalCubicWeight || 0
-    ).toString();
+    const chargedWeight = Math.max(this.invoiceform.value.finalActualWeight || 0,this.invoiceform.value.totalCubicWeight || 0).toString();
     const payload = {
       "chargeRule": 'NONE',
       "baseCode1": 'NONE',

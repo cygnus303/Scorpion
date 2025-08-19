@@ -14,6 +14,7 @@ export class DocketListComponent {
   ) { }
 
   createPayload() {
+    if (this.docketService.basicDetailForm.valid && this.docketService.consignorForm.valid) {
     const listCCH = this.docketService.freightchargingData.map(charge => ({
       chargeCode: charge.chargeCode,
       chargeName: charge.chargeName,
@@ -65,7 +66,7 @@ export class DocketListComponent {
         "paybas": this.docketService.basicDetailForm.value.billingType,
         "pkgsno": this.docketService.invoiceform.value.totalNoOfPkgs,
         "actuwt": this.docketService.invoiceform.value.finalActualWeight,
-        "chrgwt": this.docketService.invoiceform.value.totalActualWeight,
+        "chrgwt": Math.max(this.docketService.invoiceform.value.finalActualWeight || 0, this.docketService.invoiceform.value.totalCubicWeight || 0),
         "chargedPkgsNo": this.docketService.invoiceform.value.chargeWeightPerPkg,
         "prodcd": this.docketService.basicDetailForm.value.contents,
         "spl_svc_req": "",
@@ -93,7 +94,7 @@ export class DocketListComponent {
         "tpnumber": this.docketService.consignorForm.value.tpNumber,
         "trN_MOD": this.docketService.basicDetailForm.value.mode,
         "coD_DOD": this.docketService.basicDetailForm.value.IsCODDOD,
-        "cfT_YN": this.docketService.step2DetailsList.isVolumentric === 'Y' ? true : false,
+        "cfT_YN": this.docketService.step2DetailsList?.isVolumentric === 'Y' ? true : false,
         "dacC_YN": this.docketService.basicDetailForm.value.isDACC,  // step2 na response ma pn
         "localCN_YN": this.docketService.basicDetailForm.value.isLocalNote, //y and n
         "pickup_Dely": this.docketService.basicDetailForm.value.pickup,
@@ -152,7 +153,7 @@ export class DocketListComponent {
         "docketMode": "F",
         "gcType": "",
         "cft": this.docketService.invoiceform.value.cftTotal,
-        "isVolumetric": this.docketService.step2DetailsList.isVolumentric === 'Y' ? true : false,
+        "isVolumetric": this.docketService.step2DetailsList?.isVolumentric === 'Y' ? true : false,
         "isCODDOD": this.docketService.step2DetailsList.isCODDOD === 'Y' ? true : false,
         "isODA": this.docketService.step2DetailsList.IsODA === 'Y' ? true : false,
         "isDACC": this.docketService.step2DetailsList.isDACC === 'Y' ? true : false,
@@ -237,7 +238,7 @@ export class DocketListComponent {
       },
       wmdc: {
         "dockno": this.docketService.basicDetailForm.value.cNoteNo,
-        "ratE_TYPE": Number(this.docketService.freightForm.value.rateType) || 0,
+        "ratE_TYPE": this.docketService.freightForm.value.rateType,
         "frT_RATE": Number(this.docketService.freightForm.value.freightRate) || 0,
         "freighT_CALC": Number(this.docketService.freightForm.value.freightCharges) || 0,
         "freight": Number(this.docketService.freightForm.value.freightCharges) || 0,
@@ -304,49 +305,52 @@ export class DocketListComponent {
         "chequeNo": "",
       },
     };
+      const formData = new FormData();
+      this.appendObjectToFormData(formData, payload.wmd, "DVM.WMD");
+      this.appendObjectToFormData(formData, payload.wmdc, "DVM.WMDC");
+      formData.append("DVM.isCompletion", "false")
+      formData.append("docketInvoiceList", JSON.stringify(invoiceList));
+      //  formData.append("docketInvoiceList", JSON.stringify(payload.docketInvoiceList));
+      formData.append("docketChargesList", JSON.stringify(listCCH));
+      formData.append("DOCTYP", "DKT");
+      formData.append("DynamicList", JSON.stringify(listCCH));
+      this.appendObjectToFormData(formData, payload.PC, "PC");
 
-    const formData = new FormData();
-    this.appendObjectToFormData(formData, payload.wmd, "DVM.WMD");
-    this.appendObjectToFormData(formData, payload.wmdc, "DVM.WMDC");
-    formData.append("DVM.isCompletion", "false")
-    formData.append("docketInvoiceList", JSON.stringify(invoiceList));
-    //  formData.append("docketInvoiceList", JSON.stringify(payload.docketInvoiceList));
-    formData.append("docketChargesList", JSON.stringify(listCCH));
-    formData.append("DOCTYP", "DKT");
-    formData.append("DynamicList", JSON.stringify(listCCH));
-    this.appendObjectToFormData(formData, payload.PC, "PC");
-
-    // GSTDeclaration file
-    const gstFile = this.docketService.basicDetailForm.value.GSTDeclaration;
-    if (gstFile instanceof File) {
-      formData.append("GSTDeclaration", gstFile, gstFile.name);
-    } else {
-      formData.append("GSTDeclaration", "");
-    }
-    formData.append("BaseFinYear", "2025-2026");
-    formData.append("BaseCompanyCode", "C003");
-    formData.append("BaseUserName", this.docketService.BaseUserCode);
-    formData.append("DVM.WMD.insupldt", new Date(this.docketService.consignorForm.value.policyDate).toISOString()),
-    formData.append("DVM.PC.chequeDate", new Date().toISOString()),
-    formData.append("DVM.WMD.permitdt", new Date().toISOString()),
-    formData.append("DVM.WMD.sdD_Date", new Date().toISOString()),
-    formData.append("DVM.WMD.dockdt", this.docketService.basicDetailForm.value.cNoteDate ? new Date(this.docketService.basicDetailForm.value.cNoteDate).toISOString() : '');
-    formData.append("DVM.WMD.cdeldt", new Date(this.docketService.freightData.edd).toISOString()),
-    formData.append("DVM.WMD.AppointmentDT", new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString()),
-    formData.append("DVM.docketType", "DKT");
-    this.basicDetailService.onSubmit(formData).subscribe({
-      next: (response: any) => {
-        if (response) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Saved!',
-            text: 'Docket saved successfully.',
-            timer: 2000,
-            showConfirmButton: false
-          });
-        }
+      // GSTDeclaration file
+      const gstFile = this.docketService.basicDetailForm.value.GSTDeclaration;
+      if (gstFile instanceof File) {
+        formData.append("GSTDeclaration", gstFile, gstFile.name);
+      } else {
+        formData.append("GSTDeclaration", "");
       }
-    });
+      formData.append("BaseFinYear", "2025-2026");
+      formData.append("BaseCompanyCode", "C003");
+      formData.append("BaseUserName", this.docketService.BaseUserCode);
+      formData.append("DVM.WMD.insupldt", new Date(this.docketService.consignorForm.value.policyDate).toISOString()),
+        formData.append("DVM.PC.chequeDate", new Date().toISOString()),
+        formData.append("DVM.WMD.permitdt", new Date().toISOString()),
+        formData.append("DVM.WMD.sdD_Date", new Date().toISOString()),
+        formData.append("DVM.WMD.dockdt", this.docketService.basicDetailForm.value.cNoteDate ? new Date(this.docketService.basicDetailForm.value.cNoteDate).toISOString() : '');
+      formData.append("DVM.WMD.cdeldt", new Date(this.docketService.freightData.edd).toISOString()),
+        formData.append("DVM.WMD.AppointmentDT", new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString()),
+        formData.append("DVM.docketType", "DKT");
+      this.basicDetailService.onSubmit(formData).subscribe({
+        next: (response: any) => {
+          if (response) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Saved!',
+              text: 'Docket saved successfully.',
+              timer: 2000,
+              showConfirmButton: false
+            });
+          }
+        }
+      });
+    } else {
+      this.docketService.basicDetailForm.markAllAsTouched();
+      this.docketService.consignorForm.markAllAsTouched();
+    }
   }
 
   appendObjectToFormData(formData: FormData, obj: any, parentKey: string = "") {
