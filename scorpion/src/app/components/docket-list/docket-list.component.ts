@@ -22,6 +22,17 @@ export class DocketListComponent {
       chargeAmount: this.docketService.freightForm.get(charge.chargeCode)?.value || 0
     }));
 
+    const DynamicList: any[] = [];
+    Object.values(this.docketService.groupedCharges).forEach((charges: any[]) => {
+      charges.forEach((charge) => {
+        DynamicList.push({
+          ChargeCode: charge.chargeCode,
+          Operator: charge.operator,
+          ChargeAmount: this.docketService.freightForm.get(charge.camelCaseCode)?.value || 0,
+          Acccode: ""   // empty as per your example
+        });
+      });
+    });
 
     const invoiceList = this.docketService.invoiceRows.value.map((row: any, index: number) => {
       const obj: any = {
@@ -52,9 +63,6 @@ export class DocketListComponent {
       return obj;
     });
     const payload = {
-      dvm: {
-        listCCH: listCCH
-      },
       "wmd": {
         "dockno": this.docketService.basicDetailForm.value.cNoteNo,
         "docksf": ".",
@@ -243,7 +251,6 @@ export class DocketListComponent {
         "freighT_CALC": Number(this.docketService.freightForm.value.freightCharges) || 0,
         "freight": Number(this.docketService.freightForm.value.freightCharges) || 0,
         "fov": this.docketService.freightForm.value.fovRate,
-
         "subTotal": this.docketService.freightForm.value.subTotal,
         "svctax": 0,
         "cess": 0,
@@ -268,37 +275,6 @@ export class DocketListComponent {
         "advanceAmount": 0,
         "discountValue": 0,
       },
-      "docketType": "DKT",
-      "docketInvoiceList": [
-        {
-          "dockno": "",
-          "invno": "",
-          "invdt": "",
-          "declval": 0,
-          "pkgsno": 0,
-          "actuwt": this.docketService.invoiceform.value.actualWeight,
-          "voL_L": 0,
-          "voL_B": 0,
-          "voL_H": 0,
-          "toT_CFT": 0,
-          "part_No": "",
-          "eWayBillNo": "",
-          "eWayBillExpiredDate": "",
-          "eWayInvoicevalue": 0,
-          "eWayBillInvoiceDate": "",
-          "hsnCode": "",
-          "qty": 0,
-          "itemCode": "",
-          "transportrate": 0,
-          "piece": 0,
-          "pieceAmount": 0,
-          "pieceWeight": 0,
-          "chrgwt": 0
-        }
-      ],
-      "docketChargesList": listCCH,
-      "doctyp": "DKT",
-      "dynamicList": listCCH,
       "PC": {
         "paymentMode": "",
         "payAmount": 0,
@@ -310,10 +286,9 @@ export class DocketListComponent {
       this.appendObjectToFormData(formData, payload.wmdc, "DVM.WMDC");
       formData.append("DVM.isCompletion", "false")
       formData.append("docketInvoiceList", JSON.stringify(invoiceList));
-      //  formData.append("docketInvoiceList", JSON.stringify(payload.docketInvoiceList));
       formData.append("docketChargesList", JSON.stringify(listCCH));
       formData.append("DOCTYP", "DKT");
-      formData.append("DynamicList", JSON.stringify(listCCH));
+      formData.append("DynamicList", JSON.stringify(DynamicList));
       this.appendObjectToFormData(formData, payload.PC, "PC");
 
       // GSTDeclaration file
