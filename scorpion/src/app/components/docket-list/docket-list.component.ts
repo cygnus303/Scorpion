@@ -9,18 +9,19 @@ import Swal from 'sweetalert2';
   styleUrl: './docket-list.component.scss'
 })
 export class DocketListComponent {
+  public isSubmitting :boolean = false;
   constructor(
     public docketService: DocketService, private basicDetailService: BasicDetailService
   ) { }
 
   createPayload() {
     if (this.docketService.basicDetailForm.valid && this.docketService.consignorForm.valid) {
-    const listCCH = this.docketService.freightchargingData.map(charge => ({
-      chargeCode: charge.chargeCode,
-      chargeName: charge.chargeName,
-      operator: charge.operator,
-      chargeAmount: this.docketService.freightForm.get(charge.chargeCode)?.value || 0
-    }));
+      const listCCH = this.docketService.freightchargingData.map(charge => ({
+        ChargeCode: charge.chargeCode,
+        ChargeName: charge.chargeName,
+        operator: charge.operator,
+        ChargeAmount: this.docketService.freightForm.get(charge.chargeCode)?.value || 0
+      }));
 
     const DynamicList: any[] = [];
     Object.values(this.docketService.groupedCharges).forEach((charges: any[]) => {
@@ -248,7 +249,7 @@ export class DocketListComponent {
         "dockno": this.docketService.basicDetailForm.value.cNoteNo,
         "ratE_TYPE": this.docketService.freightForm.value.rateType,
         "frT_RATE": Number(this.docketService.freightForm.value.freightRate) || 0,
-        "freighT_CALC": Number(this.docketService.freightForm.value.freightCharges) || 0,
+        "freighT_CALC": Number(this.docketService.freightForm.value.freightRate) || 0,
         "freight": Number(this.docketService.freightForm.value.freightCharges) || 0,
         "fov": this.docketService.freightForm.value.fovRate,
         "subTotal": this.docketService.freightForm.value.subTotal,
@@ -265,7 +266,7 @@ export class DocketListComponent {
         "kkcAmount": 0,
         "gstType": this.docketService.gstCalculationList.gstType,
         "igstRate": this.docketService.freightForm.value.igstrate,
-        "igstAmount": this.docketService.freightForm.value.igstrate,
+        "igstAmount": this.docketService.freightForm.value.igstamount,
         "cgstRate": this.docketService.freightForm.value.cgstrate,
         "cgstAmount": this.docketService.freightForm.value.cgstamount,
         "sgstRate": this.docketService.freightForm.value.sgstrate,
@@ -309,6 +310,7 @@ export class DocketListComponent {
       formData.append("DVM.WMD.cdeldt", new Date(this.docketService.freightData.edd).toISOString()),
         formData.append("DVM.WMD.AppointmentDT", new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString()),
         formData.append("DVM.docketType", "DKT");
+           this.isSubmitting = true; 
       this.basicDetailService.onSubmit(formData).subscribe({
         next: (response: any) => {
           if (response) {
@@ -320,7 +322,19 @@ export class DocketListComponent {
               showConfirmButton: false
             });
           }
-        }
+           this.isSubmitting = false;
+        },
+        error: (error) => {
+          console.log(error)
+        this.isSubmitting = false; // ✅ loader stop on error
+          Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: error?.error?.Error?.Message || "Something went wrong!",
+              timer: 2000,
+              showConfirmButton: false
+            });
+      }
       });
     } else {
       this.docketService.basicDetailForm.markAllAsTouched();

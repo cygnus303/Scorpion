@@ -117,7 +117,7 @@ export class DocketService {
       consignorCity: new FormControl(null),
       consignorPincode: new FormControl(null),
       consignorMobile: new FormControl(null, [Validators.pattern(mobileNo)]),
-      consignorEmail: new FormControl(null, [Validators.required, Validators.pattern(EmailRegex)]),
+      consignorEmail: new FormControl(null, [Validators.pattern(EmailRegex)]),
 
       // Consignee
       consigneeGSTNo: new FormControl(null),
@@ -128,7 +128,7 @@ export class DocketService {
       consigneeCity: new FormControl(null),
       consigneePincode: new FormControl(null),
       consigneeMobile: new FormControl(null, [Validators.pattern(mobileNo)]),
-      consigneeEmail: new FormControl(null,[Validators.required, Validators.pattern(EmailRegex)]),
+      consigneeEmail: new FormControl(null,[ Validators.pattern(EmailRegex)]),
 
       // Third Party
       // thirdPartyGSTNo: new FormControl(null),
@@ -961,9 +961,6 @@ actualWeightvalidation() {
     }
   }
  this.weightErrorMsg = '';
-  // this.invoiceform.patchValue({
-  //   finalActualWeight: this.freightData.chargedWeight ? this.freightData.chargedWeight : this.invoiceform.value.totalActualWeight
-  // });
   return true;
 }
 

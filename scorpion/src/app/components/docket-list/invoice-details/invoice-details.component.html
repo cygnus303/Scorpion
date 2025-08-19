@@ -236,10 +236,10 @@
                     <div class="col-md-11">
                       <input formControlName="finalActualWeight"
                         class="form-control rounded-0 clsAmount required2 required text-end" type="number"
-                        (blur)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.getProRataCharge();this.docketService.getFovContractDetails();docketService.actualWeightvalidation()">
-                      <div *ngIf="docketService.weightErrorMsg" class="text-danger mt-1">
+                        (blur)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.getProRataCharge();this.docketService.getFovContractDetails();">
+                      <!-- <div *ngIf="docketService.weightErrorMsg" class="text-danger mt-1">
                         {{ docketService.weightErrorMsg }}
-                      </div>
+                      </div> -->
                     </div>
                   </td>
                 </tr>
