@@ -73,7 +73,7 @@
             <div class="col-md-7"><ng-select class="noFoundTextColor required2" [items]="docketService.pincodeList" bindLabel="pinArea"
                 bindValue="value" placeholder="Pincode" formControlName="pincode" required
                  [notFoundText]="docketService.notPincodeValue" (search)="docketService.getpincodeData($event)"
-                (change)="docketService.onChangePinCode($event);docketService.onFormFieldChange();" 
+                (change)="docketService.onChangePinCode($event);docketService.onFormFieldChange();" (open)="docketService.resetPincodeDropdown()"
                  [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('pincode')?.invalid && docketService.basicDetailForm.get('pincode')?.touched}"></ng-select>
               <div *ngIf="docketService.basicDetailForm.get('pincode')?.invalid && docketService.basicDetailForm.get('pincode')?.touched"
                 class="text-danger text-start">
@@ -88,7 +88,7 @@
             <div class="col-md-7">
               <ng-select class="noFoundTextColor required2" required
                 placeholder="Billing Party" [searchable]="true" [clearable]="true" (search)="getBillingPartyData($event)" (change)="onChangeBillingParty($event);docketService.onFormFieldChange()"
-                formControlName="billingParty"  [notFoundText]="notFoundTextValue"
+                formControlName="billingParty"  [notFoundText]="notFoundTextValue"  (open)="resetBillingPartyDropdown()"
                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('billingParty')?.invalid  && docketService.basicDetailForm.get('billingParty')?.touched}">
                 <ng-option *ngFor="let item of billingPartyData" [value]="item">
                   <strong>{{ item.custcd }}</strong> : {{ item.custnm }}
@@ -133,7 +133,7 @@
           <div class="form-group"><label class="col-md-5">Destination</label>
             <div class="col-md-7">
               <ng-select class="noFoundTextColor required2" [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('destination')?.invalid  && docketService.basicDetailForm.get('destination')?.touched}" required [searchable]="true" (search)="getDestinationsList($event)" (change)="onChangedestinationsList($event);docketService.onFormFieldChange()" placeholder="Destination" formControlName="destination" 
-               [notFoundText]="notDestinationValue">
+               [notFoundText]="notDestinationValue" (open)="resetDestinationDropdown()">
                 <ng-option *ngFor="let item of destinationsList" [value]="item">
                   <strong>{{ item.locCode }}</strong> : {{ item.locName }}
                 </ng-option>
@@ -174,7 +174,7 @@
           <div class="form-group"><label class="col-md-5">From City</label>
             <div class="col-md-7">
               <ng-select class="noFoundTextColor required2" [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('fromCity')?.invalid && docketService.basicDetailForm.get('fromCity')?.touched}" required placeholder="From City" (search)="getCityList($event,this.docketService.Location,'from')" (change)="onChangeCityListList($event,'from')"
-               formControlName="fromCity"
+               formControlName="fromCity" (open)="resetCityDropdown('from')"
                [notFoundText]="notFromCityValue">
                 <ng-option *ngFor="let item of fromCityList" [value]="item.location">
                   <strong>{{ item.location }}</strong> : {{ item.location }}
@@ -190,7 +190,7 @@
         <div class="col-md-4 form-column " *ngIf="!docketService.basicDetailForm.get('destination')?.value">
           <div class="form-group"><label class="col-md-5">To City</label>
             <div class="col-md-7">
-              <input type="text" class="form-control required2" 
+              <input type="text" class="form-control required2"  (open)="resetCityDropdown('to')"
               [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('toCity')?.invalid && docketService.basicDetailForm.get('toCity')?.touched}" required placeholder="To City" formControlName="toCity" />
                <div *ngIf="docketService.basicDetailForm.get('toCity')?.invalid && docketService.basicDetailForm.get('toCity')?.touched"
                 class="text-danger text-start">

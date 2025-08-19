@@ -41,10 +41,11 @@ export class DocketService {
   public totalSubTotal: any;
   public freightchargingData: any[] = [];
   public BaseUserCode = 'CYGNUSTEAM'
-  public notPincodeValue = 'Please enter at least 1 characters';
+  public notPincodeValue ='Please Enter at least 1 characters';
   public weightErrorMsg: string = '';
   public submitErrorMsg : string ='';
   public successMsg:string='';
+  public isSearching :boolean = false;
   constructor(private basicDetailService: BasicDetailService) { }
 
   detailForm() {
@@ -231,9 +232,12 @@ export class DocketService {
   getpincodeData(event: any) {
     const searchText = event.term || event;
     if (!searchText || searchText.length < 1) {
+      this.notPincodeValue = 'Enter at least 1 characters';
       this.pincodeList = [];
       return;
     }
+    this.isSearching = true;
+    this.notPincodeValue = 'Searching...';
     this.basicDetailService.getpincodeData(searchText).subscribe({
       next: (response) => {
         if (response.success) {
@@ -249,6 +253,11 @@ export class DocketService {
         this.notPincodeValue = '';
       }
     });
+  }
+
+  resetPincodeDropdown(){
+      this.pincodeList = [];
+      this.notPincodeValue = 'Enter at least 1 characters';
   }
 
   onChangePinCode(event: any) {
