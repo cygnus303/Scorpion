@@ -140,10 +140,10 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Email Id </label>
                 <div class="col-md-7">
-                  <input class="form-control uppercase-none" maxlength="255" placeholder="Email Id" formControlName="consignorEmail" type="text" required
-                    [ngClass]="{ 'border-danger': docketService.consignorForm.get('consignorEmail')?.invalid && docketService.consignorForm.get('consignorEmail')?.touched}" />
+                  <input class="form-control uppercase-none" maxlength="255" placeholder="Email Id" formControlName="consignorEmail" type="text"
+                     />
                   <div *ngIf="docketService.consignorForm.get('consignorEmail')?.touched && docketService.consignorForm.get('consignorEmail')?.invalid " class="text-danger text-start">
-                    <small *ngIf="docketService.consignorForm.get('consignorEmail')?.errors?.['required']">Email is required.</small>
+                    <!-- <small *ngIf="docketService.consignorForm.get('consignorEmail')?.errors?.['required']">Email is required.</small> -->
                     <small *ngIf="docketService.consignorForm.get('consignorEmail')?.errors?.['pattern']">Email is invalid.</small>
                   </div>
                 </div>
@@ -289,9 +289,9 @@
                 <label class="control-label col-md-5">Email Id </label>
                 <div class="col-md-7">
                   <input class="form-control uppercase-none" formControlName="consigneeEmail"  placeholder="Email Id" type="text" required
-                  [ngClass]="{ 'border-danger': docketService.consignorForm.get('consigneeEmail')?.invalid && docketService.consignorForm.get('consigneeEmail')?.touched}" />
+                   />
                   <div *ngIf="docketService.consignorForm.get('consigneeEmail')?.touched && docketService.consignorForm.get('consigneeEmail')?.invalid " class="text-danger text-start">
-                    <small *ngIf="docketService.consignorForm.get('consigneeEmail')?.errors?.['required']">Email is required.</small>
+                    <!-- <small *ngIf="docketService.consignorForm.get('consigneeEmail')?.errors?.['required']">Email is required.</small> -->
                     <small *ngIf="docketService.consignorForm.get('consigneeEmail')?.errors?.['pattern']">Email is invalid.</small>
                   </div>
                 </div>
