@@ -46,7 +46,6 @@ export class DocketService {
   public submitErrorMsg : string ='';
   public successMsg:string='';
   public isSearching :boolean = false;
-  public isGSTApplicable : boolean =true;
   constructor(private basicDetailService: BasicDetailService) { }
 
   detailForm() {
@@ -81,8 +80,8 @@ export class DocketService {
       sacDescription: new FormControl(null),
       isAppointmentDelivery: new FormControl(false),
       iscsdDelivery: new FormControl(false),
-      isODAApplicable: new FormControl({ value: true, disabled: true }),
       isLocalNote: new FormControl(false),
+      isODAApplicable: new FormControl({ value: true, disabled: true }),
       appointmentDT: new FormControl(this.today),
       personName: new FormControl(null),
       contactNo: new FormControl(null),
@@ -97,6 +96,7 @@ export class DocketService {
       csgngstState: new FormControl(''),
       GSTDeclaration: new FormControl(null),
       destination_Area:new FormControl(''),
+      origin_Area:new FormControl(''),
 
       volumetric: new FormControl(false),
       IsLocalDocket: new FormControl(false),
@@ -359,21 +359,29 @@ export class DocketService {
   }
 
 
-  GetPincodeOrigin() {
+  GetPincodeOrigin(type?:string) {
     const payload = {
       customerCode: this.basicDetailForm.value.billingParty,
-      location: this.basicDetailForm.value.destination,
-      pincode: this.basicDetailForm.value.pincode,
+      location: type === 'Origin'? this.basicDetailForm.value.origin:this.basicDetailForm.value.destination,
+      pincode: type === 'Origin'? this.consignorForm.value.consignorPincode:this.basicDetailForm.value.pincode,
     }
     this.basicDetailService.GetPincodeOrigin(payload).subscribe({
       next: (response) => {
         if (response) {
           this.GetPincodeOriginList = response;
-          this.basicDetailForm.patchValue({
-            destinationState: this.GetPincodeOriginList.stnm,
-            csgegstState: this.GetPincodeOriginList.stateCode,
-            destination_Area: this.GetPincodeOriginList.area
-          });
+          if(type === 'Origin'){
+              this.basicDetailForm.patchValue({
+              originState: this.GetPincodeOriginList.stnm,
+              csgngstState: this.GetPincodeOriginList.stateCode,
+              origin_Area:this.GetPincodeOriginList.area
+            });
+          }else{
+            this.basicDetailForm.patchValue({
+              destinationState: this.GetPincodeOriginList.stnm,
+              csgegstState: this.GetPincodeOriginList.stateCode,
+              destination_Area: this.GetPincodeOriginList.area
+            });
+          }
           this.freightForm.patchValue({
             billedAt: this.GetPincodeOriginList.handling_Location,
             billingState: this.GetPincodeOriginList.statePrefix
@@ -392,24 +400,23 @@ export class DocketService {
     this.basicDetailService.GetDKTGSTForGTA(payload).subscribe({
       next: (response: any) => {
         if (response) {
+          debugger
           // this.GetPincodeOriginList = response;
           this.basicDetailForm.patchValue({
             sacCode: response.sacCode,
             sacDescription: response.sacCodeDesc,
             // mode: response.transType
           })
-          this.isGSTApplicable=response.isGSTApplicable;
-          if(this.isGSTApplicable){
+          if(response.isGSTApplicable){
             this.freightForm.patchValue({
               gstRate:this.GSTFromTrnMode.codeDesc
             })
-            this.getGSTCalculation(this.freightForm.value.gstRate)
           }else{
             this.freightForm.patchValue({
               gstRate:0
             })
-            this.getGSTCalculation(this.freightForm.value.gstRate)
           }
+          this.getGSTCalculation()
         }
       }
     });
@@ -615,7 +622,7 @@ export class DocketService {
     });
   }
 
-  getGSTCalculation(gstRate?:string) {
+  getGSTCalculation() {
     const originalDate = this.basicDetailForm.value.cNoteDate;
 
     const requiredFieldsFilled =
@@ -656,7 +663,7 @@ export class DocketService {
       "billingPartyAS": (this.basicDetailForm.value.billingType === 'P01' || this.basicDetailForm.value.billingType === 'P02') ? 'CSGN' : 'CSGE',
       "csgngstState": this.basicDetailForm.value.csgngstState || '',
       "csgegstState": this.basicDetailForm.value.csgegstState || '',
-      "gstRateType": gstRate|| '',
+      "gstRateType": this.freightForm.value.gstRate || '',
       "isGstApplied": "1",
       "billingState": this.freightForm.value.billingState || 'MH'
     };

@@ -105,7 +105,7 @@
                  <ng-select class="noFoundTextColor required2" [items]="docketService.pincodeList" bindLabel="pinArea"
                 bindValue="value" placeholder="Pincode" formControlName="consignorPincode"  required (open)="docketService.resetPincodeDropdown()"
                 [ngClass]="{ 'border-danger': docketService.consignorForm.get('consignorPincode')?.invalid  && docketService.consignorForm.get('consignorPincode')?.touched}"
-                notFoundText="Please enter atleast 1 characters" (search)="docketService.getpincodeData($event)" ></ng-select>
+                notFoundText="Please enter atleast 1 characters" (search)="docketService.getpincodeData($event)" (change)="docketService.GetPincodeOrigin('Origin')"></ng-select>
                 <div *ngIf="docketService.consignorForm.get('consignorPincode')?.invalid  && docketService.consignorForm.get('consignorPincode')?.touched"
                   class="text-danger text-start">
                   This field is required.
