@@ -23,7 +23,7 @@ export class DocketService {
   public exemptServicesList: generalMasterResponse[] = [];
   public rateList: generalMasterResponse[] = [];
   public today: string = '';
-  public Location = 'NIDA';
+  public Location = 'BDD';
   public step2DetailsList: any;
   public getGSTNODetailsList: any;
   public GetPincodeOriginList!: any;
@@ -46,6 +46,7 @@ export class DocketService {
   public submitErrorMsg : string ='';
   public successMsg:string='';
   public isSearching :boolean = false;
+  public isGSTApplicable : boolean =true;
   constructor(private basicDetailService: BasicDetailService) { }
 
   detailForm() {
@@ -395,6 +396,18 @@ export class DocketService {
             sacDescription: response.sacCodeDesc,
             // mode: response.transType
           })
+          this.isGSTApplicable=response.isGSTApplicable;
+          if(this.isGSTApplicable){
+            this.freightForm.patchValue({
+              gstRate:this.GSTFromTrnMode.codeDesc
+            })
+            this.getGSTCalculation(this.freightForm.value.gstRate)
+          }else{
+            this.freightForm.patchValue({
+              gstRate:0
+            })
+            this.getGSTCalculation(this.freightForm.value.gstRate)
+          }
         }
       }
     });
@@ -600,7 +613,7 @@ export class DocketService {
     });
   }
 
-  getGSTCalculation() {
+  getGSTCalculation(gstRate?:string) {
     const originalDate = this.basicDetailForm.value.cNoteDate;
 
     const requiredFieldsFilled =
@@ -641,7 +654,7 @@ export class DocketService {
       "billingPartyAS": (this.basicDetailForm.value.billingType === 'P01' || this.basicDetailForm.value.billingType === 'P02') ? 'CSGN' : 'CSGE',
       "csgngstState": this.basicDetailForm.value.csgngstState || '',
       "csgegstState": this.basicDetailForm.value.csgegstState || '',
-      "gstRateType": this.GSTFromTrnMode.codeDesc || '',
+      "gstRateType": gstRate|| '',
       "isGstApplied": "1",
       "billingState": this.freightForm.value.billingState || 'MH'
     };

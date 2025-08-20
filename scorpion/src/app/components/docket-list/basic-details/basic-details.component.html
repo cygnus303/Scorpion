@@ -363,7 +363,7 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Exempt Services</label>
             <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="docketService.exemptServicesList" bindLabel="codeDesc" bindValue="codeId" placeholder="Exempt Services"
-                formControlName="exemptServices"></ng-select></div>
+                formControlName="exemptServices"  (change)="docketService.GetDKTGSTForGTA();"></ng-select></div>
           </div>
         </div>
       </div>
