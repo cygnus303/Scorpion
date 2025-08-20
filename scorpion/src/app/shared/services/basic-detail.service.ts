@@ -113,4 +113,8 @@ export class BasicDetailService {
     onSubmit(data: any) {
     return this.apiHandlerService.Post(`Operation/submit`, data);
   }
+
+  docketValidation(data:any){
+     return this.apiHandlerService.Post(`Operation/Doketcheck`, data);
+  }
 }

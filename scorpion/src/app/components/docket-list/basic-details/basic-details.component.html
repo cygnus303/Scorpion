@@ -31,11 +31,14 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">CNote No</label>
             <div class="col-md-7"><input type="text" class="form-control" required placeholder="CNote No"
-                formControlName="cNoteNo" required
-                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('cNoteNo')?.invalid && docketService.basicDetailForm.get('cNoteNo')?.touched }"/>
+                formControlName="cNoteNo" required (change)="CheckDocketValid($event)"
+                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('cNoteNo')?.invalid && docketService.basicDetailForm.get('cNoteNo')?.touched || docketService.inValidDocketMsg} "/>
               <div *ngIf="docketService.basicDetailForm.get('cNoteNo')?.invalid && docketService.basicDetailForm.get('cNoteNo')?.touched "
                 class="text-danger text-start">
                   This field is required.
+              </div>
+              <div *ngIf="docketService.inValidDocketMsg" class="text-danger text-start">
+                  {{docketService.inValidDocketMsg}}
               </div>
               </div>
           </div>

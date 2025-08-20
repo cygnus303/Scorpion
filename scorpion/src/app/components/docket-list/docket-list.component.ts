@@ -323,6 +323,8 @@ export class DocketListComponent {
         error: (error) => {
       this.docketService.submitErrorMsg =error?.error?.Error?.Message;
         this.isSubmitting = false; // ✅ loader stop on error
+       window.scrollTo({ top: 0, behavior: 'smooth' }); 
+
       }
       });
     } else {

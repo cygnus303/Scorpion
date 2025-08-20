@@ -47,14 +47,17 @@ export class DocketService {
   public successMsg:string='';
   public isSearching :boolean = false;
   public isGSTApplicable : boolean =true;
+  public inValidDocketMsg :string='';
   constructor(private basicDetailService: BasicDetailService) { }
 
   detailForm() {
     const now = new Date();
     this.today = now.toISOString().split('T')[0];
     this.basicDetailForm = new FormGroup({
+      isODAApplicable: new FormControl({ value: true, disabled: true }),
+      isLocalNote: new FormControl(false),
       ewayBillNo: new FormControl(null),
-      cNoteNo: new FormControl(null),
+      cNoteNo: new FormControl(null ,[Validators.required]),
       pincode: new FormControl(null),
       billingName: new FormControl(null),
       origin: new FormControl(this.Location),
@@ -81,8 +84,6 @@ export class DocketService {
       sacDescription: new FormControl(null),
       isAppointmentDelivery: new FormControl(false),
       iscsdDelivery: new FormControl(false),
-      isODAApplicable: new FormControl({ value: true, disabled: true }),
-      isLocalNote: new FormControl(false),
       appointmentDT: new FormControl(this.today),
       personName: new FormControl(null),
       contactNo: new FormControl(null),

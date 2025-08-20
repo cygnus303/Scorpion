@@ -58,10 +58,10 @@ export class BasicDetailsComponent {
     if (!searchText || searchText.length < 1) {
       if (type === 'from') {
         this.fromCityList = [];
-         this.notFromCityValue = 'Please enter at least 1 characters';
-      }else {
+        this.notFromCityValue = 'Please enter at least 1 characters';
+      } else {
         this.toCityList = [];
-         this.notToCityValue = 'Please enter at least 1 characters';
+        this.notToCityValue = 'Please enter at least 1 characters';
       }
       return;
     }
@@ -99,14 +99,14 @@ export class BasicDetailsComponent {
   }
 
   resetCityDropdown(type: 'from' | 'to') {
-  if (type === 'from') {
-    this.fromCityList = [];
-    this.notFromCityValue = 'Please enter at least 1 characters';
-  } else {
-    this.toCityList = [];
-    this.notToCityValue = 'Please enter at least 1 characters';
+    if (type === 'from') {
+      this.fromCityList = [];
+      this.notFromCityValue = 'Please enter at least 1 characters';
+    } else {
+      this.toCityList = [];
+      this.notToCityValue = 'Please enter at least 1 characters';
+    }
   }
-}
 
   getDestinationsList(event?: any) {
     const searchText = event.term;
@@ -115,7 +115,7 @@ export class BasicDetailsComponent {
       this.notDestinationValue = 'Please enter at least 3 characters';
       return;
     }
-     this.notDestinationValue = 'Searching...';
+    this.notDestinationValue = 'Searching...';
     this.basicDetailService.getGCDestinations(searchText).subscribe({
       next: (response) => {
         if (response) {
@@ -134,9 +134,9 @@ export class BasicDetailsComponent {
   }
 
   resetDestinationDropdown() {
-  this.destinationsList = [];
-  this.notDestinationValue = 'Please enter at least 3 characters';
-}
+    this.destinationsList = [];
+    this.notDestinationValue = 'Please enter at least 3 characters';
+  }
   openDatePicker(event: Event): void {
     const input = event.target as HTMLInputElement;
     input.showPicker?.();
@@ -173,10 +173,10 @@ export class BasicDetailsComponent {
   }
 
   resetBillingPartyDropdown() {
-  // Clear list when dropdown opens again
-  this.billingPartyData = [];
-  this.notFoundTextValue = 'Enter at least 3 characters';
-}
+    // Clear list when dropdown opens again
+    this.billingPartyData = [];
+    this.notFoundTextValue = 'Enter at least 3 characters';
+  }
 
   getVehicleNumbersList(event?: any) {
     const searchText = event.term;
@@ -251,7 +251,7 @@ export class BasicDetailsComponent {
             this.docketService.basicDetailForm.patchValue({
               originState: response.stnm,
               csgngstState: response.statePrefix,
-              origin_Area:response.origin_Area
+              origin_Area: response.origin_Area
             });
             this.docketService.freightForm.patchValue({
               billedAt: response.statePrefix,
@@ -291,5 +291,24 @@ export class BasicDetailsComponent {
     })
     this.docketService.getRuleDetailForDepth();
     this.docketService.getRuleDetailForProceed()
+  }
+
+  CheckDocketValid(event:any) {
+    const payload = {
+      docketNo:event.target.value,
+        locCode:this.docketService.Location,
+       userId:this.docketService.BaseUserCode,
+        type:"",
+      companyCode:'C003'
+    }
+    this.basicDetailService.docketValidation(payload).subscribe({
+      next: (response: any) => {
+        if (response.codeDesc) {
+        this.docketService.inValidDocketMsg=response.codeDesc;
+        }else{
+          this.docketService.inValidDocketMsg = '';
+        }
+      }
+    });
   }
 }
