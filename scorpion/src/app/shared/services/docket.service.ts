@@ -23,7 +23,7 @@ export class DocketService {
   public exemptServicesList: generalMasterResponse[] = [];
   public rateList: generalMasterResponse[] = [];
   public today: string = '';
-  public Location = 'NIDA';
+  public Location = 'BDD';
   public step2DetailsList: any;
   public getGSTNODetailsList: any;
   public GetPincodeOriginList!: any;
@@ -95,6 +95,7 @@ export class DocketService {
       csgegstState: new FormControl(''),
       csgngstState: new FormControl(''),
       GSTDeclaration: new FormControl(null),
+      destination_Area:new FormControl(''),
 
       volumetric: new FormControl(false),
       IsLocalDocket: new FormControl(false),
@@ -369,7 +370,8 @@ export class DocketService {
           this.GetPincodeOriginList = response;
           this.basicDetailForm.patchValue({
             destinationState: this.GetPincodeOriginList.stnm,
-            csgegstState: this.GetPincodeOriginList.stateCode
+            csgegstState: this.GetPincodeOriginList.stateCode,
+            destination_Area: this.GetPincodeOriginList.area
           });
           this.freightForm.patchValue({
             billedAt: this.GetPincodeOriginList.handling_Location,
@@ -658,6 +660,12 @@ export class DocketService {
             dktTotal: this.gstCalculationList.dkttotal ?? null,
             billedAt: this.gstCalculationList.rcplbillgenloc,
             billingState: this.gstCalculationList.customerbillgenstate,
+
+        // 👇 Collected fields same as amount
+            igstcollected: this.gstCalculationList.igstamount,
+            cgstcollected: this.gstCalculationList.cgstamount,
+            sgstcollected: this.gstCalculationList.sgstamount,
+            utgstcollected: this.gstCalculationList.utgstamount,
           });
         }
       },

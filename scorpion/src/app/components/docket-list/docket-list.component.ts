@@ -200,12 +200,12 @@ export class DocketListComponent {
         "destStateCode": this.docketService.basicDetailForm.value.csgegstState,
         "destStateName": this.docketService.basicDetailForm.value.destinationState,
         "isUnionTeritory": true,
-        "origin_Area": this.docketService.basicDetailForm.value.originState,///consinee mathi avshe adress
-        "destination_Area": this.docketService.basicDetailForm.value.destinationState,///consinor mathi avshe adress
+        "origin_Area": this.docketService.basicDetailForm.value.origin_Area,///consinee mathi avshe adress
+        "destination_Area": this.docketService.basicDetailForm.value.destination_Area,///consinor mathi avshe adress
         "custGSTNo": "",
-        "custGSTState": "",
+        "custGSTState": this.docketService.basicDetailForm.value.csgegstState,
         "csgeCustGSTNo": this.docketService.consignorForm.value.consigneeGSTNo,
-        "csgeCustGSTState": "string",
+        "csgeCustGSTState":  this.docketService.basicDetailForm.value.csgegstState,
         "isCompletion": true,
         "billingState": this.docketService.freightForm.value.billingState,
         "eWayBillNo": this.docketService.basicDetailForm.value.ewayBillNo,

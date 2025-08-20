@@ -250,7 +250,8 @@ export class BasicDetailsComponent {
           if (response) {
             this.docketService.basicDetailForm.patchValue({
               originState: response.stnm,
-              csgngstState: response.statePrefix
+              csgngstState: response.statePrefix,
+              origin_Area:response.origin_Area
             });
             this.docketService.freightForm.patchValue({
               billedAt: response.statePrefix,
@@ -266,7 +267,7 @@ export class BasicDetailsComponent {
       this.docketService.consignorForm.patchValue({
         consigneeCity: event
       });
-      this.docketService.GetPincodeOrigin()
+      this.docketService.GetPincodeOrigin();
     }
     this.cityList = [];
   }

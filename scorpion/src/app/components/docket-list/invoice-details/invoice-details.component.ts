@@ -69,8 +69,8 @@ export class InvoiceDetailsComponent {
     totalCubicWeight,
     totalActualWeight,
     chargeWeightPerPkg: totalNoOfPkgs,
-    // finalActualWeight: totalActualWeight 
-    finalActualWeight: this.docketService.freightData?.chargedWeight ? (totalActualWeight < this.docketService.freightData.chargedWeight  ? this.docketService.freightData.chargedWeight : totalActualWeight): totalActualWeight
+    finalActualWeight: Math.max(totalActualWeight || 0, totalCubicWeight || 0)
+    // finalActualWeight: this.docketService.freightData?.chargedWeight ? (totalActualWeight < this.docketService.freightData.chargedWeight  ? this.docketService.freightData.chargedWeight : totalActualWeight): totalActualWeight
   });
   }
 //   calculateSummary(i: number, changedField?: string) {
