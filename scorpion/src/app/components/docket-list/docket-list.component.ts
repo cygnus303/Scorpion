@@ -225,7 +225,7 @@ export class DocketListComponent {
         "consignor": this.docketService.consignorForm.value.consignorSelection,
         "consignee": this.docketService.consignorForm.value.consigneeSelection,
         "billingParty": this.docketService.basicDetailForm.value.billingParty,
-        "freight": this.docketService.freightForm.value.freightCharge,
+        "freight": this.docketService.freightForm.value.freightCharges,
         "billigLocation": this.docketService.step2DetailsList.billingLocation,
         "docdt": this.docketService.basicDetailForm.value.cNoteDate,
         "tpCustGSTNo": "",
@@ -264,7 +264,7 @@ export class DocketListComponent {
         "fovCalculated": 0,
         "kkcRate": 0,
         "kkcAmount": 0,
-        "gstType": this.docketService.gstCalculationList.gstType,
+        "gstType": this.docketService.gstCalculationList.gsttype,
         "igstRate": this.docketService.freightForm.value.igstrate,
         "igstAmount": this.docketService.freightForm.value.igstamount,
         "cgstRate": this.docketService.freightForm.value.cgstrate,
@@ -317,6 +317,10 @@ export class DocketListComponent {
        window.scrollTo({ top: 0, behavior: 'smooth' }); 
 
             this.docketService.successMsg='Docket submitted successfully.'
+            this.docketService.basicDetailForm.reset();
+            this.docketService.freightForm.reset();
+            this.docketService.invoiceform.reset();
+            this.docketService.consignorForm.reset();
           }
            this.isSubmitting = false;
         },
