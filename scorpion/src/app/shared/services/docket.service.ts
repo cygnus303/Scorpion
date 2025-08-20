@@ -23,7 +23,7 @@ export class DocketService {
   public exemptServicesList: generalMasterResponse[] = [];
   public rateList: generalMasterResponse[] = [];
   public today: string = '';
-  public Location = 'BDD';
+  public Location = 'NAL';
   public step2DetailsList: any;
   public getGSTNODetailsList: any;
   public GetPincodeOriginList!: any;
