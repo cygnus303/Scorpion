@@ -23,7 +23,7 @@ export class DocketService {
   public exemptServicesList: generalMasterResponse[] = [];
   public rateList: generalMasterResponse[] = [];
   public today: string = '';
-  public Location = 'NAL';
+  public Location = 'LDH';
   public step2DetailsList: any;
   public getGSTNODetailsList: any;
   public GetPincodeOriginList!: any;
@@ -855,6 +855,12 @@ export class DocketService {
               }
               if (!this.basicDetailForm.get('iscsdDelivery')?.value) {
                 this.freightForm.patchValue({ SCHG10: 0 })
+              }
+              if (!this.basicDetailForm.get('isDACC')?.value) {
+                this.freightForm.patchValue({ SCHG13: 0 })
+              }
+               if (!this.basicDetailForm.get('IsCODDOD')?.value) {
+                this.freightForm.patchValue({ SCHG12: 0 })
               }
             }
           });

@@ -53,6 +53,22 @@ export class FreightDetailsComponent {
     }
     this.docketService.subTotalCalculation();
   });
+  this.docketService.basicDetailForm.get('isDACC')?.valueChanges.subscribe(value => {
+    // this.updateCharge('SCHG13', value); // Appointment Charges
+     this.docketService.freightForm.patchValue({SCHG13:0})
+    if(value){
+      this.docketService.getOtherChargesDetail();
+    }
+    this.docketService.subTotalCalculation();
+  });
+    this.docketService.basicDetailForm.get('IsCODDOD')?.valueChanges.subscribe(value => {
+    // this.updateCharge('SCHG12', value); // Appointment Charges
+     this.docketService.freightForm.patchValue({SCHG12:0})
+    if(value){
+      this.docketService.getOtherChargesDetail();
+    }
+    this.docketService.subTotalCalculation();
+  });
    this.getChargesData();
   }
 
