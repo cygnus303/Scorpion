@@ -295,11 +295,11 @@ export class BasicDetailsComponent {
 
   CheckDocketValid(event:any) {
     const payload = {
-      docketNo:event.target.value,
-        locCode:this.docketService.Location,
-       userId:this.docketService.BaseUserCode,
-        type:"",
-      companyCode:'C003'
+      docketNo: event.target.value,
+      locCode: this.docketService.Location,
+      userId: this.docketService.BaseUserCode,
+      type: "",
+      companyCode: 'C003'
     }
     this.basicDetailService.docketValidation(payload).subscribe({
       next: (response: any) => {

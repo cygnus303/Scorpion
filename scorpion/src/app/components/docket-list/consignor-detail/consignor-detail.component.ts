@@ -11,6 +11,7 @@ import { GSTNOListResponse } from '../../../shared/models/general-master.model';
 })
 export class ConsignorDetailComponent {
   public getGSTNOList!:GSTNOListResponse;
+  public notPincodeValue ='Please Enter at least 1 characters';
   constructor(
     public docketService: DocketService,
     private basicDetailService: BasicDetailService) {}

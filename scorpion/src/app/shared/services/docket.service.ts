@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { generalMasterResponse, pinCodeResponse } from '../models/general-master.model';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { BasicDetailService } from './basic-detail.service';
 import { EmailRegex, mobileNo } from '../constants/common';
+import { MobileNumberValidator } from '../directives/validators/mobile-number-validator';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,7 @@ export class DocketService {
   public exemptServicesList: generalMasterResponse[] = [];
   public rateList: generalMasterResponse[] = [];
   public today: string = '';
-  public Location = 'PIM';
+  public Location = 'NIDA';
   public step2DetailsList: any;
   public getGSTNODetailsList: any;
   public GetPincodeOriginList!: any;
@@ -155,8 +156,11 @@ export class DocketService {
       customerRefNo: new FormControl(null),
       privateMark: new FormControl(null),
       tpNumber: new FormControl(null)
-    })
+    },
+     { validators: MobileNumberValidator.notSameConsignorConsignee() }
+  )
   }
+  
 
   freightbuild() {
     this.freightForm = new FormGroup({
@@ -231,32 +235,43 @@ export class DocketService {
       cubicweight: new FormControl(0),
     });
   }
-
   getpincodeData(event: any) {
-    const searchText = event.term || event;
-    if (!searchText || searchText.length < 1) {
-      this.notPincodeValue = 'Enter at least 1 characters';
-      this.pincodeList = [];
-      return;
-    }
-    this.isSearching = true;
-    this.notPincodeValue = 'Searching...';
-    this.basicDetailService.getpincodeData(searchText).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.pincodeList = response.data;
-          this.notPincodeValue = 'No matches found';
-        } else {
-          this.pincodeList = [];
-          this.notPincodeValue = '';
-        }
-      },
-      error: () => {
-        this.pincodeList = [];
-        this.notPincodeValue = '';
-      }
-    });
+  const searchText = event.term;
+  if (!searchText || searchText.trim() === '') {
+    this.pincodeList = [];
+    this.notPincodeValue = 'Enter at least 1 character';
+    this.isSearching = false;
+    return;
   }
+
+  if (searchText.length < 1) {
+    this.notPincodeValue = 'Enter at least 1 character';
+    this.pincodeList = [];
+    return;
+  }
+
+  this.isSearching = true;
+  this.notPincodeValue = 'Searching...';
+
+  this.basicDetailService.getpincodeData(searchText).subscribe({
+    next: (response) => {
+      if (response.success && response.data?.length > 0) {
+        this.pincodeList = response.data;
+        this.notPincodeValue = 'No matches found';
+      } else {
+        this.pincodeList = [];
+        this.notPincodeValue = 'No matches found';
+      }
+      this.isSearching = false;
+    },
+    error: () => {
+      this.pincodeList = [];
+      this.notPincodeValue = '';
+      this.isSearching = false;
+    }
+  });
+}
+
 
   resetPincodeDropdown(){
       this.pincodeList = [];
@@ -768,6 +783,10 @@ export class DocketService {
               .replace(/ /g, '-'),
             billingState: this.freightData.billingState
           });
+          this.invoiceform.patchValue({
+            finalActualWeight: Math.max(this.freightData.chargedWeight || 0, this.invoiceform.value.finalActualWeight || 0),
+            chargeWeightPerPkg: Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0)
+          })
           this.getFuelSurcharge(this.freightData.freightCharge);
         }
       },
@@ -863,9 +882,9 @@ export class DocketService {
                if (!this.basicDetailForm.get('IsCODDOD')?.value) {
                 this.freightForm.patchValue({ SCHG12: 0 })
               }
-              // if (!this.freightForm.get('fovRate')?.value) {
-              //   this.freightForm.patchValue({ schg11: 0 })
-              // }
+              if (this.freightForm.get('fovRate')?.value) {
+                this.freightForm.patchValue({ SCHG11: 0 })
+              }
             }
           });
           this.subTotalCalculation(); 

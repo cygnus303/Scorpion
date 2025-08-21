@@ -37,28 +37,28 @@ export class DocketListComponent {
 
     const invoiceList = this.docketService.invoiceRows.value.map((row: any, index: number) => {
       const obj: any = {
-        srNo: row.srNo,
-        dockno: this.docketService.basicDetailForm.value.cNoteNo,
-        invno: row.invoiceNo || '',
-        invdt: row.invoicedate || null,
-        declval: row.declaredvalue || 0,
-        pkgsno: row.noOfPkgs || 0,
-        actuwt: row.actualWeight || 0,
-        voL_L: row.length || 0,
-        voL_B: row.breadth || 0,
-        voL_H: row.height || 0,
+        SrNo: row.srNo,
+        DOCKNO: this.docketService.basicDetailForm.value.cNoteNo,
+        INVNO: row.invoiceNo || '',
+        INVDT: row.invoicedate || null,
+        DECLVAL: row.declaredvalue || 0,
+        PKGSNO: row.noOfPkgs || 0,
+        ACTUWT: row.actualWeight || 0,
+        VOL_L: row.length || 0,
+        VOL_B: row.breadth || 0,
+        VOL_H: row.height || 0,
         toT_CFT: row.cubicweight || 0,
         vol_cft: row.cubicweight || 0,
-        part_No: '',
-        eWayBillNo: row.ewayBillNo || '',
-        eWayInvoicevalue: 0,
-        eWayBillInvoiceDate: row.ewayinvoiceDate || null,
-        chrgwt: 0
+        Part_No: '',
+        EWayBillNo: row.ewayBillNo || '',
+        EWayInvoicevalue: 0,
+        EWayBillInvoiceDate: row.ewayinvoiceDate || null,
+        CHRGWT: 0
       };
 
       // ✅ conditionally add eWayBillExpiredDate only if eWayBillNo has value
       if (row.ewayBillNo) {
-        obj.eWayBillExpiredDate = row.ewayBillExpiry || null;
+        obj.EWayBillExpiredDate = row.ewayBillExpiry || null;
       }
 
       return obj;

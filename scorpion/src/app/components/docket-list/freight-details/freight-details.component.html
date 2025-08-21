@@ -197,7 +197,7 @@
 
 
 
-        <div class="col-md-4" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
+        <div class="col-md-4" >
           <div class="form-group">
             <label class="control-label col-md-5"><b>GST Rate</b></label>
             <div class="col-md-7">
@@ -216,7 +216,7 @@
           </div>
         </div>
         <div class="col-md-4"></div>
-        <div class="col-md-4" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
+        <div class="col-md-4" >
           <div class="form-group">
             <label class="control-label col-md-5"><b>SUB-TOTAL</b></label>
             <div class="col-md-7">
@@ -225,7 +225,7 @@
             </div>
           </div>
         </div>
-        <div [ngClass]="{ 'hidden': docketService.isBillingTBB }">
+        <div>
           <div *ngFor="let entry of docketService.groupedCharges | keyvalue">
             <div class="row clsGSTApply">
               <div class="col-md-4" *ngFor="let charge of entry.value">
