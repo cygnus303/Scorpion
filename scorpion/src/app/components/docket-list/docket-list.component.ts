@@ -20,7 +20,7 @@ export class DocketListComponent {
         ChargeCode: charge.chargeCode,
         ChargeName: charge.chargeName,
         Operator: charge.operator,
-        ChargeAmount: this.docketService.freightForm.get(charge.chargeCode)?.value || 0
+        ChargeAmount: Number(this.docketService.freightForm.get(charge.chargeCode)?.value || 0)
       }));
 
     const DynamicList: any[] = [];
@@ -29,7 +29,7 @@ export class DocketListComponent {
         DynamicList.push({
           ChargeCode: charge.chargeCode,
           Operator: charge.operator,
-          ChargeAmount: this.docketService.freightForm.get(charge.camelCaseCode)?.value || 0,
+          ChargeAmount: Number(this.docketService.freightForm.get(charge.camelCaseCode)?.value || 0) ,
           Acccode: ""   // empty as per your example
         });
       });
@@ -102,9 +102,9 @@ export class DocketListComponent {
         "privatemark": this.docketService.consignorForm.value.privateMark,
         "tpnumber": this.docketService.consignorForm.value.tpNumber,
         "trN_MOD": this.docketService.basicDetailForm.value.mode,
-        "coD_DOD": this.docketService.basicDetailForm.value.IsCODDOD,
+        "coD_DOD": this.docketService.basicDetailForm.value.IsCODDOD === 'Y' ? true : false,
         "cfT_YN": this.docketService.step2DetailsList?.isVolumentric === 'Y' ? true : false,
-        "dacC_YN": this.docketService.basicDetailForm.value.isDACC,  // step2 na response ma pn
+        "dacC_YN": this.docketService.basicDetailForm.value.isDACC === 'Y' ? true : false,  // step2 na response ma pn
         "localCN_YN": this.docketService.basicDetailForm.value.isLocalNote, //y and n
         "pickup_Dely": this.docketService.basicDetailForm.value.pickup,
         "permit_yn": "",// api baki chhe
@@ -163,9 +163,9 @@ export class DocketListComponent {
         "gcType": "",
         "cft": this.docketService.invoiceform.value.cftTotal,
         "isVolumetric": this.docketService.step2DetailsList?.isVolumentric === 'Y' ? true : false,
-        "isCODDOD": this.docketService.step2DetailsList.isCODDOD === 'Y' ? true : false,
+        "isCODDOD": this.docketService.basicDetailForm.value.isCODDOD === 'Y' ? true : false,
         "isODA": this.docketService.step2DetailsList.IsODA === 'Y' ? true : false,
-        "isDACC": this.docketService.step2DetailsList.isDACC === 'Y' ? true : false,
+        "isDACC": this.docketService.basicDetailForm.value.isDACC === 'Y' ? true : false,
         "isLocalDocket": this.docketService.basicDetailForm.value.IsLocalDocket ? true : false,
         "isStaxExemp": this.docketService.basicDetailForm.value.exemptServices === 'Y' ? true : false,
         "person": this.docketService.basicDetailForm.value.personName,
@@ -325,7 +325,7 @@ export class DocketListComponent {
            this.isSubmitting = false;
         },
         error: (error) => {
-      this.docketService.submitErrorMsg =error?.error?.Error?.Message;
+      this.docketService.submitErrorMsg =error?.error?.message;
         this.isSubmitting = false; // ✅ loader stop on error
        window.scrollTo({ top: 0, behavior: 'smooth' }); 
 

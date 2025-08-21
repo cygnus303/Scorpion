@@ -23,7 +23,7 @@ export class DocketService {
   public exemptServicesList: generalMasterResponse[] = [];
   public rateList: generalMasterResponse[] = [];
   public today: string = '';
-  public Location = 'LDH';
+  public Location = 'PIM';
   public step2DetailsList: any;
   public getGSTNODetailsList: any;
   public GetPincodeOriginList!: any;
@@ -338,6 +338,7 @@ export class DocketService {
           this.basicDetailForm.patchValue({
             volumetric: this.step2DetailsList?.isVolumentric === 'Y' ? true : false,
             isDACC: this.step2DetailsList?.isDACC === 'Y' ? true : false,
+            IsCODDOD:this.step2DetailsList?.isCODDOD === 'Y' ? true : false
           });
           // this.basicDetailForm.patchValue({
           //  IsCODDOD:this.step2DetailsList?.isCODDOD
@@ -862,9 +863,12 @@ export class DocketService {
                if (!this.basicDetailForm.get('IsCODDOD')?.value) {
                 this.freightForm.patchValue({ SCHG12: 0 })
               }
+              // if (!this.freightForm.get('fovRate')?.value) {
+              //   this.freightForm.patchValue({ schg11: 0 })
+              // }
             }
           });
-          this.subTotalCalculation();
+          this.subTotalCalculation(); 
 
         }
       },
@@ -943,6 +947,8 @@ export class DocketService {
         const controlValue = Number(this.freightForm?.get(item.chargecode)?.value) || 0;
         totalSubTotal += controlValue;
       });
+       const fovRate = Number(this.freightForm?.value?.fovRate) || 0;
+       totalSubTotal += fovRate;
     }
 
     // Patch subtotal

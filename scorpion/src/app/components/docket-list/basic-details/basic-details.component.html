@@ -61,7 +61,7 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Billing Type</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('billingType')?.invalid  && docketService.basicDetailForm.get('billingType')?.touched }" [items]="billingTypeData" bindLabel="codeDesc" bindValue="codeId"
+              <ng-select class="noFoundTextColor required2" [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('billingType')?.invalid  && docketService.basicDetailForm.get('billingType')?.touched }" [items]="billingTypeData" bindLabel="codeDesc" bindValue="codeId"
                 placeholder="Billing Type" formControlName="billingType" required (change)="onChangeBillingType($event)">
               </ng-select>
                <div *ngIf="docketService.basicDetailForm.get('billingType')?.invalid && docketService.basicDetailForm.get('billingType')?.touched "
