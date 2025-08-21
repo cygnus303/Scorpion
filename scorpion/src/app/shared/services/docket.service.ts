@@ -389,13 +389,13 @@ export class DocketService {
           if(type === 'Origin'){
               this.basicDetailForm.patchValue({
               originState: this.GetPincodeOriginList.stnm,
-              csgngstState: this.GetPincodeOriginList.stateCode,
+              csgngstState: this.GetPincodeOriginList.statePrefix,
               origin_Area:this.GetPincodeOriginList.area
             });
           }else{
             this.basicDetailForm.patchValue({
               destinationState: this.GetPincodeOriginList.stnm,
-              csgegstState: this.GetPincodeOriginList.stateCode,
+              csgegstState: this.GetPincodeOriginList.statePrefix,
               destination_Area: this.GetPincodeOriginList.area
             });
           }
@@ -417,13 +417,12 @@ export class DocketService {
     this.basicDetailService.GetDKTGSTForGTA(payload).subscribe({
       next: (response: any) => {
         if (response) {
-          debugger
           // this.GetPincodeOriginList = response;
-          this.basicDetailForm.patchValue({
-            sacCode: response.sacCode,
-            sacDescription: response.sacCodeDesc,
-            // mode: response.transType
-          })
+          // this.basicDetailForm.patchValue({
+          //   sacCode: response.sacCode,
+          //   sacDescription: response.sacCodeDesc,
+          //   // mode: response.transType
+          // })
           if(response.isGSTApplicable){
             this.freightForm.patchValue({
               gstRate:this.GSTFromTrnMode.codeDesc

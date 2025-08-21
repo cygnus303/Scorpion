@@ -85,14 +85,14 @@ export class DocketListComponent {
         "ftl_types": this.docketService.basicDetailForm.value.typeMovement,
         "fincmplbr": this.docketService.freightForm.value.billedAt,
         "csgncd": '8888',
-        "csgnnm": this.docketService.consignorForm.value.consignorName,
+        "csgnnm": this.docketService.consignorForm.value.consignorMasterName,
         "csgnaddr": this.docketService.consignorForm.value.consignorAddress,
         "csgnCity": this.docketService.consignorForm.value.consignorCity,
         "csgnPinCode": this.docketService.consignorForm.value.consignorPincode,
         "csgnTeleNo": this.docketService.consignorForm.value.consignorMobile,
         "csgnEmail": this.docketService.consignorForm.value.consignorEmail,
         "csgecd": '8888',
-        "csgenm": this.docketService.consignorForm.value.consigneeName,
+        "csgenm": this.docketService.consignorForm.value.consigneeMasterName,
         "csgeaddr": this.docketService.consignorForm.value.consigneeAddress,
         "csgeCity": this.docketService.consignorForm.value.consigneeCity,
         "csgePinCode": this.docketService.consignorForm.value.consigneePincode,
@@ -321,6 +321,7 @@ export class DocketListComponent {
             this.docketService.freightForm.reset();
             this.docketService.invoiceform.reset();
             this.docketService.consignorForm.reset();
+             window.location.reload();
           }
            this.isSubmitting = false;
         },

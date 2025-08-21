@@ -30,7 +30,7 @@
       <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">CNote No</label>
-            <div class="col-md-7"><input type="text" class="form-control" required placeholder="CNote No"
+            <div class="col-md-7"><input type="text" class="form-control" placeholder="CNote No"
                 formControlName="cNoteNo" required (input)="CheckDocketValid($event)"
                  [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('cNoteNo')?.invalid && docketService.basicDetailForm.get('cNoteNo')?.touched || docketService.inValidDocketMsg} "/>
               <div *ngIf="docketService.basicDetailForm.get('cNoteNo')?.invalid && docketService.basicDetailForm.get('cNoteNo')?.touched "
