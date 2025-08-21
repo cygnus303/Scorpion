@@ -24,7 +24,7 @@ export class DocketService {
   public exemptServicesList: generalMasterResponse[] = [];
   public rateList: generalMasterResponse[] = [];
   public today: string = '';
-  public Location = 'NIDA';
+  public Location = 'LDH';
   public step2DetailsList: any;
   public getGSTNODetailsList: any;
   public GetPincodeOriginList!: any;
@@ -236,7 +236,7 @@ export class DocketService {
     });
   }
   getpincodeData(event: any) {
-  const searchText = event.term;
+  const searchText = typeof event === 'string' ? event : event?.term;
   if (!searchText || searchText.trim() === '') {
     this.pincodeList = [];
     this.notPincodeValue = 'Enter at least 1 character';
@@ -266,7 +266,7 @@ export class DocketService {
     },
     error: () => {
       this.pincodeList = [];
-      this.notPincodeValue = '';
+      this.notPincodeValue = 'No matches found';
       this.isSearching = false;
     }
   });

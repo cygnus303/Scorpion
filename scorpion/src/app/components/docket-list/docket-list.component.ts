@@ -15,7 +15,7 @@ export class DocketListComponent {
   ) { }
 
   onSubmit() {
-    if (this.docketService.basicDetailForm.valid && this.docketService.consignorForm.valid) {
+    if (this.docketService.basicDetailForm.valid && this.docketService.consignorForm.valid && this.docketService.invoiceform.valid) {
       const listCCH = this.docketService.freightchargingData.map(charge => ({
         ChargeCode: charge.chargeCode,
         ChargeName: charge.chargeName,
@@ -334,6 +334,7 @@ export class DocketListComponent {
     } else {
       this.docketService.basicDetailForm.markAllAsTouched();
       this.docketService.consignorForm.markAllAsTouched();
+      this.docketService.invoiceform.markAllAsTouched();
        window.scrollTo({ top: 0, behavior: 'smooth' }); 
     }
   }

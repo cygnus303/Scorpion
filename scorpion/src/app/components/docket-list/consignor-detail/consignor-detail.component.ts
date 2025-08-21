@@ -27,8 +27,9 @@ export class ConsignorDetailComponent {
         if (response.success) {
           this.getGSTNOList = response.data;
           if(type === 'Conr'){
+            this.docketService.getpincodeData(this.getGSTNOList.pncd);
             this.docketService.consignorForm.patchValue({
-              // consignorName:this.getGSTNOList.code ,
+              consignorName:this.getGSTNOList.code,
               consignorMasterName: this.getGSTNOList.tradeNam,
               consignorAddress: this.getGSTNOList.address,
               consignorCity: this.getGSTNOList.dst,
@@ -38,12 +39,13 @@ export class ConsignorDetailComponent {
             });
             
           }else if(type === 'Conee'){
+            this.docketService.getpincodeData(this.getGSTNOList.pncd);
              this.docketService.consignorForm.patchValue({
-              //  consigneeName:this.getGSTNOList.code ,
+               consigneeName:this.getGSTNOList.code,
                consigneeMasterName:  this.getGSTNOList.tradeNam,
                consigneeAddress: this.getGSTNOList.address,
                consigneeCity:  this.getGSTNOList.dst,
-              //  consigneePincode: this.getGSTNOList.pncd,
+               consigneePincode: this.getGSTNOList.pncd,
                // consigneeMobile: new FormControl(null),
                // consigneeEmail: new FormControl(null),
              });
