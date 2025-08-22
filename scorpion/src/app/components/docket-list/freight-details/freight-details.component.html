@@ -42,7 +42,12 @@
                 tabindex="-1">
                 <option value=""></option>
               </select> -->
-              <input type="text" formControlName="GSTPaidBy" class="clsAmount form-control" placeholder="GST Paid By">
+              <input type="text" formControlName="GSTPaidBy" class="clsAmount form-control" placeholder="GST Paid By"  required
+              [ngClass]="{ 'border-danger': docketService.freightForm.get('GSTPaidBy')?.invalid && docketService.freightForm.get('GSTPaidBy')?.touched}">
+                      <div *ngIf="docketService.freightForm.get('GSTPaidBy')?.invalid && docketService.freightForm.get('GSTPaidBy')?.touched"
+                        class="text-danger text-start">
+                        This field is required.
+                      </div>
             </div>
           </div>
         </div>
@@ -68,14 +73,18 @@
           <div class="form-group">
             <label class="control-label col-md-5">EDD </label>
             <div class="col-md-7">
-              <div class="input-group @*date ftdate-picker*@">
+              <div class="input-group">
                 <input class="required2 form-control required" placeholder="EDD" type="text"
-                  value="1/1/0001 12:00:00 AM" formControlName="EDD" readonly>
+                  value="1/1/0001 12:00:00 AM" formControlName="EDD" readonly required
+                   [ngClass]="{ 'border-danger': docketService.freightForm.get('EDD')?.invalid && docketService.freightForm.get('EDD')?.touched}">
+                      <div *ngIf="docketService.freightForm.get('EDD')?.invalid && docketService.freightForm.get('EDD')?.touched"
+                        class="text-danger text-start">
+                        This field is required.
+                      </div>
                 <span class="input-group-btn">
                   <button class="btn default date-set clsVehicle1" type="button" style="display: none;"><i
                       class="fa fa-calendar"></i></button>
                 </span>
-                <input id="WMD_CDELDT_Original" name="WMD_CDELDT_Original" type="hidden" value="">
               </div>
             </div>
           </div>
@@ -84,8 +93,13 @@
           <div class="form-group">
             <label class="control-label col-md-5">Billed At</label>
             <div class="col-md-7">
-              <input class="required2 form-control required" id="WMD_fincmplbrDisplay" formControlName="billedAt"
-                name="WMD.fincmplbrDisplay" placeholder="Billed At" type="text" value="" readonly="readonly">
+              <input class="required2 form-control required" formControlName="billedAt"
+                placeholder="Billed At" type="text"  readonly="readonly" required
+                [ngClass]="{ 'border-danger': docketService.freightForm.get('billedAt')?.invalid && docketService.freightForm.get('billedAt')?.touched}">
+              <div *ngIf="docketService.freightForm.get('billedAt')?.invalid && docketService.freightForm.get('billedAt')?.touched"
+                class="text-danger text-start">
+                This field is required.
+              </div>
             </div>
           </div>
         </div>
@@ -95,8 +109,14 @@
           <div class="form-group">
             <label class="control-label col-md-5">Billing State</label>
             <div class="col-md-7">
-              <input class="required2 form-control required" id="WMD_BillingState" formControlName="billingState"
-                name="WMD.BillingState" placeholder="Billing State" readonly="True" type="text" value="">
+              <input class="required2 form-control required" formControlName="billingState"
+                placeholder="Billing State" readonly="True" type="text" required
+                [ngClass]="{ 'border-danger': docketService.freightForm.get('billingState')?.invalid && docketService.freightForm.get('billingState')?.touched}">
+              <div
+                *ngIf="docketService.freightForm.get('billingState')?.invalid && docketService.freightForm.get('billingState')?.touched"
+                class="text-danger text-start">
+                This field is required.
+              </div>
             </div>
           </div>
         </div>

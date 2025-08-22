@@ -242,8 +242,8 @@ export class BasicDetailsComponent {
         locCode: event,
         baseUserCode: this.docketService.BaseUserCode,
         baseLocation: this.docketService.Location,
-        baseCompany: 'C003',
-        baseFinYear: '2025-2026'
+        baseCompany:this.docketService.loginUserList.Companycode,
+        baseFinYear: this.docketService.loginUserList.FinYear
       }
       this.basicDetailService.fromOperation(payload).subscribe({
         next: (response: any) => {
@@ -299,7 +299,7 @@ export class BasicDetailsComponent {
       locCode: this.docketService.Location,
       userId: this.docketService.BaseUserCode,
       type: "",
-      companyCode: 'C003'
+      companyCode: this.docketService.loginUserList.Companycode
     }
     this.basicDetailService.docketValidation(payload).subscribe({
       next: (response: any) => {

@@ -1,21 +1,77 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DocketService } from '../../shared/services/docket.service';
 import { BasicDetailService } from '../../shared/services/basic-detail.service';
-import Swal from 'sweetalert2';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DecryptService } from '../../shared/services/decryptservice ';
 @Component({
   selector: 'app-docket-list',
   standalone: false,
   templateUrl: './docket-list.component.html',
   styleUrl: './docket-list.component.scss'
 })
-export class DocketListComponent {
+export class DocketListComponent implements OnInit{
   public isSubmitting :boolean = false;
+  decrypted: string = '';
+
   constructor(
-    public docketService: DocketService, private basicDetailService: BasicDetailService
+    public docketService: DocketService, private basicDetailService: BasicDetailService, private activatedRoute: ActivatedRoute,private decryptService:DecryptService,private router: Router
   ) { }
 
+  ngOnInit(): void {
+    this.activatedRoute.queryParams.subscribe(params => {
+      const encrypted = params['data'];
+      const key = 'WebX';
+      if (encrypted) {
+        try {
+          this.decrypted = this.decryptService.decrypt(encrypted, key);
+          const parsedData = JSON.parse(this.decrypted);
+          localStorage.setItem("loginUserList", JSON.stringify(parsedData));
+          // ✅ Required keys
+          const requiredKeys = [
+            "FinYear",
+            "LocationCode",
+            "LocationName",
+            "UserImage",
+            "UserId",
+            "BaseUserName",
+            "Companycode"
+          ];
+
+          // ✅ check karvu ke badha keys exist kare chhe
+          const isValid = requiredKeys.every(key => parsedData.hasOwnProperty(key));
+
+          if (isValid) {
+            // 🔑 badha key male → normal flow
+            this.docketService.loginUserList = parsedData;
+            this.docketService.Location = parsedData.LocationCode;
+              // this.docketService.Location ='BDD';
+            this.docketService.BaseUserCode = parsedData.UserId;
+          } else {
+            // ❌ ek pan key missing hoy → redirect
+            console.error("Invalid decrypted data, redirecting...");
+            this.router.navigate(['/error']);
+          }
+        } catch (err) {
+          console.error("Decryption or parsing failed:", err);
+          this.router.navigate(['/error']);
+        }
+      } else {
+        // ❌ query param ma data nathi → redirect
+        this.router.navigate(['/error']);
+      }
+    });
+  }
+
+  resetAllForms() {
+  // Badha build methods ne call karo
+  this.docketService.detailForm();
+  this.docketService.consignorbuild();
+  this.docketService.freightbuild();
+  this.docketService.invoicebuild();
+}
+
   onSubmit() {
-    if (this.docketService.basicDetailForm.valid && this.docketService.consignorForm.valid && this.docketService.invoiceform.valid) {
+    if (this.docketService.basicDetailForm.valid && this.docketService.consignorForm.valid && this.docketService.invoiceform.valid && this.docketService.freightForm.valid) {
       const listCCH = this.docketService.freightchargingData.map(charge => ({
         ChargeCode: charge.chargeCode,
         ChargeName: charge.chargeName,
@@ -110,7 +166,7 @@ export class DocketListComponent {
         "permit_yn": "",// api baki chhe
         "permit_recvd_at": "",
         "permit_No": "",
-        "entryby": "string", // je user login hoy tenu userId
+        "entryby":this.docketService.loginUserList.UserId, // je user login hoy tenu userId
         "pkgsty": this.docketService.basicDetailForm.value.packingType,
         "insuyn": this.docketService.consignorForm.value.riskType,  // jo Carrier's Risk hoy to c ,owener hoy to 'o'
         "insupl": this.docketService.consignorForm.value.policyNo,
@@ -140,7 +196,7 @@ export class DocketListComponent {
         "csgnaddrcd": "",
         "csgeaddrcd": "",
         "manual_dockno": this.docketService.basicDetailForm.value.cNoteNo,
-        "company_code": "C003", //login mathi
+        "company_code":this.docketService.loginUserList.Companycode, //login mathi
         "hday_appl_yn": "",
         "csgnmobile": this.docketService.consignorForm.value.consignorMobile,
         "csgemobile": this.docketService.consignorForm.value.consigneeMobile,
@@ -199,7 +255,7 @@ export class DocketListComponent {
         "originStateName": this.docketService.basicDetailForm.value.originState,
         "destStateCode": this.docketService.basicDetailForm.value.csgegstState,
         "destStateName": this.docketService.basicDetailForm.value.destinationState,
-        "isUnionTeritory": true,
+        "isUnionTeritory": true, ///Number(this.docketService.gstCalculationList.isunionterritory),
         "origin_Area": this.docketService.basicDetailForm.value.origin_Area,///consinee mathi avshe adress
         "destination_Area": this.docketService.basicDetailForm.value.destination_Area,///consinor mathi avshe adress
         "custGSTNo": "",
@@ -299,8 +355,8 @@ export class DocketListComponent {
       } else {
         formData.append("GSTDeclaration", "");
       }
-      formData.append("BaseFinYear", "2025-2026");
-      formData.append("BaseCompanyCode", "C003");
+      formData.append("BaseFinYear",this.docketService.loginUserList.FinYear);
+      formData.append("BaseCompanyCode", this.docketService.loginUserList.Companycode);
       formData.append("BaseUserName", this.docketService.BaseUserCode);
       formData.append("DVM.WMD.insupldt", new Date(this.docketService.consignorForm.value.policyDate).toISOString()),
         formData.append("DVM.PC.chequeDate", new Date().toISOString()),
@@ -336,6 +392,7 @@ export class DocketListComponent {
       this.docketService.basicDetailForm.markAllAsTouched();
       this.docketService.consignorForm.markAllAsTouched();
       this.docketService.invoiceform.markAllAsTouched();
+      this.docketService.freightForm.markAllAsTouched();
        window.scrollTo({ top: 0, behavior: 'smooth' }); 
     }
   }

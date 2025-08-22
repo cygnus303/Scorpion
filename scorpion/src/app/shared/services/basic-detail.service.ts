@@ -3,13 +3,15 @@ import { ApiHandlerService } from './api-handler.service';
 import { Observable } from 'rxjs';
 import { IApiBaseResponse } from '../interface/api-base-action-response';
 import { billingPartyRequest, cityResponse, DestinationsList, DKTChargesResponse, GSTNOListResponse, IGSTchargesDetailResponse, pinCodeResponse } from '../models/general-master.model';
+import { DocketService } from './docket.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BasicDetailService {
+loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
 
-  constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService) { }
+  constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService) {}
 
   getGeneralMasterList(codeType: string, searchText: string | null, codeId: string | number | null): Observable<IApiBaseResponse<any[]>> {
     return this.apiHandlerService.Get(`External/${codeType}`, {
@@ -41,7 +43,7 @@ export class BasicDetailService {
     return this.apiHandlerService.Get(`Operation/GetGSTNODetails?ewbNo=${searchTerm}`);
   }
   getGSTNOList(searchTerm: string): Observable<IApiBaseResponse<GSTNOListResponse>> {
-    return this.apiHandlerService.Get(`Operation/gst-details?gstNo=${searchTerm}&baseCompanyCode=${'C003'}`);
+    return this.apiHandlerService.Get(`Operation/gst-details?gstNo=${searchTerm}&baseCompanyCode=${this.loginData.Companycode}`);
   }
   GetStep2Details(data: any): Observable<IApiBaseResponse<GSTNOListResponse>> {
     return this.apiHandlerService.Get(`Operation/GetStep2Details`, data);

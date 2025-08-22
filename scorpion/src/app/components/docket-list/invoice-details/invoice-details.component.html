@@ -157,8 +157,13 @@
                   </td>
                   <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
                     <input class="form-control rounded-0 clsAmount required2 text-end" min="0"
-                      placeholder="Invoice value" type="number" value="0" formControlName="declaredvalue"
-                      (input)="calculateSummary(i);getCFTCalculation(i)" (change)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation()">
+                      placeholder="Invoice value" type="number" value="0" formControlName="declaredvalue" required
+                      (input)="calculateSummary(i);getCFTCalculation(i)" (change)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation()"
+                      [ngClass]="{ 'border-danger': row.get('declaredvalue')?.invalid && row.get('declaredvalue')?.touched}">
+                      <div *ngIf="row.get('declaredvalue')?.invalid && row.get('declaredvalue')?.touched"
+                        class="text-danger text-start">
+                        This field is required.
+                      </div>
                   </td>
                   <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
                     <input class="form-control rounded-0 clsAmount required2 text-end" placeholder="No of Pkgs."
@@ -172,10 +177,20 @@
                       readonly formControlName="cubicweight">
                   </td>
                   <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
-                    <input class="form-control rounded-0 clsAmount required2 text-end" placeholder="Actual Weight"
-                      type="number" value="0" formControlName="actualWeight" (input)="calculateSummary(i);getCFTCalculation(i)"
-                      (blur)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();this.docketService.getFovContractDetails();"
-                      (change)="docketService.GetDKTGSTForGTA();">
+                  <input class="form-control rounded-0 clsAmount required2 text-end" placeholder="Actual Weight" type="number"
+                    formControlName="actualWeight" (input)="calculateSummary(i);getCFTCalculation(i)"
+                    (blur)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();this.docketService.getFovContractDetails();"
+                    (change)="docketService.GetDKTGSTForGTA();"
+                    [ngClass]="{ 'border-danger': row.get('actualWeight')?.invalid && row.get('actualWeight')?.touched }">
+                  
+                  <div *ngIf="row.get('actualWeight')?.touched && row.get('actualWeight')?.errors" class="text-danger text-start">
+                    <div *ngIf="row.get('actualWeight')?.errors?.['required']">
+                      Actual weight is required.
+                    </div>
+                    <div *ngIf="row.get('actualWeight')?.errors?.['min']">
+                      Please enter a value greater than or equal to 1.
+                    </div>
+                  </div>
                   </td>
                   <td class="center">
                     <div *ngIf="i !== 0" (click)="removeRow(i)"
@@ -197,13 +212,23 @@
                   </td>
 
                   <td class="center">
-                    <input formControlName="totalDeclaredValue"
-                      class="form-control rounded-0 clsAmount required2 required text-end" type="number" readonly>
+                    <input formControlName="totalDeclaredValue" required
+                      class="form-control rounded-0 clsAmount required2 required text-end" type="number" readonly 
+                      [ngClass]="{ 'border-danger': docketService.invoiceform.get('totalDeclaredValue')?.invalid && docketService.invoiceform.get('totalDeclaredValue')?.touched}">
+                      <div *ngIf="docketService.invoiceform.get('totalDeclaredValue')?.invalid && docketService.invoiceform.get('totalDeclaredValue')?.touched"
+                        class="text-danger text-start">
+                        This field is required.
+                      </div>
                   </td>
 
                   <td class="center">
                     <input formControlName="totalNoOfPkgs"
-                      class="form-control rounded-0 clsAmount required2 required text-end" type="number" readonly>
+                      class="form-control rounded-0 clsAmount required2 required text-end" type="number" readonly required
+                      [ngClass]="{ 'border-danger': docketService.invoiceform.get('totalNoOfPkgs')?.invalid && docketService.invoiceform.get('totalNoOfPkgs')?.touched}">
+                      <div *ngIf="docketService.invoiceform.get('totalNoOfPkgs')?.invalid && docketService.invoiceform.get('totalNoOfPkgs')?.touched"
+                        class="text-danger text-start">
+                        This field is required.
+                      </div>
                   </td>
 
                   <td class="center"
@@ -214,7 +239,12 @@
 
                   <td class="center">
                     <input formControlName="totalActualWeight"
-                      class="form-control rounded-0 clsAmount required2 required text-end" type="number" readonly>
+                      class="form-control rounded-0 clsAmount required2 required text-end" type="number" readonly required
+                      [ngClass]="{ 'border-danger': docketService.invoiceform.get('totalActualWeight')?.invalid && docketService.invoiceform.get('totalActualWeight')?.touched}">
+                      <div *ngIf="docketService.invoiceform.get('totalActualWeight')?.invalid && docketService.invoiceform.get('totalActualWeight')?.touched"
+                        class="text-danger text-start">
+                         Please enter a value greater than or equal to 1.
+                      </div>
                   </td>
                 </tr>
 
@@ -230,7 +260,12 @@
                   <td class="center">
                     <div class="col-md-11">
                       <input formControlName="chargeWeightPerPkg"
-                        class="form-control rounded-0 clsAmount required2 required text-end" type="number" readonly>
+                        class="form-control rounded-0 clsAmount required2 required text-end" type="number" readonly required
+                        [ngClass]="{ 'border-danger': docketService.invoiceform.get('chargeWeightPerPkg')?.invalid && docketService.invoiceform.get('chargeWeightPerPkg')?.touched}">
+                      <div *ngIf="docketService.invoiceform.get('chargeWeightPerPkg')?.invalid && docketService.invoiceform.get('chargeWeightPerPkg')?.touched"
+                        class="text-danger text-start">
+                        This field is required.
+                      </div>
                     </div>
                   </td>
 

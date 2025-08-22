@@ -117,3 +117,13 @@ export interface ChargingRepsonse{
     chargeAmount: number,
     fixCharge: number
 }
+
+export interface LoginUser {
+  LocationName: string;
+  LocationCode: string;
+  FinYear: string;
+  UserImage: string;
+  BaseUserName: string;
+  UserId: string;
+  Companycode: string;
+}

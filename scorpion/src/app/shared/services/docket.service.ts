@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { generalMasterResponse, pinCodeResponse } from '../models/general-master.model';
+import { generalMasterResponse, LoginUser, pinCodeResponse } from '../models/general-master.model';
 import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { BasicDetailService } from './basic-detail.service';
 import { EmailRegex, mobileNo } from '../constants/common';
@@ -24,7 +24,8 @@ export class DocketService {
   public exemptServicesList: generalMasterResponse[] = [];
   public rateList: generalMasterResponse[] = [];
   public today: string = '';
-  public Location = 'LDH';
+  public Location : string ='';
+  public BaseUserCode : string ='';
   public step2DetailsList: any;
   public getGSTNODetailsList: any;
   public GetPincodeOriginList!: any;
@@ -41,13 +42,13 @@ export class DocketService {
   public chargingData: any;
   public totalSubTotal: any;
   public freightchargingData: any[] = [];
-  public BaseUserCode = 'CYGNUSTEAM'
   public notPincodeValue ='Please Enter at least 1 characters';
   public weightErrorMsg: string = '';
   public submitErrorMsg : string ='';
   public successMsg:string='';
   public isSearching :boolean = false;
   public inValidDocketMsg :string='';
+  public loginUserList!:LoginUser;
   constructor(private basicDetailService: BasicDetailService) { }
 
   detailForm() {
@@ -189,13 +190,13 @@ export class DocketService {
       invoiceRows: new FormArray([]),
       // Summary row 1
       cftTotal: new FormControl(),
-      totalDeclaredValue: new FormControl(0),
-      totalNoOfPkgs: new FormControl(0),
+      totalDeclaredValue: new FormControl(),
+      totalNoOfPkgs: new FormControl(),
       totalCubicWeight: new FormControl(0),
-      totalActualWeight: new FormControl(0),
+      totalActualWeight: new FormControl(0, [Validators.required, Validators.min(1)]),
 
       // Summary row 2
-      chargeWeightPerPkg: new FormControl(0),
+      chargeWeightPerPkg: new FormControl(),
       finalActualWeight: new FormControl(0),
 
       cft_Ratio: new FormControl()
@@ -225,7 +226,7 @@ export class DocketService {
       invoiceNo: new FormControl(''),
       declaredValue: new FormControl(0),
       noOfPkgs: new FormControl(0),
-      actualWeight: new FormControl(0),
+      actualWeight: new FormControl(0, [Validators.required, Validators.min(1)]),
       length: new FormControl(0),
       breadth: new FormControl(0),
       height: new FormControl(0),
