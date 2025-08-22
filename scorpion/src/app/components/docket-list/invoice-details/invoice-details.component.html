@@ -173,8 +173,9 @@
                   </td>
                   <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
                     <input class="form-control rounded-0 clsAmount required2 text-end" placeholder="Actual Weight"
-                      type="number" value="0" formControlName="actualWeight" (input)="calculateSummary(i)"
-                      (blur)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();this.docketService.getFovContractDetails();">
+                      type="number" value="0" formControlName="actualWeight" (input)="calculateSummary(i);getCFTCalculation(i)"
+                      (blur)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();this.docketService.getFovContractDetails();"
+                      (change)="docketService.GetDKTGSTForGTA();">
                   </td>
                   <td class="center">
                     <div *ngIf="i !== 0" (click)="removeRow(i)"
