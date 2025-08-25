@@ -379,7 +379,7 @@ export class DocketService {
           this.GetPincodeOrigin();
           this.getRateData()
           // this.GetDKTGSTForGTA();
-          this.GetGSTFromTrnMode()
+          // this.GetGSTFromTrnMode()
         }
       }
     });
@@ -463,9 +463,11 @@ export class DocketService {
         }
       }
     });
+    debugger
     this.basicDetailService.contractservicecharge(this.step2DetailsList?.contractid, this.basicDetailForm.value.mode).subscribe({
       next: (response: any) => {
         if (response) {
+          debugger
           this.contractservicecharge = response;
           this.invoiceform.patchValue({
             cft_Ratio: this.contractservicecharge[0].cft_Ratio

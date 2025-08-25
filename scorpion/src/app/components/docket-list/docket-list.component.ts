@@ -377,7 +377,9 @@ export class DocketListComponent implements OnInit{
             this.docketService.freightForm.reset();
             this.docketService.invoiceform.reset();
             this.docketService.consignorForm.reset();
-             window.location.reload();
+             setTimeout(() => {
+                window.location.reload();
+              }, 4000);
           }
            this.isSubmitting = false;
         },
