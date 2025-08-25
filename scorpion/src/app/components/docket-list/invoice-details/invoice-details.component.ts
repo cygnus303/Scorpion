@@ -41,8 +41,8 @@ export class InvoiceDetailsComponent {
     // return; // stop further calculation
   }
 
-  const volMeasureType = this.docketService.contractservicecharge[0].cft_Measure; // 'INCHES' | 'CM' | 'FEET'
-  const cftWtRatio = +this.docketService.contractservicecharge[0].cft_Ratio || 0; // you can bind from service
+  const volMeasureType = this.docketService.contractservicecharge[0]?.cft_Measure; // 'INCHES' | 'CM' | 'FEET'
+  const cftWtRatio = +this.docketService.contractservicecharge[0]?.cft_Ratio || 0; // you can bind from service
   const rows = this.docketService.invoiceRows.value;
  
   let totalDeclaredValue = 0;
