@@ -205,7 +205,7 @@
         <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('destination')?.value">
           <div class="form-group"><label class="col-md-5">To City</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" placeholder="To City" (search)="getCityList($event,this.docketService.basicDetailForm.get('destination')?.value,'to')"
+              <ng-select class="noFoundTextColor required2" placeholder="To City" (search)="getCityList($event,this.docketService.basicDetailForm.get('destination')?.value,'to')"
                 (change)="onChangeCityListList($event,'to');this.docketService.getGSTCalculation()" formControlName="toCity"
                 [notFoundText]="notToCityValue">
                 <ng-option *ngFor="let item of toCityList" [value]="item.location">

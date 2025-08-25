@@ -137,50 +137,50 @@
                   <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px"
                     *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
                     <input class="form-control rounded-0 clsAmount required2 text-end" min="1" type="number" value="0"
-                      formControlName="length"
+                      formControlName="length"  (focus)="clearZero(row, 'length')" 
                       (change)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.GetDKTGSTForGTA();"
-                      (input)="calculateSummary(i);getCFTCalculation(i)">
+                      (input)="calculateSummary(i);getCFTCalculation(i)" (blur)="restoreIfEmpty(row, 'length')">
                   </td>
                   <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px; "
                     *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
                     <input class="form-control rounded-0 clsAmount required2 text-end" min="1" type="number" value="0"
-                      formControlName="breadth"
+                      formControlName="breadth" (focus)="clearZero(row, 'breadth')" 
                       (change)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.GetDKTGSTForGTA()"
-                      (input)="calculateSummary(i);getCFTCalculation(i)">
+                      (input)="calculateSummary(i);getCFTCalculation(i)" (blur)="restoreIfEmpty(row, 'breadth')" >
                   </td>
                   <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px; "
                     *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
                     <input class="form-control rounded-0 clsAmount required2 text-end" min="1" type="number" value="0"
-                      formControlName="height"
+                      formControlName="height" (focus)="clearZero(row, 'height')" 
                       (change)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.GetDKTGSTForGTA()"
-                      (input)="calculateSummary(i);getCFTCalculation(i)">
+                      (input)="calculateSummary(i);getCFTCalculation(i)" (blur)="restoreIfEmpty(row, 'height')" >
                   </td>
                   <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
                     <input class="form-control rounded-0 clsAmount required2 text-end" min="0"
-                      placeholder="Invoice value" type="number" value="0" formControlName="declaredvalue" required
+                      placeholder="Invoice value" type="number" value="0" formControlName="declaredvalue" required (focus)="clearZero(row, 'declaredvalue')" 
                       (input)="calculateSummary(i);getCFTCalculation(i)" (change)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation()"
-                      [ngClass]="{ 'border-danger': row.get('declaredvalue')?.invalid && row.get('declaredvalue')?.touched}">
+                      [ngClass]="{ 'border-danger': row.get('declaredvalue')?.invalid && row.get('declaredvalue')?.touched}" (blur)="restoreIfEmpty(row, 'declaredvalue')" >
                       <div *ngIf="row.get('declaredvalue')?.invalid && row.get('declaredvalue')?.touched"
                         class="text-danger text-start">
                         This field is required.
                       </div>
                   </td>
                   <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
-                    <input class="form-control rounded-0 clsAmount required2 text-end" placeholder="No of Pkgs."
-                      (blur)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();this.docketService.getFovContractDetails();"
+                    <input class="form-control rounded-0 clsAmount required2 text-end" placeholder="No of Pkgs." (focus)="clearZero(row, 'noOfPkgs')" 
+                      (blur)="restoreIfEmpty(row, 'noOfPkgs');docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();this.docketService.getFovContractDetails();"
                       type="number" formControlName="noOfPkgs" (input)="calculateSummary(i);getCFTCalculation(i)"
                       (change)="docketService.GetDKTGSTForGTA();">
                   </td>
                   <td class="center  clsVolumetric" style="padding-bottom: 2px; padding-top: 2px;"
                     *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                    <input class="form-control rounded-0 clsAmount required2  text-end" min="0" type="number" value="0"
+                    <input class="form-control rounded-0 clsAmount required2  text-end" min="0" type="number" value="0"  (blur)="restoreIfEmpty(row, 'cubicweight')" (focus)="clearZero(row, 'cubicweight')" 
                       readonly formControlName="cubicweight">
                   </td>
                   <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
                   <input class="form-control rounded-0 clsAmount required2 text-end" placeholder="Actual Weight" type="number"
                     formControlName="actualWeight" (input)="calculateSummary(i);getCFTCalculation(i)"
-                    (blur)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();this.docketService.getFovContractDetails();"
-                    (change)="docketService.GetDKTGSTForGTA();"
+                    (blur)="restoreIfEmpty(row, 'actualWeight');docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();this.docketService.getFovContractDetails();"
+                    (change)="docketService.GetDKTGSTForGTA();" (focus)="clearZero(row, 'actualWeight')" 
                     [ngClass]="{ 'border-danger': row.get('actualWeight')?.invalid && row.get('actualWeight')?.touched }">
                   
                   <div *ngIf="row.get('actualWeight')?.touched && row.get('actualWeight')?.errors" class="text-danger text-start">
@@ -276,8 +276,8 @@
                   <td class="center">
                     <div class="col-md-11">
                       <input formControlName="finalActualWeight"
-                        class="form-control rounded-0 clsAmount required2 required text-end" type="number"
-                        (blur)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.getProRataCharge();this.docketService.getFovContractDetails();">
+                        class="form-control rounded-0 clsAmount required2 required text-end" type="number" (focus)="clearZero(docketService.invoiceform, 'finalActualWeight')"
+                        (blur)="restoreIfEmpty(docketService.invoiceform, 'finalActualWeight');docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.getProRataCharge();this.docketService.getFovContractDetails();">
                       <!-- <div *ngIf="docketService.weightErrorMsg" class="text-danger mt-1">
                         {{ docketService.weightErrorMsg }}
                       </div> -->

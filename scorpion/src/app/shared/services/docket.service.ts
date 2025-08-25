@@ -323,10 +323,8 @@ export class DocketService {
     const billingType = this.basicDetailForm.value.billingType;
 
     if (billingParty && destination && billingType) {
-      this.getStep2Details();
-        this.consignorbuild();
-
-        console.log(this.invoiceform.value)
+        this.getStep2Details();
+        this.consignorbuild();  
     }
   }
 
@@ -465,7 +463,7 @@ export class DocketService {
         }
       }
     });
-    this.basicDetailService.contractservicecharge(this.step2DetailsList.contractid, this.basicDetailForm.value.mode).subscribe({
+    this.basicDetailService.contractservicecharge(this.step2DetailsList?.contractid, this.basicDetailForm.value.mode).subscribe({
       next: (response: any) => {
         if (response) {
           this.contractservicecharge = response;
@@ -759,8 +757,8 @@ export class DocketService {
       baseCode1: 'NONE',
       chargeSubRule: 'NONE',
       baseCode2: 'NONE',
-      chargedWeight: Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0).toString(),
-      contractID: this.step2DetailsList.contractid,
+      chargedWeight: Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString(),
+      contractID: this.step2DetailsList?.contractid,
       destination: this.basicDetailForm.value.destination,
       depth: this.depth,
       flagProceed: this.flagprocedd,
@@ -769,18 +767,18 @@ export class DocketService {
       tostate: this.basicDetailForm.value.destinationState,
       itemCode: '',
       ftlType: this.basicDetailForm.value.typeMovement || '',
-      noOfPkgs: this.invoiceform.value.totalNoOfPkgs.toString(),
-      chargedWeright: Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0).toString(),
+      noOfPkgs: this.invoiceform.value.totalNoOfPkgs?.toString(),
+      chargedWeright: Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString(),
       origin: this.basicDetailForm.value.origin,
       payBase: this.basicDetailForm.value.billingType,
       serviceType: this.basicDetailForm.value.serviceType,
       toCity: this.basicDetailForm.value.toCity,
       transMode: this.basicDetailForm.value.mode,
-      orderID: this.step2DetailsList.contractid,
-      invAmt: this.invoiceform.value.totalDeclaredValue.toString(),
+      orderID: this.step2DetailsList?.contractid,
+      invAmt: this.invoiceform.value.totalDeclaredValue?.toString(),
       dockdt: new Date().toISOString(),
       prodcd: this.basicDetailForm.value.contents,
-      isPerPieceRate: this.step2DetailsList.isPerPieceRate
+      isPerPieceRate: this.step2DetailsList?.isPerPieceRate
     }
     this.basicDetailService.GetFreightContractDetails(data).subscribe({
       next: (response: any) => {
@@ -812,9 +810,9 @@ export class DocketService {
     const payload = {
       chargeRule: "NONE",
       baseCode1: "NONE",
-      contractID: this.step2DetailsList.contractid,
-      riskType: this.step2DetailsList.risktype,
-      invAmt: this.invoiceform.value.totalDeclaredValue.toString(),
+      contractID: this.step2DetailsList?.contractid,
+      riskType: this.step2DetailsList?.risktype,
+      invAmt: this.invoiceform.value.totalDeclaredValue?.toString(),
       serviceType: this.basicDetailForm.value.serviceType
     }
     this.basicDetailService.getFovContractDetails(payload).subscribe({
@@ -831,31 +829,31 @@ export class DocketService {
   }
 
   getOtherChargesDetail() {
-    const chargedWeight = Math.max(this.invoiceform.value.totalActualWeight || 0,this.invoiceform.value.totalCubicWeight || 0).toString();
+    const chargedWeight = Math.max(this.invoiceform.value.totalActualWeight || 0,this.invoiceform.value.totalCubicWeight || 0)?.toString();
     const payload = {
       "chargeRule": 'NONE',
       "baseCode1": 'NONE',
       "chargeSubRule": "NONE",
       "baseCode2": "NONE",
       "chargedWeight": chargedWeight,
-      "contractID": this.step2DetailsList.contractid,
+      "contractID": this.step2DetailsList?.contractid,
       "destination": this.basicDetailForm.value.destination,
       "depth": this.depth,
       "flagProceed": this.flagprocedd,
       "fromCity": this.basicDetailForm.value.fromCity,
       "ftlType": this.basicDetailForm.value.typeMovement || '',
-      "noOfPkgs": this.invoiceform.value.chargeWeightPerPkg.toString(),
+      "noOfPkgs": this.invoiceform.value.chargeWeightPerPkg?.toString(),
       "origin": this.basicDetailForm.value.origin,
       "payBase": this.basicDetailForm.value.billingType,
       "serviceType": this.basicDetailForm.value.serviceType,
       "toCity": this.basicDetailForm.value.toCity,
       "transMode": this.basicDetailForm.value.mode,
-      "orderID": this.step2DetailsList.contractid,
+      "orderID": this.step2DetailsList?.contractid,
       "invAmt": this.invoiceform.value.totalDeclaredValue?.toString(),
       "dockdt": this.basicDetailForm.value.cNoteDate,
       "prodType": this.basicDetailForm.value.contents,
       "packType": this.basicDetailForm.value.packingType,
-      "riskType": this.step2DetailsList.risktype,
+      "riskType": this.step2DetailsList?.risktype,
       "originPincode": this.consignorForm.value.consignorPincode || 0,
       "destPincode": this.basicDetailForm.value.pincode || 0,
       "floorNo": 0

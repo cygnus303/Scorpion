@@ -41,9 +41,9 @@ export class InvoiceDetailsComponent {
     // return; // stop further calculation
   }
 
-  const volMeasureType = this.docketService.contractservicecharge[0]?.cft_Measure; // 'INCHES' | 'CM' | 'FEET'
-  const cftWtRatio = +this.docketService.contractservicecharge[0]?.cft_Ratio || 0; // you can bind from service
-  const rows = this.docketService.invoiceRows.value;
+  const volMeasureType = this.docketService?.contractservicecharge[0]?.cft_Measure; // 'INCHES' | 'CM' | 'FEET'
+  const cftWtRatio = +this.docketService?.contractservicecharge[0]?.cft_Ratio || 0; // you can bind from service
+  const rows = this.docketService?.invoiceRows.value;
  
   let totalDeclaredValue = 0;
   let totalNoOfPkgs = 0;
@@ -87,7 +87,18 @@ export class InvoiceDetailsComponent {
   });
   }
 
-
+clearZero(row: any, controlName: string) {
+  const control = row.get(controlName);
+  if (control?.value === 0) {
+    control.setValue('');
+  }
+}
+restoreIfEmpty(form: any, controlName: string) {
+  const control = form.get(controlName);
+  if (control?.value === '' || control?.value == null) {
+    control.setValue(0);
+  }
+}
 
   getCFTCalculation(i: number) {
     let totalCFT = 0;
