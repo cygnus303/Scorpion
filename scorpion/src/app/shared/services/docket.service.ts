@@ -24,7 +24,7 @@ export class DocketService {
   public exemptServicesList: generalMasterResponse[] = [];
   public rateList: generalMasterResponse[] = [];
   public today: string = '';
-  public Location = 'LDH';
+  public Location = 'BDD';
   public step2DetailsList: any;
   public getGSTNODetailsList: any;
   public GetPincodeOriginList!: any;
@@ -48,6 +48,9 @@ export class DocketService {
   public successMsg:string='';
   public isSearching :boolean = false;
   public inValidDocketMsg :string='';
+  public locationName: string = '';
+  public locationCode: string = '';
+  public finYear: string = '';
   constructor(private basicDetailService: BasicDetailService) { }
 
   detailForm() {
@@ -323,15 +326,26 @@ export class DocketService {
 
     if (billingParty && destination && billingType) {
       this.getStep2Details();
+        this.consignorbuild();
+
+        console.log(this.invoiceform.value)
     }
   }
+
+  validateDropdownValue(formControlName: string, newList: any[], key: string = 'codeId') {
+    const currentValue = this.basicDetailForm.get(formControlName)?.value;
+    if (currentValue && !newList.some(item => item[key] === currentValue)) {
+      this.basicDetailForm.get(formControlName)?.reset(null); // remove old value
+    }
+  }
+
   getStep2Details() {
     const rawDate = new Date(); // or from your API
     const formattedDate = rawDate.toLocaleDateString('en-GB', {
       day: '2-digit',
       month: 'long',
       year: 'numeric'
-    });
+    }); 
     const payload = {
       PartyCode: this.basicDetailForm.value.billingParty,
       Destination: this.basicDetailForm.value.destination,
@@ -369,7 +383,7 @@ export class DocketService {
           this.GetPincodeOrigin();
           this.getRateData()
           // this.GetDKTGSTForGTA();
-          // this.GetGSTFromTrnMode()
+          this.GetGSTFromTrnMode()
         }
       }
     });
@@ -499,6 +513,7 @@ export class DocketService {
       next: (response) => {
         if (response.success) {
           this.transportModeData = response.data;
+            this.validateDropdownValue('mode', this.transportModeData);
         }
       },
     });
@@ -509,6 +524,7 @@ export class DocketService {
       next: (response) => {
         if (response.success) {
           this.pickUpData = response.data;
+            this.validateDropdownValue('pickup', this.pickUpData);
         }
       },
     });
@@ -529,6 +545,7 @@ export class DocketService {
       next: (response) => {
         if (response.success) {
           this.serviceData = response.data;
+            this.validateDropdownValue('serviceType', this.serviceData);
         }
       },
     });
@@ -894,11 +911,11 @@ export class DocketService {
   }
 
   getFuelSurcharge(data:any) {
-    const fuelRateType = this.contractservicecharge[0].fuelSurchrgBas;  // %, W, F
-    const fuelRate = this.contractservicecharge[0].fuelSurchrg;
-    const minFuelCharge = this.contractservicecharge[0].min_FuelSurchrg;
-    const maxFuelCharge = this.contractservicecharge[0].max_FuelSurchrg;
-    const chargedWeight = this.invoiceform.value.finalActualWeight;
+    const fuelRateType = this.contractservicecharge[0]?.fuelSurchrgBas;  // %, W, F
+    const fuelRate = this.contractservicecharge[0]?.fuelSurchrg;
+    const minFuelCharge = this.contractservicecharge[0]?.min_FuelSurchrg;
+    const maxFuelCharge = this.contractservicecharge[0]?.max_FuelSurchrg;
+    const chargedWeight = this.invoiceform.value?.finalActualWeight;
     const freight =  Number(data);
 
     let fuelSurcharge = 0;

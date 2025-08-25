@@ -202,7 +202,7 @@ export class BasicDetailsComponent {
     this.docketService.basicDetailForm.patchValue({
       billingParty: event.custcd,
       billingName: event.custnm
-    })
+    });
   }
 
   onChangedestinationsList(event: any) {
