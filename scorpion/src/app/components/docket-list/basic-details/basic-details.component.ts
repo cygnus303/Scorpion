@@ -108,6 +108,12 @@ export class BasicDetailsComponent {
     }
   }
 
+  onResetToCity(){
+    this.docketService.basicDetailForm.patchValue({
+      toCity:null
+    })
+  }
+
   getDestinationsList(event?: any) {
     const searchText = event.term;
     if (!searchText || searchText.length < 3) {
