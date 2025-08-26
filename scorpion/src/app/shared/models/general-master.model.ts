@@ -127,3 +127,8 @@ export interface LoginUser {
   UserId: string;
   Companycode: string;
 }
+
+export interface StatesFromPartyCodeRepsonse {
+   value: string;
+   text: string;
+}

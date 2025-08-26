@@ -119,4 +119,12 @@ loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
   docketValidation(data:any){
      return this.apiHandlerService.Post(`Operation/Doketcheck`, data);
   }
+
+   getStatesFromPartyCode(data:any){
+     return this.apiHandlerService.Get(`Operation/GetStatesFromPartyCode?customerCode=${data}`);
+  }
+
+  getPincodeMasterList(cityCode:any){
+    return this.apiHandlerService.Get(`Operation/GetPincodeMasterList?cityCode=${cityCode}`)
+  }
 }

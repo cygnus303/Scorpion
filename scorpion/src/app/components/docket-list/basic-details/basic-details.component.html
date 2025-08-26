@@ -342,20 +342,21 @@
           </div>
         </div> -->
       </div>
-        <!-- <div class="row">
+        <div class="row d-none">
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Customer GST State.</label>
-            <div class="col-md-7"><textarea class="form-control-textarea" placeholder="Special Instruction"
-                formControlName="gststate" rows="2" cols="47"></textarea></div>
+            <div class="col-md-7">
+              <ng-select class="noFoundTextColor" [items]="getStatesFromPartyCodeList" bindLabel="text" bindValue="value" placeholder="Customer GST State"
+                formControlName="custGSTState"></ng-select></div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Consignee Customer GST State.</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor required2" [items]="docketService.exemptServicesList" bindLabel="codeDesc" bindValue="codeId" placeholder="Exempt Services"
-                formControlName="consigneegstdtate"></ng-select></div>
+            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="getStatesFromPartyCodeList" bindLabel="text" bindValue="value" placeholder="Consignee Customer GST State"
+                formControlName="csgeCustGSTState"></ng-select></div>
           </div>
         </div>
-      </div> -->
+      </div>
       <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Special Instruction</label>

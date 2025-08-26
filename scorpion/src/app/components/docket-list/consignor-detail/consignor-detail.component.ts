@@ -29,7 +29,7 @@ export class ConsignorDetailComponent {
           if(type === 'Conr'){
             this.docketService.getpincodeData(this.getGSTNOList.pncd);
             this.docketService.consignorForm.patchValue({
-              consignorName:this.getGSTNOList.code,
+              // consignorName:this.getGSTNOList.code,
               consignorMasterName: this.getGSTNOList.tradeNam,
               consignorAddress: this.getGSTNOList.address,
               consignorCity: this.getGSTNOList.dst,
@@ -41,7 +41,7 @@ export class ConsignorDetailComponent {
           }else if(type === 'Conee'){
             this.docketService.getpincodeData(this.getGSTNOList.pncd);
              this.docketService.consignorForm.patchValue({
-               consigneeName:this.getGSTNOList.code,
+              //  consigneeName:this.getGSTNOList.code,
                consigneeMasterName:  this.getGSTNOList.tradeNam,
                consigneeAddress: this.getGSTNOList.address,
                consigneeCity:  this.getGSTNOList.dst,

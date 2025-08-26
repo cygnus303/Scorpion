@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DocketService } from '../../../shared/services/docket.service';
 import { BasicDetailService } from '../../../shared/services/basic-detail.service';
-import { DestinationsList, generalMasterResponse, billingPartyResponse, VehicleNumbersResponse } from '../../../shared/models/general-master.model';
+import { DestinationsList, generalMasterResponse, billingPartyResponse, VehicleNumbersResponse, StatesFromPartyCodeRepsonse } from '../../../shared/models/general-master.model';
 import { cityResponse } from '../../../shared/models/general-master.model';
 import { combineLatest, filter, startWith } from 'rxjs';
 import { GeneralMasterService } from '../../../shared/services/general-master.service';
@@ -21,6 +21,7 @@ export class BasicDetailsComponent {
   public toCityList: cityResponse[] = [];
   public destinationsList: DestinationsList[] = [];
   public vehicleNumbersList: VehicleNumbersResponse[] = [];
+  public getStatesFromPartyCodeList: StatesFromPartyCodeRepsonse[] = [];
   public notFoundTextValue = 'Please enter at least 3 characters';
   public notDestinationValue = 'Please enter at least 3 characters';
   public notFromCityValue = 'Please enter at least 1 characters';
@@ -41,6 +42,28 @@ export class BasicDetailsComponent {
       this.toggleLocalNote();
     });
     this.toggleLocalNote();
+    this.getStatesFromPartyCode();
+
+    this.docketService.basicDetailForm.get('originState')?.valueChanges.subscribe((selectedValue: string) => {
+    if (selectedValue) {
+      const selectedObj = this.getStatesFromPartyCodeList.find(x => x.text === selectedValue);
+      if (selectedObj) {
+        this.docketService.basicDetailForm.get('custGSTState')?.setValue(selectedObj.value);
+      }
+    } else {
+      this.docketService.basicDetailForm.get('custGSTState')?.setValue('');
+    }
+  });
+    this.docketService.basicDetailForm.get('destinationState')?.valueChanges.subscribe((selectedValue: string) => {
+    if (selectedValue) {
+      const selectedObj = this.getStatesFromPartyCodeList.find(x => x.text === selectedValue);
+      if (selectedObj) {
+        this.docketService.basicDetailForm.get('csgeCustGSTState')?.setValue(selectedObj.value);
+      }
+    } else {
+      this.docketService.basicDetailForm.get('csgeCustGSTState')?.setValue('');
+    }
+  });
   }
 
   getBillingTypeData() {
@@ -313,6 +336,16 @@ export class BasicDetailsComponent {
         this.docketService.inValidDocketMsg=response.codeDesc;
         }else{
           this.docketService.inValidDocketMsg = '';
+        }
+      }
+    });
+  }
+
+    getStatesFromPartyCode() {
+    this.basicDetailService.getStatesFromPartyCode(8888).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.getStatesFromPartyCodeList=response;
         }
       }
     });

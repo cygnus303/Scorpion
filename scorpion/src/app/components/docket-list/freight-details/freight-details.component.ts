@@ -12,10 +12,7 @@ import { FormControl, FormGroup } from '@angular/forms';
   styleUrl: './freight-details.component.scss'
 })
 export class FreightDetailsComponent {
-  toPayAmount: string = '0.00';
-  public originalCharges: any[] = [];
-
- 
+  toPayAmount: string = '0.00'; 
   chargeAmounts: { [key: string]: any } = {};
   focusedCharge: any;
   constructor(
@@ -69,7 +66,7 @@ export class FreightDetailsComponent {
     }
     this.docketService.subTotalCalculation();
   });
-   this.getChargesData();
+   this.docketService.getChargesData();
   }
 
   // getChargesData() {
@@ -85,34 +82,34 @@ export class FreightDetailsComponent {
   //   });
   // }
 
-getChargesData() {
-  this.basicDetailService.getChargeDetail().subscribe({
-    next: (response) => {
-      if (response) {
-        this.docketService.freightchargingData = response;
-       this.originalCharges = JSON.parse(JSON.stringify(response));
-        // Form controls banavva
-        this.docketService.freightchargingData.forEach((item: any) => {
-          if (!this.docketService.freightForm.contains(item.chargeCode)) {
-            this.docketService.freightForm.addControl(
-              item.chargeCode,
-              new FormControl(item.chargeAmount || 0)
-            );
-          } else {
-            // Already control hoy to value update karvi
-            this.docketService.freightForm
-              .get(item.chargeCode)
-              ?.setValue(item.chargeAmount || 0);
-          }
-        });
-      }
-    }
-  });
-}
+// getChargesData() {
+//   this.basicDetailService.getChargeDetail().subscribe({
+//     next: (response) => {
+//       if (response) {
+//         this.docketService.freightchargingData = response;
+//        this.originalCharges = JSON.parse(JSON.stringify(response));
+//         // Form controls banavva
+//         this.docketService.freightchargingData.forEach((item: any) => {
+//           if (!this.docketService.freightForm.contains(item.chargeCode)) {
+//             this.docketService.freightForm.addControl(
+//               item.chargeCode,
+//               new FormControl(item.chargeAmount || 0)
+//             );
+//           } else {
+//             // Already control hoy to value update karvi
+//             this.docketService.freightForm
+//               .get(item.chargeCode)
+//               ?.setValue(item.chargeAmount || 0);
+//           }
+//         });
+//       }
+//     }
+//   });
+// }
 
 updateCharge(chargeCode: string, isSelected: boolean) {
   // Get original charge from originalCharges array
-  const originalItem = this.originalCharges.find(c => c.chargeCode === chargeCode);
+  const originalItem = this.docketService.originalCharges.find(c => c.chargeCode === chargeCode);
   if (originalItem) {
     const amount = isSelected ? originalItem.chargeAmount : 0;
     this.docketService.freightForm.get(chargeCode)?.setValue(amount);

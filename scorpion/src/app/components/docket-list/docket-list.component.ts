@@ -135,7 +135,7 @@ export class DocketListComponent implements OnInit{
         "chargedPkgsNo": this.docketService.invoiceform.value.chargeWeightPerPkg,
         "prodcd": this.docketService.basicDetailForm.value.contents,
         "spl_svc_req": "",
-        "stax_paidby": "",//dropdown mathi avshe teni key
+        "stax_paidby":  this.docketService.freightForm.value.stax_paidby,//dropdown mathi avshe teni key
         "stax_regno": "",
         "service_Class": this.docketService.basicDetailForm.value.serviceType,
         "ftl_types": this.docketService.basicDetailForm.value.typeMovement,
@@ -259,9 +259,9 @@ export class DocketListComponent implements OnInit{
         "origin_Area": this.docketService.basicDetailForm.value.origin_Area,///consinee mathi avshe adress
         "destination_Area": this.docketService.basicDetailForm.value.destination_Area,///consinor mathi avshe adress
         "custGSTNo": "",
-        "custGSTState": this.docketService.basicDetailForm.value.csgegstState,
+        "custGSTState": this.docketService.basicDetailForm.value.custGSTState,
         "csgeCustGSTNo": this.docketService.consignorForm.value.consigneeGSTNo,
-        "csgeCustGSTState":  this.docketService.basicDetailForm.value.csgegstState,
+        "csgeCustGSTState":  this.docketService.basicDetailForm.value.csgeCustGSTState,
         "isCompletion": true,
         "billingState": this.docketService.freightForm.value.billingState,
         "eWayBillNo": this.docketService.basicDetailForm.value.ewayBillNo,
@@ -307,7 +307,8 @@ export class DocketListComponent implements OnInit{
         "frT_RATE": Number(this.docketService.freightForm.value.freightRate) || 0,
         "freighT_CALC": Number(this.docketService.freightForm.value.freightRate) || 0,
         "freight": Number(this.docketService.freightForm.value.freightCharges) || 0,
-        "fov": this.docketService.freightForm.value.fovRate,
+        "fov": this.docketService.freightForm.value.fovCharged,
+        "fovRate": this.docketService.freightForm.value.fovRate,
         "subTotal": this.docketService.freightForm.value.subTotal,
         "svctax": 0,
         "cess": 0,
@@ -317,7 +318,7 @@ export class DocketListComponent implements OnInit{
         "discount": Number(this.docketService.freightForm.value.discount) || 0,
         "sbcRate": 0,
         "sbCess": 0,
-        "fovCalculated": 0,
+        "fovCalculated":Number(this.docketService.freightForm.value.fovCalculated) || 0,
         "kkcRate": 0,
         "kkcAmount": 0,
         "gstType": this.docketService.gstCalculationList.gsttype,

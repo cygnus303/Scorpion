@@ -41,7 +41,9 @@ export class DocketService {
   public freightData: any;
   public chargingData: any;
   public totalSubTotal: any;
+  public getPincodeMaster: any;
   public freightchargingData: any[] = [];
+  public originalCharges: any[] = [];
   public notPincodeValue ='Please Enter at least 1 characters';
   public weightErrorMsg: string = '';
   public submitErrorMsg : string ='';
@@ -55,7 +57,7 @@ export class DocketService {
     const now = new Date();
     this.today = now.toISOString().split('T')[0];
     this.basicDetailForm = new FormGroup({
-      isODAApplicable: new FormControl({ value: true, disabled: true }),
+      isODAApplicable: new FormControl({ value: false, disabled: true }),
       isLocalNote: new FormControl(false),
       ewayBillNo: new FormControl(null),
       cNoteNo: new FormControl(null ,[Validators.required]),
@@ -104,8 +106,8 @@ export class DocketService {
       volumetric: new FormControl(false),
       IsLocalDocket: new FormControl(false),
       isDACC: new FormControl(false),
-      gststate: new FormControl(),
-      consigneegstdtate: new FormControl(),
+      custGSTState: new FormControl(),
+      csgeCustGSTState: new FormControl(),
       ISCounterDelivery: new FormControl(false),
       applyreferencedktT: new FormControl(false),
       ISCounterPickUpPRS: new FormControl(false),
@@ -167,6 +169,7 @@ export class DocketService {
     this.freightForm = new FormGroup({
       freightCharges: new FormControl(),
       GSTPaidBy: new FormControl(),
+      stax_paidby: new FormControl(),
       rateType: new FormControl(),
       freightRate: new FormControl(),
       EDD: new FormControl(),
@@ -284,7 +287,19 @@ export class DocketService {
     this.basicDetailForm.patchValue({ destination: event.destination });
     this.consignorForm.patchValue({ consigneePincode: event.pinArea });
     this.pincodeList = [];
-
+    this.getPincodeMasterList(event.value); 
+  }
+  getPincodeMasterList(cityCode:string) {
+    this.basicDetailService.getPincodeMasterList(cityCode).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.getPincodeMaster=response;
+          this.basicDetailForm.patchValue({
+            isODAApplicable:this.getPincodeMaster.is_ODA_Apply === "Y" ? true:false,
+          })
+        }
+      }
+    });
   }
 
 
@@ -322,10 +337,17 @@ export class DocketService {
     const destination = this.basicDetailForm.value.destination;
     const billingType = this.basicDetailForm.value.billingType;
 
-    if (billingParty && destination && billingType) {
-        this.getStep2Details();
-        this.consignorbuild();  
+  if (billingParty && destination && billingType) {
+     if (this.invoiceRows.length > 0) {
+      this.invoiceform.reset(this.invoicebuild());
     }
+     this.freightbuild();
+    this.getChargesData();
+    this.consignorbuild();
+    this.getIGSTchargesDetail();
+
+    this.getStep2Details();
+  }
   }
 
   validateDropdownValue(formControlName: string, newList: any[], key: string = 'codeId') {
@@ -378,6 +400,7 @@ export class DocketService {
           this.getexemptServicesData();
           this.GetPincodeOrigin();
           this.getRateData()
+          this.getcontractservicecharge();
           // this.GetDKTGSTForGTA();
           // this.GetGSTFromTrnMode()
         }
@@ -463,19 +486,23 @@ export class DocketService {
         }
       }
     });
-    debugger
-    this.basicDetailService.contractservicecharge(this.step2DetailsList?.contractid, this.basicDetailForm.value.mode).subscribe({
-      next: (response: any) => {
-        if (response) {
-          debugger
-          this.contractservicecharge = response;
-          this.invoiceform.patchValue({
-            cft_Ratio: this.contractservicecharge[0].cft_Ratio
-          });
-          this.getStaxPaidBy()
-        }
-      }
-    });
+   this.getcontractservicecharge();
+  }
+
+  getcontractservicecharge(){
+    if(this.basicDetailForm.value.mode){
+      this.basicDetailService.contractservicecharge(this.step2DetailsList?.contractid, this.basicDetailForm.value.mode).subscribe({
+     next: (response: any) => {
+       if (response) {
+         this.contractservicecharge = response;
+         this.invoiceform.patchValue({
+           cft_Ratio: this.contractservicecharge[0].cft_Ratio
+         });
+         this.getStaxPaidBy()
+       }
+     }
+   });
+    }
   }
 
   getGSTNODetails(event: any) {
@@ -607,7 +634,8 @@ export class DocketService {
       next: (response: any) => {
         if (response) {
           this.freightForm.patchValue({
-            GSTPaidBy: response.result[0].text
+            GSTPaidBy: response.result[0].text,
+            stax_paidby: response.result[0].value
           })
         }
       },
@@ -753,6 +781,32 @@ export class DocketService {
       },
     });
   }
+
+  getChargesData() {
+  this.basicDetailService.getChargeDetail().subscribe({
+    next: (response) => {
+      if (response) {
+        this.freightchargingData = response;
+       this.originalCharges = JSON.parse(JSON.stringify(response));
+        // Form controls banavva
+        this.freightchargingData.forEach((item: any) => {
+          if (!this.freightForm.contains(item.chargeCode)) {
+            this.freightForm.addControl(
+              item.chargeCode,
+              new FormControl(item.chargeAmount || 0)
+            );
+          } else {
+            // Already control hoy to value update karvi
+            this.freightForm
+              .get(item.chargeCode)
+              ?.setValue(item.chargeAmount || 0);
+          }
+        });
+      }
+    }
+  });
+}
+
   GetFreightContractDetails() {
     const data = {
       chargeRule: 'NONE',
@@ -980,8 +1034,10 @@ export class DocketService {
         const controlValue = Number(this.freightForm?.get(item.chargecode)?.value) || 0;
         totalSubTotal += controlValue;
       });
-       const fovRate = Number(this.freightForm?.value?.fovRate) || 0;
-       totalSubTotal += fovRate;
+      //  const fovRate = Number(this.freightForm?.value?.fovRate) || 0;
+       const fovCharged = Number(this.freightForm?.value?.fovCharged) || 0;
+      //  totalSubTotal += fovRate;
+       totalSubTotal += fovCharged;
     }
 
     // Patch subtotal
