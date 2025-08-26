@@ -221,9 +221,8 @@
           <div class="form-group">
             <label class="control-label col-md-5"><b>GST Rate</b></label>
             <div class="col-md-7">
-              <select class="form-control select2 required2 required select2-offscreen"
-                placeholder="Select GST Percentage" formControlName="gstRate" tabindex="-1" readonly="true">
-                <option value=""></option>
+              <!-- <select class="form-control select2 required2 required select2-offscreen"
+                placeholder="Select GST Percentage" formControlName="gstRate" tabindex="-1" disabled>
                 <option value="0">0</option>
                 <option value="5">5</option>
                 <option value="6">6</option>
@@ -231,7 +230,10 @@
                 <option value="12">12</option>
                 <option selected="selected" value="18">18</option>
                 <option value="28">28</option>
-              </select>
+              </select> -->
+              <ng-select class="form-control select2 required2 required select2-offscreen" [items]="[0,5,6,10,12,18,28]" formControlName="gstRate" readonly
+                [clearable]="false">
+              </ng-select>
             </div>
           </div>
         </div>

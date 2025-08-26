@@ -219,26 +219,25 @@ export class DocketService {
     }
   }
 
-  createInvoiceRow(srNo: number): FormGroup {
-    return new FormGroup({
-      srNo: new FormControl(srNo),
-      ewayBillNo: new FormControl(''),
-      ewayBillExpiry: new FormControl(''),
-      invoiceValue: new FormControl(0),
-      ewayinvoiceDate: new FormControl(''),
-      invoiceNo: new FormControl(''),
-      declaredValue: new FormControl(0),
-      noOfPkgs: new FormControl(0),
-      actualWeight: new FormControl(0, [Validators.required, Validators.min(1)]),
-      length: new FormControl(0),
-      breadth: new FormControl(0),
-      height: new FormControl(0),
-      cubicWeight: new FormControl(0),
-      invoicedate: new FormControl(this.today),
-      declaredvalue: new FormControl(0),
-      cubicweight: new FormControl(0),
-    });
-  }
+ createInvoiceRow(srNo: number): FormGroup {
+ return new FormGroup({
+    srNo: new FormControl(srNo),
+    ewayBillNo: new FormControl(null),
+    ewayBillExpiry: new FormControl(''),
+    invoiceValue: new FormControl(0),
+    ewayinvoiceDate: new FormControl(''),
+    invoiceNo: new FormControl('', Validators.required),
+    declaredvalue: new FormControl(0, Validators.required),
+    noOfPkgs: new FormControl(0),
+    actualWeight: new FormControl(0, [Validators.required, Validators.min(1)]),
+    length: new FormControl(0),
+    breadth: new FormControl(0),
+    height: new FormControl(0),
+    cubicweight: new FormControl(0),
+    invoicedate: new FormControl(this.today),
+  });
+}
+
   getpincodeData(event: any) {
   const searchText = typeof event === 'string' ? event : event?.term;
   if (!searchText || searchText.trim() === '') {
