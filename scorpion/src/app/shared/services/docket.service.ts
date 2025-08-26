@@ -851,10 +851,14 @@ export class DocketService {
               .replace(/ /g, '-'),
             billingState: this.freightData.billingState
           });
-          this.invoiceform.patchValue({
-            finalActualWeight: Math.max(this.freightData.chargedWeight || 0, this.invoiceform.value.finalActualWeight || 0),
-            chargeWeightPerPkg: Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0)
-          })
+        // Only patch the value if there's no validation error
+          if (!this.weightErrorMsg) {
+            this.invoiceform.patchValue({
+              finalActualWeight: Math.max(this.freightData.chargedWeight || 0, this.invoiceform.value.finalActualWeight || 0),
+              chargeWeightPerPkg: Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0)
+            });
+          }
+
           this.getFuelSurcharge(this.freightData.freightCharge);
         }
       },

@@ -5,6 +5,8 @@ import { DestinationsList, generalMasterResponse, billingPartyResponse, VehicleN
 import { cityResponse } from '../../../shared/models/general-master.model';
 import { combineLatest, filter, startWith } from 'rxjs';
 import { GeneralMasterService } from '../../../shared/services/general-master.service';
+import { Validators } from '@angular/forms';
+import { mobileNo } from '../../../shared/constants/common';
 
 @Component({
   selector: 'basic-details',
@@ -64,7 +66,101 @@ export class BasicDetailsComponent {
       this.docketService.basicDetailForm.get('csgeCustGSTState')?.setValue('');
     }
   });
+     this.onApplyDeliveryChangeValidators();
+       this.onApplyDeliveryChangeValidators();
+        this.docketService?.basicDetailForm?.get('serviceType')?.valueChanges.subscribe(() => {
+      this.applyTypeMovementValidation();
+    });
+       
+       // Run validation whenever EDD changes
+  // this.docketService.freightForm.get('EDD')?.valueChanges.subscribe(() => {
+  //   this.validateAppointmentDate();
+  // });
+
+  // // Run validation whenever appointmentDT changes
+  // this.docketService.basicDetailForm.get('appointmentDT')?.valueChanges.subscribe(() => {
+  //   this.validateAppointmentDate();
+  // });
   }
+
+    onApplyDeliveryChangeValidators(){
+     this.docketService.basicDetailForm.get('isAppointmentDelivery')?.valueChanges.subscribe((isAppointment) => {
+    if (isAppointment) {
+      this.docketService.basicDetailForm.get('appointmentDT')?.setValidators([Validators.required]);
+      this.docketService.basicDetailForm.get('personName')?.setValidators([Validators.required]);
+      this.docketService.basicDetailForm.get('contactNo')?.setValidators([Validators.required, Validators.pattern(mobileNo)]);
+      this.docketService.basicDetailForm.get('remarks')?.setValidators([Validators.required]);
+    } else {
+      this.docketService.basicDetailForm.get('appointmentDT')?.clearValidators();
+      this.docketService.basicDetailForm.get('personName')?.clearValidators();
+      this.docketService.basicDetailForm.get('contactNo')?.clearValidators();
+      this.docketService.basicDetailForm.get('remarks')?.clearValidators();
+    }
+    // update validity after setting/clearing validators
+    this.docketService.basicDetailForm.get('appointmentDT')?.updateValueAndValidity();
+    this.docketService.basicDetailForm.get('personName')?.updateValueAndValidity();
+    this.docketService.basicDetailForm.get('contactNo')?.updateValueAndValidity();
+    this.docketService.basicDetailForm.get('remarks')?.updateValueAndValidity();
+  });
+  }
+
+onApplyReferenceDktChangeValidators() {
+  const isReferenceCtrl = this.docketService.basicDetailForm.get('isreferenceDKT');
+  const refDocketCtrl = this.docketService.basicDetailForm.get('referenceDocket');
+
+  if (!isReferenceCtrl || !refDocketCtrl) return;
+
+  // 1. Apply once at init (so it works first time)
+  if (isReferenceCtrl.value) {
+    refDocketCtrl.setValidators([Validators.required]);
+  } else {
+    refDocketCtrl.clearValidators();
+    refDocketCtrl.setValue(null);
+  }
+  refDocketCtrl.updateValueAndValidity();
+
+  // 2. Subscribe to changes for future updates
+  isReferenceCtrl.valueChanges.subscribe((isReference) => {
+    if (isReference) {
+      refDocketCtrl.setValidators([Validators.required]);
+    } else {
+      refDocketCtrl.clearValidators();
+      refDocketCtrl.setValue(null);
+    }
+    refDocketCtrl.updateValueAndValidity();
+  });
+}
+
+applyTypeMovementValidation() {
+  const control = this.docketService.basicDetailForm.get('typeMovement');
+
+  if (this.docketService?.basicDetailForm?.get('serviceType')?.value === '2') {
+    control?.setValidators([Validators.required]);
+  } else {
+    control?.clearValidators();
+    control?.setErrors(null); // 👈 clear old error if any
+  }
+
+  control?.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+}
+
+
+validateAppointmentDate() {
+  // const eddDate = this.docketService.freightForm.get('EDD')?.value;
+  // const appointmentDate = this.docketService.basicDetailForm.get('appointmentDT')?.value;
+  // const appointmentCtrl = this.docketService.basicDetailForm.get('appointmentDT');
+
+  // if (eddDate && appointmentDate && new Date(appointmentDate) < new Date(eddDate)) {
+  //   appointmentCtrl?.setErrors({ ...(appointmentCtrl.errors || {}), minDate: true });
+  // } else {
+  //   if (appointmentCtrl?.errors) {
+  //     const errors = { ...appointmentCtrl.errors };
+  //     delete errors['minDate'];
+  //     appointmentCtrl.setErrors(Object.keys(errors).length ? errors : null);
+  //   }
+  // }
+}
+
 
   getBillingTypeData() {
     this.basicDetailService.getGeneralMasterList('PAYTYP', null, null).subscribe({
