@@ -43,8 +43,8 @@ export class DocketListComponent implements OnInit{
           if (isValid) {
             // 🔑 badha key male → normal flow
             this.docketService.loginUserList = parsedData;
-            this.docketService.Location = parsedData.LocationCode;
-              // this.docketService.Location ='BDD';
+            // this.docketService.Location = parsedData.LocationCode;
+              this.docketService.Location ='TBH';
             this.docketService.BaseUserCode = parsedData.UserId;
           } else {
             // ❌ ek pan key missing hoy → redirect

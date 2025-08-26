@@ -70,7 +70,11 @@ export class BasicDetailsComponent {
        this.onApplyDeliveryChangeValidators();
         this.docketService?.basicDetailForm?.get('serviceType')?.valueChanges.subscribe(() => {
       this.applyTypeMovementValidation();
+      this.applyVehicleNoValidation();
     });
+     this.docketService.basicDetailForm.get('vehicleType')?.valueChanges.subscribe(() => {
+    this.applyVehicleNoValidation();
+  });
        
        // Run validation whenever EDD changes
   // this.docketService.freightForm.get('EDD')?.valueChanges.subscribe(() => {
@@ -139,6 +143,21 @@ applyTypeMovementValidation() {
   } else {
     control?.clearValidators();
     control?.setErrors(null); // 👈 clear old error if any
+  }
+
+  control?.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+}
+
+applyVehicleNoValidation(){
+  const serviceType = this.docketService.basicDetailForm.get('serviceType')?.value;
+  const vehicleType = this.docketService.basicDetailForm.get('vehicleType')?.value;
+  const control = this.docketService.basicDetailForm.get('vehicleno');
+
+  if (serviceType === '2' && vehicleType === 'own') {   // 👈 condition tame change kari shako
+    control?.setValidators([Validators.required]);
+  } else {
+    control?.clearValidators();
+    control?.setErrors(null);
   }
 
   control?.updateValueAndValidity({ onlySelf: true, emitEvent: false });

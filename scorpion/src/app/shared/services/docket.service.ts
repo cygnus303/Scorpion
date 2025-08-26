@@ -813,7 +813,7 @@ export class DocketService {
       baseCode1: 'NONE',
       chargeSubRule: 'NONE',
       baseCode2: 'NONE',
-      chargedWeight: Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString(),
+      chargedWeight: Math.max(this.invoiceform.value.finalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString(),
       contractID: this.step2DetailsList?.contractid,
       destination: this.basicDetailForm.value.destination,
       depth: this.depth,
@@ -824,7 +824,7 @@ export class DocketService {
       itemCode: '',
       ftlType: this.basicDetailForm.value.typeMovement || '',
       noOfPkgs: this.invoiceform.value.totalNoOfPkgs?.toString(),
-      chargedWeright: Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString(),
+      chargedWeright: Math.max(this.invoiceform.value.finalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString(),
       origin: this.basicDetailForm.value.origin,
       payBase: this.basicDetailForm.value.billingType,
       serviceType: this.basicDetailForm.value.serviceType,
@@ -1072,43 +1072,53 @@ export class DocketService {
 
 
 actualWeightvalidation() {
-  var CFTWeightType = this.step2DetailsList.cftWeightType;
-  var CHRGWT: number = Math.max(
-  Number(this.invoiceform.value.finalActualWeight) || 0,
-  Number(this.invoiceform.value.totalCubicWeight) || 0
-);
+  const CFTWeightType = this.step2DetailsList.cftWeightType;
+  const CHRGWT: number = Math.max(
+    Number(this.invoiceform.value.finalActualWeight) || 0,
+    Number(this.invoiceform.value.totalCubicWeight) || 0
+  );
 
-  var ACTUWT = this.invoiceform.value.totalActualWeight;
-  var CFTWeight = this.invoiceform.value.totalCubicWeight;
+  const ACTUWT = this.invoiceform.value.totalActualWeight;
+  const CFTWeight = this.invoiceform.value.totalCubicWeight;
 
+  const ctrl = this.invoiceform.get('finalActualWeight');
   this.weightErrorMsg = ''; // reset
+  ctrl?.setErrors(null); // reset errors
 
   if (this.step2DetailsList.isVolumentric == 'Y') {
     if (CFTWeightType == "A") {
       if (CHRGWT < ACTUWT) {
         this.weightErrorMsg = "Charged Weight must not be less than Actual Weight.";
+        ctrl?.setErrors({ weightInvalid: true });
         return false;
       }
     } else if (CFTWeightType == "V") {
       if (CHRGWT < CFTWeight) {
         this.weightErrorMsg = "Charged Weight must not be less than CFT Weight.";
+        ctrl?.setErrors({ weightInvalid: true });
         return false;
       }
     } else if (CFTWeightType == "H") {
       if (CHRGWT < ACTUWT || CHRGWT < CFTWeight) {
         this.weightErrorMsg = "Charged Weight must be higher than CFT Weight and Actual Weight.";
+        ctrl?.setErrors({ weightInvalid: true });
         return false;
       }
     }
   } else {
     if (CHRGWT < ACTUWT) {
       this.weightErrorMsg = "Charged Weight must not be less than Actual Weight.";
+      ctrl?.setErrors({ weightInvalid: true });
       return false;
     }
   }
- this.weightErrorMsg = '';
+
+  // if valid
+  this.weightErrorMsg = '';
+  ctrl?.setErrors(null);
   return true;
 }
+
 
 }
 

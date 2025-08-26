@@ -402,12 +402,16 @@
         <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('vehicleType')?.value === 'own'">
           <div class="form-group"><label class="col-md-5">Vehicle No</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" [searchable]="true" (search)="getVehicleNumbersList($event)"
-                (change)="onChangeVehicleNo($event)" placeholder="Vehicle No" formControlName="vehicleno">
+              <ng-select class="noFoundTextColor required2" [searchable]="true" (search)="getVehicleNumbersList($event)"
+                (change)="onChangeVehicleNo($event)" placeholder="Vehicle No" formControlName="vehicleno" [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('vehicleno')?.invalid  && docketService.basicDetailForm.get('vehicleno')?.touched}">
                 <ng-option *ngFor="let item of vehicleNumbersList" [value]="item.vehno">
                   <strong>{{ item.vehno }}</strong> : {{ item.vehno }}
                 </ng-option>
               </ng-select>
+               <div *ngIf="docketService.basicDetailForm.get('vehicleno')?.invalid  && docketService.basicDetailForm.get('vehicleno')?.touched"
+                class="text-danger text-start">
+                This field is required.
+              </div>
             </div>
           </div>
         </div>

@@ -286,8 +286,8 @@
                         class="form-control rounded-0 clsAmount required2 required text-end" type="number" (focus)="clearZero(docketService.invoiceform, 'finalActualWeight')" (change)="docketService.actualWeightvalidation()"
                         (blur)="restoreIfEmpty(docketService.invoiceform, 'finalActualWeight');docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.getProRataCharge();this.docketService.getFovContractDetails();">
                       <div *ngIf="docketService.weightErrorMsg" class="text-danger mt-1">
-                        {{ docketService.weightErrorMsg }}
-                      </div>
+                      {{ docketService.weightErrorMsg }}
+                    </div>
                     </div>
                   </td>
                 </tr>
