@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { BasicDetailService } from '../../../shared/services/basic-detail.service';
 import { DocketService } from '../../../shared/services/docket.service';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'invoice-details',
@@ -21,43 +21,64 @@ export class InvoiceDetailsComponent {
 
   ngOnInit() {
     this.docketService.invoicebuild();
-      this.docketService.invoiceform.valueChanges.subscribe(() => {
-    this.applyEwayBillValidation();
-  });
-   this.docketService.basicDetailForm.get('pincode')?.valueChanges.subscribe(() => {
-    this.applyEwayBillValidation();
-  });
-     this.docketService.basicDetailForm.get('destinationState')?.valueChanges.subscribe(() => {
-    this.applyEwayBillValidation();
-  });
-     this.docketService.basicDetailForm.get('originState')?.valueChanges.subscribe(() => {
-    this.applyEwayBillValidation();
-  });
-
+  //     this.docketService.invoiceform.valueChanges.subscribe(() => {
+  //   this.applyEwayBillValidation();
+  // });
+  //  this.docketService.basicDetailForm.get('pincode')?.valueChanges.subscribe(() => {
+  //   this.applyEwayBillValidation();
+  // });
+  //    this.docketService.basicDetailForm.get('destinationState')?.valueChanges.subscribe(() => {
+  //   this.applyEwayBillValidation();
+  // });
+  //    this.docketService.basicDetailForm.get('originState')?.valueChanges.subscribe(() => {
+  //   this.applyEwayBillValidation();
+  // });
+  
   }
 
+ handleDeclaredValueChange(row: AbstractControl) {
+  row.get('declaredvalue')?.valueChanges.subscribe((value) => {
+    const declared = value ?? 0;
+    const originState = this.docketService.basicDetailForm.get('originState')?.value;
+    const destState = this.docketService.basicDetailForm.get('destinationState')?.value;
+
+    if (declared > 100000 && originState && destState && originState === destState) {
+      row.get('ewayBillNo')?.setValidators([Validators.required]);
+      row.get('ewayBillExpiry')?.setValidators([Validators.required]);
+      row.get('ewayinvoiceDate')?.setValidators([Validators.required]);
+    } else {
+      row.get('ewayBillNo')?.clearValidators();
+      row.get('ewayBillExpiry')?.clearValidators();
+      row.get('ewayinvoiceDate')?.clearValidators();
+    }
+
+    row.get('ewayBillNo')?.updateValueAndValidity({ emitEvent: false });
+    row.get('ewayBillExpiry')?.updateValueAndValidity({ emitEvent: false });
+    row.get('ewayinvoiceDate')?.updateValueAndValidity({ emitEvent: false });
+  });
+}
   removeRow(index: number): void {
     this.docketService.invoiceRows.removeAt(index);
   }
 
 
-  applyEwayBillValidation() {
-  const totalDeclaredValue = this.docketService.invoiceform.get('totalDeclaredValue')?.value;
-  const originState = this.docketService.basicDetailForm.get('originState')?.value;
-  const destState = this.docketService.basicDetailForm.get('destinationState')?.value;
+//   applyEwayBillValidation() {
+//   const totalDeclaredValue = this.docketService.invoiceform.get('totalDeclaredValue')?.value;
+//   const originState = this.docketService.basicDetailForm.get('originState')?.value;
+//   const destState = this.docketService.basicDetailForm.get('destinationState')?.value;
 
-  this.docketService.invoiceRows.controls.forEach((row: any) => {
-    const ewayBillNo = row.get('ewayBillNo');
-    if (totalDeclaredValue > 100000 && originState && destState && originState === destState) {
-      ewayBillNo?.setValidators([Validators.required]);
-    } else {
-      ewayBillNo?.clearValidators();
-        ewayBillNo?.setErrors(null);
-    }
+//   this.docketService.invoiceRows.controls.forEach((row: any) => {
+//     const ewayBillNo = row.get('ewayBillNo');
+//     if (totalDeclaredValue > 100000 && originState && destState && originState === destState) {
+//       ewayBillNo?.setValidators([Validators.required]);
+//     } else {
+//       ewayBillNo?.clearValidators();
+//         ewayBillNo?.setErrors(null);
+//     }
 
-    ewayBillNo?.updateValueAndValidity({ emitEvent: false });
-  });
-}
+//     ewayBillNo?.updateValueAndValidity({ emitEvent: false });
+//   });
+// }
   calculateSummary(i:number) {
       const serviceType = this.docketService.basicDetailForm.get('serviceType')?.value;
 
