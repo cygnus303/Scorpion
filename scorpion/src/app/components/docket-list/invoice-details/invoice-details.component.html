@@ -110,8 +110,15 @@
                     <input class="form-control rounded-0" formControlName="srNo" type="text">
                   </td>
                   <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
-                    <input class="form-control rounded-0 " maxlength="12" placeholder="E-Way Bill No"
-                      formControlName="ewayBillNo" type="text">
+                    <!-- <input class="form-control rounded-0 " maxlength="12" placeholder="E-Way Bill No"
+                      formControlName="ewayBillNo" type="text"> -->
+                      <input class="form-control rounded-0" maxlength="12" placeholder="E-Way Bill No"
+                            formControlName="ewayBillNo" type="text"
+                            [ngClass]="{ 'border-danger': row.get('ewayBillNo')?.invalid && row.get('ewayBillNo')?.touched }">
+
+                          <div *ngIf="row.get('ewayBillNo')?.errors  && row.get('ewayBillNo')?.touched" class="text-danger text-start">
+                          This field is required.
+                          </div>
                   </td>
                   <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
                     <input class="form-control rounded-0" placeholder="dd-MM-yyyy" type="text"
@@ -276,11 +283,11 @@
                   <td class="center">
                     <div class="col-md-11">
                       <input formControlName="finalActualWeight"
-                        class="form-control rounded-0 clsAmount required2 required text-end" type="number" (focus)="clearZero(docketService.invoiceform, 'finalActualWeight')"
+                        class="form-control rounded-0 clsAmount required2 required text-end" type="number" (focus)="clearZero(docketService.invoiceform, 'finalActualWeight')" (change)="docketService.actualWeightvalidation()"
                         (blur)="restoreIfEmpty(docketService.invoiceform, 'finalActualWeight');docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.getProRataCharge();this.docketService.getFovContractDetails();">
-                      <!-- <div *ngIf="docketService.weightErrorMsg" class="text-danger mt-1">
+                      <div *ngIf="docketService.weightErrorMsg" class="text-danger mt-1">
                         {{ docketService.weightErrorMsg }}
-                      </div> -->
+                      </div>
                     </div>
                   </td>
                 </tr>
