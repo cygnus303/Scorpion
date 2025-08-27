@@ -73,6 +73,7 @@ export class DocketListComponent implements OnInit{
 }
 
   onSubmit() {
+      if (this.isSubmitting) return;
     if (this.docketService.basicDetailForm.valid && this.docketService.consignorForm.valid && this.docketService.invoiceform.valid && this.docketService.freightForm.valid) {
       const listCCH = this.docketService.freightchargingData.map(charge => ({
         ChargeCode: charge.chargeCode,

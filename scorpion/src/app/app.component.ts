@@ -14,17 +14,25 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 export class AppComponent {
   title = 'scorpion';
 
-  public loading: string = 'disable';
+  // public loading: string = 'disable';
   constructor(public commonService: CommonService,public spinner: NgxSpinnerService){
-    this.commonService.isLoading.subscribe({
-      next: (response) => {
-        setTimeout(()=>{
-          if (response != null) {
-            this.loading = response ? 'enable' : 'disable';
-          }
-        },500)
-      },
-      error: (response: any) => {},
-    });
+    // this.commonService.isLoading.subscribe({
+    //   next: (response) => {
+    //     setTimeout(()=>{
+    //       if (response != null) {
+    //         this.loading = response ? 'enable' : 'disable';
+    //       }
+    //     },500)
+    //   },
+    //   error: (response: any) => {},
+    // });
   }
+  
+  // ngOnInit() {
+  //   this.spinner.show();
+  //   setTimeout(() => {
+  //     this.spinner.hide();
+  //   }, 5000);
+  // }
+  
 }

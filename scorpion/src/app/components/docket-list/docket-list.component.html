@@ -33,3 +33,10 @@
     </button>
     </div>
 </div>
+
+<div *ngIf="isSubmitting" class="loading-overlay">
+  <div class="spinner-container">
+    <i class="fas fa-spinner fa-spin custom-spinner"></i>
+    <div class="mt-3 custom-text">Submitting...</div>
+  </div>
+</div>
