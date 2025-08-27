@@ -53,87 +53,108 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="form-group mb-1">
                 <label class="control-label col-md-5"></label>
                 <div class="col-md-7">
                   <input class="required2 form-control required2" required formControlName="consignorMasterName" 
                     placeholder="Consignor Name" type="text" [ngClass]="{ 'border-danger': docketService.consignorForm.get('consignorMasterName')?.invalid  && docketService.consignorForm.get('consignorMasterName')?.touched}">
-                    <div *ngIf="docketService.consignorForm.get('consignorMasterName')?.invalid  && docketService.consignorForm.get('consignorMasterName')?.touched"
-                      class="text-danger text-start">
-                      This field is required.
-                    </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="form-group">
-                <label class="control-label col-md-5">Address </label>
-                <div class="col-md-7">
-               <!-- <ng-select class="noFoundTextColor" placeholder="Address"></ng-select> -->
-                  <textarea class="required2 form-control-textarea required clsCnor required2" required formControlName="consignorAddress" cols="20" 
-                    placeholder="Address" rows="2" [ngClass]="{ 'border-danger': docketService.consignorForm.get('consignorAddress')?.invalid  && docketService.consignorForm.get('consignorAddress')?.touched}"></textarea>
-                   <div *ngIf="docketService.consignorForm.get('consignorAddress')?.invalid  && docketService.consignorForm.get('consignorAddress')?.touched"
-                      class="text-danger text-start">
-                      This field is required.
-                    </div>
                   </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="form-group">
-                <label class="control-label col-md-5">City </label>
-                <div class="col-md-7">
-                  <input class="required2 form-control required clsCnor required2" required  formControlName="consignorCity"
-                    placeholder="City" type="text" [ngClass]="{ 'border-danger': docketService.consignorForm.get('consignorCity')?.invalid  && docketService.consignorForm.get('consignorCity')?.touched}">
-                    <div *ngIf="docketService.consignorForm.get('consignorCity')?.invalid  && docketService.consignorForm.get('consignorCity')?.touched"
-                      class="text-danger text-start">
-                      This field is required.
-                    </div>
                 </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="form-group">
-                <label class="control-label col-md-5">Pincode </label>
-                <div class="col-md-7">
-                 <ng-select class="noFoundTextColor required2" [items]="docketService.pincodeList" bindLabel="pinArea"
-                bindValue="value" placeholder="Pincode" formControlName="consignorPincode"  required (open)="docketService.resetPincodeDropdown()"
-                [ngClass]="{ 'border-danger': docketService.consignorForm.get('consignorPincode')?.invalid  && docketService.consignorForm.get('consignorPincode')?.touched}"
-               [notFoundText]="docketService.notPincodeValue"  (search)="docketService.getpincodeData($event)" (change)="docketService.GetPincodeOrigin('Origin')"></ng-select>
-                <div *ngIf="docketService.consignorForm.get('consignorPincode')?.invalid  && docketService.consignorForm.get('consignorPincode')?.touched"
-                  class="text-danger text-start">
+               <div class="form-group mb-1">
+                 <div class="col-md-5"></div>
+                 <div *ngIf="docketService.consignorForm.get('consignorMasterName')?.invalid  && docketService.consignorForm.get('consignorMasterName')?.touched"
+                  class="text-danger col-md-7 text-start">
                   This field is required.
                 </div>
+               </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group mb-1">
+                <label class="control-label col-md-5">Address </label>
+                <div class="col-md-7">
+                  <!-- <ng-select class="noFoundTextColor" placeholder="Address"></ng-select> -->
+                  <textarea class="required2 form-control-textarea required clsCnor required2" required
+                    formControlName="consignorAddress" cols="20" placeholder="Address" rows="2"
+                    [ngClass]="{ 'border-danger': docketService.consignorForm.get('consignorAddress')?.invalid  && docketService.consignorForm.get('consignorAddress')?.touched}"></textarea>
+                </div>
+              </div>
+              <div class="form-group mb-1">
+                <div class="col-md-5"></div>
+                <div
+                  *ngIf="docketService.consignorForm.get('consignorAddress')?.invalid  && docketService.consignorForm.get('consignorAddress')?.touched"
+                  class="text-danger col-md-7 text-start">
+                  This field is required.
                 </div>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="form-group mb-1">
+                <label class="control-label col-md-5">City </label>
+                <div class="col-md-7">
+                  <input class="required2 form-control required clsCnor required2" required formControlName="consignorCity"
+                    placeholder="City" type="text"
+                    [ngClass]="{ 'border-danger': docketService.consignorForm.get('consignorCity')?.invalid  && docketService.consignorForm.get('consignorCity')?.touched}">
+                </div>
+              </div>
+              <div class="form-group mb-1">
+                <div class="col-md-5"></div>
+                <div
+                  *ngIf="docketService.consignorForm.get('consignorCity')?.invalid  && docketService.consignorForm.get('consignorCity')?.touched"
+                  class="text-danger col-md-7 text-start">
+                  This field is required.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group mb-1">
+                <label class="control-label col-md-5">Pincode </label>
+                <div class="col-md-7">
+                  <ng-select class="noFoundTextColor required2" [items]="docketService.pincodeList" bindLabel="pinArea"
+                    bindValue="value" placeholder="Pincode" formControlName="consignorPincode" required
+                    (open)="docketService.resetPincodeDropdown()"
+                    [ngClass]="{ 'border-danger': docketService.consignorForm.get('consignorPincode')?.invalid  && docketService.consignorForm.get('consignorPincode')?.touched}"
+                    [notFoundText]="docketService.notPincodeValue" (search)="docketService.getpincodeData($event)"
+                    (change)="docketService.GetPincodeOrigin('Origin')"></ng-select>
+                </div>
+              </div>
+              <div class="form-group mb-1">
+                <div class="col-md-5"></div>
+                <div
+                  *ngIf="docketService.consignorForm.get('consignorPincode')?.invalid  && docketService.consignorForm.get('consignorPincode')?.touched"
+                  class="text-danger col-md-7 text-start">
+                  This field is required.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group mb-1">
                 <label class="control-label col-md-5">Mobile No </label>
                 <div class="col-md-7">
                   <input [ngClass]="{ 'border-danger': docketService.consignorForm.get('consignorMobile')?.invalid && docketService.consignorForm.get('consignorMobile')?.touched}" class="form-control required2"  formControlName="consignorMobile"
                   maxlength="10"  placeholder="Mobile No"  required>
-                  <div *ngIf="docketService.consignorForm.get('consignorMobile')?.touched && docketService.consignorForm.get('consignorMobile')?.invalid" class="text-danger text-start">
-                    <div *ngIf="docketService.consignorForm.get('consignorMobile')?.errors?.['required']">
-                      This field is required.
-                    </div>
-                    <div *ngIf="docketService.consignorForm.get('consignorMobile')?.errors?.['pattern']">
-                      Please enter a valid Indian mobile number.
-                    </div>
-                      <div *ngIf="docketService.consignorForm.get('consignorMobile')?.errors?.['sameNumber'] && docketService.consignorForm.get('consignorMobile')?.touched" class="text-danger text-start">
-                        Consignee and Consignor mobile cannot be same.
-                      </div>
-
-                  </div>
                 </div>
+              </div>
+              <div class="form-group mb-1">
+                <div class="col-md-5"></div>
+                <div *ngIf="docketService.consignorForm.get('consignorMobile')?.touched && docketService.consignorForm.get('consignorMobile')?.invalid" class="text-danger col-md-7 text-start">
+                <div *ngIf="docketService.consignorForm.get('consignorMobile')?.errors?.['required']">
+                  This field is required.
+                </div>
+                <div *ngIf="docketService.consignorForm.get('consignorMobile')?.errors?.['pattern']">
+                  Please enter a valid Indian mobile number.
+                </div>
+                  <div *ngIf="docketService.consignorForm.get('consignorMobile')?.errors?.['sameNumber'] && docketService.consignorForm.get('consignorMobile')?.touched" class="text-danger text-start">
+                    Consignee and Consignor mobile cannot be same.
+                  </div>
+              </div>
               </div>
             </div>
           </div>
@@ -144,12 +165,15 @@
                 <div class="col-md-7">
                   <input class="form-control uppercase-none" maxlength="255" placeholder="Email Id" formControlName="consignorEmail" type="text"
                      />
-                  <div *ngIf="docketService.consignorForm.get('consignorEmail')?.touched && docketService.consignorForm.get('consignorEmail')?.invalid " class="text-danger text-start">
+                    </div>
+                  </div>
+                  <div class="form-group mb-1">
+                    <div class="col-md-5"></div>
+                    <div *ngIf="docketService.consignorForm.get('consignorEmail')?.touched && docketService.consignorForm.get('consignorEmail')?.invalid " class="text-danger col-md-7 text-start">
                     <!-- <small *ngIf="docketService.consignorForm.get('consignorEmail')?.errors?.['required']">Email is required.</small> -->
                     <small *ngIf="docketService.consignorForm.get('consignorEmail')?.errors?.['pattern']">Email is invalid.</small>
                   </div>
-                </div>
-              </div>
+                  </div>
             </div>
           </div>
         </div>
@@ -201,104 +225,124 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="form-group mb-1">
                 <label class="control-label col-md-5"></label>
                 <div class="col-md-7">
                   <input class="required2 form-control required clsCnee required2" required formControlName="consigneeMasterName"
                     placeholder="Consignee Name" type="text"  [ngClass]="{ 'border-danger': docketService.consignorForm.get('consigneeMasterName')?.invalid  && docketService.consignorForm.get('consigneeMasterName')?.touched}">
-                    <div
-                      *ngIf="docketService.consignorForm.get('consigneeMasterName')?.invalid  && docketService.consignorForm.get('consigneeMasterName')?.touched"
-                      class="text-danger text-start">
-                      This field is required.
-                    </div>
+                  </div>
                 </div>
-              </div>
+                <div class="form-group mb-1">
+                   <div class="col-md-5"></div>
+                  <div *ngIf="docketService.consignorForm.get('consigneeMasterName')?.invalid  && docketService.consignorForm.get('consigneeMasterName')?.touched"
+                  class="text-danger col-md-7 text-start">
+                  This field is required.
+                </div>
+                </div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="form-group mb-1">
                 <label class="control-label col-md-5">Address </label>
                 <div class="col-md-7">
                   <!-- <select class="form-control required2" placeholder="Address"></select> -->
                   <textarea class="required2 form-control-textarea required clsCnee required2" required formControlName="consigneeAddress" cols="20" 
                     placeholder="Address" rows="2"  [ngClass]="{ 'border-danger': docketService.consignorForm.get('consigneeAddress')?.invalid  && docketService.consignorForm.get('consigneeAddress')?.touched}"></textarea>
-                    <div *ngIf="docketService.consignorForm.get('consigneeAddress')?.invalid  && docketService.consignorForm.get('consigneeAddress')?.touched"
-                  class="text-danger text-start">
+                  </div>
+                </div>
+               <div class="form-group mb-1">
+                 <div class="col-md-5"></div>
+                 <div *ngIf="docketService.consignorForm.get('consigneeAddress')?.invalid  && docketService.consignorForm.get('consigneeAddress')?.touched"
+                  class="text-danger col-md-7 text-start">
                   This field is required.
                 </div>
-                </div>
-              </div>
+               </div>
             </div>
           </div>
     
           <div class="row">
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="form-group mb-1">
                 <label class="control-label col-md-5">City </label>
                 <div class="col-md-7">
                   <input class="required2 form-control required clsCnee required2" required formControlName="consigneeCity"
-                    placeholder="City" type="text"  [ngClass]="{ 'border-danger': docketService.consignorForm.get('consigneeCity')?.invalid  && docketService.consignorForm.get('consigneeCity')?.touched}">
-                    <div *ngIf="docketService.consignorForm.get('consigneeCity')?.invalid  && docketService.consignorForm.get('consigneeCity')?.touched"
-                  class="text-danger text-start">
-                  This field is required.
+                    placeholder="City" type="text"
+                    [ngClass]="{ 'border-danger': docketService.consignorForm.get('consigneeCity')?.invalid  && docketService.consignorForm.get('consigneeCity')?.touched}">
                 </div>
+              </div>
+              <div class="form-group mb-1">
+                <div class="col-md-5"></div>
+                <div *ngIf="docketService.consignorForm.get('consigneeCity')?.invalid  && docketService.consignorForm.get('consigneeCity')?.touched"
+                  class="text-danger col-md-7 text-start">
+                  This field is required.
                 </div>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="form-group mb-1">
                 <label class="control-label col-md-5">Pincode </label>
                 <div class="col-md-7">
                   <ng-select class="noFoundTextColor required2" [items]="docketService.pincodeList" bindLabel="pinArea" required (open)="docketService.resetPincodeDropdown()"
                 bindValue="pinArea" placeholder="Pincode" formControlName="consigneePincode"  [ngClass]="{ 'border-danger': docketService.consignorForm.get('consigneePincode')?.invalid  && docketService.consignorForm.get('consigneePincode')?.touched}"
                 [notFoundText]="docketService.notPincodeValue" (search)="docketService.getpincodeData($event)"></ng-select>
-                <div *ngIf="docketService.consignorForm.get('consigneePincode')?.invalid  && docketService.consignorForm.get('consigneePincode')?.touched"
-                  class="text-danger text-start">
-                  This field is required.
-                </div>
-                </div>
               </div>
+            </div>
+            <div class="form-group mb-1">
+              <div class="col-md-5"></div>
+              <div *ngIf="docketService.consignorForm.get('consigneePincode')?.invalid  && docketService.consignorForm.get('consigneePincode')?.touched"
+              class="text-danger col-md-7 text-start">
+              This field is required.
+            </div>
+            </div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="form-group mb-1">
                 <label class="control-label col-md-5">Mobile No </label>
                 <div class="col-md-7">
                   <input class="form-control required required2" required formControlName="consigneeMobile" maxlength="10"
                     placeholder="Mobile No" type="text" [ngClass]="{ 'border-danger': docketService.consignorForm.get('consigneeMobile')?.invalid && docketService.consignorForm.get('consigneeMobile')?.touched}">
-                    <div *ngIf="docketService.consignorForm.get('consigneeMobile')?.touched && docketService.consignorForm.get('consigneeMobile')?.invalid" class="text-danger text-start">
+                  </div>
+                </div>
+                <div class="form-group mb-1">
+                  <div class="col-md-5"></div>
+                  <div *ngIf="docketService.consignorForm.get('consigneeMobile')?.touched && docketService.consignorForm.get('consigneeMobile')?.invalid"
+                    class="text-danger col-md-7 text-start">
                     <div *ngIf="docketService.consignorForm.get('consigneeMobile')?.errors?.['required']">
                       This field is required.
                     </div>
                     <div *ngIf="docketService.consignorForm.get('consigneeMobile')?.errors?.['pattern']">
                       Please enter a valid Indian mobile number.
                     </div>
-                    <div *ngIf="docketService.consignorForm.get('consigneeMobile')?.errors?.['sameNumber'] && docketService.consignorForm.get('consigneeMobile')?.touched" class="text-danger text-start">
+                    <div
+                      *ngIf="docketService.consignorForm.get('consigneeMobile')?.errors?.['sameNumber'] && docketService.consignorForm.get('consigneeMobile')?.touched"
+                      class="text-danger text-start">
                       Consignee and Consignor mobile cannot be same.
                     </div>
-
                   </div>
                 </div>
-              </div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="form-group mb-1">
                 <label class="control-label col-md-5">Email Id </label>
                 <div class="col-md-7">
                   <input class="form-control uppercase-none" formControlName="consigneeEmail"  placeholder="Email Id" type="text"
                    />
-                  <div *ngIf="docketService.consignorForm.get('consigneeEmail')?.touched && docketService.consignorForm.get('consigneeEmail')?.invalid " class="text-danger text-start">
-                    <!-- <small *ngIf="docketService.consignorForm.get('consigneeEmail')?.errors?.['required']">Email is required.</small> -->
-                    <small *ngIf="docketService.consignorForm.get('consigneeEmail')?.errors?.['pattern']">Email is invalid.</small>
                   </div>
                 </div>
-              </div>
+                <div class="form-group mb-1">
+                  <div class="col-md-5"></div>
+                  <div *ngIf="docketService.consignorForm.get('consigneeEmail')?.touched && docketService.consignorForm.get('consigneeEmail')?.invalid " class="text-danger col-md-7 text-start">
+                  <!-- <small *ngIf="docketService.consignorForm.get('consigneeEmail')?.errors?.['required']">Email is required.</small> -->
+                  <small *ngIf="docketService.consignorForm.get('consigneeEmail')?.errors?.['pattern']">Email is invalid.</small>
+                </div>
+                </div>
             </div>
           </div>
         </div>
