@@ -24,12 +24,12 @@
         <a class="btn btn-light default"> <i class="fas fa-sync"></i>&nbsp;Reset</a>
     <button type="submit" class="btn btn-success btn-sm px-3" 
           (click)="onSubmit()">
-        <ng-container *ngIf="!isSubmitting">
+        <ng-container>
             <i class="fas fa-check"></i>&nbsp;Submit
         </ng-container>
-        <ng-container *ngIf="isSubmitting">
+        <!-- <ng-container *ngIf="isSubmitting">
             <i class="fas fa-spinner fa-spin"></i>&nbsp;Saving...
-        </ng-container>
+        </ng-container> -->
     </button>
     </div>
 </div>

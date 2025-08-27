@@ -3,6 +3,7 @@ import { DocketService } from '../../shared/services/docket.service';
 import { BasicDetailService } from '../../shared/services/basic-detail.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DecryptService } from '../../shared/services/decryptservice ';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-docket-list',
   standalone: false,
@@ -14,7 +15,8 @@ export class DocketListComponent implements OnInit{
   decrypted: string = '';
 
   constructor(
-    public docketService: DocketService, private basicDetailService: BasicDetailService, private activatedRoute: ActivatedRoute,private decryptService:DecryptService,private router: Router
+    public docketService: DocketService, private basicDetailService: BasicDetailService, private activatedRoute: ActivatedRoute,private decryptService:DecryptService,private router: Router,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit(): void {
@@ -44,7 +46,7 @@ export class DocketListComponent implements OnInit{
             // 🔑 badha key male → normal flow
             this.docketService.loginUserList = parsedData;
             // this.docketService.Location = parsedData.LocationCode;
-              this.docketService.Location = parsedData.LocationCode;
+              this.docketService.Location = 'TBH';
             this.docketService.BaseUserCode = parsedData.UserId;
           } else {
             // ❌ ek pan key missing hoy → redirect
