@@ -433,15 +433,18 @@
           <div class="form-group">
             <label for="refDkt" class="col-md-5">Reference Docket</label>
             <div class="col-md-7">
-              <input type="text" class="form-control required2" placeholder="Docket No." formControlName="referenceDocket" 
+              <input type="text" class="form-control required2" placeholder="Docket No." formControlName="referenceDocket" (input)="ReferenceDocket($event)"
               [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('referenceDocket')?.invalid  && docketService.basicDetailForm.get('referenceDocket')?.touched}"
               />
               <div *ngIf="docketService.basicDetailForm.get('referenceDocket')?.invalid && docketService.basicDetailForm.get('referenceDocket')?.touched"
-                       class="text-danger text-start">
-                       <div *ngIf="docketService.basicDetailForm.get('referenceDocket')?.errors?.['required']">
-                         This field is required.
-                       </div>
-                     </div>
+                class="text-danger text-start">
+                <div *ngIf="docketService.basicDetailForm.get('referenceDocket')?.errors?.['required']">
+                  This field is required.
+                </div>
+                <div *ngIf="referenceDocketMsg" class="text-danger text-start">
+                  {{referenceDocketMsg}}
+                </div>
+              </div>
             </div>
           </div>
         </div>

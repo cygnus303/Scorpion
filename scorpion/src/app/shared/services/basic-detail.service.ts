@@ -127,4 +127,8 @@ loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
   getPincodeMasterList(cityCode:any){
     return this.apiHandlerService.Get(`Operation/GetPincodeMasterList?cityCode=${cityCode}`)
   }
+
+  referenceDocket(data:any){
+     return this.apiHandlerService.Post(`Operation/check-valid-docket`, data);
+  }
 }

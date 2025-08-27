@@ -24,6 +24,7 @@ export class BasicDetailsComponent {
   public destinationsList: DestinationsList[] = [];
   public vehicleNumbersList: VehicleNumbersResponse[] = [];
   public getStatesFromPartyCodeList: StatesFromPartyCodeRepsonse[] = [];
+  public referenceDocketMsg:any;
   public notFoundTextValue = 'Please enter at least 3 characters';
   public notDestinationValue = 'Please enter at least 3 characters';
   public notFromCityValue = 'Please enter at least 1 characters';
@@ -451,6 +452,23 @@ validateAppointmentDate() {
         this.docketService.inValidDocketMsg=response.codeDesc;
         }else{
           this.docketService.inValidDocketMsg = '';
+        }
+      }
+    });
+  }
+
+   ReferenceDocket(event:any) {
+    const payload = {
+      docketNo: event.target.value,
+    }
+    this.basicDetailService.referenceDocket(payload).subscribe({
+      next: (response: any) => {
+        if (response?.cnt === 0) {
+          this.referenceDocketMsg = "Please Enter valid docket no";
+          this.docketService.basicDetailForm.get('referenceDocket')?.setErrors({ invalid: true });
+        } else {
+          this.referenceDocketMsg = "";
+          this.docketService.basicDetailForm.get('referenceDocket')?.setErrors(null);
         }
       }
     });
