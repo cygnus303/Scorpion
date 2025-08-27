@@ -4,6 +4,7 @@ import { BasicDetailService } from '../../shared/services/basic-detail.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DecryptService } from '../../shared/services/decryptservice ';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { SweetAlertService } from '../../shared/services/sweet-alert.service';
 @Component({
   selector: 'app-docket-list',
   standalone: false,
@@ -16,7 +17,7 @@ export class DocketListComponent implements OnInit{
 
   constructor(
     public docketService: DocketService, private basicDetailService: BasicDetailService, private activatedRoute: ActivatedRoute,private decryptService:DecryptService,private router: Router,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService, private sweetAlertService: SweetAlertService,
   ) { }
 
   ngOnInit(): void {
@@ -376,7 +377,7 @@ export class DocketListComponent implements OnInit{
           if (response) {
        window.scrollTo({ top: 0, behavior: 'smooth' }); 
 
-            this.docketService.successMsg='Docket submitted successfully.'
+            this.sweetAlertService.success('Docket submitted successfully.');
             this.docketService.basicDetailForm.reset();
             this.docketService.freightForm.reset();
             this.docketService.invoiceform.reset();
@@ -388,9 +389,8 @@ export class DocketListComponent implements OnInit{
            this.isSubmitting = false;
         },
         error: (error) => {
-      this.docketService.submitErrorMsg =error?.error?.message;
+       this.sweetAlertService.error(error?.error?.message);
         this.isSubmitting = false; // ✅ loader stop on error
-       window.scrollTo({ top: 0, behavior: 'smooth' }); 
 
       }
       });
