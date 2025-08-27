@@ -51,6 +51,7 @@ export class DocketService {
   public isSearching :boolean = false;
   public inValidDocketMsg :string='';
   public loginUserList!:LoginUser;
+  public bsValue: Date = new Date(); 
   constructor(private basicDetailService: BasicDetailService) { }
 
   detailForm() {
@@ -74,7 +75,7 @@ export class DocketService {
       serviceType: new FormControl(null),
       typeMovement: new FormControl(null),
       contents: new FormControl(null),
-      cNoteDate: new FormControl(this.today),
+      cNoteDate: new FormControl(new Date()),
       packingType: new FormControl(null),
       businessType: new FormControl(null),
       specialInstruction: new FormControl(null),
@@ -234,7 +235,7 @@ export class DocketService {
     breadth: new FormControl(0),
     height: new FormControl(0),
     cubicweight: new FormControl(0),
-    invoicedate: new FormControl(this.today),
+    invoicedate: new FormControl(new Date()),
   });
 }
 
@@ -909,7 +910,7 @@ export class DocketService {
       "transMode": this.basicDetailForm.value.mode,
       "orderID": this.step2DetailsList?.contractid,
       "invAmt": this.invoiceform.value.totalDeclaredValue?.toString(),
-      "dockdt": this.basicDetailForm.value.cNoteDate,
+      "dockdt": new Date(this.basicDetailForm.value.cNoteDate).toISOString(),
       "prodType": this.basicDetailForm.value.contents,
       "packType": this.basicDetailForm.value.packingType,
       "riskType": this.step2DetailsList?.risktype,

@@ -47,8 +47,15 @@
           <div class="form-group">
             <label class="col-md-5">CNote Date</label>
             <div class="col-md-7">
-              <input type="date" class="form-control required2" placeholder="CNote Date" formControlName="cNoteDate"
-                [max]="docketService.today" (click)="openDatePicker($event)" required [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('cNoteDate')?.invalid  && docketService.basicDetailForm.get('cNoteDate')?.touched }"/>
+           <input type="text"
+           class="form-control"
+           #dp="bsDatepicker"
+           bsDatepicker
+           [bsValue]="docketService.bsValue"  [bsConfig]="{ containerClass: 'theme-dark-blue' ,rangeInputFormat: 'DD.MM.YYYY', dateInputFormat:
+                     'DD.MM.YYYY'}" placeholder="CNote Date" [minDate]="docketService.bsValue" formControlName="cNoteDate" 
+          required [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('cNoteDate')?.invalid  && docketService.basicDetailForm.get('cNoteDate')?.touched }">
+              <!-- <input type="date" class="form-control required2" placeholder="CNote Date" formControlName="cNoteDate"
+                [max]="docketService.today" (click)="openDatePicker($event)" required [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('cNoteDate')?.invalid  && docketService.basicDetailForm.get('cNoteDate')?.touched }"/> -->
               <div *ngIf="docketService.basicDetailForm.get('cNoteDate')?.invalid && docketService.basicDetailForm.get('cNoteDate')?.touched "
                 class="text-danger text-start">
                 This field is required.
@@ -59,17 +66,23 @@
       </div>
       <div class="row">
         <div class="col-md-4 form-column ">
-          <div class="form-group"><label class="col-md-5">Billing Type</label>
+          <div class="form-group">
+            <label class="col-md-5">Billing Type</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor required2" [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('billingType')?.invalid  && docketService.basicDetailForm.get('billingType')?.touched }" [items]="billingTypeData" bindLabel="codeDesc" bindValue="codeId"
-                placeholder="Billing Type" formControlName="billingType" required (change)="onChangeBillingType($event)">
+              <ng-select class="noFoundTextColor required2"
+                [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('billingType')?.invalid  && docketService.basicDetailForm.get('billingType')?.touched }"
+                [items]="billingTypeData" bindLabel="codeDesc" bindValue="codeId" placeholder="Billing Type"
+                formControlName="billingType" required (change)="onChangeBillingType($event)">
               </ng-select>
-               <div *ngIf="docketService.basicDetailForm.get('billingType')?.invalid && docketService.basicDetailForm.get('billingType')?.touched "
-                class="text-danger text-start">
-                This field is required.
-              </div>
             </div>
           </div>
+         <div class="form-group">
+           <div
+            *ngIf="docketService.basicDetailForm.get('billingType')?.invalid && docketService.basicDetailForm.get('billingType')?.touched "
+            class="text-danger col ms-5">
+            This field is required.
+          </div>
+         </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Pincode</label>

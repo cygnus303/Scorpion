@@ -93,13 +93,12 @@ export class DocketListComponent implements OnInit{
         });
       });
     });
-
     const invoiceList = this.docketService.invoiceRows.value.map((row: any, index: number) => {
       const obj: any = {
         SrNo: row.srNo,
         DOCKNO: this.docketService.basicDetailForm.value.cNoteNo,
         INVNO: row.invoiceNo || '',
-        INVDT: row.invoicedate || null,
+        INVDT: row.invoicedate ? new Date(row.invoicedate).toISOString() : null,
         DECLVAL: row.declaredvalue || 0,
         PKGSNO: row.noOfPkgs || 0,
         ACTUWT: row.actualWeight || 0,
@@ -111,7 +110,7 @@ export class DocketListComponent implements OnInit{
         Part_No: '',
         EWayBillNo: row.ewayBillNo || '',
         EWayInvoicevalue: 0,
-        EWayBillInvoiceDate: row.ewayinvoiceDate || null,
+        EWayBillInvoiceDate:  row.ewayinvoiceDate ? new Date(row.ewayinvoiceDate).toISOString() : null,
         CHRGWT: 0
       };
 
@@ -250,7 +249,7 @@ export class DocketListComponent implements OnInit{
         "min_DACCCharged": this.docketService.step2DetailsList.min_DACCCharged,
         "dktdaccCharges": 0,
         "ftltype": this.docketService.basicDetailForm.value.typeMovement,
-        "dockdate": this.docketService.basicDetailForm.value.cNoteDate,
+        "dockdate": new Date(this.docketService.basicDetailForm.value.cNoteDate).toISOString(),
         "is_ODA_Apply": this.docketService.basicDetailForm.value.isODAApplicable,
         "mailId": "",
         "referenceNo": this.docketService.basicDetailForm.value.referenceDocket,
@@ -286,7 +285,7 @@ export class DocketListComponent implements OnInit{
         "billingParty": this.docketService.basicDetailForm.value.billingParty,
         "freight": this.docketService.freightForm.value.freightCharges,
         "billigLocation": this.docketService.step2DetailsList.billingLocation,
-        "docdt": this.docketService.basicDetailForm.value.cNoteDate,
+        "docdt": new Date(this.docketService.basicDetailForm.value.cNoteDate).toISOString(),
         "tpCustGSTNo": "",
         "tpcd": "",
         "tpnm": "",

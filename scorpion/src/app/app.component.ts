@@ -3,13 +3,23 @@ import { RouterOutlet } from '@angular/router';
 import { CommonService } from './shared/services/common.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NgxSpinnerModule],
+   imports: [
+    CommonModule,        
+    RouterOutlet,
+    NgxSpinnerModule,
+    BsDatepickerModule,
+    HttpClientModule       
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  styleUrl: './app.component.scss'
 })
 export class AppComponent {
   title = 'scorpion';

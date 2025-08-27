@@ -180,9 +180,9 @@ restoreIfEmpty(form: any, controlName: string) {
 
   }
 
-  openDatePicker(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    input.showPicker?.();
-  }
+  // openDatePicker(event: Event): void {
+  //   const input = event.target as HTMLInputElement;
+  //   input.showPicker?.();
+  // }
 
 }

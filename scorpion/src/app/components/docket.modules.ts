@@ -11,6 +11,7 @@ import { InvoiceDetailsComponent } from './docket-list/invoice-details/invoice-d
 import { NgSelectModule } from '@ng-select/ng-select';
 import { HeaderComponent } from '../layouts/header/header.component';
 import { DocketService } from '../shared/services/docket.service';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
     declarations: [
@@ -22,11 +23,12 @@ import { DocketService } from '../shared/services/docket.service';
         HeaderComponent
     ],
     imports: [
+        CommonModule,
         RouterModule.forChild(DocketRoutes),
         ReactiveFormsModule,
-        CommonModule,
         FormsModule,
         NgSelectModule,
+        BsDatepickerModule,
     ],
     providers: [DatePipe,DocketService],
     exports: [ RouterModule ],
