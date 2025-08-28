@@ -131,4 +131,8 @@ loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
   referenceDocket(data:any){
      return this.apiHandlerService.Post(`Operation/check-valid-docket`, data);
   }
+
+  eWayBillData(ewaybillNo:string){
+     return this.apiHandlerService.Get(`Operation/GetEwaybillDetail?ewaybillNo=${ewaybillNo}`);
+  }
 }

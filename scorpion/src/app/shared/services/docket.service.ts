@@ -4,6 +4,7 @@ import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@ang
 import { BasicDetailService } from './basic-detail.service';
 import { EmailRegex, mobileNo } from '../constants/common';
 import { MobileNumberValidator } from '../directives/validators/mobile-number-validator';
+import { SweetAlertService } from './sweet-alert.service';
 
 @Injectable({
   providedIn: 'root',
@@ -52,7 +53,7 @@ export class DocketService {
   public inValidDocketMsg :string='';
   public loginUserList!:LoginUser;
   public bsValue: Date = new Date(); 
-  constructor(private basicDetailService: BasicDetailService) { }
+  constructor(private basicDetailService: BasicDetailService,private sweetAlertService:SweetAlertService) { }
 
   detailForm() {
     const now = new Date();
@@ -341,6 +342,7 @@ export class DocketService {
      if (this.invoiceRows.length > 0) {
       this.invoiceform.reset(this.invoicebuild());
     }
+
      this.freightbuild();
     this.getChargesData();
     this.consignorbuild();
@@ -402,7 +404,11 @@ export class DocketService {
           this.getRateData()
           this.getcontractservicecharge();
           // this.GetDKTGSTForGTA();
-          // this.GetGSTFromTrnMode()
+          // this.GetGSTFromTrnMode();
+
+          if((this.basicDetailForm.value.billingType==='P02' && this.step2DetailsList.contractid==='P028888')|| !this.step2DetailsList.contractid){
+            this.sweetAlertService.info('Cutomer Contract not found or May be Expire, Please contact you administrator for further detail.')
+          }
         }
       }
     });

@@ -84,28 +84,29 @@ export class SweetAlertService {
     });
   }
 
-  info(message: string, onConfirm?: () => void): void {
-   Swal.fire({
-      title: '<div style="font-weight: 600; font-size: 20px;">Information</div>',
-      html: `<div style="font-size: 17px; padding: 10px 0; color: #444;">
-           ${message}
-         </div>`,
-      icon: 'info',
-      showConfirmButton: true,
-      confirmButtonText: 'OK, Got It!',
-      background: 'rgba(255, 255, 255, 0.9)',
-      color: '#2c3e50',
-      width: '420px',
-      customClass: {
-        popup: 'glassy-info-popup',
-        confirmButton: 'glass-btn-ok'
-      },
-      buttonsStyling: false,
-    }).then((result) => {
-      if (result.isConfirmed && onConfirm) {
-        onConfirm();
-      }
-    });
+info(message: string, onConfirm?: () => void): void {
+  Swal.fire({
+    title: 'Information',
+    html: `<div>${message}</div>`,
+    icon: 'info',
+    showConfirmButton: true,
+    confirmButtonText: 'OK, Got It!',
+    background: 'rgba(255, 255, 255, 0.9)',
+    color: '#2c3e50',
+    width: '420px',
+    buttonsStyling: false,
+    customClass: {
+      popup: 'glassy-info-popup',
+      title: 'glassy-info-title',
+      htmlContainer: 'glassy-info-body',
+      confirmButton: 'glassy-info-btn',
+      icon: 'glassy-info-icon'
+    }
+  }).then((result) => {
+    if (result.isConfirmed && onConfirm) {
+      onConfirm();
+    }
+  });
 }
 
 confirm(message: string, options?: any) {

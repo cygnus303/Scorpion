@@ -21,7 +21,7 @@
           <div class="form-group">
             <label class="col-md-5">EwayBill Number</label>
             <div class="col-md-7">
-              <input type="text" class="form-control " placeholder="EwayBill Number" formControlName="ewayBillNo"
+              <input type="text" class="form-control " placeholder="EwayBill Number" formControlName="ewayBillNo" maxlength="12"
                 (blur)="docketService.getGSTNODetails($event)" />
             </div>
           </div>
