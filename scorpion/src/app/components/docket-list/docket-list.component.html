@@ -1,4 +1,16 @@
 <!-- <app-header></app-header> -->
+<div class="alert alert-danger display-hide d-flex justify-content-between" *ngIf="docketService.submitErrorMsg">
+    <ul class="mb-0" style="list-style-type: disc; padding-left: 20px;">
+    <li *ngFor="let err of docketService.submitErrorMsg">
+      {{ err }}
+    </li>
+  </ul>
+</div>
+<div class="alert alert-success display-hide d-flex justify-content-between" *ngIf="docketService.successMsg">
+    {{ docketService.successMsg }}
+    <i class="fas fa-times cursor-pointer" (click)="docketService.successMsg =''"></i>
+</div>
+
 <div class="p-2 mt-0">
     <basic-details></basic-details>
 </div>

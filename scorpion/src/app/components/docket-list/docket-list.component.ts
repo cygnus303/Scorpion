@@ -376,20 +376,18 @@ export class DocketListComponent implements OnInit{
         next: (response: any) => {
           if (response) {
        window.scrollTo({ top: 0, behavior: 'smooth' }); 
-
-            this.sweetAlertService.success('Docket submitted successfully.');
+       this.docketService.successMsg='Docket submitted successfully.'
+      //  window.location.href = `https://sepluat.cygnux.in/Operation/DocketDone/${'2'}?DOCKNO=${this.docketService.basicDetailForm.value.cNoteNo}&IsFromBillGeneration=N`;
             this.docketService.basicDetailForm.reset();
             this.docketService.freightForm.reset();
             this.docketService.invoiceform.reset();
             this.docketService.consignorForm.reset();
-             setTimeout(() => {
-                window.location.reload();
-              }, 4000);
           }
            this.isSubmitting = false;
         },
         error: (error) => {
-       this.sweetAlertService.error(error?.error?.message);
+        window.scrollTo({ top: 0, behavior: 'smooth' }); 
+      this.docketService.submitErrorMsg =error?.error?.message;
         this.isSubmitting = false; // ✅ loader stop on error
 
       }
