@@ -3,6 +3,45 @@
   font-size: 11px !important;
 }
 
+.glassy-info-popup {
+  font-family:none !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  padding: 28px;
+}
+
+.glassy-info-title {
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  color: #2c3e50 !important;
+}
+
+.glassy-info-body div{
+  font-size: 14px !important;
+  padding: 10px 0 !important;
+  color: #444 !important;
+}
+
+.glassy-info-btn {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  background-color: #2c3e50 !important;
+  color: #fff !important;
+  border-radius: 6px !important;
+  padding: 8px 18px !important;
+}
+
+/* 🔹 Bigger icon */
+.glassy-info-icon{
+  transform: scale(1.4) !important; /* increase size */
+  margin-bottom: 10px !important;
+}
+
+.glassy-info-icon .swal2-icon-content{
+  transform: scale(1.6) !important; /* increase size */
+  margin-bottom: 10px !important;
+   font-size: 21px !important;
+}
+
 .fa,
 .fas,
 .far,

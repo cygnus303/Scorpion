@@ -185,4 +185,36 @@ restoreIfEmpty(form: any, controlName: string) {
   //   input.showPicker?.();
   // }
 
+
+getEwayBillData(event: any, index: number) {
+  const search = event.target.value;
+  this.basicDetailService.eWayBillData(search).subscribe({
+    next: (response: any) => {
+      if (response.status===1) {
+        const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
+        const row = invoiceRows.at(index) as FormGroup;
+
+        // always keep Date object for bsDatepicker
+        const invoiceDate = response.eWayBillInvoiceDate ? new Date(response.eWayBillInvoiceDate) : null;
+        const expiryDate =
+          response.eWayBillExpiredDate && response.eWayBillExpiredDate !== '1900-01-01T00:00:00'
+            ? new Date(response.eWayBillExpiredDate)
+            : null;
+        const invDate = response.invdt ? new Date(response.invdt) : null;
+
+        row.patchValue({
+          ewayinvoiceDate: invoiceDate,
+          ewayBillExpiry: expiryDate,
+          invoicedate: invDate
+        });   
+
+       
+      }else{
+
+      }
+    }
+  });
+}
+
+
 }
