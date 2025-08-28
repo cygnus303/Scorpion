@@ -61,7 +61,7 @@
   font-size: 11px !important;
   color: #333;
   border: 1px solid #e5e5e5 ;
-  border-radius: 0 !important;
+  border-radius: 4px !important;
   line-height: 1.42857143;
   background: none;
   padding: 0 !important;
@@ -70,13 +70,13 @@
   
 
   .ng-select-container {
-    height: 22px !important;
-    min-height: 22px !important;
+    height: 30px !important;
+    min-height: 30px !important;
     border: none !important;
     padding: 0 6px !important;
     display: flex;
     align-items: center;
-    border-radius: 0 !important;
+    border-radius: 4px !important;
   }
 
   .ng-value-container {
@@ -99,7 +99,7 @@
   }
 
   .ng-arrow-wrapper {
-    padding: 0 6px !important;
+    padding: 3px 6px 0 6px !important;
     height: 100%;
     display: flex;
     align-items: center;
@@ -112,8 +112,8 @@
   // Prevent jump on focus
   &.ng-select-focused .ng-select-container {
     border: none !important;
-    height: 22px !important;
-    min-height: 22px !important;
+    height: 30px !important;
+    min-height: 30px !important;
     padding: 0 6px !important;
     display: flex;
     align-items: center;
@@ -151,7 +151,7 @@ ng-select .ng-input input[type='text'] {
 }
 
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
-  padding: 4px 6px !important; // Reduce top/bottom padding
+  padding: 6px !important; // Reduce top/bottom padding
   font-size: 11px !important;
   line-height: 1.2 !important;
   min-height: unset !important;
@@ -197,11 +197,11 @@ ng-select .ng-input input[type='text'] {
       color: #333333;
       display: block;
       width: 100%;
-      height: 24px;
+      height: 30px;
       padding: 2px 6px;
       line-height: 1.42857143;
       background-image: none;
-      border-radius: 0px !important;
+      border-radius: 4px !important;
       text-transform: uppercase;
     }
 
@@ -215,9 +215,9 @@ ng-select .ng-input input[type='text'] {
       display: block;
       width: 100%;
       padding: 2px 6px;
-      line-height: 1.42857143;
+      line-height: 2.42857143;
       background-image: none;
-      border-radius: 0px;
+      border-radius: 4px;
     }
 
     // .uppercase-input {

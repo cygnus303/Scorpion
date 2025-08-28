@@ -352,17 +352,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-4 form-column">
-          <div class="form-group">
-            <label for="refDkt" class="col-md-5">COD/DOD</label>
-            <div class="col-md-7 text-start">
-              <label class="yes-no">
-                <input type="checkbox" formControlName="IsCODDOD" />
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-        </div>
+        
         <!-- <div class="col-md-4 form-column" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
           <div class="form-group">
             <label for="refDkt" class="col-md-5">Volumetric</label>
@@ -588,9 +578,16 @@
         <div class="col-md-4 form-column ">
           <div class="form-group ">
             <label for="CSD" class="col-md-5">CSD Delivery</label>
-            <div class="col-md-7 text-start">
+            <div class="col-md-2 text-start">
               <label class="yes-no">
                 <input type="checkbox" formControlName="iscsdDelivery"><span class="slider"></span>
+              </label>
+            </div>
+            <label for="refDkt" class="col-md-4">COD/DOD</label>
+            <div class="col-md-2 text-start">
+              <label class="yes-no">
+                <input type="checkbox" formControlName="IsCODDOD" />
+                <span class="slider"></span>
               </label>
             </div>
           </div>
@@ -627,7 +624,7 @@
             <div class="col-md-2">
               <input type="checkbox" formControlName="isLocalNote">
             </div>
-            <div class="col-md-4 text-danger bold" style="margin-top:5px;">(Same Origin-Destination)</div>
+            <div class="col-md-4 text-danger bold" style="margin-top:5px;font-weight: 600 !important;">(Same Origin-Destination)</div>
           </div>
         </div>
       </div>

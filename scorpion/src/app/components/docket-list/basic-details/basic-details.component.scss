@@ -1,7 +1,7 @@
 .yes-no {
   display: inline-block;
   width: 46px;
-  height: 18px;
+  height: 22px;
   position: relative;
 
   &:before,
@@ -10,7 +10,7 @@
     font-size: 9px;
     z-index: 3;
     position: absolute;
-    bottom: 3px;
+    bottom: 4px;
   }
 
   &:before {
@@ -47,7 +47,7 @@
     &:before {
       content: "";
       position: absolute;
-      height: 16px;
+      height: 20px;
       width: 22px;
       left: 1px;
       bottom: 1px;

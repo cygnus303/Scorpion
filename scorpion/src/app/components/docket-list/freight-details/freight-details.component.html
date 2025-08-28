@@ -3,11 +3,10 @@
     <i class="fa fa-edit me-2"></i>
     CNote Entry - Freight Details
   </div>
-  <div *ngIf="docketService.contractMessage !== '-'"
-     class="text-danger text-start p-3 fw-bold"
-     style="font-size: 13px!important">
-  {{ docketService.contractMessage }}
-</div>
+  <div *ngIf="docketService.contractMessage !== '-'" class="text-danger text-start fw-bold"
+    style="font-size: 13px!important">
+    {{ docketService.contractMessage }}
+  </div>
 
   <div class="form-grid p-4">
     <form [formGroup]="docketService.freightForm">
@@ -24,16 +23,35 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label col-md-5" style="padding-top: 0px;padding-right: 1px;padding-left: 49px;">
-              <ng-select class="noFoundTextColor required2" placeholder="Rate Type" notFoundText="No matches found" [items]="docketService.rateList" bindLabel="codeDesc" bindValue="codeId" (change)="docketService.onchangeRateType($event)"
-                formControlName="rateType" [readonly]="docketService.basicDetailForm.get('serviceType')?.value ==='1'"></ng-select>
+              <ng-select class="noFoundTextColor required2" placeholder="Rate Type" notFoundText="No matches found"
+                [items]="docketService.rateList" bindLabel="codeDesc" bindValue="codeId"
+                (change)="docketService.onchangeRateType($event)" formControlName="rateType"
+                [readonly]="docketService.basicDetailForm.get('serviceType')?.value ==='1'"></ng-select>
             </label>
-            <div class="col-md-4">
-              <input class="clsAmount form-control text-end" placeholder="Freight Rate"
-                formControlName="freightRate" type="number" value="0" readonly>
+            <div class="col-md-7">
+              <input class="clsAmount form-control text-end" placeholder="Freight Rate" formControlName="freightRate"
+                type="number" value="0" readonly>
             </div>
           </div>
         </div>
-
+        <div class="col-md-4">
+          <div class="form-group mb-1">
+            <label class="control-label col-md-5">Billed At</label>
+            <div class="col-md-7">
+              <input class="required2 form-control required" formControlName="billedAt" placeholder="Billed At"
+                type="text" readonly="readonly" required
+                [ngClass]="{ 'border-danger': docketService.freightForm.get('billedAt')?.invalid && docketService.freightForm.get('billedAt')?.touched}">
+            </div>
+          </div>
+          <div class="form-group mb-1">
+            <div class="col-md-5"></div>
+            <div
+              *ngIf="docketService.freightForm.get('billedAt')?.invalid && docketService.freightForm.get('billedAt')?.touched"
+              class="text-danger col-md-7 text-start">
+              This field is required.
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="row">
@@ -45,16 +63,18 @@
                 tabindex="-1">
                 <option value=""></option>
               </select> -->
-              <input type="text" formControlName="GSTPaidBy" class="clsAmount form-control" placeholder="GST Paid By"  required
-              [ngClass]="{ 'border-danger': docketService.freightForm.get('GSTPaidBy')?.invalid && docketService.freightForm.get('GSTPaidBy')?.touched}">
+              <input type="text" formControlName="GSTPaidBy" class="clsAmount form-control" placeholder="GST Paid By"
+                required
+                [ngClass]="{ 'border-danger': docketService.freightForm.get('GSTPaidBy')?.invalid && docketService.freightForm.get('GSTPaidBy')?.touched}">
             </div>
           </div>
           <div class="form-group mb-1">
             <div class="col-md-5"></div>
-            <div *ngIf="docketService.freightForm.get('GSTPaidBy')?.invalid && docketService.freightForm.get('GSTPaidBy')?.touched"
-            class="text-danger col-md-7 text-start">
-            This field is required.
-          </div>
+            <div
+              *ngIf="docketService.freightForm.get('GSTPaidBy')?.invalid && docketService.freightForm.get('GSTPaidBy')?.touched"
+              class="text-danger col-md-7 text-start">
+              This field is required.
+            </div>
           </div>
         </div>
         <div class="col-md-2" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
@@ -82,8 +102,8 @@
               <div class="input-group mb-1">
                 <input class="required2 form-control required" placeholder="EDD" type="text"
                   value="1/1/0001 12:00:00 AM" formControlName="EDD" readonly required
-                   [ngClass]="{ 'border-danger': docketService.freightForm.get('EDD')?.invalid && docketService.freightForm.get('EDD')?.touched}">
-                     
+                  [ngClass]="{ 'border-danger': docketService.freightForm.get('EDD')?.invalid && docketService.freightForm.get('EDD')?.touched}">
+
                 <span class="input-group-btn">
                   <button class="btn default date-set clsVehicle1" type="button" style="display: none;"><i
                       class="fa fa-calendar"></i></button>
@@ -93,146 +113,126 @@
           </div>
           <div class="form-group mb-1">
             <div class="col-md-5"></div>
-             <div *ngIf="docketService.freightForm.get('EDD')?.invalid && docketService.freightForm.get('EDD')?.touched"
-                    class="text-danger col-md-7 text-start">
-                    This field is required.
-                  </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group mb-1">
-            <label class="control-label col-md-5">Billed At</label>
-            <div class="col-md-7">
-              <input class="required2 form-control required" formControlName="billedAt"
-                placeholder="Billed At" type="text"  readonly="readonly" required
-                [ngClass]="{ 'border-danger': docketService.freightForm.get('billedAt')?.invalid && docketService.freightForm.get('billedAt')?.touched}">
-              </div>
-            </div>
-            <div class="form-group mb-1">
-             <div class="col-md-5"></div>
-              <div *ngIf="docketService.freightForm.get('billedAt')?.invalid && docketService.freightForm.get('billedAt')?.touched"
+            <div *ngIf="docketService.freightForm.get('EDD')?.invalid && docketService.freightForm.get('EDD')?.touched"
               class="text-danger col-md-7 text-start">
               This field is required.
             </div>
-            </div>
-        </div>
-        <div class="col-md-8">
+          </div>
         </div>
         <div class="col-md-4">
           <div class="form-group mb-1">
             <label class="control-label col-md-5">Billing State</label>
             <div class="col-md-7">
-              <input class="required2 form-control required" formControlName="billingState"
-                placeholder="Billing State" readonly="True" type="text" required
+              <input class="required2 form-control required" formControlName="billingState" placeholder="Billing State"
+                readonly="True" type="text" required
                 [ngClass]="{ 'border-danger': docketService.freightForm.get('billingState')?.invalid && docketService.freightForm.get('billingState')?.touched}">
-              </div>
             </div>
-            <div class="form-group mb-1">
-              <div class="col-md-5"></div>
-              <div *ngIf="docketService.freightForm.get('billingState')?.invalid && docketService.freightForm.get('billingState')?.touched"
+          </div>
+          <div class="form-group mb-1">
+            <div class="col-md-5"></div>
+            <div
+              *ngIf="docketService.freightForm.get('billingState')?.invalid && docketService.freightForm.get('billingState')?.touched"
               class="text-danger col-md-7 text-start">
               This field is required.
             </div>
-            </div>
+          </div>
         </div>
-        <div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="control-label col-md-5">FOV Rate (% of Invoice)</label>
-              <div class="col-md-7">
-                <input class="required2 clsAmount form-control required text-end" formControlName="fovRate"
-                  placeholder="FOV Rate " type="text" readonly>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="control-label col-md-5">FOV Calculated</label>
-              <div class="col-md-7">
-                <input class="required2 clsAmount form-control required text-end" formControlName="fovCalculated"
-                  placeholder="FOV" type="text" readonly>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="control-label col-md-5">FOV Charged </label>
-              <div class="col-md-7">
-                <input class="required2 form-control clsAmount required text-end" formControlName="fovCharged"
-                  placeholder="FOV Charged" type="text" readonly>
-              </div>
+      </div>
+      <div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label col-md-5">FOV Rate (% of Invoice)</label>
+            <div class="col-md-7">
+              <input class="required2 clsAmount form-control required text-end" formControlName="fovRate"
+                placeholder="FOV Rate " type="text" readonly>
             </div>
           </div>
         </div>
-
-        <div class="row" *ngIf="docketService.basicDetailForm.value.IsCODDOD">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="control-label col-md-5">COD/DOD Charged</label>
-              <div class="col-md-7">
-                <input class="required2 form-control clsAmount required clsPayment" formControlName="coddodCharged"
-                  placeholder="COD/DOD Charged ">
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="control-label col-md-5">COD/DOD To be Collected</label>
-              <div class="col-md-7">
-                <input class="required2 clsAmount form-control required" formControlName="coddodCollected"
-                  placeholder="COD/DOD Amount" type="text">
-              </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label col-md-5">FOV Calculated</label>
+            <div class="col-md-7">
+              <input class="required2 clsAmount form-control required text-end" formControlName="fovCalculated"
+                placeholder="FOV" type="text" readonly>
             </div>
           </div>
         </div>
-        <div class="row clsDACC" style="display: none;" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="control-label col-md-5">DACC Charged</label>
-              <div class="col-md-7">
-                <input class="required2 clsAmount form-control required clsPayment" placeholder="DACC Charged "
-                  type="text">
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="control-label col-md-5">DACC To be Collected</label>
-              <div class="col-md-7">
-                <input class="required2 clsAmount form-control required" placeholder="DACC Amount" type="text"
-                  value="0">
-              </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label col-md-5">FOV Charged </label>
+            <div class="col-md-7">
+              <input class="required2 form-control clsAmount required text-end" formControlName="fovCharged"
+                placeholder="FOV Charged" type="text" readonly>
             </div>
           </div>
         </div>
+      </div>
 
-        <h3 class="pb-4 text-start appointment mt-5" [ngClass]="{ 'hidden': docketService.isBillingTBB }">Charges Details</h3>
+      <div class="row" *ngIf="docketService.basicDetailForm.value.IsCODDOD">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label col-md-5">COD/DOD Charged</label>
+            <div class="col-md-7">
+              <input class="required2 form-control clsAmount required clsPayment" formControlName="coddodCharged"
+                placeholder="COD/DOD Charged ">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label col-md-5">COD/DOD To be Collected</label>
+            <div class="col-md-7">
+              <input class="required2 clsAmount form-control required" formControlName="coddodCollected"
+                placeholder="COD/DOD Amount" type="text">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row clsDACC" style="display: none;" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label col-md-5">DACC Charged</label>
+            <div class="col-md-7">
+              <input class="required2 clsAmount form-control required clsPayment" placeholder="DACC Charged "
+                type="text">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label col-md-5">DACC To be Collected</label>
+            <div class="col-md-7">
+              <input class="required2 clsAmount form-control required" placeholder="DACC Amount" type="text" value="0">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="pb-4 text-start appointment mt-5" [ngClass]="{ 'hidden': docketService.isBillingTBB }">Charges Details
+      </h3>
 
 
-        <div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
-          <div class="col-md-4" *ngFor="let charge of docketService.freightchargingData">
-            <div class="form-group to-pay-group">
-              <label class="control-label col-md-5">{{ charge.chargeName }}</label>
-              <div class="col-md-7">
-                <div class="input-icon">
-                     <input type="text"
-                   class="form-control clsAmount required2"
-                   [placeholder]="charge.chargeName"
-                   (keypress)="docketService.allowNumericDecimal($event)"
-                   formControlName="{{ charge.chargeCode }}"
-                   (focus)="onFocus(charge.chargeCode)"
-                   (blur)="onBlur(charge.chargeCode);docketService.subTotalCalculation();docketService.getGSTCalculation()" />
-                  <i class="bold">{{charge.operator}}</i>
-                </div>
+      <div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
+        <div class="col-md-4" *ngFor="let charge of docketService.freightchargingData">
+          <div class="form-group to-pay-group">
+            <label class="control-label col-md-5">{{ charge.chargeName }}</label>
+            <div class="col-md-7">
+              <div class="input-icon">
+                <input type="text" class="form-control clsAmount required2" [placeholder]="charge.chargeName"
+                  (keypress)="docketService.allowNumericDecimal($event)" formControlName="{{ charge.chargeCode }}"
+                  (focus)="onFocus(charge.chargeCode)"
+                  (blur)="onBlur(charge.chargeCode);docketService.subTotalCalculation();docketService.getGSTCalculation()" />
+                <i class="bold">{{charge.operator}}</i>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
 
 
-
-        <div class="col-md-4" >
+      <div class="row">
+        <div class="col-md-4">
           <div class="form-group">
             <label class="control-label col-md-5"><b>GST Rate</b></label>
             <div class="col-md-7">
@@ -246,63 +246,67 @@
                 <option selected="selected" value="18">18</option>
                 <option value="28">28</option>
               </select> -->
-              <ng-select class="form-control select2 required2 required select2-offscreen" [items]="[0,5,6,10,12,18,28]" formControlName="gstRate" readonly
-                [clearable]="false">
+              <ng-select class="form-control select2 required2 required select2-offscreen" [items]="[0,5,6,10,12,18,28]"
+                formControlName="gstRate" readonly [clearable]="false">
               </ng-select>
             </div>
           </div>
         </div>
         <div class="col-md-4"></div>
-        <div class="col-md-4" >
+        <div class="col-md-4">
           <div class="form-group">
             <label class="control-label col-md-5"><b>SUB-TOTAL</b></label>
             <div class="col-md-7">
-              <input class="required2 clsAmount form-control required clsROFixed" 
-                formControlName="subTotal" placeholder="SUB-TOTAL" readonly="true" type="text" value="">
+              <input class="required2 clsAmount form-control required clsROFixed" formControlName="subTotal"
+                placeholder="SUB-TOTAL" readonly="true" type="text" value="">
             </div>
           </div>
         </div>
-        <div>
-          <div *ngFor="let entry of docketService.groupedCharges | keyvalue">
-            <div class="row clsGSTApply">
-              <div class="col-md-4" *ngFor="let charge of entry.value">
-                <div class="form-group to-pay-group">
-                  <label class="control-label col-md-5">
-                    {{ charge.chargeName }}
-                    <!-- <span [id]="'lbl_' + charge.chargeCode"></span> -->
-                  </label>
-                  <div class="col-md-7">
-                    <div class="input-icon">
-                      <input type="text" class="form-control clsAmount required2" [placeholder]="charge.chargeName"
-                         formControlName="{{ charge.camelCaseCode }}" readonly />
-                      <i class="bold">{{charge.operator}}</i>
-                    </div>
+      </div>
+      <div>
+        <div *ngFor="let entry of docketService.groupedCharges | keyvalue">
+          <div class="row clsGSTApply">
+            <div class="col-md-4" *ngFor="let charge of entry.value">
+              <div class="form-group to-pay-group">
+                <label class="control-label col-md-5">
+                  {{ charge.chargeName }}
+                  <!-- <span [id]="'lbl_' + charge.chargeCode"></span> -->
+                </label>
+                <div class="col-md-7">
+                  <div class="input-icon">
+                    <input type="text" class="form-control clsAmount required2" [placeholder]="charge.chargeName"
+                      formControlName="{{ charge.camelCaseCode }}" readonly />
+                    <i class="bold">{{charge.operator}}</i>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="col-md-4 clsdis" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
-          <div class="form-group">
-            <label class="control-label col-md-5">Discount(%)</label>
-            <div class="col-md-7">
-              <input class="form-control clsAmount" data-val="true"
-                data-val-number="The field Discount must be a number." id="WMD_Discount" name="WMD.Discount"
-                placeholder="Discount" type="number" value="0" formControlName="discount">
-            </div>
+      <div class="col-md-4 clsdis" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
+        <div class="form-group">
+          <label class="control-label col-md-5">Discount(%)</label>
+          <div class="col-md-7">
+            <input class="form-control clsAmount" data-val="true" data-val-number="The field Discount must be a number."
+              id="WMD_Discount" name="WMD.Discount" placeholder="Discount" type="number" value="0"
+              formControlName="discount">
           </div>
         </div>
-        <div class="col-md-4 clsdis" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
-          <div class="form-group">
-            <label class="control-label col-md-5">Discount Amount</label>
-            <div class="col-md-7">
-              <input class="form-control clsAmount" id="WMD_DiscountAmount" name="WMD.DiscountAmount"
-                placeholder="Discount" readonly="true" type="number" value="" formControlName="discountAmount">
-            </div>
+      </div>
+      <div class="col-md-4 clsdis" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
+        <div class="form-group">
+          <label class="control-label col-md-5">Discount Amount</label>
+          <div class="col-md-7">
+            <input class="form-control clsAmount" id="WMD_DiscountAmount" name="WMD.DiscountAmount"
+              placeholder="Discount" readonly="true" type="number" value="" formControlName="discountAmount">
           </div>
         </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4"></div>
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label col-md-5"><b>TOTAL</b></label>
@@ -311,7 +315,7 @@
                 placeholder="TOTAL" type="text" value="0" readonly>
             </div>
           </div>
-        </div> -
+        </div>
       </div>
     </form>
   </div>

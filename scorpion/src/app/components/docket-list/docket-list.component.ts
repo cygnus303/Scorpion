@@ -46,8 +46,8 @@ export class DocketListComponent implements OnInit{
           if (isValid) {
             // 🔑 badha key male → normal flow
             this.docketService.loginUserList = parsedData;
-            // this.docketService.Location = parsedData.LocationCode;
-              this.docketService.Location = 'NAG';
+            this.docketService.Location = parsedData.LocationCode;
+              // this.docketService.Location = 'TBH';
             this.docketService.BaseUserCode = parsedData.UserId;
           } else {
             // ❌ ek pan key missing hoy → redirect
@@ -376,8 +376,9 @@ export class DocketListComponent implements OnInit{
         next: (response: any) => {
           if (response) {
        window.scrollTo({ top: 0, behavior: 'smooth' }); 
+       debugger
        this.docketService.successMsg='Docket submitted successfully.'
-      //  window.location.href = `https://sepluat.cygnux.in/Operation/DocketDone/${'2'}?DOCKNO=${this.docketService.basicDetailForm.value.cNoteNo}&IsFromBillGeneration=N`;
+       window.location.href = `https://sepluat.cygnux.in/Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N`;
             this.docketService.basicDetailForm.reset();
             this.docketService.freightForm.reset();
             this.docketService.invoiceform.reset();

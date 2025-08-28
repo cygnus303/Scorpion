@@ -16,19 +16,19 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 @NgModule({
     declarations: [
         DocketListComponent,
+        InvoiceDetailsComponent,
         BasicDetailsComponent,
         ConsignorDetailComponent,
         FreightDetailsComponent,
-        InvoiceDetailsComponent,
         HeaderComponent
     ],
     imports: [
         CommonModule,
-        RouterModule.forChild(DocketRoutes),
         ReactiveFormsModule,
         FormsModule,
         NgSelectModule,
         BsDatepickerModule,
+        RouterModule.forChild(DocketRoutes),
     ],
     providers: [DatePipe,DocketService],
     exports: [ RouterModule ],
