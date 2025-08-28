@@ -51,9 +51,8 @@
           <div class="form-group mb-1">
             <label class="col-md-5">CNote Date</label>
             <div class="col-md-7">
-              <input type="text" class="form-control" #dp="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue"
-                [bsConfig]="{ containerClass: 'theme-dark-blue' ,rangeInputFormat: 'DD.MM.YYYY', dateInputFormat:
-                             'DD.MM.YYYY'}" placeholder="CNote Date" [minDate]="docketService.bsValue"
+              <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue"
+                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" placeholder="CNote Date" [minDate]="docketService.bsValue"
                 formControlName="cNoteDate" required
                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('cNoteDate')?.invalid  && docketService.basicDetailForm.get('cNoteDate')?.touched }">
               <!-- <input type="date" class="form-control required2" placeholder="CNote Date" formControlName="cNoteDate"
