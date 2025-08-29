@@ -121,13 +121,29 @@
                         This field is required.
                       </div>
                   </td>
-                  <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
+                  <!-- <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
                     <input class="form-control" placeholder="dd-MM-yyyy" type="text"
                       formControlName="ewayBillExpiry" readonly [ngClass]="{'border-danger': row.get('ewayBillExpiry')?.invalid && row.get('ewayBillExpiry')?.touched ,'required2': row.get('declaredvalue')?.value > 100000}">
                          <div *ngIf="row.get('ewayBillExpiry')?.errors  && row.get('ewayBillExpiry')?.touched" class="text-danger text-start">
                           This field is required.
                           </div>
-                  </td>
+                  </td> -->
+                  <input type="text" 
+       class="form-control uppercase-none" 
+       #dp="bsDatepicker"
+       bsDatepicker
+       [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"
+       placeholder="dd/MMM/yyyy"
+       formControlName="ewayBillExpiry"
+       [ngClass]="{ 
+         'border-danger': row.get('ewayBillExpiry')?.invalid && row.get('ewayBillExpiry')?.touched, 
+         'required2': row.get('declaredvalue')?.value > 100000 
+       }">
+<div *ngIf="row.get('ewayBillExpiry')?.errors && row.get('ewayBillExpiry')?.touched" 
+     class="text-danger text-start">
+  This field is required.
+</div>
+
                   <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
 
                                 <input type="text" 
