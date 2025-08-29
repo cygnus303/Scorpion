@@ -59,10 +59,6 @@
           <div class="form-group mb-1">
             <label class="control-label col-md-5">GST Paid By</label>
             <div class="col-md-7">
-              <!-- <select class="form-control required2 required " formControlName="GSTPaidBy" placeholder="GST Paid By"
-                tabindex="-1">
-                <option value=""></option>
-              </select> -->
               <input type="text" formControlName="GSTPaidBy" class="clsAmount form-control" placeholder="GST Paid By"
                 required
                 [ngClass]="{ 'border-danger': docketService.freightForm.get('GSTPaidBy')?.invalid && docketService.freightForm.get('GSTPaidBy')?.touched}">
@@ -70,8 +66,7 @@
           </div>
           <div class="form-group mb-1">
             <div class="col-md-5"></div>
-            <div
-              *ngIf="docketService.freightForm.get('GSTPaidBy')?.invalid && docketService.freightForm.get('GSTPaidBy')?.touched"
+            <div *ngIf="docketService.freightForm.get('GSTPaidBy')?.invalid && docketService.freightForm.get('GSTPaidBy')?.touched"
               class="text-danger col-md-7 text-start">
               This field is required.
             </div>
@@ -82,16 +77,6 @@
             <label class="control-label col-md-10" style="padding-top:1px;">GST Exempted</label>
             <div class="col-md-2 chkactive">
               <input type="hidden">
-              <!-- <div class="checker"><span>
-                        <div
-                          class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-animate bootstrap-switch-mini">
-                          <div class="bootstrap-switch-container"><span
-                              class="bootstrap-switch-handle-on bootstrap-switch-primary">YES</span><label
-                              class="bootstrap-switch-label">&nbsp;</label><span
-                              class="bootstrap-switch-handle-off bootstrap-switch-default">NO</span><input
-                              type="checkbox" class="WMD_IsStaxExempN WMD_IsStaxExempChange" value="false"></div>
-                        </div>
-                      </span></div> -->
             </div>
           </div>
         </div>
@@ -103,11 +88,6 @@
                 <input class="required2 form-control required" placeholder="EDD" type="text"
                   value="1/1/0001 12:00:00 AM" formControlName="EDD" readonly required
                   [ngClass]="{ 'border-danger': docketService.freightForm.get('EDD')?.invalid && docketService.freightForm.get('EDD')?.touched}">
-
-                <span class="input-group-btn">
-                  <button class="btn default date-set clsVehicle1" type="button" style="display: none;"><i
-                      class="fa fa-calendar"></i></button>
-                </span>
               </div>
             </div>
           </div>
@@ -124,7 +104,7 @@
             <label class="control-label col-md-5">Billing State</label>
             <div class="col-md-7">
               <input class="required2 form-control required" formControlName="billingState" placeholder="Billing State"
-                readonly="True" type="text" required
+               readonly type="text" required
                 [ngClass]="{ 'border-danger': docketService.freightForm.get('billingState')?.invalid && docketService.freightForm.get('billingState')?.touched}">
             </div>
           </div>
@@ -173,7 +153,7 @@
           <div class="form-group">
             <label class="control-label col-md-5">COD/DOD Charged</label>
             <div class="col-md-7">
-              <input class="required2 form-control clsAmount required clsPayment" formControlName="coddodCharged"
+              <input class="required2 form-control clsAmount required" formControlName="coddodCharged"
                 placeholder="COD/DOD Charged ">
             </div>
           </div>
@@ -188,30 +168,8 @@
           </div>
         </div>
       </div>
-      <div class="row clsDACC" style="display: none;" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="control-label col-md-5">DACC Charged</label>
-            <div class="col-md-7">
-              <input class="required2 clsAmount form-control required clsPayment" placeholder="DACC Charged "
-                type="text">
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="control-label col-md-5">DACC To be Collected</label>
-            <div class="col-md-7">
-              <input class="required2 clsAmount form-control required" placeholder="DACC Amount" type="text" value="0">
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <h3 class="pb-4 text-start appointment mt-5" [ngClass]="{ 'hidden': docketService.isBillingTBB }">Charges Details
-      </h3>
-
-
+      <h3 class="pb-4 text-start appointment mt-5" [ngClass]="{ 'hidden': docketService.isBillingTBB }">Charges Details</h3>
       <div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
         <div class="col-md-4" *ngFor="let charge of docketService.freightchargingData">
           <div class="form-group to-pay-group">
@@ -229,24 +187,12 @@
         </div>
       </div>
 
-
-
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label col-md-5"><b>GST Rate</b></label>
             <div class="col-md-7">
-              <!-- <select class="form-control select2 required2 required select2-offscreen"
-                placeholder="Select GST Percentage" formControlName="gstRate" tabindex="-1" disabled>
-                <option value="0">0</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="10">10</option>
-                <option value="12">12</option>
-                <option selected="selected" value="18">18</option>
-                <option value="28">28</option>
-              </select> -->
-              <ng-select class="form-control select2 required2 required select2-offscreen" [items]="[0,5,6,10,12,18,28]"
+              <ng-select class="form-control required2 required" [items]="[0,5,6,10,12,18,28]"
                 formControlName="gstRate" readonly [clearable]="false">
               </ng-select>
             </div>
@@ -257,7 +203,7 @@
           <div class="form-group">
             <label class="control-label col-md-5"><b>SUB-TOTAL</b></label>
             <div class="col-md-7">
-              <input class="required2 clsAmount form-control required clsROFixed" formControlName="subTotal"
+              <input class="required2 clsAmount form-control required" formControlName="subTotal"
                 placeholder="SUB-TOTAL" readonly="true" type="text" value="">
             </div>
           </div>
@@ -285,22 +231,20 @@
         </div>
       </div>
 
-      <div class="col-md-4 clsdis" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
+      <div class="col-md-4" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
         <div class="form-group">
           <label class="control-label col-md-5">Discount(%)</label>
           <div class="col-md-7">
-            <input class="form-control clsAmount" data-val="true" data-val-number="The field Discount must be a number."
-              id="WMD_Discount" name="WMD.Discount" placeholder="Discount" type="number" value="0"
-              formControlName="discount">
+            <input class="form-control clsAmount" placeholder="Discount" type="number" formControlName="discount">
           </div>
         </div>
       </div>
-      <div class="col-md-4 clsdis" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
+      <div class="col-md-4" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
         <div class="form-group">
           <label class="control-label col-md-5">Discount Amount</label>
           <div class="col-md-7">
-            <input class="form-control clsAmount" id="WMD_DiscountAmount" name="WMD.DiscountAmount"
-              placeholder="Discount" readonly="true" type="number" value="" formControlName="discountAmount">
+            <input class="form-control clsAmount" 
+              placeholder="Discount" readonly type="number" value="" formControlName="discountAmount">
           </div>
         </div>
       </div>
@@ -311,7 +255,7 @@
           <div class="form-group">
             <label class="control-label col-md-5"><b>TOTAL</b></label>
             <div class="col-md-7">
-              <input class="required2 form-control clsAmount required clsROFixed" formControlName="dktTotal"
+              <input class="required2 form-control clsAmount required" formControlName="dktTotal"
                 placeholder="TOTAL" type="text" value="0" readonly>
             </div>
           </div>

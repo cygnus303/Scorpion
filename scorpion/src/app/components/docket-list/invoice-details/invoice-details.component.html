@@ -151,7 +151,6 @@
                     bsDatepicker
                     [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"
                     placeholder="dd/MMM/yyyy"
-                    [minDate]="docketService.bsValue" 
                     formControlName="ewayinvoiceDate"
                     [ngClass]="{ 
                       'border-danger': row.get('ewayinvoiceDate')?.invalid && row.get('ewayinvoiceDate')?.touched, 
@@ -176,7 +175,7 @@
                   <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
                      <input type="text" class="form-control uppercase-none" #dp="bsDatepicker"  bsDatepicker
                      [bsValue]="docketService.bsValue"  [bsConfig]="{ containerClass: 'theme-dark-blue' ,rangeInputFormat: 'DD MMMM YYYY', dateInputFormat:
-                     'DD MMMM YYYY'}" placeholder="dd/MMM/yyyy" [minDate]="docketService.bsValue" formControlName="invoicedate" required 
+                     'DD MMMM YYYY'}" placeholder="dd/MMM/yyyy" [maxDate]="docketService.bsValue" formControlName="invoicedate" required 
                      [ngClass]="{ 'border-danger': docketService.invoiceform.get('invoicedate')?.invalid  && docketService.invoiceform.get('invoicedate')?.touched }">
 
                     <!-- <input class="form-control required2" placeholder="dd/MMM/yyyy" type="date"
