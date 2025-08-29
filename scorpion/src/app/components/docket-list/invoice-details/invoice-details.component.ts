@@ -82,6 +82,7 @@ export class InvoiceDetailsComponent {
   //   });
   // }
   calculateSummary(i: number) {
+    debugger
     const serviceType = this.docketService.basicDetailForm.get('serviceType')?.value;
 
     // ✅ if serviceType = 2 → only reset Length, Breadth, Height, CubicWeight
@@ -189,6 +190,7 @@ export class InvoiceDetailsComponent {
 
 
 getEwayBillData(event: any, index: number) {
+  debugger
   const search = event.target.value;
 
   // if (search.length === 12) {
@@ -249,6 +251,12 @@ getEwayBillData(event: any, index: number) {
                   invoiceNo:response.invno,
                   declaredvalue:response.decval
                 });
+              this.calculateSummary(index);
+              this.getCFTCalculation(index);
+              this.docketService.GetFreightContractDetails();
+              this.docketService.getOtherChargesDetail();
+              this.docketService.getGSTCalculation();
+              this.handleDeclaredValueChange(row);
 
                 this.docketService.consignorForm.patchValue({
                   consignorSelection: response.csgncd,
