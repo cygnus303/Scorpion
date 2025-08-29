@@ -72,15 +72,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-2" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
-          <div class="form-group" style="display: none;">
-            <label class="control-label col-md-10" style="padding-top:1px;">GST Exempted</label>
-            <div class="col-md-2 chkactive">
-              <input type="hidden">
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2">
+        <div class="col-md-4">
           <div class="form-group">
             <label class="control-label col-md-5">EDD </label>
             <div class="col-md-7">
@@ -118,6 +110,7 @@
           </div>
         </div>
       </div>
+
       <div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
         <div class="col-md-4">
           <div class="form-group">
@@ -170,6 +163,7 @@
       </div>
 
       <h3 class="pb-4 text-start appointment mt-5" [ngClass]="{ 'hidden': docketService.isBillingTBB }">Charges Details</h3>
+
       <div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
         <div class="col-md-4" *ngFor="let charge of docketService.freightchargingData">
           <div class="form-group to-pay-group">
@@ -192,7 +186,7 @@
           <div class="form-group">
             <label class="control-label col-md-5"><b>GST Rate</b></label>
             <div class="col-md-7">
-              <ng-select class="form-control required2 required" [items]="[0,5,6,10,12,18,28]"
+              <ng-select class="required2" [items]="[0,5,6,10,12,18,28]"
                 formControlName="gstRate" readonly [clearable]="false">
               </ng-select>
             </div>
@@ -203,20 +197,19 @@
           <div class="form-group">
             <label class="control-label col-md-5"><b>SUB-TOTAL</b></label>
             <div class="col-md-7">
-              <input class="required2 clsAmount form-control required" formControlName="subTotal"
+              <input class="required2 clsAmount form-control required text-end" formControlName="subTotal"
                 placeholder="SUB-TOTAL" readonly="true" type="text" value="">
             </div>
           </div>
         </div>
       </div>
-      <div>
+
         <div *ngFor="let entry of docketService.groupedCharges | keyvalue">
-          <div class="row clsGSTApply">
+          <div class="row">
             <div class="col-md-4" *ngFor="let charge of entry.value">
               <div class="form-group to-pay-group">
                 <label class="control-label col-md-5">
                   {{ charge.chargeName }}
-                  <!-- <span [id]="'lbl_' + charge.chargeCode"></span> -->
                 </label>
                 <div class="col-md-7">
                   <div class="input-icon">
@@ -229,33 +222,30 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="col-md-4" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
-        <div class="form-group">
-          <label class="control-label col-md-5">Discount(%)</label>
-          <div class="col-md-7">
-            <input class="form-control clsAmount" placeholder="Discount" type="number" formControlName="discount">
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
-        <div class="form-group">
-          <label class="control-label col-md-5">Discount Amount</label>
-          <div class="col-md-7">
-            <input class="form-control clsAmount" 
-              placeholder="Discount" readonly type="number" value="" formControlName="discountAmount">
-          </div>
-        </div>
-      </div>
       <div class="row">
-        <div class="col-md-4"></div>
-        <div class="col-md-4"></div>
+        <div class="col-md-4" >
+          <div class="form-group" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
+            <label class="control-label col-md-5">Discount(%)</label>
+            <div class="col-md-7">
+              <input class="form-control clsAmount" placeholder="Discount" type="number" formControlName="discount">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4" >
+          <div class="form-group" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
+            <label class="control-label col-md-5">Discount Amount</label>
+            <div class="col-md-7">
+              <input class="form-control clsAmount" 
+                placeholder="Discount" readonly type="number" value="" formControlName="discountAmount">
+            </div>
+          </div>
+        </div>
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label col-md-5"><b>TOTAL</b></label>
             <div class="col-md-7">
-              <input class="required2 form-control clsAmount required" formControlName="dktTotal"
+              <input class="required2 form-control clsAmount required text-end" formControlName="dktTotal"
                 placeholder="TOTAL" type="text" value="0" readonly>
             </div>
           </div>

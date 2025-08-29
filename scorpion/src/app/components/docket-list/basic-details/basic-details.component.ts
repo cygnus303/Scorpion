@@ -58,7 +58,7 @@ export class BasicDetailsComponent {
       this.docketService.basicDetailForm.get('custGSTState')?.setValue('');
     }
   });
-    this.docketService.basicDetailForm.get('destinationState')?.valueChanges.subscribe((selectedValue: string) => {
+    this.docketService.basicDetailForm.get('destinationState')?.valueChanges.subscribe((selectedValue: string) => {   
     if (selectedValue) {
       const selectedObj = this.getStatesFromPartyCodeList.find(x => x.text === selectedValue);
       if (selectedObj) {
@@ -69,24 +69,18 @@ export class BasicDetailsComponent {
     }
   });
      this.onApplyDeliveryChangeValidators();
-       this.onApplyDeliveryChangeValidators();
-        this.docketService?.basicDetailForm?.get('serviceType')?.valueChanges.subscribe(() => {
+    this.docketService?.basicDetailForm?.get('serviceType')?.valueChanges.subscribe(() => {
       this.applyTypeMovementValidation();
       this.applyVehicleNoValidation();
     });
-     this.docketService.basicDetailForm.get('vehicleType')?.valueChanges.subscribe(() => {
-    this.applyVehicleNoValidation();
-  });
-       
-       // Run validation whenever EDD changes
-  // this.docketService.freightForm.get('EDD')?.valueChanges.subscribe(() => {
-  //   this.validateAppointmentDate();
-  // });
+    this.docketService.basicDetailForm.get('vehicleType')?.valueChanges.subscribe(() => {
+      this.applyVehicleNoValidation();
+    });       
 
-  // // Run validation whenever appointmentDT changes
-  // this.docketService.basicDetailForm.get('appointmentDT')?.valueChanges.subscribe(() => {
-  //   this.validateAppointmentDate();
-  // });
+  // Run validation whenever appointmentDT changes
+  this.docketService.basicDetailForm?.get('appointmentDT')?.valueChanges.subscribe(() => {
+    this.docketService.validateAppointmentDate();
+  });
   }
 
     onApplyDeliveryChangeValidators(){
@@ -164,24 +158,6 @@ applyVehicleNoValidation(){
 
   control?.updateValueAndValidity({ onlySelf: true, emitEvent: false });
 }
-
-
-validateAppointmentDate() {
-  // const eddDate = this.docketService.freightForm.get('EDD')?.value;
-  // const appointmentDate = this.docketService.basicDetailForm.get('appointmentDT')?.value;
-  // const appointmentCtrl = this.docketService.basicDetailForm.get('appointmentDT');
-
-  // if (eddDate && appointmentDate && new Date(appointmentDate) < new Date(eddDate)) {
-  //   appointmentCtrl?.setErrors({ ...(appointmentCtrl.errors || {}), minDate: true });
-  // } else {
-  //   if (appointmentCtrl?.errors) {
-  //     const errors = { ...appointmentCtrl.errors };
-  //     delete errors['minDate'];
-  //     appointmentCtrl.setErrors(Object.keys(errors).length ? errors : null);
-  //   }
-  // }
-}
-
 
   getBillingTypeData() {
     this.basicDetailService.getGeneralMasterList('PAYTYP', null, null).subscribe({

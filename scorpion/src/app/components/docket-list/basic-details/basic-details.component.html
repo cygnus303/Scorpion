@@ -21,8 +21,8 @@
           <div class="form-group">
             <label class="col-md-5">EwayBill Number</label>
             <div class="col-md-7">
-              <input type="text" class="form-control " placeholder="EwayBill Number" formControlName="ewayBillNo" maxlength="12"
-                (blur)="docketService.getGSTNODetails($event)" />
+              <input type="text" class="form-control " placeholder="EwayBill Number" formControlName="ewayBillNo"
+                maxlength="12" (blur)="docketService.getGSTNODetails($event)" />
             </div>
           </div>
         </div>
@@ -38,7 +38,8 @@
           <div class="form-group mb-1">
             <div class="col-md-5"></div>
             <div class="text-danger col-md-7 text-start">
-              <div *ngIf="docketService.basicDetailForm.get('cNoteNo')?.invalid && docketService.basicDetailForm.get('cNoteNo')?.touched ">
+              <div
+                *ngIf="docketService.basicDetailForm.get('cNoteNo')?.invalid && docketService.basicDetailForm.get('cNoteNo')?.touched ">
                 This field is required.
               </div>
               <div *ngIf="docketService.inValidDocketMsg">
@@ -47,26 +48,45 @@
             </div>
           </div>
         </div>
+        <div class="col-md-4 form-column ">
+          <div class="form-group mb-1"><label class="col-md-5">Pincode</label>
+            <div class="col-md-7"><ng-select class="noFoundTextColor required2" [items]="docketService.pincodeList"
+                bindLabel="pinArea" bindValue="value" placeholder="Pincode" formControlName="pincode" required
+                [notFoundText]="docketService.notPincodeValue" (search)="docketService.getpincodeData($event)"
+                (change)="docketService.onChangePinCode($event);docketService.onFormFieldChange();"
+                (open)="docketService.resetPincodeDropdown()"
+                [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('pincode')?.invalid && docketService.basicDetailForm.get('pincode')?.touched}"></ng-select>
+            </div>
+          </div>
+          <div class="form-group mb-1">
+            <div class="col-md-5"></div>
+            <div
+              *ngIf="docketService.basicDetailForm.get('pincode')?.invalid && docketService.basicDetailForm.get('pincode')?.touched"
+              class="text-danger col-md-7 text-start">
+              This field is required.
+            </div>
+          </div>
+        </div>
         <div class="col-md-4 form-column">
           <div class="form-group mb-1">
             <label class="col-md-5">CNote Date</label>
             <div class="col-md-7">
               <div class="input-group">
-                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue"
-                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" placeholder="CNote Date" [maxDate]="docketService.bsValue"
-                  formControlName="cNoteDate" required
+                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
+                  [bsValue]="docketService.bsValue"
+                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                  placeholder="CNote Date" [maxDate]="docketService.bsValue" formControlName="cNoteDate" required
                   [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('cNoteDate')?.invalid  && docketService.basicDetailForm.get('cNoteDate')?.touched }">
-                    <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
-                      <i class="fa fa-calendar"></i>
-                    </span>
+                <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                  <i class="fa fa-calendar"></i>
+                </span>
               </div>
-              <!-- <input type="date" class="form-control required2" placeholder="CNote Date" formControlName="cNoteDate"
-                        [max]="docketService.today" (click)="openDatePicker($event)" required [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('cNoteDate')?.invalid  && docketService.basicDetailForm.get('cNoteDate')?.touched }"/> -->
             </div>
           </div>
           <div class="form-group mb-1">
             <div class="col-md-5"></div>
-            <div *ngIf="docketService.basicDetailForm.get('cNoteDate')?.invalid && docketService.basicDetailForm.get('cNoteDate')?.touched "
+            <div
+              *ngIf="docketService.basicDetailForm.get('cNoteDate')?.invalid && docketService.basicDetailForm.get('cNoteDate')?.touched "
               class="text-danger col-md-7 text-start">
               This field is required.
             </div>
@@ -85,39 +105,22 @@
               </ng-select>
             </div>
           </div>
-         <div class="form-group mb-1">
-          <div class="col-md-5"></div>
-           <div *ngIf="docketService.basicDetailForm.get('billingType')?.invalid && docketService.basicDetailForm.get('billingType')?.touched "
-            class="text-danger col-md-7 text-start">
-            This field is required.
-          </div>
-         </div>
-        </div>
-        <div class="col-md-4 form-column ">
-          <div class="form-group mb-1"><label class="col-md-5">Pincode</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor required2" [items]="docketService.pincodeList" bindLabel="pinArea"
-                bindValue="value" placeholder="Pincode" formControlName="pincode" required
-                [notFoundText]="docketService.notPincodeValue" (search)="docketService.getpincodeData($event)"
-                (change)="docketService.onChangePinCode($event);docketService.onFormFieldChange();" (open)="docketService.resetPincodeDropdown()"
-                [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('pincode')?.invalid && docketService.basicDetailForm.get('pincode')?.touched}"></ng-select>
-             </div>
-          </div>
           <div class="form-group mb-1">
             <div class="col-md-5"></div>
-             <div *ngIf="docketService.basicDetailForm.get('pincode')?.invalid && docketService.basicDetailForm.get('pincode')?.touched"
-                class="text-danger col-md-7 text-start">
-                This field is required.
-              </div>
+            <div
+              *ngIf="docketService.basicDetailForm.get('billingType')?.invalid && docketService.basicDetailForm.get('billingType')?.touched "
+              class="text-danger col-md-7 text-start">
+              This field is required.
+            </div>
           </div>
         </div>
-      </div>
-      <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group mb-1"><label class="col-md-5">Billing Party</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor required2" required
-                placeholder="Billing Party" [searchable]="true" [clearable]="true" (search)="getBillingPartyData($event)" (change)="onChangeBillingParty($event);docketService.onFormFieldChange()"
-                formControlName="billingParty"  [notFoundText]="notFoundTextValue"  (open)="resetBillingPartyDropdown()"
+              <ng-select class="noFoundTextColor required2" required placeholder="Billing Party" [searchable]="true"
+                [clearable]="true" (search)="getBillingPartyData($event)"
+                (change)="onChangeBillingParty($event);docketService.onFormFieldChange()" formControlName="billingParty"
+                [notFoundText]="notFoundTextValue" (open)="resetBillingPartyDropdown()"
                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('billingParty')?.invalid  && docketService.basicDetailForm.get('billingParty')?.touched}">
                 <ng-option *ngFor="let item of billingPartyData" [value]="item">
                   <strong>{{ item.custcd }}</strong> : {{ item.custnm }}
@@ -127,16 +130,17 @@
           </div>
           <div class="form-group mb-1">
             <div class="col-md-5"></div>
-            <div *ngIf="docketService.basicDetailForm.get('billingParty')?.invalid && docketService.basicDetailForm.get('billingParty')?.touched"
-            class="text-danger col-md-7 text-start">
-            This field is required.
-          </div>
+            <div
+              *ngIf="docketService.basicDetailForm.get('billingParty')?.invalid && docketService.basicDetailForm.get('billingParty')?.touched"
+              class="text-danger col-md-7 text-start">
+              This field is required.
+            </div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Billing Name</label>
             <div class="col-md-7"><input type="text" class="form-control required2" placeholder="Billing Name"
-                formControlName="billingName" readonly >
+                formControlName="billingName" readonly>
             </div>
           </div>
         </div>
@@ -144,82 +148,34 @@
       <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group mb-1"><label class="col-md-5">Origin</label>
-            <div class="col-md-7"><input type="text"  class="form-control" placeholder="Origin"
-                formControlName="origin" readonly /></div>
+            <div class="col-md-7"><input type="text" class="form-control" placeholder="Origin" formControlName="origin"
+                readonly /></div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group mb-1"><label class="col-md-5">Origin State Name</label>
-            <div class="col-md-7"><input type="text" class="form-control required2" required placeholder="Origin State Name"
-                formControlName="originState" readonly required [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('originState')?.invalid  && docketService.basicDetailForm.get('originState')?.touched }"/>
-              </div>
-            </div>
-            <div class="form-group mb-1">
-              <div class="col-md-5"></div>
-              <div *ngIf="docketService.basicDetailForm.get('originState')?.invalid && docketService.basicDetailForm.get('originState')?.touched"
-             class="text-danger col-md-7 text-start">
-             This field is required.
-           </div>
-            </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4 form-column ">
-          <div class="form-group mb-1"><label class="col-md-5">Destination</label>
-            <div class="col-md-7">
-              <ng-select class="noFoundTextColor required2" [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('destination')?.invalid  && docketService.basicDetailForm.get('destination')?.touched}" required [searchable]="true" (search)="getDestinationsList($event)" (change)="onChangedestinationsList($event);docketService.onFormFieldChange()" placeholder="Destination" formControlName="destination" 
-               [notFoundText]="notDestinationValue" (open)="resetDestinationDropdown()"  (clear)="onResetToCity()">
-                <ng-option *ngFor="let item of destinationsList" [value]="item">
-                  <strong>{{ item.locCode }}</strong> : {{ item.locName }}
-                </ng-option>
-              </ng-select>
+            <div class="col-md-7"><input type="text" class="form-control required2" required
+                placeholder="Origin State Name" formControlName="originState" readonly required
+                [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('originState')?.invalid  && docketService.basicDetailForm.get('originState')?.touched }" />
             </div>
           </div>
           <div class="form-group mb-1">
             <div class="col-md-5"></div>
-            <div *ngIf="docketService.basicDetailForm.get('destination')?.invalid  && docketService.basicDetailForm.get('destination')?.touched"
-           class="text-danger col-md-7 text-start">
-           This field is required.
-         </div>
+            <div
+              *ngIf="docketService.basicDetailForm.get('originState')?.invalid && docketService.basicDetailForm.get('originState')?.touched"
+              class="text-danger col-md-7 text-start">
+              This field is required.
+            </div>
           </div>
-        </div>
-        <div class="col-md-4 form-column ">
-          <div class="form-group mb-1"><label class="col-md-5">Dest State Name</label>
-            <div class="col-md-7"><input type="text" class="form-control required2" required placeholder="Dest State Name"
-                formControlName="destinationState" readonly [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('destinationState')?.invalid  && docketService.basicDetailForm.get('destinationState')?.touched}"/>
-              </div>
-            </div>
-            <div class="form-group mb-1">
-              <div class="col-md-5"></div>
-              <div *ngIf="docketService.basicDetailForm.get('destinationState')?.invalid  && docketService.basicDetailForm.get('destinationState')?.touched"
-             class="text-danger col-md-7 text-start">
-             This field is required.
-           </div>
-            </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4 form-column ">
-          <div class="form-group mb-1"><label class="col-md-5">Transit Mode</label>
-            <div class="col-md-7">
-              <ng-select class="noFoundTextColor required2" required placeholder="Transit Mode" notFoundText="No matches found" [items]="docketService.transportModeData" bindLabel="codeDesc" bindValue="codeId" (change)="docketService.GetGSTFromTrnMode()"
-                formControlName="mode" [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('mode')?.invalid  && docketService.basicDetailForm.get('mode')?.touched}"></ng-select>
-              </div>
-            </div>
-            <div class="form-group mb-1">
-              <div class="col-md-5"></div>
-              <div *ngIf="docketService.basicDetailForm.get('mode')?.invalid  && docketService.basicDetailForm.get('mode')?.touched"
-           class="text-danger col-md-7 text-start">
-           This field is required.
-         </div>
-            </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group mb-1"><label class="col-md-5">From City</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor required2" [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('fromCity')?.invalid && docketService.basicDetailForm.get('fromCity')?.touched}" required placeholder="From City" (search)="getCityList($event,this.docketService.Location,'from')" (change)="onChangeCityListList($event,'from')"
-               formControlName="fromCity" (open)="resetCityDropdown('from')"
-               [notFoundText]="notFromCityValue">
+              <ng-select class="noFoundTextColor required2"
+                [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('fromCity')?.invalid && docketService.basicDetailForm.get('fromCity')?.touched}"
+                required placeholder="From City" (search)="getCityList($event,this.docketService.Location,'from')"
+                (change)="onChangeCityListList($event,'from')" formControlName="fromCity"
+                (open)="resetCityDropdown('from')" [notFoundText]="notFromCityValue">
                 <ng-option *ngFor="let item of fromCityList" [value]="item.location">
                   <strong>{{ item.location }}</strong> : {{ item.location }}
                 </ng-option>
@@ -228,33 +184,79 @@
           </div>
           <div class="form-group mb-1">
             <div class="col-md-5"></div>
-            <div *ngIf="docketService.basicDetailForm.get('fromCity')?.invalid && docketService.basicDetailForm.get('fromCity')?.touched"
-           class="text-danger col-md-7 text-start">
-           This field is required.
-         </div>
+            <div
+              *ngIf="docketService.basicDetailForm.get('fromCity')?.invalid && docketService.basicDetailForm.get('fromCity')?.touched"
+              class="text-danger col-md-7 text-start">
+              This field is required.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 form-column ">
+          <div class="form-group mb-1"><label class="col-md-5">Destination</label>
+            <div class="col-md-7">
+              <ng-select class="noFoundTextColor required2"
+                [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('destination')?.invalid  && docketService.basicDetailForm.get('destination')?.touched}"
+                required [searchable]="true" (search)="getDestinationsList($event)"
+                (change)="onChangedestinationsList($event);docketService.onFormFieldChange()" placeholder="Destination"
+                formControlName="destination" [notFoundText]="notDestinationValue" (open)="resetDestinationDropdown()"
+                (clear)="onResetToCity()">
+                <ng-option *ngFor="let item of destinationsList" [value]="item">
+                  <strong>{{ item.locCode }}</strong> : {{ item.locName }}
+                </ng-option>
+              </ng-select>
+            </div>
+          </div>
+          <div class="form-group mb-1">
+            <div class="col-md-5"></div>
+            <div
+              *ngIf="docketService.basicDetailForm.get('destination')?.invalid  && docketService.basicDetailForm.get('destination')?.touched"
+              class="text-danger col-md-7 text-start">
+              This field is required.
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 form-column ">
+          <div class="form-group mb-1"><label class="col-md-5">Dest State Name</label>
+            <div class="col-md-7"><input type="text" class="form-control required2" required
+                placeholder="Dest State Name" formControlName="destinationState" readonly
+                [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('destinationState')?.invalid  && docketService.basicDetailForm.get('destinationState')?.touched}" />
+            </div>
+          </div>
+          <div class="form-group mb-1">
+            <div class="col-md-5"></div>
+            <div
+              *ngIf="docketService.basicDetailForm.get('destinationState')?.invalid  && docketService.basicDetailForm.get('destinationState')?.touched"
+              class="text-danger col-md-7 text-start">
+              This field is required.
+            </div>
           </div>
         </div>
         <div class="col-md-4 form-column " *ngIf="!docketService.basicDetailForm.get('destination')?.value">
           <div class="form-group mb-1"><label class="col-md-5">To City</label>
             <div class="col-md-7">
-              <input type="text" class="form-control required2"  (open)="resetCityDropdown('to')"
-              [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('toCity')?.invalid && docketService.basicDetailForm.get('toCity')?.touched}" required placeholder="To City" formControlName="toCity" />
+              <input type="text" class="form-control required2" (open)="resetCityDropdown('to')"
+                [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('toCity')?.invalid && docketService.basicDetailForm.get('toCity')?.touched}"
+                required placeholder="To City" formControlName="toCity" />
             </div>
           </div>
-          <div  class="form-group mb-1">
+          <div class="form-group mb-1">
             <div class="col-md-5"></div>
-            <div *ngIf="docketService.basicDetailForm.get('toCity')?.invalid && docketService.basicDetailForm.get('toCity')?.touched"
-           class="text-danger col-md-7 text-start">
-           This field is required.
-         </div>
+            <div
+              *ngIf="docketService.basicDetailForm.get('toCity')?.invalid && docketService.basicDetailForm.get('toCity')?.touched"
+              class="text-danger col-md-7 text-start">
+              This field is required.
+            </div>
           </div>
         </div>
         <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('destination')?.value">
           <div class="form-group"><label class="col-md-5">To City</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor required2" placeholder="To City" (search)="getCityList($event,this.docketService.basicDetailForm.get('destination')?.value,'to')"
-                (change)="onChangeCityListList($event,'to');this.docketService.getGSTCalculation()" formControlName="toCity"
-                [notFoundText]="notToCityValue">
+              <ng-select class="noFoundTextColor required2" placeholder="To City"
+                (search)="getCityList($event,this.docketService.basicDetailForm.get('destination')?.value,'to')"
+                (change)="onChangeCityListList($event,'to');this.docketService.getGSTCalculation()"
+                formControlName="toCity" [notFoundText]="notToCityValue">
                 <ng-option *ngFor="let item of toCityList" [value]="item.location">
                   <strong>{{ item.location }}</strong> : {{ item.location }}
                 </ng-option>
@@ -265,44 +267,53 @@
       </div>
       <div class="row">
         <div class="col-md-4 form-column ">
-          <div class="form-group mb-1"><label class="col-md-5">Pickup/Delivery</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor required2" required placeholder="Pickup/Delivery" [items]="docketService.pickUpData" bindLabel="codeDesc" bindValue="codeId"
-                formControlName="pickup" notFoundText="No matches found" [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('pickup')?.invalid && docketService.basicDetailForm.get('pickup')?.touched}"></ng-select>
-              </div>
-            </div>
-            <div class="form-group mb-1">
-              <div class="col-md-5"></div>
-              <div *ngIf="docketService.basicDetailForm.get('pickup')?.invalid && docketService.basicDetailForm.get('pickup')?.touched"
-             class="text-danger col-md-7 text-start">
-             This field is required.
-           </div>
-            </div>
-        </div>
-        <div class="col-md-4 form-column ">
-          <div class="form-group mb-1"><label class="col-md-5">Service Type</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor required2" [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('serviceType')?.invalid  && docketService.basicDetailForm.get('serviceType')?.touched}" required placeholder="Service Type" [items]="docketService.serviceData" bindLabel="codeDesc" bindValue="codeId"
-                formControlName="serviceType" notFoundText="No matches found" (change)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.getProRataCharge()"></ng-select>
-              </div>
-            </div>
-            <div class="form-group mb-1">
-              <div class="col-md-5"></div>
-              <div *ngIf="docketService.basicDetailForm.get('serviceType')?.invalid  && docketService.basicDetailForm.get('serviceType')?.touched"
-              class="text-danger col-md-7 text-start">
-              This field is required.
-            </div>
-            </div>
-        </div>
-        <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('serviceType')?.value ==='2'">
-          <div class="form-group mb-1"><label class="col-md-5">Type of Movement</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor required2" [items]="docketService.typeofMovementList"
-                bindLabel="codeDesc" bindValue="codeId" placeholder="Type of Movement" formControlName="typeMovement"
-                notFoundText="No matches found"
-                [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('typeMovement')?.invalid  && docketService.basicDetailForm.get('typeMovement')?.touched}"></ng-select>
+          <div class="form-group mb-1"><label class="col-md-5">Transit Mode</label>
+            <div class="col-md-7">
+              <ng-select class="noFoundTextColor required2" required placeholder="Transit Mode"
+                notFoundText="No matches found" [items]="docketService.transportModeData" bindLabel="codeDesc"
+                bindValue="codeId" (change)="docketService.GetGSTFromTrnMode()" formControlName="mode"
+                [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('mode')?.invalid  && docketService.basicDetailForm.get('mode')?.touched}"></ng-select>
             </div>
           </div>
           <div class="form-group mb-1">
             <div class="col-md-5"></div>
-            <div *ngIf="docketService.basicDetailForm.get('typeMovement')?.touched && docketService.basicDetailForm.get('typeMovement')?.hasError('required')"
+            <div
+              *ngIf="docketService.basicDetailForm.get('mode')?.invalid  && docketService.basicDetailForm.get('mode')?.touched"
+              class="text-danger col-md-7 text-start">
+              This field is required.
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 form-column ">
+          <div class="form-group mb-1"><label class="col-md-5">Service Type</label>
+            <div class="col-md-7"><ng-select class="noFoundTextColor required2"
+                [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('serviceType')?.invalid  && docketService.basicDetailForm.get('serviceType')?.touched}"
+                required placeholder="Service Type" [items]="docketService.serviceData" bindLabel="codeDesc"
+                bindValue="codeId" formControlName="serviceType" notFoundText="No matches found"
+                (change)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.getProRataCharge()"></ng-select>
+            </div>
+          </div>
+          <div class="form-group mb-1">
+            <div class="col-md-5"></div>
+            <div
+              *ngIf="docketService.basicDetailForm.get('serviceType')?.invalid  && docketService.basicDetailForm.get('serviceType')?.touched"
+              class="text-danger col-md-7 text-start">
+              This field is required.
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 form-column ">
+          <div class="form-group mb-1"><label class="col-md-5">Pickup/Delivery</label>
+            <div class="col-md-7"><ng-select class="noFoundTextColor required2" required placeholder="Pickup/Delivery"
+                [items]="docketService.pickUpData" bindLabel="codeDesc" bindValue="codeId" formControlName="pickup"
+                notFoundText="No matches found"
+                [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('pickup')?.invalid && docketService.basicDetailForm.get('pickup')?.touched}"></ng-select>
+            </div>
+          </div>
+          <div class="form-group mb-1">
+            <div class="col-md-5"></div>
+            <div
+              *ngIf="docketService.basicDetailForm.get('pickup')?.invalid && docketService.basicDetailForm.get('pickup')?.touched"
               class="text-danger col-md-7 text-start">
               This field is required.
             </div>
@@ -321,7 +332,8 @@
           </div>
           <div class="form-group mb-1">
             <div class="col-md-5"></div>
-            <div *ngIf="docketService.basicDetailForm.get('contents')?.invalid && docketService.basicDetailForm.get('contents')?.touched"
+            <div
+              *ngIf="docketService.basicDetailForm.get('contents')?.invalid && docketService.basicDetailForm.get('contents')?.touched"
               class="text-danger col-md-7 text-start">
               This field is required.
             </div>
@@ -329,35 +341,41 @@
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group mb-1"><label class="col-md-5">Packaging Type</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor required2" required placeholder="Packaging Type" [items]="docketService.packagingTypeData" bindLabel="codeDesc" bindValue="codeId"
-                formControlName="packingType" notFoundText="No matches found" [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('packingType')?.invalid  && docketService.basicDetailForm.get('packingType')?.touched}"></ng-select>
-              </div>
+            <div class="col-md-7"><ng-select class="noFoundTextColor required2" required placeholder="Packaging Type"
+                [items]="docketService.packagingTypeData" bindLabel="codeDesc" bindValue="codeId"
+                formControlName="packingType" notFoundText="No matches found"
+                [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('packingType')?.invalid  && docketService.basicDetailForm.get('packingType')?.touched}"></ng-select>
             </div>
-            <div class="form-group mb-1">
-               <div class="col-md-5"></div>
-              <div *ngIf="docketService.basicDetailForm.get('packingType')?.invalid  && docketService.basicDetailForm.get('packingType')?.touched"
+          </div>
+          <div class="form-group mb-1">
+            <div class="col-md-5"></div>
+            <div
+              *ngIf="docketService.basicDetailForm.get('packingType')?.invalid  && docketService.basicDetailForm.get('packingType')?.touched"
               class="text-danger col-md-7 text-start">
               This field is required.
             </div>
-            </div>
+          </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group mb-1"><label class="col-md-5">Business Type</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor required2" required [items]="docketService.businessTypeList" bindLabel="codeDesc" bindValue="codeId" placeholder="Business Type"
-                formControlName="businessType"  notFoundText="No matches found" [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('businessType')?.invalid  && docketService.basicDetailForm.get('businessType')?.touched}"></ng-select>
-              </div>
+            <div class="col-md-7"><ng-select class="noFoundTextColor required2" required
+                [items]="docketService.businessTypeList" bindLabel="codeDesc" bindValue="codeId"
+                placeholder="Business Type" formControlName="businessType" notFoundText="No matches found"
+                [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('businessType')?.invalid  && docketService.basicDetailForm.get('businessType')?.touched}"></ng-select>
             </div>
-            <div class="form-group mb-1">
-               <div class="col-md-5"></div>
-              <div *ngIf="docketService.basicDetailForm.get('businessType')?.invalid  && docketService.basicDetailForm.get('businessType')?.touched"
+          </div>
+          <div class="form-group mb-1">
+            <div class="col-md-5"></div>
+            <div
+              *ngIf="docketService.basicDetailForm.get('businessType')?.invalid  && docketService.basicDetailForm.get('businessType')?.touched"
               class="text-danger col-md-7 text-start">
               This field is required.
             </div>
-            </div>
+          </div>
         </div>
       </div>
       <div class="row">
-        
+
         <!-- <div class="col-md-4 form-column" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
           <div class="form-group">
             <label for="refDkt" class="col-md-5">Volumetric</label>
@@ -381,41 +399,19 @@
           </div>
         </div> -->
       </div>
-      <div class="row">
-        <div class="col-md-4 form-column" *ngIf="this.docketService?.step2DetailsList?.isDACC === 'Y'">
-          <div class="form-group">
-            <label for="refDkt" class="col-md-5">DACC</label>
-            <div class="col-md-7 text-start">
-              <label class="yes-no">
-                <input type="checkbox" formControlName="isDACC" />
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-        </div>
-        <!-- <div class="col-md-4 form-column">
-          <div class="form-group">
-            <label for="refDkt" class="col-md-5">Local CNote</label>
-            <div class="col-md-7 text-start">
-              <label class="yes-no">
-                <input type="checkbox" formControlName="IsLocalDocket" />
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-        </div> -->
-      </div>
-        <div class="row d-none">
+      <div class="row d-none">
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Customer GST State.</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor" [items]="getStatesFromPartyCodeList" bindLabel="text" bindValue="value" placeholder="Customer GST State"
-                formControlName="custGSTState"></ng-select></div>
+              <ng-select class="noFoundTextColor" [items]="getStatesFromPartyCodeList" bindLabel="text"
+                bindValue="value" placeholder="Customer GST State" formControlName="custGSTState"></ng-select>
+            </div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Consignee Customer GST State.</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="getStatesFromPartyCodeList" bindLabel="text" bindValue="value" placeholder="Consignee Customer GST State"
+            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="getStatesFromPartyCodeList"
+                bindLabel="text" bindValue="value" placeholder="Consignee Customer GST State"
                 formControlName="csgeCustGSTState"></ng-select></div>
           </div>
         </div>
@@ -429,8 +425,46 @@
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Exempt Services</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="docketService.exemptServicesList" bindLabel="codeDesc" bindValue="codeId" placeholder="Exempt Services"
-                formControlName="exemptServices"  (change)="docketService.GetDKTGSTForGTA();"></ng-select></div>
+            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="docketService.exemptServicesList"
+                bindLabel="codeDesc" bindValue="codeId" placeholder="Exempt Services" formControlName="exemptServices"
+                (change)="docketService.GetDKTGSTForGTA();"></ng-select></div>
+          </div>
+        </div>
+        <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('serviceType')?.value ==='2'">
+          <div class="form-group mb-1"><label class="col-md-5">Type of Movement</label>
+            <div class="col-md-7"><ng-select class="noFoundTextColor required2"
+                [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId"
+                placeholder="Type of Movement" formControlName="typeMovement" notFoundText="No matches found"
+                [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('typeMovement')?.invalid  && docketService.basicDetailForm.get('typeMovement')?.touched}"></ng-select>
+            </div>
+          </div>
+          <div class="form-group mb-1">
+            <div class="col-md-5"></div>
+            <div
+              *ngIf="docketService.basicDetailForm.get('typeMovement')?.touched && docketService.basicDetailForm.get('typeMovement')?.hasError('required')"
+              class="text-danger col-md-7 text-start">
+              This field is required.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 form-column ">
+          <div class="form-group"><label class="col-md-5">Sac Code</label>
+            <div class="col-md-7"><input type="text" class="form-control" placeholder="Sac Code"
+                formControlName="sacCode" readonly /></div>
+          </div>
+        </div>
+        <div class="col-md-4 form-column ">
+          <div class="form-group"><label class="col-md-5">Sac Code Description</label>
+            <div class="col-md-7"><input type="text" class="form-control" placeholder="Sac Code Description"
+                formControlName="sacDescription" readonly /></div>
+          </div>
+        </div>
+        <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('exemptServices')?.value">
+          <div class="form-group"><label class="col-md-5">Upload GST Declaraion</label>
+            <div class="col-md-7 text-start"><input type="file" formControlName="GSTDeclaration"
+                (change)="onFileSelect($event)" /></div>
           </div>
         </div>
       </div>
@@ -461,135 +495,57 @@
           <div class="form-group mb-1"><label class="col-md-5">Vehicle No</label>
             <div class="col-md-7">
               <ng-select class="noFoundTextColor required2" [searchable]="true" (search)="getVehicleNumbersList($event)"
-                (change)="onChangeVehicleNo($event)" placeholder="Vehicle No"  [notFoundText]="notVehicleNoValue" formControlName="vehicleno" [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('vehicleno')?.invalid  && docketService.basicDetailForm.get('vehicleno')?.touched}">
+                (change)="onChangeVehicleNo($event)" placeholder="Vehicle No" [notFoundText]="notVehicleNoValue"
+                formControlName="vehicleno"
+                [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('vehicleno')?.invalid  && docketService.basicDetailForm.get('vehicleno')?.touched}">
                 <ng-option *ngFor="let item of vehicleNumbersList" [value]="item.vehno">
                   <strong>{{ item.vehno }}</strong> : {{ item.vehno }}
                 </ng-option>
               </ng-select>
             </div>
           </div>
-          <div  class="form-group mb-1">
-             <div class="col-md-5"></div>
-            <div *ngIf="docketService.basicDetailForm.get('vehicleno')?.invalid  && docketService.basicDetailForm.get('vehicleno')?.touched"
-           class="text-danger col-md-7 text-start">
-           This field is required.
-         </div>
+          <div class="form-group mb-1">
+            <div class="col-md-5"></div>
+            <div
+              *ngIf="docketService.basicDetailForm.get('vehicleno')?.invalid  && docketService.basicDetailForm.get('vehicleno')?.touched"
+              class="text-danger col-md-7 text-start">
+              This field is required.
+            </div>
           </div>
         </div>
       </div>
+
+
       <div class="row">
         <div class="col-md-4 form-column">
           <div class="form-group">
             <label for="refDkt" class="col-md-5">Apply Reference DKT</label>
-            <div class="col-md-7 text-start">
-              <label class="yes-no" >
-                <input type="checkbox" formControlName="isreferenceDKT" (change)="onApplyReferenceDktChangeValidators()"/>
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-        </div>
-        <!-- Show only if checkbox is checked -->
-        <div class="col-md-4 form-column" *ngIf="docketService.basicDetailForm.get('isreferenceDKT')?.value">
-          <div class="form-group mb-1">
-            <label for="refDkt" class="col-md-5">Reference Docket</label>
-            <div class="col-md-7">
-              <input type="text" class="form-control required2" placeholder="Docket No." formControlName="referenceDocket" (input)="ReferenceDocket($event)"
-              [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('referenceDocket')?.invalid  && docketService.basicDetailForm.get('referenceDocket')?.touched}"
-              />
-            </div>
-          </div>
-          <div class="form-group mb-1">
-             <div class="col-md-5"></div>
-            <div *ngIf="docketService.basicDetailForm.get('referenceDocket')?.invalid && docketService.basicDetailForm.get('referenceDocket')?.touched"
-            class="text-danger col-md-7 text-start">
-            <div *ngIf="docketService.basicDetailForm.get('referenceDocket')?.errors?.['required']">
-              This field is required.
-            </div>
-            <div *ngIf="referenceDocketMsg" class="text-danger text-start">
-              {{referenceDocketMsg}}
-            </div>
-          </div>
-          </div>
-        </div>
-
-        <div class="col-md-4 form-column" *ngIf="docketService.basicDetailForm.get('isreferenceDKT')?.value">
-          <div class="form-group">
-            <label for="refDkt" class="col-md-5">Is Docket Payment</label>
-            <div class="col-md-7 text-start">
-              <label class="yes-no">
-                <input type="checkbox" formControlName="isDocketPayment" />
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- <div class="row">
-        <div class="col-md-4 form-column">
-          <div class="form-group">
-            <label for="refDkt" class="col-md-5">Counter Pick Up</label>
-            <div class="col-md-7 text-start">
-              <label class="yes-no">
-                <input type="checkbox" formControlName="ISCounterPickUpPRS" />
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-        </div>
-           <div class="col-md-4 form-column">
-          <div class="form-group">
-            <label for="refDkt" class="col-md-5">Counter Delivery</label>
-            <div class="col-md-7 text-start">
-              <label class="yes-no">
-                <input type="checkbox" formControlName="ISCounterDelivery" />
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-        </div>
-      </div> -->
-
-      <div class="row">
-        <div class="col-md-4 form-column ">
-          <div class="form-group"><label class="col-md-5">Sac Code</label>
-            <div class="col-md-7"><input type="text" class="form-control" placeholder="Sac Code"
-                formControlName="sacCode" readonly /></div>
-          </div>
-        </div>
-        <div class="col-md-4 form-column ">
-          <div class="form-group"><label class="col-md-5">Sac Code Description</label>
-            <div class="col-md-7"><input type="text" class="form-control" placeholder="Sac Code Description"
-                formControlName="sacDescription" readonly /></div>
-          </div>
-        </div>
-        <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('exemptServices')?.value">
-          <div class="form-group"><label class="col-md-5">Upload GST Declaraion</label>
-            <div class="col-md-7 text-start"><input type="file" formControlName="GSTDeclaration"  (change)="onFileSelect($event)"/></div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4 form-column ">
-          <div class="form-group">
-            <label for="appointment" class="col-md-5">Appointment Delivery</label>
-            <div class="col-md-7 text-start">
-              <label class="yes-no">
-                <input type="checkbox" formControlName="isAppointmentDelivery"><span class="slider"></span>
-              </label>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 form-column ">
-          <div class="form-group ">
-            <label for="CSD" class="col-md-5">CSD Delivery</label>
             <div class="col-md-2 text-start">
+              <label class="yes-no">
+                <input type="checkbox" formControlName="isreferenceDKT"
+                  (change)="onApplyReferenceDktChangeValidators()" />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <label for="CSD" class="col-md-3 text-end transform">CSD Delivery</label>
+            <div class="col-md-2 ">
               <label class="yes-no">
                 <input type="checkbox" formControlName="iscsdDelivery"><span class="slider"></span>
               </label>
             </div>
-            <label for="refDkt" class="col-md-4">COD/DOD</label>
-            <div class="col-md-2 text-start">
+          </div>
+        </div>
+        <div class="col-md-4 form-column ">
+          <div class="form-group">
+            <label for="ODA" class="col-md-5">ODA Applicable</label>
+            <div class="disabled col-md-2 text-start">
+              <label class="yes-no ">
+                <input type="checkbox" formControlName="isODAApplicable" class="cursor-pointer" readonly />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <label for="refDkt" class="col-md-3 text-end transform">COD/DOD</label>
+            <div class="col-md-2 ">
               <label class="yes-no">
                 <input type="checkbox" formControlName="IsCODDOD" />
                 <span class="slider"></span>
@@ -611,28 +567,34 @@
       <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group">
-            <label for="ODA" class="col-md-5">ODA Applicable</label>
-            <div class="col-md-7 text-start">
-              <div class="disabled">
-                <label class="yes-no ">
-                  <input type="checkbox" formControlName="isODAApplicable" class="cursor-pointer" readonly/>
-                  <span class="slider"></span>
-                </label>
-              </div>
+            <label for="appointment" class="col-md-5">Appointment Delivery</label>
+            <div class="col-md-2 text-start">
+              <label class="yes-no">
+                <input type="checkbox" formControlName="isAppointmentDelivery"><span class="slider"></span>
+              </label>
+            </div>
+            <label for="refDkt" class="col-md-3 text-end transform"
+              *ngIf="this.docketService?.step2DetailsList?.isDACC === 'Y'">DACC</label>
+            <div class="col-md-2 " *ngIf="this.docketService?.step2DetailsList?.isDACC === 'Y'">
+              <label class="yes-no">
+                <input type="checkbox" formControlName="isDACC" />
+                <span class="slider"></span>
+              </label>
             </div>
           </div>
         </div>
-
         <div class="col-md-4 form-column ">
           <div class="form-group">
             <label class="control-label col-md-5 text-primary bold">Is Local CNote?</label>
             <div class="col-md-2">
               <input type="checkbox" formControlName="isLocalNote">
             </div>
-            <div class="col-md-4 text-danger bold" style="margin-top:5px;font-weight: 600 !important;">(Same Origin-Destination)</div>
+            <div class="col-md-4 text-danger bold" style="margin-top:5px;font-weight: 600 !important;">(Same
+              Origin-Destination)</div>
           </div>
         </div>
       </div>
+
       <div *ngIf="docketService.basicDetailForm.get('isAppointmentDelivery')?.value">
         <h3 class="pb-4 text-start appointment bold">Appointment Details</h3>
         <div class="p-3">
@@ -640,46 +602,62 @@
             <div class="col-md-3 form-column">
               <div class="form-group mb-1"><label class="col-md-5">Appointment Date</label>
                 <div class="col-md-5">
-                  <input type="date" class="form-control required2" required placeholder="Appointment Date"
+                    <div class="input-group">
+                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
+                  [bsValue]="docketService.bsValue"
+                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                  placeholder="Appointment Date" [minDate]="docketService.bsValue" formControlName="appointmentDT"
+                  [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('appointmentDT')?.invalid && docketService.basicDetailForm.get('appointmentDT')?.touched}" >
+                <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                  <i class="fa fa-calendar"></i>
+                </span>
+              </div>
+                  <!-- <input type="date" class="form-control required2" required placeholder="Appointment Date"
                     formControlName="appointmentDT" [max]="docketService.today" (click)="openDatePicker($event)"
-                    [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('appointmentDT')?.invalid && docketService.basicDetailForm.get('appointmentDT')?.touched}" />
+                    [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('appointmentDT')?.invalid && docketService.basicDetailForm.get('appointmentDT')?.touched}" /> -->
                 </div>
               </div>
-                  <div class="form-group mb-1">
-                     <div class="col-md-5"></div>
-                    <div *ngIf="docketService.basicDetailForm.get('appointmentDT')?.invalid  && docketService.basicDetailForm.get('appointmentDT')?.touched"
-                      class="text-danger col-md-7 text-start">
-                      <div *ngIf="docketService.basicDetailForm.get('appointmentDT')?.errors?.['required']">
-                        This field is required.
-                      </div>
-                    </div>
-                  </div>
+              <div class="form-group mb-1">
+                <div class="col-md-5"></div>
+            <div class="text-danger col-md-7 text-start">
+              <div *ngIf="docketService.basicDetailForm.get('appointmentDT')?.invalid  && docketService.basicDetailForm.get('appointmentDT')?.touched">
+                <div *ngIf="docketService.basicDetailForm.get('appointmentDT')?.errors?.['required']">
+                  This field is required.
+                </div>
+              </div>
+            <div *ngIf="docketService.basicDetailForm.get('appointmentDT')?.errors?.['appointmentBeforeEdd']">
+              Appointment date should be greater than or equal to EDD.
+            </div>
+            </div>
+              </div>
             </div>
             <div class="col-md-3 form-column">
               <div class="form-group mb-1"><label class="col-md-5"> Name Of Person</label>
                 <div class="col-md-5"><input type="text" class="form-control col-md-5 required2"
                     placeholder="Name Of Person" formControlName="personName"
                     [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('personName')?.invalid && docketService.basicDetailForm.get('personName')?.touched}" />
-                  </div>
                 </div>
-                <div class="form-group mb-1">
-                   <div class="col-md-5"></div>
-                  <div *ngIf="docketService.basicDetailForm.get('personName')?.invalid && docketService.basicDetailForm.get('personName')?.touched"
+              </div>
+              <div class="form-group mb-1">
+                <div class="col-md-5"></div>
+                <div
+                  *ngIf="docketService.basicDetailForm.get('personName')?.invalid && docketService.basicDetailForm.get('personName')?.touched"
                   class="text-danger col-md-7 text-start">
                   This field is required.
                 </div>
-                </div>
+              </div>
             </div>
             <div class="col-md-3 form-column">
               <div class="form-group mb-1"><label class="col-md-5"> Contact Number</label>
                 <div class="col-md-5"><input type="text" class="form-control col-md-5 required2"
                     placeholder="Contact Number" maxlength="10" formControlName="contactNo"
                     [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('contactNo')?.invalid && docketService.basicDetailForm.get('contactNo')?.touched}" />
-                  </div>
                 </div>
-                <div class="form-group mb-1">
-                   <div class="col-md-5"></div>
-                  <div *ngIf="docketService.basicDetailForm.get('contactNo')?.invalid && docketService.basicDetailForm.get('contactNo')?.touched"
+              </div>
+              <div class="form-group mb-1">
+                <div class="col-md-5"></div>
+                <div
+                  *ngIf="docketService.basicDetailForm.get('contactNo')?.invalid && docketService.basicDetailForm.get('contactNo')?.touched"
                   class="text-danger col-md-7 text-start">
                   <div *ngIf="docketService.basicDetailForm.get('contactNo')?.errors?.['required']">
                     This field is required.
@@ -689,22 +667,23 @@
                     Please enter a valid Indian mobile number.
                   </div>
                 </div>
-                </div>
+              </div>
             </div>
             <div class="col-md-3 form-column">
               <div class="form-group"><label class="col-md-5"> Remarks</label>
                 <div class="col-md-5"><input type="text" placeholder="Remarks" required class="form-control col-md-5"
                     formControlName="remarks"
                     [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('remarks')?.invalid && docketService.basicDetailForm.get('remarks')?.touched}" />
-                  </div>
                 </div>
-                <div class="form-group mb-1">
-                   <div class="col-md-5"></div>
-                  <div *ngIf="docketService.basicDetailForm.get('remarks')?.invalid && docketService.basicDetailForm.get('remarks')?.touched"
+              </div>
+              <div class="form-group mb-1">
+                <div class="col-md-5"></div>
+                <div
+                  *ngIf="docketService.basicDetailForm.get('remarks')?.invalid && docketService.basicDetailForm.get('remarks')?.touched"
                   class="text-danger col-md-7 text-start">
                   This field is required.
                 </div>
-                </div>
+              </div>
             </div>
           </div>
           <div class="row mt-3">
@@ -722,6 +701,48 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div *ngIf="docketService.basicDetailForm.get('isreferenceDKT')?.value">
+        <h3 class="pb-4 text-start appointment bold">Apply Reference DKT</h3>
+        <div class="p-3 row">
+          <!-- Show only if checkbox is checked -->
+          <div class="col-md-4 form-column" *ngIf="docketService.basicDetailForm.get('isreferenceDKT')?.value">
+            <div class="form-group">
+              <label for="refDkt" class="col-md-5">Reference Docket</label>
+              <div class="col-md-7">
+                <input type="text" class="form-control required2" placeholder="Docket No."
+                  formControlName="referenceDocket" (input)="ReferenceDocket($event)"
+                  [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('referenceDocket')?.invalid  && docketService.basicDetailForm.get('referenceDocket')?.touched}" />
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-md-5"></div>
+              <div
+                *ngIf="docketService.basicDetailForm.get('referenceDocket')?.invalid && docketService.basicDetailForm.get('referenceDocket')?.touched"
+                class="text-danger col-md-7 text-start">
+                <div *ngIf="docketService.basicDetailForm.get('referenceDocket')?.errors?.['required']">
+                  This field is required.
+                </div>
+                <div *ngIf="referenceDocketMsg" class="text-danger text-start">
+                  {{referenceDocketMsg}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 form-column" *ngIf="docketService.basicDetailForm.get('isreferenceDKT')?.value">
+            <div class="form-group">
+              <label for="refDkt" class="col-md-5">Is Docket Payment</label>
+              <div class="col-md-7 text-start">
+                <label class="yes-no">
+                  <input type="checkbox" formControlName="isDocketPayment" />
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </form>

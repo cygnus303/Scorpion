@@ -25,8 +25,8 @@ export class DocketService {
   public exemptServicesList: generalMasterResponse[] = [];
   public rateList: generalMasterResponse[] = [];
   public today: string = '';
-  public Location : string ='';
-  public BaseUserCode : string ='';
+  public Location: string = '';
+  public BaseUserCode: string = '';
   public step2DetailsList: any;
   public getGSTNODetailsList: any;
   public GetPincodeOriginList!: any;
@@ -45,15 +45,15 @@ export class DocketService {
   public getPincodeMaster: any;
   public freightchargingData: any[] = [];
   public originalCharges: any[] = [];
-  public notPincodeValue ='Please Enter at least 1 characters';
+  public notPincodeValue = 'Please Enter at least 1 characters';
   public weightErrorMsg: string = '';
-  public submitErrorMsg : string ='';
-  public successMsg:string='';
-  public isSearching :boolean = false;
-  public inValidDocketMsg :string='';
-  public loginUserList!:LoginUser;
-  public bsValue: Date = new Date(); 
-  constructor(private basicDetailService: BasicDetailService,private sweetAlertService:SweetAlertService) { }
+  public submitErrorMsg: string = '';
+  public successMsg: string = '';
+  public isSearching: boolean = false;
+  public inValidDocketMsg: string = '';
+  public loginUserList!: LoginUser;
+  public bsValue: Date = new Date();
+  constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
   detailForm() {
     const now = new Date();
@@ -62,7 +62,7 @@ export class DocketService {
       isODAApplicable: new FormControl({ value: false, disabled: true }),
       isLocalNote: new FormControl(false),
       ewayBillNo: new FormControl(null),
-      cNoteNo: new FormControl(null ,[Validators.required]),
+      cNoteNo: new FormControl(null, [Validators.required]),
       pincode: new FormControl(null),
       billingName: new FormControl(null),
       origin: new FormControl(this.Location),
@@ -89,7 +89,7 @@ export class DocketService {
       sacDescription: new FormControl(null),
       isAppointmentDelivery: new FormControl(false),
       iscsdDelivery: new FormControl(false),
-      appointmentDT: new FormControl(this.today),
+      appointmentDT: new FormControl(new Date()),
       personName: new FormControl(null),
       contactNo: new FormControl(null),
       remarks: new FormControl(null),
@@ -102,8 +102,8 @@ export class DocketService {
       csgegstState: new FormControl(''),
       csgngstState: new FormControl(''),
       GSTDeclaration: new FormControl(null),
-      destination_Area:new FormControl(''),
-      origin_Area:new FormControl(''),
+      destination_Area: new FormControl(''),
+      origin_Area: new FormControl(''),
 
       volumetric: new FormControl(false),
       IsLocalDocket: new FormControl(false),
@@ -140,7 +140,7 @@ export class DocketService {
       consigneeCity: new FormControl(null),
       consigneePincode: new FormControl(null),
       consigneeMobile: new FormControl(null, [Validators.pattern(mobileNo)]),
-      consigneeEmail: new FormControl(null,[ Validators.pattern(EmailRegex)]),
+      consigneeEmail: new FormControl(null, [Validators.pattern(EmailRegex)]),
 
       // Third Party
       // thirdPartyGSTNo: new FormControl(null),
@@ -162,10 +162,10 @@ export class DocketService {
       privateMark: new FormControl(null),
       tpNumber: new FormControl(null)
     },
-     { validators: MobileNumberValidator.notSameConsignorConsignee() }
-  )
+      { validators: MobileNumberValidator.notSameConsignorConsignee() }
+    )
   }
-  
+
 
   freightbuild() {
     this.freightForm = new FormGroup({
@@ -221,66 +221,66 @@ export class DocketService {
     }
   }
 
- createInvoiceRow(srNo: number): FormGroup {
- return new FormGroup({
-    srNo: new FormControl(srNo),
-    ewayBillNo: new FormControl(null),
-    ewayBillExpiry: new FormControl(''),
-    invoiceValue: new FormControl(0),
-    ewayinvoiceDate: new FormControl(''),
-    invoiceNo: new FormControl('', Validators.required),
-    declaredvalue: new FormControl(0, Validators.required),
-    noOfPkgs: new FormControl(0),
-    actualWeight: new FormControl(0, [Validators.required, Validators.min(1)]),
-    length: new FormControl(0),
-    breadth: new FormControl(0),
-    height: new FormControl(0),
-    cubicweight: new FormControl(0),
-    invoicedate: new FormControl(new Date()),
-  });
-}
+  createInvoiceRow(srNo: number): FormGroup {
+    return new FormGroup({
+      srNo: new FormControl(srNo),
+      ewayBillNo: new FormControl(null),
+      ewayBillExpiry: new FormControl(''),
+      invoiceValue: new FormControl(0),
+      ewayinvoiceDate: new FormControl(''),
+      invoiceNo: new FormControl('', Validators.required),
+      declaredvalue: new FormControl(0, Validators.required),
+      noOfPkgs: new FormControl(0),
+      actualWeight: new FormControl(0, [Validators.required, Validators.min(1)]),
+      length: new FormControl(0),
+      breadth: new FormControl(0),
+      height: new FormControl(0),
+      cubicweight: new FormControl(0),
+      invoicedate: new FormControl(new Date()),
+    });
+  }
 
   getpincodeData(event: any) {
-  const searchText = typeof event === 'string' ? event : event?.term;
-  if (!searchText || searchText.trim() === '') {
-    this.pincodeList = [];
-    this.notPincodeValue = 'Enter at least 1 character';
-    this.isSearching = false;
-    return;
-  }
+    const searchText = typeof event === 'string' ? event : event?.term;
+    if (!searchText || searchText.trim() === '') {
+      this.pincodeList = [];
+      this.notPincodeValue = 'Enter at least 1 character';
+      this.isSearching = false;
+      return;
+    }
 
-  if (searchText.length < 1) {
-    this.notPincodeValue = 'Enter at least 1 character';
-    this.pincodeList = [];
-    return;
-  }
+    if (searchText.length < 1) {
+      this.notPincodeValue = 'Enter at least 1 character';
+      this.pincodeList = [];
+      return;
+    }
 
-  this.isSearching = true;
-  this.notPincodeValue = 'Searching...';
+    this.isSearching = true;
+    this.notPincodeValue = 'Searching...';
 
-  this.basicDetailService.getpincodeData(searchText).subscribe({
-    next: (response) => {
-      if (response.success && response.data?.length > 0) {
-        this.pincodeList = response.data;
-        this.notPincodeValue = 'No matches found';
-      } else {
+    this.basicDetailService.getpincodeData(searchText).subscribe({
+      next: (response) => {
+        if (response.success && response.data?.length > 0) {
+          this.pincodeList = response.data;
+          this.notPincodeValue = 'No matches found';
+        } else {
+          this.pincodeList = [];
+          this.notPincodeValue = 'No matches found';
+        }
+        this.isSearching = false;
+      },
+      error: () => {
         this.pincodeList = [];
         this.notPincodeValue = 'No matches found';
+        this.isSearching = false;
       }
-      this.isSearching = false;
-    },
-    error: () => {
-      this.pincodeList = [];
-      this.notPincodeValue = 'No matches found';
-      this.isSearching = false;
-    }
-  });
-}
+    });
+  }
 
 
-  resetPincodeDropdown(){
-      this.pincodeList = [];
-      this.notPincodeValue = 'Enter at least 1 characters';
+  resetPincodeDropdown() {
+    this.pincodeList = [];
+    this.notPincodeValue = 'Enter at least 1 characters';
   }
 
   onChangePinCode(event: any) {
@@ -288,15 +288,15 @@ export class DocketService {
     this.basicDetailForm.patchValue({ destination: event.destination });
     this.consignorForm.patchValue({ consigneePincode: event.pinArea });
     this.pincodeList = [];
-    this.getPincodeMasterList(event.value); 
+    this.getPincodeMasterList(event.value);
   }
-  getPincodeMasterList(cityCode:string) {
+  getPincodeMasterList(cityCode: string) {
     this.basicDetailService.getPincodeMasterList(cityCode).subscribe({
       next: (response: any) => {
         if (response) {
-          this.getPincodeMaster=response;
+          this.getPincodeMaster = response;
           this.basicDetailForm.patchValue({
-            isODAApplicable:this.getPincodeMaster.is_ODA_Apply === "Y" ? true:false,
+            isODAApplicable: this.getPincodeMaster.is_ODA_Apply === "Y" ? true : false,
           })
         }
       }
@@ -338,18 +338,18 @@ export class DocketService {
     const destination = this.basicDetailForm.value.destination;
     const billingType = this.basicDetailForm.value.billingType;
 
-  if (billingParty && destination && billingType) {
-     if (this.invoiceRows.length > 0) {
-      this.invoiceform.reset(this.invoicebuild());
+    if (billingParty && destination && billingType) {
+      if (this.invoiceRows.length > 0) {
+        this.invoiceform.reset(this.invoicebuild());
+      }
+
+      this.freightbuild();
+      this.getChargesData();
+      this.consignorbuild();
+      this.getIGSTchargesDetail();
+
+      this.getStep2Details();
     }
-
-     this.freightbuild();
-    this.getChargesData();
-    this.consignorbuild();
-    this.getIGSTchargesDetail();
-
-    this.getStep2Details();
-  }
   }
 
   validateDropdownValue(formControlName: string, newList: any[], key: string = 'codeId') {
@@ -365,7 +365,7 @@ export class DocketService {
       day: '2-digit',
       month: 'long',
       year: 'numeric'
-    }); 
+    });
     const payload = {
       PartyCode: this.basicDetailForm.value.billingParty,
       Destination: this.basicDetailForm.value.destination,
@@ -387,7 +387,7 @@ export class DocketService {
           this.basicDetailForm.patchValue({
             volumetric: this.step2DetailsList?.isVolumentric === 'Y' ? true : false,
             isDACC: this.step2DetailsList?.isDACC === 'Y' ? true : false,
-            IsCODDOD:this.step2DetailsList?.isCODDOD === 'Y' ? true : false
+            IsCODDOD: this.step2DetailsList?.isCODDOD === 'Y' ? true : false
           });
           // this.basicDetailForm.patchValue({
           //  IsCODDOD:this.step2DetailsList?.isCODDOD
@@ -406,8 +406,12 @@ export class DocketService {
           // this.GetDKTGSTForGTA();
           // this.GetGSTFromTrnMode();
 
-          if((this.basicDetailForm.value.billingType==='P02' && this.step2DetailsList.contractid==='P028888')|| !this.step2DetailsList.contractid){
+          if ((this.basicDetailForm.value.billingType === 'P02' && this.step2DetailsList.contractid === 'P028888') || !this.step2DetailsList.contractid) {
             this.sweetAlertService.info('Cutomer Contract not found or May be Expire, Please contact you administrator for further detail.')
+            this.basicDetailForm.patchValue({
+              billingParty: null,
+              billingName: null
+            })
           }
         }
       }
@@ -415,23 +419,23 @@ export class DocketService {
   }
 
 
-  GetPincodeOrigin(type?:string) {
+  GetPincodeOrigin(type?: string) {
     const payload = {
       customerCode: this.basicDetailForm.value.billingParty,
-      location: type === 'Origin'? this.basicDetailForm.value.origin:this.basicDetailForm.value.destination,
-      pincode: type === 'Origin'? this.consignorForm.value.consignorPincode:this.basicDetailForm.value.pincode,
+      location: type === 'Origin' ? this.basicDetailForm.value.origin : this.basicDetailForm.value.destination,
+      pincode: type === 'Origin' ? this.consignorForm.value.consignorPincode : this.basicDetailForm.value.pincode,
     }
     this.basicDetailService.GetPincodeOrigin(payload).subscribe({
       next: (response) => {
         if (response) {
           this.GetPincodeOriginList = response;
-          if(type === 'Origin'){
-              this.basicDetailForm.patchValue({
+          if (type === 'Origin') {
+            this.basicDetailForm.patchValue({
               originState: this.GetPincodeOriginList.stnm,
               csgngstState: this.GetPincodeOriginList.statePrefix,
-              origin_Area:this.GetPincodeOriginList.area
+              origin_Area: this.GetPincodeOriginList.area
             });
-          }else{
+          } else {
             this.basicDetailForm.patchValue({
               destinationState: this.GetPincodeOriginList.stnm,
               csgegstState: this.GetPincodeOriginList.statePrefix,
@@ -462,13 +466,13 @@ export class DocketService {
           //   sacDescription: response.sacCodeDesc,
           //   // mode: response.transType
           // })
-          if(response.isGSTApplicable){
+          if (response.isGSTApplicable) {
             this.freightForm.patchValue({
-              gstRate:this.GSTFromTrnMode.codeDesc
+              gstRate: this.GSTFromTrnMode.codeDesc
             })
-          }else{
+          } else {
             this.freightForm.patchValue({
-              gstRate:0
+              gstRate: 0
             })
           }
           this.getGSTCalculation()
@@ -492,22 +496,22 @@ export class DocketService {
         }
       }
     });
-   this.getcontractservicecharge();
+    this.getcontractservicecharge();
   }
 
-  getcontractservicecharge(){
-    if(this.basicDetailForm.value.mode){
+  getcontractservicecharge() {
+    if (this.basicDetailForm.value.mode) {
       this.basicDetailService.contractservicecharge(this.step2DetailsList?.contractid, this.basicDetailForm.value.mode).subscribe({
-     next: (response: any) => {
-       if (response) {
-         this.contractservicecharge = response;
-         this.invoiceform.patchValue({
-           cft_Ratio: this.contractservicecharge[0].cft_Ratio
-         });
-         this.getStaxPaidBy()
-       }
-     }
-   });
+        next: (response: any) => {
+          if (response) {
+            this.contractservicecharge = response;
+            this.invoiceform.patchValue({
+              cft_Ratio: this.contractservicecharge[0].cft_Ratio
+            });
+            this.getStaxPaidBy()
+          }
+        }
+      });
     }
   }
 
@@ -544,7 +548,7 @@ export class DocketService {
       next: (response) => {
         if (response.success) {
           this.transportModeData = response.data;
-            this.validateDropdownValue('mode', this.transportModeData);
+          this.validateDropdownValue('mode', this.transportModeData);
         }
       },
     });
@@ -555,7 +559,7 @@ export class DocketService {
       next: (response) => {
         if (response.success) {
           this.pickUpData = response.data;
-            this.validateDropdownValue('pickup', this.pickUpData);
+          this.validateDropdownValue('pickup', this.pickUpData);
         }
       },
     });
@@ -576,7 +580,7 @@ export class DocketService {
       next: (response) => {
         if (response.success) {
           this.serviceData = response.data;
-            this.validateDropdownValue('serviceType', this.serviceData);
+          this.validateDropdownValue('serviceType', this.serviceData);
         }
       },
     });
@@ -746,7 +750,7 @@ export class DocketService {
             billedAt: this.gstCalculationList.rcplbillgenloc,
             billingState: this.gstCalculationList.customerbillgenstate,
 
-        // 👇 Collected fields same as amount
+            // 👇 Collected fields same as amount
             igstcollected: this.gstCalculationList.igstamount,
             cgstcollected: this.gstCalculationList.cgstamount,
             sgstcollected: this.gstCalculationList.sgstamount,
@@ -789,29 +793,29 @@ export class DocketService {
   }
 
   getChargesData() {
-  this.basicDetailService.getChargeDetail().subscribe({
-    next: (response) => {
-      if (response) {
-        this.freightchargingData = response;
-       this.originalCharges = JSON.parse(JSON.stringify(response));
-        // Form controls banavva
-        this.freightchargingData.forEach((item: any) => {
-          if (!this.freightForm.contains(item.chargeCode)) {
-            this.freightForm.addControl(
-              item.chargeCode,
-              new FormControl(item.chargeAmount || 0)
-            );
-          } else {
-            // Already control hoy to value update karvi
-            this.freightForm
-              .get(item.chargeCode)
-              ?.setValue(item.chargeAmount || 0);
-          }
-        });
+    this.basicDetailService.getChargeDetail().subscribe({
+      next: (response) => {
+        if (response) {
+          this.freightchargingData = response;
+          this.originalCharges = JSON.parse(JSON.stringify(response));
+          // Form controls banavva
+          this.freightchargingData.forEach((item: any) => {
+            if (!this.freightForm.contains(item.chargeCode)) {
+              this.freightForm.addControl(
+                item.chargeCode,
+                new FormControl(item.chargeAmount || 0)
+              );
+            } else {
+              // Already control hoy to value update karvi
+              this.freightForm
+                .get(item.chargeCode)
+                ?.setValue(item.chargeAmount || 0);
+            }
+          });
+        }
       }
-    }
-  });
-}
+    });
+  }
 
   GetFreightContractDetails() {
     const data = {
@@ -857,7 +861,10 @@ export class DocketService {
               .replace(/ /g, '-'),
             billingState: this.freightData.billingState
           });
-        // Only patch the value if there's no validation error
+          this.validateAppointmentDate();
+
+          // Only patch the value if there's no validation error
+
           if (!this.weightErrorMsg) {
             this.invoiceform.patchValue({
               finalActualWeight: Math.max(this.freightData.chargedWeight || 0, this.invoiceform.value.finalActualWeight || 0),
@@ -871,6 +878,28 @@ export class DocketService {
     });
     this.getFovContractDetails()
   }
+
+validateAppointmentDate() {
+  const appointmentControl = this.basicDetailForm.get('appointmentDT');
+  const eddControl = this.freightForm.get('EDD');
+
+  if (!appointmentControl || !eddControl) return;
+
+  const appointmentDate = appointmentControl.value ? new Date(appointmentControl.value) : null;
+  const eddDate = eddControl.value ? new Date(eddControl.value) : null;
+
+  if (appointmentDate && eddDate && appointmentDate < eddDate) {
+    appointmentControl.setErrors({ appointmentBeforeEdd: true });
+    appointmentControl.markAsTouched();  // 👈 force touched
+  } else {
+    if (appointmentControl.hasError('appointmentBeforeEdd')) {
+      const errors = { ...appointmentControl.errors };
+      delete errors['appointmentBeforeEdd'];
+      appointmentControl.setErrors(Object.keys(errors).length ? errors : null);
+    }
+  }
+}
+
 
   getFovContractDetails() {
     const payload = {
@@ -895,7 +924,7 @@ export class DocketService {
   }
 
   getOtherChargesDetail() {
-    const chargedWeight = Math.max(this.invoiceform.value.totalActualWeight || 0,this.invoiceform.value.totalCubicWeight || 0)?.toString();
+    const chargedWeight = Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString();
     const payload = {
       "chargeRule": 'NONE',
       "baseCode1": 'NONE',
@@ -957,7 +986,7 @@ export class DocketService {
               if (!this.basicDetailForm.get('isDACC')?.value) {
                 this.freightForm.patchValue({ SCHG13: 0 })
               }
-               if (!this.basicDetailForm.get('IsCODDOD')?.value) {
+              if (!this.basicDetailForm.get('IsCODDOD')?.value) {
                 this.freightForm.patchValue({ SCHG12: 0 })
               }
               if (this.freightForm.get('fovRate')?.value) {
@@ -965,20 +994,20 @@ export class DocketService {
               }
             }
           });
-          this.subTotalCalculation(); 
+          this.subTotalCalculation();
 
         }
       },
     });
   }
 
-  getFuelSurcharge(data:any) {
+  getFuelSurcharge(data: any) {
     const fuelRateType = this.contractservicecharge[0]?.fuelSurchrgBas;  // %, W, F
     const fuelRate = this.contractservicecharge[0]?.fuelSurchrg;
     const minFuelCharge = this.contractservicecharge[0]?.min_FuelSurchrg;
     const maxFuelCharge = this.contractservicecharge[0]?.max_FuelSurchrg;
     const chargedWeight = this.invoiceform.value?.finalActualWeight;
-    const freight =  Number(data);
+    const freight = Number(data);
 
     let fuelSurcharge = 0;
     let surcharge = 0;
@@ -1006,7 +1035,7 @@ export class DocketService {
     this.freightForm.patchValue({
       SCHG20: fuelSurcharge
     })
-   this.subTotalCalculation()
+    this.subTotalCalculation()
 
   }
 
@@ -1045,9 +1074,9 @@ export class DocketService {
         totalSubTotal += controlValue;
       });
       //  const fovRate = Number(this.freightForm?.value?.fovRate) || 0;
-       const fovCharged = Number(this.freightForm?.value?.fovCharged) || 0;
+      const fovCharged = Number(this.freightForm?.value?.fovCharged) || 0;
       //  totalSubTotal += fovRate;
-       totalSubTotal += fovCharged;
+      totalSubTotal += fovCharged;
     }
 
     // Patch subtotal
@@ -1077,53 +1106,53 @@ export class DocketService {
 
 
 
-actualWeightvalidation() {
-  const CFTWeightType = this.step2DetailsList.cftWeightType;
-  const CHRGWT: number = Math.max(
-    Number(this.invoiceform.value.finalActualWeight) || 0,
-    Number(this.invoiceform.value.totalCubicWeight) || 0
-  );
+  actualWeightvalidation() {
+    const CFTWeightType = this.step2DetailsList.cftWeightType;
+    const CHRGWT: number = Math.max(
+      Number(this.invoiceform.value.finalActualWeight) || 0,
+      Number(this.invoiceform.value.totalCubicWeight) || 0
+    );
 
-  const ACTUWT = this.invoiceform.value.totalActualWeight;
-  const CFTWeight = this.invoiceform.value.totalCubicWeight;
+    const ACTUWT = this.invoiceform.value.totalActualWeight;
+    const CFTWeight = this.invoiceform.value.totalCubicWeight;
 
-  const ctrl = this.invoiceform.get('finalActualWeight');
-  this.weightErrorMsg = ''; // reset
-  ctrl?.setErrors(null); // reset errors
+    const ctrl = this.invoiceform.get('finalActualWeight');
+    this.weightErrorMsg = ''; // reset
+    ctrl?.setErrors(null); // reset errors
 
-  if (this.step2DetailsList.isVolumentric == 'Y') {
-    if (CFTWeightType == "A") {
+    if (this.step2DetailsList.isVolumentric == 'Y') {
+      if (CFTWeightType == "A") {
+        if (CHRGWT < ACTUWT) {
+          this.weightErrorMsg = "Charged Weight must not be less than Actual Weight.";
+          ctrl?.setErrors({ weightInvalid: true });
+          return false;
+        }
+      } else if (CFTWeightType == "V") {
+        if (CHRGWT < CFTWeight) {
+          this.weightErrorMsg = "Charged Weight must not be less than CFT Weight.";
+          ctrl?.setErrors({ weightInvalid: true });
+          return false;
+        }
+      } else if (CFTWeightType == "H") {
+        if (CHRGWT < ACTUWT || CHRGWT < CFTWeight) {
+          this.weightErrorMsg = "Charged Weight must be higher than CFT Weight and Actual Weight.";
+          ctrl?.setErrors({ weightInvalid: true });
+          return false;
+        }
+      }
+    } else {
       if (CHRGWT < ACTUWT) {
         this.weightErrorMsg = "Charged Weight must not be less than Actual Weight.";
         ctrl?.setErrors({ weightInvalid: true });
         return false;
       }
-    } else if (CFTWeightType == "V") {
-      if (CHRGWT < CFTWeight) {
-        this.weightErrorMsg = "Charged Weight must not be less than CFT Weight.";
-        ctrl?.setErrors({ weightInvalid: true });
-        return false;
-      }
-    } else if (CFTWeightType == "H") {
-      if (CHRGWT < ACTUWT || CHRGWT < CFTWeight) {
-        this.weightErrorMsg = "Charged Weight must be higher than CFT Weight and Actual Weight.";
-        ctrl?.setErrors({ weightInvalid: true });
-        return false;
-      }
     }
-  } else {
-    if (CHRGWT < ACTUWT) {
-      this.weightErrorMsg = "Charged Weight must not be less than Actual Weight.";
-      ctrl?.setErrors({ weightInvalid: true });
-      return false;
-    }
-  }
 
-  // if valid
-  this.weightErrorMsg = '';
-  ctrl?.setErrors(null);
-  return true;
-}
+    // if valid
+    this.weightErrorMsg = '';
+    ctrl?.setErrors(null);
+    return true;
+  }
 
 
 }
