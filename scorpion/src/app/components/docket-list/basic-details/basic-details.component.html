@@ -51,10 +51,15 @@
           <div class="form-group mb-1">
             <label class="col-md-5">CNote Date</label>
             <div class="col-md-7">
-              <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue"
-                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" placeholder="CNote Date" [minDate]="docketService.bsValue"
-                formControlName="cNoteDate" required
-                [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('cNoteDate')?.invalid  && docketService.basicDetailForm.get('cNoteDate')?.touched }">
+              <div class="input-group">
+                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue"
+                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" placeholder="CNote Date" [maxDate]="docketService.bsValue"
+                  formControlName="cNoteDate" required
+                  [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('cNoteDate')?.invalid  && docketService.basicDetailForm.get('cNoteDate')?.touched }">
+                    <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                      <i class="fa fa-calendar"></i>
+                    </span>
+              </div>
               <!-- <input type="date" class="form-control required2" placeholder="CNote Date" formControlName="cNoteDate"
                         [max]="docketService.today" (click)="openDatePicker($event)" required [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('cNoteDate')?.invalid  && docketService.basicDetailForm.get('cNoteDate')?.touched }"/> -->
             </div>
@@ -456,7 +461,7 @@
           <div class="form-group mb-1"><label class="col-md-5">Vehicle No</label>
             <div class="col-md-7">
               <ng-select class="noFoundTextColor required2" [searchable]="true" (search)="getVehicleNumbersList($event)"
-                (change)="onChangeVehicleNo($event)" placeholder="Vehicle No" formControlName="vehicleno" [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('vehicleno')?.invalid  && docketService.basicDetailForm.get('vehicleno')?.touched}">
+                (change)="onChangeVehicleNo($event)" placeholder="Vehicle No"  [notFoundText]="notVehicleNoValue" formControlName="vehicleno" [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('vehicleno')?.invalid  && docketService.basicDetailForm.get('vehicleno')?.touched}">
                 <ng-option *ngFor="let item of vehicleNumbersList" [value]="item.vehno">
                   <strong>{{ item.vehno }}</strong> : {{ item.vehno }}
                 </ng-option>

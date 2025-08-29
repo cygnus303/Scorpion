@@ -29,6 +29,7 @@ export class BasicDetailsComponent {
   public notDestinationValue = 'Please enter at least 3 characters';
   public notFromCityValue = 'Please enter at least 1 characters';
   public notToCityValue = 'Please enter at least 1 characters';
+  public notVehicleNoValue = 'Please enter at least 1 characters';
 
   constructor(
     public docketService: DocketService,
@@ -327,18 +328,23 @@ validateAppointmentDate() {
     const searchText = event.term;
     if (!searchText || searchText.length < 1) {
       this.vehicleNumbersList = [];
+      this.notVehicleNoValue='Please enter at least 1 characters';
       return;
     }
+    this.notVehicleNoValue = 'Searching...';
     this.basicDetailService.getGetVehicleNumbers(searchText).subscribe({
       next: (response) => {
         if (response) {
           this.vehicleNumbersList = response;
+           this.notVehicleNoValue = 'No matches found';
         } else {
           this.vehicleNumbersList = [];
+          this.notVehicleNoValue = '';
         }
       },
       error: () => {
         this.vehicleNumbersList = [];
+         this.notVehicleNoValue = '';
       }
     });
   }
