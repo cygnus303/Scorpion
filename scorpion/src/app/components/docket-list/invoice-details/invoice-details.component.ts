@@ -251,10 +251,10 @@ getEwayBillData(event: any, index: number) {
                 });
 
                 this.docketService.consignorForm.patchValue({
-                  consignorSelection: response.csgncd,
-                  consigneeSelection: response.csgecd,
-                  consigneeName: response.csgenm,
-                  consignorName: response.csgnm,
+                  consignorName: response.csgncd,
+                  consigneeName: response.csgecd,
+                  consigneeMasterName: response.csgenm,
+                  consignorMasterName: response.csgnm,
                   consignorAddress: response.csgnAdd,
                   consigneeAddress: response.csgeAdd,
                   consigneePincode: response.toPincode,
@@ -264,11 +264,11 @@ getEwayBillData(event: any, index: number) {
                 });
 
                 this.docketService.basicDetailForm.patchValue({
-                  billingParty: response.partyCode,
+                  // billingParty: response.partyCode,
                   billingName: response.partyName,
-                  billingType: response.paybas,
+                  // billingType: response.paybas,
                   mode: response.transMode,
-                  pincode: response.pincode,
+                  pincode: response.toPincode,
                   fromCity: response.fromCity,
                   toCity: response.toCity,
                   destination: response.destcd,
