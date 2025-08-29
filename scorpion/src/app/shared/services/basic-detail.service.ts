@@ -135,4 +135,8 @@ loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
   eWayBillData(ewaybillNo:string){
      return this.apiHandlerService.Get(`Operation/GetEwaybillDetail?ewaybillNo=${ewaybillNo}`);
   }
+
+  checkEWayBill(ewaybillNo:string){
+     return this.apiHandlerService.Get(`Operation/CheckEWBD?ewbNo=${ewaybillNo}`);
+  }
 }
