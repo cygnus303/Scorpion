@@ -271,7 +271,7 @@ getEwayBillData(event: any, index: number) {
               });
             this.docketService.getpincodeData(response.toPincode.toString())
             this.docketService.getTransportModeData(response.transMode.toString())
-              this.docketService.basicDetailForm.patchValue({
+            this.docketService.basicDetailForm.patchValue({
                 billingName: response.partyName,
                 mode: response.transMode.toString(),
                 pincode: response.toPincode.toString(),
@@ -279,19 +279,9 @@ getEwayBillData(event: any, index: number) {
                 // toCity: response.toCity,
                 destination: response.destcd,
               });
-           this.docketService.GetPincodeOrigin('Origin');
- 
+              this.docketService.GetPincodeOrigin('Origin');
                 row.updateValueAndValidity();
- 
                 this.updateTotalDeclaredValue();
- 
-// this.calculateSummary(index);
-// this.getCFTCalculation(index);
-// this.docketService.GetFreightContractDetails();
-// this.docketService.getOtherChargesDetail();
-// this.docketService.getGSTCalculation();
-// this.handleDeclaredValueChange(row);
- 
               } else {
                 row.patchValue({
                   ewayinvoiceDate: null,
