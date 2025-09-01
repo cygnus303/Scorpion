@@ -5,6 +5,7 @@ import { BasicDetailService } from './basic-detail.service';
 import { EmailRegex, mobileNo } from '../constants/common';
 import { MobileNumberValidator } from '../directives/validators/mobile-number-validator';
 import { SweetAlertService } from './sweet-alert.service';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -53,6 +54,7 @@ export class DocketService {
   public inValidDocketMsg: string = '';
   public loginUserList!: LoginUser;
   public bsValue: Date = new Date();
+  public ewayBill$ = new Subject<string>();
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
   detailForm() {
@@ -419,7 +421,7 @@ export class DocketService {
   }
 
 
-  GetPincodeOrigin(type?: string) {
+  GetPincodeOrigin(type?: string ) {
     const payload = {
       customerCode: this.basicDetailForm.value.billingParty,
       location: type === 'Origin' ? this.basicDetailForm.value.origin : this.basicDetailForm.value.destination,

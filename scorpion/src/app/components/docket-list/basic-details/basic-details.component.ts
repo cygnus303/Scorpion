@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { DocketService } from '../../../shared/services/docket.service';
 import { BasicDetailService } from '../../../shared/services/basic-detail.service';
 import { DestinationsList, generalMasterResponse, billingPartyResponse, VehicleNumbersResponse, StatesFromPartyCodeRepsonse } from '../../../shared/models/general-master.model';
 import { cityResponse } from '../../../shared/models/general-master.model';
-import { combineLatest, filter, startWith } from 'rxjs';
 import { GeneralMasterService } from '../../../shared/services/general-master.service';
 import { Validators } from '@angular/forms';
 import { mobileNo } from '../../../shared/constants/common';
@@ -82,6 +81,11 @@ export class BasicDetailsComponent {
     this.docketService.validateAppointmentDate();
   });
   }
+
+    callEwayBillFromParent(event: any) {
+    this.docketService.ewayBill$.next(event);
+  }
+
 
     onApplyDeliveryChangeValidators(){
      this.docketService.basicDetailForm.get('isAppointmentDelivery')?.valueChanges.subscribe((isAppointment) => {
