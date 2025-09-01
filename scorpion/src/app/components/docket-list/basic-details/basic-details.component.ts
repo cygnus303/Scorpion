@@ -6,6 +6,7 @@ import { cityResponse } from '../../../shared/models/general-master.model';
 import { GeneralMasterService } from '../../../shared/services/general-master.service';
 import { Validators } from '@angular/forms';
 import { mobileNo } from '../../../shared/constants/common';
+import { CommonDateService } from '../../../shared/services/common-date.service';
 
 @Component({
   selector: 'basic-details',
@@ -23,6 +24,8 @@ export class BasicDetailsComponent {
   public destinationsList: DestinationsList[] = [];
   public vehicleNumbersList: VehicleNumbersResponse[] = [];
   public getStatesFromPartyCodeList: StatesFromPartyCodeRepsonse[] = [];
+minDate: Date | undefined;
+maxDate: Date | undefined;
   public referenceDocketMsg:any;
   public notFoundTextValue = 'Please enter at least 3 characters';
   public notDestinationValue = 'Please enter at least 3 characters';
@@ -32,7 +35,8 @@ export class BasicDetailsComponent {
 
   constructor(
     public docketService: DocketService,
-    private basicDetailService: BasicDetailService, public generalMasterService: GeneralMasterService) { }
+    private basicDetailService: BasicDetailService, public generalMasterService: GeneralMasterService,
+  public commonDateService:CommonDateService) { }
 
   ngOnInit() {
     this.docketService.detailForm();
@@ -80,12 +84,14 @@ export class BasicDetailsComponent {
   this.docketService.basicDetailForm?.get('appointmentDT')?.valueChanges.subscribe(() => {
     this.docketService.validateAppointmentDate();
   });
+
+    this.dateAccess()
+
   }
 
     callEwayBillFromParent(event: any) {
     this.docketService.ewayBill$.next(event);
   }
-
 
     onApplyDeliveryChangeValidators(){
      this.docketService.basicDetailForm.get('isAppointmentDelivery')?.valueChanges.subscribe((isAppointment) => {
@@ -172,6 +178,33 @@ applyVehicleNoValidation(){
       }
     });
   }
+
+  dateAccess() {
+  const payload = {
+    moduleCode: '01',
+    baseUserName: this.docketService.baseUsername
+  };
+
+  this.commonDateService.userDateSelection(payload).subscribe({
+    next: (res: any) => {
+      if (res && res.length > 0) {
+        const rule = res[0];
+
+        // API min_Date
+        this.minDate = new Date(rule.min_Date);
+
+        // BackDate days logic
+        if (rule.backDate_Days && rule.backDate_Days > 0) {
+          const today = new Date();
+          this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
+        }
+
+        // Max date = today
+        this.maxDate = new Date();
+      }
+    }
+  });
+}
 
   getCityList(event?: any, locCode?: any, type?: 'from' | 'to') {
     const searchText = event.term;
@@ -341,6 +374,10 @@ applyVehicleNoValidation(){
       destination: event.locCode,
     });
     this.destinationsList = [];
+  }
+
+  accessDate(){
+
   }
 
   toggleLocalNote() {
