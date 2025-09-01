@@ -113,7 +113,7 @@
                     <!-- <input class="form-control" maxlength="12" placeholder="E-Way Bill No"
                       formControlName="ewayBillNo" type="text"> -->
                       <input class="form-control" maxlength="12" placeholder="E-Way Bill No."
-                            formControlName="ewayBillNo" type="text" (blur)="getEwayBillData($event,i)"
+                            formControlName="ewayBillNo" type="text" (blur)="getEwayBillData($event,i,true)"
                             [ngClass]="{ 'border-danger': row.get('ewayBillNo')?.invalid && row.get('ewayBillNo')?.touched ,'required2': row.get('declaredvalue')?.value > 100000}">
                       <div *ngIf="row.get('ewayBillNo')?.hasError('required') 
                                     && (row.get('ewayBillNo')?.touched || row.get('declaredvalue')?.value > 100000)"

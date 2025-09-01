@@ -133,6 +133,16 @@ export class InvoiceDetailsComponent {
       totalCubicWeight += cubicweight;
       totalActualWeight += +r.actualWeight || 0;
     });
+      const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
+  let total = 0;
+  invoiceRows.controls.forEach((ctrl: any) => {
+    const val = ctrl.get('declaredvalue')?.value || 0;
+    total += Number(val);
+  });
+
+  this.docketService.invoiceform.patchValue({
+    totalDeclaredValue: total
+  }, { emitEvent: false });
     this.docketService.invoiceRows.patchValue(updatedRows);
     this.docketService.invoiceform.patchValue({
       totalDeclaredValue,
@@ -192,10 +202,10 @@ export class InvoiceDetailsComponent {
   // }
 
 
-getEwayBillData(event: any, index: number) {
+getEwayBillData(event: any, index: number,isInvoice?:boolean) {
   const search = event.target.value;
  
-  // if (search.length === 12) {
+  if (search.length.toString() === "12") {
     const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
     const row = invoiceRows.at(index) as FormGroup;
  
@@ -215,10 +225,11 @@ getEwayBillData(event: any, index: number) {
     });
     return;
   }else{
+    debugger
  
     this.basicDetailService.checkEWayBill(search).subscribe({
       next: (checkRes: any) => {
-        if (checkRes.status === "N" && search.length === 12) {
+        if (checkRes.status === "N" && search.length.toString() === "12") {
           // If not exist in ERP, call eWayBillData API
           this.basicDetailService.eWayBillData(search).subscribe({
             next: (response: any) => {
@@ -252,7 +263,7 @@ getEwayBillData(event: any, index: number) {
                   invoiceNo:response.invno,
                   declaredvalue:response.decval
                 });
-               
+               if(!isInvoice){
         this.docketService.getpincodeData(response.pincode.toString())
               this.docketService.consignorForm.patchValue({
                 consignorName: response.csgncd,
@@ -279,6 +290,7 @@ getEwayBillData(event: any, index: number) {
                 destination: response.destcd,
               });
               this.docketService.GetPincodeOrigin('Origin');
+            }
                 row.updateValueAndValidity();
                 this.updateTotalDeclaredValue();
               } else {
@@ -313,7 +325,7 @@ getEwayBillData(event: any, index: number) {
       }
     });
   }
-  // }
+  }
 }
 
 // Helper method for sum
