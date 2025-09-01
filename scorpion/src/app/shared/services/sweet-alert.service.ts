@@ -68,7 +68,11 @@ export class SweetAlertService {
   error(message:any){
     Swal.fire({
       icon: "error",
-      text: message
+      text:`<div>${message}</div>`,
+      background: 'rgba(255, 255, 255, 0.9)',
+      color: '#2c3e50',
+      width: '420px',
+      buttonsStyling: false,
     });
     Swal.fire({
       icon: 'error',
@@ -78,9 +82,16 @@ export class SweetAlertService {
       showConfirmButton: true,
       confirmButtonText: "Ok",
       confirmButtonColor: '#171829',
+    background: 'rgba(255, 255, 255, 0.9)',
+    color: '#2c3e50',
+    width: '420px',
       customClass: {
-        container: 'notification-popup'
-      }
+      popup: 'glassy-info-popup',
+      title: 'glassy-info-title',
+      htmlContainer: 'glassy-info-body',
+      confirmButton: 'glassy-info-btn',
+      icon: 'glassy-info-icon'
+    }
     });
   }
 

@@ -342,14 +342,15 @@ export class DocketService {
     const billingType = this.basicDetailForm.value.billingType;
 
     if (billingParty && destination && billingType) {
-      if (this.invoiceRows.length > 0) {
-        this.invoiceform.reset(this.invoicebuild());
+      if(!this.basicDetailForm.value.ewayBillNo){
+        if (this.invoiceRows.length > 0) {
+          this.invoiceform.reset(this.invoicebuild());
+        }
+        this.freightbuild();
+        this.getChargesData();
+        this.consignorbuild();
+        this.getIGSTchargesDetail();
       }
-
-      this.freightbuild();
-      this.getChargesData();
-      this.consignorbuild();
-      this.getIGSTchargesDetail();
 
       this.getStep2Details();
     }

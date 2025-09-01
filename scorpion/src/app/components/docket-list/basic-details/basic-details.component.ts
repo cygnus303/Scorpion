@@ -376,10 +376,6 @@ applyVehicleNoValidation(){
     this.destinationsList = [];
   }
 
-  accessDate(){
-
-  }
-
   toggleLocalNote() {
     const destination = this.docketService?.basicDetailForm?.get('destination')?.value;
     const origin = this.docketService?.basicDetailForm?.get('origin')?.value;
