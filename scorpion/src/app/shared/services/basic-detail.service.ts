@@ -139,4 +139,8 @@ loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
   checkEWayBill(ewaybillNo:string){
      return this.apiHandlerService.Get(`Operation/CheckEWBD?ewbNo=${ewaybillNo}`);
   }
+
+  dateSelectionRule(payload:any){
+     return this.apiHandlerService.Get(`Operation/GetDateRules?moduleCode=${payload.moduleCode}&baseUserName=${payload.baseUserName}`);
+  }
 }

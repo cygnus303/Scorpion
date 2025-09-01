@@ -86,7 +86,6 @@ export class InvoiceDetailsComponent {
   //   });
   // }
   calculateSummary(i: number) {
-    debugger
     const serviceType = this.docketService.basicDetailForm.get('serviceType')?.value;
 
     // ✅ if serviceType = 2 → only reset Length, Breadth, Height, CubicWeight
@@ -193,18 +192,18 @@ export class InvoiceDetailsComponent {
   // }
 
 
-getEwayBillData(event: any, index?: number) {
-  // 👇 Default index 0 if not passed
-  const rowIndex = index ?? 0;
-
+getEwayBillData(event: any, index: number) {
+  debugger
   const search = event.target.value;
-  const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
-  const row = invoiceRows.at(rowIndex) as FormGroup;
-
-  const isDuplicate = invoiceRows.controls.some((ctrl, i) =>
-    i !== rowIndex && ctrl.get('ewayBillNo')?.value === search
+ 
+  // if (search.length === 12) {
+    const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
+    const row = invoiceRows.at(index) as FormGroup;
+ 
+     const isDuplicate = invoiceRows.controls.some((ctrl, i) =>
+    i !== index && ctrl.get('ewayBillNo')?.value === search
   );
-
+ 
   if (isDuplicate) {
     this.sweetAlertService.error("Message !! cannot select Duplicate EWayBillNo.");
     row.patchValue({
@@ -216,44 +215,46 @@ getEwayBillData(event: any, index?: number) {
       declaredvalue: null
     });
     return;
-  }
-
-  // 👇 rest of your API logic with rowIndex instead of index
-  this.basicDetailService.checkEWayBill(search).subscribe({
-    next: (checkRes: any) => {
-      if (checkRes.status === "N" && search.length === 12) {
-        this.basicDetailService.eWayBillData(search).subscribe({
-          next: (response: any) => {
-            if (response.status === 1) {
-              const invoiceDate = response.eWayBillInvoiceDate ? new Date(response.eWayBillInvoiceDate) : null;
-              const expiryDate =
-                response.eWayBillExpiredDate && response.eWayBillExpiredDate !== '1900-01-01T00:00:00'
-                  ? new Date(response.eWayBillExpiredDate)
-                  : null;
-              const invDate = response.invdt ? new Date(response.invdt) : null;
-
-              if (expiryDate && expiryDate < new Date()) {
-                this.sweetAlertService.error("Error !! Please Check it EWayBill Expired Date !!!!");
+  }else{
+ 
+    this.basicDetailService.checkEWayBill(search).subscribe({
+      next: (checkRes: any) => {
+        if (checkRes.status === "N" && search.length === 12) {
+          // If not exist in ERP, call eWayBillData API
+          this.basicDetailService.eWayBillData(search).subscribe({
+            next: (response: any) => {
+              if (response.status === 1) {
+                // always keep Date object for bsDatepicker
+                const invoiceDate = response.eWayBillInvoiceDate ? new Date(response.eWayBillInvoiceDate) : null;
+                const expiryDate =
+                  response.eWayBillExpiredDate && response.eWayBillExpiredDate !== '1900-01-01T00:00:00'
+                    ? new Date(response.eWayBillExpiredDate)
+                    : null;
+                const invDate = response.invdt ? new Date(response.invdt) : null;
+               
+                // check expiry date
+                if (expiryDate && expiryDate < new Date()) {
+                  this.sweetAlertService.error("Error !! Please Check it EWayBill Expired Date !!!!");
+                  row.patchValue({
+                    ewayinvoiceDate: null,
+                    ewayBillExpiry: null,
+                    invoicedate: null,
+                    ewayBillNo: null,
+                    invoiceNo:null,
+                    declaredvalue:null
+                  });
+                  return; // stop further execution if expired
+                }
                 row.patchValue({
-                  ewayinvoiceDate: null,
-                  ewayBillExpiry: null,
-                  invoicedate: null,
-                  ewayBillNo: null,
-                  invoiceNo: null,
-                  declaredvalue: null
+                  ewayinvoiceDate: invoiceDate,
+                  ewayBillExpiry: expiryDate,
+                  invoicedate: invDate,
+                  ewayBillNo: search,
+                  invoiceNo:response.invno,
+                  declaredvalue:response.decval
                 });
-                return;
-              }
-
-              row.patchValue({
-                ewayinvoiceDate: invoiceDate,
-                ewayBillExpiry: expiryDate,
-                invoicedate: invDate,
-                ewayBillNo: search,
-                invoiceNo: response.invno,
-                declaredvalue: response.decval
-              });
-              this.docketService.getpincodeData(response.pincode.toString())
+               
+        this.docketService.getpincodeData(response.pincode.toString())
               this.docketService.consignorForm.patchValue({
                 consignorName: response.csgncd,
                 consigneeName: response.csgecd,
@@ -279,12 +280,65 @@ getEwayBillData(event: any, index?: number) {
                 destination: response.destcd,
               });
            this.docketService.GetPincodeOrigin('Origin');
+ 
+                row.updateValueAndValidity();
+ 
+                this.updateTotalDeclaredValue();
+ 
+// this.calculateSummary(index);
+// this.getCFTCalculation(index);
+// this.docketService.GetFreightContractDetails();
+// this.docketService.getOtherChargesDetail();
+// this.docketService.getGSTCalculation();
+// this.handleDeclaredValueChange(row);
+ 
+              } else {
+                row.patchValue({
+                  ewayinvoiceDate: null,
+                  ewayBillExpiry: null,
+                  invoicedate: null,
+                  ewayBillNo: null,
+                  invoiceNo:null,
+                  declaredvalue:null
+                });
+              }
+            },
+            error: () => {
+              this.sweetAlertService.error("Error !! Unable to fetch EWayBill data.");
             }
-          }
-        });
+          });
+        } else {
+          this.sweetAlertService.error("Error !! This EWay Bill Already Exist IN ERP !!!");
+          row.patchValue({
+            ewayinvoiceDate: null,
+            ewayBillExpiry: null,
+            invoicedate: null,
+            ewayBillNo: null,
+            invoiceNo:null,
+            declaredvalue:null
+          });
+        }
+      },
+      error: () => {
+        this.sweetAlertService.error("Error !! Failed to check EWay Bill in ERP.");
       }
-    }
+    });
+  }
+  // }
+}
+
+// Helper method for sum
+ updateTotalDeclaredValue() {
+  const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
+  let total = 0;
+  invoiceRows.controls.forEach((ctrl: any) => {
+    const val = ctrl.get('declaredvalue')?.value || 0;
+    total += Number(val);
   });
+
+  this.docketService.invoiceform.patchValue({
+    totalDeclaredValue: total
+  }, { emitEvent: false });
 }
 
 

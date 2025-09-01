@@ -49,6 +49,7 @@ export class DocketListComponent implements OnInit{
             // this.docketService.Location = parsedData.LocationCode;
               this.docketService.Location = 'TBH';
             this.docketService.BaseUserCode = parsedData.UserId;
+            this.docketService.baseUsername=parsedData.BaseUserName;
           } else {
             // ❌ ek pan key missing hoy → redirect
             console.error("Invalid decrypted data, redirecting...");
@@ -376,7 +377,6 @@ export class DocketListComponent implements OnInit{
         next: (response: any) => {
           if (response) {
        window.scrollTo({ top: 0, behavior: 'smooth' }); 
-       debugger
        this.docketService.successMsg='Docket submitted successfully.'
        window.location.href = `https://sepluat.cygnux.in/Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N`;
             this.docketService.basicDetailForm.reset();
