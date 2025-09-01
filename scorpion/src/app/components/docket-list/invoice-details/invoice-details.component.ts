@@ -193,7 +193,6 @@ export class InvoiceDetailsComponent {
 
 
 getEwayBillData(event: any, index: number) {
-  debugger
   const search = event.target.value;
  
   // if (search.length === 12) {

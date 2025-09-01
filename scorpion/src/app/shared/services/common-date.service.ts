@@ -5,23 +5,20 @@ import { DocketService } from './docket.service';
 @Injectable({
   providedIn: 'root'
 })
-export class DateAccessService {
+export class CommonDateService {
 
   constructor(
     public basicDetailService:BasicDetailService,
     public docketService:DocketService
   ) { }
 
-  userDateSelection(){
-    // const payload={
-    //    moduleCode: event.target.value,
-    //    baseUserName:this.docketService.baseUsername
-
-    // }
+  userDateSelection(payload:any){
     // this.basicDetailService.dateSelectionRule(payload).subscribe({
     //   next: (response: any) => {
        
     //   }
     // });
+
+      return this.basicDetailService.dateSelectionRule(payload);
   }
 }
