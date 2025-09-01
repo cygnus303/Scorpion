@@ -82,7 +82,6 @@ export class InvoiceDetailsComponent {
   //   });
   // }
   calculateSummary(i: number) {
-    debugger
     const serviceType = this.docketService.basicDetailForm.get('serviceType')?.value;
 
     // ✅ if serviceType = 2 → only reset Length, Breadth, Height, CubicWeight
@@ -228,7 +227,7 @@ getEwayBillData(event: any, index: number) {
                     ? new Date(response.eWayBillExpiredDate)
                     : null;
                 const invDate = response.invdt ? new Date(response.invdt) : null;
-
+                
                 // check expiry date
                 if (expiryDate && expiryDate < new Date()) {
                   this.sweetAlertService.error("Error !! Please Check it EWayBill Expired Date !!!!");
@@ -242,7 +241,6 @@ getEwayBillData(event: any, index: number) {
                   });
                   return; // stop further execution if expired
                 }
-
                 row.patchValue({
                   ewayinvoiceDate: invoiceDate,
                   ewayBillExpiry: expiryDate,
@@ -251,12 +249,8 @@ getEwayBillData(event: any, index: number) {
                   invoiceNo:response.invno,
                   declaredvalue:response.decval
                 });
-              this.calculateSummary(index);
-              this.getCFTCalculation(index);
-              this.docketService.GetFreightContractDetails();
-              this.docketService.getOtherChargesDetail();
-              this.docketService.getGSTCalculation();
-              this.handleDeclaredValueChange(row);
+                
+
 
                 this.docketService.consignorForm.patchValue({
                   consignorName: response.csgncd,
@@ -281,6 +275,17 @@ getEwayBillData(event: any, index: number) {
                   toCity: response.toCity,
                   destination: response.destcd,
                 });
+
+                row.updateValueAndValidity();
+
+                this.updateTotalDeclaredValue();
+
+// this.calculateSummary(index);
+// this.getCFTCalculation(index);
+// this.docketService.GetFreightContractDetails();
+// this.docketService.getOtherChargesDetail();
+// this.docketService.getGSTCalculation();
+// this.handleDeclaredValueChange(row);
 
               } else {
                 row.patchValue({
@@ -315,6 +320,20 @@ getEwayBillData(event: any, index: number) {
     });
   }
   // }
+}
+
+// Helper method for sum
+ updateTotalDeclaredValue() {
+  const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
+  let total = 0;
+  invoiceRows.controls.forEach((ctrl: any) => {
+    const val = ctrl.get('declaredvalue')?.value || 0;
+    total += Number(val);
+  });
+
+  this.docketService.invoiceform.patchValue({
+    totalDeclaredValue: total
+  }, { emitEvent: false });
 }
 
 
