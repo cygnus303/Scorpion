@@ -24,18 +24,6 @@ export class InvoiceDetailsComponent {
 
   ngOnInit() {
     this.docketService.invoicebuild();
-    //     this.docketService.invoiceform.valueChanges.subscribe(() => {
-    //   this.applyEwayBillValidation();
-    // });
-    //  this.docketService.basicDetailForm.get('pincode')?.valueChanges.subscribe(() => {
-    //   this.applyEwayBillValidation();
-    // });
-    //    this.docketService.basicDetailForm.get('destinationState')?.valueChanges.subscribe(() => {
-    //   this.applyEwayBillValidation();
-    // });
-    //    this.docketService.basicDetailForm.get('originState')?.valueChanges.subscribe(() => {
-    //   this.applyEwayBillValidation();
-    // });
       this.subscription = this.docketService.ewayBill$.subscribe(ewayBillNo => {
       this.getEwayBillData(ewayBillNo,0);
     });
@@ -67,26 +55,8 @@ export class InvoiceDetailsComponent {
     this.docketService.invoiceRows.removeAt(index);
   }
 
-
-  //   applyEwayBillValidation() {
-  //   const totalDeclaredValue = this.docketService.invoiceform.get('totalDeclaredValue')?.value;
-  //   const originState = this.docketService.basicDetailForm.get('originState')?.value;
-  //   const destState = this.docketService.basicDetailForm.get('destinationState')?.value;
-
-  //   this.docketService.invoiceRows.controls.forEach((row: any) => {
-  //     const ewayBillNo = row.get('ewayBillNo');
-  //     if (totalDeclaredValue > 100000 && originState && destState && originState === destState) {
-  //       ewayBillNo?.setValidators([Validators.required]);
-  //     } else {
-  //       ewayBillNo?.clearValidators();
-  //         ewayBillNo?.setErrors(null);
-  //     }
-
-  //     ewayBillNo?.updateValueAndValidity({ emitEvent: false });
-  //   });
-  // }
   calculateSummary(i: number) {
-    const serviceType = this.docketService.basicDetailForm.get('serviceType')?.value;
+    const serviceType = this.docketService?.basicDetailForm?.get('serviceType')?.value;
 
     // ✅ if serviceType = 2 → only reset Length, Breadth, Height, CubicWeight
     if (serviceType === '2') {
@@ -98,9 +68,10 @@ export class InvoiceDetailsComponent {
       });
       // return; // stop further calculation
     }
-
-    const volMeasureType = this.docketService?.contractservicecharge[0]?.cft_Measure; // 'INCHES' | 'CM' | 'FEET'
-    const cftWtRatio = +this.docketService?.contractservicecharge[0]?.cft_Ratio || 0; // you can bind from service
+    if(this.docketService?.contractservicecharge){
+      var volMeasureType = this.docketService?.contractservicecharge[0]?.cft_Measure; // 'INCHES' | 'CM' | 'FEET'
+      var cftWtRatio = +this.docketService?.contractservicecharge[0]?.cft_Ratio || 0; // you can bind from service
+    }
     const rows = this.docketService?.invoiceRows.value;
 
     let totalDeclaredValue = 0;
@@ -196,12 +167,6 @@ export class InvoiceDetailsComponent {
 
   }
 
-  // openDatePicker(event: Event): void {
-  //   const input = event.target as HTMLInputElement;
-  //   input.showPicker?.();
-  // }
-
-
 getEwayBillData(event: any, index: number,isInvoice?:boolean) {
   const search = event.target.value;
  
@@ -263,8 +228,9 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                   invoiceNo:response.invno,
                   declaredvalue:response.decval
                 });
+                this.calculateSummary(index)
                if(!isInvoice){
-        this.docketService.getpincodeData(response.pincode.toString())
+           this.docketService.getpincodeData(response.pincode.toString())
               this.docketService.consignorForm.patchValue({
                 consignorName: response.csgncd,
                 consigneeName: response.csgecd,
@@ -292,7 +258,6 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
               this.docketService.GetPincodeOrigin('Origin');
             }
                 row.updateValueAndValidity();
-                this.updateTotalDeclaredValue();
               } else {
                 row.patchValue({
                   ewayinvoiceDate: null,
@@ -327,21 +292,6 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
   }
   }
 }
-
-// Helper method for sum
- updateTotalDeclaredValue() {
-  const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
-  let total = 0;
-  invoiceRows.controls.forEach((ctrl: any) => {
-    const val = ctrl.get('declaredvalue')?.value || 0;
-    total += Number(val);
-  });
-
-  this.docketService.invoiceform.patchValue({
-    totalDeclaredValue: total
-  }, { emitEvent: false });
-}
-
 
  ngOnDestroy() {
     if (this.subscription) {
