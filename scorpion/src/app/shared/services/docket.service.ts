@@ -343,6 +343,7 @@ export class DocketService {
 
     if (billingParty && destination && billingType) {
       if(!this.basicDetailForm.value.ewayBillNo){
+         const oldValue = this.consignorForm?.value; 
         if (this.invoiceRows.length > 0) {
           this.invoiceform.reset(this.invoicebuild());
         }
@@ -350,6 +351,9 @@ export class DocketService {
         this.getChargesData();
         this.consignorbuild();
         this.getIGSTchargesDetail();
+        this.consignorForm.patchValue({
+          consigneePincode: oldValue?.consigneePincode
+        });
       }
 
       this.getStep2Details();
@@ -891,8 +895,7 @@ validateAppointmentDate() {
 
   const appointmentDate = appointmentControl.value ? new Date(appointmentControl.value) : null;
   const eddDate = eddControl.value ? new Date(eddControl.value) : null;
-
-  if (appointmentDate && eddDate && appointmentDate < eddDate) {
+  if (appointmentDate && eddDate && appointmentDate < eddDate && this.basicDetailForm.get('isAppointmentDelivery')?.value) {
     appointmentControl.setErrors({ appointmentBeforeEdd: true });
     appointmentControl.markAsTouched();  // 👈 force touched
   } else {

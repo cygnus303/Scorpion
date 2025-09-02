@@ -190,8 +190,6 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
     });
     return;
   }else{
-    debugger
- 
     this.basicDetailService.checkEWayBill(search).subscribe({
       next: (checkRes: any) => {
         if (checkRes.status === "N" && search.length.toString() === "12") {

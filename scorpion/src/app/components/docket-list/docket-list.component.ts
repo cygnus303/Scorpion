@@ -388,7 +388,7 @@ export class DocketListComponent implements OnInit{
         },
         error: (error) => {
         window.scrollTo({ top: 0, behavior: 'smooth' }); 
-      this.docketService.submitErrorMsg =error?.error?.message;
+      this.docketService.submitErrorMsg = error?.error?.message;
         this.isSubmitting = false; // ✅ loader stop on error
 
       }
