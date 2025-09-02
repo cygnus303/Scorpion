@@ -15,8 +15,23 @@
           <div class="form-group">
             <label class="control-label col-md-5">Freight Charges</label>
             <div class="col-md-7">
-              <input class="required2 form-control required text-end" placeholder="Freight Charges" type="number"
-                value="0" formControlName="freightCharges" readonly>
+              <!-- <input class="required2 form-control required text-end" placeholder="Freight Charges" type="number"
+                value="0" formControlName="freightCharges" readonly> -->
+              <input type="number" class="form-control text-end" placeholder="Freight Charges"
+                formControlName="freightCharges" min="0.01" step="0.01"
+                [ngClass]="{ 'border-danger': docketService.freightForm.get('freightCharges')?.hasError('min') && docketService.freightForm.get('freightCharges')?.touched}">
+              <!-- <div *ngIf="docketService.freightForm.get('freightCharges')?.hasError('min') && docketService.freightForm.get('freightCharges')?.touched"
+                class="text-danger text-start">
+              Please enter a value greater than or equal to 0.01.
+            </div> -->
+            </div>
+          </div>
+          <div class="form-group mb-1">
+            <div class="col-md-5"></div>
+            <div
+              *ngIf="docketService.freightForm.get('freightCharges')?.hasError('min') && docketService.freightForm.get('freightCharges')?.touched"
+              class="text-danger col-md-7 text-start">
+              Please enter a value greater than or equal to 0.01.
             </div>
           </div>
         </div>
@@ -30,9 +45,18 @@
             </label>
             <div class="col-md-7">
               <input class="clsAmount form-control text-end" placeholder="Freight Rate" formControlName="freightRate"
-                type="number" value="0" readonly>
+                min="0.01" step="0.01" type="number" value="0" readonly
+                [ngClass]="{ 'border-danger': docketService.freightForm.get('freightRate')?.hasError('min') && docketService.freightForm.get('freightRate')?.touched}">
+              </div>
             </div>
-          </div>
+            <div class="form-group mb-1">
+              <div class="col-md-5"></div>
+              <div
+                *ngIf="docketService.freightForm.get('freightRate')?.hasError('min') && docketService.freightForm.get('freightRate')?.touched"
+                class="text-danger col-md-7 text-start">
+                Please enter a value greater than or equal to 0.01.
+              </div>
+            </div>
         </div>
         <div class="col-md-4">
           <div class="form-group mb-1">
@@ -66,7 +90,8 @@
           </div>
           <div class="form-group mb-1">
             <div class="col-md-5"></div>
-            <div *ngIf="docketService.freightForm.get('GSTPaidBy')?.invalid && docketService.freightForm.get('GSTPaidBy')?.touched"
+            <div
+              *ngIf="docketService.freightForm.get('GSTPaidBy')?.invalid && docketService.freightForm.get('GSTPaidBy')?.touched"
               class="text-danger col-md-7 text-start">
               This field is required.
             </div>
@@ -80,7 +105,7 @@
                 <input class="required2 form-control required" placeholder="EDD" type="text"
                   value="1/1/0001 12:00:00 AM" formControlName="EDD" readonly required
                   [ngClass]="{ 'border-danger': docketService.freightForm.get('EDD')?.invalid && docketService.freightForm.get('EDD')?.touched}">
-                   <span class="input-group-text cursor-pointer" >
+                <span class="input-group-text cursor-pointer">
                   <i class="fa fa-calendar"></i>
                 </span>
               </div>
@@ -99,7 +124,7 @@
             <label class="control-label col-md-5">Billing State</label>
             <div class="col-md-7">
               <input class="required2 form-control required" formControlName="billingState" placeholder="Billing State"
-               readonly type="text" required
+                readonly type="text" required
                 [ngClass]="{ 'border-danger': docketService.freightForm.get('billingState')?.invalid && docketService.freightForm.get('billingState')?.touched}">
             </div>
           </div>
@@ -165,7 +190,8 @@
         </div>
       </div>
 
-      <h3 class="pb-4 text-start appointment mt-5" [ngClass]="{ 'hidden': docketService.isBillingTBB }">Charges Details</h3>
+      <h3 class="pb-4 text-start appointment mt-5" [ngClass]="{ 'hidden': docketService.isBillingTBB }">Charges Details
+      </h3>
 
       <div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
         <div class="col-md-4" *ngFor="let charge of docketService.freightchargingData">
@@ -189,8 +215,8 @@
           <div class="form-group">
             <label class="control-label col-md-5"><b>GST Rate</b></label>
             <div class="col-md-7">
-              <ng-select class="required2" [items]="[0,5,6,10,12,18,28]"
-                formControlName="gstRate" readonly [clearable]="false">
+              <ng-select class="required2" [items]="[0,5,6,10,12,18,28]" formControlName="gstRate" readonly
+                [clearable]="false">
               </ng-select>
             </div>
           </div>
@@ -207,27 +233,27 @@
         </div>
       </div>
 
-        <div *ngFor="let entry of docketService.groupedCharges | keyvalue">
-          <div class="row">
-            <div class="col-md-4" *ngFor="let charge of entry.value">
-              <div class="form-group to-pay-group">
-                <label class="control-label col-md-5">
-                  {{ charge.chargeName }}
-                </label>
-                <div class="col-md-7">
-                  <div class="input-icon">
-                    <input type="text" class="form-control clsAmount required2" [placeholder]="charge.chargeName"
-                      formControlName="{{ charge.camelCaseCode }}" readonly />
-                    <i class="bold">{{charge.operator}}</i>
-                  </div>
+      <div *ngFor="let entry of docketService.groupedCharges | keyvalue">
+        <div class="row">
+          <div class="col-md-4" *ngFor="let charge of entry.value">
+            <div class="form-group to-pay-group">
+              <label class="control-label col-md-5">
+                {{ charge.chargeName }}
+              </label>
+              <div class="col-md-7">
+                <div class="input-icon">
+                  <input type="text" class="form-control clsAmount required2" [placeholder]="charge.chargeName"
+                    formControlName="{{ charge.camelCaseCode }}" readonly />
+                  <i class="bold">{{charge.operator}}</i>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
       <div class="row">
-        <div class="col-md-4" >
+        <div class="col-md-4">
           <div class="form-group" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
             <label class="control-label col-md-5">Discount(%)</label>
             <div class="col-md-7">
@@ -235,12 +261,12 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4" >
+        <div class="col-md-4">
           <div class="form-group" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
             <label class="control-label col-md-5">Discount Amount</label>
             <div class="col-md-7">
-              <input class="form-control clsAmount" 
-                placeholder="Discount" readonly type="number" value="" formControlName="discountAmount">
+              <input class="form-control clsAmount" placeholder="Discount" readonly type="number" value=""
+                formControlName="discountAmount">
             </div>
           </div>
         </div>

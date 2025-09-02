@@ -172,11 +172,11 @@ export class DocketService {
 
   freightbuild() {
     this.freightForm = new FormGroup({
-      freightCharges: new FormControl(),
+      freightCharges: new FormControl( [Validators.required, Validators.min(0.01)]),
       GSTPaidBy: new FormControl(),
       stax_paidby: new FormControl(),
       rateType: new FormControl(),
-      freightRate: new FormControl(),
+      freightRate: new FormControl([Validators.required, Validators.min(0.01)]),
       EDD: new FormControl(),
       billedAt: new FormControl(),
       billingState: new FormControl(),
