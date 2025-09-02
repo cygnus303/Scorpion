@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { DocketService } from '../../../shared/services/docket.service';
 import { BasicDetailService } from '../../../shared/services/basic-detail.service';
 import { GSTNOListResponse } from '../../../shared/models/general-master.model';
-
+import { Subscription } from 'rxjs';
+ 
 @Component({
   selector: 'consignor-detail',
   standalone: false,
@@ -12,17 +13,20 @@ import { GSTNOListResponse } from '../../../shared/models/general-master.model';
 export class ConsignorDetailComponent {
   public getGSTNOList!:GSTNOListResponse;
   public notPincodeValue ='Please Enter at least 1 characters';
+  public GSTNOListSubscription!: Subscription;
   constructor(
     public docketService: DocketService,
     private basicDetailService: BasicDetailService) {}
-
+ 
   ngOnInit() {
     this.docketService.consignorbuild();
   }
-
+ 
   getGSTNODetails(event:any,type:any){
   const searchText = event.target.value;
-    this.basicDetailService.getGSTNOList(searchText).subscribe({
+  
+  if(this.GSTNOListSubscription){this.GSTNOListSubscription.unsubscribe()}
+   this.GSTNOListSubscription = this.basicDetailService.getGSTNOList(searchText).subscribe({
       next: (response) => {
         if (response.success) {
           this.getGSTNOList = response.data;
@@ -37,7 +41,7 @@ export class ConsignorDetailComponent {
               // consignorMobile: this.getGSTNOList.flno,
               // consignorEmail: this.getGSTNOList.Address,
             });
-            
+           
           }else if(type === 'Conee'){
             this.docketService.getpincodeData(this.getGSTNOList.pncd);
              this.docketService.consignorForm.patchValue({
@@ -50,8 +54,12 @@ export class ConsignorDetailComponent {
                // consigneeEmail: new FormControl(null),
              });
           }
-        } 
+        }
       }
     });
+  }
+ 
+   ngOnDestroy() {
+    if(this.GSTNOListSubscription){this.GSTNOListSubscription.unsubscribe()}
   }
 }

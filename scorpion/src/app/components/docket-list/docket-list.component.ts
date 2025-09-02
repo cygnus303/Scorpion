@@ -237,10 +237,10 @@ export class DocketListComponent implements OnInit{
         "cfttot": this.docketService.invoiceform.value.cftTotal,
         "decval": this.docketService.invoiceform.value.totalDeclaredValue,
         "contractId": this.docketService.step2DetailsList.contractid,
-        "chargeRule": "NONE",
-        "chargeSubRule": "NONE",
-        "baseCode1": "NONE",
-        "baseCode2": "NONE",
+        "chargeRule": "",
+        "chargeSubRule": "",
+        "baseCode1": "",
+        "baseCode2": "",
         "contractDepth": this.docketService.depth,
         "flagProceed": this.docketService.flagprocedd,
         "codRateType": this.docketService.step2DetailsList.codRateType,
@@ -394,7 +394,7 @@ if (validationError) {
           if (response) {
        window.scrollTo({ top: 0, behavior: 'smooth' }); 
        this.docketService.successMsg='Docket submitted successfully.'
-       window.location.href = `https://sepluat.cygnux.in/Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N`;
+      window.parent.location.href = `https://sepluat.cygnux.in/Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N`;
             this.docketService.basicDetailForm.reset();
             this.docketService.freightForm.reset();
             this.docketService.invoiceform.reset();
