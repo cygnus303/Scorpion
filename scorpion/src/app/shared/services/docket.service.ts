@@ -476,7 +476,7 @@ export class DocketService {
           // })
           if (response.isGSTApplicable) {
             this.freightForm.patchValue({
-              gstRate: this.GSTFromTrnMode.codeDesc
+              gstRate: this.GSTFromTrnMode?.codeDesc
             })
           } else {
             this.freightForm.patchValue({

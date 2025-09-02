@@ -254,6 +254,7 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                 destination: response.destcd,
               });
               this.docketService.GetPincodeOrigin('Origin');
+              this.docketService.GetGSTFromTrnMode()
             }
                 row.updateValueAndValidity();
               } else {

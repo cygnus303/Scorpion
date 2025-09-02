@@ -343,6 +343,22 @@ export class DocketListComponent implements OnInit{
         "chequeNo": "",
       },
     };
+
+      const DKTsubTotal = Number(this.docketService.freightForm.value.subTotal) || 0;
+    const DKTTotal = Number(this.docketService.freightForm.value.dktTotal) || 0;
+
+    const docketcharges = {
+      SubTotal: DKTsubTotal,
+      DocketTotal: DKTTotal,
+    };
+
+  const validationError = this.validateDocket(payload, DKTsubTotal, docketcharges, DKTTotal);
+
+if (validationError) {
+  this.sweetAlertService.error(validationError);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  return;
+}
       const formData = new FormData();
       this.appendObjectToFormData(formData, payload.wmd, "DVM.WMD");
       this.appendObjectToFormData(formData, payload.wmdc, "DVM.WMDC");
@@ -417,6 +433,75 @@ export class DocketListComponent implements OnInit{
       }
     }
   }
+
+validateDocket(DVM: any, DKTsubTotal: number, docketcharges: any, DKTTotal: number): string | null {
+  let CalculatedFREIGHT = 0;
+
+  // 🔹 Freight Calculation
+  switch (this.docketService.freightForm.value.rateType) {
+    case "P":
+      CalculatedFREIGHT =
+        this.docketService.invoiceform.value.totalNoOfPkgs *
+        this.docketService.freightForm.value.freightRate;
+      break;
+    case "F":
+      CalculatedFREIGHT = this.docketService.freightForm.value.freightRate;
+      break;
+    case "T":
+      CalculatedFREIGHT =
+        (Math.max(
+          this.docketService.invoiceform.value.finalActualWeight || 0,
+          this.docketService.invoiceform.value.totalCubicWeight || 0
+        ) *
+          this.docketService.freightForm.value.freightRate) / 1000;
+      break;
+    case "W":
+      CalculatedFREIGHT =
+        Math.max(
+          this.docketService.invoiceform.value.finalActualWeight || 0,
+          this.docketService.invoiceform.value.totalCubicWeight || 0
+        ) * this.docketService.freightForm.value.freightRate;
+      break;
+  }
+
+  // 🟢 Freight Validation
+  if (
+    Math.round(CalculatedFREIGHT) !==
+    Math.round(Number(this.docketService.freightForm.value.freightCharges))
+  ) {
+    this.sweetAlertService.error("Freight Not Calculated Right. Please Check Freight and then submit.");
+  }
+
+  // 🟢 EDD Validation
+  if (!this.docketService.freightData.edd) {
+   this.sweetAlertService.error("EDD Date cannot be blank.");
+  }
+
+  // 🟢 Charge Weight Validation
+  if (
+    Math.max(
+      this.docketService.invoiceform.value.finalActualWeight || 0,
+      this.docketService.invoiceform.value.totalCubicWeight
+    ) <= 0
+  ) {
+    this.sweetAlertService.error("Charge weight cannot be 0.");
+  }
+
+  // 🟢 SubTotal Validation
+  if (Math.round(DKTsubTotal) !== Math.round(docketcharges.SubTotal)) {
+    this.sweetAlertService.error("Problem in Docket Subtotal Calculation. Please retry and check charges properly.");
+  }
+
+  // 🟢 Docket Total Validation
+  const DKtTotDiff = DKTTotal - docketcharges.DocketTotal;
+  if (Math.abs(DKtTotDiff) >= 1) {
+  this.sweetAlertService.error("Problem in Docket Total Calculation. Please retry and check charges properly.");
+  }
+
+  return null; // ✅ all validations passed
+}
+
+
 
 }
 
