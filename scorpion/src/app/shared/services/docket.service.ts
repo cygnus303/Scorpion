@@ -472,7 +472,7 @@ export class DocketService {
           // })
           if (response.isGSTApplicable) {
             this.freightForm.patchValue({
-              gstRate: this.GSTFromTrnMode.codeDesc
+              gstRate: this.GSTFromTrnMode?.codeDesc
             })
           } else {
             this.freightForm.patchValue({
@@ -892,7 +892,7 @@ validateAppointmentDate() {
   const appointmentDate = appointmentControl.value ? new Date(appointmentControl.value) : null;
   const eddDate = eddControl.value ? new Date(eddControl.value) : null;
 
-  if (appointmentDate && eddDate && appointmentDate < eddDate) {
+    if (appointmentDate && eddDate && appointmentDate < eddDate) {
     appointmentControl.setErrors({ appointmentBeforeEdd: true });
     appointmentControl.markAsTouched();  // 👈 force touched
   } else {

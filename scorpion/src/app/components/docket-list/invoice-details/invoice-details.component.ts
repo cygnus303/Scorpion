@@ -190,7 +190,6 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
     });
     return;
   }else{
-    debugger
  
     this.basicDetailService.checkEWayBill(search).subscribe({
       next: (checkRes: any) => {
@@ -256,6 +255,7 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                 destination: response.destcd,
               });
               this.docketService.GetPincodeOrigin('Origin');
+              this.docketService.GetGSTFromTrnMode()
             }
                 row.updateValueAndValidity();
               } else {
