@@ -145,11 +145,11 @@
 
                   <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
                     <div class="input-group">
-                      <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
+                      <input type="text" class="form-control uppercase-none" #dp2="bsDatepicker" bsDatepicker
                         [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }" placeholder="dd/MMM/yyyy"
                         formControlName="ewayinvoiceDate" [ngClass]="{'border-danger': row.get('ewayinvoiceDate')?.invalid && row.get('ewayinvoiceDate')?.touched, 
                                           'required2': row.get('declaredvalue')?.value > 100000}">
-                      <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                      <span class="input-group-text cursor-pointer" (click)="dp2.toggle()">
                         <i class="fa fa-calendar"></i>
                       </span>
                     </div>
@@ -170,11 +170,11 @@
                   </td>
                   <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
                     <div class="input-group">
-                     <input type="text" class="form-control uppercase-none" #dp="bsDatepicker"  bsDatepicker
+                     <input type="text" class="form-control uppercase-none" #dp1="bsDatepicker"  bsDatepicker
                      [bsValue]="docketService.bsValue"  [bsConfig]="{ containerClass: 'theme-dark-blue' ,rangeInputFormat: 'DD MMMM YYYY', dateInputFormat:
                      'DD MMMM YYYY'}" placeholder="dd/MMM/yyyy" [maxDate]="docketService.bsValue" formControlName="invoicedate" required 
                      [ngClass]="{ 'border-danger': docketService.invoiceform.get('invoicedate')?.invalid  && docketService.invoiceform.get('invoicedate')?.touched }">
-                      <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                      <span class="input-group-text cursor-pointer" (click)="dp1.toggle()">
                         <i class="fa fa-calendar"></i>
                       </span>
                   </div>
