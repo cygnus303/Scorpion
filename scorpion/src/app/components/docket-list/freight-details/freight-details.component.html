@@ -18,7 +18,7 @@
               <!-- <input class="required2 form-control required text-end" placeholder="Freight Charges" type="number"
                 value="0" formControlName="freightCharges" readonly> -->
               <input type="number" class="form-control text-end" placeholder="Freight Charges"
-                formControlName="freightCharges" min="0.01" step="0.01"
+                formControlName="freightCharges" min="0.01" step="0.01" readonly
                 [ngClass]="{ 'border-danger': docketService.freightForm.get('freightCharges')?.hasError('min') && docketService.freightForm.get('freightCharges')?.touched}">
               <!-- <div *ngIf="docketService.freightForm.get('freightCharges')?.hasError('min') && docketService.freightForm.get('freightCharges')?.touched"
                 class="text-danger text-start">

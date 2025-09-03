@@ -827,10 +827,10 @@ export class DocketService {
 
   GetFreightContractDetails() {
     const data = {
-      chargeRule: '',
-      baseCode1: '',
-      chargeSubRule: '',
-      baseCode2: '',
+     chargeRule: 'NONE',
+      baseCode1: 'NONE',
+      chargeSubRule: 'NONE',
+      baseCode2: 'NONE',
       chargedWeight: Math.max(this.invoiceform.value.finalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString(),
       contractID: this.step2DetailsList?.contractid,
       destination: this.basicDetailForm.value.destination,
@@ -910,8 +910,8 @@ validateAppointmentDate() {
 
   getFovContractDetails() {
     const payload = {
-      chargeRule: "",
-      baseCode1: "",
+      chargeRule: "NONE",
+      baseCode1: "NONE",
       contractID: this.step2DetailsList?.contractid,
       riskType: this.step2DetailsList?.risktype,
       invAmt: this.invoiceform.value.totalDeclaredValue?.toString(),
@@ -933,10 +933,10 @@ validateAppointmentDate() {
   getOtherChargesDetail() {
     const chargedWeight = Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString();
     const payload = {
-      "chargeRule": '',
-      "baseCode1": '',
-      "chargeSubRule": "",
-      "baseCode2": "",
+       "chargeRule": 'NONE',
+      "baseCode1": 'NONE',
+      "chargeSubRule": "NONE",
+      "baseCode2": "NONE",
       "chargedWeight": chargedWeight,
       "contractID": this.step2DetailsList?.contractid,
       "destination": this.basicDetailForm.value.destination,
