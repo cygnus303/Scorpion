@@ -251,6 +251,11 @@ export class DocketService {
     });
   }
 
+freightAndOtherChar(){
+  this.GetFreightContractDetails()
+  this.getOtherChargesDetail()
+}
+
   getpincodeData(event: any) {
     const searchText = typeof event === 'string' ? event : event?.term;
     if (!searchText || searchText.trim() === '') {
@@ -862,6 +867,11 @@ export class DocketService {
       prodcd: this.basicDetailForm.value.contents,
       isPerPieceRate: this.step2DetailsList?.isPerPieceRate
     }
+
+    if (!data.invAmt || !data.prodcd || !data.tostate || !data.noOfPkgs || !data.transMode || !data.serviceType) {
+      console.warn("Required fields missing, API not called:", data);
+      return;
+    }
     this.basicDetailService.GetFreightContractDetails(data).subscribe({
       next: (response: any) => {
         if (response) {
@@ -969,15 +979,10 @@ validateAppointmentDate() {
       "floorNo": 0
     };
 
-    // Required fields check
-    const allFieldsFilled = Object.values(payload).every(
-      value => value !== null && value !== undefined && value !== '' && value !== '0'
-    );
-
-    // if (!allFieldsFilled) {
-    //   console.warn('Required fields are missing. Skipping API call.');
-    //   return;
-    // }
+     if (!payload.invAmt || !payload.fromCity || !payload.packType || !payload.noOfPkgs || !payload.transMode || !payload.serviceType || !payload.prodType || !payload.toCity) {
+      console.warn("Required fields missing, API not called:", payload);
+      return;
+    }
 
     // Call API only if all fields are filled
     this.basicDetailService.getOtherChargesDetail(payload).subscribe({
