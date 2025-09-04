@@ -53,7 +53,9 @@ export class InvoiceDetailsComponent {
   }
   removeRow(index: number): void {
     this.docketService.invoiceRows.removeAt(index);
+     this.docketService.reIndexSrNo(); 
   }
+
 
   calculateSummary(i: number) {
     const serviceType = this.docketService?.basicDetailForm?.get('serviceType')?.value;

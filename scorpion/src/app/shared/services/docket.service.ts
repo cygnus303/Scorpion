@@ -212,11 +212,19 @@ export class DocketService {
 
     // Add default 1 row
     this.addRows();
+    this.reIndexSrNo()
   }
 
   get invoiceRows(): FormArray {
     return this.invoiceform.get('invoiceRows') as FormArray;
   }
+
+  reIndexSrNo() {
+  const invoiceRows = this.invoiceRows;
+  invoiceRows.controls.forEach((ctrl, index) => {
+    ctrl.patchValue({ srNo: index + 1 }, { emitEvent: false });
+  });
+}
 
   addRows(): void {
     for (let i = 0; i < this.noOfRows; i++) {

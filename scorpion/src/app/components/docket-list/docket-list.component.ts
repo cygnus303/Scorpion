@@ -269,7 +269,7 @@ export class DocketListComponent implements OnInit{
         "isCompletion": true,
         "billingState": this.docketService.freightForm.value.billingState,
         "eWayBillNo": this.docketService.basicDetailForm.value.ewayBillNo,
-        "isCounterPickUpPRS": true,
+        "isCounterPickUpPRS": false,
         "isCounterDelivery": true,
         "retailsd": true,
         "isDockType": "DKT",
