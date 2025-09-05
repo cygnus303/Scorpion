@@ -70,17 +70,14 @@
                   <th class="center">
                     Invoice Date
                   </th>
-                  <th class="center "
-                    *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                    Length {{docketService.contractservicecharge[0]?.cft_Measure ?(docketService.contractservicecharge[0]?.cft_Measure):''}}
+                  <th class="center "*ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
+                    Length&nbsp;({{ docketService.contractservicecharge?.[0]?.cft_Measure ? (docketService.contractservicecharge[0].cft_Measure | titlecase) : '' }})
                   </th>
-                  <th class="center "
-                    *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                    Breadth {{docketService.contractservicecharge[0]?.cft_Measure ?(docketService.contractservicecharge[0]?.cft_Measure):''}}
+                  <th class="center " *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
+                    Breadth&nbsp;({{ docketService.contractservicecharge?.[0]?.cft_Measure ? (docketService.contractservicecharge[0].cft_Measure | titlecase) : '' }})
                   </th>
-                  <th class="center "
-                    *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                    Height {{docketService.contractservicecharge[0]?.cft_Measure ?(docketService.contractservicecharge[0]?.cft_Measure):''}}
+                  <th class="center" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
+                    Height&nbsp;({{ docketService.contractservicecharge?.[0]?.cft_Measure ? (docketService.contractservicecharge[0].cft_Measure | titlecase) : '' }})
                   </th>
                   <th class="center">
                     Declared Value
