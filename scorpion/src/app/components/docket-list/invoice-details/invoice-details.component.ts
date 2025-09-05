@@ -21,7 +21,7 @@ export class InvoiceDetailsComponent {
     public basicDetailService: BasicDetailService,
     private sweetAlertService:SweetAlertService
   ) { }
-
+  
   ngOnInit() {
     this.docketService.invoicebuild();
       this.subscription = this.docketService.ewayBill$.subscribe(ewayBillNo => {
@@ -297,6 +297,6 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
       this.subscription.unsubscribe();
     }
   }
-
+  
   }
 

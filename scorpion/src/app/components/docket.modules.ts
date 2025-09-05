@@ -12,6 +12,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { HeaderComponent } from '../layouts/header/header.component';
 import { DocketService } from '../shared/services/docket.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { DecimalLimitDirective } from '../shared/directives/decimal-limit.directive';
 
 @NgModule({
     declarations: [
@@ -20,7 +21,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
         BasicDetailsComponent,
         ConsignorDetailComponent,
         FreightDetailsComponent,
-        HeaderComponent
+        HeaderComponent,
+        DecimalLimitDirective
     ],
     imports: [
         CommonModule,
