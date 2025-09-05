@@ -156,7 +156,7 @@ export class DocketService {
       // thirdPartyMobile: new FormControl(null),
 
       // Risk & Documents
-      riskType: new FormControl('O'),
+      riskType: new FormControl({ value: 'O', disabled: true }),
       policyNo: new FormControl(null),
       policyDate: new FormControl(null),
       internalCovers: new FormControl(null),
@@ -409,7 +409,7 @@ freightAndOtherChar(){
           this.basicDetailForm.patchValue({
             volumetric: this.step2DetailsList?.isVolumentric === 'Y' ? true : false,
             isDACC: this.step2DetailsList?.isDACC === 'Y' ? true : false,
-            IsCODDOD: this.step2DetailsList?.isCODDOD === 'Y' ? true : false
+            // IsCODDOD: this.step2DetailsList?.isCODDOD === 'Y' ? true : false
           });
           // this.basicDetailForm.patchValue({
           //  IsCODDOD:this.step2DetailsList?.isCODDOD
@@ -429,7 +429,7 @@ freightAndOtherChar(){
           // this.GetGSTFromTrnMode();
 
           if ((this.basicDetailForm.value.billingType === 'P02' && this.step2DetailsList.contractid === 'P028888') || !this.step2DetailsList.contractid) {
-            this.sweetAlertService.info('Cutomer Contract not found or May be Expire, Please contact you administrator for further detail.')
+            this.sweetAlertService.info('Cutomer Contract not found or May be Expired, Please contact you administrator for further detail.')
             this.basicDetailForm.patchValue({
               billingParty: null,
               billingName: null

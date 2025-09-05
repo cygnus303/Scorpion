@@ -72,15 +72,15 @@
                   </th>
                   <th class="center "
                     *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                    Length (Inches)
+                    Length {{docketService.contractservicecharge[0]?.cft_Measure ?(docketService.contractservicecharge[0]?.cft_Measure):''}}
                   </th>
                   <th class="center "
                     *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                    Breadth (Inches)
+                    Breadth {{docketService.contractservicecharge[0]?.cft_Measure ?(docketService.contractservicecharge[0]?.cft_Measure):''}}
                   </th>
                   <th class="center "
                     *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                    Height (Inches)
+                    Height {{docketService.contractservicecharge[0]?.cft_Measure ?(docketService.contractservicecharge[0]?.cft_Measure):''}}
                   </th>
                   <th class="center">
                     Declared Value
@@ -187,21 +187,21 @@
                   </td>
                   <td class="center" style="padding-bottom: 2px; padding-top: 2px"
                     *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                    <input class="form-control required2 text-end" min="1" type="number" value="0"
+                    <input class="form-control required2 text-end" min="1" type="number" value="0"  [max]="docketService.contractservicecharge[0]?.cft_Measure === 'INCHES' ? 99.99 : 999.99"
                       formControlName="length"  (focus)="clearZero(row, 'length')" (keypress)="docketService.allowNumericDecimal($event)"
                       (change)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.GetDKTGSTForGTA();"
                       (input)="calculateSummary(i);getCFTCalculation(i)" (blur)="restoreIfEmpty(row, 'length')">
                   </td>
                   <td class="center" style="padding-bottom: 2px; padding-top: 2px; "
                     *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                    <input class="form-control required2 text-end" min="1" type="number" value="0"
+                    <input class="form-control required2 text-end" min="1" type="number" value="0"  [max]="docketService.contractservicecharge[0]?.cft_Measure === 'INCHES' ? 99.99 : 999.99"
                       formControlName="breadth" (focus)="clearZero(row, 'breadth')" (keypress)="docketService.allowNumericDecimal($event)"
                       (change)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.GetDKTGSTForGTA()"
                       (input)="calculateSummary(i);getCFTCalculation(i)" (blur)="restoreIfEmpty(row, 'breadth')" >
                   </td>
                   <td class="center" style="padding-bottom: 2px; padding-top: 2px; "
                     *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                    <input class="form-control required2 text-end" min="1" type="number" value="0"
+                    <input class="form-control required2 text-end" min="1" type="number" value="0"  [max]="docketService.contractservicecharge[0]?.cft_Measure === 'INCHES' ? 99.99 : 999.99"
                       formControlName="height" (focus)="clearZero(row, 'height')" (keypress)="docketService.allowNumericDecimal($event)"
                       (change)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.GetDKTGSTForGTA()"
                       (input)="calculateSummary(i);getCFTCalculation(i)" (blur)="restoreIfEmpty(row, 'height')" >

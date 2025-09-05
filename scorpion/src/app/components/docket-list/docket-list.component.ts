@@ -17,7 +17,7 @@ export class DocketListComponent implements OnInit{
 
   constructor(
     public docketService: DocketService, private basicDetailService: BasicDetailService, private activatedRoute: ActivatedRoute,private decryptService:DecryptService,private router: Router,
-    private spinner: NgxSpinnerService, private sweetAlertService: SweetAlertService,
+   private sweetAlertService: SweetAlertService,
   ) { }
 
   ngOnInit(): void {
@@ -46,8 +46,8 @@ export class DocketListComponent implements OnInit{
           if (isValid) {
             // 🔑 badha key male → normal flow
             this.docketService.loginUserList = parsedData;
-            this.docketService.Location = parsedData.LocationCode;
-              // this.docketService.Location = 'PIM';
+            // this.docketService.Location = parsedData.LocationCode;
+              this.docketService.Location = 'TBH';
             this.docketService.BaseUserCode = parsedData.UserId;
             this.docketService.baseUsername=parsedData.BaseUserName;
           } else {
