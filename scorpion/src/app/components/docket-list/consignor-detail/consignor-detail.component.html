@@ -289,7 +289,7 @@
                 <label class="control-label col-md-5">Pincode </label>
                 <div class="col-md-7">
                   <ng-select class="noFoundTextColor required2" [items]="docketService.pincodeList" bindLabel="pinArea" required (open)="docketService.resetPincodeDropdown()"
-                bindValue="pinArea" placeholder="Pincode" formControlName="consigneePincode"  [ngClass]="{ 'border-danger': docketService.consignorForm.get('consigneePincode')?.invalid  && docketService.consignorForm.get('consigneePincode')?.touched}"
+                bindValue="value" placeholder="Pincode" formControlName="consigneePincode"  [ngClass]="{ 'border-danger': docketService.consignorForm.get('consigneePincode')?.invalid  && docketService.consignorForm.get('consigneePincode')?.touched}"
                 [notFoundText]="docketService.notPincodeValue" (search)="docketService.getpincodeData($event)"></ng-select>
               </div>
             </div>

@@ -301,8 +301,9 @@ freightAndOtherChar(){
 
   onChangePinCode(event: any) {
     if (!event) return;
+    this.getpincodeData(event.value)
     this.basicDetailForm.patchValue({ destination: event.destination });
-    this.consignorForm.patchValue({ consigneePincode: event.pinArea });
+    this.consignorForm.patchValue({ consigneePincode: event.value });
     this.pincodeList = [];
     this.getPincodeMasterList(event.value);
   }
