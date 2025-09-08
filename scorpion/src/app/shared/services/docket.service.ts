@@ -243,7 +243,7 @@ export class DocketService {
       declaredvalue: new FormControl(0, Validators.required),
       noOfPkgs: new FormControl(0),
       actualWeight: new FormControl(0, [Validators.required, Validators.min(1)]),
-      length: new FormControl(0),
+      length: new FormControl(0,[Validators.min(1)]),
       breadth: new FormControl(0),
       height: new FormControl(0),
       cubicweight: new FormControl(0),

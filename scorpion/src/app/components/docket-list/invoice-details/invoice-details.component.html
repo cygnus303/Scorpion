@@ -210,7 +210,11 @@
                     [unit]="docketService.contractservicecharge && docketService.contractservicecharge.length > 0 ? docketService.contractservicecharge[0]?.cft_Measure : ''"
                       formControlName="length"  (focus)="clearZero(row, 'length')" (keypress)="docketService.allowNumericDecimal($event)"
                       (change)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.GetDKTGSTForGTA();"
-                      (input)="calculateSummary(i);getCFTCalculation(i)" (blur)="restoreIfEmpty(row, 'length')">
+                      (input)="calculateSummary(i);getCFTCalculation(i)" (blur)="restoreIfEmpty(row, 'length')"
+                      [ngClass]="{ 'border-danger': docketService.invoiceRows.at(i).get('length')?.hasError('min') && docketService.invoiceRows.at(i).get('length')?.touched }">
+                      <div *ngIf="docketService.invoiceRows.at(i).get('length')?.hasError('min') && docketService.invoiceRows.at(i).get('length')?.touched" class="text-danger">
+                          This field is required.
+                      </div>
                   </td>
                   <td class="center" style="padding-bottom: 2px; padding-top: 2px; "
                     *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
@@ -218,7 +222,11 @@
                       [unit]="docketService.contractservicecharge && docketService.contractservicecharge.length > 0 ? docketService.contractservicecharge[0]?.cft_Measure : ''"
                       formControlName="breadth" (focus)="clearZero(row, 'breadth')" (keypress)="docketService.allowNumericDecimal($event)"
                       (change)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.GetDKTGSTForGTA()"
-                      (input)="calculateSummary(i);getCFTCalculation(i)" (blur)="restoreIfEmpty(row, 'breadth')" >
+                      (input)="calculateSummary(i);getCFTCalculation(i)" (blur)="restoreIfEmpty(row, 'breadth')" 
+                      [ngClass]="{ 'border-danger': docketService.invoiceRows.at(i).get('breadth')?.hasError('min') && docketService.invoiceRows.at(i).get('breadth')?.touched }">
+                       <div *ngIf="docketService.invoiceRows.at(i).get('breadth')?.hasError('min') && docketService.invoiceRows.at(i).get('breadth')?.touched" class="text-danger">
+                          This field is required.
+                      </div>
                   </td>
                   <td class="center" style="padding-bottom: 2px; padding-top: 2px; "
                     *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
@@ -226,7 +234,11 @@
                       [unit]="docketService.contractservicecharge && docketService.contractservicecharge.length > 0 ? docketService.contractservicecharge[0]?.cft_Measure : ''"
                       formControlName="height" (focus)="clearZero(row, 'height')" (keypress)="docketService.allowNumericDecimal($event)"
                       (change)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.GetDKTGSTForGTA()"
-                      (input)="calculateSummary(i);getCFTCalculation(i)" (blur)="restoreIfEmpty(row, 'height')" >
+                      (input)="calculateSummary(i);getCFTCalculation(i)" (blur)="restoreIfEmpty(row, 'height')" 
+                      [ngClass]="{ 'border-danger': docketService.invoiceRows.at(i).get('height')?.hasError('min') && docketService.invoiceRows.at(i).get('height')?.touched }">
+                       <div *ngIf="docketService.invoiceRows.at(i).get('height')?.hasError('min') && docketService.invoiceRows.at(i).get('height')?.touched" class="text-danger">
+                          This field is required.
+                      </div>
                   </td>
                   <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
                     <input class="form-control required2 text-end" min="0"(keypress)="docketService.allowNumericDecimal($event)"
