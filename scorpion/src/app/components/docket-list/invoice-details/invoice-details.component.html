@@ -30,19 +30,31 @@
           <div class="form-group">
             <label class="control-label col-md-5">No Of Rows </label>
             <div class="col-md-7">
-              <input type="number" class="input-small required2 form-control required"
-                [(ngModel)]="docketService.noOfRows" [ngModelOptions]="{standalone: true}" min="1"
-                placeholder="Private Mark" (keypress)="docketService.allowNumericDecimal($event)">
+              <!-- <div class="input-group mb-2">
+                <input type="number" class="input-small required2 form-control required"
+                  [(ngModel)]="docketService.noOfRows" [ngModelOptions]="{standalone: true}" min="1"
+                  placeholder="Private Mark" (keypress)="docketService.allowNumericDecimal($event)" >
+                  <button type="button" class="btn btn-outline-primary" (click)="docketService.addRows()" title="Add Row">
+                    <i class="fas fa-plus"></i>
+                  </button>
+              </div> -->
+              <div class="input-group custom-input-group">
+                <input type="number" class="form-control rounded-0 rounded-start" [(ngModel)]="docketService.noOfRows" [ngModelOptions]="{ standalone: true }"
+                  min="1" placeholder="Enter rows" (keypress)="docketService.allowNumericDecimal($event)" />
+                <button type="button" class="btn btn-add text-light rounded-0 rounded-end" (click)="docketService.addRows()" title="Add Row">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-md-1">
+        <!-- <div class="col-md-1">
           <a class="btn btn-primary right" (click)="docketService.addRows()">
             <i class="fas fa-plus"></i> Add New Row
           </a>
         </div>
         <div class="col-md-5">
-        </div>
+        </div> -->
       </div>
 
       <div class="row">
@@ -50,9 +62,18 @@
           <div class="portlet-body table-scrollable">
             <table id="container" class="table table-bordered table-striped table-condensed flip-content" style="margin: 0px;">
               <thead class="flip-content">
+                    <tr
+                      *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' 
+                                                 && docketService.basicDetailForm.get('serviceType')?.value === '1' && docketService.contractservicecharge?.[0]?.cft_Measure as unit">
+                      <th colspan="6"></th>
+                      <th class="center" colspan="3">
+                        Dimensions ({{ unit | titlecase }})
+                      </th>
+                      <th colspan="5"></th>
+                    </tr>
                 <tr>
                   <th class="center">
-                    Sr. No.
+                    Sr.&nbsp;No.
                   </th>
                   <th class="cente">
                     E-Way Bill No
@@ -71,13 +92,13 @@
                     Invoice Date
                   </th>
                   <th class="center "*ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                    Length&nbsp;({{ docketService.contractservicecharge?.[0]?.cft_Measure ? (docketService.contractservicecharge[0].cft_Measure | titlecase) : '' }})
+                    Length
                   </th>
                   <th class="center " *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                    Breadth&nbsp;({{ docketService.contractservicecharge?.[0]?.cft_Measure ? (docketService.contractservicecharge[0].cft_Measure | titlecase) : '' }})
+                    Breadth
                   </th>
                   <th class="center" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                    Height&nbsp;({{ docketService.contractservicecharge?.[0]?.cft_Measure ? (docketService.contractservicecharge[0].cft_Measure | titlecase) : '' }})
+                    Height
                   </th>
                   <th class="center">
                     Declared Value
@@ -97,6 +118,7 @@
 
                   <th class="center">X</th>
                 </tr>
+            
               </thead>
               <tbody formArrayName="invoiceRows">
                 <tr class="editorRow" *ngFor="let row of docketService.invoiceRows.controls; let i = index"
