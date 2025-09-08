@@ -36,6 +36,7 @@ export class DocketService {
   public gstCalculationList: any;
   public isBillingTBB: boolean = false;
   public noOfRows: number = 1;
+  public noboxDetailRows: number = 1;
   public groupedCharges: { [ids: number]: any[] } = {};
   public GSTFromTrnMode: any;
   public depth: string = '';
@@ -196,6 +197,7 @@ export class DocketService {
   invoicebuild() {
     this.invoiceform = new FormGroup({
       invoiceRows: new FormArray([]),
+      boxDetail:new FormArray([]),
       // Summary row 1
       cftTotal: new FormControl(),
       totalDeclaredValue: new FormControl(),
@@ -212,7 +214,10 @@ export class DocketService {
 
     // Add default 1 row
     this.addRows();
-    this.reIndexSrNo()
+    this.addBoxDetailRows();
+
+    this.reIndexSrNo();
+    this.boxDetailIndexSrNo();
   }
 
   get invoiceRows(): FormArray {
@@ -232,22 +237,43 @@ export class DocketService {
     }
   }
 
+  //  box Detail
+  
+  get boxDetailRows(): FormArray {
+    return this.invoiceform.get('boxDetail') as FormArray;
+  }
+
+  boxDetailIndexSrNo() {
+  const boxDetailRows = this.boxDetailRows;
+  boxDetailRows.controls.forEach((ctrl, index) => {
+    ctrl.patchValue({ srNo: index + 1 }, { emitEvent: false });
+  });
+}
+
+  addBoxDetailRows(): void {
+    for (let i = 0; i < this.noboxDetailRows; i++) {
+      this.boxDetailRows.push(this.createboxDetailRow(this.boxDetailRows.length + 1));
+    }
+  }
+ createboxDetailRow(srNo: number): FormGroup {
+    return new FormGroup({
+      srNo: new FormControl(srNo),
+      noOfPkgs: new FormControl(0),
+      actualWeight: new FormControl(0, [Validators.required, Validators.min(1)]),
+      length: new FormControl(0),
+      breadth: new FormControl(0),
+      height: new FormControl(0),
+      cubicweight: new FormControl(0),
+    });
+  }
   createInvoiceRow(srNo: number): FormGroup {
     return new FormGroup({
       srNo: new FormControl(srNo),
       ewayBillNo: new FormControl(null),
       ewayBillExpiry: new FormControl(''),
-      invoiceValue: new FormControl(0),
       ewayinvoiceDate: new FormControl(''),
       invoiceNo: new FormControl('', Validators.required),
       declaredvalue: new FormControl(0, Validators.required),
-      noOfPkgs: new FormControl(0),
-      actualWeight: new FormControl(0, [Validators.required, Validators.min(1)]),
-      length: new FormControl(0,[Validators.min(1)]),
-      breadth: new FormControl(0,[Validators.min(1)]),
-      height: new FormControl(0,[Validators.min(1)]),
-      cubicweight: new FormControl(0),
-      invoicedate: new FormControl(new Date()),
     });
   }
 
