@@ -16,6 +16,9 @@ export class InvoiceDetailsComponent {
   public chargingData: any;
   public pincodeMatrixData: any;
   private subscription!: Subscription;
+  // to remember first entered row index for each invoice
+private invoiceMasterMap: { [invNo: string]: number } = {};
+
   constructor(
     public docketService: DocketService,
     public basicDetailService: BasicDetailService,
@@ -53,13 +56,51 @@ export class InvoiceDetailsComponent {
   }
   removeRow(index: number): void {
     this.docketService.invoiceRows.removeAt(index);
-     this.docketService.reIndexSrNo(); 
+    this.docketService.reIndexSrNo(); 
+    this.calculateSummary(index);
+    this.getCFTCalculation(index);
+    this.docketService.freightAndOtherChar();
+    this.docketService.getGSTCalculation()
   }
 
-   removeboxDetailRow(index: number): void {
-    this.docketService.boxDetailRows.removeAt(index);
-     this.docketService.boxDetailIndexSrNo(); 
+  
+checkDuplicateInvoices(i: number) {
+  const rows = this.docketService.invoiceRows.controls;
+  const currentInv = rows[i].get('invoiceNo')?.value?.trim();
+
+  if (!currentInv) return;
+
+  // 1) jo already koi master nathi to aa row master banav
+  if (this.invoiceMasterMap[currentInv] === undefined) {
+    this.invoiceMasterMap[currentInv] = i;
   }
+
+  // 2) master index find karo
+  const masterIndex = this.invoiceMasterMap[currentInv];
+
+  // 3) loop all rows with same invoice
+  rows.forEach((row, idx) => {
+    if (row.get('invoiceNo')?.value?.trim() === currentInv) {
+      const declaredCtrl = row.get('declaredvalue');
+      if (!declaredCtrl) return;
+
+      if (idx === masterIndex) {
+        // master → enable
+        if (declaredCtrl.disabled) {
+          declaredCtrl.enable({ emitEvent: false });
+        }
+      } else {
+        // duplicate → 0 + disable
+        declaredCtrl.setValue(0, { emitEvent: false });
+        declaredCtrl.disable({ emitEvent: false });
+      }
+    }
+  });
+  this.calculateSummary(i);
+  this.getCFTCalculation(i);
+  this.docketService.freightAndOtherChar()
+  this.docketService.getGSTCalculation()
+}
 
 calculateSummary(i: number) {
   const serviceType = this.docketService?.basicDetailForm?.get('serviceType')?.value;
@@ -130,6 +171,8 @@ calculateSummary(i: number) {
   }, { emitEvent: false });
 }
 
+
+
   clearZero(row: any, controlName: string) {
     const control = row.get(controlName);
     if (control?.value === 0) {
@@ -170,6 +213,7 @@ calculateSummary(i: number) {
     );
 
   }
+
 
 getEwayBillData(event: any, index: number,isInvoice?:boolean) {
   const search = event.target.value;

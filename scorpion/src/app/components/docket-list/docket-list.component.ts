@@ -386,7 +386,7 @@ if (validationError) {
         formData.append("DVM.WMD.dockdt", this.docketService.basicDetailForm.value.cNoteDate ? new Date(this.docketService.basicDetailForm.value.cNoteDate).toISOString() : '');
       formData.append("DVM.WMD.cdeldt", new Date(this.docketService.freightData.edd).toISOString()),
         formData.append("DVM.WMD.AppointmentDT", new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString()),
-       formData.append("DVM.WMD.Version", String(Number('2')));
+       formData.append("DVM.WMD.Version", String(Number('3')));
         formData.append("DVM.docketType", "DKT");
            this.isSubmitting = true; 
       this.basicDetailService.onSubmit(formData).subscribe({
@@ -394,15 +394,7 @@ if (validationError) {
           if (response) {
        window.scrollTo({ top: 0, behavior: 'smooth' }); 
        this.docketService.successMsg='Docket submitted successfully.'
-      // window.parent.location.href = `https://sepluat.cygnux.in/Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N`;
-      let baseUrl = window.location.origin;
-      if (baseUrl.includes("sepluat")) {
-        baseUrl = "https://sepluat.cygnux.in";
-      } else {
-        baseUrl = "https://sepl.cygnux.in";
-      }
-
-      window.parent.location.href =`${baseUrl}/Operation/DocketDone/1?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N`;
+      window.parent.location.href = `https://sepluat.cygnux.in/Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N`;
             this.docketService.basicDetailForm.reset();
             this.docketService.freightForm.reset();
             this.docketService.invoiceform.reset();

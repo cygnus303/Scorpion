@@ -1,4 +1,5 @@
 import { Directive, HostListener, Input } from '@angular/core';
+import { NgControl } from '@angular/forms';
 
 @Directive({
   selector: '[appDecimalLimit]',
@@ -6,14 +7,15 @@ import { Directive, HostListener, Input } from '@angular/core';
 })
 export class DecimalLimitDirective {
 
-  @Input() unit: 'INCHES' | 'CM' | undefined; // default fallback handle in code
+  @Input() unit: 'INCHES' | 'CM' | undefined;
+
+  constructor(private ngControl: NgControl) {}
 
   @HostListener('input', ['$event'])
   onInput(event: Event) {
     const input = event.target as HTMLInputElement;
     if (!input) return;
 
-    // unit fallback
     const unit = (this.unit || 'INCHES').toUpperCase();
 
     // regex unit wise
@@ -22,17 +24,24 @@ export class DecimalLimitDirective {
         ? /^\d{0,2}(\.\d{0,2})?$/      // max 99.99
         : /^\d{0,3}(\.\d{0,2})?$/;     // max 999.99
 
-    if (!regex.test(input.value)) {
-      input.value = input.value.slice(0, -1);
+    let value = input.value;
+
+    // remove invalid char
+    if (!regex.test(value)) {
+      value = value.slice(0, -1);
     }
 
     // hard limit check
-    const value = parseFloat(input.value);
-    if (unit === 'INCHES' && value > 99.99) {
-      input.value = '99.99';
+    const numValue = parseFloat(value);
+    if (unit === 'INCHES' && numValue > 99.99) {
+      value = '99.99';
     }
-    if (unit === 'CM' && value > 999.99) {
-      input.value = '999.99';
+    if (unit === 'CM' && numValue > 999.99) {
+      value = '999.99';
     }
+
+    // 👇 Update both UI & FormControl properly
+    input.value = value;
+    this.ngControl.control?.setValue(Number(value), { emitEvent: false }); // prevent double event loop
   }
 }
