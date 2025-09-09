@@ -16,6 +16,7 @@ export class InvoiceDetailsComponent {
   public chargingData: any;
   public pincodeMatrixData: any;
   private subscription!: Subscription;
+  private invoiceMasterMap: { [invNo: string]: number } = {};
   constructor(
     public docketService: DocketService,
     public basicDetailService: BasicDetailService,
@@ -29,6 +30,44 @@ export class InvoiceDetailsComponent {
     });
 
   }
+
+checkDuplicateInvoices(i: number) {
+  const rows = this.docketService.invoiceRows.controls;
+  const currentInv = rows[i].get('invoiceNo')?.value?.trim();
+ 
+  if (!currentInv) return;
+ 
+  // 1) jo already koi master nathi to aa row master banav
+  if (this.invoiceMasterMap[currentInv] === undefined) {
+    this.invoiceMasterMap[currentInv] = i;
+  }
+ 
+  // 2) master index find karo
+  const masterIndex = this.invoiceMasterMap[currentInv];
+ 
+  // 3) loop all rows with same invoice
+  rows.forEach((row, idx) => {
+    if (row.get('invoiceNo')?.value?.trim() === currentInv) {
+      const declaredCtrl = row.get('declaredvalue');
+      if (!declaredCtrl) return;
+ 
+      if (idx === masterIndex) {
+        // master → enable
+        if (declaredCtrl.disabled) {
+          declaredCtrl.enable({ emitEvent: false });
+        }
+      } else {
+        // duplicate → 0 + disable
+        declaredCtrl.setValue(0, { emitEvent: false });
+        declaredCtrl.disable({ emitEvent: false });
+      }
+    }
+  });
+  this.calculateSummary(i);
+  this.getCFTCalculation(i);
+  this.docketService.freightAndOtherChar()
+  this.docketService.getGSTCalculation()
+}
 
   handleDeclaredValueChange(row: AbstractControl) {
     row.get('declaredvalue')?.valueChanges.subscribe((value) => {
@@ -51,19 +90,96 @@ export class InvoiceDetailsComponent {
       row.get('ewayinvoiceDate')?.updateValueAndValidity({ emitEvent: false });
     });
   }
-  removeRow(index: number): void {
+removeRow(index: number): void {
     this.docketService.invoiceRows.removeAt(index);
-     this.docketService.reIndexSrNo(); 
+    this.docketService.reIndexSrNo();
+    this.calculateSummary(index);
+    this.getCFTCalculation(index);
+    this.docketService.freightAndOtherChar();
+    this.docketService.getGSTCalculation()
   }
-
+ 
    removeboxDetailRow(index: number): void {
     this.docketService.boxDetailRows.removeAt(index);
-     this.docketService.boxDetailIndexSrNo(); 
-  }
+     this.docketService.boxDetailIndexSrNo();
+     this.calculateSummary(index);
+     this.getCFTCalculation(index);
+      this.docketService.freightAndOtherChar();
+      this.docketService.getGSTCalculation()
+   }
+
+// calculateSummary(i: number) {
+//   const serviceType = this.docketService?.basicDetailForm?.get('serviceType')?.value;
+
+//   // ✅ if serviceType = 2 → only reset Length, Breadth, Height, CubicWeight
+//   if (serviceType === '2') {
+//     this.docketService.invoiceRows.controls[i].patchValue({
+//       length: 0,
+//       breadth: 0,
+//       height: 0,
+//       cubicweight: 0
+//     }, { emitEvent: false });
+//     return; // stop further calculation
+//   }
+
+//   let volMeasureType = '';
+//   let cftWtRatio = 0;
+//   if (this.docketService?.contractservicecharge) {
+//     volMeasureType = this.docketService?.contractservicecharge[0]?.cft_Measure; // 'INCHES' | 'CM' | 'FEET'
+//     cftWtRatio = +this.docketService?.contractservicecharge[0]?.cft_Ratio || 0;
+//   }
+
+//   const rows = this.docketService?.invoiceRows.value;
+
+//   let totalDeclaredValue = 0;
+//   let totalNoOfPkgs = 0;
+//   let totalCubicWeight = 0;
+//   let totalActualWeight = 0;
+
+//   rows.forEach((r: any, idx: number) => {
+//     const length = +r.length || 0;
+//     const breadth = +r.breadth || 0;
+//     const height = +r.height || 0;
+//     const pkgsNo = +r.noOfPkgs || 0;
+
+//     let volume = 0;
+//     if (volMeasureType === 'INCHES') {
+//       volume = (length * breadth * height * cftWtRatio) / 1728;
+//     } else if (volMeasureType === 'CM') {
+//       volume = (length * breadth * height * cftWtRatio) / 27000;
+//     } else if (volMeasureType === 'FEET') {
+//       volume = length * breadth * height * cftWtRatio;
+//     }
+
+//     const cubicweight = +(volume * pkgsNo).toFixed(2);
+
+//     // ✅ Only update cubicweight for changed row
+//     if (idx === i) {
+//       this.docketService.invoiceRows.controls[i].patchValue({
+//         cubicweight: cubicweight
+//       }, { emitEvent: false });
+//     }
+
+//     totalDeclaredValue += +r.declaredvalue || 0;
+//     totalNoOfPkgs += pkgsNo;
+//     totalCubicWeight += cubicweight;
+//     totalActualWeight += +r.actualWeight || 0;
+//   });
+
+//   // update totals
+//   this.docketService.invoiceform.patchValue({
+//     totalDeclaredValue,
+//     totalNoOfPkgs,
+//     totalCubicWeight,
+//     totalActualWeight,
+//     chargeWeightPerPkg: totalNoOfPkgs,
+//     finalActualWeight: Math.max(totalActualWeight || 0, totalCubicWeight || 0)
+//   }, { emitEvent: false });
+// }
 
 calculateSummary(i: number) {
   const serviceType = this.docketService?.basicDetailForm?.get('serviceType')?.value;
-
+ 
   // ✅ if serviceType = 2 → only reset Length, Breadth, Height, CubicWeight
   if (serviceType === '2') {
     this.docketService.invoiceRows.controls[i].patchValue({
@@ -74,27 +190,29 @@ calculateSummary(i: number) {
     }, { emitEvent: false });
     return; // stop further calculation
   }
-
+ 
   let volMeasureType = '';
   let cftWtRatio = 0;
   if (this.docketService?.contractservicecharge) {
     volMeasureType = this.docketService?.contractservicecharge[0]?.cft_Measure; // 'INCHES' | 'CM' | 'FEET'
     cftWtRatio = +this.docketService?.contractservicecharge[0]?.cft_Ratio || 0;
   }
-
-  const rows = this.docketService?.invoiceRows.value;
-
+ 
+  const boxDetailRows = this.docketService?.boxDetailRows.value;
+  const invoiceDetailRows = this.docketService?.invoiceRows.value;
+ 
+ 
   let totalDeclaredValue = 0;
   let totalNoOfPkgs = 0;
   let totalCubicWeight = 0;
   let totalActualWeight = 0;
-
-  rows.forEach((r: any, idx: number) => {
+ 
+  boxDetailRows.forEach((r: any, idx: number) => {
     const length = +r.length || 0;
     const breadth = +r.breadth || 0;
     const height = +r.height || 0;
     const pkgsNo = +r.noOfPkgs || 0;
-
+ 
     let volume = 0;
     if (volMeasureType === 'INCHES') {
       volume = (length * breadth * height * cftWtRatio) / 1728;
@@ -103,22 +221,26 @@ calculateSummary(i: number) {
     } else if (volMeasureType === 'FEET') {
       volume = length * breadth * height * cftWtRatio;
     }
-
+ 
     const cubicweight = +(volume * pkgsNo).toFixed(2);
-
+ 
     // ✅ Only update cubicweight for changed row
     if (idx === i) {
-      this.docketService.invoiceRows.controls[i].patchValue({
+      this.docketService.boxDetailRows.controls[i].patchValue({
         cubicweight: cubicweight
       }, { emitEvent: false });
     }
-
+ 
     totalDeclaredValue += +r.declaredvalue || 0;
     totalNoOfPkgs += pkgsNo;
     totalCubicWeight += cubicweight;
     totalActualWeight += +r.actualWeight || 0;
   });
-
+ 
+    invoiceDetailRows.forEach((r: any, idx: number) => {
+    totalDeclaredValue += +r.declaredvalue || 0;
+  });
+ 
   // update totals
   this.docketService.invoiceform.patchValue({
     totalDeclaredValue,
@@ -129,6 +251,7 @@ calculateSummary(i: number) {
     finalActualWeight: Math.max(totalActualWeight || 0, totalCubicWeight || 0)
   }, { emitEvent: false });
 }
+ 
 
   clearZero(row: any, controlName: string) {
     const control = row.get(controlName);
@@ -143,32 +266,61 @@ calculateSummary(i: number) {
     }
   }
 
-  getCFTCalculation(i: number) {
-    let totalCFT = 0;
+  // getCFTCalculation(i: number) {
+  //   let totalCFT = 0;
 
+  //   // Get CFT ratio from main form
+  //   const cftRatio = +this.docketService.invoiceform?.get('cft_Ratio')?.value || 0;
+
+  //   this.docketService.invoiceRows.controls.forEach((ctrl) => {
+  //     const length = Number(ctrl.get('length')?.value) || 0;
+  //     const breadth = Number(ctrl.get('breadth')?.value) || 0;
+  //     const height = Number(ctrl.get('height')?.value) || 0;
+  //     const noOfPkgs = Number(ctrl.get('noOfPkgs')?.value) || 0;
+
+  //     // Row CFT calculation
+  //     const cftTotal = length * breadth * height * cftRatio * noOfPkgs;
+  //     totalCFT += cftTotal;
+
+  //     // Update row CFT without rounding
+  //     ctrl.patchValue({ cftTotal }, { emitEvent: false });
+  //   });
+
+  //   // Update grand total without rounding
+  //   this.docketService.invoiceform.patchValue(
+  //     { cftTotal: totalCFT },
+  //     { emitEvent: false }
+  //   );
+
+  // }
+
+  //for new invoice detail form
+   getCFTCalculation(i: number) {
+    let totalCFT = 0;
+ 
     // Get CFT ratio from main form
     const cftRatio = +this.docketService.invoiceform?.get('cft_Ratio')?.value || 0;
-
-    this.docketService.invoiceRows.controls.forEach((ctrl) => {
+ 
+    this.docketService.boxDetailRows.controls.forEach((ctrl) => {
       const length = Number(ctrl.get('length')?.value) || 0;
       const breadth = Number(ctrl.get('breadth')?.value) || 0;
       const height = Number(ctrl.get('height')?.value) || 0;
       const noOfPkgs = Number(ctrl.get('noOfPkgs')?.value) || 0;
-
+ 
       // Row CFT calculation
       const cftTotal = length * breadth * height * cftRatio * noOfPkgs;
       totalCFT += cftTotal;
-
+ 
       // Update row CFT without rounding
       ctrl.patchValue({ cftTotal }, { emitEvent: false });
     });
-
+ 
     // Update grand total without rounding
     this.docketService.invoiceform.patchValue(
       { cftTotal: totalCFT },
       { emitEvent: false }
     );
-
+ 
   }
 
 getEwayBillData(event: any, index: number,isInvoice?:boolean) {

@@ -46,8 +46,8 @@ export class DocketListComponent implements OnInit{
           if (isValid) {
             // 🔑 badha key male → normal flow
             this.docketService.loginUserList = parsedData;
-            this.docketService.Location = parsedData.LocationCode;
-              // this.docketService.Location = 'TBH';
+            // this.docketService.Location = parsedData.LocationCode;
+              this.docketService.Location = 'IDR';
             this.docketService.BaseUserCode = parsedData.UserId;
             this.docketService.baseUsername=parsedData.BaseUserName;
           } else {
@@ -100,7 +100,7 @@ export class DocketListComponent implements OnInit{
         SrNo: row.srNo,
         DOCKNO: this.docketService.basicDetailForm.value.cNoteNo,
         INVNO: row.invoiceNo || '',
-        INVDT: row.invoicedate ? new Date(row.invoicedate).toISOString() : null,
+        INVDT: new Date().toISOString(),
         DECLVAL: row.declaredvalue || 0,
         PKGSNO: row.noOfPkgs || 0,
         ACTUWT: row.actualWeight || 0,
@@ -123,6 +123,21 @@ export class DocketListComponent implements OnInit{
 
       return obj;
     });
+      const DocketBoxLBHList = this.docketService.boxDetailRows.value.map((row: any, index: number) => {
+      const obj: any = {
+        ACTUWT: row.actualWeight || 0,
+        SrNo: row.srNo,
+        VOL_L: row.length || 0,
+        vol_cft: row.cubicweight || 0,
+        PKGSNO: row.noOfPkgs || 0,
+        toT_CFT: row.cubicweight || 0,
+        DOCKNO: this.docketService.basicDetailForm.value.cNoteNo,
+        VOL_B: row.breadth || 0,
+        VolumetricBox: "",
+        VOL_H: row.height || 0,
+      };
+      return obj;
+    });
     const payload = {
       "wmd": {
         "dockno": this.docketService.basicDetailForm.value.cNoteNo,
@@ -134,7 +149,7 @@ export class DocketListComponent implements OnInit{
         "to_loc": this.docketService.basicDetailForm.value.toCity,
         "paybas": this.docketService.basicDetailForm.value.billingType,
         "pkgsno": this.docketService.invoiceform.value.totalNoOfPkgs,
-        "actuwt": this.docketService.invoiceform.value.finalActualWeight,
+        "actuwt": this.docketService.invoiceform.value.totalActualWeight,
         "chrgwt": Math.max(this.docketService.invoiceform.value.finalActualWeight || 0, this.docketService.invoiceform.value.totalCubicWeight || 0),
         "chargedPkgsNo": this.docketService.invoiceform.value.chargeWeightPerPkg,
         "prodcd": this.docketService.basicDetailForm.value.contents,
@@ -364,6 +379,7 @@ if (validationError) {
       this.appendObjectToFormData(formData, payload.wmdc, "DVM.WMDC");
       formData.append("DVM.isCompletion", "false")
       formData.append("docketInvoiceList", JSON.stringify(invoiceList));
+      formData.append("DocketBoxLBHList", JSON.stringify(DocketBoxLBHList));
       formData.append("docketChargesList", JSON.stringify(listCCH));
       formData.append("DOCTYP", "DKT");
       formData.append("DynamicList", JSON.stringify(DynamicList));

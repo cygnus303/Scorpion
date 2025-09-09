@@ -197,7 +197,7 @@ export class DocketService {
   invoicebuild() {
     this.invoiceform = new FormGroup({
       invoiceRows: new FormArray([]),
-      boxDetail:new FormArray([]),
+      boxDetailRows:new FormArray([]),
       // Summary row 1
       cftTotal: new FormControl(),
       totalDeclaredValue: new FormControl(),
@@ -240,7 +240,7 @@ export class DocketService {
   //  box Detail
   
   get boxDetailRows(): FormArray {
-    return this.invoiceform.get('boxDetail') as FormArray;
+    return this.invoiceform.get('boxDetailRows') as FormArray;
   }
 
   boxDetailIndexSrNo() {
