@@ -46,8 +46,8 @@ export class DocketListComponent implements OnInit{
           if (isValid) {
             // 🔑 badha key male → normal flow
             this.docketService.loginUserList = parsedData;
-            // this.docketService.Location = parsedData.LocationCode;
-              this.docketService.Location = 'IDR';
+            this.docketService.Location = parsedData.LocationCode;
+              // this.docketService.Location = 'IDR';
             this.docketService.BaseUserCode = parsedData.UserId;
             this.docketService.baseUsername=parsedData.BaseUserName;
           } else {
@@ -274,7 +274,7 @@ export class DocketListComponent implements OnInit{
         "originStateName": this.docketService.basicDetailForm.value.originState,
         "destStateCode": this.docketService.basicDetailForm.value.csgegstState,
         "destStateName": this.docketService.basicDetailForm.value.destinationState,
-        "isUnionTeritory": true, ///Number(this.docketService.gstCalculationList.isunionterritory),
+        "isUnionTeritory":this.docketService.gstCalculationList.isunionterritory === "1",
         "origin_Area": this.docketService.basicDetailForm.value.origin_Area,///consinee mathi avshe adress
         "destination_Area": this.docketService.basicDetailForm.value.destination_Area,///consinor mathi avshe adress
         "custGSTNo": "",
@@ -410,15 +410,14 @@ if (validationError) {
           if (response) {
        window.scrollTo({ top: 0, behavior: 'smooth' }); 
        this.docketService.successMsg='Docket submitted successfully.'
-      // window.parent.location.href = `https://sepluat.cygnux.in/Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N`;
-      let baseUrl = window.location.origin;
-      if (baseUrl.includes("sepluat")) {
-        baseUrl = "https://sepluat.cygnux.in";
-      } else {
-        baseUrl = "https://sepl.cygnux.in";
-      }
-
-      window.parent.location.href =`${baseUrl}/Operation/DocketDone/1?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N`;
+      window.parent.location.href = `https://sepluat.cygnux.in/Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N`;
+      // let baseUrl = window.location.origin;
+      // if (baseUrl.includes("sepluat")) {
+      //   baseUrl = "https://sepluat.cygnux.in";
+      // } else {
+      //   baseUrl = "https://sepl.cygnux.in";
+      // }
+      // window.parent.location.href =`${baseUrl}/Operation/DocketDone/1?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N`;
             this.docketService.basicDetailForm.reset();
             this.docketService.freightForm.reset();
             this.docketService.invoiceform.reset();

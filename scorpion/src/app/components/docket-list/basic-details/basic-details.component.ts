@@ -372,6 +372,7 @@ applyVehicleNoValidation(){
   onChangedestinationsList(event: any) {
     this.docketService.basicDetailForm.patchValue({
       destination: event.locCode,
+      toCity:null
     });
     this.destinationsList = [];
   }

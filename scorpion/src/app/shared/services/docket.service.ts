@@ -278,8 +278,8 @@ export class DocketService {
   }
 
 freightAndOtherChar(){
-  this.GetFreightContractDetails()
-  this.getOtherChargesDetail()
+  this.GetFreightContractDetails();
+  this.getOtherChargesDetail();
 }
 
   getpincodeData(event: any) {
@@ -382,20 +382,21 @@ freightAndOtherChar(){
     const billingType = this.basicDetailForm.value.billingType;
 
     if (billingParty && destination && billingType) {
+
       if(!this.basicDetailForm.value.ewayBillNo){
+        this.freightAndOtherChar()
          const oldValue = this.consignorForm?.value; 
-        if (this.invoiceRows.length > 0) {
-          this.invoiceform.reset(this.invoicebuild());
-        }
-        this.freightbuild();
-        this.getChargesData();
+        // if (this.invoiceRows.length > 0) {
+        //   this.invoiceform.reset(this.invoicebuild());
+        // }
+        // this.freightbuild();
+        // this.getChargesData();
         this.consignorbuild();
-        this.getIGSTchargesDetail();
+        // this.getIGSTchargesDetail();
         this.consignorForm.patchValue({
           consigneePincode: oldValue?.consigneePincode
         });
       }
-
       this.getStep2Details();
     }
   }
@@ -882,7 +883,7 @@ freightAndOtherChar(){
       itemCode: '',
       ftlType: this.basicDetailForm.value.typeMovement || '',
       noOfPkgs: this.invoiceform.value.totalNoOfPkgs?.toString(),
-      chargedWeright: Math.max(this.invoiceform.value.finalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString(),
+      chargedWeright:this.invoiceform.value.finalActualWeight.toString(),
       origin: this.basicDetailForm.value.origin,
       payBase: this.basicDetailForm.value.billingType,
       serviceType: this.basicDetailForm.value.serviceType,
@@ -890,7 +891,7 @@ freightAndOtherChar(){
       transMode: this.basicDetailForm.value.mode,
       orderID: this.step2DetailsList?.contractid,
       invAmt: this.invoiceform.value.totalDeclaredValue?.toString(),
-      dockdt: new Date().toISOString(),
+      dockdt: this.basicDetailForm.value.cNoteDate.toISOString(),
       prodcd: this.basicDetailForm.value.contents,
       isPerPieceRate: this.step2DetailsList?.isPerPieceRate
     }
@@ -918,12 +919,24 @@ freightAndOtherChar(){
 
           // Only patch the value if there's no validation error
 
-          if (!this.weightErrorMsg) {
+        if (!this.weightErrorMsg) {
+          const newFinalWeight = Math.max(this.freightData.chargedWeight || 0, this.invoiceform.value.finalActualWeight || 0);
+          const newPkgWeight = Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0);
+
+          const currentFinalWeight = this.invoiceform.value.finalActualWeight;
+          const currentPkgWeight = this.invoiceform.value.chargeWeightPerPkg;
+
+          if (newFinalWeight !== currentFinalWeight || newPkgWeight !== currentPkgWeight) {
             this.invoiceform.patchValue({
-              finalActualWeight: Math.max(this.freightData.chargedWeight || 0, this.invoiceform.value.finalActualWeight || 0),
-              chargeWeightPerPkg: Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0)
+              finalActualWeight: newFinalWeight,
+              chargeWeightPerPkg: newPkgWeight
             });
+
+            // 🔄 Call again only once if updated
+            this.GetFreightContractDetails();
+            return; // stop further execution to avoid multiple triggers
           }
+        }
 
           this.getFuelSurcharge(this.freightData.freightCharge);
         }

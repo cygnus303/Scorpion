@@ -31,7 +31,7 @@ export class InvoiceDetailsComponent {
 
   }
 
-checkDuplicateInvoices(i: number) {
+checkDuplicateInvoices(i: number,row: AbstractControl) {
   const rows = this.docketService.invoiceRows.controls;
   const currentInv = rows[i].get('invoiceNo')?.value?.trim();
  
@@ -67,29 +67,59 @@ checkDuplicateInvoices(i: number) {
   this.getCFTCalculation(i);
   this.docketService.freightAndOtherChar()
   this.docketService.getGSTCalculation()
+  this.handleDeclaredValueChange(row)
 }
 
-  handleDeclaredValueChange(row: AbstractControl) {
-    row.get('declaredvalue')?.valueChanges.subscribe((value) => {
-      const declared = value ?? 0;
-      const originState = this.docketService.basicDetailForm.get('originState')?.value;
-      const destState = this.docketService.basicDetailForm.get('destinationState')?.value;
+handleDeclaredValueChange(row: AbstractControl) {
+  row.get('declaredvalue')?.valueChanges.subscribe((value) => {
+    const declared = value ?? 0;
+    const originState = this.docketService.basicDetailForm.get('originState')?.value;
+    const destState = this.docketService.basicDetailForm.get('destinationState')?.value;
 
-      if (declared > 100000 && originState && destState && originState === destState) {
-        row.get('ewayBillNo')?.setValidators([Validators.required]);
-        row.get('ewayBillExpiry')?.setValidators([Validators.required]);
-        row.get('ewayinvoiceDate')?.setValidators([Validators.required]);
-      } else {
-        row.get('ewayBillNo')?.clearValidators();
-        row.get('ewayBillExpiry')?.clearValidators();
-        row.get('ewayinvoiceDate')?.clearValidators();
-      }
+    let requireValidators = false;
 
-      row.get('ewayBillNo')?.updateValueAndValidity({ emitEvent: false });
-      row.get('ewayBillExpiry')?.updateValueAndValidity({ emitEvent: false });
-      row.get('ewayinvoiceDate')?.updateValueAndValidity({ emitEvent: false });
-    });
+    // Rule 1: Same state + declared > 100000
+    if (declared >= 100000 && originState && destState && originState === destState) {
+      requireValidators = true;
+    }
+
+    // Rule 2: Different states + declared > 50000
+    if (declared >= 50000 && originState && destState && originState !== destState) {
+      requireValidators = true;
+    }
+    if (requireValidators) {
+      row.get('ewayBillNo')?.setValidators([Validators.required]);
+      row.get('ewayBillExpiry')?.setValidators([Validators.required]);
+      row.get('ewayinvoiceDate')?.setValidators([Validators.required]);
+    } else {
+      row.get('ewayBillNo')?.clearValidators();
+      row.get('ewayBillExpiry')?.clearValidators();
+      row.get('ewayinvoiceDate')?.clearValidators();
+    }
+
+    row.get('ewayBillNo')?.updateValueAndValidity({ emitEvent: false });
+    row.get('ewayBillExpiry')?.updateValueAndValidity({ emitEvent: false });
+    row.get('ewayinvoiceDate')?.updateValueAndValidity({ emitEvent: false });
+  });
+}
+
+isEwayRequired(row: AbstractControl): boolean {
+  const declared = row.get('declaredvalue')?.value ?? 0;
+  const originState = this.docketService.basicDetailForm.get('originState')?.value;
+  const destState = this.docketService.basicDetailForm.get('destinationState')?.value;
+  if (!originState || !destState) return false;
+  // Rule 1: Same state + declared > 100000
+  if (declared >= 100000 && originState === destState) {
+    return true;
   }
+  // Rule 2: Different states + declared > 50000
+  if (declared >= 50000 && originState !== destState) {
+    return true;
+  }
+  return false;
+}
+
+
 removeRow(index: number): void {
     this.docketService.invoiceRows.removeAt(index);
     this.docketService.reIndexSrNo();
