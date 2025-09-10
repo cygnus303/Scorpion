@@ -461,8 +461,8 @@
                               <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
                                 [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"
                                 placeholder="dd/MMM/yyyy" formControlName="ewayBillExpiry" [ngClass]="{ 'border-danger': row.get('ewayBillExpiry')?.invalid && row.get('ewayBillExpiry')?.touched, 
-                                                     'required2': isEwayRequired(row)}">
-                              <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                                                     'required2': isEwayRequired(row)}"[class.disabled]="true">
+                              <span class="input-group-text cursor-pointer" (click)="dp.toggle()"[class.disabled]="true">
                                 <i class="fa fa-calendar"></i>
                               </span>
                             </div>
@@ -475,10 +475,10 @@
                           <td class="center">
                             <div class="input-group">
                               <input type="text" class="form-control uppercase-none" #dp2="bsDatepicker" bsDatepicker
-                                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"
+                                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY', minDate: minDate }"
                                 placeholder="dd/MMM/yyyy" formControlName="ewayinvoiceDate" [ngClass]="{'border-danger': row.get('ewayinvoiceDate')?.invalid && row.get('ewayinvoiceDate')?.touched, 
-                                              'required2': isEwayRequired(row)}">
-                              <span class="input-group-text cursor-pointer" (click)="dp2.toggle()">
+                                              'required2': isEwayRequired(row)}" >
+                              <span class="input-group-text cursor-pointer" (click)="dp2.toggle()"   >
                                 <i class="fa fa-calendar"></i>
                               </span>
                             </div>
@@ -504,7 +504,7 @@
                               (input)="calculateSummary(i);getCFTCalculation(i)"
                               (change)="docketService.freightAndOtherChar();docketService.getGSTCalculation();handleDeclaredValueChange(row)"
                               [ngClass]="{ 'border-danger': row.get('declaredvalue')?.invalid && row.get('declaredvalue')?.touched}"
-                              (blur)="restoreIfEmpty(row, 'declaredvalue')">
+                              (blur)="restoreIfEmpty(row, 'declaredvalue')" >
                             <div *ngIf="row.get('declaredvalue')?.invalid && row.get('declaredvalue')?.touched"
                               class="text-danger text-start">
                               This field is required.

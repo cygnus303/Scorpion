@@ -17,6 +17,7 @@ export class InvoiceDetailsComponent {
   public pincodeMatrixData: any;
   private subscription!: Subscription;
   private invoiceMasterMap: { [invNo: string]: number } = {};
+  public minDate: Date = new Date();
   constructor(
     public docketService: DocketService,
     public basicDetailService: BasicDetailService,
