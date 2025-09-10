@@ -4,7 +4,7 @@
     CNote Entry - Invoice Details
   </div>
   <div class="form-grid p-4">
-    <form [formGroup]="docketService.invoiceform">
+    <form [formGroup]="docketService.invoiceform" appTabNavigation >
       <div class="row"
         *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
         <div class="col-md-4">
@@ -128,8 +128,8 @@
                       <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
                         [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }" placeholder="dd/MMM/yyyy"
                         formControlName="ewayBillExpiry" [ngClass]="{ 'border-danger': row.get('ewayBillExpiry')?.invalid && row.get('ewayBillExpiry')?.touched, 
-                                                 'required2': row.get('declaredvalue')?.value > 100000}">
-                      <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                                                 'required2': row.get('declaredvalue')?.value > 100000}"  [class.disabled]="true">
+                      <span class="input-group-text cursor-pointer" (click)="dp.toggle()"  [class.disabled]="true">
                         <i class="fa fa-calendar"></i>
                       </span>
                     </div>
@@ -140,11 +140,11 @@
 
                   <td class="center" style="padding-bottom: 2px; padding-top: 2px;">
                     <div class="input-group">
-                      <input type="text" class="form-control uppercase-none" #dp2="bsDatepicker" bsDatepicker
-                        [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }" placeholder="dd/MMM/yyyy"
+                      
+                      <span class="input-group-text cursor-pointer"><input type="text" class="form-control uppercase-none" #dp2="bsDatepicker" bsDatepicker
+                        [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' , minDate: minDate }" placeholder="dd/MMM/yyyy"
                         formControlName="ewayinvoiceDate" [ngClass]="{'border-danger': row.get('ewayinvoiceDate')?.invalid && row.get('ewayinvoiceDate')?.touched, 
                                           'required2': row.get('declaredvalue')?.value > 100000}">
-                      <span class="input-group-text cursor-pointer" (click)="dp2.toggle()">
                         <i class="fa fa-calendar"></i>
                       </span>
                     </div>
@@ -200,6 +200,10 @@
                       <div *ngIf="docketService.invoiceRows.at(i).get('length')?.hasError('min') && docketService.invoiceRows.at(i).get('length')?.touched" class="text-danger">
                           This field is required.
                       </div>
+                      <div *ngIf="docketService.invoiceRows.at(i).get('length')?.hasError('max')" class="text-danger">
+                          Please enter a value less than or equal to 
+                          {{ docketService.contractservicecharge[0]?.cft_Measure?.toLowerCase() === 'inches' ? 99.99 : 999.99 }}.
+                        </div>
                   </td>
                   <td class="center" style="padding-bottom: 2px; padding-top: 2px; "
                     *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
@@ -211,6 +215,10 @@
                       [ngClass]="{ 'border-danger': docketService.invoiceRows.at(i).get('breadth')?.hasError('min') && docketService.invoiceRows.at(i).get('breadth')?.touched }">
                        <div *ngIf="docketService.invoiceRows.at(i).get('breadth')?.hasError('min') && docketService.invoiceRows.at(i).get('breadth')?.touched" class="text-danger">
                           This field is required.
+                      </div>
+                      <div *ngIf="docketService.invoiceRows.at(i).get('breadth')?.hasError('max')" class="text-danger">
+                          Please enter a value less than or equal to 
+                          {{ docketService.contractservicecharge[0]?.cft_Measure?.toLowerCase() === 'inches' ? 99.99 : 999.99 }}.
                       </div>
                   </td>
                   <td class="center" style="padding-bottom: 2px; padding-top: 2px; "
@@ -224,9 +232,13 @@
                        <div *ngIf="docketService.invoiceRows.at(i).get('height')?.hasError('min') && docketService.invoiceRows.at(i).get('height')?.touched" class="text-danger">
                           This field is required.
                       </div>
+                      <div *ngIf="docketService.invoiceRows.at(i).get('height')?.hasError('max')" class="text-danger">
+                        Please enter a value less than or equal to 
+                        {{ docketService.contractservicecharge[0]?.cft_Measure?.toLowerCase() === 'inches' ? 99.99 : 999.99 }}.
+                      </div>
                   </td>
                   <td class="center " style="padding-bottom: 2px; padding-top: 2px;">
-                    <input class="form-control required2 text-end" min="0"(keypress)="docketService.allowNumericDecimal($event)"
+                    <input class="form-control required2 text-end" min="0"(keypress)="docketService.allowNumericDecimal($event)" min="1"
                       placeholder="Invoice value" type="number" value="0" formControlName="declaredvalue" required (focus)="clearZero(row, 'declaredvalue')" 
                       (input)="calculateSummary(i);getCFTCalculation(i);handleDeclaredValueChange(row)" (change)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation()"
                       [ngClass]="{ 'border-danger': row.get('declaredvalue')?.invalid && row.get('declaredvalue')?.touched}" (blur)="restoreIfEmpty(row, 'declaredvalue')" >

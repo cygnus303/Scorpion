@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { generalMasterResponse, LoginUser, pinCodeResponse } from '../models/general-master.model';
-import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { BasicDetailService } from './basic-detail.service';
 import { EmailRegex, mobileNo } from '../constants/common';
 import { MobileNumberValidator } from '../directives/validators/mobile-number-validator';
@@ -233,6 +233,7 @@ export class DocketService {
     for (let i = 0; i < this.noOfRows; i++) {
       this.invoiceRows.push(this.createInvoiceRow(this.invoiceRows.length + 1));
     }
+     this.updateMaxValidators();
   }
 
 
@@ -534,12 +535,29 @@ freightAndOtherChar(){
             this.invoiceform.patchValue({
               cft_Ratio: this.contractservicecharge[0].cft_Ratio
             });
-            this.getStaxPaidBy()
+            this.getStaxPaidBy();
+            this.updateMaxValidators()
           }
         }
       });
     }
   }
+
+updateMaxValidators() {
+  const measure = this.contractservicecharge?.[0]?.cft_Measure || 'Inches';
+  const maxValue = measure.toLowerCase() === 'inches' ? 99.99 : 999.99;
+
+  this.invoiceRows.controls.forEach((control: AbstractControl) => {
+    const row = control as FormGroup; // cast to FormGroup
+    ['length', 'breadth', 'height'].forEach(field => {
+      const formControl = row.get(field);
+      formControl?.setValidators([Validators.min(1), Validators.max(maxValue)]);
+      formControl?.updateValueAndValidity();
+    });
+  });
+}
+
+
 
   getGSTNODetails(event: any) {
     const searchText = event.target.value;
@@ -1178,7 +1196,5 @@ validateAppointmentDate() {
     ctrl?.setErrors(null);
     return true;
   }
-
-
 }
 

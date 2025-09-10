@@ -4,7 +4,7 @@
     CNote Entry - Basic Details
   </div>
   <div class="form-grid p-4">
-    <form [formGroup]="docketService.basicDetailForm">
+    <form [formGroup]="docketService.basicDetailForm" appTabNavigation>
       <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group">
@@ -120,7 +120,7 @@
               <ng-select class="noFoundTextColor required2" required placeholder="Billing Party" [searchable]="true"
                 [clearable]="true" (search)="getBillingPartyData($event)"
                 (change)="onChangeBillingParty($event);docketService.onFormFieldChange()" formControlName="billingParty"
-                [notFoundText]="notFoundTextValue" (open)="resetBillingPartyDropdown()"
+                [notFoundText]="notFoundTextValue" (open)="resetBillingPartyDropdown()" [appNgSelectTab]="'fromCity'"
                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('billingParty')?.invalid  && docketService.basicDetailForm.get('billingParty')?.touched}">
                 <ng-option *ngFor="let item of billingPartyData" [value]="item">
                   <strong>{{ item.custcd }}</strong> : {{ item.custnm }}

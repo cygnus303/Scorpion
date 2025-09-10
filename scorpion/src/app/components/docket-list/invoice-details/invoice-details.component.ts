@@ -16,8 +16,9 @@ export class InvoiceDetailsComponent {
   public chargingData: any;
   public pincodeMatrixData: any;
   private subscription!: Subscription;
+  public minDate: Date = new Date();
   // to remember first entered row index for each invoice
-private invoiceMasterMap: { [invNo: string]: number } = {};
+  private invoiceMasterMap: { [invNo: string]: number } = {};
 
   constructor(
     public docketService: DocketService,
