@@ -433,6 +433,8 @@ applyVehicleNoValidation(){
         consigneeCity: event
       });
       this.docketService.GetPincodeOrigin();
+      this.toCityList = [];
+      this.notToCityValue = 'Please enter at least 1 characters';
     }
     this.cityList = [];
   }
