@@ -400,6 +400,9 @@ applyVehicleNoValidation(){
 
   onChangeCityListList(event: any, type: any) {
     if (type === 'from') {
+       this.docketService.consignorForm.patchValue({
+        consignorCity: event
+      });
       // this.docketService.basicDetailForm.patchValue({
       //   fromCity: event + ':' + event,
       // });

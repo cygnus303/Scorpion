@@ -22,7 +22,7 @@
             <label class="col-md-5">EwayBill Number</label>
             <div class="col-md-7">
               <input type="text" class="form-control " placeholder="EwayBill Number" formControlName="ewayBillNo"
-                maxlength="12" (blur)="callEwayBillFromParent($event)" />
+                maxlength="12" (blur)="callEwayBillFromParent($event)"/>
             </div>
           </div>
         </div>
@@ -236,7 +236,7 @@
         <div class="col-md-4 form-column " *ngIf="!docketService.basicDetailForm.get('destination')?.value">
           <div class="form-group mb-1"><label class="col-md-5">To City</label>
             <div class="col-md-7">
-              <input type="text" class="form-control required2" (open)="resetCityDropdown('to')" 
+              <input type="text" class="form-control required2" (open)="resetCityDropdown('to')"
                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('toCity')?.invalid && docketService.basicDetailForm.get('toCity')?.touched}"
                 required placeholder="To City" formControlName="toCity" />
             </div>
@@ -306,7 +306,7 @@
           <div class="form-group mb-1"><label class="col-md-5">Pickup/Delivery</label>
             <div class="col-md-7"><ng-select class="noFoundTextColor required2" required placeholder="Pickup/Delivery"
                 [items]="docketService.pickUpData" bindLabel="codeDesc" bindValue="codeId" formControlName="pickup"
-                notFoundText="No matches found"
+                notFoundText="No matches found" (change)="docketService.freightAndOtherChar()"
                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('pickup')?.invalid && docketService.basicDetailForm.get('pickup')?.touched}"></ng-select>
             </div>
           </div>
@@ -326,7 +326,7 @@
             <div class="col-md-7">
               <ng-select class="noFoundTextColor required2" type="text" required placeholder="Contents"
                 [items]="docketService.contentsData" bindLabel="codeDesc" bindValue="codeId" formControlName="contents"
-                notFoundText="No matches found"
+                notFoundText="No matches found" (change)="docketService.freightAndOtherChar()"
                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('contents')?.invalid  && docketService.basicDetailForm.get('contents')?.touched}"></ng-select>
             </div>
           </div>
@@ -343,7 +343,7 @@
           <div class="form-group mb-1"><label class="col-md-5">Packaging Type</label>
             <div class="col-md-7"><ng-select class="noFoundTextColor required2" required placeholder="Packaging Type"
                 [items]="docketService.packagingTypeData" bindLabel="codeDesc" bindValue="codeId"
-                formControlName="packingType" notFoundText="No matches found"
+                formControlName="packingType" notFoundText="No matches found"  (change)="docketService.freightAndOtherChar()"
                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('packingType')?.invalid  && docketService.basicDetailForm.get('packingType')?.touched}"></ng-select>
             </div>
           </div>

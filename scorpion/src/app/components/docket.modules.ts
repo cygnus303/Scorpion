@@ -13,6 +13,7 @@ import { HeaderComponent } from '../layouts/header/header.component';
 import { DocketService } from '../shared/services/docket.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { DecimalLimitDirective } from '../shared/directives/decimal-limit.directive';
+import { FocusNextDirective } from '../shared/directives/focusnext.directive';
 
 @NgModule({
     declarations: [
@@ -22,7 +23,8 @@ import { DecimalLimitDirective } from '../shared/directives/decimal-limit.direct
         ConsignorDetailComponent,
         FreightDetailsComponent,
         HeaderComponent,
-        DecimalLimitDirective
+        DecimalLimitDirective,
+        FocusNextDirective
     ],
     imports: [
         CommonModule,
