@@ -3,7 +3,7 @@
     <i class="fa fa-edit me-2"></i>
   CNote Entry - Consignor & Consignee Details
   </div>
-<div class="form-grid p-4" appFocusNext>
+<div class="form-grid p-4" >
   <form [formGroup]="docketService.consignorForm">
       <div class="row">
         <div class="col-md-4">
@@ -19,7 +19,7 @@
                 <label class="control-label col-md-5">Consignor GST No.</label>
                 <div class="col-md-7">
                   <input class="form-control GSTNo clsGST" formControlName="consignorGSTNo" (blur)="getGSTNODetails($event,'Conr')" maxlength="15" 
-                    placeholder="Consignor GST No." type="text" >
+                    placeholder="Consignor GST No." type="text" appFocusNexts>
                 </div>
               </div>
             </div>
@@ -46,7 +46,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Select Name </label>
                 <div class="col-md-7">
-                <ng-select class="noFoundTextColor required2" placeholder="Select Name" formControlName="consignorName" notFoundText="Please enter atleast 3 characters" readonly></ng-select>
+                <ng-select class="noFoundTextColor required2" appFocusNexts placeholder="Select Name" formControlName="consignorName" notFoundText="Please enter atleast 3 characters" readonly></ng-select>
                 </div>
               </div>
             </div>
@@ -56,7 +56,7 @@
               <div class="form-group mb-1">
                 <label class="control-label col-md-5"></label>
                 <div class="col-md-7">
-                  <input class="required2 form-control required2" required formControlName="consignorMasterName" 
+                  <input class="required2 form-control required2" appFocusNexts required formControlName="consignorMasterName" 
                     placeholder="Consignor Name" type="text" [ngClass]="{ 'border-danger': docketService.consignorForm.get('consignorMasterName')?.invalid  && docketService.consignorForm.get('consignorMasterName')?.touched}">
                   </div>
                 </div>
@@ -76,7 +76,7 @@
                 <div class="col-md-7">
                   <!-- <ng-select class="noFoundTextColor" placeholder="Address"></ng-select> -->
                   <textarea class="required2 form-control-textarea required clsCnor required2" required
-                    formControlName="consignorAddress" cols="20" placeholder="Address" rows="2"
+                    formControlName="consignorAddress" cols="20" placeholder="Address" rows="2" appFocusNexts
                     [ngClass]="{ 'border-danger': docketService.consignorForm.get('consignorAddress')?.invalid  && docketService.consignorForm.get('consignorAddress')?.touched}"></textarea>
                 </div>
               </div>
@@ -95,7 +95,7 @@
               <div class="form-group mb-1">
                 <label class="control-label col-md-5">City </label>
                 <div class="col-md-7">
-                  <input class="required2 form-control required clsCnor required2" required formControlName="consignorCity"
+                  <input class="required2 form-control required clsCnor required2" required appFocusNexts formControlName="consignorCity"
                     placeholder="City" type="text"
                     [ngClass]="{ 'border-danger': docketService.consignorForm.get('consignorCity')?.invalid  && docketService.consignorForm.get('consignorCity')?.touched}">
                 </div>
@@ -116,7 +116,7 @@
                 <label class="control-label col-md-5">Pincode </label>
                 <div class="col-md-7">
                   <ng-select class="noFoundTextColor required2" [items]="docketService.pincodeList" bindLabel="pinArea"
-                    bindValue="value" placeholder="Pincode" formControlName="consignorPincode" required
+                    bindValue="value" placeholder="Pincode" formControlName="consignorPincode" required appFocusNext
                     (open)="docketService.resetPincodeDropdown()"
                     [ngClass]="{ 'border-danger': docketService.consignorForm.get('consignorPincode')?.invalid  && docketService.consignorForm.get('consignorPincode')?.touched}"
                     [notFoundText]="docketService.notPincodeValue" (search)="docketService.getpincodeData($event)"
@@ -138,7 +138,7 @@
               <div class="form-group mb-1">
                 <label class="control-label col-md-5">Mobile No </label>
                 <div class="col-md-7">
-              <input type="text" class="form-control required2" formControlName="consignorMobile" maxlength="10"
+              <input type="text" class="form-control required2" formControlName="consignorMobile" maxlength="10" appFocusNexts
                 placeholder="Mobile No" required inputmode="numeric" pattern="[0-9]*"
                 (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
                 [ngClass]="{ 'border-danger': docketService.consignorForm.get('consignorMobile')?.invalid && docketService.consignorForm.get('consignorMobile')?.touched }">
@@ -166,7 +166,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Email Id </label>
                 <div class="col-md-7">
-                  <input class="form-control uppercase-none" maxlength="255" placeholder="Email Id" formControlName="consignorEmail" type="text"
+                  <input class="form-control uppercase-none" maxlength="255" placeholder="Email Id" appFocusNexts formControlName="consignorEmail" type="text"
                      />
                     </div>
                   </div>
@@ -193,7 +193,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Consignee GST No.</label>
                 <div class="col-md-7">
-                  <input class="required2 form-control" formControlName="consigneeGSTNo"  maxlength="15"  (input)="getGSTNODetails($event ,'Conee')"
+                  <input class="required2 form-control" formControlName="consigneeGSTNo" appFocusNexts  maxlength="15"  (input)="getGSTNODetails($event ,'Conee')"
                      placeholder="Consignee GST No." type="text" >
                 </div>
               </div>
@@ -221,7 +221,7 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Select Name </label>
                 <div class="col-md-7">
-                <ng-select class="noFoundTextColor required2" placeholder="Select Name" formControlName="consigneeName" notFoundText="Please enter atleast 3 characters" readonly></ng-select>
+                <ng-select class="noFoundTextColor required2" placeholder="Select Name" appFocusNexts formControlName="consigneeName" notFoundText="Please enter atleast 3 characters" readonly></ng-select>
                 </div>
               </div>
             </div>
@@ -231,7 +231,7 @@
               <div class="form-group mb-1">
                 <label class="control-label col-md-5"></label>
                 <div class="col-md-7">
-                  <input class="required2 form-control required clsCnee required2" required formControlName="consigneeMasterName"
+                  <input class="required2 form-control required clsCnee required2" required appFocusNexts formControlName="consigneeMasterName"
                     placeholder="Consignee Name" type="text"  [ngClass]="{ 'border-danger': docketService.consignorForm.get('consigneeMasterName')?.invalid  && docketService.consignorForm.get('consigneeMasterName')?.touched}">
                   </div>
                 </div>
@@ -250,7 +250,7 @@
                 <label class="control-label col-md-5">Address </label>
                 <div class="col-md-7">
                   <!-- <select class="form-control required2" placeholder="Address"></select> -->
-                  <textarea class="required2 form-control-textarea required clsCnee required2" required formControlName="consigneeAddress" cols="20" 
+                  <textarea class="required2 form-control-textarea required clsCnee required2" appFocusNexts required formControlName="consigneeAddress" cols="20" 
                     placeholder="Address" rows="2"  [ngClass]="{ 'border-danger': docketService.consignorForm.get('consigneeAddress')?.invalid  && docketService.consignorForm.get('consigneeAddress')?.touched}"></textarea>
                   </div>
                 </div>
@@ -269,7 +269,7 @@
               <div class="form-group mb-1">
                 <label class="control-label col-md-5">City </label>
                 <div class="col-md-7">
-                  <input class="required2 form-control required clsCnee required2" required formControlName="consigneeCity"
+                  <input class="required2 form-control required clsCnee required2" required appFocusNexts formControlName="consigneeCity"
                     placeholder="City" type="text"
                     [ngClass]="{ 'border-danger': docketService.consignorForm.get('consigneeCity')?.invalid  && docketService.consignorForm.get('consigneeCity')?.touched}">
                 </div>
@@ -288,7 +288,7 @@
               <div class="form-group mb-1">
                 <label class="control-label col-md-5">Pincode </label>
                 <div class="col-md-7">
-                  <ng-select class="noFoundTextColor required2" [items]="docketService.pincodeList" bindLabel="pinArea" required (open)="docketService.resetPincodeDropdown()"
+                  <ng-select class="noFoundTextColor required2" appFocusNexts [items]="docketService.pincodeList" bindLabel="pinArea" required (open)="docketService.resetPincodeDropdown()"
                 bindValue="value" placeholder="Pincode" formControlName="consigneePincode"  [ngClass]="{ 'border-danger': docketService.consignorForm.get('consigneePincode')?.invalid  && docketService.consignorForm.get('consigneePincode')?.touched}"
                 [notFoundText]="docketService.notPincodeValue" (search)="docketService.getpincodeData($event)"></ng-select>
               </div>
@@ -307,7 +307,7 @@
               <div class="form-group mb-1">
                 <label class="control-label col-md-5">Mobile No </label>
                 <div class="col-md-7">
-                  <input class="form-control required required2" required formControlName="consigneeMobile" maxlength="10" pattern="[0-9]*"
+                  <input class="form-control required required2" required appFocusNexts formControlName="consigneeMobile" maxlength="10" pattern="[0-9]*"
                 (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
                     placeholder="Mobile No" type="text" [ngClass]="{ 'border-danger': docketService.consignorForm.get('consigneeMobile')?.invalid && docketService.consignorForm.get('consigneeMobile')?.touched}">
                   </div>
@@ -336,7 +336,7 @@
               <div class="form-group mb-1">
                 <label class="control-label col-md-5">Email Id </label>
                 <div class="col-md-7">
-                  <input class="form-control uppercase-none" formControlName="consigneeEmail"  placeholder="Email Id" type="text"
+                  <input class="form-control uppercase-none" formControlName="consigneeEmail" appFocusNexts  placeholder="Email Id" type="text"
                    />
                   </div>
                 </div>
@@ -470,7 +470,7 @@
                 <div class="form-group">
                   <label class="control-label col-md-5">Policy No</label>
                   <div class="col-md-7">
-                    <input class="form-control " formControlName="policyNo" placeholder="Policy No" type="text">
+                    <input class="form-control " formControlName="policyNo" placeholder="Policy No" type="text" appFocusNexts>
                   </div>
                 </div>
               </div>
@@ -510,7 +510,7 @@
                 <div class="form-group">
                   <label class="control-label col-md-5">Customer Ref No </label>
                   <div class="col-md-7">
-                    <input class="form-control " formControlName="customerRefNo" placeholder="Customer Ref No" type="text">
+                    <input class="form-control " formControlName="customerRefNo" placeholder="Customer Ref No" type="text" appFocusNexts>
                   </div>
                 </div>
               </div>
