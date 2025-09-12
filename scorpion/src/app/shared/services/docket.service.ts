@@ -1034,6 +1034,11 @@ validateAppointmentDate() {
               this.freightForm.patchValue({
                 [item.chargecode]: item.charge
               });
+              if (item.chargecode === 'SCHG12') {
+                this.freightForm.patchValue({
+                  coddodCharged: item.charge
+                });
+              }
               if (!this.basicDetailForm.get('IsMAllDeliveryN')?.value) {
                 this.freightForm.patchValue({ SCHG17: 0 })
               }
@@ -1047,7 +1052,8 @@ validateAppointmentDate() {
                 this.freightForm.patchValue({ SCHG13: 0 })
               }
               if (!this.basicDetailForm.get('IsCODDOD')?.value) {
-                this.freightForm.patchValue({ SCHG12: 0 })
+                this.freightForm.patchValue({ SCHG12: 0 });
+                this.freightForm.patchValue({coddodCharged:0})
               }
               if (this.freightForm.get('fovRate')?.value) {
                 this.freightForm.patchValue({ SCHG11: 0 })

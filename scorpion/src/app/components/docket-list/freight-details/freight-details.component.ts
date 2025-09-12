@@ -60,7 +60,8 @@ export class FreightDetailsComponent {
   });
     this.docketService.basicDetailForm.get('IsCODDOD')?.valueChanges.subscribe(value => {
     // this.updateCharge('SCHG12', value); // Appointment Charges
-     this.docketService.freightForm.patchValue({SCHG12:0})
+     this.docketService.freightForm.patchValue({SCHG12:0});
+     this.docketService.freightForm.patchValue({coddodCharged:0})
     if(value){
       this.docketService.getOtherChargesDetail();
     }
