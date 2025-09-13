@@ -18,6 +18,7 @@ export class InvoiceDetailsComponent {
   private subscription!: Subscription;
   private invoiceMasterMap: { [invNo: string]: number } = {};
   public minDate: Date = new Date();
+  isValidEWay:boolean=false;
   constructor(
     public docketService: DocketService,
     public basicDetailService: BasicDetailService,
@@ -27,7 +28,7 @@ export class InvoiceDetailsComponent {
   ngOnInit() {
     this.docketService.invoicebuild();
       this.subscription = this.docketService.ewayBill$.subscribe(ewayBillNo => {
-      this.getEwayBillData(ewayBillNo,0);
+      this.getEwayBillData(ewayBillNo,0,false);
     });
 
   }
@@ -208,79 +209,168 @@ removeRow(index: number): void {
 //   }, { emitEvent: false });
 // }
 
+
+//For new invoice
+// calculateSummary(i: number) {
+//   const serviceType = this.docketService?.basicDetailForm?.get('serviceType')?.value;
+ 
+//   // ✅ if serviceType = 2 → only reset Length, Breadth, Height, CubicWeight
+//   if (serviceType === '2') {
+//     this.docketService.invoiceRows.controls[i].patchValue({
+//       length: 0,
+//       breadth: 0,
+//       height: 0,
+//       cubicweight: 0
+//     }, { emitEvent: false });
+//     return; // stop further calculation
+//   }
+//   let volMeasureType = '';
+//   let cftWtRatio = 0;
+//   if (this.docketService?.contractservicecharge) {
+//     volMeasureType = this.docketService?.contractservicecharge[0]?.cft_Measure; // 'INCHES' | 'CM' | 'FEET'
+//     cftWtRatio = +this.docketService?.contractservicecharge[0]?.cft_Ratio || 0;
+//   }
+ 
+//   const boxDetailRows = this.docketService?.boxDetailRows.value;
+//   const invoiceDetailRows = this.docketService?.invoiceRows.value;
+ 
+ 
+//   let totalDeclaredValue = 0;
+//   let totalNoOfPkgs = 0;
+//   let totalCubicWeight = 0;
+//   let totalActualWeight = 0;
+ 
+//   boxDetailRows.forEach((r: any, idx: number) => {
+//     const length = +r.length || 0;
+//     const breadth = +r.breadth || 0;
+//     const height = +r.height || 0;
+//     const pkgsNo = +r.noOfPkgs || 0;
+ 
+//     let volume = 0;
+//     if (volMeasureType === 'INCHES') {
+//       volume = (length * breadth * height * cftWtRatio) / 1728;
+//     } else if (volMeasureType === 'CM') {
+//       volume = (length * breadth * height * cftWtRatio) / 27000;
+//     } else if (volMeasureType === 'FEET') {
+//       volume = length * breadth * height * cftWtRatio;
+//     }
+ 
+//     const cubicweight = +(volume * pkgsNo).toFixed(2);
+ 
+//     // ✅ Only update cubicweight for changed row
+//     if (idx === i) {
+//       this.docketService.boxDetailRows.controls[i].patchValue({
+//         cubicweight: cubicweight
+//       }, { emitEvent: false });
+//     }
+ 
+//     totalDeclaredValue += +r.declaredvalue || 0;
+//     totalNoOfPkgs += pkgsNo;
+//     totalCubicWeight += cubicweight;
+//     totalActualWeight += +r.actualWeight || 0;
+//   });
+ 
+//     invoiceDetailRows.forEach((r: any, idx: number) => {
+//     totalDeclaredValue += +r.declaredvalue || 0;
+//   });
+ 
+//   // update totals
+//   this.docketService.invoiceform.patchValue({
+//     totalDeclaredValue,
+//     totalNoOfPkgs,
+//     totalCubicWeight,
+//     totalActualWeight,
+//     chargeWeightPerPkg: totalNoOfPkgs,
+//     finalActualWeight: Math.max(totalActualWeight || 0, totalCubicWeight || 0)
+//   }, { emitEvent: false });
+// }
+
 calculateSummary(i: number) {
   const serviceType = this.docketService?.basicDetailForm?.get('serviceType')?.value;
- 
-  // ✅ if serviceType = 2 → only reset Length, Breadth, Height, CubicWeight
-  if (serviceType === '2') {
-    this.docketService.invoiceRows.controls[i].patchValue({
-      length: 0,
-      breadth: 0,
-      height: 0,
-      cubicweight: 0
-    }, { emitEvent: false });
-    return; // stop further calculation
-  }
- 
+
   let volMeasureType = '';
   let cftWtRatio = 0;
   if (this.docketService?.contractservicecharge) {
     volMeasureType = this.docketService?.contractservicecharge[0]?.cft_Measure; // 'INCHES' | 'CM' | 'FEET'
     cftWtRatio = +this.docketService?.contractservicecharge[0]?.cft_Ratio || 0;
   }
- 
+
   const boxDetailRows = this.docketService?.boxDetailRows.value;
   const invoiceDetailRows = this.docketService?.invoiceRows.value;
- 
- 
+
   let totalDeclaredValue = 0;
   let totalNoOfPkgs = 0;
   let totalCubicWeight = 0;
   let totalActualWeight = 0;
- 
+
   boxDetailRows.forEach((r: any, idx: number) => {
-    const length = +r.length || 0;
-    const breadth = +r.breadth || 0;
-    const height = +r.height || 0;
+    let length = +r.length || 0;
+    let breadth = +r.breadth || 0;
+    let height = +r.height || 0;
     const pkgsNo = +r.noOfPkgs || 0;
- 
-    let volume = 0;
-    if (volMeasureType === 'INCHES') {
-      volume = (length * breadth * height * cftWtRatio) / 1728;
-    } else if (volMeasureType === 'CM') {
-      volume = (length * breadth * height * cftWtRatio) / 27000;
-    } else if (volMeasureType === 'FEET') {
-      volume = length * breadth * height * cftWtRatio;
+
+    let cubicweight = 0;
+
+    // 👉 serviceType=2 → force reset
+    if (serviceType === '2') {
+      if (idx === i) {
+        this.docketService.boxDetailRows.controls[i].patchValue({
+          length: 0,
+          breadth: 0,
+          height: 0,
+          cubicweight: 0
+        }, { emitEvent: false });
+      }
+      length = breadth = height = 0;
+      cubicweight = 0;
+    } else {
+      // Normal volume calculation
+      let volume = 0;
+      if (volMeasureType === 'INCHES') {
+        volume = (length * breadth * height * cftWtRatio) / 1728;
+      } else if (volMeasureType === 'CM') {
+        volume = (length * breadth * height * cftWtRatio) / 27000;
+      } else if (volMeasureType === 'FEET') {
+        volume = length * breadth * height * cftWtRatio;
+      }
+
+      cubicweight = +(volume * pkgsNo).toFixed(2);
+
+      if (idx === i) {
+        this.docketService.boxDetailRows.controls[i].patchValue({
+          cubicweight: cubicweight
+        }, { emitEvent: false });
+      }
     }
- 
-    const cubicweight = +(volume * pkgsNo).toFixed(2);
- 
-    // ✅ Only update cubicweight for changed row
-    if (idx === i) {
-      this.docketService.boxDetailRows.controls[i].patchValue({
-        cubicweight: cubicweight
-      }, { emitEvent: false });
-    }
- 
+
     totalDeclaredValue += +r.declaredvalue || 0;
     totalNoOfPkgs += pkgsNo;
     totalCubicWeight += cubicweight;
     totalActualWeight += +r.actualWeight || 0;
   });
- 
-    invoiceDetailRows.forEach((r: any, idx: number) => {
+
+  invoiceDetailRows.forEach((r: any) => {
     totalDeclaredValue += +r.declaredvalue || 0;
   });
- 
-  // update totals
+
+  // ✅ Always patch totals (even if serviceType=2)
+  // this.docketService.invoiceform.patchValue({
+  //   totalDeclaredValue,
+  //   totalNoOfPkgs,
+  //   totalCubicWeight,
+  //   totalActualWeight,
+  //   chargeWeightPerPkg: totalNoOfPkgs,
+  //   finalActualWeight: Math.max(totalActualWeight || 0, totalCubicWeight || 0)
+  // }, { emitEvent: false });
+
   this.docketService.invoiceform.patchValue({
-    totalDeclaredValue,
-    totalNoOfPkgs,
-    totalCubicWeight,
-    totalActualWeight,
-    chargeWeightPerPkg: totalNoOfPkgs,
-    finalActualWeight: Math.max(totalActualWeight || 0, totalCubicWeight || 0)
-  }, { emitEvent: false });
+  totalDeclaredValue: +totalDeclaredValue.toFixed(2),
+  totalNoOfPkgs,
+  totalCubicWeight: +totalCubicWeight.toFixed(2),
+  totalActualWeight: +totalActualWeight.toFixed(2),
+  chargeWeightPerPkg: totalNoOfPkgs,
+  finalActualWeight: +Math.max(totalActualWeight || 0, totalCubicWeight || 0).toFixed(2)
+}, { emitEvent: false });
 }
  
 
@@ -343,12 +433,12 @@ calculateSummary(i: number) {
       totalCFT += cftTotal;
  
       // Update row CFT without rounding
-      ctrl.patchValue({ cftTotal }, { emitEvent: false });
+      ctrl.patchValue( { cftTotal: parseFloat(cftTotal.toFixed(2)) }, { emitEvent: false });
     });
  
     // Update grand total without rounding
     this.docketService.invoiceform.patchValue(
-      { cftTotal: totalCFT },
+      { cftTotal: parseFloat(totalCFT.toFixed(2)) },
       { emitEvent: false }
     );
  
@@ -366,7 +456,10 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
   );
  
   if (isDuplicate) {
-    this.sweetAlertService.error("Message !! cannot select Duplicate EWayBillNo.");
+    this.sweetAlertService.warning("Message !! cannot select Duplicate EWayBillNo.");
+      if(!isInvoice){
+        this.docketService.basicDetailForm.patchValue({ewayBillNo:null});
+      }
     row.patchValue({
       ewayinvoiceDate: null,
       ewayBillExpiry: null,
@@ -394,7 +487,10 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                
                 // check expiry date
                 if (expiryDate && expiryDate < new Date()) {
-                  this.sweetAlertService.error("Error !! Please Check it EWayBill Expired Date !!!!");
+                  this.sweetAlertService.warning("Please Check EWayBill Expired Date !!!!");
+                  if(!isInvoice){
+                    this.docketService.basicDetailForm.patchValue({ewayBillNo:null});
+                  }
                   row.patchValue({
                     ewayinvoiceDate: null,
                     ewayBillExpiry: null,
@@ -413,6 +509,14 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                   invoiceNo:response.invno,
                   declaredvalue:response.decval
                 });
+
+                if (isInvoice || index === 0) {
+                  this.isValidEWay=true;
+                  row.get('ewayBillExpiry')?.disable();
+                  row.get('invoicedate')?.disable();
+                  row.get('invoiceNo')?.disable();
+                  row.get('declaredvalue')?.disable();
+                }
                 this.calculateSummary(index)
                if(!isInvoice){
            this.docketService.getpincodeData(response.pincode.toString())
@@ -423,7 +527,7 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                 consignorMasterName: response.csgnm,
                 consignorAddress: response.csgnAdd,
                 consigneeAddress: response.csgeAdd,
-                consigneePincode: response.toPincode,
+                consigneePincode: response.toPincode.toString(),
                 consignorCity: response.fromCity,
                 consigneeCity:response.toCity,
                 consignorGSTNo: response.consignor,
@@ -434,17 +538,20 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
             this.docketService.getTransportModeData(response.transMode.toString())
             this.docketService.basicDetailForm.patchValue({
                 billingName: response.partyName,
-                mode: response.transMode.toString(),
+                // mode: response.transMode.toString(),
                 pincode: response.toPincode.toString(),
                 // fromCity: response.fromCity,
                 // toCity: response.toCity,
                 destination: response.destcd,
               });
               this.docketService.GetPincodeOrigin('Origin');
-              this.docketService.GetGSTFromTrnMode()
+              this.docketService.GetGSTFromTrnMode();
             }
                 row.updateValueAndValidity();
               } else {
+                 if(!isInvoice){
+                    this.docketService.basicDetailForm.patchValue({ewayBillNo:null});
+                  }
                 row.patchValue({
                   ewayinvoiceDate: null,
                   ewayBillExpiry: null,
@@ -460,7 +567,10 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
             }
           });
         } else {
-          this.sweetAlertService.error("Error !! This EWay Bill Already Exist IN ERP !!!");
+          this.sweetAlertService.warning("This EWay Bill Already Exist in ERP !!!");
+          if(!isInvoice){
+            this.docketService.basicDetailForm.patchValue({ewayBillNo:null});
+          }
           row.patchValue({
             ewayinvoiceDate: null,
             ewayBillExpiry: null,
