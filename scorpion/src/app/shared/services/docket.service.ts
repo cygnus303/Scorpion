@@ -697,6 +697,7 @@ freightAndOtherChar(){
             GSTPaidBy: response.result[0].text,
             stax_paidby: response.result[0].value
           })
+          this.freightForm.get('GSTPaidBy')?.disable();
         }
       },
     });
