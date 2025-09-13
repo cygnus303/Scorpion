@@ -120,6 +120,27 @@ info(message: string, onConfirm?: () => void): void {
   });
 }
 
+warning(message: string): void {
+  Swal.fire({
+    title: 'Warning',
+    html: `<div>${message}</div>`,
+    icon: 'warning',
+    showConfirmButton: true,
+    confirmButtonText: 'OK, Got It!',
+    background: 'rgba(255, 255, 255, 0.9)',
+    color: '#2c3e50',
+    width: '420px',
+    buttonsStyling: false,
+    customClass: {
+      popup: 'glassy-info-popup',
+      title: 'glassy-info-title',
+      htmlContainer: 'glassy-info-body',
+      confirmButton: 'glassy-info-btn',
+      icon: 'glassy-info-icon'
+    }
+  })
+}
+
 confirm(message: string, options?: any) {
   return Swal.fire({
     title: message,

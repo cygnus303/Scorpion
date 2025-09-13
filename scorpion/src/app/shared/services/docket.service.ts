@@ -1147,7 +1147,7 @@ validateAppointmentDate() {
 
     // Patch subtotal
     this.freightForm.patchValue(
-      { subTotal: totalSubTotal },
+      { subTotal: totalSubTotal.toFixed(2) },
       { emitEvent: false }
     );
     this.totalSubTotal = totalSubTotal;
