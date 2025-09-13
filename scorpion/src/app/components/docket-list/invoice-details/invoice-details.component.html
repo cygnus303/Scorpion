@@ -444,8 +444,8 @@
                               <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
                                 [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }" 
                                 placeholder="dd/MMM/yyyy" formControlName="ewayBillExpiry" [ngClass]="{ 'border-danger': row.get('ewayBillExpiry')?.invalid && row.get('ewayBillExpiry')?.touched, 
-                                                     'required2': isEwayRequired(row)}"[class.disabled]="true">
-                              <span class="input-group-text cursor-pointer" (click)="dp.toggle()"[class.disabled]="true">
+                                                     'required2': isEwayRequired(row)}"[class.disabled-input]="true">
+                              <span class="input-group-text cursor-pointer" (click)="dp.toggle()"[class.disabled-input]="true">
                                 <i class="fa fa-calendar"></i>
                               </span>
                             </div>
@@ -460,8 +460,8 @@
                               <input type="text" class="form-control uppercase-none" #dp2="bsDatepicker" bsDatepicker
                                 [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY', minDate: minDate }"
                                 placeholder="dd/MMM/yyyy" formControlName="ewayinvoiceDate" [ngClass]="{'border-danger': row.get('ewayinvoiceDate')?.invalid && row.get('ewayinvoiceDate')?.touched, 
-                                              'required2': isEwayRequired(row)}" [class.disabled]="isValidEWay">
-                              <span class="input-group-text cursor-pointer" (click)="dp2.toggle()" [class.disabled]="isValidEWay">
+                                              'required2': isEwayRequired(row)}" [class.disabled-input]="row.get('ewayinvoiceDate')?.disabled">
+                              <span class="input-group-text cursor-pointer" (click)="dp2.toggle()" [class.disabled-input]="row.get('ewayinvoiceDate')?.disabled">
                                 <i class="fa fa-calendar"></i>
                               </span>
                             </div>

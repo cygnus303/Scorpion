@@ -18,7 +18,6 @@ export class InvoiceDetailsComponent {
   private subscription!: Subscription;
   private invoiceMasterMap: { [invNo: string]: number } = {};
   public minDate: Date = new Date();
-  isValidEWay:boolean=false;
   constructor(
     public docketService: DocketService,
     public basicDetailService: BasicDetailService,
@@ -511,11 +510,11 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                 });
 
                 if (isInvoice || index === 0) {
-                  this.isValidEWay=true;
                   row.get('ewayBillExpiry')?.disable();
                   row.get('invoicedate')?.disable();
                   row.get('invoiceNo')?.disable();
                   row.get('declaredvalue')?.disable();
+                  row.get('ewayinvoiceDate')?.disable();
                 }
                 this.calculateSummary(index)
                if(!isInvoice){
