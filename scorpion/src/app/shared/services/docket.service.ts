@@ -1063,7 +1063,7 @@ validateAppointmentDate() {
             }
           });
           this.subTotalCalculation();
-
+          this.getFuelSurcharge(this.freightData.freightCharge);
         }
       },
     });
