@@ -363,23 +363,6 @@
           <div class="portlet-body m-3">
             <div>
               <div class="row">
-                <div class="col-md-4"  *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                  <div class="form-group">
-                    <label class="control-label col-md-5">CFT Ratio </label>
-                    <div class="col-md-7">
-                      <input class="form-control" placeholder="CNote No" type="text" formControlName="cft_Ratio" readonly>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4"  *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'"> 
-                  <div class="form-group">
-                    <label class="control-label col-md-5">CFT Total </label>
-                    <div class="col-md-7">
-                      <input class="required2 form-control required" placeholder="CFT Total" type="text"
-                        formControlName="cftTotal" readonly>
-                    </div>
-                  </div>
-                </div>
                  <div class="col-md-3">
                   <div class="form-group">
                     <label class="control-label col-md-5">No Of Rows </label>
@@ -533,6 +516,23 @@
           </div>
           <div class="portlet-body m-3">
             <div class="row">
+              <div class="col-md-4"  *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">CFT Ratio </label>
+                    <div class="col-md-7">
+                      <input class="form-control" placeholder="CNote No" type="text" formControlName="cft_Ratio" readonly>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4"  *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'"> 
+                  <div class="form-group">
+                    <label class="control-label col-md-5">CFT Total </label>
+                    <div class="col-md-7">
+                      <input class="required2 form-control required" placeholder="CFT Total" type="text"
+                        formControlName="cftTotal" readonly>
+                    </div>
+                  </div>
+                </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="control-label col-md-5">No Of Rows </label>
@@ -555,8 +555,8 @@
                 <div class="portlet-body mb-3">
                   <table class="table table-bordered table-striped table-condensed flip-content mb-0">
                     <thead class="flip-content">
-                      <tr>
-                      <tr
+                      <!-- <tr> -->
+                      <!-- <tr
                         *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' 
                                                    && docketService.basicDetailForm.get('serviceType')?.value === '1' && docketService.contractservicecharge?.[0]?.cft_Measure as unit">
                         <th colspan="1"></th>
@@ -564,22 +564,25 @@
                           Dimensions ({{ unit | titlecase }})
                         </th>
                         <th colspan="4"></th>
-                      </tr>
+                      </tr> -->
                       <tr>
                         <th class="center">
                           Sr.&nbsp;No.
                         </th>
                         <th class="center "
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                          Length
+                          Length ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ? 'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm' 
+                                  ? 'CM' : docketService.contractservicecharge?.[0]?.cft_Measure }})
                         </th>
                         <th class="center "
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                          Breadth
+                          Breadth ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ? 'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm' 
+                                  ? 'CM' : docketService.contractservicecharge?.[0]?.cft_Measure }})
                         </th>
                         <th class="center"
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                          Height
+                          Height ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ? 'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm' 
+                                  ? 'CM' : docketService.contractservicecharge?.[0]?.cft_Measure }})
                         </th>
                         <th class="center">
                           No of Pkgs.
@@ -669,9 +672,62 @@
         </div>
       </div>
     </div>
-    <div class="row">
+
+    <div class="row pb-3">
+     <div class="col-3">
+        <div class="row align-items-center">
+          <label class="control-label col-5"><b>Total Declared Amt.</b></label>
+          <div class="col-7">
+            <input formControlName="totalDeclaredValue" required class="form-control required2 required text-end" placeholder="Total Declared Value"
+              type="number" readonly
+              [ngClass]="{ 'border-danger': docketService.invoiceform.get('totalDeclaredValue')?.invalid && docketService.invoiceform.get('totalDeclaredValue')?.touched}">
+              <div *ngIf="docketService.invoiceform.get('totalDeclaredValue')?.invalid && docketService.invoiceform.get('totalDeclaredValue')?.touched"
+                class="text-danger text-start ">
+                    This field is required.
+                  </div>
+          </div>
+        </div>
+     </div>
+     <div class="col-3">
+        <div class="row align-items-center">
+          <label class="control-label col-5"><b>Total Pkgs.</b></label>
+          <div class="col-7">
+             <input formControlName="totalNoOfPkgs" class="form-control required2 required text-end" type="number" readonly  placeholder="Total Pkgs."
+              required
+              [ngClass]="{ 'border-danger': docketService.invoiceform.get('totalNoOfPkgs')?.invalid && docketService.invoiceform.get('totalNoOfPkgs')?.touched}">
+               <div *ngIf="docketService.invoiceform.get('totalNoOfPkgs')?.invalid && docketService.invoiceform.get('totalNoOfPkgs')?.touched"
+            class="text-danger text-start">
+            This field is required.
+          </div>
+          </div>
+        </div>
+     </div>
+     <div class="col-3">
+        <div class="row align-items-center">
+          <label class="control-label col-5"><b>CFT Total</b></label>
+          <div class="col-7">
+            <input formControlName="totalCubicWeight"
+                      class="form-control required2 required text-end" type="number" readonly>
+          </div>
+        </div>
+     </div>
+     <div class="col-3">
+        <div class="row align-items-center">
+          <label class="control-label col-5"><b>Total Actual Wt.</b></label>
+          <div class="col-7">
+           <input formControlName="totalActualWeight" class="form-control required2 required text-end" type="number" readonly required
+              [ngClass]="{ 'border-danger': docketService.invoiceform.get('totalActualWeight')?.invalid && docketService.invoiceform.get('totalActualWeight')?.touched}">
+               <div *ngIf="docketService.invoiceform.get('totalActualWeight')?.invalid && docketService.invoiceform.get('totalActualWeight')?.touched"
+               class="text-danger text-start">
+            Please enter a value greater than or equal to 1.
+          </div>
+          </div>
+        </div>
+     </div>
+    </div>
+    <!-- <div class="row">
       <div class="col-md-3">
-        <div class="form-group">
+       <div class="form-group row">
           <label class="control-label col-md-5"><b>Total Declared Amt.</b></label>
           <div class="col-md-7">
             <input formControlName="totalDeclaredValue" required class="form-control required2 required text-end" placeholder="Total Declared Value"
@@ -681,12 +737,12 @@
         </div>
         <div class="form-group">
           <div class="col-md-5"></div>
-          <div *ngIf="docketService.invoiceform.get('totalDeclaredValue')?.invalid && docketService.invoiceform.get('totalDeclaredValue')?.touched"
+              <div *ngIf="docketService.invoiceform.get('totalDeclaredValue')?.invalid && docketService.invoiceform.get('totalDeclaredValue')?.touched"
             class="text-danger text-start col-md-7">
-            This field is required.
-          </div>
+                This field is required.
+              </div>
         </div>
-      </div>
+        </div>
       <div class="col-md-3">
         <div class="form-group">
           <label class="control-label col-md-5"><b>Total Pkgs.</b></label>
@@ -703,8 +759,8 @@
             class="text-danger text-start col-md-7">
             This field is required.
           </div>
+          </div>
         </div>
-      </div>
       <div class="col-md-2">
         <div class="form-group">
           <label class="control-label col-md-5"><b>CFT Total</b></label>
@@ -728,40 +784,35 @@
             class="text-danger text-start col-md-7">
             Please enter a value greater than or equal to 1.
           </div>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-3">
-        <div class="form-group">
-          <label class="control-label col-md-5"><b>Total Charge Pkg.</b></label>
-          <div class="col-md-7">
+      </div> -->
+    <div class="row pb-3">
+      <div class="col-3"></div>
+      <div class="col-3">
+        <div class="row align-items-center">
+          <label class="control-label col-5"><b>Total Charge Pkg.</b></label>
+          <div class="col-7">
             <input formControlName="chargeWeightPerPkg" class="form-control required2 required text-end" type="number" readonly required
               [ngClass]="{ 'border-danger': docketService.invoiceform.get('chargeWeightPerPkg')?.invalid && docketService.invoiceform.get('chargeWeightPerPkg')?.touched}">
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="col-md-5"></div>
-          <div *ngIf="docketService.invoiceform.get('chargeWeightPerPkg')?.invalid && docketService.invoiceform.get('chargeWeightPerPkg')?.touched"
-            class="text-danger text-start col-md-7">
-            This field is required.
+              <div *ngIf="docketService.invoiceform.get('chargeWeightPerPkg')?.invalid && docketService.invoiceform.get('chargeWeightPerPkg')?.touched"
+                class="text-danger text-start col-md-7">
+                This field is required.
+              </div>
           </div>
         </div>
       </div>
       <div class="col-md-3">
-        <div class="form-group">
-          <label class="control-label col-md-5"><b>Total Charge Wt.</b></label>
-          <div class="col-md-7">
+        <div class="row align-items-center">
+          <label class="control-label col-5"><b>Total Charge Wt.</b></label>
+          <div class="col-7">
             <input formControlName="finalActualWeight" class="form-control required2 required text-end" type="number"
               (focus)="clearZero(docketService.invoiceform, 'finalActualWeight')"
               (change)="docketService.actualWeightvalidation()"
               (blur)="restoreIfEmpty(docketService.invoiceform, 'finalActualWeight');docketService.freightAndOtherChar();docketService.getGSTCalculation();docketService.getProRataCharge();this.docketService.getFovContractDetails();">
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="col-md-5"></div>
-          <div *ngIf="docketService.weightErrorMsg" class="text-danger mt-1 col-md-7">
-            {{ docketService.weightErrorMsg }}
+              <div *ngIf="docketService.weightErrorMsg" class="text-danger mt-1 col-md-7">
+                {{ docketService.weightErrorMsg }}
+              </div>
           </div>
         </div>
       </div>

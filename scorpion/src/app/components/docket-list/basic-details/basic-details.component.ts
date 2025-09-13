@@ -390,13 +390,16 @@ applyVehicleNoValidation(){
     }
   }
 
-  onFileSelect(event: any) {
-    if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files[0];
-      // set file in form control
-      this.docketService.basicDetailForm.get("GSTDeclaration")?.setValue(file);
-    }
+
+onFileSelect(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (input.files?.length) {
+    const file = input.files[0];
+    this.docketService.selectedFile = file;
+    this.docketService.basicDetailForm.get('GSTDeclaration')?.setValue(file);
   }
+}
+
 
   onChangeCityListList(event: any, type: any) {
     if (type === 'from') {

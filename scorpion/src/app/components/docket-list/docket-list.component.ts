@@ -47,7 +47,7 @@ export class DocketListComponent implements OnInit{
             // 🔑 badha key male → normal flow
             this.docketService.loginUserList = parsedData;
             // this.docketService.Location = parsedData.LocationCode;
-              this.docketService.Location = 'IDR';
+              this.docketService.Location = 'BLR';
             this.docketService.BaseUserCode = parsedData.UserId;
             this.docketService.baseUsername=parsedData.BaseUserName;
           } else {
@@ -386,7 +386,7 @@ if (validationError) {
       this.appendObjectToFormData(formData, payload.PC, "PC");
 
       // GSTDeclaration file
-      const gstFile = this.docketService.basicDetailForm.value.GSTDeclaration;
+      const gstFile = this.docketService?.selectedFile;
       if (gstFile instanceof File) {
         formData.append("GSTDeclaration", gstFile, gstFile.name);
       } else {

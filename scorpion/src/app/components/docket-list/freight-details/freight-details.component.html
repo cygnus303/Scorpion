@@ -10,9 +10,10 @@
 
   <div class="form-grid p-4">
     <form [formGroup]="docketService.freightForm">
-      <div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
+      <div class="row">
         <div class="col-md-4">
-          <div class="form-group">
+        <div [ngClass]="{ 'hidden': docketService.isBillingTBB }">
+            <div class="form-group">
             <label class="control-label col-md-5">Freight Charges</label>
             <div class="col-md-7">
               <!-- <input class="required2 form-control required text-end" placeholder="Freight Charges" type="number"
@@ -35,8 +36,10 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4">
-          <div class="form-group">
+        </div>
+        <div class="col-md-4" >
+         <div [ngClass]="{ 'hidden': docketService.isBillingTBB }">
+           <div class="form-group">
             <label class="control-label col-md-5" style="padding-top: 0px;padding-right: 1px;padding-left: 49px;">
               <ng-select class="noFoundTextColor required2" placeholder="Rate Type" notFoundText="No matches found"
                 [items]="docketService.rateList" bindLabel="codeDesc" bindValue="codeId"
@@ -57,8 +60,9 @@
                 Please enter a value greater than or equal to 0.01.
               </div>
             </div>
+         </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4" >
           <div class="form-group mb-1">
             <label class="control-label col-md-5">Billed At</label>
             <div class="col-md-7">

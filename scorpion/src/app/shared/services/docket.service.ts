@@ -57,6 +57,7 @@ export class DocketService {
   public loginUserList!: LoginUser;
   public bsValue: Date = new Date();
   public ewayBill$ = new Subject<string>();
+  public selectedFile! :File;
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
   detailForm() {
@@ -896,7 +897,7 @@ freightAndOtherChar(){
       isPerPieceRate: this.step2DetailsList?.isPerPieceRate
     }
 
-    if (!data.invAmt || !data.prodcd || !data.tostate || !data.noOfPkgs || !data.transMode || !data.serviceType) {
+    if (!data.invAmt || !data.prodcd || !data.tostate || data.noOfPkgs === "0" || !data.transMode || !data.serviceType) {
       console.warn("Required fields missing, API not called:", data);
       return;
     }

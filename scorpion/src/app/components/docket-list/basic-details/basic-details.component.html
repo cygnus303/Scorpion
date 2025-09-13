@@ -574,7 +574,8 @@
                 <input type="checkbox" formControlName="isAppointmentDelivery"><span class="slider"></span>
               </label>
             </div>
-            <label for="refDkt" class="col-md-3 text-end transform"
+           <div class="d-none">
+             <label for="refDkt" class="col-md-3 text-end transform "
               *ngIf="this.docketService?.step2DetailsList?.isDACC === 'Y'">DACC</label>
             <div class="col-md-2 " *ngIf="this.docketService?.step2DetailsList?.isDACC === 'Y'">
               <label class="yes-no">
@@ -582,6 +583,7 @@
                 <span class="slider"></span>
               </label>
             </div>
+           </div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
