@@ -395,7 +395,9 @@ freightAndOtherChar(){
         this.consignorbuild();
         // this.getIGSTchargesDetail();
         this.consignorForm.patchValue({
-          consigneePincode: oldValue?.consigneePincode
+          consigneePincode: oldValue?.consigneePincode,
+          consigneeCity:oldValue?.consigneeCity,
+          consignorCity:oldValue?.consignorCity,
         });
       }
       this.getStep2Details();
