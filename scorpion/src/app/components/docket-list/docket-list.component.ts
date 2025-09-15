@@ -46,8 +46,8 @@ export class DocketListComponent implements OnInit{
           if (isValid) {
             // 🔑 badha key male → normal flow
             this.docketService.loginUserList = parsedData;
-            // this.docketService.Location = parsedData.LocationCode;
-              this.docketService.Location = 'RKE';
+            this.docketService.Location = parsedData.LocationCode;
+              // this.docketService.Location = 'RKE';
             this.docketService.BaseUserCode = parsedData.UserId;
             this.docketService.baseUsername=parsedData.BaseUserName;
           } else {
