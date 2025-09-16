@@ -48,8 +48,8 @@ export class DocketListComponent implements OnInit{
           if (isValid) {
             // 🔑 badha key male → normal flow
             this.docketService.loginUserList = parsedData;
-            // this.docketService.Location = parsedData.LocationCode;
-              this.docketService.Location = 'NAG';
+            this.docketService.Location = parsedData.LocationCode;
+              // this.docketService.Location = 'NAG';
             this.docketService.BaseUserCode = parsedData.UserId;
             this.docketService.baseUsername=parsedData.BaseUserName;
           } else {
@@ -321,6 +321,7 @@ export class DocketListComponent implements OnInit{
         "isAppointmentDelivery": this.docketService.basicDetailForm.value.isAppointmentDelivery,
         "isCSDDelivery": this.docketService.basicDetailForm.value.iscsdDelivery,
         "isMAllDelivery": this.docketService.basicDetailForm.value.IsMAllDeliveryN,
+        "DiscountType": this.docketService.freightForm.value.discountType,
       },
       wmdc: {
         "dockno": this.docketService.basicDetailForm.value.cNoteNo,
@@ -352,7 +353,8 @@ export class DocketListComponent implements OnInit{
         "utgstRate": this.docketService.freightForm.value.utgstrate || 0,
         "utgstAmount": this.docketService.freightForm.value.utgstamount || 0,
         "advanceAmount": 0,
-        "discountValue": 0,
+        "DiscountType": this.docketService.freightForm.value.discountType,
+        "discountValue": this.docketService.freightForm.value.discountAmount,
       },
       "PC": {
         "paymentMode": "",
