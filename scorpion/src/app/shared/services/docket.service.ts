@@ -58,6 +58,7 @@ export class DocketService {
   public bsValue: Date = new Date();
   public ewayBill$ = new Subject<string>();
   public selectedFile! :File;
+  public docketUrl:any;
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
   detailForm() {
@@ -527,7 +528,7 @@ freightAndOtherChar(){
               gstRate: 0
             })
           }
-          this.getGSTCalculation()
+          // this.getGSTCalculation()
         }
       }
     });
@@ -910,7 +911,7 @@ freightAndOtherChar(){
           this.freightData = response.result[0];
           this.contractMessage = this.freightData.contractMessage
           this.freightForm.patchValue({
-            freightCharges: this.freightData.freightCharge,
+            freightCharges: this.freightData?.freightCharge,
             rateType: this.freightData.rateType,
             freightRate: this.freightData.freightRate,
             EDD: new Date(this.freightData.edd)
@@ -942,7 +943,7 @@ freightAndOtherChar(){
           }
         }
 
-          this.getFuelSurcharge(this.freightData.freightCharge);
+          this.getFuelSurcharge(this.freightData?.freightCharge);
         }
       },
     });
@@ -1064,8 +1065,8 @@ validateAppointmentDate() {
               }
             }
           });
-          this.subTotalCalculation();
-          this.getFuelSurcharge(this.freightData.freightCharge);
+          // this.subTotalCalculation();
+          this.getFuelSurcharge(this.freightData?.freightCharge);
         }
       },
     });

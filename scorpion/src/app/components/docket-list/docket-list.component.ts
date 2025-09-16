@@ -22,6 +22,8 @@ export class DocketListComponent implements OnInit{
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe(params => {
+      this.docketService.docketUrl = params['data'];
+      localStorage.setItem("docketUrl", JSON.stringify(params));
       const encrypted = params['data'];
       const key = 'WebX';
       if (encrypted) {
@@ -46,8 +48,8 @@ export class DocketListComponent implements OnInit{
           if (isValid) {
             // 🔑 badha key male → normal flow
             this.docketService.loginUserList = parsedData;
-            this.docketService.Location = parsedData.LocationCode;
-              // this.docketService.Location = 'RKE';
+            // this.docketService.Location = parsedData.LocationCode;
+              this.docketService.Location = 'NAG';
             this.docketService.BaseUserCode = parsedData.UserId;
             this.docketService.baseUsername=parsedData.BaseUserName;
           } else {
@@ -410,7 +412,8 @@ if (validationError) {
           if (response) {
        window.scrollTo({ top: 0, behavior: 'smooth' }); 
        this.docketService.successMsg='Docket submitted successfully.'
-      window.parent.location.href = `https://sepluat.cygnux.in/Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N`;
+      // window.parent.location.href = `https://sepluat.cygnux.in/Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N`;
+            this.router.navigate(['/DocketDone', 1],{ queryParams: { DOCKNO: response.res.dockNo, IsFromBillGeneration: 'N' } } );
       // let baseUrl = window.location.origin;
       // if (baseUrl.includes("sepluat")) {
       //   baseUrl = "https://sepluat.cygnux.in";

@@ -132,7 +132,7 @@
                               type="number" value="0" formControlName="declaredvalue" required
                               (focus)="clearZero(row, 'declaredvalue')" [readonly]="!!row.get('ewayBillNo')?.value"
                               (input)="calculateSummary(i);getCFTCalculation(i)" 
-                              (change)="docketService.freightAndOtherChar();docketService.getGSTCalculation();handleDeclaredValueChange(row)"
+                              (change)="docketService.freightAndOtherChar();handleDeclaredValueChange(row)"
                               [ngClass]="{ 'border-danger': row.get('declaredvalue')?.invalid && row.get('declaredvalue')?.touched}"
                               (blur)="restoreIfEmpty(row, 'declaredvalue')" >
                             <div *ngIf="row.get('declaredvalue')?.invalid && row.get('declaredvalue')?.touched"

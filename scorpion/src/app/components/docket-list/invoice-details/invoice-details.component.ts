@@ -67,7 +67,7 @@ checkDuplicateInvoices(i: number,row: AbstractControl) {
   this.calculateSummary(i);
   this.getCFTCalculation(i);
   this.docketService.freightAndOtherChar()
-  this.docketService.getGSTCalculation()
+  // this.docketService.getGSTCalculation()
   this.handleDeclaredValueChange(row)
 }
 
@@ -127,7 +127,7 @@ removeRow(index: number): void {
     this.calculateSummary(index);
     this.getCFTCalculation(index);
     this.docketService.freightAndOtherChar();
-    this.docketService.getGSTCalculation()
+    // this.docketService.getGSTCalculation()
   }
  
    removeboxDetailRow(index: number): void {
@@ -136,7 +136,7 @@ removeRow(index: number): void {
      this.calculateSummary(index);
      this.getCFTCalculation(index);
       this.docketService.freightAndOtherChar();
-      this.docketService.getGSTCalculation()
+      // this.docketService.getGSTCalculation()
    }
 
 

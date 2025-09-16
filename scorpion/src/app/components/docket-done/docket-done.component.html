@@ -1,0 +1,72 @@
+<div class="d-flex align-items-center justify-content-center" style="margin-top:10%;">
+  <div class="card shadow-lg border-0" style="width: 50%;">
+    
+    <!-- Header -->
+    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+      <i class="fas fa-check me-2"></i>
+      CNote Done Successfully Done
+    </div>
+    
+    <!-- Body -->
+    <div class="card-body">
+      <table class="table table-bordered table-striped text-center align-middle">
+        <thead class="table-light">
+          <tr>
+            <th class="text-start">Document Type</th>
+            <th class="text-start">Document Number</th>
+            <th class="text-start">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-start"><b>Docket Number</b></td>
+            <td class="text-start"><b>{{docketData.dockNo}}</b></td>
+            <td class="text-start">
+              <a (click)="openPrint(docketData.dockNo)" class="text-decoration-none" >
+                <i class="fas fa-print me-1"></i>View 
+                <span class="mx-1">||</span> 
+                  Print
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td class="text-start"><b>Appointment Number</b></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="text-start"><b>Bill Number</b></td>
+            <td></td>
+            <td class="text-start">
+              <a target="_blank" href="/ViewPrint/CustomerBillView?typ=1" class="text-decoration-none">
+                <i class="fas fa-print me-1"></i>View 
+                <span class="mx-1">||</span> 
+                Print
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Footer Section -->
+      <div class="mt-3">
+        <span class="badge bg-danger">NOTE!</span>
+        <span class="ms-2">
+          Click on CNote Number for View and Print. ||
+        <a class="fw-semibold" (click)="addMoreCNote()">
+            Click to Add more CNote
+        </a>
+
+          &nbsp; &nbsp;
+          <a (click)="barcodePrint()" class="fw-semibold">
+          <i class="fas fa-print me-2"></i>Barcode View || Print
+          </a>
+          &nbsp; &nbsp;
+          <a class="btn btn-sm download-btn px-4">
+            <i class="fas fa-download"></i> Download
+          </a>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

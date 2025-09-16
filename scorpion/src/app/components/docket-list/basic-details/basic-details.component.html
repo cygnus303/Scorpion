@@ -428,7 +428,7 @@
           <div class="form-group"><label class="col-md-5">Exempt Services</label>
             <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="docketService.exemptServicesList"
                 bindLabel="codeDesc" bindValue="codeId" placeholder="Exempt Services" appFocusNext formControlName="exemptServices" 
-                (change)="docketService.GetDKTGSTForGTA();"></ng-select></div>
+                (change)="docketService.GetDKTGSTForGTA();docketService.getGSTCalculation()"></ng-select></div>
           </div>
         </div>
         <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('serviceType')?.value ==='2'">

@@ -14,10 +14,12 @@ import { DocketService } from '../shared/services/docket.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { DecimalLimitDirective } from '../shared/directives/decimal-limit.directive';
 import { FocusNextDirective } from '../shared/directives/focusnext.directive';
+import { DocketDoneComponent } from './docket-done/docket-done.component';
 
 @NgModule({
     declarations: [
         DocketListComponent,
+        DocketDoneComponent,
         InvoiceDetailsComponent,
         BasicDetailsComponent,
         ConsignorDetailComponent,
