@@ -15,6 +15,10 @@ export class FreightDetailsComponent {
   toPayAmount: string = '0.00'; 
   chargeAmounts: { [key: string]: any } = {};
   focusedCharge: any;
+  discountTypes = [
+  { label: 'In %', value: 'P' },
+  { label: 'Flat', value: 'F' }
+];
   constructor(
     public docketService: DocketService,
     public basicDetailService: BasicDetailService
@@ -131,5 +135,13 @@ onBlur(chargeCode: string) {
   if (control && (control.value === null || control.value === '' || isNaN(control.value))) {
     control.setValue(0);
   }
+}
+
+onCloseDiscountType(){
+  this.docketService.freightForm.patchValue({
+    discount: null,
+      discountAmount: null,
+      subTotal:this.docketService.originalSubtotal
+  })
 }
 }

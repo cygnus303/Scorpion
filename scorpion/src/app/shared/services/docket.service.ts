@@ -59,6 +59,8 @@ export class DocketService {
   public ewayBill$ = new Subject<string>();
   public selectedFile! :File;
   public docketUrl:any;
+  public isSubmiting:boolean=false;
+  public originalSubtotal: number = 0;
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
   detailForm() {
@@ -191,6 +193,7 @@ export class DocketService {
       gstRate: new FormControl(),
       subTotal: new FormControl(),
       dktTotal: new FormControl(),
+      discountType:new FormControl(),
       discountAmount: new FormControl(),
       discount: new FormControl(),
     })
@@ -387,19 +390,19 @@ freightAndOtherChar(){
 
       if(!this.basicDetailForm.value.ewayBillNo){
         this.freightAndOtherChar()
-         const oldValue = this.consignorForm?.value; 
+        //  const oldValue = this.consignorForm?.value; 
         // if (this.invoiceRows.length > 0) {
         //   this.invoiceform.reset(this.invoicebuild());
         // }
         // this.freightbuild();
         // this.getChargesData();
-        this.consignorbuild();
+        // this.consignorbuild();
         // this.getIGSTchargesDetail();
-        this.consignorForm.patchValue({
-          consigneePincode: oldValue?.consigneePincode,
-          consigneeCity:oldValue?.consigneeCity,
-          consignorCity:oldValue?.consignorCity,
-        });
+        // this.consignorForm.patchValue({
+        //   consigneePincode: oldValue?.consigneePincode,
+        //  consigneeCity:oldValue?.consigneeCity,
+        //   consignorCity:oldValue?.consignorCity,
+        // });
       }
       this.getStep2Details();
     }
@@ -794,6 +797,7 @@ freightAndOtherChar(){
     this.basicDetailService.getGSTCalculation(payload).subscribe({
       next: (response: any) => {
         if (response) {
+          this.isSubmiting=true;
           this.gstCalculationList = Object.keys(response).reduce((acc: any, key) => {
             acc[key.toLowerCase()] = response[key];
             return acc;
@@ -812,7 +816,8 @@ freightAndOtherChar(){
           });
         }
       },
-    });
+    }); 
+    this.isSubmiting=false;
   }
 
   getIGSTchargesDetail() {
@@ -908,6 +913,7 @@ freightAndOtherChar(){
     this.basicDetailService.GetFreightContractDetails(data).subscribe({
       next: (response: any) => {
         if (response) {
+          this.isSubmiting=true;
           this.freightData = response.result[0];
           this.contractMessage = this.freightData.contractMessage
           this.freightForm.patchValue({
@@ -947,7 +953,8 @@ freightAndOtherChar(){
         }
       },
     });
-    this.getFovContractDetails()
+    this.getFovContractDetails();
+    this.isSubmiting=false;
   }
 
 validateAppointmentDate() {
@@ -1033,6 +1040,7 @@ validateAppointmentDate() {
     this.basicDetailService.getOtherChargesDetail(payload).subscribe({
       next: (response) => {
         if (response) {
+          this.isSubmiting=true;
           this.chargingData = response;
           this.chargingData.forEach((item: any) => {
             if (this.freightForm.contains(item.chargecode)) {
@@ -1070,6 +1078,7 @@ validateAppointmentDate() {
         }
       },
     });
+    this.isSubmiting=false;
   }
 
   getFuelSurcharge(data: any) {
@@ -1155,6 +1164,7 @@ validateAppointmentDate() {
       { subTotal: totalSubTotal.toFixed(2) },
       { emitEvent: false }
     );
+      this.originalSubtotal = this.freightForm.value.subTotal;
     this.totalSubTotal = totalSubTotal;
     this.getGSTCalculation();
     console.log("Subtotal (Freight + API charges):", totalSubTotal);
@@ -1225,6 +1235,32 @@ validateAppointmentDate() {
     return true;
   }
 
+calculateDiscount(event?: any) {
+  const discountType = event?.value || this.freightForm.value.discountType;
+    if (event?.value) {
+    this.freightForm.patchValue({
+      discount: null,
+      discountAmount: null,
+      subTotal:this.originalSubtotal
+    });
+  }
+  
+  let Subtotal = this.originalSubtotal;
+
+  let discounts = this.freightForm.value.discount;
+  if (discountType == "P") {
+    discounts = parseFloat(this.originalSubtotal.toString()) * parseFloat(discounts) / 100;
+  }
+
+  const finalSubtotal = Subtotal - parseFloat(discounts);
+
+  this.freightForm.patchValue({
+    subTotal: finalSubtotal.toFixed(2),
+    discountAmount: discounts.toFixed(2)
+  });
+
+  this.getGSTCalculation();
+}
 
 }
 
