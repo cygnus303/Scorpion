@@ -22,14 +22,14 @@
             <td class="text-start"><b>Docket Number</b></td>
             <td class="text-start"><b>{{docketData.dockNo}}</b></td>
             <td class="text-start">
-              <a (click)="openPrint(docketData.dockNo)" class="text-decoration-none" >
+              <a (click)="openPrint(docketData.dockNo)" class="text-decoration-none cursor-pointer" >
                 <i class="fas fa-print me-1"></i>View 
                 <span class="mx-1">||</span> 
                   Print
               </a>
             </td>
           </tr>
-          <tr>
+          <!-- <tr>
             <td class="text-start"><b>Appointment Number</b></td>
             <td></td>
             <td></td>
@@ -38,13 +38,13 @@
             <td class="text-start"><b>Bill Number</b></td>
             <td></td>
             <td class="text-start">
-              <a target="_blank" href="/ViewPrint/CustomerBillView?typ=1" class="text-decoration-none">
+              <a target="_blank" href="/ViewPrint/CustomerBillView?typ=1" class="text-decoration-none cursor-pointer">
                 <i class="fas fa-print me-1"></i>View 
                 <span class="mx-1">||</span> 
                 Print
               </a>
             </td>
-          </tr>
+          </tr> -->
         </tbody>
       </table>
 
@@ -53,16 +53,16 @@
         <span class="badge bg-danger">NOTE!</span>
         <span class="ms-2">
           Click on CNote Number for View and Print. ||
-        <a class="fw-semibold" (click)="addMoreCNote()">
+        <a class="fw-semibold cursor-pointer" (click)="addMoreCNote()">
             Click to Add more CNote
         </a>
 
           &nbsp; &nbsp;
-          <a (click)="barcodePrint()" class="fw-semibold">
+          <a (click)="barcodePrint()" class="fw-semibold cursor-pointer">
           <i class="fas fa-print me-2"></i>Barcode View || Print
           </a>
           &nbsp; &nbsp;
-          <a class="btn btn-sm download-btn px-4">
+          <a class="btn btn-sm download-btn px-4 cursor-pointer">
             <i class="fas fa-download"></i> Download
           </a>
         </span>
