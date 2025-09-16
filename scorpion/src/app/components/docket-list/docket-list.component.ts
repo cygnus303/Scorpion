@@ -367,13 +367,13 @@ export class DocketListComponent implements OnInit{
       DocketTotal: DKTTotal,
     };
 
-  const validationError = this.validateDocket(payload, DKTsubTotal, docketcharges, DKTTotal);
+  // const validationError = this.validateDocket(payload, DKTsubTotal, docketcharges, DKTTotal);
 
-if (validationError) {
-  this.sweetAlertService.error(validationError);
-  window.scrollTo({ top: 0, behavior: "smooth" });
-  return;
-}
+// if (validationError) {
+//   this.sweetAlertService.error(validationError);
+//   window.scrollTo({ top: 0, behavior: "smooth" });
+//   return;
+// }
       const formData = new FormData();
       this.appendObjectToFormData(formData, payload.wmd, "DVM.WMD");
       this.appendObjectToFormData(formData, payload.wmdc, "DVM.WMDC");

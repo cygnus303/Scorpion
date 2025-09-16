@@ -196,8 +196,8 @@
 
       <h3 class="pb-4 text-start appointment mt-5" [ngClass]="{ 'hidden': docketService.isBillingTBB }">Charges Details
       </h3>
-
-      <div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
+ 
+      <!--<div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
         <div class="col-md-4" *ngFor="let charge of docketService.freightchargingData">
           <div class="form-group to-pay-group">
             <label class="control-label col-md-5">{{ charge.chargeName }}</label>
@@ -212,6 +212,57 @@
             </div>
           </div>
         </div>
+      </div> -->
+ 
+      <div class="row">
+        <!-- SCHG03 column, always visible -->
+        <ng-container *ngFor="let charge of docketService.freightchargingData">
+          <div class="col-md-4" *ngIf="charge.chargeCode === 'SCHG03'">
+            <div class="form-group to-pay-group">
+              <label class="control-label col-md-5">
+                {{ charge.chargeName }}
+              </label>
+              <div class="col-md-7">
+                <div class="input-icon">
+                  <input type="text"
+                        class="form-control clsAmount required2"
+                        [placeholder]="charge.chargeName"
+                        (keypress)="docketService.allowNumericDecimal($event)"
+                        [formControlName]="charge.chargeCode"
+                        (focus)="onFocus(charge.chargeCode)"
+                        (blur)="onBlur(charge.chargeCode);
+                                docketService.subTotalCalculation();
+                                docketService.getGSTCalculation()" />
+                  <i class="bold">{{charge.operator}}</i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+ 
+        <!-- baki charges, dependent on isBillingTBB -->
+        <ng-container *ngFor="let charge of docketService.freightchargingData">
+          <div class="col-md-4" *ngIf="charge.chargeCode !== 'SCHG03'"
+              [ngClass]="{ 'hidden': docketService.isBillingTBB }">
+            <div class="form-group to-pay-group">
+              <label class="control-label col-md-5">{{ charge.chargeName }}</label>
+              <div class="col-md-7">
+                <div class="input-icon">
+                  <input type="text"
+                        class="form-control clsAmount required2"
+                        [placeholder]="charge.chargeName"
+                        (keypress)="docketService.allowNumericDecimal($event)"
+                        [formControlName]="charge.chargeCode"
+                        (focus)="onFocus(charge.chargeCode)"
+                        (blur)="onBlur(charge.chargeCode);
+                                docketService.subTotalCalculation();
+                                docketService.getGSTCalculation()" />
+                  <i class="bold">{{charge.operator}}</i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
       </div>
 
       <div class="row">
@@ -258,15 +309,26 @@
 
       <div class="row">
         <div class="col-md-4">
-          <div class="form-group" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
-            <label class="control-label col-md-5">Discount(%)</label>
+          <div class="form-group" >
+            <label class="control-label col-md-5">Discount Type</label>
             <div class="col-md-7">
-              <input class="form-control clsAmount" placeholder="Discount" type="number" formControlName="discount">
+              <ng-select class="noFoundTextColor required2" 
+                (close)="onCloseDiscountType()"
+                 placeholder="Discount Type"  bindLabel="label" bindValue="value" formControlName="discountType"  [items]="discountTypes" (change)="docketService.calculateDiscount($event)"
+               ></ng-select>
             </div>
           </div>
         </div>
         <div class="col-md-4">
-          <div class="form-group" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
+          <div class="form-group" >
+            <label class="control-label col-md-5">Discount</label>
+            <div class="col-md-7">
+              <input class="form-control clsAmount" placeholder="Discount" type="number" formControlName="discount" (blur)="docketService.calculateDiscount($event)">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group" >
             <label class="control-label col-md-5">Discount Amount</label>
             <div class="col-md-7">
               <input class="form-control clsAmount" placeholder="Discount" readonly type="number" value=""

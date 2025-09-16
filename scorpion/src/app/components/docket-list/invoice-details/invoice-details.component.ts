@@ -509,6 +509,7 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                   declaredvalue:response.decval
                 });
 
+                this.calculateSummary(index)
                 if (isInvoice || index === 0) {
                   row.get('ewayBillExpiry')?.disable();
                   row.get('invoicedate')?.disable();
