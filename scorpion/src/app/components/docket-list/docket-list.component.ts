@@ -3,7 +3,6 @@ import { DocketService } from '../../shared/services/docket.service';
 import { BasicDetailService } from '../../shared/services/basic-detail.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DecryptService } from '../../shared/services/decryptservice ';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { SweetAlertService } from '../../shared/services/sweet-alert.service';
 @Component({
   selector: 'app-docket-list',
@@ -354,7 +353,7 @@ export class DocketListComponent implements OnInit{
         "utgstAmount": this.docketService.freightForm.value.utgstamount || 0,
         "advanceAmount": 0,
         "DiscountType": this.docketService.freightForm.value.discountType,
-        "discountValue": this.docketService.freightForm.value.discountAmount,
+        "discountValue": Number(this.docketService.freightForm.value.discountAmount),
       },
       "PC": {
         "paymentMode": "",

@@ -14,7 +14,6 @@ export class DocketDoneComponent {
   public docketData: any = {};   
   constructor(private route: ActivatedRoute,public docketService: DocketService, private router: Router) {}
   ngOnInit() {
-    debugger
     this.docketData = {
       id: this.route.snapshot.paramMap.get('id'),
       dockNo: this.route.snapshot.queryParamMap.get('DOCKNO'),

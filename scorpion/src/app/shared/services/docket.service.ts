@@ -193,7 +193,7 @@ export class DocketService {
       gstRate: new FormControl(),
       subTotal: new FormControl(),
       dktTotal: new FormControl(),
-      discountType:new FormControl(),
+      discountType:new FormControl(''),
       discountAmount: new FormControl(),
       discount: new FormControl(),
     })
@@ -284,7 +284,7 @@ export class DocketService {
 
 freightAndOtherChar(){
   this.GetFreightContractDetails();
-  this.getOtherChargesDetail();
+  // this.getOtherChargesDetail();
 }
 
   getpincodeData(event: any) {
@@ -750,7 +750,6 @@ freightAndOtherChar(){
 
   getGSTCalculation() {
     const originalDate = this.basicDetailForm.value.cNoteDate;
-
     const requiredFieldsFilled =
       this.basicDetailForm.value.billingParty &&
       this.basicDetailForm.value.businessType &&
@@ -775,7 +774,6 @@ freightAndOtherChar(){
       month: 'long',
       year: 'numeric'
     });
-
     const payload = {
       "custcode": this.basicDetailForm.value.billingParty || '',
       "payBas": this.basicDetailForm.value.billingType || '',
@@ -793,7 +791,6 @@ freightAndOtherChar(){
       "isGstApplied": "1",
       "billingState": this.freightForm.value.billingState || 'MH'
     };
-
     this.basicDetailService.getGSTCalculation(payload).subscribe({
       next: (response: any) => {
         if (response) {
@@ -948,8 +945,8 @@ freightAndOtherChar(){
             return; // stop further execution to avoid multiple triggers
           }
         }
-
-          this.getFuelSurcharge(this.freightData?.freightCharge);
+        // this.getFuelSurcharge(this.freightData?.freightCharge);
+        this.getOtherChargesDetail();
         }
       },
     });
