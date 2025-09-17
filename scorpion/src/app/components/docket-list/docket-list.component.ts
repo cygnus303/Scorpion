@@ -103,11 +103,11 @@ export class DocketListComponent implements OnInit{
         INVNO: row.invoiceNo || '',
         INVDT: new Date().toISOString(),
         DECLVAL: row.declaredvalue || 0,
-        PKGSNO: row.noOfPkgs || 0,
+        PKGSNO: Number(row.noOfPkgs)|| 0,
         ACTUWT: row.actualWeight || 0,
-        VOL_L: row.length || 0,
-        VOL_B: row.breadth || 0,
-        VOL_H: row.height || 0,
+        VOL_L: Number(row.length) || 0,
+        VOL_B: Number(row.breadth) || 0,
+        VOL_H: Number(row.height) || 0,
         toT_CFT: row.cubicweight || 0,
         vol_cft: row.cubicweight || 0,
         Part_No: '',
@@ -126,16 +126,16 @@ export class DocketListComponent implements OnInit{
     });
       const DocketBoxLBHList = this.docketService.boxDetailRows.value.map((row: any, index: number) => {
       const obj: any = {
-        ACTUWT: row.actualWeight || 0,
+        ACTUWT:  Number(row.actualWeight) || 0,
         SrNo: row.srNo,
-        VOL_L: row.length || 0,
-        vol_cft: row.cubicweight || 0,
-        PKGSNO: row.noOfPkgs || 0,
-        toT_CFT: row.cubicweight || 0,
+        VOL_L: Number(row.length) || 0,
+        vol_cft:  Number(row.cubicweight) || 0,
+        PKGSNO:  Number(row.noOfPkgs) || 0,
+        toT_CFT:  Number(row.cubicweight) || 0,
         DOCKNO: this.docketService.basicDetailForm.value.cNoteNo,
-        VOL_B: row.breadth || 0,
+        VOL_B: Number(row.breadth) || 0,
         VolumetricBox: "",
-        VOL_H: row.height || 0,
+        VOL_H:  Number(row.height) || 0,
       };
       return obj;
     });
@@ -405,7 +405,7 @@ export class DocketListComponent implements OnInit{
         formData.append("DVM.WMD.dockdt", this.docketService.basicDetailForm.value.cNoteDate ? new Date(this.docketService.basicDetailForm.value.cNoteDate).toISOString() : '');
       formData.append("DVM.WMD.cdeldt", new Date(this.docketService.freightData.edd).toISOString()),
         formData.append("DVM.WMD.AppointmentDT", new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString()),
-       formData.append("DVM.WMD.Version", String(Number('5')));
+       formData.append("DVM.WMD.Version", String(Number('6')));
         formData.append("DVM.docketType", "DKT");
            this.isSubmitting = true; 
       this.basicDetailService.onSubmit(formData).subscribe({
