@@ -383,7 +383,7 @@
           <div class="col-7">
             <input formControlName="finalActualWeight" class="form-control required2 required text-end" type="number"
               (change)="docketService.actualWeightvalidation()" readOnly
-              (blur)="restoreIfEmpty(docketService.invoiceform, 'finalActualWeight');docketService.freightAndOtherChar();docketService.getGSTCalculation();docketService.getProRataCharge();this.docketService.getFovContractDetails();">
+              (blur)="restoreIfEmpty(docketService.invoiceform, 'finalActualWeight');docketService.freightAndOtherChar();docketService.getProRataCharge()">
               <div *ngIf="docketService.weightErrorMsg" class="text-danger mt-1 col-md-7">
                 {{ docketService.weightErrorMsg }}
               </div>

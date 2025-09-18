@@ -61,6 +61,7 @@ export class DocketService {
   public docketUrl:any;
   public isSubmiting:boolean=false;
   public originalSubtotal: number = 0;
+  private lastRequestId = 0;
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
   detailForm() {
@@ -334,7 +335,7 @@ freightAndOtherChar(){
   onChangePinCode(event: any) {
     if (!event) return;
     this.getpincodeData(event.value)
-    this.basicDetailForm.patchValue({ destination: event.destination });
+    this.basicDetailForm.patchValue({ destination: event.destination , toCity:null});
     this.consignorForm.patchValue({ consigneePincode: event.value });
     this.pincodeList = [];
     this.getPincodeMasterList(event.value);
@@ -818,7 +819,7 @@ freightAndOtherChar(){
   //   this.isSubmiting=false;
   // }
 
-  private lastRequestId = 0;
+
 
 getGSTCalculation() {
   const originalDate = this.basicDetailForm.value.cNoteDate;
