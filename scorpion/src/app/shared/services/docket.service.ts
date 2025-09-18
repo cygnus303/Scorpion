@@ -925,9 +925,7 @@ freightAndOtherChar(){
             billingState: this.freightData.billingState
           });
           this.validateAppointmentDate();
-
           // Only patch the value if there's no validation error
-
         if (!this.weightErrorMsg) {
           const newFinalWeight = Math.max(this.freightData.chargedWeight || 0, this.invoiceform.value.finalActualWeight || 0);
           const newPkgWeight = Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0);
@@ -950,16 +948,13 @@ freightAndOtherChar(){
       }
     },
   });
-
     this.isSubmiting=false;
   }
 
 validateAppointmentDate() {
   const appointmentControl = this.basicDetailForm.get('appointmentDT');
   const eddControl = this.freightForm.get('EDD');
-
   if (!appointmentControl || !eddControl) return;
-
   const appointmentDate = appointmentControl.value ? new Date(appointmentControl.value) : null;
   const eddDate = eddControl.value ? new Date(eddControl.value) : null;
   if (appointmentDate && eddDate && appointmentDate < eddDate && this.basicDetailForm.get('isAppointmentDelivery')?.value) {
@@ -973,7 +968,6 @@ validateAppointmentDate() {
     }
   }
 }
-
 
   getFovContractDetails() {
     const payload = {
@@ -1122,28 +1116,6 @@ validateAppointmentDate() {
   }
 
   subTotalCalculation() {
-    //  let totalSubTotal = 0;
-
-    //       // Freight charge from freightForm
-    //       const freightCharges = Number(this.freightForm?.get('freightCharges')?.value) || 0;
-    //       totalSubTotal += freightCharges;
-
-    //       // Charges from API response
-    //       if (this.chargingData && Array.isArray(this.chargingData)) {
-    //         this.chargingData.forEach((item: any) => {
-    //           totalSubTotal += Number(item.charge) || 0;
-    //           console.log('charging data',item.charge)
-
-    //         });
-    //       }
-
-    //       // Patch subtotal in freightForm
-    //       this.freightForm.patchValue(
-    //         { subTotal: totalSubTotal },
-    //         { emitEvent: false }
-    //       );
-    //       this.totalSubTotal = totalSubTotal;
-    //       console.log("Subtotal (Freight + API charges):", totalSubTotal);
     let totalSubTotal = 0;
     // Freight charge from freightForm
     const freightCharges = Number(this.freightForm?.get('freightCharges')?.value) || 0;
@@ -1186,8 +1158,6 @@ validateAppointmentDate() {
       event.preventDefault();
     }
   }
-
-
 
   actualWeightvalidation() {
     const CFTWeightType = this.step2DetailsList.cftWeightType;

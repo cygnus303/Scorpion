@@ -89,7 +89,7 @@
                           <td>
                             <div class="input-group">
                               <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
-                                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"  [readonly]="!!row.get('ewayBillNo')?.value"
+                                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"  [readonly]="row.get('ewayBillNo')?.value?.length === 12"
                                 placeholder="dd/MMM/yyyy" formControlName="ewayBillExpiry" [ngClass]="{ 'border-danger': row.get('ewayBillExpiry')?.invalid && row.get('ewayBillExpiry')?.touched, 
                                                      'required2': isEwayRequired(row)}"[class.disabled-input]="true">
                               <span class="input-group-text cursor-pointer" (click)="dp.toggle()"[class.disabled-input]="true">
@@ -105,10 +105,10 @@
                           <td class="center">
                             <div class="input-group">
                               <input type="text" class="form-control uppercase-none" #dp2="bsDatepicker" bsDatepicker
-                                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY', minDate: minDate }"  [readonly]="!!row.get('ewayBillNo')?.value"
+                                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY', minDate: minDate }"  [readonly]="row.get('ewayBillNo')?.value?.length === 12"
                                 placeholder="dd/MMM/yyyy" formControlName="ewayinvoiceDate" [ngClass]="{'border-danger': row.get('ewayinvoiceDate')?.invalid && row.get('ewayinvoiceDate')?.touched, 
                                               'required2': isEwayRequired(row)}" [class.disabled-input]="row.get('ewayinvoiceDate')?.disabled">
-                              <span class="input-group-text cursor-pointer" (click)="dp2.toggle()" [class.disabled-input]="row.get('ewayinvoiceDate')?.disabled">
+                              <span class="input-group-text cursor-pointer" (click)="dp2.toggle()" [class.disabled-input]="row.get('ewayBillNo')?.value?.length === 12">
                                 <i class="fa fa-calendar"></i>
                               </span>
                             </div>
@@ -118,7 +118,7 @@
                             </div>
                           </td>
                           <td class="center">
-                            <input class="form-control required required2" placeholder="Invoice No." type="text" [readonly]="!!row.get('ewayBillNo')?.value"
+                            <input class="form-control required required2" placeholder="Invoice No." type="text" [readonly]="row.get('ewayBillNo')?.value?.length === 12"
                               formControlName="invoiceNo" required  (blur)="checkDuplicateInvoices(i,row)" 
                               [ngClass]="{ 'border-danger': row.get('invoiceNo')?.invalid && row.get('invoiceNo')?.touched}">
                             <div *ngIf="row.get('invoiceNo')?.invalid && row.get('invoiceNo')?.touched"
@@ -130,7 +130,7 @@
                             <input class="form-control required2 text-end" min="0"
                               (keypress)="docketService.allowNumericDecimal($event)" placeholder="Invoice value"
                               type="number" value="0" formControlName="declaredvalue" required
-                              (focus)="clearZero(row, 'declaredvalue')" [readonly]="!!row.get('ewayBillNo')?.value"
+                              (focus)="clearZero(row, 'declaredvalue')" [readonly]="row.get('ewayBillNo')?.value?.length === 12"
                               (input)="calculateSummary(i);getCFTCalculation(i)" 
                               (change)="docketService.freightAndOtherChar();handleDeclaredValueChange(row)"
                               [ngClass]="{ 'border-danger': row.get('declaredvalue')?.invalid && row.get('declaredvalue')?.touched}"
