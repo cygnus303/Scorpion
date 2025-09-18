@@ -749,34 +749,88 @@ freightAndOtherChar(){
     });
   }
 
-  getGSTCalculation() {
-    const originalDate = this.basicDetailForm.value.cNoteDate;
-    const requiredFieldsFilled =
-      this.basicDetailForm.value.billingParty &&
-      this.basicDetailForm.value.businessType &&
-      this.basicDetailForm.value.origin &&
-      this.basicDetailForm.value.destination &&
-      this.basicDetailForm.value.mode &&
-      originalDate &&
-      // this.freightForm.value.billingState &&
-      this.GSTFromTrnMode?.codeDesc;
-    // this.consignorForm.value.consignorGSTNo &&
-    // this.consignorForm.value.consigneeGSTNo &&
-    // this.basicDetailForm.value.originState;
+  // getGSTCalculation() {
+  //   const originalDate = this.basicDetailForm.value.cNoteDate;
+  //   const requiredFieldsFilled =
+  //     this.basicDetailForm.value.billingParty &&
+  //     this.basicDetailForm.value.businessType &&
+  //     this.basicDetailForm.value.origin &&
+  //     this.basicDetailForm.value.destination &&
+  //     this.basicDetailForm.value.mode &&
+  //     originalDate &&
+  //     // this.freightForm.value.billingState &&
+  //     this.GSTFromTrnMode?.codeDesc;
+  //   // this.consignorForm.value.consignorGSTNo &&
+  //   // this.consignorForm.value.consigneeGSTNo &&
+  //   // this.basicDetailForm.value.originState;
 
-    if (!requiredFieldsFilled) {
-      return;
-    }
+  //   if (!requiredFieldsFilled) {
+  //     return;
+  //   }
 
-    // Date format "DD Month YYYY"
-    const dateObj = new Date(originalDate);
-    const formattedDate = dateObj.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric'
-    });
-    const payload = {
-      "custcode": this.basicDetailForm.value.billingParty || '',
+  //   // Date format "DD Month YYYY"
+  //   const dateObj = new Date(originalDate);
+  //   const formattedDate = dateObj.toLocaleDateString('en-GB', {
+  //     day: '2-digit',
+  //     month: 'long',
+  //     year: 'numeric'
+  //   });
+  //   const payload = {
+  //     "custcode": this.basicDetailForm.value.billingParty || '',
+  //     "payBas": this.basicDetailForm.value.billingType || '',
+  //     "baseLocation": this.basicDetailForm.value.origin || '',
+  //     "destCd": this.basicDetailForm.value.destination || '',
+  //     "subTotal": this.freightForm.value.subTotal,
+  //     "csgngstNo": this.consignorForm.value.consignorGSTNo || '',
+  //     "csgegstNo": this.consignorForm.value.consigneeGSTNo || '',
+  //     "transMode": this.basicDetailForm.value.mode || '',
+  //     "docketDate": formattedDate || '',
+  //     "billingPartyAS": (this.basicDetailForm.value.billingType === 'P01' || this.basicDetailForm.value.billingType === 'P02') ? 'CSGN' : 'CSGE',
+  //     "csgngstState": this.basicDetailForm.value.csgngstState || '',
+  //     "csgegstState": this.basicDetailForm.value.csgegstState || '',
+  //     "gstRateType": this.freightForm.value.gstRate || '',
+  //     "isGstApplied": "1",
+  //     "billingState": this.freightForm.value.billingState || 'MH'
+  //   };
+  //   this.basicDetailService.getGSTCalculation(payload).subscribe({
+  //     next: (response: any) => {
+  //       if (response) {
+  //         this.isSubmiting=true;
+  //         this.gstCalculationList = Object.keys(response).reduce((acc: any, key) => {
+  //           acc[key.toLowerCase()] = response[key];
+  //           return acc;
+  //         }, {});
+  //         this.freightForm.patchValue({
+  //           ...this.gstCalculationList,
+  //           dktTotal: this.gstCalculationList.dkttotal ?? null,
+  //           billedAt: this.gstCalculationList.rcplbillgenloc,
+  //           billingState: this.gstCalculationList.customerbillgenstate,
+
+  //           // 👇 Collected fields same as amount
+  //           igstcollected: this.gstCalculationList.igstamount,
+  //           cgstcollected: this.gstCalculationList.cgstamount,
+  //           sgstcollected: this.gstCalculationList.sgstamount,
+  //           utgstcollected: this.gstCalculationList.utgstamount,
+  //         });
+  //       }
+  //     },
+  //   }); 
+  //   this.isSubmiting=false;
+  // }
+
+  private lastRequestId = 0;
+
+getGSTCalculation() {
+  const originalDate = this.basicDetailForm.value.cNoteDate;
+  if (!originalDate) return;
+
+  const dateObj = new Date(originalDate);
+  const formattedDate = dateObj.toLocaleDateString('en-GB', {
+    day: '2-digit', month: 'long', year: 'numeric'
+  });
+
+  const payload = {
+     "custcode": this.basicDetailForm.value.billingParty || '',
       "payBas": this.basicDetailForm.value.billingType || '',
       "baseLocation": this.basicDetailForm.value.origin || '',
       "destCd": this.basicDetailForm.value.destination || '',
@@ -791,32 +845,36 @@ freightAndOtherChar(){
       "gstRateType": this.freightForm.value.gstRate || '',
       "isGstApplied": "1",
       "billingState": this.freightForm.value.billingState || 'MH'
-    };
-    this.basicDetailService.getGSTCalculation(payload).subscribe({
-      next: (response: any) => {
-        if (response) {
-          this.isSubmiting=true;
-          this.gstCalculationList = Object.keys(response).reduce((acc: any, key) => {
-            acc[key.toLowerCase()] = response[key];
-            return acc;
-          }, {});
-          this.freightForm.patchValue({
-            ...this.gstCalculationList,
-            dktTotal: this.gstCalculationList.dkttotal ?? null,
-            billedAt: this.gstCalculationList.rcplbillgenloc,
-            billingState: this.gstCalculationList.customerbillgenstate,
+  };
 
+  const currentId = ++this.lastRequestId;
+
+  this.basicDetailService.getGSTCalculation(payload).subscribe({
+    next: (response: any) => {
+      // 👇 Only update if this is the latest request
+      if (currentId === this.lastRequestId) {
+        this.gstCalculationList = Object.keys(response).reduce((acc: any, key) => {
+          acc[key.toLowerCase()] = response[key];
+          return acc;
+        }, {});
+        this.freightForm.patchValue({
+          ...this.gstCalculationList,
+          dktTotal: this.gstCalculationList.dkttotal ?? null,
+                billedAt: this.gstCalculationList.rcplbillgenloc,
+            billingState: this.gstCalculationList.customerbillgenstate,
+ 
             // 👇 Collected fields same as amount
             igstcollected: this.gstCalculationList.igstamount,
             cgstcollected: this.gstCalculationList.cgstamount,
             sgstcollected: this.gstCalculationList.sgstamount,
             utgstcollected: this.gstCalculationList.utgstamount,
-          });
-        }
-      },
-    }); 
-    this.isSubmiting=false;
-  }
+ 
+        });
+      }
+    }
+  });
+}
+
 
   getIGSTchargesDetail() {
     this.basicDetailService.getIGSTchargesDetail().subscribe({
