@@ -284,7 +284,8 @@ export class DocketService {
 
 freightAndOtherChar(){
   this.GetFreightContractDetails();
-  // this.getOtherChargesDetail();
+  this.getOtherChargesDetail();
+  this.getFovContractDetails();
 }
 
   getpincodeData(event: any) {
@@ -945,12 +946,11 @@ freightAndOtherChar(){
             return; // stop further execution to avoid multiple triggers
           }
         }
-        // this.getFuelSurcharge(this.freightData?.freightCharge);
-        this.getOtherChargesDetail();
-        }
-      },
-    });
-    this.getFovContractDetails();
+        this.getFuelSurcharge(this.freightData?.freightCharge);
+      }
+    },
+  });
+
     this.isSubmiting=false;
   }
 
@@ -984,6 +984,11 @@ validateAppointmentDate() {
       invAmt: this.invoiceform.value.totalDeclaredValue?.toString(),
       serviceType: this.basicDetailForm.value.serviceType
     }
+    if (!payload.contractID || !payload.riskType || !payload.invAmt || !payload.serviceType) {
+    console.warn("Skipping FOV API call — missing values", {
+    });
+    return;
+  }
     this.basicDetailService.getFovContractDetails(payload).subscribe({
       next: (response: any) => {
         if (response) {
@@ -1071,7 +1076,7 @@ validateAppointmentDate() {
             }
           });
           // this.subTotalCalculation();
-          this.getFuelSurcharge(this.freightData?.freightCharge);
+          // this.getFuelSurcharge(this.freightData?.freightCharge);
         }
       },
     });

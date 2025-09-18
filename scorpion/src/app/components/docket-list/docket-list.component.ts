@@ -4,6 +4,7 @@ import { BasicDetailService } from '../../shared/services/basic-detail.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DecryptService } from '../../shared/services/decryptservice ';
 import { SweetAlertService } from '../../shared/services/sweet-alert.service';
+import { environment } from 'environments/environment';
 @Component({
   selector: 'app-docket-list',
   standalone: false,
@@ -13,6 +14,7 @@ import { SweetAlertService } from '../../shared/services/sweet-alert.service';
 export class DocketListComponent implements OnInit{
   public isSubmitting :boolean = false;
   decrypted: string = '';
+  env = environment;
 
   constructor(
     public docketService: DocketService, private basicDetailService: BasicDetailService, private activatedRoute: ActivatedRoute,private decryptService:DecryptService,private router: Router,
@@ -48,7 +50,7 @@ export class DocketListComponent implements OnInit{
             // 🔑 badha key male → normal flow
             this.docketService.loginUserList = parsedData;
             this.docketService.Location = parsedData.LocationCode;
-              // this.docketService.Location = 'NAG';
+              // this.docketService.Location = 'IDR';
             this.docketService.BaseUserCode = parsedData.UserId;
             this.docketService.baseUsername=parsedData.BaseUserName;
           } else {
@@ -413,8 +415,8 @@ export class DocketListComponent implements OnInit{
           if (response) {
        window.scrollTo({ top: 0, behavior: 'smooth' }); 
        this.docketService.successMsg='Docket submitted successfully.'
-      // window.parent.location.href = `https://sepluat.cygnux.in/Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N`;
-            this.router.navigate(['/DocketDone', 1],{ queryParams: { DOCKNO: response.res.dockNo, IsFromBillGeneration: 'N' } } );
+      window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N&src=angular`;
+            // this.router.navigate(['/DocketDone', 1],{ queryParams: { DOCKNO: response.res.dockNo, IsFromBillGeneration: 'N' } } );
       // let baseUrl = window.location.origin;
       // if (baseUrl.includes("sepluat")) {
       //   baseUrl = "https://sepluat.cygnux.in";
