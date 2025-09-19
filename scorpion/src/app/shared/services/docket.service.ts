@@ -1129,7 +1129,7 @@ validateAppointmentDate() {
             }
           });
           // this.subTotalCalculation();
-          // this.getFuelSurcharge(this.freightData?.freightCharge);
+          this.getFuelSurcharge(this.freightData?.freightCharge);
         }
       },
     });

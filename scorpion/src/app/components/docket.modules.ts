@@ -15,6 +15,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { DecimalLimitDirective } from '../shared/directives/decimal-limit.directive';
 import { FocusNextDirective } from '../shared/directives/focusnext.directive';
 import { DocketDoneComponent } from './docket-done/docket-done.component';
+import { DocketEditComponent } from './docket-list/docket-edit/docket-edit.component';
 
 @NgModule({
     declarations: [
@@ -24,6 +25,7 @@ import { DocketDoneComponent } from './docket-done/docket-done.component';
         BasicDetailsComponent,
         ConsignorDetailComponent,
         FreightDetailsComponent,
+        DocketEditComponent,
         HeaderComponent,
         DecimalLimitDirective,
         FocusNextDirective
