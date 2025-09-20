@@ -147,7 +147,7 @@ getCompletionData() {
               packingType: basicDetail.pkgsty,
               sacCode: basicDetail.sacCode,
               sacDescription: basicDetail.sacCodeDesc,
-              appointmentDT: basicDetail.appointmentDT,
+              appointmentDT: basicDetail.appointmentDT !== '0001-01-01T00:00:00'?new Date(basicDetail.appointmentDT):'',
               personName: basicDetail.person,
               contactNo: basicDetail.apmtMobile,
               remarks: basicDetail.apmtRemark,
@@ -650,10 +650,11 @@ getCompletionData() {
         formData.append("DVM.WMD.sdD_Date", new Date().toISOString()),
         formData.append("DVM.WMD.dockdt", this.docketService.basicDetailForm.value.cNoteDate ? new Date(this.docketService.basicDetailForm.value.cNoteDate).toISOString() : '');
       formData.append("DVM.WMD.cdeldt", new Date(this.docketService.freightData.edd).toISOString()),
-        formData.append("DVM.WMD.AppointmentDT", new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString()),
+        formData.append("DVM.WMD.AppointmentDT",this.docketService.basicDetailForm.value.appointmentDT ? new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString() : new Date().toISOString()),
         formData.append("DVM.WMD.Version", String(Number('6')));
       formData.append("DVM.docketType", "DKT");
       this.isSubmitting = true;
+      if(!this.docketService.isComplition){
       this.basicDetailService.onSubmit(formData).subscribe({
         next: (response: any) => {
           if (response) {
@@ -679,13 +680,14 @@ getCompletionData() {
 
         }
       });
+    }
       if(this.docketService.isComplition){
         this.basicDetailService.completionSubmit(formData).subscribe({
         next: (response: any) => {
           if (response) {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             this.docketService.successMsg = 'Docket submitted successfully.'
-            window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N&src=angular`;
+            window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'2'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N&src=angular`;
             this.docketService.basicDetailForm.reset();
             this.docketService.freightForm.reset();
             this.docketService.invoiceform.reset();
