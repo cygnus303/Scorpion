@@ -22,52 +22,71 @@ export class DocketListComponent implements OnInit{
   ) { }
 
   ngOnInit(): void {
-    this.activatedRoute.queryParams.subscribe(params => {
-      this.docketService.docketUrl = params['data'];
-      localStorage.setItem("docketUrl", JSON.stringify(params));
-      const encrypted = params['data'];
-      const key = 'WebX';
-      if (encrypted) {
-        try {
-          this.decrypted = this.decryptService.decrypt(encrypted, key);
-          const parsedData = JSON.parse(this.decrypted);
-          localStorage.setItem("loginUserList", JSON.stringify(parsedData));
-          // ✅ Required keys
-          const requiredKeys = [
-            "FinYear",
-            "LocationCode",
-            "LocationName",
-            "UserImage",
-            "UserId",
-            "BaseUserName",
-            "Companycode"
-          ];
+  this.activatedRoute.queryParams.subscribe(params => {
+    const encrypted = params['data'];
+    const key = 'WebX';
 
-          // ✅ check karvu ke badha keys exist kare chhe
-          const isValid = requiredKeys.every(key => parsedData.hasOwnProperty(key));
+    if (!encrypted) {
+      this.router.navigate(['/error']);
+      return;
+    }
 
-          if (isValid) {
-            // 🔑 badha key male → normal flow
-            this.docketService.loginUserList = parsedData;
-            this.docketService.Location = parsedData.LocationCode;
-              // this.docketService.Location = 'NAG';
-            this.docketService.BaseUserCode = parsedData.UserId;
-            this.docketService.baseUsername=parsedData.BaseUserName;
-          } else {
-            // ❌ ek pan key missing hoy → redirect
-            console.error("Invalid decrypted data, redirecting...");
-            this.router.navigate(['/error']);
-          }
-        } catch (err) {
-          console.error("Decryption or parsing failed:", err);
-          this.router.navigate(['/error']);
-        }
+    try {
+      const decrypted = this.decryptService.decrypt(encrypted, key);
+      const parsedData = JSON.parse(decrypted);
+
+      // 🔑 check current route
+      const currentRoute = this.router.url.split("?")[0];
+
+      if (currentRoute.includes("docketFinancialEdit")) {
+        this.handleFinancialEdit(parsedData);
+      } else if (currentRoute.includes("docket")) {
+        this.handleNormalDocket(parsedData);
       } else {
-        // ❌ query param ma data nathi → redirect
         this.router.navigate(['/error']);
       }
-    });
+    } catch (err) {
+      console.error("Decryption/Parsing failed", err);
+      this.router.navigate(['/error']);
+    }
+  });
+}
+
+handleNormalDocket(parsedData: any) {
+  const requiredKeys = [
+    "FinYear","LocationCode","LocationName",
+    "UserImage","UserId","BaseUserName","Companycode"
+  ];
+  if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
+    this.docketService.loginUserList = parsedData;
+    //  this.docketService.Location = parsedData.LocationCode;
+    this.docketService.Location = 'NAG';
+    this.docketService.BaseUserCode = parsedData.UserId;
+    this.docketService.baseUsername = parsedData.BaseUserName;
+    console.log("👉 Normal docket flow loaded");
+  } else {
+    this.router.navigate(['/error']);
   }
+}
+
+handleFinancialEdit(parsedData: any) {
+  const requiredKeys = [
+      "FinYear","LocationCode","LocationName",
+    "UserImage","UserId","BaseUserName","Companycode"
+    //     "docketNo","isFromBillGeneration","type",
+    // "baseLocationCode","baseCompanyCode","baseUserName"
+  ];
+  if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
+    this.docketService.loginUserList = parsedData;
+      this.docketService.Location = parsedData.LocationCode;
+     // this.docketService.Location = 'NAG';
+    this.docketService.BaseUserCode = parsedData.UserId;
+    this.docketService.baseUsername = parsedData.BaseUserName;
+  } else {
+    this.router.navigate(['/error']);
+  }
+}
+
 
   resetAllForms() {
   // Badha build methods ne call karo

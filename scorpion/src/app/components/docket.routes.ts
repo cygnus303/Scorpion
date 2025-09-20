@@ -16,7 +16,7 @@ export const DocketRoutes: Routes = [
      component: DocketDoneComponent
   },
   {
-     path: 'DocketEdit',
-     component: DocketEditComponent
+     path: 'docketFinancialEdit',
+     component: DocketListComponent
   },
 ];
