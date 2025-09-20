@@ -903,7 +903,7 @@ getGSTCalculation() {
 }
 
 
-  getIGSTchargesDetail() {
+  getIGSTchargesDetail(complitiondata?:any) {
     this.basicDetailService.getIGSTchargesDetail().subscribe({
       next: (response) => {
         if (!response) return;
@@ -932,9 +932,25 @@ getGSTCalculation() {
         });
       },
     });
+  if (complitiondata) {
+    // Extra values patch કરવી
+    this.freightForm.patchValue({
+            // ...complitiondata?.wmdc,
+      dktTotal:complitiondata?.wmdc?.dkttot ?? 0,
+      igstrate:complitiondata?.wmdc?.igstRate ?? 0,
+      cgstrate:complitiondata?.wmdc?.cgstRate ?? 0,
+      sgstrate:complitiondata?.wmdc?.sgstRate ?? 0,
+      utgstrate:complitiondata?.wmdc?.utgstRate ?? 0,
+      igstcollected: complitiondata?.wmdc?.igstAmount ?? 0,
+      cgstcollected: complitiondata?.wmdc?.cgstAmount ?? 0,
+      sgstcollected: complitiondata?.wmdc?.sgstAmount ?? 0,
+      utgstcollected: complitiondata?.wmdc?.utgstAmount ?? 0,
+    });
+    console.log(this.freightForm.value)
+  }
   }
 
-  getChargesData() {
+getChargesData() {
     this.basicDetailService.getChargeDetail().subscribe({
       next: (response) => {
         if (response) {

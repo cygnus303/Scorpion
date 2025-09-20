@@ -32,7 +32,6 @@ export default class DocketEditComponent {
     this.basicDetailService.getCompletion(payload).subscribe({
       next: (response) => {
         if (response) {
-          debugger
           this.completiondata = response;
         }
       }

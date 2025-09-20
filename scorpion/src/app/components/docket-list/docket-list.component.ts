@@ -84,7 +84,9 @@ handleFinancialEdit(parsedData: any) {
      // this.docketService.Location = 'NAG';
     this.docketService.BaseUserCode = parsedData.UserId;
     this.docketService.baseUsername = parsedData.BaseUserName;
-    this.getCompletionData()
+   setTimeout(() => {
+      this.getCompletionData();
+    }, 300);
   } else {
     this.router.navigate(['/error']);
   }
@@ -102,8 +104,68 @@ getCompletionData(){
     this.basicDetailService.getCompletion(payload).subscribe({
       next: (response) => {
         if (response) {
-          debugger
-          this.completiondata = response;
+          this.completiondata = response.data;
+          this.docketService.getIGSTchargesDetail(this.completiondata);
+            if(this.completiondata.wmd){
+          const basicDetail = this.completiondata.wmd
+          this.docketService.basicDetailForm.patchValue({
+            cNoteNo:basicDetail.dockno,
+            Pincode:basicDetail.csgePinCode,
+            billingType:basicDetail.paybas,
+            billingName:basicDetail.party_name,
+            billingParty:basicDetail.partY_CODE,
+            Origin:basicDetail.orgncd,
+            originState:basicDetail.originStateName,
+            csgngstState:basicDetail.originStateCode,
+            fromCity:basicDetail.from_loc,
+            destination:basicDetail.destcd,
+            toCity:basicDetail.to_loc,
+            mode:basicDetail.trN_MOD,
+            serviceType:basicDetail.service_Class,
+            pickup:basicDetail.pickup_Dely,
+            exemptServices:basicDetail.isStaxExemp,
+            isreferenceDKT:basicDetail.isReferenceDKT,
+            iscsdDelivery:basicDetail.isCSDDelivery,
+            isCODDOD:basicDetail.isCODDOD,
+            IsMAllDeliveryN:basicDetail.isMAllDelivery
+          });
+        }
+ 
+        // 🚀 patching freightForm after response
+        if (this.completiondata?.listCharges) {
+          this.completiondata.listCharges.forEach((item: any) => {
+            if (this.docketService.freightForm.contains(item.chargeCode)) {
+              this.docketService.freightForm.patchValue({
+                [item.chargeCode]: item.chargeAmount
+              });
+              // extra condition handling
+              if (item.chargeCode === 'SCHG12') {
+                this.docketService.freightForm.patchValue({
+                  coddodCharged: item.chargeAmount
+                });
+              }
+              if (!this.docketService.basicDetailForm.get('IsMAllDeliveryN')?.value) {
+                this.docketService.freightForm.patchValue({ SCHG17: 0 });
+              }
+              if (!this.docketService.basicDetailForm.get('isAppointmentDelivery')?.value) {
+                this.docketService.freightForm.patchValue({ UCHG08: 0 });
+              }
+              if (!this.docketService.basicDetailForm.get('iscsdDelivery')?.value) {
+                this.docketService.freightForm.patchValue({ SCHG10: 0 });
+              }
+              if (!this.docketService.basicDetailForm.get('isDACC')?.value) {
+                this.docketService.freightForm.patchValue({ SCHG13: 0 });
+              }
+              if (!this.docketService.basicDetailForm.get('IsCODDOD')?.value) {
+                this.docketService.freightForm.patchValue({ SCHG12: 0, coddodCharged: 0 });
+              }
+              if (this.docketService.freightForm.get('fovRate')?.value) {
+                this.docketService.freightForm.patchValue({ SCHG11: 0 });
+              }
+            }
+          });
+        }
+      
         }
       }
     });
