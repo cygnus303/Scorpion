@@ -62,6 +62,7 @@ export class DocketService {
   public isSubmiting:boolean=false;
   public originalSubtotal: number = 0;
   private lastRequestId = 0;
+  public calculateSummary = new Subject<boolean>();
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
   detailForm() {
@@ -389,9 +390,8 @@ freightAndOtherChar(){
     const billingType = this.basicDetailForm.value.billingType;
 
     if (billingParty && destination && billingType) {
-
+      this.getStep2Details();
       if(!this.basicDetailForm.value.ewayBillNo){
-        this.freightAndOtherChar()
         //  const oldValue = this.consignorForm?.value; 
         // if (this.invoiceRows.length > 0) {
         //   this.invoiceform.reset(this.invoicebuild());
@@ -406,7 +406,6 @@ freightAndOtherChar(){
         //   consignorCity:oldValue?.consignorCity,
         // });
       }
-      this.getStep2Details();
     }
   }
 
@@ -417,64 +416,74 @@ freightAndOtherChar(){
     }
   }
 
-  getStep2Details() {
-    const rawDate = new Date(); // or from your API
-    const formattedDate = rawDate.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric'
-    });
-    const payload = {
-      PartyCode: this.basicDetailForm.value.billingParty,
-      Destination: this.basicDetailForm.value.destination,
-      Paybas: this.basicDetailForm.value.billingType,
-      Doctype: 'DKT',
-      DOCKDT: formattedDate,
-      orgncd: this.Location
-    }
-    this.basicDetailService.GetStep2Details(payload).subscribe({
-      next: (response) => {
-        if (response) {
-          this.step2DetailsList = response;
-          this.freightForm.patchValue({
-            billedAt: this.step2DetailsList.billingLocation
-          });
-          this.consignorForm.patchValue({
-            riskType: this.step2DetailsList?.risktype,
-          });
-          this.basicDetailForm.patchValue({
-            volumetric: this.step2DetailsList?.isVolumentric === 'Y' ? true : false,
-            isDACC: this.step2DetailsList?.isDACC === 'Y' ? true : false,
-            // IsCODDOD: this.step2DetailsList?.isCODDOD === 'Y' ? true : false
-          });
-          // this.basicDetailForm.patchValue({
-          //  IsCODDOD:this.step2DetailsList?.isCODDOD
-          // })
-          this.getTransportModeData(this.step2DetailsList.transMode);
-          this.getPickUpData(this.step2DetailsList.pkgDelyType);
-          this.getContentsData();
-          this.getServiceTypeData(this.step2DetailsList.serviceType);
-          this.getPackagingTypeData();
-          this.getTypeofMovementData(this.step2DetailsList.ftlType);
-          this.getbusinessTypeData();
-          this.getexemptServicesData();
-          this.GetPincodeOrigin();
-          this.getRateData()
-          this.getcontractservicecharge();
-          // this.GetDKTGSTForGTA();
-          // this.GetGSTFromTrnMode();
+getStep2Details() {
+  const rawDate = new Date(); // or from your API
+  const formattedDate = rawDate.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric'
+  });
 
-          if ((this.basicDetailForm.value.billingType === 'P02' && this.step2DetailsList.contractid === 'P028888') || !this.step2DetailsList.contractid) {
-            this.sweetAlertService.info('Cutomer Contract not found or May be Expired, Please contact you administrator for further detail.')
-            this.basicDetailForm.patchValue({
-              billingParty: null,
-              billingName: null
-            })
-          }
+  const payload = {
+    PartyCode: this.basicDetailForm.value.billingParty,
+    Destination: this.basicDetailForm.value.destination,
+    Paybas: this.basicDetailForm.value.billingType,
+    Doctype: 'DKT',
+    DOCKDT: formattedDate,
+    orgncd: this.Location
+  }
+
+  this.basicDetailService.GetStep2Details(payload).subscribe({
+    next: (response) => {
+      if (response) {
+        this.step2DetailsList = response;
+
+        this.freightForm.patchValue({
+          billedAt: this.step2DetailsList.billingLocation
+        });
+
+        this.consignorForm.patchValue({
+          riskType: this.step2DetailsList?.risktype,
+        });
+
+        this.basicDetailForm.patchValue({
+          volumetric: this.step2DetailsList?.isVolumentric === 'Y',
+          isDACC: this.step2DetailsList?.isDACC === 'Y',
+          // IsCODDOD: this.step2DetailsList?.isCODDOD === 'Y'
+        });
+
+        // Load dependent data
+        this.getTransportModeData(this.step2DetailsList.transMode);
+        this.getPickUpData(this.step2DetailsList.pkgDelyType);
+        this.getContentsData();
+        this.getServiceTypeData(this.step2DetailsList.serviceType);
+        this.getPackagingTypeData();
+        this.getTypeofMovementData(this.step2DetailsList.ftlType);
+        this.getbusinessTypeData();
+        this.getexemptServicesData();
+        this.GetPincodeOrigin();
+        this.getRateData();
+        this.getcontractservicecharge();
+
+        // Contract validation
+        if (
+          (this.basicDetailForm.value.billingType === 'P02' &&
+            this.step2DetailsList.contractid === 'P028888') ||
+          !this.step2DetailsList.contractid
+        ) {
+          this.sweetAlertService.info(
+            'Cutomer Contract not found or May be Expired, Please contact your administrator for further detail.'
+          );
+          this.basicDetailForm.patchValue({
+            billingParty: null,
+            billingName: null
+          });
         }
       }
-    });
-  }
+    }
+  });
+}
+
 
 
   GetPincodeOrigin(type?: string ) {
@@ -539,8 +548,8 @@ freightAndOtherChar(){
     });
   }
 
-  GetGSTFromTrnMode() {
-    this.basicDetailService.GetGSTFromTrnMode(this.basicDetailForm.value.mode || '').subscribe({
+GetGSTFromTrnMode() {
+  this.basicDetailService.GetGSTFromTrnMode(this.basicDetailForm.value.mode || '').subscribe({
       next: (response: any) => {
         if (response) {
           this.basicDetailForm.patchValue({
@@ -552,26 +561,43 @@ freightAndOtherChar(){
           });
           this.GSTFromTrnMode = response;
         }
+      },
+      error: (err) => {
+        console.error("Error in GetGSTFromTrnMode:", err);
+      },
+      complete: () => {
+        // ✅ hamesha last ma call thase
+        this.getcontractservicecharge();
       }
     });
-    this.getcontractservicecharge();
-  }
+}
 
-  getcontractservicecharge() {
-    if (this.basicDetailForm.value.mode) {
-      this.basicDetailService.contractservicecharge(this.step2DetailsList?.contractid, this.basicDetailForm.value.mode).subscribe({
+getcontractservicecharge() {
+  if (this.basicDetailForm.value.mode) {
+    this.basicDetailService
+      .contractservicecharge(this.step2DetailsList?.contractid, this.basicDetailForm.value.mode)
+      .subscribe({
         next: (response: any) => {
           if (response) {
             this.contractservicecharge = response;
             this.invoiceform.patchValue({
               cft_Ratio: this.contractservicecharge[0].cft_Ratio
             });
-            this.getStaxPaidBy()
+            this.getStaxPaidBy();
           }
+        },
+        error: (err) => {
+          console.error("Error in contractservicecharge:", err);
+        },
+        complete: () => {
+          this.calculateSummary.next(true);
+          setTimeout(() => {
+            this.freightAndOtherChar();
+          }, 200);
         }
       });
-    }
   }
+}
 
   getGSTNODetails(event: any) {
     const searchText = event.target.value;
@@ -940,6 +966,7 @@ getGSTCalculation() {
       chargeSubRule: 'NONE',
       baseCode2: 'NONE',
       chargedWeight: Math.max(this.invoiceform.value.finalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString(),
+      chargedWeright:this.invoiceform.value.finalActualWeight.toString(),
       contractID: this.step2DetailsList?.contractid,
       destination: this.basicDetailForm.value.destination,
       depth: this.depth,
@@ -950,7 +977,6 @@ getGSTCalculation() {
       itemCode: '',
       ftlType: this.basicDetailForm.value.typeMovement || '',
       noOfPkgs: this.invoiceform.value.totalNoOfPkgs?.toString(),
-      chargedWeright:this.invoiceform.value.finalActualWeight.toString(),
       origin: this.basicDetailForm.value.origin,
       payBase: this.basicDetailForm.value.billingType,
       serviceType: this.basicDetailForm.value.serviceType,
@@ -985,6 +1011,7 @@ getGSTCalculation() {
           });
           this.validateAppointmentDate();
           // Only patch the value if there's no validation error
+          this.getFuelSurcharge(this.freightData?.freightCharge);
         if (!this.weightErrorMsg) {
           const newFinalWeight = Math.max(this.freightData.chargedWeight || 0, this.invoiceform.value.finalActualWeight || 0);
           const newPkgWeight = Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0);
@@ -1002,8 +1029,7 @@ getGSTCalculation() {
             this.GetFreightContractDetails();
             return; // stop further execution to avoid multiple triggers
           }
-        }
-        this.getFuelSurcharge(this.freightData?.freightCharge);
+        }        
       }
     },
   });

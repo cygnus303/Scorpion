@@ -16,6 +16,7 @@ export class InvoiceDetailsComponent {
   public chargingData: any;
   public pincodeMatrixData: any;
   private subscription!: Subscription;
+  private calculateSummarySubscription!: Subscription;
   private invoiceMasterMap: { [invNo: string]: number } = {};
   public minDate: Date = new Date();
   constructor(
@@ -29,7 +30,13 @@ export class InvoiceDetailsComponent {
       this.subscription = this.docketService.ewayBill$.subscribe(ewayBillNo => {
       this.getEwayBillData(ewayBillNo,0,false);
     });
-
+    this.calculateSummarySubscription = this.docketService.calculateSummary.subscribe(response => {
+      if(response){
+        for (let i = 0; i < this.docketService.boxDetailRows.length; i++) {
+          this.calculateSummary(i);
+        }
+      }
+    });
   }
 
 checkDuplicateInvoices(i: number,row: AbstractControl) {
@@ -65,7 +72,6 @@ checkDuplicateInvoices(i: number,row: AbstractControl) {
     }
   });
   this.calculateSummary(i);
-  this.getCFTCalculation(i);
   this.docketService.freightAndOtherChar()
   // this.docketService.getGSTCalculation()
   this.handleDeclaredValueChange(row)
@@ -125,7 +131,6 @@ removeRow(index: number): void {
     this.docketService.invoiceRows.removeAt(index);
     this.docketService.reIndexSrNo();
     this.calculateSummary(index);
-    this.getCFTCalculation(index);
     this.docketService.freightAndOtherChar();
     // this.docketService.getGSTCalculation()
   }
@@ -134,7 +139,6 @@ removeRow(index: number): void {
     this.docketService.boxDetailRows.removeAt(index);
      this.docketService.boxDetailIndexSrNo();
      this.calculateSummary(index);
-     this.getCFTCalculation(index);
       this.docketService.freightAndOtherChar();
       // this.docketService.getGSTCalculation()
    }
@@ -220,6 +224,7 @@ calculateSummary(i: number) {
   chargeWeightPerPkg: totalNoOfPkgs,
   finalActualWeight: +Math.max(totalActualWeight || 0, totalCubicWeight || 0).toFixed(2)
 }, { emitEvent: false });
+  this.getCFTCalculation(i)
 }
  
 
@@ -401,10 +406,9 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
   }
 }
 
- ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+  ngOnDestroy() {
+    if (this.subscription) { this.subscription.unsubscribe() }
+    if (this.calculateSummarySubscription) { this.calculateSummarySubscription.unsubscribe(); }
   }
   
   }
