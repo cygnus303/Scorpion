@@ -143,4 +143,8 @@ loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
   dateSelectionRule(payload:any){
      return this.apiHandlerService.Get(`Operation/GetDateRules?moduleCode=${payload.moduleCode}&baseUserName=${payload.baseUserName}`);
   }
+
+  getCompletion(payload:any){
+     return this.apiHandlerService.Post(`Docket/FinancialEdit`,payload);
+  }
 }

@@ -15,6 +15,8 @@ export class DocketListComponent implements OnInit{
   public isSubmitting :boolean = false;
   decrypted: string = '';
   env = environment;
+  public completiondata:any;
+
 
   constructor(
     public docketService: DocketService, private basicDetailService: BasicDetailService, private activatedRoute: ActivatedRoute,private decryptService:DecryptService,private router: Router,
@@ -65,6 +67,26 @@ export class DocketListComponent implements OnInit{
       } else {
         // ❌ query param ma data nathi → redirect
         this.router.navigate(['/error']);
+      }
+    });
+    this.getCompletionData()
+  }
+
+   getCompletionData(){
+    const payload={
+  docketNo: "52630",
+  isFromBillGeneration: "true",
+  type: "1",
+  baseLocationCode: "PIM",
+  baseCompanyCode: "C003",
+  baseUserName: "cygnusteam"
+    }
+    this.basicDetailService.getCompletion(payload).subscribe({
+      next: (response) => {
+        if (response) {
+          debugger
+          this.completiondata = response;
+        }
       }
     });
   }
