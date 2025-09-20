@@ -159,6 +159,8 @@ getCompletionData() {
               isAppointmentDelivery: basicDetail.isAppointmentDelivery,
               specialInstruction: basicDetail.spl_svc_req
             });
+            this.docketService.GetGSTFromTrnMode()
+             this.docketService.GetDKTGSTForGTA();
             this.docketService.getpincodeData(basicDetail.csgnPinCode);
             this.docketService.consignorForm.patchValue({
               consignorName: basicDetail.csgncd,
@@ -557,7 +559,7 @@ getCompletionData() {
           "IsFromBillGeneration":"",
           "cutoff_applied_yn":"",
           "SerialNo":"",
-          "CSGEFloor":"",
+          "CSGEFloor":0,
           "ISOnSubtotalorTotal":"",
           "Discount": Number(this.docketService.freightForm.value.discount) || 0,
           "TRDays":0,
