@@ -423,14 +423,13 @@ getStep2Details() {
     month: 'long',
     year: 'numeric'
   });
-
   const payload = {
     PartyCode: this.basicDetailForm.value.billingParty,
     Destination: this.basicDetailForm.value.destination,
     Paybas: this.basicDetailForm.value.billingType,
     Doctype: 'DKT',
     DOCKDT: formattedDate,
-    orgncd: this.Location
+    orgncd: this.basicDetailForm.value.origin || this.Location
   }
 
   this.basicDetailService.GetStep2Details(payload).subscribe({

@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DecryptService } from '../../shared/services/decryptservice ';
 import { SweetAlertService } from '../../shared/services/sweet-alert.service';
 import { environment } from 'environments/environment';
+import { FormArray } from '@angular/forms';
 @Component({
   selector: 'app-docket-list',
   standalone: false,
@@ -92,84 +93,179 @@ handleFinancialEdit(parsedData: any) {
   }
 }
 
-getCompletionData(){
-    const payload={
-  docketNo: "52630",
-  isFromBillGeneration: "true",
-  type: "1",
-  baseLocationCode: "PIM",
-  baseCompanyCode: "C003",
-  baseUserName: "cygnusteam"
-    }
-    this.basicDetailService.getCompletion(payload).subscribe({
-      next: (response) => {
-        if (response) {
-          this.completiondata = response.data;
-          this.docketService.getIGSTchargesDetail(this.completiondata);
-            if(this.completiondata.wmd){
-          const basicDetail = this.completiondata.wmd
+getCompletionData() {
+  const payload = {
+    docketNo: "62049138",
+    isFromBillGeneration: "true",
+    type: "1",
+    baseLocationCode: "BLR",
+    baseCompanyCode: "C003",
+    baseUserName: "cygnusteam"
+  };
+
+  this.basicDetailService.getCompletion(payload).subscribe({
+    next: (response) => {
+      if (response) {
+        this.completiondata = response.data;
+        const basicDetail = this.completiondata.wmd;
+
+        if (basicDetail) {
+          this.docketService.getpincodeData(basicDetail.csgePinCode);
+
+          // first patch
           this.docketService.basicDetailForm.patchValue({
-            cNoteNo:basicDetail.dockno,
-            Pincode:basicDetail.csgePinCode,
-            billingType:basicDetail.paybas,
-            billingName:basicDetail.party_name,
-            billingParty:basicDetail.partY_CODE,
-            Origin:basicDetail.orgncd,
-            originState:basicDetail.originStateName,
-            csgngstState:basicDetail.originStateCode,
-            fromCity:basicDetail.from_loc,
-            destination:basicDetail.destcd,
-            toCity:basicDetail.to_loc,
-            mode:basicDetail.trN_MOD,
-            serviceType:basicDetail.service_Class,
-            pickup:basicDetail.pickup_Dely,
-            exemptServices:basicDetail.isStaxExemp,
-            isreferenceDKT:basicDetail.isReferenceDKT,
-            iscsdDelivery:basicDetail.isCSDDelivery,
-            isCODDOD:basicDetail.isCODDOD,
-            IsMAllDeliveryN:basicDetail.isMAllDelivery
+            cNoteNo: basicDetail.dockno,
+            cNoteDate: new Date(basicDetail.dockdt),
+            pincode: basicDetail.csgePinCode,
+            billingType: basicDetail.paybas,
+            billingName: basicDetail.party_name,
+            billingParty: basicDetail.partY_CODE,
+            origin: basicDetail.orgncd,
+            destination: basicDetail.destcd,
           });
-        }
- 
-        // 🚀 patching freightForm after response
-        if (this.completiondata?.listCharges) {
-          this.completiondata.listCharges.forEach((item: any) => {
-            if (this.docketService.freightForm.contains(item.chargeCode)) {
-              this.docketService.freightForm.patchValue({
-                [item.chargeCode]: item.chargeAmount
-              });
-              // extra condition handling
-              if (item.chargeCode === 'SCHG12') {
-                this.docketService.freightForm.patchValue({
-                  coddodCharged: item.chargeAmount
+           this.docketService.Location =  basicDetail.orgncd
+          this.docketService.getRuleDetailForDepth();
+          this.docketService.getRuleDetailForProceed()
+          setTimeout(() => {
+            // second patch
+            this.docketService.basicDetailForm.patchValue({
+              originState: basicDetail.originStateName,
+              csgngstState: basicDetail.originStateCode,
+              fromCity: basicDetail.from_loc,
+              toCity: basicDetail.to_loc,
+              mode: basicDetail.trN_MOD,
+              serviceType: basicDetail.service_Class,
+              pickup: basicDetail.pickup_Dely,
+              exemptServices: basicDetail.exemptServices,
+              isreferenceDKT: basicDetail.isReferenceDKT,
+              iscsdDelivery: basicDetail.isCSDDelivery,
+              isCODDOD: basicDetail.isCODDOD,
+              IsMAllDeliveryN: basicDetail.isMAllDelivery,
+              IsODA: basicDetail.isODA,
+              contents: basicDetail.prodcd,
+              packingType: basicDetail.pkgsty,
+              sacCode: basicDetail.sacCode,
+              sacDescription: basicDetail.sacCodeDesc,
+              appointmentDT: basicDetail.appointmentDT,
+              personName: basicDetail.person,
+              contactNo: basicDetail.apmtMobile,
+              remarks: basicDetail.apmtRemark,
+              fromTime: basicDetail.fromTime,
+              toTime: basicDetail.toTime,
+              ewayBillNo: basicDetail.eWayBillNo,
+              referenceDocket: basicDetail.referenceDocketNo,
+              isDocketPayment: basicDetail.isDKTPayment,
+              isAppointmentDelivery: basicDetail.isAppointmentDelivery,
+              specialInstruction: basicDetail.spl_svc_req
+            });
+            this.docketService.getpincodeData(basicDetail.csgnPinCode);
+            this.docketService.consignorForm.patchValue({
+              consignorName: basicDetail.csgncd,
+              consignorMasterName: basicDetail.csgnnm,
+              consignorAddress: basicDetail.csgnaddr,
+              consignorCity: basicDetail.csgnCity,
+              consignorPincode: basicDetail.csgnPinCode,
+              consigneeName: basicDetail.csgecd,
+              consigneeMasterName: basicDetail.csgenm,
+              consigneeAddress: basicDetail.csgeaddr,
+              consigneeCity: basicDetail.csgeCity,
+              consigneePincode: basicDetail.csgePinCode,
+              consignorMobile: basicDetail.csgnmobile,
+              consigneeMobile: basicDetail.csgemobile,
+              consigneeGSTNo: basicDetail.csgeCustGSTNo,
+              consignorGSTNo: basicDetail.custGSTNo,
+            });
+
+            this.docketService.freightForm.patchValue({
+              edd: basicDetail.cdeldt,
+              gstRate: basicDetail.gstRateType
+            });
+
+            this.docketService.invoiceform.patchValue({
+              totalNoOfPkgs: basicDetail.pkgsno,
+              totalActualWeight: basicDetail.actuwt,
+              finalActualWeight: basicDetail.chrgwt,
+              chargeWeightPerPkg: basicDetail.chargedPkgsNo,
+            });
+
+            if (this.completiondata.listInVoice) {
+               const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
+               invoiceRows.clear(); // Clear old rows
+              this.completiondata.listInVoice.forEach((item: any, index: number) => {
+                 invoiceRows.push(this.docketService.createInvoiceRow(index));
+                this.docketService.invoiceRows.controls[index].patchValue({
+                  srNo: item.srNo,
+                  ewayBillNo: item.eWayBillNo,
+                  ewayBillExpiry: new Date(item.eWayBillExpiredDate),
+                  ewayinvoiceDate: new Date(item.eWayBillInvoiceDate),
+                  invoiceNo: item.invno,
+                  declaredvalue: item.declval,
                 });
-              }
-              if (!this.docketService.basicDetailForm.get('IsMAllDeliveryN')?.value) {
-                this.docketService.freightForm.patchValue({ SCHG17: 0 });
-              }
-              if (!this.docketService.basicDetailForm.get('isAppointmentDelivery')?.value) {
-                this.docketService.freightForm.patchValue({ UCHG08: 0 });
-              }
-              if (!this.docketService.basicDetailForm.get('iscsdDelivery')?.value) {
-                this.docketService.freightForm.patchValue({ SCHG10: 0 });
-              }
-              if (!this.docketService.basicDetailForm.get('isDACC')?.value) {
-                this.docketService.freightForm.patchValue({ SCHG13: 0 });
-              }
-              if (!this.docketService.basicDetailForm.get('IsCODDOD')?.value) {
-                this.docketService.freightForm.patchValue({ SCHG12: 0, coddodCharged: 0 });
-              }
-              if (this.docketService.freightForm.get('fovRate')?.value) {
-                this.docketService.freightForm.patchValue({ SCHG11: 0 });
-              }
+              });
             }
-          });
-        }
-      
+
+            if (this.completiondata.listBoxLBH) {
+              const boxRows = this.docketService.invoiceform.get('boxDetailRows') as FormArray;
+              boxRows.clear(); // Clear old rows
+              this.completiondata.listBoxLBH.forEach((item: any, index: number) => {
+                   boxRows.push(this.docketService.createboxDetailRow(index));
+                this.docketService.boxDetailRows.controls[index].patchValue({
+                  srNo: item.srNo || index + 1,
+                  noOfPkgs: item.pkgsno || 0,
+                  actualWeight: item.actuwt || 0,
+                  length: item.voL_L || 0,
+                  breadth: item.voL_B || 0,
+                  height: item.voL_H || 0,
+                  cubicweight: item.vol_cft || 0,
+                  totalCFT: item.toT_CFT || 0
+                });
+              });
+            }
+
+            if (this.completiondata?.listCharges) {
+              this.completiondata.listCharges.forEach((item: any) => {
+                if (this.docketService.freightForm.contains(item.chargeCode)) {
+                  this.docketService.freightForm.patchValue({
+                    [item.chargeCode]: item.chargeAmount
+                  });
+                  if (item.chargeCode === 'SCHG12') {
+                    this.docketService.freightForm.patchValue({
+                      coddodCharged: item.chargeAmount
+                    });
+                  }
+                  if (!this.docketService.basicDetailForm.get('IsMAllDeliveryN')?.value) {
+                    this.docketService.freightForm.patchValue({ SCHG17: 0 });
+                  }
+                  if (!this.docketService.basicDetailForm.get('isAppointmentDelivery')?.value) {
+                    this.docketService.freightForm.patchValue({ UCHG08: 0 });
+                  }
+                  if (!this.docketService.basicDetailForm.get('iscsdDelivery')?.value) {
+                    this.docketService.freightForm.patchValue({ SCHG10: 0 });
+                  }
+                  if (!this.docketService.basicDetailForm.get('isDACC')?.value) {
+                    this.docketService.freightForm.patchValue({ SCHG13: 0 });
+                  }
+                  if (!this.docketService.basicDetailForm.get('IsCODDOD')?.value) {
+                    this.docketService.freightForm.patchValue({ SCHG12: 0, coddodCharged: 0 });
+                  }
+                  if (this.docketService.freightForm.get('fovRate')?.value) {
+                    this.docketService.freightForm.patchValue({ SCHG11: 0 });
+                  }
+                }
+              });
+            }
+
+            this.docketService.getIGSTchargesDetail(this.completiondata);
+
+            // ✅ call only after everything is patched
+            this.docketService.onFormFieldChange();
+
+          }, 300);
         }
       }
-    });
-  }
+    }
+  });
+}
 
 
   resetAllForms() {
@@ -383,7 +479,7 @@ getCompletionData(){
         "isUnionTeritory":this.docketService.gstCalculationList.isunionterritory === "1",
         "origin_Area": this.docketService.basicDetailForm.value.origin_Area,///consinee mathi avshe adress
         "destination_Area": this.docketService.basicDetailForm.value.destination_Area,///consinor mathi avshe adress
-        "custGSTNo": "",
+        "custGSTNo":  this.docketService.consignorForm.value.consignorGSTNo,
         "custGSTState": this.docketService.basicDetailForm.value.custGSTState,
         "csgeCustGSTNo": this.docketService.consignorForm.value.consigneeGSTNo,
         "csgeCustGSTState":  this.docketService.basicDetailForm.value.csgeCustGSTState,
