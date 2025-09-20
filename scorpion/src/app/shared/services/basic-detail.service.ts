@@ -147,4 +147,9 @@ loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
   getCompletion(payload:any){
      return this.apiHandlerService.Post(`Docket/FinancialEdit`,payload);
   }
+
+  completionSubmit(data: any) {
+    return this.apiHandlerService.Post(`Operation/AddDocket`, data);
+  }
+
 }
