@@ -416,14 +416,11 @@ export class DocketListComponent implements OnInit{
        window.scrollTo({ top: 0, behavior: 'smooth' }); 
        this.docketService.successMsg='Docket submitted successfully.'
       window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N&src=angular`;
+            // const source = 'angular';
+            // const encodedSrc = btoa(source); // => "YW5ndWxhcg=="
+            // const url = `${this.env.liveUrl}Operation/DocketDone/1?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N&src=${encodedSrc}`;
+            // window.parent.location.href = url;
             // this.router.navigate(['/DocketDone', 1],{ queryParams: { DOCKNO: response.res.dockNo, IsFromBillGeneration: 'N' } } );
-      // let baseUrl = window.location.origin;
-      // if (baseUrl.includes("sepluat")) {
-      //   baseUrl = "https://sepluat.cygnux.in";
-      // } else {
-      //   baseUrl = "https://sepl.cygnux.in";
-      // }
-      // window.parent.location.href =`${baseUrl}/Operation/DocketDone/1?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N`;
             this.docketService.basicDetailForm.reset();
             this.docketService.freightForm.reset();
             this.docketService.invoiceform.reset();

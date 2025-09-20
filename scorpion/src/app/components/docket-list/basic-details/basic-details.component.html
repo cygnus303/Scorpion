@@ -272,7 +272,7 @@
             <div class="col-md-7">
               <ng-select class="noFoundTextColor required2" required placeholder="Transit Mode" appFocusNext
                 notFoundText="No matches found" [items]="docketService.transportModeData" bindLabel="codeDesc" 
-                bindValue="codeId" (change)="docketService.GetGSTFromTrnMode();docketService.freightAndOtherChar()" formControlName="mode"
+                bindValue="codeId" (change)="docketService.GetGSTFromTrnMode();" formControlName="mode"
                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('mode')?.invalid  && docketService.basicDetailForm.get('mode')?.touched}"></ng-select>
             </div>
           </div>
