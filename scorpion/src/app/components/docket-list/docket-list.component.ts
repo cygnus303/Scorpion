@@ -6,6 +6,7 @@ import { DecryptService } from '../../shared/services/decryptservice ';
 import { SweetAlertService } from '../../shared/services/sweet-alert.service';
 import { environment } from 'environments/environment';
 import { FormArray } from '@angular/forms';
+import { BasePayload } from 'app/shared/models/general-master.model';
 @Component({
   selector: 'app-docket-list',
   standalone: false,
@@ -17,6 +18,7 @@ export class DocketListComponent implements OnInit {
   decrypted: string = '';
   env = environment;
   public completiondata: any;
+  public isComplitionlist!:BasePayload;
 
 
   constructor(
@@ -75,8 +77,8 @@ export class DocketListComponent implements OnInit {
   handleFinancialEdit(parsedData: any) {
     const requiredKeys = [
       "FinYear", "LocationCode", "LocationName",
-      "UserImage", "UserId", "BaseUserName", "Companycode"
-      //     "docketNo","isFromBillGeneration","type",
+      "UserImage", "UserId", "BaseUserName", "Companycode",
+      "DocketNo","IsFromBillGeneration","Type",
       // "baseLocationCode","baseCompanyCode","baseUserName"
     ];
     if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
@@ -85,7 +87,8 @@ export class DocketListComponent implements OnInit {
       // this.docketService.Location = 'NAG';
       this.docketService.BaseUserCode = parsedData.UserId;
       this.docketService.baseUsername = parsedData.BaseUserName;
-      this.docketService.isComplition=true
+      this.docketService.isComplition=true;
+      this.isComplitionlist = parsedData;
       setTimeout(() => {
         this.getCompletionData();
       }, 300);
@@ -96,12 +99,12 @@ export class DocketListComponent implements OnInit {
 
 getCompletionData() {
   const payload = {
-    docketNo: "62049138",
-    isFromBillGeneration: "true",
-    type: "1",
-    baseLocationCode: "BLR",
-    baseCompanyCode: "C003",
-    baseUserName: "cygnusteam"
+    docketNo: this.isComplitionlist.DocketNo,
+    isFromBillGeneration: this.isComplitionlist.IsFromBillGeneration || '',
+    type: this.isComplitionlist.Type,
+    baseLocationCode: this.docketService.Location,
+    baseCompanyCode: this.isComplitionlist.Companycode,
+    baseUserName: this.docketService.baseUsername
   };
 
   this.basicDetailService.getCompletion(payload).subscribe({
@@ -157,7 +160,9 @@ getCompletionData() {
               referenceDocket: basicDetail.referenceDocketNo,
               isDocketPayment: basicDetail.isDKTPayment,
               isAppointmentDelivery: basicDetail.isAppointmentDelivery,
-              specialInstruction: basicDetail.spl_svc_req
+              specialInstruction: basicDetail.spl_svc_req,
+              ISCounterPickUpPRS: basicDetail.isCounterPickUpPRS,
+              ISCounterDelivery: basicDetail.isCounterDelivery
             });
             this.docketService.GetGSTFromTrnMode()
              this.docketService.GetDKTGSTForGTA();

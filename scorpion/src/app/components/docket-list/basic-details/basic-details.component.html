@@ -400,7 +400,7 @@
           </div>
         </div> -->
       <!-- </div> -->
-      <div class="row d-none">
+      <div class="row" [ngClass]="this.docketService.isComplition ? '':'d-none'">
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Customer GST State.</label>
             <div class="col-md-7">
@@ -416,6 +416,16 @@
                 formControlName="csgeCustGSTState"></ng-select></div>
           </div>
         </div>
+          <div class="col-md-4 form-column ">
+            <div class="form-group ">
+              <label class="col-md-5 align-items-center">Counter Pick Up</label>
+              <div class="col-md-1">
+                <input type="checkbox" formControlName="ISCounterPickUpPRS">
+              </div>
+              <label class="col-md-4">Counter Delivery</label>
+              <div class="col-md-1 align-items-center"><input type="checkbox" formControlName="ISCounterDelivery"></div>
+            </div>
+          </div>
       </div>
       <div class="row">
         <div class="col-md-4 form-column ">

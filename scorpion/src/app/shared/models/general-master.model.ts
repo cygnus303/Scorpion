@@ -128,6 +128,19 @@ export interface LoginUser {
   Companycode: string;
 }
 
+export interface BasePayload {
+   LocationName: string;
+  LocationCode: string;
+  FinYear: string;
+  UserImage: string;
+  BaseUserName: string;
+  UserId: string;
+  Companycode: string;
+  DocketNo: string;
+  IsFromBillGeneration: string | boolean;
+  Type: string | number;
+}
+
 export interface StatesFromPartyCodeRepsonse {
    value: string;
    text: string;
