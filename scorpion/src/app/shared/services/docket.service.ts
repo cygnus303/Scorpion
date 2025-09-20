@@ -63,6 +63,7 @@ export class DocketService {
   public originalSubtotal: number = 0;
   private lastRequestId = 0;
   public calculateSummary = new Subject<boolean>();
+  public isComplition : boolean = false;
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
   detailForm() {
