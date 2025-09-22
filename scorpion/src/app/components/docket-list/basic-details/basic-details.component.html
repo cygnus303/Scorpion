@@ -560,8 +560,8 @@
                 <input type="checkbox" formControlName="isAppointmentDelivery"><span class="slider"></span>
               </label>
             </div>
-             <label for="refDkt" [ngClass]="this.docketService.isComplition ? '':'d-none'" class="col-md-3 text-end transform ">DACC</label>
-            <div class="col-md-2" [ngClass]="this.docketService.isComplition ? '':'d-none'">
+             <label for="refDkt" [ngClass]="this.docketService.isComplition ? 'd-none':'d-none'" class="col-md-3 text-end transform ">DACC</label>
+            <div class="col-md-2" [ngClass]="this.docketService.isComplition ? 'd-none':'d-none'">
               <label class="yes-no">
                 <input type="checkbox" formControlName="isDACC" />
                 <span class="slider"></span>

@@ -18,7 +18,7 @@
     <form [formGroup]="docketService.freightForm">
       <div class="row">
         <div class="col-md-4">
-        <div [ngClass]="{ 'hidden': docketService.isBillingTBB }">
+        <div [ngClass]="{ 'hidden': docketService.isBillingTBB ,'d-none': docketService.isComplition}">
             <div class="form-group">
             <label class="control-label col-md-5">Freight Charges</label>
             <div class="col-md-7">
@@ -44,7 +44,7 @@
         </div>
         </div>
         <div class="col-md-4" >
-         <div [ngClass]="{ 'hidden': docketService.isBillingTBB }">
+         <div [ngClass]="{ 'hidden': docketService.isBillingTBB ,'d-none': docketService.isComplition}">
            <div class="form-group">
             <label class="control-label col-md-5" style="padding-top: 0px;padding-right: 1px;padding-left: 49px;">
               <ng-select class="noFoundTextColor required2" placeholder="Rate Type" notFoundText="No matches found"
@@ -149,7 +149,7 @@
         </div>
       </div>
 
-      <div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
+      <div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB,'d-none': docketService.isComplition }">
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label col-md-5">FOV Rate (% of Invoice)</label>
@@ -200,7 +200,7 @@
         </div>
       </div>
 
-       <h3 class="pb-4 text-start appointment mt-5" [ngClass]="{ 'hidden': docketService.isBillingTBB }">Charges Details
+       <h3 class="pb-4 text-start appointment mt-5" [ngClass]="{ 'hidden': docketService.isBillingTBB ,'d-none': docketService.isComplition}">Charges Details
       </h3>
  
       <!--<div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
@@ -220,7 +220,7 @@
         </div>
       </div> -->
  
-      <div class="row">
+      <div class="row"  [ngClass]="this.docketService.isComplition ? 'd-none':''">
         <!-- SCHG03 column, always visible -->
         <ng-container *ngFor="let charge of docketService.freightchargingData">
           <div class="col-md-4" *ngIf="charge.chargeCode === 'SCHG03'">
@@ -315,7 +315,7 @@
 
       <div class="row">
         <div class="col-md-2">
-          <div class="form-group" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
+          <div class="form-group" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y' || docketService.isComplition">
             <label class="control-label col-md-5">Discount Type</label>
             <div class="col-md-7">
               <ng-select class="noFoundTextColor required2" 
@@ -326,7 +326,7 @@
           </div>
         </div>
         <div class="col-md-2">
-          <div class="form-group" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
+          <div class="form-group" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y' || docketService.isComplition">
             <label class="control-label col-md-5">Discount</label>
             <div class="col-md-7">
               <input class="form-control clsAmount" placeholder="Discount" type="number" formControlName="discount" (blur)="docketService.calculateDiscount($event)">
@@ -334,7 +334,7 @@
           </div>
         </div>
         <div class="col-md-4">
-          <div class="form-group" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
+          <div class="form-group" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y' || docketService.isComplition">
             <label class="control-label col-md-5">Discount Amount</label>
             <div class="col-md-7">
               <input class="form-control clsAmount" placeholder="Discount" readonly type="number" value=""
