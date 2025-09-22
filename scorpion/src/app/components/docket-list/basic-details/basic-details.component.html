@@ -375,31 +375,7 @@
           </div>
         </div>
       </div>
-      <!-- <div class="row"> -->
-
-        <!-- <div class="col-md-4 form-column" *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y'">
-          <div class="form-group">
-            <label for="refDkt" class="col-md-5">Volumetric</label>
-            <div class="col-md-7 text-start">
-              <label class="yes-no">
-                <input type="checkbox" formControlName="volumetric" />
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-        </div>
-         <div class="col-md-4 form-column">
-          <div class="form-group">
-            <label for="refDkt" class="col-md-5">ODA</label>
-            <div class="col-md-7 text-start">
-              <label class="yes-no">
-                <input type="checkbox" formControlName="IsODA" />
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-        </div> -->
-      <!-- </div> -->
+   
       <div class="row" [ngClass]="this.docketService.isComplition ? '':'d-none'">
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Customer GST State.</label>
@@ -584,16 +560,13 @@
                 <input type="checkbox" formControlName="isAppointmentDelivery"><span class="slider"></span>
               </label>
             </div>
-           <div class="d-none">
-             <label for="refDkt" class="col-md-3 text-end transform "
-              *ngIf="this.docketService?.step2DetailsList?.isDACC === 'Y'">DACC</label>
-            <div class="col-md-2 " *ngIf="this.docketService?.step2DetailsList?.isDACC === 'Y'">
+             <label for="refDkt" [ngClass]="this.docketService.isComplition ? '':'d-none'" class="col-md-3 text-end transform ">DACC</label>
+            <div class="col-md-2" [ngClass]="this.docketService.isComplition ? '':'d-none'">
               <label class="yes-no">
                 <input type="checkbox" formControlName="isDACC" />
                 <span class="slider"></span>
               </label>
             </div>
-           </div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
@@ -606,8 +579,18 @@
               Origin-Destination)</div>
           </div>
         </div>
+        <div class="col-md-4 form-column" [ngClass]="this.docketService.isComplition ? '':'d-none'">
+          <div class="form-group">
+            <label for="refDkt" class="col-md-5">Volumetric</label>
+            <div class="col-md-7 text-start">
+              <label class="yes-no">
+                <input type="checkbox" formControlName="isVolumetric" />
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
       </div>
-
       <div *ngIf="docketService.basicDetailForm.get('isAppointmentDelivery')?.value">
         <h3 class="pb-4 text-start appointment bold">Appointment Details</h3>
         <div class="p-3">

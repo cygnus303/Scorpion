@@ -120,7 +120,7 @@ getCompletionData() {
           // first patch
           this.docketService.basicDetailForm.patchValue({
             cNoteNo: basicDetail.dockno,
-            cNoteDate: new Date(basicDetail.dockdt),
+            // cNoteDate: new Date(basicDetail.dockdt.split('T')[0]),
             pincode: basicDetail.csgePinCode,
             billingType: basicDetail.paybas,
             billingName: basicDetail.party_name,
@@ -151,7 +151,7 @@ getCompletionData() {
               packingType: basicDetail.pkgsty,
               sacCode: basicDetail.sacCode,
               sacDescription: basicDetail.sacCodeDesc,
-              appointmentDT: basicDetail.appointmentDT !== '0001-01-01T00:00:00'?new Date(basicDetail.appointmentDT):'',
+              appointmentDT: basicDetail.appointmentDT !== '0001-01-01T00:00:00'?new Date(basicDetail.appointmentDT):new Date(),
               personName: basicDetail.person,
               contactNo: basicDetail.apmtMobile,
               remarks: basicDetail.apmtRemark,
@@ -204,8 +204,8 @@ getCompletionData() {
                 this.docketService.invoiceRows.controls[index].patchValue({
                   srNo: item.srNo,
                   ewayBillNo: item.eWayBillNo,
-                  ewayBillExpiry: item.eWayBillExpiredDate?new Date(item.eWayBillExpiredDate):new Date(),
-                  ewayinvoiceDate: item.eWayBillInvoiceDate?new Date(item.eWayBillInvoiceDate):new Date(),
+                  ewayBillExpiry: item.eWayBillExpiredDate?new Date(item.eWayBillExpiredDate) : '',
+                  ewayinvoiceDate: item.eWayBillInvoiceDate?new Date(item.eWayBillInvoiceDate) : '',
                   invoiceNo: item.invno,
                   declaredvalue: item.declval,
                 });
@@ -415,7 +415,7 @@ getCompletionData() {
           "trN_MOD": this.docketService.basicDetailForm.value.mode,
           "coD_DOD": this.docketService.basicDetailForm.value.IsCODDOD === 'Y' ? true : false,
           "cfT_YN": this.docketService.step2DetailsList?.isVolumentric === 'Y' ? true : false,
-          "dacC_YN": this.docketService.basicDetailForm.value.isDACC === 'Y' ? true : false,  // step2 na response ma pn
+          "dacC_YN": this.docketService.basicDetailForm.value.isDACC,  // step2 na response ma pn
           "localCN_YN": this.docketService.basicDetailForm.value.isLocalNote, //y and n
           "pickup_Dely": this.docketService.basicDetailForm.value.pickup,
           "permit_yn": "",// api baki chhe
@@ -473,10 +473,10 @@ getCompletionData() {
           "docketMode": "F",
           "gcType": "",
           "cft": this.docketService.invoiceform.value.cftTotal,
-          "isVolumetric": this.docketService.step2DetailsList?.isVolumentric === 'Y' ? true : false,
+          "isVolumetric":  this.docketService.basicDetailForm.value.isVolumetric,
           "isCODDOD": this.docketService.basicDetailForm.value.isCODDOD === 'Y' ? true : false,
           "isODA": this.docketService.step2DetailsList.IsODA === 'Y' ? true : false,
-          "isDACC": this.docketService.basicDetailForm.value.isDACC === 'Y' ? true : false,
+          "isDACC": this.docketService.basicDetailForm.value.isDACC,
           "isLocalDocket": this.docketService.basicDetailForm.value.IsLocalDocket ? true : false,
           "isStaxExemp": this.docketService.basicDetailForm.value.exemptServices === 'Y' ? true : false,
           "person": this.docketService.basicDetailForm.value.personName,

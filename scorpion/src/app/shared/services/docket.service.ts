@@ -116,7 +116,7 @@ export class DocketService {
       destination_Area: new FormControl(''),
       origin_Area: new FormControl(''),
 
-      volumetric: new FormControl(false),
+      isVolumetric: new FormControl(false),
       IsLocalDocket: new FormControl(false),
       isDACC: new FormControl(false),
       custGSTState: new FormControl(),
@@ -447,7 +447,7 @@ getStep2Details() {
         });
 
         this.basicDetailForm.patchValue({
-          volumetric: this.step2DetailsList?.isVolumentric === 'Y',
+          isVolumetric: this.step2DetailsList?.isVolumentric === 'Y',
           isDACC: this.step2DetailsList?.isDACC === 'Y',
           // IsCODDOD: this.step2DetailsList?.isCODDOD === 'Y'
         });
