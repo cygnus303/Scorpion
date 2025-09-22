@@ -100,6 +100,7 @@ export class DocketListComponent implements OnInit {
 getCompletionData() {
   const payload = {
     docketNo: this.isComplitionlist.DocketNo,
+    // docketNo: '62813556',
     isFromBillGeneration: this.isComplitionlist.IsFromBillGeneration || '',
     type: this.isComplitionlist.Type,
     baseLocationCode: this.docketService.Location,
@@ -195,7 +196,7 @@ getCompletionData() {
               chargeWeightPerPkg: basicDetail.chargedPkgsNo,
             });
 
-            if (this.completiondata.listInVoice) {
+            if (this.completiondata.listInVoice?.length) {
                const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
                invoiceRows.clear(); // Clear old rows
               this.completiondata.listInVoice.forEach((item: any, index: number) => {
@@ -203,15 +204,15 @@ getCompletionData() {
                 this.docketService.invoiceRows.controls[index].patchValue({
                   srNo: item.srNo,
                   ewayBillNo: item.eWayBillNo,
-                  ewayBillExpiry: new Date(item.eWayBillExpiredDate),
-                  ewayinvoiceDate: new Date(item.eWayBillInvoiceDate),
+                  ewayBillExpiry: item.eWayBillExpiredDate?new Date(item.eWayBillExpiredDate):new Date(),
+                  ewayinvoiceDate: item.eWayBillInvoiceDate?new Date(item.eWayBillInvoiceDate):new Date(),
                   invoiceNo: item.invno,
                   declaredvalue: item.declval,
                 });
               });
             }
 
-            if (this.completiondata.listBoxLBH) {
+            if (this.completiondata.listBoxLBH?.length) {
               const boxRows = this.docketService.invoiceform.get('boxDetailRows') as FormArray;
               boxRows.clear(); // Clear old rows
               this.completiondata.listBoxLBH.forEach((item: any, index: number) => {
