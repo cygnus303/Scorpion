@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DocketService } from '../../shared/services/docket.service';
 import { BasicDetailService } from '../../shared/services/basic-detail.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,6 +7,7 @@ import { SweetAlertService } from '../../shared/services/sweet-alert.service';
 import { environment } from 'environments/environment';
 import { FormArray } from '@angular/forms';
 import { BasePayload } from 'app/shared/models/general-master.model';
+import { BasicDetailsComponent } from './basic-details/basic-details.component';
 @Component({
   selector: 'app-docket-list',
   standalone: false,
@@ -19,6 +20,7 @@ export class DocketListComponent implements OnInit {
   env = environment;
   public completiondata: any;
   public isComplitionlist!:BasePayload;
+  @ViewChild(BasicDetailsComponent) basicDetailsComp!: BasicDetailsComponent;
 
 
   constructor(
@@ -165,8 +167,9 @@ getCompletionData() {
               ISCounterPickUpPRS: basicDetail.isCounterPickUpPRS,
               ISCounterDelivery: basicDetail.isCounterDelivery
             });
+            this.basicDetailsComp.onChangeCityListList(this.docketService.basicDetailForm.get('fromCity')?.value,'from');
             this.docketService.GetGSTFromTrnMode()
-             this.docketService.GetDKTGSTForGTA();
+            this.docketService.GetDKTGSTForGTA();
             this.docketService.getpincodeData(basicDetail.csgnPinCode);
             this.docketService.consignorForm.patchValue({
               consignorName: basicDetail.csgncd,

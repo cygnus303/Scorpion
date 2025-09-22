@@ -471,13 +471,22 @@ getStep2Details() {
             this.step2DetailsList.contractid === 'P028888') ||
           !this.step2DetailsList.contractid
         ) {
+          const billingParty = this.basicDetailForm.get('billingParty')?.value || '';
+          const billingName = this.basicDetailForm.get('billingName')?.value || '';
           this.sweetAlertService.info(
-            'Cutomer Contract not found or May be Expired, Please contact your administrator for further detail.'
+              `Customer Contract for <strong>${billingParty} - ${billingName}</strong> not found or may be expired. Please contact your administrator for further details.`,
+            () => {
+              this.basicDetailForm.patchValue({
+                billingParty: null,
+                billingName: null
+              });
+            }
           );
-          this.basicDetailForm.patchValue({
-            billingParty: null,
-            billingName: null
-          });
+
+          // this.basicDetailForm.patchValue({
+          //   billingParty: null,
+          //   billingName: null
+          // });
         }
       }
     }
