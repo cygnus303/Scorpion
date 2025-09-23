@@ -118,12 +118,11 @@ getCompletionData() {
 
         if (basicDetail) {
           this.docketService.getpincodeData(basicDetail.csgePinCode);
-
           // first patch
           this.docketService.basicDetailForm.patchValue({
             cNoteNo: basicDetail.dockno,
             // cNoteDate: new Date(basicDetail.dockdt.split('T')[0]),
-            pincode: basicDetail.csgePinCode,
+            pincode: basicDetail.csgePinCode ? basicDetail.csgePinCode : null,
             billingType: basicDetail.paybas,
             billingName: basicDetail.party_name,
             billingParty: basicDetail.partY_CODE,

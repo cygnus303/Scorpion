@@ -2,6 +2,7 @@ import { Directive, ElementRef, Host, HostListener, Input, NgZone, Optional, Ren
 import { NgControl } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Directive({
   selector: '[appFocusNext]',
@@ -225,10 +226,83 @@ export class FocusNextDirective {
     @Optional() @Host() private ngSelect?: NgSelectComponent
   ) {}
 
+  ngAfterViewInit() {
+  const isEwayBill =
+    this.el.nativeElement.getAttribute('formControlName') === 'ewayBillNo';
+
+  if (isEwayBill) {
+    setTimeout(() => {
+      (this.el.nativeElement as HTMLElement).focus();
+    }, 0);
+  }
+}
+
   // 🔑 Keydown handler
   @HostListener('keydown', ['$event'])
-  handleKeydown(event: KeyboardEvent) {
+async  handleKeydown(event: KeyboardEvent) {
     const tag = this.el.nativeElement.tagName.toLowerCase();
+     const isEwayBill =
+      this.el.nativeElement.getAttribute('formControlName') === 'ewayBillNo';
+
+    if (event.key !== 'Enter' && event.key !== 'Tab') return;
+
+    if (isEwayBill) {
+      const input = this.el.nativeElement as HTMLInputElement;
+
+      if (!input.value) {
+        event.preventDefault(); // ❌ stop normal tab/enter
+
+        let goNext = false;
+
+        await Swal.fire({
+          title: 'EwayBill is empty. Do you want to go to the next field?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'No',
+          background: 'rgba(255, 255, 255, 0.9)',
+          color: '#2c3e50',
+          width: '420px',
+          buttonsStyling: false,
+          customClass: {
+            popup: 'glassy-info-popup',
+            title: 'glassy-info-title',
+            htmlContainer: 'glassy-info-body',
+            confirmButton: 'glassy-info-btn',
+            cancelButton: 'glassy-info-btn',
+            icon: 'glassy-info-icon',
+            actions: 'glassy-info-actions'  // custom class for buttons container
+          },
+          didClose: () => {
+            // 🔑 focus control after dialog closed
+            if (goNext) {
+              const form = input.closest('form');
+            if (!form) return;
+
+            const selector =
+              'input:not([readonly]):not([disabled]):not([hidden]), ' +
+              'select:not([disabled]):not([hidden]), ' +
+              'textarea:not([readonly]):not([disabled]):not([hidden]), ' +
+              'ng-select:not([disabled]):not([hidden])';
+
+            const all = Array.from(form.querySelectorAll(selector)) as HTMLElement[];
+            const visible = all.filter(el => this.isVisible(el));
+
+            const index = visible.indexOf(input);
+            if (index !== -1 && index + 1 < visible.length) {
+              setTimeout(() => visible[index + 1].focus(), 0);
+            }
+            } else {
+              setTimeout(() => input.focus(), 0);
+            }
+          }
+        }).then(result => {
+          goNext = result.isConfirmed;
+        });
+
+        return;
+      }
+    }
 
     if (event.key !== 'Enter' && event.key !== 'Tab') return;
 

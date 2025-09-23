@@ -395,11 +395,23 @@
           <div class="col-md-4 form-column ">
             <div class="form-group ">
               <label class="col-md-5 align-items-center">Counter Pick Up</label>
-              <div class="col-md-1">
+              <!-- <div class="col-md-1">
                 <input type="checkbox" formControlName="ISCounterPickUpPRS">
-              </div>
+              </div> -->
+              <div class="col-md-1 text-start">
+              <label class="yes-no">
+                <input type="checkbox" formControlName="ISCounterPickUpPRS" />
+                <span class="slider"></span>
+              </label>
+            </div>
               <label class="col-md-4">Counter Delivery</label>
-              <div class="col-md-1 align-items-center"><input type="checkbox" formControlName="ISCounterDelivery"></div>
+              <div class="col-md-1 text-start">
+              <label class="yes-no">
+                <input type="checkbox" formControlName="ISCounterDelivery" />
+                <span class="slider"></span>
+              </label>
+            </div>
+              <!-- <div class="col-md-1 align-items-center"><input type="checkbox" formControlName="ISCounterDelivery"></div> -->
             </div>
           </div>
       </div>
@@ -579,7 +591,7 @@
               Origin-Destination)</div>
           </div>
         </div>
-        <div class="col-md-4 form-column d-none">
+        <div class="col-md-4 form-column" [ngClass]="this.docketService.isComplition ? 'd-none':'d-none'">
           <div class="form-group">
             <label for="refDkt" class="col-md-5">Volumetric</label>
             <div class="col-md-7 text-start">

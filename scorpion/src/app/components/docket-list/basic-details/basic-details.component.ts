@@ -24,8 +24,8 @@ export class BasicDetailsComponent {
   public destinationsList: DestinationsList[] = [];
   public vehicleNumbersList: VehicleNumbersResponse[] = [];
   public getStatesFromPartyCodeList: StatesFromPartyCodeRepsonse[] = [];
-minDate: Date | undefined;
-maxDate: Date | undefined;
+  minDate: Date | undefined;
+  maxDate: Date | undefined;
   public referenceDocketMsg:any;
   public notFoundTextValue = 'Please enter at least 3 characters';
   public notDestinationValue = 'Please enter at least 3 characters';
@@ -90,8 +90,8 @@ maxDate: Date | undefined;
   }
 
     callEwayBillFromParent(event: any) {
-    this.docketService.ewayBill$.next(event);
-  }
+  this.docketService.ewayBill$.next(event);
+}
 
     onApplyDeliveryChangeValidators(){
      this.docketService.basicDetailForm.get('isAppointmentDelivery')?.valueChanges.subscribe((isAppointment) => {

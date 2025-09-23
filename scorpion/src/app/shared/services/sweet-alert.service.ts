@@ -147,7 +147,20 @@ confirm(message: string, options?: any) {
     icon: 'warning',
     showCancelButton: true,
     confirmButtonText: options?.confirmButtonText || 'Yes',
-    cancelButtonText: options?.cancelButtonText || 'No'
+    cancelButtonText: options?.cancelButtonText || 'No',
+    background: 'rgba(255, 255, 255, 0.9)',
+    color: '#2c3e50',
+    width: '420px',
+    buttonsStyling: false,
+    customClass: {
+      popup: 'glassy-info-popup',
+      title: 'glassy-info-title',
+      htmlContainer: 'glassy-info-body',
+      confirmButton: 'glassy-info-btn',
+      cancelButton: 'glassy-info-btn',
+      icon: 'glassy-info-icon',
+      actions: 'glassy-info-actions'  // custom class for buttons container
+    }
   });
 }
 

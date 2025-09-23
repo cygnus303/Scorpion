@@ -332,3 +332,9 @@ input[readonly] {
 .transform{
     transform: translateX(15%);
 }
+
+.glassy-info-actions {
+  display: flex !important;
+  justify-content: center; /* center horizontally */
+  gap: 10px; /* space between buttons */
+}
