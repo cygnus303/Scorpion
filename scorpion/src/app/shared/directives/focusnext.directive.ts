@@ -255,7 +255,7 @@ async handleKeydown(event: KeyboardEvent) {
         let goNext = false;
 
         await Swal.fire({
-          title: 'EwayBill is empty. Do you want to go to the next field?',
+          title: 'Are you sure you do not have EWayBill No. to add?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Yes',
