@@ -243,7 +243,7 @@ getCompletionData() {
                 finalActualWeight: basicDetail.chrgwt,
                 chargeWeightPerPkg: basicDetail.chargedPkgsNo,
               });
-            }, 500);
+            }, 600);
             this.docketService.freightForm.patchValue({
             EDD: basicDetail.cdeldt === '0001-01-01T00:00:00' ? '01 JAN 0001' : basicDetail.cdeldt ,
             gstRate: basicDetail.gstRateType

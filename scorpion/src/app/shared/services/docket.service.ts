@@ -817,27 +817,27 @@ getGSTCalculation() {
   this.basicDetailService.getGSTCalculation(payload).subscribe({
     next: (response: any) => {
       // 👇 Only update if this is the latest request
-      // if (currentId === this.lastRequestId) {
-      //   this.gstCalculationList = Object.keys(response).reduce((acc: any, key) => {
-      //     acc[key.toLowerCase()] = response[key];
-      //     return acc;
-      //   }, {});
-      //   this.freightForm.patchValue({
-      //     ...this.gstCalculationList,
-      //     dktTotal: this.gstCalculationList.dkttotal ?? null,
-      //           billedAt: this.gstCalculationList.rcplbillgenloc,
-      //       billingState: this.gstCalculationList.customerbillgenstate,
- 
-      //       // 👇 Collected fields same as amount
-      //       igstcollected: this.gstCalculationList.igstamount,
-      //       cgstcollected: this.gstCalculationList.cgstamount,
-      //       sgstcollected: this.gstCalculationList.sgstamount,
-      //       utgstcollected: this.gstCalculationList.utgstamount,
- 
-      //   });
-      // }
       if (currentId === this.lastRequestId) {
-       this.mergeAndPatchGST(response,this.completiondata?.wmdc || {},this.freightForm);
+        this.gstCalculationList = Object.keys(response).reduce((acc: any, key) => {
+          acc[key.toLowerCase()] = response[key];
+          return acc;
+        }, {});
+        // this.freightForm.patchValue({
+        //   ...this.gstCalculationList,
+        //   dktTotal: this.gstCalculationList.dkttotal ?? null,
+        //         billedAt: this.gstCalculationList.rcplbillgenloc,
+        //     billingState: this.gstCalculationList.customerbillgenstate,
+ 
+        //     // 👇 Collected fields same as amount
+        //     igstcollected: this.gstCalculationList.igstamount,
+        //     cgstcollected: this.gstCalculationList.cgstamount,
+        //     sgstcollected: this.gstCalculationList.sgstamount,
+        //     utgstcollected: this.gstCalculationList.utgstamount,
+ 
+        // });
+      }
+      if (currentId === this.lastRequestId) {
+       this.mergeAndPatchGST(this.gstCalculationList,this.completiondata?.wmdc || {},this.freightForm);
       }
     }
   });
