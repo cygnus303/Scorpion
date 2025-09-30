@@ -40,7 +40,7 @@ export class DocketListComponent implements OnInit {
     }
   // }
     const currentRoute = this.router.url.split("?")[0];
-    if (currentRoute.includes("docketFinancialEdit") || currentRoute.includes("DocketFinancialEditCretria")) {
+    if (currentRoute.includes("docketFinancialEdit") || currentRoute.includes("docketEditCretria")) {
       this.docketService.isComplition = true;
       this.getCompletionData();
     } 
@@ -63,7 +63,7 @@ export class DocketListComponent implements OnInit {
 
     //     if (currentRoute.includes("docketFinancialEdit")) {
     //       this.handleFinancialEdit(parsedData);
-    //     } else if (currentRoute.includes("DocketFinancialEditCretria") || currentRoute.includes("docket")) {
+    //     } else if (currentRoute.includes("docketEditCretria") || currentRoute.includes("docket")) {
     //       this.handleNormalDocket(parsedData);
     //     } else {
     //       this.router.navigate(['/error']);
