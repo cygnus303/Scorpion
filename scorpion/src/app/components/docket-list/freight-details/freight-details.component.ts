@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
 import { BasicDetailService } from '../../../shared/services/basic-detail.service';
-import { IGSTchargesDetailResponse } from '../../../shared/models/general-master.model';
 import { DocketService } from '../../../shared/services/docket.service';
-import { ChargingRepsonse } from '../../../shared/models/general-master.model';
-import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'freight-details',
@@ -25,7 +22,6 @@ export class FreightDetailsComponent {
   ) { }
 
   ngOnInit() {
-   
     this.docketService.getIGSTchargesDetail();
     this.docketService.freightbuild();
     this.docketService.basicDetailForm.get('IsMAllDeliveryN')?.valueChanges.subscribe(value => {
@@ -39,7 +35,7 @@ export class FreightDetailsComponent {
 
   this.docketService.basicDetailForm.get('iscsdDelivery')?.valueChanges.subscribe(value => {
     // this.updateCharge('SCHG10', value); // CSD Delivery Charges
-     this.docketService.freightForm.patchValue({SCHG10:0})
+    this.docketService.freightForm.patchValue({SCHG10:0})
     if(value){
       this.docketService.getOtherChargesDetail();
     }
@@ -48,7 +44,7 @@ export class FreightDetailsComponent {
 
   this.docketService.basicDetailForm.get('isAppointmentDelivery')?.valueChanges.subscribe(value => {
     // this.updateCharge('UCHG08', value); // Appointment Charges
-     this.docketService.freightForm.patchValue({UCHG08:0})
+    this.docketService.freightForm.patchValue({UCHG08:0})
     if(value){
       this.docketService.getOtherChargesDetail();
     }
@@ -56,7 +52,7 @@ export class FreightDetailsComponent {
   });
   this.docketService.basicDetailForm.get('isDACC')?.valueChanges.subscribe(value => {
     // this.updateCharge('SCHG13', value); // Appointment Charges
-     this.docketService.freightForm.patchValue({SCHG13:0})
+    this.docketService.freightForm.patchValue({SCHG13:0})
     if(value){
       this.docketService.getOtherChargesDetail();
     }
@@ -64,15 +60,15 @@ export class FreightDetailsComponent {
   });
     this.docketService.basicDetailForm.get('IsCODDOD')?.valueChanges.subscribe(value => {
     // this.updateCharge('SCHG12', value); // Appointment Charges
-     this.docketService.freightForm.patchValue({SCHG12:0});
-     this.docketService.freightForm.patchValue({coddodCharged:0})
+    this.docketService.freightForm.patchValue({SCHG12:0});
+    this.docketService.freightForm.patchValue({coddodCharged:0})
     if(value){
       this.docketService.getOtherChargesDetail();
     }
     this.docketService.subTotalCalculation();
   });
-   this.docketService.getChargesData();
-  }
+this.docketService.getChargesData();
+}
 
   // getChargesData() {
   //   this.basicDetailService.getChargeDetail().subscribe({

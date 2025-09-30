@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { generalMasterResponse, LoginUser, pinCodeResponse } from '../models/general-master.model';
+import { BasePayload, generalMasterResponse, LoginUser, pinCodeResponse } from '../models/general-master.model';
 import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { BasicDetailService } from './basic-detail.service';
 import { EmailRegex, mobileNo } from '../constants/common';
@@ -54,7 +54,7 @@ export class DocketService {
   public successMsg: string = '';
   public isSearching: boolean = false;
   public inValidDocketMsg: string = '';
-  public loginUserList!: LoginUser;
+  public loginUserList!: BasePayload;
   public bsValue: Date = new Date();
   public ewayBill$ = new Subject<string>();
   public selectedFile! :File;
@@ -64,6 +64,8 @@ export class DocketService {
   private lastRequestId = 0;
   public calculateSummary = new Subject<boolean>();
   public isComplition : boolean = false;
+  public completiondata: any;
+
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
   detailForm() {
@@ -785,77 +787,6 @@ getcontractservicecharge() {
     });
   }
 
-  // getGSTCalculation() {
-  //   const originalDate = this.basicDetailForm.value.cNoteDate;
-  //   const requiredFieldsFilled =
-  //     this.basicDetailForm.value.billingParty &&
-  //     this.basicDetailForm.value.businessType &&
-  //     this.basicDetailForm.value.origin &&
-  //     this.basicDetailForm.value.destination &&
-  //     this.basicDetailForm.value.mode &&
-  //     originalDate &&
-  //     // this.freightForm.value.billingState &&
-  //     this.GSTFromTrnMode?.codeDesc;
-  //   // this.consignorForm.value.consignorGSTNo &&
-  //   // this.consignorForm.value.consigneeGSTNo &&
-  //   // this.basicDetailForm.value.originState;
-
-  //   if (!requiredFieldsFilled) {
-  //     return;
-  //   }
-
-  //   // Date format "DD Month YYYY"
-  //   const dateObj = new Date(originalDate);
-  //   const formattedDate = dateObj.toLocaleDateString('en-GB', {
-  //     day: '2-digit',
-  //     month: 'long',
-  //     year: 'numeric'
-  //   });
-  //   const payload = {
-  //     "custcode": this.basicDetailForm.value.billingParty || '',
-  //     "payBas": this.basicDetailForm.value.billingType || '',
-  //     "baseLocation": this.basicDetailForm.value.origin || '',
-  //     "destCd": this.basicDetailForm.value.destination || '',
-  //     "subTotal": this.freightForm.value.subTotal,
-  //     "csgngstNo": this.consignorForm.value.consignorGSTNo || '',
-  //     "csgegstNo": this.consignorForm.value.consigneeGSTNo || '',
-  //     "transMode": this.basicDetailForm.value.mode || '',
-  //     "docketDate": formattedDate || '',
-  //     "billingPartyAS": (this.basicDetailForm.value.billingType === 'P01' || this.basicDetailForm.value.billingType === 'P02') ? 'CSGN' : 'CSGE',
-  //     "csgngstState": this.basicDetailForm.value.csgngstState || '',
-  //     "csgegstState": this.basicDetailForm.value.csgegstState || '',
-  //     "gstRateType": this.freightForm.value.gstRate || '',
-  //     "isGstApplied": "1",
-  //     "billingState": this.freightForm.value.billingState || 'MH'
-  //   };
-  //   this.basicDetailService.getGSTCalculation(payload).subscribe({
-  //     next: (response: any) => {
-  //       if (response) {
-  //         this.isSubmiting=true;
-  //         this.gstCalculationList = Object.keys(response).reduce((acc: any, key) => {
-  //           acc[key.toLowerCase()] = response[key];
-  //           return acc;
-  //         }, {});
-  //         this.freightForm.patchValue({
-  //           ...this.gstCalculationList,
-  //           dktTotal: this.gstCalculationList.dkttotal ?? null,
-  //           billedAt: this.gstCalculationList.rcplbillgenloc,
-  //           billingState: this.gstCalculationList.customerbillgenstate,
-
-  //           // 👇 Collected fields same as amount
-  //           igstcollected: this.gstCalculationList.igstamount,
-  //           cgstcollected: this.gstCalculationList.cgstamount,
-  //           sgstcollected: this.gstCalculationList.sgstamount,
-  //           utgstcollected: this.gstCalculationList.utgstamount,
-  //         });
-  //       }
-  //     },
-  //   }); 
-  //   this.isSubmiting=false;
-  // }
-
-
-
 getGSTCalculation() {
   const originalDate = this.basicDetailForm.value.cNoteDate;
   if (!originalDate) return;
@@ -1036,7 +967,7 @@ getChargesData() {
           });
           this.validateAppointmentDate();
           // Only patch the value if there's no validation error
-          this.getFuelSurcharge(this.freightData?.freightCharge);
+             this.getFuelSurcharge(this.freightData?.freightCharge);
         if (!this.weightErrorMsg) {
           const newFinalWeight = Math.max(this.freightData.chargedWeight || 0, this.invoiceform.value.finalActualWeight || 0);
           const newPkgWeight = Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0);
@@ -1105,7 +1036,6 @@ validateAppointmentDate() {
       },
     });
   }
-
   getOtherChargesDetail() {
     const chargedWeight = Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString();
     const payload = {
@@ -1149,35 +1079,45 @@ validateAppointmentDate() {
           this.isSubmiting=true;
           this.chargingData = response;
           this.chargingData.forEach((item: any) => {
-            if (this.freightForm.contains(item.chargecode)) {
-              this.freightForm.patchValue({
-                [item.chargecode]: item.charge
-              });
-              if (item.chargecode === 'SCHG12') {
-                this.freightForm.patchValue({
-                  coddodCharged: item.charge
-                });
-              }
-              if (!this.basicDetailForm.get('IsMAllDeliveryN')?.value) {
-                this.freightForm.patchValue({ SCHG17: 0 })
-              }
-              if (!this.basicDetailForm.get('isAppointmentDelivery')?.value) {
-                this.freightForm.patchValue({ UCHG08: 0 })
-              }
-              if (!this.basicDetailForm.get('iscsdDelivery')?.value) {
-                this.freightForm.patchValue({ SCHG10: 0 })
-              }
-              if (!this.basicDetailForm.get('isDACC')?.value) {
-                this.freightForm.patchValue({ SCHG13: 0 })
-              }
-              if (!this.basicDetailForm.get('IsCODDOD')?.value) {
-                this.freightForm.patchValue({ SCHG12: 0 });
-                this.freightForm.patchValue({coddodCharged:0})
-              }
-              if (this.freightForm.get('fovRate')?.value) {
-                this.freightForm.patchValue({ SCHG11: 0 })
-              }
+            if(this.loginUserList.Type !== '2'){
+              // if (this.freightForm.contains(item.chargecode)) {
+              //     this.freightForm.patchValue({
+              //       [item.chargecode]: item.charge
+              //     });
+              //     if (item.chargecode === 'SCHG12') {
+              //       this.freightForm.patchValue({
+              //         coddodCharged: item.charge
+              //       });
+              //     }
+              //     if (!this.basicDetailForm.get('IsMAllDeliveryN')?.value) {
+              //       this.freightForm.patchValue({ SCHG17: 0 })
+              //     }
+              //     if (!this.basicDetailForm.get('isAppointmentDelivery')?.value) {
+              //       this.freightForm.patchValue({ UCHG08: 0 })
+              //     }
+              //     if (!this.basicDetailForm.get('iscsdDelivery')?.value) {
+              //       this.freightForm.patchValue({ SCHG10: 0 })
+              //     }
+              //     if (!this.basicDetailForm.get('isDACC')?.value) {
+              //       this.freightForm.patchValue({ SCHG13: 0 })
+              //     }
+              //     if (!this.basicDetailForm.get('IsCODDOD')?.value) {
+              //       this.freightForm.patchValue({ SCHG12: 0 });
+              //       this.freightForm.patchValue({coddodCharged:0})
+              //     }
+              //     if (this.freightForm.get('fovRate')?.value) {
+              //       this.freightForm.patchValue({ SCHG11: 0 })
+              //     }
+              //   }
             }
+            // else{
+              this.mergeAndPatchCharges(
+                this.chargingData,
+                this.completiondata?.listCharges || [], // agar edit data available hoy to
+                this.freightForm,
+                this.basicDetailForm
+              );
+            // }
           });
           // this.subTotalCalculation();
           this.getFuelSurcharge(this.freightData?.freightCharge);
@@ -1186,6 +1126,57 @@ validateAppointmentDate() {
     });
     this.isSubmiting=false;
   }
+
+ mergeAndPatchCharges(apiCharges: any[], editCharges: any[], freightForm: FormGroup, basicDetailForm: FormGroup) {
+  const mergedCharges: { [key: string]: number } = {};
+
+// 1. API charges
+apiCharges?.forEach((item: any) => {
+  const code = (item.chargecode || "").toUpperCase();
+  const amount = item.charge || 0;
+  mergedCharges[code] = Math.max(mergedCharges[code] || 0, amount);
+});
+
+// 2. Edit charges
+editCharges?.forEach((item: any) => {
+  const code = (item.chargeCode || item.chargecode || "").toUpperCase();
+  const amount = item.chargeAmount || item.charge || 0;
+  mergedCharges[code] = Math.max(mergedCharges[code] || 0, amount);
+});
+
+  // 3. Patch into freightForm
+  Object.keys(mergedCharges).forEach(code => {
+    if (freightForm.contains(code)) {
+      freightForm.patchValue(
+        { [code]: mergedCharges[code] },
+        { emitEvent: false }
+      );
+    } else {
+      console.warn("Form control not found:", code);
+    }
+  });
+
+  // 4. Special business rules
+  if (!basicDetailForm.get('IsMAllDeliveryN')?.value) {
+    freightForm.patchValue({ SCHG17: 0 });
+  }
+  if (!basicDetailForm.get('isAppointmentDelivery')?.value) {
+    freightForm.patchValue({ UCHG08: 0 });
+  }
+  if (!basicDetailForm.get('iscsdDelivery')?.value) {
+    freightForm.patchValue({ SCHG10: 0 });
+  }
+  if (!basicDetailForm.get('isDACC')?.value) {
+    freightForm.patchValue({ SCHG13: 0 });
+  }
+  if (!basicDetailForm.get('IsCODDOD')?.value) {
+    freightForm.patchValue({ SCHG12: 0, coddodCharged: 0 });
+  }
+  if (freightForm.get('fovRate')?.value) {
+    freightForm.patchValue({ SCHG11: 0 });
+  }
+}
+
 
   getFuelSurcharge(data: any) {
     const fuelRateType = this.contractservicecharge[0]?.fuelSurchrgBas;  // %, W, F

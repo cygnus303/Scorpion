@@ -239,7 +239,7 @@ export class FocusNextDirective {
 
   // 🔑 Keydown handler
   @HostListener('keydown', ['$event'])
-async  handleKeydown(event: KeyboardEvent) {
+async handleKeydown(event: KeyboardEvent) {
     const tag = this.el.nativeElement.tagName.toLowerCase();
      const isEwayBill =
       this.el.nativeElement.getAttribute('formControlName') === 'ewayBillNo';
@@ -249,7 +249,7 @@ async  handleKeydown(event: KeyboardEvent) {
     if (isEwayBill) {
       const input = this.el.nativeElement as HTMLInputElement;
 
-      if (!input.value) {
+      if (!input.value || input.value.length < 12) {
         event.preventDefault(); // ❌ stop normal tab/enter
 
         let goNext = false;
@@ -301,6 +301,10 @@ async  handleKeydown(event: KeyboardEvent) {
         });
 
         return;
+      }
+      if (input.value.length !== 12) {
+        input.value= '';
+        event.preventDefault();
       }
     }
 

@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DocketService } from '../../shared/services/docket.service';
 import { BasicDetailService } from '../../shared/services/basic-detail.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DecryptService } from '../../shared/services/decryptservice ';
+import { Router } from '@angular/router';
 import { SweetAlertService } from '../../shared/services/sweet-alert.service';
 import { environment } from 'environments/environment';
 import { FormArray } from '@angular/forms';
@@ -18,110 +17,127 @@ export class DocketListComponent implements OnInit {
   public isSubmitting: boolean = false;
   decrypted: string = '';
   env = environment;
-  public completiondata: any;
+  
   public isComplitionlist!:BasePayload;
   @ViewChild(BasicDetailsComponent) basicDetailsComp!: BasicDetailsComponent;
 
 
   constructor(
-    public docketService: DocketService, private basicDetailService: BasicDetailService, private activatedRoute: ActivatedRoute, private decryptService: DecryptService, private router: Router,
+    public docketService: DocketService, private basicDetailService: BasicDetailService, private router: Router,
     private sweetAlertService: SweetAlertService,
   ) { }
 
   ngOnInit(): void {
-    this.activatedRoute.queryParams.subscribe(params => {
-      const encrypted = params['data'];
-      const key = 'WebX';
-
-      if (!encrypted) {
-        this.router.navigate(['/error']);
-        return;
-      }
-
-      try {
-        const decrypted = this.decryptService.decrypt(encrypted, key);
-        const parsedData = JSON.parse(decrypted);
-
-        // 🔑 check current route
-        const currentRoute = this.router.url.split("?")[0];
-
-        if (currentRoute.includes("docketFinancialEdit")) {
-          this.handleFinancialEdit(parsedData);
-        } else if (currentRoute.includes("docket")) {
-          this.handleNormalDocket(parsedData);
-        } else {
-          this.router.navigate(['/error']);
-        }
-      } catch (err) {
-        console.error("Decryption/Parsing failed", err);
-        this.router.navigate(['/error']);
-      }
-    });
-  }
-
-  handleNormalDocket(parsedData: any) {
-    const requiredKeys = [
-      "FinYear", "LocationCode", "LocationName",
-      "UserImage", "UserId", "BaseUserName", "Companycode"
-    ];
-    if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
-      this.docketService.loginUserList = parsedData;
-       this.docketService.Location = parsedData.LocationCode;
-      // this.docketService.Location = 'IDR';
-      this.docketService.BaseUserCode = parsedData.UserId;
-      this.docketService.baseUsername = parsedData.BaseUserName;
-      console.log("👉 Normal docket flow loaded");
-    } else {
-      this.router.navigate(['/error']);
+    //  if (!this.docketService.loginUserList) {
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      // this.docketService.Location = 'HYN';
+      this.docketService.isComplition = false;
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
+  // }
+    const currentRoute = this.router.url.split("?")[0];
+    if (currentRoute.includes("docketFinancialEdit") || currentRoute.includes("docketEditCretria")) {
+      this.docketService.isComplition = true;
+      this.getCompletionData();
+    } 
+   
+    // this.activatedRoute.queryParams.subscribe(params => {
+    //   const encrypted = params['data'];
+    //   const key = 'WebX';
+
+    //   if (!encrypted) {
+    //     this.router.navigate(['/error']);
+    //     return;
+    //   }
+
+    //   try {
+    //     const decrypted = this.decryptService.decrypt(encrypted, key);
+    //     const parsedData = JSON.parse(decrypted);
+
+    //     // 🔑 check current route
+    //     const currentRoute = this.router.url.split("?")[0];
+
+    //     if (currentRoute.includes("docketFinancialEdit")) {
+    //       this.handleFinancialEdit(parsedData);
+    //     } else if (currentRoute.includes("docketEditCretria") || currentRoute.includes("docket")) {
+    //       this.handleNormalDocket(parsedData);
+    //     } else {
+    //       this.router.navigate(['/error']);
+    //     }
+    //   } catch (err) {
+    //     console.error("Decryption/Parsing failed", err);
+    //     this.router.navigate(['/error']);
+    //   }
+    // });
   }
 
-  handleFinancialEdit(parsedData: any) {
-    const requiredKeys = [
-      "FinYear", "LocationCode", "LocationName",
-      "UserImage", "UserId", "BaseUserName", "Companycode",
-      "DocketNo","IsFromBillGeneration","Type",
-      // "baseLocationCode","baseCompanyCode","baseUserName"
-    ];
-    if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
-      this.docketService.loginUserList = parsedData;
-      this.docketService.Location = parsedData.LocationCode;
-      // this.docketService.Location = 'NAG';
-      this.docketService.BaseUserCode = parsedData.UserId;
-      this.docketService.baseUsername = parsedData.BaseUserName;
-      this.docketService.isComplition=true;
-      this.isComplitionlist = parsedData;
-      setTimeout(() => {
-        this.getCompletionData();
-      }, 300);
-    } else {
-      this.router.navigate(['/error']);
-    }
-  }
+  // handleNormalDocket(parsedData: any) {
+  //   const requiredKeys = [
+  //     "FinYear", "LocationCode", "LocationName",
+  //     "UserImage", "UserId", "BaseUserName", "Companycode"
+  //   ];
+  //   if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
+  //     this.docketService.loginUserList = parsedData;
+  //      this.docketService.Location = parsedData.LocationCode;
+  //     // this.docketService.Location = 'IDR';
+  //     this.docketService.BaseUserCode = parsedData.UserId;
+  //     this.docketService.baseUsername = parsedData.BaseUserName;
+  //     console.log("👉 Normal docket flow loaded");
+  //   } else {
+  //     this.router.navigate(['/error']);
+  //   }
+  // }
+
+  // handleFinancialEdit(parsedData: any) {
+  //   const requiredKeys = [
+  //     "FinYear", "LocationCode", "LocationName",
+  //     "UserImage", "UserId", "BaseUserName", "Companycode",
+  //     "DocketNo","IsFromBillGeneration","Type",
+  //     // "baseLocationCode","baseCompanyCode","baseUserName"
+  //   ];
+  //   if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
+  //     this.docketService.loginUserList = parsedData;
+  //     this.docketService.Location = parsedData.LocationCode;
+  //     // this.docketService.Location = 'NAG';
+  //     this.docketService.BaseUserCode = parsedData.UserId;
+  //     this.docketService.baseUsername = parsedData.BaseUserName;
+  //     this.docketService.isComplition=true;
+  //     this.isComplitionlist = parsedData;
+  //     setTimeout(() => {
+  //       this.getCompletionData();
+  //     }, 300);
+  //   } else {
+  //     this.router.navigate(['/error']);
+  //   }
+  // }
 
 getCompletionData() {
   const payload = {
-    docketNo: this.isComplitionlist.DocketNo,
-    // docketNo: '62813556',
-    isFromBillGeneration: this.isComplitionlist.IsFromBillGeneration || '',
-    type: this.isComplitionlist.Type,
-    baseLocationCode: this.docketService.Location,
-    baseCompanyCode: this.isComplitionlist.Companycode,
-    baseUserName: this.docketService.baseUsername
+    docketNo: this.docketService.loginUserList.DocketNo,
+    // docketNo: 'CNPIM2526000004',
+    isFromBillGeneration: this.docketService.loginUserList.IsFromBillGeneration || '',
+    type: this.docketService.loginUserList.Type,
+    baseLocationCode: this.docketService.loginUserList.LocationCode,
+    baseCompanyCode: this.docketService.loginUserList.Companycode,
+    baseUserName: this.docketService.loginUserList.BaseUserName
   };
 
   this.basicDetailService.getCompletion(payload).subscribe({
     next: (response) => {
       if (response) {
-        this.completiondata = response.data;
-        const basicDetail = this.completiondata.wmd;
+        this.docketService.completiondata = response.data;
+        const basicDetail = this.docketService.completiondata.wmd;
 
         if (basicDetail) {
           this.docketService.getpincodeData(basicDetail.csgePinCode);
           // first patch
           this.docketService.basicDetailForm.patchValue({
             cNoteNo: basicDetail.dockno,
-            // cNoteDate: new Date(basicDetail.dockdt.split('T')[0]),
+            cNoteDate: new Date(basicDetail.dockdt.split('T')[0]),
             pincode: basicDetail.csgePinCode ? basicDetail.csgePinCode : null,
             billingType: basicDetail.paybas,
             billingName: basicDetail.party_name,
@@ -167,8 +183,8 @@ getCompletionData() {
               ISCounterDelivery: basicDetail.isCounterDelivery
             });
             this.basicDetailsComp.onChangeCityListList(this.docketService.basicDetailForm.get('fromCity')?.value,'from');
-            this.docketService.GetGSTFromTrnMode()
-            this.docketService.GetDKTGSTForGTA();
+            // this.docketService.GetGSTFromTrnMode()
+            // this.docketService.GetDKTGSTForGTA();
             this.docketService.getpincodeData(basicDetail.csgnPinCode);
             this.docketService.consignorForm.patchValue({
               consignorName: basicDetail.csgncd,
@@ -198,10 +214,10 @@ getCompletionData() {
               chargeWeightPerPkg: basicDetail.chargedPkgsNo,
             });
 
-            if (this.completiondata.listInVoice?.length) {
+            if (this.docketService.completiondata.listInVoice?.length) {
                const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
                invoiceRows.clear(); // Clear old rows
-              this.completiondata.listInVoice.forEach((item: any, index: number) => {
+              this.docketService.completiondata.listInVoice.forEach((item: any, index: number) => {
                  invoiceRows.push(this.docketService.createInvoiceRow(index));
                 this.docketService.invoiceRows.controls[index].patchValue({
                   srNo: item.srNo,
@@ -214,10 +230,10 @@ getCompletionData() {
               });
             }
 
-            if (this.completiondata.listBoxLBH?.length) {
+            if (this.docketService.completiondata.listBoxLBH?.length) {
               const boxRows = this.docketService.invoiceform.get('boxDetailRows') as FormArray;
               boxRows.clear(); // Clear old rows
-              this.completiondata.listBoxLBH.forEach((item: any, index: number) => {
+              this.docketService.completiondata.listBoxLBH.forEach((item: any, index: number) => {
                    boxRows.push(this.docketService.createboxDetailRow(index));
                 this.docketService.boxDetailRows.controls[index].patchValue({
                   srNo: item.srNo || index + 1,
@@ -231,45 +247,23 @@ getCompletionData() {
                 });
               });
             }
-
-            if (this.completiondata?.listCharges) {
-              this.completiondata.listCharges.forEach((item: any) => {
+           this.docketService.onFormFieldChange();
+            if (this.docketService.completiondata?.listCharges) {
+              this.docketService.completiondata.listCharges.forEach((item: any) => {
                 if (this.docketService.freightForm.contains(item.chargeCode)) {
                   this.docketService.freightForm.patchValue({
                     [item.chargeCode]: item.chargeAmount
                   });
-                  if (item.chargeCode === 'SCHG12') {
-                    this.docketService.freightForm.patchValue({
-                      coddodCharged: item.chargeAmount
-                    });
-                  }
-                  if (!this.docketService.basicDetailForm.get('IsMAllDeliveryN')?.value) {
-                    this.docketService.freightForm.patchValue({ SCHG17: 0 });
-                  }
-                  if (!this.docketService.basicDetailForm.get('isAppointmentDelivery')?.value) {
-                    this.docketService.freightForm.patchValue({ UCHG08: 0 });
-                  }
-                  if (!this.docketService.basicDetailForm.get('iscsdDelivery')?.value) {
-                    this.docketService.freightForm.patchValue({ SCHG10: 0 });
-                  }
-                  if (!this.docketService.basicDetailForm.get('isDACC')?.value) {
-                    this.docketService.freightForm.patchValue({ SCHG13: 0 });
-                  }
-                  if (!this.docketService.basicDetailForm.get('IsCODDOD')?.value) {
-                    this.docketService.freightForm.patchValue({ SCHG12: 0, coddodCharged: 0 });
-                  }
-                  if (this.docketService.freightForm.get('fovRate')?.value) {
-                    this.docketService.freightForm.patchValue({ SCHG11: 0 });
-                  }
                 }
               });
+              this.docketService.mergeAndPatchCharges( [], // API khali
+                this.docketService.completiondata?.listCharges || [],
+                this.docketService.freightForm,
+                this.docketService.basicDetailForm
+              );
             }
 
-            this.docketService.getIGSTchargesDetail(this.completiondata);
-
-            // ✅ call only after everything is patched
-            this.docketService.onFormFieldChange();
-
+            this.docketService.getIGSTchargesDetail(this.docketService.completiondata);
           }, 300);
         }
       }
