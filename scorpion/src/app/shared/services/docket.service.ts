@@ -410,7 +410,7 @@ freightAndOtherChar(){
         // });
       }
     }
-  }
+}
 
   validateDropdownValue(formControlName: string, newList: any[], key: string = 'codeId') {
     const currentValue = this.basicDetailForm.get(formControlName)?.value;
@@ -448,7 +448,7 @@ getStep2Details() {
           riskType: this.step2DetailsList?.risktype,
         });
 
-        this.basicDetailForm.patchValue({
+      this.basicDetailForm.patchValue({
           isVolumetric: this.step2DetailsList?.isVolumentric === 'Y',
           isDACC: this.step2DetailsList?.isDACC === 'Y',
           // IsCODDOD: this.step2DetailsList?.isCODDOD === 'Y'
@@ -467,29 +467,29 @@ getStep2Details() {
         this.getRateData();
         this.getcontractservicecharge();
 
-        // Contract validation
-        if (
-          (this.basicDetailForm.value.billingType === 'P02' &&
+      // Contract validation
+      if (
+        (this.basicDetailForm.value.billingType === 'P02' &&
             this.step2DetailsList.contractid === 'P028888') ||
           !this.step2DetailsList.contractid
-        ) {
-          const billingParty = this.basicDetailForm.get('billingParty')?.value || '';
-          const billingName = this.basicDetailForm.get('billingName')?.value || '';
-          this.sweetAlertService.info(
-              `Customer Contract for <strong>${billingParty} - ${billingName}</strong> not found or may be expired. Please contact your administrator for further details.`,
-            () => {
-              this.basicDetailForm.patchValue({
-                billingParty: null,
-                billingName: null
-              });
-            }
-          );
+      ) {
+        const billingParty = this.basicDetailForm.get('billingParty')?.value || '';
+        const billingName = this.basicDetailForm.get('billingName')?.value || '';
+        this.sweetAlertService.info(
+          `Customer Contract for <strong>${billingParty} - ${billingName}</strong> not found or may be expired. Please contact your administrator for further details.`,
+          () => {
+            this.basicDetailForm.patchValue({
+              billingParty: null,
+              billingName: null
+            });
+          }
+        );
 
           // this.basicDetailForm.patchValue({
           //   billingParty: null,
           //   billingName: null
           // });
-        }
+      }
       }
     }
   });
@@ -786,7 +786,6 @@ getcontractservicecharge() {
       },
     });
   }
-
 getGSTCalculation() {
   const originalDate = this.basicDetailForm.value.cNoteDate;
   if (!originalDate) return;
@@ -813,34 +812,74 @@ getGSTCalculation() {
       "isGstApplied": "1",
       "billingState": this.freightForm.value.billingState || 'MH'
   };
-
   const currentId = ++this.lastRequestId;
 
   this.basicDetailService.getGSTCalculation(payload).subscribe({
     next: (response: any) => {
       // 👇 Only update if this is the latest request
+      // if (currentId === this.lastRequestId) {
+      //   this.gstCalculationList = Object.keys(response).reduce((acc: any, key) => {
+      //     acc[key.toLowerCase()] = response[key];
+      //     return acc;
+      //   }, {});
+      //   this.freightForm.patchValue({
+      //     ...this.gstCalculationList,
+      //     dktTotal: this.gstCalculationList.dkttotal ?? null,
+      //           billedAt: this.gstCalculationList.rcplbillgenloc,
+      //       billingState: this.gstCalculationList.customerbillgenstate,
+ 
+      //       // 👇 Collected fields same as amount
+      //       igstcollected: this.gstCalculationList.igstamount,
+      //       cgstcollected: this.gstCalculationList.cgstamount,
+      //       sgstcollected: this.gstCalculationList.sgstamount,
+      //       utgstcollected: this.gstCalculationList.utgstamount,
+ 
+      //   });
+      // }
       if (currentId === this.lastRequestId) {
-        this.gstCalculationList = Object.keys(response).reduce((acc: any, key) => {
-          acc[key.toLowerCase()] = response[key];
-          return acc;
-        }, {});
-        this.freightForm.patchValue({
-          ...this.gstCalculationList,
-          dktTotal: this.gstCalculationList.dkttotal ?? null,
-                billedAt: this.gstCalculationList.rcplbillgenloc,
-            billingState: this.gstCalculationList.customerbillgenstate,
- 
-            // 👇 Collected fields same as amount
-            igstcollected: this.gstCalculationList.igstamount,
-            cgstcollected: this.gstCalculationList.cgstamount,
-            sgstcollected: this.gstCalculationList.sgstamount,
-            utgstcollected: this.gstCalculationList.utgstamount,
- 
-        });
+       this.mergeAndPatchGST(response,this.completiondata?.wmdc || {},this.freightForm);
       }
     }
   });
 }
+
+mergeAndPatchGST(apiGST: any, editGST: any, freightForm: FormGroup) {
+  // Convert both objects to lowercase keys
+  const apiData = Object.keys(apiGST || {}).reduce((acc: any, key) => {
+    acc[key.toLowerCase()] = apiGST[key];
+    return acc;
+  }, {});
+
+  const editData = Object.keys(editGST || {}).reduce((acc: any, key) => {
+    acc[key.toLowerCase()] = editGST[key];
+    return acc;
+  }, {});
+
+  // Merge values using Math.max
+  const mergedGST = {
+    ...apiData,
+    igstamount: Math.max(apiData.igstamount || 0, editData.igstamount || 0),
+    cgstamount: Math.max(apiData.cgstamount || 0, editData.cgstamount || 0),
+    sgstamount: Math.max(apiData.sgstamount || 0, editData.sgstamount || 0),
+    utgstamount: Math.max(apiData.utgstamount || 0, editData.utgstamount || 0),
+    igstrate: Math.max(apiData.igstrate || 0, editData.igstrate || 0),
+    cgstrate: Math.max(apiData.cgstrate || 0, editData.cgstrate || 0),
+    sgstrate: Math.max(apiData.sgstrate || 0, editData.sgstrate || 0),
+    utgstrate: Math.max(apiData.utgstrate || 0, editData.utgstrate || 0),
+    dktTotal: Math.max(apiData.dkttotal || 0, editData.dkttot || 0),
+    igstcollected: Math.max(apiData.igstamount || 0, editData.igstamount || 0),
+    cgstcollected: Math.max(apiData.cgstamount || 0, editData.cgstamount || 0),
+    sgstcollected: Math.max(apiData.sgstamount || 0, editData.sgstamount || 0),
+    utgstcollected: Math.max(apiData.utgstamount || 0, editData.utgstamount || 0),
+    billedAt: apiData.rcplbillgenloc ?? editData.rcplbillgenloc ?? null,
+    billingState: apiData.customerbillgenstate ?? editData.customerbillgenstate ?? null
+  };
+
+  // Patch form
+  freightForm.patchValue(mergedGST, { emitEvent: false });
+}
+
+
 
 
   getIGSTchargesDetail(complitiondata?:any) {
@@ -872,22 +911,22 @@ getGSTCalculation() {
         });
       },
     });
-  if (complitiondata) {
-    // Extra values patch કરવી
-    this.freightForm.patchValue({
-            // ...complitiondata?.wmdc,
-      dktTotal:complitiondata?.wmdc?.dkttot ?? 0,
-      igstrate:complitiondata?.wmdc?.igstRate ?? 0,
-      cgstrate:complitiondata?.wmdc?.cgstRate ?? 0,
-      sgstrate:complitiondata?.wmdc?.sgstRate ?? 0,
-      utgstrate:complitiondata?.wmdc?.utgstRate ?? 0,
-      igstcollected: complitiondata?.wmdc?.igstAmount ?? 0,
-      cgstcollected: complitiondata?.wmdc?.cgstAmount ?? 0,
-      sgstcollected: complitiondata?.wmdc?.sgstAmount ?? 0,
-      utgstcollected: complitiondata?.wmdc?.utgstAmount ?? 0,
-    });
-    console.log(this.freightForm.value)
-  }
+  // if (complitiondata) {
+  //   // Extra values patch કરવી
+  //   this.freightForm.patchValue({
+  //           // ...complitiondata?.wmdc,
+  //     dktTotal:complitiondata?.wmdc?.dkttot ?? 0,
+  //     igstrate:complitiondata?.wmdc?.igstRate ?? 0,
+  //     cgstrate:complitiondata?.wmdc?.cgstRate ?? 0,
+  //     sgstrate:complitiondata?.wmdc?.sgstRate ?? 0,
+  //     utgstrate:complitiondata?.wmdc?.utgstRate ?? 0,
+  //     igstcollected: complitiondata?.wmdc?.igstAmount ?? 0,
+  //     cgstcollected: complitiondata?.wmdc?.cgstAmount ?? 0,
+  //     sgstcollected: complitiondata?.wmdc?.sgstAmount ?? 0,
+  //     utgstcollected: complitiondata?.wmdc?.utgstAmount ?? 0,
+  //   });
+  //   console.log(this.freightForm.value)
+  // }
   }
 
 getChargesData() {
@@ -1335,5 +1374,9 @@ calculateDiscount(event?: any) {
   this.getGSTCalculation();
 }
 
+}
+
+function tap(arg0: (response: any) => void): import("rxjs").OperatorFunction<import("../interface/api-base-action-response").IApiBaseResponse<import("../models/general-master.model").GSTNOListResponse>, any> {
+  throw new Error('Function not implemented.');
 }
 

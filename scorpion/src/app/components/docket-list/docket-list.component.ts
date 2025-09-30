@@ -40,7 +40,7 @@ export class DocketListComponent implements OnInit {
     }
   // }
     const currentRoute = this.router.url.split("?")[0];
-    if (currentRoute.includes("docketFinancialEdit") || currentRoute.includes("docketEditCretria")) {
+    if (currentRoute.includes("docketFinancialEdit") || currentRoute.includes("DocketFinancialEditCretria")) {
       this.docketService.isComplition = true;
       this.getCompletionData();
     } 
@@ -63,7 +63,7 @@ export class DocketListComponent implements OnInit {
 
     //     if (currentRoute.includes("docketFinancialEdit")) {
     //       this.handleFinancialEdit(parsedData);
-    //     } else if (currentRoute.includes("docketEditCretria") || currentRoute.includes("docket")) {
+    //     } else if (currentRoute.includes("DocketFinancialEditCretria") || currentRoute.includes("docket")) {
     //       this.handleNormalDocket(parsedData);
     //     } else {
     //       this.router.navigate(['/error']);
@@ -118,7 +118,7 @@ export class DocketListComponent implements OnInit {
 getCompletionData() {
   const payload = {
     docketNo: this.docketService.loginUserList.DocketNo,
-    // docketNo: 'CNPIM2526000004',
+    // docketNo: '62807867',
     isFromBillGeneration: this.docketService.loginUserList.IsFromBillGeneration || '',
     type: this.docketService.loginUserList.Type,
     baseLocationCode: this.docketService.loginUserList.LocationCode,
@@ -202,18 +202,6 @@ getCompletionData() {
               consigneeGSTNo: basicDetail.csgeCustGSTNo,
               consignorGSTNo: basicDetail.custGSTNo,
             });
-
-            this.docketService.freightForm.patchValue({
-              edd: basicDetail.cdeldt,
-              gstRate: basicDetail.gstRateType
-            });
-            this.docketService.invoiceform.patchValue({
-              totalNoOfPkgs: basicDetail.pkgsno,
-              totalActualWeight: basicDetail.actuwt,
-              finalActualWeight: basicDetail.chrgwt,
-              chargeWeightPerPkg: basicDetail.chargedPkgsNo,
-            });
-
             if (this.docketService.completiondata.listInVoice?.length) {
                const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
                invoiceRows.clear(); // Clear old rows
@@ -222,8 +210,8 @@ getCompletionData() {
                 this.docketService.invoiceRows.controls[index].patchValue({
                   srNo: item.srNo,
                   ewayBillNo: item.eWayBillNo,
-                  ewayBillExpiry: item.eWayBillExpiredDate?new Date(item.eWayBillExpiredDate) : '',
-                  ewayinvoiceDate: item.eWayBillInvoiceDate?new Date(item.eWayBillInvoiceDate) : '',
+                  ewayBillExpiry: item.eWayBillExpiredDate?new Date(item.eWayBillExpiredDate) : '01 JAN 0001',
+                  ewayinvoiceDate: item.eWayBillInvoiceDate?new Date(item.eWayBillInvoiceDate) : '01 JAN 0001',
                   invoiceNo: item.invno,
                   declaredvalue: item.declval,
                 });
@@ -247,7 +235,19 @@ getCompletionData() {
                 });
               });
             }
-           this.docketService.onFormFieldChange();
+            this.docketService.onFormFieldChange();
+            setTimeout(() => {   
+              this.docketService.invoiceform.patchValue({
+                totalNoOfPkgs: basicDetail.pkgsno,
+                totalActualWeight: basicDetail.actuwt,
+                finalActualWeight: basicDetail.chrgwt,
+                chargeWeightPerPkg: basicDetail.chargedPkgsNo,
+              });
+            }, 500);
+            this.docketService.freightForm.patchValue({
+            EDD: basicDetail.cdeldt === '0001-01-01T00:00:00' ? '01 JAN 0001' : basicDetail.cdeldt ,
+            gstRate: basicDetail.gstRateType
+          });
             if (this.docketService.completiondata?.listCharges) {
               this.docketService.completiondata.listCharges.forEach((item: any) => {
                 if (this.docketService.freightForm.contains(item.chargeCode)) {
@@ -262,8 +262,8 @@ getCompletionData() {
                 this.docketService.basicDetailForm
               );
             }
-
-            this.docketService.getIGSTchargesDetail(this.docketService.completiondata);
+            this.docketService.mergeAndPatchGST({},this.docketService.completiondata?.wmdc || {}, this.docketService.freightForm)
+              // this.docketService.patchOrMergeGST(this.docketService.completiondata.wmdc, this.docketService.freightForm);
           }, 300);
         }
       }

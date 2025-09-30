@@ -23,7 +23,7 @@ export const DocketRoutes: Routes = [
       canActivate: [DocketGuard]
   },
   {
-     path: 'docketEditCretria',
+     path: 'DocketFinancialEditCretria',
      component: DocketEditComponent,
      canActivate: [DocketGuard]
   },
