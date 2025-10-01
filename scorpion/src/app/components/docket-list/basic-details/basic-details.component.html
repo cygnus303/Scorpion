@@ -290,8 +290,7 @@
             <div class="col-md-7"><ng-select class="noFoundTextColor required2" appFocusNext
                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('serviceType')?.invalid  && docketService.basicDetailForm.get('serviceType')?.touched}"
                 required placeholder="Service Type" [items]="docketService.serviceData" bindLabel="codeDesc"
-                bindValue="codeId" formControlName="serviceType" notFoundText="No matches found"
-                (change)="docketService.GetFreightContractDetails();docketService.getOtherChargesDetail();docketService.getGSTCalculation();docketService.getProRataCharge()"></ng-select>
+                bindValue="codeId" formControlName="serviceType" notFoundText="No matches found" (change)="docketService.getProRataCharge();docketService.freightAndOtherChar()"></ng-select>
             </div>
           </div>
           <div class="form-group mb-1">

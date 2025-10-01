@@ -182,17 +182,17 @@ export class DocketService {
 
   freightbuild() {
     this.freightForm = new FormGroup({
-      freightCharges: new FormControl( [Validators.required, Validators.min(0.01)]),
+      freightCharges: new FormControl(0, [Validators.required, Validators.min(0.01)]),
       GSTPaidBy: new FormControl(),
       stax_paidby: new FormControl(),
       rateType: new FormControl(),
-      freightRate: new FormControl([Validators.required, Validators.min(0.01)]),
+      freightRate: new FormControl(0,[Validators.required, Validators.min(0.01)]),
       EDD: new FormControl(),
       billedAt: new FormControl(),
       billingState: new FormControl(),
-      fovRate: new FormControl(),
-      fovCalculated: new FormControl(),
-      fovCharged: new FormControl(),
+      fovRate: new FormControl(0),
+      fovCalculated: new FormControl(0),
+      fovCharged: new FormControl(0),
       coddodCharged: new FormControl(),
       coddodCollected: new FormControl(),
       gstRate: new FormControl(),
@@ -1056,9 +1056,9 @@ validateAppointmentDate() {
       contractID: this.step2DetailsList?.contractid,
       riskType: this.step2DetailsList?.risktype,
       invAmt: this.invoiceform.value.totalDeclaredValue?.toString(),
-      serviceType: this.basicDetailForm.value.serviceType
+      serviceType: this.basicDetailForm.value.serviceType ?this.basicDetailForm.value.serviceType :''
     }
-    if (!payload.contractID || !payload.riskType || !payload.invAmt || !payload.serviceType) {
+    if (!payload.contractID || !payload.riskType || !payload.invAmt) {
     console.warn("Skipping FOV API call — missing values", {
     });
     return;
@@ -1117,8 +1117,8 @@ validateAppointmentDate() {
         if (response) {
           this.isSubmiting=true;
           this.chargingData = response;
-          this.chargingData.forEach((item: any) => {
-            if(this.loginUserList.Type !== '2'){
+          // this.chargingData.forEach((item: any) => {
+            // if(this.loginUserList.Type !== '2'){
               // if (this.freightForm.contains(item.chargecode)) {
               //     this.freightForm.patchValue({
               //       [item.chargecode]: item.charge
@@ -1148,7 +1148,7 @@ validateAppointmentDate() {
               //       this.freightForm.patchValue({ SCHG11: 0 })
               //     }
               //   }
-            }
+            // }
             // else{
               this.mergeAndPatchCharges(
                 this.chargingData,
@@ -1157,7 +1157,7 @@ validateAppointmentDate() {
                 this.basicDetailForm
               );
             // }
-          });
+          // });
           // this.subTotalCalculation();
           this.getFuelSurcharge(this.freightData?.freightCharge);
         }
@@ -1167,27 +1167,33 @@ validateAppointmentDate() {
   }
 
  mergeAndPatchCharges(apiCharges: any[], editCharges: any[], freightForm: FormGroup, basicDetailForm: FormGroup) {
-  const mergedCharges: { [key: string]: number } = {};
+   const mergedMap = new Map<string, number>();
 
-// 1. API charges
-apiCharges?.forEach((item: any) => {
-  const code = (item.chargecode || "").toUpperCase();
-  const amount = item.charge || 0;
-  mergedCharges[code] = Math.max(mergedCharges[code] || 0, amount);
-});
+  // 1. API charges
+  apiCharges?.forEach((item: any) => {
+    const code = (item.chargecode || "").toUpperCase();
+    const amount = item.charge || 0;
+    mergedMap.set(code, Math.max(mergedMap.get(code) || 0, amount));
+  });
 
-// 2. Edit charges
-editCharges?.forEach((item: any) => {
-  const code = (item.chargeCode || item.chargecode || "").toUpperCase();
-  const amount = item.chargeAmount || item.charge || 0;
-  mergedCharges[code] = Math.max(mergedCharges[code] || 0, amount);
-});
+  // 2. Edit charges
+  editCharges?.forEach((item: any) => {
+    const code = (item.chargeCode || item.chargecode || "").toUpperCase();
+    const amount = item.chargeAmount || item.charge || 0;
+    mergedMap.set(code, Math.max(mergedMap.get(code) || 0, amount));
+  });
+
+  // 3. Convert back into array of objects (keep original structure)
+  this.chargingData = Array.from(mergedMap.entries()).map(([code, amount]) => ({
+    chargecode: code,
+    charge: amount
+  }));
 
   // 3. Patch into freightForm
-  Object.keys(mergedCharges).forEach(code => {
-    if (freightForm.contains(code)) {
+  this.chargingData.forEach((code:any) => {
+    if (this.freightForm.contains(code.chargecode)) {
       freightForm.patchValue(
-        { [code]: mergedCharges[code] },
+        {[code.chargecode]: code.charge},
         { emitEvent: false }
       );
     } else {

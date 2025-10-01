@@ -33,7 +33,7 @@ export class DocketListComponent implements OnInit {
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      // this.docketService.Location = 'HYN';
+      // this.docketService.Location = 'TBH';
       this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
@@ -118,7 +118,7 @@ export class DocketListComponent implements OnInit {
 getCompletionData() {
   const payload = {
     docketNo: this.docketService.loginUserList.DocketNo,
-    // docketNo: '62807867',
+    // docketNo: '90042087',
     isFromBillGeneration: this.docketService.loginUserList.IsFromBillGeneration || '',
     type: this.docketService.loginUserList.Type,
     baseLocationCode: this.docketService.loginUserList.LocationCode,
@@ -180,7 +180,8 @@ getCompletionData() {
               isAppointmentDelivery: basicDetail.isAppointmentDelivery,
               specialInstruction: basicDetail.spl_svc_req,
               ISCounterPickUpPRS: basicDetail.isCounterPickUpPRS,
-              ISCounterDelivery: basicDetail.isCounterDelivery
+              ISCounterDelivery: basicDetail.isCounterDelivery,
+              isDACC: basicDetail.isDACC
             });
             this.basicDetailsComp.onChangeCityListList(this.docketService.basicDetailForm.get('fromCity')?.value,'from');
             // this.docketService.GetGSTFromTrnMode()
@@ -236,14 +237,12 @@ getCompletionData() {
               });
             }
             this.docketService.onFormFieldChange();
-            setTimeout(() => {   
               this.docketService.invoiceform.patchValue({
                 totalNoOfPkgs: basicDetail.pkgsno,
                 totalActualWeight: basicDetail.actuwt,
                 finalActualWeight: basicDetail.chrgwt,
                 chargeWeightPerPkg: basicDetail.chargedPkgsNo,
               });
-            }, 600);
             this.docketService.freightForm.patchValue({
             EDD: basicDetail.cdeldt === '0001-01-01T00:00:00' ? '01 JAN 0001' : basicDetail.cdeldt ,
             gstRate: basicDetail.gstRateType
@@ -263,7 +262,6 @@ getCompletionData() {
               );
             }
             this.docketService.mergeAndPatchGST({},this.docketService.completiondata?.wmdc || {}, this.docketService.freightForm)
-              // this.docketService.patchOrMergeGST(this.docketService.completiondata.wmdc, this.docketService.freightForm);
           }, 300);
         }
       }
