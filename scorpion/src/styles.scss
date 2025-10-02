@@ -342,3 +342,26 @@ input[readonly] {
   justify-content: center; /* center horizontally */
   gap: 10px; /* space between buttons */
 }
+
+// delivery-agent-list css
+
+  .custom-table thead tr th{
+    background-color: #1e2b5c; /* Dark blue color */
+    color: #fff; /* White text */
+  }
+  .custom-table,
+  .custom-table th,
+  .custom-table td {
+    border: 1px solid #dee2e6; /* Add border to table and cells */
+  }
+  .custom-table th,
+  .custom-table td {
+    vertical-align: middle;
+  }
+
+
+/* Case B: class applied directly to .modal-dialog */
+.checkbox-lg {
+  transform: scale(1.5);  /* 1.5 times bigger */
+  margin-right: 0.5rem;   /* spacing */
+}

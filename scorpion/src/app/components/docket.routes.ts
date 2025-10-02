@@ -7,20 +7,22 @@ import { DocketGuard } from 'app/shared/docket.guard';
 
 export const DocketRoutes: Routes = [
   {
-    path: 'docket',
-    component: DocketListComponent,
+     path: 'docket',
+     component: DocketListComponent,
      canActivate: [DocketGuard]
-  },{
+  },
+  {
     path: 'error',
     component: ErrorPageComponent
-  },{
+  },
+  {
      path: 'DocketDone/:id',
      component: DocketDoneComponent
   },
   {
      path: 'docketFinancialEdit',
      component: DocketListComponent,
-      canActivate: [DocketGuard]
+     canActivate: [DocketGuard]
   },
   {
      path: 'docketEditCretria',

@@ -8,4 +8,11 @@ export const routes: Routes = [
         (m) => m.DocketModule
       ),
   },
+       {
+    path: 'delivery-agent',
+    loadChildren: () =>
+      import('./components/delivery-agent-list/delivery-agent.module').then(
+        (m) => m.DeliveryAgentModule
+      ),
+  },
 ];
