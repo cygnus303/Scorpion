@@ -4,13 +4,13 @@
     <button type="button" class="btn text-white" (click)="closePopup()"><i class="fas fa-times"></i></button>
   </div>
   <div class="modal-body">
-    <form>
+    <form [formGroup]="dAForm">
       <div class="row pb-3">
         <div class="col-6">
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Delivery Agent Code:</b></label>
             <div class="col-7">
-              <input class="form-control" placeholder="Delivery Agent Code" type="text">
+              <input class="form-control" placeholder="Delivery Agent Code" type="text" formControlName="dA_Code">
               <!-- <div class="text-danger text-start ">
                           This field is required.
                         </div> -->
@@ -21,7 +21,7 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Delivery Agent Name:</b></label>
             <div class="col-7">
-              <input class="form-control" type="text" placeholder="TDelivery Agent Name">
+              <input class="form-control" type="text" placeholder="TDelivery Agent Name" formControlName="deliveryAgentName">
             </div>
           </div>
         </div>
@@ -31,7 +31,7 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Delivery Agent Mobile No.</b></label>
             <div class="col-7">
-              <input class="form-control" type="number" placeholder="Delivery Agent Mobile No.">
+              <input class="form-control" type="text" placeholder="Delivery Agent Mobile No." formControlName="deliveryAgentMobile">
             </div>
           </div>
         </div>
@@ -39,7 +39,7 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>FTL Type:</b></label>
             <div class="col-7">
-              <input class="form-control" placeholder="FTL Type" type="text">
+              <input class="form-control" placeholder="FTL Type" type="text" formControlName="fTlType">
             </div>
           </div>
         </div>
@@ -49,7 +49,7 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Vehicle No:</b></label>
             <div class="col-7">
-              <input class="form-control" type="text" placeholder="Vehicle No">
+              <input class="form-control" type="text" placeholder="Vehicle No" formControlName="vehicleNo">
             </div>
           </div>
         </div>
@@ -58,7 +58,7 @@
             <label class="control-label col-5"><b>Registration date:</b></label>
             <div class="col-7">
                <div class="input-group">
-                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
+                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker formControlName="registrationDate"
                   [bsValue]="docketService.bsValue"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                   placeholder="Registration date" >
@@ -75,7 +75,7 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Engine No: </b></label>
             <div class="col-7">
-              <input class="form-control" placeholder="Engine No" type="text">
+              <input class="form-control" placeholder="Engine No" type="text" formControlName="engineNo">
             </div>
           </div>
         </div>
@@ -83,7 +83,7 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Chassis No:</b></label>
             <div class="col-7">
-              <input class="form-control" type="text" placeholder="Chassis No">
+              <input class="form-control" type="text" placeholder="Chassis No" formControlName="chassisNo">
             </div>
           </div>
         </div>
@@ -93,7 +93,7 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>RC Book No:</b></label>
             <div class="col-7">
-              <input class="form-control" type="text" placeholder="RC Book No">
+              <input class="form-control" type="text" placeholder="RC Book No" formControlName="rcBookNo">
             </div>
           </div>
         </div>
@@ -102,7 +102,7 @@
             <label class="control-label col-5"><b>Permit validity Date:</b></label>
             <div class="col-7">
                <div class="input-group">
-                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
+                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker formControlName="permitValidityDate"
                   [bsValue]="docketService.bsValue"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                   placeholder="Permit validity Date" >
@@ -120,11 +120,11 @@
             <label class="control-label col-5"><b>Insurance Validity Date:</b></label>
             <div class="col-7">
                <div class="input-group">
-                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
+                <input type="text" class="form-control uppercase-none" #dq="bsDatepicker" bsDatepicker formControlName="insuranceValidityDate"
                   [bsValue]="docketService.bsValue"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                   placeholder="Insurance Validity Date" >
-                <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                <span class="input-group-text cursor-pointer" (click)="dq.toggle()">
                   <i class="fa fa-calendar"></i>
                 </span>
               </div>
@@ -136,7 +136,7 @@
             <label class="control-label col-5"><b>Fitness Validity Date:</b></label>
             <div class="col-7">
               <div class="input-group">
-                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
+                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker formControlName="fitnessValidityDate"
                   [bsValue]="docketService.bsValue"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                   placeholder="Fitness Validity Date" >
@@ -153,7 +153,7 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>License No:</b></label>
             <div class="col-7">
-              <input class="form-control" placeholder="License No" type="text">
+              <input class="form-control" placeholder="License No" type="text" formControlName="licenseNo">
             </div>
           </div>
         </div>
@@ -162,7 +162,7 @@
             <label class="control-label col-5"><b>Date of Birth:</b></label>
             <div class="col-7">
               <div class="input-group">
-                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
+                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker formControlName="dateOfBirth"
                   [bsValue]="docketService.bsValue"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                   placeholder="Date of Birth" >
@@ -179,7 +179,7 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Issue By RTO:</b></label>
             <div class="col-7">
-              <input class="form-control" type="text" placeholder="Issue By RTO">
+              <input class="form-control" type="text" placeholder="Issue By RTO" formControlName="issueByRTO">
             </div>
           </div>
         </div>
@@ -188,7 +188,7 @@
             <label class="control-label col-5"><b>License validity Date:</b></label>
             <div class="col-7">
               <div class="input-group">
-                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
+                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker formControlName="licenseValidityDate"
                   [bsValue]="docketService.bsValue"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                   placeholder="License validity Date" >
@@ -205,7 +205,7 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Business Associate Vendor:</b></label>
             <div class="col-7">
-              <input class="form-control" type="text" placeholder="Business Associate Vendor">
+              <input class="form-control" type="text" placeholder="Business Associate Vendor" formControlName="businessAssociateVendor">
             </div>
           </div>
         </div>
@@ -213,7 +213,7 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Location:</b></label>
             <div class="col-7">
-              <input class="form-control" type="text" placeholder="Location">
+              <input class="form-control" type="text" placeholder="Location" formControlName="location">
             </div>
           </div>
         </div>
@@ -224,8 +224,8 @@
             <label class="control-label col-5"><b>GPS Enabled: </b></label>
             <div class="col-7">
               <div class="d-flex align-items-center">
-                <input type="checkbox" class="form-check-input me-4 checkbox-lg">
-                <input class="form-control" placeholder="GPS Provider" type="text">
+                <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="gpsEnabled">
+                <input class="form-control" placeholder="GPS Provider" type="text" formControlName="gpsProvider">
               </div>
             </div>
           </div>
@@ -234,7 +234,7 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>License Attachment:</b></label>
             <div class="col-7">
-              <input type="file"  class="form-control py-2 pt-2 uppercase-none"/>
+              <input type="file"  class="form-control py-2 pt-2 uppercase-none" formControlName="licenseAttachment"   (change)="onFileSelected($event)" />
             </div>
           </div>
         </div>
@@ -243,6 +243,6 @@
   </div>
   <div class="modal-footer">
     <!-- <button class="btn btn-secondary" (click)="closePopup()">Cancel</button> -->
-    <button class="btn btn-success px-5"> <i class="fas fa-check me-2"></i> Submit</button>
+    <button class="btn btn-success px-5" (click)="onSubmit()"> <i class="fas fa-check me-2"></i> Submit</button>
   </div>
 </ng-template>
