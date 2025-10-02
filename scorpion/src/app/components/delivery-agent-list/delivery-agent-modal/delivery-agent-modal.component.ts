@@ -59,6 +59,7 @@ export class DeliveryAgentModalComponent {
       gpsProvider: new FormControl(''),
       location: new FormControl(''),
       licenseAttachment: new FormControl(''),
+      licenceFile:new FormControl(''),
       entryBy: new FormControl(''),
       updateBy: new FormControl('')
     })
