@@ -8,7 +8,7 @@
             <button class="btn btn-light btn-sm me-2 fw-bold">
                 <i class="fas fa-download"></i> Download Excel
             </button>
-            <button class="btn btn-light btn-sm fw-bold" (click)="openAddUser()">
+            <button class="btn btn-light btn-sm fw-bold" (click)="openDeliveryAgentsPopup()">
                 <i class="fas fa-user-plus"></i> Add User
             </button>
         </div>
@@ -27,92 +27,25 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>D0001</td>
-                    <td>GOPAL SINGH</td>
-                    <td>MHP</td>
-                    <td>V0723: Madhukar Sonawane</td>
+                <tr *ngFor="let item of deliveryAgentsList">
+                    <td>{{item.id}}</td>
+                    <td>{{item.agentCode}}</td>
+                    <td>{{item.agentName}}</td>
+                    <td>{{item.branch}}</td>
+                    <td>{{item.vehicleInfo}}</td>
                     <td class="text-center">
-                        <i class="fas fa-check-square text-success me-1 fs-4"></i> 
+                        <ng-container *ngIf="item.status; else inactive">
+                            <i class="fas fa-check-square text-success me-1 fs-4"></i>
+                        </ng-container>
+                        <ng-template #inactive>
+                            <i class="fas fa-window-close text-danger fs-4"></i>
+                        </ng-template>
                     </td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-secondary me-1" title="Edit">
+                        <button class="btn btn-sm btn-secondary me-1" title="Edit" (click)="openDeliveryAgentsPopup(item)">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-sm btn-info text-white" title="View">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>D0001</td>
-                    <td>GOPAL SINGH</td>
-                    <td>MHP</td>
-                    <td>V0723: Madhukar Sonawane</td>
-                    <td class="text-center">
-                        <i class="fas fa-check-square text-success me-1 fs-4"></i> 
-                    </td>
-                    <td class="text-center">
-                        <button class="btn btn-sm btn-secondary me-1" title="Edit">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-info text-white" title="View">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>D0001</td>
-                    <td>GOPAL SINGH</td>
-                    <td>MHP</td>
-                    <td>V0723: Madhukar Sonawane</td>
-                    <td class="text-center">
-                        <i class="fas fa-window-close text-danger fs-4"></i> 
-                    </td>
-                    <td class="text-center">
-                        <button class="btn btn-sm btn-secondary me-1" title="Edit">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-info text-white" title="View">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>D0001</td>
-                    <td>GOPAL SINGH</td>
-                    <td>MHP</td>
-                    <td>V0723: Madhukar Sonawane</td>
-                    <td class="text-center">
-                        <i class="fas fa-check-square text-success me-1 fs-4"></i> 
-                    </td>
-                    <td class="text-center">
-                        <button class="btn btn-sm btn-secondary me-1" title="Edit">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-info text-white" title="View">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>D0001</td>
-                    <td>GOPAL SINGH</td>
-                    <td>MHP</td>
-                    <td>V0723: Madhukar Sonawane</td>
-                    <td class="text-center">
-                        <i class="fas fa-window-close text-danger fs-4"></i> 
-                    </td>
-                    <td class="text-center">
-                        <button class="btn btn-sm btn-secondary me-1" title="Edit">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-info text-white" title="View">
+                        <button class="btn btn-sm btn-info text-white" title="View" (click)="opendeliveryAgentViewPopup(item)">
                             <i class="fas fa-eye"></i>
                         </button>
                     </td>
@@ -123,3 +56,4 @@
 </div>
 
 <delivery-agent-modal #deliveryAgentPopup></delivery-agent-modal>
+<delivery-agent-view #deliveryAgentViewPopup></delivery-agent-view>

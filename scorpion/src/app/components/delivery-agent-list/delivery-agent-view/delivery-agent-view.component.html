@@ -1,0 +1,75 @@
+<!-- TemplateRef for modal -->
+<ng-template #templatePopup>
+   <div class="modal-header background-color text-white d-flex justify-content-between">
+    <h5 class="modal-title">Add Delivery Agent</h5>
+    <button type="button" class="btn text-white" (click)="closePopup()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body">
+  <div class="table-container">
+    <table class="table table-bordered table-striped">
+      <tbody>
+        <tr>
+          <td style="width: 50%;"><strong>Delivery Agent Code:</strong> {{ '--' }}</td>
+          <td><strong>Delivery Agent Name:</strong> {{ '--' }}</td>
+        </tr>
+        <tr>
+          <td><strong>Delivery Agent Mobile No.</strong> {{ '--' }}</td>
+          <td><strong>FTL Type:</strong> {{ '--' }}</td>
+        </tr>
+        <tr>
+          <td><strong>Vehicle No:</strong> {{ '--' }}</td>
+          <td><strong>Engine No:</strong> {{ '--' }}</td>
+        </tr>
+        <tr>
+          <td><strong>Registration date:</strong> {{ '--' }}</td>
+          <td><strong>Chassis No: </strong> {{ '--' }}</td>
+        </tr>
+        <tr>
+          <td><strong>RC Book No:</strong> {{ '--' }}</td>
+          <td><strong>Permit validity Date:</strong> {{ '--' }}</td>
+        </tr>
+        <tr>
+          <td><strong>Insurance Validity Date:</strong> {{ '--' }}</td>
+          <td><strong>Fitness Validity Date:</strong> {{ '--' }}</td>
+        </tr>
+        <tr>
+          <td><strong>License No:</strong> {{ '--' }}</td>
+          <td><strong>Date of Birth:</strong> {{ '--' }}</td>
+        </tr>
+        <tr>
+          <td><strong>Issue By RTO:</strong> {{ '--' }}</td>
+          <td><strong>License validity Date:</strong> {{ '--' }}</td>
+        </tr>
+        <tr>
+          <td><strong>Issue By RTO:</strong> {{ '--' }}</td>
+          <td><strong>License validity Date:</strong> {{ '--' }}</td>
+        </tr>
+         <tr>
+          <td><strong>Business Associate Vendor:</strong> {{ '--' }}</td>
+          <td><strong>Location:</strong> {{ '--' }}</td>
+        </tr>
+         <tr>
+          <td><strong>GPS Enabled:</strong> {{ '--' }}</td>
+          <td><strong>GPS Provider:</strong> {{ '--' }}</td>
+        </tr>
+         <tr>
+          <td><strong>Active Flag:</strong> {{ '--' }}</td>
+          <td><strong>License Attachment:</strong> {{ '--' }}</td>
+        </tr>
+        <tr>
+          <td><strong>Added By:</strong> {{ '--' }}</td>
+          <td><strong>Added Date:</strong> {{ '--' }}</td>
+        </tr>
+        <tr>
+          <td><strong>Edited  By:</strong> {{ '--' }}</td>
+          <td><strong>Edited  Date:</strong> {{ '--' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+
+  <!-- <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="closePopup()">Cancel</button>
+  </div> -->
+</ng-template>

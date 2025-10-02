@@ -5,9 +5,10 @@ import { DeliveryRoutes } from './delivery-agent.routes';
 import { DeliveryAgentListComponent } from './delivery-agent-list.component';
 import { DeliveryAgentModalComponent } from './delivery-agent-modal/delivery-agent-modal.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { DeliveryAgentViewComponent } from './delivery-agent-view/delivery-agent-view.component';
 
 @NgModule({
-  declarations: [DeliveryAgentListComponent,DeliveryAgentModalComponent],
+  declarations: [DeliveryAgentListComponent,DeliveryAgentModalComponent,DeliveryAgentViewComponent],
   imports: [
     CommonModule,
     BsDatepickerModule,
