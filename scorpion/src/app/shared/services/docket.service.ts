@@ -794,7 +794,6 @@ getGSTCalculation() {
   const formattedDate = dateObj.toLocaleDateString('en-GB', {
     day: '2-digit', month: 'long', year: 'numeric'
   });
-
   const payload = {
      "custcode": this.basicDetailForm.value.billingParty || '',
       "payBas": this.basicDetailForm.value.billingType || '',
@@ -813,7 +812,6 @@ getGSTCalculation() {
       "billingState": this.freightForm.value.billingState || 'MH'
   };
   const currentId = ++this.lastRequestId;
-
   this.basicDetailService.getGSTCalculation(payload).subscribe({
     next: (response: any) => {
       // 👇 Only update if this is the latest request
@@ -836,6 +834,7 @@ getGSTCalculation() {
  
         // });
       }
+    
       if (currentId === this.lastRequestId) {
        this.mergeAndPatchGST(this.gstCalculationList,this.completiondata?.wmdc || {},this.freightForm);
       }
