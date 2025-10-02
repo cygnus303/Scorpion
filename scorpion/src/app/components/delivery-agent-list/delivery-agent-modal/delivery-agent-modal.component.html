@@ -7,10 +7,10 @@
     <form [formGroup]="dAForm">
       <div class="row pb-3">
         <div class="col-6">
-          <div class="row align-items-center">
+          <div class="row align-items-center" >
             <label class="control-label col-5"><b>Delivery Agent Code:</b></label>
             <div class="col-7">
-              <input class="form-control" placeholder="Delivery Agent Code" type="text" formControlName="dA_Code">
+              <input class="form-control" placeholder="Delivery Agent Code" type="text" formControlName="dA_Code" [readonly]="!deliveryAgentList ? true:false">
               <!-- <div class="text-danger text-start ">
                           This field is required.
                         </div> -->
@@ -21,7 +21,7 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Delivery Agent Name:</b></label>
             <div class="col-7">
-              <input class="form-control" type="text" placeholder="TDelivery Agent Name" formControlName="deliveryAgentName">
+              <input class="form-control required2" type="text" placeholder="TDelivery Agent Name" formControlName="deliveryAgentName">
             </div>
           </div>
         </div>
@@ -31,7 +31,7 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Delivery Agent Mobile No.</b></label>
             <div class="col-7">
-              <input class="form-control" type="text" placeholder="Delivery Agent Mobile No." formControlName="deliveryAgentMobile">
+              <input class="form-control required2" type="text" placeholder="Delivery Agent Mobile No." formControlName="deliveryAgentMobile">
             </div>
           </div>
         </div>
@@ -39,7 +39,7 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>FTL Type:</b></label>
             <div class="col-7">
-              <input class="form-control" placeholder="FTL Type" type="text" formControlName="fTlType">
+              <input class="form-control required2" placeholder="FTL Type" type="text" formControlName="fTlType">
             </div>
           </div>
         </div>
@@ -50,8 +50,8 @@
             <label class="control-label col-5"><b>Vehicle No:</b></label>
             <div class="col-7">
                 <div class="d-flex">
-                  <input class="form-control" type="text" placeholder="Vehicle No" formControlName="vehicleNo">
-                  <button class="btn background-color text-white ms-2" type="button">
+                  <input class="form-control required2" type="text" placeholder="Vehicle No" formControlName="vehicleNo">
+                  <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentList ? true:false">
                     Invoke
                   </button>
                 </div>
@@ -159,8 +159,8 @@
             <label class="control-label col-5"><b>License No:</b></label>
             <div class="col-7">
                <div class="d-flex">
-                   <input class="form-control" placeholder="License No" type="text" formControlName="licenseNo">
-                  <button class="btn background-color text-white ms-2" type="button">
+                   <input class="form-control required2" placeholder="License No" type="text" formControlName="licenseNo">
+                  <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentList ? true:false">
                     Invoke
                   </button>
                 </div>
@@ -172,7 +172,7 @@
             <label class="control-label col-5"><b>Date of Birth:</b></label>
             <div class="col-7">
               <div class="input-group">
-                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker formControlName="dateOfBirth"
+                <input type="text" class="form-control uppercase-none required2" #dp="bsDatepicker" bsDatepicker formControlName="dateOfBirth"
                   [bsValue]="docketService.bsValue"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                   placeholder="Date of Birth" >
@@ -215,7 +215,7 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Business Associate Vendor:</b></label>
             <div class="col-7">
-              <input class="form-control" type="text" placeholder="Business Associate Vendor" formControlName="businessAssociateVendor">
+              <input class="form-control required2" type="text" placeholder="Business Associate Vendor" formControlName="businessAssociateVendor">
             </div>
           </div>
         </div>
@@ -223,13 +223,13 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Location:</b></label>
             <div class="col-7">
-              <input class="form-control" type="text" placeholder="Location" formControlName="location">
+              <input class="form-control required2" type="text" placeholder="Location" formControlName="location">
             </div>
           </div>
         </div>
       </div>
       <div class="row pb-3">
-        <div class="col-6">
+        <div class="col-6 mb-3">
           <div class="row align-items-center">
             <label class="control-label col-5"><b>GPS Enabled: </b></label>
             <div class="col-7">
@@ -240,7 +240,7 @@
             </div>
           </div>
         </div>
-             <div class="col-6">
+        <div class="col-6"  *ngIf="deliveryAgentList ? true : false">
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Active Flag :</b></label>
             <div class="col-7">
@@ -250,11 +250,11 @@
             </div>
           </div>
         </div>
-        <div class="col-6 mt-3">
+        <div class="col-6">
           <div class="row align-items-center">
             <label class="control-label col-5"><b>License Attachment:</b></label>
             <div class="col-7">
-              <input type="file"  class="form-control py-2 pt-2 uppercase-none" formControlName="licenseAttachment"   (change)="onFileSelected($event)" />
+              <input type="file"  class="form-control py-2 pt-2 uppercase-none required2" formControlName="file"   (change)="onFileSelected($event)" />
             </div>
           </div>
         </div>

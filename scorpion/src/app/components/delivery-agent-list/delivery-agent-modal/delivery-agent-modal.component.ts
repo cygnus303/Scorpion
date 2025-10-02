@@ -16,17 +16,14 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 export class DeliveryAgentModalComponent {
   public bsModalRef!: BsModalRef;
   public dAForm!: FormGroup;
-  constructor(
-    private modalService: BsModalService,
-    public docketService: DocketService,
-    public deliveryAgentService: DeliveryAgentService,
-    public sweetAlertService:SweetAlertService
-  ) { }
+  public deliveryAgentList:any;
+  constructor(private modalService: BsModalService,public docketService: DocketService,public deliveryAgentService: DeliveryAgentService,public sweetAlertService:SweetAlertService) { }
   @ViewChild('templatePopup', { static: true }) templatePopup!: TemplateRef<any>;
    ngOnInit(){
      this.buildForm()
-  }
+   }
  showPopup(data:any){
+    this.deliveryAgentList = data;
     this.bsModalRef = this.modalService.show(this.templatePopup, {  backdrop: true, ignoreBackdropClick: false, class: 'modal-xl modal-dialog-centered' });
   }
 
@@ -60,26 +57,26 @@ export class DeliveryAgentModalComponent {
       location: new FormControl(''),
       licenseAttachment: new FormControl(''),
       entryBy: new FormControl(''),
-      updateBy: new FormControl('')
+      updateBy: new FormControl(''),
+      file:new FormControl(''),
     })
 
   }
 
-  onFileSelected(event: any) {
+onFileSelected(event: any) {
   const file: File = event.target.files[0];
   if (file) {
     const reader = new FileReader();
     reader.onload = () => {
-      // Convert to Base64 and set in form
+      // Convert to Base64 and set in reactive form
       const base64String = (reader.result as string).split(',')[1];
       this.dAForm.patchValue({
-        licenseAttachment: base64String
+        licenseAttachment: base64String,
       });
     };
-    reader.readAsDataURL(file);  // Read file as Base64
+    reader.readAsDataURL(file); 
   }
 }
-
 
   onSubmit() {
     this.deliveryAgentService.addDeliveryAgent(this.dAForm.value).subscribe({
