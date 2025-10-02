@@ -31,7 +31,9 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Delivery Agent Mobile No.</b></label>
             <div class="col-7">
-              <input class="form-control required2" type="text" placeholder="Delivery Agent Mobile No." formControlName="deliveryAgentMobile">
+              <input class="form-control required2" type="text" placeholder="Delivery Agent Mobile No." formControlName="deliveryAgentMobile" maxlength="10" pattern="[0-9]*"
+              (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
+              >
             </div>
           </div>
         </div>
@@ -63,11 +65,11 @@
             <label class="control-label col-5"><b>Registration date:</b></label>
             <div class="col-7">
                <div class="input-group">
-                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker formControlName="registrationDate"
+                <input type="text" class="form-control uppercase-none" #dr="bsDatepicker" bsDatepicker formControlName="registrationDate"
                   [bsValue]="docketService.bsValue"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                   placeholder="Registration date" >
-                <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                <span class="input-group-text cursor-pointer" (click)="dr.toggle()">
                   <i class="fa fa-calendar"></i>
                 </span>
               </div>
@@ -141,11 +143,11 @@
             <label class="control-label col-5"><b>Fitness Validity Date:</b></label>
             <div class="col-7">
               <div class="input-group">
-                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker formControlName="fitnessValidityDate"
+                <input type="text" class="form-control uppercase-none" #df="bsDatepicker" bsDatepicker formControlName="fitnessValidityDate"
                   [bsValue]="docketService.bsValue"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                   placeholder="Fitness Validity Date" >
-                <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                <span class="input-group-text cursor-pointer" (click)="df.toggle()">
                   <i class="fa fa-calendar"></i>
                 </span>
               </div>
@@ -172,11 +174,11 @@
             <label class="control-label col-5"><b>Date of Birth:</b></label>
             <div class="col-7">
               <div class="input-group">
-                <input type="text" class="form-control uppercase-none required2" #dp="bsDatepicker" bsDatepicker formControlName="dateOfBirth"
+                <input type="text" class="form-control uppercase-none required2" #db="bsDatepicker" bsDatepicker formControlName="dateOfBirth"
                   [bsValue]="docketService.bsValue"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                   placeholder="Date of Birth" >
-                <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                <span class="input-group-text cursor-pointer" (click)="db.toggle()">
                   <i class="fa fa-calendar"></i>
                 </span>
               </div>
@@ -198,11 +200,11 @@
             <label class="control-label col-5"><b>License validity Date:</b></label>
             <div class="col-7">
               <div class="input-group">
-                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker formControlName="licenseValidityDate"
+                <input type="text" class="form-control uppercase-none" #dv="bsDatepicker" bsDatepicker formControlName="licenseValidityDate"
                   [bsValue]="docketService.bsValue"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                   placeholder="License validity Date" >
-                <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                   <i class="fa fa-calendar"></i>
                 </span>
               </div>
