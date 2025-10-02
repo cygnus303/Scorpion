@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DeliveryRoutes } from './delivery-agent.routes';
 import { DeliveryAgentListComponent } from './delivery-agent-list.component';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { DeliveryAgentModalComponent } from './delivery-agent-modal/delivery-agent-modal.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { DeliveryAgentViewComponent } from './delivery-agent-view/delivery-agent-view.component';
@@ -15,7 +16,8 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
     BsDatepickerModule,
     RouterModule.forChild(DeliveryRoutes),
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbPaginationModule
 ],
    exports: [ RouterModule ],
    schemas: [CUSTOM_ELEMENTS_SCHEMA],
