@@ -22,4 +22,5 @@ export interface DeliveryAgent {
   licenseAttachment: string;
   entryBy: string;
   updateBy: string;
+  LicenseAttachmentPath:File;
 }

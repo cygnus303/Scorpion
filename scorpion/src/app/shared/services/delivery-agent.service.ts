@@ -11,7 +11,7 @@ export class DeliveryAgentService {
   constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService) { }
 
 
-  addDeliveryAgent(paylaod: DeliveryAgent): Observable<any> {
+  addDeliveryAgent(paylaod: any): Observable<any> {
     return this.apiHandlerService.Post(`Master/AddOrUpdate`,paylaod);
   }
 }

@@ -55,38 +55,49 @@ export class DeliveryAgentModalComponent {
       gpsEnabled: new FormControl(false),
       gpsProvider: new FormControl(''),
       location: new FormControl(''),
-      licenseAttachment: new FormControl(''),
-      licenceFile:new FormControl(''),
+      LicenseAttachmentPath: new FormControl(''),
+      LicenseAttachment: new FormControl(''),
       entryBy: new FormControl(''),
       updateBy: new FormControl(''),
-      file:new FormControl(''),
     })
 
   }
 
 onFileSelected(event: any) {
+  debugger
   const file: File = event.target.files[0];
   if (file) {
     const reader = new FileReader();
-    reader.onload = () => {
-      // Convert to Base64 and set in reactive form
-      const base64String = (reader.result as string).split(',')[1];
-      this.dAForm.patchValue({
-        licenseAttachment: base64String,
+    // reader.onload = () => {
+    //   // Convert to Base64 and set in reactive form
+    //   const base64String = (reader.result as string).split(',')[1];
+    //   this.dAForm.patchValue({
+    //     licenseAttachment: base64String,
+    //   });
+    // };
+     this.dAForm.patchValue({
+        LicenseAttachmentPath: file
       });
-    };
     reader.readAsDataURL(file); 
   }
 }
 
   onSubmit() {
-    this.deliveryAgentService.addDeliveryAgent(this.dAForm.value).subscribe({
-      next: (response) => {
-        if (response) {
-          this.sweetAlertService.success('Delivery Agent Submitted Successfully!!')
-        }
-      },
-    })
+    if(this.dAForm.valid){
+      const formData = new FormData();
+      Object.keys(this.dAForm.value).forEach((key) => {
+        formData.append(key, this.dAForm.value[key]);
+      });
+      this.deliveryAgentService.addDeliveryAgent(formData).subscribe({
+        next: (response) => {
+          if (response) {
+            this.sweetAlertService.success('Delivery Agent Submitted Successfully!!')
+          }
+        },
+      })
+    }else{
+      this.dAForm.markAllAsTouched();
+    }
   }
 
 }
