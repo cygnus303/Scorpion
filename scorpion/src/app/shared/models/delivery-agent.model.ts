@@ -26,10 +26,12 @@ export interface DeliveryAgent {
 }
 
 export interface DeliveryAgentsListRepsonse {
+  srno:number;
  dA_Code: number;
  deliveryAgentName: string;
  location: string;
  isActive: boolean;
+ baName:string;
 }
 
 export interface DeliveryAgentByCodeResponse {

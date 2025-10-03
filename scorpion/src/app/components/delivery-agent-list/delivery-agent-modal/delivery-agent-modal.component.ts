@@ -23,14 +23,14 @@ export class DeliveryAgentModalComponent {
   @ViewChild('templatePopup', { static: true }) templatePopup!: TemplateRef<any>;
   @Output() dataEvent = new EventEmitter<boolean>();
 
-  constructor(private modalService: BsModalService,public docketService: DocketService,public deliveryAgentService: DeliveryAgentService,public sweetAlertService:SweetAlertService) { }
+  constructor(private modalService: BsModalService,public docketService: DocketService,public deliveryAgentService: DeliveryAgentService,public sweetAlertService:SweetAlertService) {}
   
   
   showPopup(data?:DeliveryAgentByCodeResponse){
    this.buildForm();
    this.getLocationData();
    this.docketService.getTypeofMovementData('');
-  this.getVendors();
+   this.getVendors();
     if(data){
       this.deliveryAgentCode = data.dA_Code;
       const patchData = {

@@ -11,7 +11,6 @@
             <label class="control-label col-5"><b>Delivery Agent Code:</b></label>
             <div class="col-7">
               <input class="form-control" placeholder="Delivery Agent Code" type="text" formControlName="dA_Code" readonly>
-              <!-- <div class="text-danger text-start "> This field is required.</div> -->
             </div>
           </div>
         </div>
@@ -19,8 +18,10 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Delivery Agent Name:</b></label>
             <div class="col-7">
-              <input class="form-control required2" type="text" placeholder="TDelivery Agent Name" formControlName="deliveryAgentName">
-            </div>
+              <input class="form-control required2" type="text" placeholder="Delivery Agent Name" formControlName="deliveryAgentName" required
+               [ngClass]="{ 'border-danger': dAForm.get('deliveryAgentName')?.invalid  && dAForm.get('deliveryAgentName')?.touched }">
+               <div class="text-danger" *ngIf="dAForm.get('deliveryAgentName')?.invalid && dAForm.get('deliveryAgentName')?.touched "> This field is required.</div>
+              </div>
           </div>
         </div>
       </div>

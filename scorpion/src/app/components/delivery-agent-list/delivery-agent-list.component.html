@@ -28,11 +28,11 @@
             </thead>
             <tbody>
                 <tr *ngFor="let data of deliveryAgentsList;let i=index">
-                    <td>{{i+1}}</td>
+                    <td>{{data.srno}}</td>
                     <td>{{data.dA_Code}}</td>
                     <td>{{data.deliveryAgentName}}</td>
                     <td>{{data.location}}</td>
-                    <td>{{'--'}}</td>
+                    <td>{{data.baName}}</td>
                     <td class="text-center">
                         <ng-container *ngIf="data.isActive; else inactive">
                             <i class="fas fa-check-square text-success me-1 fs-4"></i>
