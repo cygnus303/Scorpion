@@ -8,16 +8,16 @@
       <div class="row pb-3">
         <div class="col-6">
           <div class="row align-items-center" >
-            <label class="control-label col-5"><b>Delivery Agent Code:</b></label>
-            <div class="col-7">
+            <label class="col-sm-5 col-form-label text-end">Delivery Agent Code</label>
+            <div class="col-sm-7">
               <input class="form-control" placeholder="Delivery Agent Code" type="text" formControlName="dA_Code" readonly>
             </div>
           </div>
         </div>
         <div class="col-6">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>Delivery Agent Name:</b></label>
-            <div class="col-7">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Delivery Agent Name</label>
+            <div class="col-sm-7">
               <input class="form-control required2" type="text" placeholder="Delivery Agent Name" formControlName="deliveryAgentName" required
                [ngClass]="{ 'border-danger': dAForm.get('deliveryAgentName')?.invalid  && dAForm.get('deliveryAgentName')?.touched }">
                <div class="text-danger" *ngIf="dAForm.get('deliveryAgentName')?.invalid && dAForm.get('deliveryAgentName')?.touched "> This field is required.</div>
@@ -27,45 +27,46 @@
       </div>
       <div class="row pb-3">
         <div class="col-6">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>Delivery Agent Mobile No.</b></label>
-            <div class="col-7">
-              <input class="form-control required2" type="text" placeholder="Delivery Agent Mobile No." formControlName="deliveryAgentMobile" maxlength="10" pattern="[0-9]*"
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Delivery Agent Mobile No.</label>
+            <div class="col-sm-7">
+              <input class="form-control required2" type="text" placeholder="Delivery Agent Mobile No." formControlName="deliveryAgentMobile" required maxlength="10" pattern="[0-9]*"
               (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
-              >
+              [ngClass]="{ 'border-danger': dAForm.get('deliveryAgentMobile')?.invalid  && dAForm.get('deliveryAgentMobile')?.touched }">
+               <div class="text-danger" *ngIf="dAForm.get('deliveryAgentMobile')?.invalid && dAForm.get('deliveryAgentMobile')?.touched "> This field is required.</div>
             </div>
           </div>
         </div>
         <div class="col-6">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>FTL Type:</b></label>
-            <div class="col-7">
-                  <ng-select class="required2" 
-                [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId"
-                placeholder="Select FTL Type" formControlName="fTlType" notFoundText="No matches found"
-               ></ng-select>
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">FTL Type</label>
+            <div class="col-sm-7">
+              <ng-select class="required2" [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId" required placeholder="Select FTL Type"
+              formControlName="fTlType" notFoundText="No matches found" [ngClass]="{ 'border-danger': dAForm.get('fTlType')?.invalid  && dAForm.get('fTlType')?.touched }"></ng-select>
+               <div class="text-danger" *ngIf="dAForm.get('fTlType')?.invalid && dAForm.get('fTlType')?.touched "> This field is required.</div>
             </div>
           </div>
         </div>
       </div>
       <div class="row pb-3">
         <div class="col-6">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>Vehicle No:</b></label>
-            <div class="col-7">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Vehicle No</label>
+            <div class="col-sm-7">
                 <div class="d-flex">
-                  <input class="form-control required2" type="text" placeholder="Vehicle No" formControlName="vehicleNo">
+                  <input class="form-control required2" type="text" placeholder="Vehicle No" formControlName="vehicleNo" required [ngClass]="{ 'border-danger': dAForm.get('vehicleNo')?.invalid  && dAForm.get('vehicleNo')?.touched }">
                   <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode ? true:false">
                     Invoke
                   </button>
                 </div>
+                 <div class="text-danger" *ngIf="dAForm.get('vehicleNo')?.invalid && dAForm.get('vehicleNo')?.touched "> This field is required.</div>
             </div>
           </div>
         </div>
         <div class="col-6">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>Registration date:</b></label>
-            <div class="col-7">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Registration date</label>
+            <div class="col-sm-7">
                <div class="input-group">
                 <input type="text" class="form-control uppercase-none" #dr="bsDatepicker" bsDatepicker formControlName="registrationDate"
                   [bsValue]="docketService.bsValue"
@@ -81,17 +82,17 @@
       </div>
       <div class="row pb-3">
         <div class="col-6">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>Engine No: </b></label>
-            <div class="col-7">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Engine No </label>
+            <div class="col-sm-7">
               <input class="form-control" placeholder="Engine No" type="text" formControlName="engineNo">
             </div>
           </div>
         </div>
         <div class="col-6">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>Chassis No:</b></label>
-            <div class="col-7">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Chassis No</label>
+            <div class="col-sm-7">
               <input class="form-control" type="text" placeholder="Chassis No" formControlName="chassisNo">
             </div>
           </div>
@@ -99,17 +100,17 @@
       </div>
       <div class="row pb-3">
         <div class="col-6">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>RC Book No:</b></label>
-            <div class="col-7">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">RC Book No</label>
+            <div class="col-sm-7">
               <input class="form-control" type="text" placeholder="RC Book No" formControlName="rcBookNo">
             </div>
           </div>
         </div>
         <div class="col-6">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>Permit validity Date:</b></label>
-            <div class="col-7">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Permit validity Date</label>
+            <div class="col-sm-7">
                <div class="input-group">
                 <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker formControlName="permitValidityDate"
                   [bsValue]="docketService.bsValue"
@@ -125,9 +126,9 @@
       </div>
       <div  class="row pb-3">
         <div class="col-6">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>Insurance Validity Date:</b></label>
-            <div class="col-7">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Insurance Validity Date</label>
+            <div class="col-sm-7">
                <div class="input-group">
                 <input type="text" class="form-control uppercase-none" #dq="bsDatepicker" bsDatepicker formControlName="insuranceValidityDate"
                   [bsValue]="docketService.bsValue"
@@ -141,9 +142,9 @@
           </div>
         </div>
         <div class="col-6">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>Fitness Validity Date:</b></label>
-            <div class="col-7">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Fitness Validity Date</label>
+            <div class="col-sm-7">
               <div class="input-group">
                 <input type="text" class="form-control uppercase-none" #df="bsDatepicker" bsDatepicker formControlName="fitnessValidityDate"
                   [bsValue]="docketService.bsValue"
@@ -159,48 +160,50 @@
       </div>
       <div class="row pb-3">
         <div class="col-6">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>License No:</b></label>
-            <div class="col-7">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">License No</label>
+            <div class="col-sm-7">
                <div class="d-flex">
-                   <input class="form-control required2" placeholder="License No" type="text" formControlName="licenseNo">
+                   <input class="form-control required2" placeholder="License No" type="text" formControlName="licenseNo" required [ngClass]="{ 'border-danger': dAForm.get('licenseNo')?.invalid  && dAForm.get('licenseNo')?.touched }">
                   <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode ? true:false">
                     Invoke
                   </button>
                 </div>
+                <div class="text-danger" *ngIf="dAForm.get('licenseNo')?.invalid && dAForm.get('licenseNo')?.touched "> This field is required.</div>
             </div>
           </div>
         </div>
         <div class="col-6">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>Date of Birth:</b></label>
-            <div class="col-7">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Date of Birth</label>
+            <div class="col-sm-7">
               <div class="input-group">
                 <input type="text" class="form-control uppercase-none required2" #db="bsDatepicker" bsDatepicker formControlName="dateOfBirth"
-                  [bsValue]="docketService.bsValue"
+                  [bsValue]="docketService.bsValue" required
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
-                  placeholder="Date of Birth" >
+                  placeholder="Date of Birth" [ngClass]="{ 'border-danger': dAForm.get('dateOfBirth')?.invalid  && dAForm.get('dateOfBirth')?.touched }">
                 <span class="input-group-text cursor-pointer" (click)="db.toggle()">
                   <i class="fa fa-calendar"></i>
                 </span>
               </div>
+               <div class="text-danger" *ngIf="dAForm.get('dateOfBirth')?.invalid && dAForm.get('dateOfBirth')?.touched "> This field is required.</div>
             </div>
           </div>
         </div>
       </div>
       <div class="row pb-3">
         <div class="col-6">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>Issue By RTO:</b></label>
-            <div class="col-7">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Issue By RTO</label>
+            <div class="col-sm-7">
               <input class="form-control" type="text" placeholder="Issue By RTO" formControlName="issueByRTO">
             </div>
           </div>
         </div>
         <div class="col-6">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>License validity Date:</b></label>
-            <div class="col-7">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">License validity Date</label>
+            <div class="col-sm-7">
               <div class="input-group">
                 <input type="text" class="form-control uppercase-none" #dv="bsDatepicker" bsDatepicker formControlName="licenseValidityDate"
                   [bsValue]="docketService.bsValue"
@@ -216,33 +219,33 @@
       </div>
       <div class="row pb-3">
             <div class="col-6">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>Business Associate Vendor:</b></label>
-            <div class="col-7">
-              <!-- <input class="form-control required2" type="text" placeholder="Business Associate Vendor" formControlName="businessAssociateVendor"> -->
-              <ng-select class="required2" placeholder="Business Associate Vendor" formControlName="businessAssociateVendor"
-                [items]="vendorsList" bindLabel="vendorName" bindValue="vendorCode">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Business Associate Vendor</label>
+            <div class="col-sm-7">
+              <ng-select class="required2" placeholder="Business Associate Vendor" required formControlName="businessAssociateVendor"
+                [items]="vendorsList" bindLabel="vendorName" bindValue="vendorCode" [ngClass]="{ 'border-danger': dAForm.get('businessAssociateVendor')?.invalid  && dAForm.get('businessAssociateVendor')?.touched }">
               </ng-select>
+               <div class="text-danger" *ngIf="dAForm.get('businessAssociateVendor')?.invalid && dAForm.get('businessAssociateVendor')?.touched "> This field is required.</div>
             </div>
           </div>
         </div>
         <div class="col-6">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>Location:</b></label>
-            <div class="col-7">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Location</label>
+            <div class="col-sm-7">
                <ng-select class=" required2" 
-                [items]="locationData" bindLabel="locName" bindValue="locCode" [multiple]="true"
-                placeholder="Select location" formControlName="location" notFoundText="No matches found"
-               ></ng-select>
+                [items]="locationData" bindLabel="locName" bindValue="locCode" [multiple]="true" required [ngClass]="{ 'border-danger': dAForm.get('location')?.invalid  && dAForm.get('location')?.touched }"
+                placeholder="Select location" formControlName="location" notFoundText="No matches found"></ng-select>
+                 <div class="text-danger" *ngIf="dAForm.get('location')?.invalid && dAForm.get('location')?.touched "> This field is required.</div>
             </div>
           </div>
         </div>
       </div>
       <div class="row pb-3">
         <div class="col-6 mb-3">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>GPS Enabled: </b></label>
-            <div class="col-7">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">GPS Enabled </label>
+            <div class="col-sm-7">
               <div class="d-flex align-items-center">
                 <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="gpsEnabled">
                 <input class="form-control" placeholder="GPS Provider" type="text" formControlName="gpsProvider" [readonly]="this.dAForm.value.gpsEnabled ? false  :true" >
@@ -251,9 +254,9 @@
           </div>
         </div>
         <div class="col-6"  *ngIf="deliveryAgentCode ? true : false">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>Active Flag :</b></label>
-            <div class="col-7">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Active Flag</label>
+            <div class="col-sm-7">
               <div class="d-flex align-items-center">
                 <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="isActive"> 
               </div>
@@ -261,9 +264,9 @@
           </div>
         </div>
         <div class="col-6">
-          <div class="row align-items-center">
-            <label class="control-label col-5"><b>License Attachment:</b></label>
-            <div class="col-7">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">License Attachment</label>
+            <div class="col-sm-7">
               <input type="file"  class="form-control py-2 pt-2 uppercase-none" formControlName="LicenseAttachment"   (change)="onFileSelected($event)" />
             </div>
           </div>
@@ -271,8 +274,8 @@
       </div>
     </form>
   </div>
-  <div class="modal-footer">
+  <div class="modal-footer d-flex justify-content-center">
     <!-- <button class="btn btn-secondary" (click)="closePopup()">Cancel</button> -->
-    <button class="btn btn-success px-5" (click)="onSubmit()"> <i class="fas fa-check me-2"></i> Submit</button>
+    <button class="btn btn-success btn-sm px-3" (click)="onSubmit()"> <i class="fas fa-check me-2"></i> Submit</button>
   </div>
 </ng-template>
