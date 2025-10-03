@@ -39,7 +39,10 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>FTL Type:</b></label>
             <div class="col-7">
-              <input class="form-control required2" placeholder="FTL Type" type="text" formControlName="fTlType">
+                  <ng-select class="required2" 
+                [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId"
+                placeholder="Select FTL Type" formControlName="fTlType" notFoundText="No matches found"
+               ></ng-select>
             </div>
           </div>
         </div>
@@ -223,7 +226,10 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Location:</b></label>
             <div class="col-7">
-              <input class="form-control required2" type="text" placeholder="Location" formControlName="location">
+               <ng-select class=" required2" 
+                [items]="locationData" bindLabel="locName" bindValue="locCode"
+                placeholder="Select location" formControlName="location" notFoundText="No matches found"
+               ></ng-select>
             </div>
           </div>
         </div>
