@@ -7,6 +7,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { DocketService } from './shared/services/docket.service';
 
 @Component({
   selector: 'app-root',
@@ -22,10 +23,20 @@ import { HttpClientModule } from '@angular/common/http';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
+  
   title = 'scorpion';
 
   // public loading: string = 'disable';
-  constructor(public commonService: CommonService,public spinner: NgxSpinnerService){
+  constructor(public commonService: CommonService,public spinner: NgxSpinnerService,public docketService: DocketService){
+     const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      // this.docketService.Location = 'TBH';
+      this.docketService.isComplition = false;
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
     // this.commonService.isLoading.subscribe({
     //   next: (response) => {
     //     setTimeout(()=>{

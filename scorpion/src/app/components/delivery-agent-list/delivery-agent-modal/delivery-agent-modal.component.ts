@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, output, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { DocketService } from 'app/shared/services/docket.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -19,6 +19,8 @@ export class DeliveryAgentModalComponent {
   public deliveryAgentList:any;
   constructor(private modalService: BsModalService,public docketService: DocketService,public deliveryAgentService: DeliveryAgentService,public sweetAlertService:SweetAlertService) { }
   @ViewChild('templatePopup', { static: true }) templatePopup!: TemplateRef<any>;
+  @Output() dataEvent = new EventEmitter<boolean>();
+
    ngOnInit(){
      this.buildForm()
    }
@@ -35,7 +37,7 @@ export class DeliveryAgentModalComponent {
 
   buildForm() {
     this.dAForm = new FormGroup({
-      dA_Code: new FormControl(0),
+      dA_Code: new FormControl(null),
       deliveryAgentName: new FormControl(''),
       deliveryAgentMobile: new FormControl(''),
       vehicleNo: new FormControl(''),
@@ -57,25 +59,18 @@ export class DeliveryAgentModalComponent {
       location: new FormControl(''),
       LicenseAttachmentPath: new FormControl(''),
       LicenseAttachment: new FormControl(''),
-      entryBy: new FormControl(''),
-      updateBy: new FormControl(''),
+      entryBy: new FormControl(this.docketService.loginUserList?.UserId),
+      updateBy: new FormControl(this.docketService.loginUserList.UserId),
+      IsActive:new FormControl(true)
     })
 
   }
 
 onFileSelected(event: any) {
-  debugger
   const file: File = event.target.files[0];
   if (file) {
     const reader = new FileReader();
-    // reader.onload = () => {
-    //   // Convert to Base64 and set in reactive form
-    //   const base64String = (reader.result as string).split(',')[1];
-    //   this.dAForm.patchValue({
-    //     licenseAttachment: base64String,
-    //   });
-    // };
-     this.dAForm.patchValue({
+     this.dAForm?.patchValue({
         LicenseAttachmentPath: file
       });
     reader.readAsDataURL(file); 
@@ -85,13 +80,40 @@ onFileSelected(event: any) {
   onSubmit() {
     if(this.dAForm.valid){
       const formData = new FormData();
-      Object.keys(this.dAForm.value).forEach((key) => {
-        formData.append(key, this.dAForm.value[key]);
-      });
+       Object.keys(this.dAForm.value).forEach((key) => {
+      let value = this.dAForm.value[key];
+
+      // 📌 Convert date fields to ISO string
+      if (
+        [
+          'registrationDate',
+          'permitValidityDate',
+          'insuranceValidityDate',
+          'fitnessValidityDate',
+          'dateOfBirth',
+          'licenseValidityDate'
+        ].includes(key) &&
+        value
+      ) {
+        value = new Date(value).toISOString();
+      }
+
+      // 📌 Handle file upload (LicenseAttachment)
+      if (key === 'LicenseAttachment' && value instanceof File) {
+        formData.append(key, value, value.name);
+      } else {
+        formData.append(key, value ?? '');
+      }
+    });
       this.deliveryAgentService.addDeliveryAgent(formData).subscribe({
         next: (response) => {
           if (response) {
-            this.sweetAlertService.success('Delivery Agent Submitted Successfully!!')
+            this.sweetAlertService.success(response.message)
+            .then(()=>{
+              this.bsModalRef.hide();
+              this.buildForm();
+              this.dataEvent.emit(true);
+            });
           }
         },
       })

@@ -9,12 +9,7 @@ export class SweetAlertService {
   constructor() { }
 
   success(message:string){
-    Swal.fire({
-      title: message,
-      icon: "success",
-      draggable: true
-    });
-    Swal.fire({
+   return Swal.fire({
       title: message,
       icon: 'success',
       showCancelButton: false,

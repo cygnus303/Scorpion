@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { DeliveryAgentModalComponent } from './delivery-agent-modal/delivery-agent-modal.component';
 import { DeliveryAgentViewComponent } from './delivery-agent-view/delivery-agent-view.component';
+import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service';
 
 @Component({
   selector: 'app-delivery-agent-list',
@@ -11,48 +12,25 @@ import { DeliveryAgentViewComponent } from './delivery-agent-view/delivery-agent
 export class DeliveryAgentListComponent {
   @ViewChild('deliveryAgentPopup') deliveryAgentPopup!: DeliveryAgentModalComponent;
   @ViewChild('deliveryAgentViewPopup') deliveryAgentViewPopup!: DeliveryAgentViewComponent;
-  deliveryAgentsList = [
-  {
-    id: 1,
-    agentCode: "D0001",
-    agentName: "GOPAL SINGH",
-    branch: "MHP",
-    vehicleInfo: "V0723: Madhukar Sonawane",
-    status: true,   // active / inactive
-  },
-  {
-    id: 2,
-    agentCode: "D0002",
-    agentName: "GOPAL SINGH",
-    branch: "MHP",
-    vehicleInfo: "V0723: Madhukar Sonawane",
-    status: true,
-  },
-  {
-    id: 3,
-    agentCode: "D0003",
-    agentName: "GOPAL SINGH",
-    branch: "MHP",
-    vehicleInfo: "V0723: Madhukar Sonawane",
-    status: false,
-  },
-  {
-    id: 4,
-    agentCode: "D0004",
-    agentName: "GOPAL SINGH",
-    branch: "MHP",
-    vehicleInfo: "V0723: Madhukar Sonawane",
-    status: true,
-  },
-  {
-    id: 5,
-    agentCode: "D0005",
-    agentName: "GOPAL SINGH",
-    branch: "MHP",
-    vehicleInfo: "V0723: Madhukar Sonawane",
-    status: false,
+  public deliveryAgentsList:any[]=[]
+
+  constructor(
+    private deliveryAgentService:DeliveryAgentService
+  ){}
+
+  ngOnInit(){
+    this.getDeliveryAgentList();
   }
-];
+
+getDeliveryAgentList(){
+  this.deliveryAgentService.getDeliveryAgent().subscribe({
+      next: (response) => {
+          if (response) {
+            this.deliveryAgentsList=response.data;
+          }
+        },
+  })
+}
 
   openDeliveryAgentsPopup(item?:any){
      this.deliveryAgentPopup.showPopup(item)

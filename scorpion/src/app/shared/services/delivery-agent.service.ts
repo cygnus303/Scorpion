@@ -14,4 +14,8 @@ export class DeliveryAgentService {
   addDeliveryAgent(paylaod: any): Observable<any> {
     return this.apiHandlerService.Post(`Master/AddOrUpdate`,paylaod);
   }
+
+  getDeliveryAgent():Observable<any> {
+    return this.apiHandlerService.Get(`Master/GetDAList`);
+  }
 }
