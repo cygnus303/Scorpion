@@ -230,7 +230,7 @@
             <label class="control-label col-5"><b>Location:</b></label>
             <div class="col-7">
                <ng-select class=" required2" 
-                [items]="locationData" bindLabel="locName" bindValue="locCode"
+                [items]="locationData" bindLabel="locName" bindValue="locCode" [multiple]="true"
                 placeholder="Select location" formControlName="location" notFoundText="No matches found"
                ></ng-select>
             </div>
