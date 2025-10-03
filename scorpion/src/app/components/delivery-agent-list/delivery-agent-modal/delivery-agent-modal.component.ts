@@ -24,14 +24,12 @@ export class DeliveryAgentModalComponent {
   @Output() dataEvent = new EventEmitter<boolean>();
 
   constructor(private modalService: BsModalService,public docketService: DocketService,public deliveryAgentService: DeliveryAgentService,public sweetAlertService:SweetAlertService) { }
-
-   ngOnInit(){
-     this.buildForm();
-     this.getLocationData();
-     this.docketService.getTypeofMovementData('');
-   }
-
- showPopup(data?:DeliveryAgentByCodeResponse){
+  
+  
+  showPopup(data?:DeliveryAgentByCodeResponse){
+   this.buildForm();
+   this.getLocationData();
+   this.docketService.getTypeofMovementData('');
   this.getVendors();
     if(data){
       this.deliveryAgentCode = data.dA_Code;
@@ -45,6 +43,9 @@ export class DeliveryAgentModalComponent {
         licenseValidityDate: data.licenseValidityDate ? new Date(data.licenseValidityDate) : null,
       };
       this.dAForm.patchValue(patchData);
+    }else{
+    this.deliveryAgentCode = '';
+    this.dAForm.reset();
     }
     this.bsModalRef = this.modalService.show(this.templatePopup, {  backdrop: true, ignoreBackdropClick: false, class: 'modal-xl modal-dialog-centered' });
   }
@@ -123,11 +124,9 @@ getLocationData(){
       const formData = new FormData();
        Object.keys(this.dAForm.value).forEach((key) => {
       let value = this.dAForm.value[key];
-      // 📌 Convert date fields to ISO string
       if ( ['registrationDate','permitValidityDate','insuranceValidityDate','fitnessValidityDate','dateOfBirth','licenseValidityDate'].includes(key) && value) {
         value = new Date(value).toISOString();
       }
-      // 📌 Handle file upload (LicenseAttachment)
       if (key === 'LicenseAttachment' && value instanceof File) {
         formData.append(key, value, value.name);
       } else {
