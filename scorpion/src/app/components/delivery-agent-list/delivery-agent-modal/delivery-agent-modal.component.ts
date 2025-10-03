@@ -19,13 +19,16 @@ export class DeliveryAgentModalComponent {
   public dAForm!: FormGroup;
   public deliveryAgentCode!:string;
   public vendorsList:VendorsListResponse[]=[];
+  public locationData:any[]=[];
   @ViewChild('templatePopup', { static: true }) templatePopup!: TemplateRef<any>;
   @Output() dataEvent = new EventEmitter<boolean>();
 
   constructor(private modalService: BsModalService,public docketService: DocketService,public deliveryAgentService: DeliveryAgentService,public sweetAlertService:SweetAlertService) { }
 
    ngOnInit(){
-     this.buildForm()
+     this.buildForm();
+     this.getLocationData();
+     this.docketService.getTypeofMovementData('');
    }
 
  showPopup(data?:DeliveryAgentByCodeResponse){
@@ -70,10 +73,10 @@ export class DeliveryAgentModalComponent {
       issueByRTO: new FormControl(''),
       licenseValidityDate: new FormControl(''),
       businessAssociateVendor: new FormControl(null),
-      fTlType: new FormControl(''),
+      fTlType: new FormControl(null),
       gpsEnabled: new FormControl(false),
       gpsProvider: new FormControl(''),
-      location: new FormControl(''),
+      location: new FormControl(null),
       LicenseAttachmentPath: new FormControl(''),
       LicenseAttachment: new FormControl(''),
       entryBy: new FormControl(this.docketService.loginUserList?.UserId),
@@ -102,6 +105,18 @@ onFileSelected(event: any) {
       }
     });
   }
+getLocationData(){
+    this.deliveryAgentService.getLocation().subscribe({
+        next: (response) => {
+          if (response) {
+            this.locationData=response.map((location: any) => ({
+            locCode: location.locCode,
+            locName: `${location.locCode}: ${location.locName}`,
+          }));
+          }
+        },
+      })
+}
 
   onSubmit() {
     if(this.dAForm.valid){

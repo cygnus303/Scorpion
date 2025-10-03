@@ -30,4 +30,7 @@ export class DeliveryAgentService {
   getVendors():Observable<any> {
     return this.apiHandlerService.Get(`External/GetVendors`);
   }
+  getLocation():Observable<any> {
+    return this.apiHandlerService.Get(`External/GetLocations`);
+  }
 }
