@@ -244,7 +244,7 @@
             <div class="col-7">
               <div class="d-flex align-items-center">
                 <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="gpsEnabled">
-                <input class="form-control" placeholder="GPS Provider" type="text" formControlName="gpsProvider">
+                <input class="form-control" placeholder="GPS Provider" type="text" formControlName="gpsProvider" [readonly]="this.dAForm.value.gpsEnabled ? false  :true" >
               </div>
             </div>
           </div>
