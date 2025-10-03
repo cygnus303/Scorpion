@@ -8,6 +8,7 @@ import { DeliveryAgentModalComponent } from './delivery-agent-modal/delivery-age
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { DeliveryAgentViewComponent } from './delivery-agent-view/delivery-agent-view.component';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [DeliveryAgentListComponent,DeliveryAgentModalComponent,DeliveryAgentViewComponent],
@@ -17,7 +18,8 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
     RouterModule.forChild(DeliveryRoutes),
     FormsModule,
     ReactiveFormsModule,
-    NgbPaginationModule
+    NgbPaginationModule,
+    NgSelectModule
 ],
    exports: [ RouterModule ],
    schemas: [CUSTOM_ELEMENTS_SCHEMA],

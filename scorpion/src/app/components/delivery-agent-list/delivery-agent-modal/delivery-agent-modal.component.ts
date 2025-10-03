@@ -4,7 +4,7 @@ import { DocketService } from 'app/shared/services/docket.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
-import { DeliveryAgentByCodeResponse } from 'app/shared/models/delivery-agent.model';
+import { DeliveryAgentByCodeResponse, VendorsListResponse } from 'app/shared/models/delivery-agent.model';
 
 
 @Component({
@@ -18,6 +18,7 @@ export class DeliveryAgentModalComponent {
   public bsModalRef!: BsModalRef;
   public dAForm!: FormGroup;
   public deliveryAgentCode!:string;
+  public vendorsList:VendorsListResponse[]=[];
   @ViewChild('templatePopup', { static: true }) templatePopup!: TemplateRef<any>;
   @Output() dataEvent = new EventEmitter<boolean>();
 
@@ -28,6 +29,7 @@ export class DeliveryAgentModalComponent {
    }
 
  showPopup(data?:DeliveryAgentByCodeResponse){
+  this.getVendors();
     if(data){
       this.deliveryAgentCode = data.dA_Code;
       const patchData = {
@@ -67,7 +69,7 @@ export class DeliveryAgentModalComponent {
       dateOfBirth: new FormControl(''),
       issueByRTO: new FormControl(''),
       licenseValidityDate: new FormControl(''),
-      businessAssociateVendor: new FormControl(''),
+      businessAssociateVendor: new FormControl(null),
       fTlType: new FormControl(''),
       gpsEnabled: new FormControl(false),
       gpsProvider: new FormControl(''),
@@ -91,6 +93,15 @@ onFileSelected(event: any) {
     reader.readAsDataURL(file); 
   }
 }
+
+  getVendors() {
+    this.deliveryAgentService.getVendors().subscribe({next: (response) => {
+        if (response) {
+          this.vendorsList = response;
+        }
+      }
+    });
+  }
 
   onSubmit() {
     if(this.dAForm.valid){

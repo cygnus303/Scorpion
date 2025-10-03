@@ -215,7 +215,10 @@
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Business Associate Vendor:</b></label>
             <div class="col-7">
-              <input class="form-control required2" type="text" placeholder="Business Associate Vendor" formControlName="businessAssociateVendor">
+              <!-- <input class="form-control required2" type="text" placeholder="Business Associate Vendor" formControlName="businessAssociateVendor"> -->
+              <ng-select class="required2" placeholder="Business Associate Vendor" formControlName="businessAssociateVendor"
+                [items]="vendorsList" bindLabel="vendorName" bindValue="vendorCode">
+              </ng-select>
             </div>
           </div>
         </div>

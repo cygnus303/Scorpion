@@ -9,10 +9,9 @@ export const routes: Routes = [
       ),
   },
        {
-    path: 'delivery-agent',
+    path: 'Master',
     loadChildren: () =>
       import('./components/delivery-agent-list/delivery-agent.module').then(
-        (m) => m.DeliveryAgentModule
-      ),
+        (m) => m.DeliveryAgentModule),
   },
 ];

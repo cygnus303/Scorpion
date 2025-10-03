@@ -26,11 +26,10 @@ export class DocketGuard implements CanActivate {
       const parsedData = JSON.parse(decrypted);
 
       const currentRoute = route.routeConfig?.path ?? '';
-
       if (currentRoute.includes("docketFinancialEdit")) {
         return this.handleFinancialEdit(parsedData);
       } 
-      else if (currentRoute.includes("docketEditCretria") || currentRoute.includes("docket")) {
+      else if (currentRoute.includes("docketEditCretria") || currentRoute.includes("docket") || currentRoute.includes("delivery-agent")) {
         return this.handleNormalDocket(parsedData);
       } 
       else {

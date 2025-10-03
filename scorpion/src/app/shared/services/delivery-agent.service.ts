@@ -26,4 +26,8 @@ export class DeliveryAgentService {
    deliveryAgentExport():Observable<any> {
     return this.apiHandlerService.DownloadFile(`Master/DA-export-excel`);
   }
+
+  getVendors():Observable<any> {
+    return this.apiHandlerService.Get(`External/GetVendors`);
+  }
 }
