@@ -22,4 +22,8 @@ export class DeliveryAgentService {
    getDeliveryAgentByCodeList(code:string):Observable<any> {
     return this.apiHandlerService.Get(`Master/GetDAByCode?daCode=${code}`);
   }
+
+   deliveryAgentExport():Observable<any> {
+    return this.apiHandlerService.DownloadFile(`Master/DA-export-excel`);
+  }
 }

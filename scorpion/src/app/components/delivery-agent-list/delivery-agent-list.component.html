@@ -5,7 +5,7 @@
            List of Delivery Agents
         </div>
         <div>
-            <button class="btn btn-light btn-sm me-2 fw-bold">
+            <button class="btn btn-light btn-sm me-2 fw-bold" (click)="deliveryAgentExport()">
                 <i class="fas fa-download"></i> Download Excel
             </button>
             <button class="btn btn-light btn-sm fw-bold" (click)="openDeliveryAgentsPopup()">
@@ -52,9 +52,12 @@
                 </tr>
             </tbody>
         </table>
+        <div class="d-flex justify-content-end">
+            <div class="m-3 mt-2"> Showing Total Records : <strong>{{totalItems}}</strong> </div>
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="pageNumber" [pageSize]="pageSize" [maxSize]="3" (pageChange)="getDeliveryAgentList($event)"></ngb-pagination>
+        </div>
     </div>
 </div>
-<ngb-pagination [collectionSize]="totalItems" [(page)]="pageNumber" [pageSize]="pageSize" [maxSize]="3" (pageChange)="getDeliveryAgentList($event)"></ngb-pagination>
 
 <delivery-agent-modal #deliveryAgentPopup (dataEvent)="getDeliveryAgentList()"></delivery-agent-modal>
 <delivery-agent-view #deliveryAgentViewPopup></delivery-agent-view>

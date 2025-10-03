@@ -10,9 +10,10 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
   providers:[BsModalService],
 })
 export class DeliveryAgentViewComponent {
-  bsModalRef!:BsModalRef;
+  public bsModalRef!:BsModalRef;
   public deliveryAgentViewList!:DeliveryAgentByCodeResponse;
   @ViewChild('templatePopup', { static: true }) templatePopup!: TemplateRef<any>;
+
   constructor(private modalService: BsModalService) {}
  showPopup(data:any){
     if(data){
