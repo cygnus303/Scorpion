@@ -1,6 +1,7 @@
 <ng-template #templatePopup>
   <div class="modal-header background-color text-white d-flex justify-content-between">
-    <h5 class="modal-title">{{!deliveryAgentCode ? 'Add':'Edit'}}  Delivery Agent</h5>
+    <h5 class="modal-title">   <i [ngClass]="!deliveryAgentCode ? 'fas fa-user-plus text-success me-2 text-white' : 'fas fa-edit text-warning me-2 text-white'"></i>
+ {{!deliveryAgentCode ? 'Add':'Edit'}}  Delivery Agent</h5>
     <button type="button" class="btn text-white" (click)="closePopup()"><i class="fas fa-times"></i></button>
   </div>
   <div class="modal-body">
@@ -258,7 +259,11 @@
             <label class="col-sm-5 col-form-label text-end">Active Flag</label>
             <div class="col-sm-7">
               <div class="d-flex align-items-center">
-                <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="isActive"> 
+                <!-- <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="isActive">  -->
+                 <label class="yes-no">
+                <input type="checkbox" formControlName="isActive" />
+                <span class="slider"></span>
+              </label>
               </div>
             </div>
           </div>
