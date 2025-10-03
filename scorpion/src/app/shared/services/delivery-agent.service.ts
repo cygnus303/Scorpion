@@ -15,7 +15,11 @@ export class DeliveryAgentService {
     return this.apiHandlerService.Post(`Master/AddOrUpdate`,paylaod);
   }
 
-  getDeliveryAgent():Observable<any> {
-    return this.apiHandlerService.Get(`Master/GetDAList`);
+  getDeliveryAgent(url:string):Observable<any> {
+    return this.apiHandlerService.Get(`Master/GetDAList?${url}`);
+  }
+
+   getDeliveryAgentByCodeList(code:string):Observable<any> {
+    return this.apiHandlerService.Get(`Master/GetDAByCode?daCode=${code}`);
   }
 }

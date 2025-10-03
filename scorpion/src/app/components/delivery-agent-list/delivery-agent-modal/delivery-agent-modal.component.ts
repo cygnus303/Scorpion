@@ -4,6 +4,7 @@ import { DocketService } from 'app/shared/services/docket.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { DeliveryAgentByCodeResponse } from 'app/shared/models/delivery-agent.model';
 
 
 @Component({
@@ -16,16 +17,30 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 export class DeliveryAgentModalComponent {
   public bsModalRef!: BsModalRef;
   public dAForm!: FormGroup;
-  public deliveryAgentList:any;
-  constructor(private modalService: BsModalService,public docketService: DocketService,public deliveryAgentService: DeliveryAgentService,public sweetAlertService:SweetAlertService) { }
+  public deliveryAgentCode!:string;
   @ViewChild('templatePopup', { static: true }) templatePopup!: TemplateRef<any>;
   @Output() dataEvent = new EventEmitter<boolean>();
+
+  constructor(private modalService: BsModalService,public docketService: DocketService,public deliveryAgentService: DeliveryAgentService,public sweetAlertService:SweetAlertService) { }
 
    ngOnInit(){
      this.buildForm()
    }
- showPopup(data:any){
-    this.deliveryAgentList = data;
+
+ showPopup(data?:DeliveryAgentByCodeResponse){
+    if(data){
+      this.deliveryAgentCode = data.dA_Code;
+      const patchData = {
+        ...data,
+        registrationDate: data.registrationDate ? new Date(data.registrationDate) : null,
+        insuranceValidityDate: data.insuranceValidityDate ? new Date(data.insuranceValidityDate) : null,
+        permitValidityDate: data.permitValidityDate ? new Date(data.permitValidityDate) : null,
+        fitnessValidityDate: data.fitnessValidityDate ? new Date(data.fitnessValidityDate) : null,
+        dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
+        licenseValidityDate: data.licenseValidityDate ? new Date(data.licenseValidityDate) : null,
+      };
+      this.dAForm.patchValue(patchData);
+    }
     this.bsModalRef = this.modalService.show(this.templatePopup, {  backdrop: true, ignoreBackdropClick: false, class: 'modal-xl modal-dialog-centered' });
   }
 
@@ -61,7 +76,7 @@ export class DeliveryAgentModalComponent {
       LicenseAttachment: new FormControl(''),
       entryBy: new FormControl(this.docketService.loginUserList?.UserId),
       updateBy: new FormControl(this.docketService.loginUserList.UserId),
-      IsActive:new FormControl(true)
+      isActive:new FormControl(true)
     })
 
   }
@@ -82,22 +97,10 @@ onFileSelected(event: any) {
       const formData = new FormData();
        Object.keys(this.dAForm.value).forEach((key) => {
       let value = this.dAForm.value[key];
-
       // 📌 Convert date fields to ISO string
-      if (
-        [
-          'registrationDate',
-          'permitValidityDate',
-          'insuranceValidityDate',
-          'fitnessValidityDate',
-          'dateOfBirth',
-          'licenseValidityDate'
-        ].includes(key) &&
-        value
-      ) {
+      if ( ['registrationDate','permitValidityDate','insuranceValidityDate','fitnessValidityDate','dateOfBirth','licenseValidityDate'].includes(key) && value) {
         value = new Date(value).toISOString();
       }
-
       // 📌 Handle file upload (LicenseAttachment)
       if (key === 'LicenseAttachment' && value instanceof File) {
         formData.append(key, value, value.name);

@@ -24,3 +24,36 @@ export interface DeliveryAgent {
   updateBy: string;
   LicenseAttachmentPath:File;
 }
+
+export interface DeliveryAgentsListRepsonse {
+ dA_Code: number;
+ deliveryAgentName: string;
+ location: string;
+ isActive: boolean;
+}
+
+export interface DeliveryAgentByCodeResponse {
+    dA_Code: string;
+    deliveryAgentName: string;
+    deliveryAgentMobile: string;
+    vehicleNo: string;
+    registrationDate: string;
+    engineNo: string;
+    chassisNo: string;
+    rcBookNo: string;
+    insuranceValidityDate: string;
+    permitValidityDate: string;
+    fitnessValidityDate: string;
+    licenseNo: string;
+    dateOfBirth: string;
+    issueByRTO: string;
+    licenseValidityDate: string;
+    businessAssociateVendor: string;
+    fTlType: string;
+    gpsEnabled: boolean;
+    gpsProvider: string;
+    location: string;
+    licenseAttachment: string;
+    isActive: boolean;
+    entryBy: string;
+}

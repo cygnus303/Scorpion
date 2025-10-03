@@ -1,4 +1,5 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { DeliveryAgentByCodeResponse } from 'app/shared/models/delivery-agent.model';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -10,9 +11,13 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 })
 export class DeliveryAgentViewComponent {
   bsModalRef!:BsModalRef;
-  constructor(private modalService: BsModalService) {}
+  public deliveryAgentViewList!:DeliveryAgentByCodeResponse;
   @ViewChild('templatePopup', { static: true }) templatePopup!: TemplateRef<any>;
+  constructor(private modalService: BsModalService) {}
  showPopup(data:any){
+    if(data){
+      this.deliveryAgentViewList = data;
+    }
     this.bsModalRef = this.modalService.show(this.templatePopup, {  backdrop: true, ignoreBackdropClick: false, class: 'modal-lg modal-dialog-centered' });
   }
 

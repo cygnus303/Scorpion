@@ -32,9 +32,9 @@
                     <td>{{data.dA_Code}}</td>
                     <td>{{data.deliveryAgentName}}</td>
                     <td>{{data.location}}</td>
-                    <td>{{data.vehicleInfo}}</td>
+                    <td>{{'--'}}</td>
                     <td class="text-center">
-                        <ng-container *ngIf="data.status; else inactive">
+                        <ng-container *ngIf="data.isActive; else inactive">
                             <i class="fas fa-check-square text-success me-1 fs-4"></i>
                         </ng-container>
                         <ng-template #inactive>
@@ -42,10 +42,10 @@
                         </ng-template>
                     </td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-secondary me-1" title="Edit" (click)="openDeliveryAgentsPopup(data)">
+                        <button class="btn btn-sm btn-secondary me-1" title="Edit" (click)="openDeliveryAgentsPopup(data.dA_Code)">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-sm btn-info text-white" title="View" (click)="opendeliveryAgentViewPopup(data)">
+                        <button class="btn btn-sm btn-info text-white" title="View" (click)="opendeliveryAgentViewPopup(data.dA_Code)">
                             <i class="fas fa-eye"></i>
                         </button>
                     </td>
@@ -54,8 +54,7 @@
         </table>
     </div>
 </div>
-<!-- <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="pageSize" [maxSize]="3">
-</ngb-pagination> -->
+<ngb-pagination [collectionSize]="totalItems" [(page)]="pageNumber" [pageSize]="pageSize" [maxSize]="3" (pageChange)="getDeliveryAgentList($event)"></ngb-pagination>
 
 <delivery-agent-modal #deliveryAgentPopup (dataEvent)="getDeliveryAgentList()"></delivery-agent-modal>
 <delivery-agent-view #deliveryAgentViewPopup></delivery-agent-view>

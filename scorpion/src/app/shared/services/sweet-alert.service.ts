@@ -8,19 +8,26 @@ export class SweetAlertService {
 
   constructor() { }
 
-  success(message:string){
-   return Swal.fire({
-      title: message,
-      icon: 'success',
-      showCancelButton: false,
-      showConfirmButton: true,
-      confirmButtonText: "Ok",
-      confirmButtonColor: '#171829',
-      customClass: {
-        container: 'notification-popup'
-      }
-    });
-  }
+ success(message: string): Promise<any> {
+  return Swal.fire({
+    title: 'Success',
+    html: `<div>${message}</div>`,
+    icon: 'success',
+    showConfirmButton: true,
+    confirmButtonText: 'OK, Great!',
+    background: 'rgba(255, 255, 255, 0.9)',
+    color: '#2c3e50',
+    width: '420px',
+    buttonsStyling: false,
+    customClass: {
+      popup: 'glassy-info-popup',
+      title: 'glassy-info-title',
+      htmlContainer: 'glassy-info-body',
+      confirmButton: 'glassy-info-btn',
+      icon: 'glassy-info-icon'
+    }
+  });
+}
 
   delete(message:string, onConfirm: () => void){
     Swal.fire({

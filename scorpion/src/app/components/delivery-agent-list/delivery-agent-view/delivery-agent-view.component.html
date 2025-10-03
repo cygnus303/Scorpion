@@ -1,7 +1,7 @@
 <!-- TemplateRef for modal -->
 <ng-template #templatePopup>
    <div class="modal-header background-color text-white d-flex justify-content-between">
-    <h5 class="modal-title">Add Delivery Agent</h5>
+    <h5 class="modal-title">View Delivery Agent</h5>
     <button type="button" class="btn text-white" (click)="closePopup()"><i class="fas fa-times"></i></button>
   </div>
   <div class="modal-body">
@@ -9,55 +9,55 @@
     <table class="table table-bordered table-striped">
       <tbody>
         <tr>
-          <td style="width: 50%;"><strong>Delivery Agent Code:</strong> {{ '--' }}</td>
-          <td><strong>Delivery Agent Name:</strong> {{ '--' }}</td>
+          <td style="width: 50%;"><strong>Delivery Agent Code:</strong> {{ deliveryAgentViewList.dA_Code }}</td>
+          <td><strong>Delivery Agent Name:</strong> {{ deliveryAgentViewList.deliveryAgentName }}</td>
         </tr>
         <tr>
-          <td><strong>Delivery Agent Mobile No.</strong> {{ '--' }}</td>
-          <td><strong>FTL Type:</strong> {{ '--' }}</td>
+          <td><strong>Delivery Agent Mobile No.</strong> {{ deliveryAgentViewList.deliveryAgentMobile }}</td>
+          <td><strong>FTL Type:</strong> {{ deliveryAgentViewList.fTlType }}</td>
         </tr>
         <tr>
-          <td><strong>Vehicle No:</strong> {{ '--' }}</td>
-          <td><strong>Engine No:</strong> {{ '--' }}</td>
+          <td><strong>Vehicle No:</strong> {{ deliveryAgentViewList.vehicleNo }}</td>
+          <td><strong>Engine No:</strong> {{ deliveryAgentViewList.engineNo }}</td>
         </tr>
         <tr>
-          <td><strong>Registration date:</strong> {{ '--' }}</td>
-          <td><strong>Chassis No: </strong> {{ '--' }}</td>
+          <td><strong>Registration date:</strong> {{ deliveryAgentViewList.registrationDate }}</td>
+          <td><strong>Chassis No: </strong> {{ deliveryAgentViewList.chassisNo }}</td>
         </tr>
         <tr>
-          <td><strong>RC Book No:</strong> {{ '--' }}</td>
-          <td><strong>Permit validity Date:</strong> {{ '--' }}</td>
+          <td><strong>RC Book No:</strong> {{ deliveryAgentViewList.rcBookNo }}</td>
+          <td><strong>Permit validity Date:</strong> {{ deliveryAgentViewList.permitValidityDate }}</td>
         </tr>
         <tr>
-          <td><strong>Insurance Validity Date:</strong> {{ '--' }}</td>
-          <td><strong>Fitness Validity Date:</strong> {{ '--' }}</td>
+          <td><strong>Insurance Validity Date:</strong> {{ deliveryAgentViewList.insuranceValidityDate }}</td>
+          <td><strong>Fitness Validity Date:</strong> {{ deliveryAgentViewList.fitnessValidityDate }}</td>
         </tr>
         <tr>
-          <td><strong>License No:</strong> {{ '--' }}</td>
-          <td><strong>Date of Birth:</strong> {{ '--' }}</td>
+          <td><strong>License No:</strong> {{ deliveryAgentViewList.licenseNo }}</td>
+          <td><strong>Date of Birth:</strong> {{ deliveryAgentViewList.dateOfBirth }}</td>
         </tr>
         <tr>
-          <td><strong>Issue By RTO:</strong> {{ '--' }}</td>
-          <td><strong>License validity Date:</strong> {{ '--' }}</td>
+          <td><strong>Issue By RTO:</strong> {{ deliveryAgentViewList.issueByRTO }}</td>
+          <td><strong>License validity Date:</strong> {{ deliveryAgentViewList.licenseValidityDate }}</td>
         </tr>
         <tr>
-          <td><strong>Issue By RTO:</strong> {{ '--' }}</td>
-          <td><strong>License validity Date:</strong> {{ '--' }}</td>
+          <td><strong>Issue By RTO:</strong> {{ deliveryAgentViewList.issueByRTO }}</td>
+          <td><strong>License validity Date:</strong> {{ deliveryAgentViewList.licenseValidityDate }}</td>
         </tr>
          <tr>
-          <td><strong>Business Associate Vendor:</strong> {{ '--' }}</td>
-          <td><strong>Location:</strong> {{ '--' }}</td>
+          <td><strong>Business Associate Vendor:</strong> {{ deliveryAgentViewList.businessAssociateVendor }}</td>
+          <td><strong>Location:</strong> {{ deliveryAgentViewList.location }}</td>
         </tr>
          <tr>
-          <td><strong>GPS Enabled:</strong> {{ '--' }}</td>
-          <td><strong>GPS Provider:</strong> {{ '--' }}</td>
+          <td><strong>GPS Enabled:</strong> {{ deliveryAgentViewList.gpsEnabled }}</td>
+          <td><strong>GPS Provider:</strong> {{ deliveryAgentViewList.gpsProvider }}</td>
         </tr>
          <tr>
-          <td><strong>Active Flag:</strong> {{ '--' }}</td>
+          <td><strong>Active Flag:</strong> {{ deliveryAgentViewList.isActive}}</td>
           <td><strong>License Attachment:</strong> {{ '--' }}</td>
         </tr>
         <tr>
-          <td><strong>Added By:</strong> {{ '--' }}</td>
+          <td><strong>Added By:</strong> {{ deliveryAgentViewList.entryBy }}</td>
           <td><strong>Added Date:</strong> {{ '--' }}</td>
         </tr>
         <tr>

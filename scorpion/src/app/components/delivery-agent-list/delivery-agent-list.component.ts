@@ -2,6 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 import { DeliveryAgentModalComponent } from './delivery-agent-modal/delivery-agent-modal.component';
 import { DeliveryAgentViewComponent } from './delivery-agent-view/delivery-agent-view.component';
 import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service';
+import { DeliveryAgentByCodeResponse, DeliveryAgentsListRepsonse } from 'app/shared/models/delivery-agent.model';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-delivery-agent-list',
@@ -10,32 +12,67 @@ import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service
   styleUrl: './delivery-agent-list.component.scss'
 })
 export class DeliveryAgentListComponent {
+  public totalItems!:number;
+  public pageNumber:number = 1;
+  public pageSize:number = 5;
   @ViewChild('deliveryAgentPopup') deliveryAgentPopup!: DeliveryAgentModalComponent;
   @ViewChild('deliveryAgentViewPopup') deliveryAgentViewPopup!: DeliveryAgentViewComponent;
-  public deliveryAgentsList:any[]=[]
+  public deliveryAgentsList:DeliveryAgentsListRepsonse[]=[]
+  public deliveryAgentByCodeList!:DeliveryAgentByCodeResponse;
 
-  constructor(
-    private deliveryAgentService:DeliveryAgentService
-  ){}
+  constructor(private deliveryAgentService:DeliveryAgentService){}
 
   ngOnInit(){
     this.getDeliveryAgentList();
   }
 
-getDeliveryAgentList(){
-  this.deliveryAgentService.getDeliveryAgent().subscribe({
+  getDeliveryAgentList(pageNumber: number = 1, pageSize: number = this.pageSize) {
+    const url = `pageNumber=${pageNumber}&pageSize=${pageSize}`;
+    this.deliveryAgentService.getDeliveryAgent(url).subscribe({next: (response) => {
+        if (response) {
+          this.deliveryAgentsList = response.data;
+          this.totalItems=response.totalRecords
+        }
+      },
+    })
+  }
+
+ getDeliveryAgentByCodeList(code: string, callback?: (data: any) => void) {
+  this.deliveryAgentService.getDeliveryAgentByCodeList(code)
+    .pipe(
+      finalize(() => {
+        if (callback) {
+          callback(this.deliveryAgentByCodeList);
+        }
+      })
+    )
+    .subscribe({
       next: (response) => {
-          if (response) {
-            this.deliveryAgentsList=response.data;
-          }
-        },
-  })
+        if (response) {
+          this.deliveryAgentByCodeList = response.data;
+        }
+      },
+      error: (err) => {
+        this.deliveryAgentByCodeList = {} as any; // fallback empty object
+      }
+    });
 }
 
-  openDeliveryAgentsPopup(item?:any){
-     this.deliveryAgentPopup.showPopup(item)
+  openDeliveryAgentsPopup(code?: any) {
+    if (code) {
+      this.getDeliveryAgentByCodeList(code, (item) => {
+        this.deliveryAgentPopup.showPopup(item);
+      });
+    } else {
+      this.deliveryAgentPopup.showPopup();
+    }
   }
-   opendeliveryAgentViewPopup(item:any){
-     this.deliveryAgentViewPopup.showPopup(item)
+
+  opendeliveryAgentViewPopup(code?: any) {
+    if (code) {
+      this.getDeliveryAgentByCodeList(code, (item) => {
+        this.deliveryAgentViewPopup.showPopup(item)
+      });
+    }
   }
 }

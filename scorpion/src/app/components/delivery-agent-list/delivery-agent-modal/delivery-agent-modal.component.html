@@ -1,6 +1,6 @@
 <ng-template #templatePopup>
   <div class="modal-header background-color text-white d-flex justify-content-between">
-    <h5 class="modal-title">Add Delivery Agent</h5>
+    <h5 class="modal-title">{{!deliveryAgentCode ? 'Add':'Edit'}}  Delivery Agent</h5>
     <button type="button" class="btn text-white" (click)="closePopup()"><i class="fas fa-times"></i></button>
   </div>
   <div class="modal-body">
@@ -10,10 +10,8 @@
           <div class="row align-items-center" >
             <label class="control-label col-5"><b>Delivery Agent Code:</b></label>
             <div class="col-7">
-              <input class="form-control" placeholder="Delivery Agent Code" type="text" formControlName="dA_Code" [readonly]="!deliveryAgentList ? true:false">
-              <!-- <div class="text-danger text-start ">
-                          This field is required.
-                        </div> -->
+              <input class="form-control" placeholder="Delivery Agent Code" type="text" formControlName="dA_Code" [readonly]="!deliveryAgentCode ? true:false">
+              <!-- <div class="text-danger text-start "> This field is required.</div> -->
             </div>
           </div>
         </div>
@@ -53,7 +51,7 @@
             <div class="col-7">
                 <div class="d-flex">
                   <input class="form-control required2" type="text" placeholder="Vehicle No" formControlName="vehicleNo">
-                  <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentList ? true:false">
+                  <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode ? true:false">
                     Invoke
                   </button>
                 </div>
@@ -162,7 +160,7 @@
             <div class="col-7">
                <div class="d-flex">
                    <input class="form-control required2" placeholder="License No" type="text" formControlName="licenseNo">
-                  <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentList ? true:false">
+                  <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode ? true:false">
                     Invoke
                   </button>
                 </div>
@@ -242,12 +240,12 @@
             </div>
           </div>
         </div>
-        <div class="col-6"  *ngIf="deliveryAgentList ? true : false">
+        <div class="col-6"  *ngIf="deliveryAgentCode ? true : false">
           <div class="row align-items-center">
             <label class="control-label col-5"><b>Active Flag :</b></label>
             <div class="col-7">
               <div class="d-flex align-items-center">
-                <input type="checkbox" class="form-check-input me-4 checkbox-lg">
+                <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="isActive"> 
               </div>
             </div>
           </div>
