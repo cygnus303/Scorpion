@@ -15,6 +15,7 @@ export class DeliveryAgentViewComponent {
   @ViewChild('templatePopup', { static: true }) templatePopup!: TemplateRef<any>;
 
   constructor(private modalService: BsModalService) {}
+  
  showPopup(data:any){
     if(data){
       this.deliveryAgentViewList = data;
@@ -23,8 +24,6 @@ export class DeliveryAgentViewComponent {
   }
 
   closePopup() {
-  if (this.bsModalRef) {
-    this.bsModalRef.hide(); // modal close karva
-  }
-}
+    if (this.bsModalRef) {this.bsModalRef.hide();}
+ }
 }

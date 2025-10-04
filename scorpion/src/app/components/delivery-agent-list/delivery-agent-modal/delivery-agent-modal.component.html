@@ -223,7 +223,7 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end">Business Associate Vendor</label>
             <div class="col-sm-7">
-              <ng-select class="required2" placeholder="Business Associate Vendor" required formControlName="businessAssociateVendor"
+              <ng-select class="required2" placeholder="Business Associate Vendor" required formControlName="businessAssociateVendor" (change)="getLocation($event)"
                 [items]="vendorsList" bindLabel="vendorName" bindValue="vendorCode" [ngClass]="{ 'border-danger': dAForm.get('businessAssociateVendor')?.invalid  && dAForm.get('businessAssociateVendor')?.touched }">
               </ng-select>
                <div class="text-danger" *ngIf="dAForm.get('businessAssociateVendor')?.invalid && dAForm.get('businessAssociateVendor')?.touched "> This field is required.</div>
@@ -236,7 +236,7 @@
             <div class="col-sm-7">
                <ng-select class=" required2" 
                 [items]="locationData" bindLabel="locName" bindValue="locCode" [multiple]="true" required [ngClass]="{ 'border-danger': dAForm.get('location')?.invalid  && dAForm.get('location')?.touched }"
-                placeholder="Select location" formControlName="location" notFoundText="No matches found"></ng-select>
+                placeholder="Select location" formControlName="location" notFoundText="No matches found" readonly></ng-select>
                  <div class="text-danger" *ngIf="dAForm.get('location')?.invalid && dAForm.get('location')?.touched "> This field is required.</div>
             </div>
           </div>

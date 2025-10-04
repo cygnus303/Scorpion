@@ -6,7 +6,6 @@ import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { DeliveryAgentByCodeResponse, VendorsListResponse } from 'app/shared/models/delivery-agent.model';
 
-
 @Component({
   selector: 'delivery-agent-modal',
   standalone: false,
@@ -25,12 +24,11 @@ export class DeliveryAgentModalComponent {
 
   constructor(private modalService: BsModalService,public docketService: DocketService,public deliveryAgentService: DeliveryAgentService,public sweetAlertService:SweetAlertService) {}
   
-  
   showPopup(data?:DeliveryAgentByCodeResponse){
    this.buildForm();
+   this.getVendors();
    this.getLocationData();
    this.docketService.getTypeofMovementData('');
-   this.getVendors();
     if(data){
       this.deliveryAgentCode = data.dA_Code;
       const patchData = {
@@ -41,18 +39,17 @@ export class DeliveryAgentModalComponent {
         fitnessValidityDate: data.fitnessValidityDate ? new Date(data.fitnessValidityDate) : null,
         dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
         licenseValidityDate: data.licenseValidityDate ? new Date(data.licenseValidityDate) : null,
+        location: data.location.split(",").map((x: any) => x.trim())
       };
       this.dAForm.patchValue(patchData);
     }else{
-    this.deliveryAgentCode = '';
+     this.deliveryAgentCode = '';
     }
     this.bsModalRef = this.modalService.show(this.templatePopup, {  backdrop: true, ignoreBackdropClick: false, class: 'modal-xl modal-dialog-centered' });
   }
 
   closePopup() {
-    if (this.bsModalRef) {
-      this.bsModalRef.hide(); // modal close karva
-    }
+    if (this.bsModalRef) {this.bsModalRef.hide();}
   }
 
   buildForm() {
@@ -105,18 +102,25 @@ onFileSelected(event: any) {
       }
     });
   }
-getLocationData(){
-    this.deliveryAgentService.getLocation().subscribe({
-        next: (response) => {
-          if (response) {
-            this.locationData=response.map((location: any) => ({
+
+  getLocation(event:any){
+     const result = event.vendorbrcd.split(",").map((x: any) => x.trim());
+    this.dAForm.patchValue({
+      location:result
+    });
+  }
+
+  getLocationData() {
+    this.deliveryAgentService.getLocation().subscribe({next: (response) => {
+        if (response) {
+          this.locationData = response.map((location: any) => ({
             locCode: location.locCode,
-            locName: `${location.locCode}: ${location.locName}`,
+            locName: `${location.locCode} ~ ${location.locName}`,
           }));
-          }
-        },
-      })
-}
+        }
+      },
+    })
+  }
 
   onSubmit() {
     if(this.dAForm.valid){
@@ -132,11 +136,9 @@ getLocationData(){
         formData.append(key, value ?? '');
       }
     });
-      this.deliveryAgentService.addDeliveryAgent(formData).subscribe({
-        next: (response) => {
+      this.deliveryAgentService.addDeliveryAgent(formData).subscribe({next: (response) => {
           if (response) {
-            this.sweetAlertService.success(response.message)
-            .then(()=>{
+            this.sweetAlertService.success(response.message).then(()=>{
               this.bsModalRef.hide();
               this.buildForm();
               this.dataEvent.emit(true);

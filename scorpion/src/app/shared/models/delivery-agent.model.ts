@@ -58,6 +58,7 @@ export interface DeliveryAgentByCodeResponse {
     licenseAttachment: string;
     isActive: boolean;
     entryBy: string;
+    businessAssociatecode:string;
 }
 export interface VendorsListResponse {
  vendorCode:string;
