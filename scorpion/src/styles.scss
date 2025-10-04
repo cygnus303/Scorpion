@@ -366,6 +366,31 @@ input[readonly] {
   margin-right: 0.5rem;   /* spacing */
 }
 
+.edit-color{
+  background-color: #e5e5e5;
+}
+
+.edit-border{
+  border-left: 3px solid #223066;
+}
+
+.badge {
+    font-size: 11px !important;
+    font-weight: 300;
+    height: 18px;
+    padding: 3px 6px 3px 6px;
+    border-radius: 12px !important;
+    text-shadow: none !important;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.bg-light{
+  td{
+    background-color: #f9f7f7;
+  }
+}
+
 // yes-no button
 .yes-no {
   display: inline-block;

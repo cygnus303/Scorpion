@@ -15,9 +15,10 @@ import saveAs from 'file-saver';
 export class DeliveryAgentListComponent {
   public totalItems!:number;
   public pageNumber:number = 1;
-  public pageSize:number = 5;
+  public pageSize:number = 10;
   public deliveryAgentsList:DeliveryAgentsListRepsonse[]=[]
   public deliveryAgentByCodeList!:DeliveryAgentByCodeResponse;
+  public filters: { [key: string]: string } = {}; // Dynamic filter object
   @ViewChild('deliveryAgentPopup') deliveryAgentPopup!: DeliveryAgentModalComponent;
   @ViewChild('deliveryAgentViewPopup') deliveryAgentViewPopup!: DeliveryAgentViewComponent;
 
@@ -28,8 +29,15 @@ export class DeliveryAgentListComponent {
   }
 
   getDeliveryAgentList(pageNumber: number = 1, pageSize: number = this.pageSize) {
-    const url = `pageNumber=${pageNumber}&pageSize=${pageSize}`;
-    this.deliveryAgentService.getDeliveryAgent(url).subscribe({next: (response) => {
+     this.filters = Object.fromEntries(
+      Object.entries(this.filters).filter(([key, value]) => value !== null)
+    );
+    const data ={
+      ...this.filters,
+      PageNumber:pageNumber,
+      PageSize:pageSize
+    }
+    this.deliveryAgentService.getDeliveryAgent(data).subscribe({next: (response) => {
         if (response) {
           this.deliveryAgentsList = response.data;
           this.totalItems=response.totalRecords
