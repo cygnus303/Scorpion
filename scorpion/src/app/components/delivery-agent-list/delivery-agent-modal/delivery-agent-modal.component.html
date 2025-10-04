@@ -256,12 +256,12 @@
         </div>
         <div class="col-6"  *ngIf="deliveryAgentCode ? true : false">
           <div class="row">
-            <label class="col-sm-5 col-form-label text-end">Active Flag</label>
+            <label class="col-sm-5 col-form-label text-end">Active</label>
             <div class="col-sm-7">
               <div class="d-flex align-items-center">
                 <!-- <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="isActive">  -->
                  <label class="yes-no">
-                <input type="checkbox" formControlName="isActive" />
+                <input type="checkbox" formControlName="isActive" (change)="isActiveChecked($event)"/>
                 <span class="slider"></span>
               </label>
               </div>
