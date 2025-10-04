@@ -63,3 +63,8 @@ export interface VendorsListResponse {
  vendorCode:string;
  vendorName: string;
 }
+
+export interface LocationListResponse{
+   locCode: string,
+   locName: string
+}

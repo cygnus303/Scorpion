@@ -148,6 +148,8 @@ confirm(message: string, options?: any) {
     title: message,
     icon: 'warning',
     showCancelButton: true,
+     allowOutsideClick: false,   // ⛔ block outside click
+    allowEscapeKey: false, 
     confirmButtonText: options?.confirmButtonText || 'Yes',
     cancelButtonText: options?.cancelButtonText || 'No',
     background: 'rgba(255, 255, 255, 0.9)',

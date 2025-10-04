@@ -4,7 +4,7 @@ import { DocketService } from 'app/shared/services/docket.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
-import { DeliveryAgentByCodeResponse, VendorsListResponse } from 'app/shared/models/delivery-agent.model';
+import { DeliveryAgentByCodeResponse, LocationListResponse, VendorsListResponse } from 'app/shared/models/delivery-agent.model';
 
 
 @Component({
@@ -19,7 +19,7 @@ export class DeliveryAgentModalComponent {
   public dAForm!: FormGroup;
   public deliveryAgentCode!:string;
   public vendorsList:VendorsListResponse[]=[];
-  public locationData:any[]=[];
+  public locationData:LocationListResponse[]=[];
   @ViewChild('templatePopup', { static: true }) templatePopup!: TemplateRef<any>;
   @Output() dataEvent = new EventEmitter<boolean>();
 
@@ -117,6 +117,22 @@ getLocationData(){
         },
       })
 }
+
+isActiveChecked(event: any) {
+  event.preventDefault();
+  const isChecked = this.dAForm.get('isActive')?.value;
+
+  if (!isChecked) {
+    this.sweetAlertService.confirm('Do you want to deactivate this user?').then((result: any) => {
+      if (result.isConfirmed) {
+        this.dAForm.get('isActive')?.setValue(false, { emitEvent: false });
+      }else{
+        this.dAForm.get('isActive')?.setValue(true, { emitEvent: true });
+      }
+    });
+  } 
+}
+
 
   onSubmit() {
     if(this.dAForm.valid){
