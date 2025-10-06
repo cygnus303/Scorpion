@@ -503,3 +503,10 @@ input[readonly] {
     cursor: not-allowed;
   }
 }
+
+.input-height{
+    .ng-select-container {
+     height: auto !important;
+     min-height: 30px !important; // optional - set your desired height
+   }
+}

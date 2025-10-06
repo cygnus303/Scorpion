@@ -5,6 +5,8 @@ import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service
 import { DeliveryAgentByCodeResponse, DeliveryAgentsListRepsonse } from 'app/shared/models/delivery-agent.model';
 import { finalize } from 'rxjs';
 import saveAs from 'file-saver';
+import lottie from 'lottie-web';
+import { defineElement } from 'lord-icon-element';
 
 @Component({
   selector: 'app-delivery-agent-list',
@@ -18,19 +20,19 @@ export class DeliveryAgentListComponent {
   public pageSize:number = 10;
   public deliveryAgentsList:DeliveryAgentsListRepsonse[]=[]
   public deliveryAgentByCodeList!:DeliveryAgentByCodeResponse;
+  public isloading:boolean=false;
   public filters: { [key: string]: string } = {}; // Dynamic filter object
   @ViewChild('deliveryAgentPopup') deliveryAgentPopup!: DeliveryAgentModalComponent;
   @ViewChild('deliveryAgentViewPopup') deliveryAgentViewPopup!: DeliveryAgentViewComponent;
 
-  constructor(
-    private deliveryAgentService:DeliveryAgentService,
-  ){}
+  constructor(private deliveryAgentService:DeliveryAgentService){defineElement(lottie.loadAnimation);}
 
   ngOnInit(){
     this.getDeliveryAgentList();
   }
 
   getDeliveryAgentList(pageNumber: number = 1, pageSize: number = this.pageSize) {
+    this.isloading=true;   
      this.filters = Object.fromEntries(
       Object.entries(this.filters).filter(([key, value]) => value !== null)
     );
@@ -42,10 +44,12 @@ export class DeliveryAgentListComponent {
     this.deliveryAgentService.getDeliveryAgent(data).subscribe({next: (response) => {
         if (response) {
           this.deliveryAgentsList = response.data;
-          this.totalItems=response.totalRecords
+          this.totalItems=response.totalRecords;
+          this.isloading=false;
         }
       },
     })
+    this.isloading=false;
   }
 
   getDeliveryAgentByCodeList(code: string, callback?: (data: any) => void) {
