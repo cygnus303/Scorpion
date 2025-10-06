@@ -71,6 +71,45 @@
   padding: 0 !important;
   box-shadow: none !important;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  &.ng-select-multiple {
+        .ng-value {
+          display: inline-flex; // Inline layout for text and icon
+          align-items: center; // Align items vertically
+          background-color: #f8f9fa; // Light gray background
+          border: 1px solid #007bff; // Blue border
+          border-radius: 4px; // Rounded corners
+          padding: 5px 8px; // Padding for each ng-value
+          margin-right: 8px; // Margin between selected items
+          margin-bottom: 8px; // Add margin to prevent overlapping rows
+    
+          // Ensure the remove icon is after the text
+          .ng-value-icon {
+            color: #007bff;
+            cursor: pointer;
+    
+            &:hover {
+              color: #dc3545; // Red color on hover
+            }
+          }
+        }
+      }
+
+    ::ng-deep ng-select[multiple] .ng-select-container {
+      min-height: auto !important;
+      height: auto !important;
+      flex-wrap: wrap !important;
+      align-items: flex-start !important;
+    }
+
+    ::ng-deep ng-select[multiple] .ng-value-container {
+      flex-wrap: wrap !important;
+      padding-top: 4px !important;
+      padding-bottom: 4px !important;
+    }
+
+    ::ng-deep ng-select[multiple] .ng-value {
+      margin-bottom: 2px;
+    }
   
 
   .ng-select-container {

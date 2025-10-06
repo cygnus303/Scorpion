@@ -5,6 +5,9 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { DeliveryAgentByCodeResponse, LocationListResponse, VendorsListResponse } from 'app/shared/models/delivery-agent.model';
+import { BasicDetailService } from 'app/shared/services/basic-detail.service';
+import { generalMasterResponse } from 'app/shared/models/general-master.model';
+import { debounceTime, Subject } from 'rxjs';
 
 @Component({
   selector: 'delivery-agent-modal',
@@ -19,15 +22,69 @@ export class DeliveryAgentModalComponent {
   public deliveryAgentCode!:string;
   public vendorsList:VendorsListResponse[]=[];
   public locationData:LocationListResponse[]=[];
+  public  gpsdata:generalMasterResponse[]=[];
+  public showInvokeButton:boolean=false;
+  public showVehicleInvokeButton:boolean=false;
   @ViewChild('templatePopup', { static: true }) templatePopup!: TemplateRef<any>;
   @Output() dataEvent = new EventEmitter<boolean>();
+  private licenceInput$ = new Subject<any>();
+  constructor(
+    private modalService: BsModalService,
+    public docketService: DocketService,
+    public deliveryAgentService: DeliveryAgentService,
+    public sweetAlertService:SweetAlertService,
+    public basicDetailService:BasicDetailService
+  ) {}
 
-  constructor(private modalService: BsModalService,public docketService: DocketService,public deliveryAgentService: DeliveryAgentService,public sweetAlertService:SweetAlertService) {}
+  ngOnInit() {
+    this.licenceInput$.pipe(debounceTime(600)).subscribe((event: any) => {
+    const dob = this.dAForm.value.dateOfBirth;
+    const value = event ? event.target.value?.trim():this.dAForm.value.licenseNo;
+    if (!value || value.length < 3 || !dob) return;
+    const params = {
+      dlnumber: value,
+      dob: dob  ? `${('0' + dob.getDate()).slice(-2)} ${ ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][dob.getMonth()] } ${dob.getFullYear()}`: '',
+      baseUserName: this.docketService.loginUserList.BaseUserName
+    };
+    this.deliveryAgentService.getLicenceDetail(params).subscribe({
+      next: (response: any) => {
+        if (response && response.data) {
+          this.dAForm.patchValue({
+            issueByRTO: response.data.omRtoFullname,
+            licenseValidityDate: response.data.validTillDate
+          });
+        }
+      }
+    });
+  });
+}
+
+getVehicleDetail(event?:any){
+  const params = {
+    vehNo: event ? event.target.value : this.dAForm.value.vehicleNo,
+    baseUserName:this.docketService.loginUserList.BaseUserName
+  }
+   this.deliveryAgentService.getVehicleDetail(params).subscribe({next: (response: any) => {
+        if (response) {
+          this.dAForm.patchValue({
+            chassisNo:  response.rc_chasi_no,
+            rcBookNo: response.rc_regn_no,
+            registrationDate: new Date(response.rc_regn_upto),
+            engineNo: response.rc_eng_no,
+            permitValidityDate: new Date(response.rc_permit_valid_upto),
+            insuranceValidityDate: new Date(response.rc_insurance_upto),
+            fitnessValidityDate: new Date(response.rc_fit_upto),
+          });
+        }
+      }
+    });
+}
   
   showPopup(data?:DeliveryAgentByCodeResponse){
    this.buildForm();
    this.getVendors();
    this.getLocationData();
+   this.getGPSProviderData()
    this.docketService.getTypeofMovementData('');
     if(data){
       this.deliveryAgentCode = data.dA_Code;
@@ -39,9 +96,40 @@ export class DeliveryAgentModalComponent {
         fitnessValidityDate: data.fitnessValidityDate ? new Date(data.fitnessValidityDate) : null,
         dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
         licenseValidityDate: data.licenseValidityDate ? new Date(data.licenseValidityDate) : null,
-        location: data.location.split(",").map((x: any) => x.trim())
+        gpsProvider:data.gpsProvider?data.gpsProvider:null,
+        location:data.location?data.location: data.location?.split(",").map((x: any) => x.trim())
       };
       this.dAForm.patchValue(patchData);
+
+          const registrationDate = this.dAForm.value.registrationDate? new Date(this.dAForm.value.registrationDate): null;
+          const permitValidityDate = this.dAForm.value.permitValidityDate? new Date(this.dAForm.value.permitValidityDate): null;
+          const insuranceValidityDate = this.dAForm.value.insuranceValidityDate? new Date(this.dAForm.value.insuranceValidityDate): null;
+          const fitnessValidityDate = this.dAForm.value.fitnessValidityDate? new Date(this.dAForm.value.fitnessValidityDate): null;
+          const today = new Date();
+         const isExpired = (registrationDate && registrationDate < today) || (permitValidityDate && permitValidityDate < today) || (insuranceValidityDate && insuranceValidityDate < today) ||
+        (fitnessValidityDate && fitnessValidityDate < today);
+
+      // ✅ If expired → show button and disable fields
+      if (isExpired) {
+        this.showVehicleInvokeButton = true;
+         this.dAForm.patchValue({
+            chassisNo:'',
+            rcBookNo:'',
+            registrationDate:'',
+            engineNo:'',
+            permitValidityDate:'',
+            insuranceValidityDate:'',
+            fitnessValidityDate:'',
+          });
+      }
+    const licenseDate = this.dAForm.value.licenseValidityDate ? new Date(this.dAForm.value.licenseValidityDate): null;
+      if (licenseDate && licenseDate < today) {
+        this.showInvokeButton = true;
+        this.dAForm.patchValue({
+          issueByRTO: '',
+          licenseValidityDate: ''
+        });
+      }
     }else{
      this.deliveryAgentCode = '';
     }
@@ -72,7 +160,7 @@ export class DeliveryAgentModalComponent {
       businessAssociateVendor: new FormControl(null),
       fTlType: new FormControl(null),
       gpsEnabled: new FormControl(false),
-      gpsProvider: new FormControl(''),
+      gpsProvider: new FormControl(null),
       location: new FormControl(null),
       LicenseAttachmentPath: new FormControl(''),
       LicenseAttachment: new FormControl(''),
@@ -104,7 +192,7 @@ onFileSelected(event: any) {
   }
 
   getLocation(event:any){
-     const result = event.vendorbrcd.split(",").map((x: any) => x.trim());
+     const result = event.vendorbrcd?.split(",").map((x: any) => x.trim());
     this.dAForm.patchValue({
       location:result
     });
@@ -122,6 +210,16 @@ onFileSelected(event: any) {
     })
   }
 
+  getGPSProviderData() {
+      this.basicDetailService.getGeneralMasterList('GPSP', '', '').subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.gpsdata = response.data;
+          }
+        },
+      });
+  }
+
 isActiveChecked(event: any) {
   event.preventDefault();
   const isChecked = this.dAForm.get('isActive')?.value;
@@ -137,6 +235,9 @@ isActiveChecked(event: any) {
   } 
 }
 
+  onChangeLicenceNumber(event?:any){
+    this.licenceInput$.next(event);
+  }
 
   onSubmit() {
     if(this.dAForm.valid){

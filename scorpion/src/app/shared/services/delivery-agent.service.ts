@@ -30,7 +30,16 @@ export class DeliveryAgentService {
   getVendors():Observable<any> {
     return this.apiHandlerService.Get(`External/GetVendors`);
   }
+
   getLocation():Observable<any> {
     return this.apiHandlerService.Get(`External/GetLocations`);
+  }
+
+  getLicenceDetail(params:any){
+    return this.apiHandlerService.Get(`Master/GetDriverDetails?dlnumber=${params.dlnumber}&dob=${params.dob}&baseUserName=${params.baseUserName}`);
+  }
+
+  getVehicleDetail(params:any){
+    return this.apiHandlerService.Get(`Master/GetVehicleDetails?vehNo=${params.vehNo}&baseUserName=${params.baseUserName}`);
   }
 }

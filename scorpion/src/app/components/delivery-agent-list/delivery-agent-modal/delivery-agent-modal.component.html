@@ -55,8 +55,10 @@
             <label class="col-sm-5 col-form-label text-end">Vehicle No</label>
             <div class="col-sm-7">
                 <div class="d-flex">
-                  <input class="form-control required2" type="text" placeholder="Vehicle No" formControlName="vehicleNo" required [ngClass]="{ 'border-danger': dAForm.get('vehicleNo')?.invalid  && dAForm.get('vehicleNo')?.touched }">
-                  <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode ? true:false">
+                  <input class="form-control required2" type="text" placeholder="Vehicle No" formControlName="vehicleNo" (input)="getVehicleDetail($event)" required 
+                 
+                  [ngClass]="{ 'border-danger': dAForm.get('vehicleNo')?.invalid  && dAForm.get('vehicleNo')?.touched }">
+                  <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode && showVehicleInvokeButton? true:false" (click)="getVehicleDetail()">
                     Invoke
                   </button>
                 </div>
@@ -162,20 +164,6 @@
       <div class="row pb-3">
         <div class="col-6">
           <div class="row">
-            <label class="col-sm-5 col-form-label text-end">License No</label>
-            <div class="col-sm-7">
-               <div class="d-flex">
-                   <input class="form-control required2" placeholder="License No" type="text" formControlName="licenseNo" required [ngClass]="{ 'border-danger': dAForm.get('licenseNo')?.invalid  && dAForm.get('licenseNo')?.touched }">
-                  <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode ? true:false">
-                    Invoke
-                  </button>
-                </div>
-                <div class="text-danger" *ngIf="dAForm.get('licenseNo')?.invalid && dAForm.get('licenseNo')?.touched "> This field is required.</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="row">
             <label class="col-sm-5 col-form-label text-end">Date of Birth</label>
             <div class="col-sm-7">
               <div class="input-group">
@@ -188,6 +176,22 @@
                 </span>
               </div>
                <div class="text-danger" *ngIf="dAForm.get('dateOfBirth')?.invalid && dAForm.get('dateOfBirth')?.touched "> This field is required.</div>
+            </div>
+          </div>
+        </div>
+          <div class="col-6">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">License No</label>
+            <div class="col-sm-7">
+               <div class="d-flex">
+                   <input class="form-control required2" placeholder="License No" type="text" formControlName="licenseNo" required 
+                    (input)="onChangeLicenceNumber($event)"
+                   [ngClass]="{ 'border-danger': dAForm.get('licenseNo')?.invalid  && dAForm.get('licenseNo')?.touched }">
+                  <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode && showInvokeButton ? true:false" (click)="onChangeLicenceNumber()">
+                    Invoke
+                  </button>
+                </div>
+                <div class="text-danger" *ngIf="dAForm.get('licenseNo')?.invalid && dAForm.get('licenseNo')?.touched "> This field is required.</div>
             </div>
           </div>
         </div>
@@ -234,7 +238,7 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end">Location</label>
             <div class="col-sm-7">
-               <ng-select class=" required2" 
+               <ng-select class="" 
                 [items]="locationData" bindLabel="locName" bindValue="locCode" [multiple]="true" required [ngClass]="{ 'border-danger': dAForm.get('location')?.invalid  && dAForm.get('location')?.touched }"
                 placeholder="Select location" formControlName="location" notFoundText="No matches found" readonly></ng-select>
                  <div class="text-danger" *ngIf="dAForm.get('location')?.invalid && dAForm.get('location')?.touched "> This field is required.</div>
@@ -249,7 +253,10 @@
             <div class="col-sm-7">
               <div class="d-flex align-items-center">
                 <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="gpsEnabled">
-                <input class="form-control" placeholder="GPS Provider" type="text" formControlName="gpsProvider" [readonly]="this.dAForm.value.gpsEnabled ? false  :true" >
+                <!-- <input class="form-control" placeholder="GPS Provider" type="text" formControlName="gpsProvider" [readonly]="this.dAForm.value.gpsEnabled ? false  :true" > -->
+                  <ng-select class=" required2" 
+                [items]="gpsdata" bindLabel="codeDesc" bindValue="codeId"  [ngClass]="{ 'border-danger': dAForm.get('gpsProvider')?.invalid  && dAForm.get('gpsProvider')?.touched }"
+                placeholder="Select GPS Provider" formControlName="gpsProvider" notFoundText="No matches found" [readonly]="this.dAForm.value.gpsEnabled ? false  :true"></ng-select>
               </div>
             </div>
           </div>

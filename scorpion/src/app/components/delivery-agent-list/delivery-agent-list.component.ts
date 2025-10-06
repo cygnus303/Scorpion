@@ -22,7 +22,9 @@ export class DeliveryAgentListComponent {
   @ViewChild('deliveryAgentPopup') deliveryAgentPopup!: DeliveryAgentModalComponent;
   @ViewChild('deliveryAgentViewPopup') deliveryAgentViewPopup!: DeliveryAgentViewComponent;
 
-  constructor(private deliveryAgentService:DeliveryAgentService){}
+  constructor(
+    private deliveryAgentService:DeliveryAgentService,
+  ){}
 
   ngOnInit(){
     this.getDeliveryAgentList();
