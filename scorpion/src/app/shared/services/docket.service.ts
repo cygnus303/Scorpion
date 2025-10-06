@@ -65,6 +65,7 @@ export class DocketService {
   public calculateSummary = new Subject<boolean>();
   public isComplition : boolean = false;
   public completiondata: any;
+  private freightTimeout: any;
 
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
@@ -286,6 +287,18 @@ export class DocketService {
       declaredvalue: new FormControl(0, Validators.required),
     });
   }
+
+//   debounce(fn: (...args: any[]) => void, delay: number) {
+//   let timer: any;
+//   return (...args: any[]) => {
+//     clearTimeout(timer);
+//     timer = setTimeout(() => fn(...args), delay);
+//   };
+// }
+
+// debouncedFreightAndOtherChar = this.debounce(() => {
+//   this.freightAndOtherChar();
+// }, 500);
 
 freightAndOtherChar(){
   this.GetFreightContractDetails();

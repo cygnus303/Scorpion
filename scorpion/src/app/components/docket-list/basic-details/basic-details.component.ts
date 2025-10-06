@@ -456,7 +456,7 @@ onFileSelect(event: Event) {
     if (event?.codeId === 'P02') {
       this.docketService.isBillingTBB = true;
     } else {
-      this.docketService.isBillingTBB = false;
+      this.docketService.isBillingTBB = true;
     }
     this.docketService.basicDetailForm.patchValue({
       billingParty: null,
