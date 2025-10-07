@@ -59,6 +59,7 @@ export interface DeliveryAgentByCodeResponse {
     isActive: boolean;
     entryBy: string;
     businessAssociatecode:string;
+    locationName:string
 }
 export interface VendorsListResponse {
  vendorCode:string;

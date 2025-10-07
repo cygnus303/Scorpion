@@ -44,7 +44,7 @@ export class DocketListComponent implements OnInit {
       this.docketService.isComplition = true;
       this.getCompletionData();
     } 
-   
+
     // this.activatedRoute.queryParams.subscribe(params => {
     //   const encrypted = params['data'];
     //   const key = 'WebX';
@@ -624,7 +624,7 @@ getCompletionData() {
       this.appendObjectToFormData(formData, payload.wmd, "DVM.WMD");
       this.appendObjectToFormData(formData, payload.wmdc, "DVM.WMDC");
       formData.append("DVM.isCompletion", "false");
-      formData.append("DVM.IsFromCompletion", "false");
+      formData.append("DVM.IsFromCompletion", this.docketService?.loginUserList?.Type?.toString() === '1'  ? "1" :"0");
       formData.append("docketInvoiceList", JSON.stringify(invoiceList));
       formData.append("DocketBoxLBHList", JSON.stringify(DocketBoxLBHList));
       formData.append("docketChargesList", JSON.stringify(listCCH));
