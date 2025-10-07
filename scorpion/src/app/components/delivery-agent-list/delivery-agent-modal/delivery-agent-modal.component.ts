@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output, output, TemplateRef, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DocketService } from 'app/shared/services/docket.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service';
@@ -27,7 +27,6 @@ export class DeliveryAgentModalComponent {
   public showVehicleInvokeButton:boolean=false;
   @ViewChild('templatePopup', { static: true }) templatePopup!: TemplateRef<any>;
   @Output() dataEvent = new EventEmitter<boolean>();
-  private licenceInput$ = new Subject<any>();
   constructor(
     private modalService: BsModalService,
     public docketService: DocketService,
@@ -35,49 +34,54 @@ export class DeliveryAgentModalComponent {
     public sweetAlertService:SweetAlertService,
     public basicDetailService:BasicDetailService
   ) {}
+getVehicleDetail(event?: any) {
+  const vehicleNo = event ? event.target.value.trim() : this.dAForm.value.vehicleNo?.trim();
+  if (!vehicleNo) return;
+  const payload = {
+    vehicleNo: vehicleNo,
+    licenseNo: '',
+    dA_Code: this.dAForm.value.dA_Code
+  };
+  this.deliveryAgentService.validationData(payload).subscribe({
+    next: (response: any) => {
+      if (response?.message === 'No duplicate found. You can proceed to save data.') {
+        const params = {
+          vehNo: vehicleNo,
+          baseUserName: this.docketService.loginUserList.BaseUserName
+        };
 
-  ngOnInit() {
-    this.licenceInput$.pipe(debounceTime(600)).subscribe((event: any) => {
-    const dob = this.dAForm.value.dateOfBirth;
-    const value = event ? event.target.value?.trim():this.dAForm.value.licenseNo;
-    if (!value || value.length < 3 || !dob) return;
-    const params = {
-      dlnumber: value,
-      dob: dob  ? `${('0' + dob.getDate()).slice(-2)} ${ ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][dob.getMonth()] } ${dob.getFullYear()}`: '',
-      baseUserName: this.docketService.loginUserList.BaseUserName
-    };
-    this.deliveryAgentService.getLicenceDetail(params).subscribe({
-      next: (response: any) => {
-        if (response && response.data) {
-          this.dAForm.patchValue({
-            issueByRTO: response.data.omRtoFullname,
-            licenseValidityDate: response.data.validTillDate
-          });
-        }
+        this.deliveryAgentService.getVehicleDetail(params).subscribe({
+          next: (response: any) => {
+            if (response) {
+              this.dAForm.patchValue({
+                chassisNo: response.rc_chasi_no || '',
+                rcBookNo: response.rc_regn_no || '',
+                registrationDate: response.rc_regn_upto ? new Date(response.rc_regn_upto) : null,
+                engineNo: response.rc_eng_no || '',
+                permitValidityDate: response.rc_permit_valid_upto ? new Date(response.rc_permit_valid_upto) : null,
+                insuranceValidityDate: response.rc_insurance_upto ? new Date(response.rc_insurance_upto) : null,
+                fitnessValidityDate: response.rc_fit_upto ? new Date(response.rc_fit_upto) : null,
+              });
+            }
+          },
+          error: (err) => console.error('Error fetching vehicle details:', err)
+        });
+
+      } 
+      else {
+        this.sweetAlertService.info(
+          'Vehicle number or License Number is already used in another Delivery Agent. Please use a different vehicle or license number.'
+        );
+
+        this.dAForm.patchValue({ vehicleNo: null });
+        setTimeout(() => {
+          const vehicleInput = document.querySelector('input[formControlName="vehicleNo"]') as HTMLInputElement;
+          vehicleInput?.focus();
+        }, 200);
       }
-    });
+    },
+    error: (err) => console.error('Validation API failed:', err)
   });
-}
-
-getVehicleDetail(event?:any){
-  const params = {
-    vehNo: event ? event.target.value : this.dAForm.value.vehicleNo,
-    baseUserName:this.docketService.loginUserList.BaseUserName
-  }
-   this.deliveryAgentService.getVehicleDetail(params).subscribe({next: (response: any) => {
-        if (response) {
-          this.dAForm.patchValue({
-            chassisNo:  response.rc_chasi_no,
-            rcBookNo: response.rc_regn_no,
-            registrationDate: new Date(response.rc_regn_upto),
-            engineNo: response.rc_eng_no,
-            permitValidityDate: new Date(response.rc_permit_valid_upto),
-            insuranceValidityDate: new Date(response.rc_insurance_upto),
-            fitnessValidityDate: new Date(response.rc_fit_upto),
-          });
-        }
-      }
-    });
 }
   
   showPopup(data?:DeliveryAgentByCodeResponse){
@@ -153,7 +157,7 @@ getVehicleDetail(event?:any){
       permitValidityDate: new FormControl(''),
       insuranceValidityDate: new FormControl(''),
       fitnessValidityDate: new FormControl(''),
-      licenseNo: new FormControl(''),
+      licenseNo: new FormControl('', [Validators.required,Validators.pattern(/^[A-Z]{2}\d{2}\s?\d{11}$/)]),
       dateOfBirth: new FormControl(''),
       issueByRTO: new FormControl(''),
       licenseValidityDate: new FormControl(''),
@@ -235,9 +239,52 @@ isActiveChecked(event: any) {
   } 
 }
 
-  onChangeLicenceNumber(event?:any){
-    this.licenceInput$.next(event);
-  }
+  onChangeLicenceNumber(event?: any) {
+  const dob = this.dAForm.value.dateOfBirth;
+  const licenseNo = event ? event.target.value?.trim() : this.dAForm.value.licenseNo?.trim();
+  if (!licenseNo || licenseNo.length < 3 || !dob) return;
+  const payload = {
+    vehicleNo: '', // not needed here
+    licenseNo: licenseNo,
+    dA_Code: this.dAForm.value.dA_Code
+  };
+  this.deliveryAgentService.validationData(payload).subscribe({
+    next: (response: any) => {
+      if (response?.message === 'No duplicate found. You can proceed to save data.') {
+        const params = {
+          dlnumber: licenseNo,
+          dob: dob ? `${('0' + dob.getDate()).slice(-2)} ${[ 'Jan','Feb','Mar', 'Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][dob.getMonth()]} ${dob.getFullYear()}`: '',
+          baseUserName: this.docketService.loginUserList.BaseUserName
+        };
+
+        this.deliveryAgentService.getLicenceDetail(params).subscribe({
+          next: (response: any) => {
+            if (response && response.data) {
+              this.dAForm.patchValue({
+                issueByRTO: response.data.omRtoFullname || '',
+                licenseValidityDate: response.data.validTillDate || ''
+              });
+            }
+          },
+          error: (err) => console.error('Error fetching license detail:', err)
+        });
+
+      } else {
+        this.sweetAlertService.info(
+          'License Number or Vehicle Number is already used in another Delivery Agent. Please use a different license or vehicle number.'
+        );
+
+        this.dAForm.patchValue({ licenseNo: null });
+        setTimeout(() => {
+          const licenseInput = document.querySelector('input[formControlName="licenseNo"]') as HTMLInputElement;
+          licenseInput?.focus();
+        }, 200);
+      }
+    },
+    error: (err) => console.error('Validation API failed:', err)
+  });
+}
+
 
   onSubmit() {
     if(this.dAForm.valid){

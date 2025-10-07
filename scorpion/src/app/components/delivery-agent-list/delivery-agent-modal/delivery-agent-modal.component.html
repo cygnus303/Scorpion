@@ -55,7 +55,7 @@
             <label class="col-sm-5 col-form-label text-end">Vehicle No</label>
             <div class="col-sm-7">
                 <div class="d-flex">
-                  <input class="form-control required2" type="text" placeholder="Vehicle No" formControlName="vehicleNo" (input)="getVehicleDetail($event)" required 
+                  <input class="form-control required2" type="text" placeholder="Vehicle No" formControlName="vehicleNo" (blur)="getVehicleDetail($event)" required 
                  
                   [ngClass]="{ 'border-danger': dAForm.get('vehicleNo')?.invalid  && dAForm.get('vehicleNo')?.touched }">
                   <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode && showVehicleInvokeButton? true:false" (click)="getVehicleDetail()">
@@ -185,13 +185,17 @@
             <div class="col-sm-7">
                <div class="d-flex">
                    <input class="form-control required2" placeholder="License No" type="text" formControlName="licenseNo" required 
-                    (input)="onChangeLicenceNumber($event)"
+                    (blur)="onChangeLicenceNumber($event)"
                    [ngClass]="{ 'border-danger': dAForm.get('licenseNo')?.invalid  && dAForm.get('licenseNo')?.touched }">
                   <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode && showInvokeButton ? true:false" (click)="onChangeLicenceNumber()">
                     Invoke
                   </button>
                 </div>
-                <div class="text-danger" *ngIf="dAForm.get('licenseNo')?.invalid && dAForm.get('licenseNo')?.touched "> This field is required.</div>
+                <div class="text-danger" *ngIf="dAForm.get('licenseNo')?.touched">
+                    <div *ngIf="dAForm.get('licenseNo')?.hasError('required')"> This field is required.</div>
+                   <div *ngIf="dAForm.get('licenseNo')?.hasError('pattern')">Please enter a valid License Number. </div>
+                </div>
+                <!-- <div class="text-danger" *ngIf="dAForm.get('licenseNo')?.invalid && dAForm.get('licenseNo')?.touched "> This field is required.</div> -->
             </div>
           </div>
         </div>

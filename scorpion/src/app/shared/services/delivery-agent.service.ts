@@ -42,4 +42,8 @@ export class DeliveryAgentService {
   getVehicleDetail(params:any){
     return this.apiHandlerService.Get(`Master/GetVehicleDetails?vehNo=${params.vehNo}&baseUserName=${params.baseUserName}`);
   }
+
+  validationData(payload:any){
+    return this.apiHandlerService.Post(`Master/validate`,payload);
+  }
 }
