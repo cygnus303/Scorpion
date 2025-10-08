@@ -309,14 +309,13 @@
   <div class="modal-footer d-flex justify-content-center">
     <!-- <button class="btn btn-secondary" (click)="closePopup()">Cancel</button> -->
     <button class="btn btn-success btn-sm px-3" (click)="onSubmit()" [disabled]="isLicenceLoading || isvehicleLoading || isSubmiiting"> 
-      <i class="fas fa-check me-2"></i>
-       Submit
+      <ng-container *ngIf="!isSubmiiting; else loading">
+         <i class="fas fa-check me-2"></i>
+                      Submit
+                    </ng-container>
+                    <ng-template #loading>
+                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true">Submitting</span>
+                    </ng-template>
       </button>
   </div>
-  <div *ngIf="!isSubmiiting" class="loading-overlay">
-  <div class="spinner-container">
-    <i class="fas fa-spinner fa-spin custom-spinner"></i>
-    <div class="mt-3 custom-text">Submitting...</div>
-  </div>
-</div>
 </ng-template>
