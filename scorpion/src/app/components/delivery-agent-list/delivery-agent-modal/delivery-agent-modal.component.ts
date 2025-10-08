@@ -109,7 +109,7 @@ getVehicleDetail(event?: any) {
         dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
         licenseValidityDate: data.licenseValidityDate ? new Date(data.licenseValidityDate) : null,
         gpsProvider:data.gpsProvider?data.gpsProvider:null,
-        location:data.location?data.location: data.location?.split(",").map((x: any) => x.trim())
+        location:data.location?.split(",").map((x: any) => x.trim())
       };
       this.dAForm.patchValue(patchData);
           const registrationDate = this.dAForm.value.registrationDate? new Date(this.dAForm.value.registrationDate): null;
@@ -117,7 +117,7 @@ getVehicleDetail(event?: any) {
           const insuranceValidityDate = this.dAForm.value.insuranceValidityDate? new Date(this.dAForm.value.insuranceValidityDate): null;
           const fitnessValidityDate = this.dAForm.value.fitnessValidityDate? new Date(this.dAForm.value.fitnessValidityDate): null;
           const today = new Date();
-         const isExpired = (registrationDate && registrationDate < today) || (permitValidityDate && permitValidityDate < today) || (insuranceValidityDate && insuranceValidityDate < today) ||
+         const isExpired = (permitValidityDate && permitValidityDate < today) || (insuranceValidityDate && insuranceValidityDate < today) ||
         (fitnessValidityDate && fitnessValidityDate < today);
 
       // ✅ If expired → show button and disable fields
