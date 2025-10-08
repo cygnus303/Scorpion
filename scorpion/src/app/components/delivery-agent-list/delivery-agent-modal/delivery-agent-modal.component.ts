@@ -27,6 +27,7 @@ export class DeliveryAgentModalComponent {
   public isLicenceLoading : boolean =  false; 
   public isvehicleLoading : boolean =false;
   public isSubmiiting : boolean = false;
+  public today: Date = new Date();
   @ViewChild('templatePopup', { static: true }) templatePopup!: TemplateRef<any>;
   @Output() dataEvent = new EventEmitter<boolean>();
 
@@ -78,7 +79,7 @@ getVehicleDetail(event?: any) {
       } 
       else {
         this.sweetAlertService.info(
-          'Vehicle number or License Number is already used in another Delivery Agent. Please use a different vehicle or license number.'
+          'Vehicle number is already used in another Delivery Agent. Please use a different license number.'
         );
 
         this.dAForm.patchValue({ vehicleNo: null });
@@ -283,7 +284,7 @@ onChangeLicenceNumber(event?: any) {
           }
         });
       } else {
-        this.sweetAlertService.info('License Number or Vehicle Number is already used in another Delivery Agent. Please use a different license or vehicle number.');
+        this.sweetAlertService.info('Vehicle Number is already used in another Delivery Agent. Please use a different license number.');
         this.dAForm.patchValue({ licenseNo: null });
         setTimeout(() => {
           const licenseInput = document.querySelector('input[formControlName="licenseNo"]') as HTMLInputElement;
