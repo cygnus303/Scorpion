@@ -7,6 +7,7 @@ import { finalize } from 'rxjs';
 import saveAs from 'file-saver';
 import lottie from 'lottie-web';
 import { defineElement } from 'lord-icon-element';
+import { CommonService } from 'app/shared/services/common.service';
 
 @Component({
   selector: 'app-delivery-agent-list',
@@ -20,36 +21,43 @@ export class DeliveryAgentListComponent {
   public pageSize:number = 10;
   public deliveryAgentsList:DeliveryAgentsListRepsonse[]=[]
   public deliveryAgentByCodeList!:DeliveryAgentByCodeResponse;
-  public isloading:boolean=false;
+  public loading:boolean=false;
   public filters: { [key: string]: string } = {}; // Dynamic filter object
   @ViewChild('deliveryAgentPopup') deliveryAgentPopup!: DeliveryAgentModalComponent;
   @ViewChild('deliveryAgentViewPopup') deliveryAgentViewPopup!: DeliveryAgentViewComponent;
 
-  constructor(private deliveryAgentService:DeliveryAgentService){defineElement(lottie.loadAnimation);}
+  constructor(
+    private deliveryAgentService:DeliveryAgentService,
+    private commonService:CommonService
+  ){
+    defineElement(lottie.loadAnimation);
+  }
 
   ngOnInit(){
+     this.commonService.loading.subscribe((state: boolean) => {
+      this.loading = state;
+    });
     this.getDeliveryAgentList();
   }
 
   getDeliveryAgentList(pageNumber: number = 1, pageSize: number = this.pageSize) {
-    this.isloading=true;   
-     this.filters = Object.fromEntries(
+    this.filters = Object.fromEntries(
       Object.entries(this.filters).filter(([key, value]) => value !== null)
     );
     const data ={
       ...this.filters,
       PageNumber:pageNumber,
       PageSize:pageSize
-    }
+    } 
+    this.commonService.updateLoader(true);
     this.deliveryAgentService.getDeliveryAgent(data).subscribe({next: (response) => {
         if (response) {
           this.deliveryAgentsList = response.data;
           this.totalItems=response.totalRecords;
-          this.isloading=false;
+          this.commonService.updateLoader(false);
         }
       },
     })
-    this.isloading=false;
   }
 
   getDeliveryAgentByCodeList(code: string, callback?: (data: any) => void) {

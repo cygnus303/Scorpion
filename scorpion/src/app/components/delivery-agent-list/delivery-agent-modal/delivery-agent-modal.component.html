@@ -58,8 +58,16 @@
                   <input class="form-control required2" type="text" placeholder="Vehicle No" formControlName="vehicleNo" (blur)="getVehicleDetail($event)" required 
                  
                   [ngClass]="{ 'border-danger': dAForm.get('vehicleNo')?.invalid  && dAForm.get('vehicleNo')?.touched }">
-                  <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode && showVehicleInvokeButton? true:false" (click)="getVehicleDetail()">
-                    Invoke
+                  <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode && showVehicleInvokeButton? true:false" 
+                  (click)="getVehicleDetail()"
+                  [disabled]="isvehicleLoading"
+                  >
+                   <ng-container *ngIf="!isvehicleLoading; else loading">
+                      Invoke
+                    </ng-container>
+                    <ng-template #loading>
+                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    </ng-template>
                   </button>
                 </div>
                  <div class="text-danger" *ngIf="dAForm.get('vehicleNo')?.invalid && dAForm.get('vehicleNo')?.touched "> This field is required.</div>
@@ -187,8 +195,16 @@
                    <input class="form-control required2" placeholder="License No" type="text" formControlName="licenseNo" required 
                     (blur)="onChangeLicenceNumber($event)"
                    [ngClass]="{ 'border-danger': dAForm.get('licenseNo')?.invalid  && dAForm.get('licenseNo')?.touched }">
-                  <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode && showInvokeButton ? true:false" (click)="onChangeLicenceNumber()">
-                    Invoke
+                  <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode && showInvokeButton ? true:false" 
+                  (click)="onChangeLicenceNumber()"
+                  [disabled]="isLicenceLoading"
+                  >
+                   <ng-container *ngIf="!isLicenceLoading; else loading">
+                      Invoke
+                    </ng-container>
+                    <ng-template #loading>
+                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    </ng-template>
                   </button>
                 </div>
                 <div class="text-danger" *ngIf="dAForm.get('licenseNo')?.touched">
@@ -292,6 +308,15 @@
   </div>
   <div class="modal-footer d-flex justify-content-center">
     <!-- <button class="btn btn-secondary" (click)="closePopup()">Cancel</button> -->
-    <button class="btn btn-success btn-sm px-3" (click)="onSubmit()"> <i class="fas fa-check me-2"></i> Submit</button>
+    <button class="btn btn-success btn-sm px-3" (click)="onSubmit()" [disabled]="isLicenceLoading || isvehicleLoading || isSubmiiting"> 
+      <i class="fas fa-check me-2"></i>
+       Submit
+      </button>
   </div>
+  <div *ngIf="!isSubmiiting" class="loading-overlay">
+  <div class="spinner-container">
+    <i class="fas fa-spinner fa-spin custom-spinner"></i>
+    <div class="mt-3 custom-text">Submitting...</div>
+  </div>
+</div>
 </ng-template>

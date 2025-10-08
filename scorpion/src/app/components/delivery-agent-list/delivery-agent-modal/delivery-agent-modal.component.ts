@@ -7,7 +7,6 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { DeliveryAgentByCodeResponse, LocationListResponse, VendorsListResponse } from 'app/shared/models/delivery-agent.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { generalMasterResponse } from 'app/shared/models/general-master.model';
-import { debounceTime, Subject } from 'rxjs';
 
 @Component({
   selector: 'delivery-agent-modal',
@@ -25,8 +24,12 @@ export class DeliveryAgentModalComponent {
   public  gpsdata:generalMasterResponse[]=[];
   public showInvokeButton:boolean=false;
   public showVehicleInvokeButton:boolean=false;
+  public isLicenceLoading : boolean =  false; 
+  public isvehicleLoading : boolean =false;
+  public isSubmiiting : boolean = false;
   @ViewChild('templatePopup', { static: true }) templatePopup!: TemplateRef<any>;
   @Output() dataEvent = new EventEmitter<boolean>();
+
   constructor(
     private modalService: BsModalService,
     public docketService: DocketService,
@@ -34,6 +37,7 @@ export class DeliveryAgentModalComponent {
     public sweetAlertService:SweetAlertService,
     public basicDetailService:BasicDetailService
   ) {}
+
 getVehicleDetail(event?: any) {
   const vehicleNo = event ? event.target.value.trim() : this.dAForm.value.vehicleNo?.trim();
   if (!vehicleNo) return;
@@ -49,7 +53,7 @@ getVehicleDetail(event?: any) {
           vehNo: vehicleNo,
           baseUserName: this.docketService.loginUserList.BaseUserName
         };
-
+        this.isvehicleLoading=true;
         this.deliveryAgentService.getVehicleDetail(params).subscribe({
           next: (response: any) => {
             if (response) {
@@ -63,8 +67,12 @@ getVehicleDetail(event?: any) {
                 fitnessValidityDate: response.rc_fit_upto ? new Date(response.rc_fit_upto) : null,
               });
             }
+            this.isvehicleLoading=false;
           },
-          error: (err) => console.error('Error fetching vehicle details:', err)
+          error: (err) => {
+            console.error('Error fetching vehicle details:', err);
+            this.isvehicleLoading=false;
+          }
         });
 
       } 
@@ -243,6 +251,9 @@ isActiveChecked(event: any) {
   const dob = this.dAForm.value.dateOfBirth;
   const licenseNo = event ? event.target.value?.trim() : this.dAForm.value.licenseNo?.trim();
   if (!licenseNo || licenseNo.length < 3 || !dob) return;
+
+ this.isLicenceLoading = true;
+
   const payload = {
     vehicleNo: '', // not needed here
     licenseNo: licenseNo,
@@ -265,8 +276,11 @@ isActiveChecked(event: any) {
                 licenseValidityDate: response.data.validTillDate || ''
               });
             }
+               this.isLicenceLoading = false;
           },
-          error: (err) => console.error('Error fetching license detail:', err)
+          error: (err) => {console.error('Error fetching license detail:', err);
+             this.isLicenceLoading = false;
+          }
         });
 
       } else {
@@ -300,6 +314,7 @@ isActiveChecked(event: any) {
         formData.append(key, value ?? '');
       }
     });
+    this.isSubmiiting=true;
       this.deliveryAgentService.addDeliveryAgent(formData).subscribe({next: (response) => {
           if (response) {
             this.sweetAlertService.success(response.message).then(()=>{
@@ -308,10 +323,12 @@ isActiveChecked(event: any) {
               this.dataEvent.emit(true);
             });
           }
+        this.isSubmiiting=false;
         },
       })
     }else{
       this.dAForm.markAllAsTouched();
+        this.isSubmiiting=false;
     }
   }
 
