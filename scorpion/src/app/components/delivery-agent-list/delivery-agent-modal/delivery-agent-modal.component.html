@@ -56,7 +56,7 @@
             <div class="col-sm-7">
                 <div class="d-flex">
                   <input class="form-control required2" type="text" placeholder="Vehicle No" formControlName="vehicleNo" (blur)="getVehicleDetail($event)" required 
-                 
+                  [readOnly]="deliveryAgentCode"
                   [ngClass]="{ 'border-danger': dAForm.get('vehicleNo')?.invalid  && dAForm.get('vehicleNo')?.touched }">
                   <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode && showVehicleInvokeButton? true:false" 
                   (click)="getVehicleDetail()"
@@ -80,7 +80,7 @@
             <div class="col-sm-7">
                <div class="input-group">
                 <input type="text" class="form-control uppercase-none" #dr="bsDatepicker" bsDatepicker formControlName="registrationDate"
-                  [bsValue]="docketService.bsValue"
+                  [bsValue]="docketService.bsValue"  [maxDate]="today"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                   placeholder="Registration date" >
                 <span class="input-group-text cursor-pointer" (click)="dr.toggle()">
@@ -106,7 +106,7 @@
             <div class="col-sm-7">
                <div class="input-group">
                 <input type="text" class="form-control uppercase-none" #dq="bsDatepicker" bsDatepicker formControlName="insuranceValidityDate"
-                  [bsValue]="docketService.bsValue"
+                  [bsValue]="docketService.bsValue" [minDate]="today"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                   placeholder="Insurance Validity Date" >
                 <span class="input-group-text cursor-pointer" (click)="dq.toggle()">
@@ -132,7 +132,7 @@
             <div class="col-sm-7">
                <div class="input-group">
                 <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker formControlName="permitValidityDate"
-                  [bsValue]="docketService.bsValue"
+                  [bsValue]="docketService.bsValue" [minDate]="today"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                   placeholder="Permit validity Date" >
                 <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
@@ -158,7 +158,7 @@
             <div class="col-sm-7">
               <div class="input-group">
                 <input type="text" class="form-control uppercase-none" #df="bsDatepicker" bsDatepicker formControlName="fitnessValidityDate"
-                  [bsValue]="docketService.bsValue"
+                  [bsValue]="docketService.bsValue" [minDate]="today"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                   placeholder="Fitness Validity Date" >
                 <span class="input-group-text cursor-pointer" (click)="df.toggle()">
@@ -193,7 +193,7 @@
             <div class="col-sm-7">
                <div class="d-flex">
                    <input class="form-control required2" placeholder="License No" type="text" formControlName="licenseNo" required 
-                    (input)="onChangeLicenceNumber($event)"
+                    (input)="onChangeLicenceNumber($event)" [readOnly]="deliveryAgentCode"
                    [ngClass]="{ 'border-danger': dAForm.get('licenseNo')?.invalid  && dAForm.get('licenseNo')?.touched }">
                   <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode && showInvokeButton ? true:false" 
                   (click)="onChangeLicenceNumber()"
@@ -231,7 +231,7 @@
             <div class="col-sm-7">
               <div class="input-group">
                 <input type="text" class="form-control uppercase-none" #dv="bsDatepicker" bsDatepicker formControlName="licenseValidityDate"
-                  [bsValue]="docketService.bsValue"
+                  [bsValue]="docketService.bsValue"  [minDate]="today"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                   placeholder="License validity Date" >
                 <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
