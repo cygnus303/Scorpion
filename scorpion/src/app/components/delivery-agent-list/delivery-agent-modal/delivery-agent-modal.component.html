@@ -193,7 +193,7 @@
             <div class="col-sm-7">
                <div class="d-flex">
                    <input class="form-control required2" placeholder="License No" type="text" formControlName="licenseNo" required 
-                    (blur)="onChangeLicenceNumber($event)"
+                    (input)="onChangeLicenceNumber($event)"
                    [ngClass]="{ 'border-danger': dAForm.get('licenseNo')?.invalid  && dAForm.get('licenseNo')?.touched }">
                   <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode && showInvokeButton ? true:false" 
                   (click)="onChangeLicenceNumber()"

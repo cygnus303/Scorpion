@@ -428,6 +428,10 @@ input[readonly] {
   td{
     background-color: #f9f7f7;
   }
+  th{
+     background-color: #f9f7f7 !important;
+     color: #333333 !important;
+  }
 }
 
 // yes-no button
