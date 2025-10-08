@@ -104,7 +104,6 @@ getVehicleDetail(event?: any) {
         location:data.location?data.location: data.location?.split(",").map((x: any) => x.trim())
       };
       this.dAForm.patchValue(patchData);
-
           const registrationDate = this.dAForm.value.registrationDate? new Date(this.dAForm.value.registrationDate): null;
           const permitValidityDate = this.dAForm.value.permitValidityDate? new Date(this.dAForm.value.permitValidityDate): null;
           const insuranceValidityDate = this.dAForm.value.insuranceValidityDate? new Date(this.dAForm.value.insuranceValidityDate): null;
@@ -239,26 +238,28 @@ isActiveChecked(event: any) {
   } 
 }
 
-  onChangeLicenceNumber(event?: any) {
+onChangeLicenceNumber(event?: any) {
   const dob = this.dAForm.value.dateOfBirth;
   const licenseNo = event ? event.target.value?.trim() : this.dAForm.value.licenseNo?.trim();
-  if (!licenseNo || licenseNo.length < 3 || !dob) return;
-  const payload = {
-    vehicleNo: '', // not needed here
-    licenseNo: licenseNo,
-    dA_Code: this.dAForm.value.dA_Code
-  };
-  this.deliveryAgentService.validationData(payload).subscribe({
-    next: (response: any) => {
+  const licenseControl = this.dAForm.get('licenseNo');
+    if (!licenseControl || licenseControl.invalid || !dob) {
+      licenseControl?.markAsTouched();
+      this.dAForm.get('dateOfBirth')?.markAsTouched();
+      return;
+    }
+    const payload = {
+      vehicleNo: '', // not needed here
+      licenseNo: licenseNo,
+      dA_Code: this.dAForm.value.dA_Code
+    };
+  this.deliveryAgentService.validationData(payload).subscribe({next: (response: any) => {
       if (response?.message === 'No duplicate found. You can proceed to save data.') {
         const params = {
           dlnumber: licenseNo,
-          dob: dob ? `${('0' + dob.getDate()).slice(-2)} ${[ 'Jan','Feb','Mar', 'Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][dob.getMonth()]} ${dob.getFullYear()}`: '',
+          dob: dob ? dob.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '',
           baseUserName: this.docketService.loginUserList.BaseUserName
         };
-
-        this.deliveryAgentService.getLicenceDetail(params).subscribe({
-          next: (response: any) => {
+        this.deliveryAgentService.getLicenceDetail(params).subscribe({next: (response: any) => {
             if (response && response.data) {
               this.dAForm.patchValue({
                 issueByRTO: response.data.omRtoFullname || '',
@@ -268,12 +269,8 @@ isActiveChecked(event: any) {
           },
           error: (err) => console.error('Error fetching license detail:', err)
         });
-
       } else {
-        this.sweetAlertService.info(
-          'License Number or Vehicle Number is already used in another Delivery Agent. Please use a different license or vehicle number.'
-        );
-
+        this.sweetAlertService.info('License Number or Vehicle Number is already used in another Delivery Agent. Please use a different license or vehicle number.');
         this.dAForm.patchValue({ licenseNo: null });
         setTimeout(() => {
           const licenseInput = document.querySelector('input[formControlName="licenseNo"]') as HTMLInputElement;
@@ -284,7 +281,6 @@ isActiveChecked(event: any) {
     error: (err) => console.error('Validation API failed:', err)
   });
 }
-
 
   onSubmit() {
     if(this.dAForm.valid){
