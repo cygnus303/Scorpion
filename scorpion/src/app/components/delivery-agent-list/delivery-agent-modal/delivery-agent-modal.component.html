@@ -70,7 +70,11 @@
                     </ng-template>
                   </button>
                 </div>
-                 <div class="text-danger" *ngIf="dAForm.get('vehicleNo')?.invalid && dAForm.get('vehicleNo')?.touched "> This field is required.</div>
+                 <!-- <div class="text-danger" *ngIf="dAForm.get('vehicleNo')?.invalid && dAForm.get('vehicleNo')?.touched "> This field is required.</div> -->
+                  <div class="text-danger" *ngIf="dAForm.get('vehicleNo')?.touched">
+                    <div *ngIf="dAForm.get('vehicleNo')?.hasError('required')"> This field is required.</div>
+                   <div *ngIf="dAForm.get('vehicleNo')?.hasError('pattern')">Please enter a valid Vehicle No. </div>
+                </div>
             </div>
           </div>
         </div>
@@ -306,16 +310,30 @@
       </div>
     </form>
   </div>
-  <div class="modal-footer d-flex justify-content-center">
-    <!-- <button class="btn btn-secondary" (click)="closePopup()">Cancel</button> -->
-    <button class="btn btn-success btn-sm px-3" (click)="onSubmit()" [disabled]="isLicenceLoading || isvehicleLoading || isSubmiiting"> 
+  <!-- <div class="modal-footer d-flex justify-content-center">
+    <button class="btn btn-secondary" (click)="closePopup()">Cancel</button>
+    <button class="btn btn-success btn-sm px-3" (click)="onSubmit()" [disabled]="isLicenceLoading || isvehicleLoading"> 
       <ng-container *ngIf="!isSubmiiting; else loading">
-         <i class="fas fa-check me-2"></i>
-                      Submit
-                    </ng-container>
-                    <ng-template #loading>
-                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true">Submitting</span>
-                    </ng-template>
-      </button>
-  </div>
+        <i class="fas fa-check me-2"></i>
+        Submit
+      </ng-container>
+      <ng-template #loading>
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      </ng-template>
+    </button>
+  </div> -->
+
+  <div class="modal-footer d-flex justify-content-center">
+  <button class="btn btn-success btn-sm px-3 d-flex align-items-center gap-2" (click)="onSubmit()" [disabled]="isLicenceLoading || isvehicleLoading">
+    <ng-container *ngIf="isSubmiiting; else normalText">
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      <span>Loading...</span>
+    </ng-container>
+    <ng-template #normalText>
+      <i class="bi bi-check-circle me-1"></i> Submit
+    </ng-template>
+  </button>
+</div>
+
+
 </ng-template>

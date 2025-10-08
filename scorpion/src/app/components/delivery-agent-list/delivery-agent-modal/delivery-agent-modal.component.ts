@@ -133,6 +133,8 @@ getVehicleDetail(event?: any) {
             insuranceValidityDate:'',
             fitnessValidityDate:'',
           });
+      }else{
+        this.showVehicleInvokeButton = false;
       }
     const licenseDate = this.dAForm.value.licenseValidityDate ? new Date(this.dAForm.value.licenseValidityDate): null;
       if (licenseDate && licenseDate < today) {
@@ -141,6 +143,8 @@ getVehicleDetail(event?: any) {
           issueByRTO: '',
           licenseValidityDate: ''
         });
+      }else{
+         this.showInvokeButton = false;
       }
     }else{
      this.deliveryAgentCode = '';
@@ -157,7 +161,7 @@ getVehicleDetail(event?: any) {
       dA_Code: new FormControl(null),
       deliveryAgentName: new FormControl(''),
       deliveryAgentMobile: new FormControl(''),
-      vehicleNo: new FormControl(''),
+      vehicleNo: new FormControl('', [ Validators.required,Validators.pattern(/^[A-Za-z]{2}\d{1,2}[A-Za-z]{1,2}\d{4}$/i)]),
       registrationDate: new FormControl(''),
       engineNo: new FormControl(''),
       chassisNo: new FormControl(''),
@@ -165,7 +169,7 @@ getVehicleDetail(event?: any) {
       permitValidityDate: new FormControl(''),
       insuranceValidityDate: new FormControl(''),
       fitnessValidityDate: new FormControl(''),
-      licenseNo: new FormControl('', [Validators.required,Validators.pattern(/^[A-Z]{2}\d{2}\s?\d{11}$/)]),
+      licenseNo: new FormControl('', [Validators.required,Validators.pattern(/^[A-Za-z]{2}\d{2}\s?\d{11}$/)]),
       dateOfBirth: new FormControl(''),
       issueByRTO: new FormControl(''),
       licenseValidityDate: new FormControl(''),
@@ -298,6 +302,7 @@ onChangeLicenceNumber(event?: any) {
 
   onSubmit() {
     if(this.dAForm.valid){
+      this.isSubmiiting=true;
       const formData = new FormData();
        Object.keys(this.dAForm.value).forEach((key) => {
       let value = this.dAForm.value[key];
@@ -310,7 +315,6 @@ onChangeLicenceNumber(event?: any) {
         formData.append(key, value ?? '');
       }
     });
-    this.isSubmiiting=true;
       this.deliveryAgentService.addDeliveryAgent(formData).subscribe({next: (response) => {
           if (response) {
             this.sweetAlertService.success(response.message).then(()=>{
@@ -321,7 +325,8 @@ onChangeLicenceNumber(event?: any) {
           }
         this.isSubmiiting=false;
         },
-      })
+      });
+       this.isSubmiiting = false;
     }else{
       this.dAForm.markAllAsTouched();
         this.isSubmiiting=false;
