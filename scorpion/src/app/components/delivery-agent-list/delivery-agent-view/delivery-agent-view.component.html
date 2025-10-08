@@ -14,7 +14,7 @@
         </tr>
         <tr>
           <td><strong>Delivery Agent Mobile No.</strong> {{ deliveryAgentViewList.deliveryAgentMobile }}</td>
-          <td><strong>FTL Type:</strong> {{ deliveryAgentViewList.fTlType }}</td>
+          <td><strong>FTL Type:</strong> {{ deliveryAgentViewList.fTlName }}</td>
         </tr>
         <tr>
           <td><strong>Vehicle No:</strong> {{ deliveryAgentViewList.vehicleNo }}</td>
@@ -45,8 +45,8 @@
           <td><strong>Location:</strong> {{ deliveryAgentViewList.locationName }}</td>
         </tr>
          <tr>
-          <td><strong>GPS Enabled:</strong> {{ deliveryAgentViewList.gpsEnabled }}</td>
-          <td><strong>GPS Provider:</strong> {{ deliveryAgentViewList.gpsProvider }}</td>
+          <td><strong>GPS Enabled:</strong> {{ deliveryAgentViewList.gpsEnabled===true?'Yes':'No' }}</td>
+          <td><strong>GPS Provider:</strong> {{ deliveryAgentViewList.gpsName }}</td>
         </tr>
          <tr>
           <td><strong>Active Flag:</strong> {{ deliveryAgentViewList.isActive}}</td>
