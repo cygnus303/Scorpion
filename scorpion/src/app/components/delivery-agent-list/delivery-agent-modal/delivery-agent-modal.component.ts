@@ -61,7 +61,7 @@ getVehicleDetail(event?: any) {
               this.dAForm.patchValue({
                 chassisNo: response.rc_chasi_no || '',
                 rcBookNo: response.rc_regn_no || '',
-                registrationDate: response.rc_regn_upto ? new Date(response.rc_regn_upto) : null,
+                registrationDate: response.rc_regn_dt ? new Date(response.rc_regn_dt) : null,
                 engineNo: response.rc_eng_no || '',
                 permitValidityDate: response.rc_permit_valid_upto ? new Date(response.rc_permit_valid_upto) : null,
                 insuranceValidityDate: response.rc_insurance_upto ? new Date(response.rc_insurance_upto) : null,
@@ -78,26 +78,36 @@ getVehicleDetail(event?: any) {
 
       } 
       else {
-        this.sweetAlertService.info(
-          'Vehicle number is already used in another Delivery Agent. Please use a different license number.'
-        );
+        this.sweetAlertService.info(response.message);
 
         this.dAForm.patchValue({ vehicleNo: null });
-        setTimeout(() => {
-          const vehicleInput = document.querySelector('input[formControlName="vehicleNo"]') as HTMLInputElement;
-          vehicleInput?.focus();
-        }, 200);
       }
     },
-    error: (err) => console.error('Validation API failed:', err)
   });
+}
+
+applyGPSProviderValidation(){
+  const gpsProviderControl = this.dAForm.get('gpsProvider');
+  const gpsEnabledValue = this.dAForm.get('gpsEnabled')?.value;
+
+  if (gpsEnabledValue === true) {
+    gpsProviderControl?.setValidators([Validators.required]);
+  } else {
+    gpsProviderControl?.clearValidators();
+    gpsProviderControl?.setErrors(null); // Clear old errors
+  }
+
+  gpsProviderControl?.updateValueAndValidity({ onlySelf: true, emitEvent: false });
 }
   
   showPopup(data?:DeliveryAgentByCodeResponse){
    this.buildForm();
    this.getVendors();
    this.getLocationData();
-   this.getGPSProviderData()
+   this.getGPSProviderData();
+      this.dAForm?.get('gpsEnabled')?.valueChanges.subscribe(() => {
+      this.applyGPSProviderValidation();
+    });
    this.docketService.getTypeofMovementData('');
     if(data){
       this.deliveryAgentCode = data.dA_Code;
@@ -288,15 +298,10 @@ onChangeLicenceNumber(event?: any) {
           }
         });
       } else {
-        this.sweetAlertService.info('Vehicle Number is already used in another Delivery Agent. Please use a different license number.');
+        this.sweetAlertService.info(response.message);
         this.dAForm.patchValue({ licenseNo: null });
-        setTimeout(() => {
-          const licenseInput = document.querySelector('input[formControlName="licenseNo"]') as HTMLInputElement;
-          licenseInput?.focus();
-        }, 200);
       }
     },
-    error: (err) => console.error('Validation API failed:', err)
   });
 }
 

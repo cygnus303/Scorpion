@@ -38,6 +38,7 @@ export interface DeliveryAgentByCodeResponse {
     dA_Code: string;
     deliveryAgentName: string;
     deliveryAgentMobile: string;
+    fTlName:string;
     vehicleNo: string;
     registrationDate: string;
     engineNo: string;
@@ -53,6 +54,7 @@ export interface DeliveryAgentByCodeResponse {
     businessAssociateVendor: string;
     fTlType: string;
     gpsEnabled: boolean;
+    gpsName:string;
     gpsProvider: string;
     location: string;
     licenseAttachment: string;

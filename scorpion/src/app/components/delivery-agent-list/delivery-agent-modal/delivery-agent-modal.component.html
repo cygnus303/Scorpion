@@ -277,11 +277,14 @@
             <div class="col-sm-7">
               <div class="d-flex align-items-center">
                 <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="gpsEnabled">
-                <!-- <input class="form-control" placeholder="GPS Provider" type="text" formControlName="gpsProvider" [readonly]="this.dAForm.value.gpsEnabled ? false  :true" > -->
                   <ng-select class=" required2" 
                 [items]="gpsdata" bindLabel="codeDesc" bindValue="codeId"  [ngClass]="{ 'border-danger': dAForm.get('gpsProvider')?.invalid  && dAForm.get('gpsProvider')?.touched }"
-                placeholder="Select GPS Provider" formControlName="gpsProvider" notFoundText="No matches found" [readonly]="this.dAForm.value.gpsEnabled ? false  :true"></ng-select>
-              </div>
+                placeholder="Select GPS Provider" formControlName="gpsProvider" notFoundText="No matches found" [readonly]="this.dAForm.value.gpsEnabled ? false  :true"
+                [ngClass]="{ 'border-danger': dAForm.get('gpsProvider')?.invalid  && dAForm.get('gpsProvider')?.touched }"
+                >
+              </ng-select>
+            </div>
+            <div class="text-danger ms-5" *ngIf="dAForm.get('gpsProvider')?.invalid && dAForm.get('gpsProvider')?.touched "> This field is required.</div>
             </div>
           </div>
         </div>
