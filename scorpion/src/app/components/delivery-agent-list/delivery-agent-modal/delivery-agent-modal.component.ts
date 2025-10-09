@@ -55,7 +55,7 @@ getVehicleDetail(event?: any) {
     next: (response: any) => {
       if (response?.message === 'No duplicate found. You can proceed to save data.') {
         const params = {
-          vehNo: vehicleNo,
+          vehNo: vehicleNo.toUpperCase(),
           baseUserName: this.docketService.loginUserList.BaseUserName
         };
         this.isvehicleLoading=true;
@@ -146,40 +146,6 @@ applyGPSProviderValidation(){
     if (this.bsModalRef) {this.bsModalRef.hide();}
   }
 
-// checkExpiryAndToggleButton(event?:any,type?:string) {
-//   debugger
-//   const permitValidityDate = type === 'permit' ? event : this.dAForm.value.permitValidityDate ? new Date(this.dAForm.value.permitValidityDate) :null ;
-//   const insuranceValidityDate =  type === 'insurance' ? event : this.dAForm.value.insuranceValidityDate ? new Date(this.dAForm.value.insuranceValidityDate):null;
-//   const fitnessValidityDate =  type === 'fitness' ? event : this.dAForm.value.fitnessValidityDate ? new Date(this.dAForm.value.fitnessValidityDate):null ;
-
-//   const today = new Date();
-//   today.setHours(0, 0, 0, 0); // ignore time
-
-//   if (permitValidityDate) permitValidityDate.setHours(0, 0, 0, 0);
-//   if (insuranceValidityDate) insuranceValidityDate.setHours(0, 0, 0, 0);
-//   if (fitnessValidityDate) fitnessValidityDate.setHours(0, 0, 0, 0);
-//   debugger
-//   this.isPermitExpired = permitValidityDate ? permitValidityDate < today : false;
-//   this.isInsuranceExpired = insuranceValidityDate ? insuranceValidityDate < today : false;
-//   this.isFitnessExpired = fitnessValidityDate ? fitnessValidityDate < today : false;
-//  const isExpired = this.isPermitExpired || this.isInsuranceExpired || this.isFitnessExpired;
-//   if (isExpired) {
-//     this.showVehicleInvokeButton = true;
-//   } else {
-//     this.showVehicleInvokeButton = false;
-//   }
-
-//     const licenseDate =  type === 'license' ? event :new Date(this.dAForm.value.licenseValidityDate);
-//      if (licenseDate) licenseDate.setHours(0, 0, 0, 0);
-//      this.isLicenseExpired = licenseDate ? licenseDate < today : false;
-//       if (this.isLicenseExpired) {
-//         this.showInvokeButton = true;
-//       }else{
-//          this.showInvokeButton = false;
-//       }
-// }
-
-// Helper function to check expiry for a single date
 checkDateExpiry(dateValue: any): boolean {
   if (!dateValue) return false; // no message if empty
   const date = new Date(dateValue);
@@ -189,7 +155,6 @@ checkDateExpiry(dateValue: any): boolean {
   return date < today;
 }
 
-// Individual functions
 checkPermitExpiry(event?:any) {
   const permit = event ? event: this.dAForm.value.permitValidityDate;
   this.isPermitExpired = this.checkDateExpiry(permit);
@@ -330,7 +295,7 @@ onChangeLicenceNumber(event?: any) {
   this.deliveryAgentService.validationData(payload).subscribe({next: (response: any) => {
       if (response?.message === 'No duplicate found. You can proceed to save data.') {
         const params = {
-          dlnumber: licenseNo,
+          dlnumber: licenseNo.toUpperCase(),
           dob: dob ? dob.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '',
           baseUserName: this.docketService.loginUserList.BaseUserName
         };
