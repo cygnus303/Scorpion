@@ -111,7 +111,7 @@
                 <div class="input-group">
                   <input type="text" class="form-control uppercase-none" #dq="bsDatepicker" bsDatepicker
                     formControlName="insuranceValidityDate" [ngClass]="{ 'border-danger': isInsuranceExpired }"
-                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}"
                     placeholder="Insurance Validity Date" (bsValueChange)="checkInsuranceExpiry($event)">
                   <span class="input-group-text cursor-pointer" (click)="dq.toggle()">
                     <i class="fa fa-calendar"></i>
@@ -139,7 +139,7 @@
             <div class="col-sm-7">
                <div class="input-group">
                 <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker formControlName="permitValidityDate"
-                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}"
                   placeholder="Permit validity Date" [ngClass]="{ 'border-danger': isPermitExpired }"   (bsValueChange)="checkPermitExpiry($event)">
                 <span class="input-group-text cursor-pointer" (click)="dp.toggle()" >
                   <i class="fa fa-calendar"></i>
@@ -167,7 +167,7 @@
             <div class="col-sm-7">
               <div class="input-group">
                 <input type="text" class="form-control uppercase-none" #df="bsDatepicker" bsDatepicker formControlName="fitnessValidityDate"
-                  [bsConfig]="{ containerClass: 'theme-dark-blue' ,  dateInputFormat: 'DD MMMM YYYY'}" [ngClass]="{ 'border-danger': isFitnessExpired }"
+                  [bsConfig]="{ containerClass: 'theme-dark-blue' ,  dateInputFormat: 'DD MMMM YYYY', minDate: today}" [ngClass]="{ 'border-danger': isFitnessExpired }"
                   placeholder="Fitness Validity Date"  (bsValueChange)="checkFitnessExpiry($event)">
                 <span class="input-group-text cursor-pointer" (click)="df.toggle()">
                   <i class="fa fa-calendar"></i>
@@ -243,7 +243,7 @@
               <div class="input-group">
                 <input type="text" class="form-control uppercase-none" #dv="bsDatepicker" bsDatepicker formControlName="licenseValidityDate"
                   [bsValue]="docketService.bsValue"  [ngClass]="{ 'border-danger': isLicenseExpired }"
-                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}"
                   placeholder="License validity Date" (bsValueChange)="checkLicenseExpiry($event)">
                 <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                   <i class="fa fa-calendar"></i>
