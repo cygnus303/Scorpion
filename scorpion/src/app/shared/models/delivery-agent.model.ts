@@ -66,6 +66,7 @@ export interface DeliveryAgentByCodeResponse {
     locationName:string
     updateBy:string;
     entryDate:string;
+    updatedDate:string;
 }
 export interface VendorsListResponse {
  vendorCode:string;
