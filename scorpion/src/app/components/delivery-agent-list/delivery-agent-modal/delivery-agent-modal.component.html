@@ -300,13 +300,33 @@
             </div>
           </div>
         </div>
-        <div class="col-6">
+        <!-- <div class="col-6">
           <div class="row">
             <label class="col-sm-5 col-form-label text-end">License Attachment</label>
             <div class="col-sm-7">
               <input type="file"  class="form-control py-2 pt-2 uppercase-none required2" formControlName="LicenseAttachment" required
               [ngClass]="{ 'border-danger': dAForm.get('LicenseAttachment')?.invalid  && dAForm.get('LicenseAttachment')?.touched }" (change)="onFileSelected($event)" />
               <div class="text-danger" *ngIf="dAForm.get('LicenseAttachment')?.invalid && dAForm.get('LicenseAttachment')?.touched "> This field is required.</div>
+            </div>
+          </div>
+        </div> -->
+        <div class="col-6">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">License Attachment</label>
+            <div class="col-sm-7 position-relative">
+              <!-- Hidden real file input -->
+              <input type="file" id="licenseFile" (change)="onFileSelected($event)" formControlName="LicenseAttachment" required class="d-none" />
+
+              <!-- Fake input field (looks like real one) -->
+              <div class="input-group border rounded-2" [ngClass]="{ 'border-danger': dAForm.get('LicenseAttachment')?.invalid  && dAForm.get('LicenseAttachment')?.touched }" >
+                <button type="button" class="input-group-text required2" (click)="openFileSelector()">Choose File</button>
+                <input type="text" class="form-control" [value]="licenseAttachmentName || 'No file chosen'" disabled />
+              </div>
+
+              <!-- Validation -->
+              <div class="text-danger mt-1" *ngIf=" dAForm.get('LicenseAttachment')?.invalid && dAForm.get('LicenseAttachment')?.touched ">
+                This field is required.
+              </div>
             </div>
           </div>
         </div>

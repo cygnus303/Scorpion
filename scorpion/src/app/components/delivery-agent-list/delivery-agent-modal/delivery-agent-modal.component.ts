@@ -32,6 +32,7 @@ export class DeliveryAgentModalComponent {
   public isPermitExpired : boolean = false;
   public isLicenseExpired : boolean = false;
   public today: Date = new Date();
+  licenseAttachmentName: string = '';
   @ViewChild('templatePopup', { static: true }) templatePopup!: TemplateRef<any>;
   @Output() dataEvent = new EventEmitter<boolean>();
 
@@ -132,8 +133,8 @@ applyGPSProviderValidation(){
         licenseValidityDate: data.licenseValidityDate ? new Date(data.licenseValidityDate) : null,
         gpsProvider:data.gpsProvider ? data.gpsProvider : null,
         location:data.location ? data.location?.split(",").map((x: any) => x.trim()):'',
-        LicenseAttachment: data.licenseAttachment ?  data.licenseAttachment:'',
       };
+      this.licenseAttachmentName = data.licenseAttachment ?  data.licenseAttachment.split('/').pop() || '':'',
       this.dAForm.patchValue(patchData);
       // this.checkExpiryAndToggleButton()
       this.checkPermitExpiry();
@@ -146,6 +147,10 @@ applyGPSProviderValidation(){
     this.bsModalRef = this.modalService.show(this.templatePopup, {  backdrop: true, ignoreBackdropClick: false, class: 'modal-xl modal-dialog-centered' });
   }
 
+   openFileSelector() {
+    const fileInput = document.getElementById('licenseFile') as HTMLInputElement;
+    fileInput?.click();
+  }
   closePopup() {
     if (this.bsModalRef) {this.bsModalRef.hide();}
   }
@@ -220,6 +225,7 @@ onFileSelected(event: any) {
   const file: File = event.target.files[0];
   if (file) {
     const reader = new FileReader();
+    this.licenseAttachmentName = file.name;
      this.dAForm?.patchValue({
         LicenseAttachmentPath: file
       });
