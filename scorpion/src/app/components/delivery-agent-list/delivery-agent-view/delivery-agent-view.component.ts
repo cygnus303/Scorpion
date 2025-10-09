@@ -12,6 +12,9 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 export class DeliveryAgentViewComponent {
   public bsModalRef!:BsModalRef;
   public deliveryAgentViewList!:DeliveryAgentByCodeResponse;
+  public licenseAttechmentImg!:DeliveryAgentByCodeResponse;
+  public modalRef!: BsModalRef;
+
   @ViewChild('templatePopup', { static: true }) templatePopup!: TemplateRef<any>;
 
   constructor(private modalService: BsModalService) {}
@@ -26,4 +29,9 @@ export class DeliveryAgentViewComponent {
   closePopup() {
     if (this.bsModalRef) {this.bsModalRef.hide();}
  }
+
+   openAttachment(Templatepod: TemplateRef<any>, data: DeliveryAgentByCodeResponse) {
+    this.licenseAttechmentImg = data;
+    this.modalRef = this.modalService.show(Templatepod, { class: 'modal-lg modal-dialog-centered', backdrop: true });
+  }
 }
