@@ -50,8 +50,12 @@
         </tr>
          <tr>
           <td><strong>Active Flag:</strong> {{ deliveryAgentViewList.isActive ===true?'Yes':'No'}}</td>
-          <td><strong>License Attachment:</strong> {{ '--' }}</td>
+          <td><strong>License Attachment:</strong> <a [href]="deliveryAgentViewList.licenseAttachment" target="_blank"> View Attachment</a></td>
         </tr>
+         <!-- <tr>
+          <td><strong>Active Flag:</strong> {{ deliveryAgentViewList.isActive ===true?'Yes':'No'}}</td>
+          <td><strong>License Attachment:</strong><i class="fas fa-eye fa-sm me-2 cursor-pointer" (click)="openAttachment(Templatepod,deliveryAgentViewList)"></i> </td>
+        </tr> -->
         <tr>
           <td><strong>Added By:</strong> {{ deliveryAgentViewList.entryBy }}</td>
           <td><strong>Added Date:</strong> {{ deliveryAgentViewList.entryDate | date:'dd/MM/yyy' }}</td>
@@ -68,4 +72,23 @@
   <!-- <div class="modal-footer">
     <button class="btn btn-secondary" (click)="closePopup()">Cancel</button>
   </div> -->
+</ng-template>
+<ng-template #Templatepod>
+  <div class="modal-content">
+    <!-- <div class="modal-header bs-blue d-flex justify-content-between">
+      <h5 class="modal-title">License</h5>
+      <button type="button" class="close" aria-label="Close" (click)="modalRef.hide()">
+        <i class="fa fa-close"></i>
+      </button>
+    </div> -->
+
+  <div class="modal-body p-2 d-flex gap-3 justify-content-center rounded align-items-center overflow-auto"
+    style="max-height: 75vh;">
+    <img *ngIf="licenseAttechmentImg?.licenseAttachment" [src]="licenseAttechmentImg.licenseAttachment" alt="License Attachment"
+      class="img-fluid object-fit-contain border rounded" style="max-height: 70vh;max-width: 45%;" />
+  </div>
+    <!-- <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="modalRef.hide()">Cancel</button>
+    </div> -->
+  </div>
 </ng-template>
