@@ -232,7 +232,9 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end">Issue By RTO</label>
             <div class="col-sm-7">
-              <input class="form-control" type="text" placeholder="Issue By RTO" formControlName="issueByRTO">
+              <input class="form-control required2" type="text" placeholder="Issue By RTO" required formControlName="issueByRTO"
+              [ngClass]="{ 'border-danger': dAForm.get('issueByRTO')?.invalid  && dAForm.get('issueByRTO')?.touched }">
+              <div class="text-danger" *ngIf="dAForm.get('issueByRTO')?.invalid && dAForm.get('issueByRTO')?.touched "> This field is required.</div>
             </div>
           </div>
         </div>
@@ -242,7 +244,7 @@
             <div class="col-sm-7">
               <div class="input-group">
                 <input type="text" class="form-control uppercase-none" #dv="bsDatepicker" bsDatepicker formControlName="licenseValidityDate"
-                  [bsValue]="docketService.bsValue"  [ngClass]="{ 'border-danger': isLicenseExpired }"
+                  [bsValue]="docketService.bsValue"  [ngClass]="{ 'border-danger': isLicenseExpired}"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}"
                   placeholder="License validity Date" (bsValueChange)="checkLicenseExpiry($event)">
                 <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
@@ -250,7 +252,7 @@
                 </span>
               </div>
                <small *ngIf="isLicenseExpired" class="text-danger fw-bold mt-1">
-                 License validity date is expired.
+                 License validity date is expired.      
               </small>
             </div>
           </div>
@@ -262,7 +264,7 @@
             <label class="col-sm-5 col-form-label text-end">Business Associate Vendor</label>
             <div class="col-sm-7">
               <ng-select class="required2" placeholder="Business Associate Vendor" required formControlName="businessAssociateVendor" (change)="getLocation($event)" (clear)="dAForm.get('location')?.reset()"
-                [items]="vendorsList" bindLabel="vendorName" bindValue="vendorCode" [ngClass]="{ 'border-danger': dAForm.get('businessAssociateVendor')?.invalid  && dAForm.get('businessAssociateVendor')?.touched }">
+                [items]="vendorsList" bindLabel="vendorDisplayName" bindValue="vendorCode" [ngClass]="{ 'border-danger': dAForm.get('businessAssociateVendor')?.invalid  && dAForm.get('businessAssociateVendor')?.touched }">
               </ng-select>
                <div class="text-danger" *ngIf="dAForm.get('businessAssociateVendor')?.invalid && dAForm.get('businessAssociateVendor')?.touched "> This field is required.</div>
             </div>
@@ -302,7 +304,9 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end">License Attachment</label>
             <div class="col-sm-7">
-              <input type="file"  class="form-control py-2 pt-2 uppercase-none" formControlName="LicenseAttachment"   (change)="onFileSelected($event)" />
+              <input type="file"  class="form-control py-2 pt-2 uppercase-none required2" formControlName="LicenseAttachment" required
+              [ngClass]="{ 'border-danger': dAForm.get('LicenseAttachment')?.invalid  && dAForm.get('LicenseAttachment')?.touched }" (change)="onFileSelected($event)" />
+              <div class="text-danger" *ngIf="dAForm.get('LicenseAttachment')?.invalid && dAForm.get('LicenseAttachment')?.touched "> This field is required.</div>
             </div>
           </div>
         </div>

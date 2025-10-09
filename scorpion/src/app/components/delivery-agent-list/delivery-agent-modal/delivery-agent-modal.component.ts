@@ -130,8 +130,9 @@ applyGPSProviderValidation(){
         fitnessValidityDate: data.fitnessValidityDate ? new Date(data.fitnessValidityDate) : null,
         dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
         licenseValidityDate: data.licenseValidityDate ? new Date(data.licenseValidityDate) : null,
-        gpsProvider:data.gpsProvider?data.gpsProvider:null,
-        location:data.location?.split(",").map((x: any) => x.trim())
+        gpsProvider:data.gpsProvider ? data.gpsProvider : null,
+        location:data.location ? data.location?.split(",").map((x: any) => x.trim()):'',
+        LicenseAttachment: data.licenseAttachment ?  data.licenseAttachment:'',
       };
       this.dAForm.patchValue(patchData);
       // this.checkExpiryAndToggleButton()

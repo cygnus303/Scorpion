@@ -49,16 +49,16 @@
           <td><strong>GPS Provider:</strong> {{ deliveryAgentViewList.gpsName }}</td>
         </tr>
          <tr>
-          <td><strong>Active Flag:</strong> {{ deliveryAgentViewList.isActive}}</td>
+          <td><strong>Active Flag:</strong> {{ deliveryAgentViewList.isActive ===true?'Yes':'No'}}</td>
           <td><strong>License Attachment:</strong> {{ '--' }}</td>
         </tr>
         <tr>
           <td><strong>Added By:</strong> {{ deliveryAgentViewList.entryBy }}</td>
-          <td><strong>Added Date:</strong> {{ '--' }}</td>
+          <td><strong>Added Date:</strong> {{ deliveryAgentViewList.entryDate | date:'dd/MM/yyy' }}</td>
         </tr>
         <tr>
-          <td><strong>Edited  By:</strong> {{ '--' }}</td>
-          <td><strong>Edited  Date:</strong> {{ '--' }}</td>
+          <td><strong>Edited  By:</strong> {{ deliveryAgentViewList.updateBy}}</td>
+          <td><strong>Edited  Date:</strong> {{ deliveryAgentViewList.entryDate | date:'dd/MM/yyy' }}</td>
         </tr>
       </tbody>
     </table>
