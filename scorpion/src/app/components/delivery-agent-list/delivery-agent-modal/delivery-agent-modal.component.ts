@@ -27,6 +27,10 @@ export class DeliveryAgentModalComponent {
   public isLicenceLoading : boolean =  false; 
   public isvehicleLoading : boolean =false;
   public isSubmiiting : boolean = false;
+  public isFitnessExpired : boolean = false;
+  public isInsuranceExpired : boolean = false;
+  public isPermitExpired : boolean = false;
+  public isLicenseExpired : boolean = false;
   public today: Date = new Date();
   @ViewChild('templatePopup', { static: true }) templatePopup!: TemplateRef<any>;
   @Output() dataEvent = new EventEmitter<boolean>();
@@ -67,6 +71,10 @@ getVehicleDetail(event?: any) {
                 insuranceValidityDate: response.rc_insurance_upto ? new Date(response.rc_insurance_upto) : null,
                 fitnessValidityDate: response.rc_fit_upto ? new Date(response.rc_fit_upto) : null,
               });
+                this.checkPermitExpiry();
+                this.checkInsuranceExpiry();
+                this.checkFitnessExpiry();
+              
             }
             this.isvehicleLoading=false;
           },
@@ -123,39 +131,11 @@ applyGPSProviderValidation(){
         location:data.location?.split(",").map((x: any) => x.trim())
       };
       this.dAForm.patchValue(patchData);
-          const registrationDate = this.dAForm.value.registrationDate? new Date(this.dAForm.value.registrationDate): null;
-          const permitValidityDate = this.dAForm.value.permitValidityDate? new Date(this.dAForm.value.permitValidityDate): null;
-          const insuranceValidityDate = this.dAForm.value.insuranceValidityDate? new Date(this.dAForm.value.insuranceValidityDate): null;
-          const fitnessValidityDate = this.dAForm.value.fitnessValidityDate? new Date(this.dAForm.value.fitnessValidityDate): null;
-          const today = new Date();
-         const isExpired = (permitValidityDate && permitValidityDate < today) || (insuranceValidityDate && insuranceValidityDate < today) ||
-        (fitnessValidityDate && fitnessValidityDate < today);
-
-      // ✅ If expired → show button and disable fields
-      if (isExpired) {
-        this.showVehicleInvokeButton = true;
-         this.dAForm.patchValue({
-            chassisNo:'',
-            rcBookNo:'',
-            registrationDate:'',
-            engineNo:'',
-            permitValidityDate:'',
-            insuranceValidityDate:'',
-            fitnessValidityDate:'',
-          });
-      }else{
-        this.showVehicleInvokeButton = false;
-      }
-    const licenseDate = this.dAForm.value.licenseValidityDate ? new Date(this.dAForm.value.licenseValidityDate): null;
-      if (licenseDate && licenseDate < today) {
-        this.showInvokeButton = true;
-        this.dAForm.patchValue({
-          issueByRTO: '',
-          licenseValidityDate: ''
-        });
-      }else{
-         this.showInvokeButton = false;
-      }
+      // this.checkExpiryAndToggleButton()
+      this.checkPermitExpiry();
+      this.checkInsuranceExpiry();
+      this.checkFitnessExpiry();
+      this.checkLicenseExpiry()
     }else{
      this.deliveryAgentCode = '';
     }
@@ -165,6 +145,77 @@ applyGPSProviderValidation(){
   closePopup() {
     if (this.bsModalRef) {this.bsModalRef.hide();}
   }
+
+// checkExpiryAndToggleButton(event?:any,type?:string) {
+//   debugger
+//   const permitValidityDate = type === 'permit' ? event : this.dAForm.value.permitValidityDate ? new Date(this.dAForm.value.permitValidityDate) :null ;
+//   const insuranceValidityDate =  type === 'insurance' ? event : this.dAForm.value.insuranceValidityDate ? new Date(this.dAForm.value.insuranceValidityDate):null;
+//   const fitnessValidityDate =  type === 'fitness' ? event : this.dAForm.value.fitnessValidityDate ? new Date(this.dAForm.value.fitnessValidityDate):null ;
+
+//   const today = new Date();
+//   today.setHours(0, 0, 0, 0); // ignore time
+
+//   if (permitValidityDate) permitValidityDate.setHours(0, 0, 0, 0);
+//   if (insuranceValidityDate) insuranceValidityDate.setHours(0, 0, 0, 0);
+//   if (fitnessValidityDate) fitnessValidityDate.setHours(0, 0, 0, 0);
+//   debugger
+//   this.isPermitExpired = permitValidityDate ? permitValidityDate < today : false;
+//   this.isInsuranceExpired = insuranceValidityDate ? insuranceValidityDate < today : false;
+//   this.isFitnessExpired = fitnessValidityDate ? fitnessValidityDate < today : false;
+//  const isExpired = this.isPermitExpired || this.isInsuranceExpired || this.isFitnessExpired;
+//   if (isExpired) {
+//     this.showVehicleInvokeButton = true;
+//   } else {
+//     this.showVehicleInvokeButton = false;
+//   }
+
+//     const licenseDate =  type === 'license' ? event :new Date(this.dAForm.value.licenseValidityDate);
+//      if (licenseDate) licenseDate.setHours(0, 0, 0, 0);
+//      this.isLicenseExpired = licenseDate ? licenseDate < today : false;
+//       if (this.isLicenseExpired) {
+//         this.showInvokeButton = true;
+//       }else{
+//          this.showInvokeButton = false;
+//       }
+// }
+
+// Helper function to check expiry for a single date
+checkDateExpiry(dateValue: any): boolean {
+  if (!dateValue) return false; // no message if empty
+  const date = new Date(dateValue);
+  date.setHours(0, 0, 0, 0);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return date < today;
+}
+
+// Individual functions
+checkPermitExpiry(event?:any) {
+  debugger
+  const permit = event ? event: this.dAForm.value.permitValidityDate;
+  this.isPermitExpired = this.checkDateExpiry(permit);
+  this.showVehicleInvokeButton = this.isPermitExpired || this.isInsuranceExpired || this.isFitnessExpired;
+}
+
+checkInsuranceExpiry(event?:any) {
+  const insurance =  event ? event: this.dAForm.value.insuranceValidityDate;
+  this.isInsuranceExpired = this.checkDateExpiry(insurance);
+  this.showVehicleInvokeButton = this.isPermitExpired || this.isInsuranceExpired || this.isFitnessExpired;
+}
+
+checkFitnessExpiry(event?:any) {
+  const fitness =  event ? event: this.dAForm.value.fitnessValidityDate;
+  this.isFitnessExpired = this.checkDateExpiry(fitness);
+  this.showVehicleInvokeButton = this.isPermitExpired || this.isInsuranceExpired || this.isFitnessExpired;
+}
+
+checkLicenseExpiry(event?:any) {
+  const license =  event ? event: this.dAForm.value.licenseValidityDate;
+  this.isLicenseExpired = this.checkDateExpiry(license);
+  this.showInvokeButton = this.isLicenseExpired;
+}
+
+
 
   buildForm() {
     this.dAForm = new FormGroup({
@@ -290,6 +341,7 @@ onChangeLicenceNumber(event?: any) {
                 issueByRTO: response.data.omRtoFullname || '',
                 licenseValidityDate: response.data.validTillDate || ''
               });
+                this.checkLicenseExpiry()
             }
                this.isLicenceLoading = false;
           },
@@ -306,14 +358,21 @@ onChangeLicenceNumber(event?: any) {
 }
 
   onSubmit() {
-    if(this.dAForm.valid){
+    if(this.dAForm.valid && !this.isFitnessExpired && !this.isInsuranceExpired && !this.isPermitExpired && !this.isLicenseExpired){
       this.isSubmiiting=true;
       const formData = new FormData();
+      console.log(this.dAForm.value)
        Object.keys(this.dAForm.value).forEach((key) => {
       let value = this.dAForm.value[key];
       if ( ['registrationDate','permitValidityDate','insuranceValidityDate','fitnessValidityDate','dateOfBirth','licenseValidityDate'].includes(key) && value) {
-        value = new Date(value).toISOString();
+       const d = new Date(value);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+
+    value = `${year}-${month}-${day}T00:00:00.000Z`;
       }
+      console.log(value)
       if (key === 'LicenseAttachment' && value instanceof File) {
         formData.append(key, value, value.name);
       } else {
