@@ -55,7 +55,7 @@
             <label class="col-sm-5 col-form-label text-end">Vehicle No</label>
             <div class="col-sm-7">
                 <div class="d-flex">
-                  <input class="form-control required2" type="text" placeholder="Vehicle No" formControlName="vehicleNo" (blur)="getVehicleDetail($event)" required 
+                  <input class="form-control required2" type="text" placeholder="Vehicle No" formControlName="vehicleNo" (input)="getVehicleDetail($event)" required 
                   [readOnly]="deliveryAgentCode"
                   [ngClass]="{ 'border-danger': dAForm.get('vehicleNo')?.invalid  && dAForm.get('vehicleNo')?.touched }">
                   <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode && showVehicleInvokeButton? true:false" 

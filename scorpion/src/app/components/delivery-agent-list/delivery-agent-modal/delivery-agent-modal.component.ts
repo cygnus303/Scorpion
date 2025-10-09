@@ -45,7 +45,7 @@ export class DeliveryAgentModalComponent {
 
 getVehicleDetail(event?: any) {
   const vehicleNo = event ? event.target.value.trim() : this.dAForm.value.vehicleNo?.trim();
-  if (!vehicleNo) return;
+  if (!vehicleNo || vehicleNo.invalid) return;
   const payload = {
     vehicleNo: vehicleNo,
     licenseNo: '',
@@ -78,8 +78,10 @@ getVehicleDetail(event?: any) {
             }
             this.isvehicleLoading=false;
           },
+          
           error: (err) => {
-            console.error('Error fetching vehicle details:', err);
+            console.error('Error fetching vehicle details:', err.error.message);
+            this.sweetAlertService.error(err.error.message)
             this.isvehicleLoading=false;
           }
         });
@@ -345,7 +347,9 @@ onChangeLicenceNumber(event?: any) {
             }
                this.isLicenceLoading = false;
           },
-          error: (err) => {console.error('Error fetching license detail:', err);
+          error: (err) => {
+            console.error('Error fetching license detail:', err);
+            this.sweetAlertService.error(err.error.message)
              this.isLicenceLoading = false;
           }
         });
