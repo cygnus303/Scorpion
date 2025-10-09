@@ -45,7 +45,9 @@ export class DeliveryAgentModalComponent {
 
 getVehicleDetail(event?: any) {
   const vehicleNo = event ? event.target.value.trim() : this.dAForm.value.vehicleNo?.trim();
-  if (!vehicleNo || vehicleNo.invalid) return;
+  const vehicleNoControl = this.dAForm.get('vehicleNo');
+  debugger
+  if (!vehicleNoControl || vehicleNoControl.invalid) return;
   const payload = {
     vehicleNo: vehicleNo.toUpperCase(),
     licenseNo: '',
@@ -329,7 +331,6 @@ onChangeLicenceNumber(event?: any) {
     if(this.dAForm.valid && !this.isFitnessExpired && !this.isInsuranceExpired && !this.isPermitExpired && !this.isLicenseExpired){
       this.isSubmiiting=true;
       const formData = new FormData();
-      console.log(this.dAForm.value)
        Object.keys(this.dAForm.value).forEach((key) => {
       let value = this.dAForm.value[key];
       if ( ['registrationDate','permitValidityDate','insuranceValidityDate','fitnessValidityDate','dateOfBirth','licenseValidityDate'].includes(key) && value) {
@@ -340,7 +341,6 @@ onChangeLicenceNumber(event?: any) {
 
     value = `${year}-${month}-${day}T00:00:00.000Z`;
       }
-      console.log(value)
       if (key === 'LicenseAttachment' && value instanceof File) {
         formData.append(key, value, value.name);
       } else {
