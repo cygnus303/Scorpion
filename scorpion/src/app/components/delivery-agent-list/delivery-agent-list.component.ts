@@ -18,7 +18,7 @@ import { CommonService } from 'app/shared/services/common.service';
 export class DeliveryAgentListComponent {
   public totalItems!:number;
   public pageNumber:number = 1;
-  public pageSize:number = 10;
+  public pageSize:number = 15;
   public deliveryAgentsList:DeliveryAgentsListRepsonse[]=[]
   public deliveryAgentByCodeList!:DeliveryAgentByCodeResponse;
   public loading:boolean=false;
