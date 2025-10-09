@@ -46,7 +46,6 @@ export class DeliveryAgentModalComponent {
 getVehicleDetail(event?: any) {
   const vehicleNo = event ? event.target.value.trim() : this.dAForm.value.vehicleNo?.trim();
   const vehicleNoControl = this.dAForm.get('vehicleNo');
-  debugger
   if (!vehicleNoControl || vehicleNoControl.invalid) return;
   const payload = {
     vehicleNo: vehicleNo.toUpperCase(),
