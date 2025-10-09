@@ -47,7 +47,7 @@ getVehicleDetail(event?: any) {
   const vehicleNo = event ? event.target.value.trim() : this.dAForm.value.vehicleNo?.trim();
   if (!vehicleNo) return;
   const payload = {
-    vehicleNo: vehicleNo,
+    vehicleNo: vehicleNo.toUpperCase(),
     licenseNo: '',
     dA_Code: this.dAForm.value.dA_Code
   };
@@ -191,7 +191,6 @@ checkDateExpiry(dateValue: any): boolean {
 
 // Individual functions
 checkPermitExpiry(event?:any) {
-  debugger
   const permit = event ? event: this.dAForm.value.permitValidityDate;
   this.isPermitExpired = this.checkDateExpiry(permit);
   this.showVehicleInvokeButton = this.isPermitExpired || this.isInsuranceExpired || this.isFitnessExpired;
@@ -323,7 +322,7 @@ onChangeLicenceNumber(event?: any) {
     }
     const payload = {
       vehicleNo: '', // not needed here
-      licenseNo: licenseNo,
+      licenseNo: licenseNo.toUpperCase(),
       dA_Code: this.dAForm.value.dA_Code
     }
     
