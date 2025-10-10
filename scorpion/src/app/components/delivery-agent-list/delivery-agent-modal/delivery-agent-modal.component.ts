@@ -216,9 +216,10 @@ checkLicenseExpiry(event?:any) {
       location: new FormControl(null),
       LicenseAttachmentPath: new FormControl(''),
       LicenseAttachment: new FormControl(''),
-      licenseAttachmentFile: new FormControl(''),
       entryBy: new FormControl(this.docketService.loginUserList?.UserId),
       updateBy: new FormControl(this.docketService.loginUserList.UserId),
+      updatedDate:new FormControl(new Date()),
+      entryDate:new FormControl(new Date()),
       isActive:new FormControl(true)
     })
 
@@ -343,7 +344,7 @@ onChangeLicenceNumber(event?: any) {
       const formData = new FormData();
        Object.keys(this.dAForm.value).forEach((key) => {
       let value = this.dAForm.value[key];
-      if ( ['registrationDate','permitValidityDate','insuranceValidityDate','fitnessValidityDate','dateOfBirth','licenseValidityDate'].includes(key) && value) {
+      if ( ['registrationDate','permitValidityDate','insuranceValidityDate','fitnessValidityDate','dateOfBirth','licenseValidityDate','entryDate','updatedDate'].includes(key) && value) {
        const d = new Date(value);
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');
