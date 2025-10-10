@@ -244,7 +244,17 @@
                             formControlName="length" (focus)="clearZero(row, 'length')"
                             (keypress)="docketService.allowNumericDecimal($event)"
                             (change)="docketService.freightAndOtherChar();docketService.GetDKTGSTForGTA();"
-                            (input)="calculateSummary(i)" (blur)="restoreIfEmpty(row, 'length')">
+                            (input)="calculateSummary(i)" (blur)="restoreIfEmpty(row, 'length')"
+                            [ngClass]="{ 'border-danger': row.get('length')?.invalid && row.get('length')?.touched }"
+                            >
+                            <div class="text-danger mt-1 small"  *ngIf="row.get('length')?.touched && row.get('length')?.errors">
+                                <span *ngIf="row.get('length')?.hasError('required')">
+                                  Please enter a value.
+                                </span>
+                                <span *ngIf="row.get('length')?.hasError('min')">
+                                  Please enter a value greater than or equal to 1.
+                                </span>
+                             </div>
                         </td>
                         <td class="center"
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
@@ -253,7 +263,17 @@
                             formControlName="breadth" (focus)="clearZero(row, 'breadth')"
                             (keypress)="docketService.allowNumericDecimal($event)"
                             (change)="docketService.freightAndOtherChar();docketService.GetDKTGSTForGTA()"
-                            (input)="calculateSummary(i)" (blur)="restoreIfEmpty(row, 'breadth')">
+                            (input)="calculateSummary(i)" (blur)="restoreIfEmpty(row, 'breadth')"
+                            [ngClass]="{ 'border-danger': row.get('breadth')?.invalid && row.get('breadth')?.touched }"
+                            >        
+                            <div class="text-danger mt-1 small" *ngIf="row.get('breadth')?.touched && row.get('breadth')?.errors">
+                              <span *ngIf="row.get('breadth')?.hasError('required')">
+                                Please enter a value.
+                              </span>
+                              <span *ngIf="row.get('breadth')?.hasError('min')">
+                                Please enter a value greater than or equal to 1.
+                              </span>
+                            </div>
                         </td>
                         <td class="center"
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
@@ -262,7 +282,17 @@
                             formControlName="height" (focus)="clearZero(row, 'height')"
                             (keypress)="docketService.allowNumericDecimal($event)"
                             (change)="docketService.freightAndOtherChar();docketService.GetDKTGSTForGTA()"
-                            (input)="calculateSummary(i)" (blur)="restoreIfEmpty(row, 'height')">
+                            (input)="calculateSummary(i)" (blur)="restoreIfEmpty(row, 'height')"
+                            [ngClass]="{ 'border-danger': row.get('height')?.invalid && row.get('height')?.touched }"
+                            >
+                          <div class="text-danger mt-1 small" *ngIf="row.get('height')?.touched && row.get('height')?.errors">
+                          <span *ngIf="row.get('height')?.hasError('required')">
+                            Please enter a value.
+                          </span>
+                          <span *ngIf="row.get('height')?.hasError('min')">
+                            Please enter a value greater than or equal to 1.
+                          </span>
+                        </div>
                         </td>
                         <td class="center ">
                           <input class="form-control required2 text-end" placeholder="No of Pkgs."

@@ -33,7 +33,7 @@ export class DocketListComponent implements OnInit {
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      // this.docketService.Location = 'TBH';
+      // this.docketService.Location = 'BDD';
       this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
@@ -118,7 +118,7 @@ export class DocketListComponent implements OnInit {
 getCompletionData() {
   const payload = {
     docketNo: this.docketService.loginUserList.DocketNo,
-    // docketNo: '90042083',
+    // docketNo: 'CNIDR2526000001',
     isFromBillGeneration: this.docketService.loginUserList.IsFromBillGeneration || '',
     type: this.docketService.loginUserList.Type,
     baseLocationCode: this.docketService.loginUserList.LocationCode,
@@ -137,7 +137,8 @@ getCompletionData() {
           // first patch
           this.docketService.basicDetailForm.patchValue({
             cNoteNo: basicDetail.dockno,
-            cNoteDate: new Date(basicDetail.dockdt.split('T')[0]),
+            // cNoteDate: new Date(basicDetail.dockdt.split('T')[0]),
+            cNoteDate: new Date(),
             pincode: basicDetail.csgePinCode ? basicDetail.csgePinCode : null,
             billingType: basicDetail.paybas,
             billingName: basicDetail.party_name,

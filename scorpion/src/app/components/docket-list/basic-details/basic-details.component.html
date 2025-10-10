@@ -199,8 +199,8 @@
             <div class="col-md-7">
               <ng-select class="noFoundTextColor required2" appFocusNext
                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('destination')?.invalid  && docketService.basicDetailForm.get('destination')?.touched}"
-                required [searchable]="true" (search)="getDestinationsList($event)" 
-                (change)="onChangedestinationsList($event);this.docketService.onFormFieldChange()" placeholder="Destination"
+                required [searchable]="true" (search)="getDestinationsList($event)" [readonly]="this.docketService.loginUserList?.Type === '2'?true:false"
+                (change)="onChangedestinationsList($event);this.docketService.onFormFieldChange();" placeholder="Destination"
                 formControlName="destination" [notFoundText]="notDestinationValue" (open)="resetDestinationDropdown()"
                 (clear)="onResetToCity()">
                 <ng-option *ngFor="let item of destinationsList" [value]="item">
