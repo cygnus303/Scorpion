@@ -144,6 +144,7 @@ applyGPSProviderValidation(){
       this.checkLicenseExpiry()
     }else{
      this.deliveryAgentCode = '';
+     this.licenseAttachmentName ='';
     }
     this.bsModalRef = this.modalService.show(this.templatePopup, {  backdrop: true, ignoreBackdropClick: false, class: 'modal-xl modal-dialog-centered' });
   }
