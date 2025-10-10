@@ -133,6 +133,7 @@ applyGPSProviderValidation(){
         licenseValidityDate: data.licenseValidityDate ? new Date(data.licenseValidityDate) : null,
         gpsProvider:data.gpsProvider ? data.gpsProvider : null,
         location:data.location ? data.location?.split(",").map((x: any) => x.trim()):'',
+        LicenseAttachment:data.licenseAttachment ? data.licenseAttachment:'',
       };
       this.licenseAttachmentName = data.licenseAttachment ?  data.licenseAttachment.split('/').pop() || '':'',
       this.dAForm.patchValue(patchData);
@@ -214,6 +215,7 @@ checkLicenseExpiry(event?:any) {
       location: new FormControl(null),
       LicenseAttachmentPath: new FormControl(''),
       LicenseAttachment: new FormControl(''),
+      licenseAttachmentFile: new FormControl(''),
       entryBy: new FormControl(this.docketService.loginUserList?.UserId),
       updateBy: new FormControl(this.docketService.loginUserList.UserId),
       isActive:new FormControl(true)
@@ -227,7 +229,8 @@ onFileSelected(event: any) {
     const reader = new FileReader();
     this.licenseAttachmentName = file.name;
      this.dAForm?.patchValue({
-        LicenseAttachmentPath: file
+        LicenseAttachmentPath: file,
+        LicenseAttachment:file?.name
       });
     reader.readAsDataURL(file); 
   }
@@ -335,7 +338,7 @@ onChangeLicenceNumber(event?: any) {
 
   onSubmit() {
     if(this.dAForm.valid && !this.isFitnessExpired && !this.isInsuranceExpired && !this.isPermitExpired && !this.isLicenseExpired){
-      this.isSubmiiting=true;
+      this.isSubmiiting=true; 
       const formData = new FormData();
        Object.keys(this.dAForm.value).forEach((key) => {
       let value = this.dAForm.value[key];
