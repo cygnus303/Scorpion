@@ -155,5 +155,4 @@ loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
    checkEditDocket(payload:any){
      return this.apiHandlerService.Post(`Docket/CheckEditDocket`,payload);
   }
-
 }

@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { cityResponse } from 'app/shared/models/general-master.model';
+import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { ChallanService } from 'app/shared/services/challan.service';
+import { DocketService } from 'app/shared/services/docket.service';
 
 @Component({
   selector: 'app-challan-list',
@@ -11,7 +14,7 @@ import { ChallanService } from 'app/shared/services/challan.service';
 export class ChallanListComponent {
 public challanForm!:FormGroup;
 public selectedDigit: number = 10; 
-constructor(public challanService:ChallanService){}
+constructor(public challanService:ChallanService,public docketService:DocketService,public basicDetailService:BasicDetailService){}
 cNoteAvailable =
 [
   {
@@ -67,6 +70,7 @@ cNoteAvailable =
  ngOnInit(){
     this.buildForm();
     this.challanService.getVendtyData();
+    this.challanService.getCityList();
   }
 
 buildForm(){
@@ -87,6 +91,7 @@ buildForm(){
     distanceInKM:new FormControl(),
     from_City:new FormControl(),
     to_City:new FormControl(),
+    loadingSlipAttachment:new FormControl(),
     vehicleNo:new FormControl(),
     mKTVehicleNo:new FormControl(),
     tripSheetNo : new FormControl(),

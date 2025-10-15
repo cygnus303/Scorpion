@@ -13,7 +13,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Manual PRS No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="Manual PRS No." type="text">
+                        <input class="form-control" placeholder="Manual PRS No." type="text" formControlName="manualTHCNo">
                     </div>
                 </div>
             </div>
@@ -23,9 +23,9 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="PRS Date" type="text" #dv="bsDatepicker"
-                                bsDatepicker
-                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
-                            <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                bsDatepicker  [bsValue]="docketService.bsValue" formControlName="tHCDate"
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY',maxDate:docketService.bsValue}" [disabled]="true">
+                            <span class="input-group-text cursor-pointer" (click)="dv.toggle()" disabled>
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
@@ -38,7 +38,7 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="Loading Date" type="text"
-                                #dv="bsDatepicker" bsDatepicker
+                                #dv="bsDatepicker" bsDatepicker formControlName="loadingDate"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
                             <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                 <i class="fa fa-calendar"></i>
@@ -53,7 +53,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Route Mode</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" placeholder="Route Mode" type="text">
+                        <input class="form-control required2" placeholder="Route Mode" type="text" formControlName="routeType">
                     </div>
                 </div>
             </div>
@@ -61,7 +61,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Route Name</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" type="text" placeholder="Route Name">
+                        <input class="form-control required2" type="text" placeholder="Route Name" formControlName="routeName">
                     </div>
                 </div>
             </div>
@@ -71,7 +71,7 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="Actual Dept. Time" type="text"
-                                #dv="bsDatepicker" bsDatepicker
+                                #dv="bsDatepicker" bsDatepicker formControlName="actualDeptDate"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
                             <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                 <i class="fa fa-calendar"></i>
@@ -86,8 +86,8 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vendor Type</label>
                     <div class="col-sm-7">
-                        <ng-select class="noFoundTextColor required2" placeholder="Vendor Type"
-                            notFoundText="No matches found" [items]="challanService.vendtyData" bindLabel="codeDesc" bindValue="codeId"></ng-select>
+                        <ng-select class="noFoundTextColor required2" placeholder="Vendor Type" formControlName="vendorType"
+                            notFoundText="No matches found" [items]="challanService.vendtyData" bindLabel="codeDesc" bindValue="codeId" (change)="challanService.getVendorsList($event)"></ng-select>
                     </div>
                 </div>
             </div>
@@ -95,7 +95,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Vendor Code/Name</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" type="text" placeholder="Vendor Code/Name">
+                         <ng-select class="noFoundTextColor required2" placeholder="Vendor Code/Name" formControlName="vendorCode" [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code"></ng-select>
                     </div>
                 </div>
             </div>
@@ -103,7 +103,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Approx KMs.</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" placeholder="Approx KMs.">
+                        <input class="form-control" type="text" placeholder="Approx KMs." formControlName="distanceInKM">
                     </div>
                 </div>
             </div>
@@ -113,7 +113,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Empty Vehicle</label>
                     <div class="col-sm-7 d-flex align-items-center">
-                        <input type="checkbox" class="form-check-input me-4 checkbox-lg">
+                        <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="isEmpty">
                     </div>
                 </div>
             </div>
@@ -121,7 +121,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">From Address</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" placeholder="From Address">
+                        <input class="form-control" type="text" placeholder="From Address" formControlName="fromAddress">
                     </div>
                 </div>
             </div>
@@ -129,7 +129,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">To Address</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" placeholder="To Address">
+                        <input class="form-control" type="text" placeholder="To Address" formControlName="toAddress">
                     </div>
                 </div>
             </div>
@@ -141,7 +141,7 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="Schedule Dep. Date" type="text"
-                                #dv="bsDatepicker" bsDatepicker
+                                #dv="bsDatepicker" bsDatepicker formControlName="scheduleDeptDate"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
                             <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                 <i class="fa fa-calendar"></i>
@@ -154,7 +154,11 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">From City</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="From City" type="text">
+                        <ng-select class="required2" placeholder="From City" formControlName="from_City" >
+                            <ng-option *ngFor="let item of challanService.cityList" [value]="item.city_code">
+                                <strong>{{ item.location }}</strong> : {{ item.location }}
+                            </ng-option>
+                        </ng-select>
                     </div>
                 </div>
             </div>
@@ -162,7 +166,11 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">To City</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" placeholder="To City">
+                        <ng-select class="required2" placeholder="To City" formControlName="to_City">
+                            <ng-option *ngFor="let item of challanService.cityList" [value]="item.city_code">
+                                <strong>{{ item.location }}</strong> : {{ item.location }}
+                            </ng-option>
+                        </ng-select>
                     </div>
                 </div>
             </div>
@@ -172,7 +180,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Loading Slip Attachment :</label>
                     <div class="col-sm-7">
-                        <input class="form-control py-2 pt-2 uppercase-none" type="file">
+                        <input class="form-control py-2 pt-2 uppercase-none" type="file" formControlName="loadingSlipAttachment">
                     </div>
                 </div>
             </div>
