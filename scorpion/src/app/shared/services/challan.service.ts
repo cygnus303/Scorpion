@@ -4,15 +4,18 @@ import { generalMasterResponse } from '../models/general-master.model';
 import { CityResponse, VendeorsResponse } from '../models/thc-master.model';
 import { THCMasterService } from './thc-master.service';
 import { DocketService } from './docket.service';
+import { SweetAlertService } from './sweet-alert.service';
+import { DeliveryAgentService } from './delivery-agent.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChallanService {
-public vendtyData:generalMasterResponse[]=[]
-public vendorsList:VendeorsResponse[]=[]
-public cityList:CityResponse[]=[]
-  constructor(private basicDetailService: BasicDetailService,private tHCMasterService:THCMasterService,private docketService:DocketService) { }
+public vendtyData:generalMasterResponse[]=[];
+public vendorsList:VendeorsResponse[]=[];
+public cityList:CityResponse[]=[];
+
+  constructor(private basicDetailService: BasicDetailService,private tHCMasterService:THCMasterService,private docketService:DocketService, ) { }
 
     getVendtyData() {
     this.basicDetailService.getGeneralMasterList('VENDTY', '', '').subscribe({

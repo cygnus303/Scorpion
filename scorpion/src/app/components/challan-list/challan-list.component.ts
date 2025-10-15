@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { cityResponse } from 'app/shared/models/general-master.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { ChallanService } from 'app/shared/services/challan.service';
+import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service';
 import { DocketService } from 'app/shared/services/docket.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 
 @Component({
   selector: 'app-challan-list',
@@ -15,7 +17,7 @@ export class ChallanListComponent {
 public challanForm!:FormGroup;
 public selectedDigit: number = 10; 
 public typeName : string='';
-constructor(public challanService:ChallanService,public docketService:DocketService,public basicDetailService:BasicDetailService){}
+constructor(public challanService:ChallanService,public docketService:DocketService,public basicDetailService:BasicDetailService,public sweetAlertService:SweetAlertService,private deliveryAgentService:DeliveryAgentService){}
 cNoteAvailable =
 [
   {
@@ -110,7 +112,7 @@ buildForm(){
     permitDate : new FormControl(),
     insuranceDate : new FormControl(),
     fitnessDate : new FormControl(),
-    driver1Licence:new FormControl(),
+    driver1Licence:new FormControl('',[Validators.required,Validators.pattern(/^[A-Za-z]{2}\d{2}\s?\d{11}$/)]),
     d1_DOB:new FormControl(),
     driver1Name:new FormControl(),
     driver1RTONo:new FormControl(),
@@ -168,6 +170,66 @@ validateVehicleNo() {
     filtered = value.replace(/[^A-Z0-9]/g, '').slice(0, this.selectedDigit);
   }
   control.setValue(filtered, { emitEvent: false });
+  if (filtered.length === this.selectedDigit) {
+    this.getVehicleDetail(filtered);
+  }
 }
+
+  getVehicleDetail(vehicleNo:string) {
+    const params = {
+      vehNo: vehicleNo.toUpperCase(),
+      baseUserName: this.docketService.loginUserList.BaseUserName
+    };
+    this.deliveryAgentService.getVehicleDetail(params).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.challanForm.patchValue({
+            eNGINENO: response.rc_eng_no || '',
+            cHASISNO: response.rc_chasi_no || '',
+            rCBOOKNO: response.rc_regn_no || '',
+            registrationDate: response.rc_regn_dt ? new Date(response.rc_regn_dt) : null,
+            permitDate: response.rc_permit_valid_upto ? new Date(response.rc_permit_valid_upto) : null,
+            insuranceDate: response.rc_insurance_upto ? new Date(response.rc_insurance_upto) : null,
+            fitnessDate: response.rc_fit_upto ? new Date(response.rc_fit_upto) : null
+          });
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching vehicle details:', err.error.message);
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+  }
+
+  onChangeLicenceNumber(event: any) {
+     const dob = this.challanForm.value.d1_DOB;
+     const licenseNo = event ? event.target.value?.trim() : this.challanForm.value.driver1Licence?.trim();
+     const licenseControl = this.challanForm.get('driver1Licence');
+      if (!licenseControl || licenseControl.invalid || !dob) {
+      licenseControl?.markAsTouched();
+      this.challanForm.get('d1_DOB')?.markAsTouched();
+      return;
+    }
+    const params = {
+      dlnumber: licenseNo.toUpperCase(),
+      dob: this.challanForm.value.d1_DOB ? this.challanForm.value.d1_DOB.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '',
+      baseUserName: this.docketService.loginUserList.BaseUserName
+    };
+    this.deliveryAgentService.getLicenceDetail(params).subscribe({
+      next: (response: any) => {
+        if (response && response.data) {
+          this.challanForm.patchValue({
+            driver1Name:response.data.bioFullName, 
+            driver1RTONo: response.data.omRtoFullname || '',
+            driver1LicenceValDate: response.data.validTillDate || ''
+          });
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching license detail:', err);
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+  }
 
 }

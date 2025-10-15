@@ -322,7 +322,7 @@
                 <div class="row" >
                     <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" placeholder="Vehicle No." type="text"  formControlName="mKTVehicleNo"
+                        <input class="form-control required2" placeholder="Vehicle No." type="text"   formControlName="mKTVehicleNo"
                         (input)="validateVehicleNo()">
                     </div>
                 </div>
@@ -365,7 +365,7 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="Registration Date" type="text"
-                                #dv="bsDatepicker" bsDatepicker
+                                #dv="bsDatepicker" bsDatepicker formControlName="registrationDate"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
                             <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                 <i class="fa fa-calendar"></i>
@@ -380,7 +380,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Engine No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" placeholder="Engine No." type="text">
+                        <input class="form-control required2" placeholder="Engine No."  formControlName="eNGINENO" type="text">
                     </div>
                 </div>
             </div>
@@ -388,7 +388,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Chasis No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" type="text" placeholder="Chasis No.">
+                        <input class="form-control required2" type="text" placeholder="Chasis No."  formControlName="cHASISNO">
                     </div>
                 </div>
             </div>
@@ -396,7 +396,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">RC Book No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" type="text" placeholder="RC Book No.">
+                        <input class="form-control required2" type="text" placeholder="RC Book No."  formControlName="rCBOOKNO">
                     </div>
                 </div>
             </div>
@@ -408,7 +408,7 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="Permit Validity Date" type="text"
-                                #dv="bsDatepicker" bsDatepicker
+                                #dv="bsDatepicker" bsDatepicker  formControlName="permitDate"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
                             <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                 <i class="fa fa-calendar"></i>
@@ -423,7 +423,7 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="Insurance Validity Date" type="text"
-                                #dv="bsDatepicker" bsDatepicker
+                                #dv="bsDatepicker" bsDatepicker  formControlName="insuranceDate"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
                             <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                 <i class="fa fa-calendar"></i>
@@ -438,7 +438,7 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="Fitness Validity Date" type="text"
-                                #dv="bsDatepicker" bsDatepicker
+                                #dv="bsDatepicker" bsDatepicker  formControlName="fitnessDate"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
                             <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                 <i class="fa fa-calendar"></i>
@@ -455,7 +455,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Licence No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Licence No." type="text">
+                            <input class="form-control required2" placeholder="Licence No." type="text" formControlName="driver1Licence" (input)="onChangeLicenceNumber($event)">
                         </div>
                     </div>
                 </div>
@@ -465,7 +465,7 @@
                         <div class="col-sm-7">
                             <div class="input-group">
                                 <input class="form-control required2" placeholder="Date Of Birth" type="text"
-                                    #dv="bsDatepicker" bsDatepicker
+                                    #dv="bsDatepicker" bsDatepicker formControlName="d1_DOB" 
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
                                 <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                     <i class="fa fa-calendar"></i>
@@ -478,7 +478,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Mobile No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Mobile No." type="text">
+                            <input class="form-control" placeholder="Mobile No." type="text" formControlName="driver1MobileNo" >
                         </div>
                     </div>
                 </div>
@@ -488,7 +488,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Driver Name</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Driver Name" type="text">
+                            <input class="form-control required2" placeholder="Driver Name" type="text" formControlName="driver1Name">
                         </div>
                     </div>
                 </div>
@@ -496,7 +496,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Issue By RTO</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Issue By RTO" type="text">
+                            <input class="form-control required2" placeholder="Issue By RTO" type="text"  formControlName="driver1RTONo">
                         </div>
                     </div>
                 </div>
@@ -506,7 +506,7 @@
                         <div class="col-sm-7">
                             <div class="input-group">
                                 <input class="form-control required2" placeholder="Licence Validity Date" type="text"
-                                    #dv="bsDatepicker" bsDatepicker
+                                    #dv="bsDatepicker" bsDatepicker   formControlName="driver1LicenceValDate"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
                                 <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                     <i class="fa fa-calendar"></i>
@@ -756,29 +756,30 @@
             </div>
         </div>
     </div>
-    <div [ngClass]="this.docketService.loginUserList.Type === '1' ? 'd-none' : ''">
+    <div [ngClass]="this.docketService.loginUserList.Type === '1' ? 'd-none' : '' ">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">CNote Available For {{typeName}}</h3>
         <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
             <i class="fas fa-list me-2"></i>
             CNote Available For {{typeName}}
         </div>
-        <table class="table table-bordered table-striped table-condensed flip-content mb-0">
+      <div class="cnote-entry-container p-3">
+          <table class="table table-bordered table-striped table-condensed flip-content mb-0">
             <thead>
                 <tr>
-                    <th><input type="checkbox"></th>
-                    <th>CNote No.</th>
-                    <th>Pay Basis</th>
-                    <th>Booking Date EDD</th>
-                    <th>Arrival Date</th>
-                    <th>Pkgs.[L/B</th>
-                    <th>Wt.[L/B]</th>
-                    <th>Chrg. Wt.</th>
-                    <th>Rate Type</th>
-                    <th>E-Way Bill No.</th>
-                    <th>Reason for Delay</th>
-                    <th>TAT in Hrs.</th>
-                    <th>Contract Amount</th>
-                    <th>IsPRSPKGScan.</th>
+                    <th class="p-3"><input type="checkbox"></th>
+                    <th class="p-3">CNote No.</th>
+                    <th class="p-3">Pay Basis</th>
+                    <th class="p-3">Booking Date EDD</th>
+                    <th class="p-3">Arrival Date</th>
+                    <th class="p-3">Pkgs.[L/B</th>
+                    <th class="p-3">Wt.[L/B]</th>
+                    <th class="p-3">Chrg. Wt.</th>
+                    <th class="p-3">Rate Type</th>
+                    <th class="p-3">E-Way Bill No.</th>
+                    <th class="p-3">Reason for Delay</th>
+                    <th class="p-3">TAT in Hrs.</th>
+                    <th class="p-3">Contract Amount</th>
+                    <th class="p-3">IsPRSPKGScan.</th>
                 </tr>
             </thead>
             <tbody>
@@ -800,6 +801,7 @@
                 </tr>
             </tbody>
         </table>
+      </div>
             <div class="row pb-3 pt-4">
                 <div class="col-4">
                     <div class="row align-items-center">
