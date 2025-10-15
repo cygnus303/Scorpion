@@ -86,7 +86,8 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vendor Type</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" placeholder="Vendor Type" type="text">
+                        <ng-select class="noFoundTextColor required2" placeholder="Vendor Type"
+                            notFoundText="No matches found" [items]="challanService.vendtyData" bindLabel="codeDesc" bindValue="codeId"></ng-select>
                     </div>
                 </div>
             </div>

@@ -5,8 +5,7 @@ import { RouterModule } from '@angular/router';
 import { ChallanRoutes } from './challan.routes';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [ChallanListComponent],
@@ -16,6 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     BsDatepickerModule,
     FormsModule,
     ReactiveFormsModule,
+    NgSelectModule
   ],
   exports: [ RouterModule ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

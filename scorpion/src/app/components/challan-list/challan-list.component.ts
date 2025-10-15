@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ChallanService } from 'app/shared/services/challan.service';
 
 @Component({
   selector: 'app-challan-list',
@@ -10,6 +11,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class ChallanListComponent {
 public challanForm!:FormGroup;
 public selectedDigit: number = 10; 
+constructor(public challanService:ChallanService){}
 cNoteAvailable =
 [
   {
@@ -64,6 +66,7 @@ cNoteAvailable =
 
  ngOnInit(){
     this.buildForm();
+    this.challanService.getVendtyData();
   }
 
 buildForm(){
