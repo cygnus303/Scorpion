@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="col-4">
-                <div class="row">
+                <div class="row d-none">
                     <label class="col-sm-5 col-form-label text-end">Loading Date</label>
                     <div class="col-sm-7">
                         <div class="input-group">
@@ -50,7 +50,7 @@
         </div>
         <div class="row pb-3">
             <div class="col-4">
-                <div class="row align-items-center">
+                <div class="row align-items-center d-none">
                     <label class="col-sm-5 col-form-label text-end">Route Mode</label>
                     <div class="col-sm-7">
                         <input class="form-control required2" placeholder="Route Mode" type="text">
@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div class="col-4">
-                <div class="row">
+                <div class="row d-none">
                     <label class="col-sm-5 col-form-label text-end">Route Name</label>
                     <div class="col-sm-7">
                         <input class="form-control required2" type="text" placeholder="Route Name">
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="col-4">
-                <div class="row">
+                <div class="row d-none">
                     <label class="col-sm-5 col-form-label text-end">Actual Dept. Time</label>
                     <div class="col-sm-7">
                         <div class="input-group">
@@ -86,7 +86,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vendor Type</label>
                     <div class="col-sm-7">
-                        <ng-select class="noFoundTextColor required2" placeholder="Vendor Type"
+                        <ng-select class="noFoundTextColor required2" placeholder="Vendor Type" formControlName="vendorType"
                             notFoundText="No matches found" [items]="challanService.vendtyData" bindLabel="codeDesc" bindValue="codeId"></ng-select>
                     </div>
                 </div>
@@ -96,6 +96,14 @@
                     <label class="col-sm-5 col-form-label text-end">Vendor Code/Name</label>
                     <div class="col-sm-7">
                         <input class="form-control required2" type="text" placeholder="Vendor Code/Name">
+                    </div>
+                </div>
+            </div>
+              <div class="col-4">
+                <div class="row" *ngIf="challanForm.value.vendorType === 'XX1' || challanForm.value.vendorType === '04' || challanForm.value.vendorType === '19'|| challanForm.value.vendorType === 'XX'">
+                    <label class="col-sm-5 col-form-label text-end">PAN No</label>
+                    <div class="col-sm-7">
+                        <input class="form-control required2" type="text" placeholder="PAN No">
                     </div>
                 </div>
             </div>
@@ -110,7 +118,7 @@
         </div>
         <div class="row pb-3">
               <div class="col-4">
-                <div class="row">
+                <div class="row d-none">
                     <label class="col-sm-5 col-form-label text-end">Empty Vehicle</label>
                     <div class="col-sm-7 d-flex align-items-center">
                         <input type="checkbox" class="form-check-input me-4 checkbox-lg">
@@ -135,7 +143,7 @@
             </div>
         </div>
         <div class="row pb-3">
-                  <div class="col-4">
+                  <div class="col-4 d-none">
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Schedule Dep. Date</label>
                     <div class="col-sm-7">
@@ -168,7 +176,7 @@
             </div>
         </div>
          <div class="row pb-3">
-            <div class="col-4">
+            <div class="col-4 d-none">
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Loading Slip Attachment :</label>
                     <div class="col-sm-7">
@@ -181,15 +189,17 @@
     <div>
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Vehicle Details</h3>
         <div class="row pb-3">
-            <div class="col-4">
+            <div class="col-4" *ngIf="challanForm.value.vendorType === 'XX1' || challanForm.value.vendorType === '04'|| challanForm.value.vendorType === '19'|| challanForm.value.vendorType === '05'">
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" placeholder="Vehicle No." type="text">
+                        <!-- <input class="form-control required2" placeholder="Vehicle No." type="text"> -->
+                       <ng-select class="noFoundTextColor required2" placeholder="Vehicle No."
+                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId"></ng-select>
                     </div>
                 </div>
             </div>
-            <div class="col-4">
+            <div class="col-4" *ngIf="challanForm.value.vendorType === 'XX'">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Vehicle No. digit</label>
                     <div class="col-sm-7 d-flex justify-content-between">
@@ -201,8 +211,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4">
-                <div class="row">
+            <div class="col-4" *ngIf="challanForm.value.vendorType === 'XX'">
+                <div class="row" >
                     <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
                     <div class="col-sm-7">
                         <input class="form-control required2" placeholder="Vehicle No." type="text"  formControlName="mKTVehicleNo"
@@ -214,7 +224,7 @@
         <div class="row pb-3">
             <div class="col-4"></div>
             <div class="col-4"></div>
-            <div class="col-4">
+            <div class="col-4" *ngIf="challanForm.value.vendorType === '05'">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Tripsheet No.</label>
                     <div class="col-sm-7">
@@ -228,7 +238,9 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vehicle Type</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="Vehicle Type" type="text">
+                        <!-- <input class="form-control" placeholder="Vehicle Type" type="text"> -->
+                               <ng-select class="noFoundTextColor required2" placeholder="Vehicle Type"
+                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId"></ng-select>
                     </div>
                 </div>
             </div>
@@ -485,7 +497,7 @@
         </div>
         <div class="row pb-3">
             <div class="col-4">
-                <div class="row align-items-center">
+                <div class="row align-items-center d-none">
                     <label class="col-sm-5 col-form-label text-end">Delivery Zone</label>
                     <div class="col-sm-7">
                         <input class="form-control" placeholder="Delivery Zone" type="text">
@@ -523,7 +535,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Is Overload</label>
                     <div class="col-sm-7 d-flex align-items-center">
-                        <input type="checkbox" class="form-check-input me-4 checkbox-lg">
+                        <input type="checkbox" class="form-check-input me-4 checkbox-lg" readonly>
                     </div>
                 </div>
             </div>
@@ -560,7 +572,7 @@
         </div>
         <div class="row pb-3">
             <div class="col-4">
-                <div class="row align-items-center">
+                <div class="row align-items-center d-none">
                     <label class="col-sm-5 col-form-label text-end">Late Dept. Reason [if any]</label>
                     <div class="col-sm-7">
                         <input class="form-control" placeholder="Late Dept. Reason" type="text">
@@ -569,7 +581,7 @@
             </div>
             <div class="col-4">
                 <div class="row">
-                    <div class="row">
+                    <div class="row d-none">
                         <label class="col-sm-5 col-form-label text-end">Out Veh. Free Space</label>
                         <div class="col-sm-7">
                             <input class="form-control" placeholder="Out Veh." type="text">
@@ -579,7 +591,7 @@
             </div>
             <div class="col-4">
                 <div class="row">
-                    <div class="row">
+                    <div class="row d-none">
                         <label class="col-sm-5 col-form-label text-end">Seal No</label>
                         <div class="col-sm-7">
                             <input class="form-control" placeholder="Seal No" type="text">
@@ -763,12 +775,12 @@
             </div>
     </div> -->
 
-    <div>
+    <div *ngIf="challanForm.value.vendorType !=='05'">
         <div class="row">
             <div class="col-md-6 pe-4">
                 <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Payment Details</h3>
     
-                <div class="row mb-3 align-items-center">
+                <div class="row mb-3 align-items-center d-none">
                     <label class="col-sm-6 col-form-label text-end">Standard Contract Amount</label>
                     <div class="col-sm-6">
                         <input type="text" class="form-control" placeholder="Standard Contract Amount" />
@@ -811,38 +823,38 @@
                 </div>
             </div>
     
-            <div class="col-md-6 ps-4">
-                <h3 class="pb-4 text-start challan-Details mt-3 mb-4">TDS Details</h3>
+            <div class="col-md-6 ps-4" >
+                <h3 class="pb-4 text-start challan-Details mt-3 mb-4" *ngIf="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='XX'">TDS Details</h3>
     
-                <div class="row mb-3 align-items-center">
+                <div class="row mb-3 align-items-center" *ngIf="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX'">
                     <label class="col-sm-4 col-form-label text-end">Enable TDS</label>
                     <div class="col-sm-8 d-flex align-items-center">
                         <input type="checkbox" class="form-check-input me-4 checkbox-lg" checked />
                     </div>
                 </div>
     
-                <div class="row mb-3 align-items-center">
+                <div class="row mb-3 align-items-center" *ngIf="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX'">
                     <label class="col-sm-4 col-form-label text-end">Amount Applicable</label>
                     <div class="col-sm-8">
                         <input type="text" class="form-control text-end" value="0" disabled />
                     </div>
                 </div>
     
-                <div class="row mb-3 align-items-center">
+                <div class="row mb-3 align-items-center" *ngIf="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX'">
                     <label class="col-sm-4 col-form-label text-end">TDS Section</label>
                     <div class="col-sm-8">
                            <input type="text" class="form-control required2" />
                     </div>
                 </div>
     
-                <div class="row mb-3 align-items-center">
+                <div class="row mb-3 align-items-center d-none">
                     <label class="col-sm-4 col-form-label text-end">TDS Rate (%)</label>
                     <div class="col-sm-8">
                         <input type="text" class="form-control text-end" value="0" />
                     </div>
                 </div>
     
-                <div class="row mb-3 align-items-center">
+                <div class="row mb-3 align-items-center d-none">
                     <label class="col-sm-4 col-form-label text-end">TDS Amount (-)</label>
                     <div class="col-sm-8">
                         <input type="text" class="form-control text-end" value="0.00" disabled />
@@ -865,7 +877,7 @@
             </div>
         </div>
         <div class="row pb-3">
-            <div class="col-4">
+            <div class="col-4 d-none">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Advance Amount</label>
                     <div class="col-sm-7">
@@ -873,7 +885,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4">
+            <div class="col-4 d-none">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Advance Location</label>
                     <div class="col-sm-7">
@@ -883,7 +895,7 @@
             </div>
         </div>
         <div class="row pb-3">
-            <div class="col-4">
+            <div class="col-4 d-none">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Balance Amount</label>
                     <div class="col-sm-7">
@@ -891,7 +903,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4">
+            <div class="col-4 d-none">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Balance Location</label>
                     <div class="col-sm-7">
