@@ -704,7 +704,7 @@ getcontractservicecharge() {
     });
   }
 
-  getTypeofMovementData(codeId: any) {
+  getTypeofMovementData(codeId?: any) {
     this.basicDetailService.getGeneralMasterList('FTLTYP ', '', codeId).subscribe({
       next: (response) => {
         if (response.success) {

@@ -11,11 +11,11 @@ import { DeliveryAgentService } from './delivery-agent.service';
   providedIn: 'root'
 })
 export class ChallanService {
-public vendtyData:generalMasterResponse[]=[];
-public vendorsList:VendeorsResponse[]=[];
+public vendtyData:generalMasterResponse[]=[]
+public vendorsList:VendeorsResponse[]=[]
 public cityList:CityResponse[]=[];
-
-  constructor(private basicDetailService: BasicDetailService,private tHCMasterService:THCMasterService,private docketService:DocketService, ) { }
+public routeModeList:generalMasterResponse[]=[];
+  constructor(private basicDetailService: BasicDetailService,private tHCMasterService:THCMasterService,private docketService:DocketService) { }
 
     getVendtyData() {
     this.basicDetailService.getGeneralMasterList('VENDTY', '', '').subscribe({
@@ -48,6 +48,16 @@ public cityList:CityResponse[]=[];
       next: (response) => {
         if (response) {
           this.cityList = response;
+        }
+      },
+    });
+  }
+
+  getRouteMode(){
+    this.basicDetailService.getGeneralMasterList('RTMD', '', '').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.routeModeList = response.data;
         }
       },
     });

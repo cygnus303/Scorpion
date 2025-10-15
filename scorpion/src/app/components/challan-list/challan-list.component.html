@@ -53,7 +53,9 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Route Mode</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Route Mode" type="text" formControlName="routeType">
+                            <!-- <input class="form-control required2" placeholder="Route Mode" type="text" formControlName="routeType"> -->
+                             <ng-select class="noFoundTextColor required2" placeholder="Route Mode" formControlName="routeType"
+                                notFoundText="No matches found" [items]="challanService.routeModeList" bindLabel="codeDesc" bindValue="codeId"></ng-select>
                         </div>
                     </div>
                 </div>
@@ -355,7 +357,9 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">FTL Type</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" placeholder="FTL Type">
+                        <!-- <input class="form-control" type="text" placeholder="FTL Type"> -->
+                          <ng-select class="noFoundTextColor required2" placeholder="FTL Type" formControlName="fTLType"
+                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" [items]="docketService.typeofMovementList"></ng-select>
                     </div>
                 </div>
             </div>
@@ -366,7 +370,7 @@
                         <div class="input-group">
                             <input class="form-control required2" placeholder="Registration Date" type="text"
                                 #dv="bsDatepicker" bsDatepicker formControlName="registrationDate"
-                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', maxDate:today}">
                             <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                 <i class="fa fa-calendar"></i>
                             </span>
@@ -408,8 +412,8 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="Permit Validity Date" type="text"
-                                #dv="bsDatepicker" bsDatepicker  formControlName="permitDate"
-                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                                #dv="bsDatepicker" bsDatepicker formControlName="permitDate"
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
                             <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                 <i class="fa fa-calendar"></i>
                             </span>
@@ -424,7 +428,7 @@
                         <div class="input-group">
                             <input class="form-control required2" placeholder="Insurance Validity Date" type="text"
                                 #dv="bsDatepicker" bsDatepicker  formControlName="insuranceDate"
-                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
                             <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                 <i class="fa fa-calendar"></i>
                             </span>
@@ -438,8 +442,8 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="Fitness Validity Date" type="text"
-                                #dv="bsDatepicker" bsDatepicker  formControlName="fitnessDate"
-                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                                #dv="bsDatepicker" bsDatepicker formControlName="fitnessDate"
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
                             <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                 <i class="fa fa-calendar"></i>
                             </span>
@@ -478,7 +482,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Mobile No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Mobile No." type="text" formControlName="driver1MobileNo" >
+                            <input class="form-control" placeholder="Mobile No." type="text" formControlName="driver1MobileNo">
                         </div>
                     </div>
                 </div>
@@ -496,7 +500,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Issue By RTO</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Issue By RTO" type="text"  formControlName="driver1RTONo">
+                            <input class="form-control required2" placeholder="Issue By RTO" type="text" formControlName="driver1RTONo">
                         </div>
                     </div>
                 </div>
@@ -506,8 +510,8 @@
                         <div class="col-sm-7">
                             <div class="input-group">
                                 <input class="form-control required2" placeholder="Licence Validity Date" type="text"
-                                    #dv="bsDatepicker" bsDatepicker   formControlName="driver1LicenceValDate"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                                    #dv="bsDatepicker" bsDatepicker formControlName="driver1LicenceValDate"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
                                 <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
@@ -524,7 +528,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Driver Name</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Driver Name" type="text">
+                            <input class="form-control required2" placeholder="Driver Name" type="text" formControlName="driver2Name">
                         </div>
                     </div>
                 </div>
@@ -532,7 +536,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Mobile No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Mobile No." type="text">
+                            <input class="form-control required2" placeholder="Mobile No." type="text" formControlName="driver2MobileNo">
                         </div>
                     </div>
                 </div>
@@ -540,7 +544,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Licence No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Licence No." type="text">
+                            <input class="form-control" placeholder="Licence No." type="text" formControlName="driver2Licence">
                         </div>
                     </div>
                 </div>
@@ -550,7 +554,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Issue By RTO</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Issue By RTO" type="text">
+                            <input class="form-control required2" placeholder="Issue By RTO" type="text" formControlName="driver2RTONo">
                         </div>
                     </div>
                 </div>
@@ -560,8 +564,8 @@
                         <div class="col-sm-7">
                             <div class="input-group">
                                 <input class="form-control required2" placeholder="Licence Validity Date" type="text"
-                                    #dv="bsDatepicker" bsDatepicker
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                                    #dv="bsDatepicker" bsDatepicker formControlName="driver2LicenceValDate"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
                                 <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
@@ -579,7 +583,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Loading Supervisor/User</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="Loading Supervisor/User" type="text">
+                        <input class="form-control" placeholder="Loading Supervisor/User" type="text" formControlName="entryBy">
                     </div>
                 </div>
             </div>
@@ -587,7 +591,7 @@
                 <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Start KMs.</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Start KMs." type="text">
+                            <input class="form-control" placeholder="Start KMs." type="text" formControlName="openKM">
                         </div>
                 </div>
             </div>
@@ -595,7 +599,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">End KMs.</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="End KMs." type="text">
+                        <input class="form-control" placeholder="End KMs." type="text" formControlName="closeKM">
                     </div>
                 </div>
             </div>
@@ -603,7 +607,7 @@
                 <div class="row align-items-center ">
                     <label class="col-sm-5 col-form-label text-end">Delivery Zone</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="Delivery Zone" type="text">
+                        <input class="form-control" placeholder="Delivery Zone" type="text" formControlName="deliveryZone">
                     </div>
                 </div>
             </div>
@@ -613,7 +617,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vehicle Capacity (TON)</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="Vehicle Capacity (TON)" type="text">
+                        <input class="form-control" placeholder="Vehicle Capacity (TON)" type="text" formControlName="vehicleCapacity">
                     </div>
                 </div>
             </div>
@@ -621,7 +625,7 @@
                 <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Outgoing Remarks</label>
                         <div class="col-sm-7">
-                            <textarea class="form-control required2" placeholder="Remarks" type="text" rows="2"
+                            <textarea class="form-control required2" placeholder="Remarks" type="text" rows="2" formControlName="THCRemarks"
                                 cols="4"></textarea>
                         </div>
                 </div>
@@ -630,7 +634,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Is Overload</label>
                     <div class="col-sm-7 d-flex align-items-center">
-                        <input type="checkbox" class="form-check-input me-4 checkbox-lg" readonly>
+                        <input type="checkbox" class="form-check-input me-4 checkbox-lg" readonly formControlName="isOverLoad">
                     </div>
                 </div>
             </div>
@@ -640,7 +644,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Weight Loaded (kg)</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="Weight Loaded (kg)" type="text">
+                        <input class="form-control" placeholder="Weight Loaded (kg)" type="text" formControlName="wtLoaded">
                     </div>
                 </div>
             </div>
@@ -648,7 +652,7 @@
                 <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Capacity Utilization (%)</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Capacity Utilization" type="text">
+                            <input class="form-control" placeholder="Capacity Utilization" type="text" formControlName="vehicleCapacityUti">
                         </div>
                 </div>
             </div>
@@ -656,7 +660,7 @@
                 <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Overload Reason</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Overload Reason" type="text">
+                            <input class="form-control" placeholder="Overload Reason" type="text" formControlName="overLoadReason">
                         </div>
                 </div>
             </div>
@@ -666,7 +670,7 @@
                 <div class="row align-items-cente">
                     <label class="col-sm-5 col-form-label text-end">Late Dept. Reason [if any]</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="Late Dept. Reason" type="text">
+                        <input class="form-control" placeholder="Late Dept. Reason" type="text" formControlName="lateDepaturereason">
                     </div>
                 </div>
             </div>
@@ -674,7 +678,7 @@
                 <div class="row align-items-cente">
                         <label class="col-sm-5 col-form-label text-end">Out Veh. Free Space</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Out Veh." type="text">
+                            <input class="form-control" placeholder="Out Veh." type="text" formControlName="freeSpace">
                         </div>
                 </div>
             </div>
@@ -682,7 +686,7 @@
                 <div class="row align-items-cente">
                         <label class="col-sm-5 col-form-label text-end">Seal No</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Seal No" type="text">
+                            <input class="form-control" placeholder="Seal No" type="text" formControlName="sealNo">
                         </div>
                 </div>
             </div>
@@ -695,7 +699,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Delivery Agent</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" placeholder="Delivery Agent" type="text">
+                        <input class="form-control required2" placeholder="Delivery Agent" type="text" formControlName="deliveryAgent">
                     </div>
                 </div>
             </div>
@@ -704,7 +708,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Delivery Agent Mobile No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Delivery Agent Mobile No." type="text">
+                            <input class="form-control" placeholder="Delivery Agent Mobile No." type="text" formControlName="deliveryAgentMoNo">
                         </div>
                     </div>
                 </div>
@@ -718,7 +722,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">E-Way Bill No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="E-Way Bill No." type="text">
+                        <input class="form-control" placeholder="E-Way Bill No." type="text" formControlName="eWayBillNo">
                     </div>
                 </div>
             </div>
@@ -728,7 +732,7 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="E-Way Bill Expired Date" type="text"
-                                #dv="bsDatepicker" bsDatepicker
+                                #dv="bsDatepicker" bsDatepicker formControlName="eWayBillExpiredDate"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
                             <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                 <i class="fa fa-calendar"></i>
@@ -744,11 +748,11 @@
                     <label class="col-sm-3 col-form-label text-end">Local/ODA Charge Applicable?</label>
                     <div class="col-sm-3 d-flex justify-content-end">
                         <div class="me-5 d-flex align-items-center">
-                            <input type="radio" class="me-3" name="ODA">
+                            <input type="radio" class="me-3" name="ODA" formControlName="is_Local_ODA_id">
                             <label>Local</label>
                         </div>
                         <div class="me-5 d-flex align-items-center">
-                            <input type="radio" class="me-3" name="ODA">
+                            <input type="radio" class="me-3" name="ODA" formControlName="is_Local_ODA_id">
                             <label>ODA</label>
                         </div>
                     </div>
@@ -807,7 +811,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Total CNote</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Total CNote" type="text" value="0">
+                            <input class="form-control" placeholder="Total CNote" type="text" value="0" formControlName="totalDockets">
                         </div>
                     </div>
                 </div>
@@ -872,21 +876,21 @@
                 <div class="row mb-3 align-items-center" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
                     <label class="col-sm-6 col-form-label text-end">Standard Contract Amount</label>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control" placeholder="Standard Contract Amount" />
+                        <input type="text" class="form-control" placeholder="Standard Contract Amount" formControlName="standardContractAmount" />
                     </div>
                 </div>
     
                 <div class="row mb-3 align-items-center">
                     <label class="col-sm-6 col-form-label text-end fw-bold">Contract Amount</label>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control text-end" value="0" />
+                        <input type="text" class="form-control text-end" value="0" formControlName="contractAmount"/>
                     </div>
                 </div>
     
                 <div class="row mb-3 align-items-center">
                     <label class="col-sm-6 col-form-label text-end">Is Monthly Bill Allow</label>
                     <div class="col-sm-6 d-flex align-items-center">
-                        <input type="checkbox" class="form-check-input me-4 checkbox-lg">
+                        <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="isMonthlyBillAllow">
                     </div>
                 </div>
     
@@ -918,21 +922,21 @@
                 <div class="row mb-3 align-items-center" *ngIf="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX'">
                     <label class="col-sm-4 col-form-label text-end">Enable TDS</label>
                     <div class="col-sm-8 d-flex align-items-center">
-                        <input type="checkbox" class="form-check-input me-4 checkbox-lg" checked />
+                        <input type="checkbox" class="form-check-input me-4 checkbox-lg" checked formControlName="isTDSEnabled"/>
                     </div>
                 </div>
     
                 <div class="row mb-3 align-items-center" *ngIf="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX'">
                     <label class="col-sm-4 col-form-label text-end">Amount Applicable</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control text-end" value="0" disabled />
+                        <input type="text" class="form-control text-end" value="0"  formControlName="tDSOnAmount" readonly/>
                     </div>
                 </div>
     
                 <div class="row mb-3 align-items-center" *ngIf="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX'">
                     <label class="col-sm-4 col-form-label text-end">TDS Section</label>
                     <div class="col-sm-8">
-                           <input type="text" class="form-control required2" />
+                           <input type="text" class="form-control required2" formControlName="TDSAcccode"/>
                     </div>
                 </div>
     
@@ -946,7 +950,7 @@
                 <div class="row mb-3 align-items-center d-none">
                     <label class="col-sm-4 col-form-label text-end">TDS Amount (-)</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control text-end" value="0.00" disabled />
+                        <input type="text" class="form-control text-end" value="0.00" formControlName="totalTDSAmount" />
                     </div>
                 </div>
             </div>
@@ -957,7 +961,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end  fw-bold">Net Amount</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" placeholder="Net Amount" value="0">
+                        <input class="form-control" type="text" placeholder="Net Amount" value="0" formControlName="netAmount">
                     </div>
                 </div>
             </div>
@@ -970,7 +974,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Advance Amount</label>
                     <div class="col-sm-7">
-                        <input class="form-control text-end required2" type="text" placeholder="Advance Amount" value="0">
+                        <input class="form-control text-end required2" type="text" placeholder="Advance Amount" value="0" formControlName="advanceAmount">
                     </div>
                 </div>
             </div>
@@ -978,7 +982,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Advance Location</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" type="text" placeholder="Advance Location">
+                        <input class="form-control required2" type="text" placeholder="Advance Location" formControlName="advanceLocation">
                     </div>
                 </div>
             </div>
@@ -988,7 +992,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Balance Amount</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" placeholder="Balance Amount" value="0">
+                        <input class="form-control" type="text" placeholder="Balance Amount" value="0" formControlName="balanceAmount">
                     </div>
                 </div>
             </div>
@@ -996,7 +1000,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Balance Location</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" type="text" placeholder="Balance Location">
+                        <input class="form-control required2" type="text" placeholder="Balance Location" formControlName="balanceLocation">
                     </div>
                 </div>
             </div>

@@ -17,6 +17,7 @@ export class ChallanListComponent {
 public challanForm!:FormGroup;
 public selectedDigit: number = 10; 
 public typeName : string='';
+public today: Date = new Date();
 constructor(public challanService:ChallanService,public docketService:DocketService,public basicDetailService:BasicDetailService,public sweetAlertService:SweetAlertService,private deliveryAgentService:DeliveryAgentService){}
 cNoteAvailable =
 [
@@ -74,6 +75,8 @@ cNoteAvailable =
     this.buildForm();
     this.challanService.getVendtyData();
     this.challanService.getCityList();
+    this.docketService.getTypeofMovementData();
+    this.challanService.getRouteMode()
     const type = this.docketService.loginUserList.Type;
     this.typeName = type === '3' ? 'DRS' :
                     type === '1' ? 'THC' :
@@ -138,6 +141,22 @@ buildForm(){
     balanceAmount : new FormControl(),
     advanceLocation : new FormControl(),
     balanceLocation : new FormControl(),
+    entryBy:new FormControl(),
+    openKM:new FormControl(),
+    closeKM:new FormControl(),
+    vehicleCapacity:new FormControl(),
+    THCRemarks:new FormControl(),
+    isOverLoad:new FormControl(),
+    wtLoaded:new FormControl(),
+    vehicleCapacityUti:new FormControl(),
+    overLoadReason:new FormControl(),
+    deliveryZone:new FormControl(),
+    lateDepaturereason:new FormControl(),
+    freeSpace:new FormControl(),
+    sealNo:new FormControl(),
+    standardContractAmount:new FormControl(),
+    isMonthlyBillAllow:new FormControl(),
+    TDSAcccode:new FormControl()
   });
 }
 
