@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormControlName, FormGroup } from '@angular/forms';
 import { cityResponse } from 'app/shared/models/general-master.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { ChallanService } from 'app/shared/services/challan.service';
@@ -15,7 +15,14 @@ export class ChallanListComponent {
 public challanForm!:FormGroup;
 public selectedDigit: number = 10; 
 public typeName : string='';
-constructor(public challanService:ChallanService,public docketService:DocketService,public basicDetailService:BasicDetailService){}
+public today: Date = new Date();
+
+
+constructor(
+  public challanService:ChallanService,
+  public docketService:DocketService,
+  public basicDetailService:BasicDetailService,
+){}
 cNoteAvailable =
 [
   {
@@ -72,6 +79,8 @@ cNoteAvailable =
     this.buildForm();
     this.challanService.getVendtyData();
     this.challanService.getCityList();
+    this.docketService.getTypeofMovementData();
+    this.challanService.getRouteMode()
     const type = this.docketService.loginUserList.Type;
     this.typeName = type === '3' ? 'DRS' :
                     type === '1' ? 'THC' :
@@ -136,6 +145,22 @@ buildForm(){
     balanceAmount : new FormControl(),
     advanceLocation : new FormControl(),
     balanceLocation : new FormControl(),
+    entryBy:new FormControl(),
+    openKM:new FormControl(),
+    closeKM:new FormControl(),
+    vehicleCapacity:new FormControl(),
+    THCRemarks:new FormControl(),
+    isOverLoad:new FormControl(),
+    wtLoaded:new FormControl(),
+    vehicleCapacityUti:new FormControl(),
+    overLoadReason:new FormControl(),
+    deliveryZone:new FormControl(),
+    lateDepaturereason:new FormControl(),
+    freeSpace:new FormControl(),
+    sealNo:new FormControl(),
+    standardContractAmount:new FormControl(),
+    isMonthlyBillAllow:new FormControl(),
+    TDSAcccode:new FormControl()
   });
 }
 

@@ -11,7 +11,8 @@ import { DocketService } from './docket.service';
 export class ChallanService {
 public vendtyData:generalMasterResponse[]=[]
 public vendorsList:VendeorsResponse[]=[]
-public cityList:CityResponse[]=[]
+public cityList:CityResponse[]=[];
+public routeModeList:generalMasterResponse[]=[];
   constructor(private basicDetailService: BasicDetailService,private tHCMasterService:THCMasterService,private docketService:DocketService) { }
 
     getVendtyData() {
@@ -45,6 +46,16 @@ public cityList:CityResponse[]=[]
       next: (response) => {
         if (response) {
           this.cityList = response;
+        }
+      },
+    });
+  }
+
+  getRouteMode(){
+    this.basicDetailService.getGeneralMasterList('RTMD', '', '').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.routeModeList = response.data;
         }
       },
     });
