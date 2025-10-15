@@ -29,7 +29,7 @@ export class DocketGuard implements CanActivate {
       if (currentRoute.includes("docketFinancialEdit")) {
         return this.handleFinancialEdit(parsedData);
       } 
-      else if (currentRoute.includes("docketEditCretria") || currentRoute.includes("docket") || currentRoute.includes("delivery-agent")) {
+      else if (currentRoute.includes("docketEditCretria") || currentRoute.includes("docket") || currentRoute.includes("delivery-agent") || currentRoute.includes("Challan")) {
         return this.handleNormalDocket(parsedData);
       } 
       else {

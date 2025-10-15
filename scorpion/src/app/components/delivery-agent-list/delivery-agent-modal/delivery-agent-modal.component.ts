@@ -21,8 +21,8 @@ export class DeliveryAgentModalComponent {
   public deliveryAgentCode!:string;
   public vendorsList:VendorsListResponse[]=[];
   public locationData:LocationListResponse[]=[];
-  public  gpsdata:generalMasterResponse[]=[];
-  public showInvokeButton:boolean=false;
+  public gpsdata:generalMasterResponse[]=[];
+  public showInvokeButton:boolean = false;
   public showVehicleInvokeButton:boolean=false;
   public isLicenceLoading : boolean =  false; 
   public isvehicleLoading : boolean =false;
@@ -32,7 +32,7 @@ export class DeliveryAgentModalComponent {
   public isPermitExpired : boolean = false;
   public isLicenseExpired : boolean = false;
   public today: Date = new Date();
-  licenseAttachmentName: string = '';
+  public licenseAttachmentName: string = '';
   @ViewChild('templatePopup', { static: true }) templatePopup!: TemplateRef<any>;
   @Output() dataEvent = new EventEmitter<boolean>();
 
@@ -76,7 +76,6 @@ getVehicleDetail(event?: any) {
                 this.checkPermitExpiry();
                 this.checkInsuranceExpiry();
                 this.checkFitnessExpiry();
-              
             }
             this.isvehicleLoading=false;
           },
@@ -189,8 +188,6 @@ checkLicenseExpiry(event?:any) {
   this.isLicenseExpired = this.checkDateExpiry(license);
   this.showInvokeButton = this.isLicenseExpired;
 }
-
-
 
   buildForm() {
     this.dAForm = new FormGroup({

@@ -1,0 +1,917 @@
+<div class="cnote-entry-container px-1 m-3">
+  <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+    <i class="fa fa-edit me-2"></i>
+    Prepare New PRS
+  </div>
+
+ <div class="form-grid p-4">
+<form [formGroup]="challanForm">
+    <div>
+        <h3 class="pb-4 text-start challan-Details mb-4">Basic Details</h3>
+        <div class="row pb-3">
+            <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Manual PRS No.</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" placeholder="Manual PRS No." type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">PRS Date</label>
+                    <div class="col-sm-7">
+                        <div class="input-group">
+                            <input class="form-control required2" placeholder="PRS Date" type="text" #dv="bsDatepicker"
+                                bsDatepicker
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                            <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Loading Date</label>
+                    <div class="col-sm-7">
+                        <div class="input-group">
+                            <input class="form-control required2" placeholder="Loading Date" type="text"
+                                #dv="bsDatepicker" bsDatepicker
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                            <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3">
+            <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Route Mode</label>
+                    <div class="col-sm-7">
+                        <input class="form-control required2" placeholder="Route Mode" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Route Name</label>
+                    <div class="col-sm-7">
+                        <input class="form-control required2" type="text" placeholder="Route Name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Actual Dept. Time</label>
+                    <div class="col-sm-7">
+                        <div class="input-group">
+                            <input class="form-control required2" placeholder="Actual Dept. Time" type="text"
+                                #dv="bsDatepicker" bsDatepicker
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                            <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3">
+            <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Vendor Type</label>
+                    <div class="col-sm-7">
+                        <input class="form-control required2" placeholder="Vendor Type" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Vendor Code/Name</label>
+                    <div class="col-sm-7">
+                        <input class="form-control required2" type="text" placeholder="Vendor Code/Name">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Approx KMs.</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text" placeholder="Approx KMs.">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3">
+              <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Empty Vehicle</label>
+                    <div class="col-sm-7 d-flex align-items-center">
+                        <input type="checkbox" class="form-check-input me-4 checkbox-lg">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">From Address</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text" placeholder="From Address">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">To Address</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text" placeholder="To Address">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3">
+                  <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Schedule Dep. Date</label>
+                    <div class="col-sm-7">
+                        <div class="input-group">
+                            <input class="form-control required2" placeholder="Schedule Dep. Date" type="text"
+                                #dv="bsDatepicker" bsDatepicker
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                            <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">From City</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" placeholder="From City" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">To City</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text" placeholder="To City">
+                    </div>
+                </div>
+            </div>
+        </div>
+         <div class="row pb-3">
+            <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Loading Slip Attachment :</label>
+                    <div class="col-sm-7">
+                        <input class="form-control py-2 pt-2 uppercase-none" type="file">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Vehicle Details</h3>
+        <div class="row pb-3">
+            <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
+                    <div class="col-sm-7">
+                        <input class="form-control required2" placeholder="Vehicle No." type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Vehicle No. digit</label>
+                    <div class="col-sm-7 d-flex justify-content-between">
+                        <div class="form-check mx-2" *ngFor="let digit of [10, 9, 8, 7, 11]">
+                            <input class="form-check-input me-1 checkbox-lg" type="radio" name="vehicleDigit" [value]="digit"
+                                (change)="onDigitChange(digit)" [checked]="selectedDigit === digit" />
+                            <label class="form-check-label">{{ digit }}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
+                    <div class="col-sm-7">
+                        <input class="form-control required2" placeholder="Vehicle No." type="text"  formControlName="mKTVehicleNo"
+                        (input)="validateVehicleNo()">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3">
+            <div class="col-4"></div>
+            <div class="col-4"></div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Tripsheet No.</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" placeholder="Tripsheet No." type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3">
+            <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Vehicle Type</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" placeholder="Vehicle Type" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">FTL Type</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text" placeholder="FTL Type">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Registration Date</label>
+                    <div class="col-sm-7">
+                        <div class="input-group">
+                            <input class="form-control required2" placeholder="Registration Date" type="text"
+                                #dv="bsDatepicker" bsDatepicker
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                            <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3">
+            <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Engine No.</label>
+                    <div class="col-sm-7">
+                        <input class="form-control required2" placeholder="Engine No." type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Chasis No.</label>
+                    <div class="col-sm-7">
+                        <input class="form-control required2" type="text" placeholder="Chasis No.">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">RC Book No.</label>
+                    <div class="col-sm-7">
+                        <input class="form-control required2" type="text" placeholder="RC Book No.">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3">
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Permit Validity Date</label>
+                    <div class="col-sm-7">
+                        <div class="input-group">
+                            <input class="form-control required2" placeholder="Permit Validity Date" type="text"
+                                #dv="bsDatepicker" bsDatepicker
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                            <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Insurance Validity Date</label>
+                    <div class="col-sm-7">
+                        <div class="input-group">
+                            <input class="form-control required2" placeholder="Insurance Validity Date" type="text"
+                                #dv="bsDatepicker" bsDatepicker
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                            <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Fitness Validity Date</label>
+                    <div class="col-sm-7">
+                        <div class="input-group">
+                            <input class="form-control required2" placeholder="Fitness Validity Date" type="text"
+                                #dv="bsDatepicker" bsDatepicker
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                            <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <h3 class="pb-2 text-start challan-Details mt-2 mb-4"> Driver 1</h3>
+            <div class="row pb-3">
+                <div class="col-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">Licence No.</label>
+                        <div class="col-sm-7">
+                            <input class="form-control required2" placeholder="Licence No." type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Date Of Birth</label>
+                        <div class="col-sm-7">
+                            <div class="input-group">
+                                <input class="form-control required2" placeholder="Date Of Birth" type="text"
+                                    #dv="bsDatepicker" bsDatepicker
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                                <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Mobile No.</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" placeholder="Mobile No." type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-3">
+                <div class="col-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">Driver Name</label>
+                        <div class="col-sm-7">
+                            <input class="form-control required2" placeholder="Driver Name" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Issue By RTO</label>
+                        <div class="col-sm-7">
+                            <input class="form-control required2" placeholder="Issue By RTO" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Licence Validity Date</label>
+                        <div class="col-sm-7">
+                            <div class="input-group">
+                                <input class="form-control required2" placeholder="Licence Validity Date" type="text"
+                                    #dv="bsDatepicker" bsDatepicker
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                                <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <h3 class="pb-2 text-start challan-Details mt-2 mb-4"> Driver 2</h3>
+            <div class="row pb-3">
+                <div class="col-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">Driver Name</label>
+                        <div class="col-sm-7">
+                            <input class="form-control required2" placeholder="Driver Name" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Mobile No.</label>
+                        <div class="col-sm-7">
+                            <input class="form-control required2" placeholder="Mobile No." type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Licence No.</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" placeholder="Licence No." type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-3">
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Issue By RTO</label>
+                        <div class="col-sm-7">
+                            <input class="form-control required2" placeholder="Issue By RTO" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Licence Validity Date</label>
+                        <div class="col-sm-7">
+                            <div class="input-group">
+                                <input class="form-control required2" placeholder="Licence Validity Date" type="text"
+                                    #dv="bsDatepicker" bsDatepicker
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                                <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Vehicle Depart Details</h3>
+        <div class="row pb-3">
+            <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Loading Supervisor/User</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" placeholder="Loading Supervisor/User" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Start KMs.</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" placeholder="Start KMs." type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">End KMs.</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" placeholder="End KMs." type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3">
+            <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Delivery Zone</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" placeholder="Delivery Zone" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+
+            </div>
+            <div class="col-4">
+
+            </div>
+        </div>
+        <div class="row pb-3">
+            <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Vehicle Capacity (TON)</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" placeholder="Vehicle Capacity (TON)" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Outgoing Remarks</label>
+                        <div class="col-sm-7">
+                            <textarea class="form-control required2" placeholder="Outgoing Remarks" type="text" rows="2"
+                                cols="4"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Is Overload</label>
+                    <div class="col-sm-7 d-flex align-items-center">
+                        <input type="checkbox" class="form-check-input me-4 checkbox-lg">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3">
+            <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Weight Loaded (kg)</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" placeholder="Weight Loaded (kg)" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Capacity Utilization (%)</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" placeholder="Capacity Utilization" type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Overload Reason</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" placeholder="Overload Reason" type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3">
+            <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Late Dept. Reason [if any]</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" placeholder="Late Dept. Reason" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Out Veh. Free Space</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" placeholder="Out Veh." type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Seal No</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" placeholder="Seal No" type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Delivery Agent Details</h3>
+        <div class="row pb-3">
+            <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Delivery Agent</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" placeholder="Delivery Agent" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Delivery Agent Mobile No.</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" placeholder="Delivery Agent Mobile No." type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h3 class="pb-4 text-start challan-Details mt-3 mb-4">E-Way Bill Details</h3>
+        <div class="row pb-3">
+            <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">E-Way Bill No.</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" placeholder="E-Way Bill No." type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">E-Way Bill Expired Date.</label>
+                    <div class="col-sm-7">
+                        <div class="input-group">
+                            <input class="form-control required2" placeholder="E-Way Bill Expired Date" type="text"
+                                #dv="bsDatepicker" bsDatepicker
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                            <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3">
+            <div class="col-6">
+                <div class="row align-items-center">
+                    <label class="col-sm-3 col-form-label text-end">Local/ODA Charge Applicable?</label>
+                    <div class="col-sm-3 d-flex justify-content-end">
+                        <div class="me-5 d-flex align-items-center">
+                            <input type="radio" class="me-3" name="ODA">
+                            <label>Local</label>
+                        </div>
+                        <div class="me-5 d-flex align-items-center">
+                            <input type="radio" class="me-3" name="ODA">
+                            <label>ODA</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h3 class="pb-4 text-start challan-Details mt-3 mb-4">CNote Available For PRS</h3>
+        <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+            <i class="fas fa-list me-2"></i>
+            CNote Available For PRS
+        </div>
+        <table class="table table-bordered table-striped table-condensed flip-content mb-0">
+            <thead>
+                <tr>
+                    <th><input type="checkbox"></th>
+                    <th>CNote No.</th>
+                    <th>Pay Basis</th>
+                    <th>Booking Date EDD</th>
+                    <th>Arrival Date</th>
+                    <th>Pkgs.[L/B</th>
+                    <th>Wt.[L/B]</th>
+                    <th>Chrg. Wt.</th>
+                    <th>Rate Type</th>
+                    <th>E-Way Bill No.</th>
+                    <th>Reason for Delay</th>
+                    <th>TAT in Hrs.</th>
+                    <th>Contract Amount</th>
+                    <th>IsPRSPKGScan.</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of cNoteAvailable" class="align-middle">
+                    <td><input type="checkbox"></td>
+                    <td>62970877.</td>
+                    <td>TBB</td>
+                    <td>05 Oct 25 <br>10 Oct 25</td>
+                    <td></td>
+                    <td><input type="text" class="form-control" value="2"> <br>/ 2 / 2.00</td>
+                    <td><input type="text" class="form-control" value="18.00"><br> / 18.00 /18.00</td>
+                    <td>20.00</td>
+                    <td><input type="text" placeholder="Type" class="form-control"><input type="text" class="form-control required2" value="00.00"></td>
+                    <td></td>
+                    <td></td>
+                    <td>-</td>
+                    <td>0.00</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+            <div class="row pb-3 pt-4">
+                <div class="col-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">Total CNote</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" placeholder="Total CNote" type="text" value="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <!-- <div>
+        <h3 class="pb-4 text-start challan-Details mt-5 mb-4">MF Available For THC</h3>
+        <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+            <i class="fas fa-list me-2"></i>
+            MF Available For THC
+        </div>
+        <table class="table table-bordered table-striped table-condensed flip-content mb-0">
+            <thead>
+                <tr>
+                    <th><input type="checkbox"></th>
+                    <th>Sys. MF No.</th>
+                    <th>Manual MF NO.</th>
+                    <th>MF Branch</th>
+                    <th>MF Date</th>
+                    <th>Next Stop</th>
+                    <th>Total CNote</th>
+                    <th>Pkgs L/B</th>
+                    <th>Wt. L/B</th>
+                    <th>Internal Movement Documents</th>
+                    <th>Vehicle No</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of cNoteAvailable" class="align-middle">
+                    <td><input type="checkbox"></td>
+                    <td>MF/PIM/2526/000443</td>
+                    <td>-</td>
+                    <td>PIM</td>
+                    <td>14/10/2025</td>
+                    <td>ZKP</td>
+                    <td>1.00</td>
+                    <td>2/2</td>
+                    <td>50.0/50.0</td>
+                    <td>0</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+            <div class="row pb-3 pt-4">
+                <div class="col-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">Total MF</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" placeholder="Total MF" type="text" value="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div> -->
+
+    <div>
+        <div class="row">
+            <div class="col-md-6 pe-4">
+                <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Payment Details</h3>
+    
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-6 col-form-label text-end">Standard Contract Amount</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" placeholder="Standard Contract Amount" />
+                    </div>
+                </div>
+    
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-6 col-form-label text-end fw-bold">Contract Amount</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control text-end" value="0" />
+                    </div>
+                </div>
+    
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-6 col-form-label text-end">Is Monthly Bill Allow</label>
+                    <div class="col-sm-6 d-flex align-items-center">
+                        <input type="checkbox" class="form-check-input me-4 checkbox-lg">
+                    </div>
+                </div>
+    
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-6 col-form-label text-end">Telephone Charges (+)</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control text-end required2" value="0" />
+                    </div>
+                </div>
+    
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-6 col-form-label text-end">Humali Charges (+)</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control text-end required2" value="0" />
+                    </div>
+                </div>
+    
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-6 col-form-label text-end">Mamul Charges (-)</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control text-end required2" value="0" />
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-md-6 ps-4">
+                <h3 class="pb-4 text-start challan-Details mt-3 mb-4">TDS Details</h3>
+    
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 col-form-label text-end">Enable TDS</label>
+                    <div class="col-sm-8 d-flex align-items-center">
+                        <input type="checkbox" class="form-check-input me-4 checkbox-lg" checked />
+                    </div>
+                </div>
+    
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 col-form-label text-end">Amount Applicable</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control text-end" value="0" disabled />
+                    </div>
+                </div>
+    
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 col-form-label text-end">TDS Section</label>
+                    <div class="col-sm-8">
+                           <input type="text" class="form-control required2" />
+                    </div>
+                </div>
+    
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 col-form-label text-end">TDS Rate (%)</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control text-end" value="0" />
+                    </div>
+                </div>
+    
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 col-form-label text-end">TDS Amount (-)</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control text-end" value="0.00" disabled />
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="row pb-3">
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end  fw-bold">Net Amount</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text" placeholder="Net Amount" value="0">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+    
+            </div>
+        </div>
+        <div class="row pb-3">
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Advance Amount</label>
+                    <div class="col-sm-7">
+                        <input class="form-control text-end required2" type="text" placeholder="Advance Amount" value="0">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Advance Location</label>
+                    <div class="col-sm-7">
+                        <input class="form-control required2" type="text" placeholder="Advance Location">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3">
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Balance Amount</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text" placeholder="Balance Amount" value="0">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Balance Location</label>
+                    <div class="col-sm-7">
+                        <input class="form-control required2" type="text" placeholder="Balance Location">
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+</form>
+</div>
+</div>
+    <div class="d-flex justify-content-center text-center p-4">
+        <button class="btn btn-secondary me-2">
+            <i class="bi bi-arrow-counterclockwise"></i> Reset
+        </button>
+        <button class="btn btn-success">
+            <i class="bi bi-check-circle"></i> Submit
+        </button>
+    </div>
+
+
+  

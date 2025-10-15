@@ -118,7 +118,7 @@ export class DocketListComponent implements OnInit {
 getCompletionData() {
   const payload = {
     docketNo: this.docketService.loginUserList.DocketNo,
-    // docketNo: 'CNIDR2526000001',
+    // docketNo: 'CNPIM2526000006',
     isFromBillGeneration: this.docketService.loginUserList.IsFromBillGeneration || '',
     type: this.docketService.loginUserList.Type,
     baseLocationCode: this.docketService.loginUserList.LocationCode,
@@ -248,6 +248,7 @@ getCompletionData() {
             EDD: basicDetail.cdeldt === '0001-01-01T00:00:00' ? '01 JAN 0001' : basicDetail.cdeldt ,
             gstRate: basicDetail.gstRateType
           });
+          if(this.docketService.loginUserList?.Type === '2'){
             if (this.docketService.completiondata?.listCharges) {
               this.docketService.completiondata.listCharges.forEach((item: any) => {
                 if (this.docketService.freightForm.contains(item.chargeCode)) {
@@ -263,6 +264,7 @@ getCompletionData() {
               );
             }
             this.docketService.mergeAndPatchGST({},this.docketService.completiondata?.wmdc || {}, this.docketService.freightForm)
+          }
           }, 300);
         }
       }
@@ -662,6 +664,7 @@ getCompletionData() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             this.docketService.successMsg = 'Docket submitted successfully.'
             // window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N&src=angular`;
+            // {btoa('angular')}
             window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&BILLNO=${response.res.billNo}&MRSNo=${response.res.mrsNo}&APMTNO=${response.res.apmtNo}&id=${response.res.id}&IsFromBillGeneration=N&src=angular`;
             this.docketService.basicDetailForm.reset();
             this.docketService.freightForm.reset();
