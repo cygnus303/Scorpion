@@ -14,6 +14,7 @@ import { DocketService } from 'app/shared/services/docket.service';
 export class ChallanListComponent {
 public challanForm!:FormGroup;
 public selectedDigit: number = 10; 
+public typeName : string='';
 constructor(public challanService:ChallanService,public docketService:DocketService,public basicDetailService:BasicDetailService){}
 cNoteAvailable =
 [
@@ -71,12 +72,16 @@ cNoteAvailable =
     this.buildForm();
     this.challanService.getVendtyData();
     this.challanService.getCityList();
+    const type = this.docketService.loginUserList.Type;
+    this.typeName = type === '3' ? 'DRS' :
+                    type === '1' ? 'THC' :
+                    type === '2' ? 'PRS' : '';
   }
 
 buildForm(){
   this.challanForm = new FormGroup({
     manualTHCNo:new FormControl(),
-    tHCDate:new FormControl(),
+    tHCDate:new FormControl(new Date()),
     loadingDate:new FormControl(),
     isEmpty:new FormControl(),
     routeType:new FormControl(),
@@ -91,6 +96,7 @@ buildForm(){
     distanceInKM:new FormControl(),
     from_City:new FormControl(),
     to_City:new FormControl(),
+    ERD:new FormControl(),
     loadingSlipAttachment:new FormControl(),
     vehicleNo:new FormControl(),
     mKTVehicleNo:new FormControl(),
