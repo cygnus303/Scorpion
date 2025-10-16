@@ -13,7 +13,10 @@ public vendtyData:generalMasterResponse[]=[]
 public vendorsList:VendeorsResponse[]=[]
 public cityList:CityResponse[]=[];
 public routeModeList:generalMasterResponse[]=[];
-  constructor(private basicDetailService: BasicDetailService,private tHCMasterService:THCMasterService,private docketService:DocketService) { }
+public latereasonList:generalMasterResponse[]=[];
+public TDSLedgerData:any[]=[];
+
+  constructor(private basicDetailService: BasicDetailService,private THCService:THCMasterService,private docketService:DocketService) { }
 
     getVendtyData() {
     this.basicDetailService.getGeneralMasterList('VENDTY', '', '').subscribe({
@@ -32,7 +35,7 @@ public routeModeList:generalMasterResponse[]=[];
      userName: this.docketService.loginUserList.BaseUserName,
      documentType:this.docketService.loginUserList.Type
     }
-    this.tHCMasterService.getVendorsList(data).subscribe({
+    this.THCService.getVendorsList(data).subscribe({
       next: (response) => {
         if (response.success) {
           this.vendorsList = response.data;
@@ -42,7 +45,7 @@ public routeModeList:generalMasterResponse[]=[];
   }
 
   getCityList() {
-    this.tHCMasterService.getCityList().subscribe({
+    this.THCService.getCityList().subscribe({
       next: (response) => {
         if (response) {
           this.cityList = response;
@@ -56,6 +59,26 @@ public routeModeList:generalMasterResponse[]=[];
       next: (response) => {
         if (response.success) {
           this.routeModeList = response.data;
+        }
+      },
+    });
+  }
+
+  getTDSLedgerList(){
+    this.THCService.getTDSLedger(this.docketService.loginUserList.Type).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.TDSLedgerData = response.data;
+        }
+      },
+    });
+  }
+
+    getDepartmentReason(){
+    this.basicDetailService.getGeneralMasterList('LTDEP', '', '').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.latereasonList = response.data;
         }
       },
     });
