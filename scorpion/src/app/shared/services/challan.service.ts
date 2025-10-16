@@ -4,6 +4,8 @@ import { generalMasterResponse } from '../models/general-master.model';
 import { CityResponse, VendeorsResponse } from '../models/thc-master.model';
 import { THCMasterService } from './thc-master.service';
 import { DocketService } from './docket.service';
+import { DeliveryAgentService } from './delivery-agent.service';
+import { LocationListResponse } from '../models/delivery-agent.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,8 @@ public vendtyData:generalMasterResponse[]=[]
 public vendorsList:VendeorsResponse[]=[]
 public cityList:CityResponse[]=[];
 public routeModeList:generalMasterResponse[]=[];
-  constructor(private basicDetailService: BasicDetailService,private tHCMasterService:THCMasterService,private docketService:DocketService) { }
+public locationData:LocationListResponse[]=[];
+  constructor(private basicDetailService: BasicDetailService,private tHCMasterService:THCMasterService,private docketService:DocketService,private deliveryAgentService:DeliveryAgentService) { }
 
     getVendtyData() {
     this.basicDetailService.getGeneralMasterList('VENDTY', '', '').subscribe({
@@ -60,4 +63,14 @@ public routeModeList:generalMasterResponse[]=[];
       },
     });
   }
+
+    getLocationData() {
+    this.deliveryAgentService.getLocation().subscribe({next: (response) => {
+        if (response) {
+          this.locationData = response
+        }
+      },
+    })
+  }
+  
 }

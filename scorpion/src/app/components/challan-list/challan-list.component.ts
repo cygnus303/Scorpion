@@ -87,6 +87,7 @@ cNoteAvailable =
     this.challanService.getCityList();
     this.docketService.getTypeofMovementData();
     this.challanService.getRouteMode()
+    this.challanService.getLocationData()
     const type = this.docketService.loginUserList.Type;
     this.typeName = type === '3' ? 'DRS' :
                     type === '1' ? 'THC' :
@@ -146,9 +147,9 @@ buildForm(){
     isTDSEnabled : new FormControl(),
     tDSOnAmount : new FormControl(),
     totalTDSAmount : new FormControl(),
-    netAmount : new FormControl(),
-    advanceAmount : new FormControl(),
-    balanceAmount : new FormControl(),
+    netAmount : new FormControl(0),
+    advanceAmount : new FormControl(0),
+    balanceAmount : new FormControl(0),
     advanceLocation : new FormControl(),
     balanceLocation : new FormControl(),
     entryBy:new FormControl(),

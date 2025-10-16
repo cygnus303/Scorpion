@@ -585,7 +585,7 @@
     <div>
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Vehicle Depart Details</h3>
         <div class="row ">
-            <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' || this.docketService.loginUserList.Type === '3' ? '' : 'd-none'">
+            <div class="col-4 pb-3" >
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Loading Supervisor/User</label>
                     <div class="col-sm-7">
@@ -593,7 +593,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' || this.docketService.loginUserList.Type === '3'? '' : 'd-none'">
+            <div class="col-4 pb-3">
                 <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Start KMs.</label>
                         <div class="col-sm-7">
@@ -706,6 +706,8 @@
                     <label class="col-sm-5 col-form-label text-end">Delivery Agent</label>
                     <div class="col-sm-7">
                         <input class="form-control required2" placeholder="Delivery Agent" type="text" formControlName="deliveryAgent">
+                          <ng-select class=" required2" [items]="challanService.locationData" bindLabel="locName" bindValue="locCode"
+                            placeholder="Delivery Agent" formControlName="deliveryAgent"></ng-select>
                     </div>
                 </div>
             </div>
@@ -924,23 +926,23 @@
             </div>
     
             <div class="col-md-6 ps-4" >
-                <h3 class="pb-4 text-start challan-Details mt-3 mb-4" *ngIf="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='XX'">TDS Details</h3>
+                <h3 class="pb-4 text-start challan-Details mt-3 mb-4" [ngClass]="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='XX' ? '' : 'd-none'">TDS Details</h3>
     
-                <div class="row mb-3 align-items-center" *ngIf="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX'">
+                <div class="row mb-3 align-items-center" [ngClass]="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX' ? '' : 'd-none'">
                     <label class="col-sm-4 col-form-label text-end">Enable TDS</label>
                     <div class="col-sm-8 d-flex align-items-center">
                         <input type="checkbox" class="form-check-input me-4 checkbox-lg" checked formControlName="isTDSEnabled"/>
                     </div>
                 </div>
     
-                <div class="row mb-3 align-items-center" *ngIf="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX'">
+                <div class="row mb-3 align-items-center" [ngClass]="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX' ? '' : 'd-none'">
                     <label class="col-sm-4 col-form-label text-end">Amount Applicable</label>
                     <div class="col-sm-8">
                         <input type="text" class="form-control text-end" value="0"  formControlName="tDSOnAmount" readonly/>
                     </div>
                 </div>
     
-                <div class="row mb-3 align-items-center" *ngIf="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX'">
+                <div class="row mb-3 align-items-center" [ngClass]="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX' ? '' : 'd-none'">
                     <label class="col-sm-4 col-form-label text-end">TDS Section</label>
                     <div class="col-sm-8">
                            <input type="text" class="form-control required2" formControlName="TDSAcccode"/>
@@ -968,7 +970,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end  fw-bold">Net Amount</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" placeholder="Net Amount" value="0" formControlName="netAmount">
+                        <input class="form-control" type="text" [value]="0" formControlName="netAmount">
                     </div>
                 </div>
             </div>
@@ -976,38 +978,41 @@
     
             </div>
         </div>
-        <div class="row pb-3">
-            <div class="col-4 d-none">
+        <div class="row ">
+            <div class="col-4 pb-3" [ngClass]="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX' ? '' : 'd-none'">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Advance Amount</label>
                     <div class="col-sm-7">
-                        <input class="form-control text-end required2" type="text" placeholder="Advance Amount" value="0" formControlName="advanceAmount">
+                        <input class="form-control text-end required2" type="text" [value]="0" formControlName="advanceAmount">
                     </div>
                 </div>
             </div>
-            <div class="col-4 d-none">
+            <div class="col-4 pb-3" [ngClass]="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX' ? '' : 'd-none'">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Advance Location</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" type="text" placeholder="Advance Location" formControlName="advanceLocation">
+                        <ng-select class=" required2" [items]="challanService.locationData" bindLabel="locName" bindValue="locCode"
+                            placeholder="Advance Location" formControlName="advanceLocation"></ng-select>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row pb-3">
-            <div class="col-4 d-none">
+        <div class="row ">
+            <div class="col-4 pb-3" [ngClass]="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX' ? '' : 'd-none'">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Balance Amount</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" placeholder="Balance Amount" value="0" formControlName="balanceAmount">
+                        <input class="form-control" type="text" [value]="0" formControlName="balanceAmount">
+                          
                     </div>
                 </div>
             </div>
-            <div class="col-4 d-none">
+            <div class="col-4 pb-3" [ngClass]="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX' ? '' : 'd-none'">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Balance Location</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" type="text" placeholder="Balance Location" formControlName="balanceLocation">
+                        <ng-select class=" required2" [items]="challanService.locationData" bindLabel="locName" bindValue="locCode"
+                            placeholder="Balance Location" formControlName="balanceLocation"></ng-select>
                     </div>
                 </div>
             </div>
