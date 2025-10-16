@@ -56,5 +56,5 @@ export class AppComponent {
   //     this.spinner.hide();
   //   }, 5000);
   // }
-  
+
 }

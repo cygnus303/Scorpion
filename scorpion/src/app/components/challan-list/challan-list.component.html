@@ -295,7 +295,7 @@
         </div>
     </div>
 
-    <div *ngIf="challanForm.value.routeType==='S'">
+    <div *ngIf="challanForm.value.routeType === 'S' || this.docketService.loginUserList.Type === '2' || this.docketService.loginUserList.Type === '3'">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Vehicle Details</h3>
         <div class="row pb-3">
             <div class="col-4" *ngIf="challanForm.value.vendorType === 'XX1' || challanForm.value.vendorType === '04'|| challanForm.value.vendorType === '19'|| challanForm.value.vendorType === '05'">
@@ -412,9 +412,9 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="Permit Validity Date" type="text"
-                                #dv="bsDatepicker" bsDatepicker formControlName="permitDate"
+                                #pv="bsDatepicker" bsDatepicker formControlName="permitDate"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
-                            <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                            <span class="input-group-text cursor-pointer" (click)="pv.toggle()">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
@@ -427,9 +427,9 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="Insurance Validity Date" type="text"
-                                #dv="bsDatepicker" bsDatepicker  formControlName="insuranceDate"
+                                #iv="bsDatepicker" bsDatepicker  formControlName="insuranceDate"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
-                            <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                            <span class="input-group-text cursor-pointer" (click)="iv.toggle()">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
@@ -442,9 +442,9 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="Fitness Validity Date" type="text"
-                                #dv="bsDatepicker" bsDatepicker formControlName="fitnessDate"
+                                #fv="bsDatepicker" bsDatepicker formControlName="fitnessDate"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
-                            <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                            <span class="input-group-text cursor-pointer" (click)="fv.toggle()">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
@@ -469,9 +469,9 @@
                         <div class="col-sm-7">
                             <div class="input-group">
                                 <input class="form-control required2" placeholder="Date Of Birth" type="text"
-                                    #dv="bsDatepicker" bsDatepicker formControlName="d1_DOB" 
+                                    #dbv="bsDatepicker" bsDatepicker formControlName="d1_DOB" 
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
-                                <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                <span class="input-group-text cursor-pointer" (click)="dbv.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
@@ -482,7 +482,8 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Mobile No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Mobile No." type="text" formControlName="driver1MobileNo">
+                            <input class="form-control" placeholder="Mobile No." type="text" formControlName="driver1MobileNo" maxlength="10" pattern="[0-9]*"
+              (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()">
                         </div>
                     </div>
                 </div>
@@ -510,9 +511,9 @@
                         <div class="col-sm-7">
                             <div class="input-group">
                                 <input class="form-control required2" placeholder="Licence Validity Date" type="text"
-                                    #dv="bsDatepicker" bsDatepicker formControlName="driver1LicenceValDate"
+                                    #lv="bsDatepicker" bsDatepicker formControlName="driver1LicenceValDate"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
-                                <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                <span class="input-group-text cursor-pointer" (click)="lv.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
@@ -536,7 +537,8 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Mobile No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Mobile No." type="text" formControlName="driver2MobileNo">
+                            <input class="form-control required2" placeholder="Mobile No." type="text" formControlName="driver2MobileNo" maxlength="10" pattern="[0-9]*"
+                              (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()">
                         </div>
                     </div>
                 </div>
@@ -564,9 +566,9 @@
                         <div class="col-sm-7">
                             <div class="input-group">
                                 <input class="form-control required2" placeholder="Licence Validity Date" type="text"
-                                    #dv="bsDatepicker" bsDatepicker formControlName="driver2LicenceValDate"
+                                    #liv="bsDatepicker" bsDatepicker formControlName="driver2LicenceValDate"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
-                                <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                <span class="input-group-text cursor-pointer" (click)="liv.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
@@ -708,7 +710,8 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Delivery Agent Mobile No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Delivery Agent Mobile No." type="text" formControlName="deliveryAgentMoNo">
+                            <input class="form-control" placeholder="Delivery Agent Mobile No." type="text" formControlName="deliveryAgentMoNo" maxlength="10" pattern="[0-9]*"
+              (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()">
                         </div>
                     </div>
                 </div>
@@ -732,9 +735,9 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="E-Way Bill Expired Date" type="text"
-                                #dv="bsDatepicker" bsDatepicker formControlName="eWayBillExpiredDate"
+                                #ewv="bsDatepicker" bsDatepicker formControlName="eWayBillExpiredDate"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
-                            <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                            <span class="input-group-text cursor-pointer" (click)="ewv.toggle()">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
