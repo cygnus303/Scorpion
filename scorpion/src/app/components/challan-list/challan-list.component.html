@@ -97,7 +97,10 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Vendor Code/Name</label>
                         <div class="col-sm-7">
-                             <ng-select class="noFoundTextColor required2" placeholder="Vendor Code/Name" formControlName="vendorCode" [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code"></ng-select>
+                             <ng-select class="noFoundTextColor required2" placeholder="Vendor Code/Name" formControlName="vendorCode" 
+                             [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code"
+                             (change)="getPANnumberData($event)"
+                             ></ng-select>
                         </div>
                     </div>
                 </div>
@@ -105,7 +108,7 @@
                     <div class="row" >
                         <label class="col-sm-5 col-form-label text-end">PAN No</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" type="text" placeholder="PAN No" formControlName="lorryOwnerPanNo" >
+                            <input class="form-control required2" type="text" placeholder="PAN No" formControlName="lorryOwnerPanNo" readonly>
                         </div>
                     </div>
                 </div>
@@ -303,8 +306,9 @@
                     <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
                     <div class="col-sm-7">
                         <!-- <input class="form-control required2" placeholder="Vehicle No." type="text"> -->
-                       <ng-select class="noFoundTextColor required2" placeholder="Vehicle No."
-                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId"></ng-select>
+                       <ng-select class="noFoundTextColor required2" placeholder="Vehicle No." [items]="vehicleNoList"
+                       (change)="getTripSheetList($event)"
+                            notFoundText="No matches found"  bindLabel="text" bindValue="value"></ng-select>
                     </div>
                 </div>
             </div>

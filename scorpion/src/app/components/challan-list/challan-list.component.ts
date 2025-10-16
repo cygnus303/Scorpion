@@ -6,6 +6,7 @@ import { ChallanService } from 'app/shared/services/challan.service';
 import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { THCMasterService } from 'app/shared/services/thc-master.service';
 
 @Component({
   selector: 'app-challan-list',
@@ -18,7 +19,16 @@ public challanForm!:FormGroup;
 public selectedDigit: number = 10; 
 public typeName : string='';
 public today: Date = new Date();
-constructor(public challanService:ChallanService,public docketService:DocketService,public basicDetailService:BasicDetailService,public sweetAlertService:SweetAlertService,private deliveryAgentService:DeliveryAgentService){}
+public vehicleNoList:any[]=[];
+
+constructor(
+  public challanService:ChallanService,
+  public docketService:DocketService,
+  public basicDetailService:BasicDetailService,
+  public sweetAlertService:SweetAlertService,
+  private deliveryAgentService:DeliveryAgentService,
+  public THCService:THCMasterService
+){}
 cNoteAvailable =
 [
   {
@@ -250,5 +260,54 @@ validateVehicleNo() {
       }
     });
   }
+
+  getTripSheetList(event:any){
+    this.THCService.getTripSheet(event.value).subscribe({
+      next: (response: any) => {
+        if (response && response.data) {
+         
+        }
+      },
+      error: (err) => {
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+    this.THCService.getVahicleCapacity(event.value).subscribe({
+    next: (response: any) => {
+      if (response && response.data) {
+       
+      }
+    },
+  })
+}
+
+getPANnumberData(event:any){
+  this.THCService.getPANnumber(event.vendor_Code).subscribe({
+      next: (response: any) => {
+        if (response && response.data) {
+         this.challanForm.patchValue({
+          lorryOwnerPanNo:response.data[0].panno
+         })
+        }
+      },
+      error: (err) => {
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+    this.getVehicleFromVendorList(event.vendor_Code)
+}
+
+getVehicleFromVendorList(vendor:string){
+  this.THCService.getvehicleDetailFromVendor(this.challanForm.value.vendorType,vendor).subscribe({
+      next: (response: any) => {
+        if (response && response.data) {
+         this.vehicleNoList=response.data;
+        }
+      },
+      error: (err) => {
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+}
 
 }
