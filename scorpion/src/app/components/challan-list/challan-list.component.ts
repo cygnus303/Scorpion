@@ -86,7 +86,9 @@ cNoteAvailable =
     this.challanService.getVendtyData();
     this.challanService.getCityList();
     this.docketService.getTypeofMovementData();
-    this.challanService.getRouteMode()
+    this.challanService.getRouteMode();
+    this.challanService.getDepartmentReason();
+    this.challanService.getTDSLedgerList();
     this.challanService.getLocationData()
     const type = this.docketService.loginUserList.Type;
     this.typeName = type === '3' ? 'DRS' :
@@ -167,7 +169,8 @@ buildForm(){
     sealNo:new FormControl(),
     standardContractAmount:new FormControl(),
     isMonthlyBillAllow:new FormControl(),
-    TDSAcccode:new FormControl()
+    TDSAcccode:new FormControl(),
+    vehicleNO:new FormControl()
   });
 }
 
@@ -273,14 +276,24 @@ validateVehicleNo() {
         this.sweetAlertService.error(err.error.message)
       }
     });
-    this.THCService.getVahicleCapacity(event.value).subscribe({
+   this.getVehicleCapacity(event.value)
+  if(event.value!=='O'){
+  this.getNewVehicleDetail(event.value)
+  }
+}
+
+getVehicleCapacity(vehicleNo:string){
+  this.THCService.getVahicleCapacity(vehicleNo).subscribe({
     next: (response: any) => {
       if (response && response.data) {
-       
+       this.challanForm.patchValue({
+        vehicleCapacity:response.data.capacity
+       })
       }
     },
-  })
+  });
 }
+
 
 getPANnumberData(event:any){
   this.THCService.getPANnumber(event.vendor_Code).subscribe({
@@ -306,6 +319,30 @@ getVehicleFromVendorList(vendor:string){
         }
       },
       error: (err) => {
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+}
+
+getNewVehicleDetail(vehicleNo:string){
+    this.THCService.getNewVehicleDetail(vehicleNo.toUpperCase()).subscribe({
+      next: (response: any) => {
+        if (response) {
+           this.challanForm.patchValue({
+            vehicleType:response.data.vehicle_Type,
+            fTLType:response.data.ftltyPe,
+            eNGINENO: response.data.engineNo || '',
+            cHASISNO: response.data.chasisNo || '',
+            rCBOOKNO: response.data.rcBookNo || '',
+            registrationDate: response.data.registrationDt ? new Date(response.data.registrationDt) : null,
+            permitDate: response.data.vehprmdt ? new Date(response.data.vehprmdt) : null,
+            insuranceDate: response.data.insuranceValDt ? new Date(response.data.insuranceValDt) : null,
+            fitnessDate: response.data.fitnessValDt ? new Date(response.data.fitnessValDt) : null
+          });
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching vehicle details:', err.error.message);
         this.sweetAlertService.error(err.error.message)
       }
     });

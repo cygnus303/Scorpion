@@ -34,4 +34,12 @@ export class THCMasterService {
   getvehicleDetailFromVendor(vendorType:string,vendor:string): Observable<IApiBaseResponse<any[]>>{
     return this.apiHandlerService.Get(`THC/VehicleFromVendor?vendorType=${vendorType}&vendor=${vendor}`);
   }
+
+  getTDSLedger(id:any): Observable<IApiBaseResponse<any[]>>{
+    return this.apiHandlerService.Get(`THC/GetTDSLedger?id=${id}`);
+  }
+
+  getNewVehicleDetail(vehicleNo:string): Observable<IApiBaseResponse<any[]>>{
+    return this.apiHandlerService.Get(`THC/NewGetVehicleDetails?vehicleNo=${vehicleNo}`);
+  }
 }

@@ -306,13 +306,13 @@
                     <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
                     <div class="col-sm-7">
                         <!-- <input class="form-control required2" placeholder="Vehicle No." type="text"> -->
-                       <ng-select class="noFoundTextColor required2" placeholder="Vehicle No." [items]="vehicleNoList"
+                       <ng-select class="noFoundTextColor required2" placeholder="Vehicle No." [items]="vehicleNoList" formControlName="vehicleNO"
                        (change)="getTripSheetList($event)"
                             notFoundText="No matches found"  bindLabel="text" bindValue="value"></ng-select>
                     </div>
                 </div>
             </div>
-            <div class="col-4" *ngIf="challanForm.value.vendorType === 'XX'">
+            <div class="col-4" *ngIf="challanForm.value.vendorType === 'XX' || challanForm.value.vehicleNO==='O'">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Vehicle No. digit</label>
                     <div class="col-sm-7 d-flex justify-content-between">
@@ -324,7 +324,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4" *ngIf="challanForm.value.vendorType === 'XX'">
+            <div class="col-4" *ngIf="challanForm.value.vendorType === 'XX'|| challanForm.value.vehicleNO==='O'">
                 <div class="row" >
                     <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
                     <div class="col-sm-7">
@@ -352,7 +352,7 @@
                     <label class="col-sm-5 col-form-label text-end">Vehicle Type</label>
                     <div class="col-sm-7">
                         <!-- <input class="form-control" placeholder="Vehicle Type" type="text"> -->
-                               <ng-select class="noFoundTextColor required2" placeholder="Vehicle Type"
+                               <ng-select class="noFoundTextColor required2" placeholder="Vehicle Type" formControlName="vehicleType"
                             notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId"></ng-select>
                     </div>
                 </div>
@@ -676,7 +676,10 @@
                 <div class="row align-items-cente">
                     <label class="col-sm-5 col-form-label text-end">Late Dept. Reason [if any]</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="Late Dept. Reason" type="text" formControlName="lateDepaturereason">
+                        <!-- <input class="form-control" placeholder="Late Dept. Reason" type="text" formControlName="lateDepaturereason"> -->
+                         <ng-select class="noFoundTextColor required2" placeholder="Vehicle No." formControlName="lateDepaturereason"
+                         [items]="challanService.latereasonList"
+                        notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId"></ng-select>
                     </div>
                 </div>
             </div>
@@ -945,7 +948,9 @@
                 <div class="row mb-3 align-items-center" [ngClass]="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX' ? '' : 'd-none'">
                     <label class="col-sm-4 col-form-label text-end">TDS Section</label>
                     <div class="col-sm-8">
-                           <input type="text" class="form-control required2" formControlName="TDSAcccode"/>
+                           <!-- <input type="text" class="form-control required2" formControlName="TDSAcccode"/> -->
+                            <ng-select class="noFoundTextColor required2" placeholder="TDS Section" [items]="challanService.TDSLedgerData"
+                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId"></ng-select>
                     </div>
                 </div>
     
