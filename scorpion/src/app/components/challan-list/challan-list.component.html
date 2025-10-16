@@ -215,7 +215,7 @@
             </div>
     </div>
      
-    <div>
+    <div *ngIf="challanForm.value.routeType==='A'">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Flight Details</h3>
         <div class="row">
             <div class="col-4 pb-3" >
@@ -265,7 +265,7 @@
         </div>
     </div>
 
-      <div>
+      <div *ngIf="challanForm.value.routeType==='R'">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Train Details</h3>
         <div class="row ">
             <div class="col-4 pb-3" >
@@ -295,7 +295,7 @@
         </div>
     </div>
 
-    <div>
+    <div *ngIf="challanForm.value.routeType==='S'">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Vehicle Details</h3>
         <div class="row pb-3">
             <div class="col-4" *ngIf="challanForm.value.vendorType === 'XX1' || challanForm.value.vendorType === '04'|| challanForm.value.vendorType === '19'|| challanForm.value.vendorType === '05'">
@@ -748,11 +748,11 @@
                     <label class="col-sm-3 col-form-label text-end">Local/ODA Charge Applicable?</label>
                     <div class="col-sm-3 d-flex justify-content-end">
                         <div class="me-5 d-flex align-items-center">
-                            <input type="radio" class="me-3" name="ODA" formControlName="is_Local_ODA_id">
+                            <input type="radio" class="me-3" name="is_Local_ODA_id" value="local" formControlName="is_Local_ODA_id">
                             <label>Local</label>
                         </div>
                         <div class="me-5 d-flex align-items-center">
-                            <input type="radio" class="me-3" name="ODA" formControlName="is_Local_ODA_id">
+                            <input type="radio" class="me-3" name="is_Local_ODA_id" value="ODA" formControlName="is_Local_ODA_id">
                             <label>ODA</label>
                         </div>
                     </div>

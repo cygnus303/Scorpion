@@ -4,8 +4,6 @@ import { generalMasterResponse } from '../models/general-master.model';
 import { CityResponse, VendeorsResponse } from '../models/thc-master.model';
 import { THCMasterService } from './thc-master.service';
 import { DocketService } from './docket.service';
-import { SweetAlertService } from './sweet-alert.service';
-import { DeliveryAgentService } from './delivery-agent.service';
 
 @Injectable({
   providedIn: 'root'
