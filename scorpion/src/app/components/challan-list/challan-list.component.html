@@ -300,7 +300,6 @@
             </div>
         </div>
     </div>
-
     <div *ngIf="challanForm.value.routeType === 'S' || this.docketService.loginUserList.Type === '2' || this.docketService.loginUserList.Type === '3'">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Vehicle Details</h3>
         <div class="row ">
@@ -315,7 +314,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4 pb-3" *ngIf="challanForm.value.vendorType === 'XX' || challanForm.value.vehicleNO==='O'">
+            <div class="col-4 pb-3" *ngIf="challanForm.value.vendorType === 'XX' || challanForm.value.vehicleNO === 'O'">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Vehicle No. digit</label>
                     <div class="col-sm-7 d-flex justify-content-between">
@@ -433,12 +432,10 @@
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
-                        <div class="text-danger text-start" > 
-                         <small *ngIf="isPermitExpired" class="text-danger fw-bold mt-1">
-                           Permit validity date is expired.
-                        </small>
-                        <small *ngIf="challanForm.get('permitDate')?.invalid && challanForm.get('permitDate')?.touched ">This field is required.</small>
+                         <div *ngIf="isPermitExpired" class="text-danger text-start fw-bold mt-1">
+                           Permit Date Will be Expired
                         </div>
+                        <small class="text-danger text-start" *ngIf="challanForm.get('permitDate')?.invalid && challanForm.get('permitDate')?.touched ">This field is required.</small>
                     </div>
                 </div>
             </div>
@@ -455,9 +452,9 @@
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
-                        <small *ngIf="isInsuranceExpired" class="text-danger fw-bold mt-1">
-                           Insurance validity date is expired.
-                        </small>
+                        <div *ngIf="isInsuranceExpired" class="text-danger text-start fw-bold mt-1">
+                           Insurance Date Will be Expired
+                        </div>
                         <div class="text-danger text-start" *ngIf="challanForm.get('insuranceDate')?.invalid && challanForm.get('insuranceDate')?.touched "> This field is required.</div>
                     </div>
                 </div>
@@ -475,9 +472,9 @@
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
-                        <small *ngIf="isFitnessExpired" class="text-danger fw-bold mt-1">
-                            Fitness Validity date is expired.
-                        </small>
+                        <div *ngIf="isFitnessExpired" class="text-danger text-start fw-bold mt-1">
+                            Fitness Date Will be Expired
+                        </div>
                         <div class="text-danger text-start" *ngIf="challanForm.get('fitnessDate')?.invalid && challanForm.get('fitnessDate')?.touched "> This field is required.</div>
                     </div>
                 </div>
@@ -492,7 +489,10 @@
                         <div class="col-sm-7">
                             <input class="form-control required2" placeholder="Licence No." type="text" formControlName="driver1Licence" (input)="onChangeLicenceNumber($event)"
                             required [ngClass]="{ 'border-danger': challanForm.get('driver1Licence')?.invalid  && challanForm.get('driver1Licence')?.touched }">
-                            <div class="text-danger text-start" *ngIf="challanForm.get('driver1Licence')?.invalid && challanForm.get('driver1Licence')?.touched "> This field is required.</div>
+                            <div class="text-danger text-start" *ngIf="challanForm.get('driver1Licence')?.touched">
+                                <div *ngIf="challanForm.get('driver1Licence')?.hasError('required')"> This field is required.</div>
+                                <div *ngIf="challanForm.get('driver1Licence')?.hasError('pattern')">Please enter a valid License Number. </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -558,9 +558,9 @@
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
-                             <small *ngIf="isLicenseExpired" class="text-danger fw-bold mt-1">
+                             <div *ngIf="isLicenseExpired" class="text-danger fw-bold mt-1">
                               License validity date is expired.      
-                              </small>
+                              </div>
                             <div class="text-danger text-start" *ngIf="challanForm.get('driver1LicenceValDate')?.invalid && challanForm.get('driver1LicenceValDate')?.touched "> This field is required.</div>
                         </div>
                     </div>
@@ -672,12 +672,12 @@
                 <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Outgoing Remarks</label>
                         <div class="col-sm-7">
-                            <textarea class="form-control required2" placeholder="Remarks" type="text" rows="2" formControlName="THCRemarks"
-                                cols="4" required [ngClass]="{ 'border-danger': challanForm.get('THCRemarks')?.invalid  && challanForm.get('THCRemarks')?.touched }"></textarea>
+                            <textarea class="form-control-textarea required2" placeholder="Remarks" type="text" rows="2" cols="10" formControlName="THCRemarks"
+                                required [ngClass]="{ 'border-danger': challanForm.get('THCRemarks')?.invalid  && challanForm.get('THCRemarks')?.touched }"></textarea>
                             <div class="text-danger text-start" *ngIf="challanForm.get('THCRemarks')?.invalid && challanForm.get('THCRemarks')?.touched "> This field is required.</div>
                         </div>
                 </div>
-            </div>
+            </div> 
             <div class="col-4">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Is Overload</label>
@@ -822,9 +822,9 @@
             <i class="fas fa-list me-2"></i>
             CNote Available For {{typeName}}
         </div>
-      <div class="cnote-entry-container p-3">
+      <div class="cnote-entry-container p-3 pt-0"  style="max-height: 420px; overflow-y: auto;">
           <table class="table table-bordered table-striped table-condensed flip-content mb-0">
-            <thead>
+            <thead class="sticky-top bg-light">
                 <tr>
                     <th class="p-3"><input type="checkbox"></th>
                     <th class="p-3">CNote No.</th>
@@ -842,24 +842,38 @@
                     <th class="p-3">IsPRSPKGScan.</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr *ngFor="let item of cNoteAvailable" class="align-middle">
-                    <td><input type="checkbox"></td>
-                    <td>62970877.</td>
-                    <td>TBB</td>
-                    <td>05 Oct 25 <br>10 Oct 25</td>
-                    <td></td>
-                    <td><input type="text" class="form-control" value="2"> <br>/ 2 / 2.00</td>
-                    <td><input type="text" class="form-control" value="18.00"><br> / 18.00 /18.00</td>
-                    <td>20.00</td>
-                    <td><input type="text" placeholder="Type" class="form-control"><input type="text" class="form-control required2" value="00.00"></td>
-                    <td></td>
-                    <td></td>
-                    <td>-</td>
-                    <td>0.00</td>
-                    <td></td>
-                </tr>
-            </tbody>
+                <tbody formArrayName="avalabledocketinPRS">
+                    <tr *ngFor="let item of avalabledocket.controls; let i = index" [formGroupName]="i" class="align-middle">
+                        <td>
+                            <ng-container *ngIf="!item.value.message; else showMessage">
+                                <input type="checkbox" formControlName="isSelected" (change)="updateTotalDockets()">
+                            </ng-container>
+                        
+                            <ng-template #showMessage>
+                                <span class="text-danger fw-semibold">{{ item.value.message }}</span>
+                            </ng-template>
+                        </td>
+                        <td>{{ item.value.dockno }}</td>
+                        <td>{{ item.value.paybaS_Str }}</td>
+                        <td>{{ item.value.bkg_Date }} <br> {{ item.value.commited_Dely_Date }}</td>
+                        <td>{{ item.value.arrival_Date }}</td>
+                        <td>
+                            <input type="text" class="form-control text-end" formControlName="arrPkgQty" readonly>
+                            <br> / {{item.value.arrPkgQty}} / {{ item.value.pkgsno }}
+                        </td>
+                        <td>
+                            <input type="text" class="form-control text-end" formControlName="arrWeightQty" readonly>
+                            <br> / {{ item.value.arrWeightQty }} / {{ item.value.actuwt }}
+                        </td>
+                        <td>{{ item.value.chrgwt }}</td>
+                        <td><input type="text" placeholder="Type" class="form-control"><input type="text" class="form-control required2" value="00.00"></td>
+                        <td>{{ item.value.eWayBillNo }}</td>
+                        <td>{{ item.value.subreasoncode }}</td>
+                        <td>-</td>
+                        <td>{{item.value.contractAmount}}</td>
+                        <td>{{ item.value.bcSerialNo }}</td>
+                    </tr>
+                </tbody>
         </table>
       </div>
             <div class="row pb-3 pt-4">
@@ -903,7 +917,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of cNoteAvailable" class="align-middle">
+                <!-- <tr *ngFor="let item of cNoteAvailable" class="align-middle">
                     <td><input type="checkbox"></td>
                     <td>MF/PIM/2526/000443</td>
                     <td>-</td>
@@ -915,7 +929,7 @@
                     <td>50.0/50.0</td>
                     <td>0</td>
                     <td></td>
-                </tr>
+                </tr> -->
             </tbody>
         </table>
             <div class="row pb-3 pt-4">

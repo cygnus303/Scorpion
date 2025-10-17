@@ -33,6 +33,7 @@ export class AppComponent {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.loginUserList.Type = '2'
       // this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      this.docketService.loginUserList.LocationCode =  'PIM';
       this.docketService.Location = 'PIM';
       this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;

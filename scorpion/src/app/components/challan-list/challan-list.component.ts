@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { cityResponse } from 'app/shared/models/general-master.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { ChallanService } from 'app/shared/services/challan.service';
@@ -35,58 +35,6 @@ constructor(
   private deliveryAgentService:DeliveryAgentService,
   public THCService:THCMasterService
 ){}
-cNoteAvailable =
-[
-  {
-    "index": 1,
-    "DOCKNO": "62970877",
-    "PayBas": "P02",
-    "Bkg_Date": "05 Oct 25",
-    "Delivery_Date": "10 Oct 25",
-    "ArrPkgQty": 2,
-    "PendPkgQty": 2,
-    "PKGSNO": 2.00,
-    "ArrWeightQty": 18.00,
-    "ACTUWT": 18.00,
-    "CHRGWT": 20.00,
-    "ratetype": "",
-    "NewRate": 0.000,
-    "ContractAmount": 0.00
-  },
-  {
-    "index": 2,
-    "DOCKNO": "62970878",
-    "PayBas": "P02",
-    "Bkg_Date": "05 Oct 25",
-    "Delivery_Date": "10 Oct 25",
-    "ArrPkgQty": 10,
-    "PendPkgQty": 10,
-    "PKGSNO": 10.00,
-    "ArrWeightQty": 120.00,
-    "ACTUWT": 120.00,
-    "CHRGWT": 120.00,
-    "ratetype": "",
-    "NewRate": 0.000,
-    "ContractAmount": 0.00
-  },
-  {
-    "index": 3,
-    "DOCKNO": "62970879",
-    "PayBas": "P02",
-    "Bkg_Date": "06 Oct 25",
-    "Delivery_Date": "11 Oct 25",
-    "ArrPkgQty": 2,
-    "PendPkgQty": 2,
-    "PKGSNO": 2.00,
-    "ArrWeightQty": 18.00,
-    "ACTUWT": 18.00,
-    "CHRGWT": 20.00,
-    "ratetype": "",
-    "NewRate": 0.000,
-    "ContractAmount": 0.00
-  }
-]
-
  ngOnInit(){
     this.buildForm();
     this.challanService.getVendtyData();
@@ -96,6 +44,7 @@ cNoteAvailable =
     this.challanService.getDepartmentReason();
     this.challanService.getTDSLedgerList();
     this.challanService.getLocationData();
+    this.avalabledocketinPRS()
     this.getDAList()
     const type = this.docketService.loginUserList.Type;
     this.typeName = type === '3' ? 'DRS' :
@@ -177,8 +126,44 @@ buildForm(){
     standardContractAmount:new FormControl(),
     isMonthlyBillAllow:new FormControl(),
     TDSAcccode:new FormControl(),
-    vehicleNO:new FormControl()
+    vehicleNO:new FormControl(),
+    avalabledocketinPRS:new FormArray([]),
   });
+}
+
+ get avalabledocket(): FormArray {
+    return this.challanForm.get('avalabledocketinPRS') as FormArray;
+  }
+
+  patchAvailableDockets(data: any[]) {
+    this.avalabledocket.clear(); // Clear existing form array if any
+    data.forEach((docket) => {
+      const group = new FormGroup({
+        isSelected: new FormControl(false),
+        dockno: new FormControl(docket.dockno),
+        paybaS_Str: new FormControl(docket.paybaS_Str),
+        bkg_Date: new FormControl(docket.bkg_Date),
+        commited_Dely_Date: new FormControl(docket.commited_Dely_Date),
+        arrPkgQty: new FormControl(docket.arrPkgQty),
+        pendPkgQty: new FormControl(docket.pendPkgQty),
+        actuwt: new FormControl(docket.actuwt),
+        chrgwt: new FormControl(docket.chrgwt),
+        pkgsno: new FormControl(docket.pkgsno),
+        arrival_Date: new FormControl(docket?.arrival_Date),
+        eWayBillNo: new FormControl(docket?.eWayBillNo),
+        subreasoncode: new FormControl(docket?.subreasoncode),
+        arrWeightQty: new FormControl(docket.arrWeightQty),
+        message: new FormControl(docket.message),
+        contractAmount: new FormControl(docket.contractAmount),
+        bcSerialNo: new FormControl(docket.bcSerialNo),
+      });
+      this.avalabledocket.push(group);
+    });
+  }
+
+  updateTotalDockets() {
+  const selected = this.avalabledocket.controls.filter(x => x.value.isSelected);
+  this.challanForm.patchValue({ totalDockets: selected.length });
 }
 
 onDigitChange(digit: number) {
@@ -401,6 +386,36 @@ getDAList(){
       },
       error: (err) => {
         console.error('Error fetching vehicle details:', err.error.message);
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+}
+
+avalabledocketinPRS(){
+  const payload={
+    fromdt: "12 Aug 2025",
+    todt: "10 Oct 2025",
+    dttyp: "1",
+    paybas: "ALL",
+    trn: "ALL",
+    bustyp: "ALL",
+    status: "P",
+    doctyp: "PRS",
+    baseLocationCode:this.docketService.loginUserList.LocationCode,
+    docketList: "",
+    alloted_To: "",
+    loadingBy: "XX9",
+    chrgType: "",
+    odaType: "",
+    baseCompanyCode:this.docketService.loginUserList.Companycode,
+    flag: 2
+  }
+  this.THCService.avalabledocketinPRS(payload).subscribe({
+      next: (response: any) => {
+        if (response && response.data) {
+          this.patchAvailableDockets(response.data);
+        }
+      },error: (err) => {
         this.sweetAlertService.error(err.error.message)
       }
     });

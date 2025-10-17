@@ -46,4 +46,8 @@ export class THCMasterService {
   getDAList(type:string): Observable<IApiBaseResponse<any[]>>{
     return this.apiHandlerService.Get(`THC/GetDeliveryAgentList?type=${type}`);
   }
+
+    avalabledocketinPRS(vendors: any) {
+    return this.apiHandlerService.Post(`THC/AvalabledocketinPRS`,vendors);
+  }
 }
