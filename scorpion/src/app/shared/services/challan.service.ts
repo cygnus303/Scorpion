@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BasicDetailService } from './basic-detail.service';
 import { generalMasterResponse } from '../models/general-master.model';
-import { CityResponse, VendeorsResponse } from '../models/thc-master.model';
+import { CityResponse, VehicleTyperesponse, VendeorsResponse } from '../models/thc-master.model';
 import { THCMasterService } from './thc-master.service';
 import { DocketService } from './docket.service';
 import { DeliveryAgentService } from './delivery-agent.service';
@@ -17,7 +17,8 @@ public cityList:CityResponse[]=[];
 public routeModeList:generalMasterResponse[]=[];
 public locationData:LocationListResponse[]=[];
 public latereasonList:generalMasterResponse[]=[];
-public TDSLedgerData:any[]=[];
+public TDSLedgerData:VehicleTyperesponse[]=[];
+public rateTypeData:generalMasterResponse[]=[];
   constructor(private basicDetailService: BasicDetailService,private THCService:THCMasterService,private docketService:DocketService,private deliveryAgentService:DeliveryAgentService) { }
 
     getVendtyData() {
@@ -90,6 +91,16 @@ public TDSLedgerData:any[]=[];
       next: (response) => {
         if (response.success) {
           this.latereasonList = response.data;
+        }
+      },
+    });
+  }
+
+  getRateTypeData(){
+    this.basicDetailService.getGeneralMasterList('HANDCHRG', '', '').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.rateTypeData = response.data;
         }
       },
     });

@@ -23,8 +23,8 @@ export class THCMasterService {
     return this.apiHandlerService.Get(`THC/TripSheetFromVehicle?vehicleNo=${vehicleNo}`);
   }
 
-  getVahicleCapacity(): Observable<IApiBaseResponse<any[]>>{
-    return this.apiHandlerService.Get(`THC/VehicleCapacity`);
+  getVahicleCapacity(id:string): Observable<IApiBaseResponse<any[]>>{
+    return this.apiHandlerService.Get(`THC/VehicleCapacity?id=${id}`);
   }
 
   getPANnumber(vendor:any): Observable<IApiBaseResponse<any[]>>{
@@ -47,7 +47,16 @@ export class THCMasterService {
     return this.apiHandlerService.Get(`THC/GetDeliveryAgentList?type=${type}`);
   }
 
-    avalabledocketinPRS(vendors: any) {
+  avalabledocketinPRS(vendors: any) {
     return this.apiHandlerService.Post(`THC/AvalabledocketinPRS`,vendors);
   }
+  
+  getTDSDetailsFromVendor(vendorCode:any): Observable<IApiBaseResponse<any[]>>{
+    return this.apiHandlerService.Post(`THC/GetTDSDetailsFromVendor`,vendorCode);
+  }
+
+  getDeliveryAgentMobileNo(agentCode:any): Observable<IApiBaseResponse<any[]>>{
+    return this.apiHandlerService.Post(`THC/CheckAgentMRCollection`,agentCode);
+  }
+
 }
