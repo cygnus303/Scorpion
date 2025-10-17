@@ -88,8 +88,9 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Vendor Type</label>
                         <div class="col-sm-7">
-                            <ng-select class="noFoundTextColor required2" placeholder="Vendor Type" formControlName="vendorType"
+                            <ng-select class="noFoundTextColor required2" placeholder="Vendor Type" formControlName="vendorType" required [ngClass]="{ 'border-danger': challanForm.get('vendorType')?.invalid  && challanForm.get('vendorType')?.touched }"
                                 notFoundText="No matches found" [items]="challanService.vendtyData" bindLabel="codeDesc" bindValue="codeId" (change)="challanService.getVendorsList($event)"></ng-select>
+                            <div class="text-danger text-start" *ngIf="challanForm.get('vendorType')?.invalid && challanForm.get('vendorType')?.touched "> This field is required.</div>
                         </div>
                     </div>
                 </div>
@@ -99,8 +100,10 @@
                         <div class="col-sm-7">
                              <ng-select class="noFoundTextColor required2" placeholder="Vendor Code/Name" formControlName="vendorCode" 
                              [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code"
+                              required [ngClass]="{ 'border-danger': challanForm.get('vendorCode')?.invalid  && challanForm.get('vendorCode')?.touched }"
                              (change)="getPANnumberData($event)"
                              ></ng-select>
+                             <div class="text-danger text-start" *ngIf="challanForm.get('vendorCode')?.invalid && challanForm.get('vendorCode')?.touched "> This field is required.</div>
                         </div>
                     </div>
                 </div>
@@ -134,7 +137,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Approx KMs.</label>
                         <div class="col-sm-7">
-                            <input class="form-control" type="text" placeholder="Approx KMs." formControlName="distanceInKM">
+                            <input class="form-control" type="text" placeholder="Approx KMs." formControlName="distanceInKM" readonly>
                         </div>
                     </div>
                 </div>
@@ -300,8 +303,8 @@
 
     <div *ngIf="challanForm.value.routeType === 'S' || this.docketService.loginUserList.Type === '2' || this.docketService.loginUserList.Type === '3'">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Vehicle Details</h3>
-        <div class="row pb-3">
-            <div class="col-4" *ngIf="challanForm.value.vendorType === 'XX1' || challanForm.value.vendorType === '04'|| challanForm.value.vendorType === '19'|| challanForm.value.vendorType === '05'">
+        <div class="row ">
+            <div class="col-4 pb-3" *ngIf="challanForm.value.vendorType === 'XX1' || challanForm.value.vendorType === '04'|| challanForm.value.vendorType === '19'|| challanForm.value.vendorType === '05'">
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
                     <div class="col-sm-7">
@@ -312,7 +315,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4" *ngIf="challanForm.value.vendorType === 'XX' || challanForm.value.vehicleNO==='O'">
+            <div class="col-4 pb-3" *ngIf="challanForm.value.vendorType === 'XX' || challanForm.value.vehicleNO==='O'">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Vehicle No. digit</label>
                     <div class="col-sm-7 d-flex justify-content-between">
@@ -324,7 +327,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4" *ngIf="challanForm.value.vendorType === 'XX'|| challanForm.value.vehicleNO==='O'">
+            <div class="col-4 pb-3" *ngIf="challanForm.value.vendorType === 'XX'|| challanForm.value.vehicleNO==='O'">
                 <div class="row" >
                     <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
                     <div class="col-sm-7">
@@ -334,10 +337,10 @@
                 </div>
             </div>
         </div>
-        <div class="row pb-3">
-            <div class="col-4"></div>
-            <div class="col-4"></div>
-            <div class="col-4" *ngIf="challanForm.value.vendorType === '05'">
+        <div class="row" *ngIf="challanForm.value.vendorType === '05'">
+            <div class="col-4 pb-3"></div>
+            <div class="col-4 pb-3"></div>
+            <div class="col-4 pb-3" >
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Tripsheet No.</label>
                     <div class="col-sm-7">
@@ -362,7 +365,7 @@
                     <label class="col-sm-5 col-form-label text-end">FTL Type</label>
                     <div class="col-sm-7">
                         <!-- <input class="form-control" type="text" placeholder="FTL Type"> -->
-                          <ng-select class="noFoundTextColor required2" placeholder="FTL Type" formControlName="fTLType"
+                          <ng-select class="noFoundTextColor required2" placeholder="FTL Type" formControlName="fTLType" readonly
                             notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" [items]="docketService.typeofMovementList"></ng-select>
                     </div>
                 </div>
@@ -373,12 +376,13 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="Registration Date" type="text"
-                                #dv="bsDatepicker" bsDatepicker formControlName="registrationDate"
+                                #dv="bsDatepicker" bsDatepicker formControlName="registrationDate"  required [ngClass]="{ 'border-danger': challanForm.get('registrationDate')?.invalid  && challanForm.get('registrationDate')?.touched }"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', maxDate:today}">
                             <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
+                        <div class="text-danger text-start" *ngIf="challanForm.get('registrationDate')?.invalid && challanForm.get('registrationDate')?.touched "> This field is required.</div>
                     </div>
                 </div>
             </div>
@@ -388,7 +392,9 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Engine No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" placeholder="Engine No."  formControlName="eNGINENO" type="text">
+                        <input class="form-control required2" placeholder="Engine No."  formControlName="eNGINENO" type="text" 
+                         required [ngClass]="{ 'border-danger': challanForm.get('eNGINENO')?.invalid  && challanForm.get('eNGINENO')?.touched }">
+                         <div class="text-danger text-start" *ngIf="challanForm.get('eNGINENO')?.invalid && challanForm.get('eNGINENO')?.touched "> This field is required.</div>
                     </div>
                 </div>
             </div>
@@ -396,7 +402,9 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Chasis No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" type="text" placeholder="Chasis No."  formControlName="cHASISNO">
+                        <input class="form-control required2" type="text" placeholder="Chasis No."  formControlName="cHASISNO"
+                         required [ngClass]="{ 'border-danger': challanForm.get('cHASISNO')?.invalid  && challanForm.get('cHASISNO')?.touched }">
+                         <div class="text-danger text-start" *ngIf="challanForm.get('cHASISNO')?.invalid && challanForm.get('cHASISNO')?.touched "> This field is required.</div>
                     </div>
                 </div>
             </div>
@@ -404,7 +412,9 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">RC Book No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" type="text" placeholder="RC Book No."  formControlName="rCBOOKNO">
+                        <input class="form-control required2" type="text" placeholder="RC Book No."  formControlName="rCBOOKNO"
+                         required [ngClass]="{ 'border-danger': challanForm.get('rCBOOKNO')?.invalid  && challanForm.get('rCBOOKNO')?.touched }">
+                         <div class="text-danger text-start" *ngIf="challanForm.get('rCBOOKNO')?.invalid && challanForm.get('rCBOOKNO')?.touched "> This field is required.</div>
                     </div>
                 </div>
             </div>
@@ -415,16 +425,20 @@
                     <label class="col-sm-5 col-form-label text-end">Permit Validity Date</label>
                     <div class="col-sm-7">
                         <div class="input-group">
-                            <input class="form-control required2" placeholder="Permit Validity Date" type="text" [ngClass]="{ 'border-danger': isPermitExpired }" 
+                            <input class="form-control required2" placeholder="Permit Validity Date" type="text"
                                 #pv="bsDatepicker" bsDatepicker formControlName="permitDate" (bsValueChange)="checkPermitExpiry($event)"
-                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}"
+                                 required [ngClass]="{ 'border-danger': challanForm.get('permitDate')?.invalid  && challanForm.get('permitDate')?.touched || isPermitExpired}">
                             <span class="input-group-text cursor-pointer" (click)="pv.toggle()">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
+                        <div class="text-danger text-start" > 
                          <small *ngIf="isPermitExpired" class="text-danger fw-bold mt-1">
                            Permit validity date is expired.
                         </small>
+                        <small *ngIf="challanForm.get('permitDate')?.invalid && challanForm.get('permitDate')?.touched ">This field is required.</small>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -433,8 +447,9 @@
                     <label class="col-sm-5 col-form-label text-end">Insurance Validity Date</label>
                     <div class="col-sm-7">
                         <div class="input-group">
-                            <input class="form-control required2" placeholder="Insurance Validity Date" type="text" (bsValueChange)="checkInsuranceExpiry($event)"
-                                #iv="bsDatepicker" bsDatepicker  formControlName="insuranceDate" [ngClass]="{ 'border-danger': isInsuranceExpired }"
+                            <input class="form-control required2" placeholder="Insurance Validity Date" type="text"
+                                #iv="bsDatepicker" bsDatepicker  formControlName="insuranceDate" (bsValueChange)="checkInsuranceExpiry($event)"
+                                 required [ngClass]="{ 'border-danger': challanForm.get('insuranceDate')?.invalid  && challanForm.get('insuranceDate')?.touched || isInsuranceExpired}"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
                             <span class="input-group-text cursor-pointer" (click)="iv.toggle()">
                                 <i class="fa fa-calendar"></i>
@@ -443,6 +458,7 @@
                         <small *ngIf="isInsuranceExpired" class="text-danger fw-bold mt-1">
                            Insurance validity date is expired.
                         </small>
+                        <div class="text-danger text-start" *ngIf="challanForm.get('insuranceDate')?.invalid && challanForm.get('insuranceDate')?.touched "> This field is required.</div>
                     </div>
                 </div>
             </div>
@@ -451,8 +467,9 @@
                     <label class="col-sm-5 col-form-label text-end">Fitness Validity Date</label>
                     <div class="col-sm-7">
                         <div class="input-group">
-                            <input class="form-control required2" placeholder="Fitness Validity Date" type="text" [ngClass]="{ 'border-danger': isFitnessExpired }"
-                                #fv="bsDatepicker" bsDatepicker formControlName="fitnessDate" (bsValueChange)="checkFitnessExpiry($event)"
+                            <input class="form-control required2" placeholder="Fitness Validity Date" type="text"
+                                #fv="bsDatepicker" bsDatepicker formControlName="fitnessDate"  (bsValueChange)="checkFitnessExpiry($event)"
+                                required [ngClass]="{ 'border-danger': challanForm.get('fitnessDate')?.invalid  && challanForm.get('fitnessDate')?.touched || isFitnessExpired}"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
                             <span class="input-group-text cursor-pointer" (click)="fv.toggle()">
                                 <i class="fa fa-calendar"></i>
@@ -461,6 +478,7 @@
                         <small *ngIf="isFitnessExpired" class="text-danger fw-bold mt-1">
                             Fitness Validity date is expired.
                         </small>
+                        <div class="text-danger text-start" *ngIf="challanForm.get('fitnessDate')?.invalid && challanForm.get('fitnessDate')?.touched "> This field is required.</div>
                     </div>
                 </div>
             </div>
@@ -472,7 +490,9 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Licence No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Licence No." type="text" formControlName="driver1Licence" (input)="onChangeLicenceNumber($event)">
+                            <input class="form-control required2" placeholder="Licence No." type="text" formControlName="driver1Licence" (input)="onChangeLicenceNumber($event)"
+                            required [ngClass]="{ 'border-danger': challanForm.get('driver1Licence')?.invalid  && challanForm.get('driver1Licence')?.touched }">
+                            <div class="text-danger text-start" *ngIf="challanForm.get('driver1Licence')?.invalid && challanForm.get('driver1Licence')?.touched "> This field is required.</div>
                         </div>
                     </div>
                 </div>
@@ -482,12 +502,13 @@
                         <div class="col-sm-7">
                             <div class="input-group">
                                 <input class="form-control required2" placeholder="Date Of Birth" type="text"
-                                    #dbv="bsDatepicker" bsDatepicker formControlName="d1_DOB" 
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                                    #dbv="bsDatepicker" bsDatepicker formControlName="d1_DOB" [ngClass]="{ 'border-danger': challanForm.get('d1_DOB')?.invalid  && challanForm.get('d1_DOB')?.touched }" 
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" (ngModelChange)="onChangeLicenceNumber()">
                                 <span class="input-group-text cursor-pointer" (click)="dbv.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
+                             <div class="text-danger text-start" *ngIf="challanForm.get('d1_DOB')?.invalid && challanForm.get('d1_DOB')?.touched "> This field is required.</div>
                         </div>
                     </div>
                 </div>
@@ -496,7 +517,9 @@
                         <label class="col-sm-5 col-form-label text-end">Mobile No.</label>
                         <div class="col-sm-7">
                             <input class="form-control" placeholder="Mobile No." type="text" formControlName="driver1MobileNo" maxlength="10" pattern="[0-9]*"
-              (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()">
+              (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
+              required [ngClass]="{ 'border-danger': challanForm.get('driver1MobileNo')?.invalid  && challanForm.get('driver1MobileNo')?.touched }">
+              <div class="text-danger text-start" *ngIf="challanForm.get('driver1MobileNo')?.invalid && challanForm.get('driver1MobileNo')?.touched "> This field is required.</div>
                         </div>
                     </div>
                 </div>
@@ -506,7 +529,9 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Driver Name</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Driver Name" type="text" formControlName="driver1Name">
+                            <input class="form-control required2" placeholder="Driver Name" type="text" formControlName="driver1Name"
+                            required [ngClass]="{ 'border-danger': challanForm.get('driver1Name')?.invalid  && challanForm.get('driver1Name')?.touched }">
+                            <div class="text-danger text-start" *ngIf="challanForm.get('driver1Name')?.invalid && challanForm.get('driver1Name')?.touched "> This field is required.</div>
                         </div>
                     </div>
                 </div>
@@ -514,7 +539,9 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Issue By RTO</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Issue By RTO" type="text" formControlName="driver1RTONo">
+                            <input class="form-control required2" placeholder="Issue By RTO" type="text" formControlName="driver1RTONo"
+                            required [ngClass]="{ 'border-danger': challanForm.get('driver1RTONo')?.invalid  && challanForm.get('driver1RTONo')?.touched }">
+                            <div class="text-danger text-start" *ngIf="challanForm.get('driver1RTONo')?.invalid && challanForm.get('driver1RTONo')?.touched "> This field is required.</div>
                         </div>
                     </div>
                 </div>
@@ -523,9 +550,10 @@
                         <label class="col-sm-5 col-form-label text-end">Licence Validity Date</label>
                         <div class="col-sm-7">
                             <div class="input-group">
-                                <input class="form-control required2" placeholder="Licence Validity Date" type="text"  [ngClass]="{ 'border-danger': isLicenseExpired}"
-                                    #lv="bsDatepicker" bsDatepicker formControlName="driver1LicenceValDate" (bsValueChange)="checkLicenseExpiry($event)"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
+                                <input class="form-control required2" placeholder="Licence Validity Date" type="text"
+                                    #lv="bsDatepicker" bsDatepicker formControlName="driver1LicenceValDate"  (bsValueChange)="checkLicenseExpiry($event)"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}"
+                                    required [ngClass]="{ 'border-danger': challanForm.get('driver1LicenceValDate')?.invalid  && challanForm.get('driver1LicenceValDate')?.touched || isLicenseExpired}">
                                 <span class="input-group-text cursor-pointer" (click)="lv.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
@@ -533,6 +561,7 @@
                              <small *ngIf="isLicenseExpired" class="text-danger fw-bold mt-1">
                               License validity date is expired.      
                               </small>
+                            <div class="text-danger text-start" *ngIf="challanForm.get('driver1LicenceValDate')?.invalid && challanForm.get('driver1LicenceValDate')?.touched "> This field is required.</div>
                         </div>
                     </div>
                 </div>
@@ -601,7 +630,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Loading Supervisor/User</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="Loading Supervisor/User" type="text" formControlName="entryBy">
+                        <input class="form-control" placeholder="Loading Supervisor/User" type="text" formControlName="entryBy" readonly>
                     </div>
                 </div>
             </div>
@@ -635,7 +664,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vehicle Capacity (TON)</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="Vehicle Capacity (TON)" type="text" formControlName="vehicleCapacity">
+                        <input class="form-control" placeholder="Vehicle Capacity (TON)" type="text" formControlName="vehicleCapacity" readonly>
                     </div>
                 </div>
             </div>
@@ -644,7 +673,8 @@
                         <label class="col-sm-5 col-form-label text-end">Outgoing Remarks</label>
                         <div class="col-sm-7">
                             <textarea class="form-control required2" placeholder="Remarks" type="text" rows="2" formControlName="THCRemarks"
-                                cols="4"></textarea>
+                                cols="4" required [ngClass]="{ 'border-danger': challanForm.get('THCRemarks')?.invalid  && challanForm.get('THCRemarks')?.touched }"></textarea>
+                            <div class="text-danger text-start" *ngIf="challanForm.get('THCRemarks')?.invalid && challanForm.get('THCRemarks')?.touched "> This field is required.</div>
                         </div>
                 </div>
             </div>
@@ -662,7 +692,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Weight Loaded (kg)</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="Weight Loaded (kg)" type="text" formControlName="wtLoaded">
+                        <input class="form-control" placeholder="Weight Loaded (kg)" type="text" formControlName="wtLoaded" readonly>
                     </div>
                 </div>
             </div>
@@ -670,7 +700,7 @@
                 <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Capacity Utilization (%)</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Capacity Utilization" type="text" formControlName="vehicleCapacityUti">
+                            <input class="form-control" placeholder="Capacity Utilization" type="text" formControlName="vehicleCapacityUti" readonly>
                         </div>
                 </div>
             </div>
@@ -678,7 +708,7 @@
                 <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Overload Reason</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Overload Reason" type="text" formControlName="overLoadReason">
+                            <input class="form-control" placeholder="Overload Reason" type="text" formControlName="overLoadReason" readonly>
                         </div>
                 </div>
             </div>
@@ -689,7 +719,7 @@
                     <label class="col-sm-5 col-form-label text-end">Late Dept. Reason [if any]</label>
                     <div class="col-sm-7">
                         <!-- <input class="form-control" placeholder="Late Dept. Reason" type="text" formControlName="lateDepaturereason"> -->
-                         <ng-select class="noFoundTextColor required2" placeholder="Vehicle No." formControlName="lateDepaturereason"
+                         <ng-select class="noFoundTextColor required2" placeholder="Late Dept. Reason" formControlName="lateDepaturereason"
                          [items]="challanService.latereasonList"
                         notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId"></ng-select>
                     </div>
@@ -722,7 +752,9 @@
                     <div class="col-sm-7">
                         <!-- <input class="form-control required2" placeholder="Delivery Agent" type="text" formControlName="deliveryAgent"> -->
                           <ng-select class=" required2" [items]="deliverAgentData" bindLabel="name" bindValue="userId"
-                            placeholder="Delivery Agent" formControlName="deliveryAgent"></ng-select>
+                            placeholder="Delivery Agent" formControlName="deliveryAgent" 
+                            required [ngClass]="{ 'border-danger': challanForm.get('deliveryAgent')?.invalid  && challanForm.get('deliveryAgent')?.touched }"></ng-select>
+                          <div class="text-danger text-start" *ngIf="challanForm.get('deliveryAgent')?.invalid && challanForm.get('deliveryAgent')?.touched "> This field is required.</div>
                     </div>
                 </div>
             </div>
@@ -835,7 +867,13 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Total CNote</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Total CNote" type="text" value="0" formControlName="totalDockets">
+                            <input class="form-control" placeholder="Total CNote" min="1" type="number" value="0" formControlName="totalDockets" readonly
+                            required [ngClass]="{ 'border-danger': challanForm.get('totalDockets')?.invalid  && challanForm.get('totalDockets')?.touched }">
+                             <div class="text-danger text-start mt-1 small"  *ngIf="challanForm.get('totalDockets')?.touched && challanForm.get('totalDockets')?.errors">
+                                <span *ngIf="challanForm.get('totalDockets')?.hasError('min')">
+                                  Please select at least one record.
+                                </span>
+                             </div>
                         </div>
                     </div>
                 </div>
@@ -907,7 +945,16 @@
                 <div class="row mb-3 align-items-center">
                     <label class="col-sm-6 col-form-label text-end fw-bold">Contract Amount</label>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control text-end" value="0" formControlName="contractAmount"/>
+                        <input min="1" type="number" class="form-control text-end" value="0" formControlName="contractAmount"
+                        required [ngClass]="{ 'border-danger': challanForm.get('contractAmount')?.invalid && challanForm.get('contractAmount')?.touched }"/>
+                        <div class="text-danger text-start mt-1 small" *ngIf="challanForm.get('contractAmount')?.touched && challanForm.get('contractAmount')?.errors">
+                            <span *ngIf="challanForm.get('contractAmount')?.hasError('required')">
+                                Please enter a value.
+                            </span>
+                            <span *ngIf="challanForm.get('contractAmount')?.hasError('min')">
+                                Please enter a value greater than or equal to 1.
+                            </span>
+                        </div>
                     </div>
                 </div>
     
@@ -1043,7 +1090,7 @@
         <button class="btn btn-secondary me-2">
             <i class="bi bi-arrow-counterclockwise"></i> Reset
         </button>
-        <button class="btn btn-success">
+        <button class="btn btn-success" (click)="onSubmit()">
             <i class="bi bi-check-circle"></i> Submit
         </button>
     </div>

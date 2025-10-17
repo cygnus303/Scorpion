@@ -25,7 +25,7 @@ public isInsuranceExpired : boolean = false;
 public isFitnessExpired : boolean = false;
 public isPermitExpired : boolean = false;
 public isLicenseExpired : boolean = false;
-
+public lastFetchedVehicleNo: string | null = null; 
 
 constructor(
   public challanService:ChallanService,
@@ -136,7 +136,7 @@ buildForm(){
     insuranceDate : new FormControl(),
     fitnessDate : new FormControl(),
     driver1Licence:new FormControl('',[Validators.required,Validators.pattern(/^[A-Za-z]{2}\d{2}\s?\d{11}$/)]),
-    d1_DOB:new FormControl(),
+    d1_DOB:new FormControl('',Validators.required),
     driver1Name:new FormControl(),
     driver1RTONo:new FormControl(),
     driver1LicenceValDate:new FormControl(),
@@ -150,9 +150,9 @@ buildForm(){
     deliveryAgentMoNo : new FormControl(),
     eWayBillNo : new FormControl(),
     eWayBillExpiredDate : new FormControl(),
-    is_Local_ODA_id : new FormControl(),
-    totalDockets: new FormControl(),
-    contractAmount : new FormControl(),
+    is_Local_ODA_id : new FormControl('local'),
+    totalDockets: new FormControl(0),
+    contractAmount : new FormControl(0),
     isTDSEnabled : new FormControl(),
     tDSOnAmount : new FormControl(),
     totalTDSAmount : new FormControl(),
@@ -161,7 +161,7 @@ buildForm(){
     balanceAmount : new FormControl(0),
     advanceLocation : new FormControl(),
     balanceLocation : new FormControl(),
-    entryBy:new FormControl(),
+    entryBy:new FormControl(this.docketService.loginUserList.BaseUserName),
     openKM:new FormControl(),
     closeKM:new FormControl(),
     vehicleCapacity:new FormControl(),
@@ -186,9 +186,11 @@ onDigitChange(digit: number) {
   this.challanForm.get('mKTVehicleNo')?.reset('');
 }
 
+
 validateVehicleNo() {
   const control = this.challanForm.get('mKTVehicleNo');
   if (!control) return;
+
   let value = (control.value || '').toUpperCase();
   let filtered = '';
   const patternMap: { [key: number]: RegExp[] } = {
@@ -202,18 +204,17 @@ validateVehicleNo() {
   if (pattern) {
     for (let i = 0; i < value.length && i < pattern.length; i++) {
       const ch = value[i];
-      if (pattern[i].test(ch)) {
-        filtered += ch;
-      }
+      if (pattern[i].test(ch)) filtered += ch;
     }
   } else {
     filtered = value.replace(/[^A-Z0-9]/g, '').slice(0, this.selectedDigit);
   }
-   if (filtered.length > this.selectedDigit) {
+  if (filtered.length > this.selectedDigit) {
     filtered = filtered.slice(0, this.selectedDigit);
   }
   control.setValue(filtered, { emitEvent: false });
-  if (filtered.length === this.selectedDigit) {
+  if ( filtered.length === this.selectedDigit && filtered !== this.lastFetchedVehicleNo) {
+    this.lastFetchedVehicleNo = filtered;
     this.getVehicleDetail(filtered);
   }
 }
@@ -244,7 +245,7 @@ validateVehicleNo() {
     });
   }
 
-  onChangeLicenceNumber(event: any) {
+  onChangeLicenceNumber(event?: any) {
      const dob = this.challanForm.value.d1_DOB;
      const licenseNo = event ? event.target.value?.trim() : this.challanForm.value.driver1Licence?.trim();
      const licenseControl = this.challanForm.get('driver1Licence');
@@ -404,4 +405,13 @@ getDAList(){
       }
     });
 }
+
+onSubmit(){
+  if(this.challanForm.valid){
+
+  }else{
+    this.challanForm.markAllAsTouched();
+  }
+}
+
 }
