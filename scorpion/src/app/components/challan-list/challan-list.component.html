@@ -356,6 +356,7 @@
                     <div class="col-sm-7">
                         <!-- <input class="form-control" placeholder="Vehicle Type" type="text"> -->
                                <ng-select class="noFoundTextColor required2" placeholder="Vehicle Type" formControlName="vehicleType"
+                                [items]="vehicleTypeList" bindLabel="codeDesc" bindValue="codeId"
                             notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId"></ng-select>
                     </div>
                 </div>
@@ -752,7 +753,7 @@
                     <div class="col-sm-7">
                         <!-- <input class="form-control required2" placeholder="Delivery Agent" type="text" formControlName="deliveryAgent"> -->
                           <ng-select class=" required2" [items]="deliverAgentData" bindLabel="name" bindValue="userId"
-                            placeholder="Delivery Agent" formControlName="deliveryAgent" 
+                            placeholder="Delivery Agent" formControlName="deliveryAgent"  (change)="getDAMobileNo($event)"
                             required [ngClass]="{ 'border-danger': challanForm.get('deliveryAgent')?.invalid  && challanForm.get('deliveryAgent')?.touched }"></ng-select>
                           <div class="text-danger text-start" *ngIf="challanForm.get('deliveryAgent')?.invalid && challanForm.get('deliveryAgent')?.touched "> This field is required.</div>
                     </div>
@@ -763,8 +764,9 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Delivery Agent Mobile No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Delivery Agent Mobile No." type="text" formControlName="deliveryAgentMoNo" maxlength="10" pattern="[0-9]*"
-              (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()">
+                            <input class="form-control" placeholder="Delivery Agent Mobile No." type="text" formControlName="deliveryAgentMoNo" 
+                               maxlength="10" pattern="[0-9]*"
+                              (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" readonly>
                         </div>
                     </div>
                 </div>
@@ -993,7 +995,7 @@
                 <div class="row mb-3 align-items-center" [ngClass]="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX' ? '' : 'd-none'">
                     <label class="col-sm-4 col-form-label text-end">Enable TDS</label>
                     <div class="col-sm-8 d-flex align-items-center">
-                        <input type="checkbox" class="form-check-input me-4 checkbox-lg" checked formControlName="isTDSEnabled"/>
+                        <input type="checkbox" class="form-check-input me-4 checkbox-lg" checked formControlName="isTDSEnabled" readonly/>
                     </div>
                 </div>
     
@@ -1008,22 +1010,23 @@
                     <label class="col-sm-4 col-form-label text-end">TDS Section</label>
                     <div class="col-sm-8">
                            <!-- <input type="text" class="form-control required2" formControlName="TDSAcccode"/> -->
-                            <ng-select class="noFoundTextColor required2" placeholder="TDS Section" [items]="challanService.TDSLedgerData"
-                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId"></ng-select>
+                            <ng-select class="noFoundTextColor required2" placeholder="TDS Section" formControlName="TDSAcccode"
+                            [items]="challanService.TDSLedgerData"
+                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" readonly></ng-select>
                     </div>
                 </div>
     
-                <div class="row mb-3 align-items-center d-none">
+                <div class="row mb-3 align-items-center" [ngClass]="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX' ? '' : 'd-none'">
                     <label class="col-sm-4 col-form-label text-end">TDS Rate (%)</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control text-end" value="0" />
+                        <input type="text" class="form-control text-end" value="0" formControlName="TDSPercent" readonly/>
                     </div>
                 </div>
     
-                <div class="row mb-3 align-items-center d-none">
+                <div class="row mb-3 align-items-center" [ngClass]="challanForm.value.vendorType === 'XX1'|| challanForm.value.vendorType ==='04'|| challanForm.value.vendorType ==='19'|| challanForm.value.vendorType ==='XX' ? '' : 'd-none'">
                     <label class="col-sm-4 col-form-label text-end">TDS Amount (-)</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control text-end" value="0.00" formControlName="totalTDSAmount" />
+                        <input type="text" class="form-control text-end" value="0.00" formControlName="totalTDSAmount" readonly/>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { cityResponse } from 'app/shared/models/general-master.model';
+import { VehicleTyperesponse } from 'app/shared/models/thc-master.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { ChallanService } from 'app/shared/services/challan.service';
 import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service';
@@ -26,6 +26,7 @@ public isFitnessExpired : boolean = false;
 public isPermitExpired : boolean = false;
 public isLicenseExpired : boolean = false;
 public lastFetchedVehicleNo: string | null = null; 
+public vehicleTypeList:VehicleTyperesponse[]=[];
 
 constructor(
   public challanService:ChallanService,
@@ -177,7 +178,8 @@ buildForm(){
     standardContractAmount:new FormControl(),
     isMonthlyBillAllow:new FormControl(),
     TDSAcccode:new FormControl(),
-    vehicleNO:new FormControl()
+    vehicleNO:new FormControl(),
+    TDSPercent:new FormControl()
   });
 }
 
@@ -280,14 +282,15 @@ validateVehicleNo() {
     this.THCService.getTripSheet(event.value).subscribe({
       next: (response: any) => {
         if (response && response.data) {
-         
+         this.challanForm.patchValue({
+          TDSPercent:response.data.tdsPercentage,
+         })
         }
       },
       error: (err) => {
         this.sweetAlertService.error(err.error.message)
       }
     });
-   this.getVehicleCapacity()
   if(event.value!=='O'){
   this.getNewVehicleDetail(event.value)
   }
@@ -297,12 +300,13 @@ validateVehicleNo() {
   this.checkLicenseExpiry()
 }
 
-getVehicleCapacity(){
-  this.THCService.getVahicleCapacity().subscribe({
+getVehicleCapacity(id:string){
+  this.THCService.getVahicleCapacity(id).subscribe({
     next: (response: any) => {
       if (response && response.data) {
        this.challanForm.patchValue({
-        vehicleCapacity:response.data.capacity
+        vehicleCapacity:response.data.capacity,
+        TDSAcccode:response.data.acccode
        })
       }
     },
@@ -352,6 +356,7 @@ getPANnumberData(event:any){
         this.sweetAlertService.error(err.error.message)
       }
     });
+    this.getTDSDetailsFromVendor(event.vendor_Code)
     this.getVehicleFromVendorList(event.vendor_Code)
 }
 
@@ -360,6 +365,26 @@ getVehicleFromVendorList(vendor:string){
       next: (response: any) => {
         if (response && response.data) {
          this.vehicleNoList=response.data;
+        }
+      },
+      error: (err) => {
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+}
+
+getTDSDetailsFromVendor(vendorCode:string){
+  const payload={
+    venderCode:vendorCode
+  }
+  this.THCService.getTDSDetailsFromVendor(payload).subscribe({
+      next: (response: any) => {
+        if (response && response.data) {
+        this.challanForm.patchValue({
+          TDSAcccode:response.data.acccode,
+          TDSPercent:response.data.tdsPercentage,
+          isTDSEnabled:response.data.isTDSApplicable
+        })
         }
       },
       error: (err) => {
@@ -381,8 +406,14 @@ getNewVehicleDetail(vehicleNo:string){
             registrationDate: response.data.registrationDt ? new Date(response.data.registrationDt) : null,
             permitDate: response.data.vehprmdt ? new Date(response.data.vehprmdt) : null,
             insuranceDate: response.data.insuranceValDt ? new Date(response.data.insuranceValDt) : null,
-            fitnessDate: response.data.fitnessValDt ? new Date(response.data.fitnessValDt) : null
+            fitnessDate: response.data.fitnessValDt ? new Date(response.data.fitnessValDt) : null,
+            openKM:response.data.startKM
           });
+          this.vehicleTypeList = [{
+            codeId: response.data.vehicle_Type,
+            codeDesc: response.data.type_Name
+          }];
+          this.getVehicleCapacity(response.data.vehicle_Type)
         }
       },
       error: (err) => {
@@ -397,6 +428,25 @@ getDAList(){
       next: (response: any) => {
         if (response) {
           this.deliverAgentData=response.data;
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching vehicle details:', err.error.message);
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+}
+
+getDAMobileNo(event:any){
+  const paylaod={
+    agentCode:event.userId
+  }
+  this.THCService.getDeliveryAgentMobileNo(paylaod).subscribe({
+      next: (response: any) => {
+        if (response) {
+         this.challanForm.patchValue({
+          deliveryAgentMoNo:response.data.mobileNo
+         })
         }
       },
       error: (err) => {
