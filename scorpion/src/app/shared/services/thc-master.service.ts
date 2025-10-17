@@ -36,7 +36,7 @@ export class THCMasterService {
   }
 
   getTDSLedger(): Observable<IApiBaseResponse<any[]>>{
-    return this.apiHandlerService.Get(`THC/GetTDSLedger}`);
+    return this.apiHandlerService.Get(`THC/GetTDSLedger`);
   }
 
   getNewVehicleDetail(vehicleNo:string): Observable<IApiBaseResponse<any[]>>{
