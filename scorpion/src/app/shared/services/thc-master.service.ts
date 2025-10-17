@@ -42,4 +42,8 @@ export class THCMasterService {
   getNewVehicleDetail(vehicleNo:string): Observable<IApiBaseResponse<any[]>>{
     return this.apiHandlerService.Get(`THC/NewGetVehicleDetails?vehicleNo=${vehicleNo}`);
   }
+
+  getDAList(type:string): Observable<IApiBaseResponse<any[]>>{
+    return this.apiHandlerService.Get(`THC/GetDeliveryAgentList?type=${type}`);
+  }
 }

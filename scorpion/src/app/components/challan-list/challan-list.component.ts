@@ -20,6 +20,12 @@ public selectedDigit: number = 10;
 public typeName : string='';
 public today: Date = new Date();
 public vehicleNoList:any[]=[];
+public deliverAgentData:any[]=[];
+public isInsuranceExpired : boolean = false;
+public isFitnessExpired : boolean = false;
+public isPermitExpired : boolean = false;
+public isLicenseExpired : boolean = false;
+
 
 constructor(
   public challanService:ChallanService,
@@ -89,7 +95,8 @@ cNoteAvailable =
     this.challanService.getRouteMode();
     this.challanService.getDepartmentReason();
     this.challanService.getTDSLedgerList();
-    this.challanService.getLocationData()
+    this.challanService.getLocationData();
+    this.getDAList()
     const type = this.docketService.loginUserList.Type;
     this.typeName = type === '3' ? 'DRS' :
                     type === '1' ? 'THC' :
@@ -283,6 +290,10 @@ validateVehicleNo() {
   if(event.value!=='O'){
   this.getNewVehicleDetail(event.value)
   }
+  this.checkPermitExpiry();
+  this.checkInsuranceExpiry();
+  this.checkFitnessExpiry();
+  this.checkLicenseExpiry()
 }
 
 getVehicleCapacity(){
@@ -295,6 +306,35 @@ getVehicleCapacity(){
       }
     },
   });
+}
+
+ checkDateExpiry(dateValue: any): boolean {
+  if (!dateValue) return false; // no message if empty
+  const date = new Date(dateValue);
+  date.setHours(0, 0, 0, 0);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return date < today;
+}
+
+checkPermitExpiry(event?:any) {
+  const permit = event ? event: this.challanForm.value.permitDate;
+  this.isPermitExpired = this.checkDateExpiry(permit);
+}
+
+checkInsuranceExpiry(event?:any) {
+  const insurance =  event ? event: this.challanForm.value.insuranceDate;
+  this.isInsuranceExpired = this.checkDateExpiry(insurance);
+}
+
+checkFitnessExpiry(event?:any) {
+  const fitness =  event ? event: this.challanForm.value.fitnessDate;
+  this.isFitnessExpired = this.checkDateExpiry(fitness);
+}
+
+checkLicenseExpiry(event?:any) {
+  const license =  event ? event: this.challanForm.value.driver1LicenceValDate;
+  this.isLicenseExpired = this.checkDateExpiry(license);
 }
 
 
@@ -351,4 +391,17 @@ getNewVehicleDetail(vehicleNo:string){
     });
 }
 
+getDAList(){
+  this.THCService.getDAList("7").subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.deliverAgentData=response.data;
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching vehicle details:', err.error.message);
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+}
 }

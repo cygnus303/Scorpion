@@ -415,13 +415,16 @@
                     <label class="col-sm-5 col-form-label text-end">Permit Validity Date</label>
                     <div class="col-sm-7">
                         <div class="input-group">
-                            <input class="form-control required2" placeholder="Permit Validity Date" type="text"
-                                #pv="bsDatepicker" bsDatepicker formControlName="permitDate"
+                            <input class="form-control required2" placeholder="Permit Validity Date" type="text" [ngClass]="{ 'border-danger': isPermitExpired }" 
+                                #pv="bsDatepicker" bsDatepicker formControlName="permitDate" (bsValueChange)="checkPermitExpiry($event)"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
                             <span class="input-group-text cursor-pointer" (click)="pv.toggle()">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
+                         <small *ngIf="isPermitExpired" class="text-danger fw-bold mt-1">
+                           Permit validity date is expired.
+                        </small>
                     </div>
                 </div>
             </div>
@@ -430,13 +433,16 @@
                     <label class="col-sm-5 col-form-label text-end">Insurance Validity Date</label>
                     <div class="col-sm-7">
                         <div class="input-group">
-                            <input class="form-control required2" placeholder="Insurance Validity Date" type="text"
-                                #iv="bsDatepicker" bsDatepicker  formControlName="insuranceDate"
+                            <input class="form-control required2" placeholder="Insurance Validity Date" type="text" (bsValueChange)="checkInsuranceExpiry($event)"
+                                #iv="bsDatepicker" bsDatepicker  formControlName="insuranceDate" [ngClass]="{ 'border-danger': isInsuranceExpired }"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
                             <span class="input-group-text cursor-pointer" (click)="iv.toggle()">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
+                        <small *ngIf="isInsuranceExpired" class="text-danger fw-bold mt-1">
+                           Insurance validity date is expired.
+                        </small>
                     </div>
                 </div>
             </div>
@@ -445,13 +451,16 @@
                     <label class="col-sm-5 col-form-label text-end">Fitness Validity Date</label>
                     <div class="col-sm-7">
                         <div class="input-group">
-                            <input class="form-control required2" placeholder="Fitness Validity Date" type="text"
-                                #fv="bsDatepicker" bsDatepicker formControlName="fitnessDate"
+                            <input class="form-control required2" placeholder="Fitness Validity Date" type="text" [ngClass]="{ 'border-danger': isFitnessExpired }"
+                                #fv="bsDatepicker" bsDatepicker formControlName="fitnessDate" (bsValueChange)="checkFitnessExpiry($event)"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
                             <span class="input-group-text cursor-pointer" (click)="fv.toggle()">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
+                        <small *ngIf="isFitnessExpired" class="text-danger fw-bold mt-1">
+                            Fitness Validity date is expired.
+                        </small>
                     </div>
                 </div>
             </div>
@@ -514,13 +523,16 @@
                         <label class="col-sm-5 col-form-label text-end">Licence Validity Date</label>
                         <div class="col-sm-7">
                             <div class="input-group">
-                                <input class="form-control required2" placeholder="Licence Validity Date" type="text"
-                                    #lv="bsDatepicker" bsDatepicker formControlName="driver1LicenceValDate"
+                                <input class="form-control required2" placeholder="Licence Validity Date" type="text"  [ngClass]="{ 'border-danger': isLicenseExpired}"
+                                    #lv="bsDatepicker" bsDatepicker formControlName="driver1LicenceValDate" (bsValueChange)="checkLicenseExpiry($event)"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
                                 <span class="input-group-text cursor-pointer" (click)="lv.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
+                             <small *ngIf="isLicenseExpired" class="text-danger fw-bold mt-1">
+                              License validity date is expired.      
+                              </small>
                         </div>
                     </div>
                 </div>
@@ -709,7 +721,7 @@
                     <label class="col-sm-5 col-form-label text-end">Delivery Agent</label>
                     <div class="col-sm-7">
                         <!-- <input class="form-control required2" placeholder="Delivery Agent" type="text" formControlName="deliveryAgent"> -->
-                          <ng-select class=" required2" [items]="challanService.locationData" bindLabel="locName" bindValue="locCode"
+                          <ng-select class=" required2" [items]="deliverAgentData" bindLabel="name" bindValue="userId"
                             placeholder="Delivery Agent" formControlName="deliveryAgent"></ng-select>
                     </div>
                 </div>
