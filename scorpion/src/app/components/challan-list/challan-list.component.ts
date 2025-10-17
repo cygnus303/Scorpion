@@ -47,7 +47,8 @@ constructor(
     this.challanService.getTDSLedgerList();
     this.challanService.getLocationData();
     this.avalabledocketinPRS()
-    this.getDAList()
+    this.getDAList();
+    this.challanService.getRateTypeData()
     const type = this.docketService.loginUserList.Type;
     this.typeName = type === '3' ? 'DRS' :
                     type === '1' ? 'THC' :
