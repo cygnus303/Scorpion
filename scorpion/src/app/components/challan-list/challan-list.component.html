@@ -828,7 +828,7 @@
           <table class="table table-bordered table-striped table-condensed flip-content mb-0">
             <thead class="sticky-top bg-light">
                 <tr>
-                    <th class="p-3"><input type="checkbox"></th>
+                    <th class="p-3"><input type="checkbox"  [checked]="isAllSelected" (change)="toggleSelectAll($event)"></th>
                     <th class="p-3">CNote No.</th>
                     <th class="p-3">Pay Basis</th>
                     <th class="p-3">Booking Date EDD</th>

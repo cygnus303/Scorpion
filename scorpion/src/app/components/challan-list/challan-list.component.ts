@@ -165,9 +165,28 @@ buildForm(){
   }
 
   updateTotalDockets() {
-  const selected = this.avalabledocket.controls.filter(x => x.value.isSelected);
-  this.challanForm.patchValue({ totalDockets: selected.length });
-}
+    const selected = this.avalabledocket.controls.filter(x => x.value.isSelected);
+    this.challanForm.patchValue({ totalDockets: selected.length });
+  }
+
+  toggleSelectAll(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+
+    this.avalabledocket.controls.forEach((control: any) => {
+      if (!control.value.message) {
+        control.get('isSelected').setValue(checked);
+      }
+    });
+    this.updateTotalDockets();
+  }
+
+  get isAllSelected(): boolean {
+    const validRows = this.avalabledocket.controls.filter((c: any) => !c.value.message);
+    return (
+      validRows.length > 0 &&
+      validRows.every((c: any) => c.get('isSelected').value)
+    );
+  }
 
 onDigitChange(digit: number) {
   this.selectedDigit = digit;
