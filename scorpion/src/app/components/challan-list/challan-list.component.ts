@@ -202,6 +202,9 @@ validateVehicleNo() {
   } else {
     filtered = value.replace(/[^A-Z0-9]/g, '').slice(0, this.selectedDigit);
   }
+   if (filtered.length > this.selectedDigit) {
+    filtered = filtered.slice(0, this.selectedDigit);
+  }
   control.setValue(filtered, { emitEvent: false });
   if (filtered.length === this.selectedDigit) {
     this.getVehicleDetail(filtered);
@@ -276,14 +279,14 @@ validateVehicleNo() {
         this.sweetAlertService.error(err.error.message)
       }
     });
-   this.getVehicleCapacity(event.value)
+   this.getVehicleCapacity()
   if(event.value!=='O'){
   this.getNewVehicleDetail(event.value)
   }
 }
 
-getVehicleCapacity(vehicleNo:string){
-  this.THCService.getVahicleCapacity(vehicleNo).subscribe({
+getVehicleCapacity(){
+  this.THCService.getVahicleCapacity().subscribe({
     next: (response: any) => {
       if (response && response.data) {
        this.challanForm.patchValue({

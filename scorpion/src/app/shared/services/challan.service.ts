@@ -76,7 +76,7 @@ public TDSLedgerData:any[]=[];
   }
   
   getTDSLedgerList(){
-    this.THCService.getTDSLedger(this.docketService.loginUserList.Type).subscribe({
+    this.THCService.getTDSLedger().subscribe({
       next: (response) => {
         if (response.success) {
           this.TDSLedgerData = response.data;
