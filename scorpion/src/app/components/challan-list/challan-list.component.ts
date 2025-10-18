@@ -139,31 +139,44 @@ buildForm(){
     return this.challanForm.get('avalabledocketinPRS') as FormArray;
   }
 
-  patchAvailableDockets(data: any[]) {
-    this.avalabledocket.clear(); // Clear existing form array if any
-    data.forEach((docket) => {
-      const group = new FormGroup({
-        isSelected: new FormControl(false),
-        dockno: new FormControl(docket.dockno),
-        paybaS_Str: new FormControl(docket.paybaS_Str),
-        bkg_Date: new FormControl(docket.bkg_Date),
-        commited_Dely_Date: new FormControl(docket.commited_Dely_Date),
-        arrPkgQty: new FormControl(docket.arrPkgQty),
-        pendPkgQty: new FormControl(docket.pendPkgQty),
-        actuwt: new FormControl(docket.actuwt),
-        chrgwt: new FormControl(docket.chrgwt),
-        pkgsno: new FormControl(docket.pkgsno),
-        arrival_Date: new FormControl(docket?.arrival_Date),
-        eWayBillNo: new FormControl(docket?.eWayBillNo),
-        subreasoncode: new FormControl(docket?.subreasoncode),
-        arrWeightQty: new FormControl(docket.arrWeightQty),
-        message: new FormControl(docket.message),
-        contractAmount: new FormControl(docket.contractAmount),
-        bcSerialNo: new FormControl(docket.bcSerialNo),
-      });
-      this.avalabledocket.push(group);
+patchAvailableDockets(data: any[]) {
+  this.avalabledocket.clear();
+
+  data.forEach((docket) => {
+    let tatInHrs = '-';
+    if (docket.arrival_Date) {
+      const arrival = new Date(docket.arrival_Date);
+      const now = new Date();
+      const diffMs = now.getTime() - arrival.getTime();
+      const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+      tatInHrs = diffHrs.toString();
+    }
+
+    const group = new FormGroup({
+      isSelected: new FormControl(false),
+      dockno: new FormControl(docket.dockno),
+      paybaS_Str: new FormControl(docket.paybaS_Str),
+      bkg_Date: new FormControl(docket.bkg_Date),
+      commited_Dely_Date: new FormControl(docket.commited_Dely_Date),
+      arrPkgQty: new FormControl(docket.arrPkgQty),
+      pendPkgQty: new FormControl(docket.pendPkgQty),
+      actuwt: new FormControl(docket.actuwt),
+      chrgwt: new FormControl(docket.chrgwt),
+      pkgsno: new FormControl(docket.pkgsno),
+      arrival_Date: new FormControl(docket?.arrival_Date),
+      eWayBillNo: new FormControl(docket?.eWayBillNo),
+      subreasoncode: new FormControl(docket?.subreasoncode),
+      arrWeightQty: new FormControl(docket.arrWeightQty),
+      message: new FormControl(docket.message),
+      contractAmount: new FormControl(docket.contractAmount),
+      bcSerialNo: new FormControl(docket.bcSerialNo),
+      tatInHrs: new FormControl(tatInHrs),
     });
-  }
+
+    this.avalabledocket.push(group);
+  });
+}
+
 
   updateTotalDockets() {
     const selected = this.avalabledocket.controls.filter(x => x.value.isSelected);
@@ -445,8 +458,8 @@ getDAList(){
 
 avalabledocketinPRS(){
   const payload={
-    fromdt: "12 Aug 2025",
-    todt: "10 Oct 2025",
+    fromdt: "06 Sep 2023",
+    todt: "05 Oct 2025",
     dttyp: "1",
     paybas: "ALL",
     trn: "ALL",

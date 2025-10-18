@@ -818,6 +818,45 @@
             </div>
         </div>
     </div>
+    <div>
+        <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Loading Charges</h3>
+        <div class="row pb-3">
+            <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Loading By :</label>
+                    <div class="col-sm-7 text-start fw-bold">
+                        ATTACHED
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Vendor Code </label>
+                    <div class="col-sm-7">
+                        <input class="form-control required2" placeholder="Vendor Code" type="text">
+                    </div>
+                </div>
+            </div>
+             <div class="col-4">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Rate </label>
+                    <div class="col-sm-7">
+                        <input class="form-control required2" placeholder="Rate" type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
+         <div class="row pb-3">
+            <div class="col-4">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Loading Charge </label>
+                    <div class="col-sm-7">
+                        <input class="form-control required2" placeholder="Loading Charge" type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div [ngClass]="this.docketService.loginUserList.Type === '1' ? 'd-none' : '' ">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">CNote Available For {{typeName}}</h3>
         <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
@@ -876,7 +915,7 @@
                           <input type="text" class="form-control required2" value="00.00"></td>
                         <td>{{ item.value.eWayBillNo }}</td>
                         <td>{{ item.value.subreasoncode }}</td>
-                        <td>-</td>
+                        <td>{{ item.value.tatInHrs }}</td>
                         <td>{{item.value.contractAmount}}</td>
                         <td>{{ item.value.bcSerialNo }}</td>
                     </tr>
