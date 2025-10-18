@@ -179,19 +179,33 @@ patchAvailableDockets(data: any[]) {
 
 
   updateTotalDockets() {
-    const selected = this.avalabledocket.controls.filter(x => x.value.isSelected);
-    this.challanForm.patchValue({ totalDockets: selected.length });
+    const docketArray = this.challanForm.get('avalabledocketinPRS') as FormArray;
+  if (!docketArray) return;
+
+  // Sum only selected rows
+  const total = docketArray.controls.reduce((sum, control) => {
+    if (control.get('isSelected')?.value) {
+      return sum + (Number(control.get('contractAmount')?.value) || 0);
+    }
+    return sum;
+  }, 0);
+
+  // Patch total to your Contract Amount field
+  this.challanForm.patchValue({
+    contractAmount: total
+  });
   }
 
   toggleSelectAll(event: Event) {
-    const checked = (event.target as HTMLInputElement).checked;
+    
+const checked = (event.target as HTMLInputElement).checked;
+  const docketArray = this.challanForm.get('avalabledocketinPRS') as FormArray;
 
-    this.avalabledocket.controls.forEach((control: any) => {
-      if (!control.value.message) {
-        control.get('isSelected').setValue(checked);
-      }
-    });
-    this.updateTotalDockets();
+  docketArray.controls.forEach(control => {
+    control.get('isSelected')?.setValue(checked, { emitEvent: false });
+  });
+
+  this.updateTotalDockets();
   }
 
   get isAllSelected(): boolean {
@@ -375,8 +389,11 @@ getPANnumberData(event:any){
         this.sweetAlertService.error(err.error.message)
       }
     });
-    this.getTDSDetailsFromVendor(event.vendor_Code)
-    this.getVehicleFromVendorList(event.vendor_Code)
+    this.getTDSDetailsFromVendor(event.vendor_Code);
+    this.getVehicleFromVendorList(event.vendor_Code);
+    if (this.challanForm.value.vendorType === '04') {
+        this.avalabledocketinPRS(event.vendor_Code);
+    }
 }
 
 getVehicleFromVendorList(vendor:string){
@@ -456,7 +473,10 @@ getDAList(){
     });
 }
 
-avalabledocketinPRS(){
+avalabledocketinPRS(event?:any){
+  if(this.challanForm.value.vendorType!=='04' && event){
+      return;
+  }
   const payload={
     fromdt: "06 Sep 2023",
     todt: "05 Oct 2025",
@@ -464,22 +484,46 @@ avalabledocketinPRS(){
     paybas: "ALL",
     trn: "ALL",
     bustyp: "ALL",
-    status: "P",
+    status: this.challanForm.value.vendorType==='04' ?'B':'P',
     doctyp: "PRS",
     baseLocationCode:this.docketService.loginUserList.LocationCode,
     docketList: "",
-    alloted_To: "",
+    alloted_To:this.challanForm.value.vendorType==='04'? this.challanForm.value.vendorCode:'',
     loadingBy: "XX9",
     chrgType: "",
     odaType: "",
     baseCompanyCode:this.docketService.loginUserList.Companycode,
     flag: 2
   }
-  this.THCService.avalabledocketinPRS(payload).subscribe({
-      next: (response: any) => {
-        if (response && response.data) {
-          this.patchAvailableDockets(response.data);
+  // this.THCService.avalabledocketinPRS(payload).subscribe({
+  //     next: (response: any) => {
+  //       if (response && response.data) {
+  //         this.patchAvailableDockets(response.data);
+  //       }
+    this.THCService.avalabledocketinPRS(payload).subscribe({
+    next: (response: any) => {
+      if (response && response.data && Array.isArray(response.data)) {
+        const updatedData = response.data;
+        const docketArray = this.avalabledocket;
+
+        if (docketArray && docketArray.length > 0) {
+          // ✅ Update contractAmount only for matching rows
+          updatedData.forEach((item: any) => {
+            const match = docketArray.controls.find(
+              (ctrl: any) => ctrl.value.dockno === item.dockno
+            );
+            if (match) {
+              match.get('contractAmount')?.setValue(item.contractAmount);
+            }
+          });
+        } else {
+          // If first time load → create FormArray
+          this.patchAvailableDockets(updatedData);
         }
+
+        // 🔁 Recalculate total in case contractAmount values changed
+        this.updateTotalDockets();
+      }
       },error: (err) => {
         this.sweetAlertService.error(err.error.message)
       }
