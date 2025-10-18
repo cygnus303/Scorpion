@@ -131,7 +131,8 @@ buildForm(){
     TDSAcccode:new FormControl(),
     vehicleNO:new FormControl(),
     avalabledocketinPRS:new FormArray([]),
-    TDSPercent:new FormControl()
+    TDSPercent:new FormControl(),
+    Loadingcharge:new FormControl()
   });
 }
 
@@ -171,41 +172,71 @@ patchAvailableDockets(data: any[]) {
       contractAmount: new FormControl(docket.contractAmount),
       bcSerialNo: new FormControl(docket.bcSerialNo),
       tatInHrs: new FormControl(tatInHrs),
+      rateType: new FormControl(''),
+      newRate: new FormControl(0),
+      charge: new FormControl(0),  
     });
-
+    group.get('rateType')?.valueChanges.subscribe(() => this.calculateCharge(group));
+    group.get('newRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
     this.avalabledocket.push(group);
   });
 }
 
+calculateCharge(group: FormGroup) {
+  const rateType = group.get('rateType')?.value;
+  const newRate = parseFloat(group.get('newRate')?.value || 0);
+  const actuwt = parseFloat(group.get('actuwt')?.value || 0);
+  const pkgsno = parseFloat(group.get('pkgsno')?.value || 0);
+  let charge = 0;
+  switch (rateType) {
+    case '1': // PER KG
+      charge = actuwt * newRate;
+      break;
+    case '3': // PER PACKAGES
+      charge = pkgsno * newRate;
+      break;
+    case '4': // FLAT
+      charge = newRate;
+      break;
+    default:
+      charge = 0;
+  }
+  group.get('charge')?.setValue(charge.toFixed(2), { emitEvent: false });
+  this.updateTotalLoadingCharge()
+}
+
+updateTotalLoadingCharge() {
+  const total = this.avalabledocket.controls.reduce((sum, ctrl) => {
+    return sum + parseFloat(ctrl.get('charge')?.value || 0);
+  }, 0);
+
+  this.challanForm.get('Loadingcharge')?.setValue(total.toFixed(2), { emitEvent: false });
+}
 
   updateTotalDockets() {
     const docketArray = this.challanForm.get('avalabledocketinPRS') as FormArray;
-  if (!docketArray) return;
-
-  // Sum only selected rows
-  const total = docketArray.controls.reduce((sum, control) => {
-    if (control.get('isSelected')?.value) {
-      return sum + (Number(control.get('contractAmount')?.value) || 0);
-    }
-    return sum;
-  }, 0);
-
-  // Patch total to your Contract Amount field
-  this.challanForm.patchValue({
-    contractAmount: total
-  });
+    if (!docketArray) return;
+    const total = docketArray.controls.reduce((sum, control) => {
+      if (control.get('isSelected')?.value) {
+        return sum + (Number(control.get('contractAmount')?.value) || 0);
+      }
+      return sum;
+    }, 0);
+    this.updateTotalLoadingCharge();
+    this.challanForm.patchValue({
+      contractAmount: total,
+    });
   }
 
   toggleSelectAll(event: Event) {
-    
-const checked = (event.target as HTMLInputElement).checked;
-  const docketArray = this.challanForm.get('avalabledocketinPRS') as FormArray;
+    const checked = (event.target as HTMLInputElement).checked;
+    const docketArray = this.challanForm.get('avalabledocketinPRS') as FormArray;
 
-  docketArray.controls.forEach(control => {
-    control.get('isSelected')?.setValue(checked, { emitEvent: false });
-  });
+    docketArray.controls.forEach(control => {
+      control.get('isSelected')?.setValue(checked, { emitEvent: false });
+    });
 
-  this.updateTotalDockets();
+    this.updateTotalDockets();
   }
 
   get isAllSelected(): boolean {
@@ -478,8 +509,8 @@ avalabledocketinPRS(event?:any){
       return;
   }
   const payload={
-    fromdt: "06 Sep 2023",
-    todt: "05 Oct 2025",
+    fromdt: "12 Aug 2025",
+    todt: "10 Oct 2025",
     dttyp: "1",
     paybas: "ALL",
     trn: "ALL",
