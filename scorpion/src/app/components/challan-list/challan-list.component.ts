@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { cityResponse } from 'app/shared/models/general-master.model';
 import { VehicleTyperesponse } from 'app/shared/models/thc-master.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { ChallanService } from 'app/shared/services/challan.service';
@@ -206,27 +205,54 @@ calculateCharge(group: FormGroup) {
 }
 
 updateTotalLoadingCharge() {
-  const total = this.avalabledocket.controls.reduce((sum, ctrl) => {
-    return sum + parseFloat(ctrl.get('charge')?.value || 0);
+   const total = this.avalabledocket.controls.reduce((sum, ctrl) => {
+    if (ctrl.get('isSelected')?.value) { // ✅ only include checked rows
+      return sum + parseFloat(ctrl.get('charge')?.value || 0);
+    }
+    return sum;
   }, 0);
 
   this.challanForm.get('Loadingcharge')?.setValue(total.toFixed(2), { emitEvent: false });
 }
 
-  updateTotalDockets() {
-    const docketArray = this.challanForm.get('avalabledocketinPRS') as FormArray;
-    if (!docketArray) return;
-    const total = docketArray.controls.reduce((sum, control) => {
-      if (control.get('isSelected')?.value) {
-        return sum + (Number(control.get('contractAmount')?.value) || 0);
-      }
-      return sum;
-    }, 0);
-    this.updateTotalLoadingCharge();
-    this.challanForm.patchValue({
-      contractAmount: total,
-    });
-  }
+  // updateTotalDockets() {
+  //   const docketArray = this.challanForm.get('avalabledocketinPRS') as FormArray;
+  //   if (!docketArray) return;
+  //   const total = docketArray.controls.reduce((sum, control) => {
+  //     if (control.get('isSelected')?.value) {
+  //       return sum + (Number(control.get('contractAmount')?.value) || 0);
+  //     }
+  //     return sum;
+  //   }, 0);
+  //   this.updateTotalLoadingCharge();
+  //   this.challanForm.patchValue({
+  //     contractAmount: total,
+  //   });
+  // }
+
+updateTotalDockets() {
+  const docketArray = this.challanForm.get('avalabledocketinPRS') as FormArray;
+  if (!docketArray) return;
+
+  let totalAmount = 0;
+  let selectedCount = 0;
+
+  docketArray.controls.forEach(control => {
+    if (control.get('isSelected')?.value) {
+      selectedCount++;
+      totalAmount += Number(control.get('contractAmount')?.value) || 0;
+    }
+  });
+
+  // update other related values
+  this.updateTotalLoadingCharge();
+
+  // patch both values into the form
+  this.challanForm.patchValue({
+    contractAmount: totalAmount,
+    totalDockets: selectedCount
+  });
+}
 
   toggleSelectAll(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
