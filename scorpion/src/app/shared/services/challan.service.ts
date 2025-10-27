@@ -195,6 +195,8 @@ public rateTypeData:generalMasterResponse[]=[];
     telephoneCharges: new FormControl(0),
     humaliCharges: new FormControl(0),
     mamulCharges: new FormControl(0),
+    flightCode:new FormControl(),
+    airportCode:new FormControl()
   });
 }
 
@@ -281,106 +283,357 @@ updateTotalLoadingCharge() {
 
 onSubmit(){
   const payload={
-  //   "CTH":{
-  //     "THCNO":"",
-  //     "ManualTHCNo":"",
-  //     "THCSF":"",
-  //     "THCDate":"",
-  //     "THCBRCD":""
-  //     "THCDESTCD"
-  //     "FROMCITY"
-  //     "TOCITY"
-  //     "THCType"
-  //     "RouteCategory"
-  //     "RouteType"
-  //     "PKDLYType"
-  //     "RouteCode"
-  //     "RouteName"
-  //     "VehicleNO"
-  //     "IsMarketVehicle":true,
-  //     "IsExtraVehicle":true,
-  //     "OpenKM"
-  //     "CloseKM"
-  //     "TotalManifest"
-  //     "TotalDockets"
-  //     "TotalPackages"
-  // "TotalActualWt"
-  // "TotalChargeWt"
-  // "FreeSpace"
-  // "WtLoaded"
-  // "IsOverLoad":true,
-  // "OverLoadReason"
-  // "WtAdjust"
-  // "TOTALWtAdjust"
-  // "TOTALWithWtAdjust"
-  // "WithWtAdjustPM"
-  // "VendorCode"
-  // "VendorName"
-  // "VendorType"
-  // "VendorAddress"
-  // "VENDORMOBNO"
-  // "VENDORPHONENO"
-  // "SUPPLYERMOBNO"
-  // "SUPPLYERCODE"
-  // "SUPPLYERNAME"
-  // "AIRAGENT"
-  // "IsBrokerMemo":true,
-  // "BrokerMemoPath":
-  // "TripSheetNo"
-  // "FleetNo"
-  // "TAMNO"
-  // "TRACKNO"
-  // "AckDays"
-  // "AckPenalyRate"
-  // "LaterPenalyRate"
-  // "ScheduleType"
-  // "AirportCode"
-  // "AirportName"
-  // "AirportDestination"
-  // "FlightCode"
-  // "FlightScheduleTime"
-  // "FlightDepatureDate"
-  // "AirportDepatureDate"
-  // "IsFlightUpdated":true,
-  // "AirWayBillNo"
-  // "IsBCProcess":true,
-  // "IsFinancialEdit":true,
-  // "IsFinalized":true,
-  // "IsClosed":true,
-  // "THCRemarks"
-  // "OperationalStatus"
-  // "ClosedBy"
-  // "ClosedDate"
-  // "IsCancelled":true,
-  // "IsQuickChallan":
-  // "CancelBy"
-  // "CancelDate"
-  // "CancelReason"
-  // "EntryBy"
-  // "EntryDate"
-  // "UpdatedBy"
-  // "UpdatedDate"
-  // "LorryOwnerName"
-  // "LorryOwnerAddress"
-  // "LorryOwnerMobileNo"
-  // "LorryOwnerPanNo"
-  // "IsSafeEx":true,
-  // "IsReassign":true,
-  // "ReassignBy",
-  // "ReassignDate"
-  // "IsVehDecRequired":true,
-  // "FirmName"
-  // "PaymentBy"
-  // "ThirdPartyName"
-  // "ThirdPartyPANNO"
-  // "NoOfVehicle"
-  //   }
+    "CTH":{
+    THCNO:"",
+    ManualTHCNo:"",
+    THCSF:"",
+    THCDate:this.challanForm.value.tHCDate,
+    THCBRCD:"",
+    THCDESTCD:"",
+    FROMCITY:this.challanForm.value.from_City,
+    TOCITY:this.challanForm.value.to_City,
+    THCType:"",
+    RouteCategory:"",
+    RouteType:"",
+    PKDLYType:"",
+    RouteCode:"",
+    RouteName:"",
+    VehicleNO:this.challanForm.value.vehicleNO,
+    IsMarketVehicle:true,
+    IsExtraVehicle:true,
+    OpenKM:this.challanForm.value.openKM,
+    CloseKM:this.challanForm.value.closeKM,
+    TotalManifest:"",
+    TotalDockets:"",
+    TotalPackages:"",
+    TotalActualWt:"",
+    TotalChargeWt:"",
+    FreeSpace:"",
+    WtLoaded:this.challanForm.value.wtLoaded,
+    IsOverLoad:this.challanForm.value.isOverLoad,
+    OverLoadReason:this.challanForm.value.overLoadReason,
+    WtAdjust:"",
+    TOTALWtAdjust:"",
+    TOTALWithWtAdjust:"",
+    WithWtAdjustPM:"",
+    VendorCode:this.challanForm.value.vendorCode,
+    VendorName:"",
+    VendorType:this.challanForm.value.vendorType,
+    VendorAddress:"",
+    VENDORMOBNO:"",
+    VENDORPHONENO:"",
+    SUPPLYERMOBNO:"",
+    SUPPLYERCODE:"",
+    SUPPLYERNAME:"",
+    AIRAGENT:"",
+    IsBrokerMemo:true,
+    BrokerMemoPath:"",
+    TripSheetNo:this.challanForm.value.tripSheetNo,
+    FleetNo:"",
+    TAMNO:"",
+    TRACKNO:"",
+    AckDays:"",
+    AckPenalyRate:"",
+    LaterPenalyRate:"",
+    ScheduleType:"",
+    AirportCode:this.challanForm.value.airportCode,
+    AirportName:"",
+    AirportDestination:"",
+    FlightCode:this.challanForm.value.flightCode,
+    FlightScheduleTime:"",
+    FlightDepatureDate:"",
+    AirportDepatureDate:"",
+    IsFlightUpdat:true,
+    AirWayBillNo:"",
+    IsBCProcess:true,
+    IsFinancialEdit:true,
+    IsFinalized:true,
+    IsClosed:true,
+    THCRemarks:this.challanForm.value.THCRemarks,
+    OperationalStatus:"",
+    ClosedBy:"",
+    ClosedDate:"",
+    IsCancelled:true,
+    IsQuickChallan:"",
+    CancelBy:"",
+    CancelDate:"",
+    CancelReason:"",
+    EntryBy:this.challanForm.value.entryBy,
+    EntryDate:"",
+    UpdatBy:"",
+    UpdatDate:"",
+    LorryOwnerName:"",
+    LorryOwnerAddress:"",
+    LorryOwnerMobileNo:"",
+    LorryOwnerPanNo:"",
+    IsSafeEx:true,
+    IsReassign:true,
+    ReassignBy:"",
+    ReassignDate:"",
+    IsVehDecRequired:true,
+    FirmName:"",
+    PaymentBy:"",
+    ThirdPartyName:"",
+    ThirdPartyPANNO:"",
+    NoOfVehicle:"",
+    Lat:"",
+    Long:"",
+    VehicleGPSStatus:"",
+    ProprietorName:"",
+    OWNERPANNOPATH:"",
+    OWNERVEHDEPATH:"",
+    BROKERPANNOPATH:"",
+    THIRDPARTYPANNOPATH:"",
+    RCBOOKPATH:"",
+    IsOwnerPanRequired:"",
+    IsBrokerPanRequired:"",
+    BROKERVEHDEPATH:"",
+    PaymentByType:"",
+    IsOperationallyClose:"",
+    OperationallyCloseBy:"",
+    IsOperationallyClosebySMS:"",
+    OperationallyCloseDate:"",
+    IsEditMode:"",
+    PickUpLocation:"",
+    DropLocaion:"",
+    SealType:"",
+    SealNo:this.challanForm.value.sealNo,
+    ActualDeptDate:this.challanForm.value.actualDeptDate,
+    ScheduleDeptDate:this.challanForm.value.scheduleDeptDate,
+    LateEarly:"",
+    ScheduleNo:"",
+    ScheduleTime:"",
+    LateDepaturereason:this.challanForm.value.lateDepaturereason,
+    IsEmpty:this.challanForm.value.isEmpty,
+    IsCityEnabled:"",
+    DeliveryZone:this.challanForm.value.deliveryZone,
+    MKTVehicleNo:this.challanForm.value.mKTVehicleNo,
+    ScheduleDay:"",
+    VehicleCapacity:this.challanForm.value.vehicleCapacity,
+    VehicleCapacityUti:this.challanForm.value.vehicleCapacityUti,
+    TrainName:"",
+    TrainNo:"",
+    RRNo:"",
+    AirLine:"",
+    FromAddress:this.challanForm.value.fromAddress,
+    From_City:this.challanForm.value.from_City,
+    To_City:this.challanForm.value.to_City,
+    Location:"",
+    city_code:"",
+    FromAddLat:"",
+    FromAddLng:"",
+    ToAddLat:"",
+    ToAddress:this.challanForm.value.toAddress,
+    ToAddLng:"",  
+    distanceInKM:this.challanForm.value.distanceInKM,
+    approxAPITime:"",
+    EWayBillNo:this.challanForm.value.eWayBillNo,
+    EWayBillExpiredDate:this.challanForm.value.eWayBillExpiredDate,
+    IsMonthlyBillAllow:this.challanForm.value.isMonthlyBillAllow,
+    DeliveryAgent:this.challanForm.value.deliveryAgent,
+    DeliveryAgentMoNo:this.challanForm.value.deliveryAgentMoNo,
+    LoadingDate:this.challanForm.value.loadingDate,
+    CityRouteCode:"",
+    CityRouteKM:"",
+    LoadingSlipAttachment:this.challanForm.value.loadingSlipAttachment,
+    ApprovedBy:"",
+    ERD:this.challanForm.value.ERD,
+    DAVendor:"",
+    },
+    "CMR":{
+      Module_Title_desc:"",
+      RULEID:"",
+      Srno:"",
+      Module_Name:"",
+      RULE_Y_N:"",
+      ModuleID:"",
+      RULE_VALUE:"",
+      RULE_DESC:"",
+      IsFromTocityRequird:"",
+      IsFromTocityRequirdinthc:"",
+    },
+    "CTFD":{
+      THCNO:"",
+      THCSF:"",
+      ContractType:"",
+      ContractAmount:this.challanForm.value.contractAmount,
+      StandardContractAmount:this.challanForm.value.standardContractAmount,
+      TotalCharges:"",
+      NetAmount:this.challanForm.value.netAmount,
+      AdvanceAmount:this.challanForm.value.advanceAmount,
+      PendingAdvanceAmount:"",
+      CollectedAdvanceAmount:"",
+      AdvanceLocation:this.challanForm.value.advanceLocation,
+      AdvanceAmountPaid:"",
+      AdvanceAmountPending:"",
+      IsAdvancePaid:"",
+      AdvancePaidOn:"",
+      AdvancePaidBy:"",
+      AdvanceVoucherNo:"",
+      AdvanceVoucherDate:"",
+      AdvanceCollMode:"",
+      AdvanceChequeNo:"",
+      AdvanceChequeDate:"",
+      AdvanceLedger:"",
+      BalanceAmount:this.challanForm.value.balanceAmount,
+      PendingBalanceAmount:"",
+      CollectedBalanceAmount:"",
+      BalanceLocation:this.challanForm.value.balanceLocation,
+      BalanceAmountPaid:"",
+      BalanceAmountPending:"",
+      BalanceCollMode:"",
+      BalanceChequeNo:"",
+      BalanceChequeDate:"",
+      BalanceLedger:"",
+      IsBalancePaid:"",
+      BalancePaidOn:"",
+      BalancePaidBy:"",
+      BalanceVoucherNo:"",
+      BalanceVoucherDate:"",
+      SCDebitVoucher:"",
+      SCDebitVoucherAmount:"",
+      SCCreditVoucher:"",
+      SCCreditVoucherAmount:"",
+      FianacialRemark:"",
+      FianacialStatus:"",
+      Narration:"",
+      PANNO:this.challanForm.value.PANNO,
+      VendorBillNo:"",
+      CENVATRATE:"",
+      CENVATAMT:"",
+      ServiceTaxAmount:"",
+      TotalBill:"",
+      InvoiceNo:"",
+      WayBillNo:"",
+      DFRClosed:"",
+      DFRClosedBy:"",
+      DFRClosedDate:"",
+      TotalTDSAmount:this.challanForm.value.totalTDSAmount,
+      AdvanceTDSAmount:"",
+      BalanceTDSAmount:"",
+      TDSPercent:this.challanForm.value.TDSPercent,
+      AdvanceAmountWOTDS:"",
+      BalanceAmountWOTDS:"",
+      Comment:"",
+      PendingAdvanceTDSAmount:"",
+      CollectedAdvanceTDSAmount:"",
+      PendingBalanceTDSAmount:"",
+      CollectedBalanceTDSAmount:"",
+      IsFromPRQ:"",
+      Loadingcharge:"",
+      LoadedRateType:"",
+      LoadedBy:"",
+      Rate:"",
+      MaxLimit:"",
+      VendorCode:"",
+      IsMonthly:"",
+      VendName:"",
+      hdnRate:"",
+      IsMathadi:"",
+      MathadiSlipNo:"",
+      MathadiDate:"",
+      MathadiAmt:"",
+      Is_Local_ODA_id:"",
+      Check_Dockno:"",
+      Type:"",
+      AttachedRateType:"",
+      IsTDSEnabled:this.challanForm.value.isTDSEnabled,
+      TDSAcccode:this.challanForm.value.TDSAcccode,
+      TDSAccdesc:"",
+      TDSOnAmount:this.challanForm.value.tDSOnAmount,
+    },
+    "CTVD":{
+      THCNO:"",
+      THCSF:"",
+      VehicleNO:this.challanForm.value.vehicleNO,
+      VehicleType:this.challanForm.value.vehicleType,
+      FTLType:this.challanForm.value.fTLType,
+      VehicleCapacity:this.challanForm.value.VehicleCapacity,
+      VehicleSize:"",
+      Driver1Name:this.challanForm.value.driver1Name,
+      Driver1MobileNo:this.challanForm.value.driver1MobileNo,
+      Driver1RTONo:this.challanForm.value.driver1RTONo,
+      Driver1Licence:this.challanForm.value.driver1Licence,
+      D1_DOB:this.challanForm.value.d1_DOB,
+      Driver1LicenceValDate:this.challanForm.value.driver1LicenceValDate,
+      Driver2Name:this.challanForm.value.driver2Name,
+      Driver2MobileNo:this.challanForm.value.driver2MobileNo,
+      Driver2RTONo:this.challanForm.value.driver2RTONo,
+      Driver2Licence:this.challanForm.value.driver2Licence,
+      Driver2LicenceValDate:this.challanForm.value.driver2LicenceValDate,
+      DriverPhotoPath:"",
+      Make:"",
+      Model:"",
+      VehicleVolume:"",
+      VehicleColor:"",
+      CHASISNO:this.challanForm.value.cHASISNO,
+      ENGINENO:this.challanForm.value.eNGINENO,
+      MODELNo:"",
+      RCBOOKNO:this.challanForm.value.rCBOOKNO,
+      CertificateNo:"",
+      InsuranceNo:"",
+      RTONo:"",
+      RegistrationDate:this.challanForm.value.registrationDate,
+      FitnessDate:this.challanForm.value.fitnessDate,
+      PermitDate:this.challanForm.value.permitDate,
+      InsuranceDate:this.challanForm.value.insuranceDate,
+      CAPACITY:"",
+      MarketVehImage:"",
+      tabletNumber:"",
+      StaffName:"",
+      StaffMobileNo:"",
+      VehicleTypeSize:"",
+      CustomerName:"",
+      Driver:"",
+    },
+    "CPML":{
+      Id:"",
+      BRCD:"",
+      RatePerGM:"",
+      VehicleSize:"",
+    },
+    "GC":{
+      FromDate:"",
+      ToDate:"",
+      GCNO:"",
+      PAYBAS:"",
+      TRNMOD:"",
+      BUSTYPE:"",
+      DATETYPE:"",
+      BookedByType:"",
+      BookedBy:"",
+      DOCTYP:"",
+      TYP:"",
+      isBookedby:"",
+      LoadingBy:"",
+      ChargeType:"",
+      VendorCode:"",
+      ODAType:"",
+      DRSType:"",
+    }
   }
+  const formData = new FormData();
+   formData.append("CVM.THCNo", "");
+   formData.append("CVM.IsMathadi", "");
+   formData.append("CVM.BookedByType", "");
+   formData.append("CVM.RatePerGram", "");
+   formData.append("CVM.RatePerGramContractAmount", "");
+   formData.append("CVM.ISAttechedVendor", "");
+   formData.append("CVM.ISContractualVendor", "");
+   formData.append("CVM.RateType", "");
+   formData.append("CVM.IsMobileUser", "");
+   formData.append("CVM.DemurrageCharge", "");
+   formData.append("CVM.DiscountRatio", "");
+   formData.append("CVM.FinalAmt", "");
+   formData.append("LoadingSlipAttachmentFile", "");
+
+
   if(this.challanForm.valid){
 
   }else{
     this.challanForm.markAllAsTouched();
   }
 }
+
  
 }
