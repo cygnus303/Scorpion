@@ -303,7 +303,7 @@
     <div *ngIf="challanForm.value.routeType === 'S' || this.docketService.loginUserList.Type === '2' || this.docketService.loginUserList.Type === '3'">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Vehicle Details</h3>
         <div class="row ">
-            <div class="col-4 pb-3" *ngIf="challanForm.value.vendorType === 'XX1' || challanForm.value.vendorType === '04'|| challanForm.value.vendorType === '19'|| challanForm.value.vendorType === '05'">
+            <div class="col-4 pb-3" *ngIf="challanForm.value.vendorType === 'XX1' || challanForm.value.vendorType === '04'|| challanForm.value.vendorType === '19' || challanForm.value.vendorType === '05' || challanForm.value.vendorType === 'XX5'">
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
                     <div class="col-sm-7">
