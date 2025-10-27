@@ -213,13 +213,26 @@ calculateNetAmount() {
   const telephoneCharges = Number(this.challanForm.get('telephoneCharges')?.value) || 0;
   const humaliCharges = Number(this.challanForm.get('humaliCharges')?.value) || 0;
   const mamulCharges = Number(this.challanForm.get('mamulCharges')?.value) || 0;
-
+  
   const netAmount = contractAmount + telephoneCharges + humaliCharges - mamulCharges;
-
-  this.challanForm.patchValue({ netAmount });
+  
+  const staxOnAmount = parseFloat(this.challanForm.get('tDSOnAmount')?.value || 0);
+  const isTDSEnabled = this.challanForm.get('isTDSEnabled')?.value;
+  const tdsRate = parseFloat(this.challanForm.get('TDSPercent')?.value || 0);
+  let tdsAmount = 0;
+  
+  if (isTDSEnabled) {
+    tdsAmount = this.rounditn((staxOnAmount * tdsRate) / 100, 0);
+  }
+  
+  this.challanForm.patchValue({
+    totalTDSAmount: tdsAmount.toFixed(2),
+    netAmount: (netAmount - tdsAmount).toFixed(2),
+  });
+  
   if(this.challanForm.value.vendorType === 'XX1'|| this.challanForm.value.vendorType ==='04'|| this.challanForm.value.vendorType ==='19'|| this.challanForm.value.vendorType ==='XX'){
     this.challanForm.patchValue({
-      balanceAmount:netAmount
+      balanceAmount:(netAmount - tdsAmount).toFixed(2)
     })
   }
 }
@@ -235,6 +248,7 @@ changeAmountApplicable(event:any){
   this.challanForm.patchValue({
        tDSOnAmount:event.target.value
   });
+
   this.calculateNetAmount();
   // this.calculateSubTotal()
 }
