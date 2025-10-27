@@ -131,7 +131,10 @@ buildForm(){
     vehicleNO:new FormControl(),
     avalabledocketinPRS:new FormArray([]),
     TDSPercent:new FormControl(),
-    Loadingcharge:new FormControl()
+    Loadingcharge:new FormControl(),
+    telephoneCharges: new FormControl(0),
+    humaliCharges: new FormControl(0),
+    mamulCharges: new FormControl(0),
   });
 }
 
@@ -204,6 +207,91 @@ calculateCharge(group: FormGroup) {
   this.updateTotalLoadingCharge()
 }
 
+calculateNetAmount() {
+  const contractAmount = Number(this.challanForm.get('contractAmount')?.value) || 0;
+  const telephoneCharges = Number(this.challanForm.get('telephoneCharges')?.value) || 0;
+  const humaliCharges = Number(this.challanForm.get('humaliCharges')?.value) || 0;
+  const mamulCharges = Number(this.challanForm.get('mamulCharges')?.value) || 0;
+
+  const netAmount = contractAmount + telephoneCharges + humaliCharges - mamulCharges;
+
+  this.challanForm.patchValue({ netAmount });
+  if(this.challanForm.value.vendorType === 'XX1'|| this.challanForm.value.vendorType ==='04'|| this.challanForm.value.vendorType ==='19'|| this.challanForm.value.vendorType ==='XX'){
+    this.challanForm.patchValue({
+      balanceAmount:netAmount
+    })
+  }
+}
+
+calculateBalanceAmount() {
+  const netAmount = Number(this.challanForm.get('netAmount')?.value) || 0;
+  const advanceAmount = Number(this.challanForm.get('advanceAmount')?.value) || 0;
+  const balanceAmount = netAmount - advanceAmount;
+  this.challanForm.patchValue({ balanceAmount });
+}
+
+changeAmountApplicable(event:any){
+  this.challanForm.patchValue({
+       tDSOnAmount:event.target.value
+  });
+  this.calculateNetAmount();
+  // this.calculateSubTotal()
+}
+
+calculateSubTotal() {
+  const form = this.challanForm;
+
+  let contractAmount = parseFloat(form.get('contractAmount')?.value || 0);
+  let totalCharges = 0;
+
+  // // Assuming challanCharges is a FormArray of charge controls
+  // const chargesArray = form.get('charges')?.value || [];
+  // chargesArray.forEach((charge: any) => {
+  //   const amount = parseFloat(charge.chargeAmount || 0);
+  //   const operator = charge.operator || '+';
+  //   totalCharges += operator === '+' ? amount : -amount;
+  // });
+   const telephoneCharges = Number(this.challanForm.get('telephoneCharges')?.value) || 0;
+  const humaliCharges = Number(this.challanForm.get('humaliCharges')?.value) || 0;
+  const mamulCharges = Number(this.challanForm.get('mamulCharges')?.value) || 0;
+
+  const netAmount = contractAmount + telephoneCharges + humaliCharges - mamulCharges;
+
+  let advanceAmount = parseFloat(form.get('advanceAmount')?.value || 0);
+  let freight = netAmount ;
+
+  const staxOnAmount = parseFloat(form.get('tdsOnAmount')?.value || 0);
+  const isTDSEnabled = form.get('isTDSEnabled')?.value;
+  const tdsRate = parseFloat(form.get('tdsPercent')?.value || 0);
+  let tdsAmount = 0;
+
+  if (isTDSEnabled) {
+    tdsAmount = this.rounditn((staxOnAmount * tdsRate) / 100, 0);
+  }
+
+  form.patchValue({
+    totalTDSAmount: tdsAmount.toFixed(2),
+    netAmount: (netAmount + contractAmount - tdsAmount).toFixed(2),
+  });
+
+  if (freight >= advanceAmount) {
+    const balanceAmount = freight - advanceAmount - tdsAmount;
+    form.patchValue({
+      balanceAmount: balanceAmount.toFixed(2),
+    });
+  } else {
+    console.warn('Advance amount cannot exceed Net Amount');
+  }
+}
+
+// Helper method
+rounditn(value: number, digits: number): number {
+  const multiplier = Math.pow(10, digits);
+  return Math.round(value * multiplier) / multiplier;
+}
+
+
+
 updateTotalLoadingCharge() {
    const total = this.avalabledocket.controls.reduce((sum, ctrl) => {
     if (ctrl.get('isSelected')?.value) { // ✅ only include checked rows
@@ -250,7 +338,8 @@ updateTotalDockets() {
   // patch both values into the form
   this.challanForm.patchValue({
     contractAmount: totalAmount,
-    totalDockets: selectedCount
+    totalDockets: selectedCount,
+    tDSOnAmount:totalAmount
   });
 }
 
@@ -571,6 +660,7 @@ avalabledocketinPRS(event?:any){
             );
             if (match) {
               match.get('contractAmount')?.setValue(item.contractAmount);
+              match.get('tDSOnAmount')?.setValue(item.contractAmount);
             }
           });
         } else {
