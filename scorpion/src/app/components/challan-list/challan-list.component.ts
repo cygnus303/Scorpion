@@ -310,6 +310,18 @@ vendorCodeName(){
     });
   if(event.value!=='O'){
   this.getNewVehicleDetail(event.value)
+  }else{
+     this.challanService.challanForm.patchValue({
+      vehicleType :'',
+      fTLType :'',
+      registrationDate :'',
+      eNGINENO :'',
+      cHASISNO :'',
+      rCBOOKNO :'',
+      permitDate :'',
+      insuranceDate :'',
+      fitnessDate :'',
+     })
   }
   this.checkPermitExpiry();
   this.checkInsuranceExpiry();
@@ -365,7 +377,8 @@ getPANnumberData(event:any){
       next: (response: any) => {
         if (response && response.data) {
          this.challanService.challanForm.patchValue({
-          lorryOwnerPanNo:response.data[0].panno
+          lorryOwnerPanNo:response.data[0].panno,
+          PANNO:response.data[0].panno
          })
         }
       },
@@ -462,14 +475,14 @@ avalabledocketinPRS(event?:any){
       return;
   }
   const payload={
-    fromdt: "12 Aug 2025",
+    fromdt: "03 Jun 2025",
     todt: "10 Oct 2025",
     dttyp: "1",
     paybas: "ALL",
     trn: "ALL",
     bustyp: "ALL",
     status: this.challanService.challanForm.value.vendorType==='04' ?'B':'P',
-    doctyp: "PRS",
+    doctyp: "DRS",
     baseLocationCode:this.docketService.loginUserList.LocationCode,
     docketList: "",
     alloted_To:this.challanService.challanForm.value.vendorType==='04'? this.challanService.challanForm.value.vendorCode:'',

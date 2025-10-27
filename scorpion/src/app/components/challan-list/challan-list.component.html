@@ -326,7 +326,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4 pb-3" *ngIf="challanService.challanForm.value.vendorType === 'XX'|| challanService.challanForm.value.vehicleNO==='O'">
+            <div class="col-4 pb-3" *ngIf="challanService.challanForm.value.vendorType === 'XX'|| challanService.challanForm.value.vehicleNO ==='O'">
                 <div class="row" >
                     <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
                     <div class="col-sm-7">
@@ -371,10 +371,10 @@
                     <label class="col-sm-5 col-form-label text-end">Registration Date</label>
                     <div class="col-sm-7">
                         <div class="input-group">
-                            <input class="form-control required2" placeholder="Registration Date" type="text"
+                            <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
                                 #dv="bsDatepicker" bsDatepicker formControlName="registrationDate"  required [ngClass]="{ 'border-danger': challanService.challanForm.get('registrationDate')?.invalid  && challanService.challanForm.get('registrationDate')?.touched }"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', maxDate:today}">
-                            <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                            <span class="input-group-text cursor-pointer" (click)="dv.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
@@ -388,7 +388,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Engine No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" placeholder="Engine No."  formControlName="eNGINENO" type="text"  readonly
+                        <input class="form-control required2" placeholder="Engine No."  formControlName="eNGINENO" type="text"  [readonly]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
                          required [ngClass]="{ 'border-danger': challanService.challanForm.get('eNGINENO')?.invalid  && challanService.challanForm.get('eNGINENO')?.touched }">
                          <div class="text-danger text-start" *ngIf="challanService.challanForm.get('eNGINENO')?.invalid && challanService.challanForm.get('eNGINENO')?.touched "> This field is required.</div>
                     </div>
@@ -398,7 +398,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Chasis No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" type="text" placeholder="Chasis No."  formControlName="cHASISNO" readonly
+                        <input class="form-control required2" type="text" placeholder="Chasis No."  formControlName="cHASISNO" [readonly]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
                          required [ngClass]="{ 'border-danger': challanService.challanForm.get('cHASISNO')?.invalid  && challanService.challanForm.get('cHASISNO')?.touched }">
                          <div class="text-danger text-start" *ngIf="challanService.challanForm.get('cHASISNO')?.invalid && challanService.challanForm.get('cHASISNO')?.touched "> This field is required.</div>
                     </div>
@@ -408,7 +408,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">RC Book No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" type="text" placeholder="RC Book No."  formControlName="rCBOOKNO" readonly
+                        <input class="form-control required2" type="text" placeholder="RC Book No."  formControlName="rCBOOKNO" [readonly]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
                          required [ngClass]="{ 'border-danger': challanService.challanForm.get('rCBOOKNO')?.invalid  && challanService.challanForm.get('rCBOOKNO')?.touched }">
                          <div class="text-danger text-start" *ngIf="challanService.challanForm.get('rCBOOKNO')?.invalid && challanService.challanForm.get('rCBOOKNO')?.touched "> This field is required.</div>
                     </div>
@@ -421,11 +421,11 @@
                     <label class="col-sm-5 col-form-label text-end">Permit Validity Date</label>
                     <div class="col-sm-7">
                         <div class="input-group">
-                            <input class="form-control required2" placeholder="Permit Validity Date" type="text"
+                            <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
                                 #pv="bsDatepicker" bsDatepicker formControlName="permitDate" (bsValueChange)="checkPermitExpiry($event)"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}"
                                  required [ngClass]="{ 'border-danger': challanService.challanForm.get('permitDate')?.invalid  && challanService.challanForm.get('permitDate')?.touched || isPermitExpired}">
-                            <span class="input-group-text cursor-pointer" (click)="pv.toggle()">
+                            <span class="input-group-text cursor-pointer" (click)="pv.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
@@ -441,11 +441,11 @@
                     <label class="col-sm-5 col-form-label text-end">Insurance Validity Date</label>
                     <div class="col-sm-7">
                         <div class="input-group">
-                            <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"
+                            <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
                                 #iv="bsDatepicker" bsDatepicker  formControlName="insuranceDate" (bsValueChange)="checkInsuranceExpiry($event)"
                                  required [ngClass]="{ 'border-danger': challanService.challanForm.get('insuranceDate')?.invalid  && challanService.challanForm.get('insuranceDate')?.touched || isInsuranceExpired}"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
-                            <span class="input-group-text cursor-pointer" (click)="iv.toggle()">
+                            <span class="input-group-text cursor-pointer" (click)="iv.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
@@ -461,11 +461,11 @@
                     <label class="col-sm-5 col-form-label text-end">Fitness Validity Date</label>
                     <div class="col-sm-7">
                         <div class="input-group">
-                            <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"
+                            <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
                                 #fv="bsDatepicker" bsDatepicker formControlName="fitnessDate"  (bsValueChange)="checkFitnessExpiry($event)"
                                 required [ngClass]="{ 'border-danger': challanService.challanForm.get('fitnessDate')?.invalid  && challanService.challanForm.get('fitnessDate')?.touched || isFitnessExpired}"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
-                            <span class="input-group-text cursor-pointer" (click)="fv.toggle()">
+                            <span class="input-group-text cursor-pointer" (click)="fv.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
@@ -864,19 +864,21 @@
             <thead class="sticky-top bg-light">
                 <tr>
                     <th class="p-3"><input type="checkbox" (change)="toggleSelectAll($event)"></th>
-                    <th class="p-3">CNote No.</th>
+                    <th class="p-3">CNote No. <div *ngIf="this.docketService.loginUserList.Type === '3'">Origin</div></th>
                     <th class="p-3">Pay Basis</th>
                     <th class="p-3">Booking Date EDD</th>
-                    <th class="p-3">Arrival Date</th>
-                    <th class="p-3">Pkgs.[L/B</th>
-                    <th class="p-3">Wt.[L/B]</th>
+                    <th class="p-3">Arrival Date <div *ngIf="this.docketService.loginUserList.Type === '3'">Stock Update Date</div></th>
+                    <th class="p-3">{{this.docketService.loginUserList.Type === '3' ? 'Actu. / Pend. /Arr. Pkgs.':'Pkgs.[L/B]'}}</th>
+                    <th class="p-3">{{this.docketService.loginUserList.Type === '3' ? 'Act./Arr.Wt.' :'Wt.[L/B]'}}</th>
                     <th class="p-3">Chrg. Wt.</th>
                     <th class="p-3">Rate Type</th>
                     <th class="p-3">E-Way Bill No.</th>
                     <th class="p-3">Reason for Delay</th>
                     <th class="p-3">TAT in Hrs.</th>
+                    <th class="p-3" *ngIf="this.docketService.loginUserList.Type === '3'">Billing Party Name</th>
+                    <th class="p-3" *ngIf="this.docketService.loginUserList.Type === '3'">Consignor Name</th>
                     <th class="p-3">Contract Amount</th>
-                    <th class="p-3">IsPRSPKGScan.</th>
+                    <th class="p-3" *ngIf="this.docketService.loginUserList.Type !== '3'">IsPRSPKGScan.</th>
                 </tr>
             </thead>
                 <tbody formArrayName="avalabledocketinPRS">
@@ -890,16 +892,16 @@
                                 <span class="text-danger fw-semibold">{{ item.value.message }}</span>
                             </ng-template>
                         </td>
-                        <td>{{ item.value.dockno }}</td>
+                        <td>{{ item.value.dockno + '.'}}<br>{{this.docketService.loginUserList.Type === '3' ? item.value.orgncd :''}}</td>
                         <td>{{ item.value.paybaS_Str }}</td>
                         <td>{{ item.value.bkg_Date }} <br> {{ item.value.commited_Dely_Date }}</td>
-                        <td>{{ item.value.arrival_Date }}</td>
+                        <td>{{ item.value.arrival_Date }} <div *ngIf="this.docketService.loginUserList.Type === '3'">{{item.value.stock_Update_DT}}</div></td>
                         <td>
-                            <input type="text" class="form-control text-end" formControlName="arrPkgQty" readonly>
-                            <br> / {{item.value.arrPkgQty}} / {{ item.value.pkgsno }}
+                            <input type="text" class="form-control text-end" formControlName="arrPkgQty" readonly *ngIf="this.docketService.loginUserList.Type !== '3'">
+                            <br>{{this.docketService.loginUserList.Type === '3' ? item.value.arrPkgQty :''}} / {{item.value.arrPkgQty}} / {{ item.value.pkgsno }}
                         </td>
                         <td>
-                            <input type="text" class="form-control text-end" formControlName="arrWeightQty" readonly>
+                            <input type="text" class="form-control text-end" formControlName="arrWeightQty" readonly *ngIf="this.docketService.loginUserList.Type !== '3'">
                             <br> / {{ item.value.arrWeightQty }} / {{ item.value.actuwt }}
                         </td>
                         <td>{{ item.value.chrgwt }}</td>
@@ -912,8 +914,10 @@
                         <td>{{ item.value.eWayBillNo }}</td>
                         <td>{{ item.value.subreasoncode }}</td>
                         <td>{{ item.value.tatInHrs }}</td>
+                        <td *ngIf="this.docketService.loginUserList.Type === '3'">{{ item.value.party_name }}</td>
+                        <td *ngIf="this.docketService.loginUserList.Type === '3'">{{ item.value.consignor_Name }}</td>
                         <td>{{item.value.contractAmount}}</td>
-                        <td>{{ item.value.bcSerialNo }}</td>
+                        <td *ngIf="this.docketService.loginUserList.Type !== '3'">{{ item.value.bcSerialNo }}</td>
                     </tr>
                 </tbody>
         </table>
@@ -1086,7 +1090,7 @@
                         <input type="text" class="form-control text-end" value="0" formControlName="totalTDSAmount" readonly/>
                     </div>
                 </div>
-                 <div class="row mb-3 align-items-center" [ngClass]="['XX1', '19', '04', 'XX'].includes(challanService.challanForm.get('vendorType')?.value) ? 'd-none' : 'd-none'">
+                 <div class="row mb-3 align-items-center" [ngClass]="['XX1', '19', '04', 'XX'].includes(challanService.challanForm.get('vendorType')?.value) && this.docketService.loginUserList.Type === '3' ? '' : 'd-none'">
                     <label class="col-sm-4 col-form-label text-end">PAN Number</label>
                     <div class="col-sm-8">
                         <input type="text" class="form-control" formControlName="PANNO"/>
