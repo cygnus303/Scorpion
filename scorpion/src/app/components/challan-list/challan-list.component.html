@@ -392,7 +392,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Engine No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" placeholder="Engine No."  formControlName="eNGINENO" type="text" 
+                        <input class="form-control required2" placeholder="Engine No."  formControlName="eNGINENO" type="text"  readonly
                          required [ngClass]="{ 'border-danger': challanForm.get('eNGINENO')?.invalid  && challanForm.get('eNGINENO')?.touched }">
                          <div class="text-danger text-start" *ngIf="challanForm.get('eNGINENO')?.invalid && challanForm.get('eNGINENO')?.touched "> This field is required.</div>
                     </div>
@@ -402,7 +402,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Chasis No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" type="text" placeholder="Chasis No."  formControlName="cHASISNO"
+                        <input class="form-control required2" type="text" placeholder="Chasis No."  formControlName="cHASISNO" readonly
                          required [ngClass]="{ 'border-danger': challanForm.get('cHASISNO')?.invalid  && challanForm.get('cHASISNO')?.touched }">
                          <div class="text-danger text-start" *ngIf="challanForm.get('cHASISNO')?.invalid && challanForm.get('cHASISNO')?.touched "> This field is required.</div>
                     </div>
@@ -412,7 +412,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">RC Book No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" type="text" placeholder="RC Book No."  formControlName="rCBOOKNO"
+                        <input class="form-control required2" type="text" placeholder="RC Book No."  formControlName="rCBOOKNO" readonly
                          required [ngClass]="{ 'border-danger': challanForm.get('rCBOOKNO')?.invalid  && challanForm.get('rCBOOKNO')?.touched }">
                          <div class="text-danger text-start" *ngIf="challanForm.get('rCBOOKNO')?.invalid && challanForm.get('rCBOOKNO')?.touched "> This field is required.</div>
                     </div>
@@ -1005,7 +1005,8 @@
                 <div class="row mb-3 align-items-center">
                     <label class="col-sm-6 col-form-label text-end fw-bold">Contract Amount</label>
                     <div class="col-sm-6">
-                        <input min="1" type="number" class="form-control text-end" value="0" formControlName="contractAmount" readonly
+                        <input min="1" type="number" class="form-control text-end" value="0" formControlName="contractAmount" [readOnly]="challanForm.value.vendorType==='04'"
+                        (blur)="changeAmountApplicable($event)"
                         required [ngClass]="{ 'border-danger': challanForm.get('contractAmount')?.invalid && challanForm.get('contractAmount')?.touched }"/>
                         <div class="text-danger text-start mt-1 small" *ngIf="challanForm.get('contractAmount')?.touched && challanForm.get('contractAmount')?.errors">
                             <span *ngIf="challanForm.get('contractAmount')?.hasError('required')">
@@ -1028,21 +1029,24 @@
                 <div class="row mb-3 align-items-center">
                     <label class="col-sm-6 col-form-label text-end">Telephone Charges (+)</label>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control text-end required2" value="0" />
+                        <input type="text" class="form-control text-end required2" value="0" formControlName="telephoneCharges"
+                        (input)="calculateNetAmount()"/>
                     </div>
                 </div>
     
                 <div class="row mb-3 align-items-center">
                     <label class="col-sm-6 col-form-label text-end">Humali Charges (+)</label>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control text-end required2" value="0" />
+                        <input type="text" class="form-control text-end required2" value="0" formControlName="humaliCharges"
+                        (input)="calculateNetAmount()"/>
                     </div>
                 </div>
     
                 <div class="row mb-3 align-items-center">
                     <label class="col-sm-6 col-form-label text-end">Mamul Charges (-)</label>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control text-end required2" value="0" />
+                        <input type="text" class="form-control text-end required2" value="0" formControlName="mamulCharges"
+                        (input)="calculateNetAmount()"/>
                     </div>
                 </div>
             </div>
@@ -1101,7 +1105,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end  fw-bold">Net Amount</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" [value]="0" formControlName="netAmount">
+                        <input class="form-control" type="text" [value]="0" formControlName="netAmount" readonly>
                     </div>
                 </div>
             </div>
@@ -1114,7 +1118,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Advance Amount</label>
                     <div class="col-sm-7">
-                        <input class="form-control text-end required2" type="text" [value]="0" formControlName="advanceAmount">
+                        <input class="form-control text-end required2" type="text" [value]="0" formControlName="advanceAmount" (input)="calculateBalanceAmount()">
                     </div>
                 </div>
             </div>
