@@ -131,7 +131,8 @@ buildForm(){
     vehicleNO:new FormControl(),
     avalabledocketinPRS:new FormArray([]),
     TDSPercent:new FormControl(),
-    Loadingcharge:new FormControl()
+    Loadingcharge:new FormControl(),
+    PANNO:new FormControl(),
   });
 }
 
@@ -309,6 +310,10 @@ validateVehicleNo() {
     this.lastFetchedVehicleNo = filtered;
     this.getVehicleDetail(filtered);
   }
+}
+
+vendorCodeName(){
+  this.challanForm.patchValue({vendorCode:null})
 }
 
   getVehicleDetail(vehicleNo:string) {
