@@ -7,6 +7,7 @@ import { DocketService } from './docket.service';
 import { DeliveryAgentService } from './delivery-agent.service';
 import { LocationListResponse } from '../models/delivery-agent.model';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { json } from 'stream/consumers';
 
 @Injectable({
   providedIn: 'root'
@@ -328,11 +329,250 @@ updateTotalLoadingCharge() {
 }
 
 onSubmit(){
+ const DocketList: any = [
+  {
+    actuwt: 0,
+    rate: 0,
+    docket_Mode: "string",
+    newRate: 0,
+    demurrage_Amount: "string",
+    isPRSPKGScan: "string",
+    freight: 0,
+    docketNo: "string",
+    party_name: "string",
+    freeStorageDays: "string",
+    docksf: "string",
+    message: "string",
+    pkgsno: 0,
+    consignor_Name: "string",
+    cnt: 0,
+    contractAmount: 0,
+    demurrageCharge: 0,
+    svctax: 0,
+    arrPkgQty: 0,
+    orgncd: "string",
+    dkttot: 0,
+    payBas: "string",
+    manual_dockno: "string",
+    chrgwT_Load: 0,
+    bkg_Date: "string",
+    subreasoncode: "string",
+    eWayBillNo: "string",
+    dem_Rate: "string",
+    curr_Loc: "string",
+    trN_MOD: "string",
+    arrival_Date: "string",
+    dockno: "string",
+    pendPkgQty: 0,
+    commited_Dely_Date: "string",
+    atad: "2025-10-28T07:25:14.166Z",
+    isRemoved: true,
+    maxLimit: 0,
+    chrgwt: 0,
+    isEnabled: true,
+    cdeldt: "2025-10-28T07:25:14.166Z",
+    cnd: 0,
+    damcnt: 0,
+    ratetype: "string",
+    requestCNT: 0,
+    businesstype: "string",
+    id: 0,
+    total_Demurrage_Days: "string",
+    stock_Update_DT: "string",
+    pkgsnO_Load: 0,
+    arrWeightQty: 0,
+    rateList: [
+      {
+        hourlyBasedSlot: 0,
+        entryDate: "2025-10-28T07:25:14.166Z",
+        rutdesc: "string",
+        recptdt: "string",
+        codeType: "string",
+        codeId: "string",
+        entryBy: "string",
+        ocT_AMT: "string",
+        name: "string",
+        pkgsty: "string",
+        dkttot: "string",
+        locaname: "string",
+        loccode: "string",
+        code: "string",
+        noofchar: 0,
+        activeservice: true,
+        codeAccess: "string",
+        vendor_Type: "string",
+        rutcd: "string",
+        lastUpdatedDate: "2025-10-28T07:25:14.166Z",
+        location: "string",
+        pkgstyName: "string",
+        prodcd: "string",
+        oct_percentage: "string",
+        ocT_RECEIPTNO: "string",
+        id: 0,
+        lastUpdatedBy: "string",
+        codefor: "string",
+        codeDesc: "string",
+        noofdigits: 0,
+        statusCode: "string"
+      }
+    ],
+    paybaS_Str: "string",
+    staff_BA: "string",
+    desT_CD: "string",
+    handlingchrg: 0
+  }
+];
+
+const ListVendorType:any=[
+  {
+  "vendor_Type_Code": "string",
+  "vendor_Type": "string",
+  "displayIndex": 0
+}
+];
+
+const ListCharges:any=[
+  {
+  "chargecode": "string",
+  "chargename": "string",
+  "operator": "string",
+  "acccode": "string",
+  "chargeAmount": 0,
+  "cnt": 0
+}
+];
+
+const MFList:any=[
+  {
+  "tcdt_ddmmyyyy": "string",
+  "manual": "string",
+  "toT_DKT": 0,
+  "myRouteName": "string",
+  "toBH_CODE": "string",
+  "packages": "string",
+  "vehicleNo": "string",
+  "tcno": "string",
+  "isRemoved": true,
+  "isEnabled": true,
+  "weight": "string",
+  "toT_LOAD_PKGS": 0,
+  "id": 0,
+  "toT_LOAD_ACTWT": 0,
+  "totalInternalDocument": 0,
+  "tC_Date": "string",
+  "tcbr": "string"
+}
+];
+
+const THCCharge:any=[
+  {
+  "chargecode": "string",
+  "chargename": "string",
+  "operator": "string",
+  "acccode": "string",
+  "chargeAmount": 0,
+  "cnt": 0
+}
+];
+
+const PRSDRSDocketList:any=[
+  {
+  "actuwt": 0,
+  "rate": 0,
+  "docket_Mode": "string",
+  "newRate": 0,
+  "demurrage_Amount": "string",
+  "isPRSPKGScan": "string",
+  "freight": 0,
+  "docketNo": "string",
+  "party_name": "string",
+  "freeStorageDays": "string",
+  "docksf": "string",
+  "message": "string",
+  "pkgsno": 0,
+  "consignor_Name": "string",
+  "cnt": 0,
+  "contractAmount": 0,
+  "demurrageCharge": 0,
+  "svctax": 0,
+  "arrPkgQty": 0,
+  "orgncd": "string",
+  "dkttot": 0,
+  "payBas": "string",
+  "manual_dockno": "string",
+  "chrgwT_Load": 0,
+  "bkg_Date": "string",
+  "subreasoncode": "string",
+  "eWayBillNo": "string",
+  "dem_Rate": "string",
+  "curr_Loc": "string",
+  "trN_MOD": "string",
+  "arrival_Date": "string",
+  "dockno": "string",
+  "pendPkgQty": 0,
+  "commited_Dely_Date": "string",
+  "atad": "2025-10-28T07:25:14.168Z",
+  "isRemoved": true,
+  "maxLimit": 0,
+  "chrgwt": 0,
+  "isEnabled": true,
+  "cdeldt": "2025-10-28T07:25:14.168Z",
+  "cnd": 0,
+  "damcnt": 0,
+  "ratetype": "string",
+  "requestCNT": 0,
+  "businesstype": "string",
+  "id": 0,
+  "total_Demurrage_Days": "string",
+  "stock_Update_DT": "string",
+  "pkgsnO_Load": 0,
+  "arrWeightQty": 0,
+  "rateList": [
+    {
+      "hourlyBasedSlot": 0,
+      "entryDate": "2025-10-28T07:25:14.168Z",
+      "rutdesc": "string",
+      "recptdt": "string",
+      "codeType": "string",
+      "codeId": "string",
+      "entryBy": "string",
+      "ocT_AMT": "string",
+      "name": "string",
+      "pkgsty": "string",
+      "dkttot": "string",
+      "locaname": "string",
+      "loccode": "string",
+      "code": "string",
+      "noofchar": 0,
+      "activeservice": true,
+      "codeAccess": "string",
+      "vendor_Type": "string",
+      "rutcd": "string",
+      "lastUpdatedDate": "2025-10-28T07:25:14.168Z",
+      "location": "string",
+      "pkgstyName": "string",
+      "prodcd": "string",
+      "oct_percentage": "string",
+      "ocT_RECEIPTNO": "string",
+      "id": 0,
+      "lastUpdatedBy": "string",
+      "codefor": "string",
+      "codeDesc": "string",
+      "noofdigits": 0,
+      "statusCode": "string"
+    }
+  ],
+  "paybaS_Str": "string",
+  "staff_BA": "string",
+  "desT_CD": "string",
+  "handlingchrg": 0
+}
+]
   const payload={
     "CTH":{
     THCNO:"N/A",
     ManualTHCNo:this.challanForm.value.manualTHCNo,
-    THCSF:"",
+    THCSF:"0",
     THCDate:this.challanForm.value.tHCDate,
     THCBRCD:this.docketService.loginUserList.LocationCode,
     THCDESTCD:"",
@@ -356,7 +596,7 @@ onSubmit(){
     TotalChargeWt:0,
     FreeSpace:Number(this.challanForm.value.freeSpace),
     WtLoaded:Number(this.challanForm.value.wtLoaded),
-    IsOverLoad:this.challanForm.value.isOverLoad,
+    IsOverLoad:this.challanForm.value.isOverLoa?true:false,
     OverLoadReason:this.challanForm.value.overLoadReason,
     WtAdjust:0,
     TOTALWtAdjust:0,
@@ -367,7 +607,7 @@ onSubmit(){
     VendorType:this.challanForm.value.vendorType,
     VendorAddress:"",
     VENDORMOBNO:"",
-    VENDORPHONENO:"",
+    VENDORPHONENO:"0",
     SUPPLYERMOBNO:"",
     SUPPLYERCODE:"",
     SUPPLYERNAME:"",
@@ -400,7 +640,7 @@ onSubmit(){
     ClosedBy:"",
     ClosedDate:"",
     IsCancelled:true,
-    IsQuickChallan:"",
+    IsQuickChallan:true,
     CancelBy:"",
     CancelDate:"",
     CancelReason:"",
@@ -431,15 +671,15 @@ onSubmit(){
     BROKERPANNOPATH:"",
     THIRDPARTYPANNOPATH:"",
     RCBOOKPATH:"",
-    IsOwnerPanRequired:"",
-    IsBrokerPanRequired:"",
+    IsOwnerPanRequired:true,
+    IsBrokerPanRequired:true,
     BROKERVEHDEPATH:"",
     PaymentByType:0,
-    IsOperationallyClose:"",
+    IsOperationallyClose:true,
     OperationallyCloseBy:"",
-    IsOperationallyClosebySMS:"",
+    IsOperationallyClosebySMS:true,
     OperationallyCloseDate:"",
-    IsEditMode:"",
+    IsEditMode:true,
     PickUpLocation:"",
     DropLocaion:"",
     SealType:0,
@@ -450,12 +690,12 @@ onSubmit(){
     ScheduleNo:"",
     ScheduleTime:"",
     LateDepaturereason:this.challanForm.value.lateDepaturereason,
-    IsEmpty:this.challanForm.value.isEmpty,
-    IsCityEnabled:"",
+    IsEmpty:this.challanForm.value.isEmpty?true:false,
+    IsCityEnabled:true,
     DeliveryZone:this.challanForm.value.deliveryZone,
     MKTVehicleNo:this.challanForm.value.mKTVehicleNo,
     ScheduleDay:"",
-    VehicleCapacity:Number(this.challanForm.value.vehicleCapacity),
+    VehicleCapacity:this.challanForm.value.vehicleCapacity?Number(this.challanForm.value.vehicleCapacity):0,
     VehicleCapacityUti:Number(this.challanForm.value.vehicleCapacityUti),
     TrainName:this.challanForm.value.trainName,
     TrainNo:this.challanForm.value.trainNo,
@@ -475,7 +715,7 @@ onSubmit(){
     approxAPITime:"",
     EWayBillNo:this.challanForm.value.eWayBillNo,
     EWayBillExpiredDate:this.challanForm.value.eWayBillExpiredDate,
-    IsMonthlyBillAllow:this.challanForm.value.isMonthlyBillAllow,
+    IsMonthlyBillAllow:this.challanForm.value.isMonthlyBillAllow?true:false,
     DeliveryAgent:this.challanForm.value.deliveryAgent,
     DeliveryAgentMoNo:this.challanForm.value.deliveryAgentMoNo,
     LoadingDate:this.challanForm.value.loadingDate,
@@ -500,7 +740,7 @@ onSubmit(){
     },
     "CTFD":{
       THCNO:"N/A",
-      THCSF:"",
+      THCSF:"0",
       ContractType:"",
       ContractAmount:Number(this.challanForm.value.contractAmount),
       StandardContractAmount:Number(this.challanForm.value.standardContractAmount),
@@ -512,7 +752,7 @@ onSubmit(){
       AdvanceLocation:Number(this.challanForm.value.advanceLocation),
       AdvanceAmountPaid:0,
       AdvanceAmountPending:0,
-      IsAdvancePaid:"",
+      IsAdvancePaid:true,
       AdvancePaidOn:"",
       AdvancePaidBy:"",
       AdvanceVoucherNo:"",
@@ -524,14 +764,14 @@ onSubmit(){
       BalanceAmount:Number(this.challanForm.value.balanceAmount),
       PendingBalanceAmount:0,
       CollectedBalanceAmount:0,
-      BalanceLocation:this.challanForm.value.balanceLocation,
+      BalanceLocation:this.challanForm.value.balanceLocation?this.challanForm.value.balanceLocation:'1',
       BalanceAmountPaid:0,
       BalanceAmountPending:0,
       BalanceCollMode:"",
       BalanceChequeNo:"",
       BalanceChequeDate:"",
       BalanceLedger:"",
-      IsBalancePaid:"",
+      IsBalancePaid:true,
       BalancePaidOn:"",
       BalancePaidBy:"",
       BalanceVoucherNo:"",
@@ -557,7 +797,7 @@ onSubmit(){
       TotalTDSAmount:Number(this.challanForm.value.totalTDSAmount),
       AdvanceTDSAmount:0,
       BalanceTDSAmount:0,
-      TDSPercent:Number(this.challanForm.value.TDSPercent),
+      TDSPercent:this.challanForm.value.TDSPercent ? Number(this.challanForm.value.TDSPercent): 0,
       AdvanceAmountWOTDS:0,
       BalanceAmountWOTDS:0,
       Comment:"",
@@ -572,12 +812,12 @@ onSubmit(){
       Rate:0,
       MaxLimit:0,
       VendorCode:"",
-      IsMonthly:"",
+      IsMonthly:true,
       VendName:"",
       hdnRate:0,
-      IsMathadi:"",
+      IsMathadi:true,
       MathadiSlipNo:"",
-      MathadiDate:"",
+      MathadiDate:"2025-10-28T09:44:12.384Z",
       MathadiAmt:0,
       Is_Local_ODA_id:this.challanForm.value.is_Local_ODA_id,
       Check_Dockno:"",
@@ -590,11 +830,11 @@ onSubmit(){
     },
     "CTVD":{
       THCNO:"N/A",
-      THCSF:"",
+      THCSF:"0",
       VehicleNO:this.challanForm.value.vehicleNO,
       VehicleType:this.challanForm.value.vehicleType,
       FTLType:this.challanForm.value.fTLType,
-      VehicleCapacity:this.challanForm.value.VehicleCapacity,
+      VehicleCapacity:this.challanForm.value.VehicleCapacity?this.challanForm.value.VehicleCapacity:'0',
       VehicleSize:"",
       Driver1Name:this.challanForm.value.driver1Name,
       Driver1MobileNo:this.challanForm.value.driver1MobileNo,
@@ -633,7 +873,7 @@ onSubmit(){
       Driver:"",
     },
     "CPML":{
-      Id:"",
+      Id:0,
       BRCD:"",
       RatePerGM:0,
       VehicleSize:"",
@@ -645,12 +885,12 @@ onSubmit(){
       PAYBAS:"",
       TRNMOD:"",
       BUSTYPE:"",
-      DATETYPE:"",
+      DATETYPE:"2025-10-28T09:44:12.384Z",
       BookedByType:"",
       BookedBy:"",
       DOCTYP:"",
       TYP:"",
-      isBookedby:"",
+      isBookedby:true,
       LoadingBy:"",
       ChargeType:"",
       VendorCode:"",
@@ -668,30 +908,30 @@ onSubmit(){
 
 
    formData.append("CVM.THCNo", "N/A");
-   formData.append("CVM.DocketList", '');
-   formData.append("CVM.ListVendorType", "");
-   formData.append("CVM.ListCharges", "");
-   formData.append("MFList", "");
-   formData.append("THCCharge", "");
-   formData.append("PRSDRSDocketList", "");
+   formData.append("CVM.DocketList", JSON.stringify(DocketList));
+   formData.append("CVM.ListVendorType", JSON.stringify(ListVendorType));
+   formData.append("CVM.ListCharges", JSON.stringify(ListCharges));
+   formData.append("MFList",JSON.stringify(MFList));
+   formData.append("THCCharge", JSON.stringify(THCCharge));
+   formData.append("PRSDRSDocketList",JSON.stringify(PRSDRSDocketList));
 
 
-   formData.append("CVM.IsMathadi", "");
+   formData.append("CVM.IsMathadi", 'true');
    formData.append("CVM.BookedByType", "");
    formData.append("CVM.RatePerGram", "");
    formData.append("CVM.RatePerGramContractAmount", "");
-   formData.append("CVM.ISAttechedVendor", "");
-   formData.append("CVM.ISContractualVendor", "");
-   formData.append("CVM.RateType", "");
-   formData.append("CVM.IsMobileUser", "");
+   formData.append("CVM.ISAttechedVendor", "true");
+   formData.append("CVM.ISContractualVendor", 'true');
+   formData.append("CVM.RateType", "0");
+   formData.append("CVM.IsMobileUser","true");
    formData.append("CVM.DemurrageCharge", "");
    formData.append("CVM.DiscountRatio", "");
    formData.append("CVM.FinalAmt", "");
    formData.append("LoadingSlipAttachmentFile", "");
    formData.append("BaseFinYear", this.docketService.loginUserList.FinYear);
    formData.append("BaseCompanyCode", this.docketService.loginUserList.Companycode);
-   formData.append("BaseUserName", this.docketService.BaseUserCode);
-   formData.append("BaseUserType", '');
+   formData.append("BaseUserName", this.docketService.loginUserList.BaseUserName);
+   formData.append("BaseUserType", '1');
    formData.append("BaseLocationCode", this.docketService.loginUserList.LocationCode);
   // if(this.challanForm.valid){
     this.THCService.challanSubmit(formData).subscribe({next: (response) => {
