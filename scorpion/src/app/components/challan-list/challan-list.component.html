@@ -255,7 +255,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Airline Name</label>
                     <div class="col-sm-7 d-flex justify-content-between">
-                        <ng-select class="noFoundTextColor required2" placeholder="Airline Name"
+                        <ng-select class="noFoundTextColor required2" placeholder="Airline Name" formControlName="airLine"
                             notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId"></ng-select>
                     </div>
                 </div>
@@ -264,7 +264,7 @@
                 <div class="row" >
                     <label class="col-sm-5 col-form-label text-end">Flight No</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" placeholder="Flight No" type="text">
+                        <input class="form-control required2" placeholder="Flight No" type="text" formControlName="flightCode">
                     </div>
                 </div>
             </div>
@@ -274,7 +274,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Flight Sch. Dept. Time</label>
                     <div class="col-sm-7">
-                      <input class="form-control required2" placeholder="Flight Sch. Dept. Time" type="text">
+                      <input class="form-control required2" placeholder="Flight Sch. Dept. Time" type="text" formControlName="flightScheduleTime">
                     </div>
                 </div>
             </div>
@@ -282,7 +282,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">AWB No.</label>
                     <div class="col-sm-7 d-flex justify-content-between">
-                       <input class="form-control required2" placeholder="AWB No" type="text">
+                       <input class="form-control required2" placeholder="AWB No" type="text" formControlName="airWayBillNos">
                     </div>
                 </div>
             </div>
@@ -296,7 +296,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Train No.</label>
                     <div class="col-sm-7">
-                     <input class="form-control required2" placeholder="Train No." type="text">
+                     <input class="form-control required2" placeholder="Train No." type="text" formControlName="trainNo">
                     </div>
                 </div>
             </div>
@@ -304,7 +304,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Train Name</label>
                     <div class="col-sm-7 d-flex justify-content-between"> 
-                        <input class="form-control required2" placeholder="Train Name" type="text">
+                        <input class="form-control required2" placeholder="Train Name" type="text" formControlName="trainName">
                     </div>
                 </div>
             </div>
@@ -312,7 +312,7 @@
                 <div class="row " >
                     <label class="col-sm-5 col-form-label text-end">RR No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" placeholder="RR No." type="text">
+                        <input class="form-control required2" placeholder="RR No." type="text" formControlName="RRNo">
                     </div>
                 </div>
             </div>
@@ -357,7 +357,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Tripsheet No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="Tripsheet No." type="text">
+                        <input class="form-control" placeholder="Tripsheet No." type="text" formControlName="tripSheetNo">
                     </div>
                 </div>
             </div>
