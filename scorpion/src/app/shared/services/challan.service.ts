@@ -21,7 +21,13 @@ public locationData:LocationListResponse[]=[];
 public latereasonList:generalMasterResponse[]=[];
 public TDSLedgerData:VehicleTyperesponse[]=[];
 public rateTypeData:generalMasterResponse[]=[];
-  constructor(private basicDetailService: BasicDetailService,private THCService:THCMasterService,private docketService:DocketService,private deliveryAgentService:DeliveryAgentService) { }
+
+constructor(
+  private basicDetailService: BasicDetailService,
+  private THCService:THCMasterService,
+  private docketService:DocketService,
+  private deliveryAgentService:DeliveryAgentService,
+) { }
 
     getVendtyData() {
     this.basicDetailService.getGeneralMasterList('VENDTY', '', '').subscribe({
@@ -203,7 +209,8 @@ public rateTypeData:generalMasterResponse[]=[];
     RRNo:new FormControl(),
     airLine:new FormControl(),
     flightScheduleTime:new FormControl(),
-    airWayBillNo:new FormControl()
+    airWayBillNo:new FormControl(),
+    routeCode:new FormControl()
   });
 }
 
@@ -295,40 +302,40 @@ updateTotalLoadingCharge() {
 onSubmit(){
   const payload={
     "CTH":{
-    THCNO:"",
+    THCNO:"N/A",
     ManualTHCNo:this.challanForm.value.manualTHCNo,
     THCSF:"",
     THCDate:this.challanForm.value.tHCDate,
-    THCBRCD:"",
+    THCBRCD:this.docketService.loginUserList.LocationCode,
     THCDESTCD:"",
     FROMCITY:this.challanForm.value.from_City,
     TOCITY:this.challanForm.value.to_City,
-    THCType:"",
+    THCType:this.docketService.loginUserList.Type,
     RouteCategory:"",
     RouteType:this.challanForm.value.routeType,
     PKDLYType:"",
-    RouteCode:"",
+    RouteCode:this.challanForm.value.routeCode,
     RouteName:this.challanForm.value.routeName,
     VehicleNO:this.challanForm.value.vehicleNO,
     IsMarketVehicle:true,
     IsExtraVehicle:true,
-    OpenKM:this.challanForm.value.openKM,
-    CloseKM:this.challanForm.value.closeKM,
+    OpenKM:Number(this.challanForm.value.openKM),
+    CloseKM:Number(this.challanForm.value.closeKM),
     TotalManifest:"",
-    TotalDockets:this.challanForm.value.totalDockets,
-    TotalPackages:"",
-    TotalActualWt:"",
-    TotalChargeWt:"",
-    FreeSpace:this.challanForm.value.freeSpace,
-    WtLoaded:this.challanForm.value.wtLoaded,
+    TotalDockets:Number(this.challanForm.value.totalDockets),
+    TotalPackages:0,
+    TotalActualWt:0,
+    TotalChargeWt:0,
+    FreeSpace:Number(this.challanForm.value.freeSpace),
+    WtLoaded:Number(this.challanForm.value.wtLoaded),
     IsOverLoad:this.challanForm.value.isOverLoad,
     OverLoadReason:this.challanForm.value.overLoadReason,
-    WtAdjust:"",
-    TOTALWtAdjust:"",
-    TOTALWithWtAdjust:"",
+    WtAdjust:0,
+    TOTALWtAdjust:0,
+    TOTALWithWtAdjust:0,
     WithWtAdjustPM:"",
     VendorCode:this.challanForm.value.vendorCode,
-    VendorName:"",
+    VendorName:this.challanForm.value.vendorCode,
     VendorType:this.challanForm.value.vendorType,
     VendorAddress:"",
     VENDORMOBNO:"",
@@ -344,8 +351,8 @@ onSubmit(){
     TAMNO:"",
     TRACKNO:"",
     AckDays:"",
-    AckPenalyRate:"",
-    LaterPenalyRate:"",
+    AckPenalyRate:0,
+    LaterPenalyRate:0,
     ScheduleType:"",
     AirportCode:this.challanForm.value.airportCode,
     AirportName:"",
@@ -383,10 +390,10 @@ onSubmit(){
     ReassignDate:"",
     IsVehDecRequired:true,
     FirmName:"",
-    PaymentBy:"",
+    PaymentBy:0,
     ThirdPartyName:"",
     ThirdPartyPANNO:"",
-    NoOfVehicle:"",
+    NoOfVehicle:0,
     Lat:"",
     Long:"",
     VehicleGPSStatus:"",
@@ -399,7 +406,7 @@ onSubmit(){
     IsOwnerPanRequired:"",
     IsBrokerPanRequired:"",
     BROKERVEHDEPATH:"",
-    PaymentByType:"",
+    PaymentByType:0,
     IsOperationallyClose:"",
     OperationallyCloseBy:"",
     IsOperationallyClosebySMS:"",
@@ -407,7 +414,7 @@ onSubmit(){
     IsEditMode:"",
     PickUpLocation:"",
     DropLocaion:"",
-    SealType:"",
+    SealType:0,
     SealNo:this.challanForm.value.sealNo,
     ActualDeptDate:this.challanForm.value.actualDeptDate,
     ScheduleDeptDate:this.challanForm.value.scheduleDeptDate,
@@ -420,8 +427,8 @@ onSubmit(){
     DeliveryZone:this.challanForm.value.deliveryZone,
     MKTVehicleNo:this.challanForm.value.mKTVehicleNo,
     ScheduleDay:"",
-    VehicleCapacity:this.challanForm.value.vehicleCapacity,
-    VehicleCapacityUti:this.challanForm.value.vehicleCapacityUti,
+    VehicleCapacity:Number(this.challanForm.value.vehicleCapacity),
+    VehicleCapacityUti:Number(this.challanForm.value.vehicleCapacityUti),
     TrainName:this.challanForm.value.trainName,
     TrainNo:this.challanForm.value.trainNo,
     RRNo:this.challanForm.value.RRNo,
@@ -430,7 +437,7 @@ onSubmit(){
     From_City:this.challanForm.value.from_City,
     To_City:this.challanForm.value.to_City,
     Location:"",
-    city_code:"",
+    city_code:0,
     FromAddLat:"",
     FromAddLng:"",
     ToAddLat:"",
@@ -454,7 +461,7 @@ onSubmit(){
     "CMR":{
       Module_Title_desc:"",
       RULEID:"",
-      Srno:"",
+      Srno:0,
       Module_Name:"",
       RULE_Y_N:"",
       ModuleID:"",
@@ -464,19 +471,19 @@ onSubmit(){
       IsFromTocityRequirdinthc:"",
     },
     "CTFD":{
-      THCNO:"",
+      THCNO:"N/A",
       THCSF:"",
       ContractType:"",
-      ContractAmount:this.challanForm.value.contractAmount,
-      StandardContractAmount:this.challanForm.value.standardContractAmount,
-      TotalCharges:"",
+      ContractAmount:Number(this.challanForm.value.contractAmount),
+      StandardContractAmount:Number(this.challanForm.value.standardContractAmount),
+      TotalCharges:0,
       NetAmount:this.challanForm.value.netAmount,
       AdvanceAmount:this.challanForm.value.advanceAmount,
-      PendingAdvanceAmount:"",
-      CollectedAdvanceAmount:"",
-      AdvanceLocation:this.challanForm.value.advanceLocation,
-      AdvanceAmountPaid:"",
-      AdvanceAmountPending:"",
+      PendingAdvanceAmount:0,
+      CollectedAdvanceAmount:0,
+      AdvanceLocation:Number(this.challanForm.value.advanceLocation),
+      AdvanceAmountPaid:0,
+      AdvanceAmountPending:0,
       IsAdvancePaid:"",
       AdvancePaidOn:"",
       AdvancePaidBy:"",
@@ -486,12 +493,12 @@ onSubmit(){
       AdvanceChequeNo:"",
       AdvanceChequeDate:"",
       AdvanceLedger:"",
-      BalanceAmount:this.challanForm.value.balanceAmount,
-      PendingBalanceAmount:"",
-      CollectedBalanceAmount:"",
+      BalanceAmount:Number(this.challanForm.value.balanceAmount),
+      PendingBalanceAmount:0,
+      CollectedBalanceAmount:0,
       BalanceLocation:this.challanForm.value.balanceLocation,
-      BalanceAmountPaid:"",
-      BalanceAmountPending:"",
+      BalanceAmountPaid:0,
+      BalanceAmountPending:0,
       BalanceCollMode:"",
       BalanceChequeNo:"",
       BalanceChequeDate:"",
@@ -502,59 +509,59 @@ onSubmit(){
       BalanceVoucherNo:"",
       BalanceVoucherDate:"",
       SCDebitVoucher:"",
-      SCDebitVoucherAmount:"",
+      SCDebitVoucherAmount:0,
       SCCreditVoucher:"",
-      SCCreditVoucherAmount:"",
+      SCCreditVoucherAmount:0,
       FianacialRemark:"",
       FianacialStatus:"",
       Narration:"",
       PANNO:this.challanForm.value.PANNO,
       VendorBillNo:"",
-      CENVATRATE:"",
-      CENVATAMT:"",
-      ServiceTaxAmount:"",
-      TotalBill:"",
+      CENVATRATE:0,
+      CENVATAMT:0,
+      ServiceTaxAmount:0,
+      TotalBill:0,
       InvoiceNo:"",
       WayBillNo:"",
       DFRClosed:"",
       DFRClosedBy:"",
       DFRClosedDate:"",
-      TotalTDSAmount:this.challanForm.value.totalTDSAmount,
-      AdvanceTDSAmount:"",
-      BalanceTDSAmount:"",
-      TDSPercent:this.challanForm.value.TDSPercent,
-      AdvanceAmountWOTDS:"",
-      BalanceAmountWOTDS:"",
+      TotalTDSAmount:Number(this.challanForm.value.totalTDSAmount),
+      AdvanceTDSAmount:0,
+      BalanceTDSAmount:0,
+      TDSPercent:Number(this.challanForm.value.TDSPercent),
+      AdvanceAmountWOTDS:0,
+      BalanceAmountWOTDS:0,
       Comment:"",
-      PendingAdvanceTDSAmount:"",
-      CollectedAdvanceTDSAmount:"",
-      PendingBalanceTDSAmount:"",
-      CollectedBalanceTDSAmount:"",
+      PendingAdvanceTDSAmount:0,
+      CollectedAdvanceTDSAmount:0,
+      PendingBalanceTDSAmount:0,
+      CollectedBalanceTDSAmount:0,
       IsFromPRQ:"",
-      Loadingcharge:this.challanForm.value.Loadingcharge,
+      Loadingcharge:Number(this.challanForm.value.Loadingcharge),
       LoadedRateType:"",
       LoadedBy:"",
-      Rate:"",
-      MaxLimit:"",
+      Rate:0,
+      MaxLimit:0,
       VendorCode:"",
       IsMonthly:"",
       VendName:"",
-      hdnRate:"",
+      hdnRate:0,
       IsMathadi:"",
       MathadiSlipNo:"",
       MathadiDate:"",
-      MathadiAmt:"",
+      MathadiAmt:0,
       Is_Local_ODA_id:this.challanForm.value.is_Local_ODA_id,
       Check_Dockno:"",
-      Type:"",
-      AttachedRateType:"",
+      Type:0,
+      AttachedRateType:0,
       IsTDSEnabled:this.challanForm.value.isTDSEnabled,
       TDSAcccode:this.challanForm.value.TDSAcccode,
       TDSAccdesc:"",
-      TDSOnAmount:this.challanForm.value.tDSOnAmount,
+      TDSOnAmount:Number(this.challanForm.value.tDSOnAmount),
     },
     "CTVD":{
-      THCNO:"",
+      THCNO:"N/A",
       THCSF:"",
       VehicleNO:this.challanForm.value.vehicleNO,
       VehicleType:this.challanForm.value.vehicleType,
@@ -573,9 +580,9 @@ onSubmit(){
       Driver2Licence:this.challanForm.value.driver2Licence,
       Driver2LicenceValDate:this.challanForm.value.driver2LicenceValDate,
       DriverPhotoPath:"",
-      Make:"",
-      Model:"",
-      VehicleVolume:"",
+      Make:0,
+      Model:0,
+      VehicleVolume:0,
       VehicleColor:"",
       CHASISNO:this.challanForm.value.cHASISNO,
       ENGINENO:this.challanForm.value.eNGINENO,
@@ -588,7 +595,7 @@ onSubmit(){
       FitnessDate:this.challanForm.value.fitnessDate,
       PermitDate:this.challanForm.value.permitDate,
       InsuranceDate:this.challanForm.value.insuranceDate,
-      CAPACITY:"",
+      CAPACITY:0,
       MarketVehImage:"",
       tabletNumber:"",
       StaffName:"",
@@ -600,7 +607,7 @@ onSubmit(){
     "CPML":{
       Id:"",
       BRCD:"",
-      RatePerGM:"",
+      RatePerGM:0,
       VehicleSize:"",
     },
     "GC":{
@@ -624,7 +631,23 @@ onSubmit(){
     }
   }
   const formData = new FormData();
-   formData.append("CVM.THCNo", "");
+   this.appendObjectToFormData(formData, payload.CTH, "CVM.CTH");
+  this.appendObjectToFormData(formData, payload.CMR, "CVM.CMR");
+  this.appendObjectToFormData(formData, payload.CTFD, "CVM.CTFD");
+  this.appendObjectToFormData(formData, payload.CTVD, "CVM.CTVD");
+  this.appendObjectToFormData(formData, payload.CPML, "CVM.CPML");
+  this.appendObjectToFormData(formData, payload.GC, "CVM.GC");
+
+
+   formData.append("CVM.THCNo", "N/A");
+   formData.append("CVM.DocketList", '');
+   formData.append("CVM.ListVendorType", "");
+   formData.append("CVM.ListCharges", "");
+   formData.append("MFList", "");
+   formData.append("THCCharge", "");
+   formData.append("PRSDRSDocketList", "");
+
+
    formData.append("CVM.IsMathadi", "");
    formData.append("CVM.BookedByType", "");
    formData.append("CVM.RatePerGram", "");
@@ -642,13 +665,33 @@ onSubmit(){
    formData.append("BaseUserName", this.docketService.BaseUserCode);
    formData.append("BaseUserType", '');
    formData.append("BaseLocationCode", this.docketService.loginUserList.LocationCode);
-
-  if(this.challanForm.valid){
-
-  }else{
-    this.challanForm.markAllAsTouched();
-  }
+  // if(this.challanForm.valid){
+    this.THCService.challanSubmit(formData).subscribe({next: (response) => {
+        if (response) {
+          alert('successfully')
+        }
+      },
+    })
+  // }else{
+  //   this.challanForm.markAllAsTouched();
+  // }
 }
+
+  appendObjectToFormData(formData: FormData, obj: any, parentKey: string = "") {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        const value = obj[key];
+        const formKey = parentKey ? `${parentKey}.${key}` : key;
+
+        if (value !== null && typeof value === "object" && !Array.isArray(value)) {
+          // Recursive call if nested object
+          this.appendObjectToFormData(formData, value, formKey);
+        } else {
+          formData.append(formKey, value !== null && value !== undefined ? String(value) : "");
+        }
+      }
+    }
+  }
 
  
 }
