@@ -66,5 +66,9 @@ export class THCMasterService {
   getRoutesFromRouteType(payload:any): Observable<IApiBaseResponse<any[]>>{
     return this.apiHandlerService.Get(`THC/GetRoutesFromRouteType?routeType=${payload.routeType}&isEmpty=${payload.isEmpty}&locationCode=${payload.locationCode}`);
   }
+  
+  challanSubmit(payload:any): Observable<IApiBaseResponse<any[]>>{
+    return this.apiHandlerService.Post(`THC/ChallanSubmit`,payload);
+  }
 
 }
