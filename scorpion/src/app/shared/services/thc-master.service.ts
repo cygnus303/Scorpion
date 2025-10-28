@@ -59,4 +59,8 @@ export class THCMasterService {
     return this.apiHandlerService.Post(`THC/CheckAgentMRCollection`,agentCode);
   }
 
+  getMFListFromRoute(paylaod:any): Observable<IApiBaseResponse<any[]>>{
+    return this.apiHandlerService.Post(`THC/GetMFListFromRoute`,paylaod);
+  }
+
 }

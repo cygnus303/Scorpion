@@ -492,19 +492,12 @@ avalabledocketinPRS(event?:any){
     baseCompanyCode:this.docketService.loginUserList.Companycode,
     flag: 2
   }
-  // this.THCService.avalabledocketinPRS(payload).subscribe({
-  //     next: (response: any) => {
-  //       if (response && response.data) {
-  //         this.patchAvailableDockets(response.data);
-  //       }
     this.THCService.avalabledocketinPRS(payload).subscribe({
     next: (response: any) => {
       if (response && response.data && Array.isArray(response.data)) {
         const updatedData = response.data;
         const docketArray = this.challanService.avalabledocket;
-
         if (docketArray && docketArray.length > 0) {
-          // ✅ Update contractAmount only for matching rows
           updatedData.forEach((item: any) => {
             const match = docketArray.controls.find(
               (ctrl: any) => ctrl.value.dockno === item.dockno
@@ -515,14 +508,31 @@ avalabledocketinPRS(event?:any){
             }
           });
         } else {
-          // If first time load → create FormArray
           this.challanService.patchAvailableDockets(updatedData);
         }
-
-        // 🔁 Recalculate total in case contractAmount values changed
         this.updateTotalDockets();
       }
       },error: (err) => {
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+}
+
+getMFListFromRoute(){
+  const paylaod = {
+    location: this.docketService.loginUserList.LocationCode,
+    isBCProcess: "N",
+    thcDate: this.challanService.challanForm.value.tHCDate,
+    baseCompanyCode: this.docketService.loginUserList.Companycode
+  }
+  this.THCService.getMFListFromRoute(paylaod).subscribe({
+      next: (response: any) => {
+        if (response) {
+         
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching vehicle details:', err.error.message);
         this.sweetAlertService.error(err.error.message)
       }
     });

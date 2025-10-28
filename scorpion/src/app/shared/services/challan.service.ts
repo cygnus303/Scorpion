@@ -117,12 +117,13 @@ public rateTypeData:generalMasterResponse[]=[];
   this.challanForm = new FormGroup({
     manualTHCNo:new FormControl(),
     tHCDate:new FormControl(new Date()),
-    loadingDate:new FormControl(),
+    loadingDate:new FormControl(new Date()),
     isEmpty:new FormControl(),
     routeType:new FormControl(),
     routeName:new FormControl(),
-    actualDeptDate:new FormControl(),
-    scheduleDeptDate:new FormControl(),
+    actualDeptDate:new FormControl(new Date()),
+    scheduleDeptDate:new FormControl(new Date()),
+    CityRouteKM:new FormControl(),
     vendorType:new FormControl(),
     vendorCode:new FormControl(),
     lorryOwnerPanNo:new FormControl(),
@@ -630,7 +631,11 @@ onSubmit(){
    formData.append("CVM.DiscountRatio", "");
    formData.append("CVM.FinalAmt", "");
    formData.append("LoadingSlipAttachmentFile", "");
-
+   formData.append("BaseFinYear", this.docketService.loginUserList.FinYear);
+   formData.append("BaseCompanyCode", this.docketService.loginUserList.Companycode);
+   formData.append("BaseUserName", this.docketService.BaseUserCode);
+   formData.append("BaseUserType", '');
+   formData.append("BaseLocationCode", this.docketService.loginUserList.LocationCode);
 
   if(this.challanForm.valid){
 

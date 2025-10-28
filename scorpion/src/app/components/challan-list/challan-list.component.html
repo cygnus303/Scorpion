@@ -24,7 +24,7 @@
                             <div class="input-group">
                                 <input class="form-control required2" [placeholder]="typeName + ' Date'" type="text" #dv="bsDatepicker"
                                     bsDatepicker  [bsValue]="docketService.bsValue" formControlName="tHCDate"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY',maxDate:docketService.bsValue}" [disabled]="true">
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A',maxDate:docketService.bsValue}" [disabled]="true">
                                 <span class="input-group-text cursor-pointer" (click)="dv.toggle()" disabled>
                                     <i class="fa fa-calendar"></i>
                                 </span>
@@ -38,12 +38,22 @@
                         <div class="col-sm-7">
                             <div class="input-group">
                                 <input class="form-control required2" placeholder="Loading Date" type="text"
-                                    #dv="bsDatepicker" bsDatepicker formControlName="loadingDate"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                                    #dv="bsDatepicker"  [bsValue]="docketService.bsValue" bsDatepicker formControlName="loadingDate"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
                                 <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
+                  <div class="col-4">
+                    <div class="row ">
+                        <label class="col-sm-5 col-form-label text-end">Empty Vehicle</label>
+                        <div class="col-sm-7 d-flex align-items-center">
+                            <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="isEmpty">
                         </div>
                     </div>
                 </div>
@@ -72,9 +82,9 @@
                         <label class="col-sm-5 col-form-label text-end">Actual Dept. Time</label>
                         <div class="col-sm-7">
                             <div class="input-group">
-                                <input class="form-control required2" placeholder="Actual Dept. Time" type="text"
-                                    #dv="bsDatepicker" bsDatepicker formControlName="actualDeptDate"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                                <input class="form-control required2" placeholder="Actual Dept. Time" type="text" 
+                                    #dv="bsDatepicker"  [bsValue]="docketService.bsValue" bsDatepicker formControlName="actualDeptDate"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
                                 <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
@@ -116,6 +126,31 @@
                     </div>
                 </div>
             </div>
+                 <div class="row">
+                  <div class="col-4" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
+                    <div class="row ">
+                        <label class="col-sm-5 col-form-label text-end">City Route KM</label>
+                        <div class="col-sm-7 d-flex align-items-center">
+                            <input type="text" class="form-control" placeholder="City Route KM" formControlName="CityRouteKM">
+                        </div>
+                    </div>
+                </div>
+              <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">Schedule Dep. Date</label>
+                        <div class="col-sm-7">
+                            <div class="input-group">
+                                <input class="form-control required2" placeholder="Schedule Dep. Date" type="text"
+                                    #dv="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue" formControlName="scheduleDeptDate"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
+                                <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row ">
                 <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? 'd-none' : ''">
                     <div class="row">
@@ -138,23 +173,6 @@
                         <label class="col-sm-5 col-form-label text-end">Approx KMs.</label>
                         <div class="col-sm-7">
                             <input class="form-control" type="text" placeholder="Approx KMs." formControlName="distanceInKM" readonly>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-              <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
-                    <div class="row align-items-center">
-                        <label class="col-sm-5 col-form-label text-end">Schedule Dep. Date</label>
-                        <div class="col-sm-7">
-                            <div class="input-group">
-                                <input class="form-control required2" placeholder="Schedule Dep. Date" type="text"
-                                    #dv="bsDatepicker" bsDatepicker formControlName="scheduleDeptDate"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
-                                <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
-                                    <i class="fa fa-calendar"></i>
-                                </span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -191,7 +209,7 @@
                             <div class="input-group">
                                 <input class="form-control required2" placeholder="Expected Reporting Date" type="text"
                                     #dv="bsDatepicker" bsDatepicker formControlName="ERD"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
                                 <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
@@ -202,14 +220,14 @@
             </div>
 
             <div class="row pb-3">
-                   <div class="col-4" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
+                   <!-- <div class="col-4" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
                     <div class="row ">
                         <label class="col-sm-5 col-form-label text-end">Empty Vehicle</label>
                         <div class="col-sm-7 d-flex align-items-center">
                             <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="isEmpty">
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-4" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Loading Slip Attachment :</label>
