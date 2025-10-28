@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormArray} from '@angular/forms';
+import { StatesFromPartyCodeRepsonse } from 'app/shared/models/general-master.model';
 import { VehicleTyperesponse } from 'app/shared/models/thc-master.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { ChallanService } from 'app/shared/services/challan.service';
@@ -26,6 +27,7 @@ public isPermitExpired : boolean = false;
 public isLicenseExpired : boolean = false;
 public lastFetchedVehicleNo: string | null = null; 
 public vehicleTypeList:VehicleTyperesponse[]=[];
+public routeNameList:StatesFromPartyCodeRepsonse[]=[];
 
 constructor(
   public challanService:ChallanService,
@@ -38,13 +40,15 @@ constructor(
  ngOnInit(){
     this.challanService.buildForm();
     this.challanService.getVendtyData();
-    this.challanService.getCityList();
+    if(this.docketService.loginUserList.Type !== '1'){
+      this.challanService.getCityList();
+      this.avalabledocketinPRS()
+    }
     this.docketService.getTypeofMovementData();
     this.challanService.getRouteMode();
     this.challanService.getDepartmentReason();
     this.challanService.getTDSLedgerList();
     this.challanService.getLocationData();
-    this.avalabledocketinPRS()
     this.getDAList();
     this.challanService.getRateTypeData()
     const type = this.docketService.loginUserList.Type;
@@ -518,9 +522,9 @@ avalabledocketinPRS(event?:any){
     });
 }
 
-getMFListFromRoute(){
+getMFListFromRoute(event:any){
   const paylaod = {
-    location: this.docketService.loginUserList.LocationCode,
+    location: event.value,
     isBCProcess: "N",
     thcDate: this.challanService.challanForm.value.tHCDate,
     baseCompanyCode: this.docketService.loginUserList.Companycode
@@ -528,7 +532,37 @@ getMFListFromRoute(){
   this.THCService.getMFListFromRoute(paylaod).subscribe({
       next: (response: any) => {
         if (response) {
-         
+           const formArray = this.challanService.avalableForTHC;
+           formArray.clear();
+         const list = Array.isArray(response) ? response : (response?.data || []);
+         for(let i = 0; i < list.length; i++){
+          formArray.push(this.challanService.buildMfGroup(list[i]));
+         };
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching vehicle details:', err.error.message);
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+}
+
+updateTotalManifest(): void {
+    const total = this.challanService.avalableForTHC.controls.reduce((sum, g) => sum + (g.get('selected')?.value ? 1 : 0), 0);
+    this.challanService.challanForm.get('TotalManifest')?.setValue(total, { emitEvent: false });
+  }
+
+getRoutesFromRouteType(event:any){
+  this.challanService.challanForm.patchValue({routeName:null})
+  const paylaod = {
+    routeType:event.codeId,
+    isEmpty:'N',
+    locationCode:this.docketService.loginUserList.LocationCode
+  }
+  this.THCService.getRoutesFromRouteType(paylaod).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.routeNameList = response
         }
       },
       error: (err) => {

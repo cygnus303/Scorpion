@@ -115,7 +115,7 @@ public rateTypeData:generalMasterResponse[]=[];
 
   buildForm(){
   this.challanForm = new FormGroup({
-    manualTHCNo:new FormControl(),
+    manualTHCNo:new FormControl('N/A'),
     tHCDate:new FormControl(new Date()),
     loadingDate:new FormControl(new Date()),
     isEmpty:new FormControl(),
@@ -132,6 +132,8 @@ public rateTypeData:generalMasterResponse[]=[];
     distanceInKM:new FormControl(),
     from_City:new FormControl(),
     to_City:new FormControl(),
+    FROMCITY:new FormControl(),
+    TOCITY:new FormControl(),
     ERD:new FormControl(),
     loadingSlipAttachment:new FormControl(),
     vehicleNo:new FormControl(),
@@ -190,6 +192,7 @@ public rateTypeData:generalMasterResponse[]=[];
     TDSAcccode:new FormControl(),
     vehicleNO:new FormControl(),
     avalabledocketinPRS:new FormArray([]),
+    avalableForTHC:new FormArray([]),
     TDSPercent:new FormControl(),
     Loadingcharge:new FormControl(),
     PANNO:new FormControl(),
@@ -203,7 +206,32 @@ public rateTypeData:generalMasterResponse[]=[];
     RRNo:new FormControl(),
     airLine:new FormControl(),
     flightScheduleTime:new FormControl(),
-    airWayBillNo:new FormControl()
+    airWayBillNo:new FormControl(),
+    TotalManifest:new FormControl()
+  });
+}
+
+ get avalableForTHC(): FormArray {
+    return this.challanForm.get('avalableForTHC') as FormArray;
+  }
+
+public buildMfGroup(item: any): FormGroup {
+  return new FormGroup({
+    selected: new FormControl(false),
+    tcno: new FormControl(item.tcno || ''),
+    manual: new FormControl(item.manual || ''),
+    tcbr: new FormControl(item.tcbr || ''),
+    tC_Date: new FormControl(item.tC_Date || item.tcdt_ddmmyyyy || ''),
+    toBH_CODE: new FormControl(item.toBH_CODE || ''),
+    toT_DKT: new FormControl(item.toT_DKT ?? 0),
+    packages: new FormControl(item.packages || ''),
+    weight: new FormControl(item.weight || ''),
+    totalInternalDocument: new FormControl(item.totalInternalDocument ?? 0),
+    vehicleNo: new FormControl(item.vehicleNo || ''),
+    toT_LOAD_PKGS:new FormControl(item.toT_LOAD_PKGS || ''),
+    toT_LOAD_ACTWT:new FormControl(item.toT_LOAD_ACTWT || ''),
+    myRouteName:new FormControl(item.myRouteName || ''),
+    tcdt_ddmmyyyy:new FormControl(item.tcdt_ddmmyyyy || '')
   });
 }
 

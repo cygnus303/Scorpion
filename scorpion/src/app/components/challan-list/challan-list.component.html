@@ -63,8 +63,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Route Mode</label>
                         <div class="col-sm-7">
-                            <!-- <input class="form-control required2" placeholder="Route Mode" type="text" formControlName="routeType"> -->
-                             <ng-select class="noFoundTextColor required2" placeholder="Route Mode" formControlName="routeType"
+                             <ng-select class="noFoundTextColor required2" placeholder="Route Mode" formControlName="routeType" (change)="getRoutesFromRouteType($event)"
                                 notFoundText="No matches found" [items]="challanService.routeModeList" bindLabel="codeDesc" bindValue="codeId"></ng-select>
                         </div>
                     </div>
@@ -73,7 +72,8 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Route Name</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" type="text" placeholder="Route Name" formControlName="routeName">
+                            <ng-select class="noFoundTextColor required2" placeholder="Route Name" formControlName="routeName" (change)="getMFListFromRoute($event)"
+                                notFoundText="No matches found" [items]="routeNameList" bindLabel="text" bindValue="value"></ng-select>
                         </div>
                     </div>
                 </div>
@@ -84,6 +84,45 @@
                             <div class="input-group">
                                 <input class="form-control required2" placeholder="Actual Dept. Time" type="text" 
                                     #dv="bsDatepicker"  [bsValue]="docketService.bsValue" bsDatepicker formControlName="actualDeptDate"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
+                                <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div class="row"  [ngClass]="this.docketService.loginUserList.Type === '1'? '' : 'd-none'">
+                <div class="col-4 pb-3">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">From City</label>
+                        <div class="col-sm-7">
+                            <ng-select class="required2" placeholder="From City" formControlName="FROMCITY" >
+                                <ng-option *ngFor="let item of challanService.cityList" [value]="item.city_code">
+                                    <strong>{{ item.location }}</strong> : {{ item.location }}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 pb-3">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">To City</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control required2" required
+                                [ngClass]="{ 'border-danger': challanService.challanForm.get('TOCITY')?.invalid && challanService.challanForm.get('TOCITY')?.touched }"
+                                placeholder="To City" formControlName="TOCITY" />
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">Expected Reporting Date</label>
+                        <div class="col-sm-7">
+                            <div class="input-group">
+                                <input class="form-control required2" placeholder="Expected Reporting Date" type="text"
+                                    #dv="bsDatepicker" bsDatepicker formControlName="ERD"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
                                 <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
                                     <i class="fa fa-calendar"></i>
@@ -127,7 +166,7 @@
                 </div>
             </div>
                  <div class="row">
-                  <div class="col-4" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
+                  <div class="col-4" [ngClass]="this.docketService.loginUserList.Type === '1' && this.challanService.challanForm.value.routeType === 'S' ? '' : 'd-none'">
                     <div class="row ">
                         <label class="col-sm-5 col-form-label text-end">City Route KM</label>
                         <div class="col-sm-7 d-flex align-items-center">
@@ -178,7 +217,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '3' ? 'd-none' : ''">
+                <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '1' ? 'd-none' : ''">
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">From City</label>
                         <div class="col-sm-7">
@@ -190,7 +229,7 @@
                         </div>
                     </div>
                 </div>
-                  <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '3' ? 'd-none' : ''">
+                  <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '1'? 'd-none' : ''">
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">To City</label>
                         <div class="col-sm-7">
@@ -202,21 +241,7 @@
                         </div>
                     </div>
                 </div>
-                    <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
-                    <div class="row align-items-center">
-                        <label class="col-sm-5 col-form-label text-end">Expected Reporting Date</label>
-                        <div class="col-sm-7">
-                            <div class="input-group">
-                                <input class="form-control required2" placeholder="Expected Reporting Date" type="text"
-                                    #dv="bsDatepicker" bsDatepicker formControlName="ERD"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
-                                <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
-                                    <i class="fa fa-calendar"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
 
             <div class="row pb-3">
@@ -282,7 +307,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">AWB No.</label>
                     <div class="col-sm-7 d-flex justify-content-between">
-                       <input class="form-control required2" placeholder="AWB No" type="text" formControlName="airWayBillNos">
+                       <input class="form-control required2" placeholder="AWB No" type="text" formControlName="airWayBillNo">
                     </div>
                 </div>
             </div>
@@ -967,7 +992,7 @@
         <table class="table table-bordered table-striped table-condensed flip-content mb-0">
             <thead>
                 <tr>
-                    <th><input type="checkbox"></th>
+                    <th></th>
                     <th>Sys. MF No.</th>
                     <th>Manual MF NO.</th>
                     <th>MF Branch</th>
@@ -980,20 +1005,26 @@
                     <th>Vehicle No</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- <tr *ngFor="let item of cNoteAvailable" class="align-middle">
-                    <td><input type="checkbox"></td>
-                    <td>MF/PIM/2526/000443</td>
-                    <td>-</td>
-                    <td>PIM</td>
-                    <td>14/10/2025</td>
-                    <td>ZKP</td>
-                    <td>1.00</td>
-                    <td>2/2</td>
-                    <td>50.0/50.0</td>
-                    <td>0</td>
-                    <td></td>
-                </tr> -->
+            <tbody formArrayName="avalableForTHC">
+            <tr *ngFor="let item of challanService.avalableForTHC.controls; let i = index" [formGroupName]="i" class="align-middle">
+                <td>
+                    <input type="checkbox" formControlName="selected" (change)="updateTotalManifest()">
+                </td>
+                <td>{{ item.value.tcno}}</td>
+                <td>{{ item.value.manualTHCNo}}</td>
+                <td>{{ item.value.tcbr}}</td>
+                <td>{{ item.value.tC_Date }}</td>
+                <td>{{ item.value.toBH_CODE }}</td>
+                <td>{{ item.value.toT_DKT }}</td>
+                <td>{{ item.value.packages }}</td>
+                <td>{{ item.value.weight }}</td>
+                <td>{{ item.value.totalInternalDocument }}</td>
+                <td>{{ item.value.vehicleNo }}</td>
+            </tr>
+            
+            <tr *ngIf="challanService.avalableForTHC.length === 0">
+                <td colspan="11" class="text-center">No MF available</td>
+            </tr>
             </tbody>
         </table>
             <div class="row pb-3 pt-4">
@@ -1001,7 +1032,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Total MF</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Total MF" type="text" value="0">
+                            <input class="form-control" placeholder="Total MF" type="text" value="0" formControlName="TotalManifest" >
                         </div>
                     </div>
                 </div>
