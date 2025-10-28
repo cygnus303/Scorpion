@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormArray} from '@angular/forms';
-import { StatesFromPartyCodeRepsonse } from 'app/shared/models/general-master.model';
+import { cityResponse, StatesFromPartyCodeRepsonse } from 'app/shared/models/general-master.model';
 import { VehicleTyperesponse } from 'app/shared/models/thc-master.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { ChallanService } from 'app/shared/services/challan.service';
@@ -28,6 +28,10 @@ public isLicenseExpired : boolean = false;
 public lastFetchedVehicleNo: string | null = null; 
 public vehicleTypeList:VehicleTyperesponse[]=[];
 public routeNameList:StatesFromPartyCodeRepsonse[]=[];
+public fromCityList: cityResponse[] = [];
+public toCityList: cityResponse[] = [];
+public notFromCityValue = 'Please enter at least 1 characters';
+public notToCityValue = 'Please enter at least 1 characters';
 
 constructor(
   public challanService:ChallanService,
@@ -300,18 +304,18 @@ vendorCodeName(){
   }
 
   getTripSheetList(event:any){
-    this.THCService.getTripSheet(event.value).subscribe({
-      next: (response: any) => {
-        if (response && response.data) {
-         this.challanService.challanForm.patchValue({
-          TDSPercent:response.data.tdsPercentage,
-         })
-        }
-      },
-      error: (err) => {
-        this.sweetAlertService.error(err.error.message)
-      }
-    });
+    // this.THCService.getTripSheet(event.value).subscribe({
+    //   next: (response: any) => {
+    //     if (response && response.data) {
+    //      this.challanService.challanForm.patchValue({
+    //       // TDSPercent:response.data.tdsPercentage,
+    //      })
+    //     }
+    //   },
+    //   error: (err) => {
+    //     this.sweetAlertService.error(err.error.message)
+    //   }
+    // });
   if(event.value!=='O'){
   this.getNewVehicleDetail(event.value)
   }else{
@@ -377,7 +381,7 @@ checkLicenseExpiry(event?:any) {
 
 
 getPANnumberData(event:any){
-  this.THCService.getPANnumber(event.vendor_Code).subscribe({
+  this.THCService.getPANnumber(event?.vendor_Code).subscribe({
       next: (response: any) => {
         if (response && response.data) {
          this.challanService.challanForm.patchValue({
@@ -429,6 +433,61 @@ getTDSDetailsFromVendor(vendorCode:string){
       }
     });
 }
+
+  getCityList(event?: any, locCode?: any, type?: 'from' | 'to') {
+    const searchText = event.term;
+    if (!searchText || searchText.length < 1) {
+      if (type === 'from') {
+        this.fromCityList = [];
+        this.notFromCityValue = 'Please enter at least 1 characters';
+      } else {
+        this.toCityList = [];
+        this.notToCityValue = 'Please enter at least 1 characters';
+      }
+      return;
+    }
+
+    this.basicDetailService.getCityData(locCode, searchText).subscribe({
+      next: (response) => {
+        if (response.success) {
+          if (type === 'from') {
+            this.fromCityList = response.data;
+            this.notFromCityValue = 'No matches found';
+          } else {
+            this.toCityList = response.data;
+            this.notToCityValue = 'No matches found';
+          }
+        } else {
+          if (type === 'from') {
+            this.fromCityList = [];
+            this.notFromCityValue = '';
+          } else {
+            this.toCityList = [];
+            this.notToCityValue = '';
+          }
+        }
+      },
+      error: () => {
+        if (type === 'from') {
+          this.fromCityList = [];
+          this.notFromCityValue = '';
+        } else {
+          this.toCityList = [];
+          this.notToCityValue = '';
+        }
+      }
+    });
+  }
+
+  resetCityDropdown(type: 'from' | 'to') {
+    if (type === 'from') {
+      this.fromCityList = [];
+      this.notFromCityValue = 'Please enter at least 1 characters';
+    } else {
+      this.toCityList = [];
+      this.notToCityValue = 'Please enter at least 1 characters';
+    }
+  }
 
 getNewVehicleDetail(vehicleNo:string){
     this.THCService.getNewVehicleDetail(vehicleNo.toUpperCase()).subscribe({

@@ -98,8 +98,12 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">From City</label>
                         <div class="col-sm-7">
-                            <ng-select class="required2" placeholder="From City" formControlName="FROMCITY" >
-                                <ng-option *ngFor="let item of challanService.cityList" [value]="item.city_code">
+                            <ng-select class="noFoundTextColor required2" appFocusNext
+                                [ngClass]="{ 'border-danger': challanService.challanForm.get('FROMCITY')?.invalid && challanService.challanForm.get('FROMCITY')?.touched}"
+                                 placeholder="From City" (search)="getCityList($event,this.docketService.Location,'from')"
+                               formControlName="FROMCITY"
+                                (open)="resetCityDropdown('from')" [notFoundText]="notFromCityValue">
+                                <ng-option *ngFor="let item of fromCityList" [value]="item.location">
                                     <strong>{{ item.location }}</strong> : {{ item.location }}
                                 </ng-option>
                             </ng-select>
@@ -109,10 +113,19 @@
                 <div class="col-4 pb-3">
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">To City</label>
-                        <div class="col-sm-7">
-                            <input type="text" class="form-control required2" required
+                        <div class="col-sm-7" *ngIf="!challanService.challanForm.value.routeCode">
+                            <input type="text" class="form-control required2"
                                 [ngClass]="{ 'border-danger': challanService.challanForm.get('TOCITY')?.invalid && challanService.challanForm.get('TOCITY')?.touched }"
                                 placeholder="To City" formControlName="TOCITY" />
+                        </div>
+                        <div class="col-md-7" *ngIf="challanService.challanForm.value.routeCode">
+                            <ng-select class="noFoundTextColor required2" placeholder="To City"
+                                (search)="getCityList($event,this.docketService.Location,'to')"
+                                formControlName="TOCITY" [notFoundText]="notToCityValue">
+                                <ng-option *ngFor="let item of toCityList" [value]="item.location">
+                                    <strong>{{ item.location }}</strong> : {{ item.location }}
+                                </ng-option>
+                            </ng-select>
                         </div>
                     </div>
                 </div>
@@ -132,6 +145,33 @@
                     </div>
                 </div>
             </div>
+                    <div class="row">
+                        <div class="col-4"
+                            [ngClass]="this.docketService.loginUserList.Type === '1' && this.challanService.challanForm.value.routeType === 'S' ? '' : 'd-none'">
+                            <div class="row ">
+                                <label class="col-sm-5 col-form-label text-end">City Route KM</label>
+                                <div class="col-sm-7 d-flex align-items-center">
+                                    <input type="text" class="form-control" placeholder="City Route KM" formControlName="CityRouteKM" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
+                            <div class="row align-items-center">
+                                <label class="col-sm-5 col-form-label text-end">Schedule Dep. Date</label>
+                                <div class="col-sm-7">
+                                    <div class="input-group">
+                                        <input class="form-control required2" placeholder="Schedule Dep. Date" type="text"
+                                            #dv="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue"
+                                            formControlName="scheduleDeptDate"
+                                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
+                                        <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             <div class="row ">
                 <div class="col-4 pb-3">
                     <div class="row align-items-center">
@@ -165,31 +205,7 @@
                     </div>
                 </div>
             </div>
-                 <div class="row">
-                  <div class="col-4" [ngClass]="this.docketService.loginUserList.Type === '1' && this.challanService.challanForm.value.routeType === 'S' ? '' : 'd-none'">
-                    <div class="row ">
-                        <label class="col-sm-5 col-form-label text-end">City Route KM</label>
-                        <div class="col-sm-7 d-flex align-items-center">
-                            <input type="text" class="form-control" placeholder="City Route KM" formControlName="CityRouteKM">
-                        </div>
-                    </div>
-                </div>
-              <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
-                    <div class="row align-items-center">
-                        <label class="col-sm-5 col-form-label text-end">Schedule Dep. Date</label>
-                        <div class="col-sm-7">
-                            <div class="input-group">
-                                <input class="form-control required2" placeholder="Schedule Dep. Date" type="text"
-                                    #dv="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue" formControlName="scheduleDeptDate"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
-                                <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
-                                    <i class="fa fa-calendar"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        
             <div class="row ">
                 <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? 'd-none' : ''">
                     <div class="row">
@@ -264,7 +280,7 @@
             </div>
     </div>
      
-    <div *ngIf="challanService.challanForm.value.routeType==='A'">
+    <div *ngIf="challanService.challanForm.value.routeType === 'A'">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Flight Details</h3>
         <div class="row">
             <div class="col-4 pb-3" >
@@ -392,7 +408,6 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vehicle Type</label>
                     <div class="col-sm-7">
-                        <!-- <input class="form-control" placeholder="Vehicle Type" type="text"> -->
                                <ng-select class="noFoundTextColor required2" placeholder="Vehicle Type" formControlName="vehicleType"
                                 [items]="vehicleTypeList" bindLabel="codeDesc" bindValue="codeId"
                             notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId"></ng-select>
@@ -403,7 +418,6 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">FTL Type</label>
                     <div class="col-sm-7">
-                        <!-- <input class="form-control" type="text" placeholder="FTL Type"> -->
                           <ng-select class="noFoundTextColor required2" placeholder="FTL Type" formControlName="fTLType" readonly
                             notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" [items]="docketService.typeofMovementList"></ng-select>
                     </div>
@@ -769,7 +783,7 @@
                 <div class="row align-items-cente">
                         <label class="col-sm-5 col-form-label text-end">Out Veh. Free Space</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Out Veh." type="text" formControlName="freeSpace">
+                            <input class="form-control" placeholder="Free Space" type="text" formControlName="freeSpace">
                         </div>
                 </div>
             </div>
@@ -1119,7 +1133,6 @@
                 <div class="row mb-3 align-items-center" [ngClass]="['XX1', '19', '04', 'XX'].includes(challanService.challanForm.get('vendorType')?.value) && challanService.challanForm.value.isTDSEnabled ? '' : 'd-none'">
                     <label class="col-sm-4 col-form-label text-end">TDS Section</label>
                     <div class="col-sm-8">
-                           <!-- <input type="text" class="form-control required2" formControlName="TDSAcccode"/> -->
                             <ng-select class="noFoundTextColor required2" placeholder="TDS Section" formControlName="TDSAcccode"
                             [items]="challanService.TDSLedgerData"
                             notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" readonly></ng-select>
@@ -1139,10 +1152,10 @@
                         <input type="text" class="form-control text-end" value="0" formControlName="totalTDSAmount" readonly/>
                     </div>
                 </div>
-                 <div class="row mb-3 align-items-center" [ngClass]="['XX1', '19', '04', 'XX'].includes(challanService.challanForm.get('vendorType')?.value) && this.docketService.loginUserList.Type === '3' ? '' : 'd-none'">
+                 <div class="row mb-3 align-items-center" [ngClass]="['XX1', '19', '04', 'XX'].includes(challanService.challanForm.get('vendorType')?.value) && this.docketService.loginUserList.Type !== '2' ? '' : 'd-none'">
                     <label class="col-sm-4 col-form-label text-end">PAN Number</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" formControlName="PANNO"/>
+                        <input type="text" class="form-control" formControlName="PANNO" [readonly]="this.docketService.loginUserList.Type === '1'"/>
                     </div>
                 </div>
             </div>
@@ -1194,7 +1207,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Balance Location</label>
                     <div class="col-sm-7">
-                        <ng-select class=" required2" [items]="challanService.locationData" bindLabel="locName" bindValue="locCode"
+                        <ng-select class=" required2" [items]="challanService.locationData" bindLabel="locName" bindValue="locCode" [readonly]="this.docketService.loginUserList.Type === '1'"
                             placeholder="Balance Location" formControlName="balanceLocation"></ng-select>
                     </div>
                 </div>
