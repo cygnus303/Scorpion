@@ -215,7 +215,8 @@ constructor(
     flightScheduleTime:new FormControl(),
     airWayBillNo:new FormControl(),
     TotalManifest:new FormControl(),
-    routeCode:new FormControl()
+    routeCode:new FormControl(),
+    customerName:new FormControl()
   });
 }
 
@@ -711,7 +712,7 @@ const MFList = (this.avalableForTHC.controls as FormGroup[])
       StaffName:"",
       StaffMobileNo:"",
       VehicleTypeSize:"",
-      CustomerName:"",
+      CustomerName:this.challanForm.value.customerName,
       Driver:"",
     },
     "CPML":{

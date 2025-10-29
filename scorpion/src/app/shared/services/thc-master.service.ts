@@ -76,4 +76,8 @@ export class THCMasterService {
     return this.apiHandlerService.Get(`THC/VehicleType?vehicleNo=${vehicleNo}`);
   }
 
+  getAirport(locationCode:string): Observable<IApiBaseResponse<any[]>>{
+    return this.apiHandlerService.Get(`THC/GetAirport?locationCode=${locationCode}`);
+  }
+
 }
