@@ -250,10 +250,10 @@ public buildMfGroup(item: any): FormGroup {
 patchAvailableDockets(data: any[]) {
   this.avalabledocket.clear();
 
-  data.forEach((docket) => {
+  data.forEach((item) => {
     let tatInHrs = '-';
-    if (docket.arrival_Date) {
-      const arrival = new Date(docket.arrival_Date);
+    if (item.arrival_Date) {
+      const arrival = new Date(item.arrival_Date);
       const now = new Date();
       const diffMs = now.getTime() - arrival.getTime();
       const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
@@ -262,30 +262,57 @@ patchAvailableDockets(data: any[]) {
 
     const group = new FormGroup({
       isSelected: new FormControl(false),
-      dockno: new FormControl(docket.dockno),
-      paybaS_Str: new FormControl(docket.paybaS_Str),
-      bkg_Date: new FormControl(docket.bkg_Date),
-      commited_Dely_Date: new FormControl(docket.commited_Dely_Date),
-      arrPkgQty: new FormControl(docket.arrPkgQty),
-      pendPkgQty: new FormControl(docket.pendPkgQty),
-      actuwt: new FormControl(docket.actuwt),
-      chrgwt: new FormControl(docket.chrgwt),
-      pkgsno: new FormControl(docket.pkgsno),
-      arrival_Date: new FormControl(docket?.arrival_Date),
-      eWayBillNo: new FormControl(docket?.eWayBillNo),
-      subreasoncode: new FormControl(docket?.subreasoncode),
-      arrWeightQty: new FormControl(docket.arrWeightQty),
-      message: new FormControl(docket.message),
-      contractAmount: new FormControl(docket.contractAmount),
-      bcSerialNo: new FormControl(docket.bcSerialNo),
-      stock_Update_DT: new FormControl(docket.stock_Update_DT),
-      orgncd: new FormControl(docket.orgncd),
-      party_name: new FormControl(docket.party_name),
-      consignor_Name: new FormControl(docket.consignor_Name),
-      tatInHrs: new FormControl(tatInHrs),
-      rateType: new FormControl(''),
-      newRate: new FormControl(0),
-      charge: new FormControl(0),  
+      id: new FormControl(item.id ?? 0),
+    dockno: new FormControl(item.dockno || ''),
+    docksf: new FormControl(item.docksf || ''),
+    manual_dockno: new FormControl(item.manual_dockno || ''),
+    docket_Mode: new FormControl(item.docket_Mode || ''),
+    bkg_Date: new FormControl(item.bkg_Date || ''),
+    arrival_Date: new FormControl(item.arrival_Date || ''),
+    commited_Dely_Date: new FormControl(item.commited_Dely_Date || ''),
+    orgncd: new FormControl(item.orgncd || ''),
+    desT_CD: new FormControl(item.desT_CD || ''),
+    curr_Loc: new FormControl(item.curr_Loc || ''),
+    pendPkgQty: new FormControl(item.pendPkgQty ?? 0),
+    arrPkgQty: new FormControl(item.arrPkgQty ?? 0),
+    pkgsno: new FormControl(item.pkgsno ?? 0),
+    payBas: new FormControl(item.payBas || ''),
+    paybaS_Str: new FormControl(item.paybaS_Str || ''),
+    atad: new FormControl(item.atad || ''),
+    cdeldt: new FormControl(item.cdeldt || ''),
+    businesstype: new FormControl(item.businesstype || ''),
+    trN_MOD: new FormControl(item.trN_MOD || ''),
+    actuwt: new FormControl(item.actuwt ?? 0),
+    arrWeightQty: new FormControl(item.arrWeightQty ?? 0),
+    chrgwt: new FormControl(item.chrgwt ?? 0),
+    freight: new FormControl(item.freight ?? 0),
+    dkttot: new FormControl(item.dkttot ?? 0),
+    handlingchrg: new FormControl(item.handlingchrg ?? 0),
+    svctax: new FormControl(item.svctax ?? 0),
+    cnd: new FormControl(item.cnd ?? 0),
+    isEnabled: new FormControl(item.isEnabled ?? false),
+    rate: new FormControl(item.rate ?? 0),
+    maxLimit: new FormControl(item.maxLimit ?? 0),
+    newRate: new FormControl(item.newRate ?? 0),
+    cnt: new FormControl(item.cnt ?? 0),
+    message: new FormControl(item.message || ''),
+    eWayBillNo: new FormControl(item.eWayBillNo || ''),
+    pkgsnO_Load: new FormControl(item.pkgsnO_Load ?? 0),
+    chrgwT_Load: new FormControl(item.chrgwT_Load ?? 0),
+    isRemoved: new FormControl(item.isRemoved ?? false),
+    subreasoncode: new FormControl(item.subreasoncode || ''),
+    party_name: new FormControl(item.party_name || ''),
+    consignor_Name: new FormControl(item.consignor_Name || ''),
+    stock_Update_DT: new FormControl(item.stock_Update_DT || ''),
+    freeStorageDays: new FormControl(item.freeStorageDays || ''),
+    demurrageCharge: new FormControl(item.demurrageCharge ?? 0),
+    damcnt: new FormControl(item.damcnt ?? 0),
+    requestCNT: new FormControl(item.requestCNT ?? 0),
+    contractAmount: new FormControl(item.contractAmount ?? 0),
+    bcSerialNo: new FormControl(item.bcSerialNo),
+    tatInHrs: new FormControl(tatInHrs),
+    rateType: new FormControl(''),
+    charge: new FormControl(0),
     });
     group.get('rateType')?.valueChanges.subscribe(() => this.calculateCharge(group));
     group.get('newRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
@@ -329,99 +356,11 @@ updateTotalLoadingCharge() {
 }
 
 onSubmit(){
- const DocketList: any = [
-  {
-    actuwt: 0,
-    rate: 0,
-    docket_Mode: "string",
-    newRate: 0,
-    demurrage_Amount: "string",
-    isPRSPKGScan: "string",
-    freight: 0,
-    docketNo: "string",
-    party_name: "string",
-    freeStorageDays: "string",
-    docksf: "string",
-    message: "string",
-    pkgsno: 0,
-    consignor_Name: "string",
-    cnt: 0,
-    contractAmount: 0,
-    demurrageCharge: 0,
-    svctax: 0,
-    arrPkgQty: 0,
-    orgncd: "string",
-    dkttot: 0,
-    payBas: "string",
-    manual_dockno: "string",
-    chrgwT_Load: 0,
-    bkg_Date: "string",
-    subreasoncode: "string",
-    eWayBillNo: "string",
-    dem_Rate: "string",
-    curr_Loc: "string",
-    trN_MOD: "string",
-    arrival_Date: "string",
-    dockno: "string",
-    pendPkgQty: 0,
-    commited_Dely_Date: "string",
-    atad: "2025-10-28T07:25:14.166Z",
-    isRemoved: true,
-    maxLimit: 0,
-    chrgwt: 0,
-    isEnabled: true,
-    cdeldt: "2025-10-28T07:25:14.166Z",
-    cnd: 0,
-    damcnt: 0,
-    ratetype: "string",
-    requestCNT: 0,
-    businesstype: "string",
-    id: 0,
-    total_Demurrage_Days: "string",
-    stock_Update_DT: "string",
-    pkgsnO_Load: 0,
-    arrWeightQty: 0,
-    rateList: [
-      {
-        hourlyBasedSlot: 0,
-        entryDate: "2025-10-28T07:25:14.166Z",
-        rutdesc: "string",
-        recptdt: "string",
-        codeType: "string",
-        codeId: "string",
-        entryBy: "string",
-        ocT_AMT: "string",
-        name: "string",
-        pkgsty: "string",
-        dkttot: "string",
-        locaname: "string",
-        loccode: "string",
-        code: "string",
-        noofchar: 0,
-        activeservice: true,
-        codeAccess: "string",
-        vendor_Type: "string",
-        rutcd: "string",
-        lastUpdatedDate: "2025-10-28T07:25:14.166Z",
-        location: "string",
-        pkgstyName: "string",
-        prodcd: "string",
-        oct_percentage: "string",
-        ocT_RECEIPTNO: "string",
-        id: 0,
-        lastUpdatedBy: "string",
-        codefor: "string",
-        codeDesc: "string",
-        noofdigits: 0,
-        statusCode: "string"
-      }
-    ],
-    paybaS_Str: "string",
-    staff_BA: "string",
-    desT_CD: "string",
-    handlingchrg: 0
-  }
-];
+  const DocketList = (this.avalabledocket.controls as FormGroup[])
+  .filter((group) => group.get('isSelected')?.value)
+  .map((group) => group.value);
+  console.log(DocketList)
+
 
 const ListVendorType:any=[
   {
@@ -442,28 +381,6 @@ const ListCharges:any=[
 }
 ];
 
-const MFList:any=[
-  {
-  "tcdt_ddmmyyyy": "string",
-  "manual": "string",
-  "toT_DKT": 0,
-  "myRouteName": "string",
-  "toBH_CODE": "string",
-  "packages": "string",
-  "vehicleNo": "string",
-  "tcno": "string",
-  "isRemoved": true,
-  "isEnabled": true,
-  "weight": "string",
-  "toT_LOAD_PKGS": 0,
-  "id": 0,
-  "toT_LOAD_ACTWT": 0,
-  "totalInternalDocument": 0,
-  "tC_Date": "string",
-  "tcbr": "string"
-}
-];
-
 const THCCharge:any=[
   {
   "chargecode": "string",
@@ -474,100 +391,25 @@ const THCCharge:any=[
   "cnt": 0
 }
 ];
+const MFList = (this.avalableForTHC.controls as FormGroup[])
+  .filter(group => group.get('selected')?.value)
+  .map(group => {
+    return {
+      ...group.value,
+      id:0,
+      isEnabled: true,
+      isRemoved: false
+    };
+  });
 
-const PRSDRSDocketList:any=[
-  {
-  "actuwt": 0,
-  "rate": 0,
-  "docket_Mode": "string",
-  "newRate": 0,
-  "demurrage_Amount": "string",
-  "isPRSPKGScan": "string",
-  "freight": 0,
-  "docketNo": "string",
-  "party_name": "string",
-  "freeStorageDays": "string",
-  "docksf": "string",
-  "message": "string",
-  "pkgsno": 0,
-  "consignor_Name": "string",
-  "cnt": 0,
-  "contractAmount": 0,
-  "demurrageCharge": 0,
-  "svctax": 0,
-  "arrPkgQty": 0,
-  "orgncd": "string",
-  "dkttot": 0,
-  "payBas": "string",
-  "manual_dockno": "string",
-  "chrgwT_Load": 0,
-  "bkg_Date": "string",
-  "subreasoncode": "string",
-  "eWayBillNo": "string",
-  "dem_Rate": "string",
-  "curr_Loc": "string",
-  "trN_MOD": "string",
-  "arrival_Date": "string",
-  "dockno": "string",
-  "pendPkgQty": 0,
-  "commited_Dely_Date": "string",
-  "atad": "2025-10-28T07:25:14.168Z",
-  "isRemoved": true,
-  "maxLimit": 0,
-  "chrgwt": 0,
-  "isEnabled": true,
-  "cdeldt": "2025-10-28T07:25:14.168Z",
-  "cnd": 0,
-  "damcnt": 0,
-  "ratetype": "string",
-  "requestCNT": 0,
-  "businesstype": "string",
-  "id": 0,
-  "total_Demurrage_Days": "string",
-  "stock_Update_DT": "string",
-  "pkgsnO_Load": 0,
-  "arrWeightQty": 0,
-  "rateList": [
-    {
-      "hourlyBasedSlot": 0,
-      "entryDate": "2025-10-28T07:25:14.168Z",
-      "rutdesc": "string",
-      "recptdt": "string",
-      "codeType": "string",
-      "codeId": "string",
-      "entryBy": "string",
-      "ocT_AMT": "string",
-      "name": "string",
-      "pkgsty": "string",
-      "dkttot": "string",
-      "locaname": "string",
-      "loccode": "string",
-      "code": "string",
-      "noofchar": 0,
-      "activeservice": true,
-      "codeAccess": "string",
-      "vendor_Type": "string",
-      "rutcd": "string",
-      "lastUpdatedDate": "2025-10-28T07:25:14.168Z",
-      "location": "string",
-      "pkgstyName": "string",
-      "prodcd": "string",
-      "oct_percentage": "string",
-      "ocT_RECEIPTNO": "string",
-      "id": 0,
-      "lastUpdatedBy": "string",
-      "codefor": "string",
-      "codeDesc": "string",
-      "noofdigits": 0,
-      "statusCode": "string"
-    }
-  ],
-  "paybaS_Str": "string",
-  "staff_BA": "string",
-  "desT_CD": "string",
-  "handlingchrg": 0
-}
-]
+
+  const PRSDRSDocketList = (this.avalabledocket.controls as FormGroup[])
+  .filter(group => group.get('isSelected')?.value)
+  .map(group => {
+    const docket = { ...group.value, IsEnabled: true };
+    return docket;
+  });
+
   const payload={
     "CTH":{
     THCNO:"N/A",
