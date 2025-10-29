@@ -352,7 +352,7 @@ getVehicleCapacity(id:string){
       if (response && response.data) {
        this.challanService.challanForm.patchValue({
         vehicleCapacity:response.data.capacity,
-        TDSAcccode:response.data.acccode
+        // TDSAcccode:response.data.acccode
        })
       }
     },
@@ -390,6 +390,10 @@ checkLicenseExpiry(event?:any) {
 
 
 getPANnumberData(event:any){
+  this.challanService.challanForm.patchValue({
+    vehicleType:null,
+    vehicleNO:null
+  });
   this.THCService.getPANnumber(event?.vendor_Code).subscribe({
       next: (response: any) => {
         if (response && response.data) {
@@ -405,7 +409,7 @@ getPANnumberData(event:any){
     });
     this.getTDSDetailsFromVendor(event.vendor_Code);
     this.getVehicleFromVendorList(event.vendor_Code);
-    // this.getVehicleType(event.vendor_Code)
+    this.getVehicleType(event.vendor_Code)
     if (this.challanService.challanForm.value.vendorType === '04') {
         this.avalabledocketinPRS(event.vendor_Code);
     }
@@ -608,7 +612,6 @@ avalabledocketinPRS(event?:any){
 
 getMFListFromRoute(event:any){
   this.challanService.challanForm.patchValue({
-    vendorType:null,
     vendorCode:null
   })
   const paylaod = {
@@ -664,11 +667,30 @@ updateTotalManifest(mfNo:string): void {
   this.challanService.challanForm.patchValue({
       TotalManifest: totals.totalManifests,
       wtLoaded: totals.totalWeight,
-    },{ emitEvent: false });   
+    },{ emitEvent: false });
+    
+    const vehicleCapacity = this.challanService.challanForm.value.vehicleCapacity;
+    const weightLoaded = this.challanService.challanForm.value.wtLoaded;
+    if (vehicleCapacity && weightLoaded) {
+      const utilization = (weightLoaded / (vehicleCapacity * 1000)) * 100;
+      const roundedUtilization = Number(utilization.toFixed(2));
+
+      this.challanService.challanForm.patchValue({
+        vehicleCapacityUti: roundedUtilization
+      });
+    } else {
+      this.challanService.challanForm.patchValue({
+        vehicleCapacityUti: 0
+      });
+    }
   }
 
 getRoutesFromRouteType(event:any){
-  this.challanService.challanForm.patchValue({routeName:null})
+  this.challanService.challanForm.patchValue({
+    routeName:null,
+    vendorType:null,
+    vendorCode:null
+  })
   const paylaod = {
     routeType:event.codeId,
     isEmpty:'N',
@@ -685,7 +707,7 @@ getRoutesFromRouteType(event:any){
         this.sweetAlertService.error(err.error.message)
       }
     });
-    if(event.codeId === 'S' && !this.challanService.challanForm.value.vendorCode){
+    if(event.codeId === 'S'){
       this.getVehicleType('O')
     }
     if(event.codeId==='A'){
@@ -726,6 +748,10 @@ getAirportDetail(){
         this.sweetAlertService.error(err.error.message)
       }
     });
+}
+
+onChangeVehicleType(event:any){
+    this.getVehicleCapacity(event.typeCode);
 }
 
 }
