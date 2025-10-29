@@ -324,7 +324,7 @@ vendorCodeName(){
     //     this.sweetAlertService.error(err.error.message)
     //   }
     // });
-  if(event.value!=='O'){
+  if(event.value !== 'O'){
   this.getNewVehicleDetail(event.value)
   }else{
      this.challanService.challanForm.patchValue({
@@ -337,7 +337,8 @@ vendorCodeName(){
       permitDate :'',
       insuranceDate :'',
       fitnessDate :'',
-     })
+     });
+     this.getVehicleType(event.value)
   }
   this.checkPermitExpiry();
   this.checkInsuranceExpiry();
@@ -404,7 +405,7 @@ getPANnumberData(event:any){
     });
     this.getTDSDetailsFromVendor(event.vendor_Code);
     this.getVehicleFromVendorList(event.vendor_Code);
-    this.getVehicleType(event.vendor_Code)
+    // this.getVehicleType(event.vendor_Code)
     if (this.challanService.challanForm.value.vendorType === '04') {
         this.avalabledocketinPRS(event.vendor_Code);
     }

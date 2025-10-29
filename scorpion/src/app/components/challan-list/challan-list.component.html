@@ -63,8 +63,10 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Route Mode</label>
                         <div class="col-sm-7">
-                             <ng-select class="noFoundTextColor required2" placeholder="Route Mode" formControlName="routeType" (change)="getRoutesFromRouteType($event)"
+                             <ng-select class="noFoundTextColor required2" placeholder="Route Mode" formControlName="routeType"
+                              [ngClass]="{ 'border-danger': challanService.challanForm.get('routeType')?.invalid  && challanService.challanForm.get('routeType')?.touched }" (change)="getRoutesFromRouteType($event)"
                                 notFoundText="No matches found" [items]="challanService.routeModeList" bindLabel="codeDesc" bindValue="codeId"></ng-select>
+                                 <div class="text-danger text-start" *ngIf="challanService.challanForm.get('routeType')?.invalid && challanService.challanForm.get('routeType')?.touched "> This field is required.</div>
                         </div>
                     </div>
                 </div>
@@ -73,7 +75,9 @@
                         <label class="col-sm-5 col-form-label text-end">Route Name</label>
                         <div class="col-sm-7">
                             <ng-select class="noFoundTextColor required2" placeholder="Route Name" formControlName="routeCode" (change)="getMFListFromRoute($event)"
-                                notFoundText="No matches found" [items]="routeNameList" bindLabel="text" bindValue="value"></ng-select>
+                                notFoundText="No matches found" [items]="routeNameList" bindLabel="text" bindValue="value"
+                                [ngClass]="{ 'border-danger': challanService.challanForm.get('routeCode')?.invalid  && challanService.challanForm.get('routeCode')?.touched }"></ng-select>
+                                 <div class="text-danger text-start" *ngIf="challanService.challanForm.get('routeCode')?.invalid && challanService.challanForm.get('routeCode')?.touched "> This field is required.</div>
                         </div>
                     </div>
                 </div>
@@ -101,12 +105,13 @@
                             <ng-select class="noFoundTextColor required2" appFocusNext
                                 [ngClass]="{ 'border-danger': challanService.challanForm.get('FROMCITY')?.invalid && challanService.challanForm.get('FROMCITY')?.touched}"
                                  placeholder="From City" (search)="getCityList($event,this.docketService.loginUserList.LocationCode,'from')"
-                               formControlName="FROMCITY"
+                               formControlName="FROMCITY" [ngClass]="{ 'border-danger': challanService.challanForm.get('FROMCITY')?.invalid  && challanService.challanForm.get('FROMCITY')?.touched }"
                                 (open)="resetCityDropdown('from')" [notFoundText]="notFromCityValue">
                                 <ng-option *ngFor="let item of fromCityList" [value]="item.location">
                                     <strong>{{ item.location }}</strong> : {{ item.location }}
                                 </ng-option>
                             </ng-select>
+                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('FROMCITY')?.invalid && challanService.challanForm.get('FROMCITY')?.touched "> This field is required.</div>
                         </div>
                     </div>
                 </div>
@@ -116,16 +121,18 @@
                         <div class="col-sm-7" *ngIf="!challanService.challanForm.value.routeCode">
                             <input type="text" class="form-control required2"
                                 [ngClass]="{ 'border-danger': challanService.challanForm.get('TOCITY')?.invalid && challanService.challanForm.get('TOCITY')?.touched }"
-                                placeholder="To City" formControlName="TOCITY" />
+                                placeholder="To City" formControlName="TOCITY" [ngClass]="{ 'border-danger': challanService.challanForm.get('TOCITY')?.invalid  && challanService.challanForm.get('TOCITY')?.touched }"/>
+                                 <div class="text-danger text-start" *ngIf="challanService.challanForm.get('TOCITY')?.invalid && challanService.challanForm.get('TOCITY')?.touched "> This field is required.</div>
                         </div>
                         <div class="col-md-7" *ngIf="challanService.challanForm.value.routeCode">
                             <ng-select class="noFoundTextColor required2" placeholder="To City"
                                 (search)="getCityList($event,this.docketService.loginUserList.LocationCode,'to')"
-                                formControlName="TOCITY" [notFoundText]="notToCityValue">
+                                formControlName="TOCITY" [notFoundText]="notToCityValue" [ngClass]="{ 'border-danger': challanService.challanForm.get('TOCITY')?.invalid  && challanService.challanForm.get('TOCITY')?.touched }">
                                 <ng-option *ngFor="let item of toCityList" [value]="item.location">
                                     <strong>{{ item.location }}</strong> : {{ item.location }}
                                 </ng-option>
                             </ng-select>
+                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('TOCITY')?.invalid && challanService.challanForm.get('TOCITY')?.touched "> This field is required.</div>
                         </div>
                     </div>
                 </div>
@@ -573,7 +580,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Mobile No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Mobile No." type="text" formControlName="driver1MobileNo" maxlength="10" pattern="[0-9]*"
+                            <input class="form-control required2" placeholder="Mobile No." type="text" formControlName="driver1MobileNo" maxlength="10" pattern="[0-9]*"
               (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
               required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1MobileNo')?.invalid  && challanService.challanForm.get('driver1MobileNo')?.touched }">
               <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1MobileNo')?.invalid && challanService.challanForm.get('driver1MobileNo')?.touched "> This field is required.</div>
@@ -631,7 +638,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Driver Name</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Driver Name" type="text" formControlName="driver2Name">
+                            <input class="form-control" placeholder="Driver Name" type="text" formControlName="driver2Name">
                         </div>
                     </div>
                 </div>
@@ -639,7 +646,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Mobile No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Mobile No." type="text" formControlName="driver2MobileNo" maxlength="10" pattern="[0-9]*"
+                            <input class="form-control" placeholder="Mobile No." type="text" formControlName="driver2MobileNo" maxlength="10" pattern="[0-9]*"
                               (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()">
                         </div>
                     </div>
@@ -658,7 +665,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Issue By RTO</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Issue By RTO" type="text" formControlName="driver2RTONo">
+                            <input class="form-control" placeholder="Issue By RTO" type="text" formControlName="driver2RTONo">
                         </div>
                     </div>
                 </div>
@@ -667,7 +674,7 @@
                         <label class="col-sm-5 col-form-label text-end">Licence Validity Date</label>
                         <div class="col-sm-7">
                             <div class="input-group">
-                                <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"
+                                <input class="form-control" placeholder="dd/MM/yyyy" type="text"
                                     #liv="bsDatepicker" bsDatepicker formControlName="driver2LicenceValDate"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
                                 <span class="input-group-text cursor-pointer" (click)="liv.toggle()">
@@ -786,7 +793,7 @@
                 <div class="row align-items-cente">
                         <label class="col-sm-5 col-form-label text-end">Out Veh. Free Space</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Out Veh." type="text" formControlName="freeSpace">
+                            <input class="form-control" placeholder="Free Space" type="text" formControlName="freeSpace" readonly>
                         </div>
                 </div>
             </div>
@@ -845,7 +852,7 @@
                     <label class="col-sm-5 col-form-label text-end">E-Way Bill Expired Date.</label>
                     <div class="col-sm-7">
                         <div class="input-group">
-                            <input class="form-control required2" placeholder="E-Way Bill Expired Date" type="text"
+                            <input class="form-control" placeholder="E-Way Bill Expired Date" type="text"
                                 #ewv="bsDatepicker" bsDatepicker formControlName="eWayBillExpiredDate"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
                             <span class="input-group-text cursor-pointer" (click)="ewv.toggle()">
@@ -1049,7 +1056,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Total MF</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Total MF" type="text" value="0" formControlName="TotalManifest" >
+                            <input class="form-control" placeholder="Total MF" type="text" value="0" formControlName="TotalManifest" readonly>
                         </div>
                     </div>
                 </div>
@@ -1064,14 +1071,14 @@
                 <div class="row mb-3 align-items-center" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
                     <label class="col-sm-6 col-form-label text-end">Standard Contract Amount</label>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control" placeholder="Standard Contract Amount" formControlName="standardContractAmount" />
+                        <input type="text" class="form-control" placeholder="Standard Contract Amount" formControlName="standardContractAmount" readonly/>
                     </div>
                 </div>
     
                 <div class="row mb-3 align-items-center">
                     <label class="col-sm-6 col-form-label text-end fw-bold">Contract Amount</label>
                     <div class="col-sm-6">
-                        <input min="1" type="number" class="form-control text-end" value="0" formControlName="contractAmount" [readOnly]="challanService.challanForm.value.vendorType==='04'"
+                        <input min="1" type="number" class="form-control text-end" value="0" formControlName="contractAmount" [readOnly]="challanService.challanForm.value.vendorType === '04'"
                         (blur)="changeAmountApplicable($event)"
                         required [ngClass]="{ 'border-danger': challanService.challanForm.get('contractAmount')?.invalid && challanService.challanForm.get('contractAmount')?.touched }"/>
                         <div class="text-danger text-start mt-1 small" *ngIf="challanService.challanForm.get('contractAmount')?.touched && challanService.challanForm.get('contractAmount')?.errors">
@@ -1156,10 +1163,10 @@
                         <input type="text" class="form-control text-end" value="0" formControlName="totalTDSAmount" readonly/>
                     </div>
                 </div>
-                 <div class="row mb-3 align-items-center" [ngClass]="['XX1', '19', '04', 'XX'].includes(challanService.challanForm.get('vendorType')?.value) && this.docketService.loginUserList.Type === '3' ? '' : 'd-none'">
+                 <div class="row mb-3 align-items-center" [ngClass]="['XX1', '19', '04', 'XX'].includes(challanService.challanForm.get('vendorType')?.value) && this.docketService.loginUserList.Type !== '2' ? '' : 'd-none'">
                     <label class="col-sm-4 col-form-label text-end">PAN Number</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" formControlName="PANNO"/>
+                        <input type="text" class="form-control" formControlName="PANNO" [readonly]="this.docketService.loginUserList.Type === '1'"/>
                     </div>
                 </div>
             </div>
@@ -1202,7 +1209,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Balance Amount</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" [value]="0" formControlName="balanceAmount">
+                        <input class="form-control" type="text" [value]="0" formControlName="balanceAmount" [readonly]="this.docketService.loginUserList.Type === '1'">
                           
                     </div>
                 </div>
@@ -1212,7 +1219,7 @@
                     <label class="col-sm-5 col-form-label text-end">Balance Location</label>
                     <div class="col-sm-7">
                         <ng-select class=" required2" [items]="challanService.locationData" bindLabel="locName" bindValue="locCode"
-                            placeholder="Balance Location" formControlName="balanceLocation"></ng-select>
+                            placeholder="Balance Location" formControlName="balanceLocation" [readonly]="this.docketService.loginUserList.Type === '1'"></ng-select>
                     </div>
                 </div>
             </div>

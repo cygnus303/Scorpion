@@ -121,12 +121,13 @@ constructor(
 
 
   buildForm(){
+  const isType1 = this.docketService.loginUserList.Type === '1';
   this.challanForm = new FormGroup({
     manualTHCNo:new FormControl('N/A'),
     tHCDate:new FormControl(new Date()),
     loadingDate:new FormControl(new Date()),
     isEmpty:new FormControl(),
-    routeType:new FormControl(),
+    routeType:new FormControl(null, isType1 ? Validators.required : null),
     routeName:new FormControl(),
     actualDeptDate:new FormControl(new Date()),
     scheduleDeptDate:new FormControl(new Date()),
@@ -139,8 +140,8 @@ constructor(
     distanceInKM:new FormControl(),
     from_City:new FormControl(),
     to_City:new FormControl(),
-    FROMCITY:new FormControl(),
-    TOCITY:new FormControl(),
+    FROMCITY:new FormControl(null, isType1 ? Validators.required : null),
+    TOCITY:new FormControl(null, isType1 ? Validators.required : null),
     ERD:new FormControl(),
     loadingSlipAttachment:new FormControl(),
     vehicleNo:new FormControl(),
@@ -215,7 +216,7 @@ constructor(
     flightScheduleTime:new FormControl(),
     airWayBillNo:new FormControl(),
     TotalManifest:new FormControl(),
-    routeCode:new FormControl(),
+    routeCode:new FormControl(null, isType1 ? Validators.required : null),
     customerName:new FormControl()
   });
 }
@@ -776,16 +777,16 @@ const MFList = (this.avalableForTHC.controls as FormGroup[])
    formData.append("BaseUserName", this.docketService.loginUserList.BaseUserName);
    formData.append("BaseUserType", '1');
    formData.append("BaseLocationCode", this.docketService.loginUserList.LocationCode);
-  // if(this.challanForm.valid){
+  if(this.challanForm.valid){
     this.THCService.challanSubmit(formData).subscribe({next: (response) => {
         if (response) {
           alert('successfully')
         }
       },
     })
-  // }else{
-  //   this.challanForm.markAllAsTouched();
-  // }
+  }else{
+    this.challanForm.markAllAsTouched();
+  }
 }
 
   appendObjectToFormData(formData: FormData, obj: any, parentKey: string = "") {
