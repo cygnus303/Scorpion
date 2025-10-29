@@ -76,4 +76,8 @@ export class THCMasterService {
     return this.apiHandlerService.Get(`THC/VehicleType?vehicleNo=${vehicleNo}`);
   }
 
+  getEWayBillExpiryDateByMF(payload:any): Observable<IApiBaseResponse<any[]>>{
+    return this.apiHandlerService.Post(`THC/GetEWayBillExpiryDateByMF`,payload);
+  }
+
 }

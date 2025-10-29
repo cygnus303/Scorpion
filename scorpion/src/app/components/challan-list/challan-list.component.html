@@ -100,7 +100,7 @@
                         <div class="col-sm-7">
                             <ng-select class="noFoundTextColor required2" appFocusNext
                                 [ngClass]="{ 'border-danger': challanService.challanForm.get('FROMCITY')?.invalid && challanService.challanForm.get('FROMCITY')?.touched}"
-                                 placeholder="From City" (search)="getCityList($event,this.docketService.Location,'from')"
+                                 placeholder="From City" (search)="getCityList($event,this.docketService.loginUserList.LocationCode,'from')"
                                formControlName="FROMCITY"
                                 (open)="resetCityDropdown('from')" [notFoundText]="notFromCityValue">
                                 <ng-option *ngFor="let item of fromCityList" [value]="item.location">
@@ -120,7 +120,7 @@
                         </div>
                         <div class="col-md-7" *ngIf="challanService.challanForm.value.routeCode">
                             <ng-select class="noFoundTextColor required2" placeholder="To City"
-                                (search)="getCityList($event,this.docketService.Location,'to')"
+                                (search)="getCityList($event,this.docketService.loginUserList.LocationCode,'to')"
                                 formControlName="TOCITY" [notFoundText]="notToCityValue">
                                 <ng-option *ngFor="let item of toCityList" [value]="item.location">
                                     <strong>{{ item.location }}</strong> : {{ item.location }}
@@ -1021,7 +1021,7 @@
             <tbody formArrayName="avalableForTHC">
             <tr *ngFor="let item of challanService.avalableForTHC.controls; let i = index" [formGroupName]="i" class="align-middle">
                 <td>
-                    <input type="checkbox" formControlName="selected" (change)="updateTotalManifest()">
+                    <input type="checkbox" formControlName="selected" (change)="updateTotalManifest(item.value.tcno)">
                 </td>
                 <td>{{ item.value.tcno}}</td>
                 <td>{{ item.value.manualTHCNo}}</td>

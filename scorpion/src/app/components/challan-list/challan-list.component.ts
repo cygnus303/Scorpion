@@ -622,9 +622,36 @@ getMFListFromRoute(event:any){
     });
 }
 
-updateTotalManifest(): void {
-    const total = this.challanService.avalableForTHC.controls.reduce((sum, g) => sum + (g.get('selected')?.value ? 1 : 0), 0);
-    this.challanService.challanForm.get('TotalManifest')?.setValue(total, { emitEvent: false });
+updateTotalManifest(mfNo:string): void {
+  const payload = {
+    mfNo:mfNo
+  }
+  this.THCService.getEWayBillExpiryDateByMF(payload).subscribe({
+      next: (response: any) => {
+        if (response && response.data) {
+          const result = response.data[0];
+          if (result.message) {
+            this.sweetAlertService.info(result.message);
+          } else if (result.expiryDate) {
+            this.sweetAlertService.info( `This Manifest E-Way Bill expired on: ${result.expiryDate}. Please update or verify before continuing!`);
+            this.challanService.challanForm.patchValue({eWayBillExpiredDate:new Date(result.expiryDate)})
+          }
+        }
+      },
+      error: (err) => {
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+    const totals = this.challanService.avalableForTHC.controls.reduce((acc, g) => {
+    if (g.get('selected')?.value) {
+      acc.totalManifests += 1;
+      acc.totalWeight += Number(g.get('toT_LOAD_ACTWT')?.value) || 0;
+    }
+    return acc; },{ totalManifests: 0, totalWeight: 0 });
+  this.challanService.challanForm.patchValue({
+      TotalManifest: totals.totalManifests,
+      wtLoaded: totals.totalWeight,
+    },{ emitEvent: false });   
   }
 
 getRoutesFromRouteType(event:any){
@@ -645,7 +672,7 @@ getRoutesFromRouteType(event:any){
         this.sweetAlertService.error(err.error.message)
       }
     });
-    if(event.codeId==='S' && !this.challanService.challanForm.value.vendorCode){
+    if(event.codeId === 'S' && !this.challanService.challanForm.value.vendorCode){
       this.getVehicleType('O')
     }
 }
