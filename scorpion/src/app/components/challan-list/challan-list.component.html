@@ -409,8 +409,8 @@
                     <label class="col-sm-5 col-form-label text-end">Vehicle Type</label>
                     <div class="col-sm-7">
                                <ng-select class="noFoundTextColor required2" placeholder="Vehicle Type" formControlName="vehicleType"
-                                [items]="vehicleTypeList" bindLabel="codeDesc" bindValue="codeId"
-                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId"></ng-select>
+                                [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode"
+                            notFoundText="No matches found" ></ng-select>
                     </div>
                 </div>
             </div>
@@ -871,7 +871,7 @@
             </div>
         </div>
     </div>
-    <div>
+    <div *ngIf="this.docketService.loginUserList.Type !== '1'">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Loading Charges</h3>
         <div class="row pb-3">
             <div class="col-4">

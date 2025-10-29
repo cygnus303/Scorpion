@@ -12,3 +12,8 @@ export interface VehicleTyperesponse{
     codeId:string,
     codeDesc:string
 }
+
+export interface VehicleTypeListResponse{
+    type_Name:string,
+    typeCode:string
+}

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormArray} from '@angular/forms';
 import { cityResponse, StatesFromPartyCodeRepsonse } from 'app/shared/models/general-master.model';
-import { VehicleTyperesponse } from 'app/shared/models/thc-master.model';
+import { VehicleTypeListResponse } from 'app/shared/models/thc-master.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { ChallanService } from 'app/shared/services/challan.service';
 import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service';
@@ -26,7 +26,7 @@ public isFitnessExpired : boolean = false;
 public isPermitExpired : boolean = false;
 public isLicenseExpired : boolean = false;
 public lastFetchedVehicleNo: string | null = null; 
-public vehicleTypeList:VehicleTyperesponse[]=[];
+public vehicleTypeList:VehicleTypeListResponse[]=[];
 public routeNameList:StatesFromPartyCodeRepsonse[]=[];
 public fromCityList: cityResponse[] = [];
 public toCityList: cityResponse[] = [];
@@ -396,6 +396,7 @@ getPANnumberData(event:any){
     });
     this.getTDSDetailsFromVendor(event.vendor_Code);
     this.getVehicleFromVendorList(event.vendor_Code);
+    this.getVehicleType(event.vendor_Code)
     if (this.challanService.challanForm.value.vendorType === '04') {
         this.avalabledocketinPRS(event.vendor_Code);
     }
@@ -505,11 +506,26 @@ getNewVehicleDetail(vehicleNo:string){
             fitnessDate: response.data.fitnessValDt ? new Date(response.data.fitnessValDt) : null,
             openKM:response.data.startKM
           });
-          this.vehicleTypeList = [{
-            codeId: response.data.vehicle_Type,
-            codeDesc: response.data.type_Name
-          }];
+          // this.vehicleTypeList = [{
+          //   typeCode: response.data.vehicle_Type,
+          //   type_Name: response.data.type_Name
+          // }];
+          this.getVehicleType(vehicleNo)
           this.getVehicleCapacity(response.data.vehicle_Type)
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching vehicle details:', err.error.message);
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+}
+
+getVehicleType(vehicleNo:string){
+  this.THCService.getVehicleType(vehicleNo).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.vehicleTypeList=response.data;
         }
       },
       error: (err) => {
@@ -629,6 +645,9 @@ getRoutesFromRouteType(event:any){
         this.sweetAlertService.error(err.error.message)
       }
     });
+    if(event.codeId==='S' && !this.challanService.challanForm.value.vendorCode){
+      this.getVehicleType('O')
+    }
 }
 
 getDAMobileNo(event:any){

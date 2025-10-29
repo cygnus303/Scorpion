@@ -71,4 +71,9 @@ export class THCMasterService {
     return this.apiHandlerService.Post(`THC/ChallanSubmit`,payload);
   }
 
+  
+  getVehicleType(vehicleNo:string): Observable<IApiBaseResponse<any[]>>{
+    return this.apiHandlerService.Get(`THC/VehicleType?vehicleNo=${vehicleNo}`);
+  }
+
 }
