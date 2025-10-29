@@ -78,6 +78,10 @@ export class THCMasterService {
 
   getEWayBillExpiryDateByMF(payload:any): Observable<IApiBaseResponse<any[]>>{
     return this.apiHandlerService.Post(`THC/GetEWayBillExpiryDateByMF`,payload);
+    }
+    
+  getAirport(locationCode:string): Observable<IApiBaseResponse<any[]>>{
+    return this.apiHandlerService.Get(`THC/GetAirport?locationCode=${locationCode}`);
   }
 
 }

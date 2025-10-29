@@ -258,14 +258,18 @@
             </div>
 
             <div class="row pb-3">
-                   <!-- <div class="col-4" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
+                   <div class="col-4" *ngIf="challanService.challanForm.value.isEmpty">
                     <div class="row ">
-                        <label class="col-sm-5 col-form-label text-end">Empty Vehicle</label>
+                        <label class="col-sm-5 col-form-label text-end">Customer Name</label>
                         <div class="col-sm-7 d-flex align-items-center">
-                            <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="isEmpty">
+                            <ng-select placeholder="Customer Name" formControlName="customerName">
+                                <ng-option >
+                                    
+                                </ng-option>
+                            </ng-select>
                         </div>
                     </div>
-                </div> -->
+                </div>
                 <div class="col-4" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Loading Slip Attachment :</label>

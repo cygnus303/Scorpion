@@ -59,6 +59,14 @@ constructor(
     this.typeName = type === '3' ? 'DRS' :
                     type === '1' ? 'THC' :
                     type === '2' ? 'PRS' : '';
+    this.challanService.challanForm.get('isEmpty')?.valueChanges.subscribe((isEmpty: boolean) => {
+    if (isEmpty) {
+      this.challanService.challanForm.patchValue({
+        customerName: null,
+        routeCode: null
+      });
+    }
+  });
   }
 
 calculateNetAmount() {
@@ -598,6 +606,10 @@ avalabledocketinPRS(event?:any){
 }
 
 getMFListFromRoute(event:any){
+  this.challanService.challanForm.patchValue({
+    vendorType:null,
+    vendorCode:null
+  })
   const paylaod = {
     location: event.value,
     isBCProcess: "N",
@@ -675,6 +687,9 @@ getRoutesFromRouteType(event:any){
     if(event.codeId === 'S' && !this.challanService.challanForm.value.vendorCode){
       this.getVehicleType('O')
     }
+    if(event.codeId==='A'){
+      this.getAirportDetail()
+    }
 }
 
 getDAMobileNo(event:any){
@@ -695,4 +710,21 @@ getDAMobileNo(event:any){
       }
     });
 }
+
+getAirportDetail(){
+   this.THCService.getAirport(this.docketService.loginUserList.LocationCode).subscribe({
+      next: (response: any) => {
+        if (response) {
+         this.challanService.challanForm.patchValue({
+          airportCode:response.data.Value
+         })
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching vehicle details:', err.error.message);
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+}
+
 }
