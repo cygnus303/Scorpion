@@ -161,7 +161,7 @@ constructor(
     driver1Name:new FormControl(),
     driver1RTONo:new FormControl(),
     driver1LicenceValDate:new FormControl(),
-    driver1MobileNo:new FormControl(),
+    driver1MobileNo:new FormControl(null, isType1 ? Validators.required : null),
     driver2Name:new FormControl(),
     driver2MobileNo:new FormControl(),
     driver2Licence:new FormControl(),
@@ -172,7 +172,7 @@ constructor(
     eWayBillNo : new FormControl(),
     eWayBillExpiredDate : new FormControl(),
     is_Local_ODA_id : new FormControl('local'),
-    totalDockets: new FormControl(0),
+    totalDockets: new FormControl(0, !isType1 ? Validators.required : null),
     contractAmount : new FormControl(0),
     isTDSEnabled : new FormControl(),
     tDSOnAmount : new FormControl(),
@@ -215,7 +215,7 @@ constructor(
     airLine:new FormControl(),
     flightScheduleTime:new FormControl(),
     airWayBillNo:new FormControl(),
-    TotalManifest:new FormControl(),
+    TotalManifest:new FormControl(0, isType1 ? Validators.required : null),
     routeCode:new FormControl(null, isType1 ? Validators.required : null),
     customerName:new FormControl()
   });

@@ -295,8 +295,8 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Airport</label>
                     <div class="col-sm-7">
-                       <ng-select class="noFoundTextColor required2" placeholder="Airport" formControlName="airportCode"
-                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId"></ng-select>
+                       <ng-select class="noFoundTextColor required2"  [items]="airportList" placeholder="Airport" formControlName="airportCode"
+                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" (change)="getFlights()"></ng-select>
                     </div>
                 </div>
             </div>
@@ -304,8 +304,8 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Airline Name</label>
                     <div class="col-sm-7 d-flex justify-content-between">
-                        <ng-select class="noFoundTextColor required2" placeholder="Airline Name" formControlName="airLine"
-                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId"></ng-select>
+                        <ng-select class="noFoundTextColor required2" placeholder="Airline Name" formControlName="airLine"  (change)="getFlights()"
+                            notFoundText="No matches found" [items]="airlineList" bindLabel="codeDesc" bindValue="codeId"></ng-select>
                     </div>
                 </div>
             </div>
@@ -313,7 +313,8 @@
                 <div class="row" >
                     <label class="col-sm-5 col-form-label text-end">Flight No</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" placeholder="Flight No" type="text" formControlName="flightCode">
+                        <ng-select class="noFoundTextColor required2" placeholder="Flight No" formControlName="flightCode"  
+                            notFoundText="No matches found" [items]="flightsList" bindLabel="codeDesc" bindValue="codeId"></ng-select>
                     </div>
                 </div>
             </div>
@@ -323,7 +324,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Flight Sch. Dept. Time</label>
                     <div class="col-sm-7">
-                      <input class="form-control required2" placeholder="Flight Sch. Dept. Time" type="text" formControlName="flightScheduleTime">
+                      <input class="form-control required2" placeholder="Flight Sch. Dept. Time" type="text" formControlName="flightScheduleTime" readonly>
                     </div>
                 </div>
             </div>
@@ -499,7 +500,7 @@
                          <div *ngIf="isPermitExpired" class="text-danger text-start fw-bold mt-1">
                            Permit Date Will be Expired
                         </div>
-                        <small class="text-danger text-start" *ngIf="challanService.challanForm.get('permitDate')?.invalid && challanService.challanForm.get('permitDate')?.touched ">This field is required.</small>
+                        <div class="text-danger text-start" *ngIf="challanService.challanForm.get('permitDate')?.invalid && challanService.challanForm.get('permitDate')?.touched ">This field is required.</div>
                     </div>
                 </div>
             </div>
@@ -580,9 +581,10 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Mobile No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Mobile No." type="text" formControlName="driver1MobileNo" maxlength="10" pattern="[0-9]*"
+                            <input class="form-control" placeholder="Mobile No." type="text" formControlName="driver1MobileNo" maxlength="10" pattern="[0-9]*"
               (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
-              required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1MobileNo')?.invalid  && challanService.challanForm.get('driver1MobileNo')?.touched }">
+              [ngClass]="[ challanService.challanForm.get('driver1MobileNo')?.invalid && challanService.challanForm.get('driver1MobileNo')?.touched ? 'border-danger' : '',
+                docketService.loginUserList.Type === '1' ? 'required2' : '']">
               <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1MobileNo')?.invalid && challanService.challanForm.get('driver1MobileNo')?.touched "> This field is required.</div>
                         </div>
                     </div>
@@ -995,7 +997,7 @@
                         <label class="col-sm-5 col-form-label text-end">Total CNote</label>
                         <div class="col-sm-7">
                             <input class="form-control" placeholder="Total CNote" min="1" type="number" value="0" formControlName="totalDockets" readonly
-                            required [ngClass]="{ 'border-danger': challanService.challanForm.get('totalDockets')?.invalid  && challanService.challanForm.get('totalDockets')?.touched }">
+                             [ngClass]="{ 'border-danger': challanService.challanForm.get('totalDockets')?.invalid  && challanService.challanForm.get('totalDockets')?.touched }">
                              <div class="text-danger text-start mt-1 small"  *ngIf="challanService.challanForm.get('totalDockets')?.touched && challanService.challanForm.get('totalDockets')?.errors">
                                 <span *ngIf="challanService.challanForm.get('totalDockets')?.hasError('min')">
                                   Please select at least one record.
@@ -1056,7 +1058,13 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Total MF</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Total MF" type="text" value="0" formControlName="TotalManifest" readonly>
+                            <input class="form-control" placeholder="Total MF" type="number" value="0" min="1" formControlName="TotalManifest" readonly
+                            [ngClass]="{ 'border-danger': challanService.challanForm.get('TotalManifest')?.invalid  && challanService.challanForm.get('TotalManifest')?.touched }">
+                             <div class="text-danger text-start mt-1 small"  *ngIf="challanService.challanForm.get('TotalManifest')?.touched && challanService.challanForm.get('TotalManifest')?.errors">
+                                <span *ngIf="challanService.challanForm.get('TotalManifest')?.hasError('min')">
+                                  Please select at least one record.
+                                </span>
+                             </div>
                         </div>
                     </div>
                 </div>

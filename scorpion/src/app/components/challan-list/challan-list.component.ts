@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormArray} from '@angular/forms';
-import { cityResponse, StatesFromPartyCodeRepsonse } from 'app/shared/models/general-master.model';
-import { VehicleTypeListResponse } from 'app/shared/models/thc-master.model';
+import { cityResponse, generalMasterResponse, StatesFromPartyCodeRepsonse } from 'app/shared/models/general-master.model';
+import { AirportListResponse, FlightsListResponse, VehicleTypeListResponse } from 'app/shared/models/thc-master.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { ChallanService } from 'app/shared/services/challan.service';
 import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service';
@@ -30,6 +30,9 @@ public vehicleTypeList:VehicleTypeListResponse[]=[];
 public routeNameList:StatesFromPartyCodeRepsonse[]=[];
 public fromCityList: cityResponse[] = [];
 public toCityList: cityResponse[] = [];
+public airportList:AirportListResponse[]=[];
+public airlineList:generalMasterResponse[]=[];
+public flightsList:FlightsListResponse[]=[];
 public notFromCityValue = 'Please enter at least 1 characters';
 public notToCityValue = 'Please enter at least 1 characters';
 
@@ -690,6 +693,7 @@ getRoutesFromRouteType(event:any){
     }
     if(event.codeId==='A'){
       this.getAirportDetail()
+      this.getAirlineList()
     }
 }
 
@@ -715,10 +719,11 @@ getDAMobileNo(event:any){
 getAirportDetail(){
    this.THCService.getAirport(this.docketService.loginUserList.LocationCode).subscribe({
       next: (response: any) => {
-        if (response) {
+        if (response && response.data) {
+          this.airportList = response.data
          this.challanService.challanForm.patchValue({
-          airportCode:response.data.Value
-         })
+          airportCode:response.data[0].codeId
+         });
         }
       },
       error: (err) => {
@@ -728,4 +733,32 @@ getAirportDetail(){
     });
 }
 
+ getAirlineList() {
+    this.basicDetailService.getGeneralMasterList('ALN ', '', '').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.airlineList = response.data;
+        }
+      },
+    });
+  }
+
+  getFlights(){
+    const payload = {
+      airLine:this.challanService.challanForm.value.airLine,
+      airport:this.challanService.challanForm.value.airportCode
+    }
+    if (!payload.airLine || !payload.airport) { return;}
+   this.THCService.getFlights(payload).subscribe({
+      next: (response: any) => {
+        if (response && response.data) {
+          this.flightsList = response.data
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching vehicle details:', err.error.message);
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+}
 }

@@ -8,10 +8,14 @@ export interface CityResponse {
     city_code:number
 }
 
-export interface VehicleTyperesponse{
-    codeId:string,
-    codeDesc:string
+export interface CodeResponse {
+  codeId: string;
+  codeDesc: string;
 }
+
+export type VehicleTyperesponse = CodeResponse;
+export type AirportListResponse = CodeResponse;
+export type FlightsListResponse = CodeResponse;
 
 export interface VehicleTypeListResponse{
     type_Name:string,

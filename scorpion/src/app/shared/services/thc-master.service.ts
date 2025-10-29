@@ -84,4 +84,7 @@ export class THCMasterService {
     return this.apiHandlerService.Get(`THC/GetAirport?locationCode=${locationCode}`);
   }
 
+   getFlights(payload:any): Observable<IApiBaseResponse<any[]>>{
+    return this.apiHandlerService.Post(`THC/GetFlights`,payload);
+    }
 }
