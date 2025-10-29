@@ -57,11 +57,11 @@
           <td><strong>License Attachment:</strong><i class="fas fa-eye fa-sm me-2 cursor-pointer" (click)="openAttachment(Templatepod,deliveryAgentViewList)"></i> </td>
         </tr> -->
         <tr>
-          <td><strong>Added By:</strong> {{ deliveryAgentViewList.entryBy }}</td>
+          <td><strong>Added By:</strong> {{ deliveryAgentViewList.entryName }}</td>
           <td><strong>Added Date:</strong> {{ deliveryAgentViewList.entryDate | date:'dd/MM/yyy' }}</td>
         </tr>
         <tr>
-          <td><strong>Edited  By:</strong> {{ deliveryAgentViewList.updateBy}}</td>
+          <td><strong>Edited  By:</strong> {{ deliveryAgentViewList.updateName}}</td>
           <td><strong>Edited  Date:</strong> {{ deliveryAgentViewList.updatedDate | date:'dd/MM/yyy' }}</td>
         </tr>
       </tbody>
