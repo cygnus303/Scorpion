@@ -21,3 +21,11 @@ export interface VehicleTypeListResponse{
     type_Name:string,
     typeCode:string
 }
+
+export interface CustomerListResponse{
+    id:string,
+    text:string
+}
+
+
+export type AllCityByLocationResponse = CustomerListResponse;

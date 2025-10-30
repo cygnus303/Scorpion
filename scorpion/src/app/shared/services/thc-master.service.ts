@@ -87,4 +87,16 @@ export class THCMasterService {
    getFlights(payload:any): Observable<IApiBaseResponse<any[]>>{
     return this.apiHandlerService.Post(`THC/GetFlights`,payload);
     }
+
+  getCustomerListForTHC(searchTerm:string){
+    return this.apiHandlerService.Get(`THC/getCustomerListForTHC?searchTerm=${searchTerm}`);
+  }
+
+  getAllCityByLocation(locCode:string,searchTerm:string){
+    return this.apiHandlerService.Get(`THC/GetAllCityByLocation?locCode=${locCode}&searchTerm=${searchTerm}`);
+  }
+
+  getFlightSchTime(payload:any){
+    return this.apiHandlerService.Get(`THC/GetFlightSchTime?flight=${payload.flightCode}&airport=${payload.airport}`);
+  }
 }

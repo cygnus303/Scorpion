@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormArray} from '@angular/forms';
 import { cityResponse, generalMasterResponse, StatesFromPartyCodeRepsonse } from 'app/shared/models/general-master.model';
-import { AirportListResponse, FlightsListResponse, VehicleTypeListResponse } from 'app/shared/models/thc-master.model';
+import { AirportListResponse, AllCityByLocationResponse, CustomerListResponse, FlightsListResponse, VehicleTypeListResponse } from 'app/shared/models/thc-master.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { ChallanService } from 'app/shared/services/challan.service';
 import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service';
@@ -28,14 +28,17 @@ public isLicenseExpired : boolean = false;
 public lastFetchedVehicleNo: string | null = null; 
 public vehicleTypeList:VehicleTypeListResponse[]=[];
 public routeNameList:StatesFromPartyCodeRepsonse[]=[];
-public fromCityList: cityResponse[] = [];
-public toCityList: cityResponse[] = [];
+public fromCityList: AllCityByLocationResponse[] = [];
+public toCityList: AllCityByLocationResponse[] = [];
 public airportList:AirportListResponse[]=[];
 public airlineList:generalMasterResponse[]=[];
 public flightsList:FlightsListResponse[]=[];
+public customerList:CustomerListResponse[]=[];
 public notFromCityValue = 'Please enter at least 1 characters';
+public notCustomerListValue = 'Please enter at least 1 characters';
 public notToCityValue = 'Please enter at least 1 characters';
-
+public previewUrl: string | ArrayBuffer | null = null;
+@ViewChild('fileInput') fileInput!: ElementRef;
 constructor(
   public challanService:ChallanService,
   public docketService:DocketService,
@@ -464,14 +467,14 @@ getTDSDetailsFromVendor(vendorCode:string){
       return;
     }
 
-    this.basicDetailService.getCityData(locCode, searchText).subscribe({
-      next: (response) => {
-        if (response.success) {
+    this.THCService.getAllCityByLocation(locCode, searchText).subscribe({
+      next: (response:any) => {
+        if (response) {
           if (type === 'from') {
-            this.fromCityList = response.data;
+            this.fromCityList = response;
             this.notFromCityValue = 'No matches found';
           } else {
-            this.toCityList = response.data;
+            this.toCityList = response;
             this.notToCityValue = 'No matches found';
           }
         } else {
@@ -692,7 +695,8 @@ getRoutesFromRouteType(event:any){
   this.challanService.challanForm.patchValue({
     routeName:null,
     vendorType:null,
-    vendorCode:null
+    vendorCode:null,
+    routeCode:null
   })
   const paylaod = {
     routeType:event.codeId,
@@ -744,7 +748,7 @@ getAirportDetail(){
         if (response && response.data) {
           this.airportList = response.data
          this.challanService.challanForm.patchValue({
-          airportCode:response.data[0].codeId
+          airportCode:response.data[0]?.codeId
          });
         }
       },
@@ -783,8 +787,85 @@ getAirportDetail(){
       }
     });
 }
+
 onChangeVehicleType(event:any){
     this.getVehicleCapacity(event.typeCode);
 }
 
+  getCustomerListForTHC(event?: any) {
+    const searchText = event.term;
+    if (!searchText || searchText.length < 1) {
+        this.customerList = [];
+        this.notCustomerListValue = 'Please enter at least 1 characters';
+      return;
+    }
+    this.THCService.getCustomerListForTHC(searchText).subscribe({
+      next: (response:any) => {
+        if (response) {
+            this.customerList = response;
+            this.notCustomerListValue = 'No matches found';
+        } else {
+            this.customerList = [];
+            this.notCustomerListValue = '';
+        }
+      },
+      error: () => {
+          this.customerList = [];
+          this.notCustomerListValue = '';
+      }
+    });
+  }
+
+  resetCustomerDropdown() {
+      this.customerList = [];
+      this.notCustomerListValue = 'Please enter at least 1 characters';
+  }
+
+  getFlightSchTime(){
+    const payload = {
+      flightCode:this.challanService.challanForm.value.flightCode,
+      airport:this.challanService.challanForm.value.airportCode
+    }
+    if (!payload.flightCode || !payload.airport) { return;}
+   this.THCService.getFlightSchTime(payload).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.challanService.challanForm.patchValue({flightScheduleTime:response?.schTime})
+        }
+      },
+      error: (err) => {
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+}
+
+
+onFileSelected(event: any) {
+  const file = event.target.files[0];
+  if (file) {
+    this.challanService.selectedFile = file;
+
+    // preview
+    const reader = new FileReader();
+    reader.onload = () => this.previewUrl = reader.result;
+    reader.readAsDataURL(file);
+
+    // assign to form control
+    this.challanService.challanForm.patchValue({
+      loadingSlipAttachment: file
+    });
+  }
+}
+
+triggerFileInput() {
+  if (this.fileInput?.nativeElement) this.fileInput.nativeElement.click();
+}
+
+removeAttachment() {
+  this.challanService.selectedFile = null;
+  this.previewUrl = null;
+  this.challanService.challanForm.patchValue({
+    loadingSlipAttachment: null
+  });
+}
 }

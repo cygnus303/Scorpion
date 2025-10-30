@@ -524,3 +524,9 @@ input[readonly] {
   font-weight: 300 !important;
   color: #333333;
 }
+
+.attachment-img {
+  max-width: 50%;
+  border-radius: 10px;
+  object-fit: cover;
+}

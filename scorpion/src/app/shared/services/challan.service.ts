@@ -22,6 +22,7 @@ public locationData:LocationListResponse[]=[];
 public latereasonList:generalMasterResponse[]=[];
 public TDSLedgerData:VehicleTyperesponse[]=[];
 public rateTypeData:generalMasterResponse[]=[];
+public selectedFile: File | null = null;
 
 constructor(
   private basicDetailService: BasicDetailService,
@@ -420,8 +421,8 @@ const MFList = (this.avalableForTHC.controls as FormGroup[])
     THCDate:this.challanForm.value.tHCDate,
     THCBRCD:this.docketService.loginUserList.LocationCode,
     THCDESTCD:"",
-    FROMCITY:this.challanForm.value.FROMCITY,
-    TOCITY:this.challanForm.value.TOCITY,
+    FROMCITY:this.challanForm.value.FROMCITY?this.challanForm.value.FROMCITY:this.challanForm.value.from_City,
+    TOCITY:this.challanForm.value.TOCITY?this.challanForm.value.TOCITY:this.challanForm.value.to_City,
     THCType:this.docketService.loginUserList.Type,
     RouteCategory:"",
     RouteType:this.challanForm.value.routeType,
@@ -771,7 +772,9 @@ const MFList = (this.avalableForTHC.controls as FormGroup[])
    formData.append("CVM.DemurrageCharge", "");
    formData.append("CVM.DiscountRatio", "");
    formData.append("CVM.FinalAmt", "");
-   formData.append("LoadingSlipAttachmentFile", "");
+    if (this.selectedFile) {
+      formData.append("LoadingSlipAttachmentFile", this.selectedFile);
+    }
    formData.append("BaseFinYear", this.docketService.loginUserList.FinYear);
    formData.append("BaseCompanyCode", this.docketService.loginUserList.Companycode);
    formData.append("BaseUserName", this.docketService.loginUserList.BaseUserName);
