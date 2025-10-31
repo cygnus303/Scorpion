@@ -165,6 +165,16 @@ checkDateExpiry(dateValue: any): boolean {
   return date < today;
 }
 
+onGpsToggle() {
+  const gpsEnabled = this.dAForm.get('gpsEnabled')?.value;
+  const gpsProvider = this.dAForm.get('gpsProvider');
+
+  if (!gpsEnabled) {
+    gpsProvider?.reset();    
+  } 
+}
+
+
 checkPermitExpiry(event?:any) {
   const permit = event ? event: this.dAForm.value.permitValidityDate;
   this.isPermitExpired = this.checkDateExpiry(permit);
@@ -211,8 +221,8 @@ checkLicenseExpiry(event?:any) {
       gpsEnabled: new FormControl(false),
       gpsProvider: new FormControl(null),
       location: new FormControl(null),
-      LicenseAttachmentPath: new FormControl(''),
-      LicenseAttachment: new FormControl(''),
+      LicenseAttachmentPath: new FormControl(null),
+      LicenseAttachment: new FormControl('',Validators.required),
       entryBy: new FormControl(this.docketService.loginUserList?.UserId),
       updateBy: new FormControl(this.docketService.loginUserList.UserId),
       updatedDate:new FormControl(new Date()),

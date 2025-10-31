@@ -451,8 +451,8 @@ onSubmit(){
 
   const ListVendorType: any = [
     {
-      "Vendor_Type_Code": "string",
-      "Vendor_Type": "string",
+      "Vendor_Type_Code": "",
+      "Vendor_Type": "",
       "DisplayIndex": 0
     }
   ];

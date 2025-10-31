@@ -288,7 +288,7 @@
             <label class="col-sm-5 col-form-label text-end">GPS Enabled </label>
             <div class="col-sm-7">
               <div class="d-flex align-items-center">
-                <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="gpsEnabled">
+                <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="gpsEnabled" (change)="onGpsToggle()">
                   <ng-select class=" required2" 
                 [items]="gpsdata" bindLabel="codeDesc" bindValue="codeId"  [ngClass]="{ 'border-danger': dAForm.get('gpsProvider')?.invalid  && dAForm.get('gpsProvider')?.touched }"
                 placeholder="Select GPS Provider" formControlName="gpsProvider" notFoundText="No matches found" [readonly]="this.dAForm.value.gpsEnabled ? false  :true"
@@ -315,12 +315,14 @@
             <label class="col-sm-5 col-form-label text-end">License Attachment</label>
             <div class="col-sm-7 position-relative">
               <!-- Hidden real file input -->
-              <input type="file" id="licenseFile" (change)="onFileSelected($event)" formControlName="LicenseAttachment" required class="d-none" />
+              <!-- <input type="file" id="licenseFile" (change)="onFileSelected($event)" formControlName="LicenseAttachment" required class="d-none" /> -->
+              <input #licenseFileInput type="file" id="licenseFile" (change)="onFileSelected($event)" class="d-none" />
+
 
               <!-- Fake input field (looks like real one) -->
               <div class="input-group border rounded-2" [ngClass]="{ 'border-danger': dAForm.get('LicenseAttachment')?.invalid  && dAForm.get('LicenseAttachment')?.touched }" >
                 <button type="button" class="input-group-text required2" (click)="openFileSelector()">Choose File</button>
-                <input type="text" class="form-control" [value]="licenseAttachmentName || 'No file chosen'" disabled />
+                 <input type="text" class="form-control" [value]="licenseAttachmentName || 'No file chosen'" disabled />
               </div>
 
               <!-- Validation -->
