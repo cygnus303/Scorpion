@@ -442,7 +442,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vehicle Type</label>
                     <div class="col-sm-7">
-                               <ng-select class="noFoundTextColor required2" placeholder="Vehicle Type" formControlName="vehicleType"
+                               <ng-select class="noFoundTextColor" placeholder="Vehicle Type" formControlName="vehicleType"
                                 [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode"
                             notFoundText="No matches found" (change)="onChangeVehicleType($event)"></ng-select>
                     </div>
@@ -453,7 +453,7 @@
                     <label class="col-sm-5 col-form-label text-end">FTL Type</label>
                     <div class="col-sm-7">
                         <!-- <input class="form-control" type="text" placeholder="FTL Type"> -->
-                          <ng-select class="noFoundTextColor required2" placeholder="FTL Type" formControlName="fTLType" readonly
+                          <ng-select class="noFoundTextColor" placeholder="FTL Type" formControlName="fTLType" readonly
                             notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" [items]="docketService.typeofMovementList"></ng-select>
                     </div>
                 </div>
@@ -1017,7 +1017,7 @@
         
                 <td>{{ item.value.EWayBillNo }}</td>
                 <td>{{ item.value.subreasoncode }}</td>
-                <td>{{ item.value.TatInHrs }}</td>
+                <td>{{ item.value.tatInHrs }}</td>
                 <td *ngIf="docketService.loginUserList.Type === '3'">{{ item.value.party_name }}</td>
                 <td *ngIf="docketService.loginUserList.Type === '3'">{{ item.value.Consignor_Name }}</td>
                 <td>{{ item.value.ContractAmount }}</td>
@@ -1094,7 +1094,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Total MF</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Total MF" type="number" value="0" min="1" formControlName="TotalManifest" readonly
+                            <input class="form-control" placeholder="Total MF" type="number" value="0" formControlName="TotalManifest" readonly
                             [ngClass]="{ 'border-danger': challanService.challanForm.get('TotalManifest')?.invalid  && challanService.challanForm.get('TotalManifest')?.touched }">
                              <div class="text-danger text-start mt-1 small"  *ngIf="challanService.challanForm.get('TotalManifest')?.touched && challanService.challanForm.get('TotalManifest')?.errors">
                                 <span *ngIf="challanService.challanForm.get('TotalManifest')?.hasError('min')">

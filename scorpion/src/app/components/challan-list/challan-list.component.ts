@@ -117,7 +117,7 @@ changeAmountApplicable(event:any){
        tDSOnAmount:event.target.value
   });
 
-  this.challanService.calculateNetAmount();
+  // this.challanService.calculateNetAmount();
   // this.calculateSubTotal()
 }
 
@@ -179,13 +179,12 @@ updateTotalDockets() {
 
   let totalAmount = 0;
   let selectedCount = 0;
-
   docketArray.controls.forEach(control => {
-     const hasMessage = !!(control.get('message')?.value || control.value?.message);
+     const hasMessage = !!(control.get('Message')?.value || control.value?.Message);
     const isSelected = !!control.get('isSelected')?.value;
     if (!hasMessage && isSelected) {
       selectedCount++;
-      totalAmount += Number(control.get('contractAmount')?.value) || 0;
+      totalAmount += Number(control.get('ContractAmount')?.value) || 0;
     }
   });
 
@@ -198,6 +197,7 @@ updateTotalDockets() {
     totalDockets: selectedCount,
     tDSOnAmount:totalAmount
   });
+  this.challanService.calculateNetAmount();
 }
 
   toggleSelectAll(event: Event) {
@@ -212,7 +212,7 @@ updateTotalDockets() {
   }
 
   get isAllSelected(): boolean {
-    const validRows = this.challanService.avalabledocket.controls.filter((c: any) => !c.value.message);
+    const validRows = this.challanService.avalabledocket.controls.filter((c: any) => !c.value.Message);
     return (
       validRows.length > 0 &&
       validRows.every((c: any) => c.get('isSelected').value)
@@ -581,7 +581,7 @@ avalabledocketinPRS(event?:any){
     trn: "ALL",
     bustyp: "ALL",
     status: this.challanService.challanForm.value.vendorType === '04' ? 'B' : 'P' ,
-    doctyp: "DRS",
+    doctyp: "PRS",
     baseLocationCode:this.docketService.loginUserList.LocationCode,
     docketList: "",
     alloted_To:this.challanService.challanForm.value.vendorType==='04'? this.challanService.challanForm.value.vendorCode:'',
@@ -599,10 +599,10 @@ avalabledocketinPRS(event?:any){
         if (docketArray && docketArray.length > 0) {
           updatedData.forEach((item: any) => {
             const match = docketArray.controls.find(
-              (ctrl: any) => ctrl.value.dockno === item.dockno
+              (ctrl: any) => ctrl.value.DOCKNO === item.dockno
             );
             if (match) {
-              match.get('contractAmount')?.setValue(item.contractAmount);
+              match.get('ContractAmount')?.setValue(item.contractAmount);
               match.get('tDSOnAmount')?.setValue(item.contractAmount);
             }
           });
