@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { FormArray} from '@angular/forms';
+import { AbstractControl, FormArray} from '@angular/forms';
 import { cityResponse, generalMasterResponse, StatesFromPartyCodeRepsonse } from 'app/shared/models/general-master.model';
 import { AirportListResponse, AllCityByLocationResponse, CustomerListResponse, FlightsListResponse, VehicleTypeListResponse } from 'app/shared/models/thc-master.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
@@ -173,6 +173,15 @@ changeAmountApplicable(event:any){
 //   return Math.round(value * multiplier) / multiplier;
 // }
 
+onDocketSelectionChange(ctrl: AbstractControl) {
+  this.updateTotalDockets();
+
+  // only call API if checked
+  if (ctrl.get('isSelected')?.value) {
+    this.getContractDetail(ctrl);
+  }
+}
+
 updateTotalDockets() {
   const docketArray = this.challanService.challanForm.get('avalabledocketinPRS') as FormArray;
   if (!docketArray) return;
@@ -210,6 +219,67 @@ updateTotalDockets() {
 
     this.updateTotalDockets();
   }
+
+  getContractDetail(ctrl?: AbstractControl) {
+  const docket = ctrl?.value; // current selected docket
+
+  const payload = {
+    thctype: this.docketService.loginUserList.Type,
+    totalWeight: Number(this.challanService.challanForm.value.wtLoaded),
+    weightAdjust: 0,
+    isAllowAdhoc: false,
+    isAdhoc: false,
+    isAllowTAM: false,
+    vendorCode: this.challanService.challanForm.value.vendorCode,
+    routeCode: this.challanService.challanForm.value.routeCode?this.challanService.challanForm.value.routeCode:'',
+    routeMODE: this.challanService.challanForm.value.routeType?this.challanService.challanForm.value.routeType:'',
+    ftL_Type: this.challanService.challanForm.value.fTLType?this.challanService.challanForm.value.fTLType:'',
+    vehicle: this.challanService.challanForm.value.vehicleNO?this.challanService.challanForm.value.vehicleNO:'',
+    from_City: this.challanService.challanForm.value.from_City?this.challanService.challanForm.value.from_City:'',
+    to_City: this.challanService.challanForm.value.to_City?this.challanService.challanForm.value.to_City:'',
+    paybas: docket.PayBas? docket.PayBas:'',
+    dockno: docket.DOCKNO ?docket.DOCKNO :''
+  };
+
+  this.THCService.getContractData(payload).subscribe({
+    next: (response: any) => {
+      if (response) {
+          if(this.docketService.loginUserList.Type==='1'){
+            this.challanService.challanForm.patchValue({
+              contractAmount:response.contractAmount
+            })
+          }
+          this.challanService.challanForm.patchValue({
+            standardContractAmount:response.StandardContractAmount,
+            tDSOnAmount:response.contractAmount
+          })
+  const contractControl = this.challanService.challanForm.get('contractAmount');
+
+        if (
+        response.ContractID === '' &&
+        (
+          ((this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '2') &&
+            this.challanService.challanForm.value.vendorType === '04') ||
+          (this.docketService.loginUserList.Type === '1' &&
+            this.challanService.challanForm.value.vendorType === 'XX1')
+        )
+      ) {
+        contractControl?.setErrors({ vendorContract: true });
+        contractControl?.markAsTouched(); 
+      } else {
+        contractControl?.setErrors({ vendorExpired: true });
+        contractControl?.markAsTouched(); 
+      }
+        this.updateTotalDockets();
+      }
+    },
+    error: (err) => {
+      console.error('Error fetching contract details:', err.error.message);
+      this.sweetAlertService.error(err.error.message);
+    }
+  });
+}
+
 
   get isAllSelected(): boolean {
     const validRows = this.challanService.avalabledocket.controls.filter((c: any) => !c.value.Message);
@@ -643,6 +713,7 @@ getMFListFromRoute(event:any){
         this.sweetAlertService.error(err.error.message)
       }
     });
+    this.getContractDetail()
 }
 
 updateTotalManifest(mfNo:string): void {
@@ -730,10 +801,14 @@ getDAMobileNo(event:any){
   }
   this.THCService.getDeliveryAgentMobileNo(paylaod).subscribe({
       next: (response: any) => {
-        if (response) {
-         this.challanService.challanForm.patchValue({
-          deliveryAgentMoNo:response.data.mobileNo
+        if(response){
+          if(response.data.counts!==0){
+            this.sweetAlertService.info(`Please Clear this Agent Previous Assign DRS And MR Collection, Documents :" + ${response.data.docList} + "!!`)
+          }else{
+             this.challanService.challanForm.patchValue({
+               deliveryAgentMoNo:response.data.mobileNo
          })
+          }
         }
       },
       error: (err) => {
@@ -790,6 +865,9 @@ getAirportDetail(){
 
 onChangeVehicleType(event:any){
     this.getVehicleCapacity(event.typeCode);
+    this.challanService.challanForm.patchValue({
+      fTLType:event.typeCode
+    })
 }
 
   getCustomerListForTHC(event?: any) {

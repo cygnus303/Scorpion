@@ -63,7 +63,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Route Mode</label>
                         <div class="col-sm-7">
-                             <ng-select class="noFoundTextColor required2" placeholder="Route Mode" formControlName="routeType"
+                             <ng-select class="noFoundTextColor required2" placeholder="Route Mode" formControlName="routeType" (change)="getContractDetail()"
                               [ngClass]="{ 'border-danger': challanService.challanForm.get('routeType')?.invalid  && challanService.challanForm.get('routeType')?.touched }" (change)="getRoutesFromRouteType($event)"
                                 notFoundText="No matches found" [items]="challanService.routeModeList" bindLabel="codeDesc" bindValue="codeId"></ng-select>
                                  <div class="text-danger text-start" *ngIf="challanService.challanForm.get('routeType')?.invalid && challanService.challanForm.get('routeType')?.touched "> This field is required.</div>
@@ -241,7 +241,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">From City</label>
                         <div class="col-sm-7">
-                            <ng-select class="required2" placeholder="From City" formControlName="from_City" >
+                            <ng-select class="required2" placeholder="From City" formControlName="from_City" (change)="getContractDetail()">
                                 <ng-option *ngFor="let item of challanService.cityList" [value]="item.city_code">
                                     <strong>{{ item.location }}</strong> : {{ item.location }}
                                 </ng-option>
@@ -253,7 +253,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">To City</label>
                         <div class="col-sm-7">
-                            <ng-select class="required2" placeholder="To City" formControlName="to_City">
+                            <ng-select class="required2" placeholder="To City" formControlName="to_City" (change)="getContractDetail()">
                                 <ng-option *ngFor="let item of challanService.cityList" [value]="item.city_code">
                                     <strong>{{ item.location }}</strong> : {{ item.location }}
                                 </ng-option>
@@ -454,7 +454,7 @@
                     <div class="col-sm-7">
                         <!-- <input class="form-control" type="text" placeholder="FTL Type"> -->
                           <ng-select class="noFoundTextColor" placeholder="FTL Type" formControlName="fTLType" readonly
-                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" [items]="docketService.typeofMovementList"></ng-select>
+                            notFoundText="No matches found"  bindLabel="type_Name" bindValue="typeCode"  [items]="vehicleTypeList"></ng-select>
                     </div>
                 </div>
             </div>
@@ -979,7 +979,7 @@
                 class="align-middle">
                 <td>
                     <ng-container *ngIf="!item.value.Message; else showMessage">
-                        <input type="checkbox" formControlName="isSelected" (change)="updateTotalDockets()">
+                        <input type="checkbox" formControlName="isSelected" (change)="onDocketSelectionChange(item)">
                     </ng-container>
                     <ng-template #showMessage>
                         <span class="text-danger fw-semibold">{{ item.value.Message }}</span>
@@ -1134,6 +1134,12 @@
                                 Please enter a value greater than or equal to 1.
                             </span>
                         </div>
+                        <div *ngIf="challanService.challanForm.get('contractAmount')?.errors?.['vendorContract']">
+                        Vendor Contract not found
+                            </div>
+                                <div *ngIf="challanService.challanForm.get('contractAmount')?.errors?.['vendorExpired']">
+                        Vendor Contract Expired
+                            </div>
                     </div>
                 </div>
                 <div class="row mb-3 align-items-center"  *ngIf="!['04', '19', 'XX'].includes(challanService.challanForm.get('vendorType')?.value)">

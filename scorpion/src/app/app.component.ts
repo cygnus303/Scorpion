@@ -22,7 +22,6 @@ export class AppComponent {
   
   title = 'scorpion';
 
-  // public loading: string = 'disable';
   constructor(public commonService: CommonService,public spinner: NgxSpinnerService,public docketService: DocketService){
      const saved = localStorage.getItem("loginUserList");
     if (saved) {
@@ -34,23 +33,6 @@ export class AppComponent {
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
-    // this.commonService.isLoading.subscribe({
-    //   next: (response) => {
-    //     setTimeout(()=>{
-    //       if (response != null) {
-    //         this.loading = response ? 'enable' : 'disable';
-    //       }
-    //     },500)
-    //   },
-    //   error: (response: any) => {},
-    // });
   }
-  
-  // ngOnInit() {
-  //   this.spinner.show();
-  //   setTimeout(() => {
-  //     this.spinner.hide();
-  //   }, 5000);
-  // }
 
 }

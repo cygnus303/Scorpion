@@ -103,4 +103,8 @@ export class THCMasterService {
    getChargesDetails(){
     return this.apiHandlerService.Get(`THC/GetChargesDetails?chargeType=${'GE'}`);
   }
+
+  getContractData(payload:any){
+    return this.apiHandlerService.Post(`THC/GetContractAmount`,payload);
+  }
 }
