@@ -974,45 +974,57 @@
                     <th class="p-3" *ngIf="this.docketService.loginUserList.Type !== '3'">IsPRSPKGScan.</th>
                 </tr>
             </thead>
-                <tbody formArrayName="avalabledocketinPRS">
-                    <tr *ngFor="let item of challanService.avalabledocket.controls; let i = index" [formGroupName]="i" class="align-middle">
-                        <td>
-                            <ng-container *ngIf="!item.value.message; else showMessage">
-                                <input type="checkbox" formControlName="isSelected" (change)="updateTotalDockets()">
-                            </ng-container>
-                        
-                            <ng-template #showMessage>
-                                <span class="text-danger fw-semibold">{{ item.value.message }}</span>
-                            </ng-template>
-                        </td>
-                        <td>{{ item.value.dockno + '.'}}<br>{{this.docketService.loginUserList.Type === '3' ? item.value.orgncd :''}}</td>
-                        <td>{{ item.value.paybaS_Str }}</td>
-                        <td>{{ item.value.bkg_Date }} <br> {{ item.value.commited_Dely_Date }}</td>
-                        <td>{{ item.value.arrival_Date }} <div *ngIf="this.docketService.loginUserList.Type === '3'">{{item.value.stock_Update_DT}}</div></td>
-                        <td>
-                            <input type="text" class="form-control text-end" formControlName="arrPkgQty" readonly *ngIf="this.docketService.loginUserList.Type !== '3'">
-                            <br>{{this.docketService.loginUserList.Type === '3' ? item.value.arrPkgQty :''}} / {{item.value.arrPkgQty}} / {{ item.value.pkgsno }}
-                        </td>
-                        <td>
-                            <input type="text" class="form-control text-end" formControlName="arrWeightQty" readonly *ngIf="this.docketService.loginUserList.Type !== '3'">
-                            <br> / {{ item.value.arrWeightQty }} / {{ item.value.actuwt }}
-                        </td>
-                        <td>{{ item.value.chrgwt }}</td>
-                        <td>
-                          <!-- <input type="text" placeholder="Type" class="form-control"> -->
-                         <ng-select class="required2" [items]="challanService.rateTypeData" formControlName="rateType" bindLabel="codeDesc" bindValue="codeId"
-                            placeholder="Type"
-                            ></ng-select>
-                          <input type="text" class="form-control required2" formControlName="newRate" value="00.00"></td>
-                        <td>{{ item.value.eWayBillNo }}</td>
-                        <td>{{ item.value.subreasoncode }}</td>
-                        <td>{{ item.value.tatInHrs }}</td>
-                        <td *ngIf="this.docketService.loginUserList.Type === '3'">{{ item.value.party_name }}</td>
-                        <td *ngIf="this.docketService.loginUserList.Type === '3'">{{ item.value.consignor_Name }}</td>
-                        <td>{{item.value.contractAmount}}</td>
-                        <td *ngIf="this.docketService.loginUserList.Type !== '3'">{{ item.value.bcSerialNo }}</td>
-                    </tr>
-                </tbody>
+        <tbody formArrayName="avalabledocketinPRS">
+            <tr *ngFor="let item of challanService.avalabledocket.controls; let i = index" [formGroupName]="i"
+                class="align-middle">
+                <td>
+                    <ng-container *ngIf="!item.value.Message; else showMessage">
+                        <input type="checkbox" formControlName="isSelected" (change)="updateTotalDockets()">
+                    </ng-container>
+                    <ng-template #showMessage>
+                        <span class="text-danger fw-semibold">{{ item.value.Message }}</span>
+                    </ng-template>
+                </td>
+        
+                <td>{{ item.value.DOCKNO + '.' }}<br>{{ docketService.loginUserList.Type === '3' ? item.value.ORGNCD : '' }}
+                </td>
+                <td>{{ item.value.PAYBAS_Str }}</td>
+                <td>{{ item.value.Bkg_Date }} <br> {{ item.value.Commited_Dely_Date }}</td>
+                <td>{{ item.value.Arrival_Date }} <div *ngIf="docketService.loginUserList.Type === '3'">{{
+                        item.value.Stock_Update_DT }}</div>
+                </td>
+        
+                <td>
+                    <input type="text" class="form-control text-end" formControlName="ArrPkgQty" readonly
+                        *ngIf="docketService.loginUserList.Type !== '3'">
+                    <br>{{ docketService.loginUserList.Type === '3' ? item.value.ArrPkgQty : '' }} / {{ item.value.ArrPkgQty }}
+                    / {{ item.value.PKGSNO }}
+                </td>
+        
+                <td>
+                    <input type="text" class="form-control text-end" formControlName="ArrWeightQty" readonly
+                        *ngIf="docketService.loginUserList.Type !== '3'">
+                    <br> / {{ item.value.ArrWeightQty }} / {{ item.value.ACTUWT }}
+                </td>
+        
+                <td>{{ item.value.CHRGWT }}</td>
+                <td>
+                    <ng-select class="required2" [items]="challanService.rateTypeData" formControlName="rateType"
+                        bindLabel="codeDesc" bindValue="codeId" placeholder="Type">
+                    </ng-select>
+                    <input type="text" class="form-control required2" formControlName="NewRate" value="00.00">
+                </td>
+        
+                <td>{{ item.value.EWayBillNo }}</td>
+                <td>{{ item.value.subreasoncode }}</td>
+                <td>{{ item.value.TatInHrs }}</td>
+                <td *ngIf="docketService.loginUserList.Type === '3'">{{ item.value.party_name }}</td>
+                <td *ngIf="docketService.loginUserList.Type === '3'">{{ item.value.Consignor_Name }}</td>
+                <td>{{ item.value.ContractAmount }}</td>
+                <td *ngIf="docketService.loginUserList.Type !== '3'">{{ item.value.BCSerialNo }}</td>
+            </tr>
+        </tbody>
+
         </table>
       </div>
             <div class="row pb-3 pt-4">
@@ -1131,7 +1143,7 @@
                     </div>
                 </div>
     
-                <div class="row mb-3 align-items-center">
+                <!-- <div class="row mb-3 align-items-center">
                     <label class="col-sm-6 col-form-label text-end">Telephone Charges (+)</label>
                     <div class="col-sm-6">
                         <input type="text" class="form-control text-end required2" formControlName="telephoneCharges"
@@ -1152,6 +1164,18 @@
                     <div class="col-sm-6">
                         <input type="text" class="form-control text-end required2" formControlName="mamulCharges"
                         (input)="calculateNetAmount()"/>
+                    </div>
+                </div> -->
+
+                <div formGroupName="charges">
+                    <div *ngFor="let ch of challanService.chargesDetailsList" class="row mb-3 align-items-center">
+                        <label class="col-sm-6 col-form-label text-end">
+                            {{ ch.chargename }}
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control text-end required2" [formControlName]="ch.chargecode"
+                                (input)="challanService.calculateNetAmount()" />
+                        </div>
                     </div>
                 </div>
             </div>

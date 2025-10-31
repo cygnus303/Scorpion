@@ -99,4 +99,8 @@ export class THCMasterService {
   getFlightSchTime(payload:any){
     return this.apiHandlerService.Get(`THC/GetFlightSchTime?flight=${payload.flightCode}&airport=${payload.airport}`);
   }
+
+   getChargesDetails(){
+    return this.apiHandlerService.Get(`THC/GetChargesDetails?chargeType=${'GE'}`);
+  }
 }

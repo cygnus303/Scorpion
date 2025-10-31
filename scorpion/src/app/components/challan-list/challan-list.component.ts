@@ -49,6 +49,7 @@ constructor(
 ){}
  ngOnInit(){
     this.challanService.buildForm();
+    this.challanService.getChargesDetails();
     this.challanService.getVendtyData();
     if(this.docketService.loginUserList.Type !== '1'){
       this.challanService.getCityList();
@@ -75,34 +76,34 @@ constructor(
   });
   }
 
-calculateNetAmount() {
-  const contractAmount = Number(this.challanService.challanForm.get('contractAmount')?.value) || 0;
-  const telephoneCharges = Number(this.challanService.challanForm.get('telephoneCharges')?.value) || 0;
-  const humaliCharges = Number(this.challanService.challanForm.get('humaliCharges')?.value) || 0;
-  const mamulCharges = Number(this.challanService.challanForm.get('mamulCharges')?.value) || 0;
+// calculateNetAmount() {
+//   const contractAmount = Number(this.challanService.challanForm.get('contractAmount')?.value) || 0;
+//   const telephoneCharges = Number(this.challanService.challanForm.get('telephoneCharges')?.value) || 0;
+//   const humaliCharges = Number(this.challanService.challanForm.get('humaliCharges')?.value) || 0;
+//   const mamulCharges = Number(this.challanService.challanForm.get('mamulCharges')?.value) || 0;
   
-  const netAmount = contractAmount + telephoneCharges + humaliCharges - mamulCharges;
+//   const netAmount = contractAmount + telephoneCharges + humaliCharges - mamulCharges;
   
-  const staxOnAmount = parseFloat(this.challanService.challanForm.get('tDSOnAmount')?.value || 0);
-  const isTDSEnabled = this.challanService.challanForm.get('isTDSEnabled')?.value;
-  const tdsRate = parseFloat(this.challanService.challanForm.get('TDSPercent')?.value || 0);
-  let tdsAmount = 0;
+//   const staxOnAmount = parseFloat(this.challanService.challanForm.get('tDSOnAmount')?.value || 0);
+//   const isTDSEnabled = this.challanService.challanForm.get('isTDSEnabled')?.value;
+//   const tdsRate = parseFloat(this.challanService.challanForm.get('TDSPercent')?.value || 0);
+//   let tdsAmount = 0;
   
-  if (isTDSEnabled) {
-    tdsAmount = this.rounditn((staxOnAmount * tdsRate) / 100, 0);
-  }
+//   if (isTDSEnabled) {
+//     tdsAmount = this.rounditn((staxOnAmount * tdsRate) / 100, 0);
+//   }
   
-  this.challanService.challanForm.patchValue({
-    totalTDSAmount: tdsAmount.toFixed(2),
-    netAmount: (netAmount - tdsAmount).toFixed(2),
-  });
+//   this.challanService.challanForm.patchValue({
+//     totalTDSAmount: tdsAmount.toFixed(2),
+//     netAmount: (netAmount - tdsAmount).toFixed(2),
+//   });
   
-  if(this.challanService.challanForm.value.vendorType === 'XX1'|| this.challanService.challanForm.value.vendorType ==='04'|| this.challanService.challanForm.value.vendorType ==='19'|| this.challanService.challanForm.value.vendorType ==='XX'){
-    this.challanService.challanForm.patchValue({
-      balanceAmount:(netAmount - tdsAmount).toFixed(2)
-    })
-  }
-}
+//   if(this.challanService.challanForm.value.vendorType === 'XX1'|| this.challanService.challanForm.value.vendorType ==='04'|| this.challanService.challanForm.value.vendorType ==='19'|| this.challanService.challanForm.value.vendorType ==='XX'){
+//     this.challanService.challanForm.patchValue({
+//       balanceAmount:(netAmount - tdsAmount).toFixed(2)
+//     })
+//   }
+// }
 
 calculateBalanceAmount() {
   const netAmount = Number(this.challanService.challanForm.get('netAmount')?.value) || 0;
@@ -116,61 +117,61 @@ changeAmountApplicable(event:any){
        tDSOnAmount:event.target.value
   });
 
-  this.calculateNetAmount();
+  this.challanService.calculateNetAmount();
   // this.calculateSubTotal()
 }
 
-calculateSubTotal() {
-  const form = this.challanService.challanForm;
+// calculateSubTotal() {
+//   const form = this.challanService.challanForm;
 
-  let contractAmount = parseFloat(form.get('contractAmount')?.value || 0);
-  let totalCharges = 0;
+//   let contractAmount = parseFloat(form.get('contractAmount')?.value || 0);
+//   let totalCharges = 0;
 
-  // // Assuming challanCharges is a FormArray of charge controls
-  // const chargesArray = form.get('charges')?.value || [];
-  // chargesArray.forEach((charge: any) => {
-  //   const amount = parseFloat(charge.chargeAmount || 0);
-  //   const operator = charge.operator || '+';
-  //   totalCharges += operator === '+' ? amount : -amount;
-  // });
-   const telephoneCharges = Number(this.challanService.challanForm.get('telephoneCharges')?.value) || 0;
-  const humaliCharges = Number(this.challanService.challanForm.get('humaliCharges')?.value) || 0;
-  const mamulCharges = Number(this.challanService.challanForm.get('mamulCharges')?.value) || 0;
+//   // // Assuming challanCharges is a FormArray of charge controls
+//   // const chargesArray = form.get('charges')?.value || [];
+//   // chargesArray.forEach((charge: any) => {
+//   //   const amount = parseFloat(charge.chargeAmount || 0);
+//   //   const operator = charge.operator || '+';
+//   //   totalCharges += operator === '+' ? amount : -amount;
+//   // });
+//    const telephoneCharges = Number(this.challanService.challanForm.get('telephoneCharges')?.value) || 0;
+//   const humaliCharges = Number(this.challanService.challanForm.get('humaliCharges')?.value) || 0;
+//   const mamulCharges = Number(this.challanService.challanForm.get('mamulCharges')?.value) || 0;
 
-  const netAmount = contractAmount + telephoneCharges + humaliCharges - mamulCharges;
+//   const netAmount = contractAmount + telephoneCharges + humaliCharges - mamulCharges;
 
-  let advanceAmount = parseFloat(form.get('advanceAmount')?.value || 0);
-  let freight = netAmount ;
+//   let advanceAmount = parseFloat(form.get('advanceAmount')?.value || 0);
+//   let freight = netAmount ;
 
-  const staxOnAmount = parseFloat(form.get('tdsOnAmount')?.value || 0);
-  const isTDSEnabled = form.get('isTDSEnabled')?.value;
-  const tdsRate = parseFloat(form.get('tdsPercent')?.value || 0);
-  let tdsAmount = 0;
+//   const staxOnAmount = parseFloat(form.get('tdsOnAmount')?.value || 0);
+//   const isTDSEnabled = form.get('isTDSEnabled')?.value;
+//   const tdsRate = parseFloat(form.get('tdsPercent')?.value || 0);
+//   let tdsAmount = 0;
 
-  if (isTDSEnabled) {
-    tdsAmount = this.rounditn((staxOnAmount * tdsRate) / 100, 0);
-  }
+//   if (isTDSEnabled) {
+//     tdsAmount = this.rounditn((staxOnAmount * tdsRate) / 100, 0);
+//   }
 
-  form.patchValue({
-    totalTDSAmount: tdsAmount.toFixed(2),
-    netAmount: (netAmount + contractAmount - tdsAmount).toFixed(2),
-  });
+//   form.patchValue({
+//     totalTDSAmount: tdsAmount.toFixed(2),
+//     netAmount: (netAmount + contractAmount - tdsAmount).toFixed(2),
+//   });
 
-  if (freight >= advanceAmount) {
-    const balanceAmount = freight - advanceAmount - tdsAmount;
-    form.patchValue({
-      balanceAmount: balanceAmount.toFixed(2),
-    });
-  } else {
-    console.warn('Advance amount cannot exceed Net Amount');
-  }
-}
+//   if (freight >= advanceAmount) {
+//     const balanceAmount = freight - advanceAmount - tdsAmount;
+//     form.patchValue({
+//       balanceAmount: balanceAmount.toFixed(2),
+//     });
+//   } else {
+//     console.warn('Advance amount cannot exceed Net Amount');
+//   }
+// }
 
 // Helper method
-rounditn(value: number, digits: number): number {
-  const multiplier = Math.pow(10, digits);
-  return Math.round(value * multiplier) / multiplier;
-}
+// rounditn(value: number, digits: number): number {
+//   const multiplier = Math.pow(10, digits);
+//   return Math.round(value * multiplier) / multiplier;
+// }
 
 updateTotalDockets() {
   const docketArray = this.challanService.challanForm.get('avalabledocketinPRS') as FormArray;
@@ -579,7 +580,7 @@ avalabledocketinPRS(event?:any){
     paybas: "ALL",
     trn: "ALL",
     bustyp: "ALL",
-    status: this.challanService.challanForm.value.vendorType==='04' ?'B':'P',
+    status: this.challanService.challanForm.value.vendorType === '04' ? 'B' : 'P' ,
     doctyp: "DRS",
     baseLocationCode:this.docketService.loginUserList.LocationCode,
     docketList: "",
@@ -736,7 +737,6 @@ getDAMobileNo(event:any){
         }
       },
       error: (err) => {
-        console.error('Error fetching vehicle details:', err.error.message);
         this.sweetAlertService.error(err.error.message)
       }
     });

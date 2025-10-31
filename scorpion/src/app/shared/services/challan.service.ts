@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { BasicDetailService } from './basic-detail.service';
 import { generalMasterResponse } from '../models/general-master.model';
-import { CityResponse, VehicleTyperesponse, VendeorsResponse } from '../models/thc-master.model';
+import { ChargesResponse, CityResponse, VehicleTyperesponse, VendeorsResponse } from '../models/thc-master.model';
 import { THCMasterService } from './thc-master.service';
 import { DocketService } from './docket.service';
 import { DeliveryAgentService } from './delivery-agent.service';
 import { LocationListResponse } from '../models/delivery-agent.model';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { json } from 'stream/consumers';
+import { SweetAlertService } from './sweet-alert.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,13 +23,14 @@ public locationData:LocationListResponse[]=[];
 public latereasonList:generalMasterResponse[]=[];
 public TDSLedgerData:VehicleTyperesponse[]=[];
 public rateTypeData:generalMasterResponse[]=[];
+public chargesDetailsList:ChargesResponse[]=[];
 public selectedFile: File | null = null;
 
 constructor(
   private basicDetailService: BasicDetailService,
   private THCService:THCMasterService,
   private docketService:DocketService,
-  private deliveryAgentService:DeliveryAgentService,
+  private deliveryAgentService:DeliveryAgentService,public sweetAlertService:SweetAlertService,
 ) { }
 
     getVendtyData() {
@@ -120,6 +122,89 @@ constructor(
     });
   }
 
+getChargesDetails(){
+  this.THCService.getChargesDetails().subscribe({
+      next: (response: any) => {
+        if (response && response.data) {
+         this.chargesDetailsList = response.data;
+           this.buildChargeControls(this.chargesDetailsList);
+        }
+      }
+    });
+}
+
+buildChargeControls(charges: any[]): void {
+  let chargesGroup = this.challanForm.get('charges') as FormGroup | null;
+  if (!chargesGroup) {
+    this.challanForm.addControl('charges', new FormGroup({}));
+    chargesGroup = this.challanForm.get('charges') as FormGroup;
+    if (!chargesGroup) { // extremely defensive
+      console.error('Failed to create charges FormGroup');
+      return;
+    }
+  }
+  Object.keys(chargesGroup.controls).forEach(k => chargesGroup.removeControl(k));
+  charges.forEach(ch => {
+    const initial = (ch.chargeAmount ?? 0);
+    chargesGroup.addControl(ch.chargecode, new FormControl(initial));
+  });
+  this.calculateNetAmount();
+}
+
+calculateNetAmount() {
+  const contractAmount = Number(this.challanForm.get('contractAmount')?.value) || 0;
+  const chargesGroup = this.challanForm.get('charges') as FormGroup;
+  let netChargesEffect = 0;
+
+  if (this.chargesDetailsList && this.chargesDetailsList.length) {
+    this.chargesDetailsList.forEach(ch => {
+      const ctrl = chargesGroup.get(ch.chargecode);
+      const val = Number(ctrl?.value) || 0;
+      if (ch.operator === '+' || ch.operator === '+') {
+        netChargesEffect += val;
+      } else if (ch.operator === '-' || ch.operator === '−') {
+        netChargesEffect -= val;
+      } else {
+        netChargesEffect += val;
+      }
+    });
+  } else {
+    const telephoneCharges = Number(this.challanForm.get('telephoneCharges')?.value) || 0;
+    const humaliCharges = Number(this.challanForm.get('humaliCharges')?.value) || 0;
+    const mamulCharges = Number(this.challanForm.get('mamulCharges')?.value) || 0;
+    netChargesEffect = telephoneCharges + humaliCharges - mamulCharges;
+  }
+
+  const netAmountBeforeTDS = contractAmount + netChargesEffect;
+
+  const staxOnAmount = parseFloat(this.challanForm.get('tDSOnAmount')?.value || '0');
+  const isTDSEnabled = this.challanForm.get('isTDSEnabled')?.value;
+  const tdsRate = parseFloat(this.challanForm.get('TDSPercent')?.value || '0');
+  let tdsAmount = 0;
+
+  if (isTDSEnabled) {
+    tdsAmount = this.rounditn((staxOnAmount * tdsRate) / 100, 0);
+  }
+
+  const finalNet = netAmountBeforeTDS - tdsAmount;
+
+  this.challanForm.patchValue({
+    totalTDSAmount: tdsAmount.toFixed(2),
+    netAmount: finalNet.toFixed(2),
+  }, { emitEvent: false });
+
+  // vendor-specific balanceAmount behavior (unchanged)
+  if (['XX1','04','19','XX'].includes(this.challanForm.value.vendorType)) {
+    this.challanForm.patchValue({
+      balanceAmount: finalNet.toFixed(2)
+    }, { emitEvent: false });
+  }
+}
+
+rounditn(value: number, digits: number): number {
+  const multiplier = Math.pow(10, digits);
+  return Math.round(value * multiplier) / multiplier;
+}
 
   buildForm(){
   const isType1 = this.docketService.loginUserList.Type === '1';
@@ -205,9 +290,10 @@ constructor(
     TDSPercent:new FormControl(),
     Loadingcharge:new FormControl(),
     PANNO:new FormControl(),
-    telephoneCharges: new FormControl(0),
-    humaliCharges: new FormControl(0),
-    mamulCharges: new FormControl(0),
+    // telephoneCharges: new FormControl(0),
+    // humaliCharges: new FormControl(0),
+    // mamulCharges: new FormControl(0),
+    charges: new FormGroup({}),
     flightCode:new FormControl(),
     airportCode:new FormControl(),
     trainNo:new FormControl(),
@@ -265,69 +351,69 @@ patchAvailableDockets(data: any[]) {
 
     const group = new FormGroup({
       isSelected: new FormControl(false),
-      id: new FormControl(item.id ?? 0),
-    dockno: new FormControl(item.dockno || ''),
-    docksf: new FormControl(item.docksf || ''),
-    manual_dockno: new FormControl(item.manual_dockno || ''),
-    docket_Mode: new FormControl(item.docket_Mode || ''),
-    bkg_Date: new FormControl(item.bkg_Date || ''),
-    arrival_Date: new FormControl(item.arrival_Date || ''),
-    commited_Dely_Date: new FormControl(item.commited_Dely_Date || ''),
-    orgncd: new FormControl(item.orgncd || ''),
-    desT_CD: new FormControl(item.desT_CD || ''),
-    curr_Loc: new FormControl(item.curr_Loc || ''),
-    pendPkgQty: new FormControl(item.pendPkgQty ?? 0),
-    arrPkgQty: new FormControl(item.arrPkgQty ?? 0),
-    pkgsno: new FormControl(item.pkgsno ?? 0),
-    payBas: new FormControl(item.payBas || ''),
-    paybaS_Str: new FormControl(item.paybaS_Str || ''),
-    atad: new FormControl(item.atad || ''),
-    cdeldt: new FormControl(item.cdeldt || ''),
-    businesstype: new FormControl(item.businesstype || ''),
-    trN_MOD: new FormControl(item.trN_MOD || ''),
-    actuwt: new FormControl(item.actuwt ?? 0),
-    arrWeightQty: new FormControl(item.arrWeightQty ?? 0),
-    chrgwt: new FormControl(item.chrgwt ?? 0),
-    freight: new FormControl(item.freight ?? 0),
-    dkttot: new FormControl(item.dkttot ?? 0),
-    handlingchrg: new FormControl(item.handlingchrg ?? 0),
-    svctax: new FormControl(item.svctax ?? 0),
-    cnd: new FormControl(item.cnd ?? 0),
-    isEnabled: new FormControl(item.isEnabled ?? false),
-    rate: new FormControl(item.rate ?? 0),
-    maxLimit: new FormControl(item.maxLimit ?? 0),
-    newRate: new FormControl(item.newRate ?? 0),
-    cnt: new FormControl(item.cnt ?? 0),
-    message: new FormControl(item.message || ''),
-    eWayBillNo: new FormControl(item.eWayBillNo || ''),
-    pkgsnO_Load: new FormControl(item.pkgsnO_Load ?? 0),
-    chrgwT_Load: new FormControl(item.chrgwT_Load ?? 0),
-    isRemoved: new FormControl(item.isRemoved ?? false),
-    subreasoncode: new FormControl(item.subreasoncode || ''),
-    party_name: new FormControl(item.party_name || ''),
-    consignor_Name: new FormControl(item.consignor_Name || ''),
-    stock_Update_DT: new FormControl(item.stock_Update_DT || ''),
-    freeStorageDays: new FormControl(item.freeStorageDays || ''),
-    demurrageCharge: new FormControl(item.demurrageCharge ?? 0),
-    damcnt: new FormControl(item.damcnt ?? 0),
-    requestCNT: new FormControl(item.requestCNT ?? 0),
-    contractAmount: new FormControl(item.contractAmount ?? 0),
-    bcSerialNo: new FormControl(item.bcSerialNo),
-    tatInHrs: new FormControl(tatInHrs),
-    rateType: new FormControl(''),
-    charge: new FormControl(0),
+      ID: new FormControl(item.id ?? 0),
+      DOCKNO: new FormControl(item.dockno || ''),
+      DOCKSF: new FormControl(item.docksf || ''),
+      manual_dockno: new FormControl(item.manual_dockno || ''),
+      Docket_Mode: new FormControl(item.docket_Mode || ''),
+      Bkg_Date: new FormControl(item.bkg_Date || ''),
+      Arrival_Date: new FormControl(item.arrival_Date || ''),
+      Commited_Dely_Date: new FormControl(item.commited_Dely_Date || ''),
+      ORGNCD: new FormControl(item.orgncd || ''),
+      DEST_CD: new FormControl(item.desT_CD || ''),
+      Curr_Loc: new FormControl(item.curr_Loc || ''),
+      PendPkgQty: new FormControl(item.pendPkgQty ?? 0),
+      ArrPkgQty: new FormControl(item.arrPkgQty ?? 0),
+      PKGSNO: new FormControl(item.pkgsno ?? 0),
+      PayBas: new FormControl(item.payBas || ''),
+      PAYBAS_Str: new FormControl(item.paybaS_Str || ''),
+      ATAD: new FormControl(item.atad || ''),
+      CDELDT: new FormControl(item.cdeldt || ''),
+      businesstype: new FormControl(item.businesstype || ''),
+      TRN_MOD: new FormControl(item.trN_MOD || ''),
+      ACTUWT: new FormControl(item.actuwt ?? 0),
+      ArrWeightQty: new FormControl(item.arrWeightQty ?? 0),
+      CHRGWT: new FormControl(item.chrgwt ?? 0),
+      Freight: new FormControl(item.freight ?? 0),
+      DKTTOT: new FormControl(item.dkttot ?? 0),
+      Handlingchrg: new FormControl(item.handlingchrg ?? 0),
+      SVCTAX: new FormControl(item.svctax ?? 0),
+      CND: new FormControl(item.cnd ?? 0),
+      IsEnabled: new FormControl(item.isEnabled ?? false),
+      Rate: new FormControl(item.rate ?? 0),
+      MaxLimit: new FormControl(item.maxLimit ?? 0),
+      NewRate: new FormControl(item.newRate ?? 0),
+      CNT: new FormControl(item.cnt ?? 0),
+      Message: new FormControl(item.message || ''),
+      EWayBillNo: new FormControl(item.eWayBillNo || ''),
+      PKGSNO_Load: new FormControl(item.pkgsnO_Load ?? 0),
+      CHRGWT_Load: new FormControl(item.chrgwT_Load ?? 0),
+      IsRemoved: new FormControl(item.isRemoved ?? false),
+      subreasoncode: new FormControl(item.subreasoncode || ''),
+      party_name: new FormControl(item.party_name || ''),
+      Consignor_Name: new FormControl(item.consignor_Name || ''),
+      Stock_Update_DT: new FormControl(item.stock_Update_DT || ''),
+      FreeStorageDays: new FormControl(item.freeStorageDays || ''),
+      DemurrageCharge: new FormControl(item.demurrageCharge ?? 0),
+      DAMCNT: new FormControl(item.damcnt ?? 0),
+      RequestCNT: new FormControl(item.requestCNT ?? 0),
+      ContractAmount: new FormControl(item.contractAmount ?? 0),
+      bcSerialNo: new FormControl(item.bcSerialNo),
+      tatInHrs: new FormControl(tatInHrs),
+      rateType: new FormControl(''),
+      charge: new FormControl(0),
     });
     group.get('rateType')?.valueChanges.subscribe(() => this.calculateCharge(group));
-    group.get('newRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
+    group.get('NewRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
     this.avalabledocket.push(group);
   });
 }
 
 calculateCharge(group: FormGroup) {
   const rateType = group.get('rateType')?.value;
-  const newRate = parseFloat(group.get('newRate')?.value || 0);
-  const actuwt = parseFloat(group.get('actuwt')?.value || 0);
-  const pkgsno = parseFloat(group.get('pkgsno')?.value || 0);
+  const newRate = parseFloat(group.get('NewRate')?.value || 0);
+  const actuwt = parseFloat(group.get('ACTUWT')?.value || 0);
+  const pkgsno = parseFloat(group.get('PKGSNO')?.value || 0);
   let charge = 0;
   switch (rateType) {
     case '1': // PER KG
@@ -359,66 +445,46 @@ updateTotalLoadingCharge() {
 }
 
 onSubmit(){
-  const DocketList = (this.avalabledocket.controls as FormGroup[])
-  .filter((group) => group.get('isSelected')?.value)
-  .map((group) => group.value);
-  console.log(DocketList)
+  // const DocketList = (this.avalabledocket.controls as FormGroup[]).filter((group) => group.get('isSelected')?.value).map((group) => group.value);
+    const DocketList = (this.avalabledocket.controls as FormGroup[]).filter(group => group.get('isSelected')?.value).map(group => {
+   const docket = { ...group.value, NewRate: Number(group.value.NewRate)};return docket;});
 
+  const ListVendorType: any = [
+    {
+      "Vendor_Type_Code": "string",
+      "Vendor_Type": "string",
+      "DisplayIndex": 0
+    }
+  ];
+    const chargesGroup = this.challanForm.get('charges') as FormGroup;
+    const formCharges = chargesGroup?.value || {};
+    const THCCharge = this.chargesDetailsList.map(ch => ({
+      chargecode: ch.chargecode,
+      chargename: ch.chargename,
+      Operator: ch.operator,
+      Acccode: ch.acccode,
+      ChargeAmount: Number(formCharges[ch.chargecode]) || 0,
+      Cnt: ch.cnt || 0
+    }));
+  const ListCharges:any=THCCharge
 
-const ListVendorType:any=[
-  {
-  "vendor_Type_Code": "string",
-  "vendor_Type": "string",
-  "displayIndex": 0
-}
-];
-
-const ListCharges:any=[
-  {
-  "chargecode": "string",
-  "chargename": "string",
-  "operator": "string",
-  "acccode": "string",
-  "chargeAmount": 0,
-  "cnt": 0
-}
-];
-
-const THCCharge:any=[
-  {
-  "chargecode": "string",
-  "chargename": "string",
-  "operator": "string",
-  "acccode": "string",
-  "chargeAmount": 0,
-  "cnt": 0
-}
-];
-const MFList = (this.avalableForTHC.controls as FormGroup[])
-  .filter(group => group.get('selected')?.value)
-  .map(group => {
+  const MFList = (this.avalableForTHC.controls as FormGroup[]).filter(group => group.get('selected')?.value).map(group => {
     return {
       ...group.value,
       id:0,
       isEnabled: true,
       isRemoved: false
-    };
-  });
+    };});
 
+  const PRSDRSDocketList = (this.avalabledocket.controls as FormGroup[]).filter(group => group.get('isSelected')?.value).map(group => {
+  const docket = { ...group.value, IsEnabled: true };return docket;});
 
-  const PRSDRSDocketList = (this.avalabledocket.controls as FormGroup[])
-  .filter(group => group.get('isSelected')?.value)
-  .map(group => {
-    const docket = { ...group.value, IsEnabled: true };
-    return docket;
-  });
-
-  const payload={
+  const payload = {
     "CTH":{
     THCNO:"N/A",
     ManualTHCNo:this.challanForm.value.manualTHCNo,
     THCSF:"0",
-    THCDate:this.challanForm.value.tHCDate,
+    THCDate:this.challanForm.value.tHCDate.toISOString(),
     THCBRCD:this.docketService.loginUserList.LocationCode,
     THCDESTCD:"",
     FROMCITY:this.challanForm.value.FROMCITY?this.challanForm.value.FROMCITY:this.challanForm.value.from_City,
@@ -441,7 +507,7 @@ const MFList = (this.avalableForTHC.controls as FormGroup[])
     TotalChargeWt:0,
     FreeSpace:Number(this.challanForm.value.freeSpace),
     WtLoaded:Number(this.challanForm.value.wtLoaded),
-    IsOverLoad:this.challanForm.value.isOverLoa?true:false,
+    IsOverLoad:this.challanForm.value.isOverLoad?true:false,
     OverLoadReason:this.challanForm.value.overLoadReason,
     WtAdjust:0,
     TOTALWtAdjust:0,
@@ -475,7 +541,7 @@ const MFList = (this.avalableForTHC.controls as FormGroup[])
     FlightDepatureDate:"",
     AirportDepatureDate:"",
     IsFlightUpdat:true,
-    AirWayBillNo:this.challanForm.value.AirWayBillNo,
+    AirWayBillNo:this.challanForm.value.airWayBillNo,
     IsBCProcess:true,
     IsFinancialEdit:true,
     IsFinalized:true,
@@ -529,8 +595,8 @@ const MFList = (this.avalableForTHC.controls as FormGroup[])
     DropLocaion:"",
     SealType:0,
     SealNo:this.challanForm.value.sealNo,
-    ActualDeptDate:this.challanForm.value.actualDeptDate,
-    ScheduleDeptDate:this.challanForm.value.scheduleDeptDate,
+    ActualDeptDate:this.challanForm.value.actualDeptDate.toISOString(),
+    ScheduleDeptDate:this.challanForm.value.scheduleDeptDate.toISOString(),
     LateEarly:"",
     ScheduleNo:"",
     ScheduleTime:"",
@@ -563,7 +629,7 @@ const MFList = (this.avalableForTHC.controls as FormGroup[])
     IsMonthlyBillAllow:this.challanForm.value.isMonthlyBillAllow?true:false,
     DeliveryAgent:this.challanForm.value.deliveryAgent,
     DeliveryAgentMoNo:this.challanForm.value.deliveryAgentMoNo,
-    LoadingDate:this.challanForm.value.loadingDate,
+    LoadingDate:this.challanForm.value.loadingDate.toISOString(),
     CityRouteCode:"",
     CityRouteKM:"",
     LoadingSlipAttachment:this.challanForm.value.loadingSlipAttachment,
@@ -594,7 +660,7 @@ const MFList = (this.avalableForTHC.controls as FormGroup[])
       AdvanceAmount:this.challanForm.value.advanceAmount,
       PendingAdvanceAmount:0,
       CollectedAdvanceAmount:0,
-      AdvanceLocation:Number(this.challanForm.value.advanceLocation),
+      AdvanceLocation:this.challanForm.value.advanceLocation,
       AdvanceAmountPaid:0,
       AdvanceAmountPending:0,
       IsAdvancePaid:true,
@@ -662,7 +728,7 @@ const MFList = (this.avalableForTHC.controls as FormGroup[])
       hdnRate:0,
       IsMathadi:true,
       MathadiSlipNo:"",
-      MathadiDate:"2025-10-28T09:44:12.384Z",
+      MathadiDate:new Date().toISOString(),
       MathadiAmt:0,
       Is_Local_ODA_id:this.challanForm.value.is_Local_ODA_id,
       Check_Dockno:"",
@@ -679,19 +745,19 @@ const MFList = (this.avalableForTHC.controls as FormGroup[])
       VehicleNO:this.challanForm.value.vehicleNO,
       VehicleType:this.challanForm.value.vehicleType,
       FTLType:this.challanForm.value.fTLType,
-      VehicleCapacity:this.challanForm.value.VehicleCapacity?this.challanForm.value.VehicleCapacity:'0',
+      VehicleCapacity:this.challanForm.value.vehicleCapacity?this.challanForm.value.vehicleCapacity:'0',
       VehicleSize:"",
       Driver1Name:this.challanForm.value.driver1Name,
       Driver1MobileNo:this.challanForm.value.driver1MobileNo,
       Driver1RTONo:this.challanForm.value.driver1RTONo,
       Driver1Licence:this.challanForm.value.driver1Licence,
-      D1_DOB:this.challanForm.value.d1_DOB,
-      Driver1LicenceValDate:this.challanForm.value.driver1LicenceValDate,
+      D1_DOB:this.challanForm.value.d1_DOB.toISOString(),
+      Driver1LicenceValDate:new Date(this.challanForm.value.driver1LicenceValDate).toISOString(),
       Driver2Name:this.challanForm.value.driver2Name,
       Driver2MobileNo:this.challanForm.value.driver2MobileNo,
       Driver2RTONo:this.challanForm.value.driver2RTONo,
       Driver2Licence:this.challanForm.value.driver2Licence,
-      Driver2LicenceValDate:this.challanForm.value.driver2LicenceValDate,
+      Driver2LicenceValDate:this.challanForm.value.driver2LicenceValDate.toISOString(),
       DriverPhotoPath:"",
       Make:0,
       Model:0,
@@ -704,10 +770,10 @@ const MFList = (this.avalableForTHC.controls as FormGroup[])
       CertificateNo:"",
       InsuranceNo:"",
       RTONo:"",
-      RegistrationDate:this.challanForm.value.registrationDate,
-      FitnessDate:this.challanForm.value.fitnessDate,
-      PermitDate:this.challanForm.value.permitDate,
-      InsuranceDate:this.challanForm.value.insuranceDate,
+      RegistrationDate:this.challanForm.value.registrationDate.toISOString(),
+      FitnessDate:this.challanForm.value.fitnessDate.toISOString(),
+      PermitDate:this.challanForm.value.permitDate.toISOString(),
+      InsuranceDate:this.challanForm.value.insuranceDate.toISOString(),
       CAPACITY:0,
       MarketVehImage:"",
       tabletNumber:"",
@@ -730,7 +796,7 @@ const MFList = (this.avalableForTHC.controls as FormGroup[])
       PAYBAS:"",
       TRNMOD:"",
       BUSTYPE:"",
-      DATETYPE:"2025-10-28T09:44:12.384Z",
+      DATETYPE:new Date().toISOString(),
       BookedByType:"",
       BookedBy:"",
       DOCTYP:"",
@@ -780,16 +846,16 @@ const MFList = (this.avalableForTHC.controls as FormGroup[])
    formData.append("BaseUserName", this.docketService.loginUserList.BaseUserName);
    formData.append("BaseUserType", '1');
    formData.append("BaseLocationCode", this.docketService.loginUserList.LocationCode);
-  if(this.challanForm.valid){
-    this.THCService.challanSubmit(formData).subscribe({next: (response) => {
-        if (response) {
-          alert('successfully')
+  // if(this.challanForm.valid){
+    this.THCService.challanSubmit(formData).subscribe({next: (response:any) => {
+        if (response && response.data) {
+           this.sweetAlertService.success(response.data.doctyp +' '+ 'Document ' +  response.data.docno +' '+ response.data.tranXaction)
         }
       },
     })
-  }else{
-    this.challanForm.markAllAsTouched();
-  }
+  // }else{
+  //   this.challanForm.markAllAsTouched();
+  // }
 }
 
   appendObjectToFormData(formData: FormData, obj: any, parentKey: string = "") {

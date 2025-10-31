@@ -27,5 +27,13 @@ export interface CustomerListResponse{
     text:string
 }
 
-
 export type AllCityByLocationResponse = CustomerListResponse;
+
+export interface ChargesResponse {
+ chargecode: string;
+ chargename: string;
+ operator: string;
+ acccode: string;
+ chargeAmount:number;
+ cnt: number;
+}
