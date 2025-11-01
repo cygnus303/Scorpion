@@ -237,39 +237,46 @@ updateTotalDockets() {
     vehicle: this.challanService.challanForm.value.vehicleNO?this.challanService.challanForm.value.vehicleNO:'',
     from_City: this.challanService.challanForm.value.from_City?this.challanService.challanForm.value.from_City:'',
     to_City: this.challanService.challanForm.value.to_City?this.challanService.challanForm.value.to_City:'',
-    paybas: docket.PayBas? docket.PayBas:'',
-    dockno: docket.DOCKNO ?docket.DOCKNO :''
+    paybas: docket?.PayBas? docket.PayBas:'',
+    dockno: docket?.DOCKNO ?docket.DOCKNO :''
   };
 
   this.THCService.getContractData(payload).subscribe({
     next: (response: any) => {
-      if (response) {
+      if (response && response.data) {
           if(this.docketService.loginUserList.Type==='1'){
             this.challanService.challanForm.patchValue({
-              contractAmount:response.contractAmount
+              contractAmount:response.data.contractAmount
             })
           }
           this.challanService.challanForm.patchValue({
-            standardContractAmount:response.StandardContractAmount,
-            tDSOnAmount:response.contractAmount
+            standardContractAmount:response.data.standardContractAmount,
+            tDSOnAmount:response.data.contractAmount
           })
   const contractControl = this.challanService.challanForm.get('contractAmount');
-
         if (
-        response.ContractID === '' &&
+        response.data.contractID === '' &&
         (
           ((this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '2') &&
             this.challanService.challanForm.value.vendorType === '04') ||
           (this.docketService.loginUserList.Type === '1' &&
             this.challanService.challanForm.value.vendorType === 'XX1')
-        )
-      ) {
+        )) {
         contractControl?.setErrors({ vendorContract: true });
         contractControl?.markAsTouched(); 
+        if(contractControl?.hasError('vendorExpired')){
+          const errors = { ...contractControl?.errors };
+          delete errors['vendorExpired'];
+        }
       } else {
         contractControl?.setErrors({ vendorExpired: true });
         contractControl?.markAsTouched(); 
+       if(contractControl?.hasError('vendorContract')){
+          const errors = { ...contractControl?.errors };
+          delete errors['vendorContract'];
+        }
       }
+        // contractControl.setErrors(Object.keys(errors).length ? errors : null);
         this.updateTotalDockets();
       }
     },
@@ -490,6 +497,7 @@ getPANnumberData(event:any){
     if (this.challanService.challanForm.value.vendorType === '04') {
         this.avalabledocketinPRS(event.vendor_Code);
     }
+    this.getContractDetail()
 }
 
 getVehicleFromVendorList(vendor:string){
@@ -586,7 +594,7 @@ getNewVehicleDetail(vehicleNo:string){
         if (response) {
            this.challanService.challanForm.patchValue({
             vehicleType:response.data.vehicle_Type,
-            fTLType:response.data.ftltyPe,
+            fTLType:response.data.vehicle_Type,
             eNGINENO: response.data.engineNo || '',
             cHASISNO: response.data.chasisNo || '',
             rCBOOKNO: response.data.rcBookNo || '',
@@ -803,7 +811,11 @@ getDAMobileNo(event:any){
       next: (response: any) => {
         if(response){
           if(response.data.counts!==0){
-            this.sweetAlertService.info(`Please Clear this Agent Previous Assign DRS And MR Collection, Documents :" + ${response.data.docList} + "!!`)
+            this.sweetAlertService.info(`Please Clear this Agent Previous Assign DRS And MR Collection, Documents :${response.data.docList}!!`);
+            this.challanService.challanForm.patchValue({
+              deliveryAgent:null,
+               deliveryAgentMoNo:null
+         })
           }else{
              this.challanService.challanForm.patchValue({
                deliveryAgentMoNo:response.data.mobileNo
