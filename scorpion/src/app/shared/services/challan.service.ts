@@ -305,7 +305,10 @@ rounditn(value: number, digits: number): number {
     airWayBillNo:new FormControl(),
     TotalManifest:new FormControl(0, isType1 ? [Validators.required, Validators.min(1)] : null),
     routeCode:new FormControl(null, isType1 ? Validators.required : null),
-    customerName:new FormControl()
+    customerName:new FormControl(),
+
+
+     GC_LoadingBy:new FormControl(''),
   });
 }
 
@@ -403,6 +406,7 @@ patchAvailableDockets(data: any[]) {
       tatInHrs: new FormControl(tatInHrs),
       rateType: new FormControl(null),
       charge: new FormControl(0),
+      rateError: new FormControl('')
     });
     group.get('rateType')?.valueChanges.subscribe(() => this.calculateCharge(group));
     group.get('NewRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
@@ -410,7 +414,49 @@ patchAvailableDockets(data: any[]) {
   });
 }
 
+validateRate(group: FormGroup): boolean {
+  const loadingBy = this.challanForm.get('GC_LoadingBy')?.value;
+  if (loadingBy === 'XX9') {
+    group.get('rateError')?.setValue('');
+    return true; // no validation when XX9
+  }
+
+  const rateType = group.get('rateType')?.value;
+  const rate = parseFloat(group.get('NewRate')?.value || '0') || 0;
+  const chrgwt = parseFloat(group.get('CHRGWT')?.value || '0') || 0;
+  const noofpkg = parseFloat(group.get('PKGSNO')?.value || '0') || 0;
+  if (chrgwt === 0) {
+    group.get('rateError')?.setValue('Charge weight is zero cannot validate rate.');
+    group.get('NewRate')?.setValue('0.00', { emitEvent: false });
+    return false;
+  }
+
+  let maxlimitcalculation = 0;
+
+  if (rateType === '4') { 
+    maxlimitcalculation = rate / chrgwt;
+  } else if (rateType === '3') { 
+    maxlimitcalculation = (rate * noofpkg) / chrgwt;
+  } else {
+    maxlimitcalculation = rate;
+  }
+  if (maxlimitcalculation > 5.0) {
+    group.get('rateError')?.setValue('Rate Amount Is High Please Check');
+    group.get('NewRate')?.setValue('0.00', { emitEvent: false });
+    return false;
+  } else {
+    group.get('rateError')?.setValue('');
+    return true;
+  }
+}
+
 calculateCharge(group: FormGroup) {
+   const isValid = this.validateRate(group);
+  if (!isValid) {
+    group.get('charge')?.setValue((0).toFixed(2), { emitEvent: false });
+    this.updateTotalLoadingCharge();
+    return;
+  }
   const rateType = group.get('rateType')?.value;
   const newRate = parseFloat(group.get('NewRate')?.value || 0);
   const actuwt = parseFloat(group.get('ACTUWT')?.value || 0);
