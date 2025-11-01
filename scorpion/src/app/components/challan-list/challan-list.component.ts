@@ -185,20 +185,14 @@ onDocketSelectionChange(ctrl: AbstractControl) {
 
 checkArrivalTime(ctrl: AbstractControl) {
   const docket = ctrl.value;
-
-    // Check if THCType == DRS
     if (this.docketService.loginUserList.Type === '3') {
 
-      const arrivalDateText = docket.Arrival_Date; // e.g. "18 Jul 25 04:41:00"
-      const reasonValue = docket.reasonValue; // optional field
-
-      // 1️⃣ If arrival date missing → allow check
+      const arrivalDateText = docket.Arrival_Date; 
+      const reasonValue = docket.subreasoncode; 
       if (!arrivalDateText) {
         console.log("1 - No arrival date, allow check");
         return;
       }
-
-      // 2️⃣ If arrival date exists, check time diff
       const arrivalDate = new Date(arrivalDateText);
       const currentDate = new Date();
       const diffHours = (currentDate.getTime() - arrivalDate.getTime()) / (1000 * 60 * 60);
@@ -272,7 +266,9 @@ updateTotalDockets() {
     paybas: docket?.PayBas? docket.PayBas:'',
     dockno: docket?.DOCKNO ?docket.DOCKNO :''
   };
-
+if (!payload.vendorCode) {
+  return; // 👈 stop further execution
+}
   this.THCService.getContractData(payload).subscribe({
     next: (response: any) => {
       if (response && response.data) {
@@ -699,7 +695,7 @@ avalabledocketinPRS(event?:any){
     trn: "ALL",
     bustyp: "ALL",
     status: this.challanService.challanForm.value.vendorType === '04' ? 'B' : 'P' ,
-    doctyp: "DRS",
+    doctyp: "PRS",
     baseLocationCode:this.docketService.loginUserList.LocationCode,
     docketList: "",
     alloted_To:this.challanService.challanForm.value.vendorType==='04'? this.challanService.challanForm.value.vendorCode:'',
