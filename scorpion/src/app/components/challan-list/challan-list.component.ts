@@ -179,8 +179,40 @@ onDocketSelectionChange(ctrl: AbstractControl) {
   // only call API if checked
   if (ctrl.get('isSelected')?.value) {
     this.getContractDetail(ctrl);
+      this.checkArrivalTime(ctrl);
   }
 }
+
+checkArrivalTime(ctrl: AbstractControl) {
+  const docket = ctrl.value;
+
+    // Check if THCType == DRS
+    if (this.docketService.loginUserList.Type === '3') {
+
+      const arrivalDateText = docket.Arrival_Date; // e.g. "18 Jul 25 04:41:00"
+      const reasonValue = docket.reasonValue; // optional field
+
+      // 1️⃣ If arrival date missing → allow check
+      if (!arrivalDateText) {
+        console.log("1 - No arrival date, allow check");
+        return;
+      }
+
+      // 2️⃣ If arrival date exists, check time diff
+      const arrivalDate = new Date(arrivalDateText);
+      const currentDate = new Date();
+      const diffHours = (currentDate.getTime() - arrivalDate.getTime()) / (1000 * 60 * 60);
+
+      if (diffHours > 48) {
+        if (!reasonValue || reasonValue.trim() === '') {
+          this.sweetAlertService.info("Arrival time is more than 48 hours ahead. Please add reason.");
+          ctrl.get('isSelected')?.setValue(false, { emitEvent: false });
+          return;
+        }
+      }
+  }
+}
+
 
 updateTotalDockets() {
   const docketArray = this.challanService.challanForm.get('avalabledocketinPRS') as FormArray;
@@ -608,7 +640,12 @@ getNewVehicleDetail(vehicleNo:string){
           //   typeCode: response.data.vehicle_Type,
           //   type_Name: response.data.type_Name
           // }];
-          this.getVehicleType(vehicleNo)
+          if(this.challanService.challanForm.value==='XX4'||this.challanService.challanForm.value==='XX1'){
+            this.GetVehicleTypesForChallanFromRouteVendType()
+          }else{
+            this.getVehicleType(vehicleNo)
+
+          }
           this.getVehicleCapacity(response.data.vehicle_Type)
         }
       },
@@ -617,6 +654,9 @@ getNewVehicleDetail(vehicleNo:string){
         this.sweetAlertService.error(err.error.message)
       }
     });
+}
+GetVehicleTypesForChallanFromRouteVendType(){
+
 }
 
 getVehicleType(vehicleNo:string){
@@ -653,13 +693,13 @@ avalabledocketinPRS(event?:any){
   }
   const payload={
     fromdt: "03 Jun 2025",
-    todt: "10 Oct 2025",
-    dttyp: "1",
+    todt: "01 Nov 2025",
+    dttyp: "3",
     paybas: "ALL",
     trn: "ALL",
     bustyp: "ALL",
     status: this.challanService.challanForm.value.vendorType === '04' ? 'B' : 'P' ,
-    doctyp: "PRS",
+    doctyp: "DRS",
     baseLocationCode:this.docketService.loginUserList.LocationCode,
     docketList: "",
     alloted_To:this.challanService.challanForm.value.vendorType==='04'? this.challanService.challanForm.value.vendorCode:'',
