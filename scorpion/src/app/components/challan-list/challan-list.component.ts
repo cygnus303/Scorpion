@@ -1,5 +1,5 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { AbstractControl, FormArray} from '@angular/forms';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { AbstractControl, FormArray, Validators} from '@angular/forms';
 import { cityResponse, generalMasterResponse, StatesFromPartyCodeRepsonse } from 'app/shared/models/general-master.model';
 import { AirportListResponse, AllCityByLocationResponse, CustomerListResponse, FlightsListResponse, VehicleTypeListResponse } from 'app/shared/models/thc-master.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
@@ -38,6 +38,8 @@ public notFromCityValue = 'Please enter at least 1 characters';
 public notCustomerListValue = 'Please enter at least 1 characters';
 public notToCityValue = 'Please enter at least 1 characters';
 public previewUrl: string | ArrayBuffer | null = null;
+public contractAmtMsg:string='';
+public contractExpiredMsg:string=''
 @ViewChild('fileInput') fileInput!: ElementRef;
 constructor(
   public challanService:ChallanService,
@@ -45,7 +47,8 @@ constructor(
   public basicDetailService:BasicDetailService,
   public sweetAlertService:SweetAlertService,
   private deliveryAgentService:DeliveryAgentService,
-  public THCService:THCMasterService
+  public THCService:THCMasterService,
+    private cdr: ChangeDetectorRef
 ){}
  ngOnInit(){
     this.challanService.buildForm();
@@ -246,8 +249,8 @@ updateTotalDockets() {
     this.updateTotalDockets();
   }
 
-  getContractDetail(ctrl?: AbstractControl) {
-  const docket = ctrl?.value; // current selected docket
+getContractDetail(ctrl?: AbstractControl) {
+  const docket = ctrl?.value;
 
   const payload = {
     thctype: this.docketService.loginUserList.Type,
@@ -257,62 +260,47 @@ updateTotalDockets() {
     isAdhoc: false,
     isAllowTAM: false,
     vendorCode: this.challanService.challanForm.value.vendorCode,
-    routeCode: this.challanService.challanForm.value.routeCode?this.challanService.challanForm.value.routeCode:'',
-    routeMODE: this.challanService.challanForm.value.routeType?this.challanService.challanForm.value.routeType:'',
-    ftL_Type: this.challanService.challanForm.value.fTLType?this.challanService.challanForm.value.fTLType:'',
-    vehicle: this.challanService.challanForm.value.vehicleNO?this.challanService.challanForm.value.vehicleNO:'',
-    from_City: this.challanService.challanForm.value.from_City?this.challanService.challanForm.value.from_City:'',
-    to_City: this.challanService.challanForm.value.to_City?this.challanService.challanForm.value.to_City:'',
-    paybas: docket?.PayBas? docket.PayBas:'',
-    dockno: docket?.DOCKNO ?docket.DOCKNO :''
+    routeCode: this.challanService.challanForm.value.routeCode || '',
+    routeMODE: this.challanService.challanForm.value.routeType || '',
+    ftL_Type: this.challanService.challanForm.value.fTLType || '',
+    vehicle: this.challanService.challanForm.value.vehicleNO || '',
+    from_City: this.challanService.challanForm.value.from_City || '',
+    to_City: this.challanService.challanForm.value.to_City || '',
+    paybas: docket?.PayBas || '',
+    dockno: docket?.DOCKNO || ''
   };
-if (!payload.vendorCode) {
-  return; // 👈 stop further execution
-}
+
   this.THCService.getContractData(payload).subscribe({
-    next: (response: any) => {
-      if (response && response.data) {
-          if(this.docketService.loginUserList.Type==='1'){
-            this.challanService.challanForm.patchValue({
-              contractAmount:response.data.contractAmount
-            })
-          }
-          this.challanService.challanForm.patchValue({
-            standardContractAmount:response.data.standardContractAmount,
-            tDSOnAmount:response.data.contractAmount
-          })
-  const contractControl = this.challanService.challanForm.get('contractAmount');
+  next: (response: any) => {
+    if (response && response.data) {
+      const contractControl = this.challanService.challanForm.get('contractAmount');
+
+      setTimeout(() => {
         if (
-        response.data.contractID === '' &&
-        (
-          ((this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '2') &&
-            this.challanService.challanForm.value.vendorType === '04') ||
-          (this.docketService.loginUserList.Type === '1' &&
-            this.challanService.challanForm.value.vendorType === 'XX1')
-        )) {
-        contractControl?.setErrors({ vendorContract: true });
-        contractControl?.markAsTouched(); 
-        if(contractControl?.hasError('vendorExpired')){
-          const errors = { ...contractControl?.errors };
-          delete errors['vendorExpired'];
+          response.data.contractID === '' &&
+          (
+            ((this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '2') &&
+              this.challanService.challanForm.value.vendorType === '04') ||
+            (this.docketService.loginUserList.Type === '1' &&
+              this.challanService.challanForm.value.vendorType === 'XX1')
+          )
+        ) {
+          // contractControl?.setErrors({ vendorContract: true });
+          this.contractAmtMsg=' Vendor Contract not found'
+        } else {
+          // contractControl?.setErrors({ vendorExpired: true });
+          this.contractExpiredMsg=' Vendor Contract Expired'
         }
-      } else {
-        contractControl?.setErrors({ vendorExpired: true });
-        contractControl?.markAsTouched(); 
-       if(contractControl?.hasError('vendorContract')){
-          const errors = { ...contractControl?.errors };
-          delete errors['vendorContract'];
-        }
-      }
-        // contractControl.setErrors(Object.keys(errors).length ? errors : null);
-        this.updateTotalDockets();
-      }
-    },
-    error: (err) => {
-      console.error('Error fetching contract details:', err.error.message);
-      this.sweetAlertService.error(err.error.message);
+        console.log('Errors after timeout:', contractControl?.errors);
+      });
     }
-  });
+  },
+  error: (err) => {
+    console.error('Error fetching contract details:', err.error.message);
+    this.sweetAlertService.error(err.error.message);
+  }
+});
+
 }
 
 

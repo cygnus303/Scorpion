@@ -1137,12 +1137,18 @@
                                 Please enter a value greater than or equal to 1.
                             </span>
                         </div>
-                        <div *ngIf="challanService.challanForm.get('contractAmount')?.errors?.['vendorContract']">
+                        <!-- <div *ngIf="challanService.challanForm.get('contractAmount')?.errors?.['vendorContract']">
                         Vendor Contract not found
                             </div>
                                 <div *ngIf="challanService.challanForm.get('contractAmount')?.errors?.['vendorExpired']">
                         Vendor Contract Expired
-                            </div>
+                            </div> -->
+                        <div class="text-danger text-start mt-1 small" *ngIf="contractAmtMsg">
+                            Vendor Contract not found
+                        </div>
+                        <div class="text-danger text-start mt-1 small" *ngIf="contractExpiredMsg">
+                            Vendor Contract Expired
+                        </div>
                     </div>
                 </div>
                 <div class="row mb-3 align-items-center"  *ngIf="!['04', '19', 'XX'].includes(challanService.challanForm.get('vendorType')?.value)">
