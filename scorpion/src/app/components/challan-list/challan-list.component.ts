@@ -270,37 +270,36 @@ getContractDetail(ctrl?: AbstractControl) {
     dockno: docket?.DOCKNO || ''
   };
 
-  this.THCService.getContractData(payload).subscribe({
-  next: (response: any) => {
-    if (response && response.data) {
-      const contractControl = this.challanService.challanForm.get('contractAmount');
+  if (payload.vendorCode !== "" && payload.vendorCode !== null && (payload.paybas === undefined || payload.paybas === "" || (this.docketService.loginUserList.Type === "2" && this.challanService.challanForm.value.vendorTyp === '04'))) {
+    this.THCService.getContractData(payload).subscribe({
+      next: (response: any) => {
+        if (response && response.data) {
+          const contractControl = this.challanService.challanForm.get('contractAmount');
 
-      setTimeout(() => {
-        if (
-          response.data.contractID === '' &&
-          (
-            ((this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '2') &&
-              this.challanService.challanForm.value.vendorType === '04') ||
-            (this.docketService.loginUserList.Type === '1' &&
-              this.challanService.challanForm.value.vendorType === 'XX1')
-          )
-        ) {
-          // contractControl?.setErrors({ vendorContract: true });
-          this.contractAmtMsg=' Vendor Contract not found'
-        } else {
-          // contractControl?.setErrors({ vendorExpired: true });
-          this.contractExpiredMsg=' Vendor Contract Expired'
+          setTimeout(() => {
+            if (response.data.contractID === '' && (
+                ((this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '2') &&
+                  this.challanService.challanForm.value.vendorType === '04') ||
+                (this.docketService.loginUserList.Type === '1' &&
+                  this.challanService.challanForm.value.vendorType === 'XX1')
+              )
+            ) {
+              // contractControl?.setErrors({ vendorContract: true });
+              this.contractAmtMsg = ' Vendor Contract not found'
+            } else {
+              // contractControl?.setErrors({ vendorExpired: true });
+              this.contractExpiredMsg = ' Vendor Contract Expired'
+            }
+            console.log('Errors after timeout:', contractControl?.errors);
+          });
         }
-        console.log('Errors after timeout:', contractControl?.errors);
-      });
-    }
-  },
-  error: (err) => {
-    console.error('Error fetching contract details:', err.error.message);
-    this.sweetAlertService.error(err.error.message);
+      },
+      error: (err) => {
+        console.error('Error fetching contract details:', err.error.message);
+        this.sweetAlertService.error(err.error.message);
+      }
+    });
   }
-});
-
 }
 
 
