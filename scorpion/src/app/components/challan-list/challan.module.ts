@@ -6,9 +6,10 @@ import { ChallanRoutes } from './challan.routes';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ChallanFilterComponent } from './challan-filter/challan-filter.component';
 
 @NgModule({
-  declarations: [ChallanListComponent],
+  declarations: [ChallanListComponent,ChallanFilterComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(ChallanRoutes),
