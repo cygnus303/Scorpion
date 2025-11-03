@@ -58,6 +58,11 @@
 .background{
     background-color: #5795fa !important;
 }
+.clear-icon.ng-select{
+   .ng-clear-wrapper {
+    display: none !important;
+  }
+}
 
 .ng-select {
   width: 100%;

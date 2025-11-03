@@ -675,14 +675,14 @@ avalabledocketinPRS(event?:any){
       return;
   }
   const payload={
-    fromdt: "03 Jun 2025",
+    fromdt: "03 Mar 2025",
     todt: "01 Nov 2025",
     dttyp: "3",
     paybas: "ALL",
     trn: "ALL",
     bustyp: "ALL",
     status: this.challanService.challanForm.value.vendorType === '04' ? 'B' : 'P' ,
-    doctyp: "PRS",
+    doctyp: "DRS",
     baseLocationCode:this.docketService.loginUserList.LocationCode,
     docketList: "",
     alloted_To:this.challanService.challanForm.value.vendorType==='04'? this.challanService.challanForm.value.vendorCode:'',

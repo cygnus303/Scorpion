@@ -63,7 +63,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Route Mode</label>
                         <div class="col-sm-7">
-                             <ng-select class="noFoundTextColor required2" placeholder="Route Mode" formControlName="routeType" (change)="getContractDetail()"
+                             <ng-select class="noFoundTextColor required2 clear-icon"  placeholder="Route Mode" formControlName="routeType" (change)="getContractDetail()"
                               [ngClass]="{ 'border-danger': challanService.challanForm.get('routeType')?.invalid  && challanService.challanForm.get('routeType')?.touched }" (change)="getRoutesFromRouteType($event)"
                                 notFoundText="No matches found" [items]="challanService.routeModeList" bindLabel="codeDesc" bindValue="codeId"></ng-select>
                                  <div class="text-danger text-start" *ngIf="challanService.challanForm.get('routeType')?.invalid && challanService.challanForm.get('routeType')?.touched "> This field is required.</div>
@@ -74,7 +74,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Route Name</label>
                         <div class="col-sm-7">
-                            <ng-select class="noFoundTextColor required2" placeholder="Route Name" formControlName="routeCode" (change)="getMFListFromRoute($event)"
+                            <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Route Name" formControlName="routeCode" (change)="getMFListFromRoute($event)"
                                 notFoundText="No matches found" [items]="routeNameList" bindLabel="text" bindValue="value"
                                 [ngClass]="{ 'border-danger': challanService.challanForm.get('routeCode')?.invalid  && challanService.challanForm.get('routeCode')?.touched }"></ng-select>
                                  <div class="text-danger text-start" *ngIf="challanService.challanForm.get('routeCode')?.invalid && challanService.challanForm.get('routeCode')?.touched "> This field is required.</div>
@@ -157,7 +157,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Vendor Type</label>
                         <div class="col-sm-7">
-                            <ng-select class="noFoundTextColor required2" placeholder="Vendor Type" formControlName="vendorType" required [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorType')?.invalid  && challanService.challanForm.get('vendorType')?.touched }"
+                            <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Type" formControlName="vendorType" required [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorType')?.invalid  && challanService.challanForm.get('vendorType')?.touched }"
                                 notFoundText="No matches found" [items]="challanService.vendtyData" bindLabel="codeDesc" bindValue="codeId" (change)="challanService.getVendorsList($event);vendorCodeName()"></ng-select>
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vendorType')?.invalid && challanService.challanForm.get('vendorType')?.touched "> This field is required.</div>
                         </div>
@@ -167,7 +167,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Vendor Code/Name</label>
                         <div class="col-sm-7">
-                             <ng-select class="noFoundTextColor required2" placeholder="Vendor Code/Name" formControlName="vendorCode" 
+                             <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name" formControlName="vendorCode" 
                              [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code"
                               required [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorCode')?.invalid  && challanService.challanForm.get('vendorCode')?.touched }"
                              (change)="getPANnumberData($event)"
@@ -329,7 +329,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Airline Name</label>
                     <div class="col-sm-7 d-flex justify-content-between">
-                        <ng-select class="noFoundTextColor required2" placeholder="Airline Name" formControlName="airLine"  (change)="getFlights()"
+                        <ng-select class="noFoundTextColor required2 " placeholder="Airline Name" formControlName="airLine"  (change)="getFlights()"
                             notFoundText="No matches found" [items]="airlineList" bindLabel="codeDesc" bindValue="codeId"></ng-select>
                     </div>
                 </div>
@@ -806,7 +806,7 @@
         <div class="row ">
             <div class="col-4 pb-3"  [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
                 <div class="row align-items-cente">
-                    <label class="col-sm-5 col-form-label text-end">Late Dept. Reason [if any]</label>
+                    <label class="col-sm-5 col-form-label text-end clear-icon">Late Dept. Reason [if any]</label>
                     <div class="col-sm-7">
                         <!-- <input class="form-control" placeholder="Late Dept. Reason" type="text" formControlName="lateDepaturereason"> -->
                          <ng-select class="noFoundTextColor" placeholder="Late Dept. Reason" formControlName="lateDepaturereason"
