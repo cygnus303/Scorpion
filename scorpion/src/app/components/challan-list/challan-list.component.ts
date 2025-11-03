@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, Validators} from '@angular/forms';
 import { cityResponse, generalMasterResponse, StatesFromPartyCodeRepsonse } from 'app/shared/models/general-master.model';
-import { AirportListResponse, AllCityByLocationResponse, CustomerListResponse, FlightsListResponse, VehicleTypeListResponse } from 'app/shared/models/thc-master.model';
+import { AirportListResponse, AllCityByLocationResponse, CustomerListResponse, DeliveryZoneResponse, FlightsListResponse, VehicleTypeListResponse } from 'app/shared/models/thc-master.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { ChallanService } from 'app/shared/services/challan.service';
 import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service';
@@ -39,7 +39,9 @@ public notCustomerListValue = 'Please enter at least 1 characters';
 public notToCityValue = 'Please enter at least 1 characters';
 public previewUrl: string | ArrayBuffer | null = null;
 public contractAmtMsg:string='';
-public contractExpiredMsg:string=''
+public contractExpiredMsg:string='';
+public deliveryZoneData:DeliveryZoneResponse[]=[];
+
 @ViewChild('fileInput') fileInput!: ElementRef;
 constructor(
   public challanService:ChallanService,
@@ -48,7 +50,6 @@ constructor(
   public sweetAlertService:SweetAlertService,
   private deliveryAgentService:DeliveryAgentService,
   public THCService:THCMasterService,
-    private cdr: ChangeDetectorRef
 ){}
  ngOnInit(){
     this.challanService.buildForm();
@@ -77,6 +78,10 @@ constructor(
       });
     }
   });
+
+  if(this.docketService.loginUserList.Type==='3'){
+    this.getDeliveryZoneData()
+  }
   }
 
 // calculateNetAmount() {
@@ -437,7 +442,7 @@ vendorCodeName(){
       insuranceDate :'',
       fitnessDate :'',
      });
-     this.getVehicleType(event.value)
+    //  this.getVehicleType(event.value)
   }
   this.checkPermitExpiry();
   this.checkInsuranceExpiry();
@@ -508,7 +513,11 @@ getPANnumberData(event:any){
     });
     this.getTDSDetailsFromVendor(event.vendor_Code);
     this.getVehicleFromVendorList(event.vendor_Code);
-    this.getVehicleType(event.vendor_Code)
+    if(this.challanService.challanForm.value.vendorType==='XX4'||this.challanService.challanForm.value.vendorType==='XX1'){
+      this.GetVehicleTypesForChallanFromRouteVendType()
+    }else{
+      this.getVehicleType(event.vendor_Code)
+    }
     if (this.challanService.challanForm.value.vendorType === '04') {
         this.avalabledocketinPRS(event.vendor_Code);
     }
@@ -627,7 +636,6 @@ getNewVehicleDetail(vehicleNo:string){
             this.GetVehicleTypesForChallanFromRouteVendType()
           }else{
             this.getVehicleType(vehicleNo)
-
           }
           this.getVehicleCapacity(response.data.vehicle_Type)
         }
@@ -639,7 +647,27 @@ getNewVehicleDetail(vehicleNo:string){
     });
 }
 GetVehicleTypesForChallanFromRouteVendType(){
-
+const payload={
+  vehicleNo:this.challanService.challanForm.value.vehicleNO?this.challanService.challanForm.value.vehicleNO:'O',
+  routeMode:this.challanService.challanForm.value.routeType?this.challanService.challanForm.value.routeType:'',
+  routeName:this.challanService.challanForm.value.routeCode?this.challanService.challanForm.value.routeCode:'',
+  vendorType:this.challanService.challanForm.value.vendorType?this.challanService.challanForm.value.vendorType:'',
+  vendorCode:this.challanService.challanForm.value.vendorCode?this.challanService.challanForm.value.vendorCode:'',
+  thcType:this.docketService.loginUserList.Type,
+  baseLocationCode:this.docketService.loginUserList.LocationCode
+}
+if(this.challanService.challanForm.value.vehicleNO ||this.challanService.challanForm.value.routeType|| this.challanService.challanForm.value.routeCode ||
+  this.challanService.challanForm.value.vendorType || this.challanService.challanForm.value.vendorCode){
+  this.THCService.getVehicleTypesForChallanFromRouteVendType(payload).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.vehicleTypeList=response.data;
+        }
+      },
+      error: (err) => {
+      }
+    });
+  }
 }
 
 getVehicleType(vehicleNo:string){
@@ -791,6 +819,11 @@ updateTotalManifest(mfNo:string): void {
       this.challanService.challanForm.patchValue({
         vehicleCapacityUti: 0
       });
+    }
+    if(this.challanService.challanForm.value.wtLoaded >  vehicleCapacity){
+      this.challanService.challanForm.patchValue({
+        isOverLoad:true
+      })
     }
   }
 
@@ -980,5 +1013,17 @@ removeAttachment() {
   this.challanService.challanForm.patchValue({
     loadingSlipAttachment: null
   });
+}
+
+getDeliveryZoneData(){
+  this.THCService.getDeliveryDetail(this.docketService.loginUserList.LocationCode).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.deliveryZoneData=response;
+        }
+      },
+      error: (err) => {
+      }
+    });
 }
 }

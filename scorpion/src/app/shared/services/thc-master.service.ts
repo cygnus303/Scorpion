@@ -107,4 +107,12 @@ export class THCMasterService {
   getContractData(payload:any){
     return this.apiHandlerService.Post(`THC/GetContractAmount`,payload);
   }
+
+  getDeliveryDetail(locationCode:string){
+    return this.apiHandlerService.Get(`THC/GetDeliveryZone?baseLocationCode=${locationCode}`);
+  }
+
+  getVehicleTypesForChallanFromRouteVendType(payload:any){
+    return this.apiHandlerService.Get(`THC/GetVehicleTypesForChallanFromRouteVendType?vehicleNo=${payload.vehicleNo}&routeMode=${payload.routeMode}&routeName=${payload.routeName}&vendorType=${payload.vendorType}&vendorCode=${payload.vendorCode}&thcType=${payload.thcType}&baseLocationCode=${payload.baseLocationCode}`);
+  }
 }

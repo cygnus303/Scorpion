@@ -37,3 +37,8 @@ export interface ChargesResponse {
  chargeAmount:number;
  cnt: number;
 }
+
+export interface DeliveryZoneResponse{
+    value:string,
+    text:string
+}
