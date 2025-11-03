@@ -208,6 +208,9 @@ rounditn(value: number, digits: number): number {
 }
 
   buildForm(){
+    const today = new Date(); 
+const nextDay = new Date(today);
+nextDay.setDate(today.getDate() + 1);
   const isType1 = this.docketService.loginUserList.Type === '1';
   this.challanForm = new FormGroup({
     manualTHCNo:new FormControl('N/A'),
@@ -229,12 +232,12 @@ rounditn(value: number, digits: number): number {
     to_City:new FormControl(),
     FROMCITY:new FormControl(null, isType1 ? Validators.required : null),
     TOCITY:new FormControl(null, isType1 ? Validators.required : null),
-    ERD:new FormControl(),
+    ERD:new FormControl(nextDay),
     loadingSlipAttachment:new FormControl(),
     vehicleNo:new FormControl(),
     mKTVehicleNo:new FormControl(),
     tripSheetNo : new FormControl(),
-    vehicleType : new FormControl(),
+    vehicleType : new FormControl(''),
     fTLType : new FormControl(),
     registrationDate : new FormControl(),
     eNGINENO : new FormControl(),

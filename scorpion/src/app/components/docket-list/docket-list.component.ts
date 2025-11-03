@@ -652,7 +652,10 @@ getCompletionData() {
         formData.append("DVM.WMD.permitdt", new Date().toISOString()),
         formData.append("DVM.WMD.sdD_Date", new Date().toISOString()),
         formData.append("DVM.WMD.dockdt", this.docketService.basicDetailForm.value.cNoteDate ? new Date(this.docketService.basicDetailForm.value.cNoteDate).toISOString() : '');
-      formData.append("DVM.WMD.cdeldt", new Date(this.docketService.freightData.edd).toISOString()),
+      // formData.append("DVM.WMD.cdeldt", new Date(this.docketService.freightData.edd).toISOString()),
+formData.append("DVM.WMD.cdeldt", this.docketService.freightData.edd );
+
+
         formData.append("DVM.WMD.AppointmentDT",this.docketService.basicDetailForm.value.appointmentDT ? new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString() : new Date().toISOString()),
         formData.append("DVM.WMD.Version", String(Number('6')));
       formData.append("DVM.docketType", "DKT");
