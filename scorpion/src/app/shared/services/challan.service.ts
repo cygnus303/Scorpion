@@ -262,7 +262,7 @@ nextDay.setDate(today.getDate() + 1);
     eWayBillNo : new FormControl(),
     eWayBillExpiredDate : new FormControl(),
     is_Local_ODA_id : new FormControl('local'),
-    totalDockets: new FormControl(0, !isType1 ? Validators.required : null),
+    totalDockets: new FormControl(0, !isType1 ? [Validators.required, Validators.min(1)] : null),
     contractAmount : new FormControl(0),
     isTDSEnabled : new FormControl(),
     tDSOnAmount : new FormControl(0),
@@ -896,6 +896,14 @@ onSubmit(){
    formData.append("BaseUserName", this.docketService.loginUserList.BaseUserName);
    formData.append("BaseUserType", '1');
    formData.append("BaseLocationCode", this.docketService.loginUserList.LocationCode);
+      if (!this.challanForm.valid) {
+      const invalidKeys = Object.keys(this.challanForm.controls).filter(key => 
+        this.challanForm.get(key)?.invalid
+      );
+
+      console.log("Invalid controls:", invalidKeys);
+    }
+
   if(this.challanForm.valid){
     this.THCService.challanSubmit(formData).subscribe({next: (response:any) => {
         if (response && response.data) {

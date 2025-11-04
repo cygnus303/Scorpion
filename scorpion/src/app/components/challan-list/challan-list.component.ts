@@ -274,14 +274,18 @@ getContractDetail(ctrl?: AbstractControl) {
     vehicle: this.challanService.challanForm.value.vehicleNO || '',
     from_City: this.challanService.challanForm.value.from_City || '',
     to_City: this.challanService.challanForm.value.to_City || '',
-    paybas: docket?.PayBas ? docket?.PayBas :this.challanService.avalabledocket.controls[0].value.PayBas || '',
-    dockno:  docket?.DOCKNO ?  docket?.DOCKNO: this.challanService.avalabledocket.controls[0].value.DOCKNO  || '',
+    paybas: docket?.PayBas ? docket?.PayBas :this.challanService.avalabledocket.controls[0]?.value.PayBas || '',
+    dockno:  docket?.DOCKNO ?  docket?.DOCKNO: this.challanService.avalabledocket.controls[0]?.value.DOCKNO  || '',
   };
   if (payload.vendorCode !== "" && payload.vendorCode !== null && (payload.paybas === undefined || payload.paybas === "" || (this.docketService.loginUserList.Type === "2" && this.challanService.challanForm.value.vendorType === '04'))) {
     this.THCService.getContractData(payload).subscribe({
       next: (response: any) => {
         if (response && response.data) {
         this.handleContractResponse(response)
+        this.challanService.challanForm.patchValue({
+          contractAmount:response.data.contractAmount,
+          standardContractAmount:response.data.standardContractAmount
+        })
         }
       },
       error: (err) => {
@@ -645,7 +649,7 @@ getNewVehicleDetail(vehicleNo:string){
         if (response) {
            this.challanService.challanForm.patchValue({
             vehicleType:response.data.vehicle_Type,
-            fTLType:response.data.vehicle_Type,
+            fTLType:response.data.ftltyPe,
             eNGINENO: response.data.engineNo || '',
             cHASISNO: response.data.chasisNo || '',
             rCBOOKNO: response.data.rcBookNo || '',
@@ -775,7 +779,8 @@ avalabledocketinPRS(event?:any){
 
 getMFListFromRoute(event:any){
   this.challanService.challanForm.patchValue({
-    vendorCode:null
+    vendorCode:null,
+    routeName:event.text
   })
   const paylaod = {
     location: event.value,

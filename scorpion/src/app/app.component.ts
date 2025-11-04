@@ -26,8 +26,8 @@ export class AppComponent {
      const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
-      this.docketService.loginUserList.Type = '2'
-      this.docketService.loginUserList.LocationCode =  'PIM';
+      this.docketService.loginUserList.Type = '1'
+      this.docketService.loginUserList.LocationCode =  'ABH';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;

@@ -455,7 +455,7 @@
                     <div class="col-sm-7">
                         <!-- <input class="form-control" type="text" placeholder="FTL Type"> -->
                           <ng-select class="noFoundTextColor" placeholder="FTL Type" formControlName="fTLType" readonly
-                            notFoundText="No matches found"  bindLabel="type_Name" bindValue="typeCode"  [items]="vehicleTypeList"></ng-select>
+                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" [items]="docketService.typeofMovementList"></ng-select>
                     </div>
                 </div>
             </div>
@@ -1038,7 +1038,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Total CNote</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Total CNote" min="1" type="number" value="0" formControlName="totalDockets" readonly
+                            <input class="form-control" placeholder="Total CNote" type="number" value="0" formControlName="totalDockets" readonly
                              [ngClass]="{ 'border-danger': challanService.challanForm.get('totalDockets')?.invalid  && challanService.challanForm.get('totalDockets')?.touched }">
                              <div class="text-danger text-start mt-1 small"  *ngIf="challanService.challanForm.get('totalDockets')?.touched && challanService.challanForm.get('totalDockets')?.errors">
                                 <span *ngIf="challanService.challanForm.get('totalDockets')?.hasError('min')">
