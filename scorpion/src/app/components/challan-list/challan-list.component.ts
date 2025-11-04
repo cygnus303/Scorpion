@@ -274,29 +274,11 @@ getContractDetail(ctrl?: AbstractControl) {
     paybas: docket?.PayBas ? docket?.PayBas :this.challanService.avalabledocket.controls[0].value.PayBas || '',
     dockno:  docket?.DOCKNO ?  docket?.DOCKNO: this.challanService.avalabledocket.controls[0].value.DOCKNO  || '',
   };
-
-  if (payload.vendorCode !== "" && payload.vendorCode !== null && (payload.paybas === undefined || payload.paybas === "" || (this.docketService.loginUserList.Type === "2" && this.challanService.challanForm.value.vendorTyp === '04'))) {
+  if (payload.vendorCode !== "" && payload.vendorCode !== null && (payload.paybas === undefined || payload.paybas === "" || (this.docketService.loginUserList.Type === "2" && this.challanService.challanForm.value.vendorType === '04'))) {
     this.THCService.getContractData(payload).subscribe({
       next: (response: any) => {
         if (response && response.data) {
-          const contractControl = this.challanService.challanForm.get('contractAmount');
-
-          setTimeout(() => {
-            if (response.data.contractID === '' && (
-                ((this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '2') &&
-                  this.challanService.challanForm.value.vendorType === '04') ||
-                (this.docketService.loginUserList.Type === '1' &&
-                  this.challanService.challanForm.value.vendorType === 'XX1')
-              )
-            ) {
-              // contractControl?.setErrors({ vendorContract: true });
-              this.contractAmtMsg = ' Vendor Contract not found'
-            } else {
-              // contractControl?.setErrors({ vendorExpired: true });
-              this.contractExpiredMsg = ' Vendor Contract Expired'
-            }
-            console.log('Errors after timeout:', contractControl?.errors);
-          });
+        this.handleContractResponse(response)
         }
       },
       error: (err) => {
@@ -306,6 +288,49 @@ getContractDetail(ctrl?: AbstractControl) {
   }
 }
 
+handleContractResponse(response: any) {
+  const THCTYPE = this.docketService.loginUserList.Type?.toString(); // '1' | '2' | '3'
+  const vendorType = this.challanService.challanForm.value.vendorType;
+  const data = response?.data || {};
+  const contractID = (data.contractID ?? '').toString();
+  const contractExpire = !!data.contractExpire;
+  this.contractAmtMsg = '';
+  const contractControl = this.challanService.challanForm.get('contractAmount');
+  if (contractControl) {
+    contractControl.setErrors(null);
+    contractControl.markAsUntouched();
+  }
+
+  if ((THCTYPE === '3' && vendorType === '04') || (THCTYPE === '1' && vendorType === 'XX1')) {
+    this.contractAmtMsg = '';
+  }
+  else if (!contractExpire && contractID !== '' && THCTYPE === '2') {
+    this.contractAmtMsg = '';
+  }
+  else if (contractID === '' &&
+           ( ((THCTYPE === '3' || THCTYPE === '2') && vendorType === '04') ||
+             (THCTYPE === '1' && vendorType === 'XX1') )
+  ) {
+    this.contractAmtMsg = 'Vendor Contract not found';
+
+    if (contractControl) {
+      contractControl.setErrors({ vendorContract: true });
+      contractControl.markAsTouched();
+    }
+  }
+  else {
+    this.contractAmtMsg = 'Vendor Contract has Expired.';
+
+    if (contractControl) {
+      contractControl.setErrors({ vendorExpired: true });
+      contractControl.markAsTouched();
+    }
+  }
+
+  // optional: debug
+  console.log('contractID, contractExpire, THCTYPE, vendorType ->', contractID, contractExpire, THCTYPE, vendorType);
+  console.log('contractControl errors:', contractControl?.errors);
+}
 
   get isAllSelected(): boolean {
     const validRows = this.challanService.avalabledocket.controls.filter((c: any) => !c.value.Message);
@@ -704,7 +729,7 @@ avalabledocketinPRS(event?:any){
   const payload={
     fromdt: "01 Mar 2025",
     todt: "04 Nov 2025",
-    dttyp:  this.docketService.loginUserList.Type,
+    dttyp:  '3',
     paybas: "ALL",
     trn: "ALL",
     bustyp: "ALL",

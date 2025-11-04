@@ -1146,11 +1146,11 @@
                                 <div *ngIf="challanService.challanForm.get('contractAmount')?.errors?.['vendorExpired']">
                         Vendor Contract Expired
                             </div> -->
-                        <div class="text-danger text-start mt-1 small" *ngIf="contractAmtMsg">
-                            Vendor Contract not found
+                        <div class="text-danger text-start mt-1 small" *ngIf="challanService.challanForm.get('contractAmount')?.hasError('vendorContract') && challanService.challanForm.get('contractAmount')?.touched">
+                            Vendor Contract not found.
                         </div>
-                        <div class="text-danger text-start mt-1 small" *ngIf="contractExpiredMsg">
-                            Vendor Contract Expired
+                        <div class="text-danger text-start mt-1 small" *ngIf="challanService.challanForm.get('contractAmount')?.hasError('vendorExpired') && challanService.challanForm.get('contractAmount')?.touched">
+                            Vendor Contract has Expired.
                         </div>
                     </div>
                 </div>
