@@ -704,7 +704,7 @@ avalabledocketinPRS(event?:any){
   const payload={
     fromdt: "01 Mar 2025",
     todt: "04 Nov 2025",
-    dttyp: "3",
+    dttyp:  this.docketService.loginUserList.Type,
     paybas: "ALL",
     trn: "ALL",
     bustyp: "ALL",
