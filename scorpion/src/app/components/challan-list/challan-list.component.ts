@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
-import { AbstractControl, FormArray, Validators} from '@angular/forms';
-import { cityResponse, generalMasterResponse, StatesFromPartyCodeRepsonse } from 'app/shared/models/general-master.model';
+import {Component, ElementRef, ViewChild } from '@angular/core';
+import { AbstractControl, FormArray} from '@angular/forms';
+import { generalMasterResponse, StatesFromPartyCodeRepsonse } from 'app/shared/models/general-master.model';
 import { AirportListResponse, AllCityByLocationResponse, CustomerListResponse, DeliveryZoneResponse, FlightsListResponse, VehicleTypeListResponse } from 'app/shared/models/thc-master.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { ChallanService } from 'app/shared/services/challan.service';
@@ -300,8 +300,7 @@ getContractDetail(ctrl?: AbstractControl) {
         }
       },
       error: (err) => {
-        console.error('Error fetching contract details:', err.error.message);
-        this.sweetAlertService.error(err.error.message);
+         this.sweetAlertService.error(err.error.message);
       }
     });
   }
