@@ -298,11 +298,6 @@ handleContractResponse(response: any) {
   const contractID = (data.contractID ?? '').toString();
   const contractExpire = !!data.contractExpire;
   this.contractAmtMsg = '';
-  const contractControl = this.challanService.challanForm.get('contractAmount');
-  if (contractControl) {
-    contractControl.setErrors(null);
-    contractControl.markAsUntouched();
-  }
 
   if ((THCTYPE === '3' && vendorType === '04') || (THCTYPE === '1' && vendorType === 'XX1')) {
     this.contractAmtMsg = '';
@@ -315,24 +310,10 @@ handleContractResponse(response: any) {
              (THCTYPE === '1' && vendorType === 'XX1') )
   ) {
     this.contractAmtMsg = 'Vendor Contract not found';
-
-    if (contractControl) {
-      contractControl.setErrors({ vendorContract: true });
-      contractControl.markAsTouched();
-    }
   }
   else {
     this.contractAmtMsg = 'Vendor Contract has Expired.';
-
-    if (contractControl) {
-      contractControl.setErrors({ vendorExpired: true });
-      contractControl.markAsTouched();
-    }
   }
-
-  // optional: debug
-  console.log('contractID, contractExpire, THCTYPE, vendorType ->', contractID, contractExpire, THCTYPE, vendorType);
-  console.log('contractControl errors:', contractControl?.errors);
 }
 
   get isAllSelected(): boolean {
