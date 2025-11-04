@@ -732,11 +732,7 @@ avalabledocketinPRS(event?:any){
   const payload={
     fromdt: "01 Mar 2025",
     todt: "04 Nov 2025",
-<<<<<<< HEAD
     dttyp:  '3',
-=======
-    dttyp:  "3",
->>>>>>> 0222f959503c2e9e6bfe1d989f4b544144d95188
     paybas: "ALL",
     trn: "ALL",
     bustyp: "ALL",
