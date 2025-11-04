@@ -258,6 +258,7 @@ updateTotalDockets() {
   }
 
 getContractDetail(ctrl?: AbstractControl) {
+   this.contractAmtMsg = '';
   const docket = ctrl?.value;
 
   const payload = {
