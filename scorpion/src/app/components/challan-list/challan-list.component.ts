@@ -300,7 +300,7 @@ getContractDetail(ctrl?: AbstractControl) {
         }
       },
       error: (err) => {
-         this.sweetAlertService.error(err.error.message);
+        console.error('Error fetching contract details:', err.error.message);
       }
     });
   }
@@ -702,14 +702,14 @@ avalabledocketinPRS(event?:any){
       return;
   }
   const payload={
-    fromdt: "03 Mar 2025",
-    todt: "01 Nov 2025",
+    fromdt: "01 Mar 2025",
+    todt: "04 Nov 2025",
     dttyp: "3",
     paybas: "ALL",
     trn: "ALL",
     bustyp: "ALL",
     status: this.challanService.challanForm.value.vendorType === '04' ? 'B' : 'P' ,
-    doctyp: "DRS",
+    doctyp: this.docketService.loginUserList.Type==='2'?"PRS":"DRS",
     baseLocationCode:this.docketService.loginUserList.LocationCode,
     docketList: "",
     alloted_To:this.challanService.challanForm.value.vendorType==='04'? this.challanService.challanForm.value.vendorCode:'',
