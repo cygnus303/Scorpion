@@ -322,19 +322,19 @@ nextDay.setDate(today.getDate() + 1);
 public buildMfGroup(item: any): FormGroup {
   return new FormGroup({
     selected: new FormControl(false),
-    tcno: new FormControl(item.tcno || ''),
-    manual: new FormControl(item.manual || ''),
-    tcbr: new FormControl(item.tcbr || ''),
-    tC_Date: new FormControl(item.tC_Date || item.tcdt_ddmmyyyy || ''),
-    toBH_CODE: new FormControl(item.toBH_CODE || ''),
-    toT_DKT: new FormControl(item.toT_DKT ?? 0),
-    packages: new FormControl(item.packages || ''),
-    weight: new FormControl(item.weight || ''),
-    totalInternalDocument: new FormControl(item.totalInternalDocument ?? 0),
-    vehicleNo: new FormControl(item.vehicleNo || ''),
-    toT_LOAD_PKGS:new FormControl(item.toT_LOAD_PKGS || ''),
-    toT_LOAD_ACTWT:new FormControl(item.toT_LOAD_ACTWT || ''),
-    myRouteName:new FormControl(item.myRouteName || ''),
+    TCNO: new FormControl(item.tcno || ''),
+    Manual: new FormControl(item.manual || ''),
+    TCBR: new FormControl(item.tcbr || ''),
+    TC_Date: new FormControl(item.tC_Date || item.tcdt_ddmmyyyy || ''),
+    ToBH_CODE: new FormControl(item.toBH_CODE || ''),
+    TOT_DKT: new FormControl(item.toT_DKT ?? 0),
+    Packages: new FormControl(item.packages || ''),
+    Weight: new FormControl(item.weight || ''),
+    TotalInternalDocument: new FormControl(item.totalInternalDocument ?? 0),
+    VehicleNo: new FormControl(item.vehicleNo || ''),
+    TOT_LOAD_PKGS:new FormControl(item.toT_LOAD_PKGS || ''),
+    TOT_LOAD_ACTWT:new FormControl(item.toT_LOAD_ACTWT || ''),
+    MyRouteName:new FormControl(item.myRouteName || ''),
     tcdt_ddmmyyyy:new FormControl(item.tcdt_ddmmyyyy || '')
   });
 }

@@ -67,9 +67,7 @@ constructor(
     this.getDAList();
     this.challanService.getRateTypeData()
     const type = this.docketService.loginUserList.Type;
-    this.typeName = type === '3' ? 'DRS' :
-                    type === '1' ? 'THC' :
-                    type === '2' ? 'PRS' : '';
+    this.typeName = type === '3' ? 'DRS' : type === '1' ? 'THC' : type === '2' ? 'PRS' : '';
     this.challanService.challanForm.get('isEmpty')?.valueChanges.subscribe((isEmpty: boolean) => {
     if (isEmpty) {
       this.challanService.challanForm.patchValue({
@@ -84,35 +82,6 @@ constructor(
   }
   }
 
-// calculateNetAmount() {
-//   const contractAmount = Number(this.challanService.challanForm.get('contractAmount')?.value) || 0;
-//   const telephoneCharges = Number(this.challanService.challanForm.get('telephoneCharges')?.value) || 0;
-//   const humaliCharges = Number(this.challanService.challanForm.get('humaliCharges')?.value) || 0;
-//   const mamulCharges = Number(this.challanService.challanForm.get('mamulCharges')?.value) || 0;
-  
-//   const netAmount = contractAmount + telephoneCharges + humaliCharges - mamulCharges;
-  
-//   const staxOnAmount = parseFloat(this.challanService.challanForm.get('tDSOnAmount')?.value || 0);
-//   const isTDSEnabled = this.challanService.challanForm.get('isTDSEnabled')?.value;
-//   const tdsRate = parseFloat(this.challanService.challanForm.get('TDSPercent')?.value || 0);
-//   let tdsAmount = 0;
-  
-//   if (isTDSEnabled) {
-//     tdsAmount = this.rounditn((staxOnAmount * tdsRate) / 100, 0);
-//   }
-  
-//   this.challanService.challanForm.patchValue({
-//     totalTDSAmount: tdsAmount.toFixed(2),
-//     netAmount: (netAmount - tdsAmount).toFixed(2),
-//   });
-  
-//   if(this.challanService.challanForm.value.vendorType === 'XX1'|| this.challanService.challanForm.value.vendorType ==='04'|| this.challanService.challanForm.value.vendorType ==='19'|| this.challanService.challanForm.value.vendorType ==='XX'){
-//     this.challanService.challanForm.patchValue({
-//       balanceAmount:(netAmount - tdsAmount).toFixed(2)
-//     })
-//   }
-// }
-
 calculateBalanceAmount() {
   const netAmount = Number(this.challanService.challanForm.get('netAmount')?.value) || 0;
   const advanceAmount = Number(this.challanService.challanForm.get('advanceAmount')?.value) || 0;
@@ -124,67 +93,10 @@ changeAmountApplicable(event:any){
   this.challanService.challanForm.patchValue({
        tDSOnAmount:event.target.value
   });
-
-  // this.challanService.calculateNetAmount();
-  // this.calculateSubTotal()
 }
-
-// calculateSubTotal() {
-//   const form = this.challanService.challanForm;
-
-//   let contractAmount = parseFloat(form.get('contractAmount')?.value || 0);
-//   let totalCharges = 0;
-
-//   // // Assuming challanCharges is a FormArray of charge controls
-//   // const chargesArray = form.get('charges')?.value || [];
-//   // chargesArray.forEach((charge: any) => {
-//   //   const amount = parseFloat(charge.chargeAmount || 0);
-//   //   const operator = charge.operator || '+';
-//   //   totalCharges += operator === '+' ? amount : -amount;
-//   // });
-//    const telephoneCharges = Number(this.challanService.challanForm.get('telephoneCharges')?.value) || 0;
-//   const humaliCharges = Number(this.challanService.challanForm.get('humaliCharges')?.value) || 0;
-//   const mamulCharges = Number(this.challanService.challanForm.get('mamulCharges')?.value) || 0;
-
-//   const netAmount = contractAmount + telephoneCharges + humaliCharges - mamulCharges;
-
-//   let advanceAmount = parseFloat(form.get('advanceAmount')?.value || 0);
-//   let freight = netAmount ;
-
-//   const staxOnAmount = parseFloat(form.get('tdsOnAmount')?.value || 0);
-//   const isTDSEnabled = form.get('isTDSEnabled')?.value;
-//   const tdsRate = parseFloat(form.get('tdsPercent')?.value || 0);
-//   let tdsAmount = 0;
-
-//   if (isTDSEnabled) {
-//     tdsAmount = this.rounditn((staxOnAmount * tdsRate) / 100, 0);
-//   }
-
-//   form.patchValue({
-//     totalTDSAmount: tdsAmount.toFixed(2),
-//     netAmount: (netAmount + contractAmount - tdsAmount).toFixed(2),
-//   });
-
-//   if (freight >= advanceAmount) {
-//     const balanceAmount = freight - advanceAmount - tdsAmount;
-//     form.patchValue({
-//       balanceAmount: balanceAmount.toFixed(2),
-//     });
-//   } else {
-//     console.warn('Advance amount cannot exceed Net Amount');
-//   }
-// }
-
-// Helper method
-// rounditn(value: number, digits: number): number {
-//   const multiplier = Math.pow(10, digits);
-//   return Math.round(value * multiplier) / multiplier;
-// }
 
 onDocketSelectionChange(ctrl: AbstractControl) {
   this.updateTotalDockets();
-
-  // only call API if checked
   if (ctrl.get('isSelected')?.value) {
     this.getContractDetail(ctrl);
       this.checkArrivalTime(ctrl);
@@ -219,7 +131,6 @@ checkArrivalTime(ctrl: AbstractControl) {
 updateTotalDockets() {
   const docketArray = this.challanService.challanForm.get('avalabledocketinPRS') as FormArray;
   if (!docketArray) return;
-
   let totalAmount = 0;
   let selectedCount = 0;
   let totalWeight=0;
@@ -233,10 +144,7 @@ updateTotalDockets() {
     }
   });
 
-  // update other related values
   this.challanService.updateTotalLoadingCharge();
-
-  // patch both values into the form
   this.challanService.challanForm.patchValue({
     contractAmount: totalAmount,
     totalDockets: selectedCount,
@@ -304,12 +212,9 @@ handleContractResponse(response: any) {
     this.contractAmtMsg = '';
   }
   else if (!contractExpire && contractID !== '' && THCTYPE === '2') {
-    this.contractAmtMsg = '';
+     this.contractAmtMsg = '';
   }
-  else if (contractID === '' &&
-           ( ((THCTYPE === '3' || THCTYPE === '2') && vendorType === '04') ||
-             (THCTYPE === '1' && vendorType === 'XX1') )
-  ) {
+  else if (contractID === '' && ( ((THCTYPE === '3' || THCTYPE === '2') && vendorType === '04') || (THCTYPE === '1' && vendorType === 'XX1'))) {
     this.contractAmtMsg = 'Vendor Contract not found';
   }
   else {
@@ -711,23 +616,24 @@ avalabledocketinPRS(event?:any){
   if(this.challanService.challanForm.value.vendorType!=='04' && event){
       return;
   }
-  const payload={
-    fromdt: "01 Mar 2025",
-    todt: "04 Nov 2025",
-    dttyp:  '3',
-    paybas: "ALL",
-    trn: "ALL",
-    bustyp: "ALL",
+  const data = this.docketService.loginUserList;
+  const payload = {
+    fromdt: data.fromdt,
+    todt: data.todt,
+    dttyp: data.dttyp,
+    paybas: data.paybas,
+    trn: data.trn,
+    bustyp: data.bustyp,
     status: this.challanService.challanForm.value.vendorType === '04' ? 'B' : 'P' ,
-    doctyp: this.docketService.loginUserList.Type==='2'?"PRS":"DRS",
+    doctyp: this.docketService.loginUserList.Type === '2'?"PRS":"DRS",
     baseLocationCode:this.docketService.loginUserList.LocationCode,
-    docketList: "",
-    alloted_To:this.challanService.challanForm.value.vendorType==='04'? this.challanService.challanForm.value.vendorCode:'',
-    loadingBy: "XX9",
-    chrgType: "",
-    odaType: "",
+    docketList: data.docketList,
+    alloted_To:this.challanService.challanForm.value.vendorType ==='04'? this.challanService.challanForm.value.vendorCode:'',
+    loadingBy: data.loadingBy,
+    chrgType: data.chrgType,
+    odaType: data.odaType,
     baseCompanyCode:this.docketService.loginUserList.Companycode,
-    flag: 2
+    flag: data.flag,
   }
     this.THCService.avalabledocketinPRS(payload).subscribe({
     next: (response: any) => {
@@ -808,7 +714,7 @@ updateTotalManifest(mfNo:string): void {
     const totals = this.challanService.avalableForTHC.controls.reduce((acc, g) => {
     if (g.get('selected')?.value) {
       acc.totalManifests += 1;
-      acc.totalWeight += Number(g.get('toT_LOAD_ACTWT')?.value) || 0;
+      acc.totalWeight += Number(g.get('TOT_LOAD_ACTWT')?.value) || 0;
     }
     return acc; },{ totalManifests: 0, totalWeight: 0 });
   this.challanService.challanForm.patchValue({
@@ -1031,8 +937,6 @@ getDeliveryZoneData(){
         if (response) {
           this.deliveryZoneData=response;
         }
-      },
-      error: (err) => {
       }
     });
 }

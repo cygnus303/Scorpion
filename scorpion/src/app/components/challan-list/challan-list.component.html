@@ -1076,18 +1076,18 @@
             <tbody formArrayName="avalableForTHC">
             <tr *ngFor="let item of challanService.avalableForTHC.controls; let i = index" [formGroupName]="i" class="align-middle">
                 <td>
-                    <input type="checkbox" formControlName="selected" (change)="updateTotalManifest(item.value.tcno)">
+                    <input type="checkbox" formControlName="selected" (change)="updateTotalManifest(item.value.TCNO)">
                 </td>
-                <td>{{ item.value.tcno}}</td>
-                <td>{{ item.value.manualTHCNo}}</td>
-                <td>{{ item.value.tcbr}}</td>
-                <td>{{ item.value.tC_Date }}</td>
-                <td>{{ item.value.toBH_CODE }}</td>
-                <td>{{ item.value.toT_DKT }}</td>
-                <td>{{ item.value.packages }}</td>
-                <td>{{ item.value.weight }}</td>
-                <td>{{ item.value.totalInternalDocument }}</td>
-                <td>{{ item.value.vehicleNo }}</td>
+                <td>{{ item.value.TCNO}}</td>
+                <td>{{ item.value.Manual}}</td>
+                <td>{{ item.value.TCBR}}</td>
+                <td>{{ item.value.TC_Date }}</td>
+                <td>{{ item.value.ToBH_CODE }}</td>
+                <td>{{ item.value.TOT_DKT }}</td>
+                <td>{{ item.value.Packages }}</td>
+                <td>{{ item.value.Weight }}</td>
+                <td>{{ item.value.TotalInternalDocument }}</td>
+                <td>{{ item.value.VehicleNo }}</td>
             </tr>
             
             <tr *ngIf="challanService.avalableForTHC.length === 0">

@@ -139,6 +139,17 @@ export interface BasePayload {
   DocketNo: string;
   IsFromBillGeneration: string | boolean;
   Type: string | number;
+  fromdt:string;
+  todt:string;
+  dttyp:string;
+  paybas:string;
+  trn:string;
+  bustyp:string;
+  docketList:string;
+  loadingBy:string;
+  chrgType:string;
+  odaType:string;
+  flag:number;
 }
 
 export interface StatesFromPartyCodeRepsonse {
