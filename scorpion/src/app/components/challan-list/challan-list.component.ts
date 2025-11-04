@@ -271,8 +271,8 @@ getContractDetail(ctrl?: AbstractControl) {
     vehicle: this.challanService.challanForm.value.vehicleNO || '',
     from_City: this.challanService.challanForm.value.from_City || '',
     to_City: this.challanService.challanForm.value.to_City || '',
-    paybas: docket?.PayBas || '',
-    dockno: docket?.DOCKNO || ''
+    paybas: docket?.PayBas ? docket?.PayBas :this.challanService.avalabledocket.controls[0].value.PayBas || '',
+    dockno:  docket?.DOCKNO ?  docket?.DOCKNO: this.challanService.avalabledocket.controls[0].value.DOCKNO  || '',
   };
 
   if (payload.vendorCode !== "" && payload.vendorCode !== null && (payload.paybas === undefined || payload.paybas === "" || (this.docketService.loginUserList.Type === "2" && this.challanService.challanForm.value.vendorTyp === '04'))) {

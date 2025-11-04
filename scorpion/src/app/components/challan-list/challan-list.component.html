@@ -242,7 +242,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">From City</label>
                         <div class="col-sm-7">
-                            <ng-select class="required2" placeholder="From City" formControlName="from_City" (change)="getContractDetail()">
+                            <ng-select class="required2" placeholder="From City" formControlName="from_City">
                                 <ng-option *ngFor="let item of challanService.cityList" [value]="item.city_code">
                                     <strong>{{ item.location }}</strong> : {{ item.location }}
                                 </ng-option>
@@ -254,7 +254,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">To City</label>
                         <div class="col-sm-7">
-                            <ng-select class="required2" placeholder="To City" formControlName="to_City" (change)="getContractDetail()">
+                            <ng-select class="required2" placeholder="To City" formControlName="to_City">
                                 <ng-option *ngFor="let item of challanService.cityList" [value]="item.city_code">
                                     <strong>{{ item.location }}</strong> : {{ item.location }}
                                 </ng-option>
