@@ -222,12 +222,14 @@ updateTotalDockets() {
 
   let totalAmount = 0;
   let selectedCount = 0;
+  let totalWeight=0;
   docketArray.controls.forEach(control => {
      const hasMessage = !!(control.get('Message')?.value || control.value?.Message);
     const isSelected = !!control.get('isSelected')?.value;
     if (!hasMessage && isSelected) {
       selectedCount++;
       totalAmount += Number(control.get('ContractAmount')?.value) || 0;
+      totalWeight += Number(control.get('ArrWeightQty')?.value) || 0;
     }
   });
 
@@ -238,7 +240,8 @@ updateTotalDockets() {
   this.challanService.challanForm.patchValue({
     contractAmount: totalAmount,
     totalDockets: selectedCount,
-    tDSOnAmount:totalAmount
+    tDSOnAmount:totalAmount,
+    wtLoaded:totalWeight
   });
   this.challanService.calculateNetAmount();
 }
@@ -275,7 +278,7 @@ getContractDetail(ctrl?: AbstractControl) {
     dockno:  docket?.DOCKNO ?  docket?.DOCKNO: this.challanService.avalabledocket.controls[0].value.DOCKNO  || '',
   };
 
-  if (payload.vendorCode !== "" && payload.vendorCode !== null && (payload.paybas === undefined || payload.paybas === "" || (this.docketService.loginUserList.Type === "2" && this.challanService.challanForm.value.vendorTyp === '04'))) {
+  if (payload.vendorCode !== "" && payload.vendorCode !== null && (payload.paybas === undefined || payload.paybas === "" || (this.docketService.loginUserList.Type === "2" && this.challanService.challanForm.value.vendorType === '04'))) {
     this.THCService.getContractData(payload).subscribe({
       next: (response: any) => {
         if (response && response.data) {
@@ -704,7 +707,7 @@ avalabledocketinPRS(event?:any){
   const payload={
     fromdt: "01 Mar 2025",
     todt: "04 Nov 2025",
-    dttyp:  this.docketService.loginUserList.Type,
+    dttyp:  "3",
     paybas: "ALL",
     trn: "ALL",
     bustyp: "ALL",
@@ -794,6 +797,7 @@ updateTotalManifest(mfNo:string): void {
         this.sweetAlertService.error(err.error.message)
       }
     });
+   
     const totals = this.challanService.avalableForTHC.controls.reduce((acc, g) => {
     if (g.get('selected')?.value) {
       acc.totalManifests += 1;
