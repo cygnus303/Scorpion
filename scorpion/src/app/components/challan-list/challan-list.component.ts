@@ -181,10 +181,10 @@ getContractDetail(ctrl?: AbstractControl) {
     routeMODE: this.challanService.challanForm.value.routeType || '',
     ftL_Type: this.challanService.challanForm.value.fTLType || '',
     vehicle: this.challanService.challanForm.value.vehicleNO || '',
-    from_City: this.challanService.challanForm.value.from_City || '',
-    to_City: this.challanService.challanForm.value.to_City || '',
-    paybas: docket?.PayBas ? docket?.PayBas :this.challanService.avalabledocket.controls[0]?.value.PayBas || '',
-    dockno:  docket?.DOCKNO ?  docket?.DOCKNO: this.challanService.avalabledocket.controls[0]?.value.DOCKNO  || '',
+    from_City: this.challanService.challanForm.value.FROMCITY || '',
+    to_City: this.challanService.challanForm.value.TOCITY || '',
+    paybas: docket?.PayBas ? docket?.PayBas :this.challanService.avalabledocket.controls[0]?.value?.PayBas || '',
+    dockno:  docket?.DOCKNO ?  docket?.DOCKNO: this.challanService.avalabledocket.controls[0]?.value?.DOCKNO  || '',
   };
   if (payload.vendorCode !== "" && payload.vendorCode !== null && (payload.paybas === undefined || payload.paybas === "" || (this.docketService.loginUserList.Type === "2" && this.challanService.challanForm.value.vendorType === '04'))) {
     this.THCService.getContractData(payload).subscribe({
@@ -550,6 +550,7 @@ getNewVehicleDetail(vehicleNo:string){
           //   typeCode: response.data.vehicle_Type,
           //   type_Name: response.data.type_Name
           // }];
+            this.getContractDetail();
           if(this.challanService.challanForm.value==='XX4'||this.challanService.challanForm.value==='XX1'){
             this.GetVehicleTypesForChallanFromRouteVendType()
           }else{
