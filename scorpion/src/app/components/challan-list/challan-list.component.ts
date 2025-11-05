@@ -41,6 +41,7 @@ public previewUrl: string | ArrayBuffer | null = null;
 public contractAmtMsg:string='';
 public contractExpiredMsg:string='';
 public deliveryZoneData:DeliveryZoneResponse[]=[];
+public isVehicleType:boolean = false;
 
 @ViewChild('fileInput') fileInput!: ElementRef;
 constructor(
@@ -93,6 +94,7 @@ changeAmountApplicable(event:any){
   this.challanService.challanForm.patchValue({
        tDSOnAmount:event.target.value
   });
+  this.challanService.calculateNetAmount()
 }
 
 onDocketSelectionChange(ctrl: AbstractControl) {
@@ -151,7 +153,27 @@ updateTotalDockets() {
     tDSOnAmount:totalAmount,
     wtLoaded:totalWeight
   });
+    const vehicleCapacity = this.challanService.challanForm.value.vehicleCapacity;
+    const weightLoaded = this.challanService.challanForm.value.wtLoaded;
+    if (vehicleCapacity && weightLoaded) {
+      const utilization = (weightLoaded / (vehicleCapacity * 1000)) * 100;
+      const roundedUtilization = Number(utilization.toFixed(2));
+
+      this.challanService.challanForm.patchValue({
+        vehicleCapacityUti: roundedUtilization
+      });
+    } else {
+      this.challanService.challanForm.patchValue({
+        vehicleCapacityUti: 0
+      });
+    }
+    if(this.challanService.challanForm.value.wtLoaded >  vehicleCapacity){
+      this.challanService.challanForm.patchValue({
+        isOverLoad:true
+      })
+    }
   this.challanService.calculateNetAmount();
+
 }
 
   toggleSelectAll(event: Event) {
@@ -190,11 +212,18 @@ getContractDetail(ctrl?: AbstractControl) {
     this.THCService.getContractData(payload).subscribe({
       next: (response: any) => {
         if (response && response.data) {
+
         this.handleContractResponse(response)
+      if(!response.data.contractExpire && !response.data.ContractID && this.docketService.loginUserList.Type!=='2'){
+        if(this.docketService.loginUserList.Type==='1'){
+          this.challanService.challanForm.patchValue({
+                contractAmount:response.data.contractAmount
+              })
+        }
         this.challanService.challanForm.patchValue({
-          contractAmount:response.data.contractAmount,
           standardContractAmount:response.data.standardContractAmount
         })
+      }
         }
       },
       error: (err) => {
@@ -322,7 +351,7 @@ vendorCodeName(){
           this.challanService.challanForm.patchValue({
             driver1Name:response.data.bioFullName, 
             driver1RTONo: response.data.omRtoFullname || '',
-            driver1LicenceValDate: response.data.validTillDate || ''
+            driver1LicenceValDate: new Date(response.data.validTillDate) || ''
           });
         }
       },
@@ -346,6 +375,7 @@ vendorCodeName(){
     //     this.sweetAlertService.error(err.error.message)
     //   }
     // });
+    this.isVehicleType=false;
   if(event.value !== 'O'){
   this.getNewVehicleDetail(event.value)
   }else{
@@ -360,7 +390,9 @@ vendorCodeName(){
       insuranceDate :'',
       fitnessDate :'',
      });
-    //  this.getVehicleType(event.value)
+       if(event.value == 'O'){
+     this.getVehicleType(event.value)
+       }
   }
   this.checkPermitExpiry();
   this.checkInsuranceExpiry();
@@ -854,6 +886,7 @@ getAirportDetail(){
 }
 
 onChangeVehicleType(event:any){
+  this.isVehicleType=true;
     this.getVehicleCapacity(event.typeCode);
     this.challanService.challanForm.patchValue({
       fTLType:event.typeCode

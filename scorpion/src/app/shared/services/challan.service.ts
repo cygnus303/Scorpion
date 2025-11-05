@@ -26,6 +26,7 @@ public TDSLedgerData:VehicleTyperesponse[]=[];
 public rateTypeData:generalMasterResponse[]=[];
 public chargesDetailsList:ChargesResponse[]=[];
 public selectedFile: File | null = null;
+public isSubmitting:boolean = false;
 
 constructor(
   private basicDetailService: BasicDetailService,
@@ -309,9 +310,6 @@ nextDay.setDate(today.getDate() + 1);
     TotalManifest:new FormControl(0, isType1 ? [Validators.required, Validators.min(1)] : null),
     routeCode:new FormControl(null, isType1 ? Validators.required : null),
     customerName:new FormControl(),
-
-
-     GC_LoadingBy:new FormControl(''),
   });
 }
 
@@ -418,7 +416,7 @@ patchAvailableDockets(data: any[]) {
 }
 
 validateRate(group: FormGroup): boolean {
-  const loadingBy = this.challanForm.get('GC_LoadingBy')?.value;
+  const loadingBy = this.docketService.loginUserList.loadingBy;
   if (loadingBy === 'XX9') {
     group.get('rateError')?.setValue('');
     return true; // no validation when XX9
@@ -896,6 +894,7 @@ onSubmit(){
    formData.append("BaseUserName", this.docketService.loginUserList.BaseUserName);
    formData.append("BaseUserType", '1');
    formData.append("BaseLocationCode", this.docketService.loginUserList.LocationCode);
+
       if (!this.challanForm.valid) {
       const invalidKeys = Object.keys(this.challanForm.controls).filter(key => 
         this.challanForm.get(key)?.invalid
@@ -905,6 +904,7 @@ onSubmit(){
     }
 
   if(this.challanForm.valid){
+    this.isSubmitting = true;
     this.THCService.challanSubmit(formData).subscribe({next: (response:any) => {
         if (response && response.data) {
           //  this.sweetAlertService.success(response.data.doctyp +' '+ 'Document ' +  response.data.docno +' '+ response.data.tranXaction)
@@ -912,9 +912,11 @@ onSubmit(){
           window.parent.location.href = `${this.env.liveUrl}Operation/ChallanDone?DOCNO=${response.data.docno}&DOCTYP=${response.data.doctyp}&TranXaction=${response.data.tranXaction}&IsError=${response.data.isError}&src=angular`;
 
         }
+        this.isSubmitting=false;
       },error: (error) => {
           window.scrollTo({ top: 0, behavior: 'smooth' });
          this.sweetAlertService.error(error?.error?.message);
+        this.isSubmitting=false;
         }
     })
   }else{

@@ -242,7 +242,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">From City</label>
                         <div class="col-sm-7">
-                            <ng-select class="required2" placeholder="From City" formControlName="from_City">
+                            <ng-select placeholder="From City" formControlName="from_City">
                                 <ng-option *ngFor="let item of challanService.cityList" [value]="item.city_code">
                                     <strong>{{ item.location }}</strong> : {{ item.location }}
                                 </ng-option>
@@ -254,7 +254,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">To City</label>
                         <div class="col-sm-7">
-                            <ng-select class="required2" placeholder="To City" formControlName="to_City">
+                            <ng-select  placeholder="To City" formControlName="to_City">
                                 <ng-option *ngFor="let item of challanService.cityList" [value]="item.city_code">
                                     <strong>{{ item.location }}</strong> : {{ item.location }}
                                 </ng-option>
@@ -452,10 +452,13 @@
             <div class="col-4">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">FTL Type</label>
-                    <div class="col-sm-7">
-                        <!-- <input class="form-control" type="text" placeholder="FTL Type"> -->
+                    <div class="col-sm-7" *ngIf="!isVehicleType">
                           <ng-select class="noFoundTextColor" placeholder="FTL Type" formControlName="fTLType" readonly
                             notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" [items]="docketService.typeofMovementList"></ng-select>
+                        </div>
+                    <div class="col-sm-7"  *ngIf="isVehicleType">
+                        <ng-select class="noFoundTextColor" placeholder="FTL Type" formControlName="fTLType" readonly
+                        notFoundText="No matches found"  bindLabel="type_Name" bindValue="typeCode" [items]="vehicleTypeList"></ng-select>
                     </div>
                 </div>
             </div>
@@ -643,7 +646,7 @@
                             <div class="input-group">
                                 <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"
                                     #lv="bsDatepicker" bsDatepicker formControlName="driver1LicenceValDate"  (bsValueChange)="checkLicenseExpiry($event)"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}" readonly
                                     required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1LicenceValDate')?.invalid  && challanService.challanForm.get('driver1LicenceValDate')?.touched || isLicenseExpired}">
                                 <span class="input-group-text cursor-pointer" (click)="lv.toggle()">
                                     <i class="fa fa-calendar"></i>
@@ -1282,8 +1285,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Balance Amount</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" [value]="0" formControlName="balanceAmount" [readonly]="this.docketService.loginUserList.Type === '1'">
-                          
+                        <input class="form-control" type="text" [value]="0" formControlName="balanceAmount" [readonly]="this.docketService.loginUserList.Type === '1' && challanService.challanForm.value.vendorType==='XX4'">    
                     </div>
                 </div>
             </div>
@@ -1306,10 +1308,16 @@
         <button class="btn btn-secondary me-2">
             <i class="bi bi-arrow-counterclockwise"></i> Reset
         </button>
-        <button class="btn btn-success" (click)="challanService.onSubmit()">
+        <button class="btn btn-success" (click)="challanService.onSubmit()" [disabled]="challanService.isSubmitting">
             <i class="bi bi-check-circle"></i> Submit
         </button>
     </div>
+    <div *ngIf="!challanService.isSubmitting" class="loading-overlay">
+  <div class="spinner-container">
+    <i class="fas fa-spinner fa-spin custom-spinner"></i>
+    <div class="mt-3 custom-text">Submitting...</div>
+  </div>
+</div>
 
 
   
