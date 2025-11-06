@@ -483,7 +483,7 @@ getPANnumberData(event:any){
     if(this.challanService.challanForm.value.vendorType==='XX4'||this.challanService.challanForm.value.vendorType==='XX1'){
       this.GetVehicleTypesForChallanFromRouteVendType()
     }else{
-      this.getVehicleType(event.vendor_Code)
+      this.getVehicleType('O')
     }
     if (this.challanService.challanForm.value.vendorType === '04') {
         this.avalabledocketinPRS(event.vendor_Code);
@@ -603,7 +603,7 @@ getNewVehicleDetail(vehicleNo:string){
           if(this.challanService.challanForm.value==='XX4'||this.challanService.challanForm.value==='XX1'){
             this.GetVehicleTypesForChallanFromRouteVendType()
           }else{
-            this.getVehicleType(vehicleNo)
+            this.getVehicleType('O')
           }
           this.getVehicleCapacity(response.data.vehicle_Type)
         }
