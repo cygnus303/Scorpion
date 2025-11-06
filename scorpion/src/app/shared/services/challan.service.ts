@@ -543,7 +543,7 @@ onSubmit(){
     PKDLYType:"",
     RouteCode:challanForm?.routeCode,
     RouteName:challanForm?.routeName,
-    VehicleNO:challanForm?.vehicleNO,
+    VehicleNO:challanForm?.vehicleNO?challanForm?.vehicleNO:'O',
     IsMarketVehicle:true,
     IsExtraVehicle:true,
     OpenKM:Number(challanForm?.openKM),
@@ -790,7 +790,7 @@ onSubmit(){
     "CTVD":{
       THCNO:"N/A",
       THCSF:"0",
-      VehicleNO:challanForm?.vehicleNO,
+      VehicleNO:challanForm?.vehicleNO?challanForm?.vehicleNO:'O',
       VehicleType:challanForm?.vehicleType,
       FTLType:challanForm?.fTLType,
       VehicleCapacity:challanForm?.vehicleCapacity?challanForm?.vehicleCapacity:'0',

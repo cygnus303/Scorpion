@@ -27,7 +27,7 @@ export class AppComponent {
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       
-      this.docketService.loginUserList.Type = '2'
+      this.docketService.loginUserList.Type = '3'
       this.docketService.loginUserList.fromdt = "01 Mar 2025",
       this.docketService.loginUserList.todt= "05 Nov 2025",
       this.docketService.loginUserList.dttyp= '3',
@@ -39,7 +39,7 @@ export class AppComponent {
       this.docketService.loginUserList.chrgType= "";
       this.docketService.loginUserList.odaType= "";
       this.docketService.loginUserList.flag= 2;
-      this.docketService.loginUserList.LocationCode =  'TBH';
+      this.docketService.loginUserList.LocationCode =  'PAT';
 
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.isComplition = false;
