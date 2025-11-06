@@ -150,6 +150,8 @@ export interface BasePayload {
   chrgType:string;
   odaType:string;
   flag:number;
+  BookedByType:string;
+  BookedBy:string;
 }
 
 export interface StatesFromPartyCodeRepsonse {

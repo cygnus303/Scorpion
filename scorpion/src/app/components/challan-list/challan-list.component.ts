@@ -78,9 +78,23 @@ constructor(
     }
   });
 
-  if(this.docketService.loginUserList.Type==='3'){
+  if(this.docketService.loginUserList.Type ==='3'){
     this.getDeliveryZoneData()
   }
+
+  setTimeout(() => {
+    if (this.docketService.loginUserList.BookedByType === "B") {
+      this.challanService.challanForm.patchValue({
+        vendorType: this.challanService.vendtyData?.find((v: any) => v.codeId === "04")?.codeId || ''
+      });
+      this.challanService.getVendorsList(this.challanService.challanForm.value.vendorType);
+    }
+    
+      if(this.docketService.loginUserList.BookedBy){
+          this.challanService.challanForm.patchValue({vendorCode:this.docketService.loginUserList.BookedBy})
+      }
+  }, 300);
+
   }
 
 calculateBalanceAmount() {
@@ -362,7 +376,7 @@ vendorCodeName(){
     });
   }
 
-  getTripSheetList(event:any){
+  getTripSheetList(event: any) {
     // this.THCService.getTripSheet(event.value).subscribe({
     //   next: (response: any) => {
     //     if (response && response.data) {
@@ -375,30 +389,33 @@ vendorCodeName(){
     //     this.sweetAlertService.error(err.error.message)
     //   }
     // });
-    this.isVehicleType=false;
-  if(event.value !== 'O'){
-  this.getNewVehicleDetail(event.value)
-  }else{
-     this.challanService.challanForm.patchValue({
-      vehicleType :'',
-      fTLType :'',
-      registrationDate :'',
-      eNGINENO :'',
-      cHASISNO :'',
-      rCBOOKNO :'',
-      permitDate :'',
-      insuranceDate :'',
-      fitnessDate :'',
-     });
-       if(event.value == 'O'){
-     this.getVehicleType(event.value)
-       }
+    this.challanService.challanForm.patchValue({
+      mKTVehicleNo: '',
+    });
+    this.isVehicleType = false;
+    if (event.value !== 'O') {
+      this.getNewVehicleDetail(event.value)
+    } else {
+      this.challanService.challanForm.patchValue({
+        vehicleType: '',
+        fTLType: '',
+        registrationDate: '',
+        eNGINENO: '',
+        cHASISNO: '',
+        rCBOOKNO: '',
+        permitDate: '',
+        insuranceDate: '',
+        fitnessDate: '',
+      });
+      if (event.value === 'O') {
+        this.getVehicleType(event.value)
+      }
+    }
+    this.checkPermitExpiry();
+    this.checkInsuranceExpiry();
+    this.checkFitnessExpiry();
+    this.checkLicenseExpiry()
   }
-  this.checkPermitExpiry();
-  this.checkInsuranceExpiry();
-  this.checkFitnessExpiry();
-  this.checkLicenseExpiry()
-}
 
 getVehicleCapacity(id:string){
   this.THCService.getVahicleCapacity(id).subscribe({

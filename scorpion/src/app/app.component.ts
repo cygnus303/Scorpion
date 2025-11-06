@@ -31,15 +31,17 @@ export class AppComponent {
       this.docketService.loginUserList.fromdt = "01 Mar 2025",
       this.docketService.loginUserList.todt= "05 Nov 2025",
       this.docketService.loginUserList.dttyp= '3',
-      this.docketService.loginUserList.paybas= "ALL",
-      this.docketService.loginUserList.trn= "ALL",
-      this.docketService.loginUserList.bustyp= "ALL",
+      this.docketService.loginUserList.paybas= "P02",
+      this.docketService.loginUserList.trn= "1",
+      this.docketService.loginUserList.bustyp= "6",
       this.docketService.loginUserList.docketList= "",
       this.docketService.loginUserList.loadingBy= "XX9",
-      this.docketService.loginUserList.chrgType= "";
+      this.docketService.loginUserList.chrgType= "1";
       this.docketService.loginUserList.odaType= "";
       this.docketService.loginUserList.flag= 2;
-      this.docketService.loginUserList.LocationCode =  'TBH';
+      this.docketService.loginUserList.LocationCode =  'PAT';
+      this.docketService.loginUserList.BookedByType = "B";
+      this.docketService.loginUserList.BookedBy =  'V09778';
 
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.isComplition = false;

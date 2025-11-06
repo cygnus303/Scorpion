@@ -47,7 +47,7 @@ constructor(
 
    getVendorsList(event:any) {
     const data = {
-     vendorType:event.codeId,
+     vendorType:event?.codeId ? event?.codeId:event,
      branchCode:this.docketService.loginUserList.LocationCode,
      userName: this.docketService.loginUserList.BaseUserName,
      documentType:this.docketService.loginUserList.Type

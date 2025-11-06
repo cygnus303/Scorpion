@@ -159,7 +159,7 @@
                         <label class="col-sm-5 col-form-label text-end">Vendor Type</label>
                         <div class="col-sm-7">
                             <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Type" formControlName="vendorType" required [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorType')?.invalid  && challanService.challanForm.get('vendorType')?.touched }"
-                                notFoundText="No matches found" [items]="challanService.vendtyData" bindLabel="codeDesc" bindValue="codeId" (change)="challanService.getVendorsList($event);vendorCodeName()"></ng-select>
+                                notFoundText="No matches found" [items]="challanService.vendtyData" bindLabel="codeDesc" [readonly]="this.docketService.loginUserList.BookedByType === 'B'" bindValue="codeId" (change)="challanService.getVendorsList($event);vendorCodeName()"></ng-select>
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vendorType')?.invalid && challanService.challanForm.get('vendorType')?.touched "> This field is required.</div>
                         </div>
                     </div>
@@ -169,7 +169,7 @@
                         <label class="col-sm-5 col-form-label text-end">Vendor Code/Name</label>
                         <div class="col-sm-7">
                              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name" formControlName="vendorCode" 
-                             [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code"
+                             [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code" [readonly]="this.docketService.loginUserList.BookedByType === 'B'"
                               required [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorCode')?.invalid  && challanService.challanForm.get('vendorCode')?.touched }"
                              (change)="getPANnumberData($event)"
                              ></ng-select>
@@ -913,7 +913,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="this.docketService.loginUserList.Type !== '1'">
+    <div *ngIf="this.docketService.loginUserList.Type !== '1' && this.docketService.loginUserList.loadingBy === 'XX9'">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Loading Charges</h3>
         <div class="row pb-3">
             <div class="col-4">
@@ -1312,7 +1312,7 @@
             <i class="bi bi-check-circle"></i> Submit
         </button>
     </div>
-    <div *ngIf="!challanService.isSubmitting" class="loading-overlay">
+    <div *ngIf="challanService.isSubmitting" class="loading-overlay">
   <div class="spinner-container">
     <i class="fas fa-spinner fa-spin custom-spinner"></i>
     <div class="mt-3 custom-text">Submitting...</div>
