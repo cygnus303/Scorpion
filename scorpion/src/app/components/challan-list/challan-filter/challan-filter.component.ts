@@ -6,6 +6,7 @@ import { GeneralMasterService } from 'app/shared/services/general-master.service
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DecryptService } from 'app/shared/services/decryptservice ';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'challan-filter',
@@ -32,25 +33,37 @@ constructor(
   private router: Router,
 ){}
 
-    ngOnInit(){
-      this.challanService.SearchfilterForm()
-      this.generalMasterService.getPaybsData();
-      this.generalMasterService.getModeData();
-      this.generalMasterService.getBusinessTypeData();
-      this.generalMasterService.getLoadingByDetail();
-      this.generalMasterService.getChargeTypeData();
-      this.getBookedByData()
-    }
+  ngOnInit() {
+    this.challanService.SearchfilterForm()
+    this.generalMasterService.getPaybsData();
+    this.generalMasterService.getModeData();
+    this.generalMasterService.getBusinessTypeData();
+    this.generalMasterService.getLoadingByDetail();
+    this.generalMasterService.getChargeTypeData();
+    this.getBookedByData();
+    this.challanService.filterForm.get('loadingBy')?.valueChanges.subscribe((value) => {
+      const chargeTypeControl = this.challanService.filterForm.get('chargeType');
 
-    getBookedByData(){
-      this.THCMasterService.getGetBookedBy(this.docketService.loginUserList.LocationCode,this.docketService.loginUserList.BaseUserName).subscribe({
+      if (value !== 'XX9') {
+        chargeTypeControl?.setValidators([Validators.required]);
+      } else {
+        chargeTypeControl?.clearValidators();
+        chargeTypeControl?.setValue(null); // optional: clear value when not required
+      }
+
+      chargeTypeControl?.updateValueAndValidity();
+    });
+  }
+
+  getBookedByData() {
+    this.THCMasterService.getGetBookedBy(this.docketService.loginUserList.LocationCode, this.docketService.loginUserList.BaseUserName).subscribe({
       next: (response) => {
         if (response) {
           this.bookByData = response;
         }
       }
     });
-    }
+  }
 
   onSearch() {
     this.router.navigate(
