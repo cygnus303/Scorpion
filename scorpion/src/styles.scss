@@ -535,3 +535,7 @@ input[readonly] {
   border-radius: 10px;
   object-fit: cover;
 }
+
+.remove-white-space .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+  white-space: normal;
+}
