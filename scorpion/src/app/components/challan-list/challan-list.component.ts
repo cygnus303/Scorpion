@@ -56,10 +56,7 @@ constructor(
     this.challanService.buildForm();
     this.challanService.getChargesDetails();
     this.challanService.getVendtyData();
-    if(this.docketService.loginUserList.Type !== '1'){
-      this.challanService.getCityList();
-      this.avalabledocketinPRS()
-    }
+
     this.docketService.getTypeofMovementData();
     this.challanService.getRouteMode();
     this.challanService.getDepartmentReason();
@@ -77,6 +74,11 @@ constructor(
       });
     }
   });
+  
+    if(this.docketService.loginUserList.Type !== '1'){
+      this.challanService.getCityList();
+      this.avalabledocketinPRS()
+    }
 
   if(this.docketService.loginUserList.Type ==='3'){
     this.getDeliveryZoneData()
@@ -670,7 +672,8 @@ avalabledocketinPRS(event?:any){
   if(this.challanService.challanForm.value.vendorType!=='04' && event){
       return;
   }
-  const data = this.docketService.loginUserList;
+  debugger
+  const data = this.challanService.filterForm.value;
   const payload = {
     fromdt: data.fromdt,
     todt: data.todt,
