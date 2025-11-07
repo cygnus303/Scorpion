@@ -39,10 +39,10 @@ constructor(
     this.generalMasterService.getBusinessTypeData();
     this.generalMasterService.getLoadingByDetail();
     this.generalMasterService.getChargeTypeData();
-    this.getBookedByData();
+    this.getBookedByData('P');
+    this.challanService.filterForm.patchValue({BookedByType:'P'})
     this.challanService.filterForm.get('loadingBy')?.valueChanges.subscribe((value) => {
       const chargeTypeControl = this.challanService.filterForm.get('chargeType');
-
       if (value !== 'XX9') {
         chargeTypeControl?.setValidators([Validators.required]);
       } else {
@@ -54,8 +54,8 @@ constructor(
     });
   }
 
-  getBookedByData() {
-    this.THCMasterService.getGetBookedBy(this.docketService.loginUserList.LocationCode, this.docketService.loginUserList.BaseUserName).subscribe({
+  getBookedByData(id:string) {
+    this.THCMasterService.getGetBookedBy(id,this.docketService.loginUserList.LocationCode, this.docketService.loginUserList.BaseUserName).subscribe({
       next: (response) => {
         if (response) {
           this.bookByData = response;

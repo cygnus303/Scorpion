@@ -121,8 +121,8 @@ export class THCMasterService {
     return this.apiHandlerService.Get(`THC/GetGeneralMasterDetails?codeType=${codeType}`);
   }
 
-  getGetBookedBy(locationCode:string,username:string){
-    return this.apiHandlerService.Get(`THC/GetBookedBy?id=${'P'}&location=${locationCode}&username=${username}`);
+  getGetBookedBy(id:string,locationCode:string,username:string){
+    return this.apiHandlerService.Get(`THC/GetBookedBy?id=${id}&location=${locationCode}&username=${username}`);
   }
 
 }
