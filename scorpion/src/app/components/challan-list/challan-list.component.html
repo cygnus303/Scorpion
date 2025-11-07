@@ -159,7 +159,7 @@
                         <label class="col-sm-5 col-form-label text-end">Vendor Type</label>
                         <div class="col-sm-7">
                             <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Type" formControlName="vendorType" required [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorType')?.invalid  && challanService.challanForm.get('vendorType')?.touched }"
-                                notFoundText="No matches found" [items]="challanService.vendtyData" bindLabel="codeDesc" [readonly]="this.challanService.filterForm?.value?.BookedByType === 'B'" bindValue="codeId" (change)="challanService.getVendorsList($event);vendorCodeName()"></ng-select>
+                                notFoundText="No matches found" [items]="challanService.vendtyData" bindLabel="codeDesc" [readonly]="this.challanService.filterList?.BookedByType === 'B'" bindValue="codeId" (change)="challanService.getVendorsList($event);vendorCodeName()"></ng-select>
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vendorType')?.invalid && challanService.challanForm.get('vendorType')?.touched "> This field is required.</div>
                         </div>
                     </div>
@@ -169,7 +169,7 @@
                         <label class="col-sm-5 col-form-label text-end">Vendor Code/Name</label>
                         <div class="col-sm-7">
                              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name" formControlName="vendorCode" 
-                             [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code" [readonly]="this.challanService.filterForm?.value?.BookedByType === 'B'"
+                             [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code" [readonly]="this.challanService.filterList?.BookedByType === 'B'"
                               required [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorCode')?.invalid  && challanService.challanForm.get('vendorCode')?.touched }"
                              (change)="getPANnumberData($event)"
                              ></ng-select>

@@ -28,7 +28,7 @@ public chargesDetailsList:ChargesResponse[]=[];
 public selectedFile: File | null = null;
 public isSubmitting:boolean = false;
 public filterForm!:FormGroup;
-
+public filterList:any;
 
 constructor(
   private basicDetailService: BasicDetailService,
@@ -229,20 +229,11 @@ SearchfilterForm(){
     chrgType:new FormControl(),
     odaType:new FormControl(),
     flag:new FormControl(2),
-    LocationCode:new FormControl(),
-    BookedByType:new FormControl(),
-    BookedBy:new FormControl(),
-
+    LocationCode:new FormControl(''),
+    BookedByType:new FormControl(''),
+    BookedBy:new FormControl(''),
 
     dateRange:new FormControl(),
-    // paybas:new FormControl(),
-    // mode:new FormControl(),
-    // businessType:new FormControl(),
-    // loadingBy:new FormControl(),
-    // chargeType:new FormControl(),
-    // bookedType:new FormControl(),
-    // bookedBy:new FormControl(),
-    // cnoteNo:new FormControl()
   })
 }
 

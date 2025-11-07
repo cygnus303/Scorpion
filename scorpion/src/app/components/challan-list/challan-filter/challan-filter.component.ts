@@ -5,7 +5,6 @@ import { DocketService } from 'app/shared/services/docket.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DecryptService } from 'app/shared/services/decryptservice ';
 import { Validators } from '@angular/forms';
 
 @Component({
@@ -65,9 +64,20 @@ constructor(
     });
   }
 
-  onSearch() {
+onSearch() {
+  if (this.challanService.filterForm.valid) {
     this.router.navigate(
       ['Operation/ChallanList'],
-      { queryParams: { data: this.route.snapshot.queryParams['data'] } });
+      {
+        queryParams: {
+          data: this.route.snapshot.queryParams['data'],
+          start: JSON.stringify(this.challanService.filterForm.value) // must stringify
+        }
+      }
+    );
+  } else {
+    this.challanService.filterForm.markAllAsTouched();
   }
+}
+
 }

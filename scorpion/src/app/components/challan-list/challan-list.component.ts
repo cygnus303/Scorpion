@@ -1,5 +1,6 @@
 import {Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray} from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { generalMasterResponse, StatesFromPartyCodeRepsonse } from 'app/shared/models/general-master.model';
 import { AirportListResponse, AllCityByLocationResponse, CustomerListResponse, DeliveryZoneResponse, FlightsListResponse, VehicleTypeListResponse } from 'app/shared/models/thc-master.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
@@ -51,9 +52,27 @@ constructor(
   public sweetAlertService:SweetAlertService,
   private deliveryAgentService:DeliveryAgentService,
   public THCService:THCMasterService,
-){}
+   private route: ActivatedRoute, 
+){
+   this.challanService.buildForm();
+  this.route.queryParams.subscribe(params => {
+    if (params['start']) {
+      const formValues = JSON.parse(params['start']);
+      this.challanService.filterList = formValues;
+      if (this.challanService.filterList.BookedByType === "B") {
+      this.challanService.challanForm.patchValue({
+        vendorType: this.challanService.vendtyData?.find((v: any) => v.codeId === "04")?.codeId || ''
+      });
+      this.challanService.getVendorsList(this.challanService.filterList.vendorType);
+    }
+    
+      if(this.challanService.filterList.BookedBy){
+          this.challanService.challanForm.patchValue({vendorCode:this.challanService.filterList.BookedBy})
+      }
+    }
+  });
+}
  ngOnInit(){
-    this.challanService.buildForm();
     this.challanService.getChargesDetails();
     this.challanService.getVendtyData();
 
@@ -83,20 +102,6 @@ constructor(
   if(this.docketService.loginUserList.Type ==='3'){
     this.getDeliveryZoneData()
   }
-
-  setTimeout(() => {
-    if (this.challanService.challanForm.value.BookedByType === "B") {
-      this.challanService.challanForm.patchValue({
-        vendorType: this.challanService.vendtyData?.find((v: any) => v.codeId === "04")?.codeId || ''
-      });
-      this.challanService.getVendorsList(this.challanService.challanForm.value.vendorType);
-    }
-    
-      if(this.challanService.challanForm.value.BookedBy){
-          this.challanService.challanForm.patchValue({vendorCode:this.challanService.challanForm.value.BookedBy})
-      }
-  }, 300);
-
   }
 
 calculateBalanceAmount() {
@@ -680,11 +685,11 @@ avalabledocketinPRS(event?:any){
   if(this.challanService.challanForm.value?.vendorType!=='04' && event){
       return;
   }
-  const data = this.challanService.filterForm?.value;
+  const data = this.challanService.filterList;
   const payload = {
     fromdt: this.formatDate(data?.fromdt),
     todt: this.formatDate(data?.todt),
-    dttyp: data.dttyp,
+    dttyp: data.dttyp ? data.dttyp :'',
     paybas: data.paybas? data.paybas:'ALL',
     trn: data.trn?data.trn:'ALL',
     bustyp: data.bustyp?data.bustyp:'ALL',
