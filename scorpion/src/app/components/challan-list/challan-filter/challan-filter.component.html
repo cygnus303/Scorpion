@@ -1,4 +1,3 @@
-
    <div class="d-flex row col-md-10">
          <div class="cnote-entry-container px-1 ">
             <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
@@ -9,7 +8,7 @@
             <div class="form-grid p-4">
                      <div class="row align-items-center mb-3">
                     <div class="col-md-3 text-start">
-                        <input type="text" class="form-control required2" placeholder="Select Paybas">
+                        <input type="text" class="form-control required2 clear-icon" placeholder="Select Paybas">
                     </div>
                     <div class="col-md-5">
                         <div class="input-group shadow-sm rounded "><span class="input-group-text bg-white border-end-0 p-2">
@@ -26,7 +25,7 @@
                             Select Paybas
                         </label>
                     <div class="col-md-5">
-                          <ng-select class="noFoundTextColor required2" placeholder="Select Paybas"
+                          <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Paybas"
                                 formControlName="paybas" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.PayBsData">
                             </ng-select>
                     </div>
@@ -37,7 +36,7 @@
                             Select Mode
                         </label>
                     <div class="col-md-5">
-                       <ng-select class="noFoundTextColor required2" placeholder="Select Mode"
+                       <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Mode"
                                 formControlName="trnMod" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.modeData">
                             </ng-select>
                     </div>
@@ -48,7 +47,7 @@
                             Select Business Type
                         </label>
                     <div class="col-md-5">
-                        <ng-select class="noFoundTextColor required2" placeholder="Select Business Type"
+                        <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Business Type"
                                 formControlName="bustyp" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.businessTypedata">
                             </ng-select>
                     </div>
@@ -59,7 +58,7 @@
                            Loading By
                         </label>
                     <div class="col-md-5">
-                         <ng-select class="noFoundTextColor required2" placeholder="Select Loading By"
+                         <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Loading By"
                                 formControlName="loadingBy" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.loadingData">
                             </ng-select>
                     </div>
@@ -70,9 +69,14 @@
                             Charge type
                         </label>
                     <div class="col-md-5">
-                         <ng-select class="noFoundTextColor required2" placeholder="Select Charge type"
-                                formControlName="chrgType" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.chargeTypeData">
+                         <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Charge type" [readonly]="challanService.filterForm.value.loadingBy==='XX9'"
+                                formControlName="chrgType" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.chargeTypeData"
+                                [ngClass]="{ 'border-danger': challanService.filterForm.get('chrgType')?.invalid  && challanService.filterForm.get('chrgType')?.touched }"
+                                >
                             </ng-select>
+                            <div class="text-danger text-start" *ngIf="challanService.filterForm.get('chrgType')?.hasError('required') && challanService.filterForm.get('chrgType')?.touched">
+                                Charge Type is required
+                            </div>
                     </div>
                 </div>
                  <div class="row align-items-center mb-3">
@@ -81,7 +85,7 @@
                             Select Booked Type
                         </label>
                     <div class="col-md-5">
-                         <ng-select class="noFoundTextColor required2" placeholder="Select Booked By"
+                         <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Booked Type"
                                 formControlName="BookedByType" bindLabel="text" bindValue="value" [items]="bookByTypeData">
                             </ng-select>
                     </div>
@@ -92,7 +96,7 @@
                             Select Booked By
                         </label>
                     <div class="col-md-5">
-                         <ng-select class="noFoundTextColor required2" placeholder="Select Booked By"
+                         <ng-select class="noFoundTextColor clear-icon"  [ngClass]="{ 'required2': challanService.filterForm.get('BookedByType')?.value === 'B'}" placeholder="Select Booked By"
                                 formControlName="BookedBy" bindLabel="text" bindValue="value" [items]="bookByData">
                             </ng-select>
                     </div>
@@ -109,10 +113,10 @@
                            CNote No.
                         </label>
                     <div class="col-md-5">
-                        <input type="text" class="form-control required2" placeholder="CNote No." formControlName="docketList">
+                        <input type="text" class="form-control" placeholder="CNote No." formControlName="docketList">
                     </div>
                 </div>
-
+ 
                 <div class="p-4 bg-light">
                     <div class="col-md-12 d-flex gap-2">
                         <div class="col-md-8">
@@ -124,5 +128,5 @@
             </div>
         </form>
         </div>
-
+ 
    </div>
