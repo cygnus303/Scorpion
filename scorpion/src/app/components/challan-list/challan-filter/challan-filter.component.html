@@ -58,7 +58,7 @@
                            Loading By
                         </label>
                     <div class="col-md-5">
-                         <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Loading By"
+                         <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Loading By" (change)="changeLoadingBy($event.codeDesc)"
                                 formControlName="loadingBy" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.loadingData">
                             </ng-select>
                     </div>
