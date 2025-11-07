@@ -64,11 +64,14 @@ constructor(
     });
   }
 
+ 
   changeLoadingBy(event: any) {
     this.challanService.filterForm.patchValue({
-      loadingByName:event
+      loadingByName:event.codeDesc,
+      loadingBycodeFor:event.codeFor
     });
   }
+ 
 
 onSearch() {
   if (this.challanService.filterForm.valid) {
