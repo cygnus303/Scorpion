@@ -64,6 +64,12 @@ constructor(
     });
   }
 
+  changeLoadingBy(event: any) {
+    this.challanService.filterForm.patchValue({
+      loadingByName:event
+    });
+  }
+
 onSearch() {
   if (this.challanService.filterForm.valid) {
     this.router.navigate(

@@ -232,6 +232,7 @@ SearchfilterForm(){
     LocationCode:new FormControl(''),
     BookedByType:new FormControl(''),
     BookedBy:new FormControl(''),
+    loadingByName:new FormControl(''),
 
     dateRange:new FormControl(),
   })

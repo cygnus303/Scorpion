@@ -68,32 +68,30 @@ constructor(
     this.challanService.getRateTypeData()
 
     setTimeout(() => {
-    this.route.queryParams.subscribe(params => {
-      if (params['start']) {
-        const formValues = JSON.parse(params['start']);
-        this.challanService.filterList = formValues;
-        if (this.challanService.filterList.BookedByType === "B") {
-          debugger
-          const vendorTypeCode =
-          this.challanService.vendtyData?.find((v: any) => v.codeId === "04")?.codeId || '';
-          this.challanService.challanForm.patchValue({
-            vendorType: vendorTypeCode
-          });
-          this.challanService.getVendorsList(vendorTypeCode);
+      this.route.queryParams.subscribe(params => {
+        if (params['start']) {
+          const formValues = JSON.parse(params['start']);
+          this.challanService.filterList = formValues;
+          if (this.challanService.filterList.BookedByType === "B") {
+            const vendorTypeCode = this.challanService.vendtyData?.find((v: any) => v.codeId === "04")?.codeId || '';
+            this.challanService.challanForm.patchValue({
+              vendorType: vendorTypeCode
+            });
+            this.challanService.getVendorsList(vendorTypeCode);
+            if (this.challanService.filterList.BookedBy) {
+              this.challanService.challanForm.patchValue({
+                vendorCode: this.challanService.filterList.BookedBy
+              });
+            }
+          }
         }
-        if (this.challanService.filterList.BookedBy) {
-          this.challanService.challanForm.patchValue({
-            vendorCode: this.challanService.filterList.BookedBy
-          });
-        }
+      });
+
+      if (this.docketService.loginUserList.Type !== '1') {
+        this.challanService.getCityList();
+        this.avalabledocketinPRS()
       }
-    });
-    
-    if (this.docketService.loginUserList.Type !== '1') {
-      this.challanService.getCityList();
-      this.avalabledocketinPRS()
-    }
-  }, 300); 
+    }, 300); 
 
     const type = this.docketService.loginUserList.Type;
     this.typeName = type === '3' ? 'DRS' : type === '1' ? 'THC' : type === '2' ? 'PRS' : '';
