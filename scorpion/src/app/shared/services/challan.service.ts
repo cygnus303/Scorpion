@@ -212,15 +212,31 @@ rounditn(value: number, digits: number): number {
 
 SearchfilterForm(){
   this.filterForm=new FormGroup({
-    dateRange:new FormControl(),
+    fromdt:new FormControl(),
+    todt:new FormControl(),
+    dttyp:new FormControl('3'),
     paybas:new FormControl(),
-    mode:new FormControl(),
-    businessType:new FormControl(),
+    trnMod:new FormControl(),
+    bustyp:new FormControl(),
+    docketList:new FormControl(),
     loadingBy:new FormControl(),
-    chargeType:new FormControl(),
-    bookedType:new FormControl(),
-    bookedBy:new FormControl(),
-    cnoteNo:new FormControl()
+    chrgType:new FormControl(),
+    odaType:new FormControl(),
+    flag:new FormControl(2),
+    LocationCode:new FormControl(),
+    BookedByType:new FormControl(),
+    BookedBy:new FormControl(),
+
+
+    dateRange:new FormControl(),
+    // paybas:new FormControl(),
+    // mode:new FormControl(),
+    // businessType:new FormControl(),
+    // loadingBy:new FormControl(),
+    // chargeType:new FormControl(),
+    // bookedType:new FormControl(),
+    // bookedBy:new FormControl(),
+    // cnoteNo:new FormControl()
   })
 }
 

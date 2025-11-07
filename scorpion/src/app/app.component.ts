@@ -27,7 +27,7 @@ export class AppComponent {
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       
-      // this.docketService.loginUserList.Type = '2'
+      this.docketService.loginUserList.Type = '2'
       // this.docketService.loginUserList.fromdt = "01 Mar 2025",
       // this.docketService.loginUserList.todt= "05 Nov 2025",
       // this.docketService.loginUserList.dttyp= '3',

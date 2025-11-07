@@ -38,7 +38,7 @@
                         </label>
                     <div class="col-md-5">
                        <ng-select class="noFoundTextColor required2" placeholder="Select Mode"
-                                formControlName="mode" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.modeData">
+                                formControlName="trnMod" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.modeData">
                             </ng-select>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                         </label>
                     <div class="col-md-5">
                         <ng-select class="noFoundTextColor required2" placeholder="Select Business Type"
-                                formControlName="businessType" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.businessTypedata">
+                                formControlName="bustyp" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.businessTypedata">
                             </ng-select>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                         </label>
                     <div class="col-md-5">
                          <ng-select class="noFoundTextColor required2" placeholder="Select Charge type"
-                                formControlName="chargeType" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.chargeTypeData">
+                                formControlName="chrgType" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.chargeTypeData">
                             </ng-select>
                     </div>
                 </div>
@@ -82,7 +82,7 @@
                         </label>
                     <div class="col-md-5">
                          <ng-select class="noFoundTextColor required2" placeholder="Select Booked By"
-                                formControlName="bookedType" bindLabel="text" bindValue="value" [items]="bookByTypeData">
+                                formControlName="BookedByType" bindLabel="text" bindValue="value" [items]="bookByTypeData">
                             </ng-select>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                         </label>
                     <div class="col-md-5">
                          <ng-select class="noFoundTextColor required2" placeholder="Select Booked By"
-                                formControlName="bookedBy" bindLabel="text" bindValue="value" [items]="bookByData">
+                                formControlName="BookedBy" bindLabel="text" bindValue="value" [items]="bookByData">
                             </ng-select>
                     </div>
                 </div>
@@ -109,7 +109,7 @@
                            CNote No.
                         </label>
                     <div class="col-md-5">
-                        <input type="text" class="form-control required2" placeholder="CNote No." formControlName="cnoteNo">
+                        <input type="text" class="form-control required2" placeholder="CNote No." formControlName="docketList">
                     </div>
                 </div>
 
