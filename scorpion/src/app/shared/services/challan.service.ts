@@ -214,7 +214,7 @@ SearchfilterForm(){
    const today = new Date();
   const fromDate = new Date();
   fromDate.setDate(today.getDate() - 30); // subtract 30 days
-
+ 
   // format to yyyy-MM-dd (HTML date input compatible)
   const formatDate = (d: Date) => d.toISOString().split('T')[0];
   this.filterForm=new FormGroup({
@@ -225,16 +225,17 @@ SearchfilterForm(){
     trnMod:new FormControl(),
     bustyp:new FormControl(),
     docketList:new FormControl(),
-    loadingBy:new FormControl(),
+    loadingBy:new FormControl('XX9'),
+    loadingBycodeFor:new FormControl('XX9'),
     chrgType:new FormControl(),
     odaType:new FormControl(),
     flag:new FormControl(2),
     LocationCode:new FormControl(''),
     BookedByType:new FormControl(''),
-    BookedBy:new FormControl(''),
+    BookedBy:new FormControl(),
     loadingByName:new FormControl(''),
-
-    dateRange:new FormControl(),
+ 
+    dateRange:new FormControl([fromDate, today]),
   })
 }
 
