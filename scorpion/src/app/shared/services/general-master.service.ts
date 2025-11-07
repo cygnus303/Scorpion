@@ -1,17 +1,72 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { generalMasterResponse } from '../models/general-master.model';
-import { BasicDetailService } from './basic-detail.service';
-import { DocketService } from './docket.service';
+import { THCMasterService } from './thc-master.service';
+import { PRSGeneralMasterResponse } from '../models/thc-master.model';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class GeneralMasterService {
+  public PayBsData:PRSGeneralMasterResponse[]=[];
+  public modeData:PRSGeneralMasterResponse[]=[];
+  public businessTypedata:PRSGeneralMasterResponse[]=[];
+  public loadingData:PRSGeneralMasterResponse[]=[];
+  public chargeTypeData:PRSGeneralMasterResponse[]=[];
 
  constructor(
-     private basicDetailService: BasicDetailService,
-     private docketService: DocketService
+     public THCMasterService: THCMasterService,
     ) { }
+
+  getPaybsData() {
+    this.THCMasterService.getGeneralMasterDetail('PAYTYP').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.PayBsData = response.data;
+        }
+      }
+    });
+  }
+
+    getModeData() {
+    this.THCMasterService.getGeneralMasterDetail('TRN').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.modeData = response.data;
+        }
+      }
+    });
+  }
+
+   getBusinessTypeData() {
+    this.THCMasterService.getGeneralMasterDetail('BUT').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.businessTypedata = response.data;
+        }
+      }
+    });
+  }
+
+  getLoadingByDetail(){
+      this.THCMasterService.getGeneralMasterDetail('LOADBY').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.loadingData = response.data;
+        }
+      }
+    });
+  }
+
+   getChargeTypeData(){
+    this.THCMasterService.getGeneralMasterDetail('HANDCHRG').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.chargeTypeData = response.data;
+        }
+      },
+    });
+  }
 
  
 }

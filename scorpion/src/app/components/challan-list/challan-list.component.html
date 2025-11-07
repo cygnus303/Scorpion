@@ -1016,7 +1016,7 @@
                 <td>{{ item.value.CHRGWT }}</td>
                 <td>
                     <ng-select class="required2" [items]="challanService.rateTypeData" formControlName="rateType"
-                        bindLabel="codeDesc" bindValue="codeId" placeholder="Type">
+                        bindLabel="codeDesc" bindValue="codeId" placeholder="Type" [readonly]="!!docketService.loginUserList.chrgType">
                     </ng-select>
                     <input type="text" class="form-control required2" formControlName="NewRate"  [value]="item.value.NewRate">
                     <div class="text-danger small mt-1" *ngIf="challanService.avalabledocket.at(i).get('rateError')?.value">

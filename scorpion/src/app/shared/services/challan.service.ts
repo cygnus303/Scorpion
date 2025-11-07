@@ -27,6 +27,8 @@ public rateTypeData:generalMasterResponse[]=[];
 public chargesDetailsList:ChargesResponse[]=[];
 public selectedFile: File | null = null;
 public isSubmitting:boolean = false;
+public filterForm!:FormGroup;
+
 
 constructor(
   private basicDetailService: BasicDetailService,
@@ -206,6 +208,20 @@ calculateNetAmount() {
 rounditn(value: number, digits: number): number {
   const multiplier = Math.pow(10, digits);
   return Math.round(value * multiplier) / multiplier;
+}
+
+SearchfilterForm(){
+  this.filterForm=new FormGroup({
+    dateRange:new FormControl(),
+    paybas:new FormControl(),
+    mode:new FormControl(),
+    businessType:new FormControl(),
+    loadingBy:new FormControl(),
+    chargeType:new FormControl(),
+    bookedType:new FormControl(),
+    bookedBy:new FormControl(),
+    cnoteNo:new FormControl()
+  })
 }
 
   buildForm(){
@@ -405,7 +421,7 @@ patchAvailableDockets(data: any[]) {
       ContractAmount: new FormControl(item.contractAmount ?? 0),
       bcSerialNo: new FormControl(item.bcSerialNo),
       tatInHrs: new FormControl(tatInHrs),
-      rateType: new FormControl(null),
+      rateType: new FormControl(this.docketService.loginUserList.chrgType?this.docketService.loginUserList.chrgType:null),
       charge: new FormControl(0),
       rateError: new FormControl('')
     });

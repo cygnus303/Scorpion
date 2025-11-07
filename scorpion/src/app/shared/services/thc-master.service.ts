@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { ApiHandlerService } from './api-handler.service';
 import { Observable } from 'rxjs';
 import { IApiBaseResponse } from '../interface/api-base-action-response';
+import { PRSGeneralMasterResponse } from '../models/thc-master.model';
 
 @Injectable({
   providedIn: 'root'
@@ -115,4 +116,13 @@ export class THCMasterService {
   getVehicleTypesForChallanFromRouteVendType(payload:any){
     return this.apiHandlerService.Get(`THC/GetVehicleTypesForChallanFromRouteVendType?vehicleNo=${payload.vehicleNo}&routeMode=${payload.routeMode}&routeName=${payload.routeName}&vendorType=${payload.vendorType}&vendorCode=${payload.vendorCode}&thcType=${payload.thcType}&baseLocationCode=${payload.baseLocationCode}`);
   }
+
+  getGeneralMasterDetail(codeType:string): Observable<IApiBaseResponse<PRSGeneralMasterResponse[]>>{
+    return this.apiHandlerService.Get(`THC/GetGeneralMasterDetails?codeType=${codeType}`);
+  }
+
+  getGetBookedBy(locationCode:string,username:string){
+    return this.apiHandlerService.Get(`THC/GetBookedBy?id=${'P'}&location=${locationCode}&username=${username}`);
+  }
+
 }

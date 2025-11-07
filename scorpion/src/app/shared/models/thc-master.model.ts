@@ -42,3 +42,15 @@ export interface DeliveryZoneResponse{
     value:string,
     text:string
 }
+
+export interface PRSGeneralMasterResponse{
+codeId: number;
+  codeDesc: string;
+  codeType: string;
+  codeAccess: string;
+  statusCode: string;
+  entryDate: string;
+  entryBy: string;
+  noOfDigits: number;
+  codeFor: string;
+}

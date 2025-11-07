@@ -152,6 +152,7 @@ export interface BasePayload {
   flag:number;
   BookedByType:string;
   BookedBy:string;
+  drsType:string;
 }
 
 export interface StatesFromPartyCodeRepsonse {

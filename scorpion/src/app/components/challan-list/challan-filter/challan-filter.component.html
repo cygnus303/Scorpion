@@ -5,6 +5,7 @@
                 <i class="fas fa-filter me-2"></i>
                 Docket Financial Edit Criteria
             </div>
+        <form [formGroup]="challanService.filterForm">
             <div class="form-grid p-4">
                      <div class="row align-items-center mb-3">
                     <div class="col-md-3 text-start">
@@ -14,7 +15,7 @@
                         <div class="input-group shadow-sm rounded "><span class="input-group-text bg-white border-end-0 p-2">
                           <i class="fas fa-calendar-alt text-dark text-secondary"></i></span>
                             <input type="text" placeholder="Daterangepicker" class="form-control border-start-1 text-center line-height" bsDaterangepicker
-                                [(ngModel)]="dateRange" [bsConfig]="{ ranges: commonService.ranges ,rangeInputFormat: 'MMMM D, YYYY', dateInputFormat:
+                                formControlName="dateRange" [bsConfig]="{ ranges: commonService.ranges ,rangeInputFormat: 'MMMM D, YYYY', dateInputFormat:
                                                      'MMMM D, YYYY'}">
                         </div>
                     </div>
@@ -25,7 +26,9 @@
                             Select Paybas
                         </label>
                     <div class="col-md-5">
-                        <input type="text" class="form-control required2" placeholder="Select Paybas">
+                          <ng-select class="noFoundTextColor required2" placeholder="Select Paybas"
+                                formControlName="paybas" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.PayBsData">
+                            </ng-select>
                     </div>
                 </div>
                  <div class="row align-items-center mb-3">
@@ -34,7 +37,9 @@
                             Select Mode
                         </label>
                     <div class="col-md-5">
-                        <input type="text" class="form-control required2" placeholder="Select Mode">
+                       <ng-select class="noFoundTextColor required2" placeholder="Select Mode"
+                                formControlName="mode" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.modeData">
+                            </ng-select>
                     </div>
                 </div>
                  <div class="row align-items-center mb-3">
@@ -43,7 +48,9 @@
                             Select Business Type
                         </label>
                     <div class="col-md-5">
-                        <input type="text" class="form-control required2" placeholder="Select Business Type">
+                        <ng-select class="noFoundTextColor required2" placeholder="Select Business Type"
+                                formControlName="businessType" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.businessTypedata">
+                            </ng-select>
                     </div>
                 </div>
                  <div class="row align-items-center mb-3">
@@ -52,7 +59,9 @@
                            Loading By
                         </label>
                     <div class="col-md-5">
-                        <input type="text" class="form-control required2" placeholder="Loading By">
+                         <ng-select class="noFoundTextColor required2" placeholder="Select Loading By"
+                                formControlName="loadingBy" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.loadingData">
+                            </ng-select>
                     </div>
                 </div>
                  <div class="row align-items-center mb-3">
@@ -61,7 +70,9 @@
                             Charge type
                         </label>
                     <div class="col-md-5">
-                        <input type="text" class="form-control required2" placeholder="Charge type">
+                         <ng-select class="noFoundTextColor required2" placeholder="Select Charge type"
+                                formControlName="chargeType" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.chargeTypeData">
+                            </ng-select>
                     </div>
                 </div>
                  <div class="row align-items-center mb-3">
@@ -70,7 +81,9 @@
                             Select Booked Type
                         </label>
                     <div class="col-md-5">
-                        <input type="text" class="form-control required2" placeholder="Select Booked Type">
+                         <ng-select class="noFoundTextColor required2" placeholder="Select Booked By"
+                                formControlName="bookedType" bindLabel="text" bindValue="value" [items]="bookByTypeData">
+                            </ng-select>
                     </div>
                 </div>
                  <div class="row align-items-center mb-3">
@@ -79,7 +92,9 @@
                             Select Booked By
                         </label>
                     <div class="col-md-5">
-                        <input type="text" class="form-control required2" placeholder="Select Booked By">
+                         <ng-select class="noFoundTextColor required2" placeholder="Select Booked By"
+                                formControlName="bookedBy" bindLabel="text" bindValue="value" [items]="bookByData">
+                            </ng-select>
                     </div>
                 </div>
                   <div class="row align-items-center mb-3">
@@ -94,19 +109,20 @@
                            CNote No.
                         </label>
                     <div class="col-md-5">
-                        <input type="text" class="form-control required2" placeholder="CNote No.">
+                        <input type="text" class="form-control required2" placeholder="CNote No." formControlName="cnoteNo">
                     </div>
                 </div>
 
                 <div class="p-4 bg-light">
                     <div class="col-md-12 d-flex gap-2">
                         <div class="col-md-8">
-                            <button type="button" class="btn background text-white btn-sm px-3"><i
+                            <button type="button" class="btn background text-white btn-sm px-3" (click)="onSearch()"><i
                                     class="fas fa-search"></i>&nbsp;Search</button>
                         </div>
                     </div>
                 </div>
             </div>
+        </form>
         </div>
 
    </div>
