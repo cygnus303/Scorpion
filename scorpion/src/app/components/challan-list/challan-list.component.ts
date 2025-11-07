@@ -85,15 +85,15 @@ constructor(
   }
 
   setTimeout(() => {
-    if (this.docketService.loginUserList.BookedByType === "B") {
+    if (this.challanService.challanForm.value.BookedByType === "B") {
       this.challanService.challanForm.patchValue({
         vendorType: this.challanService.vendtyData?.find((v: any) => v.codeId === "04")?.codeId || ''
       });
       this.challanService.getVendorsList(this.challanService.challanForm.value.vendorType);
     }
     
-      if(this.docketService.loginUserList.BookedBy){
-          this.challanService.challanForm.patchValue({vendorCode:this.docketService.loginUserList.BookedBy})
+      if(this.challanService.challanForm.value.BookedBy){
+          this.challanService.challanForm.patchValue({vendorCode:this.challanService.challanForm.value.BookedBy})
       }
   }, 300);
 
@@ -667,28 +667,35 @@ getDAList(){
       }
     });
 }
-
+formatDate(dateStr: string): string {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  }).replace(',', '');
+}
 avalabledocketinPRS(event?:any){
-  if(this.challanService.challanForm.value.vendorType!=='04' && event){
+  if(this.challanService.challanForm.value?.vendorType!=='04' && event){
       return;
   }
-  debugger
-  const data = this.challanService.filterForm.value;
+  const data = this.challanService.filterForm?.value;
   const payload = {
-    fromdt: data.fromdt,
-    todt: data.todt,
+    fromdt: this.formatDate(data?.fromdt),
+    todt: this.formatDate(data?.todt),
     dttyp: data.dttyp,
-    paybas: data.paybas,
-    trn: data.trn,
-    bustyp: data.bustyp,
-    status: this.challanService.challanForm.value.vendorType === '04' ? 'B' : 'P' ,
+    paybas: data.paybas? data.paybas:'ALL',
+    trn: data.trn?data.trn:'ALL',
+    bustyp: data.bustyp?data.bustyp:'ALL',
+    status: this.challanService.challanForm.value?.vendorType === '04' ? 'B' : 'P' ,
     doctyp: this.docketService.loginUserList.Type === '2'?"PRS":"DRS",
     baseLocationCode:this.docketService.loginUserList.LocationCode,
-    docketList: data.docketList,
-    alloted_To:this.challanService.challanForm.value.vendorType ==='04'? this.challanService.challanForm.value.vendorCode:'',
+    docketList: data.docketList?data.docketList:'',
+    alloted_To:this.challanService.challanForm.value?.vendorType ==='04'? this.challanService.challanForm.value.vendorCode:'',
     loadingBy: data.loadingBy,
-    chrgType: data.chrgType,
-    odaType: data.odaType,
+    chrgType: data.chrgType?data.chrgType:"ALL",
+    odaType: data.odaType?data.odaType:'',
     baseCompanyCode:this.docketService.loginUserList.Companycode,
     flag: data.flag,
   }

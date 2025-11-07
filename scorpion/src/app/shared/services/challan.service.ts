@@ -211,9 +211,15 @@ rounditn(value: number, digits: number): number {
 }
 
 SearchfilterForm(){
+   const today = new Date();
+  const fromDate = new Date();
+  fromDate.setDate(today.getDate() - 30); // subtract 30 days
+
+  // format to yyyy-MM-dd (HTML date input compatible)
+  const formatDate = (d: Date) => d.toISOString().split('T')[0];
   this.filterForm=new FormGroup({
-    fromdt:new FormControl(),
-    todt:new FormControl(),
+    fromdt:new FormControl(formatDate(fromDate)),
+    todt:new FormControl(formatDate(today)),
     dttyp:new FormControl('3'),
     paybas:new FormControl(),
     trnMod:new FormControl(),
@@ -437,7 +443,7 @@ patchAvailableDockets(data: any[]) {
       ContractAmount: new FormControl(item.contractAmount ?? 0),
       bcSerialNo: new FormControl(item.bcSerialNo),
       tatInHrs: new FormControl(tatInHrs),
-      rateType: new FormControl(this.docketService.loginUserList.chrgType?this.docketService.loginUserList.chrgType:null),
+      rateType: new FormControl(this.challanForm.value.chrgType?this.challanForm.value.chrgType:null),
       charge: new FormControl(0),
       rateError: new FormControl('')
     });
@@ -448,7 +454,7 @@ patchAvailableDockets(data: any[]) {
 }
 
 validateRate(group: FormGroup): boolean {
-  const loadingBy = this.docketService.loginUserList.loadingBy;
+  const loadingBy = this.filterForm.value.loadingBy;
   if (loadingBy === 'XX9') {
     group.get('rateError')?.setValue('');
     return true; // no validation when XX9
