@@ -54,28 +54,11 @@ constructor(
   public THCService:THCMasterService,
    private route: ActivatedRoute, 
 ){
-   this.challanService.buildForm();
-  this.route.queryParams.subscribe(params => {
-    if (params['start']) {
-      const formValues = JSON.parse(params['start']);
-      this.challanService.filterList = formValues;
-      if (this.challanService.filterList.BookedByType === "B") {
-      this.challanService.challanForm.patchValue({
-        vendorType: this.challanService.vendtyData?.find((v: any) => v.codeId === "04")?.codeId || ''
-      });
-      this.challanService.getVendorsList(this.challanService.filterList.vendorType);
-    }
-    
-      if(this.challanService.filterList.BookedBy){
-          this.challanService.challanForm.patchValue({vendorCode:this.challanService.filterList.BookedBy})
-      }
-    }
-  });
+  this.challanService.buildForm();
 }
- ngOnInit(){
+  ngOnInit() {
     this.challanService.getChargesDetails();
     this.challanService.getVendtyData();
-
     this.docketService.getTypeofMovementData();
     this.challanService.getRouteMode();
     this.challanService.getDepartmentReason();
@@ -83,25 +66,43 @@ constructor(
     this.challanService.getLocationData();
     this.getDAList();
     this.challanService.getRateTypeData()
-    const type = this.docketService.loginUserList.Type;
-    this.typeName = type === '3' ? 'DRS' : type === '1' ? 'THC' : type === '2' ? 'PRS' : '';
-    this.challanService.challanForm.get('isEmpty')?.valueChanges.subscribe((isEmpty: boolean) => {
-    if (isEmpty) {
-      this.challanService.challanForm.patchValue({
-        customerName: null,
-        routeCode: null
-      });
-    }
-  });
-  
-    if(this.docketService.loginUserList.Type !== '1'){
+
+    setTimeout(() => {
+    this.route.queryParams.subscribe(params => {
+      if (params['start']) {
+        const formValues = JSON.parse(params['start']);
+        this.challanService.filterList = formValues;
+        if (this.challanService.filterList.BookedByType === "B") {
+          debugger
+          const vendorTypeCode =
+          this.challanService.vendtyData?.find((v: any) => v.codeId === "04")?.codeId || '';
+          this.challanService.challanForm.patchValue({
+            vendorType: vendorTypeCode
+          });
+          this.challanService.getVendorsList(vendorTypeCode);
+        }
+        if (this.challanService.filterList.BookedBy) {
+          this.challanService.challanForm.patchValue({
+            vendorCode: this.challanService.filterList.BookedBy
+          });
+        }
+      }
+    });
+    
+    if (this.docketService.loginUserList.Type !== '1') {
       this.challanService.getCityList();
       this.avalabledocketinPRS()
     }
+  }, 300); 
 
-  if(this.docketService.loginUserList.Type ==='3'){
-    this.getDeliveryZoneData()
-  }
+    const type = this.docketService.loginUserList.Type;
+    this.typeName = type === '3' ? 'DRS' : type === '1' ? 'THC' : type === '2' ? 'PRS' : '';
+    this.challanService.challanForm.get('isEmpty')?.valueChanges.subscribe((isEmpty: boolean) => {
+    if (isEmpty) {this.challanService.challanForm.patchValue({customerName: null,routeCode: null});}});
+
+    if (this.docketService.loginUserList.Type === '3') {
+      this.getDeliveryZoneData()
+    }
   }
 
 calculateBalanceAmount() {

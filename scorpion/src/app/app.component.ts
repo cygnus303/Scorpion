@@ -39,7 +39,7 @@ export class AppComponent {
       // this.docketService.loginUserList.chrgType= "1";
       // this.docketService.loginUserList.odaType= "";
       // this.docketService.loginUserList.flag= 2;
-      // this.docketService.loginUserList.LocationCode =  'ABA';
+      this.docketService.loginUserList.LocationCode =  'ABA';
       // this.docketService.loginUserList.BookedByType = "B";
       // this.docketService.loginUserList.BookedBy =  'V09778';
 
