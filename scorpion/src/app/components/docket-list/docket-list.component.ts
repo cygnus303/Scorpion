@@ -137,8 +137,8 @@ getCompletionData() {
           // first patch
           this.docketService.basicDetailForm.patchValue({
             cNoteNo: basicDetail.dockno,
-            // cNoteDate: new Date(basicDetail.dockdt.split('T')[0]),
-            cNoteDate: new Date(),
+            cNoteDate: new Date(basicDetail.dockdt.split('T')[0]),
+            // cNoteDate: new Date(),
             pincode: basicDetail.csgePinCode ? basicDetail.csgePinCode : null,
             billingType: basicDetail.paybas,
             billingName: basicDetail.party_name,
@@ -371,6 +371,13 @@ getCompletionData() {
         };
         return obj;
       });
+      if(this.docketService.basicDetailForm.value.isreferenceDKT === true|| this.docketService.basicDetailForm.value.billingType ==='P04'){
+        this.docketService.freightForm.patchValue({
+          freightRate:0,
+          freightCharges:0,
+          dktTotal:0
+        })
+      }
       const payload = {
         "wmd": {
           "dockno": this.docketService.basicDetailForm.value.cNoteNo,
@@ -518,7 +525,7 @@ getCompletionData() {
           "billingState": this.docketService.freightForm.value.billingState,
           "eWayBillNo": this.docketService.basicDetailForm.value.ewayBillNo,
           "isCounterPickUpPRS": false,
-          "isCounterDelivery": true,
+          "isCounterDelivery": this.docketService.basicDetailForm.value.ISCounterDelivery?true:false,
           "retailsd": true,
           "isDockType": "DKT",
           "txtVehicleNo": this.docketService.basicDetailForm.value.vehicleno,

@@ -391,22 +391,23 @@
                 formControlName="csgeCustGSTState"></ng-select></div>
           </div>
         </div>
-          <div class="col-md-4 form-column ">
-            <div class="form-group ">
+          <div class="col-md-4 form-column " *ngIf="this.docketService.loginUserList.Type==='2'">
+            <div class="form-group " >
               <label class="col-md-5 align-items-center">Counter Pick Up</label>
               <!-- <div class="col-md-1">
                 <input type="checkbox" formControlName="ISCounterPickUpPRS">
               </div> -->
-              <div class="col-md-1 text-start">
+              <div class="col-md-1 text-start" [ngClass]="this.docketService.loginUserList.Type === '2'?'disabled':''">
               <label class="yes-no">
-                <input type="checkbox" formControlName="ISCounterPickUpPRS" />
+                <input type="checkbox" formControlName="ISCounterPickUpPRS" [readonly]="this.docketService.loginUserList.Type==='2'?true:false"/>
                 <span class="slider"></span>
               </label>
             </div>
+
               <label class="col-md-4">Counter Delivery</label>
-              <div class="col-md-1 text-start">
+              <div class="col-md-1 text-start" [ngClass]="this.docketService.loginUserList.Type==='2'?'disabled':''">
               <label class="yes-no">
-                <input type="checkbox" formControlName="ISCounterDelivery" />
+                <input type="checkbox" formControlName="ISCounterDelivery"  [readonly]="this.docketService.loginUserList.Type==='2'?true:false">
                 <span class="slider"></span>
               </label>
             </div>
@@ -571,8 +572,8 @@
                 <input type="checkbox" formControlName="isAppointmentDelivery"><span class="slider"></span>
               </label>
             </div>
-             <label for="refDkt" [ngClass]="this.docketService.isComplition ? 'd-none':'d-none'" class="col-md-3 text-end transform ">DACC</label>
-            <div class="col-md-2" [ngClass]="this.docketService.isComplition ? 'd-none':'d-none'">
+             <label for="refDkt" [ngClass]="this.docketService.loginUserList.Type==='2'?'':'d-none'" class="col-md-3 text-end transform ">DACC</label>
+            <div class="col-md-2" [ngClass]="this.docketService.loginUserList.Type==='2'?'':'d-none'">
               <label class="yes-no">
                 <input type="checkbox" formControlName="isDACC" />
                 <span class="slider"></span>

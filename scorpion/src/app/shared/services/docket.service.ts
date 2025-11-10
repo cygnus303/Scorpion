@@ -124,9 +124,9 @@ export class DocketService {
       isDACC: new FormControl(false),
       custGSTState: new FormControl(),
       csgeCustGSTState: new FormControl(),
-      ISCounterDelivery: new FormControl(false),
+      ISCounterDelivery: new FormControl({ value: false, disabled: true }),
       applyreferencedktT: new FormControl(false),
-      ISCounterPickUpPRS: new FormControl(false),
+      ISCounterPickUpPRS: new FormControl({ value: false, disabled: true }),
       IsMAllDeliveryN: new FormControl(false),
       IsODA: new FormControl(false),
       BaseCode2: new FormControl(''),
@@ -892,6 +892,13 @@ mergeAndPatchGST(apiGST: any, editGST: any, freightForm: FormGroup) {
 
   // Patch form
   freightForm.patchValue(mergedGST, { emitEvent: false });
+  if(this.basicDetailForm.value.billingType === 'P04'){
+   this.freightForm.patchValue({
+          billedAt: this.basicDetailForm.value.origin,
+          billingState: this.basicDetailForm.value.csgngstState
+ 
+    });
+  }
 }
 
 
@@ -1291,6 +1298,13 @@ validateAppointmentDate() {
     this.freightForm.patchValue({
       SCHG20: fuelSurcharge
     })
+    if(this.basicDetailForm.value.isreferenceDKT === true|| this.basicDetailForm.value.billingType ==='P04'){
+        this.freightForm.patchValue({
+          freightRate:0,
+          freightCharges:0,
+          dktTotal:0
+        })
+      }
     this.subTotalCalculation()
 
   }
