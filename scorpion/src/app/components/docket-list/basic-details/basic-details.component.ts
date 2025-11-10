@@ -41,6 +41,7 @@ export class BasicDetailsComponent {
   ngOnInit() {
     this.docketService.detailForm();
     this.getBillingTypeData();
+    this.docketService.getRuleDetailForChargeRule();
 
     this.docketService?.basicDetailForm?.get('destination')?.valueChanges.subscribe(() => {
       this.toggleLocalNote();
@@ -458,6 +459,7 @@ onFileSelect(event: Event) {
     } else {
       this.docketService.isBillingTBB = true;
     }
+    
     this.docketService.basicDetailForm.patchValue({
       billingParty: null,
       billingName: null

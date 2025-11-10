@@ -65,6 +65,7 @@ export class DocketService {
   public calculateSummary = new Subject<boolean>();
   public isComplition : boolean = false;
   public completiondata: any;
+  public ruleDetailForChargeRule: any;
   private freightTimeout: any;
 
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
@@ -130,6 +131,7 @@ export class DocketService {
       IsMAllDeliveryN: new FormControl(false),
       IsODA: new FormControl(false),
       BaseCode2: new FormControl(''),
+      BaseCode1: new FormControl(''),
     });
   }
 
@@ -303,6 +305,7 @@ export class DocketService {
 
 freightAndOtherChar(){
   this.getBaseCode2();
+  this.getBaseCode1();
   this.GetFreightContractDetails();
   this.getOtherChargesDetail();
   this.getFovContractDetails();
@@ -401,6 +404,20 @@ freightAndOtherChar(){
     });
   }
 
+  getRuleDetailForChargeRule() {
+    const payload = {
+      key: 'CHRG_RULE',
+      paybas: ''
+    }
+    this.basicDetailService.getRuleDetail(payload).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.ruleDetailForChargeRule = response.result
+        }
+      }
+    });
+  }
+
 
   onFormFieldChange() {
     const billingParty = this.basicDetailForm.value.billingParty;
@@ -482,6 +499,7 @@ getStep2Details() {
         this.getRateData();
         this.getcontractservicecharge();
         this.getBaseCode2();
+        this.getBaseCode1();
 
       // Contract validation
       if (
@@ -994,11 +1012,26 @@ getBaseCode2() {
   }
 }
 
+getBaseCode1() {
+  const chargeRule = this.ruleDetailForChargeRule.defaultvalue ;
+  const serviceType = this.basicDetailForm.get('serviceType')?.value;
+  const businessType = this.basicDetailForm.get('businessType')?.value;
+
+  if (chargeRule === 'NONE') {
+    this.basicDetailForm.get('BaseCode1')?.setValue(chargeRule);
+  } 
+  else if (chargeRule === 'SVCTYP') {
+    this.basicDetailForm.get('BaseCode1')?.setValue(serviceType);
+  } 
+  else if (chargeRule === 'BUT') {
+    this.basicDetailForm.get('BaseCode1')?.setValue(businessType);
+  }
+}
 
   GetFreightContractDetails() {
     const data = {
-     chargeRule: 'NONE',
-      baseCode1: 'NONE',
+     chargeRule: this.ruleDetailForChargeRule.defaultvalue || 'NONE',
+      baseCode1: this.basicDetailForm.value.BaseCode1 || 'NONE',
       chargeSubRule: this.step2DetailsList?.chargeBas || 'NONE',
       baseCode2: this.basicDetailForm.value.BaseCode2 || 'NONE',
       chargedWeight: Math.max(this.invoiceform.value.finalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString(),
@@ -1092,8 +1125,8 @@ validateAppointmentDate() {
 
   getFovContractDetails() {
     const payload = {
-      chargeRule: "NONE",
-      baseCode1: "NONE",
+      chargeRule: this.ruleDetailForChargeRule.defaultvalue || 'NONE',
+      baseCode1: this.basicDetailForm.value.BaseCode1 || 'NONE',
       contractID: this.step2DetailsList?.contractid,
       riskType: this.step2DetailsList?.risktype,
       invAmt: this.invoiceform.value.totalDeclaredValue?.toString(),
@@ -1119,8 +1152,8 @@ validateAppointmentDate() {
   getOtherChargesDetail() {
     const chargedWeight = Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString();
     const payload = {
-       "chargeRule": 'NONE',
-      "baseCode1": 'NONE',
+      "chargeRule":this.ruleDetailForChargeRule.defaultvalue || 'NONE',
+      "baseCode1": this.basicDetailForm.value.BaseCode1 || 'NONE',
       "chargeSubRule": this.step2DetailsList?.chargeBas || 'NONE',
       "baseCode2":this.basicDetailForm.value.BaseCode2 || 'NONE',
       "chargedWeight": chargedWeight,
