@@ -129,6 +129,7 @@ export class DocketService {
       ISCounterPickUpPRS: new FormControl(false),
       IsMAllDeliveryN: new FormControl(false),
       IsODA: new FormControl(false),
+      BaseCode2: new FormControl(''),
     });
   }
 
@@ -301,6 +302,7 @@ export class DocketService {
 // }, 500);
 
 freightAndOtherChar(){
+  this.getBaseCode2();
   this.GetFreightContractDetails();
   this.getOtherChargesDetail();
   this.getFovContractDetails();
@@ -479,6 +481,7 @@ getStep2Details() {
         this.GetPincodeOrigin();
         this.getRateData();
         this.getcontractservicecharge();
+        this.getBaseCode2();
 
       // Contract validation
       if (
@@ -966,12 +969,31 @@ getChargesData() {
     });
   }
 
+getBaseCode2() {
+  const chargeRule = this.step2DetailsList?.chargeBas;
+  const prodCd = this.basicDetailForm.value.contents;
+  const pkgSty = this.basicDetailForm.value.packingType;;
+
+  if (chargeRule === 'NONE') {
+    this.basicDetailForm.get('BaseCode2')?.setValue(chargeRule);
+  } 
+  else if (chargeRule === 'PROD') {
+    this.basicDetailForm.get('BaseCode2')?.setValue(chargeRule);
+    // If you want to assign product code instead, uncomment:
+    // this.basicDetailForm.get('BaseCode2')?.setValue(prodCd);
+  } 
+  else if (chargeRule === 'PKGS') {
+    this.basicDetailForm.get('BaseCode2')?.setValue(pkgSty);
+  }
+}
+
+
   GetFreightContractDetails() {
     const data = {
      chargeRule: 'NONE',
       baseCode1: 'NONE',
-      chargeSubRule: 'NONE',
-      baseCode2: 'NONE',
+      chargeSubRule: this.step2DetailsList?.chargeBas || 'NONE',
+      baseCode2: this.basicDetailForm.value.BaseCode2 || 'NONE',
       chargedWeight: Math.max(this.invoiceform.value.finalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString(),
       chargedWeright:this.invoiceform.value.finalActualWeight.toString(),
       contractID: this.step2DetailsList?.contractid,
@@ -1092,8 +1114,8 @@ validateAppointmentDate() {
     const payload = {
        "chargeRule": 'NONE',
       "baseCode1": 'NONE',
-      "chargeSubRule": "NONE",
-      "baseCode2": "NONE",
+      "chargeSubRule": this.step2DetailsList?.chargeBas || 'NONE',
+      "baseCode2":this.basicDetailForm.value.BaseCode2 || 'NONE',
       "chargedWeight": chargedWeight,
       "contractID": this.step2DetailsList?.contractid,
       "destination": this.basicDetailForm.value.destination,
