@@ -43,6 +43,8 @@ public contractAmtMsg:string='';
 public contractExpiredMsg:string='';
 public deliveryZoneData:DeliveryZoneResponse[]=[];
 public isVehicleType:boolean = false;
+selectedFileName: string | null = null;
+isImageFile: boolean = false;
 
 @ViewChild('fileInput') fileInput!: ElementRef;
 constructor(
@@ -950,6 +952,8 @@ onChangeVehicleType(event:any){
         this.notCustomerListValue = 'Please enter at least 1 characters';
       return;
     }
+
+    this.notCustomerListValue = 'Searching...';
     this.THCService.getCustomerListForTHC(searchText).subscribe({
       next: (response:any) => {
         if (response) {
@@ -995,13 +999,20 @@ onFileSelected(event: any) {
   const file = event.target.files[0];
   if (file) {
     this.challanService.selectedFile = file;
+    this.selectedFileName = file.name;
+    this.isImageFile = file.type.startsWith('image/');
 
-    // preview
-    const reader = new FileReader();
-    reader.onload = () => this.previewUrl = reader.result;
-    reader.readAsDataURL(file);
+    if (this.isImageFile) {
+      // Show image preview
+      const reader = new FileReader();
+      reader.onload = () => this.previewUrl = reader.result;
+      reader.readAsDataURL(file);
+    } else {
+      // For PDF, just show file name (no preview)
+      this.previewUrl = null;
+    }
 
-    // assign to form control
+    // Assign file to form control
     this.challanService.challanForm.patchValue({
       loadingSlipAttachment: file
     });
@@ -1015,6 +1026,8 @@ triggerFileInput() {
 removeAttachment() {
   this.challanService.selectedFile = null;
   this.previewUrl = null;
+  this.selectedFileName = null;
+  this.isImageFile = false;
   this.challanService.challanForm.patchValue({
     loadingSlipAttachment: null
   });
