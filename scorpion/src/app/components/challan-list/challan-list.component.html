@@ -895,23 +895,6 @@
                 </div>
             </div>
         </div>
-        <div class="row pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? 'd-none' : ''">
-            <div class="col-6">
-                <div class="row align-items-center">
-                    <label class="col-sm-3 col-form-label text-end">Local/ODA Charge Applicable?</label>
-                    <div class="col-sm-3 d-flex justify-content-end">
-                        <div class="me-5 d-flex align-items-center">
-                            <input type="radio" class="me-3" name="is_Local_ODA_id" value="local" formControlName="is_Local_ODA_id">
-                            <label>Local</label>
-                        </div>
-                        <div class="me-5 d-flex align-items-center">
-                            <input type="radio" class="me-3" name="is_Local_ODA_id" value="ODA" formControlName="is_Local_ODA_id">
-                            <label>ODA</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
     <div *ngIf="this.docketService.loginUserList?.Type !== '1' && this.challanService?.filterList?.loadingBy !== 'XX9'">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Loading Charges</h3>
@@ -928,7 +911,9 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Vendor Code </label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" placeholder="Vendor Code" type="text">
+                        <!-- <input class="form-control required2" placeholder="Vendor Code" type="text"> -->
+                         <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code" formControlName="vendorChargesCode" 
+                             [items]="challanService.vendorsChargesList" bindLabel="vendor_Name" bindValue="vendor_Code" ></ng-select>
                     </div>
                 </div>
             </div>
@@ -952,6 +937,23 @@
             </div>
         </div>
     </div>
+     <div class="row pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? 'd-none' : ''">
+            <div class="col-6">
+                <div class="row align-items-center">
+                    <label class="col-sm-3 col-form-label text-end">Local/ODA Charge Applicable?</label>
+                    <div class="col-sm-3 d-flex justify-content-end">
+                        <div class="me-5 d-flex align-items-center">
+                            <input type="radio" class="me-3" name="is_Local_ODA_id" value="local" formControlName="is_Local_ODA_id">
+                            <label>Local</label>
+                        </div>
+                        <div class="me-5 d-flex align-items-center">
+                            <input type="radio" class="me-3" name="is_Local_ODA_id" value="ODA" formControlName="is_Local_ODA_id">
+                            <label>ODA</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     <div [ngClass]="this.docketService.loginUserList.Type === '1' ? 'd-none' : '' ">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">CNote Available For {{typeName}}</h3>
         <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
@@ -1016,7 +1018,7 @@
                 <td>{{ item.value.CHRGWT }}</td>
                 <td>
                     <ng-select class="required2" [items]="challanService.rateTypeData" formControlName="rateType"
-                        bindLabel="codeDesc" bindValue="codeId" placeholder="Type" [readonly]="!!challanService.challanForm.value.chrgType">
+                        bindLabel="codeDesc" bindValue="codeId" placeholder="Type" [class.disabled-select]="this.challanService.filterList?.chrgType ? true : false">
                     </ng-select>
                     <input type="text" class="form-control required2" formControlName="NewRate"  [value]="item.value.NewRate">
                     <div class="text-danger small mt-1" *ngIf="challanService.avalabledocket.at(i).get('rateError')?.value">

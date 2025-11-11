@@ -369,6 +369,15 @@ input[readonly] {
     opacity: 0.8;
     background-color: #e9ecef !important;
   }
+
+  .disabled-select {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.8;
+    .ng-select-container{
+      background-color: #e9ecef !important;
+    }
+  }
   
 @media (max-width: 783px) {
  .cnote-entry-container .form-group{

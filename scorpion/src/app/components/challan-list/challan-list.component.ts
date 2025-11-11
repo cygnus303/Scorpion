@@ -84,6 +84,7 @@ constructor(
               });
             }
           }
+          this.challanService.getChargesVendorsList(this.challanService.filterList.loadingBycodeFor);
         }
       });
 
@@ -729,6 +730,16 @@ avalabledocketinPRS(event?:any){
         } else {
           this.challanService.patchAvailableDockets(updatedData);
         }
+         // filter chrgType
+          const chrgTypeValue = this.challanService.filterList.chrgType;
+          if (chrgTypeValue) {
+            this.challanService.avalabledocket.controls.forEach((ctrl) => {
+              ctrl.patchValue({
+                rateType: chrgTypeValue
+              });
+            });
+          }
+
         this.updateTotalDockets();
       }
       },error: (err) => {

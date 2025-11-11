@@ -55,6 +55,7 @@ constructor(
   }
 
   getBookedByData(id:string) {
+    this.challanService.filterForm.patchValue({BookedBy:null})
     this.THCMasterService.getGetBookedBy(id,this.docketService.loginUserList.LocationCode, this.docketService.loginUserList.BaseUserName).subscribe({
       next: (response) => {
         if (response) {

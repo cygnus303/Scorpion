@@ -18,6 +18,7 @@ env = environment;
 public challanForm!:FormGroup;
 public vendtyData:generalMasterResponse[]=[]
 public vendorsList:VendeorsResponse[]=[]
+public vendorsChargesList:VendeorsResponse[]=[]
 public cityList:CityResponse[]=[];
 public routeModeList:generalMasterResponse[]=[];
 public locationData:LocationListResponse[]=[];
@@ -58,6 +59,22 @@ constructor(
       next: (response) => {
         if (response.success) {
           this.vendorsList = response.data;
+        }
+      },
+    });
+  }
+
+  getChargesVendorsList(event:any) {
+    const data = {
+     vendorType:event?.codeId ? event?.codeId:event,
+     branchCode:this.docketService.loginUserList.LocationCode,
+     userName: this.docketService.loginUserList.BaseUserName,
+     documentType:this.docketService.loginUserList.Type
+    }
+    this.THCService.getVendorsList(data).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.vendorsChargesList = response.data;
         }
       },
     });
@@ -341,6 +358,7 @@ nextDay.setDate(today.getDate() + 1);
     TotalManifest:new FormControl(0, isType1 ? [Validators.required, Validators.min(1)] : null),
     routeCode:new FormControl(null, isType1 ? Validators.required : null),
     customerName:new FormControl(),
+    vendorChargesCode:new FormControl(),
   });
 }
 
@@ -447,7 +465,7 @@ patchAvailableDockets(data: any[]) {
 }
 
 validateRate(group: FormGroup): boolean {
-  const loadingBy = this.filterForm.value.loadingBy;
+  const loadingBy = this.filterList?.loadingBy;
   if (loadingBy === 'XX9') {
     group.get('rateError')?.setValue('');
     return true; // no validation when XX9

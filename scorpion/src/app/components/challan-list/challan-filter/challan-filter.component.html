@@ -8,7 +8,9 @@
             <div class="form-grid p-4">
                      <div class="row align-items-center mb-3">
                     <div class="col-md-3 text-start">
-                        <input type="text" class="form-control required2 clear-icon" placeholder="Select Paybas">
+                        <!-- <input type="text" class="form-control required2 clear-icon" placeholder="Select Paybas"> -->
+                        <ng-select class="noFoundTextColor" placeholder="CNote Booking Date">
+                        </ng-select>
                     </div>
                     <div class="col-md-5">
                         <div class="input-group shadow-sm rounded "><span class="input-group-text bg-white border-end-0 p-2">
@@ -58,7 +60,7 @@
                            Loading By
                         </label>
                     <div class="col-md-5">
-                         <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Loading By" (change)="changeLoadingBy($event.codeDesc)"
+                         <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Loading By" (change)="changeLoadingBy($event)"
                                 formControlName="loadingBy" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.loadingData">
                             </ng-select>
                     </div>
@@ -69,7 +71,7 @@
                             Charge type
                         </label>
                     <div class="col-md-5">
-                         <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Charge type" [readonly]="challanService.filterForm.value.loadingBy==='XX9'"
+                         <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Charge type" [readonly]="challanService.filterForm.value.loadingBy === 'XX9'"
                                 formControlName="chrgType" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.chargeTypeData"
                                 [ngClass]="{ 'border-danger': challanService.filterForm.get('chrgType')?.invalid  && challanService.filterForm.get('chrgType')?.touched }"
                                 >
