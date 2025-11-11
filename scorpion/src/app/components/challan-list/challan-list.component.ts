@@ -59,6 +59,13 @@ constructor(
   this.challanService.buildForm();
 }
   ngOnInit() {
+      const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
     this.challanService.getChargesDetails();
     this.challanService.getVendtyData();
     this.docketService.getTypeofMovementData();
