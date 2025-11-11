@@ -530,6 +530,11 @@ getTDSDetailsFromVendor(vendorCode:string){
     });
 }
 
+  onChangeCityListList(){
+    this.toCityList = [];
+    this.notToCityValue = 'Please enter at least 1 characters';
+  }
+
   getCityList(event?: any, locCode?: any, type?: 'from' | 'to') {
     const searchText = event.term;
     if (!searchText || searchText.length < 1) {
@@ -680,7 +685,10 @@ formatDate(dateStr: string): string {
     year: 'numeric'
   }).replace(',', '');
 }
-avalabledocketinPRS(event?:any){
+avalabledocketinPRS(event?:any){ 
+  if(this.docketService.loginUserList.Type === '1'){
+    return;
+  }
   if(this.challanService.challanForm.value?.vendorType!=='04' && event){
       return;
   }
