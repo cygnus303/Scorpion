@@ -182,7 +182,7 @@ getCompletionData() {
               specialInstruction: basicDetail.spl_svc_req,
               ISCounterPickUpPRS: basicDetail.isCounterPickUpPRS,
               ISCounterDelivery: basicDetail.isCounterDelivery,
-              isDACC: basicDetail.isDACC
+              // isDACC: basicDetail.isDACC
             });
             this.basicDetailsComp.onChangeCityListList(this.docketService.basicDetailForm.get('fromCity')?.value,'from');
             this.docketService.GetGSTFromTrnMode()
@@ -524,7 +524,7 @@ getCompletionData() {
           "isCompletion": true,
           "billingState": this.docketService.freightForm.value.billingState,
           "eWayBillNo": this.docketService.basicDetailForm.value.ewayBillNo,
-          "isCounterPickUpPRS": false,
+          "isCounterPickUpPRS": this.docketService.basicDetailForm.value.ISCounterPickUpPRS?true:false,
           "isCounterDelivery": this.docketService.basicDetailForm.value.ISCounterDelivery?true:false,
           "retailsd": true,
           "isDockType": "DKT",
@@ -664,7 +664,7 @@ formData.append("DVM.WMD.cdeldt", this.docketService.freightData.edd );
 
 
         formData.append("DVM.WMD.AppointmentDT",this.docketService.basicDetailForm.value.appointmentDT ? new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString() : new Date().toISOString()),
-        formData.append("DVM.WMD.Version", String(Number('7')));
+        formData.append("DVM.WMD.Version", String(Number('8')));
       formData.append("DVM.docketType", "DKT");
       this.isSubmitting = true;
       if(!this.docketService.isComplition){

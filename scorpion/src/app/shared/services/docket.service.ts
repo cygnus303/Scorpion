@@ -482,7 +482,7 @@ getStep2Details() {
 
       this.basicDetailForm.patchValue({
           isVolumetric: this.step2DetailsList?.isVolumentric === 'Y',
-          isDACC: this.step2DetailsList?.isDACC === 'Y',
+          // isDACC: this.step2DetailsList?.isDACC === 'Y',
           // IsCODDOD: this.step2DetailsList?.isCODDOD === 'Y'
         });
 
@@ -996,8 +996,8 @@ getChargesData() {
 
 getBaseCode2() {
   const chargeRule = this.step2DetailsList?.chargeBas;
-  const prodCd = this.basicDetailForm.value.contents;
-  const pkgSty = this.basicDetailForm.value.packingType;;
+  const prodCd = this.basicDetailForm.value?.contents;
+  const pkgSty = this.basicDetailForm.value?.packingType;;
 
   if (chargeRule === 'NONE') {
     this.basicDetailForm.get('BaseCode2')?.setValue(chargeRule);
@@ -1013,7 +1013,7 @@ getBaseCode2() {
 }
 
 getBaseCode1() {
-  const chargeRule = this.ruleDetailForChargeRule.defaultvalue ;
+  const chargeRule = this.ruleDetailForChargeRule?.defaultvalue ;
   const serviceType = this.basicDetailForm.get('serviceType')?.value;
   const businessType = this.basicDetailForm.get('businessType')?.value;
 
@@ -1030,10 +1030,10 @@ getBaseCode1() {
 
   GetFreightContractDetails() {
     const data = {
-     chargeRule: this.ruleDetailForChargeRule.defaultvalue || 'NONE',
-      baseCode1: this.basicDetailForm.value.BaseCode1 || 'NONE',
+     chargeRule: this.ruleDetailForChargeRule?.defaultvalue || 'NONE',
+      baseCode1: this.basicDetailForm.value?.BaseCode1 || 'NONE',
       chargeSubRule: this.step2DetailsList?.chargeBas || 'NONE',
-      baseCode2: this.basicDetailForm.value.BaseCode2 || 'NONE',
+      baseCode2: this.basicDetailForm.value?.BaseCode2 || 'NONE',
       chargedWeight: Math.max(this.invoiceform.value.finalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString(),
       chargedWeright:this.invoiceform.value.finalActualWeight.toString(),
       contractID: this.step2DetailsList?.contractid,
@@ -1125,8 +1125,8 @@ validateAppointmentDate() {
 
   getFovContractDetails() {
     const payload = {
-      chargeRule: this.ruleDetailForChargeRule.defaultvalue || 'NONE',
-      baseCode1: this.basicDetailForm.value.BaseCode1 || 'NONE',
+      chargeRule: this.ruleDetailForChargeRule?.defaultvalue || 'NONE',
+      baseCode1: this.basicDetailForm.value?.BaseCode1 || 'NONE',
       contractID: this.step2DetailsList?.contractid,
       riskType: this.step2DetailsList?.risktype,
       invAmt: this.invoiceform.value.totalDeclaredValue?.toString(),
@@ -1152,10 +1152,10 @@ validateAppointmentDate() {
   getOtherChargesDetail() {
     const chargedWeight = Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString();
     const payload = {
-      "chargeRule":this.ruleDetailForChargeRule.defaultvalue || 'NONE',
-      "baseCode1": this.basicDetailForm.value.BaseCode1 || 'NONE',
+      "chargeRule":this.ruleDetailForChargeRule?.defaultvalue || 'NONE',
+      "baseCode1": this.basicDetailForm.value?.BaseCode1 || 'NONE',
       "chargeSubRule": this.step2DetailsList?.chargeBas || 'NONE',
-      "baseCode2":this.basicDetailForm.value.BaseCode2 || 'NONE',
+      "baseCode2":this.basicDetailForm.value?.BaseCode2 || 'NONE',
       "chargedWeight": chargedWeight,
       "contractID": this.step2DetailsList?.contractid,
       "destination": this.basicDetailForm.value.destination,

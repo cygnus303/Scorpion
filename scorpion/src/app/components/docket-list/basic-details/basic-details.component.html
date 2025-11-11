@@ -397,17 +397,17 @@
               <!-- <div class="col-md-1">
                 <input type="checkbox" formControlName="ISCounterPickUpPRS">
               </div> -->
-              <div class="col-md-1 text-start" [ngClass]="this.docketService.loginUserList.Type === '2'?'disabled':''">
+              <div class="col-md-1 text-start">
               <label class="yes-no">
-                <input type="checkbox" formControlName="ISCounterPickUpPRS" [readonly]="this.docketService.loginUserList.Type==='2'?true:false"/>
+                <input type="checkbox" formControlName="ISCounterPickUpPRS"/>
                 <span class="slider"></span>
               </label>
             </div>
 
               <label class="col-md-4">Counter Delivery</label>
-              <div class="col-md-1 text-start" [ngClass]="this.docketService.loginUserList.Type==='2'?'disabled':''">
+              <div class="col-md-1 text-start">
               <label class="yes-no">
-                <input type="checkbox" formControlName="ISCounterDelivery"  [readonly]="this.docketService.loginUserList.Type==='2'?true:false">
+                <input type="checkbox" formControlName="ISCounterDelivery">
                 <span class="slider"></span>
               </label>
             </div>
@@ -572,8 +572,8 @@
                 <input type="checkbox" formControlName="isAppointmentDelivery"><span class="slider"></span>
               </label>
             </div>
-             <label for="refDkt" [ngClass]="this.docketService.loginUserList.Type==='2'?'':'d-none'" class="col-md-3 text-end transform ">DACC</label>
-            <div class="col-md-2" [ngClass]="this.docketService.loginUserList.Type==='2'?'':'d-none'">
+             <label for="refDkt" class="col-md-3 text-end transform ">DACC</label>
+            <div class="col-md-2">
               <label class="yes-no">
                 <input type="checkbox" formControlName="isDACC" />
                 <span class="slider"></span>
