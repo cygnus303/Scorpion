@@ -24,7 +24,7 @@
                         <div class="col-sm-7">
                             <div class="input-group">
                                 <input class="form-control required2" [placeholder]="typeName + ' Date'" type="text" #dv="bsDatepicker"
-                                    bsDatepicker  [bsValue]="docketService.bsValue" formControlName="tHCDate"
+                                    bsDatepicker  [bsValue]="docketService.bsValue" formControlName="tHCDate" [class.disabled-input]="true"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A',maxDate:docketService.bsValue}" [disabled]="true">
                                 <span class="input-group-text cursor-pointer" (click)="dv.toggle()" disabled>
                                     <i class="fa fa-calendar"></i>
@@ -38,10 +38,10 @@
                         <label class="col-sm-5 col-form-label text-end">Loading Date</label>
                         <div class="col-sm-7">
                             <div class="input-group">
-                                <input class="form-control required2" placeholder="Loading Date" type="text"
-                                    #dv="bsDatepicker"  [bsValue]="docketService.bsValue" bsDatepicker formControlName="loadingDate"
+                                <input class="form-control required2" placeholder="Loading Date" type="text"  [class.disabled-input]="true"
+                                    #dvl="bsDatepicker"  [bsValue]="docketService.bsValue" bsDatepicker formControlName="loadingDate"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
-                                <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                <span class="input-group-text cursor-pointer" (click)="dvl.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
@@ -88,9 +88,9 @@
                         <div class="col-sm-7">
                             <div class="input-group">
                                 <input class="form-control required2" placeholder="Actual Dept. Time" type="text" 
-                                    #dv="bsDatepicker"  [bsValue]="docketService.bsValue" bsDatepicker formControlName="actualDeptDate"
+                                    #dva="bsDatepicker"  [bsValue]="docketService.bsValue" bsDatepicker formControlName="actualDeptDate"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
-                                <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                <span class="input-group-text cursor-pointer" (click)="dva.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
@@ -126,7 +126,7 @@
                                  <div class="text-danger text-start" *ngIf="challanService.challanForm.get('TOCITY')?.invalid && challanService.challanForm.get('TOCITY')?.touched "> This field is required.</div>
                         </div>
                         <div class="col-md-7" *ngIf="challanService.challanForm.value.routeCode">
-                            <ng-select class="noFoundTextColor required2" placeholder="To City"
+                            <ng-select class="noFoundTextColor required2" placeholder="To City" (change)="onChangeCityListList()"
                                 (search)="getCityList($event,this.docketService.loginUserList.LocationCode,'to')"
                                 formControlName="TOCITY" [notFoundText]="notToCityValue" [ngClass]="{ 'border-danger': challanService.challanForm.get('TOCITY')?.invalid  && challanService.challanForm.get('TOCITY')?.touched }">
                                 <ng-option *ngFor="let item of toCityList" [value]="item.id">
@@ -143,9 +143,9 @@
                         <div class="col-sm-7">
                             <div class="input-group">
                                 <input class="form-control required2" placeholder="Expected Reporting Date" type="text"
-                                    #dv="bsDatepicker" bsDatepicker formControlName="ERD"
+                                    #dve="bsDatepicker" bsDatepicker formControlName="ERD"  [class.disabled-input]="true"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}" readonly>
-                                <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                <span class="input-group-text cursor-pointer" (click)="dve.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
@@ -191,7 +191,7 @@
                     <div class="row ">
                         <label class="col-sm-5 col-form-label text-end">City Route KM</label>
                         <div class="col-sm-7 d-flex align-items-center">
-                            <input type="text" class="form-control" placeholder="City Route KM" formControlName="CityRouteKM">
+                            <input type="text" class="form-control" placeholder="City Route KM" formControlName="CityRouteKM" readonly>
                         </div>
                     </div>
                 </div>
@@ -200,10 +200,10 @@
                         <label class="col-sm-5 col-form-label text-end">Schedule Dep. Date</label>
                         <div class="col-sm-7">
                             <div class="input-group">
-                                <input class="form-control required2" placeholder="Schedule Dep. Date" type="text"
-                                    #dv="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue" formControlName="scheduleDeptDate"
+                                <input class="form-control required2" placeholder="Schedule Dep. Date" type="text"  [class.disabled-input]="true"
+                                    #dvS="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue" formControlName="scheduleDeptDate"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
-                                <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
+                                <span class="input-group-text cursor-pointer" (click)="dvS.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
@@ -467,10 +467,10 @@
                     <label class="col-sm-5 col-form-label text-end">Registration Date</label>
                     <div class="col-sm-7">
                         <div class="input-group">
-                            <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
-                                #dv="bsDatepicker" bsDatepicker formControlName="registrationDate"  required [ngClass]="{ 'border-danger': challanService.challanForm.get('registrationDate')?.invalid  && challanService.challanForm.get('registrationDate')?.touched }"
+                            <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"  [class.disabled-input]="true"
+                                #dvr="bsDatepicker" bsDatepicker formControlName="registrationDate"  required [ngClass]="{ 'border-danger': challanService.challanForm.get('registrationDate')?.invalid  && challanService.challanForm.get('registrationDate')?.touched }"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', maxDate:today}">
-                            <span class="input-group-text cursor-pointer" (click)="dv.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
+                            <span class="input-group-text cursor-pointer" (click)="dvr.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
@@ -518,10 +518,10 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
-                                #pv="bsDatepicker" bsDatepicker formControlName="permitDate" (bsValueChange)="checkPermitExpiry($event)"
+                                #pvp="bsDatepicker" bsDatepicker formControlName="permitDate" (bsValueChange)="checkPermitExpiry($event)"  [class.disabled-input]="true"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}"
                                  required [ngClass]="{ 'border-danger': challanService.challanForm.get('permitDate')?.invalid  && challanService.challanForm.get('permitDate')?.touched || isPermitExpired}">
-                            <span class="input-group-text cursor-pointer" (click)="pv.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
+                            <span class="input-group-text cursor-pointer" (click)="pvp.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
@@ -538,10 +538,10 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
-                                #iv="bsDatepicker" bsDatepicker  formControlName="insuranceDate" (bsValueChange)="checkInsuranceExpiry($event)"
+                                #ins="bsDatepicker" bsDatepicker  formControlName="insuranceDate" (bsValueChange)="checkInsuranceExpiry($event)"  [class.disabled-input]="true"
                                  required [ngClass]="{ 'border-danger': challanService.challanForm.get('insuranceDate')?.invalid  && challanService.challanForm.get('insuranceDate')?.touched || isInsuranceExpired}"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
-                            <span class="input-group-text cursor-pointer" (click)="iv.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
+                            <span class="input-group-text cursor-pointer" (click)="ins.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
@@ -558,10 +558,10 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
-                                #fv="bsDatepicker" bsDatepicker formControlName="fitnessDate"  (bsValueChange)="checkFitnessExpiry($event)"
+                                #fit="bsDatepicker" bsDatepicker formControlName="fitnessDate"  (bsValueChange)="checkFitnessExpiry($event)"  [class.disabled-input]="true"
                                 required [ngClass]="{ 'border-danger': challanService.challanForm.get('fitnessDate')?.invalid  && challanService.challanForm.get('fitnessDate')?.touched || isFitnessExpired}"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
-                            <span class="input-group-text cursor-pointer" (click)="fv.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
+                            <span class="input-group-text cursor-pointer" (click)="fit.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
@@ -594,7 +594,7 @@
                         <label class="col-sm-5 col-form-label text-end">Date Of Birth</label>
                         <div class="col-sm-7">
                             <div class="input-group">
-                                <input class="form-control required2" placeholder="Date Of Birth" type="text"
+                                <input class="form-control required2" placeholder="Date Of Birth" type="text"  [class.disabled-input]="true"
                                     #dbv="bsDatepicker" bsDatepicker formControlName="d1_DOB" [ngClass]="{ 'border-danger': challanService.challanForm.get('d1_DOB')?.invalid  && challanService.challanForm.get('d1_DOB')?.touched }" 
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" (ngModelChange)="onChangeLicenceNumber()">
                                 <span class="input-group-text cursor-pointer" (click)="dbv.toggle()">
@@ -644,7 +644,7 @@
                         <label class="col-sm-5 col-form-label text-end">Licence Validity Date</label>
                         <div class="col-sm-7">
                             <div class="input-group">
-                                <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"
+                                <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="true"
                                     #lv="bsDatepicker" bsDatepicker formControlName="driver1LicenceValDate"  (bsValueChange)="checkLicenseExpiry($event)"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}" readonly
                                     required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1LicenceValDate')?.invalid  && challanService.challanForm.get('driver1LicenceValDate')?.touched || isLicenseExpired}">
@@ -704,7 +704,7 @@
                         <label class="col-sm-5 col-form-label text-end">Licence Validity Date</label>
                         <div class="col-sm-7">
                             <div class="input-group">
-                                <input class="form-control" placeholder="dd/MM/yyyy" type="text"
+                                <input class="form-control" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="true"
                                     #liv="bsDatepicker" bsDatepicker formControlName="driver2LicenceValDate"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
                                 <span class="input-group-text cursor-pointer" (click)="liv.toggle()">
@@ -884,7 +884,7 @@
                     <label class="col-sm-5 col-form-label text-end">E-Way Bill Expired Date.</label>
                     <div class="col-sm-7">
                         <div class="input-group">
-                            <input class="form-control" placeholder="E-Way Bill Expired Date" type="text"
+                            <input class="form-control" placeholder="E-Way Bill Expired Date" type="text"  [class.disabled-input]="true"
                                 #ewv="bsDatepicker" bsDatepicker formControlName="eWayBillExpiredDate"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
                             <span class="input-group-text cursor-pointer" (click)="ewv.toggle()">
