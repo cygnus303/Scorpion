@@ -887,23 +887,22 @@ mergeAndPatchGST(apiGST: any, editGST: any, freightForm: FormGroup) {
     acc[key.toLowerCase()] = editGST[key];
     return acc;
   }, {});
-
   // Merge values using Math.max
   const mergedGST = {
     ...apiData,
-    igstamount: Math.max(apiData.igstamount || 0, editData.igstamount || 0),
-    cgstamount: Math.max(apiData.cgstamount || 0, editData.cgstamount || 0),
-    sgstamount: Math.max(apiData.sgstamount || 0, editData.sgstamount || 0),
-    utgstamount: Math.max(apiData.utgstamount || 0, editData.utgstamount || 0),
-    igstrate: Math.max(apiData.igstrate || 0, editData.igstrate || 0),
-    cgstrate: Math.max(apiData.cgstrate || 0, editData.cgstrate || 0),
-    sgstrate: Math.max(apiData.sgstrate || 0, editData.sgstrate || 0),
-    utgstrate: Math.max(apiData.utgstrate || 0, editData.utgstrate || 0),
-    dktTotal: Math.max(apiData.dkttotal || 0, editData.dkttot || 0),
-    igstcollected: Math.max(apiData.igstamount || 0, editData.igstamount || 0),
-    cgstcollected: Math.max(apiData.cgstamount || 0, editData.cgstamount || 0),
-    sgstcollected: Math.max(apiData.sgstamount || 0, editData.sgstamount || 0),
-    utgstcollected: Math.max(apiData.utgstamount || 0, editData.utgstamount || 0),
+    igstamount: Math.max(apiData.igstamount || 0),
+    cgstamount: Math.max(apiData.cgstamount || 0),
+    sgstamount: Math.max(apiData.sgstamount || 0),
+    utgstamount: Math.max(apiData.utgstamount || 0),
+    igstrate: Math.max(apiData.igstrate || 0),
+    cgstrate: Math.max(apiData.cgstrate || 0),
+    sgstrate: Math.max(apiData.sgstrate || 0),
+    utgstrate: Math.max(apiData.utgstrate || 0),
+    dktTotal: Math.max(apiData.dkttotal || 0),
+    igstcollected: Math.max(apiData.igstamount || 0),
+    cgstcollected: Math.max(apiData.cgstamount || 0),
+    sgstcollected: Math.max(apiData.sgstamount || 0),
+    utgstcollected: Math.max(apiData.utgstamount || 0),
     billedAt: apiData.rcplbillgenloc ?? editData.rcplbillgenloc ?? null,
     billingState: apiData.customerbillgenstate ?? editData.customerbillgenstate ?? null
   };
@@ -1029,8 +1028,8 @@ getBaseCode1() {
 }
 
 calculateChargeWeight(){
-  var ACTUWT = this.invoiceform.value.totalActualWeight;
-      var CFTTOT = this.invoiceform.value.cftTotal;
+      var ACTUWT = this.invoiceform.value.totalActualWeight;
+      var CFTTOT = this.invoiceform.value.totalCubicWeight;
       if (this.step2DetailsList.isVolumentric == 'N') {
           this.invoiceform.patchValue({
             finalActualWeight:ACTUWT
@@ -1047,10 +1046,10 @@ calculateChargeWeight(){
             finalActualWeight:CFTTOT
           })
           else {
-              if (parseFloat(ACTUWT) > parseFloat(CFTTOT))
-                this.invoiceform.patchValue({
-            finalActualWeight:ACTUWT
-          })
+            if (parseFloat(ACTUWT) > parseFloat(CFTTOT))
+              this.invoiceform.patchValue({
+                finalActualWeight: ACTUWT
+              })
           else
             this.invoiceform.patchValue({
             finalActualWeight:CFTTOT
