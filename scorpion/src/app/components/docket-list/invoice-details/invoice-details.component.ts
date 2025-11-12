@@ -153,6 +153,7 @@ removeRow(index: number): void {
     this.docketService.invoiceRows.removeAt(index);
     this.docketService.reIndexSrNo();
     this.calculateSummary(index);
+     this.docketService.calculateChargeWeight()
     this.docketService.freightAndOtherChar();
     // this.docketService.getGSTCalculation()
   }
@@ -161,6 +162,7 @@ removeRow(index: number): void {
     this.docketService.boxDetailRows.removeAt(index);
      this.docketService.boxDetailIndexSrNo();
      this.calculateSummary(index);
+     this.docketService.calculateChargeWeight()
       this.docketService.freightAndOtherChar();
       // this.docketService.getGSTCalculation()
    }
@@ -246,7 +248,9 @@ calculateSummary(i: number) {
   chargeWeightPerPkg: totalNoOfPkgs,
   finalActualWeight: +Math.max(totalActualWeight || 0, totalCubicWeight || 0).toFixed(2)
 }, { emitEvent: false });
-  this.getCFTCalculation(i)
+  this.getCFTCalculation(i);
+  this.docketService.calculateChargeWeight()
+
 }
  
 

@@ -1028,13 +1028,45 @@ getBaseCode1() {
   }
 }
 
+calculateChargeWeight(){
+  var ACTUWT = this.invoiceform.value.totalActualWeight;
+      var CFTTOT = this.invoiceform.value.cftTotal;
+      if (this.step2DetailsList.isVolumentric == 'N') {
+          this.invoiceform.patchValue({
+            finalActualWeight:ACTUWT
+          })
+      }
+      else {
+          if (this.step2DetailsList.cftWeightType == "A"){
+             this.invoiceform.patchValue({
+            finalActualWeight:ACTUWT
+          })
+          }
+          else if (this.step2DetailsList.cftWeightType == "V")
+            this.invoiceform.patchValue({
+            finalActualWeight:CFTTOT
+          })
+          else {
+              if (parseFloat(ACTUWT) > parseFloat(CFTTOT))
+                this.invoiceform.patchValue({
+            finalActualWeight:ACTUWT
+          })
+          else
+            this.invoiceform.patchValue({
+            finalActualWeight:CFTTOT
+          })
+          }
+      }
+}
+
   GetFreightContractDetails() {
     const data = {
      chargeRule: this.ruleDetailForChargeRule?.defaultvalue || 'NONE',
       baseCode1: this.basicDetailForm.value?.BaseCode1 || 'NONE',
       chargeSubRule: this.step2DetailsList?.chargeBas || 'NONE',
       baseCode2: this.basicDetailForm.value?.BaseCode2 || 'NONE',
-      chargedWeight: Math.max(this.invoiceform.value.finalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString(),
+      // chargedWeight: Math.max(this.invoiceform.value.finalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString(),
+      chargedWeight: this.invoiceform.value.finalActualWeight.toString(),
       chargedWeright:this.invoiceform.value.finalActualWeight.toString(),
       contractID: this.step2DetailsList?.contractid,
       destination: this.basicDetailForm.value.destination,
@@ -1095,6 +1127,7 @@ getBaseCode1() {
             });
 
             // 🔄 Call again only once if updated
+            this.calculateChargeWeight();
             this.GetFreightContractDetails();
             return; // stop further execution to avoid multiple triggers
           }
