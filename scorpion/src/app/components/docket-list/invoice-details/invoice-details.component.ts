@@ -94,7 +94,7 @@ checkDuplicateInvoices(i: number,row: AbstractControl) {
     }
   });
   this.calculateSummary(i);
-  this.docketService.freightAndOtherChar()
+  this.docketService.freightAndOtherChar('')
   // this.docketService.getGSTCalculation()
   this.handleDeclaredValueChange(row)
 }
@@ -154,7 +154,7 @@ removeRow(index: number): void {
     this.docketService.reIndexSrNo();
     this.calculateSummary(index);
      this.docketService.calculateChargeWeight()
-    this.docketService.freightAndOtherChar();
+    this.docketService.freightAndOtherChar('');
     // this.docketService.getGSTCalculation()
   }
  
@@ -163,7 +163,7 @@ removeRow(index: number): void {
      this.docketService.boxDetailIndexSrNo();
      this.calculateSummary(index);
      this.docketService.calculateChargeWeight()
-      this.docketService.freightAndOtherChar();
+      this.docketService.freightAndOtherChar('');
       // this.docketService.getGSTCalculation()
    }
 

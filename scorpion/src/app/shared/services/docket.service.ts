@@ -303,11 +303,11 @@ export class DocketService {
 //   this.freightAndOtherChar();
 // }, 500);
 
-freightAndOtherChar(){
+freightAndOtherChar(type:string){
   this.getBaseCode2();
   this.getBaseCode1();
   this.GetFreightContractDetails();
-  this.getOtherChargesDetail();
+  this.getOtherChargesDetail(type);
   this.getFovContractDetails();
 }
 
@@ -637,7 +637,7 @@ getcontractservicecharge() {
         complete: () => {
           this.calculateSummary.next(true);
           setTimeout(() => {
-            this.freightAndOtherChar();
+            this.freightAndOtherChar('');
           }, 200);
         }
       });
@@ -882,11 +882,12 @@ mergeAndPatchGST(apiGST: any, editGST: any, freightForm: FormGroup) {
     acc[key.toLowerCase()] = apiGST[key];
     return acc;
   }, {});
-
+  
   const editData = Object.keys(editGST || {}).reduce((acc: any, key) => {
     acc[key.toLowerCase()] = editGST[key];
     return acc;
   }, {});
+  debugger
   // Merge values using Math.max
   const mergedGST = {
     ...apiData,
@@ -1181,7 +1182,7 @@ validateAppointmentDate() {
       },
     });
   }
-  getOtherChargesDetail() {
+  getOtherChargesDetail(type?:string) {
     const chargedWeight = Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString();
     const payload = {
       "chargeRule":this.ruleDetailForChargeRule?.defaultvalue || 'NONE',
@@ -1260,7 +1261,8 @@ validateAppointmentDate() {
                 this.chargingData,
                 this.completiondata?.listCharges || [], // agar edit data available hoy to
                 this.freightForm,
-                this.basicDetailForm
+                this.basicDetailForm,
+                type
               );
             // }
           // });
@@ -1272,8 +1274,9 @@ validateAppointmentDate() {
     this.isSubmiting=false;
   }
 
- mergeAndPatchCharges(apiCharges: any[], editCharges: any[], freightForm: FormGroup, basicDetailForm: FormGroup) {
-  debugger
+ mergeAndPatchCharges(apiCharges: any[], editCharges: any[], freightForm: FormGroup, basicDetailForm: FormGroup,type?:string) {
+const isInvoice = type === 'invoice';
+ 
   const apiMap = new Map<string, number>();
   apiCharges?.forEach((item: any) => {
     const code = (item.chargeCode || item.chargecode || "").toUpperCase();
@@ -1307,16 +1310,20 @@ validateAppointmentDate() {
     const editVal = editMap.has(code) ? editMap.get(code)! : undefined;
 
     let finalValue = 0;
-
     if (controlKey) {
       const control = freightForm.get(controlKey);
       const controlVal = control?.value;
 
-      if (control && control.dirty && controlVal !== null && controlVal !== undefined) {
+      if (control && control.dirty && controlVal !== null && controlVal !== undefined && !apiVal) {
         finalValue = controlVal;
-      } else if (editVal !== undefined && editVal !== null) {
+      }else if (control && control.dirty && controlVal !== null && controlVal !== undefined && type==='invoke' && apiVal!== undefined && apiVal !== null) {
+        finalValue = apiVal;
+      }
+       else if (editVal !== undefined && editVal !== null && apiVal !== undefined && apiVal !== null && apiVal !==0) {
+        finalValue = apiVal;
+      }else if (editVal !== undefined && editVal !== null && !apiVal) {
         finalValue = editVal;
-      } else if (apiVal !== undefined && apiVal !== null) {
+      }  else if (apiVal !== undefined && apiVal !== null) {
         finalValue = apiVal;
       } else {
         finalValue = 0;
@@ -1350,6 +1357,64 @@ validateAppointmentDate() {
   }
 }
 
+// mergeAndPatchCharges(apiCharges: any[], editCharges: any[], freightForm: FormGroup, basicDetailForm: FormGroup) {
+//    const mergedMap = new Map<string, number>();
+
+//   // 1. API charges
+//   apiCharges?.forEach((item: any) => {
+//     const code = (item.chargecode || "").toUpperCase();
+//     const amount = item.charge || 0;
+//     mergedMap.set(code, Math.max(mergedMap.get(code) || 0, amount));
+//   });
+
+//   // 2. Edit charges
+//   editCharges?.forEach((item: any) => {
+//     const code = (item.chargeCode || item.chargecode || "").toUpperCase();
+//     const amount = item.chargeAmount || item.charge || 0;
+//     mergedMap.set(code, Math.max(mergedMap.get(code) || 0, amount));
+//   });
+
+//   // 3. Convert back into array of objects (keep original structure)
+//   this.chargingData = Array.from(mergedMap.entries()).map(([code, amount]) => ({
+//     chargecode: code,
+//     charge: amount
+//   }));
+
+//   // 3. Patch into freightForm
+//   this.chargingData.forEach((code:any) => {
+//     if (this.freightForm.contains(code.chargecode)) {
+//       freightForm.patchValue(
+//         {[code.chargecode]: code.charge},
+//         { emitEvent: false }
+//       );
+//     } else {
+//       console.warn("Form control not found:", code);
+//     }
+//   });
+
+//   // 4. Special business rules
+//   if (!basicDetailForm.get('IsMAllDeliveryN')?.value) {
+//     freightForm.patchValue({ SCHG17: 0 });
+//   }
+//   if (!basicDetailForm.get('isAppointmentDelivery')?.value) {
+//     freightForm.patchValue({ UCHG08: 0 });
+//   }
+//   if (!basicDetailForm.get('iscsdDelivery')?.value) {
+//     freightForm.patchValue({ SCHG10: 0 });
+//   }
+//   if (!basicDetailForm.get('isDACC')?.value) {
+//     freightForm.patchValue({ SCHG13: 0 });
+//   }
+//   if (!basicDetailForm.get('IsCODDOD')?.value) {
+//     freightForm.patchValue({ SCHG12: 0, coddodCharged: 0 });
+//   }
+//   if (freightForm.get('fovRate')?.value) {
+//     freightForm.patchValue({ SCHG11: 0 });
+//   }
+// }
+
+
+
 
   getFuelSurcharge(data: any) {
     const fuelRateType = this.contractservicecharge[0]?.fuelSurchrgBas;  // %, W, F
@@ -1381,7 +1446,7 @@ validateAppointmentDate() {
     if (surcharge > maxFuelCharge) {
       surcharge = maxFuelCharge;
     }
-    debugger
+    
     fuelSurcharge = parseFloat(surcharge.toFixed(2));
     this.freightForm.patchValue({
       SCHG20: fuelSurcharge

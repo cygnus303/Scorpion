@@ -132,7 +132,7 @@
                               type="number" value="0" formControlName="declaredvalue" required
                               (focus)="clearZero(row, 'declaredvalue')" [readonly]="row.get('ewayBillNo')?.value?.length === 12"
                               (input)="calculateSummary(i)" 
-                              (change)="docketService.freightAndOtherChar();handleDeclaredValueChange(row)"
+                              (change)="docketService.freightAndOtherChar('');handleDeclaredValueChange(row)"
                               [ngClass]="{ 'border-danger': row.get('declaredvalue')?.invalid && row.get('declaredvalue')?.touched}"
                               (blur)="restoreIfEmpty(row, 'declaredvalue')" >
                             <div *ngIf="row.get('declaredvalue')?.invalid && row.get('declaredvalue')?.touched"
@@ -243,7 +243,7 @@
                             [unit]="docketService.contractservicecharge && docketService.contractservicecharge.length > 0 ? docketService.contractservicecharge[0]?.cft_Measure : ''"
                             formControlName="length" (focus)="clearZero(row, 'length')"
                             (keypress)="docketService.allowNumericDecimal($event)"
-                            (change)="docketService.freightAndOtherChar();docketService.GetDKTGSTForGTA();"
+                            (change)="docketService.freightAndOtherChar('');docketService.GetDKTGSTForGTA();"
                             (input)="calculateSummary(i)" (blur)="restoreIfEmpty(row, 'length')"
                             [ngClass]="{ 'border-danger': row.get('length')?.invalid && row.get('length')?.touched }"
                             >
@@ -262,7 +262,7 @@
                             [unit]="docketService.contractservicecharge && docketService.contractservicecharge.length > 0 ? docketService.contractservicecharge[0]?.cft_Measure : ''"
                             formControlName="breadth" (focus)="clearZero(row, 'breadth')"
                             (keypress)="docketService.allowNumericDecimal($event)"
-                            (change)="docketService.freightAndOtherChar();docketService.GetDKTGSTForGTA()"
+                            (change)="docketService.freightAndOtherChar('');docketService.GetDKTGSTForGTA()"
                             (input)="calculateSummary(i)" (blur)="restoreIfEmpty(row, 'breadth')"
                             [ngClass]="{ 'border-danger': row.get('breadth')?.invalid && row.get('breadth')?.touched }"
                             >        
@@ -281,7 +281,7 @@
                             [unit]="docketService.contractservicecharge && docketService.contractservicecharge.length > 0 ? docketService.contractservicecharge[0]?.cft_Measure : ''"
                             formControlName="height" (focus)="clearZero(row, 'height')"
                             (keypress)="docketService.allowNumericDecimal($event)"
-                            (change)="docketService.freightAndOtherChar();docketService.GetDKTGSTForGTA()"
+                            (change)="docketService.freightAndOtherChar('');docketService.GetDKTGSTForGTA()"
                             (input)="calculateSummary(i)" (blur)="restoreIfEmpty(row, 'height')"
                             [ngClass]="{ 'border-danger': row.get('height')?.invalid && row.get('height')?.touched }"
                             >
@@ -297,7 +297,7 @@
                         <td class="center ">
                           <input class="form-control required2 text-end" placeholder="No of Pkgs."
                             (focus)="clearZero(row, 'noOfPkgs')" (keypress)="docketService.allowNumericDecimal($event)"
-                            (blur)="restoreIfEmpty(row, 'noOfPkgs');docketService.freightAndOtherChar()"
+                            (blur)="restoreIfEmpty(row, 'noOfPkgs');docketService.freightAndOtherChar('')"
                             type="number" formControlName="noOfPkgs" (input)="calculateSummary(i)"
                             (change)="docketService.GetDKTGSTForGTA();">
                         </td>
@@ -310,7 +310,7 @@
                           <input class="form-control required2 text-end" placeholder="Actual Weight" type="number"
                             formControlName="actualWeight" (input)="calculateSummary(i)"
                             (keypress)="docketService.allowNumericDecimal($event)"
-                            (blur)="restoreIfEmpty(row, 'actualWeight');docketService.freightAndOtherChar()"
+                            (blur)="restoreIfEmpty(row, 'actualWeight');docketService.freightAndOtherChar('')"
                             (change)="docketService.GetDKTGSTForGTA();" (focus)="clearZero(row, 'actualWeight')"
                             [ngClass]="{ 'border-danger': row.get('actualWeight')?.invalid && row.get('actualWeight')?.touched }">
   
@@ -413,7 +413,7 @@
           <div class="col-7">
             <input formControlName="finalActualWeight" class="form-control required2 required text-end" type="number"
               (change)="docketService.actualWeightvalidation()" readOnly
-              (blur)="restoreIfEmpty(docketService.invoiceform, 'finalActualWeight');docketService.freightAndOtherChar();docketService.getProRataCharge()">
+              (blur)="restoreIfEmpty(docketService.invoiceform, 'finalActualWeight');docketService.freightAndOtherChar('');docketService.getProRataCharge()">
               <div *ngIf="docketService.weightErrorMsg" class="text-danger mt-1 col-md-7">
                 {{ docketService.weightErrorMsg }}
               </div>

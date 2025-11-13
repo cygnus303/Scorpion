@@ -9,7 +9,7 @@
   </div>
 
 <div class="mt-3"  [ngClass]="this.docketService.isComplition ? '':'d-none'">
-  <button class="btn btn-primary btn-sm fw-bold cursor-pointer">
+  <button class="btn btn-primary btn-sm fw-bold cursor-pointer"  (click)="docketService.freightAndOtherChar('invoke')">
     Invoke Contract
   </button>
 </div>
