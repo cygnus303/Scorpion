@@ -76,7 +76,7 @@
                 <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
                   [bsValue]="docketService.bsValue" [minDate]="minDate" [maxDate]="maxDate"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
-                  placeholder="CNote Date"  formControlName="cNoteDate" required appFocusNext 
+                  placeholder="CNote Date"  formControlName="cNoteDate" required appFocusNext [class.disabled-input]="true" 
                   [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('cNoteDate')?.invalid  && docketService.basicDetailForm.get('cNoteDate')?.touched }">
                 <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
                   <i class="fa fa-calendar"></i>
@@ -614,7 +614,7 @@
                 <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
                   [bsValue]="docketService.bsValue"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
-                  placeholder="Appointment Date" [minDate]="docketService.bsValue" formControlName="appointmentDT"
+                  placeholder="Appointment Date" [minDate]="docketService.bsValue" formControlName="appointmentDT" [class.disabled-input]="true"
                   [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('appointmentDT')?.invalid && docketService.basicDetailForm.get('appointmentDT')?.touched}" >
                 <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
                   <i class="fa fa-calendar"></i>
