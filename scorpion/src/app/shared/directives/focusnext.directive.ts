@@ -363,43 +363,94 @@ async handleKeydown(event: KeyboardEvent) {
   }
 
   // 🔑 Core navigation
+  // private navigate(forward: boolean, normalizeNgSelect: boolean) {
+  //   const form = this.el.nativeElement.closest('form');
+  //   if (!form) return;
+
+  //   const selector =
+  //     'input:not([readonly]):not([disabled]):not([hidden]), ' +
+  //     'select:not([disabled]):not([hidden]), ' +
+  //     'textarea:not([readonly]):not([disabled]):not([hidden]), ' +
+  //     'ng-select:not([disabled]):not([hidden])';
+
+  //   const all = Array.from(form.querySelectorAll(selector)) as HTMLElement[];
+  //   const visible = all.filter(el => this.isVisible(el));
+  //   if (!visible.length) return;
+
+  //   // Normalize current
+  //   let current: HTMLElement = this.el.nativeElement;
+  //   if (normalizeNgSelect) {
+  //     const ngHost = current.closest('ng-select') as HTMLElement | null;
+  //     if (ngHost) current = ngHost;
+  //   } else if (current.tagName.toLowerCase() === 'ng-select') {
+  //     const inner = current.querySelector('input');
+  //     if (inner) current = inner as HTMLElement;
+  //   }
+
+  //   let index = visible.indexOf(current);
+  //   if (index === -1) return;
+
+  //   if (forward) {
+  //     for (let i = index + 1; i < visible.length; i++) {
+  //       if (this.tryFocus(visible[i])) break;
+  //     }
+  //   } else {
+  //     for (let i = index - 1; i >= 0; i--) {
+  //       if (this.tryFocus(visible[i])) break;
+  //     }
+  //   }
+  // }
+
   private navigate(forward: boolean, normalizeNgSelect: boolean) {
-    const form = this.el.nativeElement.closest('form');
-    if (!form) return;
+  const form = this.el.nativeElement.closest('form');
+  if (!form) return;
 
-    const selector =
-      'input:not([readonly]):not([disabled]):not([hidden]), ' +
-      'select:not([disabled]):not([hidden]), ' +
-      'textarea:not([readonly]):not([disabled]):not([hidden]), ' +
-      'ng-select:not([disabled]):not([hidden])';
+  const selector =
+    'input:not([readonly]):not([disabled]):not(.disabled-input), ' +
+    'select:not([disabled]):not([readonly]), ' +
+    'textarea:not([readonly]):not([disabled]), ' +
+    'ng-select:not([disabled]):not([hidden])';
 
-    const all = Array.from(form.querySelectorAll(selector)) as HTMLElement[];
-    const visible = all.filter(el => this.isVisible(el));
-    if (!visible.length) return;
+  const all = Array.from(form.querySelectorAll(selector)) as HTMLElement[];
+  const visible = all.filter(el => this.isVisible(el));
+  if (!visible.length) return;
 
-    // Normalize current
-    let current: HTMLElement = this.el.nativeElement;
-    if (normalizeNgSelect) {
-      const ngHost = current.closest('ng-select') as HTMLElement | null;
-      if (ngHost) current = ngHost;
-    } else if (current.tagName.toLowerCase() === 'ng-select') {
-      const inner = current.querySelector('input');
-      if (inner) current = inner as HTMLElement;
-    }
+  let current: HTMLElement = this.el.nativeElement;
 
-    let index = visible.indexOf(current);
-    if (index === -1) return;
+  if (normalizeNgSelect) {
+    const ngHost = current.closest('ng-select') as HTMLElement | null;
+    if (ngHost) current = ngHost;
+  } else if (current.tagName.toLowerCase() === 'ng-select') {
+    const inner = current.querySelector('input');
+    if (inner) current = inner as HTMLElement;
+  }
 
-    if (forward) {
-      for (let i = index + 1; i < visible.length; i++) {
-        if (this.tryFocus(visible[i])) break;
-      }
+  let index = visible.indexOf(current);
+  if (index === -1) return;
+
+  let next = forward ? index + 1 : index - 1;
+
+  // Skip readonly / disabled / hidden
+  while (
+    next >= 0 &&
+    next < visible.length &&
+    (visible[next].hasAttribute('readonly') ||
+      visible[next].hasAttribute('disabled') ||
+      visible[next].classList.contains('disabled-input'))
+  ) {
+    forward ? next++ : next--;
+  }
+
+  if (next >= 0 && next < visible.length) {
+    const el = visible[next];
+    if (el.tagName.toLowerCase() === 'ng-select') {
+      el.querySelector('input')?.focus();
     } else {
-      for (let i = index - 1; i >= 0; i--) {
-        if (this.tryFocus(visible[i])) break;
-      }
+      el.focus();
     }
   }
+}
+
 
   private tryFocus(el: HTMLElement): boolean {
     if (el.hasAttribute('readonly') || el.hasAttribute('disabled')) return false;

@@ -14,7 +14,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Manual {{typeName}} No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control" [placeholder]="'Manual ' + typeName + ' No.'" type="text" formControlName="manualTHCNo">
+                            <input class="form-control" [placeholder]="'Manual ' + typeName + ' No.'" type="text" formControlName="manualTHCNo" appFocusNext>
                         </div>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
                         <label class="col-sm-5 col-form-label text-end">{{typeName}} Date</label>
                         <div class="col-sm-7">
                             <div class="input-group">
-                                <input class="form-control required2" [placeholder]="typeName + ' Date'" type="text" #dv="bsDatepicker"
+                                <input class="form-control required2" [placeholder]="typeName + ' Date'" type="text" #dv="bsDatepicker" appFocusNext
                                     bsDatepicker  [bsValue]="docketService.bsValue" formControlName="tHCDate" [class.disabled-input]="true"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A',maxDate:docketService.bsValue}" [disabled]="true">
                                 <span class="input-group-text cursor-pointer" (click)="dv.toggle()" disabled>
@@ -38,7 +38,7 @@
                         <label class="col-sm-5 col-form-label text-end">Loading Date</label>
                         <div class="col-sm-7">
                             <div class="input-group">
-                                <input class="form-control required2" placeholder="Loading Date" type="text"  [class.disabled-input]="true"
+                                <input class="form-control required2" placeholder="Loading Date" type="text"  [class.disabled-input]="true" appFocusNext
                                     #dvl="bsDatepicker"  [bsValue]="docketService.bsValue" bsDatepicker formControlName="loadingDate"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
                                 <span class="input-group-text cursor-pointer" (click)="dvl.toggle()">
@@ -54,7 +54,7 @@
                     <div class="row ">
                         <label class="col-sm-5 col-form-label text-end">Empty Vehicle</label>
                         <div class="col-sm-7 d-flex align-items-center">
-                            <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="isEmpty">
+                            <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="isEmpty" appFocusNext>
                         </div>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
                         <div class="col-sm-7">
                              <ng-select class="noFoundTextColor required2 clear-icon"  placeholder="Route Mode" formControlName="routeType" (change)="getContractDetail()"
                               [ngClass]="{ 'border-danger': challanService.challanForm.get('routeType')?.invalid  && challanService.challanForm.get('routeType')?.touched }" (change)="getRoutesFromRouteType($event)"
-                                notFoundText="No matches found" [items]="challanService.routeModeList" bindLabel="codeDesc" bindValue="codeId"></ng-select>
+                                notFoundText="No matches found" [items]="challanService.routeModeList" bindLabel="codeDesc" bindValue="codeId" appFocusNext></ng-select>
                                  <div class="text-danger text-start" *ngIf="challanService.challanForm.get('routeType')?.invalid && challanService.challanForm.get('routeType')?.touched "> This field is required.</div>
                         </div>
                     </div>
@@ -76,7 +76,7 @@
                         <label class="col-sm-5 col-form-label text-end">Route Name</label>
                         <div class="col-sm-7">
                             <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Route Name" formControlName="routeCode" (change)="getMFListFromRoute($event)"
-                                notFoundText="No matches found" [items]="routeNameList" bindLabel="text" bindValue="value"
+                                notFoundText="No matches found" [items]="routeNameList" bindLabel="text" bindValue="value" appFocusNext
                                 [ngClass]="{ 'border-danger': challanService.challanForm.get('routeCode')?.invalid  && challanService.challanForm.get('routeCode')?.touched }"></ng-select>
                                  <div class="text-danger text-start" *ngIf="challanService.challanForm.get('routeCode')?.invalid && challanService.challanForm.get('routeCode')?.touched "> This field is required.</div>
                         </div>
@@ -87,7 +87,7 @@
                         <label class="col-sm-5 col-form-label text-end">Actual Dept. Time</label>
                         <div class="col-sm-7">
                             <div class="input-group">
-                                <input class="form-control required2" placeholder="Actual Dept. Time" type="text" 
+                                <input class="form-control required2" placeholder="Actual Dept. Time" type="text"  appFocusNext
                                     #dva="bsDatepicker"  [bsValue]="docketService.bsValue" bsDatepicker formControlName="actualDeptDate"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
                                 <span class="input-group-text cursor-pointer" (click)="dva.toggle()">
@@ -120,14 +120,14 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">To City</label>
                         <div class="col-sm-7" *ngIf="!challanService.challanForm.value.routeCode">
-                            <input type="text" class="form-control required2"
+                            <input type="text" class="form-control required2" appFocusNext
                                 [ngClass]="{ 'border-danger': challanService.challanForm.get('TOCITY')?.invalid && challanService.challanForm.get('TOCITY')?.touched }"
                                 placeholder="To City" formControlName="TOCITY" [ngClass]="{ 'border-danger': challanService.challanForm.get('TOCITY')?.invalid  && challanService.challanForm.get('TOCITY')?.touched }"/>
                                  <div class="text-danger text-start" *ngIf="challanService.challanForm.get('TOCITY')?.invalid && challanService.challanForm.get('TOCITY')?.touched "> This field is required.</div>
                         </div>
                         <div class="col-md-7" *ngIf="challanService.challanForm.value.routeCode">
                             <ng-select class="noFoundTextColor required2" placeholder="To City" (change)="onChangeCityListList()"
-                                (search)="getCityList($event,this.docketService.loginUserList.LocationCode,'to')"
+                                (search)="getCityList($event,this.docketService.loginUserList.LocationCode,'to')" appFocusNext
                                 formControlName="TOCITY" [notFoundText]="notToCityValue" [ngClass]="{ 'border-danger': challanService.challanForm.get('TOCITY')?.invalid  && challanService.challanForm.get('TOCITY')?.touched }">
                                 <ng-option *ngFor="let item of toCityList" [value]="item.id">
                                     {{ item.text }}
@@ -142,7 +142,7 @@
                         <label class="col-sm-5 col-form-label text-end">Expected Reporting Date</label>
                         <div class="col-sm-7">
                             <div class="input-group">
-                                <input class="form-control required2" placeholder="Expected Reporting Date" type="text"
+                                <input class="form-control required2" placeholder="Expected Reporting Date" type="text" appFocusNext
                                     #dve="bsDatepicker" bsDatepicker formControlName="ERD"  [class.disabled-input]="true"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}" readonly>
                                 <span class="input-group-text cursor-pointer" (click)="dve.toggle()">
@@ -159,7 +159,7 @@
                         <label class="col-sm-5 col-form-label text-end">Vendor Type</label>
                         <div class="col-sm-7">
                             <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Type" formControlName="vendorType" required [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorType')?.invalid  && challanService.challanForm.get('vendorType')?.touched }"
-                                notFoundText="No matches found" [items]="challanService.vendtyData" bindLabel="codeDesc" [readonly]="this.challanService.filterList?.BookedByType === 'B'" bindValue="codeId" (change)="challanService.getVendorsList($event);vendorCodeName()"></ng-select>
+                                notFoundText="No matches found" [items]="challanService.vendtyData" bindLabel="codeDesc" [readonly]="this.challanService.filterList?.BookedByType === 'B'" bindValue="codeId" (change)="challanService.getVendorsList($event);vendorCodeName()" appFocusNext></ng-select>
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vendorType')?.invalid && challanService.challanForm.get('vendorType')?.touched "> This field is required.</div>
                         </div>
                     </div>
@@ -171,7 +171,7 @@
                              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name" formControlName="vendorCode" 
                              [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code" [readonly]="this.challanService.filterList?.BookedByType === 'B'"
                               required [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorCode')?.invalid  && challanService.challanForm.get('vendorCode')?.touched }"
-                             (change)="getPANnumberData($event)"
+                             (change)="getPANnumberData($event)" appFocusNext
                              ></ng-select>
                              <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vendorCode')?.invalid && challanService.challanForm.get('vendorCode')?.touched "> This field is required.</div>
                         </div>
@@ -181,7 +181,7 @@
                     <div class="row" >
                         <label class="col-sm-5 col-form-label text-end">PAN No</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" type="text" placeholder="PAN No" formControlName="lorryOwnerPanNo" readonly>
+                            <input class="form-control required2" type="text" placeholder="PAN No" formControlName="lorryOwnerPanNo" readonly appFocusNext>
                         </div>
                     </div>
                 </div>
@@ -191,7 +191,7 @@
                     <div class="row ">
                         <label class="col-sm-5 col-form-label text-end">City Route KM</label>
                         <div class="col-sm-7 d-flex align-items-center">
-                            <input type="text" class="form-control" placeholder="City Route KM" formControlName="CityRouteKM" readonly>
+                            <input type="text" class="form-control" placeholder="City Route KM" formControlName="CityRouteKM" readonly appFocusNext>
                         </div>
                     </div>
                 </div>
@@ -201,7 +201,7 @@
                         <div class="col-sm-7">
                             <div class="input-group">
                                 <input class="form-control required2" placeholder="Schedule Dep. Date" type="text"  [class.disabled-input]="true"
-                                    #dvS="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue" formControlName="scheduleDeptDate"
+                                    #dvS="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue" formControlName="scheduleDeptDate" appFocusNext
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
                                 <span class="input-group-text cursor-pointer" (click)="dvS.toggle()">
                                     <i class="fa fa-calendar"></i>
@@ -216,7 +216,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">From Address</label>
                         <div class="col-sm-7">
-                            <input class="form-control" type="text" placeholder="From Address" formControlName="fromAddress">
+                            <input class="form-control" type="text" placeholder="From Address" formControlName="fromAddress" appFocusNext>
                         </div>
                     </div>
                 </div>
@@ -224,7 +224,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">To Address</label>
                         <div class="col-sm-7">
-                            <input class="form-control" type="text" placeholder="To Address" formControlName="toAddress">
+                            <input class="form-control" type="text" placeholder="To Address" formControlName="toAddress" appFocusNext>
                         </div>
                     </div>
                 </div>
@@ -232,7 +232,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Approx KMs.</label>
                         <div class="col-sm-7">
-                            <input class="form-control" type="text" placeholder="Approx KMs." formControlName="distanceInKM" readonly>
+                            <input class="form-control" type="text" placeholder="Approx KMs." formControlName="distanceInKM" readonly appFocusNext>
                         </div>
                     </div>
                 </div>
@@ -242,7 +242,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">From City</label>
                         <div class="col-sm-7">
-                            <ng-select placeholder="From City" formControlName="from_City">
+                            <ng-select placeholder="From City" formControlName="from_City" appFocusNext>
                                 <ng-option *ngFor="let item of challanService.cityList" [value]="item.city_code">
                                     <strong>{{ item.location }}</strong> : {{ item.location }}
                                 </ng-option>
@@ -254,7 +254,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">To City</label>
                         <div class="col-sm-7">
-                            <ng-select  placeholder="To City" formControlName="to_City">
+                            <ng-select  placeholder="To City" formControlName="to_City" appFocusNext>
                                 <ng-option *ngFor="let item of challanService.cityList" [value]="item.city_code">
                                     <strong>{{ item.location }}</strong> : {{ item.location }}
                                 </ng-option>
@@ -272,7 +272,7 @@
                         <div class="col-sm-7 d-flex align-items-center">
                               <ng-select class="noFoundTextColor required2"
                                  placeholder="Customer Name" (search)="getCustomerListForTHC($event)"
-                               formControlName="customerName" placeholder="Customer Name"
+                               formControlName="customerName" placeholder="Customer Name" appFocusNext
                                  (open)="resetCustomerDropdown()" [notFoundText]="notCustomerListValue">
                                 <ng-option *ngFor="let item of customerList" [value]="item.id">
                                      {{ item.text }}
@@ -345,7 +345,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Airport</label>
                     <div class="col-sm-7">
-                       <ng-select class="noFoundTextColor required2"  [items]="airportList" placeholder="Airport" formControlName="airportCode"
+                       <ng-select class="noFoundTextColor required2"  [items]="airportList" placeholder="Airport" formControlName="airportCode" appFocusNext
                             notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" (change)="getFlights()"></ng-select>
                     </div>
                 </div>
@@ -354,7 +354,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Airline Name</label>
                     <div class="col-sm-7 d-flex justify-content-between">
-                        <ng-select class="noFoundTextColor required2 " placeholder="Airline Name" formControlName="airLine"  (change)="getFlights()"
+                        <ng-select class="noFoundTextColor required2 " placeholder="Airline Name" formControlName="airLine"  (change)="getFlights()" appFocusNext
                             notFoundText="No matches found" [items]="airlineList" bindLabel="codeDesc" bindValue="codeId"></ng-select>
                     </div>
                 </div>
@@ -364,7 +364,7 @@
                     <label class="col-sm-5 col-form-label text-end">Flight No</label>
                     <div class="col-sm-7">
                         <ng-select class="noFoundTextColor required2" placeholder="Flight No" formControlName="flightCode" (change)="getFlightSchTime()" 
-                            notFoundText="No matches found" [items]="flightsList" bindLabel="codeDesc" bindValue="codeId"></ng-select>
+                            notFoundText="No matches found" [items]="flightsList" bindLabel="codeDesc" bindValue="codeId" appFocusNext></ng-select>
                     </div>
                 </div>
             </div>
@@ -374,7 +374,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Flight Sch. Dept. Time</label>
                     <div class="col-sm-7">
-                      <input class="form-control required2" placeholder="Flight Sch. Dept. Time" type="text" formControlName="flightScheduleTime" readonly>
+                      <input class="form-control required2" placeholder="Flight Sch. Dept. Time" type="text" formControlName="flightScheduleTime" readonly appFocusNext>
                     </div>
                 </div>
             </div>
@@ -382,7 +382,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">AWB No.</label>
                     <div class="col-sm-7 d-flex justify-content-between">
-                       <input class="form-control required2" placeholder="AWB No" type="text" formControlName="airWayBillNo">
+                       <input class="form-control required2" placeholder="AWB No" type="text" formControlName="airWayBillNo" appFocusNext>
                     </div>
                 </div>
             </div>
@@ -396,7 +396,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Train No.</label>
                     <div class="col-sm-7">
-                     <input class="form-control required2" placeholder="Train No." type="text" formControlName="trainNo">
+                     <input class="form-control required2" placeholder="Train No." type="text" formControlName="trainNo" appFocusNext>
                     </div>
                 </div>
             </div>
@@ -404,7 +404,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Train Name</label>
                     <div class="col-sm-7 d-flex justify-content-between"> 
-                        <input class="form-control required2" placeholder="Train Name" type="text" formControlName="trainName">
+                        <input class="form-control required2" placeholder="Train Name" type="text" formControlName="trainName" appFocusNext>
                     </div>
                 </div>
             </div>
@@ -412,7 +412,7 @@
                 <div class="row " >
                     <label class="col-sm-5 col-form-label text-end">RR No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" placeholder="RR No." type="text" formControlName="RRNo">
+                        <input class="form-control required2" placeholder="RR No." type="text" formControlName="RRNo" appFocusNext>
                     </div>
                 </div>
             </div>
@@ -427,7 +427,7 @@
                     <div class="col-sm-7">
                         <!-- <input class="form-control required2" placeholder="Vehicle No." type="text"> -->
                        <ng-select class="noFoundTextColor required2" placeholder="Vehicle No." [items]="vehicleNoList" formControlName="vehicleNO"
-                       (change)="getTripSheetList($event)"
+                       (change)="getTripSheetList($event)" appFocusNext
                             notFoundText="No matches found"  bindLabel="text" bindValue="value"></ng-select>
                     </div>
                 </div>
@@ -438,7 +438,7 @@
                     <div class="col-sm-7 d-flex justify-content-between">
                         <div class="form-check mx-2" *ngFor="let digit of [10, 9, 8, 7, 11]">
                             <input class="form-check-input me-1 checkbox-lg" type="radio" name="vehicleDigit" [value]="digit"
-                                (change)="onDigitChange(digit)" [checked]="selectedDigit === digit" />
+                                (change)="onDigitChange(digit)" [checked]="selectedDigit === digit" appFocusNext/>
                             <label class="form-check-label">{{ digit }}</label>
                         </div>
                     </div>
@@ -448,7 +448,7 @@
                 <div class="row" >
                     <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" placeholder="Vehicle No." type="text"   formControlName="mKTVehicleNo"
+                        <input class="form-control required2" placeholder="Vehicle No." type="text"   formControlName="mKTVehicleNo" appFocusNext
                         (input)="validateVehicleNo()">
                     </div>
                 </div>
@@ -457,7 +457,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Tripsheet No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="Tripsheet No." type="text" formControlName="tripSheetNo">
+                        <input class="form-control" placeholder="Tripsheet No." type="text" formControlName="tripSheetNo" appFocusNext>
                     </div>
                 </div>
             </div>
@@ -468,7 +468,7 @@
                     <label class="col-sm-5 col-form-label text-end">Vehicle Type</label>
                     <div class="col-sm-7">
                                <ng-select class="noFoundTextColor" placeholder="Vehicle Type" formControlName="vehicleType"
-                                [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode"
+                                [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode" appFocusNext
                             notFoundText="No matches found" (change)="onChangeVehicleType($event)"></ng-select>
                     </div>
                 </div>
@@ -477,11 +477,11 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">FTL Type</label>
                     <div class="col-sm-7" *ngIf="!isVehicleType">
-                          <ng-select class="noFoundTextColor" placeholder="FTL Type" formControlName="fTLType" readonly
+                          <ng-select class="noFoundTextColor" placeholder="FTL Type" formControlName="fTLType" readonly appFocusNext
                             notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" [items]="docketService.typeofMovementList"></ng-select>
                         </div>
                     <div class="col-sm-7"  *ngIf="isVehicleType">
-                        <ng-select class="noFoundTextColor" placeholder="FTL Type" formControlName="fTLType" readonly
+                        <ng-select class="noFoundTextColor" placeholder="FTL Type" formControlName="fTLType" readonly appFocusNext
                         notFoundText="No matches found"  bindLabel="type_Name" bindValue="typeCode" [items]="vehicleTypeList"></ng-select>
                     </div>
                 </div>
@@ -493,7 +493,7 @@
                         <div class="input-group">
                             <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"  [class.disabled-input]="true"
                                 #dvr="bsDatepicker" bsDatepicker formControlName="registrationDate"  required [ngClass]="{ 'border-danger': challanService.challanForm.get('registrationDate')?.invalid  && challanService.challanForm.get('registrationDate')?.touched }"
-                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', maxDate:today}">
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', maxDate:today}" appFocusNext>
                             <span class="input-group-text cursor-pointer" (click)="dvr.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
                                 <i class="fa fa-calendar"></i>
                             </span>
@@ -509,7 +509,7 @@
                     <label class="col-sm-5 col-form-label text-end">Engine No.</label>
                     <div class="col-sm-7">
                         <input class="form-control required2" placeholder="Engine No."  formControlName="eNGINENO" type="text"  [readonly]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
-                         required [ngClass]="{ 'border-danger': challanService.challanForm.get('eNGINENO')?.invalid  && challanService.challanForm.get('eNGINENO')?.touched }">
+                         required [ngClass]="{ 'border-danger': challanService.challanForm.get('eNGINENO')?.invalid  && challanService.challanForm.get('eNGINENO')?.touched }" appFocusNext>
                          <div class="text-danger text-start" *ngIf="challanService.challanForm.get('eNGINENO')?.invalid && challanService.challanForm.get('eNGINENO')?.touched "> This field is required.</div>
                     </div>
                 </div>
@@ -519,7 +519,7 @@
                     <label class="col-sm-5 col-form-label text-end">Chasis No.</label>
                     <div class="col-sm-7">
                         <input class="form-control required2" type="text" placeholder="Chasis No."  formControlName="cHASISNO" [readonly]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
-                         required [ngClass]="{ 'border-danger': challanService.challanForm.get('cHASISNO')?.invalid  && challanService.challanForm.get('cHASISNO')?.touched }">
+                         required [ngClass]="{ 'border-danger': challanService.challanForm.get('cHASISNO')?.invalid  && challanService.challanForm.get('cHASISNO')?.touched }" appFocusNext>
                          <div class="text-danger text-start" *ngIf="challanService.challanForm.get('cHASISNO')?.invalid && challanService.challanForm.get('cHASISNO')?.touched "> This field is required.</div>
                     </div>
                 </div>
@@ -529,7 +529,7 @@
                     <label class="col-sm-5 col-form-label text-end">RC Book No.</label>
                     <div class="col-sm-7">
                         <input class="form-control required2" type="text" placeholder="RC Book No."  formControlName="rCBOOKNO" [readonly]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
-                         required [ngClass]="{ 'border-danger': challanService.challanForm.get('rCBOOKNO')?.invalid  && challanService.challanForm.get('rCBOOKNO')?.touched }">
+                         required [ngClass]="{ 'border-danger': challanService.challanForm.get('rCBOOKNO')?.invalid  && challanService.challanForm.get('rCBOOKNO')?.touched }" appFocusNext>
                          <div class="text-danger text-start" *ngIf="challanService.challanForm.get('rCBOOKNO')?.invalid && challanService.challanForm.get('rCBOOKNO')?.touched "> This field is required.</div>
                     </div>
                 </div>
@@ -543,7 +543,7 @@
                         <div class="input-group">
                             <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
                                 #pvp="bsDatepicker" bsDatepicker formControlName="permitDate" (bsValueChange)="checkPermitExpiry($event)"  [class.disabled-input]="true"
-                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}"
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}" appFocusNext
                                  required [ngClass]="{ 'border-danger': challanService.challanForm.get('permitDate')?.invalid  && challanService.challanForm.get('permitDate')?.touched || isPermitExpired}">
                             <span class="input-group-text cursor-pointer" (click)="pvp.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
                                 <i class="fa fa-calendar"></i>
@@ -564,7 +564,7 @@
                             <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
                                 #ins="bsDatepicker" bsDatepicker  formControlName="insuranceDate" (bsValueChange)="checkInsuranceExpiry($event)"  [class.disabled-input]="true"
                                  required [ngClass]="{ 'border-danger': challanService.challanForm.get('insuranceDate')?.invalid  && challanService.challanForm.get('insuranceDate')?.touched || isInsuranceExpired}"
-                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}" appFocusNext>
                             <span class="input-group-text cursor-pointer" (click)="ins.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
                                 <i class="fa fa-calendar"></i>
                             </span>
@@ -584,7 +584,7 @@
                             <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
                                 #fit="bsDatepicker" bsDatepicker formControlName="fitnessDate"  (bsValueChange)="checkFitnessExpiry($event)"  [class.disabled-input]="true"
                                 required [ngClass]="{ 'border-danger': challanService.challanForm.get('fitnessDate')?.invalid  && challanService.challanForm.get('fitnessDate')?.touched || isFitnessExpired}"
-                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}" appFocusNext>
                             <span class="input-group-text cursor-pointer" (click)="fit.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
                                 <i class="fa fa-calendar"></i>
                             </span>
@@ -604,7 +604,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Licence No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Licence No." type="text" formControlName="driver1Licence" (input)="onChangeLicenceNumber($event)"
+                            <input class="form-control required2" placeholder="Licence No." type="text" formControlName="driver1Licence" (input)="onChangeLicenceNumber($event)" appFocusNext
                             required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1Licence')?.invalid  && challanService.challanForm.get('driver1Licence')?.touched }">
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1Licence')?.touched">
                                 <div *ngIf="challanService.challanForm.get('driver1Licence')?.hasError('required')"> This field is required.</div>
@@ -618,7 +618,7 @@
                         <label class="col-sm-5 col-form-label text-end">Date Of Birth</label>
                         <div class="col-sm-7">
                             <div class="input-group">
-                                <input class="form-control required2" placeholder="Date Of Birth" type="text"  [class.disabled-input]="true"
+                                <input class="form-control required2" placeholder="Date Of Birth" type="text"  [class.disabled-input]="true" appFocusNext
                                     #dbv="bsDatepicker" bsDatepicker formControlName="d1_DOB" [ngClass]="{ 'border-danger': challanService.challanForm.get('d1_DOB')?.invalid  && challanService.challanForm.get('d1_DOB')?.touched }" 
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" (ngModelChange)="onChangeLicenceNumber()">
                                 <span class="input-group-text cursor-pointer" (click)="dbv.toggle()">
@@ -636,7 +636,7 @@
                             <input class="form-control" placeholder="Mobile No." type="text" formControlName="driver1MobileNo" maxlength="10" pattern="[0-9]*"
               (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
               [ngClass]="[ challanService.challanForm.get('driver1MobileNo')?.invalid && challanService.challanForm.get('driver1MobileNo')?.touched ? 'border-danger' : '',
-                docketService.loginUserList.Type === '1' ? 'required2' : '']">
+                docketService.loginUserList.Type === '1' ? 'required2' : '']" appFocusNext>
               <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1MobileNo')?.invalid && challanService.challanForm.get('driver1MobileNo')?.touched "> This field is required.</div>
                         </div>
                     </div>
@@ -647,7 +647,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Driver Name</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Driver Name" type="text" formControlName="driver1Name"
+                            <input class="form-control required2" placeholder="Driver Name" type="text" formControlName="driver1Name" appFocusNext
                             required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1Name')?.invalid  && challanService.challanForm.get('driver1Name')?.touched }">
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1Name')?.invalid && challanService.challanForm.get('driver1Name')?.touched "> This field is required.</div>
                         </div>
@@ -657,7 +657,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Issue By RTO</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Issue By RTO" type="text" formControlName="driver1RTONo"
+                            <input class="form-control required2" placeholder="Issue By RTO" type="text" formControlName="driver1RTONo" appFocusNext
                             required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1RTONo')?.invalid  && challanService.challanForm.get('driver1RTONo')?.touched }">
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1RTONo')?.invalid && challanService.challanForm.get('driver1RTONo')?.touched "> This field is required.</div>
                         </div>
@@ -668,7 +668,7 @@
                         <label class="col-sm-5 col-form-label text-end">Licence Validity Date</label>
                         <div class="col-sm-7">
                             <div class="input-group">
-                                <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="true"
+                                <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="true" appFocusNext
                                     #lv="bsDatepicker" bsDatepicker formControlName="driver1LicenceValDate"  (bsValueChange)="checkLicenseExpiry($event)"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}" readonly
                                     required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1LicenceValDate')?.invalid  && challanService.challanForm.get('driver1LicenceValDate')?.touched || isLicenseExpired}">
@@ -692,7 +692,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Driver Name</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Driver Name" type="text" formControlName="driver2Name">
+                            <input class="form-control" placeholder="Driver Name" type="text" formControlName="driver2Name" appFocusNext>
                         </div>
                     </div>
                 </div>
@@ -701,7 +701,7 @@
                         <label class="col-sm-5 col-form-label text-end">Mobile No.</label>
                         <div class="col-sm-7">
                             <input class="form-control" placeholder="Mobile No." type="text" formControlName="driver2MobileNo" maxlength="10" pattern="[0-9]*"
-                              (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()">
+                              (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" appFocusNext>
                         </div>
                     </div>
                 </div>
@@ -709,7 +709,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Licence No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Licence No." type="text" formControlName="driver2Licence">
+                            <input class="form-control" placeholder="Licence No." type="text" formControlName="driver2Licence" appFocusNext>
                         </div>
                     </div>
                 </div>
@@ -719,7 +719,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Issue By RTO</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Issue By RTO" type="text" formControlName="driver2RTONo">
+                            <input class="form-control" placeholder="Issue By RTO" type="text" formControlName="driver2RTONo" appFocusNext>
                         </div>
                     </div>
                 </div>
@@ -729,7 +729,7 @@
                         <div class="col-sm-7">
                             <div class="input-group">
                                 <input class="form-control" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="true"
-                                    #liv="bsDatepicker" bsDatepicker formControlName="driver2LicenceValDate"
+                                    #liv="bsDatepicker" bsDatepicker formControlName="driver2LicenceValDate" appFocusNext
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
                                 <span class="input-group-text cursor-pointer" (click)="liv.toggle()">
                                     <i class="fa fa-calendar"></i>
@@ -748,7 +748,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Loading Supervisor/User</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="Loading Supervisor/User" type="text" formControlName="entryBy" readonly>
+                        <input class="form-control" placeholder="Loading Supervisor/User" type="text" formControlName="entryBy" readonly appFocusNext>
                     </div>
                 </div>
             </div>
@@ -756,7 +756,7 @@
                 <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Start KMs.</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Start KMs." type="text" formControlName="openKM">
+                            <input class="form-control" placeholder="Start KMs." type="text" formControlName="openKM" appFocusNext>
                         </div>
                 </div>
             </div>
@@ -764,7 +764,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">End KMs.</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="End KMs." type="text" formControlName="closeKM">
+                        <input class="form-control" placeholder="End KMs." type="text" formControlName="closeKM" appFocusNext>
                     </div>
                 </div>
             </div>
@@ -772,7 +772,7 @@
                 <div class="row align-items-center ">
                     <label class="col-sm-5 col-form-label text-end">Delivery Zone</label>
                     <div class="col-sm-7">
-                           <ng-select class="noFoundTextColor" placeholder="Delivery Zone" formControlName="deliveryZone"
+                           <ng-select class="noFoundTextColor" placeholder="Delivery Zone" formControlName="deliveryZone" appFocusNext
                                 [items]="deliveryZoneData" bindLabel="text" bindValue="value"
                             notFoundText="No matches found"></ng-select>
                     </div>
@@ -784,7 +784,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vehicle Capacity (TON)</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="Vehicle Capacity (TON)" type="text" formControlName="vehicleCapacity" readonly>
+                        <input class="form-control" placeholder="Vehicle Capacity (TON)" type="text" formControlName="vehicleCapacity" readonly appFocusNext>
                     </div>
                 </div>
             </div>
@@ -792,7 +792,7 @@
                 <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Outgoing Remarks</label>
                         <div class="col-sm-7">
-                            <textarea class="form-control-textarea required2" placeholder="Remarks" type="text" rows="2" cols="10" formControlName="THCRemarks"
+                            <textarea class="form-control-textarea required2" placeholder="Remarks" type="text" rows="2" cols="10" formControlName="THCRemarks" appFocusNext
                                 required [ngClass]="{ 'border-danger': challanService.challanForm.get('THCRemarks')?.invalid  && challanService.challanForm.get('THCRemarks')?.touched }"></textarea>
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('THCRemarks')?.invalid && challanService.challanForm.get('THCRemarks')?.touched "> This field is required.</div>
                         </div>
@@ -802,7 +802,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Is Overload</label>
                     <div class="col-sm-7 d-flex align-items-center">
-                        <input type="checkbox" class="form-check-input me-4 checkbox-lg" readonly formControlName="isOverLoad">
+                        <input type="checkbox" class="form-check-input me-4 checkbox-lg" readonly formControlName="isOverLoad" appFocusNext>
                     </div>
                 </div>
             </div>
@@ -812,7 +812,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Weight Loaded (kg)</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="Weight Loaded (kg)" type="text" formControlName="wtLoaded" readonly>
+                        <input class="form-control" placeholder="Weight Loaded (kg)" type="text" formControlName="wtLoaded" readonly appFocusNext>
                     </div>
                 </div>
             </div>
@@ -820,7 +820,7 @@
                 <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Capacity Utilization (%)</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Capacity Utilization" type="text" formControlName="vehicleCapacityUti" readonly>
+                            <input class="form-control" placeholder="Capacity Utilization" type="text" formControlName="vehicleCapacityUti" readonly appFocusNext>
                         </div>
                 </div>
             </div>
@@ -828,7 +828,7 @@
                 <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Overload Reason</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Overload Reason" type="text" formControlName="overLoadReason" readonly>
+                            <input class="form-control" placeholder="Overload Reason" type="text" formControlName="overLoadReason" readonly appFocusNext>
                         </div>
                 </div>
             </div>
@@ -840,7 +840,7 @@
                     <div class="col-sm-7">
                         <!-- <input class="form-control" placeholder="Late Dept. Reason" type="text" formControlName="lateDepaturereason"> -->
                          <ng-select class="noFoundTextColor" placeholder="Late Dept. Reason" formControlName="lateDepaturereason"
-                         [items]="challanService.latereasonList"
+                         [items]="challanService.latereasonList" appFocusNext
                         notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId"></ng-select>
                     </div>
                 </div>
@@ -849,7 +849,7 @@
                 <div class="row align-items-cente">
                         <label class="col-sm-5 col-form-label text-end">Out Veh. Free Space</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Free Space" type="text" formControlName="freeSpace" readonly>
+                            <input class="form-control" placeholder="Free Space" type="text" formControlName="freeSpace" readonly appFocusNext>
                         </div>
                 </div>
             </div>
@@ -857,7 +857,7 @@
                 <div class="row align-items-cente">
                         <label class="col-sm-5 col-form-label text-end">Seal No</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Seal No" type="text" formControlName="sealNo">
+                            <input class="form-control" placeholder="Seal No" type="text" formControlName="sealNo" appFocusNext>
                         </div>
                 </div>
             </div>
@@ -872,7 +872,7 @@
                     <div class="col-sm-7">
                         <!-- <input class="form-control required2" placeholder="Delivery Agent" type="text" formControlName="deliveryAgent"> -->
                           <ng-select class=" required2" [items]="deliverAgentData" bindLabel="name" bindValue="userId"
-                            placeholder="Delivery Agent" formControlName="deliveryAgent"  (change)="getDAMobileNo($event)"
+                            placeholder="Delivery Agent" formControlName="deliveryAgent"  (change)="getDAMobileNo($event)" appFocusNext
                             required [ngClass]="{ 'border-danger': challanService.challanForm.get('deliveryAgent')?.invalid  && challanService.challanForm.get('deliveryAgent')?.touched }"></ng-select>
                           <div class="text-danger text-start" *ngIf="challanService.challanForm.get('deliveryAgent')?.invalid && challanService.challanForm.get('deliveryAgent')?.touched "> This field is required.</div>
                     </div>
@@ -884,7 +884,7 @@
                         <label class="col-sm-5 col-form-label text-end">Delivery Agent Mobile No.</label>
                         <div class="col-sm-7">
                             <input class="form-control" placeholder="Delivery Agent Mobile No." type="text" formControlName="deliveryAgentMoNo" 
-                               maxlength="10" pattern="[0-9]*"
+                               maxlength="10" pattern="[0-9]*" appFocusNext
                               (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" readonly>
                         </div>
                     </div>
@@ -899,7 +899,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">E-Way Bill No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="E-Way Bill No." type="text" formControlName="eWayBillNo">
+                        <input class="form-control" placeholder="E-Way Bill No." type="text" formControlName="eWayBillNo" appFocusNext>
                     </div>
                 </div>
             </div>
@@ -909,7 +909,7 @@
                     <div class="col-sm-7">
                         <div class="input-group">
                             <input class="form-control" placeholder="E-Way Bill Expired Date" type="text"  [class.disabled-input]="true"
-                                #ewv="bsDatepicker" bsDatepicker formControlName="eWayBillExpiredDate"
+                                #ewv="bsDatepicker" bsDatepicker formControlName="eWayBillExpiredDate" appFocusNext
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY',minDate:today}">
                             <span class="input-group-text cursor-pointer" (click)="ewv.toggle()">
                                 <i class="fa fa-calendar"></i>
@@ -937,7 +937,7 @@
                     <div class="col-sm-7">
                         <!-- <input class="form-control required2" placeholder="Vendor Code" type="text"> -->
                          <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code" formControlName="vendorChargesCode" 
-                             [items]="challanService.vendorsChargesList" bindLabel="vendor_Name" bindValue="vendor_Code" ></ng-select>
+                             [items]="challanService.vendorsChargesList" bindLabel="vendor_Name" bindValue="vendor_Code" appFocusNext></ng-select>
                     </div>
                 </div>
             </div>
@@ -945,7 +945,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Rate </label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" placeholder="Rate" type="text">
+                        <input class="form-control required2" placeholder="Rate" type="text" appFocusNext>
                     </div>
                 </div>
             </div>
@@ -955,7 +955,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Loading Charge </label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" formControlName="Loadingcharge" placeholder="Loading Charge" type="text" readonly>
+                        <input class="form-control required2" formControlName="Loadingcharge" placeholder="Loading Charge" type="text" readonly appFocusNext>
                     </div>
                 </div>
             </div>
@@ -967,11 +967,11 @@
                     <label class="col-sm-3 col-form-label text-end">Local/ODA Charge Applicable?</label>
                     <div class="col-sm-3 d-flex justify-content-end">
                         <div class="me-5 d-flex align-items-center">
-                            <input type="radio" class="me-3" name="is_Local_ODA_id" value="local" formControlName="is_Local_ODA_id">
+                            <input type="radio" class="me-3" name="is_Local_ODA_id" value="local" formControlName="is_Local_ODA_id" appFocusNext>
                             <label>Local</label>
                         </div>
                         <div class="me-5 d-flex align-items-center">
-                            <input type="radio" class="me-3" name="is_Local_ODA_id" value="ODA" formControlName="is_Local_ODA_id">
+                            <input type="radio" class="me-3" name="is_Local_ODA_id" value="ODA" formControlName="is_Local_ODA_id" appFocusNext>
                             <label>ODA</label>
                         </div>
                     </div>
@@ -1156,7 +1156,7 @@
                 <div class="row mb-3 align-items-center">
                     <label class="col-sm-6 col-form-label text-end fw-bold">Contract Amount</label>
                     <div class="col-sm-6">
-                        <input min="1" type="number" class="form-control text-end" formControlName="contractAmount" 
+                        <input min="1" type="number" class="form-control text-end" formControlName="contractAmount" appFocusNext
                         [readOnly]="((this.docketService.loginUserList.Type === '2' ||this.docketService.loginUserList.Type === '3') && challanService.challanForm.value.vendorType === '04') ||
                         (challanService.challanForm.value.vendorType === 'XX1' &&this.docketService.loginUserList.Type === '1')"
                         (blur)="changeAmountApplicable($event)"
@@ -1187,7 +1187,7 @@
                 <div class="row mb-3 align-items-center"  *ngIf="!['04', '19', 'XX'].includes(challanService.challanForm.get('vendorType')?.value)">
                     <label class="col-sm-6 col-form-label text-end">Is Monthly Bill Allow</label>
                     <div class="col-sm-6 d-flex align-items-center">
-                        <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="isMonthlyBillAllow">
+                        <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="isMonthlyBillAllow" appFocusNext>
                     </div>
                 </div>
     
@@ -1222,7 +1222,7 @@
                         </label>
                         <div class="col-sm-6">
                             <input type="text" class="form-control text-end required2" [formControlName]="ch.chargecode"
-                                (input)="challanService.calculateNetAmount()" />
+                                (input)="challanService.calculateNetAmount()" appFocusNext/>
                         </div>
                     </div>
                 </div>
@@ -1234,14 +1234,14 @@
                 <div class="row mb-3 align-items-center" [ngClass]="['XX1', '19', '04', 'XX'].includes(challanService.challanForm.get('vendorType')?.value) ? '' : 'd-none'">
                     <label class="col-sm-4 col-form-label text-end">Enable TDS</label>
                     <div class="col-sm-8 d-flex align-items-center">
-                        <input type="checkbox" class="form-check-input me-4 checkbox-lg border" formControlName="isTDSEnabled" [class.disabled-input]="challanService.challanForm.get('vendorCode')?.value"/>
+                        <input type="checkbox" class="form-check-input me-4 checkbox-lg border" formControlName="isTDSEnabled" [class.disabled-input]="challanService.challanForm.get('vendorCode')?.value" appFocusNext/>
                     </div>
                 </div>
     
                 <div class="row mb-3 align-items-center" [ngClass]="['XX1', '19', '04', 'XX'].includes(challanService.challanForm.get('vendorType')?.value) ? '' : 'd-none'">
                     <label class="col-sm-4 col-form-label text-end">Amount Applicable</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control text-end" formControlName="tDSOnAmount" readonly/>
+                        <input type="text" class="form-control text-end" formControlName="tDSOnAmount" readonly appFocusNext/>
                     </div>
                 </div>
     
@@ -1250,27 +1250,27 @@
                     <div class="col-sm-8">
                             <ng-select class="noFoundTextColor required2" placeholder="TDS Section" formControlName="TDSAcccode"
                             [items]="challanService.TDSLedgerData"
-                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" readonly></ng-select>
+                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" readonly appFocusNext></ng-select>
                     </div>
                 </div>
     
                 <div class="row mb-3 align-items-center" [ngClass]="['XX1', '19', '04', 'XX'].includes(challanService.challanForm.get('vendorType')?.value) && challanService.challanForm.value.isTDSEnabled ? '' : 'd-none'">
                     <label class="col-sm-4 col-form-label text-end">TDS Rate (%)</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control text-end" formControlName="TDSPercent" readonly/>
+                        <input type="text" class="form-control text-end" formControlName="TDSPercent" readonly appFocusNext/>
                     </div>
                 </div>
     
                 <div class="row mb-3 align-items-center" [ngClass]="['XX1', '19', '04', 'XX'].includes(challanService.challanForm.get('vendorType')?.value) ? '' : 'd-none'">
                     <label class="col-sm-4 col-form-label text-end">TDS Amount (-)</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control text-end" formControlName="totalTDSAmount" readonly/>
+                        <input type="text" class="form-control text-end" formControlName="totalTDSAmount" readonly appFocusNext/>
                     </div>
                 </div>
                  <div class="row mb-3 align-items-center" [ngClass]="['XX1', '19', '04', 'XX'].includes(challanService.challanForm.get('vendorType')?.value) && this.docketService.loginUserList.Type !== '2' ? '' : 'd-none'">
                     <label class="col-sm-4 col-form-label text-end">PAN Number</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" formControlName="PANNO" [readonly]="this.docketService.loginUserList.Type === '1'"/>
+                        <input type="text" class="form-control" formControlName="PANNO" [readonly]="this.docketService.loginUserList.Type === '1'" appFocusNext/>
                     </div>
                 </div>
             </div>
@@ -1281,7 +1281,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end  fw-bold">Net Amount</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" [value]="0" formControlName="netAmount" readonly>
+                        <input class="form-control" type="text" [value]="0" formControlName="netAmount" readonly appFocusNext>
                     </div>
                 </div>
             </div>
@@ -1292,7 +1292,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Advance Amount</label>
                     <div class="col-sm-7">
-                        <input class="form-control text-end required2" type="text" [value]="0" formControlName="advanceAmount" (input)="calculateBalanceAmount()">
+                        <input class="form-control text-end required2" type="text" [value]="0" formControlName="advanceAmount" (input)="calculateBalanceAmount()" appFocusNext>
                     </div>
                 </div>
             </div>
@@ -1300,7 +1300,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Advance Location</label>
                     <div class="col-sm-7">
-                        <ng-select class=" required2" [items]="challanService.locationData" bindLabel="locName" bindValue="locCode"
+                        <ng-select class=" required2" [items]="challanService.locationData" bindLabel="locName" bindValue="locCode" appFocusNext
                             placeholder="Advance Location" formControlName="advanceLocation"></ng-select>
                     </div>
                 </div>
@@ -1311,7 +1311,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Balance Amount</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" [value]="0" formControlName="balanceAmount" [readonly]="this.docketService.loginUserList.Type === '1' && challanService.challanForm.value.vendorType==='XX4'">    
+                        <input class="form-control" type="text" [value]="0" formControlName="balanceAmount" [readonly]="this.docketService.loginUserList.Type === '1' && challanService.challanForm.value.vendorType==='XX4'" appFocusNext>    
                     </div>
                 </div>
             </div>
@@ -1319,7 +1319,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Balance Location</label>
                     <div class="col-sm-7">
-                        <ng-select class=" required2" [items]="challanService.locationData" bindLabel="locName" bindValue="locCode"
+                        <ng-select class=" required2" [items]="challanService.locationData" bindLabel="locName" bindValue="locCode" appFocusNext
                             placeholder="Balance Location" formControlName="balanceLocation" [readonly]="this.docketService.loginUserList.Type === '1'"></ng-select>
                     </div>
                 </div>
