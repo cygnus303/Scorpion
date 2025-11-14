@@ -62,7 +62,9 @@ constructor(
       const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
-      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      // this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      this.docketService.loginUserList.LocationCode =  'PIM';
+      this.docketService.loginUserList.Type = '2'
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
@@ -703,6 +705,7 @@ avalabledocketinPRS(event?:any){
       return;
   }
   const data = this.challanService.filterList;
+  console.log(data)
   const payload = {
     fromdt: this.formatDate(data?.fromdt),
     todt: this.formatDate(data?.todt),
