@@ -887,7 +887,7 @@ mergeAndPatchGST(apiGST: any, editGST: any, freightForm: FormGroup) {
     acc[key.toLowerCase()] = editGST[key];
     return acc;
   }, {});
-  debugger
+  
   // Merge values using Math.max
   const mergedGST = {
     ...apiData,
@@ -1262,7 +1262,6 @@ validateAppointmentDate() {
                 this.completiondata?.listCharges || [], // agar edit data available hoy to
                 this.freightForm,
                 this.basicDetailForm,
-                type
               );
             // }
           // });
@@ -1274,69 +1273,77 @@ validateAppointmentDate() {
     this.isSubmiting=false;
   }
 
- mergeAndPatchCharges(apiCharges: any[], editCharges: any[], freightForm: FormGroup, basicDetailForm: FormGroup,type?:string) {
-const isInvoice = type === 'invoice';
- 
-  const apiMap = new Map<string, number>();
+mergeAndPatchCharges(
+  apiCharges: any[],
+  editCharges: any[],
+  freightForm: FormGroup,
+  basicDetailForm: FormGroup,
+) {
+  const mergedMap = new Map<string, number>();
+
+  // 1️⃣ Collect API charges
   apiCharges?.forEach((item: any) => {
-    const code = (item.chargeCode || item.chargecode || "").toUpperCase();
-    const amount = Number(item.chargeAmount ?? item.charge ?? 0) || 0;
-    apiMap.set(code, amount);
+    const code = (item.chargecode || "").toUpperCase();
+    const amount = Number(item.charge) || 0;
+    mergedMap.set(code, amount);
   });
 
-  const editMap = new Map<string, number>();
+  // 2️⃣ Add/Edit charges
   editCharges?.forEach((item: any) => {
     const code = (item.chargeCode || item.chargecode || "").toUpperCase();
-    const amount = Number(item.chargeAmount ?? item.charge ?? 0) || 0;
-    editMap.set(code, amount);
+    const amount = Number(item.chargeAmount || item.charge) || 0;
+    mergedMap.set(code, Math.max(mergedMap.get(code) || 0, amount));
   });
 
-  const codesSet = new Set<string>();
-  apiMap.forEach((_, k) => codesSet.add(k));
-  editMap.forEach((_, k) => codesSet.add(k));
-  Object.keys(freightForm.controls).forEach(k => codesSet.add(k.toUpperCase()));
-
-  this.chargingData = Array.from(codesSet).map(code => ({
+  // 3️⃣ Convert map to array
+  this.chargingData = Array.from(mergedMap.entries()).map(([code, amount]) => ({
     chargecode: code,
-    charge: apiMap.get(code) ?? editMap.get(code) ?? 0
+    charge: amount,
   }));
 
-  codesSet.forEach((rawCode) => {
-    const code = rawCode.toUpperCase();
-    const controlKey = Object.keys(freightForm.controls).find(k => k.toUpperCase() === code);
+  // 4️⃣ Patch values into freightForm (respecting manual edits)
+  this.chargingData.forEach((chargeItem: any) => {
+    const controlName = chargeItem.chargecode;
+    const control = freightForm.get(controlName);
+    const apiChargeObj = apiCharges?.find(
+      (api) => (api.chargecode || "").toUpperCase() === controlName
+    );
+    const apiValue = Number(apiChargeObj?.charge) || 0;
 
-    // determine candidate values
-    const apiVal = apiMap.has(code) ? apiMap.get(code)! : undefined;
-    const editVal = editMap.has(code) ? editMap.get(code)! : undefined;
+    if (control) {
+      const currentValue = Number(control.value) || 0;
+      const newValue = Number(chargeItem.charge) || 0;
 
-    let finalValue = 0;
-    if (controlKey) {
-      const control = freightForm.get(controlKey);
-      const controlVal = control?.value;
-
-      if (control && control.dirty && controlVal !== null && controlVal !== undefined && !apiVal) {
-        finalValue = controlVal;
-      }else if (control && control.dirty && controlVal !== null && controlVal !== undefined && type==='invoke' && apiVal!== undefined && apiVal !== null) {
-        finalValue = apiVal;
-      }
-       else if (editVal !== undefined && editVal !== null && apiVal !== undefined && apiVal !== null && apiVal !==0) {
-        finalValue = apiVal;
-      }else if (editVal !== undefined && editVal !== null && !apiVal) {
-        finalValue = editVal;
-      }  else if (apiVal !== undefined && apiVal !== null) {
-        finalValue = apiVal;
+      /**
+       * Logic:
+       *  - If API has this code:
+       *      - If API value > 0 → override with API
+       *      - If API value = 0 → keep manual (don’t overwrite)
+       *  - If API doesn’t have code → keep manual
+       */
+      if (apiChargeObj) {
+        
+        if (apiValue > 0) {
+          // API wins (non-zero)
+          control.patchValue(apiValue, { emitEvent: false });
+        } else {
+          // API sent 0 → keep manual if any
+          if (currentValue === 0) {
+            control.patchValue(newValue, { emitEvent: false });
+          }
+        }
       } else {
-        finalValue = 0;
-      }
-
-      if (Number(control?.value) !== Number(finalValue)) {
-        control?.patchValue(finalValue, { emitEvent: false });
+        // No API charge for this code → keep manual if already filled
+        if (currentValue === 0 || currentValue === null || currentValue === undefined) {
+          control.patchValue(newValue, { emitEvent: false });
+        }
       }
     } else {
-      console.warn("Form control not found for charge:", code);
+      console.warn("Form control not found:", controlName);
     }
   });
 
+  // 5️⃣ Business rules (same)
   if (!basicDetailForm.get('IsMAllDeliveryN')?.value) {
     freightForm.patchValue({ SCHG17: 0 });
   }
@@ -1356,63 +1363,6 @@ const isInvoice = type === 'invoice';
     freightForm.patchValue({ SCHG11: 0 });
   }
 }
-
-// mergeAndPatchCharges(apiCharges: any[], editCharges: any[], freightForm: FormGroup, basicDetailForm: FormGroup) {
-//    const mergedMap = new Map<string, number>();
-
-//   // 1. API charges
-//   apiCharges?.forEach((item: any) => {
-//     const code = (item.chargecode || "").toUpperCase();
-//     const amount = item.charge || 0;
-//     mergedMap.set(code, Math.max(mergedMap.get(code) || 0, amount));
-//   });
-
-//   // 2. Edit charges
-//   editCharges?.forEach((item: any) => {
-//     const code = (item.chargeCode || item.chargecode || "").toUpperCase();
-//     const amount = item.chargeAmount || item.charge || 0;
-//     mergedMap.set(code, Math.max(mergedMap.get(code) || 0, amount));
-//   });
-
-//   // 3. Convert back into array of objects (keep original structure)
-//   this.chargingData = Array.from(mergedMap.entries()).map(([code, amount]) => ({
-//     chargecode: code,
-//     charge: amount
-//   }));
-
-//   // 3. Patch into freightForm
-//   this.chargingData.forEach((code:any) => {
-//     if (this.freightForm.contains(code.chargecode)) {
-//       freightForm.patchValue(
-//         {[code.chargecode]: code.charge},
-//         { emitEvent: false }
-//       );
-//     } else {
-//       console.warn("Form control not found:", code);
-//     }
-//   });
-
-//   // 4. Special business rules
-//   if (!basicDetailForm.get('IsMAllDeliveryN')?.value) {
-//     freightForm.patchValue({ SCHG17: 0 });
-//   }
-//   if (!basicDetailForm.get('isAppointmentDelivery')?.value) {
-//     freightForm.patchValue({ UCHG08: 0 });
-//   }
-//   if (!basicDetailForm.get('iscsdDelivery')?.value) {
-//     freightForm.patchValue({ SCHG10: 0 });
-//   }
-//   if (!basicDetailForm.get('isDACC')?.value) {
-//     freightForm.patchValue({ SCHG13: 0 });
-//   }
-//   if (!basicDetailForm.get('IsCODDOD')?.value) {
-//     freightForm.patchValue({ SCHG12: 0, coddodCharged: 0 });
-//   }
-//   if (freightForm.get('fovRate')?.value) {
-//     freightForm.patchValue({ SCHG11: 0 });
-//   }
-// }
-
 
 
 

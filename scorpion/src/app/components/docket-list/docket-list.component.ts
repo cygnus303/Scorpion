@@ -32,8 +32,8 @@ export class DocketListComponent implements OnInit {
     const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
-      // this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      this.docketService.Location = 'PIM';
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      // this.docketService.Location = 'PIM';
       this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
@@ -664,7 +664,7 @@ formData.append("DVM.WMD.cdeldt", this.docketService.freightData.edd );
 
 
         formData.append("DVM.WMD.AppointmentDT",this.docketService.basicDetailForm.value.appointmentDT ? new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString() : new Date().toISOString()),
-        formData.append("DVM.WMD.Version", String(Number('8')));
+        formData.append("DVM.WMD.Version", String(Number('9')));
       formData.append("DVM.docketType", "DKT");
       this.isSubmitting = true;
       if(!this.docketService.isComplition){
