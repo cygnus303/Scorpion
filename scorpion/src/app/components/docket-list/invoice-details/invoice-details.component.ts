@@ -302,6 +302,11 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
     const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
     const row = invoiceRows.at(index) as FormGroup;
  
+ const oldValue = (row as any).initialEwayBillNo;
+    if (oldValue && oldValue === search) {
+      return; // No popup on auto-loaded edit data
+    }
+
      const isDuplicate = invoiceRows.controls.some((ctrl, i) =>
     i !== index && ctrl.get('ewayBillNo')?.value === search
   );

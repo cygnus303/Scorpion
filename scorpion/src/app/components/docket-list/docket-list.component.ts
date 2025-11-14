@@ -217,6 +217,9 @@ getCompletionData() {
                   invoiceNo: item.invno,
                   declaredvalue: item.declval,
                 });
+                invoiceRows.controls.forEach((row: any) => {
+                    row.initialEwayBillNo = row.get('ewayBillNo')?.value;
+                  });
               });
             }
 
