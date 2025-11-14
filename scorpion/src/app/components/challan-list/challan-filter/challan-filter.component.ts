@@ -15,10 +15,16 @@ import { Validators } from '@angular/forms';
 })
 export class ChallanFilterComponent {
   public bookByData:any;
+  public typeName : string='';
   public bookByTypeData=[
     { text:'Staff', value:'P'},
     { text:'BA',value:'B'}
+  ];
+  public dateType=[
+    {text:'CNote Booking Date',value:'1'},
+    {text:'CNote Arrived Date',value:'2'}
   ]
+
   public dateRange: [Date, Date] = [new Date(new Date().getFullYear(), new Date().getMonth(), 1),
       new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59, 999)];
 
@@ -52,6 +58,9 @@ constructor(
 
       chargeTypeControl?.updateValueAndValidity();
     });
+    const type = this.docketService.loginUserList.Type;
+    this.typeName = type === '3' ? 'DRS' : type === '1' ? 'THC' : type === '2' ? 'PRS' : '';
+
   }
 
   getBookedByData(id:string) {
@@ -75,6 +84,7 @@ constructor(
  
 
 onSearch() {
+  console.log(this.challanService.filterForm.value.dateRange)
   if (this.challanService.filterForm.valid) {
     this.router.navigate(
       ['Operation/ChallanList'],
