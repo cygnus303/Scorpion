@@ -7,6 +7,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ChallanFilterComponent } from './challan-filter/challan-filter.component';
+import { SharedModule } from 'app/shared/shared/shared.module';
 
 @NgModule({
   declarations: [ChallanListComponent,ChallanFilterComponent],
@@ -16,7 +17,8 @@ import { ChallanFilterComponent } from './challan-filter/challan-filter.componen
     BsDatepickerModule,
     FormsModule,
     ReactiveFormsModule,
-    NgSelectModule
+    NgSelectModule,
+    SharedModule
   ],
   exports: [ RouterModule ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

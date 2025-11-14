@@ -13,7 +13,7 @@ import { HeaderComponent } from '../layouts/header/header.component';
 import { DocketService } from '../shared/services/docket.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { DecimalLimitDirective } from '../shared/directives/decimal-limit.directive';
-import { FocusNextDirective } from '../shared/directives/focusnext.directive';
+import { SharedModule } from 'app/shared/shared/shared.module';
 import { DocketDoneComponent } from './docket-done/docket-done.component';
 import DocketEditComponent from './docket-list/docket-edit/docket-edit.component';
 
@@ -28,7 +28,6 @@ import DocketEditComponent from './docket-list/docket-edit/docket-edit.component
         DocketEditComponent,
         HeaderComponent,
         DecimalLimitDirective,
-        FocusNextDirective
     ],
     imports: [
         CommonModule,
@@ -37,6 +36,7 @@ import DocketEditComponent from './docket-list/docket-edit/docket-edit.component
         NgSelectModule,
         BsDatepickerModule,
         RouterModule.forChild(DocketRoutes),
+        SharedModule
     ],
     providers: [DatePipe,DocketService],
     exports: [ RouterModule ],
