@@ -28,7 +28,7 @@ export class DocketService {
   public today: string = '';
   public Location: string = '';
   public BaseUserCode: string = '';
-  public baseUsername :string ='';
+    public baseUsername :string ='';
   public step2DetailsList: any;
   public getGSTNODetailsList: any;
   public GetPincodeOriginList!: any;

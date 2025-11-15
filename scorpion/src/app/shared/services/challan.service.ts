@@ -6,9 +6,10 @@ import { THCMasterService } from './thc-master.service';
 import { DocketService } from './docket.service';
 import { DeliveryAgentService } from './delivery-agent.service';
 import { LocationListResponse } from '../models/delivery-agent.model';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { SweetAlertService } from './sweet-alert.service';
 import { environment } from 'environments/environment';
+import { mobileNo } from '../constants/common';
 
 @Injectable({
   providedIn: 'root'
@@ -216,10 +217,19 @@ calculateNetAmount() {
 
   // vendor-specific balanceAmount behavior (unchanged)
   if (['XX1','04','19','XX'].includes(this.challanForm.value.vendorType)) {
-    this.challanForm.patchValue({
-      balanceAmount: finalNet.toFixed(2)
-    }, { emitEvent: false });
+
+  const netAmount = Number(this.challanForm.get('netAmount')?.value) || 0;
+  const advanceAmount = Number(this.challanForm.get('advanceAmount')?.value) || 0;
+  if(netAmount>advanceAmount){
+  const balanceAmount = netAmount - advanceAmount;
+  this.challanForm.patchValue({ balanceAmount });
   }
+}
+  //   this.challanForm.patchValue({
+  //     balanceAmount: finalNet.toFixed(2)
+  //   }, { emitEvent: false });
+  // }
+  
 }
 
 rounditn(value: number, digits: number): number {
@@ -257,9 +267,6 @@ SearchfilterForm(){
 }
 
   buildForm(){
-    const today = new Date(); 
-const nextDay = new Date(today);
-nextDay.setDate(today.getDate() + 1);
   const isType1 = this.docketService.loginUserList.Type === '1';
   this.challanForm = new FormGroup({
     manualTHCNo:new FormControl('N/A'),
@@ -281,7 +288,7 @@ nextDay.setDate(today.getDate() + 1);
     to_City:new FormControl(),
     FROMCITY:new FormControl(null, isType1 ? Validators.required : null),
     TOCITY:new FormControl(null, isType1 ? Validators.required : null),
-    ERD:new FormControl(nextDay),
+    ERD:new FormControl(),
     loadingSlipAttachment:new FormControl(),
     vehicleNo:new FormControl(),
     mKTVehicleNo:new FormControl(),
@@ -300,9 +307,9 @@ nextDay.setDate(today.getDate() + 1);
     driver1Name:new FormControl(),
     driver1RTONo:new FormControl(),
     driver1LicenceValDate:new FormControl(),
-    driver1MobileNo:new FormControl(null, isType1 ? Validators.required : null),
+    driver1MobileNo: new FormControl(null,[ Validators.pattern(mobileNo),...(isType1 ? [Validators.required] : [])]),
     driver2Name:new FormControl(),
-    driver2MobileNo:new FormControl(),
+    driver2MobileNo:new FormControl(null,[Validators.pattern(mobileNo)]),
     driver2Licence:new FormControl(),
     driver2RTONo:new FormControl(),
     driver2LicenceValDate:new FormControl(),
@@ -317,7 +324,7 @@ nextDay.setDate(today.getDate() + 1);
     tDSOnAmount : new FormControl(0),
     totalTDSAmount : new FormControl(0),
     netAmount : new FormControl(0),
-    advanceAmount : new FormControl(0),
+    advanceAmount : new FormControl(0, Validators.required),
     balanceAmount : new FormControl(0),
     advanceLocation : new FormControl(),
     balanceLocation : new FormControl(),
@@ -359,7 +366,8 @@ nextDay.setDate(today.getDate() + 1);
     routeCode:new FormControl(null, isType1 ? Validators.required : null),
     customerName:new FormControl(),
     vendorChargesCode:new FormControl(),
-  });
+  }, { validators: this.advanceNotGreaterThanNet.bind(this) }
+);
 }
 
  get avalableForTHC(): FormArray {
@@ -463,6 +471,15 @@ patchAvailableDockets(data: any[]) {
     this.avalabledocket.push(group);
   });
 }
+
+advanceNotGreaterThanNet(control: AbstractControl) {
+  const net = Number(control.get('netAmount')?.value) || 0;
+  const adv = Number(control.get('advanceAmount')?.value) || 0;
+
+  return adv > net ? { advanceInvalid: true } : null;
+}
+
+
 
 validateRate(group: FormGroup): boolean {
   const loadingBy = this.filterList?.loadingBy;

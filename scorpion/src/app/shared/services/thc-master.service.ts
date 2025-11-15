@@ -125,4 +125,9 @@ export class THCMasterService {
     return this.apiHandlerService.Get(`THC/GetBookedBy?id=${id}&location=${locationCode}&username=${username}`);
   }
 
+  getERDDate(payload:any){
+    return this.apiHandlerService.Get(`THC/GetERD?routeCode=${payload.routeCode}&thcDate=${payload.thcDate}`);
+
+  }
+
 }
