@@ -37,14 +37,9 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Loading Date</label>
                         <div class="col-sm-7">
-                            <div class="input-group">
-                                <input class="form-control required2" placeholder="Loading Date" type="text"  [class.disabled-input]="true" appFocusNext
-                                    #dvl="bsDatepicker"  [bsValue]="docketService.bsValue" bsDatepicker formControlName="loadingDate"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
-                                <span class="input-group-text cursor-pointer" (click)="dvl.toggle()">
-                                    <i class="fa fa-calendar"></i>
-                                </span>
-                            </div>
+                            <app-date-time-picker controlName="loadingDate" [placeholder]="'Loading Date & Time'"
+                                [maxDate]="docketService.bsValue">
+                            </app-date-time-picker>
                         </div>
                     </div>
                 </div>
@@ -86,14 +81,15 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Actual Dept. Time</label>
                         <div class="col-sm-7">
-                            <div class="input-group">
-                                <input class="form-control required2" placeholder="Actual Dept. Time" type="text"  appFocusNext
+                                <!-- <input class="form-control required2" placeholder="Actual Dept. Time" type="text"  appFocusNext
                                     #dva="bsDatepicker"  [bsValue]="docketService.bsValue" bsDatepicker formControlName="actualDeptDate"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
                                 <span class="input-group-text cursor-pointer" (click)="dva.toggle()">
                                     <i class="fa fa-calendar"></i>
-                                </span>
-                            </div>
+                                </span> -->
+                                 <app-date-time-picker controlName="actualDeptDate" [placeholder]="'Actual Dept. Time'"
+                                 [maxDate]="docketService.bsValue">
+                                 </app-date-time-picker>
                         </div>
                     </div>
                 </div>
@@ -295,44 +291,44 @@
                         <label class="col-sm-5 col-form-label text-end">Loading Slip Attachment :</label>
                         <div class="col-sm-7">
                             <!-- <div *ngIf="previewUrl; else uploadBlock" class="d-flex align-items-center gap-2">
-                                <img [src]="previewUrl" alt="Preview" class="img-fluid rounded border mb-2 attachment-img" style="max-height: 100px;">
+                                                        <img [src]="previewUrl" alt="Preview" class="img-fluid rounded border mb-2 attachment-img" style="max-height: 100px;">
+                                                        <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*,application/pdf" class="d-none">
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <button type="button" class="btn btn-sm btn-success" (click)="triggerFileInput()">Change
+                                                                It!</button>
+                                                            <button type="button" class="btn btn-sm btn-danger" (click)="removeAttachment()">Remove</button>
+                                                        </div>
+                                                    </div>
+                                                    <ng-template #uploadBlock>
+                                                        <input type="file" #fileInput class="form-control py-2 pt-2 uppercase-none"
+                                                            (change)="onFileSelected($event)" accept="image/*,application/pdf">
+                                                    </ng-template> -->
+                            <div *ngIf="previewUrl || selectedFileName; else uploadBlock" class="d-flex align-items-center gap-2">
+                                <!-- Image preview (only if image file) -->
+                                    <img *ngIf="isImageFile" [src]="previewUrl" alt="Preview"
+                                        class="img-fluid rounded border mb-2 attachment-img"
+                                    style="max-height: 100px;">
+                        
+                                <!-- PDF filename (only if PDF file) -->
+                                <div *ngIf="!isImageFile" class="mb-2">
+                                    <i class="bi bi-file-earmark-pdf text-danger fs-4"></i>
+                                    <span class="ms-2 fw-semibold">{{ selectedFileName }}</span>
+                                </div>
+                        
+                                <!-- Hidden file input -->
                                 <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*,application/pdf" class="d-none">
+                        
+                                <!-- Action buttons -->
                                 <div class="d-flex align-items-center gap-2">
-                                    <button type="button" class="btn btn-sm btn-success" (click)="triggerFileInput()">Change
-                                        It!</button>
+                                    <button type="button" class="btn btn-sm btn-success" (click)="triggerFileInput()">Change It!</button>
                                     <button type="button" class="btn btn-sm btn-danger" (click)="removeAttachment()">Remove</button>
                                 </div>
                             </div>
+                        
                             <ng-template #uploadBlock>
-                                <input type="file" #fileInput class="form-control py-2 pt-2 uppercase-none"
-                                    (change)="onFileSelected($event)" accept="image/*,application/pdf">
-                            </ng-template> -->
-                            <div *ngIf="previewUrl || selectedFileName; else uploadBlock" class="d-flex align-items-center gap-2">
-                                    <!-- Image preview (only if image file) -->
-                                    <img *ngIf="isImageFile" [src]="previewUrl" alt="Preview"
-                                        class="img-fluid rounded border mb-2 attachment-img"
-                                        style="max-height: 100px;">
-
-                                    <!-- PDF filename (only if PDF file) -->
-                                    <div *ngIf="!isImageFile" class="mb-2">
-                                        <i class="bi bi-file-earmark-pdf text-danger fs-4"></i>
-                                        <span class="ms-2 fw-semibold">{{ selectedFileName }}</span>
-                                    </div>
-
-                                    <!-- Hidden file input -->
-                                    <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*,application/pdf" class="d-none">
-
-                                    <!-- Action buttons -->
-                                    <div class="d-flex align-items-center gap-2">
-                                        <button type="button" class="btn btn-sm btn-success" (click)="triggerFileInput()">Change It!</button>
-                                        <button type="button" class="btn btn-sm btn-danger" (click)="removeAttachment()">Remove</button>
-                                    </div>
-                                    </div>
-
-                                    <ng-template #uploadBlock>
                                     <input type="file" #fileInput class="form-control py-2 pt-2 uppercase-none"
                                             (change)="onFileSelected($event)" accept="image/*,application/pdf">
-                                    </ng-template>
+                            </ng-template>
                         </div>
                     </div>
                 </div>
