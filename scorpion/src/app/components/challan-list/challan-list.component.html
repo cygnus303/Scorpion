@@ -1,5 +1,5 @@
 <!-- <challan-filter></challan-filter> -->
-<div class="cnote-entry-container px-1 m-3">
+<div class="cnote-entry-container">
   <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
     <i class="fa fa-edit me-2"></i>
     Prepare New {{typeName}}
@@ -22,14 +22,17 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">{{typeName}} Date</label>
                         <div class="col-sm-7">
-                            <div class="input-group">
+                              <app-date-time-picker controlName="tHCDate" [placeholder]="typeName + ' Date'"
+                               [minDate]="minDate" [maxDate]="maxDate">
+                            </app-date-time-picker>
+                            <!-- <div class="input-group">
                                 <input class="form-control required2" [placeholder]="typeName + ' Date'" type="text" #dv="bsDatepicker" appFocusNext
                                     bsDatepicker  [bsValue]="docketService.bsValue" formControlName="tHCDate" [class.disabled-input]="true" [minDate]="minDate" [maxDate]="maxDate"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}" [disabled]="true">
                                 <span class="input-group-text cursor-pointer" (click)="dv.toggle()" disabled>
                                     <i class="fa fa-calendar"></i>
                                 </span>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -162,14 +165,17 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Schedule Dep. Date</label>
                         <div class="col-sm-7">
-                            <div class="input-group">
+                             <app-date-time-picker controlName="scheduleDeptDate" placeholder="Schedule Dep. Date"
+                              [minDate]="minDate" [maxDate]="maxDate">
+                            </app-date-time-picker>
+                            <!-- <div class="input-group">
                                 <input class="form-control required2" placeholder="Schedule Dep. Date" type="text"  [class.disabled-input]="true" [minDate]="minDate" [maxDate]="maxDate"
                                     #dvS="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue" formControlName="scheduleDeptDate" appFocusNext
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
                                 <span class="input-group-text cursor-pointer" (click)="dvS.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -617,7 +623,7 @@
                             <div class="input-group">
                                 <input class="form-control required2" placeholder="Date Of Birth" type="text"  [class.disabled-input]="true" appFocusNext
                                     #dbv="bsDatepicker" bsDatepicker formControlName="d1_DOB" [ngClass]="{ 'border-danger': challanService.challanForm.get('d1_DOB')?.invalid  && challanService.challanForm.get('d1_DOB')?.touched }" 
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" (ngModelChange)="onChangeLicenceNumber()">
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY',maxDate : today}" (ngModelChange)="onChangeLicenceNumber()">
                                 <span class="input-group-text cursor-pointer" (click)="dbv.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
