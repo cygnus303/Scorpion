@@ -24,8 +24,8 @@
                         <div class="col-sm-7">
                             <div class="input-group">
                                 <input class="form-control required2" [placeholder]="typeName + ' Date'" type="text" #dv="bsDatepicker" appFocusNext
-                                    bsDatepicker  [bsValue]="docketService.bsValue" formControlName="tHCDate" [class.disabled-input]="true"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A',maxDate:docketService.bsValue}" [disabled]="true">
+                                    bsDatepicker  [bsValue]="docketService.bsValue" formControlName="tHCDate" [class.disabled-input]="true" [minDate]="minDate" [maxDate]="maxDate"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}" [disabled]="true">
                                 <span class="input-group-text cursor-pointer" (click)="dv.toggle()" disabled>
                                     <i class="fa fa-calendar"></i>
                                 </span>
@@ -39,8 +39,9 @@
                         <div class="col-sm-7">
                             <div class="input-group">
                                 <input class="form-control required2" placeholder="Loading Date" type="text"  [class.disabled-input]="true" appFocusNext
-                                    #dvl="bsDatepicker"  [bsValue]="docketService.bsValue" bsDatepicker formControlName="loadingDate"
+                                    #dvl="bsDatepicker"  [bsValue]="docketService.bsValue" bsDatepicker formControlName="loadingDate" [minDate]="minDate" [maxDate]="maxDate"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
+                                     
                                 <span class="input-group-text cursor-pointer" (click)="dvl.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
@@ -86,10 +87,13 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Actual Dept. Time</label>
                         <div class="col-sm-7">
+                            <div class="input-group" style="width: 50%;">
+                                <input class="form-control required2" placeholder="Actual Dept. Time" type="text" [value]="actualDeptTime" appFocusNext readonly>
+                            </div>
                             <div class="input-group">
-                                <input class="form-control required2" placeholder="Actual Dept. Time" type="text"  appFocusNext
-                                    #dva="bsDatepicker"  [bsValue]="docketService.bsValue" bsDatepicker formControlName="actualDeptDate"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
+                                <input class="form-control required2" placeholder="Actual Dept. Time" type="text" [class.disabled-input]="true" appFocusNext
+                                    #dva="bsDatepicker"  [bsValue]="docketService.bsValue" bsDatepicker formControlName="actualDeptDate"[minDate]="minDate" [maxDate]="maxDate"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}" >
                                 <span class="input-group-text cursor-pointer" (click)="dva.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
@@ -145,7 +149,7 @@
                                 <input class="form-control required2" placeholder="Expected Reporting Date" type="text" appFocusNext
                                     #dve="bsDatepicker" bsDatepicker formControlName="ERD"  [class.disabled-input]="true"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}" readonly>
-                                <span class="input-group-text cursor-pointer" (click)="dve.toggle()">
+                                <span class="input-group-text cursor-pointer" (click)="dve.toggle()" [class.disabled-input]="true">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
@@ -200,7 +204,7 @@
                         <label class="col-sm-5 col-form-label text-end">Schedule Dep. Date</label>
                         <div class="col-sm-7">
                             <div class="input-group">
-                                <input class="form-control required2" placeholder="Schedule Dep. Date" type="text"  [class.disabled-input]="true"
+                                <input class="form-control required2" placeholder="Schedule Dep. Date" type="text"  [class.disabled-input]="true" [minDate]="minDate" [maxDate]="maxDate"
                                     #dvS="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue" formControlName="scheduleDeptDate" appFocusNext
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
                                 <span class="input-group-text cursor-pointer" (click)="dvS.toggle()">
@@ -637,9 +641,16 @@
               (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
               [ngClass]="[ challanService.challanForm.get('driver1MobileNo')?.invalid && challanService.challanForm.get('driver1MobileNo')?.touched ? 'border-danger' : '',
                 docketService.loginUserList.Type === '1' ? 'required2' : '']" appFocusNext>
-              <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1MobileNo')?.invalid && challanService.challanForm.get('driver1MobileNo')?.touched "> This field is required.</div>
-                        </div>
+              <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1MobileNo')?.invalid && challanService.challanForm.get('driver1MobileNo')?.touched "> 
+               <div *ngIf="challanService.challanForm.get('driver1MobileNo')?.errors?.['required']">
+                      This field is required.
                     </div>
+                    <div *ngIf="challanService.challanForm.get('driver1MobileNo')?.errors?.['pattern']">
+                        Please enter a valid Indian mobile number.
+                    </div>
+                </div>
+            </div>
+        </div>
                 </div>
             </div>
             <div class="row pb-3">
@@ -701,7 +712,14 @@
                         <label class="col-sm-5 col-form-label text-end">Mobile No.</label>
                         <div class="col-sm-7">
                             <input class="form-control" placeholder="Mobile No." type="text" formControlName="driver2MobileNo" maxlength="10" pattern="[0-9]*"
-                              (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" appFocusNext>
+                              (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" 
+                               [ngClass]="[ challanService.challanForm.get('driver2MobileNo')?.invalid && challanService.challanForm.get('driver2MobileNo')?.touched ? 'border-danger' : '']"
+                              appFocusNext>
+                              <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver2MobileNo')?.invalid && challanService.challanForm.get('driver2MobileNo')?.touched "> 
+                                <div *ngIf="challanService.challanForm.get('driver2MobileNo')?.errors?.['pattern']">
+                                    Please enter a valid Indian mobile number.
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -756,7 +774,7 @@
                 <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Start KMs.</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Start KMs." type="text" formControlName="openKM" appFocusNext>
+                            <input class="form-control" placeholder="Start KMs." type="text" formControlName="openKM" (keypress)="docketService.allowNumericDecimal($event)" appFocusNext>
                         </div>
                 </div>
             </div>
@@ -764,7 +782,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">End KMs.</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="End KMs." type="text" formControlName="closeKM" appFocusNext>
+                        <input class="form-control" placeholder="End KMs." type="text" formControlName="closeKM" (keypress)="docketService.allowNumericDecimal($event)" appFocusNext>
                     </div>
                 </div>
             </div>
@@ -1222,7 +1240,7 @@
                         </label>
                         <div class="col-sm-6">
                             <input type="text" class="form-control text-end required2" [formControlName]="ch.chargecode"
-                                (input)="challanService.calculateNetAmount()" appFocusNext/>
+                                (input)="challanService.calculateNetAmount()"  (keypress)="docketService.allowNumericDecimal($event)" appFocusNext/>
                         </div>
                     </div>
                 </div>
@@ -1292,8 +1310,16 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Advance Amount</label>
                     <div class="col-sm-7">
-                        <input class="form-control text-end required2" type="text" [value]="0" formControlName="advanceAmount" (input)="calculateBalanceAmount()" appFocusNext>
-                    </div>
+                        <input class="form-control text-end required2" type="text" [value]="0" formControlName="advanceAmount" (input)="calculateBalanceAmount()" (keypress)="docketService.allowNumericDecimal($event)" appFocusNext>
+                        <div class="text-danger text-start mt-1 small" *ngIf="challanService.challanForm.get('advanceAmount')?.touched">
+                            <div *ngIf="challanService.challanForm.get('advanceAmount')?.hasError('required')">
+                                Please enter a value.
+                            </div>
+                            <div *ngIf="challanService.challanForm.hasError('advanceInvalid')">
+                                Advance amount cannot be greater than Net amount
+                            </div>
+                        </div>
+                    </div>  
                 </div>
             </div>
             <div class="col-4 pb-3" [ngClass]="['XX1', '19', '04', 'XX'].includes(challanService.challanForm.get('vendorType')?.value) ? '' : 'd-none'">
@@ -1311,7 +1337,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Balance Amount</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" [value]="0" formControlName="balanceAmount" [readonly]="this.docketService.loginUserList.Type === '1' && challanService.challanForm.value.vendorType==='XX4'" appFocusNext>    
+                        <input class="form-control" type="text" [value]="0" formControlName="balanceAmount" readonly appFocusNext>    
                     </div>
                 </div>
             </div>

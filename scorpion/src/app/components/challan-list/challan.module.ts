@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ChallanListComponent } from './challan-list.component';
 import { RouterModule } from '@angular/router';
 import { ChallanRoutes } from './challan.routes';
@@ -21,6 +21,7 @@ import { SharedModule } from 'app/shared/shared/shared.module';
     SharedModule
   ],
   exports: [ RouterModule ],
+  providers:[DatePipe],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ChallanModule { }

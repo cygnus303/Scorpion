@@ -27,7 +27,7 @@ export class AppComponent {
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       
-      this.docketService.loginUserList.Type = '2'
+      // this.docketService.loginUserList.Type = '2'
       // this.docketService.loginUserList.fromdt = "01 Mar 2025",
       // this.docketService.loginUserList.todt= "05 Nov 2025",
       // this.docketService.loginUserList.dttyp= '3',
@@ -43,7 +43,7 @@ export class AppComponent {
       // this.docketService.loginUserList.BookedByType = "B";
       // this.docketService.loginUserList.BookedBy =  'V09778';
 
-      // this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;

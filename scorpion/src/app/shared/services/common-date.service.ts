@@ -13,12 +13,6 @@ export class CommonDateService {
   ) { }
 
   userDateSelection(payload:any){
-    // this.basicDetailService.dateSelectionRule(payload).subscribe({
-    //   next: (response: any) => {
-       
-    //   }
-    // });
-
       return this.basicDetailService.dateSelectionRule(payload);
   }
 }

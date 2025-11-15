@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import {Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -5,6 +6,7 @@ import { generalMasterResponse, StatesFromPartyCodeRepsonse } from 'app/shared/m
 import { AirportListResponse, AllCityByLocationResponse, CustomerListResponse, DeliveryZoneResponse, FlightsListResponse, VehicleTypeListResponse } from 'app/shared/models/thc-master.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { ChallanService } from 'app/shared/services/challan.service';
+import { CommonDateService } from 'app/shared/services/common-date.service';
 import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
@@ -45,6 +47,9 @@ public deliveryZoneData:DeliveryZoneResponse[]=[];
 public isVehicleType:boolean = false;
 selectedFileName: string | null = null;
 isImageFile: boolean = false;
+public  minDate: Date | undefined;
+public  maxDate: Date | undefined;
+public actualDeptTime = ''; 
 
 @ViewChild('fileInput') fileInput!: ElementRef;
 constructor(
@@ -55,6 +60,8 @@ constructor(
   private deliveryAgentService:DeliveryAgentService,
   public THCService:THCMasterService,
    private route: ActivatedRoute, 
+   public commonDateService:CommonDateService,
+   private datePipe: DatePipe
 ){
   this.challanService.buildForm();
 }
@@ -64,7 +71,7 @@ constructor(
       this.docketService.loginUserList = JSON.parse(saved);
       // this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.loginUserList.LocationCode =  'PIM';
-      this.docketService.loginUserList.Type = '2'
+      this.docketService.loginUserList.Type='1'
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
@@ -105,6 +112,13 @@ constructor(
       }
     }, 300); 
 
+       this.challanService.challanForm.get('netAmount')?.valueChanges.subscribe(() => {
+      this.challanService.challanForm.updateValueAndValidity({ onlySelf: false });
+    });
+    this.challanService.challanForm.get('advanceAmount')?.valueChanges.subscribe(() => {
+      this.challanService.challanForm.updateValueAndValidity({ onlySelf: false });
+    });
+
     const type = this.docketService.loginUserList.Type;
     this.typeName = type === '3' ? 'DRS' : type === '1' ? 'THC' : type === '2' ? 'PRS' : '';
     this.challanService.challanForm.get('isEmpty')?.valueChanges.subscribe((isEmpty: boolean) => {
@@ -113,13 +127,52 @@ constructor(
     if (this.docketService.loginUserList.Type === '3') {
       this.getDeliveryZoneData()
     }
+      const dt = this.docketService.bsValue;
+    this.actualDeptTime = this.formatTime(dt);
+    this.challanDateAccess();
   }
 
+  formatTime(date: Date) {
+   return new Intl.DateTimeFormat('en-US', {
+       hour: '2-digit',
+       minute: '2-digit',
+       hour12: true
+   }).format(new Date(date));
+}
+
+    challanDateAccess() {
+    const payload = {
+      moduleCode: '04',
+      baseUserName: this.docketService.baseUsername
+    };
+
+  this.commonDateService.userDateSelection(payload).subscribe({
+    next: (res: any) => {
+      if (res && res.length > 0) {
+        const rule = res[0];
+
+        // API min_Date
+        this.minDate = new Date(rule.min_Date);
+
+        // BackDate days logic
+        if (rule.backDate_Days && rule.backDate_Days > 0) {
+          const today = new Date();
+          this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
+        }
+
+        // Max date = today
+        this.maxDate = new Date();
+      }
+    }
+  });
+}
 calculateBalanceAmount() {
   const netAmount = Number(this.challanService.challanForm.get('netAmount')?.value) || 0;
   const advanceAmount = Number(this.challanService.challanForm.get('advanceAmount')?.value) || 0;
+  if(netAmount>advanceAmount){
   const balanceAmount = netAmount - advanceAmount;
   this.challanService.challanForm.patchValue({ balanceAmount });
+  }
 }
 
 changeAmountApplicable(event:any){
@@ -787,7 +840,28 @@ getMFListFromRoute(event:any){
         this.sweetAlertService.error(err.error.message)
       }
     });
-    this.getContractDetail()
+    this.getContractDetail();
+  this.getERDDate()
+}
+
+getERDDate(){
+    const raw = this.challanService.challanForm.value.tHCDate;
+
+  const formatted = this.datePipe.transform(raw, "dd MMMM yyyy hh:mm a");
+  const payload={
+    routeCode:this.challanService.challanForm.value.routeCode,
+    thcDate:formatted
+  }
+  this.THCService.getERDDate(payload).subscribe({
+      next: (response: any) => {
+      this.challanService.challanForm.patchValue({
+        ERD:response.data.erD_DateTime
+      })
+      },
+      error: (err) => {
+        console.error('Error fetching vehicle details:', err.error.message);
+      }
+    });
 }
 
 updateTotalManifest(mfNo:string): void {
