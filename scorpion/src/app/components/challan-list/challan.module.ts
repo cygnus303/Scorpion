@@ -8,6 +8,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ChallanFilterComponent } from './challan-filter/challan-filter.component';
 import { SharedModule } from 'app/shared/shared/shared.module';
+import { DateTimePickerComponent } from 'app/layouts/header/date-time-picker/date-time-picker.component';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 
 @NgModule({
   declarations: [ChallanListComponent,ChallanFilterComponent],
@@ -18,9 +20,10 @@ import { SharedModule } from 'app/shared/shared/shared.module';
     FormsModule,
     ReactiveFormsModule,
     NgSelectModule,
-    SharedModule
+    SharedModule,
+    TimepickerModule.forRoot()
   ],
-  exports: [ RouterModule ],
+  exports: [ RouterModule ,DateTimePickerComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ChallanModule { }
