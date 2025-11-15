@@ -71,7 +71,7 @@ constructor(
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       // this.docketService.loginUserList.LocationCode =  'PIM';
-      this.docketService.loginUserList.Type = '1'
+      // this.docketService.loginUserList.Type = '1'
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
@@ -170,7 +170,7 @@ constructor(
 calculateBalanceAmount() {
   const netAmount = Number(this.challanService.challanForm.get('netAmount')?.value) || 0;
   const advanceAmount = Number(this.challanService.challanForm.get('advanceAmount')?.value) || 0;
-  if(netAmount>advanceAmount){
+  if(netAmount>=advanceAmount){
   const balanceAmount = netAmount - advanceAmount;
   this.challanService.challanForm.patchValue({ balanceAmount });
   }
