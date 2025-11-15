@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ChallanListComponent } from './challan-list.component';
 import { RouterModule } from '@angular/router';
 import { ChallanRoutes } from './challan.routes';
@@ -24,6 +24,7 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
     TimepickerModule.forRoot()
   ],
   exports: [ RouterModule ,DateTimePickerComponent],
+  providers:[DatePipe],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ChallanModule { }
