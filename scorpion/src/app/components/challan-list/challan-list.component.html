@@ -153,6 +153,31 @@
                     </div>
                 </div>
             </div>
+                 <div class="row">
+                  <div class="col-4" [ngClass]="this.docketService.loginUserList.Type === '1' && this.challanService.challanForm.value?.routeType === 'S' ? '' : 'd-none'">
+                    <div class="row ">
+                        <label class="col-sm-5 col-form-label text-end">City Route KM</label>
+                        <div class="col-sm-7 d-flex align-items-center">
+                            <input type="text" class="form-control" placeholder="City Route KM" formControlName="CityRouteKM" readonly appFocusNext>
+                        </div>
+                    </div>
+                </div>
+              <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">Schedule Dep. Date</label>
+                        <div class="col-sm-7">
+                            <div class="input-group">
+                                <input class="form-control required2" placeholder="Schedule Dep. Date" type="text"  [class.disabled-input]="true"
+                                    #dvS="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue" formControlName="scheduleDeptDate" appFocusNext
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
+                                <span class="input-group-text cursor-pointer" (click)="dvS.toggle()">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row ">
                 <div class="col-4 pb-3">
                     <div class="row align-items-center">
@@ -186,31 +211,7 @@
                     </div>
                 </div>
             </div>
-                 <div class="row">
-                  <div class="col-4" [ngClass]="this.docketService.loginUserList.Type === '1' && this.challanService.challanForm.value?.routeType === 'S' ? '' : 'd-none'">
-                    <div class="row ">
-                        <label class="col-sm-5 col-form-label text-end">City Route KM</label>
-                        <div class="col-sm-7 d-flex align-items-center">
-                            <input type="text" class="form-control" placeholder="City Route KM" formControlName="CityRouteKM" readonly appFocusNext>
-                        </div>
-                    </div>
-                </div>
-              <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
-                    <div class="row align-items-center">
-                        <label class="col-sm-5 col-form-label text-end">Schedule Dep. Date</label>
-                        <div class="col-sm-7">
-                            <div class="input-group">
-                                <input class="form-control required2" placeholder="Schedule Dep. Date" type="text"  [class.disabled-input]="true"
-                                    #dvS="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue" formControlName="scheduleDeptDate" appFocusNext
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
-                                <span class="input-group-text cursor-pointer" (click)="dvS.toggle()">
-                                    <i class="fa fa-calendar"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
             <div class="row ">
                 <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? 'd-none' : ''">
                     <div class="row">
@@ -338,7 +339,7 @@
             </div>
        </div>
      
-    <div *ngIf="challanService.challanForm.value.routeType==='A'">
+    <div *ngIf="challanService.challanForm.value.routeType==='A'" class="fade-in">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Flight Details</h3>
         <div class="row">
             <div class="col-4 pb-3" >
@@ -389,7 +390,7 @@
         </div>
     </div>
 
-      <div *ngIf="challanService.challanForm.value.routeType==='R'">
+      <div *ngIf="challanService.challanForm.value.routeType==='R'"  class="fade-in">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Train Details</h3>
         <div class="row ">
             <div class="col-4 pb-3" >
@@ -418,7 +419,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="challanService.challanForm.value.routeType === 'S' || this.docketService.loginUserList.Type === '2' || this.docketService.loginUserList.Type === '3'">
+    <div  class="fade-in" *ngIf="challanService.challanForm.value.routeType === 'S' || this.docketService.loginUserList.Type === '2' || this.docketService.loginUserList.Type === '3'">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Vehicle Details</h3>
         <div class="row ">
             <div class="col-4 pb-3" *ngIf="challanService.challanForm.value.vendorType === 'XX1' || challanService.challanForm.value.vendorType === '04'|| challanService.challanForm.value.vendorType === '19' || challanService.challanForm.value.vendorType === '05' || challanService.challanForm.value.vendorType === 'XX5'">
@@ -863,7 +864,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="docketService.loginUserList.Type==='3'">
+    <div *ngIf="docketService.loginUserList.Type === '3'">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Delivery Agent Details</h3>
         <div class="row pb-3">
             <div class="col-4">

@@ -39,6 +39,16 @@ constructor(
 ){}
 
   ngOnInit() {
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
+    const type = this.docketService.loginUserList.Type;
+    this.typeName = type === '3' ? 'DRS' : type === '1' ? 'THC' : type === '2' ? 'PRS' : '';
+
     this.challanService.SearchfilterForm()
     this.generalMasterService.getPaybsData();
     this.generalMasterService.getModeData();
@@ -58,9 +68,6 @@ constructor(
 
       chargeTypeControl?.updateValueAndValidity();
     });
-    const type = this.docketService.loginUserList.Type;
-    this.typeName = type === '3' ? 'DRS' : type === '1' ? 'THC' : type === '2' ? 'PRS' : '';
-
   }
 
   getBookedByData(id:string) {
