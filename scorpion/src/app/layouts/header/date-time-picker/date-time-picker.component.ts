@@ -13,6 +13,7 @@ export class DateTimePickerComponent implements OnInit {
   @Input() placeholder: string = 'Select Date';
   @Input() disabled: boolean = false;
   @Input() maxDate?: Date;
+  @Input() minDate?: Date;
 
   showPicker = false;
 
