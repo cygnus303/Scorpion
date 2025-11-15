@@ -470,7 +470,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vehicle Type</label>
                     <div class="col-sm-7">
-                               <ng-select class="noFoundTextColor" placeholder="Vehicle Type" formControlName="vehicleType"
+                               <ng-select class="noFoundTextColor required2" placeholder="Vehicle Type" formControlName="vehicleType"
                                 [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode" appFocusNext
                             notFoundText="No matches found" (change)="onChangeVehicleType($event)"></ng-select>
                     </div>
@@ -493,7 +493,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Registration Date</label>
                     <div class="col-sm-7">
-                        <div class="input-group">
+                        <div class="input-group"  (click)="dvr.toggle()" >
                             <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"  [class.disabled-input]="true"
                                 #dvr="bsDatepicker" bsDatepicker formControlName="registrationDate"  required [ngClass]="{ 'border-danger': challanService.challanForm.get('registrationDate')?.invalid  && challanService.challanForm.get('registrationDate')?.touched }"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', maxDate:today}" appFocusNext>
@@ -543,7 +543,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Permit Validity Date</label>
                     <div class="col-sm-7">
-                        <div class="input-group">
+                        <div class="input-group"  (click)="pvp.toggle()">
                             <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
                                 #pvp="bsDatepicker" bsDatepicker formControlName="permitDate" (bsValueChange)="checkPermitExpiry($event)"  [class.disabled-input]="true"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}" appFocusNext
@@ -563,7 +563,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Insurance Validity Date</label>
                     <div class="col-sm-7">
-                        <div class="input-group">
+                        <div class="input-group"  (click)="ins.toggle()">
                             <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
                                 #ins="bsDatepicker" bsDatepicker  formControlName="insuranceDate" (bsValueChange)="checkInsuranceExpiry($event)"  [class.disabled-input]="true"
                                  required [ngClass]="{ 'border-danger': challanService.challanForm.get('insuranceDate')?.invalid  && challanService.challanForm.get('insuranceDate')?.touched || isInsuranceExpired}"
@@ -583,7 +583,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Fitness Validity Date</label>
                     <div class="col-sm-7">
-                        <div class="input-group">
+                        <div class="input-group"  (click)="fit.toggle()" >
                             <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
                                 #fit="bsDatepicker" bsDatepicker formControlName="fitnessDate"  (bsValueChange)="checkFitnessExpiry($event)"  [class.disabled-input]="true"
                                 required [ngClass]="{ 'border-danger': challanService.challanForm.get('fitnessDate')?.invalid  && challanService.challanForm.get('fitnessDate')?.touched || isFitnessExpired}"
@@ -620,7 +620,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Date Of Birth</label>
                         <div class="col-sm-7">
-                            <div class="input-group">
+                            <div class="input-group"  (click)="dbv.toggle()">
                                 <input class="form-control required2" placeholder="Date Of Birth" type="text"  [class.disabled-input]="true" appFocusNext
                                     #dbv="bsDatepicker" bsDatepicker formControlName="d1_DOB" [ngClass]="{ 'border-danger': challanService.challanForm.get('d1_DOB')?.invalid  && challanService.challanForm.get('d1_DOB')?.touched }" 
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY',maxDate : today}" (ngModelChange)="onChangeLicenceNumber()">
@@ -677,12 +677,12 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Licence Validity Date</label>
                         <div class="col-sm-7">
-                            <div class="input-group">
+                            <div class="input-group" (click)="lvd.toggle()">
                                 <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="true" appFocusNext
-                                    #lv="bsDatepicker" bsDatepicker formControlName="driver1LicenceValDate"  (bsValueChange)="checkLicenseExpiry($event)"
+                                    #lvd="bsDatepicker" bsDatepicker formControlName="driver1LicenceValDate"  (bsValueChange)="checkLicenseExpiry($event)"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}" readonly
                                     required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1LicenceValDate')?.invalid  && challanService.challanForm.get('driver1LicenceValDate')?.touched || isLicenseExpired}">
-                                <span class="input-group-text cursor-pointer" (click)="lv.toggle()">
+                                <span class="input-group-text cursor-pointer" (click)="lvd.toggle()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
@@ -924,7 +924,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">E-Way Bill Expired Date.</label>
                     <div class="col-sm-7">
-                        <div class="input-group">
+                        <div class="input-group" (click)="ewv.toggle()">
                             <input class="form-control" placeholder="E-Way Bill Expired Date" type="text"  [class.disabled-input]="true"
                                 #ewv="bsDatepicker" bsDatepicker formControlName="eWayBillExpiredDate" appFocusNext
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY',minDate:today}">

@@ -70,7 +70,7 @@ constructor(
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      // this.docketService.loginUserList.LocationCode =  'PIM';
+      this.docketService.loginUserList.LocationCode =  'BWH';
       this.docketService.loginUserList.Type = '1'
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
@@ -677,7 +677,7 @@ getNewVehicleDetail(vehicleNo:string){
           //   type_Name: response.data.type_Name
           // }];
             this.getContractDetail();
-          if(this.challanService.challanForm.value==='XX4'||this.challanService.challanForm.value==='XX1'){
+          if(this.challanService.challanForm.value === 'XX4' || this.challanService.challanForm.value === 'XX1'){
             this.GetVehicleTypesForChallanFromRouteVendType()
           }else{
             this.getVehicleType('O')
@@ -701,7 +701,7 @@ const payload={
   thcType:this.docketService.loginUserList.Type,
   baseLocationCode:this.docketService.loginUserList.LocationCode
 }
-if(this.challanService.challanForm.value.vehicleNO ||this.challanService.challanForm.value.routeType|| this.challanService.challanForm.value.routeCode ||
+if(this.challanService.challanForm.value.vehicleNO || this.challanService.challanForm.value.routeType || this.challanService.challanForm.value.routeCode ||
   this.challanService.challanForm.value.vendorType || this.challanService.challanForm.value.vendorCode){
   this.THCService.getVehicleTypesForChallanFromRouteVendType(payload).subscribe({
       next: (response: any) => {
