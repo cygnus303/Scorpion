@@ -84,12 +84,9 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Actual Dept. Time</label>
                         <div class="col-sm-7">
-                                <!-- <input class="form-control required2" placeholder="Actual Dept. Time" type="text"  appFocusNext
-                                    #dva="bsDatepicker"  [bsValue]="docketService.bsValue" bsDatepicker formControlName="actualDeptDate"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
-                                <span class="input-group-text cursor-pointer" (click)="dva.toggle()">
-                                    <i class="fa fa-calendar"></i>
-                                </span> -->
+                              <div class="input-group" style="width: 50%;">
+                                <input class="form-control required2" placeholder="Actual Dept. Time" type="text" [value]="actualDeptTime" appFocusNext readonly>
+                            </div>
                                  <app-date-time-picker controlName="actualDeptDate" [placeholder]="'Actual Dept. Time'"
                                 [minDate]="minDate" [maxDate]="maxDate">
                                  </app-date-time-picker>
