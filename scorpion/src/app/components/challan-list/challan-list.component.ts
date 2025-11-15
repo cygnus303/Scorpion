@@ -170,7 +170,7 @@ constructor(
 calculateBalanceAmount() {
   const netAmount = Number(this.challanService.challanForm.get('netAmount')?.value) || 0;
   const advanceAmount = Number(this.challanService.challanForm.get('advanceAmount')?.value) || 0;
-  if(netAmount>advanceAmount){
+  if(netAmount>=advanceAmount){
   const balanceAmount = netAmount - advanceAmount;
   this.challanService.challanForm.patchValue({ balanceAmount });
   }
