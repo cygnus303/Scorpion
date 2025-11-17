@@ -57,12 +57,12 @@ constructor(
     this.generalMasterService.getPaybsData();
     this.generalMasterService.getModeData();
     this.generalMasterService.getBusinessTypeData();
-    this.generalMasterService.getLoadingByDetail();
+    this.getVendorType();
     this.generalMasterService.getChargeTypeData();
     this.getBookedByData('P');
     this.challanService.filterForm.patchValue({BookedByType:'P'})
     this.challanService.filterForm.get('loadingBy')?.valueChanges.subscribe((value) => {
-      const chargeTypeControl = this.challanService.filterForm.get('chargeType');
+      const chargeTypeControl = this.challanService.filterForm.get('chrgType');
       if (value !== 'XX9') {
         chargeTypeControl?.setValidators([Validators.required]);
       } else {
@@ -71,6 +71,16 @@ constructor(
       }
 
       chargeTypeControl?.updateValueAndValidity();
+    });
+  }
+
+    getVendorType(){
+      this.THCMasterService.getVendorType(this.docketService.loginUserList.LocationCode ).subscribe({
+      next: (response) => {
+        if (response && response.data ) {
+          this.generalMasterService.getLoadingByDetail(response.data[0].loading_VendorType);
+        }
+      }
     });
   }
 
@@ -89,7 +99,7 @@ constructor(
   changeLoadingBy(event: any) {
     this.challanService.filterForm.patchValue({
       loadingByName:event.codeDesc,
-      loadingBycodeFor:event.codeFor
+      loadingBycodeFor:event.codeFor || event.codeId
     });
   }
  

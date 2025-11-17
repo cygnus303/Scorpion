@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { generalMasterResponse } from '../models/general-master.model';
 import { THCMasterService } from './thc-master.service';
 import { PRSGeneralMasterResponse } from '../models/thc-master.model';
+import { BasicDetailService } from './basic-detail.service';
 
 
 @Injectable({
@@ -15,7 +16,7 @@ export class GeneralMasterService {
   public chargeTypeData:PRSGeneralMasterResponse[]=[];
 
  constructor(
-     public THCMasterService: THCMasterService,
+     public THCMasterService: THCMasterService, private basicDetailService: BasicDetailService,
     ) { }
 
   getPaybsData() {
@@ -48,13 +49,23 @@ export class GeneralMasterService {
     });
   }
 
-  getLoadingByDetail(){
-      this.THCMasterService.getGeneralMasterDetail('LOADBY').subscribe({
+  // getLoadingByDetail(){
+  //     this.THCMasterService.getGeneralMasterDetail('LOADBY').subscribe({
+  //     next: (response) => {
+  //       if (response.success) {
+  //         this.loadingData = response.data;
+  //       }
+  //     }
+  //   });
+  // }
+
+    getLoadingByDetail(vendorCode:any) {
+    this.basicDetailService.getGeneralMasterList('LOADBY', '', vendorCode).subscribe({
       next: (response) => {
         if (response.success) {
           this.loadingData = response.data;
         }
-      }
+      },
     });
   }
 
