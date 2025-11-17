@@ -266,9 +266,18 @@ updateTotalDockets() {
     const checked = (event.target as HTMLInputElement).checked;
     const docketArray = this.challanService.challanForm.get('avalabledocketinPRS') as FormArray;
 
-    docketArray.controls.forEach(control => {
+    // docketArray.controls.forEach(control => {
+    //   control.get('isSelected')?.setValue(checked, { emitEvent: false });
+    // });
+     docketArray.controls.forEach(control => {
+    const message = control.get('Message')?.value;
+    if (message && message.trim() === "Docket Not Scan") {
+      control.get('isSelected')?.setValue(false, { emitEvent: false });
+    }
+    else {
       control.get('isSelected')?.setValue(checked, { emitEvent: false });
-    });
+    }
+  });
 
     this.updateTotalDockets();
   }
@@ -759,13 +768,12 @@ avalabledocketinPRS(event?:any){
       return;
   }
   const data = this.challanService.filterList;
-  console.log(data)
   const payload = {
-    fromdt: this.formatDate(data?.fromdt),
-    todt: this.formatDate(data?.todt),
+    fromdt: this.formatDate(data?.dateRange[0]),
+    todt: this.formatDate(data?.dateRange[1]),
     dttyp: data.dttyp ? data.dttyp :'',
     paybas: data.paybas? data.paybas:'ALL',
-    trn: data.trn?data.trn:'ALL',
+    trn: data.trnMod?data.trnMod:'ALL',
     bustyp: data.bustyp?data.bustyp:'ALL',
     status: this.challanService.challanForm.value?.vendorType === '04' ? 'B' : 'P' ,
     doctyp: this.docketService.loginUserList.Type === '2'?"PRS":"DRS",

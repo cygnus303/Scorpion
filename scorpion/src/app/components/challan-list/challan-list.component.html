@@ -428,7 +428,9 @@
                         <!-- <input class="form-control required2" placeholder="Vehicle No." type="text"> -->
                        <ng-select class="noFoundTextColor required2" placeholder="Vehicle No." [items]="vehicleNoList" formControlName="vehicleNO"
                        (change)="getTripSheetList($event)" appFocusNext
+                        [ngClass]="{ 'border-danger': challanService.challanForm.get('vehicleNO')?.invalid  && challanService.challanForm.get('vehicleNO')?.touched }"
                             notFoundText="No matches found"  bindLabel="text" bindValue="value"></ng-select>
+                            <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vehicleNO')?.invalid && challanService.challanForm.get('vehicleNO')?.touched "> This field is required.</div>
                     </div>
                 </div>
             </div>
@@ -469,7 +471,9 @@
                     <div class="col-sm-7">
                                <ng-select class="noFoundTextColor required2" placeholder="Vehicle Type" formControlName="vehicleType"
                                 [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode" appFocusNext
+                                [ngClass]="{ 'border-danger': challanService.challanForm.get('vehicleType')?.invalid  && challanService.challanForm.get('vehicleType')?.touched }"
                             notFoundText="No matches found" (change)="onChangeVehicleType($event)"></ng-select>
+                            <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vehicleType')?.invalid && challanService.challanForm.get('vehicleType')?.touched "> This field is required.</div>
                     </div>
                 </div>
             </div>

@@ -102,6 +102,17 @@
                             </ng-select>
                     </div>
                 </div>
+                    <div class="row align-items-center mb-3" *ngIf="this.docketService.loginUserList.Type === '3'">
+                        <label class="control-label col-md-1" style="text-align: left;"></label>
+                        <label class="form-label col-md-2 text-start fw-semibold">
+                            ODA type
+                        </label>
+                        <div class="col-md-5">
+                            <ng-select class="noFoundTextColor clear-icon" placeholder="Select ODA type" formControlName="odaType"
+                                bindLabel="text" bindValue="value" [items]="odaTypeList">
+                            </ng-select>
+                        </div>
+                    </div>
                   <div class="row align-items-center mb-3">
                     <div class="col-md-3 text-start"> </div>
                     <div class="col-md-5 text-start">
