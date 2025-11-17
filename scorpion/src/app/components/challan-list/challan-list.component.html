@@ -426,7 +426,7 @@
                     <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
                     <div class="col-sm-7">
                         <!-- <input class="form-control required2" placeholder="Vehicle No." type="text"> -->
-                       <ng-select class="noFoundTextColor required2" placeholder="Vehicle No." [items]="vehicleNoList" formControlName="vehicleNO"
+                       <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vehicle No." [items]="vehicleNoList" formControlName="vehicleNO"
                        (change)="getTripSheetList($event)" appFocusNext
                             notFoundText="No matches found"  bindLabel="text" bindValue="value"></ng-select>
                     </div>
@@ -449,7 +449,8 @@
                     <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
                     <div class="col-sm-7">
                         <input class="form-control required2" placeholder="Vehicle No." type="text"   formControlName="mKTVehicleNo" appFocusNext
-                        (input)="validateVehicleNo()">
+                        (input)="validateVehicleNo()" [ngClass]="{ 'border-danger': challanService.challanForm.get('mKTVehicleNo')?.invalid  && challanService.challanForm.get('mKTVehicleNo')?.touched }">
+                        <div class="text-danger text-start" *ngIf="challanService.challanForm.get('mKTVehicleNo')?.invalid && challanService.challanForm.get('mKTVehicleNo')?.touched "> This field is required.</div>
                     </div>
                 </div>
             </div>
@@ -467,7 +468,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vehicle Type</label>
                     <div class="col-sm-7">
-                               <ng-select class="noFoundTextColor required2" placeholder="Vehicle Type" formControlName="vehicleType"
+                               <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vehicle Type" formControlName="vehicleType"
                                 [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode" appFocusNext
                             notFoundText="No matches found" (change)="onChangeVehicleType($event)"></ng-select>
                     </div>
@@ -1322,7 +1323,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Advance Location</label>
                     <div class="col-sm-7">
-                        <ng-select class=" required2" [items]="challanService.locationData" bindLabel="locName" bindValue="locCode" appFocusNext
+                        <ng-select class="required2 clear-icon" [items]="challanService.locationData" bindLabel="locName" bindValue="locCode" appFocusNext
                             placeholder="Advance Location" formControlName="advanceLocation"></ng-select>
                     </div>
                 </div>
@@ -1341,7 +1342,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Balance Location</label>
                     <div class="col-sm-7">
-                        <ng-select class=" required2" [items]="challanService.locationData" bindLabel="locName" bindValue="locCode" appFocusNext
+                        <ng-select class="required2 clear-icon" [items]="challanService.locationData" bindLabel="locName" bindValue="locCode" appFocusNext
                             placeholder="Balance Location" formControlName="balanceLocation" [readonly]="this.docketService.loginUserList.Type === '1'"></ng-select>
                     </div>
                 </div>
