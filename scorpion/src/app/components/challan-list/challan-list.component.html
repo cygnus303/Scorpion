@@ -740,12 +740,12 @@
                 <div class="col-4">
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Licence Validity Date</label>
-                        <div class="col-sm-7">
+                        <div class="col-sm-7" (click)="liv.toggle()">
                             <div class="input-group">
                                 <input class="form-control" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="true"
                                     #liv="bsDatepicker" bsDatepicker formControlName="driver2LicenceValDate" appFocusNext
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
-                                <span class="input-group-text cursor-pointer" (click)="liv.toggle()">
+                                <span class="input-group-text cursor-pointer" >
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
@@ -816,7 +816,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Is Overload</label>
                     <div class="col-sm-7 d-flex align-items-center">
-                        <input type="checkbox" class="form-check-input me-4 checkbox-lg" readonly formControlName="isOverLoad" appFocusNext>
+                        <input type="checkbox" style="pointer-events: none;" class="form-check-input me-4 checkbox-lg" formControlName="isOverLoad" appFocusNext readonly>
                     </div>
                 </div>
             </div>
@@ -920,8 +920,8 @@
             <div class="col-4">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">E-Way Bill Expired Date.</label>
-                    <div class="col-sm-7">
-                        <div class="input-group" (click)="ewv.toggle()">
+                    <div class="col-sm-7" (click)="ewv.toggle()">
+                        <div class="input-group" >
                             <input class="form-control" placeholder="E-Way Bill Expired Date" type="text"  [class.disabled-input]="true"
                                 #ewv="bsDatepicker" bsDatepicker formControlName="eWayBillExpiredDate" appFocusNext
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY',minDate:today}">
