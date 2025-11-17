@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import {Component, ElementRef, ViewChild } from '@angular/core';
-import { AbstractControl, FormArray} from '@angular/forms';
+import { AbstractControl, FormArray, Validators} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { generalMasterResponse, StatesFromPartyCodeRepsonse } from 'app/shared/models/general-master.model';
 import { AirportListResponse, AllCityByLocationResponse, CustomerListResponse, DeliveryZoneResponse, FlightsListResponse, VehicleTypeListResponse } from 'app/shared/models/thc-master.model';
@@ -70,8 +70,8 @@ constructor(
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      // this.docketService.loginUserList.LocationCode =  'PIM';
-      // this.docketService.loginUserList.Type = '1'
+      this.docketService.loginUserList.LocationCode =  'BWH';
+      this.docketService.loginUserList.Type = '1'
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
@@ -131,7 +131,33 @@ constructor(
       const dt = this.docketService.bsValue;
     this.actualDeptTime = this.formatTime(dt);
     this.challanDateAccess();
+
+     this.challanService.challanForm.get('vendorType')?.valueChanges.subscribe(() => {
+    this.updateVehicleRequiredValidator();
+  });
+
+  this.challanService.challanForm.get('vehicleNO')?.valueChanges.subscribe(() => {
+    this.updateVehicleRequiredValidator();
+  });
+
+  this.updateVehicleRequiredValidator(); // initial call
+
   }
+
+  updateVehicleRequiredValidator() {
+  const form = this.challanService.challanForm;
+  const vendorType = form.get('vendorType')?.value;
+  const vehicleNo = form.get('vehicleNO')?.value;
+  const mktVehicleCtrl = form.get('mKTVehicleNo');
+
+  if (vendorType === 'XX' || vehicleNo === 'O') {
+    mktVehicleCtrl?.setValidators([Validators.required]);
+  } else {
+    mktVehicleCtrl?.clearValidators();
+  }
+
+  mktVehicleCtrl?.updateValueAndValidity();
+}
 
   formatTime(date: Date) {
    return new Intl.DateTimeFormat('en-US', {
@@ -689,7 +715,7 @@ getNewVehicleDetail(vehicleNo:string){
           if(this.challanService.challanForm.value === 'XX4' || this.challanService.challanForm.value === 'XX1'){
             this.GetVehicleTypesForChallanFromRouteVendType()
           }else{
-            this.getVehicleType('O')
+            this.getVehicleType(vehicleNo?vehicleNo:'O')
           }
           this.getVehicleCapacity(response.data.vehicle_Type)
         }

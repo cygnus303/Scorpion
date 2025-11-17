@@ -240,11 +240,12 @@ rounditn(value: number, digits: number): number {
 SearchfilterForm(){
    const today = new Date();
   const fromDate = new Date();
-  fromDate.setDate(today.getDate() - 30); // subtract 30 days
+  fromDate.setDate(today.getDate() - 29); // subtract 30 days
  
   // format to yyyy-MM-dd (HTML date input compatible)
   const formatDate = (d: Date) => d.toISOString().split('T')[0];
   this.filterForm=new FormGroup({
+    bookingDateType:new FormControl('1'),
     fromdt:new FormControl(formatDate(fromDate)),
     todt:new FormControl(formatDate(today)),
     dttyp:new FormControl('3'),
@@ -267,7 +268,7 @@ SearchfilterForm(){
 }
 
   buildForm(){
-  const isType1 = this.docketService.loginUserList.Type === '1';
+  const isType1 = this.docketService.loginUserList?.Type === '1';
   this.challanForm = new FormGroup({
     manualTHCNo:new FormControl('N/A'),
     tHCDate:new FormControl(new Date()),
