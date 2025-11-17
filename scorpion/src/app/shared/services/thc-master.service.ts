@@ -130,4 +130,9 @@ export class THCMasterService {
 
   }
 
+  getUserList(searchTerm:any){
+    return this.apiHandlerService.Post(`THC/SearchUsers`,searchTerm);
+
+  }
+
 }

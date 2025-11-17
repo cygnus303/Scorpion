@@ -847,7 +847,8 @@
                 <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Overload Reason</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Overload Reason" type="text" formControlName="overLoadReason" readonly appFocusNext>
+                              <ng-select class="noFoundTextColor clear-icon" placeholder="Overload Reason" formControlName="overLoadReason" appFocusNext
+                           notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" [readonly]="!challanService.challanForm.value.isOverLoad && challanService.challanForm.value.vehicleCapacityUti===0"></ng-select>
                         </div>
                 </div>
             </div>
@@ -857,8 +858,7 @@
                 <div class="row align-items-cente">
                     <label class="col-sm-5 col-form-label text-end clear-icon">Late Dept. Reason [if any]</label>
                     <div class="col-sm-7">
-                        <!-- <input class="form-control" placeholder="Late Dept. Reason" type="text" formControlName="lateDepaturereason"> -->
-                         <ng-select class="noFoundTextColor" placeholder="Late Dept. Reason" formControlName="lateDepaturereason"
+                         <ng-select class="noFoundTextColor clear-icon" placeholder="Late Dept. Reason" formControlName="lateDepaturereason"
                          [items]="challanService.latereasonList" appFocusNext
                         notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId"></ng-select>
                     </div>
@@ -933,6 +933,22 @@
                             <span class="input-group-text cursor-pointer" (click)="ewv.toggle()">
                                 <i class="fa fa-calendar"></i>
                             </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4" *ngIf="challanService.challanForm.value.isEmpty">
+                <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Approved By</label>
+                    <div class="col-sm-7">
+                        <div class="input-group" >
+                               <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Approved By" formControlName="approvedBy"  [notFoundText]="notApprovalValue"
+                             [items]="approvalList" bindLabel="text" bindValue="id" appFocusNext (change)="onChangeApprovalList()" (search)="getApprovedByData($event)"
+                             (open)="onChangeApprovalList()" [ngClass]="{ 'border-danger': challanService.challanForm.get('approvedBy')?.invalid  && challanService.challanForm.get('approvedBy')?.touched }"
+                             ></ng-select>
+                            <div class="text-danger text-start" *ngIf="challanService.challanForm.get('approvedBy')?.errors?.['required']">
+                              This field is required.
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1099,7 +1115,7 @@
             </div>
     </div>
 
-    <div [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
+    <div [ngClass]="this.docketService.loginUserList.Type === '1' && !challanService.challanForm.value.isEmpty ? '' : 'd-none'">
         <h3 class="pb-4 text-start challan-Details mt-5 mb-4">MF Available For THC</h3>
         <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
             <i class="fas fa-list me-2"></i>
