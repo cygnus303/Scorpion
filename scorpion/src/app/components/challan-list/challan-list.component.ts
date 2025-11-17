@@ -40,6 +40,7 @@ public customerList:CustomerListResponse[]=[];
 public notFromCityValue = 'Please enter at least 1 characters';
 public notCustomerListValue = 'Please enter at least 1 characters';
 public notToCityValue = 'Please enter at least 1 characters';
+public notApprovalValue = 'Please enter at least 3 characters';
 public previewUrl: string | ArrayBuffer | null = null;
 public contractAmtMsg:string='';
 public contractExpiredMsg:string='';
@@ -50,6 +51,7 @@ isImageFile: boolean = false;
 public  minDate: Date | undefined;
 public  maxDate: Date | undefined;
 public actualDeptTime = ''; 
+public approvalList:CustomerListResponse[]=[];
 
 @ViewChild('fileInput') fileInput!: ElementRef;
 constructor(
@@ -70,8 +72,8 @@ constructor(
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      this.docketService.loginUserList.LocationCode =  'BWH';
-      this.docketService.loginUserList.Type = '1'
+      // this.docketService.loginUserList.LocationCode =  'BWH';
+      // this.docketService.loginUserList.Type = '1'
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
@@ -141,6 +143,19 @@ constructor(
   });
 
   this.updateVehicleRequiredValidator(); // initial call
+  this.getApprovedByData();
+  this.challanService.challanForm.get('isEmpty')?.valueChanges.subscribe(isEmpty => {
+    const approvedByCtrl = this.challanService.challanForm.get('approvedBy');
+
+    if (isEmpty) {
+      approvedByCtrl?.setValidators([Validators.required]);
+    } else {
+      approvedByCtrl?.clearValidators();
+      approvedByCtrl?.setValue(null);  // optional → reset field
+    }
+
+    approvedByCtrl?.updateValueAndValidity();
+  });
 
   }
 
@@ -1196,5 +1211,42 @@ getDeliveryZoneData(){
         }
       }
     });
+}
+
+getApprovedByData(event?: any) {
+  const searchText = event?.term;
+
+  // If no search text OR less than 3 characters → reset list & show message
+  if (!searchText || searchText.length < 3) {
+    this.approvalList = [];
+    this.notApprovalValue = 'Please enter at least 3 characters';
+    return;   // IMPORTANT: stop the function here
+  }
+  const payload={
+    searchTerm:searchText
+  }
+this.notApprovalValue='searching...'
+  this.THCService.getUserList(payload).subscribe({
+    next: (response: any) => {
+      if(response){
+      this.approvalList = response ;
+      this.notApprovalValue = 'No matches found'; 
+      }else{
+      this.notApprovalValue = ''; 
+      }
+    },
+  });
+}
+
+ onChangeApprovalList(){
+    this.approvalList = [];
+    this.notApprovalValue = 'Please enter at least 3 characters';
+  }
+
+onFocus(chargeCode: string) {
+  const control = this.challanService.challanForm.get(chargeCode);
+  if (control?.value === 0) {
+    control.setValue(null);
+  }
 }
 }

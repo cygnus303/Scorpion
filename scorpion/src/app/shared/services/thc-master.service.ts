@@ -132,6 +132,10 @@ export class THCMasterService {
 
    getVendorType(location:any){
     return this.apiHandlerService.Get(`THC/GetVendorType?location=${location}`);
+   }
+
+  getUserList(searchTerm:any){
+    return this.apiHandlerService.Post(`THC/SearchUsers`,searchTerm);
   }
 
 }
