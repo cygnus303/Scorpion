@@ -130,4 +130,8 @@ export class THCMasterService {
 
   }
 
+   getVendorType(location:any){
+    return this.apiHandlerService.Get(`THC/GetVendorType?location=${location}`);
+  }
+
 }

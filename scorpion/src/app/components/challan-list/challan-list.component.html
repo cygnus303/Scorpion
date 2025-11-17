@@ -622,11 +622,11 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Date Of Birth</label>
                         <div class="col-sm-7">
-                            <div class="input-group"  (click)="dbv.toggle()">
+                            <div class="input-group" (click)="dbv.toggle(); $event.stopPropagation()">
                                 <input class="form-control required2" placeholder="Date Of Birth" type="text"  [class.disabled-input]="true" appFocusNext
                                     #dbv="bsDatepicker" bsDatepicker formControlName="d1_DOB" [ngClass]="{ 'border-danger': challanService.challanForm.get('d1_DOB')?.invalid  && challanService.challanForm.get('d1_DOB')?.touched }" 
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY',maxDate : today}" (ngModelChange)="onChangeLicenceNumber()">
-                                <span class="input-group-text cursor-pointer" (click)="dbv.toggle()">
+                                <span class="input-group-text cursor-pointer" (click)="dbv.toggle();$event.stopPropagation()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
@@ -679,12 +679,12 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Licence Validity Date</label>
                         <div class="col-sm-7">
-                            <div class="input-group" (click)="lvd.toggle()">
+                            <div class="input-group" (click)="lvd.toggle(); $event.stopPropagation()">
                                 <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="true" appFocusNext
                                     #lvd="bsDatepicker" bsDatepicker formControlName="driver1LicenceValDate"  (bsValueChange)="checkLicenseExpiry($event)"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}" readonly
                                     required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1LicenceValDate')?.invalid  && challanService.challanForm.get('driver1LicenceValDate')?.touched || isLicenseExpired}">
-                                <span class="input-group-text cursor-pointer" (click)="lvd.toggle()">
+                                <span class="input-group-text cursor-pointer" (click)="lvd.toggle(); $event.stopPropagation()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
@@ -925,12 +925,12 @@
             <div class="col-4">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">E-Way Bill Expired Date.</label>
-                    <div class="col-sm-7" (click)="ewv.toggle()">
+                    <div class="col-sm-7" (click)="ewv.toggle();$event.stopPropagation()">
                         <div class="input-group" >
                             <input class="form-control" placeholder="E-Way Bill Expired Date" type="text"  [class.disabled-input]="true"
                                 #ewv="bsDatepicker" bsDatepicker formControlName="eWayBillExpiredDate" appFocusNext
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY',minDate:today}">
-                            <span class="input-group-text cursor-pointer" (click)="ewv.toggle()">
+                            <span class="input-group-text cursor-pointer" (click)="ewv.toggle();$event.stopPropagation()">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
@@ -960,7 +960,7 @@
                     </div>
                 </div>
             </div>
-             <div class="col-4">
+             <div class="col-4" *ngIf="this.challanService.filterList.loadingBycodeFor !== 'XX5'">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Rate </label>
                     <div class="col-sm-7">
@@ -1178,7 +1178,7 @@
                         <input min="1" type="number" class="form-control text-end" formControlName="contractAmount" appFocusNext
                         [readOnly]="((this.docketService.loginUserList.Type === '2' ||this.docketService.loginUserList.Type === '3') && challanService.challanForm.value.vendorType === '04') ||
                         (challanService.challanForm.value.vendorType === 'XX1' &&this.docketService.loginUserList.Type === '1')"
-                        (blur)="changeAmountApplicable($event)"
+                        (blur)="changeAmountApplicable($event);restoreIfEmpty('contractAmount')"  (focus)="clearZero('contractAmount')"
                         required [ngClass]="{ 'border-danger': challanService.challanForm.get('contractAmount')?.invalid && challanService.challanForm.get('contractAmount')?.touched }"/>
                         <div class="text-danger text-start mt-1 small" *ngIf="challanService.challanForm.get('contractAmount')?.touched && challanService.challanForm.get('contractAmount')?.errors">
                             <span *ngIf="challanService.challanForm.get('contractAmount')?.hasError('required')">
@@ -1240,8 +1240,8 @@
                             {{ ch.chargename }}
                         </label>
                         <div class="col-sm-6">
-                            <input type="text" class="form-control text-end required2" [formControlName]="ch.chargecode"
-                                (input)="challanService.calculateNetAmount()"  (keypress)="docketService.allowNumericDecimal($event)" appFocusNext/>
+                            <input type="text" class="form-control text-end required2" [formControlName]="ch.chargecode" 
+                                (input)="challanService.calculateNetAmount()" (blur)="setZeroIfEmpty(ch.chargecode)" (focus)="clearchargesZero(ch.chargecode)" (keypress)="docketService.allowNumericDecimal($event)" appFocusNext/>
                         </div>
                     </div>
                 </div>
@@ -1311,7 +1311,9 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Advance Amount</label>
                     <div class="col-sm-7">
-                        <input class="form-control text-end required2" type="text" [value]="0" formControlName="advanceAmount" (input)="calculateBalanceAmount()" (keypress)="docketService.allowNumericDecimal($event)" appFocusNext>
+                        <input class="form-control text-end required2" type="text" [value]="0" formControlName="advanceAmount"
+                         (blur)="restoreIfEmpty('advanceAmount')"  (focus)="clearZero('advanceAmount')"
+                         (input)="calculateBalanceAmount()" (keypress)="docketService.allowNumericDecimal($event)" appFocusNext>
                         <div class="text-danger text-start mt-1 small" *ngIf="challanService.challanForm.get('advanceAmount')?.touched">
                             <div *ngIf="challanService.challanForm.get('advanceAmount')?.hasError('required')">
                                 Please enter a value.

@@ -144,6 +144,42 @@ constructor(
 
   }
 
+  clearZero(controlName: string) {
+  const ctrl = this.challanService.challanForm.get(controlName);
+  if (ctrl?.value === 0 || ctrl?.value === '0') {
+    ctrl.setValue('');
+  }
+}
+
+clearchargesZero(controlName: string) {
+  const ctrl = this.challanService.challanForm.get('charges.' + controlName);
+
+  if (!ctrl) return;
+
+  const val = ctrl.value;
+
+  if (val === 0 || val === '0' || val === '0.0' || val === '0.00') {
+    ctrl.setValue('');
+  }
+}
+
+setZeroIfEmpty(controlName: string) {
+  const ctrl = this.challanService.challanForm.get('charges.' + controlName);
+  if (!ctrl) return;
+
+  const val = (ctrl.value || '').toString().trim();
+
+  if (val === '' || val === null) {
+    ctrl.setValue(0);
+  }
+}
+restoreIfEmpty(controlName: string) {
+  const ctrl = this.challanService.challanForm.get(controlName);
+  if (ctrl && (ctrl.value === '' || ctrl.value == null)) {
+    ctrl.setValue(0);
+  }
+}
+
   updateVehicleRequiredValidator() {
   const form = this.challanService.challanForm;
   const vendorType = form.get('vendorType')?.value;
@@ -856,7 +892,7 @@ getMFListFromRoute(event:any){
   const paylaod = {
     location: event.value,
     isBCProcess: "N",
-    thcDate: this.challanService.challanForm.value.tHCDate,
+    thcDate:  this.datePipe.transform(this.challanService.challanForm.value.tHCDate,'dd MMM yyyy'),
     baseCompanyCode: this.docketService.loginUserList.Companycode
   }
   this.THCService.getMFListFromRoute(paylaod).subscribe({
