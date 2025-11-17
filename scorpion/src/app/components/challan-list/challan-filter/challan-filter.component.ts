@@ -24,6 +24,10 @@ export class ChallanFilterComponent {
     {text:'CNote Booking Date',value:'1'},
     {text:'CNote Arrived Date',value:'2'}
   ]
+   public odaTypeList=[
+    { text:'ODA', value:'ODA'},
+    { text:'Non ODA',value:'NonODA'}
+  ];
 
   public dateRange: [Date, Date] = [new Date(new Date().getFullYear(), new Date().getMonth(), 1),
       new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0, 23, 59, 59, 999)];
@@ -91,7 +95,6 @@ constructor(
  
 
 onSearch() {
-  console.log(this.challanService.filterForm.value.dateRange)
   if (this.challanService.filterForm.valid) {
     this.router.navigate(
       ['Operation/ChallanList'],
