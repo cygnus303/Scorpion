@@ -11,6 +11,7 @@ import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service
 import { DocketService } from 'app/shared/services/docket.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-challan-list',
@@ -46,6 +47,7 @@ public contractAmtMsg:string='';
 public contractExpiredMsg:string='';
 public deliveryZoneData:DeliveryZoneResponse[]=[];
 public isVehicleType:boolean = false;
+public isLoadingMF = false;
 selectedFileName: string | null = null;
 isImageFile: boolean = false;
 public  minDate: Date | undefined;
@@ -105,7 +107,7 @@ constructor(
               });
             }
           }
-          this.challanService.getChargesVendorsList(this.challanService.filterList.loadingBycodeFor);
+          this.challanService.getChargesVendorsList(this.challanService?.filterList?.loadingBycodeFor);
         }
       });
 
@@ -898,7 +900,6 @@ avalabledocketinPRS(event?:any){
       }
     });
 }
-
 getMFListFromRoute(event:any){
   this.challanService.challanForm.patchValue({
     vendorCode:null,
@@ -910,7 +911,10 @@ getMFListFromRoute(event:any){
     thcDate:  this.datePipe.transform(this.challanService.challanForm.value.tHCDate,'dd MMM yyyy'),
     baseCompanyCode: this.docketService.loginUserList.Companycode
   }
-  this.THCService.getMFListFromRoute(paylaod).subscribe({
+  this.isLoadingMF = true;
+  this.THCService.getMFListFromRoute(paylaod).pipe(
+      finalize(() => { this.isLoadingMF = false; })
+    ).subscribe({
       next: (response: any) => {
         if (response) {
            const formArray = this.challanService.avalableForTHC;
@@ -926,7 +930,7 @@ getMFListFromRoute(event:any){
         this.sweetAlertService.error(err.error.message)
       }
     });
-    this.getContractDetail();
+  this.getContractDetail();
   this.getERDDate()
 }
 
