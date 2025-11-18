@@ -57,7 +57,8 @@ constructor(
     this.generalMasterService.getPaybsData();
     this.generalMasterService.getModeData();
     this.generalMasterService.getBusinessTypeData();
-    this.getVendorType();
+    // this.getVendorType();
+    this.generalMasterService.getLoadingByDetail()
     this.generalMasterService.getChargeTypeData();
     this.getBookedByData('P');
     this.challanService.filterForm.patchValue({BookedByType:'P'})
@@ -74,15 +75,15 @@ constructor(
     });
   }
 
-    getVendorType(){
-      this.THCMasterService.getVendorType(this.docketService.loginUserList.LocationCode ).subscribe({
-      next: (response) => {
-        if (response && response.data ) {
-          this.generalMasterService.getLoadingByDetail(response.data[0].loading_VendorType);
-        }
-      }
-    });
-  }
+  //   getVendorType(){
+  //     this.THCMasterService.getVendorType(this.docketService.loginUserList.LocationCode ).subscribe({
+  //     next: (response) => {
+  //       if (response && response.data ) {
+  //         this.generalMasterService.getLoadingByDetail(response.data[0].loading_VendorType);
+  //       }
+  //     }
+  //   });
+  // }
 
   getBookedByData(id:string) {
     this.challanService.filterForm.patchValue({BookedBy:null})
