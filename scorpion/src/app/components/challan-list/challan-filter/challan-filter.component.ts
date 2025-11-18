@@ -46,7 +46,7 @@ constructor(
     const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
-      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+            this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
@@ -57,8 +57,8 @@ constructor(
     this.generalMasterService.getPaybsData();
     this.generalMasterService.getModeData();
     this.generalMasterService.getBusinessTypeData();
-    // this.getVendorType();
-    this.generalMasterService.getLoadingByDetail()
+    this.getVendorType();
+    // this.generalMasterService.getLoadingByDetail()
     this.generalMasterService.getChargeTypeData();
     this.getBookedByData('P');
     this.challanService.filterForm.patchValue({BookedByType:'P'})
@@ -75,15 +75,24 @@ constructor(
     });
   }
 
-  //   getVendorType(){
-  //     this.THCMasterService.getVendorType(this.docketService.loginUserList.LocationCode ).subscribe({
-  //     next: (response) => {
-  //       if (response && response.data ) {
-  //         this.generalMasterService.getLoadingByDetail(response.data[0].loading_VendorType);
-  //       }
-  //     }
-  //   });
-  // }
+  getVendorType() {
+    this.THCMasterService.getVendorType(this.docketService.loginUserList.LocationCode).subscribe({
+      next: (response) => {
+        if (response && response.data) {
+          const userType = Number(this.docketService.loginUserList.Type);  // 1 / 2 / 3
+          const typeToIndex: any = {
+            3: 0,   // D
+            2: 1,   // P
+            1: 2    // M
+          };
+          const index = typeToIndex[userType];
+          if (index !== undefined && response.data[index]) {
+            this.generalMasterService.getLoadingByDetail(response.data[index].loading_VendorType);
+          }
+        }
+      }
+    });
+  }
 
   getBookedByData(id:string) {
     this.challanService.filterForm.patchValue({BookedBy:null})

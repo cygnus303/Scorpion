@@ -137,11 +137,11 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Expected Reporting Date</label>
                         <div class="col-sm-7">
-                            <div class="input-group">
+                            <div class="input-group" (click)="dve.toggle(); $event.stopPropagation()" >
                                 <input class="form-control required2" placeholder="Expected Reporting Date" type="text" appFocusNext
                                     #dve="bsDatepicker" bsDatepicker formControlName="ERD"  [class.disabled-input]="true"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}" readonly>
-                                <span class="input-group-text cursor-pointer" (click)="dve.toggle()" [class.disabled-input]="true">
+                                <span class="input-group-text cursor-pointer" (click)="dve.toggle(); $event.stopPropagation()" [class.disabled-input]="true">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
@@ -495,14 +495,28 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Registration Date</label>
                     <div class="col-sm-7">
-                        <div class="input-group"  (click)="dvr.toggle()" >
-                            <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"  [class.disabled-input]="true"
+                        <!-- <div class="input-group"  (click)="dvr.toggle(); $event.stopPropagation()" >
+                            <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'" 
                                 #dvr="bsDatepicker" bsDatepicker formControlName="registrationDate"  required [ngClass]="{ 'border-danger': challanService.challanForm.get('registrationDate')?.invalid  && challanService.challanForm.get('registrationDate')?.touched }"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', maxDate:today}" appFocusNext>
-                            <span class="input-group-text cursor-pointer" (click)="dvr.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
+                            <span class="input-group-text cursor-pointer" (click)="dvr.toggle(); $event.stopPropagation()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
                                 <i class="fa fa-calendar"></i>
                             </span>
-                        </div>
+                        </div> -->
+                    <div class="input-group" (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && dvr.toggle(); $event.stopPropagation()">
+                        <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="true" #dvr="bsDatepicker" bsDatepicker
+                            formControlName="registrationDate" required
+                            [ngClass]="{'border-danger':challanService.challanForm.get('registrationDate')?.invalid && challanService.challanForm.get('registrationDate')?.touched}" 
+                            [bsConfig]="{containerClass: 'theme-dark-blue',dateInputFormat: 'DD MMMM YYYY',maxDate: today}"
+                            (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && dvr.toggle(); $event.stopPropagation()"
+                            appFocusNext />
+                    
+                        <span class="input-group-text cursor-pointer"
+                            (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && dvr.toggle(); $event.stopPropagation()"
+                            [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                    </div>
                         <div class="text-danger text-start" *ngIf="challanService.challanForm.get('registrationDate')?.invalid && challanService.challanForm.get('registrationDate')?.touched "> This field is required.</div>
                     </div>
                 </div>
@@ -545,15 +559,32 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Permit Validity Date</label>
                     <div class="col-sm-7">
-                        <div class="input-group"  (click)="pvp.toggle()">
+                        <!-- <div class="input-group"  (click)="pvp.toggle(); $event.stopPropagation()">
                             <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
                                 #pvp="bsDatepicker" bsDatepicker formControlName="permitDate" (bsValueChange)="checkPermitExpiry($event)"  [class.disabled-input]="true"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}" appFocusNext
                                  required [ngClass]="{ 'border-danger': challanService.challanForm.get('permitDate')?.invalid  && challanService.challanForm.get('permitDate')?.touched || isPermitExpired}">
-                            <span class="input-group-text cursor-pointer" (click)="pvp.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
+                            <span class="input-group-text cursor-pointer" (click)="pvp.toggle(); $event.stopPropagation()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
                                 <i class="fa fa-calendar"></i>
                             </span>
+                        </div> -->
+                        <div class="input-group"
+                            (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && pvp.toggle(); $event.stopPropagation()">
+                        
+                            <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" readonly #pvp="bsDatepicker" bsDatepicker
+                                formControlName="permitDate" (bsValueChange)="checkPermitExpiry($event)"
+                                [class.disabled-input]="true"
+                                [bsConfig]="{containerClass: 'theme-dark-blue',dateInputFormat: 'DD MMMM YYYY', minDate: today}" appFocusNext required
+                                 [ngClass]="{'border-danger':challanService.challanForm.get('permitDate')?.invalid &&challanService.challanForm.get('permitDate')?.touched ||isPermitExpired}"
+                                (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && pvp.toggle(); $event.stopPropagation()" />
+                            <span class="input-group-text cursor-pointer"
+                                (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && pvp.toggle(); $event.stopPropagation()"
+                                [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        
                         </div>
+
                          <div *ngIf="isPermitExpired" class="text-danger text-start fw-bold mt-1">
                            Permit Date Will be Expired
                         </div>
@@ -565,15 +596,31 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Insurance Validity Date</label>
                     <div class="col-sm-7">
-                        <div class="input-group"  (click)="ins.toggle()">
+                        <!-- <div class="input-group"  (click)="ins.toggle(); $event.stopPropagation()">
                             <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
                                 #ins="bsDatepicker" bsDatepicker  formControlName="insuranceDate" (bsValueChange)="checkInsuranceExpiry($event)"  [class.disabled-input]="true"
                                  required [ngClass]="{ 'border-danger': challanService.challanForm.get('insuranceDate')?.invalid  && challanService.challanForm.get('insuranceDate')?.touched || isInsuranceExpired}"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}" appFocusNext>
-                            <span class="input-group-text cursor-pointer" (click)="ins.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
+                            <span class="input-group-text cursor-pointer" (click)="ins.toggle(); $event.stopPropagation()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
                                 <i class="fa fa-calendar"></i>
                             </span>
+                        </div> -->
+                        <div class="input-group"
+                            (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && ins.toggle(); $event.stopPropagation()">
+                            <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" readonly #ins="bsDatepicker" bsDatepicker
+                                formControlName="insuranceDate" (bsValueChange)="checkInsuranceExpiry($event)"
+                                [class.disabled-input]="true"
+                                required [ngClass]="{'border-danger':challanService.challanForm.get('insuranceDate')?.invalid &&challanService.challanForm.get('insuranceDate')?.touched ||isInsuranceExpired}" 
+                                [bsConfig]="{containerClass: 'theme-dark-blue',dateInputFormat: 'DD MMMM YYYY',minDate: today }" appFocusNext
+                                (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && ins.toggle(); $event.stopPropagation()" />
+                            <span class="input-group-text cursor-pointer"
+                                (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && ins.toggle(); $event.stopPropagation()"
+                                [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        
                         </div>
+
                         <div *ngIf="isInsuranceExpired" class="text-danger text-start fw-bold mt-1">
                            Insurance Date Will be Expired
                         </div>
@@ -585,12 +632,31 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Fitness Validity Date</label>
                     <div class="col-sm-7">
-                        <div class="input-group"  (click)="fit.toggle()" >
+                        <!-- <div class="input-group"  (click)="fit.toggle(); $event.stopPropagation()" >
                             <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
                                 #fit="bsDatepicker" bsDatepicker formControlName="fitnessDate"  (bsValueChange)="checkFitnessExpiry($event)"  [class.disabled-input]="true"
                                 required [ngClass]="{ 'border-danger': challanService.challanForm.get('fitnessDate')?.invalid  && challanService.challanForm.get('fitnessDate')?.touched || isFitnessExpired}"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}" appFocusNext>
-                            <span class="input-group-text cursor-pointer" (click)="fit.toggle()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
+                            <span class="input-group-text cursor-pointer" (click)="fit.toggle(); $event.stopPropagation()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </div> -->
+                        <div class="input-group"
+                            (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && fit.toggle(); $event.stopPropagation()">
+                            <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" readonly #fit="bsDatepicker" bsDatepicker
+                                formControlName="fitnessDate" (bsValueChange)="checkFitnessExpiry($event)"
+                                [class.disabled-input]="true"
+                                required [ngClass]="{'border-danger': challanService.challanForm.get('fitnessDate')?.invalid &&challanService.challanForm.get('fitnessDate')?.touched ||isFitnessExpired}" 
+                                [bsConfig]="{
+                                    containerClass: 'theme-dark-blue',
+                                    dateInputFormat: 'DD MMMM YYYY',
+                                    minDate: today
+                                }" appFocusNext
+                                (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && fit.toggle(); $event.stopPropagation()" />
+                        
+                            <span class="input-group-text cursor-pointer"
+                                (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && fit.toggle(); $event.stopPropagation()"
+                                [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
@@ -745,7 +811,7 @@
                 <div class="col-4">
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Licence Validity Date</label>
-                        <div class="col-sm-7" (click)="liv.toggle()">
+                        <div class="col-sm-7" (click)="liv.toggle(); $event.stopPropagation()">
                             <div class="input-group">
                                 <input class="form-control" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="true"
                                     #liv="bsDatepicker" bsDatepicker formControlName="driver2LicenceValDate" appFocusNext
@@ -970,17 +1036,20 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Vendor Code </label>
                     <div class="col-sm-7">
-                        <!-- <input class="form-control required2" placeholder="Vendor Code" type="text"> -->
                          <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code" formControlName="vendorChargesCode" 
-                             [items]="challanService.vendorsChargesList" bindLabel="vendor_Name" bindValue="vendor_Code" appFocusNext></ng-select>
+                             [items]="challanService.branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value" appFocusNext (change)="getLoadingCharge($event?.value)"
+                             [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorChargesCode')?.invalid  && challanService.challanForm.get('vendorChargesCode')?.touched }"></ng-select>
+                    <div *ngIf="challanService.challanForm.get('vendorChargesCode')?.hasError('rateUnavailable')" class="text-danger text-start">
+                       Rate is not available in the master
                     </div>
+                            </div>
                 </div>
             </div>
-             <div class="col-4" *ngIf="this.challanService?.filterList?.loadingBycodeFor !== 'XX5'">
+             <div class="col-4" *ngIf="this.challanService?.filterList?.loadingBycodeFor === 'XX5'">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Rate </label>
                     <div class="col-sm-7">
-                        <input class="form-control required2" placeholder="Rate" type="text" appFocusNext>
+                        <input class="form-control required2" placeholder="Rate" type="text" appFocusNext formControlName="rate" readonly>
                     </div>
                 </div>
             </div>
@@ -1079,7 +1148,7 @@
                     <ng-select class="required2" [items]="challanService.rateTypeData" formControlName="rateType"
                         bindLabel="codeDesc" bindValue="codeId" placeholder="Type" [class.disabled-select]="this.challanService.filterList?.chrgType ? true : false">
                     </ng-select>
-                    <input type="text" class="form-control required2" formControlName="NewRate"  [value]="item.value.NewRate">
+                    <input type="text" class="form-control required2" formControlName="NewRate"  [value]="item.value.NewRate" [readOnly]="israteDisabled">
                     <div class="text-danger small mt-1" *ngIf="challanService.avalabledocket.at(i).get('rateError')?.value">
                         {{ challanService.avalabledocket.at(i).get('rateError')?.value }}
                     </div>
@@ -1215,7 +1284,7 @@
                     <div class="col-sm-6">
                         <input min="1" type="number" class="form-control text-end" formControlName="contractAmount" appFocusNext
                         [readOnly]="((this.docketService.loginUserList.Type === '2' ||this.docketService.loginUserList.Type === '3') && challanService.challanForm.value.vendorType === '04') ||
-                        (challanService.challanForm.value.vendorType === 'XX1' &&this.docketService.loginUserList.Type === '1')"
+                        (challanService.challanForm.value.vendorType === 'XX1' && this.docketService.loginUserList.Type === '1')"
                         (blur)="changeAmountApplicable($event);restoreIfEmpty('contractAmount')"  (focus)="clearZero('contractAmount')"
                         required [ngClass]="{ 'border-danger': challanService.challanForm.get('contractAmount')?.invalid && challanService.challanForm.get('contractAmount')?.touched }"/>
                         <div class="text-danger text-start mt-1 small" *ngIf="challanService.challanForm.get('contractAmount')?.touched && challanService.challanForm.get('contractAmount')?.errors">

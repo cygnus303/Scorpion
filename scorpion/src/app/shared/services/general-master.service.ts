@@ -49,25 +49,25 @@ export class GeneralMasterService {
     });
   }
 
-  getLoadingByDetail(){
-      this.THCMasterService.getGeneralMasterDetail('LOADBY').subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.loadingData = response.data;
-        }
-      }
-    });
-  }
-
-  //   getLoadingByDetail(vendorCode:any) {
-  //   this.basicDetailService.getGeneralMasterList('LOADBY', '', vendorCode).subscribe({
+  // getLoadingByDetail(){
+  //     this.THCMasterService.getGeneralMasterDetail('LOADBY').subscribe({
   //     next: (response) => {
   //       if (response.success) {
   //         this.loadingData = response.data;
   //       }
-  //     },
+  //     }
   //   });
   // }
+
+    getLoadingByDetail(vendorCode:any) {
+    this.basicDetailService.getGeneralMasterList('LOADBY', '', vendorCode).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.loadingData = response.data;
+        }
+      },
+    });
+  }
 
    getChargeTypeData(){
     this.THCMasterService.getGeneralMasterDetail('HANDCHRG').subscribe({

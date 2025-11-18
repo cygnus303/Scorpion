@@ -138,4 +138,13 @@ export class THCMasterService {
     return this.apiHandlerService.Post(`THC/SearchUsers`,searchTerm);
   }
 
+   getBranchWiseLoadingUnloadingVendorList(data:any){
+    return this.apiHandlerService.Get(`THC/getBranchWiseLoadingUnloadingVendorListJson?type=${'L'}&vendorType=${data.vendorType}&baseLocationCode=${data.baseLocationCode}`);
+   }
+
+  getLoadingCharge(data:any){
+    return this.apiHandlerService.Get(`THC/GetLoadingCharge?brdc=${data.brdc}&loadingBy=${data.loadingBy}&chargeType=${data.chargeType}&typeModule=${data.typeModule}&vendorCode=${data.vendorCode}&loadUnloadType=${data.loadUnloadType}`);
+   }
+
+
 }
