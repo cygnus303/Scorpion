@@ -54,6 +54,8 @@ public  minDate: Date | undefined;
 public  maxDate: Date | undefined;
 public actualDeptTime = ''; 
 public approvalList:CustomerListResponse[]=[];
+  public israteDisabled=false;
+
 
 @ViewChild('fileInput') fileInput!: ElementRef;
 constructor(
@@ -107,7 +109,7 @@ constructor(
               });
             }
           }
-          this.challanService.getChargesVendorsList(this.challanService?.filterList?.loadingBycodeFor);
+          this.challanService.branchWiseLoadingUnloading(this.challanService?.filterList?.loadingBycodeFor);
         }
       });
 
@@ -360,6 +362,45 @@ updateTotalDockets() {
 
     this.updateTotalDockets();
   }
+
+  getLoadingCharge(event: any) {
+  const data = {
+    loadUnloadType: 'L',
+    vendorCode: event,
+    typeModule: this.docketService.loginUserList.Type === "2" ? "P" : "D",
+    chargeType: this.challanService?.filterList?.chrgType,
+    brdc: this.docketService.loginUserList.LocationCode,
+    loadingBy: this.challanService?.filterList?.loadingBycodeFor,
+  };
+
+  this.THCService.getLoadingCharge(data).subscribe({
+    next: (response: any) => {
+      if (response && response.rate && response.rate > 0) {
+        this.challanService.challanForm.patchValue({
+          rate: response.rate
+        });
+        this.challanService.avalabledocket.controls.forEach((item: any, index) => {
+          this.challanService.avalabledocket.controls[index].patchValue({
+            NewRate: response.rate
+          });
+          this.israteDisabled = true;
+        });
+
+        this.challanService.challanForm.get('rate')?.setErrors(null);
+      } else {
+        this.challanService.challanForm.patchValue({
+          rate: null
+        });
+        this.israteDisabled = false;
+        this.challanService.challanForm.get('vendorChargesCode')?.setErrors({ rateUnavailable: true });
+      }
+    },
+    error: (err) => {
+      console.error('Error fetching loading charge:', err);
+    }
+  });
+}
+
 
 getContractDetail(ctrl?: AbstractControl) {
    this.contractAmtMsg = '';

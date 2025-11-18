@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BasicDetailService } from './basic-detail.service';
 import { generalMasterResponse } from '../models/general-master.model';
-import { ChargesResponse, CityResponse, VehicleTyperesponse, VendeorsResponse } from '../models/thc-master.model';
+import { BranchWiseLoadingUnloading, ChargesResponse, CityResponse, VehicleTyperesponse, VendeorsResponse } from '../models/thc-master.model';
 import { THCMasterService } from './thc-master.service';
 import { DocketService } from './docket.service';
 import { DeliveryAgentService } from './delivery-agent.service';
@@ -27,6 +27,7 @@ public latereasonList:generalMasterResponse[]=[];
 public TDSLedgerData:VehicleTyperesponse[]=[];
 public rateTypeData:generalMasterResponse[]=[];
 public chargesDetailsList:ChargesResponse[]=[];
+public branchWiseLoadingUnloadingList:BranchWiseLoadingUnloading[]=[];
 public selectedFile: File | null = null;
 public isSubmitting:boolean = false;
 public filterForm!:FormGroup;
@@ -76,6 +77,20 @@ constructor(
       next: (response) => {
         if (response.success) {
           this.vendorsChargesList = response.data;
+        }
+      },
+    });
+  }
+
+  branchWiseLoadingUnloading(event:any) {
+    const data = {
+     vendorType:event,
+     baseLocationCode:this.docketService.loginUserList.LocationCode,
+    }
+    this.THCService.getBranchWiseLoadingUnloadingVendorList(data).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.branchWiseLoadingUnloadingList = response.data;
         }
       },
     });
@@ -368,6 +383,7 @@ SearchfilterForm(){
     routeCode:new FormControl(null, isType1 ? Validators.required : null),
     customerName:new FormControl(),
     vendorChargesCode:new FormControl(),
+    rate:new FormControl(),
   }, { validators: this.advanceNotGreaterThanNet.bind(this) }
 );
 }
@@ -446,7 +462,7 @@ patchAvailableDockets(data: any[]) {
       IsEnabled: new FormControl(item.isEnabled ?? false),
       Rate: new FormControl(item.rate ?? 0),
       MaxLimit: new FormControl(item.maxLimit ?? 0),
-      NewRate: new FormControl(item.newRate ?? 0),
+      NewRate: new FormControl(item?.newRate ?? 0),
       CNT: new FormControl(item.cnt ?? 0),
       Message: new FormControl(item.message || ''),
       EWayBillNo: new FormControl(item.eWayBillNo || ''),

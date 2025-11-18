@@ -43,6 +43,11 @@ export interface DeliveryZoneResponse{
     text:string
 }
 
+export interface BranchWiseLoadingUnloading{
+    value:string,
+    text:string
+}
+
 export interface PRSGeneralMasterResponse{
 codeId: number;
   codeDesc: string;
