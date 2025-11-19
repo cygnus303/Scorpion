@@ -449,9 +449,14 @@
             <div class="col-4 pb-3" *ngIf="challanService.challanForm.value.vendorType === 'XX'|| challanService.challanForm.value.vehicleNO ==='O'">
                 <div class="row" >
                     <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
-                    <div class="col-sm-7">
-                        <input class="form-control required2" placeholder="Vehicle No." type="text"   formControlName="mKTVehicleNo" appFocusNext
-                        (input)="validateVehicleNo()" [ngClass]="{ 'border-danger': challanService.challanForm.get('mKTVehicleNo')?.invalid  && challanService.challanForm.get('mKTVehicleNo')?.touched }">
+                    <div class="col-sm-7" >
+                        <div class="position-relative">
+                            <input class="form-control required2" placeholder="Vehicle No." type="text"   formControlName="mKTVehicleNo" appFocusNext
+                            (input)="validateVehicleNo()" [ngClass]="{ 'border-danger': challanService.challanForm.get('mKTVehicleNo')?.invalid  && challanService.challanForm.get('mKTVehicleNo')?.touched }">
+                            <div *ngIf="isVehicleLoading" class="spinner-border spinner-border-sm text-primary position-absolute"
+                                style="right:10px; top:50%; transform:translateY(-50%);">
+                            </div>
+                        </div>
                         <div class="text-danger text-start" *ngIf="challanService.challanForm.get('mKTVehicleNo')?.invalid && challanService.challanForm.get('mKTVehicleNo')?.touched "> This field is required.</div>
                     </div>
                 </div>
@@ -887,7 +892,7 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Is Overload</label>
                     <div class="col-sm-7 d-flex align-items-center">
-                        <input type="checkbox" style="pointer-events: none;" class="form-check-input me-4 checkbox-lg" formControlName="isOverLoad" appFocusNext readonly>
+                        <input type="checkbox" style="pointer-events: none;" class="form-check-input me-4 checkbox-lg custom-big-checkbox" formControlName="isOverLoad" appFocusNext readonly>
                     </div>
                 </div>
             </div>
@@ -1093,7 +1098,7 @@
           <table class="table table-bordered table-striped table-condensed flip-content mb-0">
             <thead class="sticky-top bg-light">
                 <tr>
-                    <th class="p-3"><input type="checkbox" (change)="toggleSelectAll($event)"></th>
+                    <th class="p-3"><input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox" (change)="toggleSelectAll($event)"></th>
                     <th class="p-3">CNote No. <div *ngIf="this.docketService.loginUserList.Type === '3'">Origin</div></th>
                     <th class="p-3">Pay Basis</th>
                     <th class="p-3">Booking Date EDD</th>
@@ -1112,11 +1117,20 @@
                 </tr>
             </thead>
         <tbody formArrayName="avalabledocketinPRS">
+             <tr *ngIf="isLoading">
+                    <td colspan="16" class="text-center py-4">
+                        <div class="spinner-border" role="status" style="width:1.8rem; height:1.8rem;">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <span class="ms-2">Loading dockets...</span>
+                    </td>
+                </tr>
+                <ng-container *ngIf="!isLoading">
             <tr *ngFor="let item of challanService.avalabledocket.controls; let i = index" [formGroupName]="i"
                 class="align-middle">
                 <td>
                     <ng-container *ngIf="!item.value.Message; else showMessage">
-                        <input type="checkbox" formControlName="isSelected" (change)="onDocketSelectionChange(item)">
+                        <input type="checkbox" formControlName="isSelected" class="form-check-input checkbox-lg custom-big-checkbox" (change)="onDocketSelectionChange(item)">
                     </ng-container>
                     <ng-template #showMessage>
                         <span class="text-danger fw-semibold">{{ item.value.Message }}</span>
@@ -1163,6 +1177,10 @@
                 <td>{{ item.value.ContractAmount }}</td>
                 <td *ngIf="docketService.loginUserList.Type !== '3'">{{ item.value.BCSerialNo }}</td>
             </tr>
+            <tr *ngIf="challanService.avalabledocket.length === 0">
+                        <td colspan="16" class="text-center">No CNote available</td>
+                    </tr>
+          </ng-container>
         </tbody>
 
         </table>
@@ -1221,7 +1239,7 @@
                     <tr *ngFor="let item of challanService.avalableForTHC.controls; let i = index" [formGroupName]="i"
                         class="align-middle">
                         <td>
-                            <input type="checkbox" formControlName="selected" (change)="updateTotalManifest(item.value.TCNO)">
+                            <input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox" formControlName="selected" (change)="updateTotalManifest(item.value.TCNO)">
                         </td>
                         <td>{{ item.value.TCNO}}</td>
                         <td>{{ item.value.Manual}}</td>
@@ -1285,12 +1303,15 @@
                     <div class="col-sm-6">
                         <input min="1" type="number" class="form-control text-end" formControlName="contractAmount" appFocusNext
                         [readOnly]="((this.docketService.loginUserList.Type === '2' ||this.docketService.loginUserList.Type === '3') && challanService.challanForm.value.vendorType === '04') ||
-                        (challanService.challanForm.value.vendorType === 'XX1' && this.docketService.loginUserList.Type === '1')"
+                        (challanService.challanForm.value.vendorType === 'XX1' && this.docketService.loginUserList.Type === '1')"  pattern="^[0-9]{1,8}$"  
                         (blur)="changeAmountApplicable($event);restoreIfEmpty('contractAmount')"  (focus)="clearZero('contractAmount')"
                         required [ngClass]="{ 'border-danger': challanService.challanForm.get('contractAmount')?.invalid && challanService.challanForm.get('contractAmount')?.touched }"/>
                         <div class="text-danger text-start mt-1 small" *ngIf="challanService.challanForm.get('contractAmount')?.touched && challanService.challanForm.get('contractAmount')?.errors">
                             <span *ngIf="challanService.challanForm.get('contractAmount')?.hasError('required')">
                                 Please enter a value.
+                            </span>
+                            <span *ngIf="challanService.challanForm.get('contractAmount')?.hasError('pattern')">
+                                Please enter no more than 8 digits.
                             </span>
                             <span *ngIf="challanService.challanForm.get('contractAmount')?.hasError('min')">
                                 Please enter a value greater than or equal to 1.
@@ -1361,7 +1382,7 @@
                 <div class="row mb-3 align-items-center" [ngClass]="['XX1', '19', '04', 'XX'].includes(challanService.challanForm.get('vendorType')?.value) ? '' : 'd-none'">
                     <label class="col-sm-4 col-form-label text-end">Enable TDS</label>
                     <div class="col-sm-8 d-flex align-items-center">
-                        <input type="checkbox" class="form-check-input me-4 checkbox-lg border" formControlName="isTDSEnabled" [class.disabled-input]="challanService.challanForm.get('vendorCode')?.value" appFocusNext/>
+                        <input type="checkbox" class="form-check-input me-4 checkbox-lg custom-big-checkbox" formControlName="isTDSEnabled" [class.disabled-input]="challanService.challanForm.get('vendorCode')?.value" appFocusNext/>
                     </div>
                 </div>
     

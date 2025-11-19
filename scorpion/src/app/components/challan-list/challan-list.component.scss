@@ -26,3 +26,15 @@
   font-size: 1.5rem; // bigger text
   font-weight: 500;
 }
+
+.custom-big-checkbox {
+  width: 13px;
+  height: 13px;
+  cursor: not-allowed;   // since readonly
+  border-radius: 4px;
+  border: 1px solid #6c757d !important;
+  transform: scale(1.3);
+}
+.custom-big-checkbox:checked {
+  background-color: #275a27 !important;  /* green */
+}

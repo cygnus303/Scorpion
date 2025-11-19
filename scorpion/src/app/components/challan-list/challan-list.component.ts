@@ -48,14 +48,15 @@ public contractExpiredMsg:string='';
 public deliveryZoneData:DeliveryZoneResponse[]=[];
 public isVehicleType:boolean = false;
 public isLoadingMF = false;
-selectedFileName: string | null = null;
-isImageFile: boolean = false;
+public selectedFileName: string | null = null;
+public isImageFile: boolean = false;
 public  minDate: Date | undefined;
 public  maxDate: Date | undefined;
 public actualDeptTime = ''; 
 public approvalList:CustomerListResponse[]=[];
-  public israteDisabled=false;
-
+public israteDisabled=false;
+public isLoading = false;
+public isVehicleLoading: boolean = false;
 
 @ViewChild('fileInput') fileInput!: ElementRef;
 constructor(
@@ -69,7 +70,6 @@ constructor(
    public commonDateService:CommonDateService,
    private datePipe: DatePipe
 ){
-  this.challanService.buildForm();
 }
   ngOnInit() {
      const saved = localStorage.getItem("loginUserList");
@@ -81,7 +81,7 @@ constructor(
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
-    
+    this.challanService.buildForm();
     this.challanService.getChargesDetails();
     this.challanService.getVendtyData();
     this.docketService.getTypeofMovementData();
@@ -128,7 +128,8 @@ constructor(
 
       if (this.docketService.loginUserList.Type !== '1') {
         this.challanService.getCityList();
-        this.avalabledocketinPRS()
+        this.generatePRSfilter();
+        this.avalabledocketinPRS();
       }
     }, 300); 
 
@@ -538,8 +539,10 @@ vendorCodeName(){
       vehNo: vehicleNo.toUpperCase(),
       baseUserName: this.docketService.loginUserList.BaseUserName
     };
+     this.isVehicleLoading = true;
     this.deliveryAgentService.getVehicleDetail(params).subscribe({
       next: (response: any) => {
+        this.isVehicleLoading = false;
         if (response) {
           this.challanService.challanForm.patchValue({
             eNGINENO: response.rc_eng_no || '',
@@ -553,6 +556,7 @@ vendorCodeName(){
         }
       },
       error: (err) => {
+        this.isVehicleLoading = false;
         console.error('Error fetching vehicle details:', err.error.message);
         this.sweetAlertService.error(err.error.message)
       }
@@ -894,74 +898,50 @@ formatDate(dateStr: string): string {
   }).replace(',', '');
 }
 
-// generate(event?:any){ 
-//   if(this.docketService.loginUserList.Type === '1'){
-//     return;
-//   }
-//   if(this.challanService.challanForm.value?.vendorType!=='04' && event){
-//       return;
-//   }
-//   const data = this.challanService.filterList;
-//   const payload = {
-//     gcno: "string",
-//     drsType: "",
-//     typ:this.docketService.loginUserList.Type === '2' ? 2 : 3,
-//     datetype: data.bookingDateType,
-//     vendorCode:this.challanService.challanForm.value?.vendorType ==='04'? this.challanService.challanForm.value.vendorCode:'',
-//     bookedBy:  data.BookedBy,
-//     bookedByType:  data.BookedByType,
-//     fromDate: new Date(data?.dateRange[0]).toISOString(),
-//     toDate: new Date(data?.dateRange[1]).toISOString(),
-//     paybas: data.paybas? data.paybas:'ALL',
-//     trnmod: data.trnMod?data.trnMod:'ALL',
-//     bustype: data.bustyp?data.bustyp:'ALL',
-//     doctyp: this.docketService.loginUserList.Type === '2'?"PRS":"DRS",
-//     loadingBy: data.loadingBy,
-//     chargeType: data.chrgType?data.chrgType:"ALL",
-//     odaType: data.odaType?data.odaType:'',
-//   }
-//   const baseCompanydata = {
-//     TYP:this.docketService.loginUserList.Type === '2' ? 2 : 3,
-//     baseCompanyCode:this.docketService.loginUserList.Companycode,
-//     baseLocationCode:this.docketService.loginUserList.LocationCode,
-//   }
-//     this.THCService.generate(baseCompanydata,payload).subscribe({
-//     next: (response: any) => {
-//       debugger
-//       if (response && response.data && Array.isArray(response.data)) {
-//         const updatedData = response.data;
-//         const docketArray = this.challanService.avalabledocket;
-//         if (docketArray && docketArray.length > 0) {
-//           updatedData.forEach((item: any) => {
-//             const match = docketArray.controls.find(
-//               (ctrl: any) => ctrl.value.DOCKNO === item.dockno
-//             );
-//             if (match) {
-//               match.get('ContractAmount')?.setValue(item.contractAmount);
-//               match.get('tDSOnAmount')?.setValue(item.contractAmount);
-//             }
-//           });
-//         } else {
-//           this.challanService.patchAvailableDockets(updatedData);
-//         }
-//          // filter chrgType
-//           const chrgTypeValue = this.challanService.filterList.chrgType;
-//           if (chrgTypeValue) {
-//             this.challanService.avalabledocket.controls.forEach((ctrl) => {
-//               ctrl.patchValue({
-//                 rateType: chrgTypeValue
-//               });
-//             });
-//           }
-
-//         this.updateTotalDockets();
-//       }
-//       },error: (err) => {
-//         this.sweetAlertService.error(err.error.message)
-//       }
-//     });
-// }
-
+generatePRSfilter(event?:any){ 
+  if(this.docketService.loginUserList.Type === '1'){
+    return;
+  }
+  if(this.challanService.challanForm.value?.vendorType!=='04' && event){
+      return;
+  }
+  const data = this.challanService.filterList;
+  const payload = {
+    gcno: '0',
+    drsType: "",
+    typ:this.docketService.loginUserList.Type === '2' ? 2 : 3,
+    datetype: data.bookingDateType || '',
+    vendorCode:this.challanService.challanForm.value?.vendorType ==='04'? this.challanService.challanForm.value.vendorCode:'',
+    bookedBy:  data.BookedBy || '',
+    bookedByType: data.BookedByType || '',
+    fromDate: new Date(data?.dateRange[0]).toISOString(),
+    toDate: new Date(data?.dateRange[1]).toISOString(),
+    paybas: data.paybas? data.paybas:'ALL',
+    trnmod: data.trnMod?data.trnMod:'ALL',
+    bustype: data.bustyp?data.bustyp:'ALL',
+    doctyp: this.docketService.loginUserList.Type === '2'?"PRS":"DRS",
+    loadingBy: data.loadingBy || '',
+    chargeType: data.chrgType?data.chrgType:"ALL",
+    odaType: data.odaType?data.odaType:'',
+  }
+  const baseCompanydata = {
+    TYP:this.docketService.loginUserList.Type === '2' ? 2 : 3,
+    baseCompanyCode:this.docketService.loginUserList.Companycode,
+    baseLocationCode:this.docketService.loginUserList.LocationCode,
+  }
+    this.THCService.generate(baseCompanydata,payload).subscribe({
+    next: (response: any) => {
+      if (response) {
+          this.challanService.vendtyData = response.listVendorType.map((x: any) => ({
+          codeId: x.vendor_Type_Code,
+          codeDesc: x.vendor_Type
+        }));
+      }
+      },error: (err) => {
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+}
 avalabledocketinPRS(event?:any){ 
   if(this.docketService.loginUserList.Type === '1'){
     return;
@@ -988,7 +968,8 @@ avalabledocketinPRS(event?:any){
     baseCompanyCode:this.docketService.loginUserList.Companycode,
     flag: data.flag,
   }
-    this.THCService.avalabledocketinPRS(payload).subscribe({
+    this.isLoading = true;
+    this.THCService.avalabledocketinPRS(payload).pipe(finalize(() => { this.isLoading = false; })).subscribe({
     next: (response: any) => {
       if (response && response.data && Array.isArray(response.data)) {
         const updatedData = response.data;

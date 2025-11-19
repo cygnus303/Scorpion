@@ -106,8 +106,11 @@
                         </label>
                     <div class="col-md-5">
                          <ng-select class="noFoundTextColor clear-icon"  [ngClass]="{ 'required2': challanService.filterForm.get('BookedByType')?.value === 'B'}" placeholder="Select Booked By"
-                                formControlName="BookedBy" bindLabel="text" bindValue="value" [items]="bookByData">
+                                formControlName="BookedBy" bindLabel="text" bindValue="value" [items]="bookByData" [ngClass]="{ 'border-danger': challanService.filterForm.get('BookedBy')?.invalid  && challanService.filterForm.get('BookedBy')?.touched }">
                             </ng-select>
+                             <div class="text-danger text-start" *ngIf="challanService.filterForm.get('BookedBy')?.hasError('required') && challanService.filterForm.get('BookedBy')?.touched">
+                                This field is required.
+                            </div>
                     </div>
                 </div>
                     <div class="row align-items-center mb-3" *ngIf="this.docketService.loginUserList.Type === '3'">
