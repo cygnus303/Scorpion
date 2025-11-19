@@ -984,7 +984,8 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">E-Way Bill No.</label>
                     <div class="col-sm-7">
-                        <input class="form-control" placeholder="E-Way Bill No." type="text" formControlName="eWayBillNo" appFocusNext>
+                        <input class="form-control" placeholder="E-Way Bill No." type="text" formControlName="eWayBillNo" appFocusNext
+                            inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g,'');" />
                     </div>
                 </div>
             </div>

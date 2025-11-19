@@ -12,12 +12,20 @@
                         </ng-select>
                     </div>
                     <div class="col-md-5">
-                        <div class="input-group shadow-sm rounded "><span class="input-group-text bg-white border-end-0 p-2">
+                        <!-- <div class="input-group shadow-sm rounded "><span class="input-group-text bg-white border-end-0 p-2">
                           <i class="fas fa-calendar-alt text-dark text-secondary"></i></span>
-                            <input type="text" placeholder="Daterangepicker" class="form-control border-start-1 text-center line-height" bsDaterangepicker
+                            <input type="text" placeholder="Daterangepicker" class="form-control border-start-1 text-center line-height" readonly bsDaterangepicker
                                 formControlName="dateRange" [bsConfig]="{ ranges: commonService.ranges ,rangeInputFormat: 'MMMM D, YYYY', dateInputFormat:
                                                      'MMMM D, YYYY'}">
+                        </div> -->
+                        <div class="input-group shadow-sm rounded" (click)="dvr.toggle()">
+                            <span class="input-group-text bg-white border-end-0 p-2">
+                                <i class="fas fa-calendar-alt text-dark text-secondary"></i>
+                            </span>
+                            <input type="text" placeholder="Daterangepicker" class="form-control border-start-1 text-center line-height"
+                                bsDaterangepicker #dvr="bsDaterangepicker" formControlName="dateRange" [class.disabled-input]="true"  [bsConfig]="{ ranges: commonService.ranges, rangeInputFormat: 'MMMM D, YYYY', dateInputFormat: 'MMMM D, YYYY'}" />
                         </div>
+
                     </div>
                 </div>
                 <div class="row align-items-center mb-3">
