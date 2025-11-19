@@ -41,7 +41,7 @@
                         <label class="col-sm-5 col-form-label text-end">Loading Date</label>
                         <div class="col-sm-7">
                             <app-date-time-picker controlName="loadingDate" [placeholder]="'Loading Date & Time'"
-                                [maxDate]="docketService.bsValue">
+                                 [minDate]="minDate" [maxDate]="maxDate">
                             </app-date-time-picker>
                         </div>
                     </div>
@@ -88,7 +88,7 @@
                                 <input class="form-control required2" placeholder="Actual Dept. Time" type="text" [value]="actualDeptTime" appFocusNext readonly>
                             </div>
                                  <app-date-time-picker controlName="actualDeptDate" [placeholder]="'Actual Dept. Time'"
-                                 [maxDate]="docketService.bsValue">
+                                [minDate]="minDate" [maxDate]="maxDate">
                                  </app-date-time-picker>
                         </div>
                     </div>
