@@ -26,6 +26,7 @@ export class BasicDetailsComponent {
   public getStatesFromPartyCodeList: StatesFromPartyCodeRepsonse[] = [];
   minDate: Date | undefined;
   maxDate: Date | undefined;
+  appoinmentDate:Date|undefined;
   public referenceDocketMsg:any;
   public notFoundTextValue = 'Please enter at least 3 characters';
   public notDestinationValue = 'Please enter at least 3 characters';
@@ -39,6 +40,9 @@ export class BasicDetailsComponent {
   public commonDateService:CommonDateService) { }
 
   ngOnInit() {
+    this.appoinmentDate = new Date();
+    this.appoinmentDate.setMonth(this.appoinmentDate.getMonth() + 1);
+   
     this.docketService.detailForm();
     this.getBillingTypeData();
     this.docketService.getRuleDetailForChargeRule();
