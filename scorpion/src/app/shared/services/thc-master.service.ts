@@ -51,7 +51,11 @@ export class THCMasterService {
   avalabledocketinPRS(vendors: any) {
     return this.apiHandlerService.Post(`THC/AvalabledocketinPRS`,vendors);
   }
-  
+
+   generate(data:any,vendors: any) {
+    return this.apiHandlerService.Post(`THC/generate?TYP=${data.TYP}&BaseLocationCode=${data.baseLocationCode}&BaseCompanyCode=${data.baseCompanyCode}`,vendors);
+  }
+
   getTDSDetailsFromVendor(vendorCode:any): Observable<IApiBaseResponse<any[]>>{
     return this.apiHandlerService.Post(`THC/GetTDSDetailsFromVendor`,vendorCode);
   }

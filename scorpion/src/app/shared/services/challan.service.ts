@@ -76,7 +76,11 @@ constructor(
     this.THCService.getVendorsList(data).subscribe({
       next: (response) => {
         if (response.success) {
-          this.vendorsChargesList = response.data;
+          // this.vendorsChargesList = response.data;
+          this.branchWiseLoadingUnloadingList = response.data.map((x: any) => ({
+          value: x.vendor_Code,
+          text: x.vendor_Name
+        }));
         }
       },
     });
