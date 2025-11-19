@@ -195,7 +195,7 @@
                              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name" formControlName="vendorCode" 
                              [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code" [readonly]="this.challanService.filterList?.BookedByType === 'B'"
                               required [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorCode')?.invalid  && challanService.challanForm.get('vendorCode')?.touched }"
-                             (change)="getPANnumberData($event)" appFocusNext
+                             (change)="getPANnumberData($event?.vendor_Code)" appFocusNext
                              ></ng-select>
                              <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vendorCode')?.invalid && challanService.challanForm.get('vendorCode')?.touched "> This field is required.</div>
                         </div>
@@ -1149,7 +1149,7 @@
                     <ng-select class="required2" [items]="challanService.rateTypeData" formControlName="rateType"
                         bindLabel="codeDesc" bindValue="codeId" placeholder="Type" [class.disabled-select]="this.challanService.filterList?.chrgType ? true : false">
                     </ng-select>
-                    <input type="text" class="form-control required2" formControlName="NewRate"  [value]="item.value.NewRate" [readOnly]="israteDisabled">
+                    <input type="text" class="form-control required2" formControlName="NewRate"  [value]="item.value.NewRate" [readOnly]="this.challanService?.filterList?.loadingBycodeFor === 'XX5'">
                     <div class="text-danger small mt-1" *ngIf="challanService.avalabledocket.at(i).get('rateError')?.value">
                         {{ challanService.avalabledocket.at(i).get('rateError')?.value }}
                     </div>
