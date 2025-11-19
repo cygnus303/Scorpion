@@ -110,7 +110,19 @@ constructor(
               this.getPANnumberData(this.challanService.challanForm.value.vendorCode)
             }
           }
-          this.challanService.branchWiseLoadingUnloading(this.challanService?.filterList?.loadingBycodeFor);
+          const ChargedBy = this.challanService?.filterList?.loadingBycodeFor;
+          if(ChargedBy === 'B' || ChargedBy == '04'){
+            this.challanService.getChargesVendorsList('04');
+          }
+          if(ChargedBy === 'A' || ChargedBy == 'XX1'){
+            this.challanService.getChargesVendorsList('XX1');
+          }
+          if(ChargedBy === 'M'){
+            this.challanService.getChargesVendorsList('19');
+          }
+          if(ChargedBy === 'XX5' || ChargedBy === 'XX8'){
+            this.challanService.branchWiseLoadingUnloading(this.challanService?.filterList?.loadingBycodeFor);
+          }
         }
       });
 
@@ -881,6 +893,75 @@ formatDate(dateStr: string): string {
     year: 'numeric'
   }).replace(',', '');
 }
+
+// generate(event?:any){ 
+//   if(this.docketService.loginUserList.Type === '1'){
+//     return;
+//   }
+//   if(this.challanService.challanForm.value?.vendorType!=='04' && event){
+//       return;
+//   }
+//   const data = this.challanService.filterList;
+//   const payload = {
+//     gcno: "string",
+//     drsType: "",
+//     typ:this.docketService.loginUserList.Type === '2' ? 2 : 3,
+//     datetype: data.bookingDateType,
+//     vendorCode:this.challanService.challanForm.value?.vendorType ==='04'? this.challanService.challanForm.value.vendorCode:'',
+//     bookedBy:  data.BookedBy,
+//     bookedByType:  data.BookedByType,
+//     fromDate: new Date(data?.dateRange[0]).toISOString(),
+//     toDate: new Date(data?.dateRange[1]).toISOString(),
+//     paybas: data.paybas? data.paybas:'ALL',
+//     trnmod: data.trnMod?data.trnMod:'ALL',
+//     bustype: data.bustyp?data.bustyp:'ALL',
+//     doctyp: this.docketService.loginUserList.Type === '2'?"PRS":"DRS",
+//     loadingBy: data.loadingBy,
+//     chargeType: data.chrgType?data.chrgType:"ALL",
+//     odaType: data.odaType?data.odaType:'',
+//   }
+//   const baseCompanydata = {
+//     TYP:this.docketService.loginUserList.Type === '2' ? 2 : 3,
+//     baseCompanyCode:this.docketService.loginUserList.Companycode,
+//     baseLocationCode:this.docketService.loginUserList.LocationCode,
+//   }
+//     this.THCService.generate(baseCompanydata,payload).subscribe({
+//     next: (response: any) => {
+//       debugger
+//       if (response && response.data && Array.isArray(response.data)) {
+//         const updatedData = response.data;
+//         const docketArray = this.challanService.avalabledocket;
+//         if (docketArray && docketArray.length > 0) {
+//           updatedData.forEach((item: any) => {
+//             const match = docketArray.controls.find(
+//               (ctrl: any) => ctrl.value.DOCKNO === item.dockno
+//             );
+//             if (match) {
+//               match.get('ContractAmount')?.setValue(item.contractAmount);
+//               match.get('tDSOnAmount')?.setValue(item.contractAmount);
+//             }
+//           });
+//         } else {
+//           this.challanService.patchAvailableDockets(updatedData);
+//         }
+//          // filter chrgType
+//           const chrgTypeValue = this.challanService.filterList.chrgType;
+//           if (chrgTypeValue) {
+//             this.challanService.avalabledocket.controls.forEach((ctrl) => {
+//               ctrl.patchValue({
+//                 rateType: chrgTypeValue
+//               });
+//             });
+//           }
+
+//         this.updateTotalDockets();
+//       }
+//       },error: (err) => {
+//         this.sweetAlertService.error(err.error.message)
+//       }
+//     });
+// }
+
 avalabledocketinPRS(event?:any){ 
   if(this.docketService.loginUserList.Type === '1'){
     return;
