@@ -263,7 +263,7 @@ SearchfilterForm(){
     bookingDateType:new FormControl('1'),
     fromdt:new FormControl(formatDate(fromDate)),
     todt:new FormControl(formatDate(today)),
-    dttyp:new FormControl('3'),
+    dttyp:new FormControl('1'),
     paybas:new FormControl(),
     trnMod:new FormControl(),
     bustyp:new FormControl(),
