@@ -107,6 +107,7 @@ constructor(
               this.challanService.challanForm.patchValue({
                 vendorCode: this.challanService.filterList.BookedBy
               });
+              this.getPANnumberData(this.challanService.challanForm.value.vendorCode)
             }
           }
           this.challanService.branchWiseLoadingUnloading(this.challanService?.filterList?.loadingBycodeFor);
@@ -666,7 +667,7 @@ getPANnumberData(event:any){
     vehicleType:null,
     vehicleNO:null
   });
-  this.THCService.getPANnumber(event?.vendor_Code).subscribe({
+  this.THCService.getPANnumber(event).subscribe({
       next: (response: any) => {
         if (response && response.data) {
          this.challanService.challanForm.patchValue({
@@ -679,15 +680,15 @@ getPANnumberData(event:any){
         this.sweetAlertService.error(err.error.message)
       }
     });
-    this.getTDSDetailsFromVendor(event.vendor_Code);
-    this.getVehicleFromVendorList(event.vendor_Code);
+    this.getTDSDetailsFromVendor(event);
+    this.getVehicleFromVendorList(event);
     if(this.challanService.challanForm.value.vendorType==='XX4'||this.challanService.challanForm.value.vendorType==='XX1'){
       this.GetVehicleTypesForChallanFromRouteVendType()
     }else{
       this.getVehicleType('O')
     }
     if (this.challanService.challanForm.value.vendorType === '04') {
-        this.avalabledocketinPRS(event.vendor_Code);
+        this.avalabledocketinPRS(event);
     }
     this.getContractDetail()
 }
