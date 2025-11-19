@@ -70,7 +70,6 @@ constructor(
         chargeTypeControl?.clearValidators();
         chargeTypeControl?.setValue(null); // optional: clear value when not required
       }
-
       chargeTypeControl?.updateValueAndValidity();
     });
   }
@@ -94,9 +93,17 @@ constructor(
     });
   }
 
-  getBookedByData(id:string) {
-    this.challanService.filterForm.patchValue({BookedBy:null})
-    this.THCMasterService.getGetBookedBy(id,this.docketService.loginUserList.LocationCode, this.docketService.loginUserList.BaseUserName).subscribe({
+  getBookedByData(id: string) {
+    const bookedByTypeControl = this.challanService.filterForm.get('BookedBy')
+    if (this.challanService.filterForm.get('BookedByType')?.value === 'B') {
+      bookedByTypeControl?.setValidators([Validators.required]);
+    } else {
+      bookedByTypeControl?.clearValidators();
+      bookedByTypeControl?.setValue(null);
+    }
+    bookedByTypeControl?.updateValueAndValidity();
+    this.challanService.filterForm.patchValue({ BookedBy: null })
+    this.THCMasterService.getGetBookedBy(id, this.docketService.loginUserList.LocationCode, this.docketService.loginUserList.BaseUserName).subscribe({
       next: (response) => {
         if (response) {
           this.bookByData = response;
