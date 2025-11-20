@@ -447,7 +447,11 @@ getContractDetail(ctrl?: AbstractControl) {
         if(this.docketService.loginUserList.Type==='1'){
           this.challanService.challanForm.patchValue({
                 contractAmount:response.data.contractAmount
-              })
+              });
+            this.challanService.challanForm.patchValue({
+                tDSOnAmount:response.data.contractAmount
+            });
+            this.challanService.calculateNetAmount()
         }
         this.challanService.challanForm.patchValue({
           standardContractAmount:response.data.standardContractAmount
@@ -1073,6 +1077,8 @@ updateTotalManifest(mfNo:string): void {
             this.challanService.challanForm.patchValue({eWayBillExpiredDate:new Date(result.expiryDate)})
           }
         }
+      this.getContractDetail();
+
       },
       error: (err) => {
         this.sweetAlertService.error(err.error.message)
