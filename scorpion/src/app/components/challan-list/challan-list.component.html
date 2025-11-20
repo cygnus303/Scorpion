@@ -137,11 +137,11 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Expected Reporting Date</label>
                         <div class="col-sm-7">
-                            <div class="input-group" (click)="dve.toggle(); $event.stopPropagation()" >
+                            <div class="input-group">
                                 <input class="form-control required2" placeholder="Expected Reporting Date" type="text" appFocusNext
                                     #dve="bsDatepicker" bsDatepicker formControlName="ERD"  [class.disabled-input]="true"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}" readonly>
-                                <span class="input-group-text cursor-pointer" (click)="dve.toggle(); $event.stopPropagation()" [class.disabled-input]="true">
+                                <span class="input-group-text cursor-pointer" [class.disabled-input]="true">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>

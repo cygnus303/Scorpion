@@ -32,6 +32,7 @@ public selectedFile: File | null = null;
 public isSubmitting:boolean = false;
 public filterForm!:FormGroup;
 public filterList:any;
+public generateData!:any;
 
 constructor(
   private basicDetailService: BasicDetailService,
@@ -501,7 +502,51 @@ advanceNotGreaterThanNet(control: AbstractControl) {
   return adv > net ? { advanceInvalid: true } : null;
 }
 
-
+generatePRSfilter(event?:any){ 
+  if(this.docketService.loginUserList.Type === '1'){
+    return;
+  }
+  if(this.challanForm.value?.vendorType!=='04' && event){
+      return;
+  }
+  const data = this.filterList;
+  const payload = {
+    gcno: '0',
+    drsType: "",
+    typ:this.docketService.loginUserList.Type === '2' ? 2 : 3,
+    datetype: data.bookingDateType || '',
+    vendorCode:this.challanForm.value?.vendorType ==='04'? this.challanForm.value.vendorCode:'',
+    bookedBy:  data.BookedBy || '',
+    bookedByType: data.BookedByType || '',
+    fromDate: new Date(data?.dateRange[0]).toISOString(),
+    toDate: new Date(data?.dateRange[1]).toISOString(),
+    paybas: data.paybas? data.paybas:'ALL',
+    trnmod: data.trnMod?data.trnMod:'ALL',
+    bustype: data.bustyp?data.bustyp:'ALL',
+    doctyp: this.docketService.loginUserList.Type === '2'?"PRS":"DRS",
+    loadingBy: data.loadingBy || '',
+    chargeType: data.chrgType?data.chrgType:"ALL",
+    odaType: data.odaType?data.odaType:'',
+  }
+  const baseCompanydata = {
+    TYP:this.docketService.loginUserList.Type === '2' ? 2 : 3,
+    baseCompanyCode:this.docketService.loginUserList.Companycode,
+    baseLocationCode:this.docketService.loginUserList.LocationCode,
+  }
+    this.THCService.generate(baseCompanydata,payload).subscribe({
+    next: (response: any) => {
+      if (response) {
+          this.vendtyData = response.listVendorType.map((x: any) => ({
+          codeId: x.vendor_Type_Code,
+          codeDesc: x.vendor_Type
+        }));
+        this.generateData=response
+      }
+      },error: (err) => {
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+}
 
 validateRate(group: FormGroup): boolean {
   const loadingBy = this.filterList?.loadingBy;
@@ -659,7 +704,7 @@ onSubmit(){
     SUPPLYERCODE:"",
     SUPPLYERNAME:"",
     AIRAGENT:"",
-    IsBrokerMemo:true,
+    IsBrokerMemo:false,
     BrokerMemoPath:"",
     TripSheetNo:challanForm?.tripSheetNo,
     FleetNo:"",
@@ -676,18 +721,18 @@ onSubmit(){
     FlightScheduleTime:challanForm?.flightScheduleTime,
     FlightDepatureDate:"",
     AirportDepatureDate:"",
-    IsFlightUpdat:true,
+    IsFlightUpdat:false,
     AirWayBillNo:challanForm?.airWayBillNo,
-    IsBCProcess:true,
-    IsFinancialEdit:true,
-    IsFinalized:true,
-    IsClosed:true,
+    IsBCProcess:false,
+    IsFinancialEdit:this.generateData?.cth?.isFinancialEdit ? this.generateData?.cth?.isFinancialEdit :false ,
+    IsFinalized:this.generateData?.cth?.isFinalized ? this.generateData?.cth?.isFinalized :false ,
+    IsClosed:this.generateData?.cth?.isClosed ? this.generateData?.cth?.isClosed :false ,
     THCRemarks:challanForm?.THCRemarks,
     OperationalStatus:"",
     ClosedBy:"",
     ClosedDate:"",
-    IsCancelled:true,
-    IsQuickChallan:true,
+    IsCancelled:this.generateData?.cth?.isCancelled ? this.generateData?.cth?.isCancelled : false ,
+    IsQuickChallan:this.generateData?.cth?.isQuickChallan ? this.generateData?.cth?.isQuickChallan :false ,
     CancelBy:"",
     CancelDate:"",
     CancelReason:"",
@@ -699,11 +744,11 @@ onSubmit(){
     LorryOwnerAddress:"",
     LorryOwnerMobileNo:"",
     LorryOwnerPanNo:challanForm?.lorryOwnerPanNo,
-    IsSafeEx:true,
-    IsReassign:true,
+    IsSafeEx:this.generateData?.cth?.isSafeEx ? this.generateData?.cth?.isSafeEx :false ,
+    IsReassign:false,
     ReassignBy:"",
     ReassignDate:"",
-    IsVehDecRequired:true,
+    IsVehDecRequired:this.generateData?.cth?.isVehDecRequired ? this.generateData?.cth?.isVehDecRequired :false ,
     FirmName:"",
     PaymentBy:0,
     ThirdPartyName:"",
@@ -718,15 +763,15 @@ onSubmit(){
     BROKERPANNOPATH:"",
     THIRDPARTYPANNOPATH:"",
     RCBOOKPATH:"",
-    IsOwnerPanRequired:true,
-    IsBrokerPanRequired:true,
+    IsOwnerPanRequired:this.generateData?.cth?.isOwnerPanRequired ? this.generateData?.cth?.isOwnerPanRequired : false,
+    IsBrokerPanRequired:this.generateData?.cth?.isBrokerPanRequired ? this.generateData?.cth?.isBrokerPanRequired : false,
     BROKERVEHDEPATH:"",
     PaymentByType:0,
-    IsOperationallyClose:true,
+    IsOperationallyClose:this.generateData?.cth?.isOperationallyClose ? this.generateData?.cth?.isOperationallyClose :false,
     OperationallyCloseBy:"",
-    IsOperationallyClosebySMS:true,
+    IsOperationallyClosebySMS:this.generateData?.cth?.isOperationallyClosebySMS ? this.generateData?.cth?.isOperationallyClosebySMS : false,
     OperationallyCloseDate:"",
-    IsEditMode:true,
+    IsEditMode:this.generateData?.cth?.isEditMode ? this.generateData?.cth?.isEditMode :false,
     PickUpLocation:"",
     DropLocaion:"",
     SealType:0,
@@ -738,7 +783,7 @@ onSubmit(){
     ScheduleTime:"",
     LateDepaturereason:challanForm?.lateDepaturereason,
     IsEmpty:challanForm?.isEmpty?true:false,
-    IsCityEnabled:true,
+    IsCityEnabled:this.generateData?.cth?.isCityEnabled ? this.generateData?.cth?.isCityEnabled : false,
     DeliveryZone:challanForm?.deliveryZone,
     MKTVehicleNo:challanForm?.mKTVehicleNo,
     ScheduleDay:"",
@@ -770,7 +815,7 @@ onSubmit(){
     CityRouteKM:"",
     LoadingSlipAttachment:challanForm?.loadingSlipAttachment,
     ApprovedBy:challanForm?.approvedBy,
-    ERD:challanForm?.ERD,
+    ERD:new Date(challanForm?.ERD).toISOString(),
     DAVendor:"",
     },
     "CMR":{
@@ -862,7 +907,7 @@ onSubmit(){
       IsMonthly:true,
       VendName:"",
       hdnRate:0,
-      IsMathadi:true,
+      IsMathadi:this.generateData?.isMathadi ? this.generateData?.isMathadi:false ,
       MathadiSlipNo:"",
       MathadiDate:new Date().toISOString(),
       MathadiAmt:0,
@@ -963,12 +1008,12 @@ onSubmit(){
    formData.append("PRSDRSDocketList",JSON.stringify(PRSDRSDocketList));
 
 
-   formData.append("CVM.IsMathadi", 'true');
+   formData.append("CVM.IsMathadi", this.generateData?.isMathadi ? this.generateData?.isMathadi :false );
    formData.append("CVM.BookedByType", "");
    formData.append("CVM.RatePerGram", "");
    formData.append("CVM.RatePerGramContractAmount", "");
-   formData.append("CVM.ISAttechedVendor", "true");
-   formData.append("CVM.ISContractualVendor", 'true');
+   formData.append("CVM.ISAttechedVendor", this.generateData?.isAttechedVendor ?this.generateData?.isAttechedVendor :false );
+   formData.append("CVM.ISContractualVendor", this.generateData?.isContractualVendor ? this.generateData?.isContractualVendor :false );
    formData.append("CVM.RateType", "0");
    formData.append("CVM.IsMobileUser","true");
    formData.append("CVM.DemurrageCharge", "");
@@ -994,11 +1039,13 @@ onSubmit(){
   if(this.challanForm.valid){
     this.isSubmitting = true;
     this.THCService.challanSubmit(formData).subscribe({next: (response:any) => {
-        if (response && response.data) {
+        if (response && response.data && !response.data.isError) {
           //  this.sweetAlertService.success(response.data.doctyp +' '+ 'Document ' +  response.data.docno +' '+ response.data.tranXaction)
           //  https://sepluat.cygnux.in/Operation/ChallanDone?DOCNO=PS%2FPIM%2F2526%2F002491&DOCTYP=PRS&TranXaction=Successfully%20Generated&IsError=False
           window.parent.location.href = `${this.env.liveUrl}Operation/ChallanDone?DOCNO=${response.data.docno}&DOCTYP=${response.data.doctyp}&TranXaction=${response.data.tranXaction}&IsError=${response.data.isError}&src=angular`;
 
+        }else{
+             this.sweetAlertService.error(response?.data?.message);
         }
         this.isSubmitting=false;
       },error: (error) => {

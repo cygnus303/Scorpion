@@ -124,8 +124,7 @@ constructor(
 onSearch() {
   if (this.challanService.filterForm.valid) {
     this.router.navigate(
-      ['Operation/ChallanList'],
-      {
+      ['Operation/ChallanList'],{
         queryParams: {
           data: this.route.snapshot.queryParams['data'],
           start: JSON.stringify(this.challanService.filterForm.value) // must stringify
