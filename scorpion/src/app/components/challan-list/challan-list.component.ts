@@ -128,7 +128,7 @@ constructor(
 
       if (this.docketService.loginUserList.Type !== '1') {
         this.challanService.getCityList();
-        this.generatePRSfilter();
+        this.challanService.generatePRSfilter();
         this.avalabledocketinPRS();
       }
     }, 300); 
@@ -898,50 +898,50 @@ formatDate(dateStr: string): string {
   }).replace(',', '');
 }
 
-generatePRSfilter(event?:any){ 
-  if(this.docketService.loginUserList.Type === '1'){
-    return;
-  }
-  if(this.challanService.challanForm.value?.vendorType!=='04' && event){
-      return;
-  }
-  const data = this.challanService.filterList;
-  const payload = {
-    gcno: '0',
-    drsType: "",
-    typ:this.docketService.loginUserList.Type === '2' ? 2 : 3,
-    datetype: data.bookingDateType || '',
-    vendorCode:this.challanService.challanForm.value?.vendorType ==='04'? this.challanService.challanForm.value.vendorCode:'',
-    bookedBy:  data.BookedBy || '',
-    bookedByType: data.BookedByType || '',
-    fromDate: new Date(data?.dateRange[0]).toISOString(),
-    toDate: new Date(data?.dateRange[1]).toISOString(),
-    paybas: data.paybas? data.paybas:'ALL',
-    trnmod: data.trnMod?data.trnMod:'ALL',
-    bustype: data.bustyp?data.bustyp:'ALL',
-    doctyp: this.docketService.loginUserList.Type === '2'?"PRS":"DRS",
-    loadingBy: data.loadingBy || '',
-    chargeType: data.chrgType?data.chrgType:"ALL",
-    odaType: data.odaType?data.odaType:'',
-  }
-  const baseCompanydata = {
-    TYP:this.docketService.loginUserList.Type === '2' ? 2 : 3,
-    baseCompanyCode:this.docketService.loginUserList.Companycode,
-    baseLocationCode:this.docketService.loginUserList.LocationCode,
-  }
-    this.THCService.generate(baseCompanydata,payload).subscribe({
-    next: (response: any) => {
-      if (response) {
-          this.challanService.vendtyData = response.listVendorType.map((x: any) => ({
-          codeId: x.vendor_Type_Code,
-          codeDesc: x.vendor_Type
-        }));
-      }
-      },error: (err) => {
-        this.sweetAlertService.error(err.error.message)
-      }
-    });
-}
+// generatePRSfilter(event?:any){ 
+//   if(this.docketService.loginUserList.Type === '1'){
+//     return;
+//   }
+//   if(this.challanService.challanForm.value?.vendorType!=='04' && event){
+//       return;
+//   }
+//   const data = this.challanService.filterList;
+//   const payload = {
+//     gcno: '0',
+//     drsType: "",
+//     typ:this.docketService.loginUserList.Type === '2' ? 2 : 3,
+//     datetype: data.bookingDateType || '',
+//     vendorCode:this.challanService.challanForm.value?.vendorType ==='04'? this.challanService.challanForm.value.vendorCode:'',
+//     bookedBy:  data.BookedBy || '',
+//     bookedByType: data.BookedByType || '',
+//     fromDate: new Date(data?.dateRange[0]).toISOString(),
+//     toDate: new Date(data?.dateRange[1]).toISOString(),
+//     paybas: data.paybas? data.paybas:'ALL',
+//     trnmod: data.trnMod?data.trnMod:'ALL',
+//     bustype: data.bustyp?data.bustyp:'ALL',
+//     doctyp: this.docketService.loginUserList.Type === '2'?"PRS":"DRS",
+//     loadingBy: data.loadingBy || '',
+//     chargeType: data.chrgType?data.chrgType:"ALL",
+//     odaType: data.odaType?data.odaType:'',
+//   }
+//   const baseCompanydata = {
+//     TYP:this.docketService.loginUserList.Type === '2' ? 2 : 3,
+//     baseCompanyCode:this.docketService.loginUserList.Companycode,
+//     baseLocationCode:this.docketService.loginUserList.LocationCode,
+//   }
+//     this.THCService.generate(baseCompanydata,payload).subscribe({
+//     next: (response: any) => {
+//       if (response) {
+//           this.challanService.vendtyData = response.listVendorType.map((x: any) => ({
+//           codeId: x.vendor_Type_Code,
+//           codeDesc: x.vendor_Type
+//         }));
+//       }
+//       },error: (err) => {
+//         this.sweetAlertService.error(err.error.message)
+//       }
+//     });
+// }
 avalabledocketinPRS(event?:any){ 
   if(this.docketService.loginUserList.Type === '1'){
     return;
