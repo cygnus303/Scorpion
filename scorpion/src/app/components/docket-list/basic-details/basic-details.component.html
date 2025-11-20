@@ -78,7 +78,7 @@
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                   placeholder="CNote Date"  formControlName="cNoteDate" required appFocusNext [class.disabled-input]="true" 
                   [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('cNoteDate')?.invalid  && docketService.basicDetailForm.get('cNoteDate')?.touched }">
-                <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                <span class="input-group-text cursor-pointer" (click)="dp.toggle()"  [class.disabled-input]="this.docketService.isComplition" >
                   <i class="fa fa-calendar"></i>
                 </span>
               </div>
