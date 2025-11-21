@@ -366,7 +366,7 @@ SearchfilterForm(){
     standardContractAmount:new FormControl(),
     isMonthlyBillAllow:new FormControl(),
     TDSAcccode:new FormControl(),
-    vehicleNO:new FormControl(null, isType1 ? Validators.required : null),
+    vehicleNO:new FormControl(null),
     avalabledocketinPRS:new FormArray([]),
     avalableForTHC:new FormArray([]),
     TDSPercent:new FormControl(),

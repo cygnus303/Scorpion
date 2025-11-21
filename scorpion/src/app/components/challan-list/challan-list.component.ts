@@ -152,8 +152,9 @@ constructor(
     this.actualDeptTime = this.formatTime(dt);
     this.challanDateAccess();
 
-     this.challanService.challanForm.get('vendorType')?.valueChanges.subscribe(() => {
+     this.challanService.challanForm.get('vendorType')?.valueChanges.subscribe((vendorType) => {
     this.updateVehicleRequiredValidator();
+    this.updateVehicleNoValidator(vendorType);
   });
 
   this.challanService.challanForm.get('vehicleNO')?.valueChanges.subscribe(() => {
@@ -171,11 +172,22 @@ constructor(
       approvedByCtrl?.clearValidators();
       approvedByCtrl?.setValue(null);  // optional → reset field
     }
-
     approvedByCtrl?.updateValueAndValidity();
-  });
-
+   });
   }
+
+  updateVehicleNoValidator(vendorType: string) {
+  const requiredTypes = ['XX1', '04', '19', '05', 'XX5'];
+  const vehicleControl = this.challanService.challanForm.get('vehicleNO');
+
+  if (requiredTypes.includes(vendorType)) {
+    vehicleControl?.setValidators([Validators.required]);
+  } else {
+    vehicleControl?.clearValidators();
+    vehicleControl?.setValue(null); // optional
+  }
+  vehicleControl?.updateValueAndValidity();
+}
 
   clearZero(controlName: string) {
   const ctrl = this.challanService.challanForm.get(controlName);
