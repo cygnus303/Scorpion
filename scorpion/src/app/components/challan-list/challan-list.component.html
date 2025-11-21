@@ -205,7 +205,7 @@
                     <div class="row" >
                         <label class="col-sm-5 col-form-label text-end">PAN No</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" type="text" placeholder="PAN No" formControlName="lorryOwnerPanNo" readonly appFocusNext>
+                            <input class="form-control required2" type="text" placeholder="PAN No" formControlName="lorryOwnerPanNo" [readonly]="challanService.challanForm.value.vendorType !== 'XX'" appFocusNext>
                         </div>
                     </div>
                 </div>
