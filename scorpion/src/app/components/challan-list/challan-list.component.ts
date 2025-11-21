@@ -695,10 +695,12 @@ checkLicenseExpiry(event?:any) {
 
 
 getPANnumberData(event:any){
+const vendorName= this.challanService.vendorsList.find((x:any)=>x.vendor_Code===event)?.vendor_Name
   this.challanService.challanForm.patchValue({
     vehicleType:null,
-    vehicleNO:null
-  });
+    vehicleNO:null,
+    vendorName:vendorName
+  })
   this.THCService.getPANnumber(event).subscribe({
       next: (response: any) => {
         if (response && response.data) {
