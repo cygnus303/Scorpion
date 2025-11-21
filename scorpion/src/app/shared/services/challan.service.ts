@@ -626,6 +626,10 @@ updateTotalLoadingCharge() {
   this.challanForm.get('Loadingcharge')?.setValue(total.toFixed(2), { emitEvent: false });
 }
 
+onReset(){
+ window.location.reload();
+}
+
 onSubmit(){
   // const DocketList = (this.avalabledocket.controls as FormGroup[]).filter((group) => group.get('isSelected')?.value).map((group) => group.value);
     const DocketList = (this.avalabledocket.controls as FormGroup[]).filter(group => group.get('isSelected')?.value).map(group => {
@@ -1046,7 +1050,7 @@ onSubmit(){
           window.parent.location.href = `${this.env.liveUrl}Operation/ChallanDone?DOCNO=${response.data.docno}&DOCTYP=${response.data.doctyp}&TranXaction=${response.data.tranXaction}&IsError=${response.data.isError}&src=angular`;
 
         }else{
-             this.sweetAlertService.error(response?.data?.message);
+             this.sweetAlertService.error('You have some form errors. Please check below.');
         }
         this.isSubmitting=false;
       },error: (error) => {

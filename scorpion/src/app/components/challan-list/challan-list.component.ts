@@ -76,8 +76,8 @@ constructor(
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      this.docketService.loginUserList.LocationCode =  'BWH';
-      this.docketService.loginUserList.Type = '1'
+      // this.docketService.loginUserList.LocationCode =  'PIM';
+      // this.docketService.loginUserList.Type = '2'
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
@@ -401,6 +401,7 @@ updateTotalDockets() {
 
   this.THCService.getLoadingCharge(data).subscribe({
     next: (response: any) => {
+      if(this.challanService.filterList?.loadingBycodeFor === 'XX5'){
       if (response && response.rate && response.rate > 0) {
         this.challanService.challanForm.patchValue({
           rate: response.rate
@@ -420,6 +421,7 @@ updateTotalDockets() {
         this.israteDisabled = false;
         this.challanService.challanForm.get('vendorChargesCode')?.setErrors({ rateUnavailable: true });
       }
+    }
     },
     error: (err) => {
       console.error('Error fetching loading charge:', err);
