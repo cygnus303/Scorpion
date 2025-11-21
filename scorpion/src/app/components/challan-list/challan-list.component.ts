@@ -1291,28 +1291,61 @@ onChangeVehicleType(event:any){
 }
 
 
+// onFileSelected(event: any) {
+//   const file = event.target.files[0];
+//   if (file) {
+//     this.challanService.selectedFile = file;
+//     this.selectedFileName = file.name;
+//     this.isImageFile = file.type.startsWith('image/');
+
+//     if (this.isImageFile) {
+//       // Show image preview
+//       const reader = new FileReader();
+//       reader.onload = () => this.previewUrl = reader.result;
+//       reader.readAsDataURL(file);
+//     } else {
+//       // For PDF, just show file name (no preview)
+//       this.previewUrl = null;
+//     }
+
+//     // Assign file to form control
+//     this.challanService.challanForm.patchValue({
+//       loadingSlipAttachment: file
+//     });
+//   }
+// }
+
 onFileSelected(event: any) {
   const file = event.target.files[0];
-  if (file) {
-    this.challanService.selectedFile = file;
-    this.selectedFileName = file.name;
-    this.isImageFile = file.type.startsWith('image/');
 
-    if (this.isImageFile) {
-      // Show image preview
-      const reader = new FileReader();
-      reader.onload = () => this.previewUrl = reader.result;
-      reader.readAsDataURL(file);
-    } else {
-      // For PDF, just show file name (no preview)
-      this.previewUrl = null;
-    }
+  if (!file) return;
 
-    // Assign file to form control
+  const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf', 'application/vnd.ms-excel', // .xls
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+
+  // Validate file type
+  if (!allowedTypes.includes(file.type)) {
+    this.sweetAlertService.error("Please upload a valid file (Image or PDF)");
+    event.target.value = ''; // reset file input
+    return;
+  }
+
+   this.challanService.selectedFile = file;
+  this.selectedFileName = file.name;
+  this.isImageFile = file.type.startsWith('image');
+
+  if (this.isImageFile) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewUrl = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  } else {
+    this.previewUrl = null;
+  }
     this.challanService.challanForm.patchValue({
       loadingSlipAttachment: file
     });
-  }
 }
 
 
