@@ -1098,7 +1098,7 @@
           <table class="table table-bordered table-striped table-condensed flip-content mb-0">
             <thead class="sticky-top bg-light">
                 <tr>
-                    <th class="p-3"><input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox" (change)="toggleSelectAll($event)"></th>
+                    <th class="p-3"><input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox"  style="cursor: pointer;"(change)="toggleSelectAll($event)"></th>
                     <th class="p-3">CNote No. <div *ngIf="this.docketService.loginUserList.Type === '3'">Origin</div></th>
                     <th class="p-3">Pay Basis</th>
                     <th class="p-3">Booking Date EDD</th>
@@ -1130,7 +1130,7 @@
                 class="align-middle">
                 <td>
                     <ng-container *ngIf="!item.value.Message; else showMessage">
-                        <input type="checkbox" formControlName="isSelected" class="form-check-input checkbox-lg custom-big-checkbox" (change)="onDocketSelectionChange(item)">
+                        <input type="checkbox" formControlName="isSelected" class="form-check-input checkbox-lg custom-big-checkbox"  style="cursor: pointer;" (change)="onDocketSelectionChange(item)">
                     </ng-container>
                     <ng-template #showMessage>
                         <span class="text-danger fw-semibold">{{ item.value.Message }}</span>
@@ -1239,7 +1239,7 @@
                     <tr *ngFor="let item of challanService.avalableForTHC.controls; let i = index" [formGroupName]="i"
                         class="align-middle">
                         <td>
-                            <input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox" formControlName="selected" (change)="updateTotalManifest(item.value.TCNO)">
+                            <input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox" formControlName="selected"  style="cursor: pointer;"(change)="updateTotalManifest(item.value.TCNO)">
                         </td>
                         <td>{{ item.value.TCNO}}</td>
                         <td>{{ item.value.Manual}}</td>

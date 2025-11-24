@@ -102,12 +102,15 @@ constructor(
             this.challanService.challanForm.patchValue({
               vendorType: vendorTypeCode
             });
-            this.challanService.getVendorsList(vendorTypeCode);
+            this.challanService.getVendorsList(vendorTypeCode).subscribe(() => {
+              if (this.challanService.filterList.BookedBy) {
+                this.getPANnumberData(this.challanService.challanForm.value.vendorCode);
+              }
+            });
             if (this.challanService.filterList.BookedBy) {
               this.challanService.challanForm.patchValue({
                 vendorCode: this.challanService.filterList.BookedBy
               });
-              this.getPANnumberData(this.challanService.challanForm.value.vendorCode)
             }
           }
           const ChargedBy = this.challanService?.filterList?.loadingBycodeFor;
@@ -131,7 +134,7 @@ constructor(
         this.challanService.generatePRSfilter();
         this.avalabledocketinPRS();
       }
-    }, 300); 
+    }, 400); 
 
        this.challanService.challanForm.get('netAmount')?.valueChanges.subscribe(() => {
       this.challanService.challanForm.updateValueAndValidity({ onlySelf: false });

@@ -10,6 +10,7 @@ import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '
 import { SweetAlertService } from './sweet-alert.service';
 import { environment } from 'environments/environment';
 import { mobileNo } from '../constants/common';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -51,21 +52,37 @@ constructor(
     });
   }
 
-   getVendorsList(event:any) {
-    const data = {
-     vendorType:event?.codeId ? event?.codeId:event,
-     branchCode:this.docketService.loginUserList.LocationCode,
-     userName: this.docketService.loginUserList.BaseUserName,
-     documentType:this.docketService.loginUserList.Type
-    }
-    this.THCService.getVendorsList(data).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.vendorsList = response.data;
-        }
-      },
-    });
-  }
+  //  getVendorsList(event:any) {
+  //   const data = {
+  //    vendorType:event?.codeId ? event?.codeId:event,
+  //    branchCode:this.docketService.loginUserList.LocationCode,
+  //    userName: this.docketService.loginUserList.BaseUserName,
+  //    documentType:this.docketService.loginUserList.Type
+  //   }
+  //   this.THCService.getVendorsList(data).subscribe({
+  //     next: (response) => {
+  //       if (response.success) {
+  //         this.vendorsList = response.data;
+  //       }
+  //     },
+  //   });
+  // }
+  getVendorsList(event: any) {
+  const data = {
+    vendorType: event?.codeId ? event?.codeId : event,
+    branchCode: this.docketService.loginUserList.LocationCode,
+    userName: this.docketService.loginUserList.BaseUserName,
+    documentType: this.docketService.loginUserList.Type
+  };
+
+  return this.THCService.getVendorsList(data).pipe(
+    tap((response: any) => {
+      if (response.success) {
+        this.vendorsList = response.data;
+      }
+    })
+  );
+}
 
   getChargesVendorsList(event:any) {
     const data = {
