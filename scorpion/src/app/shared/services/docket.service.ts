@@ -66,7 +66,7 @@ export class DocketService {
   public isComplition : boolean = false;
   public completiondata: any;
   public ruleDetailForChargeRule: any;
-  private freightTimeout: any;
+ public isWeightRecalculated = false;
 
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
@@ -1087,7 +1087,10 @@ calculateChargeWeight(){
       invAmt: this.invoiceform.value.totalDeclaredValue?.toString(),
       dockdt: this.basicDetailForm.value.cNoteDate.toISOString(),
       prodcd: this.basicDetailForm.value.contents,
-      isPerPieceRate: this.step2DetailsList?.isPerPieceRate
+      isPerPieceRate: this.step2DetailsList?.isPerPieceRate,
+      fromPincode:this.consignorForm.value.consignorPincode,
+      toPincode:this.basicDetailForm.value.pincode,
+      totalPiece:0
     }
 
     if (!data.invAmt || !data.prodcd || !data.tostate || data.noOfPkgs === "0" || !data.transMode || !data.serviceType) {
@@ -1113,19 +1116,19 @@ calculateChargeWeight(){
           this.validateAppointmentDate();
           // Only patch the value if there's no validation error
              this.getFuelSurcharge(this.freightData?.freightCharge);
-        if (!this.weightErrorMsg) {
+        if (!this.weightErrorMsg && !this.isWeightRecalculated) {
           const newFinalWeight = Math.max(this.freightData.chargedWeight || 0, this.invoiceform.value.finalActualWeight || 0);
           const newPkgWeight = Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0);
-
+ 
           const currentFinalWeight = this.invoiceform.value.finalActualWeight;
           const currentPkgWeight = this.invoiceform.value.chargeWeightPerPkg;
-
+ 
           if (newFinalWeight !== currentFinalWeight || newPkgWeight !== currentPkgWeight) {
             this.invoiceform.patchValue({
               finalActualWeight: newFinalWeight,
               chargeWeightPerPkg: newPkgWeight
             });
-
+              this.isWeightRecalculated = true;
             // 🔄 Call again only once if updated
             this.calculateChargeWeight();
             this.GetFreightContractDetails();

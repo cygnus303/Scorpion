@@ -37,7 +37,7 @@ export class BasicDetailsComponent {
   constructor(
     public docketService: DocketService,
     private basicDetailService: BasicDetailService, public generalMasterService: GeneralMasterService,
-  public commonDateService:CommonDateService) { }
+    public commonDateService:CommonDateService) { }
 
   ngOnInit() {
     this.appoinmentDate = new Date();
@@ -95,8 +95,8 @@ export class BasicDetailsComponent {
   }
 
     callEwayBillFromParent(event: any) {
-  this.docketService.ewayBill$.next(event);
-}
+      this.docketService.ewayBill$.next(event);
+    }
 
     onApplyDeliveryChangeValidators(){
      this.docketService.basicDetailForm.get('isAppointmentDelivery')?.valueChanges.subscribe((isAppointment) => {
