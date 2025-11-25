@@ -1301,16 +1301,16 @@
                 <div class="row mb-3 align-items-center">
                     <label class="col-sm-6 col-form-label text-end fw-bold">Contract Amount</label>
                     <div class="col-sm-6">
-                        <input min="1" type="number" class="form-control text-end" formControlName="contractAmount" appFocusNext
+                        <input   min="1" maxlength="8" type="number" class="form-control text-end" formControlName="contractAmount" appFocusNext
                         [readOnly]="((this.docketService.loginUserList.Type === '2' ||this.docketService.loginUserList.Type === '3') && challanService.challanForm.value.vendorType === '04') ||
-                        (challanService.challanForm.value.vendorType === 'XX1' && this.docketService.loginUserList.Type === '1')"  pattern="^[0-9]{1,8}$"  
+                        (challanService.challanForm.value.vendorType === 'XX1' && this.docketService.loginUserList.Type === '1')" 
                         (blur)="changeAmountApplicable($event);restoreIfEmpty('contractAmount')"  (focus)="clearZero('contractAmount')"
                         required [ngClass]="{ 'border-danger': challanService.challanForm.get('contractAmount')?.invalid && challanService.challanForm.get('contractAmount')?.touched }"/>
                         <div class="text-danger text-start mt-1 small" *ngIf="challanService.challanForm.get('contractAmount')?.touched && challanService.challanForm.get('contractAmount')?.errors">
                             <span *ngIf="challanService.challanForm.get('contractAmount')?.hasError('required')">
                                 Please enter a value.
                             </span>
-                            <span *ngIf="challanService.challanForm.get('contractAmount')?.hasError('pattern')">
+                            <span *ngIf="challanService.challanForm.get('contractAmount')?.hasError('maxlength')">
                                 Please enter no more than 8 digits.
                             </span>
                             <span *ngIf="challanService.challanForm.get('contractAmount')?.hasError('min')">

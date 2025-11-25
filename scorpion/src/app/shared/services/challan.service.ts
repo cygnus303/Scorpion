@@ -52,37 +52,37 @@ constructor(
     });
   }
 
-  //  getVendorsList(event:any) {
-  //   const data = {
-  //    vendorType:event?.codeId ? event?.codeId:event,
-  //    branchCode:this.docketService.loginUserList.LocationCode,
-  //    userName: this.docketService.loginUserList.BaseUserName,
-  //    documentType:this.docketService.loginUserList.Type
-  //   }
-  //   this.THCService.getVendorsList(data).subscribe({
-  //     next: (response) => {
-  //       if (response.success) {
-  //         this.vendorsList = response.data;
-  //       }
-  //     },
-  //   });
-  // }
-  getVendorsList(event: any) {
-  const data = {
-    vendorType: event?.codeId ? event?.codeId : event,
-    branchCode: this.docketService.loginUserList.LocationCode,
-    userName: this.docketService.loginUserList.BaseUserName,
-    documentType: this.docketService.loginUserList.Type
-  };
+   getVendorsList(event:any) {
+    const data = {
+     vendorType:event?.codeId ? event?.codeId:event,
+     branchCode:this.docketService.loginUserList.LocationCode,
+     userName: this.docketService.loginUserList.BaseUserName,
+     documentType:this.docketService.loginUserList.Type
+    }
+    this.THCService.getVendorsList(data).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.vendorsList = response.data;
+        }
+      },
+    });
+  }
+//   getVendorsList(event: any) {
+//   const data = {
+//     vendorType: event?.codeId ? event?.codeId : event,
+//     branchCode: this.docketService.loginUserList.LocationCode,
+//     userName: this.docketService.loginUserList.BaseUserName,
+//     documentType: this.docketService.loginUserList.Type
+//   };
 
-  return this.THCService.getVendorsList(data).pipe(
-    tap((response: any) => {
-      if (response.success) {
-        this.vendorsList = response.data;
-      }
-    })
-  );
-}
+//   return this.THCService.getVendorsList(data).pipe(
+//     tap((response: any) => {
+//       if (response.success) {
+//         this.vendorsList = response.data;
+//       }
+//     })
+//   );
+// }
 
   getChargesVendorsList(event:any) {
     const data = {
@@ -359,7 +359,7 @@ SearchfilterForm(){
     approvedBy:new FormControl(null),
     is_Local_ODA_id : new FormControl('local'),
     totalDockets: new FormControl(0, !isType1 ? [Validators.required, Validators.min(1)] : null),
-    contractAmount : new FormControl(0),
+    contractAmount : new FormControl(0,[Validators.min(1), Validators.maxLength(8)]),
     isTDSEnabled : new FormControl(),
     tDSOnAmount : new FormControl(0),
     totalTDSAmount : new FormControl(0),
@@ -717,7 +717,7 @@ onSubmit(){
     TOTALWithWtAdjust:0,
     WithWtAdjustPM:"",
     VendorCode:challanForm?.vendorCode,
-    VendorName:challanForm?.vendorName,
+    VendorName:challanForm?.vendorName ? challanForm?.vendorName :challanForm?.vendorCode,
     VendorType:challanForm?.vendorType,
     VendorAddress:"",
     VENDORMOBNO:"",
