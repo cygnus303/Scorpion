@@ -359,7 +359,7 @@ SearchfilterForm(){
     approvedBy:new FormControl(null),
     is_Local_ODA_id : new FormControl('local'),
     totalDockets: new FormControl(0, !isType1 ? [Validators.required, Validators.min(1)] : null),
-    contractAmount : new FormControl(0,[Validators.min(1), Validators.maxLength(8)]),
+    contractAmount : new FormControl(0,[Validators.required,Validators.min(1),Validators.max(99999999)]),
     isTDSEnabled : new FormControl(),
     tDSOnAmount : new FormControl(0),
     totalTDSAmount : new FormControl(0),
