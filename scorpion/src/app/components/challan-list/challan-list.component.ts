@@ -102,16 +102,13 @@ constructor(
             this.challanService.challanForm.patchValue({
               vendorType: vendorTypeCode
             });
-            this.challanService.getVendorsList(vendorTypeCode).subscribe(() => {
-              if (this.challanService.filterList.BookedBy) {
-                this.getPANnumberData(this.challanService.challanForm.value.vendorCode);
-              }
-            });
+            this.challanService.getVendorsList(vendorTypeCode)
             if (this.challanService.filterList.BookedBy) {
               this.challanService.challanForm.patchValue({
                 vendorCode: this.challanService.filterList.BookedBy
               });
             }
+            this.getPANnumberData(this.challanService.challanForm.value.vendorCode);
           }
           const ChargedBy = this.challanService?.filterList?.loadingBycodeFor;
           if(ChargedBy === 'B' || ChargedBy == '04'){
@@ -704,7 +701,7 @@ const vendorName= this.challanService.vendorsList.find((x:any)=>x.vendor_Code===
   this.challanService.challanForm.patchValue({
     vehicleType:null,
     vehicleNO:null,
-    vendorName:vendorName
+    vendorName:vendorName || event
   })
   this.THCService.getPANnumber(event).subscribe({
       next: (response: any) => {
