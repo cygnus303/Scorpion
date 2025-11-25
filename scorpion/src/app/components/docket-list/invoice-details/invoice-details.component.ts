@@ -380,7 +380,7 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                 consigneeCity:response.toCity,
                 consignorGSTNo: response.consignor,
                 consigneeGSTNo: response.consignee,
-                consignorPincode:response.pincode.toString()
+                consignorPincode:response.pincode.toString(),
               });
             this.docketService.getpincodeData(response.toPincode.toString())
             this.docketService.getTransportModeData(response.transMode.toString())
@@ -389,7 +389,7 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                 // mode: response.transMode.toString(),
                 pincode: response.toPincode.toString(),
                 // fromCity: response.fromCity,
-                // toCity: response.toCity,
+                toCity: null,
                 destination: response.destcd,
               });
               this.docketService.GetPincodeOrigin('Origin');

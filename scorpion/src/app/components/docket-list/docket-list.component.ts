@@ -393,7 +393,8 @@ getCompletionData() {
           "paybas": this.docketService.basicDetailForm.value.billingType,
           "pkgsno": this.docketService.invoiceform.value.totalNoOfPkgs,
           "actuwt": this.docketService.invoiceform.value.totalActualWeight,
-          "chrgwt": Math.max(this.docketService.invoiceform.value.finalActualWeight || 0, this.docketService.invoiceform.value.totalCubicWeight || 0),
+          // "chrgwt": Math.max(this.docketService.invoiceform.value.finalActualWeight || 0, this.docketService.invoiceform.value.totalCubicWeight || 0),
+          "chrgwt": this.docketService.invoiceform.value.finalActualWeight || 0,
           "chargedPkgsNo": this.docketService.invoiceform.value.chargeWeightPerPkg,
           "prodcd": this.docketService.basicDetailForm.value.contents,
           "spl_svc_req": "",
@@ -663,7 +664,7 @@ getCompletionData() {
         formData.append("DVM.WMD.sdD_Date", new Date().toISOString()),
         formData.append("DVM.WMD.dockdt", this.docketService.basicDetailForm.value.cNoteDate ? new Date(this.docketService.basicDetailForm.value.cNoteDate).toISOString() : '');
       // formData.append("DVM.WMD.cdeldt", new Date(this.docketService.freightData.edd).toISOString()),
-formData.append("DVM.WMD.cdeldt", this.docketService.freightData.edd );
+        formData.append("DVM.WMD.cdeldt", this.docketService.freightData.edd );
 
 
         formData.append("DVM.WMD.AppointmentDT",this.docketService.basicDetailForm.value.appointmentDT ? new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString() : new Date().toISOString()),
