@@ -32,6 +32,7 @@ public branchWiseLoadingUnloadingList:BranchWiseLoadingUnloading[]=[];
 public selectedFile: File | null = null;
 public isSubmitting:boolean = false;
 public filterForm!:FormGroup;
+public isRedirect:boolean = false;
 public filterList:any;
 public generateData!:any;
 
@@ -1062,18 +1063,17 @@ onSubmit(){
     this.isSubmitting = true;
     this.THCService.challanSubmit(formData).subscribe({next: (response:any) => {
         if (response && response.data && !response.data.isError) {
-          //  this.sweetAlertService.success(response.data.doctyp +' '+ 'Document ' +  response.data.docno +' '+ response.data.tranXaction)
-          //  https://sepluat.cygnux.in/Operation/ChallanDone?DOCNO=PS%2FPIM%2F2526%2F002491&DOCTYP=PRS&TranXaction=Successfully%20Generated&IsError=False
+          this.isRedirect = true;
           window.parent.location.href = `${this.env.liveUrl}Operation/ChallanDone?DOCNO=${response.data.docno}&DOCTYP=${response.data.doctyp}&TranXaction=${response.data.tranXaction}&IsError=${response.data.isError}&src=angular`;
-
         }else{
              this.sweetAlertService.error('You have some form errors. Please check below.');
         }
         this.isSubmitting=false;
       },error: (error) => {
           window.scrollTo({ top: 0, behavior: 'smooth' });
-         this.sweetAlertService.error(error?.error?.message);
-        this.isSubmitting=false;
+            this.sweetAlertService.error(error?.error?.message);
+            this.isSubmitting=false;
+            this.isRedirect = false;
         }
     })
   }else{
