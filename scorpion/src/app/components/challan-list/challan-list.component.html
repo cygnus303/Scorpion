@@ -1504,7 +1504,7 @@
         <button class="btn btn-secondary me-2" (click)="challanService.onReset()">
             <i class="bi bi-arrow-counterclockwise"></i> Reset
         </button>
-        <button class="btn btn-success" (click)="challanService.onSubmit()" >
+        <button class="btn btn-success" (click)="challanService.onSubmit()" [disabled]="challanService.isRedirect">
             <i class="bi bi-check-circle"></i> Submit
         </button>
     </div>
