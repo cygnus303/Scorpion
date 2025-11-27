@@ -89,7 +89,7 @@ constructor(
     this.challanService.getDepartmentReason();
     this.challanService.getTDSLedgerList();
     this.challanService.getLocationData();
-    this.getDAList();
+    this.getDAList(); 
     this.challanService.getRateTypeData()
 
     setTimeout(() => {
