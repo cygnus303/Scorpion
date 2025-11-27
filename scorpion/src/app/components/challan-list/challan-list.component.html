@@ -192,11 +192,23 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Vendor Code/Name</label>
                         <div class="col-sm-7">
-                             <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name" formControlName="vendorCode" 
+                             <!-- <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name" formControlName="vendorCode" 
                              [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code" [readonly]="this.challanService.filterList?.BookedByType === 'B'"
                               required [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorCode')?.invalid  && challanService.challanForm.get('vendorCode')?.touched }"
                              (change)="getPANnumberData($event?.vendor_Code)" appFocusNext
-                             ></ng-select>
+                             ></ng-select> -->
+                            <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name" formControlName="vendorCode"
+                                [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code" [readonly]="this.challanService.filterList?.BookedByType === 'B'" 
+                                required [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorCode')?.invalid && challanService.challanForm.get('vendorCode')?.touched }"
+                                (change)="getPANnumberData($event?.vendor_Code)" appFocusNext>
+                                <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                                    <div [title]="item.vendor_Name">
+                                        {{ item.vendor_Name }}
+                                    </div>
+                                </ng-template>
+                            
+                            </ng-select>
+
                              <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vendorCode')?.invalid && challanService.challanForm.get('vendorCode')?.touched "> This field is required.</div>
                         </div>
                     </div>
@@ -1098,22 +1110,22 @@
           <table class="table table-bordered table-striped table-condensed flip-content mb-0">
             <thead class="sticky-top bg-light">
                 <tr>
-                    <th class="p-3"><input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox"  style="cursor: pointer;"(change)="toggleSelectAll($event)"></th>
-                    <th class="p-3">CNote No. <div *ngIf="this.docketService.loginUserList.Type === '3'">Origin</div></th>
-                    <th class="p-3">Pay Basis</th>
-                    <th class="p-3">Booking Date EDD</th>
-                    <th class="p-3">Arrival Date <div *ngIf="this.docketService.loginUserList.Type === '3'">Stock Update Date</div></th>
-                    <th class="p-3">{{this.docketService.loginUserList.Type === '3' ? 'Actu. / Pend. /Arr. Pkgs.':'Pkgs.[L/B]'}}</th>
-                    <th class="p-3">{{this.docketService.loginUserList.Type === '3' ? 'Act./Arr.Wt.' :'Wt.[L/B]'}}</th>
-                    <th class="p-3">Chrg. Wt.</th>
-                    <th class="p-3">Rate Type</th>
-                    <th class="p-3">E-Way Bill No.</th>
-                    <th class="p-3">Reason for Delay</th>
-                    <th class="p-3">TAT in Hrs.</th>
-                    <th class="p-3" *ngIf="this.docketService.loginUserList.Type === '3'">Billing Party Name</th>
-                    <th class="p-3" *ngIf="this.docketService.loginUserList.Type === '3'">Consignor Name</th>
-                    <th class="p-3">Contract Amount</th>
-                    <th class="p-3" *ngIf="this.docketService.loginUserList.Type !== '3'">IsPRSPKGScan.</th>
+                    <th class="p-3 fw-bolder"><input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox"  style="cursor: pointer;"(change)="toggleSelectAll($event)"></th>
+                    <th class="p-3 fw-bolder">CNote No. <div *ngIf="this.docketService.loginUserList.Type === '3'">Origin</div></th>
+                    <th class="p-3 fw-bolder">Pay Basis</th>
+                    <th class="p-3 fw-bolder">Booking Date EDD</th>
+                    <th class="p-3 fw-bolder">Arrival Date <div *ngIf="this.docketService.loginUserList.Type === '3'">Stock Update Date</div></th>
+                    <th class="p-3 fw-bolder">{{this.docketService.loginUserList.Type === '3' ? 'Actu. / Pend. /Arr. Pkgs.':'Pkgs.[L/B]'}}</th>
+                    <th class="p-3 fw-bolder">{{this.docketService.loginUserList.Type === '3' ? 'Act./Arr.Wt.' :'Wt.[L/B]'}}</th>
+                    <th class="p-3 fw-bolder">Chrg. Wt.</th>
+                    <th class="p-3 fw-bolder">Rate Type</th>
+                    <th class="p-3 fw-bolder">E-Way Bill No.</th>
+                    <th class="p-3 fw-bolder">Reason for Delay</th>
+                    <th class="p-3 fw-bolder">TAT in Hrs.</th>
+                    <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '3'">Billing Party Name</th>
+                    <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '3'">Consignor Name</th>
+                    <th class="p-3 fw-bolder">Contract Amount</th>
+                    <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type !== '3'">IsPRSPKGScan.</th>
                 </tr>
             </thead>
         <tbody formArrayName="avalabledocketinPRS">

@@ -707,8 +707,8 @@ const vendorName= this.challanService.vendorsList.find((x:any)=>x.vendor_Code===
       next: (response: any) => {
         if (response && response.data) {
          this.challanService.challanForm.patchValue({
-          lorryOwnerPanNo:response.data[0].panno,
-          PANNO:response.data[0].panno
+          lorryOwnerPanNo:response.data[0]?.panno,
+          PANNO:response.data[0]?.panno
          })
         }
       },
@@ -1329,7 +1329,7 @@ onFileSelected(event: any) {
 
   // Validate file type
   if (!allowedTypes.includes(file.type)) {
-    this.sweetAlertService.error("Please upload a valid file (Image or PDF)");
+    this.sweetAlertService.error("Please upload a valid file (Image or PDF or Excel)");
     event.target.value = ''; // reset file input
     return;
   }
