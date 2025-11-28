@@ -194,7 +194,7 @@
           </div>
         </div>
       </div>
-      <div class="col-2 text-primary justify-content-center">
+      <div class="col-2 text-primary justify-content-center align-content-center">
         [Separated by <b>Comma</b> if multiple]
       </div>
     </div>
@@ -207,7 +207,7 @@
           </div>
         </div>
       </div>
-      <div class="col-2 text-primary justify-content-center">
+      <div class="col-2 text-primary justify-content-center align-content-center">
         [Separated by <b>Comma</b> if multiple]
       </div>
     </div>
@@ -238,14 +238,14 @@
           </div>
         </div>
       </div>
-      <div class="col-4">
+      <!-- <div class="col-4">
         <div class="row">
           <label class="col-sm-5 col-form-label text-end">Rate </label>
           <div class="col-sm-7">
             <input class="form-control required2" placeholder="Rate" type="text" formControlName="VendorName">
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="row pb-3">
       <div class="col-4">
@@ -270,8 +270,8 @@
       <div class="col-4">
         <div class="row align-items-center">
           <label class="col-sm-5 col-form-label text-end">Is Mathadi Applicable</label>
-          <div class="col-sm-7">
-            <input class="form-control required2" placeholder="Loading Charge" type="text" formControlName="IsMathadi">
+          <div class="col-sm-7 text-start">
+            <input type="checkbox" class="form-check-input ms-3 checkbox-lg custom-big-checkbox" formControlName="IsMathadi">
           </div>
         </div>
       </div>
@@ -279,17 +279,25 @@
     <div class="row pb-3">
       <div class="col-4">
         <div class="row">
-          <label class="col-sm-5 col-form-label text-end">Is Mathadi Applicable</label>
+          <label class="col-sm-5 col-form-label text-end">Mathadi Slip no.</label>
           <div class="col-sm-7">
-            <input class="form-control">
+            <input class="form-control" placeholder="Mathadi Slip no." type="text">
           </div>
         </div>
       </div>
       <div class="col-4">
         <div class="row">
-          <label class="col-sm-5 col-form-label text-end">Rate </label>
+          <label class="col-sm-5 col-form-label text-end">Mathadi Date </label>
           <div class="col-sm-7">
-            <input class="form-control required2" placeholder="Rate" type="text">
+            <input class="form-control required2" placeholder="Mathadi Date" type="text">
+          </div>
+        </div>
+      </div>
+       <div class="col-4">
+        <div class="row">
+          <label class="col-sm-5 col-form-label text-end">Mathadi Slip Amt </label>
+          <div class="col-sm-7">
+            <input class="form-control required2" placeholder="Mathadi Slip Amt" type="text">
           </div>
         </div>
       </div>
@@ -297,3 +305,85 @@
   </div>
 </div>
 </form>
+
+<div class="cnote-entry-container mt-5">
+  <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+    <i class="fas fa-list me-2"></i>
+    List Loading Sheet
+  </div>
+  <div class="cnote-entry-container p-3 pt-0" >
+
+    <div class="row text-success fw-bold mb-3 p-2">
+      <div class="col-4 text-center">
+        <label class="m-0 StyClss text-success" ><b>Total No Of LR : 0</b></label>
+      </div>
+    
+      <div class="col-4 text-center">
+        <label class="m-0 StyClss text-success"><b>Total Wt. [L/B] : 0</b></label>
+      </div>
+    
+      <div class="col-4 text-center">
+        <label class="m-0 StyClss text-success"><b>Total Pkgs. [L/B] : 0</b></label>
+      </div>
+    </div>
+    <div style="max-height: 500px; overflow-y: auto;">
+      <table class="table table-bordered table-hover table-condensed flip-content mb-0">
+        <thead class="sticky-top bg-light">
+          <tr>
+            <th class="p-3 fw-bolder"><input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox"style="cursor: pointer;"></th>
+            <th class="p-3 fw-bolder">Cnote No.</th>
+            <th class="p-3 fw-bolder">Manual Cnote No.</th>
+            <th class="p-3 fw-bolder">Bkg. Date</th>
+            <th class="p-3 fw-bolder">Trans. Mode</th>
+            <th class="p-3 fw-bolder">Bkg. Loc.</th>
+            <th class="p-3 fw-bolder">Dely. Loc.</th>
+            <th class="p-3 fw-bolder">City From-To</th>
+            <th class="p-3 fw-bolder">Comm. Dely Date</th>
+            <th class="p-3 fw-bolder">Rate</th>
+            <th class="p-3 fw-bolder">Pkgs.[L/B]</th>
+            <th class="p-3 fw-bolder">Wt.[L/B]</th>
+            <th class="p-3 fw-bolder">E-Way Bill No.</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of LoadingSheetList; track $index) {
+          <tr class="align-middle">
+            <td><input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox" style="cursor: pointer;"></td>
+            <td>{{item.CnoteNo}}</td>
+            <td>{{item.ManualCnoteNo}}</td>
+            <td>{{item.BkgDate}}</td>
+            <td>{{item.TransMode}}</td>
+            <td>{{item.BkgLoc}}</td>
+            <td>{{item.DelyLoc}}</td>
+            <td>{{item.CityFromTo}}</td>
+            <td>{{item.CommDelyDate}}</td>
+            <td>
+              <ng-select class="required2" ></ng-select>
+              <input type="text" class="form-control" >
+            </td>
+            <td>{{item.Pkgs_LB}}</td>
+            <td>{{item.Wt_LB}}</td>
+            <td></td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="cnote-entry-container mt-5">
+  <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+    <i class="fas fa-list me-2"></i>
+    Internal Document List
+  </div>
+  <div class="form-grid p-4 StyClss text-start">  
+     <b>No Record Found...................</b>
+  </div>
+</div>
+
+<div class="d-flex justify-content-center text-center p-4">
+  <button class="btn btn-success">
+    <i class="fas fa-check"></i> Prepare Loading Sheet
+  </button>
+</div>
