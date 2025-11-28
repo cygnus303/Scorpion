@@ -14,4 +14,10 @@ export const ChallanRoutes: Routes = [
        component: ChallanListComponent,
        canActivate: [DocketGuard]
     },
+  {
+    path: 'LoadingSheet',
+    loadComponent: () => import('../loading-sheet/loading-sheet.component').then(m => m.LoadingSheetComponent),
+    // canActivate: [DocketGuard]
+  }
+
 ];
