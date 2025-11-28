@@ -1,130 +1,159 @@
+<form [formGroup]="loadingSheetService.LSForm">
 <div class="cnote-entry-container">
   <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
     <i class="fas fa-filter me-2"></i>
     Loading Sheet Generation criteria
   </div>
   <div class="form-grid p-4">
-    <div class="row pb-3">
-      <div class="col-4">
-        <div class="row align-items-center">
-          <label class="col-sm-5 col-form-label text-end">Loading Sheet No.</label>
-          <div class="col-sm-7">
-            <input class="form-control">
-          </div>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="row">
-          <label class="col-sm-5 col-form-label text-end"> Loading Sheet Date</label>
-          <div class="col-sm-7">
-            <input class="form-control">
-          </div>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="row">
-          <label class="col-sm-5 col-form-label text-end"> Manual LS No.</label>
-          <div class="col-sm-7">
-            <input class="form-control">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row pb-3">
-      <div class="col-4">
-        <div class="row align-items-center">
-          <label class="col-sm-5 col-form-label text-end">Loading By</label>
-          <div class="col-sm-7">
-            <input class="form-control">
-          </div>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="row">
-          <label class="col-sm-5 col-form-label text-end"> Next Stop Location</label>
-          <div class="col-sm-7">
-            <input class="form-control">
-          </div>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="row">
-          <label class="col-sm-5 col-form-label text-end"> Charge type</label>
-          <div class="col-sm-7">
-            <input class="form-control">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row pb-3">
-      <div class="col-4">
-        <div class="row align-items-center">
-          <label class="col-sm-5 col-form-label text-end">LS Transport Mode</label>
-          <div class="col-sm-7">
-            <input class="form-control">
-          </div>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="row align-items-center">
-          <label class="col-sm-5 col-form-label text-end"> Select Vehicle</label>
-          <div class="col-sm-7 d-flex align-items-center">
-            <div class="d-flex align-items-center">
-              <input type="radio" class="me-3" name="is_Local_ODA_id" value="local">
-              <label>Local</label>
+
+      <div class="row pb-3">
+        <div class="col-4">
+          <div class="row align-items-center">
+            <label class="col-sm-5 col-form-label text-end">Loading Sheet No.</label>
+            <div class="col-sm-7">
+              <input class="form-control" formControlName="LsNO" placeholder="System Generated" readonly>
             </div>
-            <div class="ms-5 d-flex align-items-center">
-              <input type="radio" class="me-3" name="is_Local_ODA_id" value="ODA">
-              <label>ODA</label>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end"> Loading Sheet Date</label>
+            <div class="col-sm-7">
+              <input class="form-control required2" formControlName="LsDate" placeholder="Select Loading Sheet Date" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end"> Manual LS No.</label>
+            <div class="col-sm-7">
+              <input class="form-control" formControlName="ManualLsNO" readonly>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-4">
-        <div class="row">
-          <label class="col-sm-5 col-form-label text-end"> Seal No</label>
-          <div class="col-sm-7">
-            <input class="form-control">
+      <div class="row pb-3">
+        <div class="col-4">
+          <div class="row align-items-center" *ngIf="loadingSheetService.LSForm.value.MF_TransportMode === '6'">
+            <label class="col-sm-5 col-form-label text-end">Loading By</label>
+            <div class="col-sm-7">
+                <ng-select class="noFoundTextColor required2" placeholder="Select Loading By" formControlName="LoadingBy" 
+                   notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.loadingData" (change)="getvendoCodeData($event)"
+                   [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('LoadingBy')?.invalid  && loadingSheetService.LSForm.get('LoadingBy')?.touched }"></ng-select>
+                <div class="text-danger text-start" *ngIf="loadingSheetService.LSForm.get('LoadingBy')?.invalid && loadingSheetService.LSForm.get('LoadingBy')?.touched">
+                    This field is required.
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end"> Next Stop Location</label>
+            <div class="col-sm-7">
+              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Next Stop Location" formControlName="NextStopLocation" 
+                notFoundText="No matches found" [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('NextStopLocation')?.invalid  && loadingSheetService.LSForm.get('NextStopLocation')?.touched }"
+                ></ng-select>
+                <div class="text-danger text-start" *ngIf="loadingSheetService.LSForm.get('NextStopLocation')?.invalid && loadingSheetService.LSForm.get('NextStopLocation')?.touched">
+                    This field is required.
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4" *ngIf="loadingSheetService.LSForm.value.MF_TransportMode === '6'">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end"> Charge type</label>
+            <div class="col-sm-7">
+              <ng-select class="noFoundTextColor required2" placeholder="Select Charge type" formControlName="RateType" 
+                notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.chargeTypeData" [readonly]="loadingSheetService.LSForm.value.LoadingBy==='XX9'"
+                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('RateType')?.invalid  && loadingSheetService.LSForm.get('RateType')?.touched }"
+                ></ng-select>
+              <div class="text-danger text-start" *ngIf="loadingSheetService.LSForm.get('RateType')?.invalid && loadingSheetService.LSForm.get('RateType')?.touched">
+                    This field is required.
+              </div>
+              </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row pb-3">
-      <div class="col-4">
-        <div class="row align-items-center">
-          <label class="col-sm-5 col-form-label text-end">Vehicle No</label>
-          <div class="col-sm-7">
-            <input class="form-control">
+      <div class="row pb-3">
+        <div class="col-4">
+          <div class="row align-items-center">
+            <label class="col-sm-5 col-form-label text-end">LS Transport Mode</label>
+            <div class="col-sm-7">
+               <ng-select class="noFoundTextColor required2" placeholder="Select LS Transport Mode" formControlName="MF_TransportMode" 
+                notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.modeData" 
+                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('MF_TransportMode')?.invalid  && loadingSheetService.LSForm.get('MF_TransportMode')?.touched }"
+                ></ng-select>
+                <div class="text-danger text-start" *ngIf="loadingSheetService.LSForm.get('MF_TransportMode')?.invalid && loadingSheetService.LSForm.get('MF_TransportMode')?.touched">
+                    This field is required.
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="row align-items-center">
+            <label class="col-sm-5 col-form-label text-end"> Select Vehicle</label>
+            <div class="col-sm-7 d-flex align-items-center">
+              <div class="d-flex align-items-center">
+                <input type="radio" class="me-3" name="rdVehicle" value="Own" formControlName="rdVehicle">
+                <label>Own</label>
+              </div>
+              <div class="ms-5 d-flex align-items-center">
+                <input type="radio" class="me-3" name="rdVehicle" value="Market" formControlName="rdVehicle">
+                <label>Market</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end"> Seal No</label>
+            <div class="col-sm-7">
+              <input class="form-control" formControlName="SealNo" placeholder="select Seal No" readonly>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-4">
-        <div class="row">
-          <label class="col-sm-5 col-form-label text-end"> Prepared By</label>
-          <div class="col-sm-7">
-            <input class="form-control">
+      <div class="row pb-3">
+        <div class="col-4" *ngIf="loadingSheetService.LSForm.value.MF_TransportMode === '6'">
+          <div class="row align-items-center">
+            <label class="col-sm-5 col-form-label text-end">Vehicle No</label>
+            <div class="col-sm-7" *ngIf="loadingSheetService.LSForm.value.rdVehicle==='Own'">
+               <ng-select class="noFoundTextColor clear-icon" placeholder="Select Vehicle No" formControlName="VEHNO" 
+                                notFoundText="No matches found" [readonly]="!loadingSheetService.LSForm.value.LoadingBy"></ng-select>
+            </div>
+             <div class="col-sm-7" *ngIf="loadingSheetService.LSForm.value.rdVehicle==='Market'">
+              <input class="form-control" formControlName="VEHNO" placeholder="Select Vehicle No" [readonly]="!loadingSheetService.LSForm.value.LoadingBy">
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end"> Prepared By</label>
+            <div class="col-sm-7">
+              <input class="form-control" formControlName="PreparedBy" placeholder="Select Prepared By">
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end"> UserName</label>
+            <div class="col-sm-7">
+              <input class="form-control" formControlName="UserName" placeholder="Select UserName" readonly>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-4">
-        <div class="row">
-          <label class="col-sm-5 col-form-label text-end"> UserName</label>
-          <div class="col-sm-7">
-            <input class="form-control">
+      <div class="row pb-3">
+        <div class="col-4">
+          <div class="row align-items-center">
+            <label class="col-sm-5 col-form-label text-end">LS Type</label>
+            <div class="col-sm-7">
+               <ng-select class="noFoundTextColor clear-icon" placeholder="Select Select LS Type" formControlName="LSType" 
+                  notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId" [items]="docketService.serviceData"></ng-select>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row pb-3">
-      <div class="col-4">
-        <div class="row align-items-center">
-          <label class="col-sm-5 col-form-label text-end">LS Type</label>
-          <div class="col-sm-7">
-            <input class="form-control">
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -138,8 +167,9 @@
       <div class="col-4">
         <div class="row align-items-center">
           <label class="col-sm-5 col-form-label text-end">Select Date</label>
-          <div class="col-sm-7">
-            <input class="form-control">
+          <div class="col-sm-7"  (click)="dvr.toggle()"> 
+             <input type="text" placeholder="Daterangepicker" class="form-control border-start-1 text-center line-height"
+                                bsDaterangepicker #dvr="bsDaterangepicker" formControlName="reportrange" [class.disabled-input]="true"  [bsConfig]="{ ranges: commonService.ranges, rangeInputFormat: 'MMMM D, YYYY', dateInputFormat: 'MMMM D, YYYY'}" />
           </div>
         </div>
       </div>
@@ -149,7 +179,8 @@
         <div class="row align-items-center">
           <label class="col-sm-5 col-form-label text-end">Transport Mode</label>
           <div class="col-sm-7">
-            <input class="form-control">
+             <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Transport Mode" formControlName="TransportMode" 
+               notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.modeData"></ng-select>
           </div>
         </div>
       </div>
@@ -159,7 +190,7 @@
         <div class="row align-items-center">
           <label class="col-sm-5 col-form-label text-end">Destination</label>
           <div class="col-sm-7">
-            <input class="form-control">
+            <input class="form-control" formControlName="DestinationList" placeholder="Destination">
           </div>
         </div>
       </div>
@@ -170,9 +201,9 @@
     <div class="row pb-3">
       <div class="col-4">
         <div class="row align-items-center">
-          <label class="col-sm-5 col-form-label text-end">Docket No</label>
+          <label class="col-sm-5 col-form-label text-end">Docket No.</label>
           <div class="col-sm-7">
-            <input class="form-control">
+            <input class="form-control" formControlName="DocketNoList" placeholder="Docket No.">
           </div>
         </div>
       </div>
@@ -194,7 +225,7 @@
         <div class="row align-items-center">
           <label class="col-sm-5 col-form-label text-end">Loading By :</label>
           <div class="col-sm-7 text-start fw-bold">
-            ATTACHED
+            {{loadingName }}
           </div>
         </div>
       </div>
@@ -202,7 +233,8 @@
         <div class="row">
           <label class="col-sm-5 col-form-label text-end">Vendor Code </label>
           <div class="col-sm-7">
-            <input class="form-control">
+             <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Vendor Name" formControlName="VendorCode" 
+               notFoundText="No matches found"  [items]="challanService.branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"></ng-select>
           </div>
         </div>
       </div>
@@ -210,7 +242,7 @@
         <div class="row">
           <label class="col-sm-5 col-form-label text-end">Rate </label>
           <div class="col-sm-7">
-            <input class="form-control required2" placeholder="Rate" type="text">
+            <input class="form-control required2" placeholder="Rate" type="text" formControlName="VendorName">
           </div>
         </div>
       </div>
@@ -220,7 +252,7 @@
         <div class="row align-items-center">
           <label class="col-sm-5 col-form-label text-end">Loading Charge </label>
           <div class="col-sm-7">
-            <input class="form-control required2" placeholder="Loading Charge" type="text">
+            <input class="form-control required2" placeholder="Loading Charge" type="text" formControlName="LoadingCharge">
           </div>
         </div>
       </div>
@@ -234,12 +266,12 @@
     Mathadi Applicable Charges
   </div>
   <div class="form-grid p-4">
-      <div class="row pb-3">
+    <div class="row pb-3">
       <div class="col-4">
         <div class="row align-items-center">
           <label class="col-sm-5 col-form-label text-end">Is Mathadi Applicable</label>
           <div class="col-sm-7">
-            <input class="form-control required2" placeholder="Loading Charge" type="text">
+            <input class="form-control required2" placeholder="Loading Charge" type="text" formControlName="IsMathadi">
           </div>
         </div>
       </div>
@@ -264,3 +296,4 @@
     </div>
   </div>
 </div>
+</form>
