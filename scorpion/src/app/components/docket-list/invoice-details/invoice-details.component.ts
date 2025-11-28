@@ -389,7 +389,7 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                 // mode: response.transMode.toString(),
                 pincode: response.toPincode.toString(),
                 // fromCity: response.fromCity,
-                toCity: null,
+                // toCity: null,
                 destination: response.destcd,
               });
               this.docketService.GetPincodeOrigin('Origin');

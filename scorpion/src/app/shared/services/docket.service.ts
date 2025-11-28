@@ -1088,9 +1088,9 @@ calculateChargeWeight(){
       dockdt: this.basicDetailForm.value.cNoteDate.toISOString(),
       prodcd: this.basicDetailForm.value.contents,
       isPerPieceRate: this.step2DetailsList?.isPerPieceRate,
-      fromPincode:this.consignorForm.value.consignorPincode,
-      toPincode:this.basicDetailForm.value.pincode,
-      totalPiece:0
+      // fromPincode:this.consignorForm.value.consignorPincode,
+      // toPincode:this.basicDetailForm.value.pincode,
+      // totalPiece:0
     }
 
     if (!data.invAmt || !data.prodcd || !data.tostate || data.noOfPkgs === "0" || !data.transMode || !data.serviceType) {
@@ -1116,7 +1116,7 @@ calculateChargeWeight(){
           this.validateAppointmentDate();
           // Only patch the value if there's no validation error
              this.getFuelSurcharge(this.freightData?.freightCharge);
-        if (!this.weightErrorMsg && !this.isWeightRecalculated) {
+        if (!this.weightErrorMsg ) {
           const newFinalWeight = Math.max(this.freightData.chargedWeight || 0, this.invoiceform.value.finalActualWeight || 0);
           const newPkgWeight = Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0);
  
@@ -1128,7 +1128,7 @@ calculateChargeWeight(){
               finalActualWeight: newFinalWeight,
               chargeWeightPerPkg: newPkgWeight
             });
-              this.isWeightRecalculated = true;
+              // this.isWeightRecalculated = true;
             // 🔄 Call again only once if updated
             this.calculateChargeWeight();
             this.GetFreightContractDetails();
@@ -1192,8 +1192,8 @@ validateAppointmentDate() {
       "baseCode1": this.basicDetailForm.value?.BaseCode1 || 'NONE',
       "chargeSubRule": this.step2DetailsList?.chargeBas || 'NONE',
       "baseCode2":this.basicDetailForm.value?.BaseCode2 || 'NONE',
-      // "chargedWeight": chargedWeight,
-      "chargedWeight": this.invoiceform.value.finalActualWeight?.toString(),
+      "chargedWeight": chargedWeight,
+      // "chargedWeight": this.invoiceform.value.finalActualWeight?.toString(),
       "contractID": this.step2DetailsList?.contractid,
       "destination": this.basicDetailForm.value.destination,
       "depth": this.depth,
