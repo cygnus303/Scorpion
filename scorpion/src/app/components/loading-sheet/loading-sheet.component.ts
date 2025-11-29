@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { VehicleNumbersResponse } from 'app/shared/models/general-master.model';
@@ -28,16 +28,7 @@ export class LoadingSheetComponent {
   public noVehicleValue = 'Please enter atleast 1 character';
   public locationData: LocationResponse[] = [];
   public vehicleNumberData: VehicleNumbersResponse[] = [];
-  public LsTypeList = [
-    {
-      text: "LTL",
-      value: "LTL"
-    },
-    {
-      text: "FTL",
-      value: "FTL"
-    }
-  ];
+  public LsTypeList = [{text: "LTL", value: "LTL" },{ text: "FTL",value: "FTL"}];
   constructor(
     public loadingSheetService: LoadingSheetService,
     public generalMasterService: GeneralMasterService,
@@ -145,11 +136,32 @@ ngOnInit(){
     this.generalMasterService.getLSModedata();
     this.generalMasterService.getModeData();
     this.generalMasterService.getChargeTypeData();
+    this.isgetLoadingList =  this.docketService.loginUserList.Type === 'ULS' ? true :false;
   }
   
-  getvendoCodeData(event:any){
-    this.loadingSheetService.LSForm.patchValue({VendorName:event?.codeDesc})
-    this.challanService.branchWiseLoadingUnloading(event?.codeId)
+  getvendoCodeData(event: any) {
+    this.loadingSheetService.LSForm.patchValue({ VendorName: event?.codeDesc })
+    const ChargedBy = event?.codeId;
+    if (ChargedBy === 'B' || ChargedBy == '04') {
+      this.challanService.getChargesVendorsList('04');
+    }
+    if (ChargedBy === 'A' || ChargedBy == 'XX1') {
+      this.challanService.getChargesVendorsList('XX1');
+    }
+    if (ChargedBy === 'M') {
+      this.challanService.getChargesVendorsList('19');
+    }
+    if (ChargedBy === 'XX5' || ChargedBy === 'XX8') {
+      this.challanService.branchWiseLoadingUnloading(event?.codeId);
+    }
+    const rateType = this.loadingSheetService.LSForm.get('RateType');
+    if (this.loadingSheetService.LSForm.value.LoadingBy) {
+      rateType?.setValidators([Validators.required]);
+    } else {
+      rateType?.clearValidators();
+      rateType?.setValue('');
+    }
+   rateType?.updateValueAndValidity();
   }
 
 
@@ -157,9 +169,7 @@ ngOnInit(){
     this.THCMasterService.getVendorType(this.docketService.loginUserList.LocationCode).subscribe({
       next: (response) => {
         if (response && response.data) {
-
           const mTypeRow = response.data.find((x: any) => x.documentType === 'M');
-
           if (mTypeRow) {
             const vendorTypes = mTypeRow.loading_VendorType.split(',');
             this.generalMasterService.getLoadingByDetail(vendorTypes);
@@ -220,8 +230,14 @@ ngOnInit(){
   }
 
   getLoadinglist() {
-    this.isgetLoadingList = true;
-    this.getDocketListForMFDetail()
+    this.getDocketListForMFDetail();
+        const form = this.loadingSheetService.LSForm;
+    if (form.get('LoadingBy')?.valid && form.get('NextStopLocation')?.valid) {
+      this.isgetLoadingList = true;
+    } else {
+      this.isgetLoadingList = false;
+       form.markAllAsTouched();
+    }
   }
 
   getDocketListForMFDetail(){
@@ -259,4 +275,5 @@ ngOnInit(){
     });
   }
 
+ 
 }
