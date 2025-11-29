@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DocketService } from './docket.service';
+import { LoadingSheetApiService } from './loading-sheet-api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import { DocketService } from './docket.service';
 export class LoadingSheetService {
   LSForm!:FormGroup;
 
-  constructor(public docketService:DocketService) { }
+  constructor(public docketService:DocketService,public loadingSheetApiService: LoadingSheetApiService) { }
 
 
   buildForm(){
@@ -40,7 +41,7 @@ export class LoadingSheetService {
       IsMathadi:new FormControl(''),
       MathadiSlipNo:new FormControl(''),
       MathadiDate:new FormControl(''),
-      MathadiAmt:new FormControl('')
+      MathadiAmt:new FormControl(''),
     })
   }
   formatDate(date: Date): string {
@@ -49,4 +50,29 @@ export class LoadingSheetService {
   const year = date.getFullYear();
   return `${day} ${month} ${year}`;
 }
+
+  prepareLoadingSheet() {
+    const { reportrange, ...formValuesWithoutRange } = this.LSForm.value;
+    const payload = {
+      vm: {
+        ...formValuesWithoutRange,
+        LsDate:new Date(this.LSForm.value.LsDate).toISOString(),
+        fromDate:reportrange[0].toISOString(),
+        toDate:reportrange[1].toISOString(),
+        baseUserName: this.docketService.loginUserList.BaseUserName,
+        baseFinYear: this.docketService.loginUserList.FinYear,
+        baseLocationCode: this.docketService.loginUserList.LocationCode,
+        baseCompanyCode: this.docketService.loginUserList.Companycode,
+        location: this.docketService.loginUserList.LocationCode,
+
+      },
+      docketList: []
+    };
+
+    this.loadingSheetApiService.prepareLoadingSheet(payload).subscribe({
+      next: (response) => {
+        console.log(response)
+      }
+    });
+  }
 }

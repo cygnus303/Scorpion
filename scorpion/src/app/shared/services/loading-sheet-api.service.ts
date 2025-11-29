@@ -18,7 +18,10 @@ export class LoadingSheetApiService {
 
   InternalDocumentListForMF(payload:any){
     return this.apiHandlerService.Post(`Operation/InternalDocumentListForMFGeneration`,payload);
-    
+  }
+
+  prepareLoadingSheet(payload: any) {
+    return this.apiHandlerService.Post(`Operation/PrepareLoadingSheet`, payload);
   }
 
 }
