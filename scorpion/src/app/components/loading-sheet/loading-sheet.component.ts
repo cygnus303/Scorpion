@@ -18,97 +18,99 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
   styleUrls: ['./loading-sheet.component.scss']
 })
 export class LoadingSheetComponent {
-  public loadingName:string='';
-  constructor(
-    public loadingSheetService:LoadingSheetService,
-    public generalMasterService:GeneralMasterService,
-    public docketService:DocketService,
-    public commonService:CommonService,
-    public challanService:ChallanService 
-  ){}
-LoadingSheetList = [
-  {
-    "CnoteNo": "62970933",
-    "ManualCnoteNo": "62970933",
-    "BkgDate": "31 Oct 25",
-    "TransMode": "ROAD CARGO",
-    "BkgLoc": "PIM",
-    "DelyLoc": "CNI",
-    "CityFromTo": "PIMPLAS - CHENNAI",
-    "CommDelyDate": "03 Nov 2025",
-    "Rate": "PER KG",
-    "Pkgs_LB": 10,
-    "Wt_LB": 120
-  },
-  {
-    "CnoteNo": "62970934",
-    "ManualCnoteNo": "62970934",
-    "BkgDate": "31 Oct 25",
-    "TransMode": "ROAD CARGO",
-    "BkgLoc": "PIM",
-    "DelyLoc": "AMD",
-    "CityFromTo": "PIMPLAS - AHMEDABAD",
-    "CommDelyDate": "03 Nov 2025",
-    "Rate": "PER KG",
-    "Pkgs_LB": 10,
-    "Wt_LB": 140
-  },
-  {
-    "CnoteNo": "62970935",
-    "ManualCnoteNo": "62970935",
-    "BkgDate": "31 Oct 25",
-    "TransMode": "ROAD CARGO",
-    "BkgLoc": "PIM",
-    "DelyLoc": "KUMR",
-    "CityFromTo": "PIMPLAS - BAMUNIMAIDAN",
-    "CommDelyDate": "09 Nov 2025",
-    "Rate": "PER KG",
-    "Pkgs_LB": 30,
-    "Wt_LB": 22
-  },
-  {
-    "CnoteNo": "62970936",
-    "ManualCnoteNo": "62970936",
-    "BkgDate": "06 Nov 25",
-    "TransMode": "ROAD CARGO",
-    "BkgLoc": "PIM",
-    "DelyLoc": "AMD",
-    "CityFromTo": "PIMPLAS - AHMEDABAD",
-    "CommDelyDate": "10 Nov 2025",
-    "Rate": "PER KG",
-    "Pkgs_LB": 8,
-    "Wt_LB": 265
-  },
-  {
-    "CnoteNo": "62970937",
-    "ManualCnoteNo": "62970937",
-    "BkgDate": "06 Nov 25",
-    "TransMode": "ROAD CARGO",
-    "BkgLoc": "PIM",
-    "DelyLoc": "AMD",
-    "CityFromTo": "PIMPLAS - AHMEDABAD",
-    "CommDelyDate": "10 Nov 2025",
-    "Rate": "PER KG",
-    "Pkgs_LB": 2,
-    "Wt_LB": 120
-  },
-  {
-    "CnoteNo": "62970938",
-    "ManualCnoteNo": "62970938",
-    "BkgDate": "06 Nov 25",
-    "TransMode": "ROAD CARGO",
-    "BkgLoc": "PIM",
-    "DelyLoc": "JAI",
-    "CityFromTo": "PIMPLAS - JAIPUR",
-    "CommDelyDate": "10 Nov 2025",
-    "Rate": "PER KG",
-    "Pkgs_LB": 2,
-    "Wt_LB": 20
-  }
-]
+  constructor(public loadingSheetService:LoadingSheetService,public generalMasterService:GeneralMasterService,public docketService:DocketService,public commonService:CommonService,public challanService:ChallanService){}
+  LoadingSheetList = [
+    {
+      "CnoteNo": "62970933",
+      "ManualCnoteNo": "62970933",
+      "BkgDate": "31 Oct 25",
+      "TransMode": "ROAD CARGO",
+      "BkgLoc": "PIM",
+      "DelyLoc": "CNI",
+      "CityFromTo": "PIMPLAS - CHENNAI",
+      "CommDelyDate": "03 Nov 2025",
+      "Rate": "PER KG",
+      "Pkgs_LB": 10,
+      "Wt_LB": 120
+    },
+    {
+      "CnoteNo": "62970934",
+      "ManualCnoteNo": "62970934",
+      "BkgDate": "31 Oct 25",
+      "TransMode": "ROAD CARGO",
+      "BkgLoc": "PIM",
+      "DelyLoc": "AMD",
+      "CityFromTo": "PIMPLAS - AHMEDABAD",
+      "CommDelyDate": "03 Nov 2025",
+      "Rate": "PER KG",
+      "Pkgs_LB": 10,
+      "Wt_LB": 140
+    },
+    {
+      "CnoteNo": "62970935",
+      "ManualCnoteNo": "62970935",
+      "BkgDate": "31 Oct 25",
+      "TransMode": "ROAD CARGO",
+      "BkgLoc": "PIM",
+      "DelyLoc": "KUMR",
+      "CityFromTo": "PIMPLAS - BAMUNIMAIDAN",
+      "CommDelyDate": "09 Nov 2025",
+      "Rate": "PER KG",
+      "Pkgs_LB": 30,
+      "Wt_LB": 22
+    },
+    {
+      "CnoteNo": "62970936",
+      "ManualCnoteNo": "62970936",
+      "BkgDate": "06 Nov 25",
+      "TransMode": "ROAD CARGO",
+      "BkgLoc": "PIM",
+      "DelyLoc": "AMD",
+      "CityFromTo": "PIMPLAS - AHMEDABAD",
+      "CommDelyDate": "10 Nov 2025",
+      "Rate": "PER KG",
+      "Pkgs_LB": 8,
+      "Wt_LB": 265
+    },
+    {
+      "CnoteNo": "62970937",
+      "ManualCnoteNo": "62970937",
+      "BkgDate": "06 Nov 25",
+      "TransMode": "ROAD CARGO",
+      "BkgLoc": "PIM",
+      "DelyLoc": "AMD",
+      "CityFromTo": "PIMPLAS - AHMEDABAD",
+      "CommDelyDate": "10 Nov 2025",
+      "Rate": "PER KG",
+      "Pkgs_LB": 2,
+      "Wt_LB": 120
+    },
+    {
+      "CnoteNo": "62970938",
+      "ManualCnoteNo": "62970938",
+      "BkgDate": "06 Nov 25",
+      "TransMode": "ROAD CARGO",
+      "BkgLoc": "PIM",
+      "DelyLoc": "JAI",
+      "CityFromTo": "PIMPLAS - JAIPUR",
+      "CommDelyDate": "10 Nov 2025",
+      "Rate": "PER KG",
+      "Pkgs_LB": 2,
+      "Wt_LB": 20
+    }
+  ]
 
 ngOnInit(){
+   const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.loginUserList.LocationCode =  'PIM';
+      this.docketService.loginUserList.Type = 'LS';
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
+
     this.loadingSheetService.buildForm();
     // this.generalMasterService.getLoadingByDetail();
     this.generalMasterService.getModeData();
@@ -117,7 +119,7 @@ ngOnInit(){
   }
   
   getvendoCodeData(event:any){
-    this.loadingName=event?.codeDesc
+    this.loadingSheetService.LSForm.patchValue({VendorName:event?.codeDesc})
     this.challanService.branchWiseLoadingUnloading(event?.codeId)
   }
 }
