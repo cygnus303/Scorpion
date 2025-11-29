@@ -23,7 +23,7 @@ export class LoadingSheetService {
       LoadingBy:new FormControl(null,[Validators.required]),
       NextStopLocation:new FormControl(null,[Validators.required]),
       RateType:new FormControl(null,[Validators.required]),
-      MF_TransportMode:new FormControl('6',[Validators.required]),
+      MF_TransportMode:new FormControl('S',[Validators.required]),
       rdVehicle:new FormControl('Own'),
       SealNo:new FormControl(''),
       VEHNO:new FormControl(null),

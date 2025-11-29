@@ -34,7 +34,7 @@
       </div>
       <div class="row pb-3">
         <div class="col-4">
-          <div class="row align-items-center" *ngIf="loadingSheetService.LSForm.value.MF_TransportMode === '6'">
+          <div class="row align-items-center" *ngIf="loadingSheetService.LSForm.value.MF_TransportMode === 'S'">
             <label class="col-sm-5 col-form-label text-end">Loading By</label>
             <div class="col-sm-7">
                 <ng-select class="noFoundTextColor required2" placeholder="Select Loading By" formControlName="LoadingBy" 
@@ -50,16 +50,20 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end"> Next Stop Location</label>
             <div class="col-sm-7">
-              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Next Stop Location" formControlName="NextStopLocation" 
+              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Next Stop Location" formControlName="NextStopLocation"
                 notFoundText="No matches found" [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('NextStopLocation')?.invalid  && loadingSheetService.LSForm.get('NextStopLocation')?.touched }"
-                ></ng-select>
+                (search)="getLocationDetail($event)" [notFoundText]="nextLocationValue" (open)="resetNextLocationDropdown()" [readonly]="isgetLoadingList">
+                <ng-option *ngFor="let item of locationData" [value]="item.text">
+                  <strong>{{ item.id }}</strong> : {{ item.text }}
+                </ng-option>
+                </ng-select>
                 <div class="text-danger text-start" *ngIf="loadingSheetService.LSForm.get('NextStopLocation')?.invalid && loadingSheetService.LSForm.get('NextStopLocation')?.touched">
                     This field is required.
                 </div>
             </div>
           </div>
         </div>
-        <div class="col-4" *ngIf="loadingSheetService.LSForm.value.MF_TransportMode === '6'">
+        <div class="col-4" *ngIf="loadingSheetService.LSForm.value.MF_TransportMode === 'S'">
           <div class="row">
             <label class="col-sm-5 col-form-label text-end"> Charge type</label>
             <div class="col-sm-7">
@@ -80,7 +84,7 @@
             <label class="col-sm-5 col-form-label text-end">LS Transport Mode</label>
             <div class="col-sm-7">
                <ng-select class="noFoundTextColor required2" placeholder="Select LS Transport Mode" formControlName="MF_TransportMode" 
-                notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.modeData" 
+                notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.LsTransportModeData" 
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('MF_TransportMode')?.invalid  && loadingSheetService.LSForm.get('MF_TransportMode')?.touched }"
                 ></ng-select>
                 <div class="text-danger text-start" *ngIf="loadingSheetService.LSForm.get('MF_TransportMode')?.invalid && loadingSheetService.LSForm.get('MF_TransportMode')?.touched">
@@ -114,12 +118,16 @@
         </div>
       </div>
       <div class="row pb-3">
-        <div class="col-4" *ngIf="loadingSheetService.LSForm.value.MF_TransportMode === '6'">
+        <div class="col-4" *ngIf="loadingSheetService.LSForm.value.MF_TransportMode === 'S'">
           <div class="row align-items-center">
             <label class="col-sm-5 col-form-label text-end">Vehicle No</label>
             <div class="col-sm-7" *ngIf="loadingSheetService.LSForm.value.rdVehicle==='Own'">
-               <ng-select class="noFoundTextColor clear-icon" placeholder="Select Vehicle No" formControlName="VEHNO" 
-                                notFoundText="No matches found" [readonly]="!loadingSheetService.LSForm.value.LoadingBy"></ng-select>
+               <ng-select class="noFoundTextColor clear-icon" placeholder="Select Vehicle No" formControlName="VEHNO" (search)="getVehicleNumberDetail($event)"
+                                [notFoundText]="noVehicleValue" [readonly]="!loadingSheetService.LSForm.value.LoadingBy || isgetLoadingList " (open)="resetvehicleNoDropdown()">
+                  <ng-option *ngFor="let item of vehicleNumberData" [value]="item.vehno">
+                    <strong>{{ item.vehno }}</strong> : {{ item.vehno }}
+                  </ng-option>
+                </ng-select>
             </div>
              <div class="col-sm-7" *ngIf="loadingSheetService.LSForm.value.rdVehicle==='Market'">
               <input class="form-control" formControlName="VEHNO" placeholder="Select Vehicle No" [readonly]="!loadingSheetService.LSForm.value.LoadingBy">
@@ -130,7 +138,7 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end"> Prepared By</label>
             <div class="col-sm-7">
-              <input class="form-control" formControlName="PreparedBy" placeholder="Select Prepared By">
+              <input class="form-control" formControlName="PreparedBy" placeholder="Select Prepared By" [readOnly]="isgetLoadingList">
             </div>
           </div>
         </div>
@@ -149,7 +157,7 @@
             <label class="col-sm-5 col-form-label text-end">LS Type</label>
             <div class="col-sm-7">
                <ng-select class="noFoundTextColor clear-icon" placeholder="Select Select LS Type" formControlName="LSType" 
-                  notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId" [items]="docketService.serviceData"></ng-select>
+                  notFoundText="No matches found" bindLabel="text" bindValue="value" [items]="LsTypeList"></ng-select>
             </div>
           </div>
         </div>
@@ -167,9 +175,9 @@
       <div class="col-4">
         <div class="row align-items-center">
           <label class="col-sm-5 col-form-label text-end">Select Date</label>
-          <div class="col-sm-7"  (click)="dvr.toggle()"> 
+          <div class="col-sm-7" (click)="!isgetLoadingList && dvr.toggle()"> 
              <input type="text" placeholder="Daterangepicker" class="form-control border-start-1 text-center line-height"
-                                bsDaterangepicker #dvr="bsDaterangepicker" formControlName="reportrange" [class.disabled-input]="true"  [bsConfig]="{ ranges: commonService.ranges, rangeInputFormat: 'MMMM D, YYYY', dateInputFormat: 'MMMM D, YYYY'}" />
+                bsDaterangepicker #dvr="bsDaterangepicker" formControlName="reportrange" [class.disabled-input]="true"  [bsConfig]="{ ranges: commonService.ranges, rangeInputFormat: 'MMMM D, YYYY', dateInputFormat: 'MMMM D, YYYY'}" />
           </div>
         </div>
       </div>
@@ -238,14 +246,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="col-4">
-        <div class="row">
-          <label class="col-sm-5 col-form-label text-end">Rate </label>
-          <div class="col-sm-7">
-            <input class="form-control required2" placeholder="Rate" type="text" formControlName="VendorName">
-          </div>
-        </div>
-      </div> -->
     </div>
     <div class="row pb-3">
       <div class="col-4">
@@ -304,7 +304,12 @@
     </div>
   </div>
 </div>
-</form>
+<div class="d-flex justify-content-center text-center p-4">
+  <button class="btn btn-success" (click)="getLoadinglist()">
+    <i class="fas fa-check"></i> Get Loading Sheet
+  </button>
+</div>
+
 
 <div class="cnote-entry-container mt-5">
   <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
@@ -312,16 +317,16 @@
     List Loading Sheet
   </div>
   <div class="cnote-entry-container p-3 pt-0" >
-
+    
     <div class="row text-success fw-bold mb-3 p-2">
       <div class="col-4 text-center">
         <label class="m-0 StyClss text-success" ><b>Total No Of LR : 0</b></label>
       </div>
-    
+      
       <div class="col-4 text-center">
         <label class="m-0 StyClss text-success"><b>Total Wt. [L/B] : 0</b></label>
       </div>
-    
+      
       <div class="col-4 text-center">
         <label class="m-0 StyClss text-success"><b>Total Pkgs. [L/B] : 0</b></label>
       </div>
@@ -347,8 +352,8 @@
         </thead>
         <tbody>
           @for (item of LoadingSheetList; track $index) {
-          <tr class="align-middle">
-            <td><input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox" style="cursor: pointer;"></td>
+            <tr class="align-middle">
+              <td><input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox" style="cursor: pointer;"></td>
             <td>{{item.CnoteNo}}</td>
             <td>{{item.ManualCnoteNo}}</td>
             <td>{{item.BkgDate}}</td>
@@ -365,22 +370,13 @@
             <td>{{item.Wt_LB}}</td>
             <td></td>
           </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+        }
+      </tbody>
+    </table>
   </div>
 </div>
-
-<div class="cnote-entry-container mt-5">
-  <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
-    <i class="fas fa-list me-2"></i>
-    Internal Document List
-  </div>
-  <div class="form-grid p-4 StyClss text-start">  
-     <b>No Record Found...................</b>
-  </div>
 </div>
+</form>
 
 <div class="d-flex justify-content-center text-center p-4">
   <button class="btn btn-success">
