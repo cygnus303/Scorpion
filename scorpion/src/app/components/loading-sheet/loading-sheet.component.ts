@@ -220,7 +220,43 @@ ngOnInit(){
   }
 
   getLoadinglist() {
-    this.isgetLoadingList = true
+    this.isgetLoadingList = true;
+    this.getDocketListForMFDetail()
+  }
+
+  getDocketListForMFDetail(){
+    const payload={
+      baseLocationCode: this.docketService.loginUserList.LocationCode,
+      nextStopLocation: this.loadingSheetService.LSForm.value.NextStopLocation,
+      transportMode: this.loadingSheetService.LSForm.value.TransportMode,
+      fromDate: this.loadingSheetService.LSForm.value.reportrange ? new Date(this.loadingSheetService.LSForm.value.reportrange[0]).toISOString() : null,
+      toDate: this.loadingSheetService.LSForm.value.reportrange ? new Date(this.loadingSheetService.LSForm.value.reportrange[1]).toISOString() : null,
+      destinationList: this.loadingSheetService.LSForm.value.DestinationList,
+      docketNoList:this.loadingSheetService.LSForm.value.DocketNoList,
+      lsDate: new Date(this.loadingSheetService.LSForm.value.LsDate)?.toISOString(),
+      loadingBy: this.loadingSheetService.LSForm.value.LoadingBy,
+      rateType: this.loadingSheetService.LSForm.value.RateType,
+      baseCompanyCode:this.docketService.loginUserList.Companycode
+    }
+    this.loadingSheetApiService.getDocketListForMF(payload).subscribe({
+      next: (response) => {
+        console.log(response)
+      }
+    });
+  }
+
+    getInternalDocumentMF(){
+    const payload={
+          baseLocationCode: this.docketService.loginUserList.LocationCode,
+          nextStopLocation: this.loadingSheetService.LSForm.value.NextStopLocation,
+          fromDate:this.loadingSheetService.LSForm.value.reportrange ? new Date(this.loadingSheetService.LSForm.value.reportrange[0]).toISOString() : null,
+          toDate:this.loadingSheetService.LSForm.value.reportrange ? new Date(this.loadingSheetService.LSForm.value.reportrange[1]).toISOString() : null,
+    }
+    this.loadingSheetApiService.InternalDocumentListForMF(payload).subscribe({
+      next: (response) => {
+        console.log(response)
+      }
+    });
   }
 
 }

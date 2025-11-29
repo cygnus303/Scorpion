@@ -53,7 +53,7 @@
               <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Next Stop Location" formControlName="NextStopLocation"
                 notFoundText="No matches found" [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('NextStopLocation')?.invalid  && loadingSheetService.LSForm.get('NextStopLocation')?.touched }"
                 (search)="getLocationDetail($event)" [notFoundText]="nextLocationValue" (open)="resetNextLocationDropdown()" [readonly]="isgetLoadingList">
-                <ng-option *ngFor="let item of locationData" [value]="item.text">
+                <ng-option *ngFor="let item of locationData" [value]="item.id">
                   <strong>{{ item.id }}</strong> : {{ item.text }}
                 </ng-option>
                 </ng-select>
@@ -403,7 +403,7 @@
             <th class="p-3 fw-bolder">Comm. Dely Date</th>
             <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === 'LS'">
               Rate
-              <ng-select class="required2" ></ng-select>
+              <ng-select class="required2 clear-icon" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.chargeTypeData"></ng-select>
             </th>
             <th class="p-3 fw-bolder">Pkgs.[L/B]</th>
             <th class="p-3 fw-bolder">Wt.[L/B]</th>
@@ -423,7 +423,7 @@
             <td>{{item.CityFromTo}}</td>
             <td>{{item.CommDelyDate}}</td>
             <td *ngIf="this.docketService.loginUserList.Type === 'LS'">
-              <ng-select class="required2" ></ng-select>
+              <ng-select class="required2 clear-icon" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.chargeTypeData"></ng-select>
               <input type="text" class="form-control" >
             </td>
             <td>

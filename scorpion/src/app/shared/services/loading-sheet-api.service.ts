@@ -9,7 +9,16 @@ export class LoadingSheetApiService {
   constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService) {}
 
   getLocationList(searchTerm:string){
-        return this.apiHandlerService.Get(`Operation/GetLocationList?searchTerm=${searchTerm}`);
+    return this.apiHandlerService.Get(`Operation/GetLocationList?searchTerm=${searchTerm}`);
+  }
+
+  getDocketListForMF(payload:any){
+    return this.apiHandlerService.Post(`Operation/GetDocketListForMFGeneration`,payload);
+  }
+
+  InternalDocumentListForMF(payload:any){
+    return this.apiHandlerService.Post(`Operation/InternalDocumentListForMFGeneration`,payload);
+    
   }
 
 }
