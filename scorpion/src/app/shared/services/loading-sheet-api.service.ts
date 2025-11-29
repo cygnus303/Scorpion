@@ -16,9 +16,4 @@ export class LoadingSheetApiService {
     return this.apiHandlerService.Post(`Operation/GetDocketListForMFGeneration`,payload);
   }
 
-  InternalDocumentListForMF(payload:any){
-    return this.apiHandlerService.Post(`Operation/InternalDocumentListForMFGeneration`,payload);
-    
-  }
-
 }

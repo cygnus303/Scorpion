@@ -28,6 +28,7 @@ export class LoadingSheetComponent {
   public noVehicleValue = 'Please enter atleast 1 character';
   public locationData: LocationResponse[] = [];
   public vehicleNumberData: VehicleNumbersResponse[] = [];
+  public LoadingSheetList:any;
   public LsTypeList = [{text: "LTL", value: "LTL" },{ text: "FTL",value: "FTL"}];
   constructor(
     public loadingSheetService: LoadingSheetService,
@@ -39,86 +40,6 @@ export class LoadingSheetComponent {
     public loadingSheetApiService: LoadingSheetApiService,
     public basicDetailService: BasicDetailService
   ) { }
-  LoadingSheetList = [
-    {
-      "CnoteNo": "62970933",
-      "ManualCnoteNo": "62970933",
-      "BkgDate": "31 Oct 25",
-      "TransMode": "ROAD CARGO",
-      "BkgLoc": "PIM",
-      "DelyLoc": "CNI",
-      "CityFromTo": "PIMPLAS - CHENNAI",
-      "CommDelyDate": "03 Nov 2025",
-      "Rate": "PER KG",
-      "Pkgs_LB": 10,
-      "Wt_LB": 120
-    },
-    {
-      "CnoteNo": "62970934",
-      "ManualCnoteNo": "62970934",
-      "BkgDate": "31 Oct 25",
-      "TransMode": "ROAD CARGO",
-      "BkgLoc": "PIM",
-      "DelyLoc": "AMD",
-      "CityFromTo": "PIMPLAS - AHMEDABAD",
-      "CommDelyDate": "03 Nov 2025",
-      "Rate": "PER KG",
-      "Pkgs_LB": 10,
-      "Wt_LB": 140
-    },
-    {
-      "CnoteNo": "62970935",
-      "ManualCnoteNo": "62970935",
-      "BkgDate": "31 Oct 25",
-      "TransMode": "ROAD CARGO",
-      "BkgLoc": "PIM",
-      "DelyLoc": "KUMR",
-      "CityFromTo": "PIMPLAS - BAMUNIMAIDAN",
-      "CommDelyDate": "09 Nov 2025",
-      "Rate": "PER KG",
-      "Pkgs_LB": 30,
-      "Wt_LB": 22
-    },
-    {
-      "CnoteNo": "62970936",
-      "ManualCnoteNo": "62970936",
-      "BkgDate": "06 Nov 25",
-      "TransMode": "ROAD CARGO",
-      "BkgLoc": "PIM",
-      "DelyLoc": "AMD",
-      "CityFromTo": "PIMPLAS - AHMEDABAD",
-      "CommDelyDate": "10 Nov 2025",
-      "Rate": "PER KG",
-      "Pkgs_LB": 8,
-      "Wt_LB": 265
-    },
-    {
-      "CnoteNo": "62970937",
-      "ManualCnoteNo": "62970937",
-      "BkgDate": "06 Nov 25",
-      "TransMode": "ROAD CARGO",
-      "BkgLoc": "PIM",
-      "DelyLoc": "AMD",
-      "CityFromTo": "PIMPLAS - AHMEDABAD",
-      "CommDelyDate": "10 Nov 2025",
-      "Rate": "PER KG",
-      "Pkgs_LB": 2,
-      "Wt_LB": 120
-    },
-    {
-      "CnoteNo": "62970938",
-      "ManualCnoteNo": "62970938",
-      "BkgDate": "06 Nov 25",
-      "TransMode": "ROAD CARGO",
-      "BkgLoc": "PIM",
-      "DelyLoc": "JAI",
-      "CityFromTo": "PIMPLAS - JAIPUR",
-      "CommDelyDate": "10 Nov 2025",
-      "Rate": "PER KG",
-      "Pkgs_LB": 2,
-      "Wt_LB": 20
-    }
-  ]
 
 ngOnInit(){
    const saved = localStorage.getItem("loginUserList");
@@ -240,13 +161,20 @@ ngOnInit(){
     }
   }
 
+formatDateNoTimezone(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}T00:00:00`;
+}
+
   getDocketListForMFDetail(){
     const payload={
       baseLocationCode: this.docketService.loginUserList.LocationCode,
       nextStopLocation: this.loadingSheetService.LSForm.value.NextStopLocation,
       transportMode: this.loadingSheetService.LSForm.value.TransportMode,
-      fromDate: this.loadingSheetService.LSForm.value.reportrange ? new Date(this.loadingSheetService.LSForm.value.reportrange[0]).toISOString() : null,
-      toDate: this.loadingSheetService.LSForm.value.reportrange ? new Date(this.loadingSheetService.LSForm.value.reportrange[1]).toISOString() : null,
+      fromDate: this.loadingSheetService.LSForm.value.reportrange ? this.formatDateNoTimezone(this.loadingSheetService.LSForm.value.reportrange[0]) : null,
+      toDate: this.loadingSheetService.LSForm.value.reportrange ? this.formatDateNoTimezone(this.loadingSheetService.LSForm.value.reportrange[1]): null,
       destinationList: this.loadingSheetService.LSForm.value.DestinationList,
       docketNoList:this.loadingSheetService.LSForm.value.DocketNoList,
       lsDate: new Date(this.loadingSheetService.LSForm.value.LsDate)?.toISOString(),
@@ -256,21 +184,10 @@ ngOnInit(){
     }
     this.loadingSheetApiService.getDocketListForMF(payload).subscribe({
       next: (response) => {
-        console.log(response)
-      }
-    });
-  }
-
-    getInternalDocumentMF(){
-    const payload={
-          baseLocationCode: this.docketService.loginUserList.LocationCode,
-          nextStopLocation: this.loadingSheetService.LSForm.value.NextStopLocation,
-          fromDate:this.loadingSheetService.LSForm.value.reportrange ? new Date(this.loadingSheetService.LSForm.value.reportrange[0]).toISOString() : null,
-          toDate:this.loadingSheetService.LSForm.value.reportrange ? new Date(this.loadingSheetService.LSForm.value.reportrange[1]).toISOString() : null,
-    }
-    this.loadingSheetApiService.InternalDocumentListForMF(payload).subscribe({
-      next: (response) => {
-        console.log(response)
+        console.log(response);
+        if(response && Array.isArray(response)){
+        this.loadingSheetService.setDocketList(response);
+        }
       }
     });
   }

@@ -369,50 +369,64 @@
               <th class="p-3 fw-bolder">Comm. Dely Date</th>
               <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === 'LS'">
                 Rate
-                <ng-select class="required2"></ng-select>
+                <ng-select class="required2" bindLabel="codeDesc" bindValue="codeId"  [items]="generalMasterService.chargeTypeData"></ng-select>
               </th>
               <th class="p-3 fw-bolder">Pkgs.[L/B]</th>
               <th class="p-3 fw-bolder">Wt.[L/B]</th>
               <th class="p-3 fw-bolder">E-Way Bill No.</th>
             </tr>
           </thead>
-          <tbody>
-            @for (item of LoadingSheetList; track $index) {
-            <tr class="align-middle">
-              <td><input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox"
-                  style="cursor: pointer;"></td>
-              <td>{{item.CnoteNo}}</td>
-              <td>{{item.ManualCnoteNo}}</td>
-              <td>{{item.BkgDate}}</td>
-              <td>{{item.TransMode}}</td>
-              <td>{{item.BkgLoc}}</td>
-              <td>{{item.DelyLoc}}</td>
-              <td>{{item.CityFromTo}}</td>
-              <td>{{item.CommDelyDate}}</td>
-              <td *ngIf="this.docketService.loginUserList.Type === 'LS'">
-                <ng-select class="required2"></ng-select>
-                <input type="text" class="form-control">
-              </td>
-              <td>
-                <div class="d-flex align-items-center">
-                  <input type="text" class="form-control w-50 text-end me-2">
-                  <span class="text-primary ms-3">
-                    / {{ item.Pkgs_LB }} / {{ item.Pkgs_LB | number:'1.2-2' }}
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div class="d-flex align-items-center">
-                  <input type="text" class="form-control w-50 text-end me-2" />
-                  <span class="text-primary ms-3">
-                    / {{ item.Wt_LB }} / {{ item.Wt_LB | number:'1.2-2' }}
-                  </span>
-                </div>
-              </td>
-              <td></td>
-            </tr>
-            }
-          </tbody>
+        <tbody formArrayName="docketList">
+          <tr *ngFor="let row of loadingSheetService.docketFormArray.controls; let i = index" [formGroupName]="i">
+        
+            <td>
+              <ng-container *ngIf="!row.value.message; else showMessage">
+                <input type="checkbox" formControlName="isChecked" class="form-check-input checkbox-lg custom-big-checkbox"
+                  style="cursor: pointer;">
+              </ng-container>
+              <ng-template #showMessage>
+                <span class="text-danger fw-semibold">{{ row.value.message }}</span>
+              </ng-template>
+            </td>
+        
+            <td>{{ row.value.dockno }}</td>
+            <td>{{ row.value.manual_dockno }}</td>
+            <td>{{ row.value.docketDate }}</td>
+            <td>{{ row.value.transMode }}</td>
+            <td>{{ row.value.orgCode }}</td>
+            <td>{{ row.value.reDestCode }}</td>
+        
+            <td>{{ row.value.fromTo }}</td>
+            <td>{{ row.value.commited_DelyDate }}</td>
+        
+            <td *ngIf="docketService.loginUserList.Type === 'LS'">
+              <ng-select formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"  [items]="generalMasterService.chargeTypeData"></ng-select>
+              <input type="text" class="form-control" formControlName="newRate">
+            </td>
+        
+            <td>
+              <div class="d-flex align-items-center">
+                <input type="text" class="form-control w-50 text-end me-2" formControlName="pkgsno">
+                <span class="text-primary ms-3">
+                  / {{ row.value.packagesLB }} / {{ row.value.packagesLB | number:'1.2-2' }}
+                </span>
+              </div>
+            </td>
+        
+            <td>
+              <div class="d-flex align-items-center">
+                <input type="text" class="form-control w-50 text-end me-2" formControlName="actuwt">
+                <span class="text-primary ms-3">
+                  / {{ row.value.actuwt }} / {{ row.value.weightLB | number:'1.2-2' }}
+                </span>
+              </div>
+            </td>
+        
+            <td>{{row.value.eWayBillNo}}</td>
+        
+          </tr>
+        </tbody>
+
         </table>
       </div>
     </div>
