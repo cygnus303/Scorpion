@@ -435,7 +435,7 @@
 </form>
 
 <div class="d-flex justify-content-center text-center p-4">
-  <button class="btn btn-success" *ngIf="isgetLoadingList">
+  <button class="btn btn-success" *ngIf="isgetLoadingList" (click)="loadingSheetService.prepareLoadingSheet()">
     <i class="fas fa-check"></i> Prepare Loading Sheet
   </button>
   <button class="btn btn-success" *ngIf="!isgetLoadingList" (click)="getLoadinglist()">
