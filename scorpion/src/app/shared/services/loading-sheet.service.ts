@@ -97,7 +97,7 @@ get docketFormArray() {
 }
 
   prepareLoadingSheet() {
-    const { reportrange, ...formValuesWithoutRange } = this.LSForm.value;
+    const { reportrange,docketList, ...formValuesWithoutRange } = this.LSForm.value;
     const payload = {
       vm: {
         ...formValuesWithoutRange,
