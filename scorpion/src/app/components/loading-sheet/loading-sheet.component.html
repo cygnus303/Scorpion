@@ -433,7 +433,7 @@
         
             <td>
               <div class="d-flex align-items-center">
-                <input type="text" class="form-control w-50 text-end me-2" formControlName="PackageLB" [readOnly]="!isAllSelected" (blur)="onPackageBlur(row)">
+                <input type="text" class="form-control w-50 text-end me-2" formControlName="PackageLB" [readOnly]="!isAllSelected && this.docketService.loginUserList.Type==='LS'" (blur)="onPackageBlur(row)">
                 <span class="text-primary ms-3">
                   / {{ row.value.packagesLB }} / {{ row.value.pkgsno | number:'1.2-2' }}
                 </span>
@@ -445,7 +445,7 @@
         
             <td>
               <div class="d-flex align-items-center">
-                <input type="text" class="form-control w-50 text-end me-2" formControlName="WeightsLB" [readOnly]="!isAllSelected" (blur)="onWeightBlur(row)">
+                <input type="text" class="form-control w-50 text-end me-2" formControlName="WeightsLB" [readOnly]="!isAllSelected || this.docketService.loginUserList.Type!=='LS'" (blur)="onWeightBlur(row)">
                 <span class="text-primary ms-3">
                   / {{ row.value.weightLB }} / {{ row.value.actuwt | number:'1.2-2' }}
                 </span>
@@ -468,7 +468,7 @@
   <button class="btn btn-success" *ngIf="!isgetLoadingList" (click)="getLoadinglist()">
     <i class="fas fa-check"></i> Get LoadingSheet List
   </button>
-  <button class="btn btn-success" *ngIf="isgetLoadingList" (click)="loadingSheetService.prepareLoadingSheet()">
+  <button class="btn btn-success" *ngIf="isgetLoadingList" (click)="loadingSheetService.prepareLoadingSheet()" [disabled]="isSubmitDisabled">
     <i class="fas fa-check"></i> {{this.docketService.loginUserList.Type === 'ULS' ? 'Prepare Manifest' : 'Prepare Loading Sheet'}}  
   </button>
 </div>

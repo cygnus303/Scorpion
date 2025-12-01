@@ -285,7 +285,7 @@ updateSelectedCount() {
     selected.forEach((row: any) => {
     this.loadingSheetService.loadingRateCalc(row);
   });
-  
+
   this.loadingSheetService.calculateTotal()
 }
 
@@ -313,6 +313,18 @@ onWeightBlur(row: any) {
   }
 }
 
+get isSubmitDisabled(): boolean {
+  const type = this.docketService.loginUserList.Type;
+
+  if (type === 'ULS') {
+    const selected = this.loadingSheetService.docketFormArray.controls
+      .filter((g: any) => g.value.isChecked);
+
+    return selected.length === 0;
+  }
+
+  return false; 
+}
 
 
 }
