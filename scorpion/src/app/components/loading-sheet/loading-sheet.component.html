@@ -342,15 +342,15 @@
 
       <div class="row text-success fw-bold mb-3 p-2">
         <div class="col-4 text-center">
-          <label class="m-0 StyClss text-success"><b>Total No Of LR : 0</b></label>
+          <label class="m-0 StyClss text-success"><b>Total No Of LR : {{totalDocketSelected||0}}</b></label>
         </div>
 
         <div class="col-4 text-center">
-          <label class="m-0 StyClss text-success"><b>Total Wt. [L/B] : 0</b></label>
+          <label class="m-0 StyClss text-success"><b>Total Wt. [L/B] :{{totalActWt || 0}}</b></label>
         </div>
 
         <div class="col-4 text-center">
-          <label class="m-0 StyClss text-success"><b>Total Pkgs. [L/B] : 0</b></label>
+          <label class="m-0 StyClss text-success"><b>Total Pkgs. [L/B] : {{totalPkgs || 0}}</b></label>
         </div>
       </div>
       <div style="max-height: 500px; overflow-y: auto;">
@@ -406,18 +406,18 @@
         
             <td>
               <div class="d-flex align-items-center">
-                <input type="text" class="form-control w-50 text-end me-2" formControlName="pkgsno">
+                <input type="text" class="form-control w-50 text-end me-2" formControlName="PackageLB" [readOnly]="!isAllSelected">
                 <span class="text-primary ms-3">
-                  / {{ row.value.packagesLB }} / {{ row.value.packagesLB | number:'1.2-2' }}
+                  / {{ row.value.packagesLB }} / {{ row.value.pkgsno | number:'1.2-2' }}
                 </span>
               </div>
             </td>
         
             <td>
               <div class="d-flex align-items-center">
-                <input type="text" class="form-control w-50 text-end me-2" formControlName="actuwt">
+                <input type="text" class="form-control w-50 text-end me-2" formControlName="WeightsLB" [readOnly]="!isAllSelected">
                 <span class="text-primary ms-3">
-                  / {{ row.value.actuwt }} / {{ row.value.weightLB | number:'1.2-2' }}
+                  / {{ row.value.weightLB }} / {{ row.value.actuwt | number:'1.2-2' }}
                 </span>
               </div>
             </td>

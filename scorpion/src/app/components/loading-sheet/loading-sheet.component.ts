@@ -29,6 +29,12 @@ export class LoadingSheetComponent {
   public locationData: LocationResponse[] = [];
   public vehicleNumberData: VehicleNumbersResponse[] = [];
   public LoadingSheetList:any;
+  public totalDocketSelected!:number;
+  public totalPkgs: number = 0;
+  public totalActWt: number = 0;
+  public isAllSelected:boolean=false;
+
+
   public LsTypeList = [{text: "LTL", value: "LTL" },{ text: "FTL",value: "FTL"}];
   constructor(
     public loadingSheetService: LoadingSheetService,
@@ -192,9 +198,9 @@ formatDateNoTimezone(date: Date) {
     });
   }
 
-  totalSelected:any
 toggleSelectAll(event: any) {
   const checked = event.target.checked;
+  this.isAllSelected = checked;
   const formArray = this.loadingSheetService.docketFormArray;
 
   formArray.controls.forEach((group: any) => {
@@ -209,12 +215,21 @@ toggleSelectAll(event: any) {
 updateSelectedCount() {
   const formArray = this.loadingSheetService.docketFormArray;
 
-  this.totalSelected = formArray.controls.filter(
-    (g: any) => g.value.isChecked
-  ).length;
+  let selected = formArray.controls.filter((g: any) => g.value.isChecked);
 
-  console.log("Total selected =", this.totalSelected);
+  this.totalDocketSelected = selected.length;
+
+  // SUM calculation
+  this.totalPkgs = selected.reduce((sum: number, row: any) => {
+    return sum + (Number(row.value.PackageLB) || 0);
+  }, 0);
+
+  this.totalActWt = selected.reduce((sum: number, row: any) => {
+    return sum + (Number(row.value.WeightsLB) || 0);
+  }, 0);
+
 }
+
 
  
 }

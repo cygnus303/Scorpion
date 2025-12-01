@@ -65,6 +65,8 @@ export class LoadingSheetService {
        packagesLB:new FormControl(item.packagesLB),
        weightLB:new FormControl(item.weightLB),
        reDestCode:new FormControl(item.reDestCode),
+       PackageLB:new FormControl(item.packagesLB),
+       WeightsLB:new FormControl(item.weightLB),
        fromTo:new FormControl(item.fromTo),
        isChecked:new FormControl(item.isChecked),
        handlingCharge:new FormControl(item.handlingCharge),
