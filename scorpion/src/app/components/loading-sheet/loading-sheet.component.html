@@ -12,7 +12,7 @@
           <div class="row align-items-center">
             <label class="col-sm-5 col-form-label text-end">Loading Sheet No.</label>
             <div class="col-sm-7">
-              <input class="form-control" formControlName="LsNO" placeholder="System Generated" readonly>
+              <input class="form-control" formControlName="lsNO" placeholder="System Generated" readonly>
             </div>
           </div>
         </div>
@@ -20,7 +20,7 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end"> Loading Sheet Date</label>
             <div class="col-sm-7">
-              <input class="form-control required2" formControlName="LsDate" placeholder="Loading Sheet Date"
+              <input class="form-control required2" formControlName="lsDate" placeholder="Loading Sheet Date"
                 readonly>
             </div>
           </div>
@@ -29,22 +29,22 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end"> Manual LS No.</label>
             <div class="col-sm-7">
-              <input class="form-control" formControlName="ManualLsNO" readonly>
+              <input class="form-control" formControlName="manualLsNO" readonly>
             </div>
           </div>
         </div>
       </div>
       <div class="row pb-3">
         <div class="col-4">
-          <div class="row align-items-center" *ngIf="loadingSheetService.LSForm.value.MF_TransportMode === 'S'">
+          <div class="row align-items-center" *ngIf="loadingSheetService.LSForm.value.mF_TransportMode === 'S'">
             <label class="col-sm-5 col-form-label text-end">Loading By</label>
             <div class="col-sm-7">
-              <ng-select class="noFoundTextColor required2" placeholder="Select Loading By" formControlName="LoadingBy"
+              <ng-select class="noFoundTextColor required2" placeholder="Select Loading By" formControlName="loadingBy"
                 notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
                 [items]="generalMasterService.loadingData" (change)="getvendoCodeData($event)"
-                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('LoadingBy')?.invalid  && loadingSheetService.LSForm.get('LoadingBy')?.touched }"></ng-select>
+                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('loadingBy')?.invalid  && loadingSheetService.LSForm.get('loadingBy')?.touched }"></ng-select>
               <div class="text-danger text-start"
-                *ngIf="loadingSheetService.LSForm.get('LoadingBy')?.invalid && loadingSheetService.LSForm.get('LoadingBy')?.touched">
+                *ngIf="loadingSheetService.LSForm.get('loadingBy')?.invalid && loadingSheetService.LSForm.get('loadingBy')?.touched">
                 This field is required.
               </div>
             </div>
@@ -54,31 +54,31 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end"> Next Stop Location</label>
             <div class="col-sm-7">
-              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Next Stop Location" formControlName="NextStopLocation"
-                notFoundText="No matches found" [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('NextStopLocation')?.invalid  && loadingSheetService.LSForm.get('NextStopLocation')?.touched }"
+              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Next Stop Location" formControlName="nextStopLocation"
+                notFoundText="No matches found" [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('nextStopLocation')?.invalid  && loadingSheetService.LSForm.get('nextStopLocation')?.touched }"
                 (search)="getLocationDetail($event)" [notFoundText]="nextLocationValue" (open)="resetNextLocationDropdown()" [readonly]="isgetLoadingList">
                 <ng-option *ngFor="let item of locationData" [value]="item.id">
                   <strong>{{ item.id }}</strong> : {{ item.text }}
                 </ng-option>
               </ng-select>
               <div class="text-danger text-start"
-                *ngIf="loadingSheetService.LSForm.get('NextStopLocation')?.invalid && loadingSheetService.LSForm.get('NextStopLocation')?.touched">
+                *ngIf="loadingSheetService.LSForm.get('nextStopLocation')?.invalid && loadingSheetService.LSForm.get('nextStopLocation')?.touched">
                 This field is required.
               </div>
             </div>
           </div>
         </div>
-        <div class="col-4" *ngIf="loadingSheetService.LSForm.value.MF_TransportMode === 'S'">
+        <div class="col-4" *ngIf="loadingSheetService.LSForm.value.mF_TransportMode === 'S'">
           <div class="row">
             <label class="col-sm-5 col-form-label text-end"> Charge type</label>
             <div class="col-sm-7">
-              <ng-select class="noFoundTextColor required2" placeholder="Select Charge type" formControlName="RateType"
+              <ng-select class="noFoundTextColor required2" placeholder="Select Charge type" formControlName="rateType"
                 notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
                 [items]="generalMasterService.chargeTypeData"
-                [readonly]="loadingSheetService.LSForm.value.LoadingBy === 'XX9'"
-                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('RateType')?.invalid  && loadingSheetService.LSForm.get('RateType')?.touched }"></ng-select>
+                [readonly]="loadingSheetService.LSForm.value.loadingBy === 'XX9'"
+                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('rateType')?.invalid  && loadingSheetService.LSForm.get('rateType')?.touched }"></ng-select>
               <div class="text-danger text-start"
-                *ngIf="loadingSheetService.LSForm.get('RateType')?.invalid && loadingSheetService.LSForm.get('RateType')?.touched">
+                *ngIf="loadingSheetService.LSForm.get('rateType')?.invalid && loadingSheetService.LSForm.get('rateType')?.touched">
                 This field is required.
               </div>
             </div>
@@ -91,11 +91,11 @@
             <label class="col-sm-5 col-form-label text-end">LS Transport Mode</label>
             <div class="col-sm-7">
               <ng-select class="noFoundTextColor required2" placeholder="Select LS Transport Mode"
-                formControlName="MF_TransportMode" notFoundText="No matches found" bindLabel="codeDesc"
+                formControlName="mF_TransportMode" notFoundText="No matches found" bindLabel="codeDesc"
                 bindValue="codeId" [items]="generalMasterService.LsTransportModeData"
-                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('MF_TransportMode')?.invalid  && loadingSheetService.LSForm.get('MF_TransportMode')?.touched }"></ng-select>
+                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('mF_TransportMode')?.invalid  && loadingSheetService.LSForm.get('mF_TransportMode')?.touched }"></ng-select>
               <div class="text-danger text-start"
-                *ngIf="loadingSheetService.LSForm.get('MF_TransportMode')?.invalid && loadingSheetService.LSForm.get('MF_TransportMode')?.touched">
+                *ngIf="loadingSheetService.LSForm.get('mF_TransportMode')?.invalid && loadingSheetService.LSForm.get('mF_TransportMode')?.touched">
                 This field is required.
               </div>
             </div>
@@ -120,19 +120,19 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end"> Seal No</label>
             <div class="col-sm-7">
-              <input class="form-control" formControlName="SealNo" placeholder="Seal No" readonly>
+              <input class="form-control" formControlName="sealNo" placeholder="Seal No" readonly>
             </div>
           </div>
         </div>
       </div>
       <div class="row pb-3">
-        <div class="col-4" *ngIf="loadingSheetService.LSForm.value.MF_TransportMode === 'S'">
+        <div class="col-4" *ngIf="loadingSheetService.LSForm.value.mF_TransportMode === 'S'">
           <div class="row align-items-center">
             <label class="col-sm-5 col-form-label text-end">Vehicle No</label>
             <div class="col-sm-7" *ngIf="loadingSheetService.LSForm.value.rdVehicle==='Own'">
-              <ng-select class="noFoundTextColor clear-icon" placeholder="Select Vehicle No" formControlName="VEHNO"
+              <ng-select class="noFoundTextColor clear-icon" placeholder="Select Vehicle No" formControlName="vehno"
                 (search)="getVehicleNumberDetail($event)" [notFoundText]="noVehicleValue"
-                [readonly]="!loadingSheetService.LSForm.value.LoadingBy || isgetLoadingList "
+                [readonly]="!loadingSheetService.LSForm.value.loadingBy || isgetLoadingList "
                 (open)="resetvehicleNoDropdown()">
                 <ng-option *ngFor="let item of vehicleNumberData" [value]="item.vehno">
                   <strong>{{ item.vehno }}</strong> : {{ item.vehno }}
@@ -140,8 +140,8 @@
               </ng-select>
             </div>
             <div class="col-sm-7" *ngIf="loadingSheetService.LSForm.value.rdVehicle==='Market'">
-              <input class="form-control" formControlName="VEHNO" placeholder="Vehicle No"
-                [readonly]="!loadingSheetService.LSForm.value.LoadingBy">
+              <input class="form-control" formControlName="vehno" placeholder="Vehicle No"
+                [readonly]="!loadingSheetService.LSForm.value.loadingBy">
             </div>
           </div>
         </div>
@@ -149,7 +149,7 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end"> Prepared By</label>
             <div class="col-sm-7">
-              <input class="form-control" formControlName="PreparedBy" placeholder="Prepared By"
+              <input class="form-control" formControlName="preparedBy" placeholder="Prepared By"
                 [readOnly]="isgetLoadingList">
             </div>
           </div>
@@ -169,7 +169,7 @@
             <label class="col-sm-5 col-form-label text-end">LS Type</label>
             <div class="col-sm-7">
               <ng-select class="noFoundTextColor clear-icon" placeholder="Select LS Type"
-                formControlName="LSType" notFoundText="No matches found" bindLabel="text" bindValue="value"
+                formControlName="lsType" notFoundText="No matches found" bindLabel="text" bindValue="value"
                 [items]="LsTypeList"></ng-select>
             </div>
           </div>
@@ -205,7 +205,7 @@
             <label class="col-sm-5 col-form-label text-end">Transport Mode</label>
             <div class="col-sm-7">
               <ng-select class="noFoundTextColor clear-icon" placeholder="Select Transport Mode"
-                formControlName="TransportMode" notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
+                formControlName="transportMode" notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
                 [items]="generalMasterService.modeData"></ng-select>
             </div>
           </div>
@@ -216,7 +216,7 @@
           <div class="row align-items-center">
             <label class="col-sm-5 col-form-label text-end">Destination</label>
             <div class="col-sm-7">
-              <input class="form-control" formControlName="DestinationList" placeholder="Destination">
+              <input class="form-control" formControlName="destinationList" placeholder="Destination">
             </div>
           </div>
         </div>
@@ -229,7 +229,7 @@
           <div class="row align-items-center">
             <label class="col-sm-5 col-form-label text-end">Docket No.</label>
             <div class="col-sm-7">
-              <input class="form-control" formControlName="DocketNoList" placeholder="Docket No.">
+              <input class="form-control" formControlName="docketNoList" placeholder="Docket No.">
             </div>
           </div>
         </div>
@@ -254,7 +254,7 @@
           <div class="row align-items-center">
             <label class="col-sm-5 col-form-label text-end">Loading By :</label>
             <div class="col-sm-7 text-start fw-bold">
-              {{this.loadingSheetService.LSForm.value.VendorName }}
+              {{this.loadingSheetService.LSForm.value.vendorName }}
             </div>
           </div>
         </div>
@@ -263,7 +263,7 @@
             <label class="col-sm-5 col-form-label text-end">Vendor Code </label>
             <div class="col-sm-7">
               <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Vendor Name"
-                formControlName="VendorCode" notFoundText="No matches found"
+                formControlName="vendorCode" notFoundText="No matches found"
                 [items]="challanService.branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"></ng-select>
             </div>
           </div>
@@ -275,7 +275,7 @@
             <label class="col-sm-5 col-form-label text-end">Loading Charge </label>
             <div class="col-sm-7">
               <input class="form-control required2" placeholder="Loading Charge" type="text"
-                formControlName="LoadingCharge">
+                formControlName="loadingCharge" readonly>
             </div>
           </div>
         </div>
@@ -378,17 +378,22 @@
           </thead>
         <tbody formArrayName="docketList">
           <tr *ngFor="let row of loadingSheetService.docketFormArray.controls; let i = index" [formGroupName]="i">
-        
-            <td>
-              <ng-container *ngIf="!row.value.message; else showMessage">
-                <input type="checkbox" formControlName="isChecked" class="form-check-input checkbox-lg custom-big-checkbox" (change)="updateSelectedCount()"
-                  style="cursor: pointer;">
+          <td>
+            <ng-container *ngIf="row.value.message?.trim(); else checkError">
+              <span class="text-danger fw-semibold">{{ row.value.message }}</span>
+            </ng-container>
+          
+            <ng-template #checkError>
+              <ng-container *ngIf="row.value.errorMassage?.trim(); else showCheckbox">
+                <span class="text-danger fw-semibold">{{ row.value.errorMassage }}</span>
               </ng-container>
-              <ng-template #showMessage>
-                <span class="text-danger fw-semibold">{{ row.value.message }}</span>
-              </ng-template>
-            </td>
-        
+            </ng-template>
+          
+            <ng-template #showCheckbox>
+              <input type="checkbox" formControlName="isChecked" class="form-check-input checkbox-lg custom-big-checkbox"
+                (change)="updateSelectedCount()" style="cursor: pointer;" />
+            </ng-template>
+          </td>
             <td>{{ row.value.dockno }}</td>
             <td>{{ row.value.manual_dockno }}</td>
             <td>{{ row.value.docketDate }}</td>
