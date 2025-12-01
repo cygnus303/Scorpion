@@ -72,10 +72,10 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end"> Charge type</label>
             <div class="col-sm-7">
-              <ng-select class="noFoundTextColor required2" placeholder="Select Charge type" formControlName="rateType"
+              <ng-select class="noFoundTextColor required2" placeholder="Select Charge type"  formControlName="rateType"
                 notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
                 [items]="generalMasterService.chargeTypeData"
-                [readonly]="loadingSheetService.LSForm.value.loadingBy === 'XX9'"
+                [readonly]="!loadingSheetService.LSForm.value.loadingBy || loadingSheetService.LSForm.value.loadingBy === 'XX9'"
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('rateType')?.invalid  && loadingSheetService.LSForm.get('rateType')?.touched }"></ng-select>
               <div class="text-danger text-start"
                 *ngIf="loadingSheetService.LSForm.get('rateType')?.invalid && loadingSheetService.LSForm.get('rateType')?.touched">
@@ -120,7 +120,7 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end"> Seal No</label>
             <div class="col-sm-7">
-              <input class="form-control" formControlName="sealNo" placeholder="Seal No" readonly>
+              <input class="form-control" formControlName="sealNo" placeholder="Seal No" [readOnly]="isgetLoadingList">
             </div>
           </div>
         </div>

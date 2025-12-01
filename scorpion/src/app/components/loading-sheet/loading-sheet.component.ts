@@ -53,8 +53,8 @@ ngOnInit(){
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.loginUserList.LocationCode =  'ABH';
-      this.docketService.loginUserList.Type = 'ULS';
-      this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007068';
+      this.docketService.loginUserList.Type = 'LS';
+      this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007080';
        this.docketService.loginUserList.IsBCProcess = 'N';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
@@ -96,11 +96,11 @@ ngOnInit(){
       this.challanService.branchWiseLoadingUnloading(event?.codeId);
     }
     const rateType = this.loadingSheetService.LSForm.get('rateType');
-    if (this.loadingSheetService.LSForm.value.loadingBy) {
+    if (this.loadingSheetService.LSForm.value.loadingBy && this.loadingSheetService.LSForm.value.loadingBy !== 'XX9') {
       rateType?.setValidators([Validators.required]);
     } else {
-      rateType?.clearValidators();
-      rateType?.setValue('');
+      rateType?.setValidators(null);
+      rateType?.setValue(null);
     }
    rateType?.updateValueAndValidity();
   }
