@@ -4,7 +4,7 @@ import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { VehicleNumbersResponse } from 'app/shared/models/general-master.model';
-import { LocationResponse } from 'app/shared/models/loading-sheet.model';
+import { LocationResponse, UnLoaderUserListResponse } from 'app/shared/models/loading-sheet.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { ChallanService } from 'app/shared/services/challan.service';
 import { CommonService } from 'app/shared/services/common.service';
@@ -28,6 +28,7 @@ export class LoadingSheetComponent {
   public noVehicleValue = 'Please enter atleast 1 character';
   public locationData: LocationResponse[] = [];
   public vehicleNumberData: VehicleNumbersResponse[] = [];
+  public unLoaderUserList: UnLoaderUserListResponse[] = [];
   public LoadingSheetList:any;
   public totalDocketSelected!:number;
   public totalPkgs: number = 0;
@@ -51,19 +52,32 @@ ngOnInit(){
    const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
-      this.docketService.loginUserList.LocationCode =  'PIM';
-      this.docketService.loginUserList.Type = 'LS';
+      this.docketService.loginUserList.LocationCode =  'ABH';
+      this.docketService.loginUserList.Type = 'ULS';
+      this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007068';
+       this.docketService.loginUserList.IsBCProcess = 'N';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
-
-    this.loadingSheetService.buildForm();
-    this.getVendorType();
-    this.generalMasterService.getLSModedata();
-    this.generalMasterService.getModeData();
-    this.generalMasterService.getChargeTypeData();
     this.isgetLoadingList =  this.docketService.loginUserList.Type === 'ULS' ? true :false;
+    this.loadingSheetService.buildForm();
+    
+    if(this.docketService.loginUserList.Type === 'ULS'){
+      this.getUnLoaderUserList();
+      this.getLoadingSheet();
+      this.loadingSheetService.LSForm.get('loadingByUser')?.setValidators([Validators.required]);
+      this.loadingSheetService.LSForm.get('LoadingSupervisor')?.setValidators([Validators.required]);
+    }else{
+      this.getVendorType();
+      this.generalMasterService.getLSModedata();
+      this.generalMasterService.getModeData();
+      this.generalMasterService.getChargeTypeData();
+      this.loadingSheetService.LSForm.get('loadingByUser')?.clearValidators();
+      this.loadingSheetService.LSForm.get('loadingByUser')?.setValue('');
+      this.loadingSheetService.LSForm.get('LoadingSupervisor')?.clearValidators();
+      this.loadingSheetService.LSForm.get('LoadingSupervisor')?.setValue('');
+    }
   }
   
   getvendoCodeData(event: any) {
@@ -100,6 +114,44 @@ ngOnInit(){
           if (mTypeRow) {
             const vendorTypes = mTypeRow.loading_VendorType.split(',');
             this.generalMasterService.getLoadingByDetail(vendorTypes);
+          }
+        }
+      }
+    });
+  }
+
+  getUnLoaderUserList() {
+    this.loadingSheetApiService.getUnLoaderUserList(this.docketService.loginUserList.LocationCode).subscribe({
+      next: (response) => {
+        if (response && response.data) {
+          this.unLoaderUserList = response.data;
+        }
+      }
+    });
+  }
+
+   getLoadingSheet() {
+     const payload ={
+     type:this.docketService.loginUserList.Type,
+     tcno:this.docketService.loginUserList.TCNO,
+     isBCProcess:this.docketService.loginUserList.IsBCProcess,
+     BaseUserName:this.docketService.loginUserList.LocationCode,
+    }
+    this.loadingSheetApiService.getLoadingSheet(payload).subscribe({
+      next: (response:any) => {
+        if (response) {
+           this.loadingSheetService.LSForm.patchValue({
+             lsType:response.lsType,
+             NEXTLOC:response.nextloc,
+             mathadiAmt:response.mathadiAmt,
+             manualLsNO:response.manualLsNO,
+             lsNO:response.lsNO,
+             lsDate:new Date(response.lsDate),
+             loadingCharge:response.loadingCharge,
+             isMathadi:response.isMathadi,
+           });
+          if (response && Array.isArray(response.docketListForMFGeneration)) {
+            this.loadingSheetService.setDocketList(response.docketListForMFGeneration);
           }
         }
       }
@@ -157,13 +209,15 @@ ngOnInit(){
   }
 
   getLoadinglist() {
-    this.getDocketListForMFDetail();
-        const form = this.loadingSheetService.LSForm;
-    if (form.get('loadingBy')?.valid && form.get('nextStopLocation')?.valid) {
+    const form = this.loadingSheetService.LSForm;
+    if (form.get('loadingBy')?.valid && form.get('nextStopLocation')?.valid && form.get('rateType')?.valid) {
+      this.getDocketListForMFDetail();
       this.isgetLoadingList = true;
     } else {
       this.isgetLoadingList = false;
-       form.markAllAsTouched();
+       form.get('loadingBy')?.markAsTouched();
+       form.get('nextStopLocation')?.markAsTouched();
+       form.get('rateType')?.markAsTouched();
     }
   }
 
@@ -184,7 +238,7 @@ formatDateNoTimezone(date: Date) {
       destinationList: this.loadingSheetService.LSForm.value.destinationList,
       docketNoList:this.loadingSheetService.LSForm.value.docketNoList,
       lsDate: new Date(this.loadingSheetService.LSForm.value.lsDate)?.toISOString(),
-      loadingBy: this.loadingSheetService.LSForm.value.loadingBy,
+      loadingBy: this.loadingSheetService.LSForm.value.loadingBy ,
       rateType: this.loadingSheetService.LSForm.value.rateType,
       baseCompanyCode:this.docketService.loginUserList.Companycode
     }

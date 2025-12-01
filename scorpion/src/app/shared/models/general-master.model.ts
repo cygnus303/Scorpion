@@ -139,6 +139,8 @@ export interface BasePayload {
   DocketNo: string;
   IsFromBillGeneration: string | boolean;
   Type: string | number;
+  TCNO?:string;
+  IsBCProcess?:string;
 }
 
 export interface StatesFromPartyCodeRepsonse {

@@ -20,4 +20,11 @@ export class LoadingSheetApiService {
     return this.apiHandlerService.Post(`Operation/PrepareLoadingSheet`, payload);
   }
 
+   getUnLoaderUserList(LocationCode: any) {
+    return this.apiHandlerService.Get(`Operation/GetUnLoaderUserList?BaseLocationCode=${LocationCode}`);
+  }
+
+   getLoadingSheet(data: any) {
+    return this.apiHandlerService.Get(`Operation/GetLoadingSheet?type=${data.type}&tcno=${data.tcno}&isBCProcess=${data.isBCProcess}&BaseUserName=${data.BaseUserName}`);
+  }
 }
