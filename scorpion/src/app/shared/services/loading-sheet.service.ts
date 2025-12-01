@@ -18,31 +18,36 @@ export class LoadingSheetService {
   fromDate.setDate(today.getDate() - 29);
 
     this.LSForm=new FormGroup({
-      LsNO:new FormControl(''),
-      LsDate:new FormControl(this.formatDate(today)),
-      ManualLsNO:new FormControl('N/A'),
-      LoadingBy:new FormControl(null,[Validators.required]),
-      NextStopLocation:new FormControl(null,[Validators.required]),
-      RateType:new FormControl(null),
-      MF_TransportMode:new FormControl('S',[Validators.required]),
+      lsNO:new FormControl(''),
+      lsDate:new FormControl(this.formatDate(today)),
+      manualLsNO:new FormControl('N/A'),
+      loadingBy:new FormControl(null,[Validators.required]),
+      nextStopLocation:new FormControl(null,[Validators.required]),
+      rateType:new FormControl(null),
+      mF_TransportMode:new FormControl('S',[Validators.required]),
       rdVehicle:new FormControl('Own'),
-      SealNo:new FormControl(''),
-      VEHNO:new FormControl(null),
-      PreparedBy:new FormControl(''),
+      sealNo:new FormControl(''),
+      vehno:new FormControl(null),
+      preparedBy:new FormControl(''),
       UserName:new FormControl(this.docketService.baseUsername),
-      LSType:new FormControl(null),
+      lsType:new FormControl(null),
       reportrange:new FormControl([fromDate, today]),
-      TransportMode:new FormControl(null),
-      DestinationList:new FormControl(''),
-      DocketNoList:new FormControl(''),
-      VendorCode:new FormControl(null),
-      VendorName:new FormControl(''),
-      LoadingCharge:new FormControl(0),
-      IsMathadi:new FormControl(''),
-      MathadiSlipNo:new FormControl(''),
-      MathadiDate:new FormControl(''),
-      MathadiAmt:new FormControl(''),
+      transportMode:new FormControl(null),
+      destinationList:new FormControl(''),
+      docketNoList:new FormControl(''),
+      vendorCode:new FormControl(null),
+      vendorName:new FormControl(''),
+      loadingCharge:new FormControl(0),
+      isMathadi:new FormControl(false),
+      mathadiSlipNo:new FormControl(''),
+      mathadiDate:new FormControl(this.formatDate(today)),
+      mathadiAmt:new FormControl(0),
       docketList: new FormArray([]),
+      LoadingByUser:new FormControl(''),
+      LoadingSupervisor:new FormControl(''),
+      NEXTLOC:new FormControl(''),
+      VehicleType:new FormControl(''),
+      isMonthly:new FormControl(this.docketService.loginUserList.Type === 'LS' ? true: false)
     })
   }
 
@@ -51,35 +56,20 @@ export class LoadingSheetService {
   fa.clear(); // Old data remove
   list.forEach(item => {
     fa.push(new FormGroup({
-       id:new FormControl(item.id),
-       docketNo:new FormControl(item.docketNo),
        dockno:new FormControl(item.dockno),
        docksf:new FormControl(item.docksf),
-       manual_dockno:new FormControl(item.manual_dockno),
        pkgsno:new FormControl(item.pkgsno),
        actuwt:new FormControl(item.actuwt),
-       transMode:new FormControl(item.transMode),
        docketDate:new FormControl(item.docketDate),
        orgCode:new FormControl(item.orgCode),
-       commited_DelyDate:new FormControl(item.commited_DelyDate),
        packagesLB:new FormControl(item.packagesLB),
        weightLB:new FormControl(item.weightLB),
        reDestCode:new FormControl(item.reDestCode),
-       fromTo:new FormControl(item.fromTo),
        isChecked:new FormControl(item.isChecked),
-       handlingCharge:new FormControl(item.handlingCharge),
-       isCP:new FormControl(item.isCP),
-       rate:new FormControl(item.rate),
-       maxLimit:new FormControl(item.maxLimit),
-       isMonthly:new FormControl(item.isMonthly),
        newRate:new FormControl(item.newRate),
        ratetype:new FormControl(item.ratetype),
-       cnt:new FormControl(item.cnt),
-       eWayBillNo:new FormControl(item.eWayBillNo),
        message:new FormControl(item.message),
        errorMassage:new FormControl(item.errorMassage),
-       isRemoved:new FormControl(item.isRemoved),
-       pickup_Dely:new FormControl(item.pickup_Dely),
     }));
   });
 }
@@ -97,11 +87,17 @@ get docketFormArray() {
 }
 
   prepareLoadingSheet() {
-    const { reportrange,docketList, ...formValuesWithoutRange } = this.LSForm.value;
+    debugger
+    const { reportrange, docketList, ...formValuesWithoutRange } = this.LSForm.value;
+    const selected = (this.docketFormArray?.controls ?? []).filter(ctrl => ctrl.get('isChecked')?.value).map(ctrl => (ctrl as FormGroup).getRawValue());
     const payload = {
       vm: {
         ...formValuesWithoutRange,
-        LsDate:new Date(this.LSForm.value.LsDate).toISOString(),
+        lsDate:new Date(this.LSForm.value.lsDate).toISOString(),
+        mathadiDate:new Date(this.LSForm.value.mathadiDate).toISOString(),
+        vendorCode:this.LSForm.value.vendorCode ? this.LSForm.value.vendorCode :'',
+        vehno:this.LSForm.value.vehno ? this.LSForm.value.vehno :'',
+        lsType:this.LSForm.value.lsType ? this.LSForm.value.lsType :'',
         fromDate:reportrange[0].toISOString(),
         toDate:reportrange[1].toISOString(),
         baseUserName: this.docketService.loginUserList.BaseUserName,
@@ -109,15 +105,24 @@ get docketFormArray() {
         baseLocationCode: this.docketService.loginUserList.LocationCode,
         baseCompanyCode: this.docketService.loginUserList.Companycode,
         location: this.docketService.loginUserList.LocationCode,
-
+        Type:this.docketService.loginUserList.Type
       },
-      docketList: []
+      docketList: selected,
+      internalDocumentList:[
+        {
+            "imNo": "",
+            "isChecked": true,
+            "packages": 0,
+            "weight": 0
+        }
+      ],
     };
-
-    this.loadingSheetApiService.prepareLoadingSheet(payload).subscribe({
-      next: (response) => {
-        console.log(response)
-      }
-    });
+    if ((payload.vm.loadingBy == "A" || payload.vm.loadingBy == "XX5" || payload.vm.loadingBy == "XX8" || payload.vm.loadingBy == "M") && payload.vm.loadingCharge == 0) {
+      this.loadingSheetApiService.prepareLoadingSheet(payload).subscribe({
+        next: (response) => {
+          console.log(response)
+        }
+      });
+    }
   }
 }

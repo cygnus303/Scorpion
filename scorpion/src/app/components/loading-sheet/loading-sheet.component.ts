@@ -45,7 +45,7 @@ ngOnInit(){
    const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
-      this.docketService.loginUserList.LocationCode =  'ABH';
+      this.docketService.loginUserList.LocationCode =  'PIM';
       this.docketService.loginUserList.Type = 'LS';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
@@ -61,7 +61,7 @@ ngOnInit(){
   }
   
   getvendoCodeData(event: any) {
-    this.loadingSheetService.LSForm.patchValue({ VendorName: event?.codeDesc })
+    this.loadingSheetService.LSForm.patchValue({ vendorName: event?.codeDesc })
     const ChargedBy = event?.codeId;
     if (ChargedBy === 'B' || ChargedBy == '04') {
       this.challanService.getChargesVendorsList('04');
@@ -75,8 +75,8 @@ ngOnInit(){
     if (ChargedBy === 'XX5' || ChargedBy === 'XX8') {
       this.challanService.branchWiseLoadingUnloading(event?.codeId);
     }
-    const rateType = this.loadingSheetService.LSForm.get('RateType');
-    if (this.loadingSheetService.LSForm.value.LoadingBy) {
+    const rateType = this.loadingSheetService.LSForm.get('rateType');
+    if (this.loadingSheetService.LSForm.value.loadingBy) {
       rateType?.setValidators([Validators.required]);
     } else {
       rateType?.clearValidators();
@@ -153,7 +153,7 @@ ngOnInit(){
   getLoadinglist() {
     this.getDocketListForMFDetail();
         const form = this.loadingSheetService.LSForm;
-    if (form.get('LoadingBy')?.valid && form.get('NextStopLocation')?.valid) {
+    if (form.get('loadingBy')?.valid && form.get('nextStopLocation')?.valid) {
       this.isgetLoadingList = true;
     } else {
       this.isgetLoadingList = false;
@@ -171,15 +171,15 @@ formatDateNoTimezone(date: Date) {
   getDocketListForMFDetail(){
     const payload={
       baseLocationCode: this.docketService.loginUserList.LocationCode,
-      nextStopLocation: this.loadingSheetService.LSForm.value.NextStopLocation,
-      transportMode: this.loadingSheetService.LSForm.value.TransportMode,
+      nextStopLocation: this.loadingSheetService.LSForm.value.nextStopLocation,
+      transportMode: this.loadingSheetService.LSForm.value.transportMode,
       fromDate: this.loadingSheetService.LSForm.value.reportrange ? this.formatDateNoTimezone(this.loadingSheetService.LSForm.value.reportrange[0]) : null,
       toDate: this.loadingSheetService.LSForm.value.reportrange ? this.formatDateNoTimezone(this.loadingSheetService.LSForm.value.reportrange[1]): null,
-      destinationList: this.loadingSheetService.LSForm.value.DestinationList,
-      docketNoList:this.loadingSheetService.LSForm.value.DocketNoList,
-      lsDate: new Date(this.loadingSheetService.LSForm.value.LsDate)?.toISOString(),
-      loadingBy: this.loadingSheetService.LSForm.value.LoadingBy,
-      rateType: this.loadingSheetService.LSForm.value.RateType,
+      destinationList: this.loadingSheetService.LSForm.value.destinationList,
+      docketNoList:this.loadingSheetService.LSForm.value.docketNoList,
+      lsDate: new Date(this.loadingSheetService.LSForm.value.lsDate)?.toISOString(),
+      loadingBy: this.loadingSheetService.LSForm.value.loadingBy,
+      rateType: this.loadingSheetService.LSForm.value.rateType,
       baseCompanyCode:this.docketService.loginUserList.Companycode
     }
     this.loadingSheetApiService.getDocketListForMF(payload).subscribe({
