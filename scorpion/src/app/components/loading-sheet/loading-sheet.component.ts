@@ -45,7 +45,7 @@ ngOnInit(){
    const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
-      this.docketService.loginUserList.LocationCode =  'PIM';
+      this.docketService.loginUserList.LocationCode =  'ABH';
       this.docketService.loginUserList.Type = 'LS';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
@@ -191,6 +191,30 @@ formatDateNoTimezone(date: Date) {
       }
     });
   }
+
+  totalSelected:any
+toggleSelectAll(event: any) {
+  const checked = event.target.checked;
+  const formArray = this.loadingSheetService.docketFormArray;
+
+  formArray.controls.forEach((group: any) => {
+    if (!group.value.message) { // message wali row par checkbox nathi
+      group.get('isChecked')?.setValue(checked, { emitEvent: false });
+    }
+  });
+
+  this.updateSelectedCount();
+}
+
+updateSelectedCount() {
+  const formArray = this.loadingSheetService.docketFormArray;
+
+  this.totalSelected = formArray.controls.filter(
+    (g: any) => g.value.isChecked
+  ).length;
+
+  console.log("Total selected =", this.totalSelected);
+}
 
  
 }
