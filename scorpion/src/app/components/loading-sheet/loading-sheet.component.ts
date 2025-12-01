@@ -51,7 +51,7 @@ ngOnInit(){
    const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
-      this.docketService.loginUserList.LocationCode =  'PIM';
+      this.docketService.loginUserList.LocationCode =  'ABH';
       this.docketService.loginUserList.Type = 'LS';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
@@ -228,8 +228,37 @@ updateSelectedCount() {
     return sum + (Number(row.value.WeightsLB) || 0);
   }, 0);
 
+    selected.forEach((row: any) => {
+    this.loadingSheetService.loadingRateCalc(row);
+  });
+  
+  this.loadingSheetService.calculateTotal()
+}
+
+  onPackageBlur(row: any) {
+  const packageLB = Number(row.get('PackageLB')?.value);
+  const max = Number(row.value.packagesLB);
+
+  if (packageLB > max) {
+    row.get('PackageLB')?.setErrors({ maxLimit: true });
+  } else {
+    row.get('PackageLB')?.setErrors(null);
+    this.updateSelectedCount();
+  }
+}
+
+onWeightBlur(row: any) {
+  const weightLB = Number(row.get('WeightsLB')?.value);
+  const max = Number(row.value.weightLB);
+
+  if (weightLB > max) {
+    row.get('WeightsLB')?.setErrors({ maxLimit: true });
+  } else {
+    row.get('WeightsLB')?.setErrors(null);
+    this.updateSelectedCount();
+  }
 }
 
 
- 
+
 }

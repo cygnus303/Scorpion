@@ -26,6 +26,7 @@ export class LoadingSheetService {
       rateType:new FormControl(null),
       mF_TransportMode:new FormControl('S',[Validators.required]),
       rdVehicle:new FormControl('Own'),
+      loadedRateType:new FormControl('1'),
       sealNo:new FormControl(''),
       vehno:new FormControl(null),
       preparedBy:new FormControl(''),
@@ -53,15 +54,22 @@ export class LoadingSheetService {
 
   setDocketList(list: any[]) {
   const fa = this.LSForm.get('docketList') as FormArray;
-  fa.clear(); // Old data remove
+  fa.clear();
+
   list.forEach(item => {
-    fa.push(new FormGroup({
+
+    const group = new FormGroup({
+      id:new FormControl(item.id),
+       docketNo:new FormControl(item.docketNo),
        dockno:new FormControl(item.dockno),
        docksf:new FormControl(item.docksf),
+       manual_dockno:new FormControl(item.manual_dockno),
        pkgsno:new FormControl(item.pkgsno),
        actuwt:new FormControl(item.actuwt),
+       transMode:new FormControl(item.transMode),
        docketDate:new FormControl(item.docketDate),
        orgCode:new FormControl(item.orgCode),
+       commited_DelyDate:new FormControl(item.commited_DelyDate),
        packagesLB:new FormControl(item.packagesLB),
        weightLB:new FormControl(item.weightLB),
        reDestCode:new FormControl(item.reDestCode),
@@ -69,11 +77,26 @@ export class LoadingSheetService {
        WeightsLB:new FormControl(item.weightLB),
        fromTo:new FormControl(item.fromTo),
        isChecked:new FormControl(item.isChecked),
+       handlingCharge:new FormControl(item.handlingCharge),
+       isCP:new FormControl(item.isCP),
+       rate:new FormControl(item.rate),
+       maxLimit:new FormControl(item.maxLimit),
+       isMonthly:new FormControl(item.isMonthly),
        newRate:new FormControl(item.newRate),
        ratetype:new FormControl(item.ratetype),
+       cnt:new FormControl(item.cnt),
+       eWayBillNo:new FormControl(item.eWayBillNo),
        message:new FormControl(item.message),
        errorMassage:new FormControl(item.errorMassage),
-    }));
+       isRemoved:new FormControl(item.isRemoved),
+       pickup_Dely:new FormControl(item.pickup_Dely),
+       charge: new FormControl(0),
+       rateError:new FormControl('')
+    });
+
+    group.get('newRate')?.valueChanges.subscribe(() => this.loadingRateCalc(group));
+    group.get('ratetype')?.valueChanges.subscribe(() => this.loadingRateCalc(group));
+    fa.push(group);
   });
 }
 
@@ -81,6 +104,69 @@ get docketFormArray() {
   return this.LSForm.get('docketList') as FormArray;
 }
 
+loadingRateCalc(group: any) {
+
+  const isChecked = group.get('isChecked')?.value;
+
+  if (!isChecked) {
+    group.get('rateError')?.setValue("");
+    group.get('charge')?.setValue(0);
+    return;
+  }
+
+  const rateType = group.get('ratetype')?.value;
+  const newRate = Number(group.get('newRate')?.value || 0);
+  const weightLB = Number(group.get('actuwt')?.value || 0);
+  const packagesLB = Number(group.get('packagesLB')?.value || 0);
+
+  let charge = 0;
+
+  if (rateType === "1" || rateType === "2") {
+    charge = weightLB;
+  } else if (rateType === "3") {
+    charge = packagesLB;
+  } else if (rateType === "4") {
+    charge = 1;
+  }
+
+  // Max limit check
+  if (this.LSForm.value.loadingBy !== "XX9") {
+    let maxLimitCalculation = 0;
+
+    if (rateType === "4") {
+      maxLimitCalculation = newRate / weightLB;
+    } else if (rateType === "3") {
+      maxLimitCalculation = (newRate * packagesLB) / weightLB;
+    } else {
+      maxLimitCalculation = newRate;
+    }
+
+    // if (maxLimitCalculation > 5.0) {
+    //   group.get('rateError')?.setValue("Rate Amount Is High Please Check");
+    //   group.get('newRate')?.setValue("0.00");
+    //   group.get('charge')?.setValue(0);
+    //   return;
+    // }
+  }
+
+  group.get('rateError')?.setValue("");
+  group.get('charge')?.setValue(charge * newRate);
+
+  this.calculateTotal();
+}
+
+calculateTotal() {
+  let total = 0;
+
+  this.docketFormArray.controls.forEach((g: any) => {
+    if (g.get('isChecked')?.value) {
+      total += Number(g.get('charge')?.value || 0);
+    }
+  });
+
+  this.LSForm.get('loadingCharge')
+    ?.setValue(total.toFixed(2));
+}
 
   formatDate(date: Date): string {
   const day = date.getDate();

@@ -204,7 +204,7 @@
           <div class="row align-items-center">
             <label class="col-sm-5 col-form-label text-end">Transport Mode</label>
             <div class="col-sm-7">
-              <ng-select class="noFoundTextColor clear-icon" placeholder="Select Transport Mode"
+              <ng-select class="noFoundTextColor" placeholder="Select Transport Mode"
                 formControlName="transportMode" notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
                 [items]="generalMasterService.modeData"></ng-select>
             </div>
@@ -369,7 +369,7 @@
               <th class="p-3 fw-bolder">Comm. Dely Date</th>
               <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === 'LS'">
                 Rate
-                <ng-select class="required2" bindLabel="codeDesc" bindValue="codeId"  [items]="generalMasterService.chargeTypeData"></ng-select>
+                <ng-select class="required2 clear-icon" bindLabel="codeDesc" bindValue="codeId"  formControlName="loadedRateType" [items]="generalMasterService.chargeTypeData"></ng-select>
               </th>
               <th class="p-3 fw-bolder">Pkgs.[L/B]</th>
               <th class="p-3 fw-bolder">Wt.[L/B]</th>
@@ -405,33 +405,36 @@
             <td>{{ row.value.commited_DelyDate }}</td>
         
             <td *ngIf="docketService.loginUserList.Type === 'LS'">
-              <ng-select formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"  [items]="generalMasterService.chargeTypeData"></ng-select>
+              <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"  [items]="generalMasterService.chargeTypeData"></ng-select>
               <input type="text" class="form-control" formControlName="newRate">
             </td>
         
             <td>
               <div class="d-flex align-items-center">
-                <input type="text" class="form-control w-50 text-end me-2" formControlName="PackageLB" [readOnly]="!isAllSelected">
+                <input type="text" class="form-control w-50 text-end me-2" formControlName="PackageLB" [readOnly]="!isAllSelected" (blur)="onPackageBlur(row)">
                 <span class="text-primary ms-3">
                   / {{ row.value.packagesLB }} / {{ row.value.pkgsno | number:'1.2-2' }}
                 </span>
               </div>
+              <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('PackageLB')?.errors?.['maxLimit']">
+              Please enter a value {{ row.value.packagesLB }}.
+            </span>
             </td>
         
             <td>
               <div class="d-flex align-items-center">
-                <input type="text" class="form-control w-50 text-end me-2" formControlName="WeightsLB" [readOnly]="!isAllSelected">
+                <input type="text" class="form-control w-50 text-end me-2" formControlName="WeightsLB" [readOnly]="!isAllSelected" (blur)="onWeightBlur(row)">
                 <span class="text-primary ms-3">
                   / {{ row.value.weightLB }} / {{ row.value.actuwt | number:'1.2-2' }}
                 </span>
               </div>
+              <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('WeightsLB')?.errors?.['maxLimit']">
+               Please enter a value less than or equal to {{ row.value.weightLB }}.
+             </span>
             </td>
-        
             <td>{{row.value.eWayBillNo}}</td>
-        
           </tr>
         </tbody>
-
         </table>
       </div>
     </div>
