@@ -54,7 +54,7 @@ ngOnInit(){
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.loginUserList.LocationCode =  'ABH';
       this.docketService.loginUserList.Type = 'ULS';
-      this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007068';
+      this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007062';
        this.docketService.loginUserList.IsBCProcess = 'N';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
@@ -285,7 +285,7 @@ updateSelectedCount() {
     selected.forEach((row: any) => {
     this.loadingSheetService.loadingRateCalc(row);
   });
-  
+
   this.loadingSheetService.calculateTotal()
 }
 
@@ -313,6 +313,18 @@ onWeightBlur(row: any) {
   }
 }
 
+get isSubmitDisabled(): boolean {
+  const type = this.docketService.loginUserList.Type;
+
+  if (type === 'ULS') {
+    const selected = this.loadingSheetService.docketFormArray.controls
+      .filter((g: any) => g.value.isChecked);
+
+    return selected.length === 0;
+  }
+
+  return false; 
+}
 
 
 }
