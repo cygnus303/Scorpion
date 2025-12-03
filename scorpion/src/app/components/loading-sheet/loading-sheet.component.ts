@@ -33,6 +33,7 @@ export class LoadingSheetComponent {
   public totalDocketSelected!:number;
   public totalPkgs: number = 0;
   public totalActWt: number = 0;
+  public isLoadingSheet:boolean = false;
 
 
   public LsTypeList = [{text: "LTL", value: "LTL" },{ text: "FTL",value: "FTL"}];
@@ -53,7 +54,7 @@ ngOnInit(){
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.loginUserList.LocationCode =  'ABH';
       this.docketService.loginUserList.Type = 'LS';
-      this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007080';
+      this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007086';
        this.docketService.loginUserList.IsBCProcess = 'N';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
@@ -136,9 +137,11 @@ ngOnInit(){
      isBCProcess:this.docketService.loginUserList.IsBCProcess,
      BaseUserName:this.docketService.loginUserList.LocationCode,
     }
+    this.isLoadingSheet = true;
     this.loadingSheetApiService.getLoadingSheet(payload).subscribe({
       next: (response:any) => {
-        if (response) {
+        if (response) { 
+          this.isLoadingSheet = false;
            this.loadingSheetService.LSForm.patchValue({
              lsType:response.lsType,
              NEXTLOC:response.nextloc,
@@ -228,6 +231,7 @@ formatDateNoTimezone(date: Date) {
 }
 
   getDocketListForMFDetail(){
+    this.isLoadingSheet = true;
     const payload={
       baseLocationCode: this.docketService.loginUserList.LocationCode,
       nextStopLocation: this.loadingSheetService.LSForm.value.nextStopLocation,
@@ -243,7 +247,7 @@ formatDateNoTimezone(date: Date) {
     }
     this.loadingSheetApiService.getDocketListForMF(payload).subscribe({
       next: (response) => {
-        console.log(response);
+        this.isLoadingSheet = false;
         if(response && Array.isArray(response)){
         this.loadingSheetService.setDocketList(response);
         }
