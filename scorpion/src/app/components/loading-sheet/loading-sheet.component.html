@@ -433,7 +433,8 @@
         
             <td>
               <div class="d-flex align-items-center">
-                <input type="text" class="form-control w-50 text-end me-2" formControlName="PackageLB" [readOnly]="!isAllSelected && this.docketService.loginUserList.Type==='LS'" (blur)="onPackageBlur(row)" appFocusNext>
+                <input type="text" class="form-control w-50 text-end me-2" formControlName="PackageLB" [readOnly]="!isAllSelected && this.docketService.loginUserList.Type==='LS'" 
+                (blur)="onPackageBlur(row)" (input)="onPackageInput(row)" appFocusNext>
                 <span class="text-primary ms-3">
                   / {{ row.value.packagesLB }} / {{ row.value.pkgsno | number:'1.2-2' }}
                 </span>
@@ -446,7 +447,8 @@
         
             <td>
               <div class="d-flex align-items-center">
-                <input type="text" class="form-control w-50 text-end me-2" formControlName="WeightsLB" [readOnly]="!isAllSelected || this.docketService.loginUserList.Type!=='LS'" (blur)="onWeightBlur(row)" appFocusNext>
+                <input type="text" class="form-control w-50 text-end me-2" formControlName="WeightsLB" [readOnly]="!isAllSelected || this.docketService.loginUserList.Type!=='LS'" 
+                (blur)="onWeightBlur(row)"  (input)="onWeightInput(row)" appFocusNext>
                 <span class="text-primary ms-3">
                   / {{ row.value.weightLB }} / {{ row.value.actuwt | number:'1.2-2' }}
                 </span>
