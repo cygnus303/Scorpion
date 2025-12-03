@@ -97,7 +97,8 @@ export class LoadingSheetService {
        pickup_Dely:new FormControl(item.pickup_Dely || ''),
        charge: new FormControl(0 || ''),
        rateError:new FormControl(''),
-       PackagesLB_old:new FormControl(item.packagesLB || '')
+       PackagesLB_old:new FormControl(item.packagesLB || ''),
+       WeightLB_old:new FormControl(item.weightLB || ''),
     });
 
     group.get('newRate')?.valueChanges.subscribe(() => this.loadingRateCalc(group));

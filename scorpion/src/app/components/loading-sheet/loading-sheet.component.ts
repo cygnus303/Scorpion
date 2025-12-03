@@ -52,10 +52,10 @@ ngOnInit(){
    const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
-      // this.docketService.loginUserList.LocationCode =  'ABH';
-      // this.docketService.loginUserList.Type = 'ULS';
-      // this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007082';
-      //  this.docketService.loginUserList.IsBCProcess = 'N';
+      this.docketService.loginUserList.LocationCode =  'ABH';
+      this.docketService.loginUserList.Type = 'LS';
+      this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007082';
+       this.docketService.loginUserList.IsBCProcess = 'N';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
@@ -306,7 +306,7 @@ onPackagesFocusOut(row: any) {
 
   const enteredPackages = Number(row.get('PackageLB')?.value || 0);
   const originalPackages = Number(row.get('PackagesLB_old')?.value || 0);
-  const originalWeight = Number(row.get('WeightsLB')?.value || 0);
+  const originalWeight = Number(row.get('WeightLB_old')?.value || 0);
 
   const weightCtrl = row.get('WeightsLB');
 

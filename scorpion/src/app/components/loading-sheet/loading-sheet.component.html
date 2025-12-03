@@ -41,9 +41,9 @@
             <div class="col-sm-7">
               <ng-select class="noFoundTextColor required2" placeholder="Select Loading By" formControlName="loadingBy"
                 notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
-                [items]="generalMasterService.loadingData" (change)="getvendoCodeData($event)"
+                [items]="generalMasterService.loadingData" (change)="getvendoCodeData($event)" appFocusNext
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('loadingBy')?.invalid  && loadingSheetService.LSForm.get('loadingBy')?.touched }"></ng-select>
-              <div class="text-danger text-start"
+              <div class="text-danger text-start" 
                 *ngIf="loadingSheetService.LSForm.get('loadingBy')?.invalid && loadingSheetService.LSForm.get('loadingBy')?.touched">
                 This field is required.
               </div>
@@ -54,7 +54,7 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end"> Next Stop Location</label>
             <div class="col-sm-7">
-              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Next Stop Location" formControlName="nextStopLocation"
+              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Next Stop Location" formControlName="nextStopLocation" appFocusNext
                 notFoundText="No matches found" [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('nextStopLocation')?.invalid  && loadingSheetService.LSForm.get('nextStopLocation')?.touched }"
                 (search)="getLocationDetail($event)" [notFoundText]="nextLocationValue" (open)="resetNextLocationDropdown()" [readonly]="isgetLoadingList">
                 <ng-option *ngFor="let item of locationData" [value]="item.id">
@@ -74,7 +74,7 @@
             <div class="col-sm-7">
               <ng-select class="noFoundTextColor required2" placeholder="Select Charge type"  formControlName="rateType"
                 notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
-                [items]="generalMasterService.chargeTypeData"
+                [items]="generalMasterService.chargeTypeData" appFocusNext
                 [readonly]="!loadingSheetService.LSForm.value.loadingBy || loadingSheetService.LSForm.value.loadingBy === 'XX9'"
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('rateType')?.invalid  && loadingSheetService.LSForm.get('rateType')?.touched }"></ng-select>
               <div class="text-danger text-start"
@@ -92,7 +92,7 @@
             <div class="col-sm-7">
               <ng-select class="noFoundTextColor required2" placeholder="Select LS Transport Mode"
                 formControlName="mF_TransportMode" notFoundText="No matches found" bindLabel="codeDesc"
-                bindValue="codeId" [items]="generalMasterService.LsTransportModeData"
+                bindValue="codeId" [items]="generalMasterService.LsTransportModeData" appFocusNext
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('mF_TransportMode')?.invalid  && loadingSheetService.LSForm.get('mF_TransportMode')?.touched }"></ng-select>
               <div class="text-danger text-start"
                 *ngIf="loadingSheetService.LSForm.get('mF_TransportMode')?.invalid && loadingSheetService.LSForm.get('mF_TransportMode')?.touched">
@@ -106,11 +106,11 @@
             <label class="col-sm-5 col-form-label text-end"> Select Vehicle</label>
             <div class="col-sm-7 d-flex align-items-center">
               <div class="d-flex align-items-center">
-                <input type="radio" class="me-3" name="rdVehicle" value="Own" formControlName="rdVehicle">
+                <input type="radio" class="me-3" name="rdVehicle" value="Own" formControlName="rdVehicle" appFocusNext>
                 <label>Own</label>
               </div>
               <div class="ms-5 d-flex align-items-center">
-                <input type="radio" class="me-3" name="rdVehicle" value="Market" formControlName="rdVehicle">
+                <input type="radio" class="me-3" name="rdVehicle" value="Market" formControlName="rdVehicle" appFocusNext>
                 <label>Market</label>
               </div>
             </div>
@@ -120,7 +120,7 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end"> Seal No</label>
             <div class="col-sm-7">
-              <input class="form-control" formControlName="sealNo" placeholder="Seal No" [readOnly]="isgetLoadingList">
+              <input class="form-control" formControlName="sealNo" placeholder="Seal No" [readOnly]="isgetLoadingList" appFocusNext>
             </div>
           </div>
         </div>
@@ -131,7 +131,7 @@
             <label class="col-sm-5 col-form-label text-end">Vehicle No</label>
             <div class="col-sm-7" *ngIf="loadingSheetService.LSForm.value.rdVehicle==='Own'">
               <ng-select class="noFoundTextColor clear-icon" placeholder="Select Vehicle No" formControlName="vehno"
-                (search)="getVehicleNumberDetail($event)" [notFoundText]="noVehicleValue"
+                (search)="getVehicleNumberDetail($event)" [notFoundText]="noVehicleValue" appFocusNext
                 [readonly]="!loadingSheetService.LSForm.value.loadingBy || isgetLoadingList "
                 (open)="resetvehicleNoDropdown()">
                 <ng-option *ngFor="let item of vehicleNumberData" [value]="item.vehno">
@@ -149,7 +149,7 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end"> Prepared By</label>
             <div class="col-sm-7">
-              <input class="form-control" formControlName="preparedBy" placeholder="Prepared By"
+              <input class="form-control" formControlName="preparedBy" placeholder="Prepared By" appFocusNext
                 [readOnly]="isgetLoadingList">
             </div>
           </div>
@@ -158,7 +158,7 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end"> UserName</label>
             <div class="col-sm-7">
-              <input class="form-control" formControlName="UserName" placeholder="UserName" readonly>
+              <input class="form-control" formControlName="UserName" placeholder="UserName" readonly appFocusNext>
             </div>
           </div>
         </div>
@@ -169,7 +169,7 @@
             <label class="col-sm-5 col-form-label text-end">LS Type</label>
             <div class="col-sm-7">
               <ng-select class="noFoundTextColor clear-icon" placeholder="Select LS Type"
-                formControlName="lsType" notFoundText="No matches found" bindLabel="text" bindValue="value"
+                formControlName="lsType" notFoundText="No matches found" bindLabel="text" bindValue="value" appFocusNext
                 [items]="LsTypeList"></ng-select>
             </div>
           </div>
@@ -193,7 +193,7 @@
             <div class="col-sm-7" (click)="!isgetLoadingList && dvr.toggle()">
               <input type="text" placeholder="Daterangepicker"
                 class="form-control border-start-1 text-center line-height" bsDaterangepicker #dvr="bsDaterangepicker"
-                formControlName="reportrange" [class.disabled-input]="true"
+                formControlName="reportrange" [class.disabled-input]="true" appFocusNext
                 [bsConfig]="{ ranges: commonService.ranges, rangeInputFormat: 'MMMM D, YYYY', dateInputFormat: 'MMMM D, YYYY'}" />
             </div>
           </div>
@@ -204,7 +204,7 @@
           <div class="row align-items-center">
             <label class="col-sm-5 col-form-label text-end">Transport Mode</label>
             <div class="col-sm-7">
-              <ng-select class="noFoundTextColor" placeholder="Select Transport Mode"
+              <ng-select class="noFoundTextColor" placeholder="Select Transport Mode" appFocusNext
                 formControlName="transportMode" notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
                 [items]="generalMasterService.modeData"></ng-select>
             </div>
@@ -216,7 +216,7 @@
           <div class="row align-items-center">
             <label class="col-sm-5 col-form-label text-end">Destination</label>
             <div class="col-sm-7">
-              <input class="form-control" formControlName="destinationList" placeholder="Destination">
+              <input class="form-control" formControlName="destinationList" placeholder="Destination" appFocusNext>
             </div>
           </div>
         </div>
@@ -229,7 +229,7 @@
           <div class="row align-items-center">
             <label class="col-sm-5 col-form-label text-end">Docket No.</label>
             <div class="col-sm-7">
-              <input class="form-control" formControlName="docketNoList" placeholder="Docket No.">
+              <input class="form-control" formControlName="docketNoList" placeholder="Docket No." appFocusNext>
             </div>
           </div>
         </div>
@@ -263,7 +263,7 @@
             <label class="col-sm-5 col-form-label text-end">Vendor Code </label>
             <div class="col-sm-7">
               <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Vendor Name"
-                formControlName="vendorCode" notFoundText="No matches found"
+                formControlName="vendorCode" notFoundText="No matches found" appFocusNext
                 [items]="challanService.branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('vendorCode')?.invalid  && loadingSheetService.LSForm.get('vendorCode')?.touched }"></ng-select>
                  <div class="text-danger text-start"
@@ -280,7 +280,7 @@
             <label class="col-sm-5 col-form-label text-end">Loading Charge </label>
             <div class="col-sm-7">
               <input class="form-control required2" placeholder="Loading Charge" type="text"
-                formControlName="loadingCharge" readonly
+                formControlName="loadingCharge" readonly appFocusNext
                  [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('loadingCharge')?.invalid  && loadingSheetService.LSForm.get('loadingCharge')?.touched }">
                 <div class="text-danger text-start"
                   *ngIf="loadingSheetService.LSForm.get('loadingCharge')?.invalid && loadingSheetService.LSForm.get('loadingCharge')?.touched">
@@ -312,7 +312,7 @@
              <ng-select class="noFoundTextColor required2" placeholder="Select Loading By" formControlName="loadingByUser"
                 notFoundText="No matches found" bindLabel="name" bindValue="userId" [items]="unLoaderUserList"
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('loadingByUser')?.invalid  && loadingSheetService.LSForm.get('loadingByUser')?.touched }"></ng-select>
-                <div class="text-danger text-start"
+                <div class="text-danger text-start" appFocusNext
                 *ngIf="loadingSheetService.LSForm.get('loadingByUser')?.invalid && loadingSheetService.LSForm.get('loadingByUser')?.touched">
                 This field is required.
               </div>
@@ -324,7 +324,7 @@
           <label class="col-sm-5 col-form-label text-end">Loading Supervisor</label>
           <div class="col-sm-7">
              <ng-select class="noFoundTextColor required2" placeholder="Loading Supervisor" formControlName="LoadingSupervisor"
-                notFoundText="No matches found" bindLabel="name" bindValue="userId" [items]="unLoaderUserList"
+                notFoundText="No matches found" bindLabel="name" bindValue="userId" [items]="unLoaderUserList" appFocusNext
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('LoadingSupervisor')?.invalid  && loadingSheetService.LSForm.get('LoadingSupervisor')?.touched }"></ng-select>
                 <div class="text-danger text-start"
                 *ngIf="loadingSheetService.LSForm.get('LoadingSupervisor')?.invalid && loadingSheetService.LSForm.get('LoadingSupervisor')?.touched">
@@ -379,7 +379,7 @@
         <table class="table table-bordered table-hover table-condensed flip-content mb-0">
           <thead class="sticky-top bg-light">
             <tr>
-              <th class="p-3 fw-bolder"><input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox" (change)="toggleSelectAll($event)"
+              <th class="p-3 fw-bolder"><input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox" (change)="toggleSelectAll($event)" appFocusNext
                   style="cursor: pointer;"></th>
               <th class="p-3 fw-bolder">Cnote No.</th>
               <th class="p-3 fw-bolder">Manual Cnote No.</th>
@@ -391,7 +391,7 @@
               <th class="p-3 fw-bolder">Comm. Dely Date</th>
               <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === 'LS'">
                 Rate
-                <ng-select class="required2 clear-icon" bindLabel="codeDesc" bindValue="codeId"  formControlName="loadedRateType" [items]="generalMasterService.chargeTypeData"></ng-select>
+                <ng-select class="required2 clear-icon" bindLabel="codeDesc" bindValue="codeId"  formControlName="loadedRateType" [items]="generalMasterService.chargeTypeData" appFocusNext></ng-select>
               </th>
               <th class="p-3 fw-bolder">Pkgs.[L/B]</th>
               <th class="p-3 fw-bolder">Wt.[L/B]</th>
@@ -413,7 +413,7 @@
           
             <ng-template #showCheckbox>
               <input type="checkbox" formControlName="isChecked" class="form-check-input checkbox-lg custom-big-checkbox"
-                (change)="updateSelectedCount()" style="cursor: pointer;" />
+                (change)="updateSelectedCount()" style="cursor: pointer;" appFocusNext/>
             </ng-template>
           </td>
             <td>{{ row.value.dockno }}</td>
@@ -427,13 +427,13 @@
             <td>{{ row.value.commited_DelyDate }}</td>
         
             <td *ngIf="docketService.loginUserList.Type === 'LS'">
-              <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"  [items]="generalMasterService.chargeTypeData"></ng-select>
+              <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"  [items]="generalMasterService.chargeTypeData" appFocusNext></ng-select>
               <input type="text" class="form-control" formControlName="newRate">
             </td>
         
             <td>
               <div class="d-flex align-items-center">
-                <input type="text" class="form-control w-50 text-end me-2" formControlName="PackageLB" [readOnly]="!isAllSelected && this.docketService.loginUserList.Type==='LS'" (blur)="onPackageBlur(row)">
+                <input type="text" class="form-control w-50 text-end me-2" formControlName="PackageLB" [readOnly]="!isAllSelected && this.docketService.loginUserList.Type==='LS'" (blur)="onPackageBlur(row)" appFocusNext>
                 <span class="text-primary ms-3">
                   / {{ row.value.packagesLB }} / {{ row.value.pkgsno | number:'1.2-2' }}
                 </span>
@@ -446,7 +446,7 @@
         
             <td>
               <div class="d-flex align-items-center">
-                <input type="text" class="form-control w-50 text-end me-2" formControlName="WeightsLB" [readOnly]="!isAllSelected || this.docketService.loginUserList.Type!=='LS'" (blur)="onWeightBlur(row)">
+                <input type="text" class="form-control w-50 text-end me-2" formControlName="WeightsLB" [readOnly]="!isAllSelected || this.docketService.loginUserList.Type!=='LS'" (blur)="onWeightBlur(row)" appFocusNext>
                 <span class="text-primary ms-3">
                   / {{ row.value.weightLB }} / {{ row.value.actuwt | number:'1.2-2' }}
                 </span>
@@ -454,6 +454,7 @@
               <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('WeightsLB')?.errors?.['maxLimit']">
                Please enter a value less than or equal to {{ row.value.weightLB }}.
              </span>
+              <input type="hidden" formControlName="WeightLB_old" />
             </td>
             <td>{{row.value.eWayBillNo}}</td>
           </tr>
