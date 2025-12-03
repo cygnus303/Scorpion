@@ -355,7 +355,7 @@
   </div>
   }
 
-  <div class="cnote-entry-container mt-5">
+  <div class="cnote-entry-container">
     <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
       <i class="fas fa-list me-2"></i>
       {{this.docketService.loginUserList.Type === 'ULS' ? 'Update Loading Sheet & Prepare Manifest' : 'List Loading Sheet'}}
@@ -468,7 +468,14 @@
   <button class="btn btn-success" *ngIf="!isgetLoadingList" (click)="getLoadinglist()">
     <i class="fas fa-check"></i> Get LoadingSheet List
   </button>
-  <button class="btn btn-success" *ngIf="isgetLoadingList" (click)="loadingSheetService.prepareLoadingSheet()" [disabled]="isSubmitDisabled">
+  <button class="btn btn-success" *ngIf="isgetLoadingList" (click)="loadingSheetService.prepareLoadingSheet()" [disabled]="isSubmitDisabled || challanService.isRedirect">
     <i class="fas fa-check"></i> {{this.docketService.loginUserList.Type === 'ULS' ? 'Prepare Manifest' : 'Prepare Loading Sheet'}}  
   </button>
+</div>
+
+ <div *ngIf="challanService.isSubmitting" class="loading-spinner-overlay">
+  <div class="spinner-container">
+    <i class="fas fa-spinner fa-spin custom-spinner"></i>
+    <div class="mt-3 custom-text">Submitting...</div>
+  </div>
 </div>

@@ -52,10 +52,10 @@ ngOnInit(){
    const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
-      this.docketService.loginUserList.LocationCode =  'ABH';
-      this.docketService.loginUserList.Type = 'LS';
-      this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007080';
-       this.docketService.loginUserList.IsBCProcess = 'N';
+      // this.docketService.loginUserList.LocationCode =  'ABH';
+      // this.docketService.loginUserList.Type = 'ULS';
+      // this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007082';
+      //  this.docketService.loginUserList.IsBCProcess = 'N';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
@@ -316,7 +316,7 @@ onWeightBlur(row: any) {
 get isSubmitDisabled(): boolean {
   const type = this.docketService.loginUserList.Type;
 
-  if (type === 'ULS') {
+  if (type === 'ULS' || type === 'LS') {
     const selected = this.loadingSheetService.docketFormArray.controls
       .filter((g: any) => g.value.isChecked);
 

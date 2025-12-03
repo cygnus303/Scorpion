@@ -10,6 +10,8 @@ import { environment } from 'environments/environment';
 })
 export class LoadingSheetService {
  public LSForm!:FormGroup;
+ public isSubmitting:boolean = false;
+ public isRedirect:boolean = false;
   env = environment;
   constructor(public docketService:DocketService,public loadingSheetApiService: LoadingSheetApiService, public sweetAlertService:SweetAlertService) { }
 
@@ -180,6 +182,7 @@ calculateTotal() {
 
   prepareLoadingSheet() {
     if (this.LSForm.valid) {
+       this.isSubmitting = true;
       const { reportrange, docketList, ...formValuesWithoutRange } = this.LSForm.value;
       const selected = (this.docketFormArray?.controls ?? []).filter(ctrl => ctrl.get('isChecked')?.value).map(ctrl => (ctrl as FormGroup).getRawValue());
       const payload = {
@@ -215,13 +218,17 @@ calculateTotal() {
       this.loadingSheetApiService.prepareLoadingSheet(payload).subscribe({
         next: (response: any) => {
           if (response.success) {
+             this.isRedirect = true;
             window.parent.location.href = `${this.env.liveUrl}Operation/LoadingSheetResult?Code=${response.code}&HCNumber=${response.hcNumber}&Type=${response.type}&src=angular`;
+            this.isSubmitting=false;
           }
         }
       });
     }else{
       window.scrollTo({ top: 0, behavior: 'smooth' });
       this.LSForm.markAllAsTouched();
+       this.isSubmitting=false;
+       this.isRedirect = false;
     }
   }
 }
