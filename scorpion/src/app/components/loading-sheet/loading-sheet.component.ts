@@ -30,11 +30,9 @@ export class LoadingSheetComponent {
   public locationData: LocationResponse[] = [];
   public vehicleNumberData: VehicleNumbersResponse[] = [];
   public unLoaderUserList: UnLoaderUserListResponse[] = [];
-  public LoadingSheetList:any;
   public totalDocketSelected!:number;
   public totalPkgs: number = 0;
   public totalActWt: number = 0;
-  public isAllSelected:boolean=false;
 
 
   public LsTypeList = [{text: "LTL", value: "LTL" },{ text: "FTL",value: "FTL"}];
@@ -54,8 +52,8 @@ ngOnInit(){
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.loginUserList.LocationCode =  'ABH';
-      this.docketService.loginUserList.Type = 'LS';
-      this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007082';
+      this.docketService.loginUserList.Type = 'ULS';
+      this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007080';
        this.docketService.loginUserList.IsBCProcess = 'N';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
@@ -255,7 +253,6 @@ formatDateNoTimezone(date: Date) {
 
 toggleSelectAll(event: any) {
   const checked = event.target.checked;
-  this.isAllSelected = checked;
   const formArray = this.loadingSheetService.docketFormArray;
 
   formArray.controls.forEach((group: any) => {
@@ -296,7 +293,9 @@ updateSelectedCount() {
 
   if (packageLB > max) {
     row.get('PackageLB')?.setErrors({ maxLimit: true });
-  } else {
+  } else if(packageLB < 1){
+    row.get('PackageLB')?.setErrors({ minLimit: true });
+  }else {
     row.get('PackageLB')?.setErrors(null);
     this.onPackagesFocusOut(row);
     this.updateSelectedCount();
@@ -314,55 +313,11 @@ onPackagesFocusOut(row: any) {
   row.get('WeightsLB')?.setValue(finalWeight);
 
   row.get('WeightsLB')?.setValue(finalWeight);
+  row.get('autoPatchWeight')?.setValue(finalWeight);
   row.get('WeightEdited')?.setValue(false);
 
 
 }
-
-
-onPackageInput(row: any) {
-  row.get('PackageEdited')?.setValue(true);
-}
-
-
-onWeightBlur(row: any) {
-  const weight = Number(row.get('WeightsLB')?.value);
-  const max = Number(row.value.weightLB); // original weight
-
-  const pkgEdited = row.get('PackageEdited')?.value;
-  const weightEdited = row.get('WeightEdited')?.value;
-
-  if (!pkgEdited) {
-    if (weight > max) {
-      row.get('WeightsLB')?.setErrors({ maxLimit: true });
-      return;
-    }
-  }
-
-  row.get('WeightsLB')?.setErrors(null);
-  if(pkgEdited && weightEdited){
-  this.weightLimitvalidation(row);
-  }
-  this.updateSelectedCount();
-}
-
-weightLimitvalidation(row:any){
-  const enteredPackages = Number(row.get('PackageLB')?.value || 0);
-  const originalPackages = Number(row.get('PackagesLB_old')?.value || 0);
-
-    if (enteredPackages < originalPackages) {
-    row.get('WeightsLB')?.setErrors({ oneLess: true });
-  } else if (enteredPackages === originalPackages) {
-    row.get('WeightsLB')?.setErrors({ lessLimit: true });
-
-  }
-}
-
-onWeightInput(row: any) {
-  row.get('WeightEdited')?.setValue(true);
-}
-
-
 
 get isSubmitDisabled(): boolean {
   const type = this.docketService.loginUserList.Type;
