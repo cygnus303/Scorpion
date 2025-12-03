@@ -13,12 +13,13 @@ import { GeneralMasterService } from 'app/shared/services/general-master.service
 import { LoadingSheetApiService } from 'app/shared/services/loading-sheet-api.service';
 import { LoadingSheetService } from 'app/shared/services/loading-sheet.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
+import { SharedModule } from 'app/shared/shared/shared.module';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-loading-sheet',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, NgSelectModule, BsDatepickerModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, NgSelectModule, BsDatepickerModule,SharedModule],
   templateUrl: './loading-sheet.component.html',
   styleUrls: ['./loading-sheet.component.scss']
 })
