@@ -427,14 +427,14 @@
             <td>{{ row.value.commited_DelyDate }}</td>
         
             <td *ngIf="docketService.loginUserList.Type === 'LS'">
-              <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"  [items]="generalMasterService.chargeTypeData" appFocusNext></ng-select>
-              <input type="text" class="form-control" formControlName="newRate">
+              <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"  [items]="generalMasterService.chargeTypeData" readonly  appFocusNext></ng-select>
+              <input type="text" class="form-control" formControlName="newRate" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
             </td>
         
             <td>
               <div class="d-flex align-items-center">
-                <input type="text" class="form-control w-50 text-end me-2" formControlName="PackageLB" [readOnly]="!isAllSelected && this.docketService.loginUserList.Type==='LS'" 
-                (blur)="onPackageBlur(row)" (input)="onPackageInput(row)" appFocusNext>
+                <input type="text" class="form-control w-50 text-end me-2" formControlName="PackageLB" [readOnly]="this.docketService.loginUserList.Type==='LS'" 
+                (input)="onPackageBlur(row)"  oninput="this.value = this.value.replace(/[^0-9]/g, '')" appFocusNext >
                 <span class="text-primary ms-3">
                   / {{ row.value.packagesLB }} / {{ row.value.pkgsno | number:'1.2-2' }}
                 </span>
@@ -442,27 +442,20 @@
               <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('PackageLB')?.errors?.['maxLimit']">
               Please enter a value less than or equal to {{ row.value.packagesLB }}.
             </span>
+             <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('PackageLB')?.errors?.['minLimit']">
+              Please enter a value graeter than or equal to 1.
+            </span>
               <input type="hidden" formControlName="PackagesLB_old" />
             </td>
         
             <td>
               <div class="d-flex align-items-center">
-                <input type="text" class="form-control w-50 text-end me-2" formControlName="WeightsLB" [readOnly]="!isAllSelected || this.docketService.loginUserList.Type!=='LS'" 
-                (blur)="onWeightBlur(row)"  (input)="onWeightInput(row)" appFocusNext>
+                <input type="text" class="form-control w-50 text-end me-2" formControlName="WeightsLB" readonly
+                appFocusNext>
                 <span class="text-primary ms-3">
                   / {{ row.value.weightLB }} / {{ row.value.actuwt | number:'1.2-2' }}
                 </span>
               </div>
-              <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('WeightsLB')?.errors?.['maxLimit']">
-               Please enter a value less than or equal to {{ row.value.weightLB }}.
-             </span>
-             <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('WeightsLB')?.errors?.['oneLess']">
-               Please enter a value less than or equal to {{ row.value.weightLB - 1 }}.
-             </span>
-             <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('WeightsLB')?.errors?.['lessLimit']">
-               Please enter a value greater than or equal to {{ row.value.weightLB }}.
-             </span>
-              <input type="hidden" formControlName="WeightLB_old" />
             </td>
             <td>{{row.value.eWayBillNo}}</td>
           </tr>
