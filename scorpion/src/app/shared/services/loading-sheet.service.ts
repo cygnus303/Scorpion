@@ -96,7 +96,8 @@ export class LoadingSheetService {
        isRemoved:new FormControl(item.isRemoved || ''),
        pickup_Dely:new FormControl(item.pickup_Dely || ''),
        charge: new FormControl(0 || ''),
-       rateError:new FormControl('')
+       rateError:new FormControl(''),
+       PackagesLB_old:new FormControl(item.packagesLB || '')
     });
 
     group.get('newRate')?.valueChanges.subscribe(() => this.loadingRateCalc(group));

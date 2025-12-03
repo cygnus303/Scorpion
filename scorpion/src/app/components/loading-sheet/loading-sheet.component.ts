@@ -297,9 +297,40 @@ updateSelectedCount() {
     row.get('PackageLB')?.setErrors({ maxLimit: true });
   } else {
     row.get('PackageLB')?.setErrors(null);
+    this.onPackagesFocusOut(row);
     this.updateSelectedCount();
   }
 }
+
+onPackagesFocusOut(row: any) {
+
+  const enteredPackages = Number(row.get('PackageLB')?.value || 0);
+  const originalPackages = Number(row.get('PackagesLB_old')?.value || 0);
+  const originalWeight = Number(row.get('WeightsLB')?.value || 0);
+
+  const weightCtrl = row.get('WeightsLB');
+
+  if (enteredPackages < originalPackages) {
+    weightCtrl?.setValidators([
+      Validators.min(1),
+      Validators.max(originalWeight - 1)
+    ]);
+  } else if (enteredPackages === originalPackages) {
+    weightCtrl?.setValidators([
+      Validators.min(originalWeight),
+      Validators.max(originalWeight)
+    ]);
+  }
+
+   weightCtrl?.updateValueAndValidity();
+
+  const finalWeight = Math.round((originalWeight * enteredPackages) / originalPackages);
+
+  row.get('WeightsLB')?.setValue(finalWeight);
+
+  row.get('WeightsLB')?.setValue(finalWeight);
+}
+
 
 onWeightBlur(row: any) {
   const weightLB = Number(row.get('WeightsLB')?.value);
