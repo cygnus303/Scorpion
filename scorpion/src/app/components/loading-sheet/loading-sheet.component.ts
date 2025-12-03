@@ -311,15 +311,18 @@ onPackagesFocusOut(row: any) {
   const weightCtrl = row.get('WeightsLB');
 
   if (enteredPackages < originalPackages) {
-    weightCtrl?.setValidators([
-      Validators.min(1),
-      Validators.max(originalWeight - 1)
-    ]);
+    // weightCtrl?.setValidators([
+    //   Validators.min(1),
+    //   Validators.max(originalWeight - 1)
+    // ]);
+    row.get('WeightsLB')?.setErrors({ oneLess: true });
   } else if (enteredPackages === originalPackages) {
-    weightCtrl?.setValidators([
-      Validators.min(originalWeight),
-      Validators.max(originalWeight)
-    ]);
+    // weightCtrl?.setValidators([
+    //   Validators.min(originalWeight),
+    //   Validators.max(originalWeight)
+    // ]);
+    row.get('WeightsLB')?.setErrors({ lessLimit: true });
+
   }
 
    weightCtrl?.updateValueAndValidity();
@@ -332,17 +335,36 @@ onPackagesFocusOut(row: any) {
 }
 
 
-onWeightBlur(row: any) {
-  const weightLB = Number(row.get('WeightsLB')?.value);
-  const max = Number(row.value.weightLB);
+// onWeightBlur(row: any) {
+//   const weightLB = Number(row.get('WeightsLB')?.value);
+//   const max = Number(row.value.weightLB);
 
-  if (weightLB > max) {
-    row.get('WeightsLB')?.setErrors({ maxLimit: true });
-  } else {
-    row.get('WeightsLB')?.setErrors(null);
-    this.updateSelectedCount();
+//   if (weightLB > max) {
+//     row.get('WeightsLB')?.setErrors({ maxLimit: true });
+//   } else {
+//     row.get('WeightsLB')?.setErrors(null);
+//     this.updateSelectedCount();
+//   }
+// }
+
+onWeightBlur(row: any) {
+  const weight = Number(row.get('WeightsLB')?.value);
+  const max = Number(row.value.weightLB); // original weight
+
+  // Only show this message if Packages are NOT changed
+  const pkgChanged = Number(row.get('PackageLB')?.value) !== Number(row.get('PackagesLB_old')?.value);
+debugger
+  if (!pkgChanged) {
+    if (weight > max) {
+      row.get('WeightsLB')?.setErrors({ maxLimit: true });
+      return;
+    }
   }
+
+  row.get('WeightsLB')?.setErrors(null);
+  this.updateSelectedCount();
 }
+
 
 get isSubmitDisabled(): boolean {
   const type = this.docketService.loginUserList.Type;

@@ -439,7 +439,7 @@
                 </span>
               </div>
               <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('PackageLB')?.errors?.['maxLimit']">
-              Please enter a value {{ row.value.packagesLB }}.
+              Please enter a value less than or equal to {{ row.value.packagesLB }}.
             </span>
               <input type="hidden" formControlName="PackagesLB_old" />
             </td>
@@ -453,6 +453,12 @@
               </div>
               <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('WeightsLB')?.errors?.['maxLimit']">
                Please enter a value less than or equal to {{ row.value.weightLB }}.
+             </span>
+             <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('WeightsLB')?.errors?.['oneLess']">
+               Please enter a value less than or equal to {{ row.value.weightLB - 1 }}.
+             </span>
+             <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('WeightsLB')?.errors?.['lessLimit']">
+               Please enter a value greater than or equal to {{ row.value.weightLB }}.
              </span>
               <input type="hidden" formControlName="WeightLB_old" />
             </td>
