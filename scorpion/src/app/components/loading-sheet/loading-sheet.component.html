@@ -441,6 +441,7 @@
               <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('PackageLB')?.errors?.['maxLimit']">
               Please enter a value {{ row.value.packagesLB }}.
             </span>
+              <input type="hidden" formControlName="PackagesLB_old" />
             </td>
         
             <td>
