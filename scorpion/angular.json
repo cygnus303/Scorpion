@@ -79,7 +79,7 @@
             "sourceMap": true
           }
         },
-        "defaultConfiguration": "production"
+        "defaultConfiguration": "uat"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",

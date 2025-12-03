@@ -309,53 +309,30 @@ onPackagesFocusOut(row: any) {
   const originalPackages = Number(row.get('PackagesLB_old')?.value || 0);
   const originalWeight = Number(row.get('WeightLB_old')?.value || 0);
 
-  const weightCtrl = row.get('WeightsLB');
-
-  if (enteredPackages < originalPackages) {
-    // weightCtrl?.setValidators([
-    //   Validators.min(1),
-    //   Validators.max(originalWeight - 1)
-    // ]);
-    row.get('WeightsLB')?.setErrors({ oneLess: true });
-  } else if (enteredPackages === originalPackages) {
-    // weightCtrl?.setValidators([
-    //   Validators.min(originalWeight),
-    //   Validators.max(originalWeight)
-    // ]);
-    row.get('WeightsLB')?.setErrors({ lessLimit: true });
-
-  }
-
-   weightCtrl?.updateValueAndValidity();
-
   const finalWeight = Math.round((originalWeight * enteredPackages) / originalPackages);
 
   row.get('WeightsLB')?.setValue(finalWeight);
 
   row.get('WeightsLB')?.setValue(finalWeight);
+  row.get('WeightEdited')?.setValue(false);
+
+
 }
 
 
-// onWeightBlur(row: any) {
-//   const weightLB = Number(row.get('WeightsLB')?.value);
-//   const max = Number(row.value.weightLB);
+onPackageInput(row: any) {
+  row.get('PackageEdited')?.setValue(true);
+}
 
-//   if (weightLB > max) {
-//     row.get('WeightsLB')?.setErrors({ maxLimit: true });
-//   } else {
-//     row.get('WeightsLB')?.setErrors(null);
-//     this.updateSelectedCount();
-//   }
-// }
 
 onWeightBlur(row: any) {
   const weight = Number(row.get('WeightsLB')?.value);
   const max = Number(row.value.weightLB); // original weight
 
-  // Only show this message if Packages are NOT changed
-  const pkgChanged = Number(row.get('PackageLB')?.value) !== Number(row.get('PackagesLB_old')?.value);
-debugger
-  if (!pkgChanged) {
+  const pkgEdited = row.get('PackageEdited')?.value;
+  const weightEdited = row.get('WeightEdited')?.value;
+
+  if (!pkgEdited) {
     if (weight > max) {
       row.get('WeightsLB')?.setErrors({ maxLimit: true });
       return;
@@ -363,8 +340,28 @@ debugger
   }
 
   row.get('WeightsLB')?.setErrors(null);
+  if(pkgEdited && weightEdited){
+  this.weightLimitvalidation(row);
+  }
   this.updateSelectedCount();
 }
+
+weightLimitvalidation(row:any){
+  const enteredPackages = Number(row.get('PackageLB')?.value || 0);
+  const originalPackages = Number(row.get('PackagesLB_old')?.value || 0);
+
+    if (enteredPackages < originalPackages) {
+    row.get('WeightsLB')?.setErrors({ oneLess: true });
+  } else if (enteredPackages === originalPackages) {
+    row.get('WeightsLB')?.setErrors({ lessLimit: true });
+
+  }
+}
+
+onWeightInput(row: any) {
+  row.get('WeightEdited')?.setValue(true);
+}
+
 
 
 get isSubmitDisabled(): boolean {

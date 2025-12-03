@@ -99,6 +99,8 @@ export class LoadingSheetService {
        rateError:new FormControl(''),
        PackagesLB_old:new FormControl(item.packagesLB || ''),
        WeightLB_old:new FormControl(item.weightLB || ''),
+       PackageEdited: new FormControl(false),
+       WeightEdited:new FormControl(true)
     });
 
     group.get('newRate')?.valueChanges.subscribe(() => this.loadingRateCalc(group));
