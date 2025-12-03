@@ -52,7 +52,7 @@ ngOnInit(){
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.loginUserList.LocationCode =  'ABH';
-      this.docketService.loginUserList.Type = 'ULS';
+      this.docketService.loginUserList.Type = 'LS';
       this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007080';
        this.docketService.loginUserList.IsBCProcess = 'N';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
@@ -266,31 +266,24 @@ toggleSelectAll(event: any) {
 
 updateSelectedCount() {
   const formArray = this.loadingSheetService.docketFormArray;
-
   let selected = formArray.controls.filter((g: any) => g.value.isChecked);
-
   this.totalDocketSelected = selected.length;
-
   // SUM calculation
   this.totalPkgs = selected.reduce((sum: number, row: any) => {
     return sum + (Number(row.value.PackageLB) || 0);
   }, 0);
-
   this.totalActWt = selected.reduce((sum: number, row: any) => {
     return sum + (Number(row.value.WeightsLB) || 0);
   }, 0);
-
     selected.forEach((row: any) => {
     this.loadingSheetService.loadingRateCalc(row);
   });
-
   this.loadingSheetService.calculateTotal()
 }
 
   onPackageBlur(row: any) {
   const packageLB = Number(row.get('PackageLB')?.value);
   const max = Number(row.value.packagesLB);
-
   if (packageLB > max) {
     row.get('PackageLB')?.setErrors({ maxLimit: true });
   } else if(packageLB < 1){
@@ -303,32 +296,24 @@ updateSelectedCount() {
 }
 
 onPackagesFocusOut(row: any) {
-
   const enteredPackages = Number(row.get('PackageLB')?.value || 0);
   const originalPackages = Number(row.get('PackagesLB_old')?.value || 0);
   const originalWeight = Number(row.get('WeightLB_old')?.value || 0);
-
   const finalWeight = Math.round((originalWeight * enteredPackages) / originalPackages);
-
   row.get('WeightsLB')?.setValue(finalWeight);
-
   row.get('WeightsLB')?.setValue(finalWeight);
   row.get('autoPatchWeight')?.setValue(finalWeight);
   row.get('WeightEdited')?.setValue(false);
-
-
 }
 
 get isSubmitDisabled(): boolean {
   const type = this.docketService.loginUserList.Type;
-
   if (type === 'ULS' || type === 'LS') {
     const selected = this.loadingSheetService.docketFormArray.controls
       .filter((g: any) => g.value.isChecked);
 
     return selected.length === 0;
   }
-
   return false; 
 }
 
