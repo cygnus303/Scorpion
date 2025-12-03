@@ -194,7 +194,7 @@
               <input type="text" placeholder="Daterangepicker"
                 class="form-control border-start-1 text-center line-height" bsDaterangepicker #dvr="bsDaterangepicker"
                 formControlName="reportrange" [class.disabled-input]="true" appFocusNext
-                [bsConfig]="{ ranges: commonService.ranges, rangeInputFormat: 'MMMM D, YYYY', dateInputFormat: 'MMMM D, YYYY'}" />
+                [bsConfig]="{ ranges: commonService.ranges, rangeInputFormat: 'MMMM D, YYYY',containerClass: 'theme-dark-blue', dateInputFormat: 'MMMM D, YYYY'}" />
             </div>
           </div>
         </div>
@@ -431,39 +431,39 @@
               <input type="text" class="form-control" formControlName="newRate">
             </td>
         
-            <td>
-              <div class="d-flex align-items-center">
+          <td>
+  <div class="d-flex align-items-center">
                 <input type="text" class="form-control w-50 text-end me-2" formControlName="PackageLB" [readOnly]="!isAllSelected && this.docketService.loginUserList.Type==='LS'" 
                 (blur)="onPackageBlur(row)" (input)="onPackageInput(row)" appFocusNext>
-                <span class="text-primary ms-3">
-                  / {{ row.value.packagesLB }} / {{ row.value.pkgsno | number:'1.2-2' }}
-                </span>
-              </div>
+    <span class="text-primary ms-3">
+      / {{ row.value.packagesLB }} / {{ row.value.pkgsno | number:'1.2-2' }}
+    </span>
+  </div>
               <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('PackageLB')?.errors?.['maxLimit']">
-              Please enter a value less than or equal to {{ row.value.packagesLB }}.
-            </span>
-              <input type="hidden" formControlName="PackagesLB_old" />
-            </td>
-        
-            <td>
-              <div class="d-flex align-items-center">
+    Please enter a value less than or equal to {{ row.value.packagesLB }}.
+  </span>
+  <input type="hidden" formControlName="PackagesLB_old" />
+</td>
+
+<td>
+  <div class="d-flex align-items-center">
                 <input type="text" class="form-control w-50 text-end me-2" formControlName="WeightsLB" [readOnly]="!isAllSelected || this.docketService.loginUserList.Type!=='LS'" 
                 (blur)="onWeightBlur(row)"  (input)="onWeightInput(row)" appFocusNext>
-                <span class="text-primary ms-3">
-                  / {{ row.value.weightLB }} / {{ row.value.actuwt | number:'1.2-2' }}
-                </span>
-              </div>
+    <span class="text-primary ms-3">
+      / {{ row.value.weightLB }} / {{ row.value.actuwt | number:'1.2-2' }}
+    </span>
+  </div>
               <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('WeightsLB')?.errors?.['maxLimit']">
-               Please enter a value less than or equal to {{ row.value.weightLB }}.
-             </span>
+    Please enter a value less than or equal to {{ row.value.weightLB }}.
+  </span>
              <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('WeightsLB')?.errors?.['oneLess']">
                Please enter a value less than or equal to {{ row.value.weightLB - 1 }}.
-             </span>
+  </span>
              <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('WeightsLB')?.errors?.['lessLimit']">
-               Please enter a value greater than or equal to {{ row.value.weightLB }}.
-             </span>
-              <input type="hidden" formControlName="WeightLB_old" />
-            </td>
+    Please enter a value greater than or equal to {{ row.value.weightLB }}.
+  </span>
+  <input type="hidden" formControlName="WeightLB_old" />
+</td>
             <td>{{row.value.eWayBillNo}}</td>
           </tr>
         </tbody>
@@ -474,7 +474,7 @@
 </div>
 </form>
 
-<div class="d-flex justify-content-center text-center p-4">
+<div class="d-flex justify-content-center text-center bg-light p-4">
   <button class="btn btn-success" *ngIf="!isgetLoadingList" (click)="getLoadinglist()">
     <i class="fas fa-check"></i> Get LoadingSheet List
   </button>

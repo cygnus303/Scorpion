@@ -1175,7 +1175,7 @@
                     <ng-select class="required2" [items]="challanService.rateTypeData" formControlName="rateType"
                         bindLabel="codeDesc" bindValue="codeId" placeholder="Type" [class.disabled-select]="this.challanService.filterList?.chrgType ? true : false">
                     </ng-select>
-                    <input type="text" class="form-control required2" formControlName="NewRate"  [value]="item.value.NewRate" [readOnly]="this.challanService?.filterList?.loadingBycodeFor === 'XX5'">
+                    <input type="text" class="form-control required2" formControlName="NewRate"  [value]="item.value.NewRate" [readOnly]="this.challanService.filterList.loadingBycodeFor === 'XX5'">
                     <div class="text-danger small mt-1" *ngIf="challanService.avalabledocket.at(i).get('rateError')?.value">
                         {{ challanService.avalabledocket.at(i).get('rateError')?.value }}
                     </div>
