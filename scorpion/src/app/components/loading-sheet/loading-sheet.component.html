@@ -428,13 +428,13 @@
         
             <td *ngIf="docketService.loginUserList.Type === 'LS'">
               <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"  [items]="generalMasterService.chargeTypeData" readonly  appFocusNext></ng-select>
-              <input type="text" class="form-control" formControlName="newRate" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+              <input type="text" class="form-control" formControlName="newRate" oninput="this.value=this.value.replace(/[^0-9.]/g,'').replace(/(\..*)\./g,'$1')">
             </td>
         
             <td>
               <div class="d-flex align-items-center">
                 <input type="text" class="form-control w-50 text-end me-2" formControlName="PackageLB" [readOnly]="this.docketService.loginUserList.Type==='LS'" 
-                (input)="onPackageBlur(row)"  oninput="this.value = this.value.replace(/[^0-9]/g, '')" appFocusNext >
+                (input)="onPackageBlur(row)"  oninput="this.value=this.value.replace(/[^0-9.]/g,'').replace(/(\..*)\./g,'$1')" appFocusNext >
                 <span class="text-primary ms-3">
                   / {{ row.value.packagesLB }} / {{ row.value.pkgsno | number:'1.2-2' }}
                 </span>
