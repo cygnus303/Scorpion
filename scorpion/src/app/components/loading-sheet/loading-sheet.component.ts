@@ -56,7 +56,7 @@ ngOnInit(){
       this.docketService.loginUserList = JSON.parse(saved);
       // this.docketService.loginUserList.LocationCode =  'ABH';
       // this.docketService.loginUserList.Type = 'LS';
-      this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007076';
+      // this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007076';
       //  this.docketService.loginUserList.IsBCProcess = 'N';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
