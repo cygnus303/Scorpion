@@ -14,6 +14,7 @@ export class GeneralMasterService {
   public businessTypedata:PRSGeneralMasterResponse[]=[];
   public loadingData:PRSGeneralMasterResponse[]=[];
   public chargeTypeData:PRSGeneralMasterResponse[]=[];
+  public LsTransportModeData:PRSGeneralMasterResponse[]=[];
 
  constructor(
      public THCMasterService: THCMasterService, private basicDetailService: BasicDetailService,
@@ -74,6 +75,16 @@ export class GeneralMasterService {
       next: (response) => {
         if (response.success) {
           this.chargeTypeData = response.data;
+        }
+      },
+    });
+  }
+
+  getLSModedata(){
+    this.THCMasterService.getGeneralMasterDetail('RTMD').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.LsTransportModeData = response.data;
         }
       },
     });
