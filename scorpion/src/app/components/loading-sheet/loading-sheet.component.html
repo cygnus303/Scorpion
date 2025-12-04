@@ -58,7 +58,7 @@
             <label class="col-sm-5 col-form-label text-end">Loading By</label>
             <div class="col-sm-7">
               <ng-select class="noFoundTextColor required2" placeholder="Select Loading By" formControlName="loadingBy"
-                notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
+                notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId" [readonly]="isgetLoadingList"
                 [items]="generalMasterService.loadingData" (change)="getvendoCodeData($event)" appFocusNext
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('loadingBy')?.invalid  && loadingSheetService.LSForm.get('loadingBy')?.touched }"></ng-select>
               <div class="text-danger text-start" 
@@ -73,7 +73,7 @@
             <label class="col-sm-5 col-form-label text-end"> Charge type</label>
             <div class="col-sm-7">
               <ng-select class="noFoundTextColor required2" placeholder="Select Charge type"  formControlName="rateType"
-                notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
+                notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId" [readonly]="isgetLoadingList"
                 [items]="generalMasterService.chargeTypeData" appFocusNext
                 [readonly]="!loadingSheetService.LSForm.value.loadingBy || loadingSheetService.LSForm.value.loadingBy === 'XX9'"
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('rateType')?.invalid  && loadingSheetService.LSForm.get('rateType')?.touched }"></ng-select>
