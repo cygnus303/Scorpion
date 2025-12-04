@@ -52,10 +52,10 @@ ngOnInit(){
    const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
-      this.docketService.loginUserList.LocationCode =  'ABH';
-      this.docketService.loginUserList.Type = 'LS';
-      this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007086';
-       this.docketService.loginUserList.IsBCProcess = 'N';
+      // this.docketService.loginUserList.LocationCode =  'ABH';
+      // this.docketService.loginUserList.Type = 'LS';
+      // this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007086';
+      //  this.docketService.loginUserList.IsBCProcess = 'N';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
