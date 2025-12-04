@@ -26,7 +26,7 @@ export class LoadingSheetService {
       lsNO:new FormControl(''),
       lsDate:new FormControl(this.formatDate(today)),
       manualLsNO:new FormControl('N/A'),
-      loadingBy:new FormControl(null, Type ? Validators.required : null),
+      loadingBy:new FormControl(null),
       nextStopLocation:new FormControl(null,Type ? Validators.required : null),
       rateType:new FormControl(null),
       mF_TransportMode:new FormControl('S',Type ? Validators.required : null),
@@ -41,9 +41,9 @@ export class LoadingSheetService {
       transportMode:new FormControl(null),
       destinationList:new FormControl(''),
       docketNoList:new FormControl(''),
-      vendorCode:new FormControl(null,Type ? Validators.required : null),
+      vendorCode:new FormControl(null),
       vendorName:new FormControl(''),
-      loadingCharge:new FormControl(0,Type ? [Validators.required, Validators.min(0.01)] : null),
+      loadingCharge:new FormControl(0),
       isMathadi:new FormControl(false),
       mathadiSlipNo:new FormControl(''),
       mathadiDate:new FormControl(this.formatDate(today)),
@@ -55,6 +55,11 @@ export class LoadingSheetService {
       VehicleType:new FormControl(''),
       isMonthly:new FormControl(this.docketService.loginUserList.Type === 'LS' ? true: false)
     })
+    if(this.LSForm.value.mF_TransportMode === 'S' && this.docketService.loginUserList.Type === 'LS'){
+     this.LSForm.get('loadingCharge')?.setValidators([Validators.required, Validators.min(0.01)]);
+     this.LSForm.get('loadingBy')?.setValidators([Validators.required]);
+     this.LSForm.get('vendorCode')?.setValidators([Validators.required]);
+    }
   }
 
   setDocketList(list: any[]) {
@@ -192,7 +197,18 @@ calculateTotal() {
       const selected = (this.docketFormArray?.controls ?? [])
         .filter(ctrl => ctrl.get('isChecked')?.value)
         .map(ctrl => ({
-          packagesLB: ctrl.get('PackageLB')?.value
+          dockno: ctrl.get('dockno')?.value,
+          docksf: ctrl.get('docksf')?.value,
+          pkgsno: Number(ctrl.get('pkgsno')?.value),
+          actuwt: Number(ctrl.get('actuwt')?.value),
+          docketDate: ctrl.get('docketDate')?.value,
+          orgCode: ctrl.get('orgCode')?.value,
+          packagesLB: Number(ctrl.get('PackageLB')?.value),
+          weightLB: Number(ctrl.get('weightLB')?.value),
+          reDestCode: ctrl.get('reDestCode')?.value,
+          isChecked: ctrl.get('isChecked')?.value,
+          newRate:Number(ctrl.get('newRate')?.value),
+          ratetype: ctrl.get('ratetype')?.value,
         }));
       const payload = {
         vm: {

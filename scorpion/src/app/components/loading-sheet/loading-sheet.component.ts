@@ -55,8 +55,8 @@ ngOnInit(){
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       // this.docketService.loginUserList.LocationCode =  'ABH';
-      // this.docketService.loginUserList.Type = 'LS';
-      // this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007076';
+      // this.docketService.loginUserList.Type = 'ULS';
+      // this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007092';
       //  this.docketService.loginUserList.IsBCProcess = 'N';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
@@ -162,6 +162,12 @@ ngOnInit(){
             this.loadingSheetService.setDocketList(response.docketListForMFGeneration);
           }
         }
+      },error: (err) => {
+        console.error("Error fetching docket list", err);
+        this.isLoadingSheet = false;   // 🔥 stop loader on error
+      },
+      complete: () => {
+        this.isLoadingSheet = false;   // 🔥 always stop loader
       }
     });
   }
@@ -236,29 +242,64 @@ formatDateNoTimezone(date: Date) {
   return `${year}-${month}-${day}T00:00:00`;
 }
 
+lSTransportMode(event: any) {
+  const f = this.loadingSheetService.LSForm;
+  const loadingBy = f.get('loadingBy');
+  const vendorCode = f.get('vendorCode');
+  const loadingCharge = f.get('loadingCharge');
+  const rateType = f.get('rateType');
+  const setRequired = (ctrl: any, validators: any[]) => {
+    ctrl?.setValidators(validators);
+    ctrl?.updateValueAndValidity();
+  };
+  const clearField = (ctrl: any) => {
+    ctrl?.clearValidators();
+    ctrl?.setValue(null);
+    ctrl?.updateValueAndValidity();
+  };
+  if (event?.codeId === 'S') {
+    setRequired(loadingBy, [Validators.required]);
+    setRequired(vendorCode, [Validators.required]);
+    setRequired(loadingCharge, [Validators.required, Validators.min(0.01)]);
+  } else {
+    clearField(loadingBy);
+    clearField(vendorCode);
+    clearField(loadingCharge);
+    clearField(rateType);
+  }
+}
+
   getDocketListForMFDetail(){
     this.isLoadingSheet = true;
     const payload={
       baseLocationCode: this.docketService.loginUserList.LocationCode,
       nextStopLocation: this.loadingSheetService.LSForm.value.nextStopLocation,
-      transportMode: this.loadingSheetService.LSForm.value.transportMode,
+      transportMode: this.loadingSheetService.LSForm.value.transportMode || '',
       fromDate: this.loadingSheetService.LSForm.value.reportrange ? this.formatDateNoTimezone(this.loadingSheetService.LSForm.value.reportrange[0]) : null,
       toDate: this.loadingSheetService.LSForm.value.reportrange ? this.formatDateNoTimezone(this.loadingSheetService.LSForm.value.reportrange[1]): null,
       destinationList: this.loadingSheetService.LSForm.value.destinationList,
       docketNoList:this.loadingSheetService.LSForm.value.docketNoList,
       lsDate: new Date(this.loadingSheetService.LSForm.value.lsDate)?.toISOString(),
-      loadingBy: this.loadingSheetService.LSForm.value.loadingBy ,
-      rateType: this.loadingSheetService.LSForm.value.rateType,
+      loadingBy: this.loadingSheetService.LSForm.value.loadingBy ||'',
+      rateType: this.loadingSheetService.LSForm.value.rateType || '',
       baseCompanyCode:this.docketService.loginUserList.Companycode
     }
     this.loadingSheetApiService.getDocketListForMF(payload).subscribe({
       next: (response) => {
         this.isLoadingSheet = false;
-        if(response && Array.isArray(response)){
-        this.loadingSheetService.setDocketList(response);
+        if (response && Array.isArray(response)) {
+          this.loadingSheetService.setDocketList(response);
         }
+      },
+      error: (err) => {
+        console.error("Error fetching docket list", err);
+        this.isLoadingSheet = false;   // 🔥 stop loader on error
+      },
+      complete: () => {
+        this.isLoadingSheet = false;   // 🔥 always stop loader
       }
     });
+    
   }
 
 toggleSelectAll(event: any) {
