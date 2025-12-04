@@ -124,7 +124,7 @@ loadingRateCalc(group: any) {
   const rateType = group.get('ratetype')?.value;
   const newRate = Number(group.get('newRate')?.value || 0);
   const weightLB = Number(group.get('actuwt')?.value || 0);
-  const packagesLB = Number(group.get('packagesLB')?.value || 0);
+  const packagesLB = Number(group.get('PackageLB')?.value || 0);
 
   let charge = 0;
 

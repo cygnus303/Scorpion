@@ -54,7 +54,7 @@ ngOnInit(){
       this.docketService.loginUserList = JSON.parse(saved);
       // this.docketService.loginUserList.LocationCode =  'ABH';
       // this.docketService.loginUserList.Type = 'LS';
-      // this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007086';
+      this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007076';
       //  this.docketService.loginUserList.IsBCProcess = 'N';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
@@ -274,7 +274,7 @@ updateSelectedCount() {
   this.totalDocketSelected = selected.length;
   // SUM calculation
   this.totalPkgs = selected.reduce((sum: number, row: any) => {
-    return sum + (Number(row.value.PackageLB) || 0);
+    return sum + (Number(row.value.packagesLB) || 0);
   }, 0);
   this.totalActWt = selected.reduce((sum: number, row: any) => {
     return sum + (Number(row.value.WeightsLB) || 0);
@@ -286,21 +286,21 @@ updateSelectedCount() {
 }
 
   onPackageBlur(row: any) {
-  const packageLB = Number(row.get('PackageLB')?.value);
-  const max = Number(row.value.packagesLB);
+  const packageLB = Number(row.get('packagesLB')?.value);
+  const max = Number(row.value.PackageLB);
   if (packageLB > max) {
-    row.get('PackageLB')?.setErrors({ maxLimit: true });
+    row.get('packagesLB')?.setErrors({ maxLimit: true });
   } else if(packageLB < 1){
-    row.get('PackageLB')?.setErrors({ minLimit: true });
+    row.get('packagesLB')?.setErrors({ minLimit: true });
   }else {
-    row.get('PackageLB')?.setErrors(null);
+    row.get('packagesLB')?.setErrors(null);
     this.onPackagesFocusOut(row);
     this.updateSelectedCount();
   }
 }
 
 onPackagesFocusOut(row: any) {
-  const enteredPackages = Number(row.get('PackageLB')?.value || 0);
+  const enteredPackages = Number(row.get('packagesLB')?.value || 0);
   const originalPackages = Number(row.get('PackagesLB_old')?.value || 0);
   const originalWeight = Number(row.get('WeightLB_old')?.value || 0);
   const finalWeight = Math.round((originalWeight * enteredPackages) / originalPackages);
