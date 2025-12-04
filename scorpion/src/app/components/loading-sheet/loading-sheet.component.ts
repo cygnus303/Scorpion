@@ -162,6 +162,12 @@ ngOnInit(){
             this.loadingSheetService.setDocketList(response.docketListForMFGeneration);
           }
         }
+      },error: (err) => {
+        console.error("Error fetching docket list", err);
+        this.isLoadingSheet = false;   // 🔥 stop loader on error
+      },
+      complete: () => {
+        this.isLoadingSheet = false;   // 🔥 always stop loader
       }
     });
   }
@@ -241,24 +247,32 @@ formatDateNoTimezone(date: Date) {
     const payload={
       baseLocationCode: this.docketService.loginUserList.LocationCode,
       nextStopLocation: this.loadingSheetService.LSForm.value.nextStopLocation,
-      transportMode: this.loadingSheetService.LSForm.value.transportMode,
+      transportMode: this.loadingSheetService.LSForm.value.transportMode || '',
       fromDate: this.loadingSheetService.LSForm.value.reportrange ? this.formatDateNoTimezone(this.loadingSheetService.LSForm.value.reportrange[0]) : null,
       toDate: this.loadingSheetService.LSForm.value.reportrange ? this.formatDateNoTimezone(this.loadingSheetService.LSForm.value.reportrange[1]): null,
       destinationList: this.loadingSheetService.LSForm.value.destinationList,
       docketNoList:this.loadingSheetService.LSForm.value.docketNoList,
       lsDate: new Date(this.loadingSheetService.LSForm.value.lsDate)?.toISOString(),
       loadingBy: this.loadingSheetService.LSForm.value.loadingBy ,
-      rateType: this.loadingSheetService.LSForm.value.rateType,
+      rateType: this.loadingSheetService.LSForm.value.rateType || '',
       baseCompanyCode:this.docketService.loginUserList.Companycode
     }
     this.loadingSheetApiService.getDocketListForMF(payload).subscribe({
       next: (response) => {
         this.isLoadingSheet = false;
-        if(response && Array.isArray(response)){
-        this.loadingSheetService.setDocketList(response);
+        if (response && Array.isArray(response)) {
+          this.loadingSheetService.setDocketList(response);
         }
+      },
+      error: (err) => {
+        console.error("Error fetching docket list", err);
+        this.isLoadingSheet = false;   // 🔥 stop loader on error
+      },
+      complete: () => {
+        this.isLoadingSheet = false;   // 🔥 always stop loader
       }
     });
+    
   }
 
 toggleSelectAll(event: any) {
