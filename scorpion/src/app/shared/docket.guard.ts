@@ -131,7 +131,7 @@ export class DocketGuard implements CanActivate {
     private handleLoadingSheet(parsedData: any): boolean {
     const requiredKeys = [
       "FinYear", "LocationCode", "LocationName",
-      "UserImage", "UserId", "BaseUserName", "Companycode"
+      "UserImage", "UserId", "BaseUserName", "Companycode" , "Type"
     ];
     if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
       // this.docketService.loginUserList = parsedData;
