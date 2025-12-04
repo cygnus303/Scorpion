@@ -55,8 +55,8 @@ ngOnInit(){
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       // this.docketService.loginUserList.LocationCode =  'ABH';
-      // this.docketService.loginUserList.Type = 'LS';
-      // this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007076';
+      // this.docketService.loginUserList.Type = 'ULS';
+      // this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007092';
       //  this.docketService.loginUserList.IsBCProcess = 'N';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
@@ -242,6 +242,33 @@ formatDateNoTimezone(date: Date) {
   return `${year}-${month}-${day}T00:00:00`;
 }
 
+lSTransportMode(event: any) {
+  const f = this.loadingSheetService.LSForm;
+  const loadingBy = f.get('loadingBy');
+  const vendorCode = f.get('vendorCode');
+  const loadingCharge = f.get('loadingCharge');
+  const rateType = f.get('rateType');
+  const setRequired = (ctrl: any, validators: any[]) => {
+    ctrl?.setValidators(validators);
+    ctrl?.updateValueAndValidity();
+  };
+  const clearField = (ctrl: any) => {
+    ctrl?.clearValidators();
+    ctrl?.setValue(null);
+    ctrl?.updateValueAndValidity();
+  };
+  if (event?.codeId === 'S') {
+    setRequired(loadingBy, [Validators.required]);
+    setRequired(vendorCode, [Validators.required]);
+    setRequired(loadingCharge, [Validators.required, Validators.min(0.01)]);
+  } else {
+    clearField(loadingBy);
+    clearField(vendorCode);
+    clearField(loadingCharge);
+    clearField(rateType);
+  }
+}
+
   getDocketListForMFDetail(){
     this.isLoadingSheet = true;
     const payload={
@@ -253,7 +280,7 @@ formatDateNoTimezone(date: Date) {
       destinationList: this.loadingSheetService.LSForm.value.destinationList,
       docketNoList:this.loadingSheetService.LSForm.value.docketNoList,
       lsDate: new Date(this.loadingSheetService.LSForm.value.lsDate)?.toISOString(),
-      loadingBy: this.loadingSheetService.LSForm.value.loadingBy ,
+      loadingBy: this.loadingSheetService.LSForm.value.loadingBy ||'',
       rateType: this.loadingSheetService.LSForm.value.rateType || '',
       baseCompanyCode:this.docketService.loginUserList.Companycode
     }
