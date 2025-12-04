@@ -63,20 +63,20 @@ export class LoadingSheetService {
 
   list.forEach(item => {
 
-    const group = new FormGroup({
+     const group = new FormGroup({
       id:new FormControl(item.id ||''),
        docketNo:new FormControl(item.docketNo ||''),
        dockno:new FormControl(item.dockno ||''),
        docksf:new FormControl(item.docksf || ''),
        manual_dockno:new FormControl(item.manual_dockno || ''),
-       pkgsno:new FormControl(item.pkgsno || ''),
-       actuwt:new FormControl(item.actuwt || ''),
+       pkgsno:new FormControl(item.pkgsno || 0),
+       actuwt:new FormControl(item.actuwt || 0),
        transMode:new FormControl(item.transMode || ''),
        docketDate:new FormControl(item.docketDate || ''),
        orgCode:new FormControl(item.orgCode || ''),
        commited_DelyDate:new FormControl(item.commited_DelyDate || ''),
-       packagesLB:new FormControl(item.packagesLB || ''),
-       weightLB:new FormControl(item.weightLB || ''),
+       packagesLB:new FormControl(item.packagesLB || 0),
+       weightLB:new FormControl(item.weightLB || 0),
        reDestCode:new FormControl(item.reDestCode || ''),
        PackageLB:new FormControl(item.packagesLB || ''),
        WeightsLB:new FormControl(item.weightLB || ''),
@@ -125,7 +125,7 @@ loadingRateCalc(group: any) {
   const rateType = group.get('ratetype')?.value;
   const newRate = Number(group.get('newRate')?.value || 0);
   const weightLB = Number(group.get('actuwt')?.value || 0);
-  const packagesLB = Number(group.get('PackageLB')?.value || 0);
+  const packagesLB = Number(group.get('packagesLB')?.value || 0);
 
   let charge = 0;
 
@@ -188,7 +188,12 @@ calculateTotal() {
     if (this.LSForm.valid) {
        this.isSubmitting = true;
       const { reportrange, docketList, ...formValuesWithoutRange } = this.LSForm.value;
-      const selected = (this.docketFormArray?.controls ?? []).filter(ctrl => ctrl.get('isChecked')?.value).map(ctrl => (ctrl as FormGroup).getRawValue());
+      // const selected = (this.docketFormArray?.controls ?? []).filter(ctrl => ctrl.get('isChecked')?.value).map(ctrl => (ctrl as FormGroup).getRawValue());
+      const selected = (this.docketFormArray?.controls ?? [])
+        .filter(ctrl => ctrl.get('isChecked')?.value)
+        .map(ctrl => ({
+          packagesLB: ctrl.get('PackageLB')?.value
+        }));
       const payload = {
         vm: {
           ...formValuesWithoutRange,
