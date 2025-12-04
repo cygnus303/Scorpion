@@ -194,7 +194,7 @@
               <input type="text" placeholder="Daterangepicker"
                 class="form-control border-start-1 text-center line-height" bsDaterangepicker #dvr="bsDaterangepicker"
                 formControlName="reportrange" [class.disabled-input]="true" appFocusNext
-                [bsConfig]="{ ranges: commonService.ranges, rangeInputFormat: 'MMMM D, YYYY',containerClass: 'theme-dark-blue', dateInputFormat: 'MMMM D, YYYY'}" />
+                [bsConfig]="{ ranges: commonService.ranges, rangeInputFormat: 'MMMM D, YYYY',containerClass: 'theme-dark-blue', dateInputFormat: 'MMMM D, YYYY',maxDate: today}" />
             </div>
           </div>
         </div>
@@ -262,7 +262,7 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end">Vendor Code </label>
             <div class="col-sm-7">
-              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Vendor Name"
+              <ng-select class="noFoundTextColor  clear-icon" placeholder="Select Vendor Name"
                 formControlName="vendorCode" notFoundText="No matches found" appFocusNext
                 [items]="challanService.branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('vendorCode')?.invalid  && loadingSheetService.LSForm.get('vendorCode')?.touched }"></ng-select>
@@ -413,16 +413,16 @@
                   <ng-container *ngIf="row.value.message?.trim(); else checkError">
                     <span class="text-danger fw-semibold">{{ row.value.message }}</span>
                   </ng-container>
-          
+                  
                   <ng-template #checkError>
                     <ng-container *ngIf="row.value.errorMassage?.trim(); else showCheckbox">
                       <span class="text-danger fw-semibold">{{ row.value.errorMassage }}</span>
                     </ng-container>
                   </ng-template>
-          
+                  
                   <ng-template #showCheckbox>
                     <input type="checkbox" formControlName="isChecked" class="form-check-input checkbox-lg custom-big-checkbox"
-                      (change)="updateSelectedCount()" style="cursor: pointer;" appFocusNext />
+                    (change)="updateSelectedCount()" style="cursor: pointer;" appFocusNext />
                   </ng-template>
                 </td>
                 <td>{{ row.value.dockno }}</td>
@@ -431,17 +431,19 @@
                 <td>{{ row.value.transMode }}</td>
                 <td>{{ row.value.orgCode }}</td>
                 <td>{{ row.value.reDestCode }}</td>
-          
+                
                 <td>{{ row.value.fromTo }}</td>
                 <td>{{ row.value.commited_DelyDate }}</td>
-          
+                
                 <td *ngIf="docketService.loginUserList.Type === 'LS'">
                   <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"
-                    [items]="generalMasterService.chargeTypeData" readonly appFocusNext></ng-select>
-                  <input type="text" class="form-control" formControlName="newRate"
-                    oninput="this.value=this.value.replace(/[^0-9.]/g,'').replace(/(\..*)\./g,'$1')">
+                  [items]="generalMasterService.chargeTypeData" readonly appFocusNext></ng-select>
+                  <input type="text" class="form-control" formControlName="newRate" (blur)="loadingSheetService.loadingRateCalc(row)">
+                  <span class="text-danger small d-flex justify-content-start" *ngIf="loadingSheetService.docketFormArray.at(i).get('rateError')?.errors?.['rateLimit']">
+                  Rate Amount Is High Please Check
+                  </span> 
                 </td>
-          
+                
                 <td>
                   <div class="d-flex align-items-center">
                     <input type="text" class="form-control w-50 text-end me-2" formControlName="packagesLB"
