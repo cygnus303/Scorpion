@@ -280,7 +280,7 @@ updateSelectedCount() {
   this.totalDocketSelected = selected.length;
   // SUM calculation
   this.totalPkgs = selected.reduce((sum: number, row: any) => {
-    return sum + (Number(row.value.packagesLB) || 0);
+    return sum + (Number(row.value.PackageLB) || 0);
   }, 0);
   this.totalActWt = selected.reduce((sum: number, row: any) => {
     return sum + (Number(row.value.WeightsLB) || 0);
@@ -290,23 +290,23 @@ updateSelectedCount() {
   });
   this.loadingSheetService.calculateTotal()
 }
-
+ 
   onPackageBlur(row: any) {
-  const packageLB = Number(row.get('packagesLB')?.value);
-  const max = Number(row.value.PackageLB);
+  const packageLB = Number(row.get('PackageLB')?.value);
+  const max = Number(row.value.packagesLB);
   if (packageLB > max) {
-    row.get('packagesLB')?.setErrors({ maxLimit: true });
+    row.get('PackageLB')?.setErrors({ maxLimit: true });
   } else if(packageLB < 1){
-    row.get('packagesLB')?.setErrors({ minLimit: true });
+    row.get('PackageLB')?.setErrors({ minLimit: true });
   }else {
-    row.get('packagesLB')?.setErrors(null);
+    row.get('PackageLB')?.setErrors(null);
     this.onPackagesFocusOut(row);
     this.updateSelectedCount();
   }
 }
-
+ 
 onPackagesFocusOut(row: any) {
-  const enteredPackages = Number(row.get('packagesLB')?.value || 0);
+  const enteredPackages = Number(row.get('PackageLB')?.value || 0);
   const originalPackages = Number(row.get('PackagesLB_old')?.value || 0);
   const originalWeight = Number(row.get('WeightLB_old')?.value || 0);
   const finalWeight = Math.round((originalWeight * enteredPackages) / originalPackages);
