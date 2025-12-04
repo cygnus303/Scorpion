@@ -446,17 +446,17 @@
                 
                 <td>
                   <div class="d-flex align-items-center">
-                    <input type="text" class="form-control w-50 text-end me-2" formControlName="PackageLB"
+                    <input type="text" class="form-control w-50 text-end me-2" formControlName="packagesLB"
                       [readOnly]="this.docketService.loginUserList.Type==='LS'" (input)="onPackageBlur(row)"
                       oninput="this.value=this.value.replace(/[^0-9.]/g,'').replace(/(\..*)\./g,'$1')" appFocusNext>
                     <span class="text-primary ms-3">
-                      / {{ row.value.packagesLB }} / {{ row.value.pkgsno | number:'1.2-2' }}
+                      / {{ row.value.PackageLB }} / {{ row.value.pkgsno | number:'1.2-2' }}
                     </span>
                   </div>
-                  <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('PackageLB')?.errors?.['maxLimit']">
-                    Please enter a value less than or equal to {{ row.value.packagesLB }}.
+                  <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('packagesLB')?.errors?.['maxLimit']">
+                    Please enter a value less than or equal to {{ row.value.PackageLB }}.
                   </span>
-                  <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('PackageLB')?.errors?.['minLimit']">
+                  <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('packagesLB')?.errors?.['minLimit']">
                     Please enter a value graeter than or equal to 1.
                   </span>
                   <input type="hidden" formControlName="PackagesLB_old" />
