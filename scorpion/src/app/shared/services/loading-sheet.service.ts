@@ -101,8 +101,9 @@ export class LoadingSheetService {
        WeightLB_old:new FormControl(item.weightLB || ''),
     });
 
-    group.get('newRate')?.valueChanges.subscribe(() => this.loadingRateCalc(group));
+    // group.get('newRate')?.valueChanges.subscribe(() => this.loadingRateCalc(group));
     group.get('ratetype')?.valueChanges.subscribe(() => this.loadingRateCalc(group));
+
     fa.push(group);
   });
 }
@@ -113,13 +114,13 @@ get docketFormArray() {
 
 loadingRateCalc(group: any) {
 
-  const isChecked = group.get('isChecked')?.value;
+  // const isChecked = group.get('isChecked')?.value;
 
-  if (!isChecked) {
-    group.get('rateError')?.setValue("");
-    group.get('charge')?.setValue(0);
-    return;
-  }
+  // if (!isChecked) {
+  //   group.get('rateError')?.setValue("");
+  //   group.get('charge')?.setValue(0);
+  //   return;
+  // }
 
   const rateType = group.get('ratetype')?.value;
   const newRate = Number(group.get('newRate')?.value || 0);
@@ -148,12 +149,13 @@ loadingRateCalc(group: any) {
       maxLimitCalculation = newRate;
     }
 
-    // if (maxLimitCalculation > 5.0) {
-    //   group.get('rateError')?.setValue("Rate Amount Is High Please Check");
-    //   group.get('newRate')?.setValue("0.00");
-    //   group.get('charge')?.setValue(0);
-    //   return;
-    // }
+    if (maxLimitCalculation > 5.0) {
+      group.get('rateError')?.setErrors({ rateLimit: true });
+
+      group.get('newRate')?.setValue("0", { emitEvent: false });
+      group.get('charge')?.setValue(0, { emitEvent: false });
+      return;
+    }
   }
 
   group.get('rateError')?.setValue("");
