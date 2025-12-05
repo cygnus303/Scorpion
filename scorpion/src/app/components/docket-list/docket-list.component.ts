@@ -444,7 +444,7 @@ getCompletionData() {
           "obdno": "",
           "bacode": "", //controller side thi
           "dopino": "",
-          "stax_exmpt_yn": this.docketService.basicDetailForm.value.exemptServices ? 'N' : 'Y',
+          "stax_exmpt_yn": this.docketService.freightForm.value.stax_exmpt_yn,
           "party_as": "",
           "sourcedockno": this.docketService.basicDetailForm.value.referenceDocket,
           "multiplepickup_yn": "",
@@ -486,7 +486,7 @@ getCompletionData() {
           "isODA": this.docketService.step2DetailsList.IsODA === 'Y' ? true : false,
           "isDACC": this.docketService.basicDetailForm.value.isDACC,
           "isLocalDocket": this.docketService.basicDetailForm.value.IsLocalDocket ? true : false,
-          "isStaxExemp": this.docketService.basicDetailForm.value.exemptServices === 'Y' ? true : false,
+          "isStaxExemp": this.docketService.freightForm.value.isStaxExemp,
           "person": this.docketService.basicDetailForm.value.personName,
           "apmtMobile": this.docketService.basicDetailForm.value.contactNo,
           "apmtRemark": this.docketService.basicDetailForm.value.remarks,
