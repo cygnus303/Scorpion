@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -47,7 +47,7 @@ export class LoadingSheetComponent {
     public challanService: ChallanService,
     public THCMasterService: THCMasterService,
     public loadingSheetApiService: LoadingSheetApiService,
-    public basicDetailService: BasicDetailService
+    public basicDetailService: BasicDetailService,private cd: ChangeDetectorRef
   ) { }
 
 ngOnInit(){
@@ -55,7 +55,7 @@ ngOnInit(){
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       // this.docketService.loginUserList.LocationCode =  'BWH';
-      // this.docketService.loginUserList.Type = 'ULS';
+      // this.docketService.loginUserList.Type = 'LS';
       // this.docketService.loginUserList.TCNO = 'LS/BWH/2526/007803';
       //  this.docketService.loginUserList.IsBCProcess = 'N';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
@@ -257,6 +257,7 @@ formatDateNoTimezone(date: Date) {
       this.loadingSheetService.LSForm.get('rateType')?.clearValidators();
       this.loadingSheetService.LSForm.get('rateType')?.setValue(null);
     }
+    this.cd.detectChanges();
   }
 
   getDocketListForMFDetail(){
