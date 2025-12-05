@@ -54,9 +54,9 @@ ngOnInit(){
    const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
-      // this.docketService.loginUserList.LocationCode =  'ABH';
+      // this.docketService.loginUserList.LocationCode =  'BWH';
       // this.docketService.loginUserList.Type = 'ULS';
-      // this.docketService.loginUserList.TCNO = 'LS/ABH/2526/007092';
+      // this.docketService.loginUserList.TCNO = 'LS/BWH/2526/007803';
       //  this.docketService.loginUserList.IsBCProcess = 'N';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
@@ -242,32 +242,22 @@ formatDateNoTimezone(date: Date) {
   return `${year}-${month}-${day}T00:00:00`;
 }
 
-lSTransportMode(event: any) {
-  const f = this.loadingSheetService.LSForm;
-  const loadingBy = f.get('loadingBy');
-  const vendorCode = f.get('vendorCode');
-  const loadingCharge = f.get('loadingCharge');
-  const rateType = f.get('rateType');
-  const setRequired = (ctrl: any, validators: any[]) => {
-    ctrl?.setValidators(validators);
-    ctrl?.updateValueAndValidity();
-  };
-  const clearField = (ctrl: any) => {
-    ctrl?.clearValidators();
-    ctrl?.setValue(null);
-    ctrl?.updateValueAndValidity();
-  };
-  if (event?.codeId === 'S') {
-    setRequired(loadingBy, [Validators.required]);
-    setRequired(vendorCode, [Validators.required]);
-    setRequired(loadingCharge, [Validators.required, Validators.min(0.01)]);
-  } else {
-    clearField(loadingBy);
-    clearField(vendorCode);
-    clearField(0);
-    clearField(rateType);
+  lSTransportMode(event: any) {
+    if (event?.codeId === 'S') {
+      this.loadingSheetService.LSForm.get('loadingBy')?.setValidators([Validators.required]);
+      this.loadingSheetService.LSForm.get('vendorCode')?.setValidators([Validators.required]);
+      this.loadingSheetService.LSForm.get('loadingCharge')?.setValidators([Validators.required, Validators.min(0.01)]);
+    } else {
+      this.loadingSheetService.LSForm.get('loadingBy')?.clearValidators();
+      this.loadingSheetService.LSForm.get('loadingBy')?.setValue(null);
+      this.loadingSheetService.LSForm.get('vendorCode')?.clearValidators();
+      this.loadingSheetService.LSForm.get('vendorCode')?.setValue(null);
+      this.loadingSheetService.LSForm.get('loadingCharge')?.clearValidators();
+      this.loadingSheetService.LSForm.get('loadingCharge')?.setValue(0);
+      this.loadingSheetService.LSForm.get('rateType')?.clearValidators();
+      this.loadingSheetService.LSForm.get('rateType')?.setValue(null);
+    }
   }
-}
 
   getDocketListForMFDetail(){
     this.isLoadingSheet = true;
