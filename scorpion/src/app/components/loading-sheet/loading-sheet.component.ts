@@ -264,7 +264,7 @@ lSTransportMode(event: any) {
   } else {
     clearField(loadingBy);
     clearField(vendorCode);
-    clearField(loadingCharge);
+    clearField(0);
     clearField(rateType);
   }
 }
@@ -279,7 +279,7 @@ lSTransportMode(event: any) {
       toDate: this.loadingSheetService.LSForm.value.reportrange ? this.formatDateNoTimezone(this.loadingSheetService.LSForm.value.reportrange[1]): null,
       destinationList: this.loadingSheetService.LSForm.value.destinationList,
       docketNoList:this.loadingSheetService.LSForm.value.docketNoList,
-      lsDate: new Date(this.loadingSheetService.LSForm.value.lsDate)?.toISOString(),
+      lsDate: this.formatDateNoTimezone(new Date(this.loadingSheetService.LSForm.value.lsDate)),
       loadingBy: this.loadingSheetService.LSForm.value.loadingBy ||'',
       rateType: this.loadingSheetService.LSForm.value.rateType || '',
       baseCompanyCode:this.docketService.loginUserList.Companycode
