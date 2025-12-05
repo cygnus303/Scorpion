@@ -204,7 +204,7 @@ calculateTotal() {
           docketDate: ctrl.get('docketDate')?.value,
           orgCode: ctrl.get('orgCode')?.value,
           packagesLB: Number(ctrl.get('PackageLB')?.value),
-          weightLB: Number(ctrl.get('weightLB')?.value),
+          weightLB: Number(ctrl.get('WeightsLB')?.value),
           reDestCode: ctrl.get('reDestCode')?.value,
           isChecked: ctrl.get('isChecked')?.value,
           newRate:Number(ctrl.get('newRate')?.value),
