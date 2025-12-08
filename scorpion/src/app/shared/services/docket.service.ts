@@ -170,7 +170,7 @@ export class DocketService {
       // thirdPartyMobile: new FormControl(null),
 
       // Risk & Documents
-      riskType: new FormControl({ value: 'O', disabled: true }),
+      riskType: new FormControl('O'),
       policyNo: new FormControl(null),
       policyDate: new FormControl(null),
       internalCovers: new FormControl(null),
