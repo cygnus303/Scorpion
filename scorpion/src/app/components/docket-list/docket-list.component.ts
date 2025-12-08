@@ -600,7 +600,7 @@ getCompletionData() {
           "fovCalculated": Number(this.docketService.freightForm.value.fovCalculated) || 0,
           "kkcRate": 0,
           "kkcAmount": 0,
-          "gstType": this.docketService.gstCalculationList.gstType,
+          "gstType": this.docketService.gstCalculationList.gsttype,
           "igstRate": this.docketService.freightForm.value.igstrate || 0,
           "igstAmount": this.docketService.freightForm.value.igstamount || 0,
           "cgstRate": this.docketService.freightForm.value.cgstrate || 0,

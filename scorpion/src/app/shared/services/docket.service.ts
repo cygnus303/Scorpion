@@ -775,7 +775,7 @@ getcontractservicecharge() {
   }
 
   getStaxPaidBy() {
-    this.basicDetailService.getStaxPaidBy(this.contractservicecharge[0].gstPaidBy || 0).subscribe({
+    this.basicDetailService.getStaxPaidBy(this.contractservicecharge[0].stax_PaidBy_Opts || 0).subscribe({
       next: (response: any) => {
         if (response) {
           this.freightForm.patchValue({
