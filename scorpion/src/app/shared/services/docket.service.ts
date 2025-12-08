@@ -205,6 +205,8 @@ export class DocketService {
       discountType:new FormControl(''),
       discountAmount: new FormControl(),
       discount: new FormControl(),
+      stax_exmpt_yn:new FormControl(),
+      isStaxExemp:new FormControl()
     })
   }
 
@@ -580,11 +582,15 @@ getStep2Details() {
           // })
           if (response.isGSTApplicable) {
             this.freightForm.patchValue({
-              gstRate: this.GSTFromTrnMode?.codeDesc
+              gstRate: this.GSTFromTrnMode?.codeDesc,
+              stax_exmpt_yn:'N',
+              isStaxExemp:false
             })
           } else {
             this.freightForm.patchValue({
-              gstRate: 0
+              gstRate: 0,
+              stax_exmpt_yn:'Y',
+              isStaxExemp:true
             })
           }
           // this.getGSTCalculation()
