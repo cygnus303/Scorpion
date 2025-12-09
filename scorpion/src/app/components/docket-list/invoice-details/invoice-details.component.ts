@@ -358,9 +358,9 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                   return; // stop further execution if expired
                 }
                 this.docketService.invoiceRows.controls[index].patchValue({
-                  ewayinvoiceDate: invoiceDate,
+                  ewayinvoiceDate: invDate,
                   ewayBillExpiry: expiryDate,
-                  // invoicedate: invDate,
+                  // invoicedate: invoiceDate,
                   ewayBillNo: search,
                   invoiceNo: response.invno,
                   declaredvalue: response.decval
