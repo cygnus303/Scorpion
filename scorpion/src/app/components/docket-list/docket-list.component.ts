@@ -17,6 +17,7 @@ export class DocketListComponent implements OnInit {
   public isSubmitting: boolean = false;
   decrypted: string = '';
   env = environment;
+  public isRedirect:boolean = false;
   
   public isComplitionlist!:BasePayload;
   @ViewChild(BasicDetailsComponent) basicDetailsComp!: BasicDetailsComponent;
@@ -702,6 +703,7 @@ getCompletionData() {
           if (response) {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             this.docketService.successMsg = 'Docket submitted successfully.'
+             this.isRedirect = true;
             // window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'2'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N&src=angular`;
             window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'2'}?DOCKNO=${response.res.dockNo}&BILLNO=${response.res.billNo}&MRSNo=${response.res.mrsNo}&APMTNO=${response.res.apmtNo}&id=${response.res.id}&IsFromBillGeneration=N&src=angular`;
             this.docketService.basicDetailForm.reset();
@@ -715,6 +717,7 @@ getCompletionData() {
           window.scrollTo({ top: 0, behavior: 'smooth' });
           this.docketService.submitErrorMsg = error?.error?.message;
           this.isSubmitting = false; // ✅ loader stop on error
+           this.isRedirect = false;
 
         }
       });

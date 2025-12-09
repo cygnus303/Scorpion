@@ -12,3 +12,16 @@
     }
   }
 }
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+ 
+.table {
+  min-width: 900px; /* <-- Table ની fixed width */
+}
+.table th,
+.table td {
+  white-space: nowrap;  /* Column wrap નહીં થાય */
+}
