@@ -1037,18 +1037,18 @@ getBaseCode1() {
 calculateChargeWeight(){
       var ACTUWT = this.invoiceform.value.totalActualWeight;
       var CFTTOT = this.invoiceform.value.totalCubicWeight;
-      if (this.step2DetailsList.isVolumentric == 'N') {
+      if (this.step2DetailsList?.isVolumentric == 'N') {
           this.invoiceform.patchValue({
             finalActualWeight:ACTUWT
           })
       }
       else {
-          if (this.step2DetailsList.cftWeightType == "A"){
+          if (this.step2DetailsList?.cftWeightType == "A"){
              this.invoiceform.patchValue({
             finalActualWeight:ACTUWT
           })
           }
-          else if (this.step2DetailsList.cftWeightType == "V")
+          else if (this.step2DetailsList?.cftWeightType == "V")
             this.invoiceform.patchValue({
             finalActualWeight:CFTTOT
           })

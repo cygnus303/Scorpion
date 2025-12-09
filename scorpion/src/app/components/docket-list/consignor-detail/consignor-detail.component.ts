@@ -20,7 +20,7 @@ export class ConsignorDetailComponent {
  
   ngOnInit() {
     this.docketService.consignorbuild();
-    this.docketService.consignorForm.get('riskType')?.disable({ emitEvent: false });
+    // this.docketService.consignorForm.get('riskType')?.disable({ emitEvent: false });
   }
  
   getGSTNODetails(event:any,type:any){
