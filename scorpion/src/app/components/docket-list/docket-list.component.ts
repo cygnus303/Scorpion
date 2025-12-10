@@ -330,7 +330,7 @@ getCompletionData() {
           SrNo: row.srNo,
           DOCKNO: this.docketService.basicDetailForm.value.cNoteNo,
           INVNO: row.invoiceNo || '',
-          INVDT: new Date().toISOString(),
+          INVDT:  row.ewayinvoiceDate?new Date(row.ewayinvoiceDate).toISOString():null,
           DECLVAL: row.declaredvalue || 0,
           PKGSNO: Number(row.noOfPkgs) || 0,
           ACTUWT: row.actualWeight || 0,
