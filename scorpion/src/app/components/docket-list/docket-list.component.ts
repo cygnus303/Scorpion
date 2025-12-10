@@ -186,7 +186,9 @@ getCompletionData() {
               // isDACC: basicDetail.isDACC
             });
             this.basicDetailsComp.onChangeCityListList(this.docketService.basicDetailForm.get('fromCity')?.value,'from');
-            this.docketService.GetGSTFromTrnMode()
+            if(!basicDetail.exemptServices){
+              this.docketService.GetGSTFromTrnMode()
+            }
             // this.docketService.GetDKTGSTForGTA();
             this.docketService.getpincodeData(basicDetail.csgnPinCode);
             this.docketService.consignorForm.patchValue({

@@ -490,6 +490,15 @@ onFileSelect(event: Event) {
       }
     });
   }
+  onExemptServicesChange(event: any) {
+  if (event === null || event === undefined) {
+    return; 
+  }
+  this.docketService.GetDKTGSTForGTA();
+  setTimeout(() => {
+    this.docketService.getGSTCalculation();
+  }, 300);
+}
 
    ReferenceDocket(event:any) {
     const payload = {
