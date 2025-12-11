@@ -1124,23 +1124,23 @@ calculateChargeWeight(){
           this.validateAppointmentDate();
           // Only patch the value if there's no validation error
              this.getFuelSurcharge(this.freightData?.freightCharge);
-        if (!this.weightErrorMsg && !this.isWeightRecalculated) {
+        // if (!this.weightErrorMsg && !this.isWeightRecalculated) {
           const newFinalWeight = Math.max(this.freightData.chargedWeight || 0, this.invoiceform.value.finalActualWeight || 0);
           const newPkgWeight = Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0);
-          const currentFinalWeight = this.invoiceform.value.finalActualWeight;
-          const currentPkgWeight = this.invoiceform.value.chargeWeightPerPkg;
-          if (newFinalWeight !== currentFinalWeight || newPkgWeight !== currentPkgWeight) {
+        //   const currentFinalWeight = this.invoiceform.value.finalActualWeight;
+        //   const currentPkgWeight = this.invoiceform.value.chargeWeightPerPkg;
+        //   if (newFinalWeight !== currentFinalWeight || newPkgWeight !== currentPkgWeight) {
             this.invoiceform.patchValue({
               finalActualWeight: newFinalWeight,
               chargeWeightPerPkg: newPkgWeight
             });
-              this.isWeightRecalculated = true;
-            // 🔄 Call again only once if updated
-            this.calculateChargeWeight();
-            this.GetFreightContractDetails();
-            return; // stop further execution to avoid multiple triggers
-          }
-        }        
+        //       this.isWeightRecalculated = true;
+        //     // 🔄 Call again only once if updated
+        //     this.calculateChargeWeight();
+        //     this.GetFreightContractDetails();
+        //     return; // stop further execution to avoid multiple triggers
+        //   }
+        // }        
       }
     },
   });

@@ -293,6 +293,7 @@ calculateSummary(i: number) {
       { cftTotal: parseFloat(totalCFT.toFixed(2)) },
       { emitEvent: false }
     );
+  this.docketService.calculateChargeWeight();
  
   }
 
