@@ -1067,85 +1067,93 @@ calculateChargeWeight(){
       }
 }
 
-  GetFreightContractDetails() {
-    const data = {
-     chargeRule: this.ruleDetailForChargeRule?.defaultvalue || 'NONE',
-      baseCode1: this.basicDetailForm.value?.BaseCode1 || 'NONE',
-      chargeSubRule: this.step2DetailsList?.chargeBas || 'NONE',
-      baseCode2: this.basicDetailForm.value?.BaseCode2 || 'NONE',
-      // chargedWeight: Math.max(this.invoiceform.value.finalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString(),
-      chargedWeight: this.invoiceform.value.finalActualWeight.toString(),
-      chargedWeright:this.invoiceform.value.finalActualWeight.toString(),
-      contractID: this.step2DetailsList?.contractid,
-      destination: this.basicDetailForm.value.destination,
-      depth: this.depth,
-      flagProceed: this.flagprocedd,
-      fromCity: this.basicDetailForm.value.fromCity,
-      fromstate: this.basicDetailForm.value.originState,
-      tostate: this.basicDetailForm.value.destinationState,
-      itemCode: '',
-      ftlType: this.basicDetailForm.value.typeMovement || '',
-      noOfPkgs: this.invoiceform.value.totalNoOfPkgs?.toString(),
-      origin: this.basicDetailForm.value.origin,
-      payBase: this.basicDetailForm.value.billingType,
-      serviceType: this.basicDetailForm.value.serviceType,
-      toCity: this.basicDetailForm.value.toCity,
-      transMode: this.basicDetailForm.value.mode,
-      orderID: this.step2DetailsList?.contractid,
-      invAmt: this.invoiceform.value.totalDeclaredValue?.toString(),
-      dockdt: this.basicDetailForm.value.cNoteDate.toISOString(),
-      prodcd: this.basicDetailForm.value.contents,
-      isPerPieceRate: this.step2DetailsList?.isPerPieceRate,
-      fromPincode:this.consignorForm.value.consignorPincode,
-      toPincode:this.basicDetailForm.value.pincode,
-      totalPiece:0
-    }
+GetFreightContractDetails() {
 
-    if (!data.invAmt || !data.prodcd || !data.tostate || data.noOfPkgs === "0" || !data.transMode || !data.serviceType) {
-      console.warn("Required fields missing, API not called:", data);
-      return;
-    }
-    this.basicDetailService.GetFreightContractDetails(data).subscribe({
-      next: (response: any) => {
-        if (response) {
-          this.isSubmiting=true;
-          this.freightData = response.result[0];
-          this.contractMessage = this.freightData.contractMessage
-          this.freightForm.patchValue({
-            freightCharges: this.freightData?.freightCharge,
-            rateType: this.freightData.rateType,
-            freightRate: this.freightData.freightRate,
-            EDD: new Date(this.freightData.edd)
-              .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
-              .toUpperCase()
-              .replace(/ /g, '-'),
-            billingState: this.freightData.billingState
-          });
-          this.validateAppointmentDate();
-          // Only patch the value if there's no validation error
-             this.getFuelSurcharge(this.freightData?.freightCharge);
-        // if (!this.weightErrorMsg && !this.isWeightRecalculated) {
-          const newFinalWeight = Math.max(this.freightData.chargedWeight || 0, this.invoiceform.value.finalActualWeight || 0);
-          const newPkgWeight = Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0);
-        //   const currentFinalWeight = this.invoiceform.value.finalActualWeight;
-        //   const currentPkgWeight = this.invoiceform.value.chargeWeightPerPkg;
-        //   if (newFinalWeight !== currentFinalWeight || newPkgWeight !== currentPkgWeight) {
-            this.invoiceform.patchValue({
-              finalActualWeight: newFinalWeight,
-              chargeWeightPerPkg: newPkgWeight
-            });
-        //       this.isWeightRecalculated = true;
-        //     // 🔄 Call again only once if updated
-        //     this.calculateChargeWeight();
-        //     this.GetFreightContractDetails();
-        //     return; // stop further execution to avoid multiple triggers
-        //   }
-        // }        
-      }
-    },
-  });
-    this.isSubmiting=false;
+  const originalFinalWeight = this.invoiceform.value.finalActualWeight;
+
+  const data = {
+    chargeRule: this.ruleDetailForChargeRule?.defaultvalue || 'NONE',
+    baseCode1: this.basicDetailForm.value?.BaseCode1 || 'NONE',
+    chargeSubRule: this.step2DetailsList?.chargeBas || 'NONE',
+    baseCode2: this.basicDetailForm.value?.BaseCode2 || 'NONE',
+
+    chargedWeight: originalFinalWeight?.toString(),
+    chargedWeright: originalFinalWeight?.toString(),
+
+    contractID: this.step2DetailsList?.contractid,
+    destination: this.basicDetailForm.value.destination,
+    depth: this.depth,
+    flagProceed: this.flagprocedd,
+    fromCity: this.basicDetailForm.value.fromCity,
+    fromstate: this.basicDetailForm.value.originState,
+    tostate: this.basicDetailForm.value.destinationState,
+    itemCode: '',
+    ftlType: this.basicDetailForm.value.typeMovement || '',
+    noOfPkgs: this.invoiceform.value.totalNoOfPkgs?.toString(),
+    origin: this.basicDetailForm.value.origin,
+    payBase: this.basicDetailForm.value.billingType,
+    serviceType: this.basicDetailForm.value.serviceType,
+    toCity: this.basicDetailForm.value.toCity,
+    transMode: this.basicDetailForm.value.mode,
+    orderID: this.step2DetailsList?.contractid,
+    invAmt: this.invoiceform.value.totalDeclaredValue?.toString(),
+    dockdt: this.basicDetailForm.value.cNoteDate.toISOString(),
+    prodcd: this.basicDetailForm.value.contents,
+    isPerPieceRate: this.step2DetailsList?.isPerPieceRate,
+    fromPincode: this.consignorForm.value.consignorPincode,
+    toPincode: this.basicDetailForm.value.pincode,
+    totalPiece: 0
+  };
+
+  // Validation
+  if (!data.invAmt || !data.prodcd || !data.tostate || data.noOfPkgs === "0" || !data.transMode || !data.serviceType) {
+    console.warn("Required fields missing, API not called:", data);
+    return;
   }
+
+  this.basicDetailService.GetFreightContractDetails(data).subscribe({
+    next: (response: any) => {
+      if (response) {
+        this.isSubmiting = true;
+
+        this.freightData = response.result[0];
+        this.contractMessage = this.freightData.contractMessage;
+
+        this.freightForm.patchValue({
+          freightCharges: this.freightData?.freightCharge,
+          rateType: this.freightData.rateType,
+          freightRate: this.freightData.freightRate,
+          EDD: new Date(this.freightData.edd)
+            .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+            .toUpperCase()
+            .replace(/ /g, '-'),
+          billingState: this.freightData.billingState
+        });
+
+        this.validateAppointmentDate();
+        this.getFuelSurcharge(this.freightData?.freightCharge);
+
+        // ⭐ Update form weight ONLY if API gives higher value
+        const newFinalWeight = Math.max(
+          this.freightData.chargedWeight || 0,
+          originalFinalWeight || 0
+        );
+
+        const newPkgWeight = Math.max(
+          this.freightData.chargedPKGS || 0,
+          this.invoiceform.value.chargeWeightPerPkg || 0
+        );
+
+        this.invoiceform.patchValue({
+          finalActualWeight: newFinalWeight,
+          chargeWeightPerPkg: newPkgWeight
+        });
+      }
+    }
+  });
+
+  this.isSubmiting = false;
+}
 
 validateAppointmentDate() {
   const appointmentControl = this.basicDetailForm.get('appointmentDT');
