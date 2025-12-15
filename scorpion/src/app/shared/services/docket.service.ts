@@ -67,6 +67,7 @@ export class DocketService {
   public completiondata: any;
   public ruleDetailForChargeRule: any;
  public isWeightRecalculated = false;
+   hasConfirmedNoEwayBill = false;
 
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
