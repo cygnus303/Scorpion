@@ -108,7 +108,7 @@
                                 [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"  [readonly]="row.get('ewayBillNo')?.value?.length === 12"
                                 placeholder="dd/MMM/yyyy" formControlName="ewayinvoiceDate" [ngClass]="{'border-danger': row.get('ewayinvoiceDate')?.invalid && row.get('ewayinvoiceDate')?.touched, 
                                               'required2': isEwayRequired(row)}" [class.disabled-input]="true">
-                              <span class="input-group-text cursor-pointer" (click)="dp2.toggle()" [class.disabled-input]="row.get('ewayBillNo')?.value?.length === 12">
+                              <span class="input-group-text cursor-pointer" (click)="dp2.toggle()" >
                                 <i class="fa fa-calendar"></i>
                               </span>
                             </div>
