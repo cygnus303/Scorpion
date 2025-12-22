@@ -140,7 +140,7 @@ async handleKeydown(event: KeyboardEvent) {
 async handleOutsideClick(event: MouseEvent) {
 
   // 🔒 Global stop after YES
-  if (this.docketService.hasConfirmedNoEwayBill) {
+  if (this.docketService.hasConfirmedNoEwayBill || this.docketService.isComplition) {
     return;
   }
 
