@@ -185,6 +185,8 @@ getCompletionData() {
               ISCounterDelivery: basicDetail.isCounterDelivery,
               // isDACC: basicDetail.isDACC
             });
+          this.getODAData(basicDetail.csgePinCode);
+
             this.basicDetailsComp.onChangeCityListList(this.docketService.basicDetailForm.get('fromCity')?.value,'from');
             if(!basicDetail.exemptServices){
               this.docketService.GetGSTFromTrnMode()
@@ -274,6 +276,16 @@ getCompletionData() {
           }, 300);
         }
       }
+    }
+  });
+}
+
+getODAData(pincode:string){
+this.basicDetailService.getODADetail(pincode).subscribe({
+    next: (response) => {
+      this.docketService.basicDetailForm.patchValue({
+        isODAApplicable:response.data.is_ODA_Apply=== "Y" ? true : false      
+      })
     }
   });
 }
