@@ -20,10 +20,8 @@ export const ChallanRoutes: Routes = [
     canActivate: [DocketGuard]
   },
   {
-    path: 'deliveryUpdate',
-    loadComponent: () =>
-      import('../delivery-update-list/delivery-update-list.component')
-        .then(m => m.DeliveryUpdateListComponent)
+    path: 'UpdateDRS',
+    loadComponent: () => import('../delivery-update-list/delivery-update-list.component').then(m => m.DeliveryUpdateListComponent)
   }
 
 ];
