@@ -151,4 +151,8 @@ export class THCMasterService {
    }
 
 
+   getDeliveryUpdateData(data:any){
+    return this.apiHandlerService.Get(`THC/UpdateDRS?drsId=${data.drsId}&loadBy=${data.loadBy}&chargeType=${data.chargeType}&baseLocationCode=${data.baseLocationCode}`);
+
+   }
 }

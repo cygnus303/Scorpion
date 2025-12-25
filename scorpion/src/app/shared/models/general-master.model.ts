@@ -141,6 +141,10 @@ export interface BasePayload {
   Type: string | number;
   TCNO?:string;
   IsBCProcess?:string;
+
+  drsId?:string
+  chargeType?:string;
+  loadBy?:string;
 }
 
 export interface StatesFromPartyCodeRepsonse {
