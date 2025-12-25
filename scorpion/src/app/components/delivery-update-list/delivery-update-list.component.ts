@@ -86,7 +86,10 @@ createDrsRow(item: any): FormGroup {
   });
 }
 
-
+// in TS
+getRadioControl(i: number): FormControl {
+  return (this.drsList.at(i) as FormGroup).get('isBadPod') as FormControl;
+}
 
     getLoadingCharge(event: any) {
   const data = {
