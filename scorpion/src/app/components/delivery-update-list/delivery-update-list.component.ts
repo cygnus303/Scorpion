@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ChallanService } from 'app/shared/services/challan.service';
 import { DocketService } from 'app/shared/services/docket.service';
+import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 
 @Component({
@@ -16,13 +17,22 @@ import { THCMasterService } from 'app/shared/services/thc-master.service';
 })
 export class DeliveryUpdateListComponent {
   DRSSummaryForm!:FormGroup;
+  DRSInformation!:any;
 
-  constructor(public challanService:ChallanService,public docketService:DocketService,private THCService:THCMasterService
+  constructor(
+    public challanService:ChallanService,
+    public docketService:DocketService,
+    private THCService:THCMasterService,
+    private THCMasterService:THCMasterService,
+    public generalMasterService:GeneralMasterService
 ){}
 
 ngOnInit(){
   this.buildForm();
   this.getDeliveryDetail();
+  this.generalMasterService.getChargeTypeData();
+  this.generalMasterService.getLoadingBy()
+
 }
 
 buildForm(){
@@ -30,9 +40,53 @@ buildForm(){
     LoadingBy:new FormControl(null),
     VendorCode:new FormControl(null),
     LoadingCharge:new FormControl(null),
-    Rate:new FormControl(null)
+    Rate:new FormControl(null),
+    closeKM:new FormControl(0),
+    ratetype:new FormControl(null),
+    drsList: new FormArray([]) 
   })
 }
+
+get drsList(): FormArray {
+  return this.DRSSummaryForm.get('drsList') as FormArray;
+}
+
+
+createDrsRow(item: any): FormGroup {
+  return new FormGroup({
+    autoNo: new FormControl(item.autoNo),
+    dockno: new FormControl(item.dockno),
+    booking_Date: new FormControl(item.booking_Date),
+
+    orgncd: new FormControl(item.orgncd),
+    destcd: new FormControl(item.destcd),
+    payBasis: new FormControl(item.payBasis),
+
+    csgncd: new FormControl(item.csgncd),
+    csgnnm: new FormControl(item.csgnnm),
+    csgecd: new FormControl(item.csgecd),
+    csgenm: new FormControl(item.csgenm),
+    actQty:new FormControl(item.actQty),
+    pkgQty:new FormControl(item.pkgQty),
+    pkgs_Pending: new FormControl(item.pkgs_Pending),
+    pkgs_Arrived: new FormControl(item.pkgs_Arrived),
+    pkgs_Booked: new FormControl(item.pkgs_Booked),
+
+    comm_Dely_Dt: new FormControl(item.comm_Dely_Dt),
+
+    deliveredPkgs: new FormControl(item.pkgs_Arrived),
+    remarks: new FormControl(''),
+
+    isChecked: new FormControl(item.isChecked),
+    isBadPod: new FormControl(item.isEnabledBadPodoption),
+
+    ratetype: new FormControl(item.rateType),   // 👈 bind here
+    newRate: new FormControl(item.rate),
+    otp: new FormControl('')
+  });
+}
+
+
 
     getLoadingCharge(event: any) {
   const data = {
@@ -74,18 +128,42 @@ buildForm(){
   });
 }
 
-getDeliveryDetail(){
-  const payload={
-    drsId:this.docketService.loginUserList.drsId,
-    loadBy:this.docketService.loginUserList.loadBy,
-    chargeType:this.docketService.loginUserList.chargeType,
-    baseLocationCode:this.docketService.loginUserList.LocationCode
-  }
+getDeliveryDetail() {
+  const payload = {
+    drsId: this.docketService.loginUserList.drsId,
+    loadBy: this.docketService.loginUserList.loadBy,
+    chargeType: this.docketService.loginUserList.chargeType,
+    baseLocationCode: this.docketService.loginUserList.LocationCode
+  };
+
   this.THCService.getDeliveryUpdateData(payload).subscribe({
     next: (response: any) => {
-     
+
+      // Header information
+      this.DRSInformation = response.data.drsDeliveryList[0];
+ const summaryRateType = response.data.drsSummary?.rateType;
+
+      this.DRSSummaryForm.patchValue({
+        closeKM: this.DRSInformation?.closeKM,
+        LoadingBy:response.data.drsSummary.loadingBy
+      });
+
+
+      // Table list
+      const docketList = response.data.updateDRSLits || [];
+
+      this.drsList.clear(); // clear old rows
+
+      docketList.forEach((item: any) => {
+        item.rateType = summaryRateType; 
+        this.drsList.push(this.createDrsRow(item));
+      });
     },
-  })
+    error: (err) => {
+      console.error('Delivery Detail API Error', err);
+    }
+  });
 }
+
 
 }
