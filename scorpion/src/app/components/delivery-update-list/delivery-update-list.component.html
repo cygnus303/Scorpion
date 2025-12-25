@@ -1,6 +1,6 @@
 <div class="cnote-entry-container">
     <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
-        <i class="fas fa-filter me-2"></i>
+         <i class="fas fa-list me-2"></i>
         Update DRS Header Information
     </div>
     <div class="form-grid p-4">
@@ -82,6 +82,167 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="cnote-entry-container">
+    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+        <i class="fas fa-list me-2"></i>
+        DRS Delivery List
+    </div>
+    <div class="table-wrapper position-relative p-4">
+        <table class="table table-bordered table-striped table-condensed flip-content mb-0">
+            <thead>
+                <tr>
+                    <th>Sr.No</th>
+                    <th>Dock. No</th>
+                    <th>Dock. Date</th>
+                    <th>DRS No</th>
+                    <th>DRS Date</th>
+                    <th>Pkg / Act</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>63126150</td>
+                    <td>05 Dec 2025</td>
+                    <td>DS/PIM/2526/006282</td>
+                    <td>20 Dec 2025</td>
+                    <td>2.00 / 50.00</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>63138974</td>
+                    <td>13 Dec 2025</td>
+                    <td>DS/PIM/2526/006282</td>
+                    <td>20 Dec 2025</td>
+                    <td>81.00 / 2500.00</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>63142387</td>
+                    <td>16 Dec 2025</td>
+                    <td>DS/PIM/2526/006282</td>
+                    <td>20 Dec 2025</td>
+                    <td>1.00 / 8.00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div class="cnote-entry-container">
+    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+        <i class="fas fa-list me-2"></i>
+        DRS List
+    </div>
+    <div class="p-5">
+        <div class="pod-note d-flex justify-content-start">
+            <strong>Note:</strong> ADD as per POD Copy.
+        </div>
+        <div class="table-responsive pod-table-wrapper">
+            <table class="table pod-table">
+                <thead>
+                    <tr>
+                        <th>Sr.No</th>
+                        <th></th>
+                        <th>IS Bad<br>POD</th>
+                        <th>CNote<br>Bkg. Dt</th>
+                        <th>Bkg-Dely<br>Dest./Loc Pay Basis</th>
+                        <th>Cnor / Cnee</th>
+                        <th>PkgsPending /<br>Arrived / Booked</th>
+                        <th>Committed<br>Dely. Dt</th>
+                        <th>Pkgs.Delivered</th>
+                        <th>Remarks</th>
+                        <th>Rate Type</th>
+                        <th>Pkg / Act</th>
+                        <th>OTP</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><input type="checkbox" /></td>
+
+                        <td class="radio-col">
+                            <label><input type="radio" name="badpod" /> YES</label><br />
+                            <label><input type="radio" name="badpod" /> NO</label>
+                        </td>
+
+
+                        <td>
+                            <strong>63187234</strong><br />
+                            <small>15/12/2025</small>
+                        </td>
+
+                        <td>
+                            KDL - PIM<br />
+                            <small>TBB</small>
+                        </td>
+
+                        <td class="cnor-col">
+                            <strong>8888 : K.P.ManisH Global Ingredients Pvt. Ltd</strong><br />
+                            K.P.ManisH Global Ingredients Pvt. Ltd<br />
+                            <span class="text-danger">8888 : TEJ SARANG ENTERPRISES : TEJ SARANG ENTERPRISES</span>
+                        </td>
+
+                        <td class="text-danger text-center">
+                            8 / 8 / 8
+                        </td>
+
+                        <td>20/12/2025</td>
+
+                        <td>
+                            <input type="text" class="form-control form-control-sm" value="8" />
+                        </td>
+
+                        <td>
+                            <textarea class="form-control form-control-sm" rows="2" placeholder="Remarks"></textarea>
+                        </td>
+
+                        <td>
+                            <select class="form-select form-select-sm">
+                                <option>Type</option>
+                            </select>
+                            <input type="text" class="form-control form-control-sm mt-1" value="0.000" />
+                        </td>
+
+                        <td>8.00 / 200.00</td>
+
+                        <td>
+                            <input type="text" class="form-control form-control-sm" placeholder="OTP" />
+                        </td>
+                    </tr>
+
+                    <!-- Footer Row -->
+                    <tr class="footer-row">
+                        <td colspan="13">
+                            <div class="footer-content">
+                                <div class="left">
+                                    <label>Delivery Date & Time:</label>
+                                    <input type="text" class="form-control form-control-sm"
+                                        value="24 Dec 2025 04:45 PM" />
+                                    <label class="ms-3">Person:</label>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Person Name" />
+                                </div>
+
+                                <div class="right">
+                                    <button class="btn btn-primary btn-sm">
+                                        ⬆ POD Front UPLOAD
+                                    </button>
+                                    <button class="btn btn-primary btn-sm ms-2">
+                                        ⬆ POD Back UPLOAD
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
