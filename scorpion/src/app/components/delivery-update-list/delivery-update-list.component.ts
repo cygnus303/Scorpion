@@ -3,23 +3,36 @@ import { Component } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { DateTimePickerComponent } from 'app/layouts/header/date-time-picker/date-time-picker.component';
 import { ChallanService } from 'app/shared/services/challan.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
+import { SharedModule } from 'app/shared/shared/shared.module';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 
 @Component({
   selector: 'app-delivery-update-list',
   standalone: true,
-  imports:[CommonModule, RouterModule,NgSelectModule,ReactiveFormsModule],
+  imports:[CommonModule, RouterModule,NgSelectModule,ReactiveFormsModule,BsDatepickerModule,SharedModule],
   templateUrl: './delivery-update-list.component.html',
   styleUrl: './delivery-update-list.component.scss'
 })
 export class DeliveryUpdateListComponent {
   public DRSSummaryForm!:FormGroup;
   public DRSInformation!:any;
+  public  minDate: Date | undefined;
+public maxDate = new Date();
 
-  constructor(public challanService:ChallanService,public docketService:DocketService,private THCService:THCMasterService,public generalMasterService:GeneralMasterService){}
+
+  constructor(
+    public challanService:ChallanService,
+    public docketService:DocketService,
+    private THCService:THCMasterService,
+    public generalMasterService:GeneralMasterService,
+
+  ){}
 
 ngOnInit(){
   this.buildForm();
@@ -43,6 +56,24 @@ buildForm(){
 get drsList(): FormArray {
   return this.DRSSummaryForm.get('drsList') as FormArray;
 }
+
+
+getCurrentDateTime(): string {
+  const now = new Date();
+
+  const day = now.getDate().toString().padStart(2, '0');
+  const month = now.toLocaleString('en-US', { month: 'short' });
+  const year = now.getFullYear();
+
+  let hours = now.getHours();
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+
+  hours = hours % 12 || 12; // 12-hour format
+
+  return `${day} ${month} ${year} ${hours}:${minutes} ${ampm}`;
+}
+
 
 createDrsRow(item: any): FormGroup {
   return new FormGroup({
@@ -72,7 +103,11 @@ createDrsRow(item: any): FormGroup {
     showReason: new FormControl(false),
     highlight: new FormControl(false),
     reason: new FormControl(''),
-    cboReason:new FormControl()
+    showDeliveryInfo: new FormControl(false),
+    DELYDATE: new FormControl(this.getCurrentDateTime()),
+    DELYPERSON: new FormControl(''),
+    cboReason:new FormControl(),
+    cboLateReason:new FormControl()
   });
 }
 
@@ -150,7 +185,9 @@ onDeliveredBlur(index: number): void {
       highlight: false
     });
 
-    this.generalMasterService.getReason('LATE_D');
+    // this.generalMasterService.getReason('LATE_D');
+    this.generalMasterService.getReason('PART_D');
+    
     reasonCtrl?.setValidators([Validators.required]);
   }
 

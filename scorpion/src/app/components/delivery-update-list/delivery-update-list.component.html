@@ -57,8 +57,9 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Unloader By:</label>
                         <div class="col-sm-7 text-start fw-bold">
-                            <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Unloader By" readonly
-                                formControlName="LoadingBy" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.loadingBy">
+                            <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Unloader By"
+                                readonly formControlName="LoadingBy" bindLabel="codeDesc" bindValue="codeId"
+                                [items]="generalMasterService.loadingBy">
                             </ng-select>
                         </div>
                     </div>
@@ -67,10 +68,11 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Vendor Code :</label>
                         <div class="col-sm-7 text-start fw-bold">
-                            <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name" formControlName="vendorCode"
-                                [items]="challanService.branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"
-                                required [ngClass]="{ 'border-danger': DRSSummaryForm.get('vendorCode')?.invalid && DRSSummaryForm.get('vendorCode')?.touched }"
-                               appFocusNext></ng-select>
+                            <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name"
+                                formControlName="vendorCode" [items]="challanService.branchWiseLoadingUnloadingList"
+                                bindLabel="text" bindValue="value" required
+                                [ngClass]="{ 'border-danger': DRSSummaryForm.get('vendorCode')?.invalid && DRSSummaryForm.get('vendorCode')?.touched }"
+                                ></ng-select>
                         </div>
                     </div>
                 </div>
@@ -144,150 +146,163 @@
     </div>
 
     <div class="cnote-entry-container">
-    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
-        <i class="fas fa-list me-2"></i>
-        DRS List
-    </div>
-    <div class="p-3 pt-4">
-    <div class="alert alert-warning d-flex align-items-center ps-0 py-0" role="alert">
-        <span class="fw-semibold me-2 border-start border-2 border-primary m-0 ps-2 py-2 ">Note:</span>
-        <span>ADD as per POD Copy.</span>
-    </div>
-        <div class="table-responsive table-wrapper">
-            <table class="table table-bordered align-middle w-100 ">
-                <thead class="table-secondary">
-                    <tr>
-                        <th>Sr.No</th>
-                        <th>IS Bad<br>POD</th>
-                        <th>CNote<br>Bkg. Dt</th>
-                        <th>Bkg-Dely<br>Pay Basis</th>
-                        <th>Cnor / Cnee</th>
-                        <th>PkgsPending /<br>Arrived /<br> Booked</th>
-                        <th>Committed<br>Dely. Dt</th>
-                        <th>Pkgs.Delivered</th>
-                        <th>Remarks</th>
-                        <th>Rate Type</th>
-                        <th>Pkg / Act</th>
-                        <th>OTP</th>
-                    </tr>
-                </thead>
-
-                <tbody  formArrayName="drsList">
-                    <ng-container *ngFor="let row of drsList.controls; let i = index" [formGroupName]="i" class="m-2">
-                        <tr  [ngClass]="i % 2 === 0 ? 'table-custom' : 'table-custom-light'">
-                            <td class="text-center align-middle">
-                                <div class="d-flex align-items-center justify-content-center gap-2">
-                                    <div class="form-check m-0">
-                                        <input class="form-check-input form-check-lg" type="checkbox" style="transform: scale(1.3);" formControlName="isChecked"/>
-                                    </div>
-                                    <span class="fw-semibold">{{ i + 1 }}</span>
-                                </div>
-                            </td>
-                    
-                        <td class="text-center">
-  <div class="btn-group btn-group-sm" role="group">
-    <input type="radio" class="btn-check" [name]="'badpod'+i" id="badpodYes{{ i }}" [value]="true" [formControl]="getRadioControl(i)">
-    <label class="btn btn-outline-success" for="badpodYes{{ i }}">Yes</label>
-
-    <input type="radio" class="btn-check" [name]="'badpod'+i" id="badpodNo{{ i }}" [value]="false" [formControl]="getRadioControl(i)">
-    <label class="btn btn-outline-danger" for="badpodNo{{ i }}">No</label>
-  </div>
-</td>
-
-                    
-                            <td class="text-start">
-                                <b>{{ row.value.dockno }}</b><br>
-                                <small>{{ row.value.booking_Date }}</small>
-                            </td>
-                            <td class="text-start">{{ row.value.orgncd }} - {{ row.value.destcd }}<br><small>{{ row.value.payBasis }}</small></td>
-
-                            <td>
-                                <b>{{ row.value.csgncd }}</b><br>
-                                <span class="text-danger">{{row.value.csgecd }}</span>
-                            </td>
-                    
-                            <td class="text-danger text-center">
-                                {{ row.value.pkgs_Pending }} /
-                                {{ row.value.pkgs_Arrived }} /
-                                {{ row.value.pkgs_Booked }}
-                            </td>
-                    
-                            <td>{{row.value.comm_Dely_Dt  }}</td>
-                    
-                            <td>
-                                <input class="form-control form-control-sm" formControlName="deliveredPkgs" (blur)="onDeliveredBlur(i)">
-                            </td>
-                    
-                            <td>
-                                <input class="form-control form-control-sm"  formControlName="remarks">
-                            </td>
-                    
-                            <td>
-                               <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"
-                                 [items]="generalMasterService.chargeTypeData" readonly></ng-select>
-                                <input type="number" class="form-control form-control-sm mt-1" formControlName="newRate" />
-                            </td>
-                    
-                            <td>{{row.value.pkgQty}}/{{row.value.actQty}}</td>
-                    
-                            <td>
-                                <input class="form-control form-control-sm" formControlName="otp">
-                            </td>
+        <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+            <i class="fas fa-list me-2"></i>
+            DRS List
+        </div>
+        <div class="p-3 pt-4">
+            <div class="alert alert-warning d-flex align-items-center ps-0 py-0" role="alert">
+                <span class="fw-semibold me-2 border-start border-2 border-primary m-0 ps-2 py-2 ">Note:</span>
+                <span>ADD as per POD Copy.</span>
+            </div>
+            <div class="table-responsive table-wrapper">
+                <table class="table table-bordered align-middle w-100 ">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>Sr.No</th>
+                            <th>IS Bad<br>POD</th>
+                            <th>CNote<br>Bkg. Dt</th>
+                            <th>Bkg-Dely<br>Pay Basis</th>
+                            <th>Cnor / Cnee</th>
+                            <th>PkgsPending /<br>Arrived /<br> Booked</th>
+                            <th>Committed<br>Dely. Dt</th>
+                            <th>Pkgs.Delivered</th>
+                            <th>Remarks</th>
+                            <th>Rate Type</th>
+                            <th>Pkg / Act</th>
+                            <th>OTP</th>
                         </tr>
-                    
-                       <!-- 🔹 SUB ROW -->
-                        <tr *ngIf="drsList.at(i).get('showReason')?.value" [ngClass]="i % 2 === 0 ? 'table-custom' : 'table-custom-light'">
-                            <td colspan="12">
-                                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 ">
+                    </thead>
 
-                                    <!-- LEFT SIDE -->
-                                    <div class="d-flex align-items-center flex-wrap gap-3">
-                                        <span class="fw-semibold text-muted">Delivery Date & Time</span>
-
-                                        <input class="form-control form-control-sm" style="width: 180px;" placeholder="DD MMM YYYY HH:MM" />
-
-                                        <span class="fw-semibold text-muted ms-2">Person</span>
-
-                                        <input class="form-control form-control-sm" style="width: 160px;" placeholder="Person Name" />
-                                    </div>
-
-                                    <div class="d-flex align-items-center flex-wrap gap-3">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <span class="fw-semibold text-muted">Reason:</span>
-
-                                    
-                                             <ng-select class="noFoundTextColor required2 clear-icon" formControlName="cboReason" bindLabel="codeDesc" bindValue="codeId"
-                                 [items]="generalMasterService.reasonData" placeholder="Select Reason"></ng-select>
-
-                                            <input class="form-control form-control-sm" style="width: 200px;" placeholder="Select an option" />
+                    <tbody formArrayName="drsList">
+                        <ng-container *ngFor="let row of drsList.controls; let i = index" [formGroupName]="i"
+                            class="m-2">
+                            <tr [ngClass]="i % 2 === 0 ? 'table-custom' : 'table-custom-light'">
+                                <td class="text-center align-middle">
+                                    <div class="d-flex align-items-center justify-content-center gap-2">
+                                        <div class="form-check m-0">
+                                            <input class="form-check-input form-check-lg" type="checkbox"
+                                                style="transform: scale(1.3);" formControlName="isChecked" />
                                         </div>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <span class="fw-semibold text-muted">Mobile No:</span>
-                                            <input class="form-control form-control-sm" style="width:200px;" placeholder="Enter Mobile No">
-                                        </div>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <span class="fw-semibold text-muted">Email:</span>
-                                            <input class="form-control form-control-sm" style="width:200px;" placeholder="Enter Email">
-                                        </div>
+                                        <span class="fw-semibold">{{ i + 1 }}</span>
                                     </div>
+                                </td>
 
-                                    <!-- RIGHT SIDE -->
-                                    <div class="d-flex align-items-center gap-2">
-                                        <button class="btn btn-outline-primary btn-sm">
-                                            ⬆ POD Front UPLOAD
-                                        </button>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <input type="radio" class="btn-check" [name]="'badpod'+i" id="badpodYes{{ i }}"
+                                            [value]="true" [formControl]="getRadioControl(i)">
+                                        <label class="btn btn-outline-success" for="badpodYes{{ i }}">Yes</label>
 
-                                        <button class="btn btn-outline-primary btn-sm">
-                                            ⬆ POD Back UPLOAD
-                                        </button>
+                                        <input type="radio" class="btn-check" [name]="'badpod'+i" id="badpodNo{{ i }}"
+                                            [value]="false" [formControl]="getRadioControl(i)">
+                                        <label class="btn btn-outline-danger" for="badpodNo{{ i }}">No</label>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </ng-container>
-                </tbody>
-            </table>
+                                </td>
+
+
+                                <td class="text-start">
+                                    <b>{{ row.value.dockno }}</b><br>
+                                    <small>{{ row.value.booking_Date }}</small>
+                                </td>
+                                <td class="text-start">{{ row.value.orgncd }} - {{ row.value.destcd }}<br><small>{{
+                                        row.value.payBasis }}</small></td>
+
+                                <td>
+                                    <b>{{ row.value.csgncd }}</b><br>
+                                    <span class="text-danger">{{row.value.csgecd }}</span>
+                                </td>
+
+                                <td class="text-danger text-center">
+                                    {{ row.value.pkgs_Pending }} /
+                                    {{ row.value.pkgs_Arrived }} /
+                                    {{ row.value.pkgs_Booked }}
+                                </td>
+
+                                <td>{{row.value.comm_Dely_Dt }}</td>
+
+                                <td>
+                                    <input class="form-control form-control-sm" formControlName="deliveredPkgs"
+                                        (blur)="onDeliveredBlur(i)">
+                                </td>
+
+                                <td>
+                                    <input class="form-control form-control-sm" formControlName="remarks">
+                                </td>
+
+                                <td>
+                                    <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc"
+                                        bindValue="codeId" [items]="generalMasterService.chargeTypeData"
+                                        readonly></ng-select>
+                                    <input type="number" class="form-control form-control-sm mt-1"
+                                        formControlName="newRate" />
+                                </td>
+
+                                <td>{{row.value.pkgQty}}/{{row.value.actQty}}</td>
+
+                                <td>
+                                    <input class="form-control form-control-sm" formControlName="otp">
+                                </td>
+                            </tr>
+
+                            <!-- 🔹 SUB ROW -->
+                            <tr [ngClass]="i % 2 === 0 ? 'table-custom' : 'table-custom-light'">
+                                <td colspan="12">
+                                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 ">
+
+                                        <!-- LEFT SIDE -->
+                                        <div class="d-flex align-items-center flex-wrap gap-3">
+                                            <span class="fw-semibold text-muted">Delivery Date & Time</span>
+                                                <app-date-time-picker controlName="DELYDATE"  [maxDate]="maxDate"
+                                                    [placeholder]="'Delivery Date & Time'">
+                                                </app-date-time-picker>
+
+                                                <span class="fw-semibold text-muted ms-2">Person</span>
+
+                                                <input class="form-control form-control-sm" style="width: 160px;"
+                                                    placeholder="Person Name" />
+                                            </div>
+                                            <div *ngIf="drsList.at(i).get('showReason')?.value">
+                                                <div class="d-flex align-items-center flex-wrap gap-3">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <span class="fw-semibold text-muted">Reason:</span>
+
+
+                                                        <ng-select class="noFoundTextColor required2 clear-icon"
+                                                            formControlName="cboReason" bindLabel="codeDesc"
+                                                            bindValue="codeId" [items]="generalMasterService.reasonData"
+                                                            placeholder="Select Reason"></ng-select>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <span class="fw-semibold text-muted">Mobile No:</span>
+                                                        <input class="form-control form-control-sm" style="width:200px;"
+                                                            placeholder="Enter Mobile No">
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <span class="fw-semibold text-muted">Email:</span>
+                                                        <input class="form-control form-control-sm" style="width:200px;"
+                                                            placeholder="Enter Email">
+                                                    </div>
+                                                </div>
+
+                                                <!-- RIGHT SIDE -->
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <button class="btn btn-outline-primary btn-sm">
+                                                        ⬆ POD Front UPLOAD
+                                                    </button>
+
+                                                    <button class="btn btn-outline-primary btn-sm">
+                                                        ⬆ POD Back UPLOAD
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 </form>
