@@ -67,11 +67,10 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Vendor Code :</label>
                         <div class="col-sm-7 text-start fw-bold">
-                            <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code"
-                                formControlName="VendorCode" [items]="challanService.branchWiseLoadingUnloadingList"
-                                bindLabel="text" bindValue="value" appFocusNext
-                                (change)="getLoadingCharge($event?.value)"
-                                [ngClass]="{ 'border-danger': DRSSummaryForm.get('VendorCode')?.invalid  && DRSSummaryForm.get('VendorCode')?.touched }"></ng-select>
+                            <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name" formControlName="vendorCode"
+                                [items]="challanService.branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"
+                                required [ngClass]="{ 'border-danger': DRSSummaryForm.get('vendorCode')?.invalid && DRSSummaryForm.get('vendorCode')?.touched }"
+                               appFocusNext></ng-select>
                         </div>
                     </div>
                 </div>
