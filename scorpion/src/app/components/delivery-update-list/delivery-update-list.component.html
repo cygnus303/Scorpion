@@ -9,7 +9,7 @@
                 <div class="col-4">
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">DRS No :</label>
-                        <div class="col-sm-7 text-start fw-bold">
+                        <div class="col-sm-7 text-start fw-bold text-primary">
                             {{DRSInformation?.pdcno}}
                         </div>
                     </div>
@@ -17,15 +17,15 @@
                 <div class="col-4">
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Delivered By :</label>
-                        <div class="col-sm-7 text-start fw-bold">
-                            {{DRSInformation?.bA_Vendor_Code}}
+                        <div class="col-sm-7 text-start fw-bold text-primary">
+                             {{DRSInformation?.deliveryBy}} - {{DRSInformation?.bA_Vendor_Code}}
                         </div>
                     </div>
                 </div>
                 <div class="col-4">
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">DRS Date :</label>
-                        <div class="col-sm-7 text-start fw-bold">
+                        <div class="col-sm-7 text-start fw-bold text-primary">
                             {{DRSInformation?.drsDate| date:'dd-MM-yyyy hh:mm:ss a'}}
                         </div>
                     </div>
@@ -35,8 +35,10 @@
                 <div class="col-4">
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Start/Close KM :</label>
-                        <div class="col-sm-7 text-start fw-bold">
-                            {{DRSInformation?.start_KM}}
+                        <div class="col-sm-1 text-center fw-bold">
+                            {{DRSInformation?.start_KM}}  /
+                        </div>
+                        <div class="col-sm-6 text-start fw-bold">
                             <input class="form-control" type="text" formControlName="closeKM">
                         </div>
                     </div>
@@ -44,9 +46,9 @@
                 <div class="col-4">
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Driver Name :</label>
-                        <div class="col-sm-7 text-start fw-bold">
-                            of Vehicle {{DRSInformation?.vehno}} Carrying {{DRSInformation?.total_Dockets_In_DRS}}
-                            Consignment(s)
+                        <div class="col-sm-7 text-start">
+                           <b>of Vehicle</b> {{DRSInformation?.vehno}}  <b>Carrying {{DRSInformation?.total_Dockets_In_DRS}}
+                            Consignment(s)</b>
                         </div>
                     </div>
                 </div>
@@ -56,41 +58,47 @@
                 <div class="col-3">
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Unloader By:</label>
-                        <div class="col-sm-7 text-start fw-bold">
+                        <div class="col-sm-7 text-start">
                             <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Unloader By" readonly
                                 formControlName="LoadingBy" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.loadingBy">
                             </ng-select>
                         </div>
                     </div>
                 </div>
-                <div class="col-3">
-                    <div class="row align-items-center">
-                        <label class="col-sm-5 col-form-label text-end">Vendor Code :</label>
-                        <div class="col-sm-7 text-start fw-bold">
-                            <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name" formControlName="vendorCode"
-                                [items]="challanService.branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"
-                                required [ngClass]="{ 'border-danger': DRSSummaryForm.get('vendorCode')?.invalid && DRSSummaryForm.get('vendorCode')?.touched }"
-                               appFocusNext></ng-select>
+                @if (['M', 'B', 'A','XX1'].includes(DRSSummaryForm.get('LoadingBy')?.value)){
+                    <div class="col-3">
+                        <div class="row align-items-center">
+                            <label class="col-sm-5 col-form-label text-end">Vendor Code :</label>
+                            <div class="col-sm-7 text-start">
+                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code" formControlName="vendorCode" (change)="getLoadingCharge($event.value)"
+                                    [items]="branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"
+                                    required [ngClass]="{ 'border-danger': DRSSummaryForm.get('vendorCode')?.invalid && DRSSummaryForm.get('vendorCode')?.touched }"
+                                   appFocusNext></ng-select>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
                 <div class="col-3">
-                    <div class="row align-items-center">
-                        <label class="col-sm-5 col-form-label text-end">Rate :</label>
-                        <div class="col-sm-7 text-start fw-bold">
-                            <input class="form-control required2" placeholder="Rate" type="text" formControlName="Rate">
+                  @if(['XX5'].includes(DRSSummaryForm.get('LoadingBy')?.value)){
+                        <div class="row align-items-center">
+                            <label class="col-sm-5 col-form-label text-end">Rate :</label>
+                            <div class="col-sm-7 text-start">
+                                <input class="form-control required2" placeholder="Rate" type="text" formControlName="Rate" readonly>
+                            </div>
                         </div>
+                    }
+                </div>
+            @if (['M', 'A', 'XX5','XX8', 'B', 'XX1'].includes(DRSSummaryForm.get('LoadingBy')?.value)){
+            <div class="col-3">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">UnLoading Charge:</label>
+                    <div class="col-sm-7 text-start">
+                        <input class="form-control required2" placeholder="UnLoading Charge" type="text"
+                            formControlName="LoadingCharge" readonly>
                     </div>
                 </div>
-                <div class="col-3">
-                    <div class="row align-items-center">
-                        <label class="col-sm-5 col-form-label text-end">UnLoading Charge:</label>
-                        <div class="col-sm-7 text-start fw-bold">
-                            <input class="form-control required2" placeholder="UnLoading Charge" type="text"
-                                formControlName="LoadingCharge" readonly>
-                        </div>
-                    </div>
-                </div>
+            </div>
+            }
             </div>
         </div>
     </div>
@@ -185,15 +193,15 @@
                             </td>
                     
                         <td class="text-center">
-  <div class="btn-group btn-group-sm" role="group">
-    <input type="radio" class="btn-check" [name]="'badpod'+i" id="badpodYes{{ i }}" [value]="true" [formControl]="getRadioControl(i)">
-    <label class="btn btn-outline-success" for="badpodYes{{ i }}">Yes</label>
-
-    <input type="radio" class="btn-check" [name]="'badpod'+i" id="badpodNo{{ i }}" [value]="false" [formControl]="getRadioControl(i)">
-    <label class="btn btn-outline-danger" for="badpodNo{{ i }}">No</label>
-  </div>
-</td>
-
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" [name]="'badpod'+i" id="badpodYes{{ i }}" [value]="true"
+                                    [formControl]="getRadioControl(i)">
+                                <label class="btn btn-outline-success" for="badpodYes{{ i }}">Yes</label>
+                                <input type="radio" class="btn-check" [name]="'badpod'+i" id="badpodNo{{ i }}" [value]="false"
+                                    [formControl]="getRadioControl(i)">
+                                <label class="btn btn-outline-danger" for="badpodNo{{ i }}">No</label>
+                            </div>
+                        </td>
                     
                             <td class="text-start">
                                 <b>{{ row.value.dockno }}</b><br>
@@ -225,7 +233,7 @@
                             <td>
                                <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"
                                  [items]="generalMasterService.chargeTypeData" readonly></ng-select>
-                                <input type="number" class="form-control form-control-sm mt-1" formControlName="newRate" />
+                                <input type="number" class="form-control form-control-sm mt-1" formControlName="newRate"  [readOnly]="this.DRSSummaryForm.value.LoadingBy    === 'XX5'"/>
                             </td>
                     
                             <td>{{row.value.pkgQty}}/{{row.value.actQty}}</td>
