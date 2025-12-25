@@ -72,8 +72,13 @@
                             <div class="col-sm-7 text-start">
                                 <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code" formControlName="vendorCode" (change)="getLoadingCharge($event.value)"
                                     [items]="branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"
-                                    required [ngClass]="{ 'border-danger': DRSSummaryForm.get('vendorCode')?.invalid && DRSSummaryForm.get('vendorCode')?.touched }"
-                                   ></ng-select>
+                                    required [ngClass]="{ 'border-danger': DRSSummaryForm.get('vendorCode')?.invalid && DRSSummaryForm.get('vendorCode')?.touched }" >
+                                <ng-template ng-option-tmp let-item="item">
+                                    <div [title]="item.text"> <!-- Set title dynamically for each item -->
+                                        {{ item.text }}
+                                    </div>
+                                </ng-template>
+                                </ng-select>
                             </div>
                         </div>
                     </div>
@@ -161,7 +166,7 @@
                 <span class="fw-semibold me-2 border-start border-2 border-primary m-0 ps-2 py-2 ">Note:</span>
                 <span>ADD as per POD Copy.</span>
             </div>
-            <div class="table-responsive table-wrapper">
+            <div>
                 <table class="table table-bordered align-middle w-100 ">
                     <thead class="table-secondary">
                         <tr>
@@ -233,7 +238,7 @@
                                 </td>
 
                                 <td>
-                                    <input class="form-control form-control-sm" formControlName="remarks">
+                                    <textarea rows="2" class="form-control-textarea" formControlName="remarks"></textarea>
                                 </td>
 
                                 <td>
@@ -247,7 +252,7 @@
                                 <td>{{row.value.pkgQty}}/{{row.value.actQty}}</td>
 
                                 <td>
-                                    <input class="form-control form-control-sm" formControlName="otp">
+                                    <textarea rows="2" class="form-control-textarea" formControlName="otp"></textarea>
                                 </td>
                             </tr>
 
@@ -260,7 +265,7 @@
                                         <div class="d-flex align-items-center flex-wrap gap-3">
                                             <span class="fw-semibold text-muted">Delivery Date & Time</span>
                                                 <app-date-time-picker controlName="DELYDATE"  [maxDate]="maxDate"
-                                                    [placeholder]="'Delivery Date & Time'">
+                                                    [placeholder]="'Delivery Date & Time'" [minDate]="row.value.minDate">
                                                 </app-date-time-picker>
 
                                                 <span class="fw-semibold text-muted ms-2">Person</span>
@@ -268,16 +273,19 @@
                                                 <input class="form-control form-control-sm" style="width: 160px;"
                                                     placeholder="Person Name" />
                                             </div>
-                                            <div *ngIf="drsList.at(i).get('showReason')?.value">
-                                                <div class="d-flex align-items-center flex-wrap gap-3">
+                                                <div class="d-flex align-items-center flex-wrap gap-3" *ngIf="drsList.at(i).get('showReason')?.value">
                                                     <div class="d-flex align-items-center gap-2">
                                                         <span class="fw-semibold text-muted">Reason:</span>
-
-
-                                                        <ng-select class="noFoundTextColor required2 clear-icon"
+                                                        <ng-select class="noFoundTextColor required2 clear-icon" style="width:250px;"
                                                             formControlName="cboReason" bindLabel="codeDesc"
                                                             bindValue="codeId" [items]="generalMasterService.reasonData"
-                                                            placeholder="Select Reason"></ng-select>
+                                                            placeholder="Select Reason">
+                                                        <ng-template ng-option-tmp let-item="item">
+                                                            <div [title]="item.codeDesc"> <!-- Set title here -->
+                                                                {{ item.codeDesc }}
+                                                            </div>
+                                                        </ng-template>
+                                                        </ng-select>
                                                     </div>
                                                     <div class="d-flex align-items-center gap-2">
                                                         <span class="fw-semibold text-muted">Mobile No:</span>
@@ -301,7 +309,6 @@
                                                         ⬆ POD Back UPLOAD
                                                     </button>
                                                 </div>
-                                            </div>
                                         </div>
                                 </td>
                             </tr>

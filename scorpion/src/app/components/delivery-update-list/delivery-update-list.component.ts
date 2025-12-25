@@ -23,18 +23,12 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 export class DeliveryUpdateListComponent {
   public DRSSummaryForm!:FormGroup;
   public DRSInformation!:any;
-  public  minDate: Date | undefined;
-public maxDate = new Date();
+  public minDate: Date | undefined;
+  public maxDate = new Date();
   public branchWiseLoadingUnloadingList:BranchWiseLoadingUnloading[]=[];
 
 
-  constructor(
-    public challanService:ChallanService,
-    public docketService:DocketService,
-    private THCService:THCMasterService,
-    public generalMasterService:GeneralMasterService,
-
-  ){}
+  constructor( public challanService:ChallanService, public docketService:DocketService,private THCService:THCMasterService,public generalMasterService:GeneralMasterService){}
 
 ngOnInit(){
   this.buildForm();
@@ -77,7 +71,9 @@ getCurrentDateTime(): string {
 
 
   createDrsRow(data: any[]) {
-    data.forEach((item) => {
+  data.forEach((item) => {
+     const [day, month, year] = item.booking_Date.split('/');
+     const formattedDate = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
       const group = new FormGroup({
         autoNo: new FormControl(item.autoNo),
         dockno: new FormControl(item.dockno),
@@ -103,14 +99,15 @@ getCurrentDateTime(): string {
         newRate: new FormControl(item.rate),
         otp: new FormControl(''),
         totalLoadingCharge: new FormControl(''),
-         showReason: new FormControl(false),
-    highlight: new FormControl(false),
-    reason: new FormControl(''),
-    showDeliveryInfo: new FormControl(false),
-    DELYDATE: new FormControl(this.getCurrentDateTime()),
-    DELYPERSON: new FormControl(''),
-    cboReason:new FormControl(),
-    cboLateReason:new FormControl()
+        showReason: new FormControl(false),
+        highlight: new FormControl(false),
+        reason: new FormControl(''),
+        showDeliveryInfo: new FormControl(false),
+        DELYDATE: new FormControl(this.getCurrentDateTime()),
+        DELYPERSON: new FormControl(''),
+        cboReason:new FormControl(),
+        cboLateReason:new FormControl(),
+        minDate:new FormControl(formattedDate)
       });
       group.get('ratetype')?.valueChanges.subscribe(() => this.calculateCharge(group));
       group.get('newRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
@@ -119,27 +116,31 @@ getCurrentDateTime(): string {
   }
 
   calculateCharge(group: FormGroup) {
-  const rateType = group.get('ratetype')?.value;
-  const newRate = parseFloat(group.get('newRate')?.value || 0);
-  const actuwt = parseFloat(group.get('actQty')?.value || 0);
-  const pkgsno = parseFloat(group.get('pkgQty')?.value || 0);
-  let charge = 0;
-  switch (rateType) {
-    case '1': // PER KG
-      charge = actuwt * newRate;
-      break;
-    case '3': // PER PACKAGES
-      charge = pkgsno * newRate;
-      break;
-    case '4': // FLAT
-      charge = newRate;
-      break;
-    default:
-      charge = 0;
+    const rateType = group.get('ratetype')?.value;
+    const newRate = parseFloat(group.get('newRate')?.value || 0);
+    const actuwt = parseFloat(group.get('actQty')?.value || 0);
+    const pkgsno = parseFloat(group.get('pkgQty')?.value || 0);
+    let charge = 0;
+    switch (rateType) {
+      case '1': // PER KG
+        charge = actuwt * newRate;
+        break;
+      case '3': // PER PACKAGES
+        charge = pkgsno * newRate;
+        break;
+      case '4': // FLAT
+        charge = newRate;
+        break;
+      default:
+        charge = 0;
+    }
+    group.get('totalLoadingCharge')?.setValue(charge.toFixed(2), { emitEvent: false });
+    this.updateTotalLoadingCharge()
   }
-  group.get('totalLoadingCharge')?.setValue(charge.toFixed(2), { emitEvent: false });
-  this.updateTotalLoadingCharge()
-}
+
+   getMinDate(bookingDate: string): Date {
+    return new Date(bookingDate);
+  }
 
 updateTotalLoadingCharge() {
    const total = this.drsList.controls.reduce((sum, ctrl) => {
