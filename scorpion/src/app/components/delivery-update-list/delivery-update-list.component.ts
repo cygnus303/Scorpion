@@ -144,23 +144,22 @@ getDeliveryDetail() {
 
       // Header information
       this.DRSInformation = response.data.drsDeliveryList[0];
- const summaryRateType = response.data.drsSummary?.rateType;
+      const summaryRateType = response.data.drsSummary?.rateType;
 
       this.DRSSummaryForm.patchValue({
         closeKM: this.DRSInformation?.closeKM,
         LoadingBy:response.data.drsSummary.loadingBy
       });
 
-
-      // Table list
       const docketList = response.data.updateDRSLits || [];
 
-      this.drsList.clear(); // clear old rows
+      this.drsList.clear();
 
       docketList.forEach((item: any) => {
         item.rateType = summaryRateType; 
         this.drsList.push(this.createDrsRow(item));
       });
+      this.getPANnumberData(response.data.drsSummary.loadingBy);
     },
     error: (err) => {
       console.error('Delivery Detail API Error', err);
@@ -168,5 +167,20 @@ getDeliveryDetail() {
   });
 }
 
+getPANnumberData(vendorCode:any){
+   const ChargedBy =vendorCode;
+    if (ChargedBy === 'B' || ChargedBy == '04') {
+      this.challanService.getChargesVendorsList('04');
+    }
+    if (ChargedBy === 'A' || ChargedBy == 'XX1') {
+      this.challanService.getChargesVendorsList('XX1');
+    }
+    if (ChargedBy === 'M') {
+      this.challanService.getChargesVendorsList('19');
+    }
+    if (ChargedBy === 'XX5' || ChargedBy === 'XX8') {
+      this.challanService.branchWiseLoadingUnloading(vendorCode);
+    }
+}
 
 }
