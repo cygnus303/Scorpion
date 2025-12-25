@@ -16,6 +16,7 @@ export class GeneralMasterService {
   public chargeTypeData:PRSGeneralMasterResponse[]=[];
   public LsTransportModeData:PRSGeneralMasterResponse[]=[];
   public loadingBy:PRSGeneralMasterResponse[]=[];
+  public reasonData:PRSGeneralMasterResponse[]=[];
 
  constructor(
      public THCMasterService: THCMasterService, private basicDetailService: BasicDetailService,
@@ -86,6 +87,16 @@ export class GeneralMasterService {
       next: (response) => {
         if (response.success) {
           this.LsTransportModeData = response.data;
+        }
+      },
+    });
+  }
+
+    getReason(codeType:string){
+    this.THCMasterService.getGeneralMasterDetail(codeType).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.reasonData = response.data;
         }
       },
     });

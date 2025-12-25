@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ChallanService } from 'app/shared/services/challan.service';
@@ -68,7 +68,11 @@ createDrsRow(item: any): FormGroup {
     isBadPod: new FormControl(item.isEnabledBadPodoption),
     ratetype: new FormControl(item.rateType),  
     newRate: new FormControl(item.rate),
-    otp: new FormControl('')
+    otp: new FormControl(''),
+    showReason: new FormControl(false),
+    highlight: new FormControl(false),
+    reason: new FormControl(''),
+    cboReason:new FormControl()
   });
 }
 
@@ -120,5 +124,48 @@ getPANnumberData(vendorCode:any){
       this.challanService.branchWiseLoadingUnloading(vendorCode);
     }
 }
+
+onDeliveredBlur(index: number): void {
+  const row = this.drsList.at(index) as FormGroup;
+
+  const delivered = Number(row.get('deliveredPkgs')?.value || 0);
+  const pending = Number(row.get('pkgs_Pending')?.value || 0);
+  const reasonCtrl = row.get('reason');
+
+  // 🔴 CASE 1: Delivered = 0 → UNDELY ONLY
+  if (delivered === 0) {
+    row.patchValue({
+      showReason: true,
+      highlight: false
+    });
+
+    this.generalMasterService.getReason('UNDELY');
+    reasonCtrl?.setValidators([Validators.required]);
+  }
+
+  // 🟠 CASE 2: Delivered > 0 AND Delivered < Pending → LATE_D
+  else if (delivered < pending) {
+    row.patchValue({
+      showReason: true,
+      highlight: false
+    });
+
+    this.generalMasterService.getReason('LATE_D');
+    reasonCtrl?.setValidators([Validators.required]);
+  }
+
+  // 🟢 CASE 3: Delivered >= Pending → NO reason
+  else {
+    row.patchValue({
+      showReason: false,
+      highlight: true
+    });
+
+    reasonCtrl?.clearValidators();
+  }
+
+  reasonCtrl?.updateValueAndValidity();
+}
+
 
 }

@@ -215,7 +215,7 @@
                             <td>{{row.value.comm_Dely_Dt  }}</td>
                     
                             <td>
-                                <input class="form-control form-control-sm" formControlName="deliveredPkgs">
+                                <input class="form-control form-control-sm" formControlName="deliveredPkgs" (blur)="onDeliveredBlur(i)">
                             </td>
                     
                             <td>
@@ -236,7 +236,7 @@
                         </tr>
                     
                        <!-- 🔹 SUB ROW -->
-                        <tr [ngClass]="i % 2 === 0 ? 'table-custom' : 'table-custom-light'">
+                        <tr *ngIf="drsList.at(i).get('showReason')?.value" [ngClass]="i % 2 === 0 ? 'table-custom' : 'table-custom-light'">
                             <td colspan="12">
                                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 ">
 
@@ -255,7 +255,9 @@
                                         <div class="d-flex align-items-center gap-2">
                                             <span class="fw-semibold text-muted">Reason:</span>
 
-                                            <input class="form-control form-control-sm" style="width: 200px;" placeholder="Select Reason" />
+                                    
+                                             <ng-select class="noFoundTextColor required2 clear-icon" formControlName="cboReason" bindLabel="codeDesc" bindValue="codeId"
+                                 [items]="generalMasterService.reasonData" placeholder="Select Reason"></ng-select>
 
                                             <input class="form-control form-control-sm" style="width: 200px;" placeholder="Select an option" />
                                         </div>
