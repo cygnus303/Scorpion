@@ -143,7 +143,7 @@ export class THCMasterService {
   }
 
    getBranchWiseLoadingUnloadingVendorList(data:any){
-    return this.apiHandlerService.Get(`THC/getBranchWiseLoadingUnloadingVendorListJson?type=${'L'}&vendorType=${data.vendorType}&baseLocationCode=${data.baseLocationCode}`);
+    return this.apiHandlerService.Get(`THC/getBranchWiseLoadingUnloadingVendorListJson?type=${data?.type ? data?.type: 'L'}&vendorType=${data.vendorType}&baseLocationCode=${data.baseLocationCode}`);
    }
 
   getLoadingCharge(data:any){
