@@ -32,6 +32,9 @@ export class DocketGuard implements CanActivate {
       // else if (currentRoute.includes("ChallanList")) {
       //   return this.handleChallan(parsedData);
       // } 
+      else if (currentRoute.includes("UpdateDRS")) {
+        return this.handleUpdateDRS(parsedData);
+      } 
       else if (currentRoute.includes("LoadingSheet")) {
         return this.handleLoadingSheet(parsedData);
       } 
@@ -132,6 +135,25 @@ export class DocketGuard implements CanActivate {
     const requiredKeys = [
       "FinYear", "LocationCode", "LocationName",
       "UserImage", "UserId", "BaseUserName", "Companycode" , "Type"
+    ];
+    if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
+      // this.docketService.loginUserList = parsedData;
+      this.docketService.Location = parsedData.LocationCode;
+      this.docketService.BaseUserCode = parsedData.UserId;
+      this.docketService.baseUsername = parsedData.BaseUserName;
+      localStorage.setItem("loginUserList", JSON.stringify(parsedData));
+      this.docketService.isComplition = true;
+      // 👇 parsedData save so component can later call getCompletionData
+      return true;
+    }
+    this.router.navigate(['/error']);
+    return false;
+  }
+
+    private handleUpdateDRS(parsedData: any): boolean {
+    const requiredKeys = [
+      "FinYear", "LocationCode", "LocationName",
+      "UserImage", "UserId", "BaseUserName", "Companycode","loadBy" ,"chargeType","drsId"
     ];
     if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
       // this.docketService.loginUserList = parsedData;
