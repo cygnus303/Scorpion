@@ -32,7 +32,7 @@ export class DeliveryUpdateListComponent {
   public isSubmitting:boolean = false;
   public isRedirect:boolean = false;
   public drsDeliveryList:any[]=[];
-
+  
 
   constructor( public challanService:ChallanService,public deliveryUpdateService:DeliveryUpdateService, public docketService:DocketService,private THCService:THCMasterService,public generalMasterService:GeneralMasterService,public sweetAlertService:SweetAlertService){}
 
@@ -99,10 +99,10 @@ getCurrentDateTime(): string {
         comm_Dely_Dt: new FormControl(item.comm_Dely_Dt),
         deliveredPkgs: new FormControl(item.pkgs_Arrived),
         remarks: new FormControl(''),
-        isChecked: new FormControl(item.isChecked),
-        isBadPod: new FormControl(item.isEnabledBadPodoption),
+        isChecked: new FormControl(true),
+        isBadPod: new FormControl(),
         ratetype: new FormControl(item.rateType),
-        newRate: new FormControl(item.rate),
+        newRate: new FormControl(0),
         otp: new FormControl(''),
         DELYDATE: new FormControl(this.getCurrentDateTime()),
         cboReason:new FormControl(),
@@ -113,7 +113,10 @@ getCurrentDateTime(): string {
         showReason: new FormControl(false),
         rateError: new FormControl(''),
         frontFiles: new FormControl<File[]>([]),
-        backFiles: new FormControl<File[]>([])
+        backFiles: new FormControl<File[]>([]),
+        frontPreview: new FormControl<string | null>(null),
+        backPreview: new FormControl<string | null>(null),
+         podValidated: new FormControl(false)
       });
       group.get('ratetype')?.valueChanges.subscribe(() => this.calculateCharge(group));
       group.get('newRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
@@ -311,7 +314,7 @@ onDeliveredBlur(index: number): void {
   }
 
   if (show) {
-    row.patchValue({ showReason: true });
+    row.patchValue({ showReason: true ,cboReason:null});
     this.generalMasterService.getReason(reasonType);
 
     // 🔹 Apply validators ONLY when showReason = true
@@ -366,20 +369,113 @@ onDeliveredBlur(index: number): void {
     });
   }
 
-  onFileSelected(event: any, index: number, type: 'FRONT' | 'BACK') {
-  const files: File[] = Array.from(event.target.files);
-  const rowGroup = this.drsList.at(index) as FormGroup;
+getPreview(file: File): string {
+  return URL.createObjectURL(file);
+}
+
+onFileSelected(event: any, index: number, type: 'FRONT' | 'BACK') {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  const row = this.drsList.at(index) as FormGroup;
+  const previewUrl = URL.createObjectURL(file);
 
   if (type === 'FRONT') {
-    rowGroup.patchValue({
-      frontFiles: [...rowGroup.value.frontFiles, ...files]
+    // cleanup old url
+    const old = row.get('frontPreview')?.value;
+    if (old) URL.revokeObjectURL(old);
+
+    row.patchValue({
+      frontFiles: [file],
+      frontPreview: previewUrl
     });
   } else {
-    rowGroup.patchValue({
-      backFiles: [...rowGroup.value.backFiles, ...files]
+    const old = row.get('backPreview')?.value;
+    if (old) URL.revokeObjectURL(old);
+
+    row.patchValue({
+      backFiles: [file],
+      backPreview: previewUrl
+    });
+  }
+
+  event.target.value = '';
+
+  this.validatePOD(index);
+}
+
+
+removeFile(index: number, type: 'FRONT' | 'BACK') {
+  const row = this.drsList.at(index) as FormGroup;
+
+  if (type === 'FRONT') {
+    const url = row.get('frontPreview')?.value;
+    if (url) URL.revokeObjectURL(url);
+
+    row.patchValue({
+      frontFiles: [],
+      frontPreview: null
+    });
+  } else {
+    const url = row.get('backPreview')?.value;
+    if (url) URL.revokeObjectURL(url);
+
+    row.patchValue({
+      backFiles: [],
+      backPreview: null
     });
   }
 }
+
+ 
+validatePOD(index: number) {
+ 
+  const row = this.drsList.at(index) as FormGroup;
+  const docketNo = row.get('dockno')?.value;
+ 
+  if (!docketNo) {
+    console.error('Dock No not found for row', index);
+    return;
+  }
+ 
+  const frontFiles = row.get('frontFiles')?.value || [];
+  const backFiles  = row.get('backFiles')?.value || [];
+ 
+  // OPTIONAL: only front mandatory
+  if (!frontFiles.length) {
+    return;
+  }
+ 
+  const formData = new FormData();
+  formData.append('DocNo', docketNo);
+ 
+  frontFiles.forEach((file: File) => {
+    formData.append('PodFile', file);
+  });
+ 
+  // If backend needs back also
+  backFiles.forEach((file: File) => {
+    formData.append('PodBackFile', file);
+  });
+ 
+  this.deliveryUpdateService.checkPODValidation(formData).subscribe({
+    next: (response: any) => {
+      if (response?.success) {
+        row.patchValue({ podValidated: true });
+      } else {
+        this.sweetAlertService.error(
+          `POD validation failed for Dock No ${docketNo}`
+        );
+      }
+    },
+    error: (error) => {
+      this.sweetAlertService.error(
+        error?.error?.message || `Error validating POD for Dock No ${docketNo}`
+      );
+    }
+  });
+}
+
 
 
   deliveryUpdate(){
@@ -407,22 +503,15 @@ onDeliveredBlur(index: number): void {
    formData.append("BaseUserName",this.docketService.loginUserList.BaseUserName);
    formData.append("FinYear",this.docketService.loginUserList.FinYear);
 
-   this.drsList.controls.forEach((ctrl: any, index: number) => {
-    ctrl.value.frontFiles?.forEach((file: File) => {
-      formData.append(
-        'Files',
-        file,
-        `${ctrl.value.dockno}_FRONT_${file.name}`
-      );
+   this.drsList.controls.forEach((ctrl: any) => {
+      ctrl.value.frontFiles.forEach((file: File) => {
+        formData.append('Files', file, `${ctrl.value.dockno}_FRONT_${file.name}`);
+      });
+
+      ctrl.value.backFiles.forEach((file: File) => {
+        formData.append('BackFiles', file, `${ctrl.value.dockno}_BACK_${file.name}`);
+      });
     });
-    ctrl.value.backFiles?.forEach((file: File) => {
-      formData.append(
-        'BackFiles',
-        file,
-        `${ctrl.value.dockno}_BACK_${file.name}`
-      );
-    });
-  });
 
   if(this.DRSSummaryForm.valid){
     this.isSubmitting = true;

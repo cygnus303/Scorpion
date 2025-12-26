@@ -13,4 +13,7 @@ constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerServ
     return this.apiHandlerService.Post(`THC/add-update`,paylaod);
   }
 
+    checkPODValidation(formData:any){
+    return this.apiHandlerService.Post(`THC/check-validation`,formData);
+   }
 }
