@@ -159,4 +159,9 @@ loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
   getODADetail(pincode:string){
     return this.apiHandlerService.Get(`Operation/GetPincodeMatrixCharges?pincode=${pincode}`)
   }
+
+  getMaxDiscount(payload:any){
+    return this.apiHandlerService.Get(`Operation/max-discount?contractId=${payload.contractId}&docketDate=${payload.docketDate}`)
+
+  }
 }
