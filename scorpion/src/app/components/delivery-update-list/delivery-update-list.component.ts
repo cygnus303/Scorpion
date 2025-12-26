@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { DateTimePickerComponent } from 'app/layouts/header/date-time-picker/date-time-picker.component';
+import { mobileNo } from 'app/shared/constants/common';
 import { BranchWiseLoadingUnloading } from 'app/shared/models/thc-master.model';
 import { ChallanService } from 'app/shared/services/challan.service';
 import { DocketService } from 'app/shared/services/docket.service';
@@ -41,7 +41,7 @@ buildForm(){
   this.DRSSummaryForm = new FormGroup({
     LoadingBy:new FormControl(null),
     vendorCode:new FormControl(null),
-    LoadingCharge:new FormControl(null),
+    LoadingCharge:new FormControl(0,[Validators.required, Validators.min(0.01)]),
     Rate:new FormControl(null),
     closeKM:new FormControl(0),
     ratetype:new FormControl(null),
@@ -251,8 +251,17 @@ onDeliveredBlur(index: number): void {
       highlight: false
     });
 
-    // this.generalMasterService.getReason('LATE_D');
     this.generalMasterService.getReason('PART_D');
+    
+    reasonCtrl?.setValidators([Validators.required]);
+  }
+  else if (delivered > pending) {
+    row.patchValue({
+      showReason: true,
+      highlight: false
+    });
+
+    this.generalMasterService.getReason('LATE_D');
     
     reasonCtrl?.setValidators([Validators.required]);
   }

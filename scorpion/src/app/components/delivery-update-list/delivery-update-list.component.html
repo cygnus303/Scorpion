@@ -99,7 +99,13 @@
                     <label class="col-sm-5 col-form-label text-end">UnLoading Charge:</label>
                     <div class="col-sm-7 text-start">
                         <input class="form-control required2" placeholder="UnLoading Charge" type="text"
-                            formControlName="LoadingCharge" readonly>
+                            formControlName="LoadingCharge" readonly min="0.01"
+                             [ngClass]="{ 'border-danger': DRSSummaryForm.get('LoadingCharge')?.hasError('min') && DRSSummaryForm.get('LoadingCharge')?.touched}">
+                           <div
+                *ngIf="DRSSummaryForm.get('LoadingCharge')?.hasError('min') && DRSSummaryForm.get('LoadingCharge')?.touched"
+                class="text-danger col-md-7 text-start">
+                Please enter a value greater than or equal to 0.01.
+              </div> 
                     </div>
                 </div>
             </div>
@@ -270,8 +276,8 @@
 
                                                 <span class="fw-semibold text-muted ms-2">Person</span>
 
-                                                <input class="form-control form-control-sm" style="width: 160px;"
-                                                    placeholder="Person Name" />
+                                                <input class="form-control form-control-sm required2" style="width: 160px;"
+                                                    placeholder="Person Name" formControlName="DELYPERSON"/>
                                             </div>
                                                 <div class="d-flex align-items-center flex-wrap gap-3" *ngIf="drsList.at(i).get('showReason')?.value">
                                                     <div class="d-flex align-items-center gap-2">
@@ -289,13 +295,20 @@
                                                     </div>
                                                     <div class="d-flex align-items-center gap-2">
                                                         <span class="fw-semibold text-muted">Mobile No:</span>
-                                                        <input class="form-control form-control-sm" style="width:200px;"
-                                                            placeholder="Enter Mobile No">
+                                                        <input class="form-control form-control-sm required2" style="width:200px;"
+                                                            placeholder="Enter Mobile No" formControlName="cboMobileNo" maxlength="10" pattern="[0-9]*"
+                                                            (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()">
+                                                            <div *ngIf="DRSSummaryForm.get('cboMobileNo')?.touched && DRSSummaryForm.get('cboMobileNo')?.invalid"
+                                                                    class="text-danger col-md-7 text-start">
+                                                            <div *ngIf="DRSSummaryForm.get('cboMobileNo')?.errors?.['required']">
+                                                                Please enter a valid Indian mobile number.
+                                                                </div>
+                                                            </div>
                                                     </div>
                                                     <div class="d-flex align-items-center gap-2">
                                                         <span class="fw-semibold text-muted">Email:</span>
-                                                        <input class="form-control form-control-sm" style="width:200px;"
-                                                            placeholder="Enter Email">
+                                                        <input class="form-control form-control-sm required2" style="width:200px;"
+                                                            placeholder="Enter Email" formControlName="cboEmail">
                                                     </div>
                                                 </div>
 
