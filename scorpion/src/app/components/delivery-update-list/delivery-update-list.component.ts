@@ -40,11 +40,14 @@ ngOnInit(){
    const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
+      //  this.docketService.loginUserList.loadBy = "B";
+      // this.docketService.loginUserList.chargeType='1';
+      // this.docketService.loginUserList.drsId='DS/PIM/2526/002774';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
-    
+
   this.buildForm();
   this.getDeliveryDetail();
   this.generalMasterService.getChargeTypeData();
@@ -54,7 +57,7 @@ ngOnInit(){
 buildForm(){
   this.DRSSummaryForm = new FormGroup({
     LoadingBy:new FormControl(null),
-    vendorCode:new FormControl(null),
+    vendorCode:new FormControl(null,Validators.required),
     LoadingCharge:new FormControl(0,[Validators.required, Validators.min(0.01)]),
     Rate:new FormControl(null),
     closeKM:new FormControl(0),
@@ -116,7 +119,7 @@ getCurrentDateTime(): string {
         cboReason:new FormControl(),
         cboEmail: new FormControl(''),
         cboMobileNo: new FormControl(''),
-        DELYPERSON: new FormControl(''),
+        DELYPERSON: new FormControl('',Validators.required),
         totalLoadingCharge: new FormControl(''),
         showReason: new FormControl(false),
         rateError: new FormControl(''),

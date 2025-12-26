@@ -21,3 +21,6 @@ table tbody tr.table-custom-light td{
 .form-check-input:checked{
   border: none !important;
 }
+.table > thead {
+    vertical-align: center !important;
+}
