@@ -112,6 +112,8 @@ getCurrentDateTime(): string {
         totalLoadingCharge: new FormControl(''),
         showReason: new FormControl(false),
         rateError: new FormControl(''),
+        frontFiles: new FormControl<File[]>([]),
+        backFiles: new FormControl<File[]>([])
       });
       group.get('ratetype')?.valueChanges.subscribe(() => this.calculateCharge(group));
       group.get('newRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
@@ -364,21 +366,64 @@ onDeliveredBlur(index: number): void {
     });
   }
 
+  onFileSelected(event: any, index: number, type: 'FRONT' | 'BACK') {
+  const files: File[] = Array.from(event.target.files);
+  const rowGroup = this.drsList.at(index) as FormGroup;
+
+  if (type === 'FRONT') {
+    rowGroup.patchValue({
+      frontFiles: [...rowGroup.value.frontFiles, ...files]
+    });
+  } else {
+    rowGroup.patchValue({
+      backFiles: [...rowGroup.value.backFiles, ...files]
+    });
+  }
+}
+
 
   deliveryUpdate(){
+    const DRSDocketsUpdateList = this.drsList.getRawValue().map((row: any) => ({
+    remark: row.remarks || '',
+    isEnabledBadPodoption: row.isBadPod === true,
+    autoNo: row.autoNo,
+    dockno: row.dockno,
+    isEnabled: row.isChecked === true,
+    ratetype: row.ratetype,
+    delydate: row.DELYDATE,   // already ISO
+    pkgsdelivered: Number(row.deliveredPkgs) || 0,
+    pkgs_Pending: Number(row.pkgs_Pending) || 0
+  }));
+
   const formData = new FormData();
-  // formData.append("DRSDocketsUpdateList", THCCharge);
-  //  formData.append("pdcno", "N/A");
-  //  formData.append("LoadingBy", JSON.stringify(DocketList));
-  //  formData.append("VendorCode", JSON.stringify(ListVendorType));
-  //  formData.append("IsMonthly", JSON.stringify(ListCharges));
-  //  formData.append("LoadingCharge",JSON.stringify(MFList));
-  //  formData.append("CloseKM", JSON.stringify(THCCharge));
-  //  formData.append("LocationCode",JSON.stringify(PRSDRSDocketList));
-  //  formData.append("BaseUserName",JSON.stringify(PRSDRSDocketList));
-  //  formData.append("FinYear",JSON.stringify(PRSDRSDocketList));
-  //  formData.append("Files",JSON.stringify(PRSDRSDocketList));
-  //  formData.append("BackFiles",JSON.stringify(PRSDRSDocketList));
+   formData.append("DRSDocketsUpdateList",  JSON.stringify(DRSDocketsUpdateList));
+   formData.append("pdcno", this.DRSInformation.pdcno);
+   formData.append("LoadingBy", this.DRSInformation.loadingBy);
+   formData.append("VendorCode", this.DRSSummaryForm.value.vendorCode);
+   formData.append("IsMonthly", this.DRSInformation.isMonthly);
+   formData.append("LoadingCharge",this.DRSSummaryForm.value.LoadingCharge);
+   formData.append("CloseKM", this.DRSSummaryForm.value.closeKM);
+   formData.append("LocationCode",this.docketService.loginUserList.LocationCode);
+   formData.append("BaseUserName",this.docketService.loginUserList.BaseUserName);
+   formData.append("FinYear",this.docketService.loginUserList.FinYear);
+
+   this.drsList.controls.forEach((ctrl: any, index: number) => {
+    ctrl.value.frontFiles?.forEach((file: File) => {
+      formData.append(
+        'Files',
+        file,
+        `${ctrl.value.dockno}_FRONT_${file.name}`
+      );
+    });
+    ctrl.value.backFiles?.forEach((file: File) => {
+      formData.append(
+        'BackFiles',
+        file,
+        `${ctrl.value.dockno}_BACK_${file.name}`
+      );
+    });
+  });
+
   if(this.DRSSummaryForm.valid){
     this.isSubmitting = true;
     this.deliveryUpdateService.deliveryUpdate(formData).subscribe({next: (response:any) => {
