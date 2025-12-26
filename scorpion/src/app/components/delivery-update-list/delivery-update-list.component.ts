@@ -518,7 +518,8 @@ validatePOD(index: number) {
     this.deliveryUpdateService.deliveryUpdate(formData).subscribe({next: (response:any) => {
         if (response && response.data && !response.data.isError) {
           this.isRedirect = true;
-          // window.parent.location.href = `${this.env.liveUrl}Operation/ChallanDone?DOCNO=${response.data.docno}&DOCTYP=${response.data.doctyp}&TranXaction=${response.data.tranXaction}&IsError=${response.data.isError}&src=angular`;
+          // https://sepluat.cygnux.in/Operation/UpdateDRSResult?DRSNO=DS%2FPIM%2F2526%2F002770
+          window.parent.location.href = `${this.env.liveUrl}Operation/UpdateDRSResult?DRSNO=${this.DRSInformation?.pdcno}&src=angular`;
         }else{
              this.sweetAlertService.error('You have some form errors. Please check below.');
         }
