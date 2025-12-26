@@ -66,8 +66,10 @@ export class DocketService {
   public isComplition : boolean = false;
   public completiondata: any;
   public ruleDetailForChargeRule: any;
- public isWeightRecalculated = false;
-   hasConfirmedNoEwayBill = false;
+  public isWeightRecalculated = false;
+  public hasConfirmedNoEwayBill = false;
+  public maxDiscountLimit: number = 0;
+
 
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
@@ -377,6 +379,50 @@ freightAndOtherChar(type:string){
       }
     });
   }
+
+getMaxDiscountLimit() {
+const date = new Date(this.basicDetailForm.value.cNoteDate);
+
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = date.toLocaleString('en-GB', { month: 'long' });
+  const year = date.getFullYear();
+
+  const formattedDate = `${day} ${month} ${year}`; // 26 December 2025
+
+  const payload = {
+    contractId: this.step2DetailsList?.contractid,
+    docketDate: formattedDate
+  };
+
+  this.basicDetailService.getMaxDiscount(payload).subscribe({
+    next: (response: any) => {
+
+      const result = response.data;
+       this.maxDiscountLimit = result.maxDiscount;
+
+      const discountControl = this.freightForm.get('discount');
+      const discountAmountControl = this.freightForm.get('discountAmount');
+
+      if (result.maxDiscountY_N === 'Y' && this.freightForm.value.discountType === 'P') {
+        discountControl?.setValidators([
+          Validators.min(0),
+          Validators.max(result.maxDiscount)
+        ]);
+      } else {
+         discountControl?.clearValidators();
+        discountControl?.setValidators([Validators.min(0)]);
+        discountControl?.setValue(0);
+        discountAmountControl?.setValue(0);
+      }
+
+      discountControl?.updateValueAndValidity();
+    },
+    error: () => {
+      console.error('Error while fetching max discount');
+    }
+  });
+}
+
 
 
   getRuleDetailForDepth() {
@@ -1538,6 +1584,7 @@ calculateDiscount(event?: any) {
   let discounts = this.freightForm.value.discount;
   if (discountType == "P") {
     discounts = parseFloat(this.originalSubtotal.toString()) * parseFloat(discounts) / 100;
+    this.getMaxDiscountLimit()
   }
 
   const finalSubtotal = Subtotal - parseFloat(discounts);

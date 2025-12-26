@@ -329,7 +329,24 @@
           <div class="form-group" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
             <label class="control-label col-md-5">Discount</label>
             <div class="col-md-7">
-              <input class="form-control clsAmount" placeholder="Discount" type="number" formControlName="discount" (blur)="docketService.calculateDiscount($event)">
+              <input class="form-control clsAmount" placeholder="Discount" type="number" formControlName="discount" (blur)="docketService.calculateDiscount($event)"
+              [ngClass]="{ 'border-danger': docketService.freightForm.get('discount')?.hasError('max') && docketService.freightForm.get('discount')?.touched&&docketService.freightForm.value.discountType === 'P' &&
+       docketService.step2DetailsList?.maxDiscountY_N === 'Y'}">
+            <div class="text-danger text-start"
+                *ngIf="
+                  docketService.freightForm.get('discount')?.touched &&
+                  docketService.freightForm.get('discount')?.errors &&
+                  docketService.freightForm.value.discountType === 'P' &&
+                  docketService.step2DetailsList?.maxDiscountY_N === 'Y'
+                ">
+
+              <div *ngIf="docketService.freightForm.get('discount')?.errors?.['max']">
+                Please enter a value less than or equal to {{ docketService.maxDiscountLimit }}.
+              </div>
+
+            </div>
+
+
             </div>
           </div>
         </div>
