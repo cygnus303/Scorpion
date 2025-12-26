@@ -3,32 +3,37 @@ import { Component } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { mobileNo } from 'app/shared/constants/common';
 import { BranchWiseLoadingUnloading } from 'app/shared/models/thc-master.model';
 import { ChallanService } from 'app/shared/services/challan.service';
+import { DeliveryUpdateService } from 'app/shared/services/delivery-update.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { SharedModule } from 'app/shared/shared/shared.module';
+import { environment } from 'environments/environment';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 
 @Component({
   selector: 'app-delivery-update-list',
   standalone: true,
   imports:[CommonModule, RouterModule,NgSelectModule,ReactiveFormsModule,BsDatepickerModule,SharedModule],
   templateUrl: './delivery-update-list.component.html',
-  styleUrl: './delivery-update-list.component.scss'
+  styleUrl: './delivery-update-list.component.scss',
+  providers:[DeliveryUpdateService]
 })
 export class DeliveryUpdateListComponent {
+  env = environment;
   public DRSSummaryForm!:FormGroup;
   public DRSInformation!:any;
   public minDate: Date | undefined;
   public maxDate = new Date();
   public branchWiseLoadingUnloadingList:BranchWiseLoadingUnloading[]=[];
+  public isSubmitting:boolean = false;
+  public isRedirect:boolean = false;
 
 
-  constructor( public challanService:ChallanService, public docketService:DocketService,private THCService:THCMasterService,public generalMasterService:GeneralMasterService){}
+  constructor( public challanService:ChallanService,public deliveryUpdateService:DeliveryUpdateService, public docketService:DocketService,private THCService:THCMasterService,public generalMasterService:GeneralMasterService,public sweetAlertService:SweetAlertService){}
 
 ngOnInit(){
   this.buildForm();
@@ -355,6 +360,44 @@ onDeliveredBlur(index: number): void {
         }
       },
     });
+  }
+
+
+  deliveryUpdate(){
+  const formData = new FormData();
+  // formData.append("DRSDocketsUpdateList", THCCharge);
+  //  formData.append("pdcno", "N/A");
+  //  formData.append("LoadingBy", JSON.stringify(DocketList));
+  //  formData.append("VendorCode", JSON.stringify(ListVendorType));
+  //  formData.append("IsMonthly", JSON.stringify(ListCharges));
+  //  formData.append("LoadingCharge",JSON.stringify(MFList));
+  //  formData.append("CloseKM", JSON.stringify(THCCharge));
+  //  formData.append("LocationCode",JSON.stringify(PRSDRSDocketList));
+  //  formData.append("BaseUserName",JSON.stringify(PRSDRSDocketList));
+  //  formData.append("FinYear",JSON.stringify(PRSDRSDocketList));
+  //  formData.append("Files",JSON.stringify(PRSDRSDocketList));
+  //  formData.append("BackFiles",JSON.stringify(PRSDRSDocketList));
+  if(this.DRSSummaryForm.valid){
+    this.isSubmitting = true;
+    this.deliveryUpdateService.deliveryUpdate(formData).subscribe({next: (response:any) => {
+        if (response && response.data && !response.data.isError) {
+          this.isRedirect = true;
+          // window.parent.location.href = `${this.env.liveUrl}Operation/ChallanDone?DOCNO=${response.data.docno}&DOCTYP=${response.data.doctyp}&TranXaction=${response.data.tranXaction}&IsError=${response.data.isError}&src=angular`;
+        }else{
+             this.sweetAlertService.error('You have some form errors. Please check below.');
+        }
+        this.isSubmitting=false;
+      },error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.sweetAlertService.error(error?.error?.message);
+            this.isSubmitting=false;
+            this.isRedirect = false;
+        }
+    })
+  }else{
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.DRSSummaryForm.markAllAsTouched();
+  }
   }
 
 }
