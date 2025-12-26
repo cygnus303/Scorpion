@@ -1,0 +1,23 @@
+/* Make it stronger than Bootstrap */
+table tbody tr.table-custom td{
+  background-color: #ffffff !important; /* !important ensures it overrides Bootstrap */
+}
+
+/* Make it stronger than Bootstrap */
+table tbody tr.table-custom-light td{
+  background-color: #f1efef !important; /* !important ensures it overrides Bootstrap */
+}
+
+.text-primary{
+  color: #428bca !important;
+}
+
+/* Add conditional styles with !important */
+.font-large {
+    font-size: 15px !important;
+    font-weight: bold !important;
+}
+
+.form-check-input:checked{
+  border: none !important;
+}

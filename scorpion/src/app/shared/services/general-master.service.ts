@@ -15,6 +15,8 @@ export class GeneralMasterService {
   public loadingData:PRSGeneralMasterResponse[]=[];
   public chargeTypeData:PRSGeneralMasterResponse[]=[];
   public LsTransportModeData:PRSGeneralMasterResponse[]=[];
+  public loadingBy:PRSGeneralMasterResponse[]=[];
+  public reasonData:PRSGeneralMasterResponse[]=[];
 
  constructor(
      public THCMasterService: THCMasterService, private basicDetailService: BasicDetailService,
@@ -50,15 +52,15 @@ export class GeneralMasterService {
     });
   }
 
-  // getLoadingByDetail(){
-  //     this.THCMasterService.getGeneralMasterDetail('LOADBY').subscribe({
-  //     next: (response) => {
-  //       if (response.success) {
-  //         this.loadingData = response.data;
-  //       }
-  //     }
-  //   });
-  // }
+  getLoadingBy(){
+      this.THCMasterService.getGeneralMasterDetail('LOADBY').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.loadingBy = response.data;
+        }
+      }
+    });
+  }
 
     getLoadingByDetail(vendorCode:any) {
     this.basicDetailService.getGeneralMasterList('LOADBY', '', vendorCode).subscribe({
@@ -85,6 +87,16 @@ export class GeneralMasterService {
       next: (response) => {
         if (response.success) {
           this.LsTransportModeData = response.data;
+        }
+      },
+    });
+  }
+
+    getReason(codeType:string){
+    this.THCMasterService.getGeneralMasterDetail(codeType).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.reasonData = response.data;
         }
       },
     });

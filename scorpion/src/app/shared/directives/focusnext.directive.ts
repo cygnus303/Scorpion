@@ -2,6 +2,7 @@ import { Directive, ElementRef, Host, HostListener,NgZone, Optional} from '@angu
 import { NgSelectComponent } from '@ng-select/ng-select';
 import Swal from 'sweetalert2';
 import { DocketService } from '../services/docket.service';
+import { Router } from '@angular/router';
 
 @Directive({
   selector: '[appFocusNext]',
@@ -14,6 +15,7 @@ export class FocusNextDirective {
     private el: ElementRef<HTMLElement>,
     private ngZone: NgZone,
     private docketService:DocketService,
+    private router: Router,
     @Optional() @Host() private ngSelect?: NgSelectComponent
   ) {}
 
@@ -138,9 +140,9 @@ async handleKeydown(event: KeyboardEvent) {
   }
 @HostListener('document:click', ['$event'])
 async handleOutsideClick(event: MouseEvent) {
-
+  const currentUrl = this.router.url;
   // 🔒 Global stop after YES
-  if (this.docketService.hasConfirmedNoEwayBill || this.docketService.isComplition) {
+  if (this.docketService.hasConfirmedNoEwayBill || this.docketService.isComplition || !currentUrl.includes('docket')) {
     return;
   }
 
@@ -158,7 +160,7 @@ async handleOutsideClick(event: MouseEvent) {
   }
 
   const ewayValue =
-    this.docketService.basicDetailForm.get('ewayBillNo')?.value;
+    this.docketService.basicDetailForm?.get('ewayBillNo')?.value;
 
   // Valid → do nothing
   if (ewayValue && ewayValue.length === 12) {

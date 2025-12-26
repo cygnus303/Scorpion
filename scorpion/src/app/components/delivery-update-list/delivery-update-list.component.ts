@@ -1,0 +1,548 @@
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { BranchWiseLoadingUnloading } from 'app/shared/models/thc-master.model';
+import { ChallanService } from 'app/shared/services/challan.service';
+import { DeliveryUpdateService } from 'app/shared/services/delivery-update.service';
+import { DocketService } from 'app/shared/services/docket.service';
+import { GeneralMasterService } from 'app/shared/services/general-master.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { THCMasterService } from 'app/shared/services/thc-master.service';
+import { SharedModule } from 'app/shared/shared/shared.module';
+import { environment } from 'environments/environment';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+
+@Component({
+  selector: 'app-delivery-update-list',
+  standalone: true,
+  imports:[CommonModule, RouterModule,NgSelectModule,ReactiveFormsModule,BsDatepickerModule,SharedModule],
+  templateUrl: './delivery-update-list.component.html',
+  styleUrl: './delivery-update-list.component.scss',
+  providers:[DeliveryUpdateService]
+})
+export class DeliveryUpdateListComponent {
+  env = environment;
+  public DRSSummaryForm!:FormGroup;
+  public DRSInformation!:any;
+  public minDate: Date | undefined;
+  public maxDate = new Date();
+  public branchWiseLoadingUnloadingList:BranchWiseLoadingUnloading[]=[];
+  public isSubmitting:boolean = false;
+  public isRedirect:boolean = false;
+  public drsDeliveryList:any[]=[];
+  
+
+  constructor( public challanService:ChallanService,public deliveryUpdateService:DeliveryUpdateService, public docketService:DocketService,private THCService:THCMasterService,public generalMasterService:GeneralMasterService,public sweetAlertService:SweetAlertService){}
+
+ngOnInit(){
+   const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
+    
+  this.buildForm();
+  this.getDeliveryDetail();
+  this.generalMasterService.getChargeTypeData();
+  this.generalMasterService.getLoadingBy()
+}
+
+buildForm(){
+  this.DRSSummaryForm = new FormGroup({
+    LoadingBy:new FormControl(null),
+    vendorCode:new FormControl(null),
+    LoadingCharge:new FormControl(0,[Validators.required, Validators.min(0.01)]),
+    Rate:new FormControl(null),
+    closeKM:new FormControl(0),
+    ratetype:new FormControl(null),
+    drsList: new FormArray([])
+  })
+}
+
+get drsList(): FormArray {
+  return this.DRSSummaryForm.get('drsList') as FormArray;
+}
+
+getCurrentDateTime(): string {
+  const now = new Date();
+
+  const day = now.getDate().toString().padStart(2, '0');
+  const month = now.toLocaleString('en-US', { month: 'short' });
+  const year = now.getFullYear();
+
+  let hours = now.getHours();
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+
+  hours = hours % 12 || 12; // 12-hour format
+
+  return `${day} ${month} ${year} ${hours}:${minutes} ${ampm}`;
+}
+
+
+  createDrsRow(data: any[]) {
+  data.forEach((item) => {
+     const [day, month, year] = item.booking_Date.split('/');
+     const formattedDate = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
+      const group = new FormGroup({
+        autoNo: new FormControl(item.autoNo),
+        dockno: new FormControl(item.dockno),
+        booking_Date: new FormControl(formattedDate),
+        orgncd: new FormControl(item.orgncd),
+        destcd: new FormControl(item.destcd),
+        payBasis: new FormControl(item.payBasis),
+        csgncd: new FormControl(item.csgncd),
+        csgnnm: new FormControl(item.csgnnm),
+        csgecd: new FormControl(item.csgecd),
+        csgenm: new FormControl(item.csgenm),
+        actQty: new FormControl(item.actQty),
+        pkgQty: new FormControl(item.pkgQty),
+        pkgs_Pending: new FormControl(item.pkgs_Pending),
+        pkgs_Arrived: new FormControl(item.pkgs_Arrived),
+        pkgs_Booked: new FormControl(item.pkgs_Booked),
+        comm_Dely_Dt: new FormControl(item.comm_Dely_Dt),
+        deliveredPkgs: new FormControl(item.pkgs_Arrived),
+        remarks: new FormControl(''),
+        isChecked: new FormControl(true),
+        isBadPod: new FormControl(),
+        ratetype: new FormControl(item.rateType),
+        newRate: new FormControl(0),
+        otp: new FormControl(''),
+        DELYDATE: new FormControl(this.getCurrentDateTime()),
+        cboReason:new FormControl(),
+        cboEmail: new FormControl(''),
+        cboMobileNo: new FormControl(''),
+        DELYPERSON: new FormControl(''),
+        totalLoadingCharge: new FormControl(''),
+        showReason: new FormControl(false),
+        rateError: new FormControl(''),
+        frontFiles: new FormControl<File[]>([]),
+        backFiles: new FormControl<File[]>([]),
+        frontPreview: new FormControl<string | null>(null),
+        backPreview: new FormControl<string | null>(null),
+         podValidated: new FormControl(false)
+      });
+      group.get('ratetype')?.valueChanges.subscribe(() => this.calculateCharge(group));
+      group.get('newRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
+      this.drsList.push(group);
+    });
+  }
+
+  validateRate(group: FormGroup): boolean {
+  const loadingBy = this.DRSSummaryForm.get('LoadingBy')?.value;
+
+  // Skip validation if 'LoadingBy' is 'XX9'
+  if (loadingBy === 'XX9') {
+    group.get('rateError')?.setValue('');
+    return true;
+  }
+  const rateType = group.get('ratetype')?.value;
+  const rate = parseFloat(group.get('newRate')?.value || '0') || 0;
+  const chrgwt = parseFloat(group.get('actQty')?.value || '0') || 0;
+  const noofpkg = parseFloat(group.get('pkgQty')?.value || '0') || 0;
+
+  // Handle case where 'actQty' is zero
+  if (chrgwt === 0) {
+    group.get('rateError')?.setValue('Charge weight is zero, cannot validate rate.');
+    group.get('newRate')?.setValue('0.00', { emitEvent: false });
+    return false;
+  }
+
+  let maxlimitcalculation = 0;
+
+  // Handling the rate calculation based on rateType
+  if (rateType === '4') {
+    maxlimitcalculation = rate / chrgwt;
+  } else if (rateType === '3') {
+    maxlimitcalculation = (rate * noofpkg) / chrgwt;
+  } else {
+    maxlimitcalculation = rate;
+  }
+
+  // Checking the calculated maxlimit
+  if (maxlimitcalculation > 5.0) {
+    group.get('rateError')?.setValue('Rate Amount Is High, Please Check');
+    group.get('newRate')?.setValue('0.00', { emitEvent: false });
+    return false;
+  } else {
+    group.get('rateError')?.setValue('');
+    return true;
+  }
+}
+
+  calculateCharge(group: FormGroup) {
+    const isValid = this.validateRate(group);
+    if (!isValid) {
+      group.get('totalLoadingCharge')?.setValue((0).toFixed(2), { emitEvent: false });
+      this.updateTotalLoadingCharge();
+      return;
+    }
+    const rateType = group.get('ratetype')?.value;
+    const newRate = parseFloat(group.get('newRate')?.value || 0);
+    const actuwt = parseFloat(group.get('actQty')?.value || 0);
+    const pkgsno = parseFloat(group.get('pkgQty')?.value || 0);
+    let charge = 0;
+    switch (rateType) {
+      case '1': // PER KG
+        charge = actuwt * newRate;
+        break;
+      case '3': // PER PACKAGES
+        charge = pkgsno * newRate;
+        break;
+      case '4': // FLAT
+        charge = newRate;
+        break;
+      default:
+        charge = 0;
+    }
+    group.get('totalLoadingCharge')?.setValue(charge.toFixed(2), { emitEvent: false });
+    this.updateTotalLoadingCharge()
+  }
+
+  getMinDate(bookingDate: string): Date {
+    return new Date(bookingDate);
+  }
+
+updateTotalLoadingCharge() {
+   const total = this.drsList.controls.reduce((sum, ctrl) => {
+      return sum + parseFloat(ctrl.get('totalLoadingCharge')?.value || 0);
+  }, 0);
+
+  this.DRSSummaryForm.get('LoadingCharge')?.setValue(total.toFixed(2), { emitEvent: false });
+}
+// in TS
+getRadioControl(i: number): FormControl {
+  return (this.drsList.at(i) as FormGroup).get('isBadPod') as FormControl;
+}
+
+getDeliveryDetail() {
+  const payload = {
+    drsId: this.docketService.loginUserList.drsId,
+    loadBy: this.docketService.loginUserList.loadBy,
+    chargeType: this.docketService.loginUserList.chargeType,
+    baseLocationCode: this.docketService.loginUserList.LocationCode
+  };
+  this.THCService.getDeliveryUpdateData(payload).subscribe({next: (response: any) => {
+      this.DRSInformation = response.data.drsSummary;
+      const summaryRateType = response.data.drsSummary?.rateType;
+      this.drsDeliveryList=response.data.drsDeliveryList;
+      this.DRSSummaryForm.patchValue({
+        closeKM: this.DRSInformation?.closeKM,
+        LoadingBy:response.data.drsSummary.loadingBy
+      });
+      const docketList = response.data.updateDRSLits || [];
+      this.drsList.clear();
+      docketList.forEach((item: any) => {
+        item.rateType = summaryRateType; 
+      });
+      this.createDrsRow(docketList);
+      this.getPANnumberData(response.data.drsSummary.loadingBy);
+    },
+    error: (err) => {
+      console.error('Delivery Detail API Error', err);
+    }
+  });
+}
+
+getLoadingCharge(event: any) {
+  const data = {
+    loadUnloadType: 'U',
+    vendorCode: event,
+    typeModule: this.docketService.loginUserList.Type === "2" ? "P" : "D",
+    chargeType: this.docketService.loginUserList.chargeType,
+    brdc: this.docketService.loginUserList.LocationCode,
+    loadingBy: this.DRSSummaryForm.value.LoadingBy,
+  };
+if(['XX5'].includes(this.DRSSummaryForm.get('LoadingBy')?.value)){
+  this.THCService.getLoadingCharge(data).subscribe({
+    next: (response: any) => {
+    this.DRSSummaryForm.patchValue({
+        Rate:response.rate
+      });
+      this.drsList.controls.forEach((item: any, index) => {
+        this.drsList.controls[index].patchValue({
+          newRate: response.rate,
+        });
+      });
+    },
+    error: (err) => {
+      console.error('Error fetching loading charge:', err);
+    }
+  });
+}
+}
+
+getPANnumberData(vendorCode:any){
+   const ChargedBy = vendorCode;
+    if (ChargedBy === 'B' || ChargedBy == '04') {
+      this.getChargesVendorsList('04');
+    }
+    if (ChargedBy === 'A' || ChargedBy == 'XX1') {
+      this.getChargesVendorsList('XX1');
+    }
+    if (ChargedBy === 'M') {
+      this.getChargesVendorsList('19');
+    }
+    if (ChargedBy === 'XX5' || ChargedBy === 'XX8') {
+      this.branchWiseLoadingUnloading(vendorCode);
+    }
+}
+
+onDeliveredBlur(index: number): void {
+  const row = this.drsList.at(index) as FormGroup;
+  const delivered = Number(row.get('deliveredPkgs')?.value || 0);
+  const pending = Number(row.get('pkgs_Pending')?.value || 0);
+
+  // 🔹 Clear old validators first
+  row.get('cboReason')?.clearValidators();
+  row.get('cboEmail')?.clearValidators();
+  row.get('cboMobileNo')?.clearValidators();
+
+  let show = false;
+  let reasonType = '';
+
+  //  Delivered = 0 → UNDELY
+  if (delivered === 0) {
+    show = true;
+    reasonType = 'UNDELY';
+  }
+  // Delivered < Pending → PART_D
+  else if (delivered < pending) {
+    show = true;
+    reasonType = 'PART_D';
+  }
+  //  Delivered > Pending → LATE_D
+  else if (delivered > pending) {
+    show = true;
+    reasonType = 'LATE_D';
+  }
+
+  if (show) {
+    row.patchValue({ showReason: true ,cboReason:null});
+    this.generalMasterService.getReason(reasonType);
+
+    // 🔹 Apply validators ONLY when showReason = true
+    row.get('cboReason')?.setValidators([Validators.required]);
+    row.get('cboEmail')?.setValidators([Validators.required, Validators.email]);
+    row.get('cboMobileNo')?.setValidators([
+      Validators.required,
+      Validators.pattern('^[0-9]{10}$')
+    ]);
+  } else {
+    row.patchValue({ showReason: false });
+  }
+
+  // 🔹 Refresh validation state
+  row.get('cboReason')?.updateValueAndValidity();
+  row.get('cboEmail')?.updateValueAndValidity();
+  row.get('cboMobileNo')?.updateValueAndValidity();
+}
+
+
+  branchWiseLoadingUnloading(event: any) {
+    const data = {
+      vendorType: event,
+      baseLocationCode: this.docketService.loginUserList.LocationCode,
+      type: 'U',
+    }
+    this.THCService.getBranchWiseLoadingUnloadingVendorList(data).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.branchWiseLoadingUnloadingList = response.data;
+        }
+      },
+    });
+  }
+
+  getChargesVendorsList(event: any) {
+    const data = {
+      vendorType: event?.codeId ? event?.codeId : event,
+      branchCode: this.docketService.loginUserList.LocationCode,
+      userName: this.docketService.loginUserList.BaseUserName,
+      documentType: this.docketService.loginUserList.Type
+    }
+    this.THCService.getVendorsList(data).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.branchWiseLoadingUnloadingList = response.data.map((x: any) => ({
+            value: x.vendor_Code,
+            text: x.vendor_Name
+          }));
+        }
+      },
+    });
+  }
+
+getPreview(file: File): string {
+  return URL.createObjectURL(file);
+}
+
+onFileSelected(event: any, index: number, type: 'FRONT' | 'BACK') {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  const row = this.drsList.at(index) as FormGroup;
+  const previewUrl = URL.createObjectURL(file);
+
+  if (type === 'FRONT') {
+    // cleanup old url
+    const old = row.get('frontPreview')?.value;
+    if (old) URL.revokeObjectURL(old);
+
+    row.patchValue({
+      frontFiles: [file],
+      frontPreview: previewUrl
+    });
+  } else {
+    const old = row.get('backPreview')?.value;
+    if (old) URL.revokeObjectURL(old);
+
+    row.patchValue({
+      backFiles: [file],
+      backPreview: previewUrl
+    });
+  }
+
+  event.target.value = '';
+
+  this.validatePOD(index);
+}
+
+
+removeFile(index: number, type: 'FRONT' | 'BACK') {
+  const row = this.drsList.at(index) as FormGroup;
+
+  if (type === 'FRONT') {
+    const url = row.get('frontPreview')?.value;
+    if (url) URL.revokeObjectURL(url);
+
+    row.patchValue({
+      frontFiles: [],
+      frontPreview: null
+    });
+  } else {
+    const url = row.get('backPreview')?.value;
+    if (url) URL.revokeObjectURL(url);
+
+    row.patchValue({
+      backFiles: [],
+      backPreview: null
+    });
+  }
+}
+
+ 
+validatePOD(index: number) {
+ 
+  const row = this.drsList.at(index) as FormGroup;
+  const docketNo = row.get('dockno')?.value;
+ 
+  if (!docketNo) {
+    console.error('Dock No not found for row', index);
+    return;
+  }
+ 
+  const frontFiles = row.get('frontFiles')?.value || [];
+  const backFiles  = row.get('backFiles')?.value || [];
+ 
+  // OPTIONAL: only front mandatory
+  if (!frontFiles.length) {
+    return;
+  }
+ 
+  const formData = new FormData();
+  formData.append('DocNo', docketNo);
+ 
+  frontFiles.forEach((file: File) => {
+    formData.append('PodFile', file);
+  });
+ 
+  // If backend needs back also
+  backFiles.forEach((file: File) => {
+    formData.append('PodBackFile', file);
+  });
+ 
+  this.deliveryUpdateService.checkPODValidation(formData).subscribe({
+    next: (response: any) => {
+      if (response?.success) {
+        row.patchValue({ podValidated: true });
+      } else {
+        this.sweetAlertService.error(
+          `POD validation failed for Dock No ${docketNo}`
+        );
+      }
+    },
+    error: (error) => {
+      this.sweetAlertService.error(
+        error?.error?.message || `Error validating POD for Dock No ${docketNo}`
+      );
+    }
+  });
+}
+
+
+
+  deliveryUpdate(){
+    const DRSDocketsUpdateList = this.drsList.getRawValue().map((row: any) => ({
+    remark: row.remarks || '',
+    isEnabledBadPodoption: row.isBadPod === true,
+    autoNo: row.autoNo,
+    dockno: row.dockno,
+    isEnabled: row.isChecked === true,
+    ratetype: row.ratetype,
+    delydate: row.DELYDATE,   // already ISO
+    pkgsdelivered: Number(row.deliveredPkgs) || 0,
+    pkgs_Pending: Number(row.pkgs_Pending) || 0
+  }));
+
+  const formData = new FormData();
+   formData.append("DRSDocketsUpdateList",  JSON.stringify(DRSDocketsUpdateList));
+   formData.append("pdcno", this.DRSInformation.pdcno);
+   formData.append("LoadingBy", this.DRSInformation.loadingBy);
+   formData.append("VendorCode", this.DRSSummaryForm.value.vendorCode);
+   formData.append("IsMonthly", this.DRSInformation.isMonthly);
+   formData.append("LoadingCharge",this.DRSSummaryForm.value.LoadingCharge);
+   formData.append("CloseKM", this.DRSSummaryForm.value.closeKM);
+   formData.append("LocationCode",this.docketService.loginUserList.LocationCode);
+   formData.append("BaseUserName",this.docketService.loginUserList.BaseUserName);
+   formData.append("FinYear",this.docketService.loginUserList.FinYear);
+
+   this.drsList.controls.forEach((ctrl: any) => {
+      ctrl.value.frontFiles.forEach((file: File) => {
+        formData.append('Files', file, `${ctrl.value.dockno}_FRONT_${file.name}`);
+      });
+
+      ctrl.value.backFiles.forEach((file: File) => {
+        formData.append('BackFiles', file, `${ctrl.value.dockno}_BACK_${file.name}`);
+      });
+    });
+
+  if(this.DRSSummaryForm.valid){
+    this.isSubmitting = true;
+    this.deliveryUpdateService.deliveryUpdate(formData).subscribe({next: (response:any) => {
+        if (response && response.data && !response.data.isError) {
+          this.isRedirect = true;
+          // https://sepluat.cygnux.in/Operation/UpdateDRSResult?DRSNO=DS%2FPIM%2F2526%2F002770
+          window.parent.location.href = `${this.env.liveUrl}Operation/UpdateDRSResult?DRSNO=${this.DRSInformation?.pdcno}&src=angular`;
+        }else{
+             this.sweetAlertService.error('You have some form errors. Please check below.');
+        }
+        this.isSubmitting=false;
+      },error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.sweetAlertService.error(error?.error?.message);
+            this.isSubmitting=false;
+            this.isRedirect = false;
+        }
+    })
+  }else{
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.DRSSummaryForm.markAllAsTouched();
+  }
+  }
+
+}
