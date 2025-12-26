@@ -125,35 +125,17 @@
                         <th>Sr.No</th>
                         <th>Dock. No</th>
                         <th>Dock. Date</th>
-                        <th>DRS No</th>
                         <th>DRS Date</th>
                         <th>Pkg / Act</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>63126150</td>
-                        <td>05 Dec 2025</td>
-                        <td>DS/PIM/2526/006282</td>
-                        <td>20 Dec 2025</td>
-                        <td>2.00 / 50.00</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>63138974</td>
-                        <td>13 Dec 2025</td>
-                        <td>DS/PIM/2526/006282</td>
-                        <td>20 Dec 2025</td>
-                        <td>81.00 / 2500.00</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>63142387</td>
-                        <td>16 Dec 2025</td>
-                        <td>DS/PIM/2526/006282</td>
-                        <td>20 Dec 2025</td>
-                        <td>1.00 / 8.00</td>
+                    <tr *ngFor="let item of drsDeliveryList;let i=index">
+                        <td>{{i+1}}</td>
+                        <td>{{item.dockno}}</td>
+                        <td>{{item.dockdt}}</td>
+                        <td>{{item.drS_DT}}</td>
+                        <td>{{item.pkgsno | number:'1.2-2'}}/{{item.actuwt | number:'1.2-2'}}</td>
                     </tr>
                 </tbody>
             </table>
