@@ -39,7 +39,7 @@
                             {{DRSInformation?.start_KM}}  /
                         </div>
                         <div class="col-sm-6 text-start fw-bold">
-                            <input class="form-control" type="text" formControlName="closeKM">
+                            <input class="form-control" type="text" formControlName="closeKM" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                         </div>
                     </div>
                 </div>
@@ -72,13 +72,16 @@
                             <div class="col-sm-7 text-start">
                                 <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code" formControlName="vendorCode" (change)="getLoadingCharge($event.value)"
                                     [items]="branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"
-                                    required [ngClass]="{ 'border-danger': DRSSummaryForm.get('vendorCode')?.invalid && DRSSummaryForm.get('vendorCode')?.touched }" >
-                                <ng-template ng-option-tmp let-item="item">
-                                    <div [title]="item.text"> <!-- Set title dynamically for each item -->
-                                        {{ item.text }}
-                                    </div>
-                                </ng-template>
+                                    required  >
+                                    <ng-template ng-option-tmp let-item="item">
+                                        <div [title]="item.text">
+                                            {{ item.text }}
+                                        </div>
+                                    </ng-template>
                                 </ng-select>
+                                <!-- <div class="text-danger text-start" *ngIf="DRSSummaryForm.get('vendorCode')?.invalid && DRSSummaryForm.get('vendorCode')?.touched">
+                              This field is required.
+                            </div> -->
                             </div>
                         </div>
                     </div>
@@ -113,7 +116,7 @@
         </div>
     </div>
 
-    <div class="cnote-entry-container">
+    <div class="cnote-entry-container" *ngIf="drsDeliveryList.length > 0">
         <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
             <i class="fas fa-list me-2"></i>
             DRS Delivery List
