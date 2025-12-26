@@ -65,7 +65,7 @@
                         </div>
                     </div>
                 </div>
-                @if (['M', 'B', 'A','XX1'].includes(DRSSummaryForm.get('LoadingBy')?.value)){
+                @if (['M', 'B', 'A','XX1','XX5'].includes(DRSSummaryForm.get('LoadingBy')?.value)){
                     <div class="col-3">
                         <div class="row align-items-center">
                             <label class="col-sm-5 col-form-label text-end">Vendor Code :</label>
@@ -235,7 +235,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <textarea rows="2" class="form-control-textarea" formControlName="remarks"></textarea>
+                                    <textarea rows="2" class="form-control-textarea" formControlName="remarks" placeholder="Enter Remarks"></textarea>
                                 </td>
 
                                 <td>
@@ -251,7 +251,7 @@
                                 <td>{{row.value.pkgQty}}/{{row.value.actQty}}</td>
 
                                 <td>
-                                    <textarea rows="2" class="form-control-textarea" formControlName="otp"></textarea>
+                                    <textarea rows="2" class="form-control-textarea" formControlName="otp" placeholder="Enter OTP"></textarea>
                                 </td>
                             </tr>
 
