@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { mobileNo } from 'app/shared/constants/common';
 import { BranchWiseLoadingUnloading } from 'app/shared/models/thc-master.model';
 import { ChallanService } from 'app/shared/services/challan.service';
 import { DocketService } from 'app/shared/services/docket.service';
@@ -11,7 +10,6 @@ import { GeneralMasterService } from 'app/shared/services/general-master.service
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { SharedModule } from 'app/shared/shared/shared.module';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 
 @Component({
   selector: 'app-delivery-update-list',
@@ -26,6 +24,7 @@ export class DeliveryUpdateListComponent {
   public minDate: Date | undefined;
   public maxDate = new Date();
   public branchWiseLoadingUnloadingList:BranchWiseLoadingUnloading[]=[];
+  public drsDeliveryList:any[]=[];
 
 
   constructor( public challanService:ChallanService, public docketService:DocketService,private THCService:THCMasterService,public generalMasterService:GeneralMasterService){}
@@ -208,8 +207,9 @@ getDeliveryDetail() {
     baseLocationCode: this.docketService.loginUserList.LocationCode
   };
   this.THCService.getDeliveryUpdateData(payload).subscribe({next: (response: any) => {
-      this.DRSInformation = response.data.drsDeliveryList[0];
+      this.DRSInformation = response.data.drsSummary;
       const summaryRateType = response.data.drsSummary?.rateType;
+      this.drsDeliveryList=response.data.drsDeliveryList;
       this.DRSSummaryForm.patchValue({
         closeKM: this.DRSInformation?.closeKM,
         LoadingBy:response.data.drsSummary.loadingBy
@@ -285,17 +285,17 @@ onDeliveredBlur(index: number): void {
   let show = false;
   let reasonType = '';
 
-  // 🔴 Delivered = 0 → UNDELY
+  //  Delivered = 0 → UNDELY
   if (delivered === 0) {
     show = true;
     reasonType = 'UNDELY';
   }
-  // 🟠 Delivered < Pending → PART_D
+  // Delivered < Pending → PART_D
   else if (delivered < pending) {
     show = true;
     reasonType = 'PART_D';
   }
-  // 🔵 Delivered > Pending → LATE_D
+  //  Delivered > Pending → LATE_D
   else if (delivered > pending) {
     show = true;
     reasonType = 'LATE_D';
