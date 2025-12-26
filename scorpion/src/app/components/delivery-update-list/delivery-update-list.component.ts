@@ -77,7 +77,7 @@ getCurrentDateTime(): string {
       const group = new FormGroup({
         autoNo: new FormControl(item.autoNo),
         dockno: new FormControl(item.dockno),
-        booking_Date: new FormControl(item.booking_Date),
+        booking_Date: new FormControl(formattedDate),
         orgncd: new FormControl(item.orgncd),
         destcd: new FormControl(item.destcd),
         payBasis: new FormControl(item.payBasis),
@@ -98,16 +98,14 @@ getCurrentDateTime(): string {
         ratetype: new FormControl(item.rateType),
         newRate: new FormControl(item.rate),
         otp: new FormControl(''),
+        DELYDATE: new FormControl(this.getCurrentDateTime()),
+        cboReason:new FormControl(),
+        cboEmail: new FormControl(''),
+        cboMobileNo: new FormControl(''),
+        DELYPERSON: new FormControl(''),
         totalLoadingCharge: new FormControl(''),
         showReason: new FormControl(false),
-        highlight: new FormControl(false),
-        reason: new FormControl(''),
-        showDeliveryInfo: new FormControl(false),
-        DELYDATE: new FormControl(this.getCurrentDateTime()),
-        DELYPERSON: new FormControl(''),
-        cboReason:new FormControl(),
-        cboLateReason:new FormControl(),
-        minDate:new FormControl(formattedDate)
+        rateError: new FormControl(''),
       });
       group.get('ratetype')?.valueChanges.subscribe(() => this.calculateCharge(group));
       group.get('newRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
@@ -115,7 +113,55 @@ getCurrentDateTime(): string {
     });
   }
 
+  validateRate(group: FormGroup): boolean {
+  const loadingBy = this.DRSSummaryForm.get('LoadingBy')?.value;
+
+  // Skip validation if 'LoadingBy' is 'XX9'
+  if (loadingBy === 'XX9') {
+    group.get('rateError')?.setValue('');
+    return true;
+  }
+  const rateType = group.get('ratetype')?.value;
+  const rate = parseFloat(group.get('newRate')?.value || '0') || 0;
+  const chrgwt = parseFloat(group.get('actQty')?.value || '0') || 0;
+  const noofpkg = parseFloat(group.get('pkgQty')?.value || '0') || 0;
+
+  // Handle case where 'actQty' is zero
+  if (chrgwt === 0) {
+    group.get('rateError')?.setValue('Charge weight is zero, cannot validate rate.');
+    group.get('newRate')?.setValue('0.00', { emitEvent: false });
+    return false;
+  }
+
+  let maxlimitcalculation = 0;
+
+  // Handling the rate calculation based on rateType
+  if (rateType === '4') {
+    maxlimitcalculation = rate / chrgwt;
+  } else if (rateType === '3') {
+    maxlimitcalculation = (rate * noofpkg) / chrgwt;
+  } else {
+    maxlimitcalculation = rate;
+  }
+
+  // Checking the calculated maxlimit
+  if (maxlimitcalculation > 5.0) {
+    group.get('rateError')?.setValue('Rate Amount Is High, Please Check');
+    group.get('newRate')?.setValue('0.00', { emitEvent: false });
+    return false;
+  } else {
+    group.get('rateError')?.setValue('');
+    return true;
+  }
+}
+
   calculateCharge(group: FormGroup) {
+    const isValid = this.validateRate(group);
+    if (!isValid) {
+      group.get('totalLoadingCharge')?.setValue((0).toFixed(2), { emitEvent: false });
+      this.updateTotalLoadingCharge();
+      return;
+    }
     const rateType = group.get('ratetype')?.value;
     const newRate = parseFloat(group.get('newRate')?.value || 0);
     const actuwt = parseFloat(group.get('actQty')?.value || 0);
@@ -138,7 +184,7 @@ getCurrentDateTime(): string {
     this.updateTotalLoadingCharge()
   }
 
-   getMinDate(bookingDate: string): Date {
+  getMinDate(bookingDate: string): Date {
     return new Date(bookingDate);
   }
 
@@ -228,55 +274,52 @@ getPANnumberData(vendorCode:any){
 
 onDeliveredBlur(index: number): void {
   const row = this.drsList.at(index) as FormGroup;
-
   const delivered = Number(row.get('deliveredPkgs')?.value || 0);
   const pending = Number(row.get('pkgs_Pending')?.value || 0);
-  const reasonCtrl = row.get('reason');
 
-  // 🔴 CASE 1: Delivered = 0 → UNDELY ONLY
+  // 🔹 Clear old validators first
+  row.get('cboReason')?.clearValidators();
+  row.get('cboEmail')?.clearValidators();
+  row.get('cboMobileNo')?.clearValidators();
+
+  let show = false;
+  let reasonType = '';
+
+  // 🔴 Delivered = 0 → UNDELY
   if (delivered === 0) {
-    row.patchValue({
-      showReason: true,
-      highlight: false
-    });
-
-    this.generalMasterService.getReason('UNDELY');
-    reasonCtrl?.setValidators([Validators.required]);
+    show = true;
+    reasonType = 'UNDELY';
   }
-
-  // 🟠 CASE 2: Delivered > 0 AND Delivered < Pending → LATE_D
+  // 🟠 Delivered < Pending → PART_D
   else if (delivered < pending) {
-    row.patchValue({
-      showReason: true,
-      highlight: false
-    });
-
-    this.generalMasterService.getReason('PART_D');
-    
-    reasonCtrl?.setValidators([Validators.required]);
+    show = true;
+    reasonType = 'PART_D';
   }
+  // 🔵 Delivered > Pending → LATE_D
   else if (delivered > pending) {
-    row.patchValue({
-      showReason: true,
-      highlight: false
-    });
-
-    this.generalMasterService.getReason('LATE_D');
-    
-    reasonCtrl?.setValidators([Validators.required]);
+    show = true;
+    reasonType = 'LATE_D';
   }
 
-  // 🟢 CASE 3: Delivered >= Pending → NO reason
-  else {
-    row.patchValue({
-      showReason: false,
-      highlight: true
-    });
+  if (show) {
+    row.patchValue({ showReason: true });
+    this.generalMasterService.getReason(reasonType);
 
-    reasonCtrl?.clearValidators();
+    // 🔹 Apply validators ONLY when showReason = true
+    row.get('cboReason')?.setValidators([Validators.required]);
+    row.get('cboEmail')?.setValidators([Validators.required, Validators.email]);
+    row.get('cboMobileNo')?.setValidators([
+      Validators.required,
+      Validators.pattern('^[0-9]{10}$')
+    ]);
+  } else {
+    row.patchValue({ showReason: false });
   }
 
-  reasonCtrl?.updateValueAndValidity();
+  // 🔹 Refresh validation state
+  row.get('cboReason')?.updateValueAndValidity();
+  row.get('cboEmail')?.updateValueAndValidity();
+  row.get('cboMobileNo')?.updateValueAndValidity();
 }
 
 

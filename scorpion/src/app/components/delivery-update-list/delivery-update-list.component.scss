@@ -11,3 +11,9 @@ table tbody tr.table-custom-light td{
 .text-primary{
   color: #428bca !important;
 }
+
+/* Add conditional styles with !important */
+.font-large {
+    font-size: 15px !important;
+    font-weight: bold !important;
+}
