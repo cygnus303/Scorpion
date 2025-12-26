@@ -67,21 +67,21 @@
                 </div>
                 @if (['M', 'B', 'A','XX1','XX5'].includes(DRSSummaryForm.get('LoadingBy')?.value)){
                     <div class="col-3">
-                        <div class="row align-items-center">
+                        <div class="row">
                             <label class="col-sm-5 col-form-label text-end">Vendor Code :</label>
                             <div class="col-sm-7 text-start">
                                 <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code" formControlName="vendorCode" (change)="getLoadingCharge($event.value)"
                                     [items]="branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"
-                                    required  >
+                                    required  [ngClass]="{ 'border-danger': DRSSummaryForm.get('vendorCode')?.invalid && DRSSummaryForm.get('vendorCode')?.touched}">
                                     <ng-template ng-option-tmp let-item="item">
                                         <div [title]="item.text">
                                             {{ item.text }}
                                         </div>
                                     </ng-template>
                                 </ng-select>
-                                <!-- <div class="text-danger text-start" *ngIf="DRSSummaryForm.get('vendorCode')?.invalid && DRSSummaryForm.get('vendorCode')?.touched">
+                                <div class="text-danger text-start" *ngIf="DRSSummaryForm.get('vendorCode')?.invalid && DRSSummaryForm.get('vendorCode')?.touched">
                               This field is required.
-                            </div> -->
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -239,8 +239,8 @@
                                 </td>
 
                                 <td>
-                                    <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"
-                                        [items]="generalMasterService.chargeTypeData" [readonly]="this.DRSSummaryForm.value.LoadingBy ? true : false"></ng-select>
+                                    <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type"
+                                        [items]="generalMasterService.chargeTypeData" [readonly]="this.DRSSummaryForm.value.LoadingBy !=='XX9' ? true : false"></ng-select>
                                     <input type="number" class="form-control form-control-sm mt-1" formControlName="newRate"
                                         [readOnly]="this.DRSSummaryForm.value.LoadingBy === 'XX5'" />
                                     <div class="text-danger small mt-1" *ngIf="drsList.at(i).get('rateError')?.value">
@@ -267,20 +267,27 @@
                                                 [minDate]="row.value.booking_Date">
                                             </app-date-time-picker>
                                             <span class="fw-semibold text-muted ms-2">Person</span>
-                                            <input class="form-control form-control-sm required2" style="width: 160px;" placeholder="Person Name"
-                                                formControlName="DELYPERSON" />
+                                            <div>
+                                                <input class="form-control form-control-sm required2" style="width: 160px;" placeholder="Person Name"
+                                                formControlName="DELYPERSON" [ngClass]="{ 'border-danger': drsList.at(i).get('DELYPERSON')?.invalid && drsList.at(i).get('DELYPERSON')?.touched}"/>
+                                                <div class="text-danger text-start"
+                                                    *ngIf="drsList.at(i).get('DELYPERSON')?.invalid && drsList.at(i).get('DELYPERSON')?.touched">
+                                                    This field is required.
+                                                </div>
+                                            </div>
                                             <div class="d-flex align-items-center gap-2" *ngIf="drsList.at(i).get('showReason')?.value">
                                                 <span class="fw-semibold text-muted">Reason:</span>
                                                 <div>
                                                     <ng-select class="noFoundTextColor required2 clear-icon" style="width:250px;"
                                                         formControlName="cboReason" bindLabel="codeDesc" bindValue="codeId"
-                                                        [items]="generalMasterService.reasonData" placeholder="Select Reason">
+                                                        [items]="generalMasterService.reasonData" placeholder="Select Reason"
+                                                        [ngClass]="{ 'border-danger': drsList.at(i).get('cboReason')?.invalid && drsList.at(i).get('cboReason')?.touched}">
                                                         <ng-template ng-option-tmp let-item="item">
                                                             <div [title]="item.codeDesc">{{ item.codeDesc }}</div>
                                                         </ng-template>
                                                     </ng-select>
                                                     <div class="text-danger small text-start"
-                                                        *ngIf="drsList.at(i).get('cboReason')?.touched && drsList.at(i).get('cboReason')?.invalid">
+                                                        *ngIf="drsList.at(i).get('cboReason')?.invalid && drsList.at(i).get('cboReason')?.touched">
                                                         Reason is required
                                                     </div>
                                                 </div>
@@ -290,7 +297,8 @@
                                                 <div>
                                                     <input class="form-control form-control-sm required2" style="width:200px;" maxlength="10"
                                                         formControlName="cboMobileNo" placeholder="Enter Mobile No"
-                                                        oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                                                        oninput="this.value = this.value.replace(/[^0-9]/g,'');" 
+                                                        [ngClass]="{ 'border-danger': drsList.at(i).get('cboMobileNo')?.invalid && drsList.at(i).get('cboMobileNo')?.touched}">
                                                     <div class="text-danger small text-start"
                                                         *ngIf="drsList.at(i).get('cboMobileNo')?.touched && drsList.at(i).get('cboMobileNo')?.invalid">
                                                         <span *ngIf="drsList.at(i).get('cboMobileNo')?.errors?.['required']">
@@ -306,7 +314,7 @@
                                                 <span class="fw-semibold text-muted">Email:</span>
                                                 <div class="text-start">
                                                     <input class="form-control form-control-sm required2" placeholder="Enter Email" style="width:200px;"
-                                                        formControlName="cboEmail">
+                                                        formControlName="cboEmail" [ngClass]="{ 'border-danger': drsList.at(i).get('cboEmail')?.invalid && drsList.at(i).get('cboEmail')?.touched}">
                                                     <div class="text-danger small text-start"
                                                         *ngIf="drsList.at(i).get('cboEmail')?.touched && drsList.at(i).get('cboEmail')?.invalid">
                                                         <span *ngIf="drsList.at(i).get('cboEmail')?.errors?.['required']">
@@ -320,7 +328,7 @@
                                             </div>
                                         </div>
                                         <!-- RIGHT SIDE -->
-                                    <div class="d-flex align-items-center gap-3">
+                                    <div class="d-flex align-items-center gap-3" *ngIf="row.value.deliveredPkgs > 0">
                                     
                                         <!-- ======================= POD FRONT ======================= -->
                                         <ng-container *ngIf="drsList.at(i).value.frontPreview; else frontUpload">
