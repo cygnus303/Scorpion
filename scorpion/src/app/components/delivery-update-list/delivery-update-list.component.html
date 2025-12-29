@@ -347,6 +347,9 @@
                                             <button type="button" class="btn btn-outline-primary btn-sm" (click)="frontInput.click()">
                                                 ⬆ POD Front UPLOAD
                                             </button>
+                                             <span class="text-danger mt-1" *ngIf="isPodFrontRequired(i)">
+                                                POD Front is required
+                                             </span>
                                         </ng-template>
                                         <input type="file" #frontInput hidden accept="image/*" (change)="onFileSelected($event, i, 'FRONT')" />
                                         <!-- ======================= POD BACK ======================= -->
@@ -383,7 +386,7 @@
     </div>
 </form>
 <div class="d-flex justify-content-center text-center p-4">
-        <button class="btn btn-success" (click)="deliveryUpdate()" [disabled]="isSubmit">
+        <button class="btn btn-success" (click)="deliveryUpdate()" [disabled]="isSubmit || isRedirect">
             <i class="bi bi-check-circle"></i>  Update DRS
         </button>
     </div>

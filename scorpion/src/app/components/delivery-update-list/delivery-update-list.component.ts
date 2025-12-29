@@ -40,9 +40,6 @@ ngOnInit(){
    const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
-      //  this.docketService.loginUserList.loadBy = "B";
-      // this.docketService.loginUserList.chargeType='1';
-      // this.docketService.loginUserList.drsId='DS/PIM/2526/002774';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       //   this.docketService.loginUserList.LocationCode =  'PIM';
       // this.docketService.loginUserList.loadBy = "B";
@@ -61,14 +58,40 @@ ngOnInit(){
 buildForm(){
   this.DRSSummaryForm = new FormGroup({
     LoadingBy:new FormControl(null),
-    vendorCode:new FormControl(null,Validators.required),
-    LoadingCharge:new FormControl(0,[Validators.required, Validators.min(0.01)]),
+    vendorCode:new FormControl(null),
+    LoadingCharge:new FormControl(0),
     Rate:new FormControl(null),
     closeKM:new FormControl(0),
     ratetype:new FormControl(null),
     drsList: new FormArray([])
   })
+    this.DRSSummaryForm.get('LoadingBy')?.valueChanges
+    .subscribe(value => this.updateValidatorsByLoadingBy(value));
 }
+
+updateValidatorsByLoadingBy(loadingBy: string) {
+  const vendorCtrl = this.DRSSummaryForm.get('vendorCode');
+  const loadingChargeCtrl = this.DRSSummaryForm.get('LoadingCharge');
+
+  // 🔴 XX9 → NO validation
+  if (loadingBy === 'XX9') {
+    vendorCtrl?.clearValidators();
+    loadingChargeCtrl?.clearValidators();
+  } 
+  // 🟢 Other cases → validation required
+  else {
+    vendorCtrl?.setValidators([Validators.required]);
+    loadingChargeCtrl?.setValidators([
+      Validators.required,
+      Validators.min(0.01)
+    ]);
+  }
+
+  // 🔄 refresh validity
+  vendorCtrl?.updateValueAndValidity();
+  loadingChargeCtrl?.updateValueAndValidity();
+}
+
 
 get drsList(): FormArray {
   return this.DRSSummaryForm.get('drsList') as FormArray;
@@ -269,6 +292,7 @@ getDeliveryDetail() {
         closeKM: this.DRSInformation?.closeKM,
         LoadingBy:response.data.drsSummary.loadingBy
       });
+      this.updateValidatorsByLoadingBy(response.data.drsSummary.loadingBy);
       const docketList = response.data.updateDRSLits || [];
       this.drsList.clear();
       docketList.forEach((item: any) => {
@@ -432,6 +456,7 @@ onFileSelected(event: any, index: number, type: 'FRONT' | 'BACK') {
       frontFiles: [file],
       frontPreview: previewUrl
     });
+    row.get('frontFiles')?.markAsTouched();
   } else {
     const old = row.get('backPreview')?.value;
     if (old) URL.revokeObjectURL(old);
@@ -459,6 +484,7 @@ removeFile(index: number, type: 'FRONT' | 'BACK') {
       frontFiles: [],
       frontPreview: null
     });
+    row.get('frontFiles')?.markAsTouched();
   } else {
     const url = row.get('backPreview')?.value;
     if (url) URL.revokeObjectURL(url);
@@ -469,6 +495,20 @@ removeFile(index: number, type: 'FRONT' | 'BACK') {
     });
   }
 }
+
+isPodFrontRequired(index: number): boolean {
+  const row = this.drsList.at(index) as FormGroup;
+
+  const deliveredPkgs = Number(row.get('deliveredPkgs')?.value || 0);
+  const frontPreview = row.get('frontPreview')?.value;
+
+  return (
+    deliveredPkgs > 0 &&
+    !frontPreview &&
+    (row.get('frontFiles')?.touched || this.isSubmit)
+  );
+}
+
 
  
 validatePOD(index: number) {
@@ -519,6 +559,36 @@ validatePOD(index: number) {
   });
 }
 
+getInvalidPODRows(): number[] {
+  const invalidIndexes: number[] = [];
+
+  this.drsList.controls.forEach((row: any, index: number) => {
+    const deliveredPkgs = Number(row.get('deliveredPkgs')?.value || 0);
+    const frontFiles = row.get('frontFiles')?.value || [];
+
+    if (deliveredPkgs > 0 && frontFiles.length === 0) {
+      invalidIndexes.push(index);
+    }
+  });
+
+  return invalidIndexes;
+}
+
+hasPODError(): boolean {
+  let hasError = false;
+
+  this.drsList.controls.forEach((row: any) => {
+    const deliveredPkgs = Number(row.get('deliveredPkgs')?.value || 0);
+    const frontFiles = row.get('frontFiles')?.value || [];
+
+    if (deliveredPkgs > 0 && frontFiles.length === 0) {
+      hasError = true;
+      row.get('frontFiles')?.markAsTouched();
+    }
+  });
+
+  return hasError;
+}
 
 
   deliveryUpdate(){
@@ -555,8 +625,8 @@ validatePOD(index: number) {
         formData.append('BackFiles', file, `${ctrl.value.dockno}_BACK_${file.name}`);
       });
     });
-
-  if(this.DRSSummaryForm.valid){
+const podError = this.hasPODError();
+  if(this.DRSSummaryForm.valid && !podError ){
     this.isSubmit = true;
     this.deliveryUpdateService.deliveryUpdate(formData).subscribe({next: (response:any) => {
         if (response && response.data && !response.data.isError) {
@@ -575,8 +645,31 @@ validatePOD(index: number) {
         }
     })
   }else{
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    this.DRSSummaryForm.markAllAsTouched();
+   window.scrollTo({ top: 0, behavior: 'smooth' });
+  this.DRSSummaryForm.markAllAsTouched();
+
+  // 🔹 Summary invalid
+  const invalidSummary = Object.keys(this.DRSSummaryForm.controls).filter(
+    key => this.DRSSummaryForm.get(key)?.invalid
+  );
+  console.log('❌ Invalid Summary Controls:', invalidSummary);
+
+  // 🔹 drsList invalid controls
+  this.drsList.controls.forEach((row: any, i: number) => {
+    const invalidRow = Object.keys(row.controls).filter(
+      key => row.get(key)?.invalid
+    );
+
+    if (invalidRow.length) {
+      console.log(`❌ drsList[${i}] Invalid Fields:`, invalidRow);
+    }
+  });
+
+  // 🔥 POD INVALID LOG
+  const podInvalidRows = this.getInvalidPODRows();
+  if (podInvalidRows.length) {
+    console.log('❌ POD Front missing at rows:', podInvalidRows);
+  }
   }
   }
 
