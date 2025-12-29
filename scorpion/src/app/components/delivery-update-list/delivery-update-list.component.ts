@@ -29,9 +29,9 @@ export class DeliveryUpdateListComponent {
   public minDate: Date | undefined;
   public maxDate = new Date();
   public branchWiseLoadingUnloadingList:BranchWiseLoadingUnloading[]=[];
-  public isSubmitting:boolean = false;
   public isRedirect:boolean = false;
   public drsDeliveryList:any[]=[];
+  public isSubmit:boolean=false;
   
 
   constructor( public challanService:ChallanService,public deliveryUpdateService:DeliveryUpdateService, public docketService:DocketService,private THCService:THCMasterService,public generalMasterService:GeneralMasterService,public sweetAlertService:SweetAlertService){}
@@ -41,6 +41,10 @@ ngOnInit(){
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      //   this.docketService.loginUserList.LocationCode =  'PIM';
+      // this.docketService.loginUserList.loadBy = "B";
+      // this.docketService.loginUserList.chargeType='1';
+      // this.docketService.loginUserList.drsId='DS/PIM/2526/002778';
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
@@ -83,6 +87,34 @@ getCurrentDateTime(): string {
   return `${day} ${month} ${year} ${hours}:${minutes} ${ampm}`;
 }
 
+clearNewRateOnFocus(index: number): void {
+  if (this.DRSSummaryForm.value.LoadingBy === 'XX5') {
+    return;
+  }
+
+  const control = this.drsList.at(index).get('newRate');
+  const value = control?.value;
+
+  if (value === 0 || value === '0') {
+    setTimeout(() => {
+      control?.setValue('');
+    });
+  }
+}
+
+resetNewRateOnBlur(index: number): void {
+  if (this.DRSSummaryForm.value.LoadingBy === 'XX5') {
+    return;
+  }
+
+  const control = this.drsList.at(index).get('newRate');
+  const value = control?.value;
+
+  // user kai change na kare ane blank hoy to 0 set karo
+  if (value === null || value === '' || value === undefined) {
+    control?.setValue(0);
+  }
+}
 
   createDrsRow(data: any[]) {
   data.forEach((item) => {
@@ -522,7 +554,7 @@ validatePOD(index: number) {
     });
 
   if(this.DRSSummaryForm.valid){
-    this.isSubmitting = true;
+    this.isSubmit = true;
     this.deliveryUpdateService.deliveryUpdate(formData).subscribe({next: (response:any) => {
         if (response && response.data && !response.data.isError) {
           this.isRedirect = true;
@@ -531,11 +563,11 @@ validatePOD(index: number) {
         }else{
              this.sweetAlertService.error('You have some form errors. Please check below.');
         }
-        this.isSubmitting=false;
+        this.isSubmit=false;
       },error: (error) => {
           window.scrollTo({ top: 0, behavior: 'smooth' });
             this.sweetAlertService.error(error?.error?.message);
-            this.isSubmitting=false;
+            this.isSubmit=false;
             this.isRedirect = false;
         }
     })
