@@ -463,6 +463,18 @@ onFileSelect(event: Event) {
     } else {
       this.docketService.isBillingTBB = true;
     }
+      const freightCharges = this.docketService.freightForm.get('freightCharges');
+    const freightRate = this.docketService.freightForm.get('freightRate');
+    if (event?.codeId === 'P04') {
+      freightCharges?.clearValidators();
+      freightRate?.clearValidators();
+    } else {
+      // ✅ Required lagavo
+      freightCharges?.setValidators([Validators.required, Validators.min(0.01)]);
+      freightRate?.setValidators([Validators.required, Validators.min(0.01)]);
+    }
+    freightCharges?.updateValueAndValidity();
+    freightRate?.updateValueAndValidity();
     
     this.docketService.basicDetailForm.patchValue({
       billingParty: null,
