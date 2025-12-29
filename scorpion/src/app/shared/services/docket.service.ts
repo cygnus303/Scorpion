@@ -644,6 +644,11 @@ getStep2Details() {
               isStaxExemp:true
             })
           }
+          if(this.basicDetailForm.value.billingType==='P04'){
+             this.freightForm.patchValue({
+              gstRate: 0,
+            })
+          }
           // this.getGSTCalculation()
         }
       }
@@ -1183,20 +1188,20 @@ GetFreightContractDetails() {
         this.getFuelSurcharge(this.freightData?.freightCharge);
 
         // ⭐ Update form weight ONLY if API gives higher value
-        const newFinalWeight = Math.max(
+          const newFinalWeight = Math.max(
           this.freightData.chargedWeight || 0,
-          originalFinalWeight || 0
-        );
-
-        const newPkgWeight = Math.max(
-          this.freightData.chargedPKGS || 0,
-          this.invoiceform.value.chargeWeightPerPkg || 0
-        );
-
-        this.invoiceform.patchValue({
-          finalActualWeight: newFinalWeight,
-          chargeWeightPerPkg: newPkgWeight
-        });
+            originalFinalWeight || 0
+          );
+          
+          const newPkgWeight = Math.max(
+            this.freightData.chargedPKGS || 0,
+            this.invoiceform.value.chargeWeightPerPkg || 0
+          );
+  
+          this.invoiceform.patchValue({
+            finalActualWeight: newFinalWeight,
+            chargeWeightPerPkg: newPkgWeight
+          });
       }
     }
   });
