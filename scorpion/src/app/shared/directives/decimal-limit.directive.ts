@@ -1,5 +1,6 @@
 import { Directive, HostListener, Input } from '@angular/core';
 import { NgControl } from '@angular/forms';
+import { DocketService } from '../services/docket.service';
 
 @Directive({
   selector: '[appDecimalLimit]',
@@ -9,14 +10,14 @@ export class DecimalLimitDirective {
 
   @Input() unit: 'INCHES' | 'CM' | undefined;
 
-   constructor(private control: NgControl) {}
+   constructor(private control: NgControl,private docketService:DocketService) {}
   @HostListener('input', ['$event'])
   onInput(event: Event) {
       const input = event.target as HTMLInputElement;
       let value = input.value;
 
       // unit pramane integer digits ni limit
-      const intLimit = this.unit === 'INCHES' ? 2 : 3;
+      const intLimit = this.unit === 'INCHES' ?  (this.docketService.isComplition ? 3 : 2) : 3;
 
       const regex = new RegExp(`^\\d{0,${intLimit}}(\\.\\d{0,2})?$`);
 
