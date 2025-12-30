@@ -17,4 +17,9 @@ constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerServ
      return this.apiHandlerService.Get(`THC/arrival-details?id=${params.id}&loadBy=${params.loadBy}&chargeType=${params.chargeType}&BaseLocationCode=${params.BaseLocationCode}&BaseUserName=${params.BaseUserName}`);
   }
 
+  THCArrival(paylaod:any){
+     return this.apiHandlerService.Post(`THC/THCArrivalDetails`,paylaod);
+
+  }
+
 }

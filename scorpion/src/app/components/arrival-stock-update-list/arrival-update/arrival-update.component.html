@@ -10,7 +10,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">THC No. :</label>
                     <div class="col-sm-7 text-start text-primary-color">
-                       {{arrivalDetail?.thcno}} ({{generalMasterService.loadingData[0].codeDesc}})
+                       {{arrivalDetail?.thcno}} ({{generalMasterService.loadingData[0]?.codeDesc}})
                     </div>
                 </div>
             </div>
@@ -28,7 +28,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Expected Arrival Date & Time :</label>
                     <div class="col-sm-7 text-start text-primary-color">
-                       {{arrivalDetail.eta| date:'M/d/yyyy h:mm:ss a'}}
+                       {{arrivalDetail?.eta| date:'M/d/yyyy h:mm:ss a'}}
                     </div>
                 </div>
             </div>
@@ -36,7 +36,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vehicle Departed From :</label>
                     <div class="col-sm-7 text-start text-primary-color">
-                       {{ arrivalDetail.previousBranch + ' @ ' + arrivalDetail.atd }}
+                       {{ arrivalDetail?.previousBranch + ' @ ' + arrivalDetail?.atd }}
                     </div>
                 </div>
             </div>
@@ -109,22 +109,22 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Actual WT. :</label>
                     <div class="col-sm-7 text-start">
-                       {{arrivalDetail.chrgwt | number:'1.2-2'}}
+                       {{arrivalDetail?.chrgwt | number:'1.2-2'}}
                     </div>
                 </div>
             </div>
         </div>
-        <h3 class="pb-4 text-start appointment mt-5">UnLoading Charges</h3>
+        <h3 class="pb-4 text-start appointment mt-5" *ngIf="arrivalDetail?.loadingBy !=='XX9'">UnLoading Charges</h3>
          <div class="row pb-3 pt-3">
-               <div class="col-3">
+               <div class="col-3" *ngIf="arrivalDetail?.loadingBy !=='XX9'">
                    <div class="row align-items-center">
                        <label class="col-sm-5 col-form-label text-end">UnLoading By :</label>
                         <div class="col-sm-7 text-start text-primary-color">
-                          {{generalMasterService.loadingData[0].codeDesc}}
+                          {{generalMasterService.loadingData[0]?.codeDesc}}
                        </div>
                    </div>
                </div>
-               <div class="col-3">
+               <div class="col-3" *ngIf="arrivalDetail?.loadingBy !=='XX9'">
                    <div class="row align-items-center">
                        <label class="col-sm-5 col-form-label text-end">Vendor Code :</label>
                        <div class="col-sm-7 text-start">
@@ -140,19 +140,20 @@
                        </div>
                    </div>
                </div>
-                  <div class="col-3">
-                   <div class="row align-items-center">
+                  <div class="col-3" *ngIf="arrivalDetail?.loadingBy !=='XX9'">
+                   <div class="row">
                        <label class="col-sm-5 col-form-label text-end">Rate :</label>
                        <div class="col-sm-7 text-start">
-                          <input class="form-control" placeholder="Vendor Code" type="text" formControlName="Rate">
+                          <input class="form-control required2" placeholder="Vendor Code" type="text" formControlName="Rate" (input)="calculateCharge()">
+                         <div class="text-danger mt-1"> {{rateErrorMsg}}</div>
                        </div>
                    </div>
                </div>
-               <div class="col-3">
+               <div class="col-3" *ngIf="arrivalDetail?.loadingBy !=='XX9'">
                    <div class="row align-items-center">
                        <label class="col-sm-5 col-form-label text-end">UnLoading Charge :</label>
                         <div class="col-sm-7 text-start text-primary-color">
-                          <input class="form-control" placeholder="Vendor Code" type="text" formControlName="LoadingCharge">
+                          <input class="form-control required2" placeholder="Vendor Code" type="text" formControlName="LoadingCharge" readonly>
                        </div>
                    </div>
                </div>

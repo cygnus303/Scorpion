@@ -59,13 +59,13 @@ public Seallist=[
   buildForm(){
     this.arrivalForm=new FormGroup({
       ISN:new FormControl(''),
-      s2id_Status:new FormControl(''),
+      s2id_Status:new FormControl(null),
       AD:new FormControl(this.getCurrentDateTime()),
       CLOSEKM:new FormControl(''),
       IR:new FormControl(''),
       Unloder:new FormControl(''),
-      LAR:new FormControl(''),
-      VendorCode:new FormControl(''),
+      LAR:new FormControl(null),
+      VendorCode:new FormControl(null),
       Rate:new FormControl(''),
       LoadingCharge:new FormControl('')
     })
@@ -98,10 +98,10 @@ getArrival(){
   this.stockUpdateService.getArrivalDetail(params).subscribe({
      next: (response) => {
        this.arrivalDetail=response;
+       this.generalMasterService.getLoadingByDetail(this.arrivalDetail.loadingBy);
        this.arrivalForm.patchValue({
         Unloder:this.arrivalDetail.unloder
        });
-      this.generalMasterService.getLoadingByDetail(this.arrivalDetail.loadingBy);
         this.getPANnumberData(this.arrivalDetail.loadingBy)
       },
   })
@@ -138,14 +138,145 @@ getLoadingCharge(event: any) {
     this.arrivalForm.patchValue({
         Rate:response.rate
       });
-     
+
     },
     error: (err) => {
       console.error('Error fetching loading charge:', err);
     }
   });
 // }
+  this.calculateCharge()
 }
+
+calcRate() {
+  let Charges = 0;
+
+  const loadingBy = this.arrivalDetail.loadingBy;
+  const rateType = this.arrivalDetail.rateType;
+
+  const rate = Number(this.arrivalForm.get('Rate')?.value || 0);
+  const chrgwt = this.arrivalDetail.chrgwt||0;
+  const noofpkg = this.arrivalDetail.pkgsno || 0;
+
+  if (loadingBy !== 'XX9') {
+    let maxlimitcalculation = 0;
+
+    if (rateType === '4') {
+      maxlimitcalculation = rate / chrgwt;
+
+      if (maxlimitcalculation > 5) {
+        // this.showRateError();
+        return;
+      }
+    }
+    else if (rateType === '3') {
+      maxlimitcalculation = (rate * noofpkg) / chrgwt;
+
+      if (maxlimitcalculation > 5) {
+        // this.showRateError();
+        return;
+      }
+    }
+    else {
+      if (rate > 5) {
+        // this.showRateError();
+        return;
+      }
+    }
+
+    // this.hideRateError();
+  }
+
+  switch (rateType) {
+    case '1':
+      Charges = rate * chrgwt;
+      break;
+
+    case '2':
+      Charges = rate;
+      break;
+
+    case '3':
+      Charges = rate * noofpkg;
+      break;
+
+    case '4':
+      Charges = rate;
+      break;
+  }
+this.arrivalForm.patchValue({
+  loadingCharge:Charges.toFixed(2)
+})
+}
+
+rateErrorMsg:any;
+validateRate(): boolean {
+  const loadingBy = this.arrivalDetail.loadingBy;
+
+  // Skip validation if 'LoadingBy' is 'XX9'
+  if (loadingBy === 'XX9') {
+    return true;
+  }
+
+  const rateType = this.arrivalDetail.rateType;
+  const rate = parseFloat(this.arrivalForm.get('Rate')?.value || '0') || 0;
+  const chrgwt = parseFloat(this.arrivalDetail.chrgwt || '0') || 0;
+  const noofpkg = parseFloat(this.arrivalDetail.pkgsno || '0') || 0;
+
+  let maxlimitcalculation = 0;
+
+  if (rateType === '4') {
+    if (chrgwt === 0) return false;
+    maxlimitcalculation = rate / chrgwt;
+  }
+  else if (rateType === '3') {
+    if (chrgwt === 0) return false;
+    maxlimitcalculation = (rate * noofpkg) / chrgwt;
+  }
+  else {
+    maxlimitcalculation = rate;
+  }
+
+  // 🔴 MAX LIMIT CHECK
+  if (maxlimitcalculation > 5) {
+    this.rateErrorMsg = 'Rate Amount Is High Please Check';
+    this.arrivalForm.patchValue({ Rate: '0.00' });
+    return false;
+  }
+
+  // ✅ VALID
+  this.rateErrorMsg = '';
+  return true;
+}
+
+
+  calculateCharge() {
+    const isValid = this.validateRate();
+    if (!isValid) {this.arrivalForm.patchValue({LoadingCharge: (0).toFixed(2)})
+      return;
+    }
+    const rateType = this.arrivalDetail.rateType;
+    const newRate = parseFloat(this.arrivalForm.get('Rate')?.value || 0);
+    const actuwt = parseFloat(this.arrivalDetail.chrgwt || 0);
+    const pkgsno = parseFloat(this.arrivalDetail.pkgsno || 0);
+    let charge = 0;
+    switch (rateType) {
+      case '1': // PER KG
+        charge = actuwt * newRate;
+        break;
+      case '3': // PER PACKAGES
+        charge = pkgsno * newRate;
+        break;
+      case '4': // FLAT
+        charge = newRate;
+        break;
+      default:
+        charge = 0;
+    }
+    this.arrivalForm.patchValue({
+      LoadingCharge: charge.toFixed(2)
+    })
+  }
 
 branchWiseLoadingUnloading(event: any) {
     const data = {

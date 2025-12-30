@@ -18,7 +18,7 @@ export class ArrivalStockUpdateListComponent {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.loginUserList.LocationCode =  'PIM';
-      this.docketService.loginUserList.loadBy = "B";
+      this.docketService.loginUserList.loadBy = "XX9";
       this.docketService.loginUserList.chargeType='1';
       this.docketService.loginUserList.id='VH/BWH/2526/002424';
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
