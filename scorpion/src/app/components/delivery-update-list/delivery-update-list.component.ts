@@ -590,7 +590,17 @@ validatePOD(index: number) {
   });
 }
 
+onCloseKMFocus() {
+  const control = this.DRSSummaryForm.get('closeKM');
+
+  control?.setValue(null);
+}
+
 validateCloseKM() {
+  const control = this.DRSSummaryForm.get('closeKM');
+  if (control?.value === null || control?.value === '') {
+    control.setValue(0);
+  }
   const loadingBy = this.DRSSummaryForm.get('LoadingBy')?.value;
   const startKM = Number(this.DRSInformation?.start_KM);
   const closeKMControl = this.DRSSummaryForm.get('closeKM');
