@@ -15,7 +15,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
   styleUrl: './arrival-stock-update-liat.component.scss'
 })
 export class ArrivalStockUpdateLiatComponent {
-
+deliveryProcess =[{text:'DELIVERY THROUGH DRS', value:'1'},{text:'DELIVERY ON ARRIVAL', value:'2'}];
  constructor(public docketService: DocketService, public commonService: CommonService) { }
 
   ngOnInit(){

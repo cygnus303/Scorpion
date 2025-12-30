@@ -166,7 +166,16 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Stock Update Date :</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
-                             <input class="form-control" placeholder="Stock Update Date" type="text" >
+                            <div class="input-group" (click)="dp.toggle(); $event.stopPropagation()" >
+                                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
+                                    [bsValue]="docketService.bsValue" [maxDate]="docketService.bsValue"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                                    placeholder="Stock Update Date" required [class.disabled-input]="true">
+                                <span class="input-group-text cursor-pointer"
+                                    [class.disabled-input]="this.docketService.isComplition">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -217,17 +226,17 @@
                         <th>Biz. Type<br>Service Type</th>
                         <th>Arrived Pkgs.</th>
                         <th>Arrived Wt.</th>
-                        <th class="align-top p-1">
-                            <div class="fw-semibold small mb-1">Arrival Condition</div>
-                            <ng-select class="w-100"></ng-select>
+                        <th class="align-top p-1" style="width: 200px;">
+                            <div class="small mb-1">Arrival Condition</div>
+                            <ng-select class="clear-icon"></ng-select>
                         </th>
-                        <th class="align-top p-1">
-                            <div class="fw-semibold small mb-1">Warehouse</div>
-                            <ng-select class="w-100"></ng-select>
+                        <th class="align-top p-1" style="width: 200px;">
+                            <div class="small mb-1">Warehouse</div>
+                            <ng-select class="clear-icon"></ng-select>
                         </th>
-                        <th class="align-top p-1">
-                            <div class="fw-semibold small mb-1">Delivery Process</div>
-                            <ng-select class="w-100"></ng-select>
+                        <th class="align-top p-1" style="width: 200px;">
+                            <div class="small mb-1">Delivery Process</div>
+                            <ng-select class="clear-icon fw-normal" bindLabel="text" bindValue="value" [items]="deliveryProcess" placeholder="Select Process"></ng-select>
                         </th>
                     </tr>
                 </thead>
@@ -255,11 +264,11 @@
                             <div class="text-primary-color">SCORPION EXPRESS PVT LTD</div>
                             <small class="text-muted">FTL</small>
                         </td>
-                        <td class="fixed-col"><input class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g,'');" value="835"></td>
-                        <td class="fixed-col"><input class="form-control" value="18000.0" readonly></td>
-                        <td class="fixed-col"> <ng-select class="clear-icon" ></ng-select></td>
-                        <td class="fixed-col"><ng-select class="clear-icon" ></ng-select></td>
-                        <td class="fixed-col"><ng-select class="clear-icon" placeholder="Select Process"></ng-select></td>
+                        <td style="width: 100px;"><input class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g,'');" value="835"></td>
+                        <td style="width: 100px;"><input class="form-control" value="18000.0" readonly></td>
+                        <td style="width: 200px;"><ng-select class="clear-icon" ></ng-select></td>
+                        <td style="width: 200px;"><ng-select class="clear-icon" ></ng-select></td>
+                        <td style="width: 200px;"><ng-select class="clear-icon" bindLabel="text" bindValue="value" [items]="deliveryProcess" placeholder="Select Process"></ng-select></td>
                     </tr>
                      <tr>
                         <td class="text-center">POD :-</td>
