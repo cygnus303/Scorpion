@@ -182,7 +182,12 @@ resetNewRateOnBlur(index: number): void {
         backFiles: new FormControl<File[]>([]),
         frontPreview: new FormControl<string | null>(null),
         backPreview: new FormControl<string | null>(null),
-         podValidated: new FormControl(false)
+         podValidated: new FormControl(false),
+         coddodno:new FormControl(item.coddodno),
+         docksf:new FormControl(item.docksf),
+         coddodcollected:new FormControl(item.coddodcollected),
+         coD_DOD:new FormControl(item.coD_DOD),
+         coddodAmount:new FormControl(item.coddodAmount),
       });
       group.get('ratetype')?.valueChanges.subscribe(() => this.calculateCharge(group));
       group.get('newRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
@@ -601,12 +606,32 @@ hasPODError(): boolean {
     ratetype: row.ratetype,
     delydate: row.DELYDATE,   // already ISO
     pkgsdelivered: Number(row.deliveredPkgs) || 0,
-    pkgs_Pending: Number(row.pkgs_Pending) || 0
+    pkgs_Pending: Number(row.pkgs_Pending) || 0,
+    newRate: Number(row.newRate)||0,
+    coddodno: Number(row.coddodno)||0,
+    delyperson: row.DELYPERSON || '',
+    docksf:row.docksf || '',
+    coddodcollected: Number(row.coddodcollected) || 0,
+    cboEmail: row.cboEmail || '',
+    coD_DOD: row.coD_DOD || '',
+    cboMobileNo: row.cboMobileNo || '',
+    cboReason: row.cboReason || '',
+    payBasis: row.payBasis || '',
+    coddodAmount: Number(row.coddodAmount) || 0,
+    cboLateReason: "",
   }));
 
   const formData = new FormData();
    formData.append("DRSDocketsUpdateList",  JSON.stringify(DRSDocketsUpdateList));
    formData.append("pdcno", this.DRSInformation.pdcno);
+   formData.append("VendorName", this.DRSSummaryForm.value.vendorCode);
+   formData.append("MaxLimit", this.DRSInformation.maxLimit);
+   formData.append("IsMathadi",this.DRSInformation.isMathadi);
+   formData.append("RateType", this.DRSInformation.rateType);
+   formData.append("Rate", this.DRSInformation.rate);
+   formData.append("MathadiSlipNo",'0');
+   formData.append("MathadiDate", this.DRSInformation.mathadiDate);
+   formData.append("MathadiAmt", this.DRSInformation.mathadiAmt);
    formData.append("LoadingBy", this.DRSInformation.loadingBy);
    formData.append("VendorCode", this.DRSSummaryForm.value.vendorCode);
    formData.append("IsMonthly", this.DRSInformation.isMonthly);
