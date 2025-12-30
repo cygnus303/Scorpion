@@ -9,7 +9,7 @@
                 <div class="col-4">
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">DRS No :</label>
-                        <div class="col-sm-7 text-start fw-bold text-primary">
+                        <div class="col-sm-7 text-start fw-bold text-primary-color">
                             {{DRSInformation?.pdcno}}
                         </div>
                     </div>
@@ -17,7 +17,7 @@
                 <div class="col-4">
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Delivered By :</label>
-                        <div class="col-sm-7 text-start fw-bold text-primary">
+                        <div class="col-sm-7 text-start fw-bold text-primary-color">
                              {{DRSInformation?.deliveryBy}} - {{DRSInformation?.bA_Vendor_Code}}
                         </div>
                     </div>
@@ -25,7 +25,7 @@
                 <div class="col-4">
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">DRS Date :</label>
-                        <div class="col-sm-7 text-start fw-bold text-primary">
+                        <div class="col-sm-7 text-start fw-bold text-primary-color">
                             {{DRSInformation?.drsDate| date:'dd-MM-yyyy hh:mm:ss a'}}
                         </div>
                     </div>
@@ -39,7 +39,12 @@
                             {{DRSInformation?.start_KM}}  /
                         </div>
                         <div class="col-sm-6 text-start fw-bold">
-                            <input class="form-control" type="text" formControlName="closeKM" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                            <input class="form-control" type="text" formControlName="closeKM" oninput="this.value = this.value.replace(/[^0-9]/g,'');" (blur)="validateCloseKM()"
+                                [ngClass]="{ 'border-danger': DRSSummaryForm.get('closeKM')?.invalid && DRSSummaryForm.get('closeKM')?.touched }">
+                            <div class="text-danger small" *ngIf="DRSSummaryForm.get('closeKM')?.touched &&
+                                        DRSSummaryForm.get('closeKM')?.errors?.['max']">
+                                Please enter a value less than or equal to 900000.
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -70,7 +75,7 @@
                         <div class="row">
                             <label class="col-sm-5 col-form-label text-end">Vendor Code :</label>
                             <div class="col-sm-7 text-start">
-                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code" formControlName="vendorCode" (change)="getLoadingCharge($event.value)"
+                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code" formControlName="vendorCode" (change)="getLoadingCharge($event)"
                                     [items]="branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"
                                     required  [ngClass]="{ 'border-danger': DRSSummaryForm.get('vendorCode')?.invalid && DRSSummaryForm.get('vendorCode')?.touched}">
                                     <ng-template ng-option-tmp let-item="item">
@@ -157,7 +162,7 @@
                 <span>ADD as per POD Copy.</span>
             </div>
             <div>
-                <table class="table table-bordered align-middle w-100 ">
+                <table class="table table-bordered align-middle w-100 vertical-align">
                     <thead class="table-secondary">
                         <tr>
                             <th>Sr.No</th>
@@ -226,10 +231,11 @@
 
                                 <td>{{row.value.comm_Dely_Dt }}</td>
 
-                                <td class="align-top">
+                                 <td class="align-top">
                                     <div class="d-flex flex-column">
-                                        <input class="form-control form-control-sm" formControlName="deliveredPkgs" (input)="onDeliveredBlur(i)" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
-                                        <div *ngIf="row.value.deliveredPkgs > row.value.pkgs_Pending" class="text-danger mt-1">
+                                        <input class="form-control form-control-sm" formControlName="deliveredPkgs" (input)="onDeliveredBlur(i)" oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                                        [ngClass]="{'border-danger': row.get('deliveredPkgs')?.hasError('maxPending')}">
+                                        <div *ngIf="row.get('deliveredPkgs')?.hasError('maxPending')" class="text-danger mt-1" >
                                             <small>Please enter a value less than <br> or equal to {{ row.value.pkgs_Pending }}.</small>
                                         </div>
                                     </div>

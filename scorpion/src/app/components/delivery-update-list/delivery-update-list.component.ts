@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BranchWiseLoadingUnloading } from 'app/shared/models/thc-master.model';
@@ -41,10 +41,10 @@ ngOnInit(){
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      //   this.docketService.loginUserList.LocationCode =  'PIM';
-      // this.docketService.loginUserList.loadBy = "B";
-      // this.docketService.loginUserList.chargeType='1';
-      // this.docketService.loginUserList.drsId='DS/PIM/2526/002778';
+        this.docketService.loginUserList.LocationCode =  'PIM';
+      this.docketService.loginUserList.loadBy = "B";
+      this.docketService.loginUserList.chargeType='1';
+      this.docketService.loginUserList.drsId='DS/PIM/2526/002778';
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
@@ -59,6 +59,7 @@ buildForm(){
   this.DRSSummaryForm = new FormGroup({
     LoadingBy:new FormControl(null),
     vendorCode:new FormControl(null),
+    vendorName:new FormControl(null),
     LoadingCharge:new FormControl(0),
     Rate:new FormControl(null),
     closeKM:new FormControl(0),
@@ -163,7 +164,7 @@ resetNewRateOnBlur(index: number): void {
         pkgs_Arrived: new FormControl(item.pkgs_Arrived),
         pkgs_Booked: new FormControl(item.pkgs_Booked),
         comm_Dely_Dt: new FormControl(item.comm_Dely_Dt),
-        deliveredPkgs: new FormControl(item.pkgs_Arrived),
+        deliveredPkgs: new FormControl(item.pkgs_Arrived,[Validators.required, this.maxPendingValidator('pkgs_Pending')]),
         remarks: new FormControl(''),
         isChecked: new FormControl(true),
         isBadPod: new FormControl(),
@@ -187,13 +188,27 @@ resetNewRateOnBlur(index: number): void {
          docksf:new FormControl(item.docksf),
          coddodcollected:new FormControl(item.coddodcollected),
          coD_DOD:new FormControl(item.coD_DOD),
-         coddodAmount:new FormControl(item.coddodAmount),
+         coddodAmount:new FormControl(item.coddodAmount)
       });
       group.get('ratetype')?.valueChanges.subscribe(() => this.calculateCharge(group));
       group.get('newRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
       this.drsList.push(group);
     });
   }
+
+    maxPendingValidator(pendingKey: string) {
+  return (control: AbstractControl) => {
+    if (!control.parent) return null;
+ 
+    const pending = control.parent.get(pendingKey)?.value;
+    const delivered = control.value;
+ 
+    if (delivered > pending) {
+      return { maxPending: true };
+    }
+    return null;
+  };
+}
 
   validateRate(group: FormGroup): boolean {
   const loadingBy = this.DRSSummaryForm.get('LoadingBy')?.value;
@@ -313,9 +328,19 @@ getDeliveryDetail() {
 }
 
 getLoadingCharge(event: any) {
+  if (!event) {
+    this.DRSSummaryForm.patchValue({
+      vendorName: null
+    });
+    return;
+  }
+
+  this.DRSSummaryForm.patchValue({
+    vendorName: event.text   // 👈 Vendor Name store
+  });
   const data = {
     loadUnloadType: 'U',
-    vendorCode: event,
+    vendorCode: event.value,
     typeModule: this.docketService.loginUserList.Type === "2" ? "P" : "D",
     chargeType: this.docketService.loginUserList.chargeType,
     brdc: this.docketService.loginUserList.LocationCode,
@@ -564,6 +589,27 @@ validatePOD(index: number) {
   });
 }
 
+validateCloseKM() {
+  const loadingBy = this.DRSSummaryForm.get('LoadingBy')?.value;
+  const startKM = Number(this.DRSInformation?.start_KM);
+  const closeKMControl = this.DRSSummaryForm.get('closeKM');
+  if (loadingBy !== 'B' && loadingBy !== 'XX6') {
+    let maxValue = 0;
+    if (startKM + 2000 > 900000) {
+      maxValue = 900000;
+    } else {
+      maxValue = startKM + 2000;
+    }
+    closeKMControl?.setValidators([
+      Validators.required,
+      Validators.max(maxValue)
+    ]);
+ 
+    closeKMControl?.updateValueAndValidity();
+  }
+}
+ 
+
 getInvalidPODRows(): number[] {
   const invalidIndexes: number[] = [];
 
@@ -624,7 +670,7 @@ hasPODError(): boolean {
   const formData = new FormData();
    formData.append("DRSDocketsUpdateList",  JSON.stringify(DRSDocketsUpdateList));
    formData.append("pdcno", this.DRSInformation.pdcno);
-   formData.append("VendorName", this.DRSSummaryForm.value.vendorCode);
+   formData.append("VendorName", this.DRSSummaryForm.value.vendorName);
    formData.append("MaxLimit", this.DRSInformation.maxLimit);
    formData.append("IsMathadi",this.DRSInformation.isMathadi);
    formData.append("RateType", this.DRSInformation.rateType);
