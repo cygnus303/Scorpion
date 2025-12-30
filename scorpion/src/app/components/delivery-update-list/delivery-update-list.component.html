@@ -40,7 +40,7 @@
                         </div>
                          <div class="col-sm-6 text-start fw-bold">
                             <input class="form-control" type="text" formControlName="closeKM" oninput="this.value = this.value.replace(/[^0-9]/g,'');"
-                            [attr.max]="maxCloseKMValue" (blur)="validateCloseKM()"
+                            [attr.max]="maxCloseKMValue" (blur)="validateCloseKM()" appFocusNext (focus)="onCloseKMFocus()"
                                 [ngClass]="{ 'border-danger': DRSSummaryForm.get('closeKM')?.invalid && DRSSummaryForm.get('closeKM')?.touched }">
                             <div class="text-danger small" *ngIf="DRSSummaryForm.get('closeKM')?.touched && DRSSummaryForm.get('closeKM')?.errors?.['max']">
                                 Please enter a value less than or equal to {{ maxCloseKMValue }}.
@@ -76,7 +76,7 @@
                             <label class="col-sm-5 col-form-label text-end">Vendor Code :</label>
                             <div class="col-sm-7 text-start">
                                 <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code" formControlName="vendorCode" (change)="getLoadingCharge($event)"
-                                    [items]="branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"
+                                    [items]="branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value" appFocusNext
                                     required  [ngClass]="{ 'border-danger': DRSSummaryForm.get('vendorCode')?.invalid && DRSSummaryForm.get('vendorCode')?.touched}">
                                     <ng-template ng-option-tmp let-item="item">
                                         <div [title]="item.text">
@@ -96,7 +96,7 @@
                         <div class="row align-items-center">
                             <label class="col-sm-5 col-form-label text-end">Rate :</label>
                             <div class="col-sm-7 text-start">
-                                <input class="form-control required2" placeholder="Rate" type="text" formControlName="Rate" readonly>
+                                <input class="form-control required2" placeholder="Rate" type="text" formControlName="Rate" readonly appFocusNext>
                             </div>
                         </div>
                     }
@@ -107,7 +107,7 @@
                     <label class="col-sm-5 col-form-label text-end">UnLoading Charge:</label>
                     <div class="col-sm-7 text-start">
                         <input class="form-control required2" placeholder="UnLoading Charge" type="text" formControlName="LoadingCharge"
-                            readonly min="0.01"
+                            readonly min="0.01" appFocusNext
                             [ngClass]="{ 'border-danger': DRSSummaryForm.get('LoadingCharge')?.hasError('min') && DRSSummaryForm.get('LoadingCharge')?.touched}">
                         <div *ngIf="DRSSummaryForm.get('LoadingCharge')?.hasError('min') && DRSSummaryForm.get('LoadingCharge')?.touched"
                             class="text-danger text-start">
@@ -234,20 +234,20 @@
                                  <td class="align-top">
                                     <div class="d-flex flex-column">
                                         <input class="form-control form-control-sm" formControlName="deliveredPkgs" (input)="onDeliveredBlur(i)" oninput="this.value = this.value.replace(/[^0-9]/g,'');"
-                                        [ngClass]="{'border-danger': row.get('deliveredPkgs')?.hasError('maxPending')}">
+                                        [ngClass]="{'border-danger': row.get('deliveredPkgs')?.hasError('maxPending')}" appFocusNext>
                                         <div *ngIf="row.get('deliveredPkgs')?.hasError('maxPending')" class="text-danger mt-1" >
                                             <small>Please enter a value less than <br> or equal to {{ row.value.pkgs_Pending }}.</small>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <textarea rows="2" class="form-control-textarea" formControlName="remarks" placeholder="Enter Remarks"></textarea>
+                                    <textarea rows="2" class="form-control-textarea" formControlName="remarks" placeholder="Enter Remarks" appFocusNext></textarea>
                                 </td>
 
                                 <td>
-                                    <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type"
+                                    <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type" appFocusNext
                                         [items]="generalMasterService.chargeTypeData" [readonly]="this.DRSSummaryForm.value.LoadingBy !=='XX9' ? true : false"></ng-select>
-                                    <input type="number" class="form-control form-control-sm mt-1" formControlName="newRate"
+                                    <input type="number" class="form-control form-control-sm mt-1" formControlName="newRate" appFocusNext
                                         [readOnly]="this.DRSSummaryForm.value.LoadingBy === 'XX5'" (focus)="clearNewRateOnFocus(i)" (blur)="resetNewRateOnBlur(i)"/>
                                     <div class="text-danger small mt-1" *ngIf="drsList.at(i).get('rateError')?.value">
                                         {{ drsList.at(i).get('rateError')?.value }}
@@ -270,11 +270,11 @@
                                         <div class="d-flex align-items-center flex-wrap gap-3">
                                             <span class="fw-semibold text-muted">Delivery Date & Time</span>
                                             <app-date-time-picker controlName="DELYDATE" [maxDate]="maxDate" [placeholder]="'Delivery Date & Time'"
-                                                [minDate]="row.value.booking_Date">
+                                                [minDate]="row.value.booking_Date" appFocusNext>
                                             </app-date-time-picker>
                                             <span class="fw-semibold text-muted ms-2">Person</span>
                                             <div>
-                                                <input class="form-control form-control-sm required2" style="width: 160px;" placeholder="Person Name"
+                                                <input class="form-control form-control-sm required2" style="width: 160px;" placeholder="Person Name" appFocusNext
                                                 formControlName="DELYPERSON" [ngClass]="{ 'border-danger': drsList.at(i).get('DELYPERSON')?.invalid && drsList.at(i).get('DELYPERSON')?.touched}"/>
                                                 <div class="text-danger text-start"
                                                     *ngIf="drsList.at(i).get('DELYPERSON')?.invalid && drsList.at(i).get('DELYPERSON')?.touched">
@@ -286,7 +286,7 @@
                                                 <div>
                                                     <ng-select class="noFoundTextColor required2 clear-icon" style="width:250px;"
                                                         formControlName="cboReason" bindLabel="codeDesc" bindValue="codeId"
-                                                        [items]="generalMasterService.reasonData" placeholder="Select Reason"
+                                                        [items]="generalMasterService.reasonData" placeholder="Select Reason" appFocusNext
                                                         [ngClass]="{ 'border-danger': drsList.at(i).get('cboReason')?.invalid && drsList.at(i).get('cboReason')?.touched}">
                                                         <ng-template ng-option-tmp let-item="item">
                                                             <div [title]="item.codeDesc">{{ item.codeDesc }}</div>
@@ -303,7 +303,7 @@
                                                 <div>
                                                     <input class="form-control form-control-sm required2" style="width:200px;" maxlength="10"
                                                         formControlName="cboMobileNo" placeholder="Enter Mobile No"
-                                                        oninput="this.value = this.value.replace(/[^0-9]/g,'');" 
+                                                        oninput="this.value = this.value.replace(/[^0-9]/g,'');"  appFocusNext
                                                         [ngClass]="{ 'border-danger': drsList.at(i).get('cboMobileNo')?.invalid && drsList.at(i).get('cboMobileNo')?.touched}">
                                                     <div class="text-danger small text-start"
                                                         *ngIf="drsList.at(i).get('cboMobileNo')?.touched && drsList.at(i).get('cboMobileNo')?.invalid">
@@ -319,7 +319,7 @@
                                             <div class="d-flex align-items-center gap-2" *ngIf="drsList.at(i).get('showReason')?.value">
                                                 <span class="fw-semibold text-muted">Email:</span>
                                                 <div class="text-start">
-                                                    <input class="form-control form-control-sm required2" placeholder="Enter Email" style="width:200px;"
+                                                    <input class="form-control form-control-sm required2" placeholder="Enter Email" style="width:200px;" appFocusNext
                                                         formControlName="cboEmail" [ngClass]="{ 'border-danger': drsList.at(i).get('cboEmail')?.invalid && drsList.at(i).get('cboEmail')?.touched}">
                                                     <div class="text-danger small text-start"
                                                         *ngIf="drsList.at(i).get('cboEmail')?.touched && drsList.at(i).get('cboEmail')?.invalid">
