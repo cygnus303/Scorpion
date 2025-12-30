@@ -199,9 +199,18 @@
             <table class="table table-bordered align-middle stock-table table-fixed vertical-align">
                 <thead class="table-secondary">
                     <tr>
-                        <th class="text-center">Single<br>Stock Update</th>
-                        <th class="text-center">Damage / Pilferage</th>
-                        <th>MF #</th>
+                        <th class="align-top p-1">
+                            <div>Single<br>Stock Update</div>
+                            <input type="checkbox" class="form-check-input fs-5">
+                        </th>
+                        <th class="align-top p-1">
+                            <div class="fw-semibold small mb-1"> Damage / Pilferage</div>
+                            <div class="d-flex justify-content-center align-items-center gap-3">
+                                <input class="form-check-input fs-5" type="checkbox">
+                                <input class="form-check-input fs-5" type="checkbox">
+                            </div>
+                        </th>
+                        <th>MF #</th>   
                         <th>CNote #<br>Bkg-Dest</th>
                         <th>Bkg. Date<br>Commited Dely. Date</th>
                         <th class="text-start">Pkgs.<br>Wt.</th>
@@ -246,19 +255,40 @@
                             <div class="text-primary-color">SCORPION EXPRESS PVT LTD</div>
                             <small class="text-muted">FTL</small>
                         </td>
-                        <td class="fixed-col"><input class="form-control" value="835"></td>
+                        <td class="fixed-col"><input class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g,'');" value="835"></td>
                         <td class="fixed-col"><input class="form-control" value="18000.0" readonly></td>
                         <td class="fixed-col"> <ng-select class="clear-icon" ></ng-select></td>
                         <td class="fixed-col"><ng-select class="clear-icon" ></ng-select></td>
                         <td class="fixed-col"><ng-select class="clear-icon" placeholder="Select Process"></ng-select></td>
                     </tr>
+                     <tr>
+                        <td class="text-center">POD :-</td>
+                        <td>
+                            <button type="button" class="btn btn-outline-primary btn-sm">
+                                ⬆ POD Front UPLOAD
+                            </button>
+                        </td>
+                         <td colspan="2">
+                            <button type="button" class="btn btn-outline-primary btn-sm">
+                                    ⬆ POD Back UPLOAD
+                                </button>
+                        </td>
+                        <td colspan="4">
+                            <div class="row">
+                                <label class="col-sm-3 col-form-label text-end">Delivery Date & Time:</label>
+                                <div class="col-sm-9 text-start">
+                                    <input class="form-control" placeholder="Delivery Date & Time" type="date">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
                     <tr>
-                        <td class="text-center">Pilferage :-</td>
+                        <td class="text-center">Short :-</td>
                         <td>
                             <div class="row">
-                                <label class="col-sm-5 col-form-label text-end">Pilferage Packages:</label>
+                                <label class="col-sm-5 col-form-label text-end">Short Packages:</label>
                                 <div class="col-sm-7 text-start">
-                                    <input class="form-control" placeholder="Pilferage Packages" value="0" type="text">
+                                    <input class="form-control" placeholder="Short Packages" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
                                 </div>
                             </div>
                         </td>
@@ -266,11 +296,11 @@
                             <div class="row">
                                 <label class="col-sm-3 col-form-label text-end">Weight:</label>
                                 <div class="col-sm-9 text-start">
-                                    <input class="form-control" placeholder="Weight" value="0" type="text">
+                                    <input class="form-control" placeholder="Weight" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
                                 </div>
                             </div>
                         </td>
-                        <td colspan="4">
+                        <td colspan="3">
                             <div class="row">
                                 <label class="col-sm-2 col-form-label text-end">Reason:</label>
                                 <div class="col-sm-10 text-start">
@@ -286,7 +316,50 @@
                                 </div>
                             </div>
                         </td>
+                        <td colspan="2">
+                            <div class="row">
+                                <label class="col-sm-7 col-form-label text-end">File Upload:</label>
+                                <div class="col-sm-5 text-start">
+                                    <button type="button" class="btn btn-outline-primary btn-sm">Select</button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">Pilferage :-</td>
                         <td>
+                            <div class="row">
+                                <label class="col-sm-5 col-form-label text-end">Pilferage Packages:</label>
+                                <div class="col-sm-7 text-start">
+                                    <input class="form-control" placeholder="Pilferage Packages" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <div class="row">
+                                <label class="col-sm-3 col-form-label text-end">Weight:</label>
+                                <div class="col-sm-9 text-start">
+                                    <input class="form-control" placeholder="Weight" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="3">
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label text-end">Reason:</label>
+                                <div class="col-sm-10 text-start">
+                                      <textarea rows="1" class="form-control-textarea" placeholder="Reason"></textarea>
+                                </div>
+                            </div>
+                        </td>
+                          <td colspan="3">
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label text-end">Remarks:</label>
+                                <div class="col-sm-10 text-start">
+                                      <textarea rows="1" class="form-control-textarea" placeholder="Remarks"></textarea>
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="2">
                             <div class="row">
                                 <label class="col-sm-7 col-form-label text-end">File Upload:</label>
                                 <div class="col-sm-5 text-start">
@@ -301,7 +374,7 @@
                             <div class="row">
                                 <label class="col-sm-5 col-form-label text-end">Damage Packages::</label>
                                 <div class="col-sm-7 text-start">
-                                    <input class="form-control" placeholder="Damage Packages:" value="0" type="text">
+                                    <input class="form-control" placeholder="Damage Packages:" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
                                 </div>
                             </div>
                         </td>
@@ -309,7 +382,7 @@
                             <div class="row">
                                 <label class="col-sm-3 col-form-label text-end">Weight:</label>
                                 <div class="col-sm-9 text-start">
-                                    <input class="form-control" placeholder="Weight" value="0" type="text">
+                                    <input class="form-control" placeholder="Weight" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
                                 </div>
                             </div>
                         </td>
