@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BranchWiseLoadingUnloading } from 'app/shared/models/thc-master.model';
@@ -59,6 +59,7 @@ buildForm(){
   this.DRSSummaryForm = new FormGroup({
     LoadingBy:new FormControl(null),
     vendorCode:new FormControl(null),
+    vendorName:new FormControl(null),
     LoadingCharge:new FormControl(0),
     Rate:new FormControl(null),
     closeKM:new FormControl(0),
@@ -163,7 +164,7 @@ resetNewRateOnBlur(index: number): void {
         pkgs_Arrived: new FormControl(item.pkgs_Arrived),
         pkgs_Booked: new FormControl(item.pkgs_Booked),
         comm_Dely_Dt: new FormControl(item.comm_Dely_Dt),
-        deliveredPkgs: new FormControl(item.pkgs_Arrived),
+        deliveredPkgs: new FormControl(item.pkgs_Arrived,[Validators.required, this.maxPendingValidator('pkgs_Pending')]),
         remarks: new FormControl(''),
         isChecked: new FormControl(true),
         isBadPod: new FormControl(),
@@ -182,13 +183,32 @@ resetNewRateOnBlur(index: number): void {
         backFiles: new FormControl<File[]>([]),
         frontPreview: new FormControl<string | null>(null),
         backPreview: new FormControl<string | null>(null),
-         podValidated: new FormControl(false)
+         podValidated: new FormControl(false),
+         coddodno:new FormControl(item.coddodno),
+         docksf:new FormControl(item.docksf),
+         coddodcollected:new FormControl(item.coddodcollected),
+         coD_DOD:new FormControl(item.coD_DOD),
+         coddodAmount:new FormControl(item.coddodAmount)
       });
       group.get('ratetype')?.valueChanges.subscribe(() => this.calculateCharge(group));
       group.get('newRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
       this.drsList.push(group);
     });
   }
+
+    maxPendingValidator(pendingKey: string) {
+  return (control: AbstractControl) => {
+    if (!control.parent) return null;
+ 
+    const pending = control.parent.get(pendingKey)?.value;
+    const delivered = control.value;
+ 
+    if (delivered > pending) {
+      return { maxPending: true };
+    }
+    return null;
+  };
+}
 
   validateRate(group: FormGroup): boolean {
   const loadingBy = this.DRSSummaryForm.get('LoadingBy')?.value;
@@ -308,9 +328,19 @@ getDeliveryDetail() {
 }
 
 getLoadingCharge(event: any) {
+  if (!event) {
+    this.DRSSummaryForm.patchValue({
+      vendorName: null
+    });
+    return;
+  }
+
+  this.DRSSummaryForm.patchValue({
+    vendorName: event.text   // 👈 Vendor Name store
+  });
   const data = {
     loadUnloadType: 'U',
-    vendorCode: event,
+    vendorCode: event.value,
     typeModule: this.docketService.loginUserList.Type === "2" ? "P" : "D",
     chargeType: this.docketService.loginUserList.chargeType,
     brdc: this.docketService.loginUserList.LocationCode,
@@ -559,6 +589,27 @@ validatePOD(index: number) {
   });
 }
 
+validateCloseKM() {
+  const loadingBy = this.DRSSummaryForm.get('LoadingBy')?.value;
+  const startKM = Number(this.DRSInformation?.start_KM);
+  const closeKMControl = this.DRSSummaryForm.get('closeKM');
+  if (loadingBy !== 'B' && loadingBy !== 'XX6') {
+    let maxValue = 0;
+    if (startKM + 2000 > 900000) {
+      maxValue = 900000;
+    } else {
+      maxValue = startKM + 2000;
+    }
+    closeKMControl?.setValidators([
+      Validators.required,
+      Validators.max(maxValue)
+    ]);
+ 
+    closeKMControl?.updateValueAndValidity();
+  }
+}
+ 
+
 getInvalidPODRows(): number[] {
   const invalidIndexes: number[] = [];
 
@@ -601,12 +652,32 @@ hasPODError(): boolean {
     ratetype: row.ratetype,
     delydate: row.DELYDATE,   // already ISO
     pkgsdelivered: Number(row.deliveredPkgs) || 0,
-    pkgs_Pending: Number(row.pkgs_Pending) || 0
+    pkgs_Pending: Number(row.pkgs_Pending) || 0,
+    newRate: Number(row.newRate)||0,
+    coddodno: Number(row.coddodno)||0,
+    delyperson: row.DELYPERSON || '',
+    docksf:row.docksf || '',
+    coddodcollected: Number(row.coddodcollected) || 0,
+    cboEmail: row.cboEmail || '',
+    coD_DOD: row.coD_DOD || '',
+    cboMobileNo: row.cboMobileNo || '',
+    cboReason: row.cboReason || '',
+    payBasis: row.payBasis || '',
+    coddodAmount: Number(row.coddodAmount) || 0,
+    cboLateReason: "",
   }));
 
   const formData = new FormData();
    formData.append("DRSDocketsUpdateList",  JSON.stringify(DRSDocketsUpdateList));
    formData.append("pdcno", this.DRSInformation.pdcno);
+   formData.append("VendorName", this.DRSSummaryForm.value.vendorName);
+   formData.append("MaxLimit", this.DRSInformation.maxLimit);
+   formData.append("IsMathadi",this.DRSInformation.isMathadi);
+   formData.append("RateType", this.DRSInformation.rateType);
+   formData.append("Rate", this.DRSInformation.rate);
+   formData.append("MathadiSlipNo",'0');
+   formData.append("MathadiDate", this.DRSInformation.mathadiDate);
+   formData.append("MathadiAmt", this.DRSInformation.mathadiAmt);
    formData.append("LoadingBy", this.DRSInformation.loadingBy);
    formData.append("VendorCode", this.DRSSummaryForm.value.vendorCode);
    formData.append("IsMonthly", this.DRSInformation.isMonthly);

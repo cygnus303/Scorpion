@@ -1,29 +1,13 @@
-/* Make it stronger than Bootstrap */
-table tbody tr.table-custom td{
-  background-color: #ffffff !important; /* !important ensures it overrides Bootstrap */
-}
-
-/* Make it stronger than Bootstrap */
-table tbody tr.table-custom-light td{
-  background-color: #f1efef !important; /* !important ensures it overrides Bootstrap */
-}
-
-.text-primary{
-  color: #428bca !important;
-}
-
 /* Add conditional styles with !important */
 .font-large {
     font-size: 15px !important;
     font-weight: bold !important;
 }
-
+ 
 .form-check-input:checked{
   border: none !important;
 }
-.table > thead {
-    vertical-align: center !important;
-}
+ 
 .loading-overlay {
   position: fixed;
   top: 0;
@@ -36,18 +20,18 @@ table tbody tr.table-custom-light td{
   align-items: center;
   z-index: 9999;
 }
-
+ 
 .spinner-container {
   text-align: center;
   font-size: 1.2rem;
   color: #333;
 }
-
+ 
 .custom-spinner {
   font-size: 4rem !important;   // adjust as you like
   color: #a2a8a4;    // optional: green spinner
 }
-
+ 
 .custom-text {
   font-size: 1.5rem; // bigger text
   font-weight: 500;
