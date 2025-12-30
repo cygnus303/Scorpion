@@ -9,8 +9,8 @@ export class StockUpdateService {
 
 constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService) { }
 
- deliveryUpdate(): Observable<any> {
-    return this.apiHandlerService.Get(`stock-update-users`);
+ stockUpdateUsers(data: any): Observable<any> {
+    return this.apiHandlerService.Get(`THC/stock-update-users?searchTerm=${data.searchTerm}&baseLocationCode=${data.baseLocationCode}`);
   }
 
 }

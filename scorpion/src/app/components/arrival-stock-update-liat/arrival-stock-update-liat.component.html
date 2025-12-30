@@ -187,16 +187,24 @@
                 <div class="col-4">
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Unloader Name :</label>
-                        <div class="col-sm-7 text-start fw-bold text-primary-color">
-                          <input class="form-control" placeholder="Unloader Name" type="text" >
+                        <div class="col-sm-7 text-start">
+                            <ng-select placeholder="Search Unloader" 
+                                (open)="resetUnloaderDropdown()" (search)="stockUpdateUsers($event)" [notFoundText]="notUnloaderName"
+                                [clearable]="true">
+                                <ng-option *ngFor="let data of unloaderUsers" [value]="data.userId">{{data.userId}} : {{data.name}}</ng-option>
+                            </ng-select>
                         </div>
                     </div>
                 </div>
                 <div class="col-4">
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">UnLoading Supervisor :</label>
-                        <div class="col-sm-7 text-start fw-bold text-primary-color">
-                           <input class="form-control" placeholder="UnLoading Supervisor" type="text" >
+                        <div class="col-sm-7 text-start">
+                             <ng-select placeholder="UnLoading Supervisor" 
+                                (open)="resetUnloaderDropdown()" (search)="stockUpdateUsers($event)" [notFoundText]="notUnloaderName"
+                                [clearable]="true">
+                                <ng-option *ngFor="let data of unloaderUsers" [value]="data.userId">{{data.userId}} : {{data.name}}</ng-option>
+                            </ng-select>
                         </div>
                     </div>
                 </div>
@@ -233,7 +241,7 @@
                         <th>Arrived Wt.</th>
                         <th class="align-top p-1" style="width: 200px;">
                             <div class="small mb-1">Arrival Condition</div>
-                            <ng-select class="clear-icon"></ng-select>
+                            <ng-select [items]="conditionList" bindLabel="text" class="clear-icon" bindValue="value" placeholder="Select Condition"></ng-select>
                         </th>
                         <th class="align-top p-1" style="width: 200px;">
                             <div class="small mb-1">Warehouse</div>
@@ -241,7 +249,7 @@
                         </th>
                         <th class="align-top p-1" style="width: 200px;">
                             <div class="small mb-1">Delivery Process</div>
-                            <ng-select class="clear-icon fw-normal" bindLabel="text" bindValue="value" [items]="deliveryProcess" placeholder="Select Process"></ng-select>
+                            <ng-select class="clear-icon fw-normal" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.deliveryProcessData" placeholder="Select Process"></ng-select>
                         </th>
                     </tr>
                 </thead>
@@ -269,11 +277,11 @@
                             <div class="text-primary-color">SCORPION EXPRESS PVT LTD</div>
                             <small class="text-muted">FTL</small>
                         </td>
-                        <td style="width: 100px;"><input class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g,'');" value="835"></td>
-                        <td style="width: 100px;"><input class="form-control" value="18000.0" readonly></td>
+                        <td style="width: 150px;"><input class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g,'');" value="835"></td>
+                        <td style="width: 150px;"><input class="form-control" value="18000.0" readonly></td>
+                        <td style="width: 200px;"><ng-select [items]="conditionList" bindLabel="text" class="clear-icon" bindValue="value" placeholder="Select Condition"></ng-select></td>
                         <td style="width: 200px;"><ng-select class="clear-icon" ></ng-select></td>
-                        <td style="width: 200px;"><ng-select class="clear-icon" ></ng-select></td>
-                        <td style="width: 200px;"><ng-select class="clear-icon" bindLabel="text" bindValue="value" [items]="deliveryProcess" placeholder="Select Process"></ng-select></td>
+                        <td style="width: 200px;"><ng-select class="clear-icon" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.deliveryProcessData" placeholder="Select Process"></ng-select></td>
                     </tr>
                      <tr>
                         <td class="text-center">POD :-</td>

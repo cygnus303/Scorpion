@@ -17,6 +17,7 @@ export class GeneralMasterService {
   public LsTransportModeData:PRSGeneralMasterResponse[]=[];
   public loadingBy:PRSGeneralMasterResponse[]=[];
   public reasonData:PRSGeneralMasterResponse[]=[];
+  public deliveryProcessData:PRSGeneralMasterResponse[]=[];
 
  constructor(
      public THCMasterService: THCMasterService, private basicDetailService: BasicDetailService,
@@ -89,6 +90,16 @@ export class GeneralMasterService {
           this.LsTransportModeData = response.data;
         }
       },
+    });
+  }
+
+   getDeliveryProcessData() {
+    this.THCMasterService.getGeneralMasterDetail('DLYPRC').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.deliveryProcessData = response.data;
+        }
+      }
     });
   }
 
