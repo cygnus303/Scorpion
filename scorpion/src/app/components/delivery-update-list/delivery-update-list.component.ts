@@ -32,6 +32,7 @@ export class DeliveryUpdateListComponent {
   public isRedirect:boolean = false;
   public drsDeliveryList:any[]=[];
   public isSubmit:boolean=false;
+  maxCloseKMValue: number = 900000;
   
 
   constructor( public challanService:ChallanService,public deliveryUpdateService:DeliveryUpdateService, public docketService:DocketService,private THCService:THCMasterService,public generalMasterService:GeneralMasterService,public sweetAlertService:SweetAlertService){}
@@ -593,20 +594,23 @@ validateCloseKM() {
   const loadingBy = this.DRSSummaryForm.get('LoadingBy')?.value;
   const startKM = Number(this.DRSInformation?.start_KM);
   const closeKMControl = this.DRSSummaryForm.get('closeKM');
-  if (loadingBy !== 'B' && loadingBy !== 'XX6') {
-    let maxValue = 0;
-    if (startKM + 2000 > 900000) {
-      maxValue = 900000;
-    } else {
-      maxValue = startKM + 2000;
-    }
-    closeKMControl?.setValidators([
-      Validators.required,
-      Validators.max(maxValue)
-    ]);
  
-    closeKMControl?.updateValueAndValidity();
+  // DEFAULT MAX (always applicable)
+  this.maxCloseKMValue = 900000;
+ 
+  // Additional restriction only when NOT B / XX6
+  if (loadingBy !== 'B' && loadingBy !== 'XX6') {
+    const calculatedMax = startKM + 2000;
+    this.maxCloseKMValue =
+      calculatedMax > 900000 ? 900000 : calculatedMax;
   }
+ 
+  closeKMControl?.setValidators([
+    Validators.required,
+    Validators.max(this.maxCloseKMValue)
+  ]);
+ 
+  closeKMControl?.updateValueAndValidity();
 }
  
 

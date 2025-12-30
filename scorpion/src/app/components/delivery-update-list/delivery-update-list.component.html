@@ -38,12 +38,12 @@
                         <div class="col-sm-1 text-center fw-bold">
                             {{DRSInformation?.start_KM}}  /
                         </div>
-                        <div class="col-sm-6 text-start fw-bold">
-                            <input class="form-control" type="text" formControlName="closeKM" oninput="this.value = this.value.replace(/[^0-9]/g,'');" (blur)="validateCloseKM()"
+                         <div class="col-sm-6 text-start fw-bold">
+                            <input class="form-control" type="text" formControlName="closeKM" oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                            [attr.max]="maxCloseKMValue" (blur)="validateCloseKM()"
                                 [ngClass]="{ 'border-danger': DRSSummaryForm.get('closeKM')?.invalid && DRSSummaryForm.get('closeKM')?.touched }">
-                            <div class="text-danger small" *ngIf="DRSSummaryForm.get('closeKM')?.touched &&
-                                        DRSSummaryForm.get('closeKM')?.errors?.['max']">
-                                Please enter a value less than or equal to 900000.
+                            <div class="text-danger small" *ngIf="DRSSummaryForm.get('closeKM')?.touched && DRSSummaryForm.get('closeKM')?.errors?.['max']">
+                                Please enter a value less than or equal to {{ maxCloseKMValue }}.
                             </div>
                         </div>
                     </div>
