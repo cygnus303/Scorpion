@@ -3,6 +3,7 @@
         <i class="fa fa-edit me-2"></i>
         Arrival Details
     </div>
+    <form [formGroup]="arrivalForm">
     <div class="form-grid p-4">
         <div class="row pb-3">
             <div class="col-6">
@@ -45,10 +46,11 @@
                   <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Incoming Seal # & Status :</label>
                     <div class="col-sm-3 text-start">
-                        <input class="form-control required2" placeholder="UnLoading Charge" type="text" >
+                        <input class="form-control required2" placeholder="UnLoading Charge" type="text" formControlName="ISN">
                     </div>
                     <div class="col-sm-4 text-start">
-                        <input class="form-control required2" placeholder="UnLoading Charge" type="text" >
+                        <ng-select class="required2 clear-icon" [items]="Seallist" bindLabel="text" bindValue="value" appFocusNext
+                            placeholder="Select Status" formControlName="s2id_Status"></ng-select>
                     </div>
                 </div>
             </div>
@@ -56,7 +58,8 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vehicle Arrival Date & Time :</label>
                     <div class="col-sm-7 text-start">
-                        <input class="form-control required2" placeholder="UnLoading Charge" type="text" >
+                        <app-date-time-picker controlName="AD"  [placeholder]="'Vehicle Arrival Date & Time'">
+                        </app-date-time-picker>
                     </div>
                 </div>
             </div>
@@ -66,7 +69,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Closing KM :</label>
                     <div class="col-sm-3 text-start">
-                        <input class="form-control required2" placeholder="UnLoading Charge" type="text" >
+                        <input class="form-control" placeholder="Closing KM" type="text" formControlName="CLOSEKM">
                     </div>
                      <div class="col-sm-4 text-start text-primary-color">
                         {{'(Opening KM : 0.00) (Last Closing KM : )'}}
@@ -77,7 +80,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Unloader :</label>
                     <div class="col-sm-7 text-start">
-                       <input class="form-control required2" placeholder="Unloader" type="text" >
+                       <input class="form-control" placeholder="Unloader" type="text" formControlName="Unloder">
                     </div>
                 </div>
             </div>
@@ -86,7 +89,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Incoming Remarks :</label>
                     <div class="col-sm-7 text-start">
-                        <textarea rows="2" placeholder="Incoming Remarks" class="form-control-textarea"></textarea>
+                        <textarea class="form-control-textarea required2" rows="2" placeholder="Incoming Remarks" formControlName="IR"></textarea>
                     </div>
                 </div>
             </div>
@@ -94,12 +97,14 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Late Arrival Reason (if any) :</label>
                     <div class="col-sm-7 text-start">
-                        <input class="form-control" placeholder="Late Arrival Reason" type="text" >
+                        <ng-select class="clear-icon" [items]="Reasonlist" bindLabel="text" bindValue="value" appFocusNext
+                            placeholder="Late Arrival Reason" formControlName="LAR"></ng-select>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    </form>
 </div>
 
 
