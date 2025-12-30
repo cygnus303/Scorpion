@@ -13,4 +13,8 @@ constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerServ
     return this.apiHandlerService.Get(`THC/stock-update-users?searchTerm=${data.searchTerm}&baseLocationCode=${data.baseLocationCode}`);
   }
 
+  getArrivalDetail(params:any){
+     return this.apiHandlerService.Get(`THC/arrival-details?id=${params.id}&loadBy=${params.loadBy}&chargeType=${params.chargeType}&BaseLocationCode=${params.BaseLocationCode}&BaseUserName=${params.BaseUserName}`);
+  }
+
 }
