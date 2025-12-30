@@ -1,9 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { UnloaderUsers } from 'app/shared/models/stock-update.model';
 import { BranchWiseLoadingUnloading } from 'app/shared/models/thc-master.model';
 import { CommonService } from 'app/shared/services/common.service';
 import { DocketService } from 'app/shared/services/docket.service';
@@ -14,15 +12,13 @@ import { SharedModule } from 'app/shared/shared/shared.module';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @Component({
-  selector: 'app-arrival-stock-update-liat',
+  selector: 'app-arrival-update',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, NgSelectModule, BsDatepickerModule,SharedModule],
-  templateUrl: './arrival-stock-update-liat.component.html',
-  styleUrl: './arrival-stock-update-liat.component.scss',
+  imports: [CommonModule, ReactiveFormsModule, NgSelectModule, BsDatepickerModule,SharedModule],
+  templateUrl: './arrival-update.component.html',
+  styleUrl: './arrival-update.component.scss'
 })
-export class ArrivalStockUpdateLiatComponent {
-public unloaderUsers:UnloaderUsers[]=[];
-public notUnloaderName:string='Enter at least 3 characters';
+export class ArrivalUpdateComponent {
 public arrivalForm!:FormGroup;
 public arrivalDetail:any;
 public branchWiseLoadingUnloadingList:BranchWiseLoadingUnloading[]=[];
@@ -50,28 +46,10 @@ public Seallist=[
   value:'Unsealed'
 }
 ]
-conditionList = [
-  { text: 'GOOD', value: 1 },
-  { text: 'SHORT', value: 2 },
-  { text: 'DAMAGE', value: 3 },
-  { text: 'OPEN CONDITION', value: 4 },
-  { text: 'PILFERAGE', value: 5 }
-];
 
  constructor(public docketService: DocketService, public commonService: CommonService,private stockUpdateService:StockUpdateService,public generalMasterService:GeneralMasterService,public THCService:THCMasterService) { }
 
   ngOnInit(){
-   const saved = localStorage.getItem("loginUserList");
-    if (saved) {
-      this.docketService.loginUserList = JSON.parse(saved);
-      this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      this.docketService.loginUserList.LocationCode =  'PIM';
-      this.docketService.loginUserList.loadBy = "B";
-      this.docketService.loginUserList.chargeType='1';
-      this.docketService.loginUserList.id='VH/BWH/2526/002424';
-      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
-      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
-    }
     this.buildForm();
     this.generalMasterService.getDeliveryProcessData();
     this.getArrival();
@@ -108,33 +86,6 @@ conditionList = [
 
   return `${day} ${month} ${year} ${hours}:${minutes} ${ampm}`;
 }
-  stockUpdateUsers(event:any) {
-    const searchText = event.term;
-    if (!searchText || searchText.length < 3) {
-      this.unloaderUsers = [];
-      this.notUnloaderName = 'Enter at least 3 characters';
-      return;
-    }
-    const payload = {
-      searchTerm:searchText,
-      baseLocationCode: this.docketService.loginUserList.LocationCode,
-    };
-    this.notUnloaderName = 'Searching...';
-    this.stockUpdateService.stockUpdateUsers(payload).subscribe({
-      next: (response) => {
-        debugger
-        if (response.success) {
-          this.unloaderUsers = response.data;
-          this.notUnloaderName = 'No matches found';
-        }
-      }
-    });
-  }
-
-  resetUnloaderDropdown(){
-    this.unloaderUsers = [];
-    this.notUnloaderName = 'Enter at least 3 characters';
-  }
 
 getArrival(){
   const params={
@@ -150,17 +101,33 @@ getArrival(){
        this.arrivalForm.patchValue({
         Unloder:this.arrivalDetail.unloder
        });
-      this.generalMasterService.getLoadingByDetail(this.arrivalDetail.loadingBy)
-
+      this.generalMasterService.getLoadingByDetail(this.arrivalDetail.loadingBy);
+        this.getPANnumberData(this.arrivalDetail.loadingBy)
       },
   })
+}
+
+  getPANnumberData(vendorCode:any){
+   const ChargedBy = vendorCode;
+    if (ChargedBy === 'B' || ChargedBy == '04') {
+      this.getChargesVendorsList('04');
+    }
+    if (ChargedBy === 'A' || ChargedBy == 'XX1') {
+      this.getChargesVendorsList('XX1');
+    }
+    if (ChargedBy === 'M') {
+      this.getChargesVendorsList('19');
+    }
+    if (ChargedBy === 'XX5' || ChargedBy === 'XX8') {
+      this.branchWiseLoadingUnloading(vendorCode);
+    }
 }
 
 getLoadingCharge(event: any) {
   const data = {
     loadUnloadType: 'U',
     vendorCode: event,
-    typeModule: this.docketService.loginUserList.Type === "2" ? "P" : "D",
+    typeModule: 'M',
     chargeType: this.docketService.loginUserList.chargeType,
     brdc: this.docketService.loginUserList.LocationCode,
     loadingBy: this.arrivalDetail.loadingBy,
@@ -171,7 +138,7 @@ getLoadingCharge(event: any) {
     this.arrivalForm.patchValue({
         Rate:response.rate
       });
-      
+     
     },
     error: (err) => {
       console.error('Error fetching loading charge:', err);
@@ -214,3 +181,4 @@ branchWiseLoadingUnloading(event: any) {
     });
   }
 }
+

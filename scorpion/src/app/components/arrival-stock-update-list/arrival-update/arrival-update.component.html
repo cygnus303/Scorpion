@@ -1,0 +1,163 @@
+<div class="cnote-entry-container">
+    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+        <i class="fa fa-edit me-2"></i>
+        Arrival Details
+    </div>
+    <form [formGroup]="arrivalForm">
+    <div class="form-grid p-4">
+        <div class="row pb-3">
+            <div class="col-6">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">THC No. :</label>
+                    <div class="col-sm-7 text-start text-primary-color">
+                       {{arrivalDetail?.thcno}} ({{generalMasterService.loadingData[0].codeDesc}})
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Vehicle # :</label>
+                    <div class="col-sm-7 text-start text-primary-color">
+                       {{arrivalDetail?.vehicle}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3">
+            <div class="col-6">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Expected Arrival Date & Time :</label>
+                    <div class="col-sm-7 text-start text-primary-color">
+                       {{arrivalDetail.eta| date:'M/d/yyyy h:mm:ss a'}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Vehicle Departed From :</label>
+                    <div class="col-sm-7 text-start text-primary-color">
+                       {{ arrivalDetail.previousBranch + ' @ ' + arrivalDetail.atd }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3">
+            <div class="col-6">
+                  <div class="row">
+                    <label class="col-sm-5 col-form-label text-end">Incoming Seal # & Status :</label>
+                    <div class="col-sm-3 text-start">
+                        <input class="form-control required2" placeholder="UnLoading Charge" type="text" formControlName="ISN">
+                    </div>
+                    <div class="col-sm-4 text-start">
+                        <ng-select class="required2 clear-icon" [items]="Seallist" bindLabel="text" bindValue="value" appFocusNext
+                            placeholder="Select Status" formControlName="s2id_Status"></ng-select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Vehicle Arrival Date & Time :</label>
+                    <div class="col-sm-7 text-start">
+                        <app-date-time-picker controlName="AD"  [placeholder]="'Vehicle Arrival Date & Time'">
+                        </app-date-time-picker>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3">
+            <div class="col-6">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Closing KM :</label>
+                    <div class="col-sm-3 text-start">
+                        <input class="form-control" placeholder="Closing KM" type="text" formControlName="CLOSEKM">
+                    </div>
+                     <div class="col-sm-4 text-start text-primary-color">
+                       (Opening KM : {{ arrivalDetail?.openkm | number:'1.2-2' }}) (Last Closing KM : {{ arrivalDetail?.closekm }})
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Unloader :</label>
+                    <div class="col-sm-7 text-start">
+                       <input class="form-control" placeholder="Unloader" type="text" formControlName="Unloder">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pb-3">
+            <div class="col-6">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Incoming Remarks :</label>
+                    <div class="col-sm-7 text-start">
+                        <textarea class="form-control-textarea required2" rows="2" placeholder="Incoming Remarks" formControlName="IR"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Late Arrival Reason (if any) :</label>
+                    <div class="col-sm-7 text-start">
+                        <ng-select class="clear-icon" [items]="Reasonlist" bindLabel="text" bindValue="value" appFocusNext
+                            placeholder="Late Arrival Reason" formControlName="LAR"></ng-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+               <div class="row pb-3">
+            <div class="col-6">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Actual WT. :</label>
+                    <div class="col-sm-7 text-start">
+                       {{arrivalDetail.chrgwt | number:'1.2-2'}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h3 class="pb-4 text-start appointment mt-5">UnLoading Charges</h3>
+         <div class="row pb-3 pt-3">
+               <div class="col-3">
+                   <div class="row align-items-center">
+                       <label class="col-sm-5 col-form-label text-end">UnLoading By :</label>
+                        <div class="col-sm-7 text-start text-primary-color">
+                          {{generalMasterService.loadingData[0].codeDesc}}
+                       </div>
+                   </div>
+               </div>
+               <div class="col-3">
+                   <div class="row align-items-center">
+                       <label class="col-sm-5 col-form-label text-end">Vendor Code :</label>
+                       <div class="col-sm-7 text-start">
+                          <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code" formControlName="VendorCode" (change)="getLoadingCharge($event.value)"
+                                    [items]="branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"
+                                    >
+                                    <ng-template ng-option-tmp let-item="item">
+                                        <div [title]="item.text">
+                                            {{ item.text }}
+                                        </div>
+                                    </ng-template>
+                                </ng-select>
+                       </div>
+                   </div>
+               </div>
+                  <div class="col-3">
+                   <div class="row align-items-center">
+                       <label class="col-sm-5 col-form-label text-end">Rate :</label>
+                       <div class="col-sm-7 text-start">
+                          <input class="form-control" placeholder="Vendor Code" type="text" formControlName="Rate">
+                       </div>
+                   </div>
+               </div>
+               <div class="col-3">
+                   <div class="row align-items-center">
+                       <label class="col-sm-5 col-form-label text-end">UnLoading Charge :</label>
+                        <div class="col-sm-7 text-start text-primary-color">
+                          <input class="form-control" placeholder="Vendor Code" type="text" formControlName="LoadingCharge">
+                       </div>
+                   </div>
+               </div>
+           </div>  
+    </div>
+
+    </form>
+</div>
