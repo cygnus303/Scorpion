@@ -254,6 +254,9 @@
                                 <span *ngIf="row.get('length')?.hasError('min')">
                                   Please enter a value greater than or equal to 1.
                                 </span>
+                                <span *ngIf="row.get('length')?.hasError('max')">
+                                  Please enter a value less than <br> or equal to 199.
+                                </span>
                              </div>
                         </td>
                         <td class="center"
@@ -273,6 +276,9 @@
                               <span *ngIf="row.get('breadth')?.hasError('min')">
                                 Please enter a value greater than or equal to 1.
                               </span>
+                              <span *ngIf="row.get('breadth')?.hasError('max')">
+                                Please enter a value less than <br> or equal to 199.
+                              </span>
                             </div>
                         </td>
                         <td class="center"
@@ -288,6 +294,9 @@
                           <div class="text-danger mt-1 small" *ngIf="row.get('height')?.touched && row.get('height')?.errors">
                           <span *ngIf="row.get('height')?.hasError('required')">
                             Please enter a value.
+                          </span>
+                          <span *ngIf="row.get('height')?.hasError('max')">
+                            Please enter a value less than <br> or equal to 199.
                           </span>
                           <span *ngIf="row.get('height')?.hasError('min')">
                             Please enter a value greater than or equal to 1.
