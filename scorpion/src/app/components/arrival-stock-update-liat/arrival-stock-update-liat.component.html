@@ -10,7 +10,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">THC No. :</label>
                     <div class="col-sm-7 text-start text-primary-color">
-                        VH/BWH/2526/002423 (NO HCC)
+                       {{arrivalDetail?.thcno}} ({{generalMasterService.loadingData[0].codeDesc}})
                     </div>
                 </div>
             </div>
@@ -18,7 +18,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vehicle # :</label>
                     <div class="col-sm-7 text-start text-primary-color">
-                        MH04EL4405
+                       {{arrivalDetail?.vehicle}}
                     </div>
                 </div>
             </div>
@@ -28,7 +28,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Expected Arrival Date & Time :</label>
                     <div class="col-sm-7 text-start text-primary-color">
-                       12/5/2025 6:14:00 PM
+                       {{arrivalDetail.eta| date:'M/d/yyyy h:mm:ss a'}}
                     </div>
                 </div>
             </div>
@@ -36,7 +36,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vehicle Departed From :</label>
                     <div class="col-sm-7 text-start text-primary-color">
-                       {{ 'BWH  @  05 Dec 2025 17:14:00'}}
+                       {{ arrivalDetail.previousBranch + ' @ ' + arrivalDetail.atd }}
                     </div>
                 </div>
             </div>
@@ -72,7 +72,7 @@
                         <input class="form-control" placeholder="Closing KM" type="text" formControlName="CLOSEKM">
                     </div>
                      <div class="col-sm-4 text-start text-primary-color">
-                        {{'(Opening KM : 0.00) (Last Closing KM : )'}}
+                       (Opening KM : {{ arrivalDetail?.openkm | number:'1.2-2' }}) (Last Closing KM : {{ arrivalDetail?.closekm }})
                     </div>
                 </div>
             </div>
@@ -84,7 +84,8 @@
                     </div>
                 </div>
             </div>
-        </div><div class="row pb-3">
+        </div>
+        <div class="row pb-3">
             <div class="col-6">
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Incoming Remarks :</label>
@@ -103,7 +104,61 @@
                 </div>
             </div>
         </div>
+               <div class="row pb-3">
+            <div class="col-6">
+                <div class="row align-items-center">
+                    <label class="col-sm-5 col-form-label text-end">Actual WT. :</label>
+                    <div class="col-sm-7 text-start">
+                       {{arrivalDetail.chrgwt | number:'1.2-2'}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h3 class="pb-4 text-start appointment mt-5">UnLoading Charges</h3>
+         <div class="row pb-3 pt-3">
+               <div class="col-3">
+                   <div class="row align-items-center">
+                       <label class="col-sm-5 col-form-label text-end">UnLoading By :</label>
+                        <div class="col-sm-7 text-start text-primary-color">
+                          {{generalMasterService.loadingData[0].codeDesc}}
+                       </div>
+                   </div>
+               </div>
+               <div class="col-3">
+                   <div class="row align-items-center">
+                       <label class="col-sm-5 col-form-label text-end">Vendor Code :</label>
+                       <div class="col-sm-7 text-start">
+                          <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code" formControlName="VendorCode" (change)="getLoadingCharge($event.value)"
+                                    [items]="branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"
+                                    >
+                                    <ng-template ng-option-tmp let-item="item">
+                                        <div [title]="item.text">
+                                            {{ item.text }}
+                                        </div>
+                                    </ng-template>
+                                </ng-select>
+                       </div>
+                   </div>
+               </div>
+                  <div class="col-3">
+                   <div class="row align-items-center">
+                       <label class="col-sm-5 col-form-label text-end">Rate :</label>
+                       <div class="col-sm-7 text-start">
+                          <input class="form-control" placeholder="Vendor Code" type="text" formControlName="Rate">
+                       </div>
+                   </div>
+               </div>
+               <div class="col-3">
+                   <div class="row align-items-center">
+                       <label class="col-sm-5 col-form-label text-end">UnLoading Charge :</label>
+                        <div class="col-sm-7 text-start text-primary-color">
+                          <input class="form-control" placeholder="Vendor Code" type="text" formControlName="LoadingCharge">
+                       </div>
+                   </div>
+               </div>
+           </div>  
     </div>
+
     </form>
 </div>
 
