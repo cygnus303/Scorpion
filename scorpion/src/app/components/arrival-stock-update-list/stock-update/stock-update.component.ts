@@ -7,12 +7,13 @@ import { CommonService } from 'app/shared/services/common.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { StockUpdateService } from 'app/shared/services/stock-update.service';
+import { SharedModule } from 'app/shared/shared/shared.module';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-stock-update',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgSelectModule, BsDatepickerModule],
+  imports: [CommonModule, ReactiveFormsModule, NgSelectModule, BsDatepickerModule,SharedModule],
   templateUrl: './stock-update.component.html',
   styleUrl: './stock-update.component.scss'
 })
@@ -21,6 +22,7 @@ public unloaderUsers:UnloaderUsers[]=[];
 public notUnloaderName:string='Enter at least 3 characters';
 public stockUpdateForm!:FormGroup;
 public warehouseList:WarehouseList[]=[];
+public stockData:any;
 conditionList = [
   { text: 'GOOD', value: 1 },
   { text: 'SHORT', value: 2 },
@@ -32,18 +34,39 @@ conditionList = [
  constructor(public docketService: DocketService, public commonService: CommonService,private stockUpdateService:StockUpdateService,public generalMasterService:GeneralMasterService) { }
 
   ngOnInit(){
-     this.stockUpdateForm = new FormGroup({
+    this.buildForm()
+    this.generalMasterService.getDeliveryProcessData();
+    this.getStockUpdateDetails();
+    this.getWarehouseData();
+    this.generalMasterService.getDamageData();
+  }
+
+  buildForm(){
+         this.stockUpdateForm = new FormGroup({
       hDamage:  new FormControl(false),
       hCondition:new FormControl(),
       hWarehouse:new FormControl(),
       hPilferage: new FormControl(false),
       hDeliveryProcess : new FormControl(null),
-      stockUpdateList: new FormArray([])
+      stockUpdateList: new FormArray([]),
+      UpdateDate:new FormControl(this.getCurrentDateTime())
     });
+  }
 
-    this.generalMasterService.getDeliveryProcessData();
-    this.getStockUpdateDetails();
-    this.getWarehouseData();
+    getCurrentDateTime(): string {
+    const now = new Date();
+
+    const day = now.getDate().toString().padStart(2, '0');
+    const month = now.toLocaleString('en-US', { month: 'short' });
+    const year = now.getFullYear();
+
+    let hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    hours = hours % 12 || 12; // 12-hour format
+
+    return `${day} ${month} ${year} ${hours}:${minutes} ${ampm}`;
   }
 
   get stockUpdateArray(): FormArray {
@@ -71,6 +94,20 @@ conditionList = [
       }
     });
   }
+
+onChangeDamage(event: any, index: number) {
+  if (!event) {
+    return;
+  }
+  const severityValue = event.codeFor;
+
+  const rowGroup = this.stockUpdateArray.at(index) as FormGroup;
+
+  rowGroup.patchValue({
+    severity: severityValue
+  });
+}
+
 
   resetUnloaderDropdown(){
     this.unloaderUsers = [];
@@ -119,11 +156,12 @@ conditionList = [
     };
     this.stockUpdateService.getStockUpdateDetails(payload).subscribe({
       next: (response:any) => {
-       if (response && response.listVSFUM?.length) {
+       if (response) {
           this.stockUpdateArray.clear();
           response.listVSFUM.forEach((item: any) => {
             this.stockUpdateArray.push(this.createForm(item));
-          });
+          });;
+          this.stockData=response.vsfum;
         }
       }
     });
