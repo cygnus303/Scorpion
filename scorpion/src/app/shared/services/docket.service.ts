@@ -662,7 +662,7 @@ GetGSTFromTrnMode() {
             sacDescription: response.sacCodeDesc,
           });
           this.freightForm.patchValue({
-            gstRate: response.codeDesc
+            gstRate: this.basicDetailForm.value.billingType === 'P04' ? 0 : response.codeDesc
           });
           this.GSTFromTrnMode = response;
         }
