@@ -1,4 +1,4 @@
-
+<form  [formGroup]="stockUpdateForm">
 <div class="cnote-entry-container">
     <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
         <i class="fa fa-edit me-2"></i>
@@ -10,7 +10,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">THC No. :</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
-                            VH/BLR/2526/001018
+                           {{this.docketService.loginUserList.id}}
                         </div>
                     </div>
                 </div>
@@ -108,7 +108,7 @@
             <i class="fa fa-edit me-2"></i>
             Stock Update List
         </div>
-        <div class="table-responsive table-wrapper p-2 pt-4">
+        <div class="table-wrapper p-2 pt-4">
             <table class="table table-bordered align-middle stock-table table-fixed vertical-align">
                 <thead class="table-secondary">
                     <tr>
@@ -119,8 +119,8 @@
                         <th class="align-top p-1">
                             <div class="fw-semibold small mb-1"> Damage / Pilferage</div>
                             <div class="d-flex justify-content-center align-items-center gap-3">
-                                <input class="form-check-input fs-5" type="checkbox">
-                                <input class="form-check-input fs-5" type="checkbox">
+                                <input class="form-check-input fs-5" type="checkbox" formControlName="hDamage" (change)="onHeaderDamageChange()">
+                                <input class="form-check-input fs-5" type="checkbox" formControlName="hPilferage" (change)="onHeaderPilferageChange()">
                             </div>
                         </th>
                         <th>MF #</th>   
@@ -132,49 +132,55 @@
                         <th>Arrived Wt.</th>
                         <th class="align-top p-1" style="width: 200px;">
                             <div class="small mb-1">Arrival Condition</div>
-                            <ng-select [items]="conditionList" bindLabel="text" class="clear-icon" bindValue="value" placeholder="Select Condition"></ng-select>
+                            <ng-select class="fw-normal" [items]="conditionList" bindLabel="text" bindValue="value" placeholder="Select Condition" (change)="onArrivalCondition($event)" formControlName="hCondition" ></ng-select>
                         </th>
                         <th class="align-top p-1" style="width: 200px;">
                             <div class="small mb-1">Warehouse</div>
-                            <ng-select class="clear-icon"></ng-select>
+                            <ng-select class="fw-normal" bindLabel="godown_name" bindValue="godown_srno" [items]="warehouseList" placeholder="Select Warehouse" formControlName="hWarehouse" (change)="onWarehouse($event)"></ng-select>
                         </th>
                         <th class="align-top p-1" style="width: 200px;">
                             <div class="small mb-1">Delivery Process</div>
-                            <ng-select class="clear-icon fw-normal" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.deliveryProcessData" placeholder="Select Process"></ng-select>
+                            <ng-select class="fw-normal" bindLabel="codeDesc" bindValue="codeId" formControlName="hDeliveryProcess" (change)="onDeliveryProcessChange($event)" [items]="generalMasterService.deliveryProcessData" placeholder="Select Process"></ng-select>
                         </th>
                     </tr>
                 </thead>
     
-                <tbody>
+                <tbody  formArrayName="stockUpdateList">
+                    <ng-container *ngFor="let row of stockUpdateArray.controls; let i = index" [formGroupName]="i">
                     <tr>
-                        <td class="text-center"><input type="checkbox" class="form-check-input fs-5"></td>
-                        <td class="text-center">
+                        <td class="text-center"><input type="checkbox" class="form-check-input fs-5" formControlName="selected"></td>
+                        <td class="text-center"  style="width: 300px;">
                             <div class="d-flex justify-content-center align-items-center gap-3">
-                                <input class="form-check-input fs-5" type="checkbox">
-                                <input class="form-check-input fs-5" type="checkbox">
+                                 <input type="checkbox" class="form-check-input fs-5" formControlName="damage">
+                                <input type="checkbox" class="form-check-input fs-5" formControlName="pilferage">
                             </div>
                         </td>
-                        <td class="fw-semibold">MF/RPR/2526/000253</td>
+                        <td class="fw-semibold">{{ row.value.mfNo }}</td>
                         <td>
-                            <div class="text-primary-color fw-semibold">62680936</div>
-                            <small class="text-muted">RPR - PIM</small>
+                            <div class="text-primary-color fw-semibold">{{ row.value.docketNo }}</div>
+                            <small class="text-muted">{{ row.value.route }}</small>
                         </td>
                         <td>
-                            <div>03/07/2025</div>
-                            <small class="text-muted">08/07/2025</small>
+                            <div>{{ row.value.bookingDate }}</div>
+                            <small class="text-muted">{{ row.value.committedDate }}</small>
                         </td>
-                        <td class="text-start text-danger fw-semibold">835.00<br>18000.00</td>
+                        <td class="text-start text-danger fw-semibold"> {{ row.value.pkgs }}<br>{{ row.value.weight }}</td>
                         <td class="text-start">
-                            <div class="text-primary-color">SCORPION EXPRESS PVT LTD</div>
-                            <small class="text-muted">FTL</small>
+                            <div class="text-primary-color">{{ row.value.bizType }}</div>
+                            <small class="text-muted">{{ row.value.serviceType }}</small>
                         </td>
-                        <td style="width: 150px;"><input class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g,'');" value="835"></td>
-                        <td style="width: 150px;"><input class="form-control" value="18000.0" readonly></td>
-                        <td style="width: 200px;"><ng-select [items]="conditionList" bindLabel="text" class="clear-icon" bindValue="value" placeholder="Select Condition"></ng-select></td>
-                        <td style="width: 200px;"><ng-select class="clear-icon" ></ng-select></td>
-                        <td style="width: 200px;"><ng-select class="clear-icon" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.deliveryProcessData" placeholder="Select Process"></ng-select></td>
+                        <td style="width: 150px;">
+                            <input class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g,'');" formControlName="arrivedPkgs">
+                            <div class="text-danger text-start" *ngIf="row.get('arrivedPkgs')?.errors?.['max']">
+                                Please enter a value less than or equal to {{ row.value.pkgs }}.
+                            </div>
+                        </td>
+                        <td style="width: 150px;"><input class="form-control" formControlName="arrivedWt" readonly></td>
+                        <td style="width: 200px;"><ng-select [items]="conditionList" bindLabel="text" class="clear-icon" bindValue="value" formControlName="condition" placeholder="Select Condition"></ng-select></td>
+                        <td style="width: 200px;"><ng-select class="clear-icon" bindLabel="godown_name" bindValue="godown_srno" [items]="warehouseList" placeholder="Select Warehouse" formControlName="warehouse"></ng-select></td>
+                        <td style="width: 200px;"><ng-select class="clear-icon" bindLabel="codeDesc" bindValue="codeId" formControlName="deliveryProcess" [items]="generalMasterService.deliveryProcessData" placeholder="Select Process"></ng-select></td>
                     </tr>
-                     <tr>
+                     <tr *ngIf="row.get('deliveryProcess')?.value === '2'">
                         <td class="text-center">POD :-</td>
                         <td>
                             <button type="button" class="btn btn-outline-primary btn-sm">
@@ -186,7 +192,7 @@
                                     ⬆ POD Back UPLOAD
                                 </button>
                         </td>
-                        <td colspan="4">
+                        <td colspan="5">
                             <div class="row">
                                 <label class="col-sm-3 col-form-label text-end">Delivery Date & Time:</label>
                                 <div class="col-sm-9 text-start">
@@ -195,13 +201,13 @@
                             </div>
                         </td>
                     </tr>
-                    <tr>
+                    <tr *ngIf="(+row.value.pkgs - +row.get('arrivedPkgs')?.value) > 0">
                         <td class="text-center">Short :-</td>
                         <td>
                             <div class="row">
                                 <label class="col-sm-5 col-form-label text-end">Short Packages:</label>
                                 <div class="col-sm-7 text-start">
-                                    <input class="form-control" placeholder="Short Packages" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                    <input class="form-control" placeholder="Short Packages" formControlName="shortQty" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
                                 </div>
                             </div>
                         </td>
@@ -209,7 +215,7 @@
                             <div class="row">
                                 <label class="col-sm-3 col-form-label text-end">Weight:</label>
                                 <div class="col-sm-9 text-start">
-                                    <input class="form-control" placeholder="Weight" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                    <input class="form-control" placeholder="Weight" value="0" formControlName="shortWt" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
                                 </div>
                             </div>
                         </td>
@@ -217,7 +223,7 @@
                             <div class="row">
                                 <label class="col-sm-2 col-form-label text-end">Reason:</label>
                                 <div class="col-sm-10 text-start">
-                                      <textarea rows="1" class="form-control-textarea" placeholder="Reason"></textarea>
+                                      <textarea rows="1" class="form-control-textarea" placeholder="Reason"  formControlName="shortReason"></textarea>
                                 </div>
                             </div>
                         </td>
@@ -225,7 +231,7 @@
                             <div class="row">
                                 <label class="col-sm-2 col-form-label text-end">Remarks:</label>
                                 <div class="col-sm-10 text-start">
-                                      <textarea rows="1" class="form-control-textarea" placeholder="Remarks"></textarea>
+                                      <textarea rows="1" class="form-control-textarea" placeholder="Remarks" formControlName="shortRemarks"></textarea>
                                 </div>
                             </div>
                         </td>
@@ -238,13 +244,13 @@
                             </div>
                         </td>
                     </tr>
-                    <tr>
+                    <tr *ngIf="row.get('pilferage')?.value">
                         <td class="text-center">Pilferage :-</td>
                         <td>
                             <div class="row">
                                 <label class="col-sm-5 col-form-label text-end">Pilferage Packages:</label>
                                 <div class="col-sm-7 text-start">
-                                    <input class="form-control" placeholder="Pilferage Packages" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                    <input class="form-control" placeholder="Pilferage Packages" formControlName="pilferageQty" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
                                 </div>
                             </div>
                         </td>
@@ -252,7 +258,7 @@
                             <div class="row">
                                 <label class="col-sm-3 col-form-label text-end">Weight:</label>
                                 <div class="col-sm-9 text-start">
-                                    <input class="form-control" placeholder="Weight" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                    <input class="form-control" placeholder="Weight" formControlName="pilferageWt" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
                                 </div>
                             </div>
                         </td>
@@ -260,7 +266,7 @@
                             <div class="row">
                                 <label class="col-sm-2 col-form-label text-end">Reason:</label>
                                 <div class="col-sm-10 text-start">
-                                      <textarea rows="1" class="form-control-textarea" placeholder="Reason"></textarea>
+                                      <textarea rows="1" class="form-control-textarea" formControlName="pilferageReason" placeholder="Reason"></textarea>
                                 </div>
                             </div>
                         </td>
@@ -268,7 +274,7 @@
                             <div class="row">
                                 <label class="col-sm-2 col-form-label text-end">Remarks:</label>
                                 <div class="col-sm-10 text-start">
-                                      <textarea rows="1" class="form-control-textarea" placeholder="Remarks"></textarea>
+                                      <textarea rows="1" class="form-control-textarea" formControlName="pilferageRemarks" placeholder="Remarks"></textarea>
                                 </div>
                             </div>
                         </td>
@@ -281,13 +287,13 @@
                             </div>
                         </td>
                     </tr>
-                     <tr>
+                     <tr *ngIf="row.get('damage')?.value">
                         <td class="text-center">Damage  :-</td>
                         <td>
                             <div class="row">
-                                <label class="col-sm-5 col-form-label text-end">Damage Packages::</label>
+                                <label class="col-sm-5 col-form-label text-end">Damage Packages:</label>
                                 <div class="col-sm-7 text-start">
-                                    <input class="form-control" placeholder="Damage Packages:" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                    <input class="form-control" placeholder="Damage Packages" formControlName="damageQty" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
                                 </div>
                             </div>
                         </td>
@@ -295,7 +301,7 @@
                             <div class="row">
                                 <label class="col-sm-3 col-form-label text-end">Weight:</label>
                                 <div class="col-sm-9 text-start">
-                                    <input class="form-control" placeholder="Weight" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                    <input class="form-control" placeholder="Weight" value="0" formControlName="damageWt" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
                                 </div>
                             </div>
                         </td>
@@ -303,7 +309,7 @@
                             <div class="row">
                                 <label class="col-sm-2 col-form-label text-end">Reason:</label>
                                 <div class="col-sm-10 text-start">
-                                      <textarea rows="1" class="form-control-textarea" placeholder="Reason"></textarea>
+                                      <textarea rows="1" class="form-control-textarea"  placeholder="Reason" formControlName="damageReason"></textarea>
                                 </div>
                             </div>
                         </td>
@@ -319,7 +325,7 @@
                             <div class="row">
                                 <label class="col-sm-4 col-form-label text-end">Damage Type:</label>
                                 <div class="col-sm-8 text-start">
-                                       <ng-select class="clear-icon" placeholder="Damage Type"></ng-select>
+                                       <ng-select class="clear-icon" placeholder="Damage Type" formControlName="damageType" ></ng-select>
                                 </div>
                             </div>
                         </td>
@@ -327,11 +333,12 @@
                             <div class="row">
                                 <label class="col-sm-3 col-form-label text-end">Severity:</label>
                                 <div class="col-sm-9 text-start">
-                                      <ng-select class="clear-icon" placeholder="Severity"></ng-select>
+                                      <ng-select class="clear-icon" placeholder="Severity"  formControlName="severity"></ng-select>
                                 </div>
                             </div>
                         </td>
                     </tr>
+                 </ng-container>
                 </tbody>
             </table>
     
@@ -353,6 +360,7 @@
             </div>
         </div>
     </div>
+</form>
 
     <div class="bg-secondary-subtle p-3">
         <label>Note:</label>
@@ -371,3 +379,4 @@
         <p style="color:red;">Select atleast one CNote to see the <strong>Submit</strong> button.</p>
       </div>
     </div>
+    
