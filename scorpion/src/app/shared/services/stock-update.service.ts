@@ -22,4 +22,11 @@ constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerServ
 
   }
 
+    getStockUpdateDetails(params:any){
+     return this.apiHandlerService.Get(`THC/stockupdatedetails?id=${params.id}&BaseLocationCode=${params.baseLocationCode}`);
+  }
+
+    getWarehouseData(locCode :any){
+     return this.apiHandlerService.Get(`THC/WarehouseData/${locCode }`);
+  }
 }
