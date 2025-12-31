@@ -17,7 +17,7 @@ export class DecimalLimitDirective {
       let value = input.value;
 
       // unit pramane integer digits ni limit
-      const intLimit = this.unit === 'INCHES' ?  (this.docketService.isComplition ? 3 : 2) : 3;
+      const intLimit = this.unit === 'INCHES' ?  (this.docketService.loginUserList.Type==='2' ? 3 : 2) : 3;
 
       const regex = new RegExp(`^\\d{0,${intLimit}}(\\.\\d{0,2})?$`);
 

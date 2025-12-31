@@ -138,7 +138,7 @@ getCompletionData() {
           // first patch
           this.docketService.basicDetailForm.patchValue({
             cNoteNo: basicDetail.dockno,
-            cNoteDate: new Date(basicDetail.dockdt.split('T')[0]),
+            cNoteDate: this.docketService.loginUserList.Type==='1'?new Date():new Date(basicDetail.dockdt.split('T')[0]),
             // cNoteDate: new Date(),
             pincode: basicDetail.csgePinCode ? basicDetail.csgePinCode : null,
             billingType: basicDetail.paybas,
