@@ -23,6 +23,11 @@ export const ChallanRoutes: Routes = [
     path: 'UpdateDRS',
     loadComponent: () => import('../delivery-update-list/delivery-update-list.component').then(m => m.DeliveryUpdateListComponent),
     canActivate: [DocketGuard]
+  },
+  {
+    path: 'StockUpdateDetails',
+    loadComponent: () => import('../arrival-stock-update-list/arrival-stock-update-list.component').then(m => m.ArrivalStockUpdateListComponent),
+    // canActivate: [DocketGuard]
   }
 
 ];

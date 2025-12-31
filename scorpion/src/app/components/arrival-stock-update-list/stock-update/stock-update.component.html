@@ -1,0 +1,373 @@
+
+<div class="cnote-entry-container">
+    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+        <i class="fa fa-edit me-2"></i>
+        THC Information for Stock Update
+    </div>
+       <div class="form-grid p-4">
+          <div class="row pb-3">
+                <div class="col-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">THC No. :</label>
+                        <div class="col-sm-7 text-start fw-bold text-primary-color">
+                            VH/BLR/2526/001018
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">THC Date :</label>
+                        <div class="col-sm-7 text-start fw-bold text-primary-color">
+                             02 Jul 2025 06:36:00 PM
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">{{'THC Arrival Date  @  PIM :'}}</label>
+                        <div class="col-sm-7 text-start fw-bold text-primary-color">
+                            31 Jul 2025 04:49:00 PM
+                        </div>
+                    </div>
+                </div>
+            </div>
+                 <div class="row pb-3">
+                <div class="col-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">Vehicle No. :</label>
+                        <div class="col-sm-7 text-start fw-bold text-primary-color">
+                            JK21L1179
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">Total Manifest Count :</label>
+                        <div class="col-sm-7 text-start fw-bold text-primary-color">
+                            1
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">Total CNote Count :</label>
+                        <div class="col-sm-7 text-start fw-bold text-primary-color">
+                            1
+                        </div>
+                    </div>
+                </div>
+            </div>
+                 <div class="row pb-3">
+                <div class="col-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">Stock Update Date :</label>
+                        <div class="col-sm-7 text-start fw-bold text-primary-color">
+                            <div class="input-group" (click)="dp.toggle(); $event.stopPropagation()" >
+                                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
+                                    [bsValue]="docketService.bsValue" [maxDate]="docketService.bsValue"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                                    placeholder="Stock Update Date" required [class.disabled-input]="true">
+                                <span class="input-group-text cursor-pointer"
+                                    [class.disabled-input]="this.docketService.isComplition">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">Unloader Name :</label>
+                        <div class="col-sm-7 text-start">
+                            <ng-select placeholder="Search Unloader" 
+                                (open)="resetUnloaderDropdown()" (search)="stockUpdateUsers($event)" [notFoundText]="notUnloaderName"
+                                [clearable]="true">
+                                <ng-option *ngFor="let data of unloaderUsers" [value]="data.userId">{{data.userId}} : {{data.name}}</ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">UnLoading Supervisor :</label>
+                        <div class="col-sm-7 text-start">
+                             <ng-select placeholder="UnLoading Supervisor" 
+                                (open)="resetUnloaderDropdown()" (search)="stockUpdateUsers($event)" [notFoundText]="notUnloaderName"
+                                [clearable]="true">
+                                <ng-option *ngFor="let data of unloaderUsers" [value]="data.userId">{{data.userId}} : {{data.name}}</ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+       </div>
+    </div>
+
+    <div class="cnote-entry-container">
+        <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+            <i class="fa fa-edit me-2"></i>
+            Stock Update List
+        </div>
+        <div class="table-responsive table-wrapper p-2 pt-4">
+            <table class="table table-bordered align-middle stock-table table-fixed vertical-align">
+                <thead class="table-secondary">
+                    <tr>
+                        <th class="align-top p-1">
+                            <div>Single<br>Stock Update</div>
+                            <input type="checkbox" class="form-check-input fs-5">
+                        </th>
+                        <th class="align-top p-1">
+                            <div class="fw-semibold small mb-1"> Damage / Pilferage</div>
+                            <div class="d-flex justify-content-center align-items-center gap-3">
+                                <input class="form-check-input fs-5" type="checkbox">
+                                <input class="form-check-input fs-5" type="checkbox">
+                            </div>
+                        </th>
+                        <th>MF #</th>   
+                        <th>CNote #<br>Bkg-Dest</th>
+                        <th>Bkg. Date<br>Commited Dely. Date</th>
+                        <th class="text-start">Pkgs.<br>Wt.</th>
+                        <th>Biz. Type<br>Service Type</th>
+                        <th>Arrived Pkgs.</th>
+                        <th>Arrived Wt.</th>
+                        <th class="align-top p-1" style="width: 200px;">
+                            <div class="small mb-1">Arrival Condition</div>
+                            <ng-select [items]="conditionList" bindLabel="text" class="clear-icon" bindValue="value" placeholder="Select Condition"></ng-select>
+                        </th>
+                        <th class="align-top p-1" style="width: 200px;">
+                            <div class="small mb-1">Warehouse</div>
+                            <ng-select class="clear-icon"></ng-select>
+                        </th>
+                        <th class="align-top p-1" style="width: 200px;">
+                            <div class="small mb-1">Delivery Process</div>
+                            <ng-select class="clear-icon fw-normal" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.deliveryProcessData" placeholder="Select Process"></ng-select>
+                        </th>
+                    </tr>
+                </thead>
+    
+                <tbody>
+                    <tr>
+                        <td class="text-center"><input type="checkbox" class="form-check-input fs-5"></td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center align-items-center gap-3">
+                                <input class="form-check-input fs-5" type="checkbox">
+                                <input class="form-check-input fs-5" type="checkbox">
+                            </div>
+                        </td>
+                        <td class="fw-semibold">MF/RPR/2526/000253</td>
+                        <td>
+                            <div class="text-primary-color fw-semibold">62680936</div>
+                            <small class="text-muted">RPR - PIM</small>
+                        </td>
+                        <td>
+                            <div>03/07/2025</div>
+                            <small class="text-muted">08/07/2025</small>
+                        </td>
+                        <td class="text-start text-danger fw-semibold">835.00<br>18000.00</td>
+                        <td class="text-start">
+                            <div class="text-primary-color">SCORPION EXPRESS PVT LTD</div>
+                            <small class="text-muted">FTL</small>
+                        </td>
+                        <td style="width: 150px;"><input class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g,'');" value="835"></td>
+                        <td style="width: 150px;"><input class="form-control" value="18000.0" readonly></td>
+                        <td style="width: 200px;"><ng-select [items]="conditionList" bindLabel="text" class="clear-icon" bindValue="value" placeholder="Select Condition"></ng-select></td>
+                        <td style="width: 200px;"><ng-select class="clear-icon" ></ng-select></td>
+                        <td style="width: 200px;"><ng-select class="clear-icon" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.deliveryProcessData" placeholder="Select Process"></ng-select></td>
+                    </tr>
+                     <tr>
+                        <td class="text-center">POD :-</td>
+                        <td>
+                            <button type="button" class="btn btn-outline-primary btn-sm">
+                                ⬆ POD Front UPLOAD
+                            </button>
+                        </td>
+                         <td colspan="2">
+                            <button type="button" class="btn btn-outline-primary btn-sm">
+                                    ⬆ POD Back UPLOAD
+                                </button>
+                        </td>
+                        <td colspan="4">
+                            <div class="row">
+                                <label class="col-sm-3 col-form-label text-end">Delivery Date & Time:</label>
+                                <div class="col-sm-9 text-start">
+                                    <input class="form-control" placeholder="Delivery Date & Time" type="date">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">Short :-</td>
+                        <td>
+                            <div class="row">
+                                <label class="col-sm-5 col-form-label text-end">Short Packages:</label>
+                                <div class="col-sm-7 text-start">
+                                    <input class="form-control" placeholder="Short Packages" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <div class="row">
+                                <label class="col-sm-3 col-form-label text-end">Weight:</label>
+                                <div class="col-sm-9 text-start">
+                                    <input class="form-control" placeholder="Weight" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="3">
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label text-end">Reason:</label>
+                                <div class="col-sm-10 text-start">
+                                      <textarea rows="1" class="form-control-textarea" placeholder="Reason"></textarea>
+                                </div>
+                            </div>
+                        </td>
+                          <td colspan="3">
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label text-end">Remarks:</label>
+                                <div class="col-sm-10 text-start">
+                                      <textarea rows="1" class="form-control-textarea" placeholder="Remarks"></textarea>
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <div class="row">
+                                <label class="col-sm-7 col-form-label text-end">File Upload:</label>
+                                <div class="col-sm-5 text-start">
+                                    <button type="button" class="btn btn-outline-primary btn-sm">Select</button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">Pilferage :-</td>
+                        <td>
+                            <div class="row">
+                                <label class="col-sm-5 col-form-label text-end">Pilferage Packages:</label>
+                                <div class="col-sm-7 text-start">
+                                    <input class="form-control" placeholder="Pilferage Packages" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <div class="row">
+                                <label class="col-sm-3 col-form-label text-end">Weight:</label>
+                                <div class="col-sm-9 text-start">
+                                    <input class="form-control" placeholder="Weight" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="3">
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label text-end">Reason:</label>
+                                <div class="col-sm-10 text-start">
+                                      <textarea rows="1" class="form-control-textarea" placeholder="Reason"></textarea>
+                                </div>
+                            </div>
+                        </td>
+                          <td colspan="3">
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label text-end">Remarks:</label>
+                                <div class="col-sm-10 text-start">
+                                      <textarea rows="1" class="form-control-textarea" placeholder="Remarks"></textarea>
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <div class="row">
+                                <label class="col-sm-7 col-form-label text-end">File Upload:</label>
+                                <div class="col-sm-5 text-start">
+                                    <button type="button" class="btn btn-outline-primary btn-sm">Select</button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td class="text-center">Damage  :-</td>
+                        <td>
+                            <div class="row">
+                                <label class="col-sm-5 col-form-label text-end">Damage Packages::</label>
+                                <div class="col-sm-7 text-start">
+                                    <input class="form-control" placeholder="Damage Packages:" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <div class="row">
+                                <label class="col-sm-3 col-form-label text-end">Weight:</label>
+                                <div class="col-sm-9 text-start">
+                                    <input class="form-control" placeholder="Weight" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="3">
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label text-end">Reason:</label>
+                                <div class="col-sm-10 text-start">
+                                      <textarea rows="1" class="form-control-textarea" placeholder="Reason"></textarea>
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="1">
+                             <div class="row">
+                                <label class="col-sm-7 col-form-label text-end">File Upload:</label>
+                                <div class="col-sm-5 text-start">
+                                    <button type="button" class="btn btn-outline-primary btn-sm">Select</button>
+                                </div>
+                            </div>
+                        </td>
+                          <td colspan="2">
+                            <div class="row">
+                                <label class="col-sm-4 col-form-label text-end">Damage Type:</label>
+                                <div class="col-sm-8 text-start">
+                                       <ng-select class="clear-icon" placeholder="Damage Type"></ng-select>
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <div class="row">
+                                <label class="col-sm-3 col-form-label text-end">Severity:</label>
+                                <div class="col-sm-9 text-start">
+                                      <ng-select class="clear-icon" placeholder="Severity"></ng-select>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+    
+            <!-- CHECKBOX FOOTER -->
+            <div class="d-flex flex-wrap gap-4 mt-3 p-4 justify-content-center">
+                <div class="form-check">
+                    <input class="form-check-input fs-5" type="checkbox" id="misroute">
+                    <label class="form-check-label fw-semibold text-primary-color" for="misroute">
+                        Misroute / Interchange
+                    </label>
+                </div>
+            
+                <div class="form-check">
+                    <input class="form-check-input fs-5" type="checkbox" id="deps">
+                    <label class="form-check-label fw-semibold text-primary-color" for="deps">
+                        There is No DEPS
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-secondary-subtle p-3">
+        <label>Note:</label>
+        <div>
+            1. In case of Short received, enter the Arrived pkgs after deducting the short pkgs.
+        </div>
+        <div>
+            2. In Case of Damage, select the “Damage” Check box.
+        </div>
+
+      <div class="d-grid justify-content-center">
+          <div class="d-flex  gap-2">
+            <button class="btn btn-secondary controls"> <i class="fas fa-arrow-left"></i>&nbsp;Back to Stock Update</button>
+            <button type="button" id="btnSubmit" class="btn btn-success controls" ><i class="fas fa-check"></i>&nbsp;Stock Update</button>
+        </div>
+        <p style="color:red;">Select atleast one CNote to see the <strong>Submit</strong> button.</p>
+      </div>
+    </div>

@@ -600,3 +600,11 @@ input[readonly] {
     color: #a2a8a4;    // optional: green spinner
   }
 }
+
+.vertical-align > thead {
+    vertical-align: middle !important;
+}
+
+.text-primary-color{
+  color: #428bca !important;
+}
