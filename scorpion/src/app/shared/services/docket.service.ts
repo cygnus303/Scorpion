@@ -281,9 +281,9 @@ export class DocketService {
       srNo: new FormControl(srNo),
       noOfPkgs: new FormControl(0),
       actualWeight: new FormControl(0, [Validators.required, Validators.min(1)]),
-      length: new FormControl(0, this.isComplition ? Validators.max(199.99):null),
-      breadth: new FormControl(0, this.isComplition ? Validators.max(199.99):null),
-      height: new FormControl(0, this.isComplition ? Validators.max(199.99):null),
+      length: new FormControl(0,this.loginUserList.Type ==='2' ? Validators.max(199.99):null),
+      breadth: new FormControl(0,this.loginUserList.Type ==='2' ? Validators.max(199.99):null),
+      height: new FormControl(0,this.loginUserList.Type ==='2' ? Validators.max(199.99):null),
       cubicweight: new FormControl(0),
     });
   }
