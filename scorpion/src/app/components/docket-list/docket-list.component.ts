@@ -4,7 +4,7 @@ import { BasicDetailService } from '../../shared/services/basic-detail.service';
 import { Router } from '@angular/router';
 import { SweetAlertService } from '../../shared/services/sweet-alert.service';
 import { environment } from 'environments/environment';
-import { FormArray } from '@angular/forms';
+import { FormArray, Validators } from '@angular/forms';
 import { BasePayload } from 'app/shared/models/general-master.model';
 import { BasicDetailsComponent } from './basic-details/basic-details.component';
 @Component({
@@ -146,7 +146,7 @@ getCompletionData() {
             billingParty: basicDetail.partY_CODE,
             origin: basicDetail.orgncd,
             destination: basicDetail.destcd,
-          });
+          }); 
            this.docketService.Location =  basicDetail.orgncd
           this.docketService.getRuleDetailForDepth();
           this.docketService.getRuleDetailForProceed()
@@ -256,6 +256,21 @@ getCompletionData() {
             EDD: basicDetail.cdeldt === '0001-01-01T00:00:00' ? '01 JAN 0001' : basicDetail.cdeldt ,
             gstRate: basicDetail.gstRateType
           });
+
+          // added Validators
+             const freightCharges = this.docketService.freightForm.get('freightCharges');
+              const freightRate = this.docketService.freightForm.get('freightRate');
+              if (basicDetail.paybas === 'P04') {
+                freightCharges?.clearValidators();
+                freightRate?.clearValidators();
+              } else {
+                // ✅ Required lagavo
+                freightCharges?.setValidators([Validators.required, Validators.min(0.01)]);
+                freightRate?.setValidators([Validators.required, Validators.min(0.01)]);
+              }
+              freightCharges?.updateValueAndValidity();
+              freightRate?.updateValueAndValidity();
+
           if(this.docketService.loginUserList?.Type === '2'){
             if (this.docketService.completiondata?.listCharges) {
               this.docketService.completiondata.listCharges.forEach((item: any) => {
