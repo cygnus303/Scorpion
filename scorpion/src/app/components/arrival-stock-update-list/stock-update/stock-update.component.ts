@@ -34,15 +34,15 @@ conditionList = [
   ngOnInit(){
      this.stockUpdateForm = new FormGroup({
       hDamage:  new FormControl(false),
-      hCondition:new FormControl(),
+      hCondition:new FormControl(1),
       hWarehouse:new FormControl(),
       hPilferage: new FormControl(false),
       hDeliveryProcess : new FormControl(null),
       stockUpdateList: new FormArray([])
     });
 
-    this.generalMasterService.getDeliveryProcessData();
     this.getStockUpdateDetails();
+    this.generalMasterService.getDeliveryProcessData();
     this.getWarehouseData();
   }
 
@@ -100,17 +100,156 @@ conditionList = [
 
     this.stockUpdateArray.controls.forEach((row: any) => {
       row.get('damage')?.setValue(checked);
+      this.toggleDamageValidators(row, checked);
     });
   }
 
   /* HEADER PILFERAGE */
   onHeaderPilferageChange() {
     const checked = this.stockUpdateForm.get('hPilferage')?.value;
-
     this.stockUpdateArray.controls.forEach((row: any) => {
       row.get('pilferage')?.setValue(checked);
+      this.togglePilferageValidators(row, checked);
     });
   }
+  
+
+
+  private togglePilferageValidators(row: FormGroup, isChecked: boolean) {
+    const qtyCtrl = row.get('pilferageQty');
+    const pilferageWt = row.get('pilferageWt');
+    const pilferageReason = row.get('pilferageReason');
+    const pilferageFile = row.get('pilferageFile');
+    if (isChecked) {
+      qtyCtrl?.setValidators([Validators.required, Validators.min(1)]);
+      pilferageWt?.setValidators([Validators.required, Validators.min(1)]);
+      pilferageReason?.setValidators([Validators.required]);
+      pilferageFile?.setValidators([Validators.required]);
+    } else {
+      qtyCtrl?.clearValidators();
+      qtyCtrl?.setValue(null);
+      pilferageWt?.clearValidators();
+      pilferageWt?.setValue(null);
+      pilferageReason?.clearValidators();
+      pilferageReason?.setValue(null);
+     pilferageFile?.clearValidators();
+     pilferageFile?.setValue(null);
+    }
+     qtyCtrl?.updateValueAndValidity();
+     pilferageWt?.updateValueAndValidity();
+     pilferageReason?.updateValueAndValidity();
+     pilferageFile?.updateValueAndValidity();
+  }
+
+  private toggleDamageValidators(row: FormGroup, isChecked: boolean) {
+    const damageQty = row.get('damageQty');
+    const damageWt = row.get('damageWt');
+    const damageReason = row.get('damageReason');
+    const damageType = row.get('damageType');
+    const severity = row.get('severity');
+    const damageFile = row.get('damageFile');
+
+    if (isChecked) {
+      damageQty?.setValidators([Validators.required, Validators.min(1)]);
+      damageWt?.setValidators([Validators.required, Validators.min(1)]);
+      damageReason?.setValidators([Validators.required]);
+      damageType?.setValidators([Validators.required]);
+      severity?.setValidators([Validators.required]);
+      damageFile?.setValidators([Validators.required]);
+    } else {
+      damageQty?.clearValidators();
+      damageQty?.setValue(null);
+      damageWt?.clearValidators();
+      damageWt?.setValue(null);
+      damageReason?.clearValidators();
+      damageReason?.setValue(null);
+      damageType?.clearValidators();
+      damageType?.setValue(null);
+      severity?.clearValidators();
+      severity?.setValue(null);
+      damageFile?.clearValidators();
+      damageFile?.setValue(null);
+    }
+    damageQty?.updateValueAndValidity();
+    damageWt?.updateValueAndValidity();
+    damageReason?.updateValueAndValidity();
+    damageType?.updateValueAndValidity();
+    severity?.updateValueAndValidity();
+    damageFile?.updateValueAndValidity();
+  }
+
+onArrivedPkgsChange(index: number) {
+  const row = this.stockUpdateArray.at(index) as FormGroup;
+  const pkgs = +row.get('pkgs')?.value || 0;
+  const arrived = +row.get('arrivedPkgs')?.value || 0;
+  const shortQty = row.get('shortQty');
+  const shortWt = row.get('shortWt');
+  const shortReason = row.get('shortReason');
+  const shortRemarks = row.get('shortRemarks');
+  // jo file control hoy to
+  const shortFile = row.get('shortFile');
+
+  if (pkgs - arrived > 0) {
+    // 🔴 ADD validators
+    shortQty?.setValidators([Validators.required, Validators.min(1)]);
+    shortWt?.setValidators([Validators.required, Validators.min(1)]);
+    shortReason?.setValidators([Validators.required]);
+    shortRemarks?.setValidators([Validators.required]);
+    shortFile?.setValidators([Validators.required]);
+
+  } else {
+    // 🟢 REMOVE validators
+    shortQty?.clearValidators();
+    shortWt?.clearValidators();
+    shortReason?.clearValidators();
+    shortRemarks?.clearValidators();
+    shortFile?.clearValidators();
+
+    shortQty?.setValue(0);
+    shortWt?.setValue(0);
+    shortReason?.setValue('');
+    shortRemarks?.setValue('');
+    shortFile?.setValue(null);
+  }
+
+  shortQty?.updateValueAndValidity();
+  shortWt?.updateValueAndValidity();
+  shortReason?.updateValueAndValidity();
+  shortRemarks?.updateValueAndValidity();
+  shortFile?.updateValueAndValidity();
+}
+
+
+  onPilferageFileChange(event: any, row: any) {
+  const file = event.target.files?.[0] || null;
+  row.get('pilferageFile')?.setValue(file);
+  row.get('pilferageFile')?.markAsTouched();
+}
+
+  onShortFileChange(event: any, row: any) {
+  const file = event.target.files?.[0] || null;
+  row.get('shortFile')?.setValue(file);
+  row.get('shortFile')?.markAsTouched();
+}
+
+ onDamageFileChange(event: any, row: any) {
+  const file = event.target.files?.[0] || null;
+  row.get('damageFile')?.setValue(file);
+  row.get('damageFile')?.markAsTouched();
+}
+
+
+onRowPilferageChange(index: number) {
+  const row = this.stockUpdateArray.at(index) as FormGroup;
+  const checked = row.get('pilferage')?.value;
+  this.togglePilferageValidators(row, checked);
+}
+
+onRowDamageChange(index: number) {
+  const row = this.stockUpdateArray.at(index) as FormGroup;
+  const checked = row.get('damage')?.value;
+  this.toggleDamageValidators(row, checked);
+}
 
   getStockUpdateDetails() {
     const payload = {
@@ -134,6 +273,12 @@ conditionList = [
       next: (response:any) => {
        if (response && response?.length) {
           this.warehouseList = response;
+          this.stockUpdateForm.patchValue({
+            hWarehouse: response[0].godown_srno
+          });
+          this.stockUpdateArray.controls.forEach((row: any) => {
+            row.get('warehouse')?.setValue(response[0].godown_srno);
+          });
         }
       }
     });
@@ -162,7 +307,7 @@ conditionList = [
     arrivedPkgs: new FormControl(item.pkgsno, [Validators.required,Validators.max(item.pkgsno)]),
     arrivedWt: new FormControl({ value: item.actuwt, disabled: true }),
 
-    condition: new FormControl(null),
+    condition: new FormControl(1),
     warehouse: new FormControl(null),
     deliveryProcess: new FormControl(null),
 
@@ -170,6 +315,7 @@ conditionList = [
     shortWt: new FormControl(item.shortageWeight || 0),
     shortReason: new FormControl(''),
     shortRemarks: new FormControl(''),
+    shortFile: new FormControl(null), 
 
     pilferageQty: new FormControl(item.pilferageQty || 0),
     pilferageWt: new FormControl(item.pilferageWeight || 0),
@@ -180,9 +326,16 @@ conditionList = [
     damageWt: new FormControl(item.damageWeight || 0),
     damageReason: new FormControl(''),
     damageType: new FormControl(null),
-    severity: new FormControl(null)
+    severity: new FormControl(null),
+    pilferageFile: new FormControl(null), 
+    damageFile: new FormControl(null), 
   });
 }
 
-
+  stockUpdate() {
+    if (this.stockUpdateForm.valid) {
+    } else {
+      this.stockUpdateForm.markAllAsTouched();
+    }
+  }
 }
