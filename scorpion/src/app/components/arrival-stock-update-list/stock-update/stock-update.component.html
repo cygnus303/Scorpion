@@ -10,7 +10,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">THC No. :</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
-                           {{this.docketService.loginUserList.id}}
+                           {{stockData?.thcno}}
                         </div>
                     </div>
                 </div>
@@ -18,15 +18,15 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">THC Date :</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
-                             02 Jul 2025 06:36:00 PM
+                         {{stockData?.thcdt}}
                         </div>
                     </div>
                 </div>
                 <div class="col-4">
                     <div class="row align-items-center">
-                        <label class="col-sm-5 col-form-label text-end">{{'THC Arrival Date  @  PIM :'}}</label>
+                        <label class="col-sm-5 col-form-label text-end">{{ 'THC Arrival Date @ ' + (stockData?.sourcehb || '') + ' :' }}</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
-                            31 Jul 2025 04:49:00 PM
+                          {{stockData?.actarrv_dt| date:'M/d/yyyy h:mm:ss a'}}
                         </div>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Vehicle No. :</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
-                            JK21L1179
+                           {{stockData?.vehno}}
                         </div>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Total Manifest Count :</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
-                            1
+                           {{stockData?.manifestKount}}
                         </div>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Total CNote Count :</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
-                            1
+                           {{stockData?.docketKount}}
                         </div>
                     </div>
                 </div>
@@ -62,15 +62,9 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Stock Update Date :</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
-                            <div class="input-group" (click)="dp.toggle(); $event.stopPropagation()" >
-                                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
-                                    [bsValue]="docketService.bsValue" [maxDate]="docketService.bsValue"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
-                                    placeholder="Stock Update Date" required [class.disabled-input]="true">
-                                <span class="input-group-text cursor-pointer"
-                                    [class.disabled-input]="this.docketService.isComplition">
-                                    <i class="fa fa-calendar"></i>
-                                </span>
+                            <div class="input-group"  >
+                                <app-date-time-picker controlName="UpdateDate" [maxDate]="docketService.bsValue"  [placeholder]="'Vehicle Arrival Date & Time'">
+                        </app-date-time-picker>
                             </div>
                         </div>
                     </div>
@@ -423,7 +417,8 @@
                             <div class="row">
                                 <label class="col-sm-4 col-form-label text-end">Damage Type:</label>
                                 <div class="col-sm-8 text-start">
-                                       <ng-select class="clear-icon" placeholder="Damage Type" formControlName="damageType" 
+                                       <ng-select class="clear-icon" placeholder="Damage Type" formControlName="damageType" bindValue="codeId" bindLabel="codeDesc"
+                                       [items]="generalMasterService.damageData" (change)="onChangeDamage($event, i)"
                                         [ngClass]="{ 'border-danger': row.get('damageType')?.invalid  && row.get('damageType')?.touched }"></ng-select>
                                        <div *ngIf="row.get('damageType')?.touched && row.get('damageType')?.errors">
                                         <div class="text-danger text-start" *ngIf="row.get('damageType')?.hasError('required')">
@@ -437,8 +432,8 @@
                             <div class="row">
                                 <label class="col-sm-3 col-form-label text-end">Severity:</label>
                                 <div class="col-sm-9 text-start">
-                                      <ng-select class="clear-icon" placeholder="Severity"  formControlName="severity"
-                                       [ngClass]="{ 'border-danger': row.get('severity')?.invalid  && row.get('severity')?.touched }"></ng-select>
+                                      <input class="clear-icon" placeholder="Severity"  formControlName="severity"
+                                       [ngClass]="{ 'border-danger': row.get('severity')?.invalid  && row.get('severity')?.touched }">
                                       <div *ngIf="row.get('severity')?.touched && row.get('severity')?.errors">
                                         <div class="text-danger text-start" *ngIf="row.get('severity')?.hasError('required')">
                                             Pilferage Packages is required.

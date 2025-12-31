@@ -18,6 +18,8 @@ export class GeneralMasterService {
   public loadingBy:PRSGeneralMasterResponse[]=[];
   public reasonData:PRSGeneralMasterResponse[]=[];
   public deliveryProcessData:PRSGeneralMasterResponse[]=[];
+  public damageData:PRSGeneralMasterResponse[]=[];
+
 
  constructor(
      public THCMasterService: THCMasterService, private basicDetailService: BasicDetailService,
@@ -108,6 +110,16 @@ export class GeneralMasterService {
       next: (response) => {
         if (response.success) {
           this.reasonData = response.data;
+        }
+      },
+    });
+  }
+
+  getDamageData(){
+    this.THCMasterService.getGeneralMasterDetail('DEPSTYP').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.damageData = response.data;
         }
       },
     });
