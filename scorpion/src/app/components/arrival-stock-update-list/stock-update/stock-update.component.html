@@ -164,7 +164,7 @@
                             <small class="text-muted">{{ row.value.serviceType }}</small>
                         </td>
                         <td style="width: 150px;">
-                            <input class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g,'');" formControlName="arrivedPkgs" (change)="onArrivedPkgsChange(i)">
+                            <input class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g,'');" formControlName="arrivedPkgs" (change)="onArrivedPkgsChange(i)" (blur)="onArrPkgQtyBlur(i)">
                             <div class="text-danger text-start" *ngIf="row.get('arrivedPkgs')?.errors?.['max']" >
                                 Please enter a value less than or equal to {{ row.value.pkgs }}.
                             </div>
@@ -202,7 +202,7 @@
                                 <label class="col-sm-5 col-form-label text-end">Short Packages:</label>
                                 <div class="col-sm-7 text-start">
                                     <input class="form-control" placeholder="Short Packages" formControlName="shortQty" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text"
-                                     [ngClass]="{'border-danger':row.get('shortQty')?.invalid && row.get('shortQty')?.touched}">
+                                     [ngClass]="{'border-danger':row.get('shortQty')?.invalid && row.get('shortQty')?.touched}" readonly>
                                     <div *ngIf="row.get('shortQty')?.touched && row.get('shortQty')?.errors">
                                         <div class="text-danger" *ngIf="row.get('shortQty')?.hasError('required')">
                                             Short Packages is required
@@ -281,7 +281,7 @@
                                 <label class="col-sm-5 col-form-label text-end">Pilferage Packages:</label>
                                 <div class="col-sm-7 text-start">
                                     <input class="form-control" placeholder="Pilferage Packages" formControlName="pilferageQty" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text"
-                                     [ngClass]="{ 'border-danger': row.get('pilferageQty')?.invalid  && row.get('pilferageQty')?.touched }">
+                                     [ngClass]="{ 'border-danger': row.get('pilferageQty')?.invalid  && row.get('pilferageQty')?.touched }" (change)="onPilferageQtyChange(i)">
                                     <div *ngIf="row.get('pilferageQty')?.touched && row.get('pilferageQty')?.errors">
                                         <div class="text-danger text-start" *ngIf="row.get('pilferageQty')?.hasError('required')">
                                             Pilferage Packages is required.
@@ -355,7 +355,7 @@
                                 <label class="col-sm-5 col-form-label text-end">Damage Packages:</label>
                                 <div class="col-sm-7 text-start">
                                     <input class="form-control" placeholder="Damage Packages" formControlName="damageQty" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text"
-                                     [ngClass]="{ 'border-danger': row.get('damageQty')?.invalid  && row.get('damageQty')?.touched }">
+                                     [ngClass]="{ 'border-danger': row.get('damageQty')?.invalid  && row.get('damageQty')?.touched }"  (change)="onDamageQtyChange(i)">
                                     <div *ngIf="row.get('damageQty')?.touched && row.get('damageQty')?.errors">
                                         <div class="text-danger text-start" *ngIf="row.get('damageQty')?.hasError('required')">
                                             Pilferage Packages is required.
