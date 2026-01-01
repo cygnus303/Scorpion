@@ -4,9 +4,11 @@ import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } fr
 import { NgSelectModule } from '@ng-select/ng-select';
 import { UnloaderUsers, WarehouseList } from 'app/shared/models/stock-update.model';
 import { CommonService } from 'app/shared/services/common.service';
+import { DeliveryUpdateService } from 'app/shared/services/delivery-update.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { StockUpdateService } from 'app/shared/services/stock-update.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { SharedModule } from 'app/shared/shared/shared.module';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
@@ -23,6 +25,7 @@ public notUnloaderName:string='Enter at least 3 characters';
 public stockUpdateForm!:FormGroup;
 public warehouseList:WarehouseList[]=[];
 public stockData:any;
+public maxDate = new Date();
 conditionList = [
   { text: 'GOOD', value: 1 },
   { text: 'SHORT', value: 2 },
@@ -31,7 +34,7 @@ conditionList = [
   { text: 'PILFERAGE', value: 5 }
 ];
 
- constructor(public docketService: DocketService, public commonService: CommonService,private stockUpdateService:StockUpdateService,public generalMasterService:GeneralMasterService) { }
+ constructor(public docketService: DocketService, public commonService: CommonService,private stockUpdateService:StockUpdateService,public generalMasterService:GeneralMasterService,public deliveryUpdateService:DeliveryUpdateService,public sweetAlertService:SweetAlertService) { }
 
   ngOnInit(){
     this.buildForm()
@@ -42,11 +45,12 @@ conditionList = [
   }
 
   buildForm(){
-         this.stockUpdateForm = new FormGroup({
+   this.stockUpdateForm = new FormGroup({
       hDamage:  new FormControl(false),
       hCondition:new FormControl(1),
       hWarehouse:new FormControl(),
       hPilferage: new FormControl(false),
+      IsAllgood: new FormControl(false),
       hDeliveryProcess : new FormControl(null),
       stockUpdateList: new FormArray([]),
       UpdateDate:new FormControl(this.getCurrentDateTime())
@@ -71,6 +75,20 @@ conditionList = [
 
   get stockUpdateArray(): FormArray {
     return this.stockUpdateForm.get('stockUpdateList') as FormArray;
+  }
+
+  get isAllGoodChecked() {
+    debugger
+  return this.stockUpdateForm.get('IsAllgood')?.value;
+}
+
+  get isPilferageDamage() {
+    const stockUpdateControls = this.stockUpdateArray.controls;
+    return (
+      this.stockUpdateForm.get('hDamage')?.value ||
+      this.stockUpdateForm.get('hPilferage')?.value ||
+      stockUpdateControls.some((row: any) => row.get('damage')?.value || row.get('pilferage')?.value)
+    );
   }
 
   stockUpdateUsers(event:any) {
@@ -158,7 +176,7 @@ onChangeDamage(event: any, index: number) {
     const pilferageReason = row.get('pilferageReason');
     const pilferageFile = row.get('pilferageFile');
     if (isChecked) {
-      qtyCtrl?.setValidators([Validators.required, Validators.min(1)]);
+      qtyCtrl?.setValidators([Validators.required, Validators.min(1), Validators.max(row.get('arrivedPkgs')?.value)]);
       pilferageWt?.setValidators([Validators.required, Validators.min(1)]);
       pilferageReason?.setValidators([Validators.required]);
       pilferageFile?.setValidators([Validators.required]);
@@ -187,7 +205,7 @@ onChangeDamage(event: any, index: number) {
     const damageFile = row.get('damageFile');
 
     if (isChecked) {
-      damageQty?.setValidators([Validators.required, Validators.min(1)]);
+      damageQty?.setValidators([Validators.required, Validators.min(1), Validators.max(row.get('arrivedPkgs')?.value)]);
       damageWt?.setValidators([Validators.required, Validators.min(1)]);
       damageReason?.setValidators([Validators.required]);
       damageType?.setValidators([Validators.required]);
@@ -323,17 +341,19 @@ onRowDamageChange(index: number) {
   }
 
   createForm(item: any): FormGroup {
+     const [day, month, year] = item.dockdt.split('/');
+     const formattedDate = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
   return new FormGroup({
-    selected: new FormControl(false), 
+    IsPartStockUpdate: new FormControl(false), 
 
-    damage: new FormControl(item.isDamage),
-    pilferage: new FormControl(item.isPilferage),
+    damage: new FormControl(false),
+    pilferage: new FormControl(false),
 
     mfNo: new FormControl(item.tcno),
     docketNo: new FormControl(item.dockNo),
     route: new FormControl(`${item.orgncd} - ${item.desT_CD}`),
 
-    bookingDate: new FormControl(item.dockdt),
+    bookingDate: new FormControl(formattedDate),
     committedDate: new FormControl(item.cdelydt),
 
     pkgs: new FormControl(item.pkgsno),
@@ -367,10 +387,144 @@ onRowDamageChange(index: number) {
     severity: new FormControl(null),
     pilferageFile: new FormControl(null), 
     damageFile: new FormControl(null), 
+    DELYDATE: new FormControl(this.getCurrentDateTime()),
+    /* ================= POD CONTROLS ================= */
+    frontFiles: new FormControl([]),
+    backFiles: new FormControl([]),
+
+    frontPreview: new FormControl(null),
+    backPreview: new FormControl(null),
+
+    podValidated: new FormControl(false)
   });
 }
 
+removeFile(index: number, type: 'FRONT' | 'BACK') {
+  const row = this.stockUpdateArray.at(index) as FormGroup;
+
+  if (type === 'FRONT') {
+    const url = row.get('frontPreview')?.value;
+    if (url) URL.revokeObjectURL(url);
+
+    row.patchValue({
+      frontFiles: [],
+      frontPreview: null
+    });
+
+    row.get('frontFiles')?.markAsTouched();
+  } else {
+    const url = row.get('backPreview')?.value;
+    if (url) URL.revokeObjectURL(url);
+
+    row.patchValue({
+      backFiles: [],
+      backPreview: null
+    });
+  }
+}
+
+onFileSelected(event: any, index: number, type: 'FRONT' | 'BACK') {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  const row = this.stockUpdateArray.at(index) as FormGroup;
+  const previewUrl = URL.createObjectURL(file);
+
+  if (type === 'FRONT') {
+    const oldUrl = row.get('frontPreview')?.value;
+    if (oldUrl) URL.revokeObjectURL(oldUrl);
+
+    row.patchValue({
+      frontFiles: [file],
+      frontPreview: previewUrl
+    });
+
+    row.get('frontFiles')?.markAsTouched();
+  } else {
+    const oldUrl = row.get('backPreview')?.value;
+    if (oldUrl) URL.revokeObjectURL(oldUrl);
+
+    row.patchValue({
+      backFiles: [file],
+      backPreview: previewUrl
+    });
+  }
+
+  // reset input so same file can be selected again
+  event.target.value = '';
+  this.validatePOD(index);
+}
+validatePOD(index: number) {
+  const row = this.stockUpdateArray.at(index) as FormGroup;
+  const docketNo = row.get('docketNo')?.value;
+
+  if (!docketNo) {
+    console.error('Dock No not found for row', index);
+    return;
+  }
+
+  const frontFiles: File[] = row.get('frontFiles')?.value || [];
+  const backFiles: File[] = row.get('backFiles')?.value || [];
+
+  // Only validate if front file exists
+  if (!frontFiles.length) return;
+
+  const formData = new FormData();
+  formData.append('DocNo', docketNo);
+
+  frontFiles.forEach((file: File) => {
+    formData.append('PodFile', file);
+  });
+
+  // If backend needs back also
+  backFiles.forEach((file: File) => {
+    formData.append('PodBackFile', file);
+  });
+
+  this.deliveryUpdateService.checkPODValidation(formData).subscribe({
+    next: (response: any) => {
+      if (response?.success) {
+        row.patchValue({ podValidated: true });
+      } else {
+        this.sweetAlertService.error(
+          `POD validation failed for Dock No ${docketNo}`
+        );
+      }
+    },
+    error: (error) => {
+      this.sweetAlertService.error(
+        error?.error?.message || `Error validating POD for Dock No ${docketNo}`
+      );
+    }
+  });
+}
+
+isPodFrontRequired(index: number): boolean {
+  const row = this.stockUpdateArray.at(index);
+  if (!row) return false;
+
+  const deliveryProcess = row.get('deliveryProcess')?.value;
+  const frontFiles = row.get('frontFiles')?.value;
+
+  // Return true only if deliveryProcess is '2' and frontFiles is empty
+  return deliveryProcess === '2' && (!frontFiles || frontFiles.length === 0);
+}
+
+  toggleAll(event: any) {
+    const checked = event.target.checked;
+    this.stockUpdateArray.controls.forEach(row => row.get('IsPartStockUpdate')?.setValue(checked));
+  }
+
+  isAllSelected(): boolean {
+    return this.stockUpdateArray.controls.every(row => row.get('IsPartStockUpdate')?.value);
+  }
+
   stockUpdate() {
+     const selectedRows = this.stockUpdateArray.controls
+      .filter(row => row.get('IsPartStockUpdate')?.value)
+      .map(row => row.value);
+
+    console.log('Selected Rows:', selectedRows);
     if (this.stockUpdateForm.valid) {
     } else {
       this.stockUpdateForm.markAllAsTouched();

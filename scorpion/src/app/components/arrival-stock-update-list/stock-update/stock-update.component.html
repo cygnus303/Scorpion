@@ -108,13 +108,13 @@
                     <tr>
                         <th class="align-top p-1">
                             <div>Single<br>Stock Update</div>
-                            <input type="checkbox" class="form-check-input fs-5">
+                            <input type="checkbox" class="form-check-input fs-5"  [checked]="isAllSelected()" (change)="toggleAll($event)">
                         </th>
                         <th class="align-top p-1">
                             <div class="fw-semibold small mb-1"> Damage / Pilferage</div>
                             <div class="d-flex justify-content-center align-items-center gap-3">
-                                <input class="form-check-input fs-5" type="checkbox" formControlName="hDamage" (change)="onHeaderDamageChange()">
-                                <input class="form-check-input fs-5" type="checkbox" formControlName="hPilferage" (change)="onHeaderPilferageChange()">
+                                <input class="form-check-input fs-5" type="checkbox" formControlName="hDamage" (change)="onHeaderDamageChange()" [class.disabled-input]="isAllGoodChecked" >
+                                <input class="form-check-input fs-5" type="checkbox" formControlName="hPilferage" (change)="onHeaderPilferageChange()" [class.disabled-input]="isAllGoodChecked">
                             </div>
                         </th>
                         <th>MF #</th>   
@@ -142,11 +142,11 @@
                 <tbody  formArrayName="stockUpdateList">
                     <ng-container *ngFor="let row of stockUpdateArray.controls; let i = index" [formGroupName]="i">
                     <tr>
-                        <td class="text-center"><input type="checkbox" class="form-check-input fs-5" formControlName="selected"></td>
+                        <td class="text-center"><input type="checkbox" class="form-check-input fs-5" formControlName="IsPartStockUpdate"></td>
                         <td class="text-center"  style="width: 300px;">
                             <div class="d-flex justify-content-center align-items-center gap-3">
-                                 <input type="checkbox" class="form-check-input fs-5" formControlName="damage" (change)="onRowDamageChange(i)">
-                                <input type="checkbox" class="form-check-input fs-5" formControlName="pilferage" (change)="onRowPilferageChange(i)">
+                                 <input type="checkbox" class="form-check-input fs-5" formControlName="damage" (change)="onRowDamageChange(i)" [class.disabled-input]="isAllGoodChecked">
+                                <input type="checkbox" class="form-check-input fs-5" formControlName="pilferage" (change)="onRowPilferageChange(i)" [class.disabled-input]="isAllGoodChecked">
                             </div>
                         </td>
                         <td class="fw-semibold">{{ row.value.mfNo }}</td>
@@ -155,7 +155,7 @@
                             <small class="text-muted">{{ row.value.route }}</small>
                         </td>
                         <td>
-                            <div>{{ row.value.bookingDate }}</div>
+                            <div>{{ row.value.bookingDate | date:'dd/MM/yyyy'}}</div>
                             <small class="text-muted">{{ row.value.committedDate }}</small>
                         </td>
                         <td class="text-start text-danger fw-semibold"> {{ row.value.pkgs }}<br>{{ row.value.weight }}</td>
@@ -177,20 +177,70 @@
                      <tr *ngIf="row.get('deliveryProcess')?.value === '2'">
                         <td class="text-center">POD :-</td>
                         <td>
-                            <button type="button" class="btn btn-outline-primary btn-sm">
-                                ⬆ POD Front UPLOAD
-                            </button>
+                            <ng-container *ngIf="stockUpdateArray.at(i).value.frontPreview; else frontUpload">
+                                <div class="d-flex align-items-center gap-2">
+                                    <img [src]="stockUpdateArray.at(i).value.frontPreview" class="img-thumbnail"
+                                        style="width:55px;height:55px;object-fit:cover" />
+                        
+                                    <div class="d-flex flex-column gap-1">
+                                        <button type="button" class="btn btn-light btn-sm" (click)="frontInput.click()">
+                                            Change
+                                        </button>
+                        
+                                        <button type="button" class="btn btn-light btn-sm text-danger" (click)="removeFile(i, 'FRONT')">
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        
+                            <ng-template #frontUpload>
+                                <button type="button" class="btn btn-outline-primary btn-sm" (click)="frontInput.click()">
+                                    ⬆ POD Front UPLOAD
+                                </button>
+                        
+                                <div class="text-danger small mt-1"*ngIf="isPodFrontRequired(i)">
+                                    POD Front is required
+                                </div>
+                            </ng-template>
+                        
+                            <input type="file" #frontInput hidden accept="image/*" (change)="onFileSelected($event, i, 'FRONT')" />
                         </td>
-                         <td colspan="2">
-                            <button type="button" class="btn btn-outline-primary btn-sm">
+
+                        <td colspan="2">
+                            <ng-container *ngIf="stockUpdateArray.at(i).value.backPreview; else backUpload">
+                                <div class="d-flex align-items-center gap-2">
+                                    <img [src]="stockUpdateArray.at(i).value.backPreview" class="img-thumbnail"
+                                        style="width:55px;height:55px;object-fit:cover" />
+                        
+                                    <div class="d-flex flex-column gap-1">
+                                        <button type="button" class="btn btn-light btn-sm" (click)="backInput.click()">
+                                            Change
+                                        </button>
+                        
+                                        <button type="button" class="btn btn-light btn-sm text-danger" (click)="removeFile(i, 'BACK')">
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        
+                            <ng-template #backUpload>
+                                <button type="button" class="btn btn-outline-primary btn-sm" (click)="backInput.click()">
                                     ⬆ POD Back UPLOAD
                                 </button>
+                            </ng-template>
+                        
+                            <input type="file" #backInput hidden accept="image/*" (change)="onFileSelected($event, i, 'BACK')" />
                         </td>
+
                         <td colspan="5">
                             <div class="row">
                                 <label class="col-sm-3 col-form-label text-end">Delivery Date & Time:</label>
                                 <div class="col-sm-9 text-start">
-                                    <input class="form-control" placeholder="Delivery Date & Time" type="date">
+                                    <app-date-time-picker controlName="DELYDATE" [maxDate]="maxDate" [placeholder]="'Delivery Date & Time'"
+                                        [minDate]="row.value.bookingDate">
+                                    </app-date-time-picker>
                                 </div>
                             </div>
                         </td>
@@ -289,6 +339,9 @@
                                         <div class="text-danger text-start" *ngIf="row.get('pilferageQty')?.hasError('min')">
                                             Please enter a value greater than or equal to 1.
                                         </div>
+                                        <div class="text-danger text-start" *ngIf="row.get('pilferageQty')?.errors?.['max']">
+                                            Please enter a value less than or equal to {{ row.value.pkgs }}.
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -363,6 +416,9 @@
                                         <div class="text-danger text-start" *ngIf="row.get('damageQty')?.hasError('min')">
                                             Please enter a value greater than or equal to 1.
                                         </div>
+                                        <div class="text-danger text-start" *ngIf="row.get('damageQty')?.errors?.['max']">
+                                            Please enter a value less than or equal to {{ row.value.pkgs }}.
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -432,7 +488,7 @@
                             <div class="row">
                                 <label class="col-sm-3 col-form-label text-end">Severity:</label>
                                 <div class="col-sm-9 text-start">
-                                      <input class="clear-icon" placeholder="Severity"  formControlName="severity"
+                                      <input class="clear-icon" placeholder="Severity" class="form-control" formControlName="severity"
                                        [ngClass]="{ 'border-danger': row.get('severity')?.invalid  && row.get('severity')?.touched }">
                                       <div *ngIf="row.get('severity')?.touched && row.get('severity')?.errors">
                                         <div class="text-danger text-start" *ngIf="row.get('severity')?.hasError('required')">
@@ -457,10 +513,19 @@
                 </div>
             
                 <div class="form-check">
-                    <input class="form-check-input fs-5" type="checkbox" id="deps">
+                    <input class="form-check-input fs-5" type="checkbox" id="deps" formControlName="IsAllgood" [class.disabled-input]="isPilferageDamage">
                     <label class="form-check-label fw-semibold text-primary-color" for="deps">
                         There is No DEPS
                     </label>
+                </div>
+            
+                <div class="text-start" *ngIf="isAllGoodChecked">
+                    <div class="row">
+                        <label class="form-check-label fw-semibold text-primary-color">Remarks:</label>
+                        <div class="col-sm-12 text-start">
+                            <textarea rows="3" class="form-check-input fs-5 form-control" placeholder="Remarks"></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -481,7 +546,7 @@
             <button class="btn btn-secondary controls"> <i class="fas fa-arrow-left"></i>&nbsp;Back to Stock Update</button>
             <button type="button" id="btnSubmit" class="btn btn-success controls" (click)="stockUpdate()"><i class="fas fa-check"></i>&nbsp;Stock Update</button>
         </div>
-        <p style="color:red;">Select atleast one CNote to see the <strong>Submit</strong> button.</p>
+        <!-- <p style="color:red;">Select atleast one CNote to see the <strong>Submit</strong> button.</p> -->
       </div>
     </div>
     
