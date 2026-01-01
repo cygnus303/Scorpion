@@ -10,6 +10,7 @@ import { GeneralMasterService } from 'app/shared/services/general-master.service
 import { StockUpdateService } from 'app/shared/services/stock-update.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { SharedModule } from 'app/shared/shared/shared.module';
+import { environment } from 'environments/environment';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @Component({
@@ -20,6 +21,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
   styleUrl: './stock-update.component.scss'
 })
 export class StockUpdateComponent {
+env = environment;
 public unloaderUsers:UnloaderUsers[]=[];
 public notUnloaderName:string='Enter at least 3 characters';
 public stockUpdateForm!:FormGroup;
@@ -30,6 +32,8 @@ public selectedPilferageImage: string | ArrayBuffer | null = null;
 public selectedDamageImage: string | ArrayBuffer | null = null;
 public stockData:any;
 public maxDate = new Date();
+public isSubmitting: boolean = false;
+public isRedirect: boolean = false; 
 conditionList = [
   { text: 'GOOD', value: 1 },
   { text: 'SHORT', value: 2 },
@@ -56,6 +60,9 @@ conditionList = [
       hPilferage: new FormControl(false),
       IsAllgood: new FormControl(false),
       hDeliveryProcess : new FormControl(null),
+      ISCheckRemarks : new FormControl(null),
+      UnLoaderName: new FormControl(null,Validators.required),
+      UnLoadingSupervisor: new FormControl(null,Validators.required),
       stockUpdateList: new FormArray([]),
       UpdateDate:new FormControl(this.getCurrentDateTime())
     });
@@ -82,7 +89,6 @@ conditionList = [
   }
 
   get isAllGoodChecked() {
-    debugger
   return this.stockUpdateForm.get('IsAllgood')?.value;
 }
 
@@ -447,7 +453,7 @@ onRowDamageChange(index: number) {
     arrivedWt: new FormControl({ value: item.actuwt, disabled: true }),
 
     condition: new FormControl(1),
-    warehouse: new FormControl(null),
+    warehouse: new FormControl(item.desT_CD),
     deliveryProcess: new FormControl(null),
 
     shortQty: new FormControl(item.shortageQty || 0),
@@ -478,7 +484,13 @@ onRowDamageChange(index: number) {
 
     podValidated: new FormControl(false),
     bkG_PKGSNO:new FormControl(item.bkG_PKGSNO),
-    bkG_ACTUWT:new FormControl(item.bkG_ACTUWT)
+    bkG_ACTUWT:new FormControl(item.bkG_ACTUWT),
+    invvalue:new FormControl(item.invvalue),
+   arrPkgQty:new FormControl(item.arrPkgQty),
+   actarrv_dt:new FormControl(item.actarrv_dt),
+   isShort:new FormControl(item.isShort),
+   delPkgQty:new FormControl(item.delPkgQty),
+      isAllgood:new FormControl(item.isAllgood),
   });
 }
 
@@ -602,20 +614,181 @@ isPodFrontRequired(index: number): boolean {
     return this.stockUpdateArray.controls.every(row => row.get('IsPartStockUpdate')?.value);
   }
 
-  stockUpdate() {
-     const selectedRows = this.stockUpdateArray.controls
-      .filter(row => row.get('IsPartStockUpdate')?.value)
-      .map(row => row.value);
+formatDate(date: Date): string {
+  const d = new Date(date);
+  return d.toISOString();
+}
 
-    console.log('Selected Rows:', selectedRows);
-    if (this.stockUpdateForm.valid) {
-    } else {
-      this.stockUpdateForm.markAllAsTouched();
+stockUpdate() {
+  /* ================= SELECTED ROWS PAYLOAD ================= */
+  const selectedControls = this.stockUpdateArray.controls.filter(row => row.get('IsPartStockUpdate')?.value === true);
+  const payload = selectedControls.map(row => {
+    const v = row.value;
+    return {
+      invvalue: v.invvalue,
+      actuwt: v.weight,
+      bkG_ACTUWT: v.bkG_ACTUWT,
+      isPartStockUpdate: true,
+      dockdt: this.formatDate(v.bookingDate),
+      cdelydt: v.committedDate,
+      tcno: v.mfNo,
+      dockNo: v.docketNo,
+      orgncd: v.route?.split(' - ')[0],
+      desT_CD: v.desT_CD,
+      bizType: v.bizType,
+      service_Class: v.serviceType,
+      pkgsno: v.pkgs,
+      bkG_PKGSNO: v.bkG_PKGSNO,
+      arrPkgQty: v.arrivedPkgs,
+      actarrv_dt: v.actarrv_dt,
+      isShort: v.shortQty > 0,
+      shortageQty: v.shortQty,
+      shortageWeight: v.shortWt,
+      shortageReason: v.shortReason,
+      shortageRemarks: v.shortRemarks,
+      shortFileName: v.shortFile ? v.shortFile.name : null,
+      isPilferage: v.pilferageQty > 0,
+      pilferageQty: v.pilferageQty,
+      pilferageWeight: v.pilferageWt,
+      pilferageReason: v.pilferageReason,
+      pilferageRemarks: v.pilferageRemarks,
+      pilferageFileName: v.pilferageFile ? v.pilferageFile.name : null,
+      isDamage: v.damageQty > 0,
+      damageQry: v.damageQty,
+      damageWeight: v.damageWt,
+      damageReason: v.damageReason,
+      damageType: v.damageType,
+      severity: v.severity,
+      damageFileName: v.damageFile ? v.damageFile.name : null,
+      delPkgQty: v.delPkgQty,
+      delydate: v.DELYDATE,
+      delytime: v.DELYDATE,
+      isFTLDelivery: v.isFTLDelivery,
+      isAllgood: v.isAllgood,
+      updateDate: new Date(),
+      isMobileUser: 'N'
+    };
+  });
+  debugger;
+  /* ================= FORM DATA ================= */
+  const formData = new FormData();
+  formData.append("ViewModel.VSFUM.CDELYDT", this.stockData?.cdelydt);
+  formData.append("ViewModel.VSFUM.PKGSNO", this.stockData?.pkgsno);
+  formData.append("ViewModel.VSFUM.DockSF", this.stockData?.dockSF);
+  formData.append("ViewModel.VSFUM.BKG_PKGSNO", this.stockData?.bkG_PKGSNO);
+  formData.append("ViewModel.VSFUM.CODDOD", this.stockData?.coddod);
+  formData.append("ViewModel.VSFUM.CODDODAmount", this.stockData?.coddodAmount);
+  formData.append("ViewModel.VSFUM.ACTUWT", this.stockData?.actuwt);
+  formData.append("ViewModel.VSFUM.BKG_ACTUWT", this.stockData?.bkG_ACTUWT);
+  formData.append("ViewModel.VSFUM.TCNO", this.stockData?.tcno);
+  formData.append("ViewModel.VSFUM.DockNo", this.stockData?.dockNo);
+  formData.append("ViewModel.VSFUM.DOCKDT", this.stockData?.dockdt);
+  formData.append("ViewModel.VSFUM.CODDODCOLLECTED", this.stockData?.coddodcollected);
+  formData.append("ViewModel.VSFUM.ShortageQty", this.stockData?.shortageQty);
+  formData.append("ViewModel.VSFUM.PilferageQty", this.stockData?.pilferageQty);
+  formData.append("ViewModel.VSFUM.PilferageWeight", this.stockData?.pilferageWeight);
+  formData.append("ViewModel.VSFUM.ShortageWeight", this.stockData?.shortageWeight);
+  formData.append("ViewModel.VSFUM.IsCODDODChar", this.stockData?.isCODDODChar);
+
+  formData.append("ViewModel.VSFUM.AC", '');
+  formData.append("ViewModel.VSFUM.WI", '');
+  formData.append("ViewModel.VSFUM.DP", '');
+  formData.append("ViewModel.VSFUM.DELYREASON", '');
+  formData.append("ViewModel.VSFUM.DELYPERSON", '');
+  formData.append("ViewModel.VSFUM.ShortageReason", '');
+  formData.append("ViewModel.VSFUM.ShortageRemarks", '');
+  formData.append("ViewModel.VSFUM.PilferageReason", '');
+  formData.append("ViewModel.VSFUM.PilferageRemarks", '');
+  formData.append("ViewModel.VSFUM.DamageReason", '');
+  formData.append("ViewModel.VSFUM.DamageRemarks", '');
+  formData.append("ViewModel.VSFUM.DamageFileName", '');
+  formData.append("ViewModel.VSFUM.PilferageFileName", '');
+  formData.append("ViewModel.VSFUM.ShortFileName", '');
+  formData.append("ViewModel.VSFUM.DamageType", '');
+  formData.append("ViewModel.VSFUM.Severity", '');
+
+  formData.append("ViewModel.VSFUM.DamageQry", this.stockData?.damageQry);
+  formData.append("ViewModel.VSFUM.DamageWeight", this.stockData?.damageWeight);
+  formData.append("ViewModel.VSFUM.ISCounterDelivery", this.stockData?.isCounterDelivery);
+  formData.append("ViewModel.VSFUM.IsPartStockUpdate", this.stockData?.isPartStockUpdate);
+  formData.append("ViewModel.VSFUM.AutoNo", this.stockData?.autoNo);
+  formData.append("ViewModel.VSFUM.DELYDATE", this.stockUpdateForm.value.UpdateDate);
+  formData.append("ViewModel.VSFUM.THCNO", this.stockData?.thcno);
+  formData.append("ViewModel.VSFUM.THC_NextLoc", this.docketService.loginUserList.LocationCode);
+  formData.append("ViewModel.VSFUM.UnLoadingSupervisor", this.stockUpdateForm.value.UnLoadingSupervisor);
+  formData.append("ViewModel.VSFUM.UnLoaderName", this.stockUpdateForm.value.UnLoaderName);
+  formData.append("ViewModel.VSFUM.UpdateDate", this.stockUpdateForm.value.UpdateDate);
+  formData.append("ViewModel.VSFUM.IsAllgood", this.stockUpdateForm.value.IsAllgood);
+  formData.append("ViewModel.VSFUM.ISCheckRemarks", this.stockUpdateForm.value.ISCheckRemarks);
+  formData.append("BaseUserName", this.docketService.loginUserList.BaseUserName);
+  formData.append("BaseFinYear", this.docketService.loginUserList.FinYear);
+
+  /* ================= JSON ================= */
+  formData.append("StockUpdateList", JSON.stringify(payload));
+
+  /* ================= FILES ================= */
+  selectedControls.forEach((row, index) => {
+    const v = row.value;
+
+    if (v.shortFile) {
+      formData.append("ShortFiles", v.shortFile,
+        `${v.docketNo}_SHORT_${index}_${v.shortFile.name}`);
     }
+
+    if (v.pilferageFile) {
+      formData.append("PilferageFiles", v.pilferageFile,
+        `${v.docketNo}_PILFERAGE_${index}_${v.pilferageFile.name}`);
+    }
+
+    if (v.damageFile) {
+      formData.append("DamageFiles", v.damageFile,
+        `${v.docketNo}_DAMAGE_${index}_${v.damageFile.name}`);
+    }
+
+    if (v.frontFiles?.length) {
+      v.frontFiles.forEach((file: File, i: number) => {
+        formData.append("PodFrontFiles", file,
+          `${v.docketNo}_POD_FRONT_${i}_${file.name}`);
+      });
+    }
+
+    if (v.backFiles?.length) {
+      v.backFiles.forEach((file: File, i: number) => {
+        formData.append("PodBackFiles", file,
+          `${v.docketNo}_POD_BACK_${i}_${file.name}`);
+      });
+    }
+  });
+
+  console.log('Final Payload:', payload);
+  this.isSubmitting = false;
+  /* ================= SUBMIT ================= */
+  if (this.stockUpdateForm.valid) {
+    this.stockUpdateService.onStockupdate(formData).subscribe({
+      next: (response: any) => {
+        if (response) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          // this.successMsg = 'submitted successfully.'
+            this.isRedirect = true;
+          // https://sepluat.cygnux.in/Operation/ArrivalUpdateDone?ThcNo=VH%2FBLR%2F2526%2F000981&TranXaction=True&view=Stock%20Update&DepsId=DE%2FPIM%2F2526%2F0000018
+          window.parent.location.href = `${this.env.liveUrl}Operation/ArrivalUpdateDone?ThcNo=${this.stockData?.thcno}&TranXaction=True&view=StockUpdate&DepsId=${response.depsId}&src=angular`;
+          this.stockUpdateForm.reset();
+        }
+        this.isSubmitting = false;
+      },
+      error: (error) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // this.submitErrorMsg = error?.error?.message;
+        this.isSubmitting = false; // ✅ loader stop on error
+         this.isRedirect = true;
+      }
+    });
+  } else {
+    this.stockUpdateForm.markAllAsTouched();
   }
+}
 
   onArrPkgQtyBlur(index: number) {
-    debugger
   const row = this.stockUpdateArray.at(index) as FormGroup;
 
   const arrPkgQty = Number(row.get('arrivedPkgs')?.value || 0);
@@ -656,8 +829,8 @@ isPodFrontRequired(index: number): boolean {
     row.get('shortReason')?.setValidators(Validators.required);
     row.get('ShortageRemarks')?.setValidators(Validators.required);
 
-    this.stockUpdateForm.get('IsAllgood')?.disable();
-    this.stockUpdateForm.get('IsAllgood')?.reset();
+    // this.stockUpdateForm.get('IsAllgood')?.disable();
+    // this.stockUpdateForm.get('IsAllgood')?.reset();
 
     this.showShortageSection[index] = true;
 
@@ -678,7 +851,7 @@ isPodFrontRequired(index: number): boolean {
     row.get('shortReason')?.updateValueAndValidity();
     row.get('ShortageRemarks')?.updateValueAndValidity();
 
-    this.stockUpdateForm.get('IsAllgood')?.enable();
+    // this.stockUpdateForm.get('IsAllgood')?.enable();
     this.showShortageSection[index] = false;
   }
 }

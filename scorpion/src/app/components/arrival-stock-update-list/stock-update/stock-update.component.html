@@ -64,7 +64,7 @@
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
                             <div class="input-group"  >
                                 <app-date-time-picker controlName="UpdateDate" [maxDate]="docketService.bsValue"  [placeholder]="'Vehicle Arrival Date & Time'">
-                        </app-date-time-picker>
+                              </app-date-time-picker>
                             </div>
                         </div>
                     </div>
@@ -75,9 +75,13 @@
                         <div class="col-sm-7 text-start">
                             <ng-select placeholder="Search Unloader" 
                                 (open)="resetUnloaderDropdown()" (search)="stockUpdateUsers($event)" [notFoundText]="notUnloaderName"
-                                [clearable]="true">
+                                [clearable]="true" formControlName="UnLoaderName" 
+                                [ngClass]="{'border-danger':stockUpdateForm.get('UnLoaderName')?.invalid && stockUpdateForm.get('UnLoaderName')?.touched}">
                                 <ng-option *ngFor="let data of unloaderUsers" [value]="data.userId">{{data.userId}} : {{data.name}}</ng-option>
                             </ng-select>
+                            <div class="text-danger small mt-1" *ngIf="stockUpdateForm.get('UnLoaderName')?.touched && stockUpdateForm.get('UnLoaderName')?.hasError('required')">
+                                Unloader Name is required
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -87,9 +91,14 @@
                         <div class="col-sm-7 text-start">
                              <ng-select placeholder="UnLoading Supervisor" 
                                 (open)="resetUnloaderDropdown()" (search)="stockUpdateUsers($event)" [notFoundText]="notUnloaderName"
-                                [clearable]="true">
+                                [clearable]="true" formControlName="UnLoadingSupervisor"
+                                [ngClass]="{'border-danger':stockUpdateForm.get('UnLoadingSupervisor')?.invalid && stockUpdateForm.get('UnLoadingSupervisor')?.touched}">
                                 <ng-option *ngFor="let data of unloaderUsers" [value]="data.userId">{{data.userId}} : {{data.name}}</ng-option>
                             </ng-select>
+                            <div class="text-danger small mt-1" *ngIf="stockUpdateForm.get('UnLoadingSupervisor')?.touched &&
+                                           stockUpdateForm.get('UnLoadingSupervisor')?.hasError('required')">
+                                UnLoading Supervisor is required
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -531,12 +540,12 @@
     
             <!-- CHECKBOX FOOTER -->
             <div class="d-flex flex-wrap gap-4 mt-3 p-4 justify-content-center">
-                <div class="form-check">
+                <!-- <div class="form-check">
                     <input class="form-check-input fs-5" type="checkbox" id="misroute">
                     <label class="form-check-label fw-semibold text-primary-color" for="misroute">
                         Misroute / Interchange
                     </label>
-                </div>
+                </div> -->
             
                 <div class="form-check">
                     <input class="form-check-input fs-5" type="checkbox" id="deps" formControlName="IsAllgood" [class.disabled-input]="isPilferageDamage">
@@ -549,7 +558,7 @@
                     <div class="row">
                         <label class="form-check-label fw-semibold text-primary-color">Remarks:</label>
                         <div class="col-sm-12 text-start">
-                            <textarea rows="3" class="form-check-input fs-5 form-control" placeholder="Remarks"></textarea>
+                            <textarea rows="3" class="form-check-input fs-5 form-control" placeholder="Remarks" formControlName="ISCheckRemarks" ></textarea>
                         </div>
                     </div>
                 </div>
@@ -570,9 +579,15 @@
       <div class="d-grid justify-content-center">
           <div class="d-flex  gap-2">
             <button class="btn btn-secondary controls"> <i class="fas fa-arrow-left"></i>&nbsp;Back to Stock Update</button>
-            <button type="button" id="btnSubmit" class="btn btn-success controls" (click)="stockUpdate()"><i class="fas fa-check"></i>&nbsp;Stock Update</button>
+            <button type="button" id="btnSubmit" class="btn btn-success controls"  [disabled]="isSubmitting || isRedirect" (click)="stockUpdate()"><i class="fas fa-check"></i>&nbsp;Stock Update</button>
         </div>
         <!-- <p style="color:red;">Select atleast one CNote to see the <strong>Submit</strong> button.</p> -->
       </div>
     </div>
     
+      <div *ngIf="isSubmitting" class="loading-overlay">
+        <div class="spinner-container">
+            <i class="fas fa-spinner fa-spin custom-spinner"></i>
+            <div class="mt-3 custom-text">Submitting...</div>
+        </div>
+    </div>

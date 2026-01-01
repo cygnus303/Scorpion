@@ -32,4 +32,8 @@ constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerServ
   getStockUpdateDetail(params:any){
      return this.apiHandlerService.Get(`THC/stockupdatedetails?id=${params.id}&BaseLocationCode=${params.baseLocationCode}`);
   }
+
+    onStockupdate(formData: any) {
+    return this.apiHandlerService.Post(`THC/stockupdate`, formData);
+  }
 }
