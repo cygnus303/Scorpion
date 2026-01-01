@@ -25,7 +25,9 @@ public notUnloaderName:string='Enter at least 3 characters';
 public stockUpdateForm!:FormGroup;
 public warehouseList:WarehouseList[]=[];
 public showShortageSection: boolean[] = [];
-
+public selectedImage: string | ArrayBuffer | null = null;
+public selectedPilferageImage: string | ArrayBuffer | null = null;
+public selectedDamageImage: string | ArrayBuffer | null = null;
 public stockData:any;
 public maxDate = new Date();
 conditionList = [
@@ -324,24 +326,50 @@ onArrivedPkgsChange(index: number) {
 }
 
 
-  onPilferageFileChange(event: any, row: any) {
-  const file = event.target.files?.[0] || null;
-  row.get('pilferageFile')?.setValue(file);
-  row.get('pilferageFile')?.markAsTouched();
-}
+  onPilferageFileChange(event: Event, row: any): void {
+    const input = event.target as HTMLInputElement;
+    const file = input?.files?.[0];
+    if (file) {
+      // Set the file to the form control
+      row.get('pilferageFile')?.setValue(file);
+      // Create a FileReader to load and preview the image
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.selectedPilferageImage = reader.result;  // Store the image preview data URL
+      };
+      reader.readAsDataURL(file);  // Read the file as a data URL for the image preview
+    }
+  }
 
-  onShortFileChange(event: any, row: any) {
-  const file = event.target.files?.[0] || null;
-  row.get('shortFile')?.setValue(file);
-  row.get('shortFile')?.markAsTouched();
-}
+  onShortFileChange(event: Event, row: any): void {
+    const input = event.target as HTMLInputElement;
+    const file = input?.files?.[0];
+    if (file) {
+      // Update the form control with the file
+      row.get('shortFile')?.setValue(file);
+      // Show the selected image preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.selectedImage = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
 
- onDamageFileChange(event: any, row: any) {
-  const file = event.target.files?.[0] || null;
-  row.get('damageFile')?.setValue(file);
-  row.get('damageFile')?.markAsTouched();
-}
-
+  onDamageFileChange(event: Event, row: any): void {
+    const input = event.target as HTMLInputElement;
+    const file = input?.files?.[0];
+    if (file) {
+      // Set the file to the form control
+      row.get('damageFile')?.setValue(file);
+      // Create a FileReader to load and preview the image
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.selectedDamageImage = reader.result;  // Store the image preview data URL
+      };
+      reader.readAsDataURL(file);  // Read the file as a data URL for the image preview
+    }
+  }
 
 onRowPilferageChange(index: number) {
   const row = this.stockUpdateArray.at(index) as FormGroup;

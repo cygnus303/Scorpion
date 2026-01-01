@@ -305,24 +305,30 @@
                                 </div>
                             </div>
                         </td>
-                    <td colspan="2">
-                        <div class="row">
-                            <label class="col-sm-7 col-form-label text-end">File Upload:</label>
-                            <div class="col-sm-5 text-start">
-                                <button type="button" class="btn btn-outline-primary btn-sm" [ngClass]="{'border-danger':row.get('shortFile')?.invalid && row.get('shortFile')?.touched }" (click)="shortFileInput.click()">
-                                    Select
-                                </button>
-                                <input type="file" #shortFileInput hidden (change)="onShortFileChange($event, row)"
-                                 [ngClass]="{'border-danger':row.get('shortFile')?.invalid && row.get('shortFile')?.touched }">
-                                 <div *ngIf="row.get('shortFile')?.touched && row.get('shortFile')?.errors">
+                        <td colspan="2">
+                            <div class="row">
+                                <label class="col-sm-7 col-form-label text-end">File Upload:</label>
+                                <div class="col-sm-5 text-start">
+                                    <button type="button" class="btn btn-outline-primary btn-sm"
+                                        [ngClass]="{'border-danger': row.get('shortFile')?.invalid && row.get('shortFile')?.touched }"
+                                        (click)="shortFileInput.click()">
+                                        Select
+                                    </button>
+                                    <!-- Display the selected image -->
+                                    <div *ngIf="selectedImage">
+                                        <img [src]="selectedImage" alt="Selected Image" class="img-thumbnail mt-2" style="width:55px;height:55px;object-fit:cover">
+                                    </div>
+                                    <input type="file" #shortFileInput hidden (change)="onShortFileChange($event, row)"
+                                        [ngClass]="{'border-danger': row.get('shortFile')?.invalid && row.get('shortFile')?.touched }">
+                                    <div *ngIf="row.get('shortFile')?.touched && row.get('shortFile')?.errors">
                                         <div class="text-danger text-start" *ngIf="row.get('shortFile')?.hasError('required')">
                                             File is required.
                                         </div>
                                     </div>
+                                    
+                                </div>
                             </div>
-                        </div>
-                    </td>
-
+                        </td>
                     </tr>
                     <tr *ngIf="row.get('pilferage')?.value">
                         <td class="text-center">Pilferage :-</td>
@@ -385,21 +391,27 @@
                                 </div>
                             </div>
                         </td>
-                        <td colspan="2">
-                            <div class="row">
-                                <label class="col-sm-7 col-form-label text-end">File Upload:</label>
-                        
-                                <div class="col-sm-5 text-start">
-                                    <button type="button" class="btn btn-outline-primary btn-sm" (click)="pilferageFileInput.click()">
-                                        Select
-                                    </button>
-                                    <input type="file" #pilferageFileInput hidden (change)="onPilferageFileChange($event, i)" [ngClass]="{ 'border-danger': row.get('pilferageFile')?.invalid && row.get('pilferageFile')?.touched}">
-                                    <div *ngIf="row.get('pilferageFile')?.touched && row.get('pilferageFile')?.errors">
-                                        <div class="text-danger text-start">File is required</div>
-                                    </div>
+                    <td colspan="2">
+                        <div class="row">
+                            <label class="col-sm-7 col-form-label text-end">File Upload:</label>
+                            <div class="col-sm-5 text-start">
+                                <button type="button" class="btn btn-outline-primary btn-sm" (click)="pilferageFileInput.click()">
+                                    Select
+                                </button>
+                                <input type="file" #pilferageFileInput hidden (change)="onPilferageFileChange($event, row)"
+                                    [ngClass]="{ 'border-danger': row.get('pilferageFile')?.invalid && row.get('pilferageFile')?.touched}">
+                                <div *ngIf="row.get('pilferageFile')?.touched && row.get('pilferageFile')?.errors">
+                                    <div class="text-danger text-start">File is required</div>
+                                </div>
+                                <!-- Display the selected image if available -->
+                                <div *ngIf="selectedPilferageImage">
+                                    <img [src]="selectedPilferageImage" alt="Selected File" class="img-thumbnail mt-2"
+                                        style="width:55px;height:55px;object-fit:cover">
                                 </div>
                             </div>
-                        </td>
+                        </div>
+                    </td>
+
                     </tr>
                      <tr *ngIf="row.get('damage')?.value">
                         <td class="text-center">Damage  :-</td>
@@ -454,20 +466,27 @@
                                 </div>
                             </div>
                         </td>
-                    <td colspan="1">
-                        <div class="row">
-                            <label class="col-sm-7 col-form-label">File Upload:</label>
-                            <div class="col-sm-5 text-start">
-                                <button type="button" class="btn btn-outline-primary btn-sm" (click)="damageFileInput.click()">
-                                    Select
-                                </button>
-                                <input type="file" #damageFileInput hidden (change)="onDamageFileChange($event, i)" [ngClass]="{ 'border-danger': row.get('damageFile')?.invalid && row.get('damageFile')?.touched}">
-                                <div *ngIf="row.get('damageFile')?.touched && row.get('damageFile')?.errors">
-                                    <div class="text-danger text-start">File is required</div>
+                            <td colspan="1">
+                                <div class="row">
+                                    <label class="col-sm-7 col-form-label">File Upload:</label>
+                                    <div class="col-sm-5 text-start">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" (click)="damageFileInput.click()">
+                                            Select
+                                        </button>
+                                        <input type="file" #damageFileInput hidden (change)="onDamageFileChange($event, row)"
+                                            [ngClass]="{ 'border-danger': row.get('damageFile')?.invalid && row.get('damageFile')?.touched}">
+                                        <div *ngIf="row.get('damageFile')?.touched && row.get('damageFile')?.errors">
+                                            <div class="text-danger text-start">File is required</div>
+                                        </div>
+                                        <!-- Display the selected image or file preview if available -->
+                                        <div *ngIf="selectedDamageImage">
+                                            <img [src]="selectedDamageImage" alt="Selected File" class="img-thumbnail mt-2"
+                                               style="width:55px;height:55px;object-fit:cover">
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </td>
+                            </td>
+
 
                           <td colspan="2">
                             <div class="row">
