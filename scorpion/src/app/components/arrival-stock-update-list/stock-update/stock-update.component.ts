@@ -144,8 +144,8 @@ onDamageQtyChange(index: number): void {
   const totalWt = Number(row.get('bkG_ACTUWT')?.value || 0);
 
   if (damageQty < totalPkgs && totalPkgs > 0 && totalWt > 0) {
-    const avgWt = totalWt / totalPkgs;
-    const damageWeight = Math.round(avgWt * damageQty);
+    const avgWt = Math.floor(totalWt / totalPkgs);
+    const damageWeight = Math.floor(avgWt * damageQty);
 
     row.patchValue({
       damageWt: damageWeight
@@ -158,6 +158,13 @@ onDamageQtyChange(index: number): void {
   }
 }
 
+hasAnyPartStockUpdate(): boolean {
+  return this.stockUpdateArray.controls.some(
+    row => row.get('IsPartStockUpdate')?.value === true
+  );
+}
+
+
 onPilferageQtyChange(index: number): void {
   const row = this.stockUpdateArray.at(index) as FormGroup;
 
@@ -167,8 +174,8 @@ onPilferageQtyChange(index: number): void {
   const totalWt = Number(row.get('bkG_ACTUWT')?.value || 0);
 
   if (pilferageQty <= pkgsNo && totalPkgs > 0 && totalWt > 0) {
-    const avgWt = totalWt / totalPkgs;
-    const pilferageWeight = Math.round(avgWt * pilferageQty);
+    const avgWt = Math.floor(totalWt / totalPkgs);
+    const pilferageWeight = Math.floor(avgWt * pilferageQty);
 
     row.patchValue({
       pilferageWt: pilferageWeight
@@ -363,19 +370,19 @@ onArrivedPkgsChange(index: number) {
   }
 
   onDamageFileChange(event: Event, row: any): void {
-    const input = event.target as HTMLInputElement;
-    const file = input?.files?.[0];
-    if (file) {
+  const input = event.target as HTMLInputElement;
+  const file = input?.files?.[0];
+  if (file) {
       // Set the file to the form control
-      row.get('damageFile')?.setValue(file);
+    row.get('damageFile')?.setValue(file);
       // Create a FileReader to load and preview the image
       const reader = new FileReader();
       reader.onload = () => {
         this.selectedDamageImage = reader.result;  // Store the image preview data URL
       };
       reader.readAsDataURL(file);  // Read the file as a data URL for the image preview
-    }
   }
+}
 
 onRowPilferageChange(index: number) {
   const row = this.stockUpdateArray.at(index) as FormGroup;
@@ -415,9 +422,12 @@ onRowDamageChange(index: number) {
           this.stockUpdateForm.patchValue({
             hWarehouse: response[0].godown_srno
           });
-          this.stockUpdateArray.controls.forEach((row: any) => {
-            row.get('warehouse')?.setValue(response[0].godown_srno);
-          });
+      
+          setTimeout(() => {
+            this.stockUpdateArray.controls.forEach((row: any) => {
+              row.get('warehouse')?.setValue(response[0].godown_srno);
+            });
+          }, 300);
         }
       }
     });
@@ -444,7 +454,7 @@ onRowDamageChange(index: number) {
     pkgs: new FormControl(item.pkgsno),
     weight: new FormControl(item.actuwt),
     thcbr:new FormControl(item.thcbr),
-    
+
 
     bizType: new FormControl(item.bizType),
     serviceType: new FormControl(item.service_Class),
@@ -818,7 +828,7 @@ stockUpdate() {
     row.patchValue({
       shortQty: shortageQty,
       IsShort: true,
-      weight: roundedArrivalWT.toFixed(1),
+      arrivedWt: roundedArrivalWT.toFixed(1),
       shortWt: shortWT.toFixed(1)
     });
 

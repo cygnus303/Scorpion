@@ -73,7 +73,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Unloader Name :</label>
                         <div class="col-sm-7 text-start">
-                            <ng-select placeholder="Search Unloader" 
+                            <ng-select placeholder="Search Unloader" class="noFoundTextColor required2 clear-icon"
                                 (open)="resetUnloaderDropdown()" (search)="stockUpdateUsers($event)" [notFoundText]="notUnloaderName"
                                 [clearable]="true" formControlName="UnLoaderName" 
                                 [ngClass]="{'border-danger':stockUpdateForm.get('UnLoaderName')?.invalid && stockUpdateForm.get('UnLoaderName')?.touched}">
@@ -89,7 +89,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">UnLoading Supervisor :</label>
                         <div class="col-sm-7 text-start">
-                             <ng-select placeholder="UnLoading Supervisor" 
+                             <ng-select placeholder="UnLoading Supervisor"  class="noFoundTextColor required2 clear-icon"
                                 (open)="resetUnloaderDropdown()" (search)="stockUpdateUsers($event)" [notFoundText]="notUnloaderName"
                                 [clearable]="true" formControlName="UnLoadingSupervisor"
                                 [ngClass]="{'border-danger':stockUpdateForm.get('UnLoadingSupervisor')?.invalid && stockUpdateForm.get('UnLoadingSupervisor')?.touched}">
@@ -167,13 +167,13 @@
                             <div>{{ row.value.bookingDate | date:'dd/MM/yyyy'}}</div>
                             <small class="text-muted">{{ row.value.committedDate }}</small>
                         </td>
-                        <td class="text-start text-danger fw-semibold"> {{ row.value.pkgs }}<br>{{ row.value.weight }}</td>
+                        <td class="text-start text-danger fw-semibold"> {{ row.value.bkG_PKGSNO | number:'1.2-2' }}<br>{{ row.value.bkG_ACTUWT | number:'1.2-2' }}</td>
                         <td class="text-start">
                             <div class="text-primary-color">{{ row.value.bizType }}</div>
                             <small class="text-muted">{{ row.value.serviceType }}</small>
                         </td>
                         <td style="width: 150px;">
-                            <input class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g,'');" formControlName="arrivedPkgs" (change)="onArrivedPkgsChange(i)" (blur)="onArrPkgQtyBlur(i)">
+                            <input class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g,'');" formControlName="arrivedPkgs" (change)="onArrivedPkgsChange(i)" (input)="onArrPkgQtyBlur(i)">
                             <div class="text-danger text-start" *ngIf="row.get('arrivedPkgs')?.errors?.['max']" >
                                 Please enter a value less than or equal to {{ row.value.pkgs }}.
                             </div>
@@ -508,7 +508,7 @@
                             <div class="row">
                                 <label class="col-sm-4 col-form-label text-end">Damage Type:</label>
                                 <div class="col-sm-8 text-start">
-                                       <ng-select class="clear-icon" placeholder="Damage Type" formControlName="damageType" bindValue="codeId" bindLabel="codeDesc"
+                                       <ng-select class="clear-icon remove-white-space" placeholder="Damage Type" formControlName="damageType" bindValue="codeId" bindLabel="codeDesc"
                                        [items]="generalMasterService.damageData" (change)="onChangeDamage($event, i)"
                                         [ngClass]="{ 'border-danger': row.get('damageType')?.invalid  && row.get('damageType')?.touched }"></ng-select>
                                        <div *ngIf="row.get('damageType')?.touched && row.get('damageType')?.errors">
@@ -538,7 +538,7 @@
                 </tbody>
             </table>
     
-            <!-- CHECKBOX FOOTER -->
+            
             <div class="d-flex flex-wrap gap-4 mt-3 p-4 justify-content-center">
                 <!-- <div class="form-check">
                     <input class="form-check-input fs-5" type="checkbox" id="misroute">
@@ -579,7 +579,7 @@
       <div class="d-grid justify-content-center">
           <div class="d-flex  gap-2">
             <button class="btn btn-secondary controls"> <i class="fas fa-arrow-left"></i>&nbsp;Back to Stock Update</button>
-            <button type="button" id="btnSubmit" class="btn btn-success controls"  [disabled]="isSubmitting || isRedirect" (click)="stockUpdate()"><i class="fas fa-check"></i>&nbsp;Stock Update</button>
+            <button type="button" id="btnSubmit" class="btn btn-success controls"  [disabled]="!hasAnyPartStockUpdate() ||(isSubmitting || isRedirect)" (click)="stockUpdate()"><i class="fas fa-check"></i>&nbsp;Stock Update</button>
         </div>
         <!-- <p style="color:red;">Select atleast one CNote to see the <strong>Submit</strong> button.</p> -->
       </div>
