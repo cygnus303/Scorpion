@@ -24,6 +24,8 @@ public unloaderUsers:UnloaderUsers[]=[];
 public notUnloaderName:string='Enter at least 3 characters';
 public stockUpdateForm!:FormGroup;
 public warehouseList:WarehouseList[]=[];
+public showShortageSection: boolean[] = [];
+
 public stockData:any;
 public maxDate = new Date();
 conditionList = [
@@ -53,6 +55,7 @@ conditionList = [
       IsAllgood: new FormControl(false),
       hDeliveryProcess : new FormControl(null),
       stockUpdateList: new FormArray([]),
+      IsAllgood:new FormControl(false),
       UpdateDate:new FormControl(this.getCurrentDateTime())
     });
   }
@@ -125,6 +128,53 @@ onChangeDamage(event: any, index: number) {
     severity: severityValue
   });
 }
+
+onDamageQtyChange(index: number): void {
+  const row = this.stockUpdateArray.at(index) as FormGroup;
+
+  const damageQty = Number(row.get('damageQty')?.value || 0);
+  const totalPkgs = Number(row.get('bkG_PKGSNO')?.value || 0);
+  const totalWt = Number(row.get('bkG_ACTUWT')?.value || 0);
+
+  if (damageQty < totalPkgs && totalPkgs > 0 && totalWt > 0) {
+    const avgWt = totalWt / totalPkgs;
+    const damageWeight = Math.round(avgWt * damageQty);
+
+    row.patchValue({
+      damageWt: damageWeight
+    });
+  } else {
+    row.patchValue({
+      damageWt: 0,
+      damageReason: ''
+    });
+  }
+}
+
+onPilferageQtyChange(index: number): void {
+  const row = this.stockUpdateArray.at(index) as FormGroup;
+
+  const pilferageQty = Number(row.get('pilferageQty')?.value || 0);
+  const pkgsNo = Number(row.get('pkgs')?.value || 0);        // PKGSNO
+  const totalPkgs = Number(row.get('bkG_PKGSNO')?.value || 0);
+  const totalWt = Number(row.get('bkG_ACTUWT')?.value || 0);
+
+  if (pilferageQty <= pkgsNo && totalPkgs > 0 && totalWt > 0) {
+    const avgWt = totalWt / totalPkgs;
+    const pilferageWeight = Math.round(avgWt * pilferageQty);
+
+    row.patchValue({
+      pilferageWt: pilferageWeight
+    });
+  } else {
+    row.patchValue({
+      pilferageWt: 0,
+      pilferageReason: ''
+    });
+  }
+}
+
+
 
 
   resetUnloaderDropdown(){
@@ -395,7 +445,9 @@ onRowDamageChange(index: number) {
     frontPreview: new FormControl(null),
     backPreview: new FormControl(null),
 
-    podValidated: new FormControl(false)
+    podValidated: new FormControl(false),
+    bkG_PKGSNO:new FormControl(item.bkG_PKGSNO),
+    bkG_ACTUWT:new FormControl(item.bkG_ACTUWT)
   });
 }
 
@@ -530,4 +582,79 @@ isPodFrontRequired(index: number): boolean {
       this.stockUpdateForm.markAllAsTouched();
     }
   }
+
+  onArrPkgQtyBlur(index: number) {
+    debugger
+  const row = this.stockUpdateArray.at(index) as FormGroup;
+
+  const arrPkgQty = Number(row.get('arrivedPkgs')?.value || 0);
+  const pkgsNo = Number(row.get('bkG_PKGSNO')?.value || 0);
+  const actuWt = Number(row.get('bkG_ACTUWT')?.value || 0);
+
+  const pilferageQty = Number(row.get('pilferageQty')?.value || 0);
+  const damageQty = Number(row.get('damageQty')?.value || 0);
+
+  const sumQty = pilferageQty + damageQty;
+
+  if (sumQty > arrPkgQty) {
+    alert('Please Check Shortage Qty ....');
+    row.patchValue({
+      PilferageQty: 0,
+      DamageQry: 0
+    });
+    return;
+  }
+  if (arrPkgQty <= pkgsNo) {
+    const shortageQty = pkgsNo - arrPkgQty;
+
+    const arrivalWT = (arrPkgQty * actuWt) / pkgsNo;
+    const roundedArrivalWT = this.roundNumber(arrivalWT, 0);
+    const shortWT = actuWt - roundedArrivalWT;
+
+    row.patchValue({
+      shortQty: shortageQty,
+      IsShort: true,
+      weight: roundedArrivalWT.toFixed(1),
+      shortWt: shortWT.toFixed(1)
+    });
+
+    row.get('shortWt')?.setValidators([
+      Validators.required,
+      Validators.max(actuWt - 1)
+    ]);
+    row.get('shortReason')?.setValidators(Validators.required);
+    row.get('ShortageRemarks')?.setValidators(Validators.required);
+
+    this.stockUpdateForm.get('IsAllgood')?.disable();
+    this.stockUpdateForm.get('IsAllgood')?.reset();
+
+    this.showShortageSection[index] = true;
+
+  } else {
+    /** ❎ No shortage */
+    row.patchValue({
+      IsShort: false,
+      shortWt: '',
+      shortReason: '',
+      ShortageRemarks: ''
+    });
+
+    row.get('shortWt')?.clearValidators();
+    row.get('shortReason')?.clearValidators();
+    row.get('ShortageRemarks')?.clearValidators();
+
+    row.get('shortWt')?.updateValueAndValidity();
+    row.get('shortReason')?.updateValueAndValidity();
+    row.get('ShortageRemarks')?.updateValueAndValidity();
+
+    this.stockUpdateForm.get('IsAllgood')?.enable();
+    this.showShortageSection[index] = false;
+  }
+}
+
+roundNumber(value: number, decimals: number): number {
+  return Number(Math.round(Number(value + 'e' + decimals)) + 'e-' + decimals);
+}
+
+
 }
