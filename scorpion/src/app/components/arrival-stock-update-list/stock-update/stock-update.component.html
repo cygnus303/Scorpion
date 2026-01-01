@@ -172,7 +172,14 @@
                         <td style="width: 150px;"><input class="form-control " formControlName="arrivedWt" readonly></td>
                         <td style="width: 200px;"><ng-select [items]="conditionList" bindLabel="text" class="clear-icon required2" bindValue="value" formControlName="condition" placeholder="Select Condition"></ng-select></td>
                         <td style="width: 200px;"><ng-select class="clear-icon" bindLabel="godown_name" bindValue="godown_srno" [items]="warehouseList" placeholder="Select Warehouse" formControlName="warehouse"></ng-select></td>
-                        <td style="width: 200px;"><ng-select class="clear-icon required2" bindLabel="codeDesc" bindValue="codeId" formControlName="deliveryProcess" [items]="generalMasterService.deliveryProcessData" placeholder="Select Process"></ng-select></td>
+                        <td style="width: 200px;"  *ngIf="docketService.loginUserList.LocationCode === row.get('desT_CD')?.value ||
+                            (
+                                row.get('isFTLDelivery')?.value === true &&
+                                docketService.loginUserList.LocationCode === row.get('thcbr')?.value &&
+                                row.get('desT_CD')?.value === docketService.loginUserList.LocationCode
+                            )
+                            "
+                        ><ng-select class="clear-icon required2" bindLabel="codeDesc" bindValue="codeId" formControlName="deliveryProcess" [items]="generalMasterService.deliveryProcessData" placeholder="Select Process"></ng-select></td>
                     </tr>
                      <tr *ngIf="row.get('deliveryProcess')?.value === '2'">
                         <td class="text-center">POD :-</td>

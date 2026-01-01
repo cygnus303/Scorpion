@@ -429,12 +429,16 @@ onRowDamageChange(index: number) {
     mfNo: new FormControl(item.tcno),
     docketNo: new FormControl(item.dockNo),
     route: new FormControl(`${item.orgncd} - ${item.desT_CD}`),
+    desT_CD:new FormControl(item.desT_CD),
 
     bookingDate: new FormControl(formattedDate),
     committedDate: new FormControl(item.cdelydt),
+    isFTLDelivery:new FormControl(item.isFTLDelivery),
 
     pkgs: new FormControl(item.pkgsno),
     weight: new FormControl(item.actuwt),
+    thcbr:new FormControl(item.thcbr),
+    
 
     bizType: new FormControl(item.bizType),
     serviceType: new FormControl(item.service_Class),
