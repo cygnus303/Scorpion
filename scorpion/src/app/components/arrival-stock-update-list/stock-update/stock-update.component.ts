@@ -55,7 +55,6 @@ conditionList = [
       IsAllgood: new FormControl(false),
       hDeliveryProcess : new FormControl(null),
       stockUpdateList: new FormArray([]),
-      IsAllgood:new FormControl(false),
       UpdateDate:new FormControl(this.getCurrentDateTime())
     });
   }
