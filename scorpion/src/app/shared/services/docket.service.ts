@@ -1345,14 +1345,13 @@ validateAppointmentDate() {
     this.isSubmiting=false;
   }
 
-mergeAndPatchCharges(
+mergeAndPatchCharges( 
   apiCharges: any[],
   editCharges: any[],
   freightForm: FormGroup,
   basicDetailForm: FormGroup,
 ) {
   const mergedMap = new Map<string, number>();
-
   // 1️⃣ Collect API charges
   apiCharges?.forEach((item: any) => {
     const code = (item.chargecode || "").toUpperCase();
@@ -1434,6 +1433,22 @@ mergeAndPatchCharges(
   if (freightForm.get('fovRate')?.value) {
     freightForm.patchValue({ SCHG11: 0 });
   }
+
+freightForm.valueChanges.subscribe((values) => {
+    if (basicDetailForm.value.isreferenceDKT === true) {
+      Object.keys(freightForm.controls).forEach((controlName) => {
+        // Only charge fields & exclude SCHG04
+        if (
+          (controlName.startsWith('SCHG') || controlName.startsWith('UCHG')) &&
+          controlName !== 'SCHG04'
+        ) {
+          if (values[controlName] !== 0) {
+            freightForm.get(controlName)?.patchValue(0, { emitEvent: false });
+          }
+        }
+      });
+    }
+  });
 }
 
 
@@ -1477,7 +1492,13 @@ mergeAndPatchCharges(
         this.freightForm.patchValue({
           freightRate:0,
           freightCharges:0,
-          dktTotal:0
+          dktTotal:0,
+          SCHG20:0
+        })
+      }
+      if(this.basicDetailForm.value.isreferenceDKT === true){
+        this.freightForm.patchValue({
+          SCHG20:0
         })
       }
     this.subTotalCalculation()
