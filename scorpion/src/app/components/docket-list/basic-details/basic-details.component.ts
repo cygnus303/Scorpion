@@ -133,6 +133,18 @@ onApplyReferenceDktChangeValidators() {
     refDocketCtrl.setValue(null);
   }
   refDocketCtrl.updateValueAndValidity();
+   const freightCharges = this.docketService.freightForm.get('freightCharges');
+    const freightRate = this.docketService.freightForm.get('freightRate');
+    if (this.docketService.basicDetailForm.value.isreferenceDKT === true) {
+      freightCharges?.clearValidators();
+      freightRate?.clearValidators();
+    } else {
+      // ✅ Required lagavo
+      freightCharges?.setValidators([Validators.required, Validators.min(0.01)]);
+      freightRate?.setValidators([Validators.required, Validators.min(0.01)]);
+    }
+    freightCharges?.updateValueAndValidity();
+    freightRate?.updateValueAndValidity();
 
   // 2. Subscribe to changes for future updates
   isReferenceCtrl.valueChanges.subscribe((isReference) => {

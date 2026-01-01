@@ -260,7 +260,7 @@ getCompletionData() {
           // added Validators
              const freightCharges = this.docketService.freightForm.get('freightCharges');
               const freightRate = this.docketService.freightForm.get('freightRate');
-              if (basicDetail.paybas === 'P04') {
+              if (this.docketService.basicDetailForm.value.isreferenceDKT === true ||basicDetail.paybas === 'P04') {
                 freightCharges?.clearValidators();
                 freightRate?.clearValidators();
               } else {
@@ -404,11 +404,17 @@ this.basicDetailService.getODADetail(pincode).subscribe({
         };
         return obj;
       });
-      if(this.docketService.basicDetailForm.value.isreferenceDKT === true|| this.docketService.basicDetailForm.value.billingType ==='P04'){
-        this.docketService.freightForm.patchValue({
+      if(this.docketService.basicDetailForm.value.billingType ==='P04'){
+  this.docketService.freightForm.patchValue({
           freightRate:0,
           freightCharges:0,
           dktTotal:0
+        })
+}
+if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
+        this.docketService.freightForm.patchValue({
+          freightRate:0,
+          freightCharges:0,
         })
       }
       const payload = {
