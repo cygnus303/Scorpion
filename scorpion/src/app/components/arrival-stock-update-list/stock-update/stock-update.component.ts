@@ -679,7 +679,6 @@ stockUpdate() {
       isMobileUser: 'N'
     };
   });
-  debugger;
   /* ================= FORM DATA ================= */
   const formData = new FormData();
   formData.append("ViewModel.VSFUM.CDELYDT", this.stockData?.cdelydt);

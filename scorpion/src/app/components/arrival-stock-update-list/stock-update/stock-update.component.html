@@ -18,7 +18,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">THC Date :</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
-                         {{stockData?.thcdt}}
+                         {{ stockData?.thcdt | date:'dd MMM yyyy hh:mm:ss a' }}
                         </div>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">{{ 'THC Arrival Date @ ' + (stockData?.sourcehb || '') + ' :' }}</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
-                          {{stockData?.actarrv_dt| date:'M/d/yyyy h:mm:ss a'}}
+                          {{stockData?.actarrv_dt | date:'dd MMM yyyy h:mm:ss a'}}
                         </div>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                         <label class="col-sm-5 col-form-label text-end">Stock Update Date :</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
                             <div class="input-group"  >
-                                <app-date-time-picker controlName="UpdateDate" [maxDate]="docketService.bsValue"  [placeholder]="'Vehicle Arrival Date & Time'">
+                                <app-date-time-picker controlName="UpdateDate" class="w-100" [maxDate]="docketService.bsValue"  [placeholder]="'Vehicle Arrival Date & Time'">
                               </app-date-time-picker>
                             </div>
                         </div>
