@@ -156,6 +156,8 @@ onApplyReferenceDktChangeValidators() {
     }
     refDocketCtrl.updateValueAndValidity();
   });
+
+  this.docketService.freightAndOtherChar('')
 }
 
 applyTypeMovementValidation() {
@@ -395,15 +397,15 @@ applyVehicleNoValidation(){
   }
 
   toggleLocalNote() {
-    const destination = this.docketService?.basicDetailForm?.get('destination')?.value;
+    const destination = this.docketService?.basicDetailForm?.get('destination')?.value?.locCode ?? this.docketService?.basicDetailForm?.get('destination')?.value;
     const origin = this.docketService?.basicDetailForm?.get('origin')?.value;
     const localNoteControl = this.docketService?.basicDetailForm?.get('isLocalNote');
     if (destination && origin && destination === origin) {
-      localNoteControl?.enable();
-      this.docketService.basicDetailForm.value.isLocalNote = false;
+      localNoteControl?.setValue(true); 
+      this.docketService?.basicDetailForm?.get('IsLocalDocket')?.setValue(true); 
     } else {
-      localNoteControl?.disable();
-      this.docketService.basicDetailForm.value.isLocalNote = false;
+      localNoteControl?.setValue(false);
+      this.docketService?.basicDetailForm?.get('IsLocalDocket')?.setValue(false); 
     }
   }
 
