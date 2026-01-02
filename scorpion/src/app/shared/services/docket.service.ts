@@ -1627,7 +1627,3 @@ calculateDiscount(event?: any) {
 
 }
 
-function tap(arg0: (response: any) => void): import("rxjs").OperatorFunction<import("../interface/api-base-action-response").IApiBaseResponse<import("../models/general-master.model").GSTNOListResponse>, any> {
-  throw new Error('Function not implemented.');
-}
-

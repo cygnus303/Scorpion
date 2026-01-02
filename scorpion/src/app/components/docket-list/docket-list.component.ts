@@ -460,12 +460,12 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
           "coD_DOD": this.docketService.basicDetailForm.value.IsCODDOD === 'Y' ? true : false,
           "cfT_YN": this.docketService.step2DetailsList?.isVolumentric === 'Y' ? true : false,
           "dacC_YN": this.docketService.basicDetailForm.value.isDACC,  // step2 na response ma pn
-          "localCN_YN": this.docketService.basicDetailForm.value.isLocalNote, //y and n
+          "localCN_YN": this.docketService.basicDetailForm.value.isLocalNote ?'Y':'N', //y and n
           "pickup_Dely": this.docketService.basicDetailForm.value.pickup,
           "permit_yn": "",// api baki chhe
           "permit_recvd_at": "",
           "permit_No": "",
-          "entryby": this.docketService.loginUserList.UserId, // je user login hoy tenu userId
+          "entryby": this.docketService.loginUserList.UserId,
           "pkgsty": this.docketService.basicDetailForm.value.packingType,
           "insuyn": this.docketService.consignorForm.value.riskType,  // jo Carrier's Risk hoy to c ,owener hoy to 'o'
           "insupl": this.docketService.consignorForm.value.policyNo,

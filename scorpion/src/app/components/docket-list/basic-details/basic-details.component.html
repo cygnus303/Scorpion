@@ -585,7 +585,7 @@
           <div class="form-group">
             <label class="control-label col-md-5 text-primary bold">Is Local CNote?</label>
             <div class="col-md-2">
-              <input type="checkbox" formControlName="isLocalNote">
+              <input type="checkbox" formControlName="isLocalNote" [class.disabled-input]="true">
             </div>
             <div class="col-md-4 text-danger bold" style="margin-top:5px;font-weight: 600 !important;">(Same
               Origin-Destination)</div>
