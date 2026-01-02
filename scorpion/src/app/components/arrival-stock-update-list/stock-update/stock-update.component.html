@@ -1,4 +1,4 @@
-
+<form  [formGroup]="stockUpdateForm">
 <div class="cnote-entry-container">
     <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
         <i class="fa fa-edit me-2"></i>
@@ -10,7 +10,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">THC No. :</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
-                            VH/BLR/2526/001018
+                           {{stockData?.thcno}}
                         </div>
                     </div>
                 </div>
@@ -18,15 +18,15 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">THC Date :</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
-                             02 Jul 2025 06:36:00 PM
+                         {{ stockData?.thcdt | date:'dd MMM yyyy hh:mm:ss a' }}
                         </div>
                     </div>
                 </div>
                 <div class="col-4">
                     <div class="row align-items-center">
-                        <label class="col-sm-5 col-form-label text-end">{{'THC Arrival Date  @  PIM :'}}</label>
+                        <label class="col-sm-5 col-form-label text-end">{{ 'THC Arrival Date @ ' + (stockData?.sourcehb || '') + ' :' }}</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
-                            31 Jul 2025 04:49:00 PM
+                          {{stockData?.actarrv_dt | date:'dd MMM yyyy h:mm:ss a'}}
                         </div>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Vehicle No. :</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
-                            JK21L1179
+                           {{stockData?.vehno}}
                         </div>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Total Manifest Count :</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
-                            1
+                           {{stockData?.manifestKount}}
                         </div>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Total CNote Count :</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
-                            1
+                           {{stockData?.docketKount}}
                         </div>
                     </div>
                 </div>
@@ -62,15 +62,9 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Stock Update Date :</label>
                         <div class="col-sm-7 text-start fw-bold text-primary-color">
-                            <div class="input-group" (click)="dp.toggle(); $event.stopPropagation()" >
-                                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
-                                    [bsValue]="docketService.bsValue" [maxDate]="docketService.bsValue"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
-                                    placeholder="Stock Update Date" required [class.disabled-input]="true">
-                                <span class="input-group-text cursor-pointer"
-                                    [class.disabled-input]="this.docketService.isComplition">
-                                    <i class="fa fa-calendar"></i>
-                                </span>
+                            <div class="input-group"  >
+                                <app-date-time-picker controlName="UpdateDate" class="w-100" [maxDate]="docketService.bsValue"  [placeholder]="'Vehicle Arrival Date & Time'">
+                              </app-date-time-picker>
                             </div>
                         </div>
                     </div>
@@ -79,11 +73,15 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Unloader Name :</label>
                         <div class="col-sm-7 text-start">
-                            <ng-select placeholder="Search Unloader" 
+                            <ng-select placeholder="Search Unloader" class="noFoundTextColor required2 clear-icon"
                                 (open)="resetUnloaderDropdown()" (search)="stockUpdateUsers($event)" [notFoundText]="notUnloaderName"
-                                [clearable]="true">
+                                [clearable]="true" formControlName="UnLoaderName" 
+                                [ngClass]="{'border-danger':stockUpdateForm.get('UnLoaderName')?.invalid && stockUpdateForm.get('UnLoaderName')?.touched}">
                                 <ng-option *ngFor="let data of unloaderUsers" [value]="data.userId">{{data.userId}} : {{data.name}}</ng-option>
                             </ng-select>
+                            <div class="text-danger small mt-1" *ngIf="stockUpdateForm.get('UnLoaderName')?.touched && stockUpdateForm.get('UnLoaderName')?.hasError('required')">
+                                Unloader Name is required
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -91,11 +89,16 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">UnLoading Supervisor :</label>
                         <div class="col-sm-7 text-start">
-                             <ng-select placeholder="UnLoading Supervisor" 
+                             <ng-select placeholder="UnLoading Supervisor"  class="noFoundTextColor required2 clear-icon"
                                 (open)="resetUnloaderDropdown()" (search)="stockUpdateUsers($event)" [notFoundText]="notUnloaderName"
-                                [clearable]="true">
+                                [clearable]="true" formControlName="UnLoadingSupervisor"
+                                [ngClass]="{'border-danger':stockUpdateForm.get('UnLoadingSupervisor')?.invalid && stockUpdateForm.get('UnLoadingSupervisor')?.touched}">
                                 <ng-option *ngFor="let data of unloaderUsers" [value]="data.userId">{{data.userId}} : {{data.name}}</ng-option>
                             </ng-select>
+                            <div class="text-danger small mt-1" *ngIf="stockUpdateForm.get('UnLoadingSupervisor')?.touched &&
+                                           stockUpdateForm.get('UnLoadingSupervisor')?.hasError('required')">
+                                UnLoading Supervisor is required
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -108,19 +111,19 @@
             <i class="fa fa-edit me-2"></i>
             Stock Update List
         </div>
-        <div class="table-responsive table-wrapper p-2 pt-4">
+        <div class="table-wrapper p-2 pt-4">
             <table class="table table-bordered align-middle stock-table table-fixed vertical-align">
                 <thead class="table-secondary">
                     <tr>
                         <th class="align-top p-1">
                             <div>Single<br>Stock Update</div>
-                            <input type="checkbox" class="form-check-input fs-5">
+                            <input type="checkbox" class="form-check-input fs-5"  [checked]="isAllSelected()" (change)="toggleAll($event)">
                         </th>
                         <th class="align-top p-1">
                             <div class="fw-semibold small mb-1"> Damage / Pilferage</div>
                             <div class="d-flex justify-content-center align-items-center gap-3">
-                                <input class="form-check-input fs-5" type="checkbox">
-                                <input class="form-check-input fs-5" type="checkbox">
+                                <input class="form-check-input fs-5" type="checkbox" formControlName="hDamage" (change)="onHeaderDamageChange()" [class.disabled-input]="isAllGoodChecked" >
+                                <input class="form-check-input fs-5" type="checkbox" formControlName="hPilferage" (change)="onHeaderPilferageChange()" [class.disabled-input]="isAllGoodChecked">
                             </div>
                         </th>
                         <th>MF #</th>   
@@ -132,76 +135,148 @@
                         <th>Arrived Wt.</th>
                         <th class="align-top p-1" style="width: 200px;">
                             <div class="small mb-1">Arrival Condition</div>
-                            <ng-select [items]="conditionList" bindLabel="text" class="clear-icon" bindValue="value" placeholder="Select Condition"></ng-select>
+                            <ng-select class="fw-normal" [items]="conditionList" bindLabel="text" bindValue="value" placeholder="Select Condition" (change)="onArrivalCondition($event)" formControlName="hCondition" ></ng-select>
                         </th>
                         <th class="align-top p-1" style="width: 200px;">
                             <div class="small mb-1">Warehouse</div>
-                            <ng-select class="clear-icon"></ng-select>
+                            <ng-select class="fw-normal" bindLabel="godown_name" bindValue="godown_srno" [items]="warehouseList" placeholder="Select Warehouse" formControlName="hWarehouse" (change)="onWarehouse($event)"></ng-select>
                         </th>
                         <th class="align-top p-1" style="width: 200px;">
                             <div class="small mb-1">Delivery Process</div>
-                            <ng-select class="clear-icon fw-normal" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.deliveryProcessData" placeholder="Select Process"></ng-select>
+                            <ng-select class="fw-normal" bindLabel="codeDesc" bindValue="codeId" formControlName="hDeliveryProcess" (change)="onDeliveryProcessChange($event)" [items]="generalMasterService.deliveryProcessData" placeholder="Select Process"></ng-select>
                         </th>
                     </tr>
                 </thead>
     
-                <tbody>
+                <tbody  formArrayName="stockUpdateList">
+                    <ng-container *ngFor="let row of stockUpdateArray.controls; let i = index" [formGroupName]="i">
                     <tr>
-                        <td class="text-center"><input type="checkbox" class="form-check-input fs-5"></td>
-                        <td class="text-center">
+                        <td class="text-center"><input type="checkbox" class="form-check-input fs-5" formControlName="IsPartStockUpdate"></td>
+                        <td class="text-center"  style="width: 300px;">
                             <div class="d-flex justify-content-center align-items-center gap-3">
-                                <input class="form-check-input fs-5" type="checkbox">
-                                <input class="form-check-input fs-5" type="checkbox">
+                                 <input type="checkbox" class="form-check-input fs-5" formControlName="damage" (change)="onRowDamageChange(i)" [class.disabled-input]="isAllGoodChecked">
+                                <input type="checkbox" class="form-check-input fs-5" formControlName="pilferage" (change)="onRowPilferageChange(i)" [class.disabled-input]="isAllGoodChecked">
                             </div>
                         </td>
-                        <td class="fw-semibold">MF/RPR/2526/000253</td>
+                        <td class="fw-semibold">{{ row.value.mfNo }}</td>
                         <td>
-                            <div class="text-primary-color fw-semibold">62680936</div>
-                            <small class="text-muted">RPR - PIM</small>
+                            <div class="text-primary-color fw-semibold">{{ row.value.docketNo }}</div>
+                            <small class="text-muted">{{ row.value.route }}</small>
                         </td>
                         <td>
-                            <div>03/07/2025</div>
-                            <small class="text-muted">08/07/2025</small>
+                            <div>{{ row.value.bookingDate | date:'dd/MM/yyyy'}}</div>
+                            <small class="text-muted">{{ row.value.committedDate }}</small>
                         </td>
-                        <td class="text-start text-danger fw-semibold">835.00<br>18000.00</td>
+                        <td class="text-start text-danger fw-semibold"> {{ row.value.bkG_PKGSNO | number:'1.2-2' }}<br>{{ row.value.bkG_ACTUWT | number:'1.2-2' }}</td>
                         <td class="text-start">
-                            <div class="text-primary-color">SCORPION EXPRESS PVT LTD</div>
-                            <small class="text-muted">FTL</small>
+                            <div class="text-primary-color">{{ row.value.bizType }}</div>
+                            <small class="text-muted">{{ row.value.serviceType }}</small>
                         </td>
-                        <td style="width: 150px;"><input class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g,'');" value="835"></td>
-                        <td style="width: 150px;"><input class="form-control" value="18000.0" readonly></td>
-                        <td style="width: 200px;"><ng-select [items]="conditionList" bindLabel="text" class="clear-icon" bindValue="value" placeholder="Select Condition"></ng-select></td>
-                        <td style="width: 200px;"><ng-select class="clear-icon" ></ng-select></td>
-                        <td style="width: 200px;"><ng-select class="clear-icon" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.deliveryProcessData" placeholder="Select Process"></ng-select></td>
+                        <td style="width: 150px;">
+                            <input class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g,'');" formControlName="arrivedPkgs" (change)="onArrivedPkgsChange(i)" (input)="onArrPkgQtyBlur(i)">
+                            <div class="text-danger text-start" *ngIf="row.get('arrivedPkgs')?.errors?.['max']" >
+                                Please enter a value less than or equal to {{ row.value.pkgs }}.
+                            </div>
+                        </td>
+                        <td style="width: 150px;"><input class="form-control " formControlName="arrivedWt" readonly></td>
+                        <td style="width: 200px;"><ng-select [items]="conditionList" bindLabel="text" class="clear-icon required2" bindValue="value" formControlName="condition" placeholder="Select Condition"></ng-select></td>
+                        <td style="width: 200px;"><ng-select class="clear-icon" bindLabel="godown_name" bindValue="godown_srno" [items]="warehouseList" placeholder="Select Warehouse" formControlName="warehouse"></ng-select></td>
+                        <td style="width: 200px;"  *ngIf="docketService.loginUserList.LocationCode === row.get('desT_CD')?.value ||
+                            (
+                                row.get('isFTLDelivery')?.value === true &&
+                                docketService.loginUserList.LocationCode === row.get('thcbr')?.value &&
+                                row.get('desT_CD')?.value === docketService.loginUserList.LocationCode
+                            )
+                            "
+                        ><ng-select class="clear-icon required2" bindLabel="codeDesc" bindValue="codeId" formControlName="deliveryProcess" [items]="generalMasterService.deliveryProcessData" placeholder="Select Process"></ng-select></td>
                     </tr>
-                     <tr>
+                     <tr *ngIf="row.get('deliveryProcess')?.value === '2'">
                         <td class="text-center">POD :-</td>
                         <td>
-                            <button type="button" class="btn btn-outline-primary btn-sm">
-                                ⬆ POD Front UPLOAD
-                            </button>
+                            <ng-container *ngIf="stockUpdateArray.at(i).value.frontPreview; else frontUpload">
+                                <div class="d-flex align-items-center gap-2">
+                                    <img [src]="stockUpdateArray.at(i).value.frontPreview" class="img-thumbnail"
+                                        style="width:55px;height:55px;object-fit:cover" />
+                        
+                                    <div class="d-flex flex-column gap-1">
+                                        <button type="button" class="btn btn-light btn-sm" (click)="frontInput.click()">
+                                            Change
+                                        </button>
+                        
+                                        <button type="button" class="btn btn-light btn-sm text-danger" (click)="removeFile(i, 'FRONT')">
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        
+                            <ng-template #frontUpload>
+                                <button type="button" class="btn btn-outline-primary btn-sm" (click)="frontInput.click()">
+                                    ⬆ POD Front UPLOAD
+                                </button>
+                        
+                                <div class="text-danger small mt-1"*ngIf="isPodFrontRequired(i)">
+                                    POD Front is required
+                                </div>
+                            </ng-template>
+                        
+                            <input type="file" #frontInput hidden accept="image/*" (change)="onFileSelected($event, i, 'FRONT')" />
                         </td>
-                         <td colspan="2">
-                            <button type="button" class="btn btn-outline-primary btn-sm">
+
+                        <td colspan="2">
+                            <ng-container *ngIf="stockUpdateArray.at(i).value.backPreview; else backUpload">
+                                <div class="d-flex align-items-center gap-2">
+                                    <img [src]="stockUpdateArray.at(i).value.backPreview" class="img-thumbnail"
+                                        style="width:55px;height:55px;object-fit:cover" />
+                        
+                                    <div class="d-flex flex-column gap-1">
+                                        <button type="button" class="btn btn-light btn-sm" (click)="backInput.click()">
+                                            Change
+                                        </button>
+                        
+                                        <button type="button" class="btn btn-light btn-sm text-danger" (click)="removeFile(i, 'BACK')">
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        
+                            <ng-template #backUpload>
+                                <button type="button" class="btn btn-outline-primary btn-sm" (click)="backInput.click()">
                                     ⬆ POD Back UPLOAD
                                 </button>
+                            </ng-template>
+                        
+                            <input type="file" #backInput hidden accept="image/*" (change)="onFileSelected($event, i, 'BACK')" />
                         </td>
-                        <td colspan="4">
+
+                        <td colspan="5">
                             <div class="row">
                                 <label class="col-sm-3 col-form-label text-end">Delivery Date & Time:</label>
                                 <div class="col-sm-9 text-start">
-                                    <input class="form-control" placeholder="Delivery Date & Time" type="date">
+                                    <app-date-time-picker controlName="DELYDATE" [maxDate]="maxDate" [placeholder]="'Delivery Date & Time'"
+                                        [minDate]="row.value.bookingDate">
+                                    </app-date-time-picker>
                                 </div>
                             </div>
                         </td>
                     </tr>
-                    <tr>
+                    <tr *ngIf="(+row.value.pkgs - +row.get('arrivedPkgs')?.value) > 0">
                         <td class="text-center">Short :-</td>
                         <td>
                             <div class="row">
                                 <label class="col-sm-5 col-form-label text-end">Short Packages:</label>
                                 <div class="col-sm-7 text-start">
-                                    <input class="form-control" placeholder="Short Packages" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                    <input class="form-control" placeholder="Short Packages" formControlName="shortQty" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text"
+                                     [ngClass]="{'border-danger':row.get('shortQty')?.invalid && row.get('shortQty')?.touched}" readonly>
+                                    <div *ngIf="row.get('shortQty')?.touched && row.get('shortQty')?.errors">
+                                        <div class="text-danger" *ngIf="row.get('shortQty')?.hasError('required')">
+                                            Short Packages is required
+                                        </div>
+                                        <div class="text-danger" *ngIf="row.get('shortQty')?.hasError('min')">
+                                            Minimum value should be 1
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -209,7 +284,16 @@
                             <div class="row">
                                 <label class="col-sm-3 col-form-label text-end">Weight:</label>
                                 <div class="col-sm-9 text-start">
-                                    <input class="form-control" placeholder="Weight" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                    <input class="form-control" placeholder="Weight" value="0" formControlName="shortWt" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text"
+                                    [ngClass]="{'border-danger':row.get('shortWt')?.invalid && row.get('shortWt')?.touched}">
+                                     <div *ngIf="row.get('shortWt')?.touched && row.get('shortWt')?.errors">
+                                        <div class="text-danger" *ngIf="row.get('shortWt')?.hasError('required')">
+                                            Short Weight is required
+                                        </div>
+                                        <div class="text-danger" *ngIf="row.get('shortWt')?.hasError('min')">
+                                            Minimum value should be 1
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -217,7 +301,11 @@
                             <div class="row">
                                 <label class="col-sm-2 col-form-label text-end">Reason:</label>
                                 <div class="col-sm-10 text-start">
-                                      <textarea rows="1" class="form-control-textarea" placeholder="Reason"></textarea>
+                                      <textarea rows="1" class="form-control-textarea" placeholder="Reason"  formControlName="shortReason"
+                                       [ngClass]="{'border-danger':row.get('shortReason')?.invalid && row.get('shortReason')?.touched}"></textarea>
+                                    <div *ngIf="row.get('shortReason')?.touched && row.get('shortReason')?.errors">
+                                        <div class="text-danger">Reason is required</div>
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -225,7 +313,11 @@
                             <div class="row">
                                 <label class="col-sm-2 col-form-label text-end">Remarks:</label>
                                 <div class="col-sm-10 text-start">
-                                      <textarea rows="1" class="form-control-textarea" placeholder="Remarks"></textarea>
+                                      <textarea rows="1" class="form-control-textarea" placeholder="Remarks" formControlName="shortRemarks"
+                                      [ngClass]="{'border-danger':row.get('shortRemarks')?.invalid && row.get('shortRemarks')?.touched}"></textarea>
+                                       <div *ngIf="row.get('shortRemarks')?.touched && row.get('shortRemarks')?.errors">
+                                        <div class="text-danger">Remarks is required</div>
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -233,18 +325,46 @@
                             <div class="row">
                                 <label class="col-sm-7 col-form-label text-end">File Upload:</label>
                                 <div class="col-sm-5 text-start">
-                                    <button type="button" class="btn btn-outline-primary btn-sm">Select</button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm"
+                                        [ngClass]="{'border-danger': row.get('shortFile')?.invalid && row.get('shortFile')?.touched }"
+                                        (click)="shortFileInput.click()">
+                                        Select
+                                    </button>
+                                    <!-- Display the selected image -->
+                                    <div *ngIf="selectedImage">
+                                        <img [src]="selectedImage" alt="Selected Image" class="img-thumbnail mt-2" style="width:55px;height:55px;object-fit:cover">
+                                    </div>
+                                    <input type="file" #shortFileInput hidden (change)="onShortFileChange($event, row)"
+                                        [ngClass]="{'border-danger': row.get('shortFile')?.invalid && row.get('shortFile')?.touched }">
+                                    <div *ngIf="row.get('shortFile')?.touched && row.get('shortFile')?.errors">
+                                        <div class="text-danger text-start" *ngIf="row.get('shortFile')?.hasError('required')">
+                                            File is required.
+                                        </div>
+                                    </div>
+                                    
                                 </div>
                             </div>
                         </td>
                     </tr>
-                    <tr>
+                    <tr *ngIf="row.get('pilferage')?.value">
                         <td class="text-center">Pilferage :-</td>
                         <td>
                             <div class="row">
                                 <label class="col-sm-5 col-form-label text-end">Pilferage Packages:</label>
                                 <div class="col-sm-7 text-start">
-                                    <input class="form-control" placeholder="Pilferage Packages" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                    <input class="form-control" placeholder="Pilferage Packages" formControlName="pilferageQty" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text"
+                                     [ngClass]="{ 'border-danger': row.get('pilferageQty')?.invalid  && row.get('pilferageQty')?.touched }" (change)="onPilferageQtyChange(i)">
+                                    <div *ngIf="row.get('pilferageQty')?.touched && row.get('pilferageQty')?.errors">
+                                        <div class="text-danger text-start" *ngIf="row.get('pilferageQty')?.hasError('required')">
+                                            Pilferage Packages is required.
+                                        </div>
+                                        <div class="text-danger text-start" *ngIf="row.get('pilferageQty')?.hasError('min')">
+                                            Please enter a value greater than or equal to 1.
+                                        </div>
+                                        <div class="text-danger text-start" *ngIf="row.get('pilferageQty')?.errors?.['max']">
+                                            Please enter a value less than or equal to {{ row.value.pkgs }}.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -252,7 +372,16 @@
                             <div class="row">
                                 <label class="col-sm-3 col-form-label text-end">Weight:</label>
                                 <div class="col-sm-9 text-start">
-                                    <input class="form-control" placeholder="Weight" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                    <input class="form-control" placeholder="Weight" formControlName="pilferageWt" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text"
+                                     [ngClass]="{ 'border-danger': row.get('pilferageWt')?.invalid  && row.get('pilferageWt')?.touched }">
+                                     <div *ngIf="row.get('pilferageWt')?.touched && row.get('pilferageWt')?.errors">
+                                        <div class="text-danger text-start" *ngIf="row.get('pilferageWt')?.hasError('required')">
+                                            Pilferage Packages is required.
+                                        </div>
+                                        <div class="text-danger text-start" *ngIf="row.get('pilferageWt')?.hasError('min')">
+                                            Please enter a value greater than or equal to 1.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -260,7 +389,13 @@
                             <div class="row">
                                 <label class="col-sm-2 col-form-label text-end">Reason:</label>
                                 <div class="col-sm-10 text-start">
-                                      <textarea rows="1" class="form-control-textarea" placeholder="Reason"></textarea>
+                                      <textarea rows="1" class="form-control-textarea" formControlName="pilferageReason" placeholder="Reason"
+                                       [ngClass]="{ 'border-danger': row.get('pilferageReason')?.invalid  && row.get('pilferageReason')?.touched }"></textarea>
+                                      <div *ngIf="row.get('pilferageReason')?.touched && row.get('pilferageReason')?.errors">
+                                        <div class="text-danger text-start" *ngIf="row.get('pilferageReason')?.hasError('required')">
+                                            Pilferage Packages is required.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -268,26 +403,51 @@
                             <div class="row">
                                 <label class="col-sm-2 col-form-label text-end">Remarks:</label>
                                 <div class="col-sm-10 text-start">
-                                      <textarea rows="1" class="form-control-textarea" placeholder="Remarks"></textarea>
+                                      <textarea rows="1" class="form-control-textarea" formControlName="pilferageRemarks" placeholder="Remarks"></textarea>
                                 </div>
                             </div>
                         </td>
-                        <td colspan="2">
-                            <div class="row">
-                                <label class="col-sm-7 col-form-label text-end">File Upload:</label>
-                                <div class="col-sm-5 text-start">
-                                    <button type="button" class="btn btn-outline-primary btn-sm">Select</button>
+                    <td colspan="2">
+                        <div class="row">
+                            <label class="col-sm-7 col-form-label text-end">File Upload:</label>
+                            <div class="col-sm-5 text-start">
+                                <button type="button" class="btn btn-outline-primary btn-sm" (click)="pilferageFileInput.click()">
+                                    Select
+                                </button>
+                                <input type="file" #pilferageFileInput hidden (change)="onPilferageFileChange($event, row)"
+                                    [ngClass]="{ 'border-danger': row.get('pilferageFile')?.invalid && row.get('pilferageFile')?.touched}">
+                                <div *ngIf="row.get('pilferageFile')?.touched && row.get('pilferageFile')?.errors">
+                                    <div class="text-danger text-start">File is required</div>
+                                </div>
+                                <!-- Display the selected image if available -->
+                                <div *ngIf="selectedPilferageImage">
+                                    <img [src]="selectedPilferageImage" alt="Selected File" class="img-thumbnail mt-2"
+                                        style="width:55px;height:55px;object-fit:cover">
                                 </div>
                             </div>
-                        </td>
+                        </div>
+                    </td>
+
                     </tr>
-                     <tr>
+                     <tr *ngIf="row.get('damage')?.value">
                         <td class="text-center">Damage  :-</td>
                         <td>
                             <div class="row">
-                                <label class="col-sm-5 col-form-label text-end">Damage Packages::</label>
+                                <label class="col-sm-5 col-form-label text-end">Damage Packages:</label>
                                 <div class="col-sm-7 text-start">
-                                    <input class="form-control" placeholder="Damage Packages:" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                    <input class="form-control" placeholder="Damage Packages" formControlName="damageQty" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text"
+                                     [ngClass]="{ 'border-danger': row.get('damageQty')?.invalid  && row.get('damageQty')?.touched }"  (change)="onDamageQtyChange(i)">
+                                    <div *ngIf="row.get('damageQty')?.touched && row.get('damageQty')?.errors">
+                                        <div class="text-danger text-start" *ngIf="row.get('damageQty')?.hasError('required')">
+                                            Pilferage Packages is required.
+                                        </div>
+                                        <div class="text-danger text-start" *ngIf="row.get('damageQty')?.hasError('min')">
+                                            Please enter a value greater than or equal to 1.
+                                        </div>
+                                        <div class="text-danger text-start" *ngIf="row.get('damageQty')?.errors?.['max']">
+                                            Please enter a value less than or equal to {{ row.value.pkgs }}.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -295,7 +455,16 @@
                             <div class="row">
                                 <label class="col-sm-3 col-form-label text-end">Weight:</label>
                                 <div class="col-sm-9 text-start">
-                                    <input class="form-control" placeholder="Weight" value="0" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text">
+                                    <input class="form-control" placeholder="Weight" value="0" formControlName="damageWt" oninput="this.value = this.value.replace(/[^0-9]/g,'');" type="text"
+                                     [ngClass]="{ 'border-danger': row.get('damageWt')?.invalid  && row.get('damageWt')?.touched }">
+                                    <div *ngIf="row.get('damageWt')?.touched && row.get('damageWt')?.errors">
+                                        <div class="text-danger text-start" *ngIf="row.get('damageWt')?.hasError('required')">
+                                            Pilferage Packages is required.
+                                        </div>
+                                        <div class="text-danger text-start" *ngIf="row.get('damageWt')?.hasError('min')">
+                                            Please enter a value greater than or equal to 1.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -303,23 +472,50 @@
                             <div class="row">
                                 <label class="col-sm-2 col-form-label text-end">Reason:</label>
                                 <div class="col-sm-10 text-start">
-                                      <textarea rows="1" class="form-control-textarea" placeholder="Reason"></textarea>
+                                      <textarea rows="1" class="form-control-textarea"  placeholder="Reason" formControlName="damageReason"
+                                       [ngClass]="{ 'border-danger': row.get('damageReason')?.invalid  && row.get('damageReason')?.touched }"></textarea>
+                                      <div *ngIf="row.get('damageReason')?.touched && row.get('damageReason')?.errors">
+                                        <div class="text-danger text-start" *ngIf="row.get('damageReason')?.hasError('required')">
+                                            Pilferage Packages is required.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </td>
-                        <td colspan="1">
-                             <div class="row">
-                                <label class="col-sm-7 col-form-label text-end">File Upload:</label>
-                                <div class="col-sm-5 text-start">
-                                    <button type="button" class="btn btn-outline-primary btn-sm">Select</button>
+                            <td colspan="1">
+                                <div class="row">
+                                    <label class="col-sm-7 col-form-label">File Upload:</label>
+                                    <div class="col-sm-5 text-start">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" (click)="damageFileInput.click()">
+                                            Select
+                                        </button>
+                                        <input type="file" #damageFileInput hidden (change)="onDamageFileChange($event, row)"
+                                            [ngClass]="{ 'border-danger': row.get('damageFile')?.invalid && row.get('damageFile')?.touched}">
+                                        <div *ngIf="row.get('damageFile')?.touched && row.get('damageFile')?.errors">
+                                            <div class="text-danger text-start">File is required</div>
+                                        </div>
+                                        <!-- Display the selected image or file preview if available -->
+                                        <div *ngIf="selectedDamageImage">
+                                            <img [src]="selectedDamageImage" alt="Selected File" class="img-thumbnail mt-2"
+                                               style="width:55px;height:55px;object-fit:cover">
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
+                            </td>
+
+
                           <td colspan="2">
                             <div class="row">
                                 <label class="col-sm-4 col-form-label text-end">Damage Type:</label>
                                 <div class="col-sm-8 text-start">
-                                       <ng-select class="clear-icon" placeholder="Damage Type"></ng-select>
+                                       <ng-select class="clear-icon remove-white-space" placeholder="Damage Type" formControlName="damageType" bindValue="codeId" bindLabel="codeDesc"
+                                       [items]="generalMasterService.damageData" (change)="onChangeDamage($event, i)"
+                                        [ngClass]="{ 'border-danger': row.get('damageType')?.invalid  && row.get('damageType')?.touched }"></ng-select>
+                                       <div *ngIf="row.get('damageType')?.touched && row.get('damageType')?.errors">
+                                        <div class="text-danger text-start" *ngIf="row.get('damageType')?.hasError('required')">
+                                            Pilferage Packages is required.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -327,32 +523,49 @@
                             <div class="row">
                                 <label class="col-sm-3 col-form-label text-end">Severity:</label>
                                 <div class="col-sm-9 text-start">
-                                      <ng-select class="clear-icon" placeholder="Severity"></ng-select>
+                                      <input class="clear-icon" placeholder="Severity" class="form-control" formControlName="severity"
+                                       [ngClass]="{ 'border-danger': row.get('severity')?.invalid  && row.get('severity')?.touched }">
+                                      <div *ngIf="row.get('severity')?.touched && row.get('severity')?.errors">
+                                        <div class="text-danger text-start" *ngIf="row.get('severity')?.hasError('required')">
+                                            Pilferage Packages is required.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </td>
                     </tr>
+                 </ng-container>
                 </tbody>
             </table>
     
-            <!-- CHECKBOX FOOTER -->
+            
             <div class="d-flex flex-wrap gap-4 mt-3 p-4 justify-content-center">
-                <div class="form-check">
+                <!-- <div class="form-check">
                     <input class="form-check-input fs-5" type="checkbox" id="misroute">
                     <label class="form-check-label fw-semibold text-primary-color" for="misroute">
                         Misroute / Interchange
                     </label>
-                </div>
+                </div> -->
             
                 <div class="form-check">
-                    <input class="form-check-input fs-5" type="checkbox" id="deps">
+                    <input class="form-check-input fs-5" type="checkbox" id="deps" formControlName="IsAllgood" [class.disabled-input]="isPilferageDamage">
                     <label class="form-check-label fw-semibold text-primary-color" for="deps">
                         There is No DEPS
                     </label>
                 </div>
+            
+                <div class="text-start" *ngIf="isAllGoodChecked">
+                    <div class="row">
+                        <label class="form-check-label fw-semibold text-primary-color">Remarks:</label>
+                        <div class="col-sm-12 text-start">
+                            <textarea rows="3" class="form-check-input fs-5 form-control" placeholder="Remarks" formControlName="ISCheckRemarks" ></textarea>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</form>
 
     <div class="bg-secondary-subtle p-3">
         <label>Note:</label>
@@ -366,8 +579,15 @@
       <div class="d-grid justify-content-center">
           <div class="d-flex  gap-2">
             <button class="btn btn-secondary controls"> <i class="fas fa-arrow-left"></i>&nbsp;Back to Stock Update</button>
-            <button type="button" id="btnSubmit" class="btn btn-success controls" ><i class="fas fa-check"></i>&nbsp;Stock Update</button>
+            <button type="button" id="btnSubmit" class="btn btn-success controls"  [disabled]="!hasAnyPartStockUpdate() ||(isSubmitting || isRedirect)" (click)="stockUpdate()"><i class="fas fa-check"></i>&nbsp;Stock Update</button>
         </div>
-        <p style="color:red;">Select atleast one CNote to see the <strong>Submit</strong> button.</p>
+        <!-- <p style="color:red;">Select atleast one CNote to see the <strong>Submit</strong> button.</p> -->
       </div>
+    </div>
+    
+      <div *ngIf="isSubmitting" class="loading-overlay">
+        <div class="spinner-container">
+            <i class="fas fa-spinner fa-spin custom-spinner"></i>
+            <div class="mt-3 custom-text">Submitting...</div>
+        </div>
     </div>

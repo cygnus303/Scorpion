@@ -19,7 +19,21 @@ constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerServ
 
   THCArrival(paylaod:any){
      return this.apiHandlerService.Post(`THC/THCArrivalDetails`,paylaod);
-
   }
 
+    getStockUpdateDetails(params:any){
+     return this.apiHandlerService.Get(`THC/stockupdatedetails?id=${params.id}&BaseLocationCode=${params.baseLocationCode}`);
+  }
+
+    getWarehouseData(locCode :any){
+     return this.apiHandlerService.Get(`THC/WarehouseData/${locCode }`);
+  }
+
+  getStockUpdateDetail(params:any){
+     return this.apiHandlerService.Get(`THC/stockupdatedetails?id=${params.id}&BaseLocationCode=${params.baseLocationCode}`);
+  }
+
+    onStockupdate(formData: any) {
+    return this.apiHandlerService.Post(`THC/stockupdate`, formData);
+  }
 }

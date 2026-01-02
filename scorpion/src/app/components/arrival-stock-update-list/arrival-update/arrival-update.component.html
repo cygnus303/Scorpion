@@ -10,7 +10,7 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">THC No. :</label>
                     <div class="col-sm-7 text-start text-primary-color">
-                       {{arrivalDetail?.thcno}} ({{generalMasterService.loadingData[0]?.codeDesc}})
+                       {{arrivalDetail?.thcno}} ({{generalMasterService.loadingData.length ? generalMasterService.loadingData[0].codeDesc :''}})
                     </div>
                 </div>
             </div>
@@ -135,7 +135,7 @@
                    <div class="row align-items-center">
                        <label class="col-sm-5 col-form-label text-end">UnLoading By :</label>
                         <div class="col-sm-7 text-start text-primary-color">
-                          {{generalMasterService.loadingData[0]?.codeDesc}}
+                          {{generalMasterService.loadingData.length ? generalMasterService.loadingData[0].codeDesc :''}}
                        </div>
                    </div>
                </div>

@@ -82,8 +82,7 @@ export class ArrivalUpdateComponent {
       Rate: new FormControl(0),
       LoadingCharge: new FormControl(0)
     });
-    this.arrivalForm.get('LoadingBy')?.valueChanges
-      .subscribe(value => this.updateValidatorsByLoadingBy(value));
+    this.arrivalForm.get('LoadingBy')?.valueChanges.subscribe(value => this.updateValidatorsByLoadingBy(value));
   }
 
   updateValidatorsByLoadingBy(loadingBy: string) {
