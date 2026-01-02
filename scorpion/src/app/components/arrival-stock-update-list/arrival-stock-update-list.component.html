@@ -1,2 +1,10 @@
-<!-- <app-arrival-update></app-arrival-update> -->
-<app-stock-update></app-stock-update>
+@if (docketService.loginUserList.Type === '1') {
+  <app-arrival-update />
+}
+@else if (docketService.loginUserList.Type === '2') {
+  <app-stock-update />
+}
+@else if (docketService.loginUserList.Type === '3') {
+  <app-arrival-update />
+  <app-stock-update />
+}

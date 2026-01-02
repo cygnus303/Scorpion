@@ -20,7 +20,8 @@ export class ArrivalStockUpdateListComponent {
       // this.docketService.loginUserList.LocationCode =  'PIM';
       // this.docketService.loginUserList.loadBy = "XX9";
       // this.docketService.loginUserList.chargeType='1';
-      // this.docketService.loginUserList.id='VH/BWH/2526/002424';
+      // this.docketService.loginUserList.id='VH/LTT/2526/001764';
+      // this.docketService.loginUserList.Type = '1';
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
