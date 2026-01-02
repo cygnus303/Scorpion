@@ -17,11 +17,10 @@ export class ArrivalStockUpdateListComponent {
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      // this.docketService.loginUserList.LocationCode =  'PIM';
-      // this.docketService.loginUserList.loadBy = "XX9";
-      // this.docketService.loginUserList.chargeType='1';
-      // this.docketService.loginUserList.id='VH/LTT/2526/001764';
-      // this.docketService.loginUserList.Type = '1';
+      this.docketService.loginUserList.LocationCode =  'ABH';
+      this.docketService.loginUserList.loadBy = "XX9";
+      this.docketService.loginUserList.chargeType='1';
+      this.docketService.loginUserList.id='VH/DDN/2526/000484';
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }

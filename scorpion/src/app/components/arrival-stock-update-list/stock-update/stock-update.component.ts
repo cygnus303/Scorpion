@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { UnloaderUsers, WarehouseList } from 'app/shared/models/stock-update.model';
+import { CommonDateService } from 'app/shared/services/common-date.service';
 import { CommonService } from 'app/shared/services/common.service';
 import { DeliveryUpdateService } from 'app/shared/services/delivery-update.service';
 import { DocketService } from 'app/shared/services/docket.service';
@@ -31,9 +32,10 @@ public selectedImage: string | ArrayBuffer | null = null;
 public selectedPilferageImage: string | ArrayBuffer | null = null;
 public selectedDamageImage: string | ArrayBuffer | null = null;
 public stockData:any;
-public maxDate = new Date();
 public isSubmitting: boolean = false;
 public isRedirect: boolean = false; 
+minDate: Date | undefined;
+maxDate: Date | undefined;
 conditionList = [
   { text: 'GOOD', value: 1 },
   { text: 'SHORT', value: 2 },
@@ -42,7 +44,13 @@ conditionList = [
   { text: 'PILFERAGE', value: 5 }
 ];
 
- constructor(public docketService: DocketService, public commonService: CommonService,private stockUpdateService:StockUpdateService,public generalMasterService:GeneralMasterService,public deliveryUpdateService:DeliveryUpdateService,public sweetAlertService:SweetAlertService) { }
+ constructor(public docketService: DocketService, 
+  public commonService: CommonService,
+  private stockUpdateService:StockUpdateService,
+  public generalMasterService:GeneralMasterService,
+  public deliveryUpdateService:DeliveryUpdateService,
+  public sweetAlertService:SweetAlertService,
+  public commonDateService:CommonDateService) { }
 
   ngOnInit(){
     this.buildForm()
@@ -50,6 +58,7 @@ conditionList = [
     this.getStockUpdateDetails();
     this.getWarehouseData();
     this.generalMasterService.getDamageData();
+    this.dateAccess()
   }
 
   buildForm(){
@@ -100,6 +109,33 @@ conditionList = [
       stockUpdateControls.some((row: any) => row.get('damage')?.value || row.get('pilferage')?.value)
     );
   }
+
+    dateAccess() {
+  const payload = {
+    moduleCode: '47',
+    baseUserName: this.docketService.baseUsername
+  };
+
+  this.commonDateService.userDateSelection(payload).subscribe({
+    next: (res: any) => {
+      if (res && res.length > 0) {
+        const rule = res[0];
+
+        // API min_Date
+        this.minDate = new Date(rule.min_Date);
+
+        // BackDate days logic
+        if (rule.backDate_Days && rule.backDate_Days > 0) {
+          const today = new Date();
+          this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
+        }
+
+        // Max date = today
+        this.maxDate = new Date();
+      }
+    }
+  });
+}
 
   stockUpdateUsers(event:any) {
     const searchText = event.term;
