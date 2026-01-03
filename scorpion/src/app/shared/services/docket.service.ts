@@ -685,6 +685,7 @@ getcontractservicecharge() {
         next: (response: any) => {
           if (response) {
             this.contractservicecharge = response;
+            this.calculateSummary.next(true);
             this.invoiceform.patchValue({
               cft_Ratio: this.contractservicecharge[0].cft_Ratio
             });
@@ -695,7 +696,6 @@ getcontractservicecharge() {
           console.error("Error in contractservicecharge:", err);
         },
         complete: () => {
-          this.calculateSummary.next(true);
           setTimeout(() => {
             this.freightAndOtherChar('');
           }, 200);
@@ -1182,24 +1182,17 @@ GetFreightContractDetails() {
           billingState: this.freightData.billingState
         });
 
+        
+        // ⭐ Update form weight ONLY if API gives higher value
+        const newFinalWeight = Math.max(this.freightData.chargedWeight || 0, originalFinalWeight || 0);
+        
+        const newPkgWeight = Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0);
+        this.invoiceform.patchValue({
+          finalActualWeight: newFinalWeight,
+          chargeWeightPerPkg: newPkgWeight
+        });
         this.validateAppointmentDate();
         this.getFuelSurcharge(this.freightData?.freightCharge);
-
-        // ⭐ Update form weight ONLY if API gives higher value
-          const newFinalWeight = Math.max(
-          this.freightData.chargedWeight || 0,
-            originalFinalWeight || 0
-          );
-          
-          const newPkgWeight = Math.max(
-            this.freightData.chargedPKGS || 0,
-            this.invoiceform.value.chargeWeightPerPkg || 0
-          );
-  
-          this.invoiceform.patchValue({
-            finalActualWeight: newFinalWeight,
-            chargeWeightPerPkg: newPkgWeight
-          });
       }
     }
   });

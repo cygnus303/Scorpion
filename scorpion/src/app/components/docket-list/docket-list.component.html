@@ -26,7 +26,7 @@
 <div class="form-actions fluid">
     <div class="col-md-12 d-flex justify-content-center gap-2">
         <a class="btn btn-light default"> <i class="fas fa-sync"></i>&nbsp;Reset</a>
-    <button type="submit" class="btn btn-success btn-sm px-3" 
+    <button type="submit" class="btn btn-success btn-sm px-3"  *ngIf="!(apiLoading.loading$ | async)" 
           (click)="onSubmit()" [disabled]="!docketService.isSubmiting || isRedirect">
         <ng-container>
             <i class="fas fa-check"></i>&nbsp;Submit

@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
 import { ApiHandlerService } from './api-handler.service';
-import { Observable } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 import { IApiBaseResponse } from '../interface/api-base-action-response';
 import { billingPartyRequest, cityResponse, DestinationsList, DKTChargesResponse, GSTNOListResponse, IGSTchargesDetailResponse, pinCodeResponse } from '../models/general-master.model';
 import { DocketService } from './docket.service';
+import { ApiLoadingService } from './APILoading.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { DocketService } from './docket.service';
 export class BasicDetailService {
 loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
 
-  constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService) {}
+  constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService,public apiLoading: ApiLoadingService) {}
 
   getGeneralMasterList(codeType: string, searchText: string | null, codeId: string | number | null): Observable<IApiBaseResponse<any[]>> {
     return this.apiHandlerService.Get(`External/${codeType}`, {
@@ -63,7 +64,10 @@ loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
   }
 
   getOtherChargesDetail(payload: any) {
-    return this.apiHandlerService.Post(`Operation/GetOtherChargesDetails`, payload);
+     this.apiLoading.start();
+    return this.apiHandlerService.Post(`Operation/GetOtherChargesDetails`, payload).pipe(
+    finalize(() => this.apiLoading.stop()) // ✅ Stop loader automatically when API completes
+  );
   }
 
   GetPincodeOrigin(data: any) {
@@ -77,10 +81,15 @@ loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
   GetGSTFromTrnMode(data: any) {
     return this.apiHandlerService.Get(`Operation/GetGSTFromTrnMode?trnMode=${data}`);
   }
-  GetFreightContractDetails(data: any) {
-    return this.apiHandlerService.Post(`Operation/GetFreightContractDetails`, data);
-  }
+ GetFreightContractDetails(data: any) {
+  // ✅ Start loader automatically
+  this.apiLoading.start();
 
+  // Call API
+  return this.apiHandlerService.Post(`Operation/GetFreightContractDetails`, data).pipe(
+    finalize(() => this.apiLoading.stop()) // ✅ Stop loader automatically when API completes
+  );
+}
   getGSTCalculation(data: any) {
     return this.apiHandlerService.Post(`Operation/GetDocketGSTCalculation`, data);
   }
@@ -109,7 +118,10 @@ loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
   }
 
    getFovContractDetails(payload:any){
-    return this.apiHandlerService.Post(`Operation/GetFovContractDetails`,payload)
+     this.apiLoading.start();
+    return this.apiHandlerService.Post(`Operation/GetFovContractDetails`,payload).pipe(
+    finalize(() => this.apiLoading.stop()) // ✅ Stop loader automatically when API completes
+  );
   }
 
     onSubmit(data: any) {

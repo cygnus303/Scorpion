@@ -7,6 +7,7 @@ import { environment } from 'environments/environment';
 import { FormArray, Validators } from '@angular/forms';
 import { BasePayload } from 'app/shared/models/general-master.model';
 import { BasicDetailsComponent } from './basic-details/basic-details.component';
+import { ApiLoadingService } from 'app/shared/services/APILoading.service';
 @Component({
   selector: 'app-docket-list',
   standalone: false,
@@ -24,7 +25,7 @@ export class DocketListComponent implements OnInit {
 
 
   constructor(
-    public docketService: DocketService, private basicDetailService: BasicDetailService, private router: Router,
+    public docketService: DocketService, private basicDetailService: BasicDetailService, private router: Router,public apiLoading: ApiLoadingService,
     private sweetAlertService: SweetAlertService,
   ) { }
 
@@ -655,7 +656,7 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
           "chequeNo": "",
         },
       };
-
+      
       const DKTsubTotal = Number(this.docketService.freightForm.value.subTotal) || 0;
       const DKTTotal = Number(this.docketService.freightForm.value.dktTotal) || 0;
 
