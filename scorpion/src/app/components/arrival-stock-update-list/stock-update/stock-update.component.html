@@ -181,14 +181,9 @@
                         <td style="width: 150px;"><input class="form-control " formControlName="arrivedWt" readonly></td>
                         <td style="width: 200px;"><ng-select [items]="conditionList" bindLabel="text" class="clear-icon required2" bindValue="value" formControlName="condition" placeholder="Select Condition"></ng-select></td>
                         <td style="width: 200px;"><ng-select class="clear-icon" bindLabel="godown_name" bindValue="godown_srno" [items]="warehouseList" placeholder="Select Warehouse" formControlName="warehouse"></ng-select></td>
-                        <td style="width: 200px;"  *ngIf="docketService.loginUserList.LocationCode === row.get('desT_CD')?.value ||
-                            (
-                                row.get('isFTLDelivery')?.value === true &&
-                                docketService.loginUserList.LocationCode === row.get('thcbr')?.value &&
-                                row.get('desT_CD')?.value === docketService.loginUserList.LocationCode
-                            )
-                            "
-                        ><ng-select class="clear-icon required2" bindLabel="codeDesc" bindValue="codeId" formControlName="deliveryProcess" [items]="generalMasterService.deliveryProcessData" placeholder="Select Process"></ng-select></td>
+                        <td style="width: 200px;"  
+                        *ngIf="docketService.loginUserList.LocationCode === row.get('desT_CD')?.value ||
+                            (row.get('isFTLDelivery')?.value === true && docketService.loginUserList.LocationCode === row.get('thcbr')?.value && row.get('desT_CD')?.value === docketService.loginUserList.LocationCode)"><ng-select class="clear-icon required2" bindLabel="codeDesc" bindValue="codeId" formControlName="deliveryProcess" [items]="generalMasterService.deliveryProcessData" placeholder="Select Process"></ng-select></td>
                     </tr>
                      <tr *ngIf="row.get('deliveryProcess')?.value === '2'">
                         <td class="text-center">POD :-</td>
@@ -376,7 +371,7 @@
                                      [ngClass]="{ 'border-danger': row.get('pilferageWt')?.invalid  && row.get('pilferageWt')?.touched }">
                                      <div *ngIf="row.get('pilferageWt')?.touched && row.get('pilferageWt')?.errors">
                                         <div class="text-danger text-start" *ngIf="row.get('pilferageWt')?.hasError('required')">
-                                            Pilferage Packages is required.
+                                            Pilferage Weight is required.
                                         </div>
                                         <div class="text-danger text-start" *ngIf="row.get('pilferageWt')?.hasError('min')">
                                             Please enter a value greater than or equal to 1.
@@ -393,7 +388,7 @@
                                        [ngClass]="{ 'border-danger': row.get('pilferageReason')?.invalid  && row.get('pilferageReason')?.touched }"></textarea>
                                       <div *ngIf="row.get('pilferageReason')?.touched && row.get('pilferageReason')?.errors">
                                         <div class="text-danger text-start" *ngIf="row.get('pilferageReason')?.hasError('required')">
-                                            Pilferage Packages is required.
+                                            Pilferage Reason is required.
                                         </div>
                                     </div>
                                 </div>
@@ -439,7 +434,7 @@
                                      [ngClass]="{ 'border-danger': row.get('damageQty')?.invalid  && row.get('damageQty')?.touched }"  (change)="onDamageQtyChange(i)">
                                     <div *ngIf="row.get('damageQty')?.touched && row.get('damageQty')?.errors">
                                         <div class="text-danger text-start" *ngIf="row.get('damageQty')?.hasError('required')">
-                                            Pilferage Packages is required.
+                                            Damage Packages is required.
                                         </div>
                                         <div class="text-danger text-start" *ngIf="row.get('damageQty')?.hasError('min')">
                                             Please enter a value greater than or equal to 1.
@@ -459,7 +454,7 @@
                                      [ngClass]="{ 'border-danger': row.get('damageWt')?.invalid  && row.get('damageWt')?.touched }">
                                     <div *ngIf="row.get('damageWt')?.touched && row.get('damageWt')?.errors">
                                         <div class="text-danger text-start" *ngIf="row.get('damageWt')?.hasError('required')">
-                                            Pilferage Packages is required.
+                                            Damage Weight is required.
                                         </div>
                                         <div class="text-danger text-start" *ngIf="row.get('damageWt')?.hasError('min')">
                                             Please enter a value greater than or equal to 1.
@@ -476,7 +471,7 @@
                                        [ngClass]="{ 'border-danger': row.get('damageReason')?.invalid  && row.get('damageReason')?.touched }"></textarea>
                                       <div *ngIf="row.get('damageReason')?.touched && row.get('damageReason')?.errors">
                                         <div class="text-danger text-start" *ngIf="row.get('damageReason')?.hasError('required')">
-                                            Pilferage Packages is required.
+                                            Damage Reason is required.
                                         </div>
                                     </div>
                                 </div>
@@ -513,7 +508,7 @@
                                         [ngClass]="{ 'border-danger': row.get('damageType')?.invalid  && row.get('damageType')?.touched }"></ng-select>
                                        <div *ngIf="row.get('damageType')?.touched && row.get('damageType')?.errors">
                                         <div class="text-danger text-start" *ngIf="row.get('damageType')?.hasError('required')">
-                                            Pilferage Packages is required.
+                                            Damage Type is required.
                                         </div>
                                     </div>
                                 </div>
@@ -527,7 +522,7 @@
                                        [ngClass]="{ 'border-danger': row.get('severity')?.invalid  && row.get('severity')?.touched }">
                                       <div *ngIf="row.get('severity')?.touched && row.get('severity')?.errors">
                                         <div class="text-danger text-start" *ngIf="row.get('severity')?.hasError('required')">
-                                            Pilferage Packages is required.
+                                            Severity is required.
                                         </div>
                                     </div>
                                 </div>

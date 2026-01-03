@@ -28,7 +28,6 @@ export class AppComponent {
       this.docketService.loginUserList = JSON.parse(saved);
       // this.docketService.loginUserList.LocationCode =  'PIM';
       // this.docketService.loginUserList.Type = '1';
-      // this.docketService.loginUserList.LocationCode =  'PIM';
       // this.docketService.loginUserList.loadBy = "B";
       // this.docketService.loginUserList.chargeType='1';
       // this.docketService.loginUserList.drsId='DS/PIM/2526/002766';

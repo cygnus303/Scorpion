@@ -56,7 +56,7 @@ conditionList = [
     this.buildForm()
     this.generalMasterService.getDeliveryProcessData();
     this.getStockUpdateDetails();
-    this.getWarehouseData();
+    this.getWarehouseData(this.docketService.loginUserList.LocationCode);
     this.generalMasterService.getDamageData();
     this.dateAccess()
   }
@@ -450,8 +450,8 @@ onRowDamageChange(index: number) {
     });
   }
 
-  getWarehouseData() {
-    this.stockUpdateService.getWarehouseData(this.docketService.loginUserList.LocationCode).subscribe({
+  getWarehouseData(data:any) {
+    this.stockUpdateService.getWarehouseData(data).subscribe({
       next: (response:any) => {
        if (response && response?.length) {
           this.warehouseList = response;

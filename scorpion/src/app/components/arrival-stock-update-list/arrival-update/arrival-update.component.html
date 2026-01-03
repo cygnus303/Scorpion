@@ -46,7 +46,7 @@
                   <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Incoming Seal # & Status :</label>
                     <div class="col-sm-3 text-start">
-                        <input class="form-control required2" placeholder="UnLoading Charge" type="text" formControlName="ISN"
+                        <input class="form-control required2" placeholder="Incoming Seal" type="text" formControlName="ISN"
                          [ngClass]="{ 'border-danger': arrivalForm.get('ISN')?.invalid && arrivalForm.get('ISN')?.touched}"
                         >
                      <div class="text-danger text-start" *ngIf="arrivalForm.get('ISN')?.invalid && arrivalForm.get('ISN')?.touched">
@@ -97,7 +97,7 @@
         </div>
         <div class="row pb-3">
             <div class="col-6">
-                <div class="row align-items-center">
+                <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Incoming Remarks :</label>
                     <div class="col-sm-7 text-start">
                         <textarea class="form-control-textarea required2" rows="2" placeholder="Incoming Remarks" formControlName="IR"
@@ -180,7 +180,7 @@
     </div>
 
     </form>
-   <div class="d-flex justify-content-center text-center p-4">
+   <div class="d-flex justify-content-center text-center bg-secondary-subtle p-4">
         <button class="btn btn-success" (click)="onSubmit()" [disabled]="isSubmit || isRedirect">
             <i class="bi bi-check-circle"></i>  Update Incoming THC Data
         </button>
