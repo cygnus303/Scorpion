@@ -434,7 +434,7 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
           "chargedPkgsNo": this.docketService.invoiceform.value.chargeWeightPerPkg,
           "prodcd": this.docketService.basicDetailForm.value.contents,
           "spl_svc_req": "",
-          "stax_paidby": this.docketService.freightForm.value.stax_paidby,//dropdown mathi avshe teni key
+          "stax_paidby": this.docketService.freightForm.value.stax_paidby,
           "stax_regno": "",
           "service_Class": this.docketService.basicDetailForm.value.serviceType,
           "ftl_types": this.docketService.basicDetailForm.value.typeMovement,
@@ -459,8 +459,8 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
           "trN_MOD": this.docketService.basicDetailForm.value.mode,
           "coD_DOD": this.docketService.basicDetailForm.value.IsCODDOD === 'Y' ? true : false,
           "cfT_YN": this.docketService.step2DetailsList?.isVolumentric === 'Y' ? true : false,
-          "dacC_YN": this.docketService.basicDetailForm.value.isDACC,  // step2 na response ma pn
-          "localCN_YN": this.docketService.basicDetailForm.value.isLocalNote ?'Y':'N', //y and n
+          "dacC_YN": this.docketService.basicDetailForm.value.isDACC,
+          "localCN_YN": this.docketService.basicDetailForm.value.isLocalNote ?'Y':'N',
           "pickup_Dely": this.docketService.basicDetailForm.value.pickup,
           "permit_yn": "",// api baki chhe
           "permit_recvd_at": "",
@@ -722,7 +722,7 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
             this.docketService.invoiceform.reset();
             this.docketService.consignorForm.reset();
           }
-          this.isSubmitting = false;
+          // this.isSubmitting = false;
         },
         error: (error) => {
           window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -746,7 +746,7 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
             this.docketService.invoiceform.reset();
             this.docketService.consignorForm.reset();
           }
-          this.isSubmitting = false;
+          // this.isSubmitting = false;
         },
         error: (error) => {
           window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -623,6 +623,7 @@ getStep2Details() {
     this.basicDetailService.GetDKTGSTForGTA(payload).subscribe({
       next: (response: any) => {
         if (response) {
+           this.isSubmiting=true;
           // this.GetPincodeOriginList = response;
           if(this.basicDetailForm.value.exemptServices){
             this.basicDetailForm.patchValue({
@@ -653,6 +654,7 @@ getStep2Details() {
         }
       }
     });
+    //  this.isSubmiting=false
   }
 
 GetGSTFromTrnMode() {
@@ -908,11 +910,13 @@ getGSTCalculation() {
       "billingState": this.freightForm.value.billingState || 'MH'
   };
   const currentId = ++this.lastRequestId;
+
   this.basicDetailService.getGSTCalculation(payload).subscribe({
     next: (response: any) => {
       // 👇 Only update if this is the latest request
       if (currentId === this.lastRequestId) {
         this.gstCalculationList = Object.keys(response).reduce((acc: any, key) => {
+          this.isSubmiting=true;
           acc[key.toLowerCase()] = response[key];
           return acc;
         }, {});
@@ -933,8 +937,16 @@ getGSTCalculation() {
     
       if (currentId === this.lastRequestId) {
        this.mergeAndPatchGST(this.gstCalculationList,this.completiondata?.wmdc || {},this.freightForm);
+       this.isSubmiting=true;
       }
+    },
+    error: (err) => {
+    // ❌ Error but only for latest call
+    if (currentId === this.lastRequestId) {
+      console.error('GST Calculation API Error', err);
+      this.isSubmiting = false;
     }
+  }
   });
 }
 
@@ -1206,7 +1218,7 @@ GetFreightContractDetails() {
     }
   });
 
-  this.isSubmiting = false;
+  // this.isSubmiting = false;
 }
 
 validateAppointmentDate() {
@@ -1244,11 +1256,12 @@ validateAppointmentDate() {
     this.basicDetailService.getFovContractDetails(payload).subscribe({
       next: (response: any) => {
         if (response) {
+          this.isSubmiting=true;
           this.freightForm.patchValue({
             fovCharged: response.fovCharged,
             fovCalculated: response.fovCharged,
             fovRate: response.fovRate
-          })
+          });
         }
       },
     });
@@ -1338,11 +1351,12 @@ validateAppointmentDate() {
             // }
           // });
           // this.subTotalCalculation();
+          this.isSubmiting=false
           this.getFuelSurcharge(this.freightData?.freightCharge);
         }
       },
     });
-    this.isSubmiting=false;
+    // this.isSubmiting=false;
   }
 
 mergeAndPatchCharges( 
