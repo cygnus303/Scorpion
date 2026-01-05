@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { UnloaderUsers, WarehouseList } from 'app/shared/models/stock-update.model';
+import { CommonDateService } from 'app/shared/services/common-date.service';
 import { CommonService } from 'app/shared/services/common.service';
 import { DeliveryUpdateService } from 'app/shared/services/delivery-update.service';
 import { DocketService } from 'app/shared/services/docket.service';
@@ -31,9 +32,11 @@ public selectedImage: string | ArrayBuffer | null = null;
 public selectedPilferageImage: string | ArrayBuffer | null = null;
 public selectedDamageImage: string | ArrayBuffer | null = null;
 public stockData:any;
-public maxDate = new Date();
 public isSubmitting: boolean = false;
 public isRedirect: boolean = false; 
+minDate: Date | undefined;
+maxDate: Date | undefined;
+public status: 'loading' | 'nodata' | 'data' = 'loading';
 conditionList = [
   { text: 'GOOD', value: 1 },
   { text: 'SHORT', value: 2 },
@@ -42,14 +45,21 @@ conditionList = [
   { text: 'PILFERAGE', value: 5 }
 ];
 
- constructor(public docketService: DocketService, public commonService: CommonService,private stockUpdateService:StockUpdateService,public generalMasterService:GeneralMasterService,public deliveryUpdateService:DeliveryUpdateService,public sweetAlertService:SweetAlertService) { }
+ constructor(public docketService: DocketService, 
+  public commonService: CommonService,
+  private stockUpdateService:StockUpdateService,
+  public generalMasterService:GeneralMasterService,
+  public deliveryUpdateService:DeliveryUpdateService,
+  public sweetAlertService:SweetAlertService,
+  public commonDateService:CommonDateService) { }
 
   ngOnInit(){
     this.buildForm()
     this.generalMasterService.getDeliveryProcessData();
     this.getStockUpdateDetails();
-    this.getWarehouseData();
+    this.getWarehouseData(this.docketService.loginUserList.LocationCode);
     this.generalMasterService.getDamageData();
+    this.dateAccess()
   }
 
   buildForm(){
@@ -100,6 +110,33 @@ conditionList = [
       stockUpdateControls.some((row: any) => row.get('damage')?.value || row.get('pilferage')?.value)
     );
   }
+
+    dateAccess() {
+  const payload = {
+    moduleCode: '47',
+    baseUserName: this.docketService.baseUsername
+  };
+
+  this.commonDateService.userDateSelection(payload).subscribe({
+    next: (res: any) => {
+      if (res && res.length > 0) {
+        const rule = res[0];
+
+        // API min_Date
+        this.minDate = new Date(rule.min_Date);
+
+        // BackDate days logic
+        if (rule.backDate_Days && rule.backDate_Days > 0) {
+          const today = new Date();
+          this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
+        }
+
+        // Max date = today
+        this.maxDate = new Date();
+      }
+    }
+  });
+}
 
   stockUpdateUsers(event:any) {
     const searchText = event.term;
@@ -395,27 +432,35 @@ onRowDamageChange(index: number) {
   const checked = row.get('damage')?.value;
   this.toggleDamageValidators(row, checked);
 }
-
   getStockUpdateDetails() {
     const payload = {
       id: this.docketService.loginUserList.id,
       baseLocationCode: this.docketService.loginUserList.LocationCode
     };
+    this.status = 'loading';
+    this.stockUpdateArray.clear();
     this.stockUpdateService.getStockUpdateDetails(payload).subscribe({
-      next: (response:any) => {
-       if (response) {
-          this.stockUpdateArray.clear();
-          response.listVSFUM.forEach((item: any) => {
-            this.stockUpdateArray.push(this.createForm(item));
-          });;
-          this.stockData=response.vsfum;
+      next: (response: any) => {
+        if (response) {
+          this.stockData = response.vsfum;
+          if (response.listVSFUM && response.listVSFUM.length > 0) {
+            response.listVSFUM.forEach((item: any) => {
+              this.stockUpdateArray.push(this.createForm(item));
+            });
+            this.status = 'data';
+          } else {
+            this.status = 'nodata';
+          }
         }
+      },
+      error: () => {
+        this.status = 'nodata';
       }
     });
   }
 
-  getWarehouseData() {
-    this.stockUpdateService.getWarehouseData(this.docketService.loginUserList.LocationCode).subscribe({
+  getWarehouseData(data:any) {
+    this.stockUpdateService.getWarehouseData(data).subscribe({
       next: (response:any) => {
        if (response && response?.length) {
           this.warehouseList = response;
@@ -438,45 +483,34 @@ onRowDamageChange(index: number) {
      const formattedDate = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
   return new FormGroup({
     IsPartStockUpdate: new FormControl(false), 
-
     damage: new FormControl(false),
     pilferage: new FormControl(false),
-
     mfNo: new FormControl(item.tcno),
     docketNo: new FormControl(item.dockNo),
     route: new FormControl(`${item.orgncd} - ${item.desT_CD}`),
     desT_CD:new FormControl(item.desT_CD),
-
     bookingDate: new FormControl(formattedDate),
     committedDate: new FormControl(item.cdelydt),
     isFTLDelivery:new FormControl(item.isFTLDelivery),
-
     pkgs: new FormControl(item.pkgsno),
     weight: new FormControl(item.actuwt),
     thcbr:new FormControl(item.thcbr),
-
-
     bizType: new FormControl(item.bizType),
     serviceType: new FormControl(item.service_Class),
-
     arrivedPkgs: new FormControl(item.pkgsno, [Validators.required,Validators.max(item.pkgsno)]),
     arrivedWt: new FormControl({ value: item.actuwt, disabled: true }),
-
     condition: new FormControl(1),
     warehouse: new FormControl(item.desT_CD),
     deliveryProcess: new FormControl(null),
-
     shortQty: new FormControl(item.shortageQty || 0),
     shortWt: new FormControl(item.shortageWeight || 0),
     shortReason: new FormControl(''),
     shortRemarks: new FormControl(''),
     shortFile: new FormControl(null), 
-
     pilferageQty: new FormControl(item.pilferageQty || 0),
     pilferageWt: new FormControl(item.pilferageWeight || 0),
     pilferageReason: new FormControl(''),
     pilferageRemarks: new FormControl(''),
-
     damageQty: new FormControl(item.damageQry || 0),
     damageWt: new FormControl(item.damageWeight || 0),
     damageReason: new FormControl(''),
@@ -488,10 +522,8 @@ onRowDamageChange(index: number) {
     /* ================= POD CONTROLS ================= */
     frontFiles: new FormControl([]),
     backFiles: new FormControl([]),
-
     frontPreview: new FormControl(null),
     backPreview: new FormControl(null),
-
     podValidated: new FormControl(false),
     bkG_PKGSNO:new FormControl(item.bkG_PKGSNO),
     bkG_ACTUWT:new FormControl(item.bkG_ACTUWT),

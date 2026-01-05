@@ -12,6 +12,7 @@ import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { SharedModule } from 'app/shared/shared/shared.module';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { environment } from 'environments/environment';
+import { CommonDateService } from 'app/shared/services/common-date.service';
 
 
 @Component({
@@ -26,6 +27,8 @@ export class ArrivalUpdateComponent {
   public arrivalDetail: any;
   public isSubmit: boolean = false;
   env = environment;
+  minDate: Date | undefined;
+  maxDate: Date | undefined;
   public isRedirect: boolean = false;
   public branchWiseLoadingUnloadingList: BranchWiseLoadingUnloading[] = [];
 
@@ -59,12 +62,14 @@ export class ArrivalUpdateComponent {
     private stockUpdateService: StockUpdateService,
     public generalMasterService: GeneralMasterService,
     public THCService: THCMasterService,
-    private sweetAlertService: SweetAlertService) { }
+    private sweetAlertService: SweetAlertService,
+    public commonDateService:CommonDateService) { }
 
   ngOnInit() {
     this.buildForm();
     this.generalMasterService.getDeliveryProcessData();
     this.getArrival();
+     this.dateAccess()
   }
 
 
@@ -73,7 +78,7 @@ export class ArrivalUpdateComponent {
       ISN: new FormControl('', [Validators.required]),
       s2id_Status: new FormControl(null, [Validators.required]),
       AD: new FormControl(this.getCurrentDateTime()),
-      CLOSEKM: new FormControl(''),
+      CLOSEKM: new FormControl('0'),
       IR: new FormControl('', [Validators.required]),
       Unloder: new FormControl(''),
       LAR: new FormControl(null),
@@ -272,6 +277,33 @@ export class ArrivalUpdateComponent {
     });
   }
 
+  dateAccess() {
+  const payload = {
+    moduleCode: '46',
+    baseUserName: this.docketService.baseUsername
+  };
+
+  this.commonDateService.userDateSelection(payload).subscribe({
+    next: (res: any) => {
+      if (res && res.length > 0) {
+        const rule = res[0];
+
+        // API min_Date
+        this.minDate = new Date(rule.min_Date);
+
+        // BackDate days logic
+        if (rule.backDate_Days && rule.backDate_Days > 0) {
+          const today = new Date();
+          this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
+        }
+
+        // Max date = today
+        this.maxDate = new Date();
+      }
+    }
+  });
+}
+
   getChargesVendorsList(event: any) {
     const data = {
       vendorType: event?.codeId ? event?.codeId : event,
@@ -335,7 +367,7 @@ export class ArrivalUpdateComponent {
         next: (response) => {
           if (response.success) {
             this.isRedirect = true;
-            window.parent.location.href = `${this.env.liveUrl}Operation/ArrivalUpdateDone?ThcNo=${this.arrivalDetail?.thcno}&TranXaction=True&view=Arrival`;
+            window.parent.location.href = `${this.env.liveUrl}Operation/ArrivalUpdateDone?ThcNo=${this.arrivalDetail?.thcno}&TranXaction=True&view=Arrival&angular`;
           } else {
             this.arrivalForm.markAllAsTouched();
           }
@@ -344,7 +376,7 @@ export class ArrivalUpdateComponent {
           window.scrollTo({ top: 0, behavior: 'smooth' });
           this.sweetAlertService.error(error?.error?.message);
           this.isSubmit = false;
-          this.isRedirect = true;
+          this.isRedirect = false;
         }
       })
     }

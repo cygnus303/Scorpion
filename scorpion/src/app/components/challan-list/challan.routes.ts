@@ -27,7 +27,7 @@ export const ChallanRoutes: Routes = [
   {
     path: 'StockUpdateDetails',
     loadComponent: () => import('../arrival-stock-update-list/arrival-stock-update-list.component').then(m => m.ArrivalStockUpdateListComponent),
-    // canActivate: [DocketGuard]
+    canActivate: [DocketGuard]
   }
 
 ];
