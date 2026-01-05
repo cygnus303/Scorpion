@@ -79,7 +79,9 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Closing KM :</label>
                     <div class="col-sm-3 text-start">
-                        <input class="form-control" placeholder="Closing KM" type="text" formControlName="CLOSEKM" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                        <input class="form-control" placeholder="Closing KM" type="text" formControlName="CLOSEKM" oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                         (focus)="onFocusCloseKM()"
+                        (blur)="onBlurCloseKM()">
                     </div>
                      <div class="col-sm-4 text-start text-primary-color">
                        (Opening KM : {{ arrivalDetail?.openkm | number:'1.2-2' }}) (Last Closing KM : {{ arrivalDetail?.closekm }})
@@ -144,7 +146,7 @@
                        <label class="col-sm-5 col-form-label text-end">Vendor Code :</label>
                        <div class="col-sm-7 text-start">
                           <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code" formControlName="VendorCode" (change)="getLoadingCharge($event)"
-                                    [items]="branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"
+                                    [items]="branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value" appFocusNext
                                      [ngClass]="{ 'border-danger': arrivalForm.get('VendorCode')?.invalid && arrivalForm.get('VendorCode')?.touched}"
                                     >
                                     <ng-template ng-option-tmp let-item="item">
@@ -163,7 +165,9 @@
                    <div class="row">
                        <label class="col-sm-5 col-form-label text-end">Rate :</label>
                        <div class="col-sm-7 text-start">
-                          <input class="form-control" placeholder="Vendor Code" type="text" formControlName="Rate" (input)="calculateCharge()">
+                          <input class="form-control" placeholder="Vendor Code" type="text" formControlName="Rate" (input)="calculateCharge()" appFocusNext
+                          (focus)="onFocusRate()"
+                          (blur)="onBlurRate()">
                          <div class="text-danger mt-1"> {{rateErrorMsg}}</div>
                        </div>
                    </div>

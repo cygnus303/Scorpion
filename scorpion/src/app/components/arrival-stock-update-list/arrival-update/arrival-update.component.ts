@@ -233,6 +233,35 @@ export class ArrivalUpdateComponent {
     return true;
   }
 
+  onFocusCloseKM() {
+  const control = this.arrivalForm.get('CLOSEKM');
+    if (control?.value === '0' || control?.value === 0) {
+      control.setValue(null);
+    }
+  }
+
+  onBlurCloseKM() {
+    const control = this.arrivalForm.get('CLOSEKM');
+    if (control?.value === null || control?.value === '') {
+      control.setValue(0);
+    }
+  }
+
+  onFocusRate() {
+  const control = this.arrivalForm.get('Rate');
+    if (control?.value === 0) {
+      control.setValue(null);
+    }
+  }
+
+  onBlurRate() {
+    const control = this.arrivalForm.get('Rate');
+    if (control?.value === null || control?.value === '') {
+      control.setValue(0);
+    }
+  }
+
+
   calculateCharge() {
     const isValid = this.validateRate();
     if (!isValid) {
