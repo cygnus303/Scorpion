@@ -311,8 +311,8 @@ export class DocketService {
 freightAndOtherChar(type:string){
   this.getBaseCode2();
   this.getBaseCode1();
-  this.GetFreightContractDetails();
-  this.getOtherChargesDetail(type);
+  this.GetFreightContractDetails(type);
+  this.getOtherChargesDetail();
   this.getFovContractDetails();
 }
 
@@ -1131,7 +1131,7 @@ calculateChargeWeight(){
       }
 }
 
-GetFreightContractDetails() {
+GetFreightContractDetails(type?:string) {
 
   const originalFinalWeight = this.invoiceform.value.finalActualWeight;
 
@@ -1205,6 +1205,9 @@ GetFreightContractDetails() {
         });
         this.validateAppointmentDate();
         this.getFuelSurcharge(this.freightData?.freightCharge);
+        if(type==='isactaulweight'){
+        this.calculateSummary.next(true);
+        }
       }
     }
   });
@@ -1257,7 +1260,7 @@ validateAppointmentDate() {
       },
     });
   }
-  getOtherChargesDetail(type?:string) {
+  getOtherChargesDetail() {
     const chargedWeight = Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString();
     const payload = {
       "chargeRule":this.ruleDetailForChargeRule?.defaultvalue || 'NONE',

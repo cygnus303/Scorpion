@@ -317,9 +317,9 @@
                         </td>
                         <td class="center">
                           <input class="form-control required2 text-end" placeholder="Actual Weight" type="number"
-                            formControlName="actualWeight" (input)="calculateSummary(i)"
+                            formControlName="actualWeight" 
                             (keypress)="docketService.allowNumericDecimal($event)"
-                            (blur)="restoreIfEmpty(row, 'actualWeight');docketService.freightAndOtherChar('')"
+                            (blur)="restoreIfEmpty(row, 'actualWeight');docketService.freightAndOtherChar('isactaulweight');"
                             (change)="docketService.GetDKTGSTForGTA();" (focus)="clearZero(row, 'actualWeight')"
                             [ngClass]="{ 'border-danger': row.get('actualWeight')?.invalid && row.get('actualWeight')?.touched }">
   
