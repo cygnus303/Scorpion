@@ -184,6 +184,7 @@ getCompletionData() {
               specialInstruction: basicDetail.spl_svc_req,
               ISCounterPickUpPRS: basicDetail.isCounterPickUpPRS,
               ISCounterDelivery: basicDetail.isCounterDelivery,
+              typeMovement: basicDetail.ftl_types,
               // isDACC: basicDetail.isDACC
             });
           this.getODAData(basicDetail.csgePinCode);
