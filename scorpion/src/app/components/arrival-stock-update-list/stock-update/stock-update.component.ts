@@ -661,6 +661,10 @@ formatDate(date: Date): string {
   return d.toISOString();
 }
 
+backtoStockUpdate() {
+     window.parent.location.href = `${this.env.liveUrl}/Operation/ArrivalUpdate/${'2'}?type=${"2"}&src=angular`;
+}
+
 stockUpdate() {
   /* ================= SELECTED ROWS PAYLOAD ================= */
   const selectedControls = this.stockUpdateArray.controls.filter(row => row.get('IsPartStockUpdate')?.value === true);

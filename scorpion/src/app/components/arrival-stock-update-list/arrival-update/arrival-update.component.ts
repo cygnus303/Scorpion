@@ -277,6 +277,10 @@ export class ArrivalUpdateComponent {
     });
   }
 
+  backtoStockUpdate() {
+    window.parent.location.href = `${this.env.liveUrl}/Operation/ArrivalUpdate/${'1'}?type=${"1"}&src=angular`;
+  }
+
   dateAccess() {
   const payload = {
     moduleCode: '46',
