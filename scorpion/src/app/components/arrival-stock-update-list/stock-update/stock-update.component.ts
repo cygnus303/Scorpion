@@ -36,6 +36,7 @@ public isSubmitting: boolean = false;
 public isRedirect: boolean = false; 
 minDate: Date | undefined;
 maxDate: Date | undefined;
+public status: 'loading' | 'nodata' | 'data' = 'loading';
 conditionList = [
   { text: 'GOOD', value: 1 },
   { text: 'SHORT', value: 2 },
@@ -431,21 +432,29 @@ onRowDamageChange(index: number) {
   const checked = row.get('damage')?.value;
   this.toggleDamageValidators(row, checked);
 }
-
   getStockUpdateDetails() {
     const payload = {
       id: this.docketService.loginUserList.id,
       baseLocationCode: this.docketService.loginUserList.LocationCode
     };
+    this.status = 'loading';
+    this.stockUpdateArray.clear();
     this.stockUpdateService.getStockUpdateDetails(payload).subscribe({
-      next: (response:any) => {
-       if (response) {
-          this.stockUpdateArray.clear();
-          response.listVSFUM.forEach((item: any) => {
-            this.stockUpdateArray.push(this.createForm(item));
-          });;
-          this.stockData=response.vsfum;
+      next: (response: any) => {
+        if (response) {
+          this.stockData = response.vsfum;
+          if (response.listVSFUM && response.listVSFUM.length > 0) {
+            response.listVSFUM.forEach((item: any) => {
+              this.stockUpdateArray.push(this.createForm(item));
+            });
+            this.status = 'data';
+          } else {
+            this.status = 'nodata';
+          }
         }
+      },
+      error: () => {
+        this.status = 'nodata';
       }
     });
   }
@@ -474,45 +483,34 @@ onRowDamageChange(index: number) {
      const formattedDate = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
   return new FormGroup({
     IsPartStockUpdate: new FormControl(false), 
-
     damage: new FormControl(false),
     pilferage: new FormControl(false),
-
     mfNo: new FormControl(item.tcno),
     docketNo: new FormControl(item.dockNo),
     route: new FormControl(`${item.orgncd} - ${item.desT_CD}`),
     desT_CD:new FormControl(item.desT_CD),
-
     bookingDate: new FormControl(formattedDate),
     committedDate: new FormControl(item.cdelydt),
     isFTLDelivery:new FormControl(item.isFTLDelivery),
-
     pkgs: new FormControl(item.pkgsno),
     weight: new FormControl(item.actuwt),
     thcbr:new FormControl(item.thcbr),
-
-
     bizType: new FormControl(item.bizType),
     serviceType: new FormControl(item.service_Class),
-
     arrivedPkgs: new FormControl(item.pkgsno, [Validators.required,Validators.max(item.pkgsno)]),
     arrivedWt: new FormControl({ value: item.actuwt, disabled: true }),
-
     condition: new FormControl(1),
     warehouse: new FormControl(item.desT_CD),
     deliveryProcess: new FormControl(null),
-
     shortQty: new FormControl(item.shortageQty || 0),
     shortWt: new FormControl(item.shortageWeight || 0),
     shortReason: new FormControl(''),
     shortRemarks: new FormControl(''),
     shortFile: new FormControl(null), 
-
     pilferageQty: new FormControl(item.pilferageQty || 0),
     pilferageWt: new FormControl(item.pilferageWeight || 0),
     pilferageReason: new FormControl(''),
     pilferageRemarks: new FormControl(''),
-
     damageQty: new FormControl(item.damageQry || 0),
     damageWt: new FormControl(item.damageWeight || 0),
     damageReason: new FormControl(''),
@@ -524,10 +522,8 @@ onRowDamageChange(index: number) {
     /* ================= POD CONTROLS ================= */
     frontFiles: new FormControl([]),
     backFiles: new FormControl([]),
-
     frontPreview: new FormControl(null),
     backPreview: new FormControl(null),
-
     podValidated: new FormControl(false),
     bkG_PKGSNO:new FormControl(item.bkG_PKGSNO),
     bkG_ACTUWT:new FormControl(item.bkG_ACTUWT),
