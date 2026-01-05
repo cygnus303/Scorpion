@@ -31,6 +31,7 @@ export class ArrivalUpdateComponent {
   maxDate: Date | undefined;
   public isRedirect: boolean = false;
   public branchWiseLoadingUnloadingList: BranchWiseLoadingUnloading[] = [];
+   maxCloseKMValue: number = 900000;
 
   public Reasonlist = [
     {
@@ -240,12 +241,6 @@ export class ArrivalUpdateComponent {
     }
   }
 
-  onBlurCloseKM() {
-    const control = this.arrivalForm.get('CLOSEKM');
-    if (control?.value === null || control?.value === '') {
-      control.setValue(0);
-    }
-  }
 
   onFocusRate() {
   const control = this.arrivalForm.get('Rate');
@@ -355,6 +350,33 @@ export class ArrivalUpdateComponent {
       },
     });
   }
+
+validateCloseKM() {
+  const control = this.arrivalForm.get('CLOSEKM');
+  if (control?.value === null || control?.value === '') {
+    control.setValue(0);
+  }
+  const loadingBy = this.arrivalDetail?.loadingBy;
+  const opnKm = Number(this.arrivalDetail?.openkm);
+  const closeKMControl = this.arrivalForm.get('CLOSEKM');
+ 
+  // DEFAULT MAX (always applicable)
+  this.maxCloseKMValue = 900000;
+ 
+  // Additional restriction only when NOT B / XX6
+  // if (loadingBy !== 'B' && loadingBy !== 'XX6') {
+  //   const calculatedMax = opnKm + 2000;
+  //   this.maxCloseKMValue =
+  //     calculatedMax > 900000 ? 900000 : calculatedMax;
+  // }
+ 
+  closeKMControl?.setValidators([
+    Validators.required,
+    Validators.max(this.maxCloseKMValue)
+  ]);
+ 
+  closeKMControl?.updateValueAndValidity();
+}
 
   onSubmit() {
     if (this.arrivalForm.invalid) {
