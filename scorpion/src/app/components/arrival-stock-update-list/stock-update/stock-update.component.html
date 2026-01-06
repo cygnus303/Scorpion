@@ -618,7 +618,7 @@
       <div class="d-grid justify-content-center">
           <div class="d-flex  gap-2">
             <button class="btn btn-secondary controls" (click)="backtoStockUpdate()"> <i class="fas fa-arrow-left" ></i>&nbsp;Back to Stock Update</button>
-            <button type="button" id="btnSubmit" class="btn btn-success controls"  [disabled]="!hasAnyPartStockUpdate() ||(isSubmitting || isRedirect)" (click)="stockUpdate()"><i class="fas fa-check"></i>&nbsp;Stock Update</button>
+            <button type="button" id="btnSubmit" class="btn btn-success controls"  [disabled]="!hasAnyPartStockUpdate() || (isSubmitting || isRedirect)" (click)="stockUpdate()"><i class="fas fa-check"></i>&nbsp;Stock Update</button>
         </div>
         <!-- <p style="color:red;">Select atleast one CNote to see the <strong>Submit</strong> button.</p> -->
       </div>

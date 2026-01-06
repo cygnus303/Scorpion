@@ -34,8 +34,8 @@ public selectedDamageImage: string | ArrayBuffer | null = null;
 public stockData:any;
 public isSubmitting: boolean = false;
 public isRedirect: boolean = false; 
-minDate: Date | undefined;
-maxDate: Date | undefined;
+public minDate: Date | undefined;
+public maxDate: Date | undefined;
 public status: 'loading' | 'nodata' | 'data' = 'loading';
 conditionList = [
   { text: 'GOOD', value: 1 },
@@ -80,17 +80,13 @@ conditionList = [
 
     getCurrentDateTime(): string {
     const now = new Date();
-
     const day = now.getDate().toString().padStart(2, '0');
     const month = now.toLocaleString('en-US', { month: 'short' });
     const year = now.getFullYear();
-
     let hours = now.getHours();
     const minutes = now.getMinutes().toString().padStart(2, '0');
     const ampm = hours >= 12 ? 'PM' : 'AM';
-
     hours = hours % 12 || 12; // 12-hour format
-
     return `${day} ${month} ${year} ${hours}:${minutes} ${ampm}`;
   }
 
@@ -107,36 +103,31 @@ conditionList = [
     return (
       this.stockUpdateForm.get('hDamage')?.value ||
       this.stockUpdateForm.get('hPilferage')?.value ||
-      stockUpdateControls.some((row: any) => row.get('damage')?.value || row.get('pilferage')?.value)
-    );
+      stockUpdateControls.some((row: any) => row.get('damage')?.value || row.get('pilferage')?.value));
   }
 
-    dateAccess() {
-  const payload = {
-    moduleCode: '47',
-    baseUserName: this.docketService.baseUsername
-  };
-
-  this.commonDateService.userDateSelection(payload).subscribe({
-    next: (res: any) => {
-      if (res && res.length > 0) {
-        const rule = res[0];
-
-        // API min_Date
-        this.minDate = new Date(rule.min_Date);
-
-        // BackDate days logic
-        if (rule.backDate_Days && rule.backDate_Days > 0) {
-          const today = new Date();
-          this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
+  dateAccess() {
+    const payload = {
+      moduleCode: '47',
+      baseUserName: this.docketService.baseUsername
+    };
+    this.commonDateService.userDateSelection(payload).subscribe({
+      next: (res: any) => {
+        if (res && res.length > 0) {
+          const rule = res[0];
+          // API min_Date
+          this.minDate = new Date(rule.min_Date);
+          // BackDate days logic
+          if (rule.backDate_Days && rule.backDate_Days > 0) {
+            const today = new Date();
+            this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
+          }
+          // Max date = today
+          this.maxDate = new Date();
         }
-
-        // Max date = today
-        this.maxDate = new Date();
       }
-    }
-  });
-}
+    });
+  }
 
   stockUpdateUsers(event:any) {
     const searchText = event.term;
@@ -161,13 +152,9 @@ conditionList = [
   }
 
 onChangeDamage(event: any, index: number) {
-  if (!event) {
-    return;
-  }
+  if (!event) {return;}
   const severityValue = event.codeFor;
-
   const rowGroup = this.stockUpdateArray.at(index) as FormGroup;
-
   rowGroup.patchValue({
     severity: severityValue
   });
@@ -175,15 +162,12 @@ onChangeDamage(event: any, index: number) {
 
 onDamageQtyChange(index: number): void {
   const row = this.stockUpdateArray.at(index) as FormGroup;
-
   const damageQty = Number(row.get('damageQty')?.value || 0);
   const totalPkgs = Number(row.get('bkG_PKGSNO')?.value || 0);
   const totalWt = Number(row.get('bkG_ACTUWT')?.value || 0);
-
   if (damageQty < totalPkgs && totalPkgs > 0 && totalWt > 0) {
     const avgWt = Math.floor(totalWt / totalPkgs);
     const damageWeight = Math.floor(avgWt * damageQty);
-
     row.patchValue({
       damageWt: damageWeight
     });
@@ -196,24 +180,18 @@ onDamageQtyChange(index: number): void {
 }
 
 hasAnyPartStockUpdate(): boolean {
-  return this.stockUpdateArray.controls.some(
-    row => row.get('IsPartStockUpdate')?.value === true
-  );
+  return this.stockUpdateArray.controls.some( row => row.get('IsPartStockUpdate')?.value === true);
 }
-
 
 onPilferageQtyChange(index: number): void {
   const row = this.stockUpdateArray.at(index) as FormGroup;
-
   const pilferageQty = Number(row.get('pilferageQty')?.value || 0);
   const pkgsNo = Number(row.get('pkgs')?.value || 0);        // PKGSNO
   const totalPkgs = Number(row.get('bkG_PKGSNO')?.value || 0);
   const totalWt = Number(row.get('bkG_ACTUWT')?.value || 0);
-
   if (pilferageQty <= pkgsNo && totalPkgs > 0 && totalWt > 0) {
     const avgWt = Math.floor(totalWt / totalPkgs);
     const pilferageWeight = Math.floor(avgWt * pilferageQty);
-
     row.patchValue({
       pilferageWt: pilferageWeight
     });
@@ -224,9 +202,6 @@ onPilferageQtyChange(index: number): void {
     });
   }
 }
-
-
-
 
   resetUnloaderDropdown(){
     this.unloaderUsers = [];
@@ -253,7 +228,6 @@ onPilferageQtyChange(index: number): void {
 
   onHeaderDamageChange() {
     const checked = this.stockUpdateForm.get('hDamage')?.value;
-
     this.stockUpdateArray.controls.forEach((row: any) => {
       row.get('damage')?.setValue(checked);
       this.toggleDamageValidators(row, checked);
@@ -269,8 +243,6 @@ onPilferageQtyChange(index: number): void {
     });
   }
   
-
-
   private togglePilferageValidators(row: FormGroup, isChecked: boolean) {
     const qtyCtrl = row.get('pilferageQty');
     const pilferageWt = row.get('pilferageWt');
@@ -467,7 +439,6 @@ onRowDamageChange(index: number) {
           this.stockUpdateForm.patchValue({
             hWarehouse: response[0].godown_srno
           });
-      
           setTimeout(() => {
             this.stockUpdateArray.controls.forEach((row: any) => {
               row.get('warehouse')?.setValue(response[0].godown_srno);
@@ -479,8 +450,8 @@ onRowDamageChange(index: number) {
   }
 
   createForm(item: any): FormGroup {
-     const [day, month, year] = item.dockdt.split('/');
-     const formattedDate = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
+  const [day, month, year] = item.dockdt.split('/');
+  const formattedDate = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
   return new FormGroup({
     IsPartStockUpdate: new FormControl(false), 
     damage: new FormControl(false),
@@ -528,31 +499,27 @@ onRowDamageChange(index: number) {
     bkG_PKGSNO:new FormControl(item.bkG_PKGSNO),
     bkG_ACTUWT:new FormControl(item.bkG_ACTUWT),
     invvalue:new FormControl(item.invvalue),
-   arrPkgQty:new FormControl(item.arrPkgQty),
-   actarrv_dt:new FormControl(item.actarrv_dt),
-   isShort:new FormControl(item.isShort),
-   delPkgQty:new FormControl(item.delPkgQty),
-      isAllgood:new FormControl(item.isAllgood),
+    arrPkgQty:new FormControl(item.arrPkgQty),
+    actarrv_dt:new FormControl(item.actarrv_dt),
+    isShort:new FormControl(item.isShort),
+    delPkgQty:new FormControl(item.delPkgQty),
+    isAllgood:new FormControl(item.isAllgood),
   });
 }
 
 removeFile(index: number, type: 'FRONT' | 'BACK') {
   const row = this.stockUpdateArray.at(index) as FormGroup;
-
   if (type === 'FRONT') {
     const url = row.get('frontPreview')?.value;
     if (url) URL.revokeObjectURL(url);
-
     row.patchValue({
       frontFiles: [],
       frontPreview: null
     });
-
     row.get('frontFiles')?.markAsTouched();
   } else {
     const url = row.get('backPreview')?.value;
     if (url) URL.revokeObjectURL(url);
-
     row.patchValue({
       backFiles: [],
       backPreview: null
@@ -563,30 +530,24 @@ removeFile(index: number, type: 'FRONT' | 'BACK') {
 onFileSelected(event: any, index: number, type: 'FRONT' | 'BACK') {
   const file = event.target.files?.[0];
   if (!file) return;
-
   const row = this.stockUpdateArray.at(index) as FormGroup;
   const previewUrl = URL.createObjectURL(file);
-
   if (type === 'FRONT') {
     const oldUrl = row.get('frontPreview')?.value;
     if (oldUrl) URL.revokeObjectURL(oldUrl);
-
     row.patchValue({
       frontFiles: [file],
       frontPreview: previewUrl
     });
-
     row.get('frontFiles')?.markAsTouched();
   } else {
     const oldUrl = row.get('backPreview')?.value;
     if (oldUrl) URL.revokeObjectURL(oldUrl);
-
     row.patchValue({
       backFiles: [file],
       backPreview: previewUrl
     });
   }
-
   // reset input so same file can be selected again
   event.target.value = '';
   this.validatePOD(index);
@@ -594,25 +555,14 @@ onFileSelected(event: any, index: number, type: 'FRONT' | 'BACK') {
 validatePOD(index: number) {
   const row = this.stockUpdateArray.at(index) as FormGroup;
   const docketNo = row.get('docketNo')?.value;
-
-  if (!docketNo) {
-    console.error('Dock No not found for row', index);
-    return;
-  }
-
+  if (!docketNo) {console.error('Dock No not found for row', index); return; }
   const frontFiles: File[] = row.get('frontFiles')?.value || [];
   const backFiles: File[] = row.get('backFiles')?.value || [];
-
   // Only validate if front file exists
   if (!frontFiles.length) return;
-
   const formData = new FormData();
   formData.append('DocNo', docketNo);
-
-  frontFiles.forEach((file: File) => {
-    formData.append('PodFile', file);
-  });
-
+  frontFiles.forEach((file: File) => {formData.append('PodFile', file); });
   // If backend needs back also
   backFiles.forEach((file: File) => {
     formData.append('PodBackFile', file);
@@ -623,15 +573,11 @@ validatePOD(index: number) {
       if (response?.success) {
         row.patchValue({ podValidated: true });
       } else {
-        this.sweetAlertService.error(
-          `POD validation failed for Dock No ${docketNo}`
-        );
+        this.sweetAlertService.error(`POD validation failed for Dock No ${docketNo}`);
       }
     },
     error: (error) => {
-      this.sweetAlertService.error(
-        error?.error?.message || `Error validating POD for Dock No ${docketNo}`
-      );
+      this.sweetAlertService.error(error?.error?.message || `Error validating POD for Dock No ${docketNo}`);
     }
   });
 }
@@ -639,10 +585,8 @@ validatePOD(index: number) {
 isPodFrontRequired(index: number): boolean {
   const row = this.stockUpdateArray.at(index);
   if (!row) return false;
-
   const deliveryProcess = row.get('deliveryProcess')?.value;
   const frontFiles = row.get('frontFiles')?.value;
-
   // Return true only if deliveryProcess is '2' and frontFiles is empty
   return deliveryProcess === '2' && (!frontFiles || frontFiles.length === 0);
 }
@@ -662,7 +606,7 @@ formatDate(date: Date): string {
 }
 
 backtoStockUpdate() {
-     window.parent.location.href = `${this.env.liveUrl}/Operation/ArrivalUpdate/${'2'}?type=${"2"}&src=angular`;
+  window.parent.location.href = `${this.env.liveUrl}/Operation/ArrivalUpdate/${'2'}?type=${"2"}&src=angular`;
 }
 
 stockUpdate() {
@@ -806,9 +750,9 @@ stockUpdate() {
   });
 
   console.log('Final Payload:', payload);
-  this.isSubmitting = false;
   /* ================= SUBMIT ================= */
   if (this.stockUpdateForm.valid) {
+    this.isSubmitting = true;
     this.stockUpdateService.onStockupdate(formData).subscribe({
       next: (response: any) => {
         if (response) {
@@ -825,7 +769,7 @@ stockUpdate() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
         // this.submitErrorMsg = error?.error?.message;
         this.isSubmitting = false; // ✅ loader stop on error
-         this.isRedirect = true;
+         this.isRedirect = false;
       }
     });
   } else {
@@ -835,16 +779,12 @@ stockUpdate() {
 
   onArrPkgQtyBlur(index: number) {
   const row = this.stockUpdateArray.at(index) as FormGroup;
-
   const arrPkgQty = Number(row.get('arrivedPkgs')?.value || 0);
   const pkgsNo = Number(row.get('bkG_PKGSNO')?.value || 0);
   const actuWt = Number(row.get('bkG_ACTUWT')?.value || 0);
-
   const pilferageQty = Number(row.get('pilferageQty')?.value || 0);
   const damageQty = Number(row.get('damageQty')?.value || 0);
-
   const sumQty = pilferageQty + damageQty;
-
   if (sumQty > arrPkgQty) {
     alert('Please Check Shortage Qty ....');
     row.patchValue({
@@ -855,30 +795,24 @@ stockUpdate() {
   }
   if (arrPkgQty <= pkgsNo) {
     const shortageQty = pkgsNo - arrPkgQty;
-
     const arrivalWT = (arrPkgQty * actuWt) / pkgsNo;
     const roundedArrivalWT = this.roundNumber(arrivalWT, 0);
     const shortWT = actuWt - roundedArrivalWT;
-
     row.patchValue({
       shortQty: shortageQty,
       IsShort: true,
       arrivedWt: roundedArrivalWT.toFixed(1),
       shortWt: shortWT.toFixed(1)
     });
-
     row.get('shortWt')?.setValidators([
       Validators.required,
       Validators.max(actuWt - 1)
     ]);
     row.get('shortReason')?.setValidators(Validators.required);
     row.get('ShortageRemarks')?.setValidators(Validators.required);
-
     // this.stockUpdateForm.get('IsAllgood')?.disable();
     // this.stockUpdateForm.get('IsAllgood')?.reset();
-
     this.showShortageSection[index] = true;
-
   } else {
     /** ❎ No shortage */
     row.patchValue({
@@ -887,15 +821,12 @@ stockUpdate() {
       shortReason: '',
       ShortageRemarks: ''
     });
-
     row.get('shortWt')?.clearValidators();
     row.get('shortReason')?.clearValidators();
     row.get('ShortageRemarks')?.clearValidators();
-
     row.get('shortWt')?.updateValueAndValidity();
     row.get('shortReason')?.updateValueAndValidity();
     row.get('ShortageRemarks')?.updateValueAndValidity();
-
     // this.stockUpdateForm.get('IsAllgood')?.enable();
     this.showShortageSection[index] = false;
   }
@@ -904,6 +835,4 @@ stockUpdate() {
 roundNumber(value: number, decimals: number): number {
   return Number(Math.round(Number(value + 'e' + decimals)) + 'e-' + decimals);
 }
-
-
 }
