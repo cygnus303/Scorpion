@@ -80,7 +80,7 @@
                     <label class="col-sm-5 col-form-label text-end">Closing KM :</label>
                     <div class="col-sm-3 text-start">
                         <input class="form-control" placeholder="Closing KM" type="text" formControlName="CLOSEKM" oninput="this.value = this.value.replace(/[^0-9]/g,'');" 
-                        (blur)="validateCloseKM()"  [ngClass]="{ 'border-danger': arrivalForm.get('CLOSEKM')?.invalid && arrivalForm.get('CLOSEKM')?.touched }">
+                        (blur)="validateCloseKM()" (focus)="onFocusCloseKM()"  [ngClass]="{ 'border-danger': arrivalForm.get('CLOSEKM')?.invalid && arrivalForm.get('CLOSEKM')?.touched }">
                         <div class="text-danger small" *ngIf="arrivalForm.get('CLOSEKM')?.touched && arrivalForm.get('CLOSEKM')?.errors?.['max']">
                                 Please enter a value less than or equal to {{ maxCloseKMValue }}.
                             </div>
