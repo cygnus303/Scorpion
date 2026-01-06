@@ -472,12 +472,25 @@ onFileSelect(event: Event) {
   }
 
   onChangeBillingType(event: any) {
-    if (event?.codeId === 'P02') {
+    const type = this.docketService.loginUserList.Type;
+    const billingType = this.docketService.basicDetailForm.value.billingType;
+
+    if (type === '2') {
+      this.docketService.isOtherCharge = true;
       this.docketService.isBillingTBB = true;
     } else {
-      this.docketService.isBillingTBB = true;
+      // Type ≠ 2
+      if (billingType === 'P01' || billingType === 'P03') {
+        this.docketService.isOtherCharge = true;   // SCHG03
+        this.docketService.isBillingTBB = false;
+      } else {
+        // P02 / P04
+        this.docketService.isOtherCharge = false;
+        this.docketService.isBillingTBB = false;
+      }
     }
-      const freightCharges = this.docketService.freightForm.get('freightCharges');
+
+    const freightCharges = this.docketService.freightForm.get('freightCharges');
     const freightRate = this.docketService.freightForm.get('freightRate');
     if (event?.codeId === 'P04') {
       freightCharges?.clearValidators();

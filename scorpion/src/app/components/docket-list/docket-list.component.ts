@@ -120,7 +120,7 @@ export class DocketListComponent implements OnInit {
 getCompletionData() {
   const payload = {
     docketNo: this.docketService.loginUserList.DocketNo,
-    // docketNo: 'CNPIM2526000006',
+    // docketNo: '63153633',
     isFromBillGeneration: this.docketService.loginUserList.IsFromBillGeneration || '',
     type: this.docketService.loginUserList.Type,
     baseLocationCode: this.docketService.loginUserList.LocationCode,
@@ -188,6 +188,22 @@ getCompletionData() {
               // isDACC: basicDetail.isDACC
             });
           this.getODAData(basicDetail.csgePinCode);
+
+           const type = this.docketService.loginUserList.Type;
+          const billingType = this.docketService.basicDetailForm.value.billingType;
+
+          if (type === '2') {
+            this.docketService.isOtherCharge = true;
+            this.docketService.isBillingTBB = true;
+            } else {
+              if (billingType === 'P01' || billingType === 'P03') {
+                this.docketService.isOtherCharge = true;   // SCHG03
+                this.docketService.isBillingTBB = false;
+              } else {
+                this.docketService.isOtherCharge = false;
+                this.docketService.isBillingTBB = false;
+              }
+            }
 
             this.basicDetailsComp.onChangeCityListList(this.docketService.basicDetailForm.get('fromCity')?.value,'from');
             if(!basicDetail.exemptServices){

@@ -219,16 +219,16 @@
           </div>
         </div>
       </div> -->
- 
-      <div class="row"  [ngClass]="this.docketService.loginUserList.Type === '1' ? 'd-none':''">
+
+      <div class="row">
         <!-- SCHG03 column, always visible -->
         <ng-container *ngFor="let charge of docketService.freightchargingData">
-          <div class="col-md-4" *ngIf="charge.chargeCode === 'SCHG03'">
+          <div class="col-md-4" *ngIf="charge.chargeCode === 'SCHG03' &&  docketService.isOtherCharge">
             <div class="form-group to-pay-group">
               <label class="control-label col-md-5">
                 {{ charge.chargeName }}
               </label>
-              <div class="col-md-7">
+              <div class="col-md-7"  >
                 <div class="input-icon">
                   <input type="text"
                         class="form-control clsAmount required2"
@@ -248,8 +248,8 @@
  
         <!-- baki charges, dependent on isBillingTBB -->
         <ng-container *ngFor="let charge of docketService.freightchargingData">
-          <div class="col-md-4" *ngIf="charge.chargeCode !== 'SCHG03'"
-              [ngClass]="{ 'hidden': docketService.isBillingTBB }">
+          <div class="col-md-4"
+          [ngClass]="charge.chargeCode !== 'SCHG03' && docketService.isBillingTBB ? '':'hidden' ">
             <div class="form-group to-pay-group">
               <label class="control-label col-md-5">{{ charge.chargeName }}</label>
               <div class="col-md-7">

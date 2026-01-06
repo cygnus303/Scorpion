@@ -37,6 +37,7 @@ export class DocketService {
   public contractservicecharge: any;
   public gstCalculationList: any;
   public isBillingTBB: boolean = false;
+  public isOtherCharge: boolean = false;
   public noOfRows: number = 1;
   public noboxDetailRows: number = 1;
   public groupedCharges: { [ids: number]: any[] } = {};
