@@ -471,13 +471,13 @@ onRowDamageChange(index: number) {
     arrivedPkgs: new FormControl(item.pkgsno, [Validators.required,Validators.max(item.pkgsno)]),
     arrivedWt: new FormControl({ value: item.actuwt, disabled: true }),
     condition: new FormControl(1),
-    warehouse: new FormControl(item.desT_CD),
+    warehouse: new FormControl(''),
     deliveryProcess: new FormControl(null),
     shortQty: new FormControl(item.shortageQty || 0),
     shortWt: new FormControl(item.shortageWeight || 0),
     shortReason: new FormControl(''),
     shortRemarks: new FormControl(''),
-    shortFile: new FormControl(null), 
+    shortFile: new FormControl(null),    
     pilferageQty: new FormControl(item.pilferageQty || 0),
     pilferageWt: new FormControl(item.pilferageWeight || 0),
     pilferageReason: new FormControl(''),
@@ -504,6 +504,7 @@ onRowDamageChange(index: number) {
     isShort:new FormControl(item.isShort),
     delPkgQty:new FormControl(item.delPkgQty),
     isAllgood:new FormControl(item.isAllgood),
+    dockSF:new FormControl(item.dockSF),
   });
 }
 
@@ -656,7 +657,11 @@ stockUpdate() {
       isFTLDelivery: v.isFTLDelivery,
       isAllgood: v.isAllgood,
       updateDate: new Date(),
-      isMobileUser: 'N'
+      isMobileUser: 'N',
+      ac: v.condition,
+      wi: v.warehouse,
+      dp: v.deliveryProcess,
+      dockSF:  v.dockSF,
     };
   });
   /* ================= FORM DATA ================= */
@@ -679,9 +684,9 @@ stockUpdate() {
   formData.append("ViewModel.VSFUM.ShortageWeight", this.stockData?.shortageWeight);
   formData.append("ViewModel.VSFUM.IsCODDODChar", this.stockData?.isCODDODChar);
 
-  formData.append("ViewModel.VSFUM.AC", '');
-  formData.append("ViewModel.VSFUM.WI", '');
-  formData.append("ViewModel.VSFUM.DP", '');
+  formData.append("ViewModel.VSFUM.AC",this.stockUpdateForm.value.hCondition);
+  formData.append("ViewModel.VSFUM.WI", this.stockUpdateForm.value.hWarehouse);
+  formData.append("ViewModel.VSFUM.DP", this.stockUpdateForm.value.hDeliveryProcess);
   formData.append("ViewModel.VSFUM.DELYREASON", '');
   formData.append("ViewModel.VSFUM.DELYPERSON", '');
   formData.append("ViewModel.VSFUM.ShortageReason", '');
