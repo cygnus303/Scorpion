@@ -605,6 +605,13 @@
         </div>
     </div>
 </form>
+<div class="alert alert-danger display-hide d-flex justify-content-between" *ngIf="docketService.submitErrorMsg">
+    <ul class="mb-0" style="list-style-type: disc; padding-left: 20px;">
+    <li *ngFor="let err of docketService.submitErrorMsg">
+      {{ err }}
+    </li>
+  </ul>
+</div>
 
     <div class="bg-secondary-subtle p-3">
         <label>Note:</label>

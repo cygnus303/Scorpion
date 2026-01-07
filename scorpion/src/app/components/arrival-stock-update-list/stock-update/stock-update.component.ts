@@ -771,9 +771,8 @@ stockUpdate() {
         this.isSubmitting = false;
       },
       error: (error) => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        // this.submitErrorMsg = error?.error?.message;
-        this.isSubmitting = false; // ✅ loader stop on error
+        this.docketService.submitErrorMsg = error?.error?.message;
+        this.isSubmitting = false;
          this.isRedirect = false;
       }
     });

@@ -428,7 +428,6 @@ validateCloseKM() {
           }
           this.isSubmit = false;
         }, error: (error) => {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
           this.sweetAlertService.error(error?.error?.message);
           this.isSubmit = false;
           this.isRedirect = false;
