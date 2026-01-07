@@ -12,5 +12,9 @@ export const routes: Routes = [
     {
       path: 'Master',
       loadChildren: () =>import('./components/delivery-agent-list/delivery-agent.module').then( (m) => m.DeliveryAgentModule),
+    },
+    {
+      path: 'DefaultContract',
+      loadChildren: () =>import('./components/default-contract/default-contract.module').then( (m) => m.DefaultContractModule),
     }
 ];

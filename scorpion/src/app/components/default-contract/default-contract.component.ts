@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-default-contract',
-  standalone: true,
-  imports: [],
+  selector: 'default-contract',
+  standalone: false,
   templateUrl: './default-contract.component.html',
   styleUrl: './default-contract.component.scss'
 })
