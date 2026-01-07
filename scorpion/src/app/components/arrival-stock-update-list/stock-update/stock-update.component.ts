@@ -658,9 +658,9 @@ stockUpdate() {
       isAllgood: v.isAllgood,
       updateDate: new Date(),
       isMobileUser: 'N',
-      ac: v.condition,
-      wi: v.warehouse,
-      dp: v.deliveryProcess,
+      ac: v.condition ||'',
+      wi: v.warehouse ||'',
+      dp: v.deliveryProcess ||'',
       dockSF:  v.dockSF,
     };
   });
