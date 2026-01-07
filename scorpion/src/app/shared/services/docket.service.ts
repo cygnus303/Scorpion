@@ -312,7 +312,7 @@ export class DocketService {
 freightAndOtherChar(type:string){
   this.getBaseCode2();
   this.getBaseCode1();
-  this.GetFreightContractDetails(type);
+  this.GetFreightContractDetails();
   this.getOtherChargesDetail();
   this.getFovContractDetails();
 }
@@ -992,9 +992,6 @@ mergeAndPatchGST(apiGST: any, editGST: any, freightForm: FormGroup) {
   }
 }
 
-
-
-
   getIGSTchargesDetail(complitiondata?:any) {
     this.basicDetailService.getIGSTchargesDetail().subscribe({
       next: (response) => {
@@ -1206,9 +1203,9 @@ GetFreightContractDetails(type?:string) {
         });
         this.validateAppointmentDate();
         this.getFuelSurcharge(this.freightData?.freightCharge);
-        if(type==='isactaulweight'){
-        this.calculateSummary.next(true);
-        }
+        // if(type==='isactaulweight'){
+        // this.calculateSummary.next(true);
+        // }
       }
     }
   });
