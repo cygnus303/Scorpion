@@ -249,7 +249,7 @@ calculateSummary(i: number) {
   finalActualWeight: +Math.max(totalActualWeight || 0, totalCubicWeight || 0).toFixed(2)
 }, { emitEvent: false });
   this.getCFTCalculation(i);
-  // this.docketService.calculateChargeWeight()
+  this.docketService.calculateChargeWeight()
 
 }
  
