@@ -53,7 +53,7 @@
                 [readOnly]="((docketService.basicDetailForm.get('serviceType')?.value ==='1' && docketService.basicDetailForm.value.billingType !== 'P04')|| docketService.basicDetailForm.value.billingType === 'P04')? true : false"></ng-select>
             </label>
             <div class="col-md-7">
-              <input class="clsAmount form-control text-end" placeholder="Freight Rate" formControlName="freightRate" (blur)="docketService.onchangefrightRate()"
+              <input class="clsAmount form-control text-end" placeholder="Freight Rate" formControlName="freightRate" (input)="docketService.onchangefrightRate()"
                 min="0.01" step="0.01" type="number" value="0"  [readOnly]="((docketService.basicDetailForm.get('serviceType')?.value ==='1' && docketService.basicDetailForm.value.billingType !== 'P04')|| docketService.basicDetailForm.value.billingType === 'P04')"
                 [ngClass]="{ 'border-danger': docketService.freightForm.get('freightRate')?.hasError('min') && docketService.freightForm.get('freightRate')?.touched}">
               </div>

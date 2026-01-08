@@ -1200,7 +1200,7 @@ GetFreightContractDetails(type?:string) {
   };
 
   // Validation
-  if (!data.invAmt || !data.prodcd || !data.tostate || data.noOfPkgs === "0" || !data.transMode || !data.serviceType) {
+  if (!data.invAmt || !data.prodcd || !data.tostate ||data.noOfPkgs === "0" ||!data.transMode ||!data.serviceType ||this.invoiceform.value.totalActualWeight == 0) {
     console.warn("Required fields missing, API not called:", data);
     return;
   }
@@ -1226,13 +1226,15 @@ GetFreightContractDetails(type?:string) {
 
         
         // ⭐ Update form weight ONLY if API gives higher value
-        const newFinalWeight = Math.max(this.freightData.chargedWeight || 0, originalFinalWeight || 0);
-        
-        const newPkgWeight = Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0);
-        this.invoiceform.patchValue({
-          finalActualWeight: newFinalWeight,
-          chargeWeightPerPkg: newPkgWeight
-        });
+      if(this.freightData.chargedWeight > originalFinalWeight ){
+          const newFinalWeight = Math.max(this.freightData.chargedWeight || 0, originalFinalWeight || 0);
+         
+          const newPkgWeight = Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0);
+          this.invoiceform.patchValue({
+            finalActualWeight: newFinalWeight,
+            chargeWeightPerPkg: newPkgWeight
+          });
+        }
         this.validateAppointmentDate();
         this.getFuelSurcharge(this.freightData?.freightCharge);
         // if(type==='isactaulweight'){
