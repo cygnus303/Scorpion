@@ -18,14 +18,14 @@
     <form [formGroup]="docketService.freightForm">
       <div class="row">
         <div class="col-md-4">
-        <div [ngClass]="{ 'hidden': docketService.isBillingTBB , 'd-none': this.docketService.loginUserList.Type === '1' }">
+        <div [ngClass]="{ 'hidden': !docketService.isBillingTBB , 'd-none': this.docketService.loginUserList.Type === '1' }">
             <div class="form-group">
             <label class="control-label col-md-5">Freight Charges</label>
             <div class="col-md-7">
               <!-- <input class="required2 form-control required text-end" placeholder="Freight Charges" type="number"
                 value="0" formControlName="freightCharges" readonly> -->
-              <input type="number" class="form-control text-end" placeholder="Freight Charges"
-                formControlName="freightCharges" min="0.01" step="0.01" readonly
+              <input type="number" class="form-control text-end" placeholder="Freight Charges" (input)="docketService.onchangeRateType()"
+                formControlName="freightCharges" min="0.01" step="0.01"  [readOnly]="((docketService.basicDetailForm.get('serviceType')?.value ==='1' && docketService.basicDetailForm.value.billingType !== 'P04')|| docketService.basicDetailForm.value.billingType === 'P04')"
                 [ngClass]="{ 'border-danger': docketService.freightForm.get('freightCharges')?.hasError('min') && docketService.freightForm.get('freightCharges')?.touched}">
               <!-- <div *ngIf="docketService.freightForm.get('freightCharges')?.hasError('min') && docketService.freightForm.get('freightCharges')?.touched"
                 class="text-danger text-start">
@@ -44,17 +44,17 @@
         </div>
         </div>
         <div class="col-md-4" >
-         <div [ngClass]="{ 'hidden': docketService.isBillingTBB ,'d-none': this.docketService.loginUserList.Type === '1'}">
+         <div [ngClass]="{ 'hidden': !docketService.isBillingTBB ,'d-none': this.docketService.loginUserList.Type === '1'}">
            <div class="form-group">
             <label class="control-label col-md-5" style="padding-top: 0px;padding-right: 1px;padding-left: 49px;">
-              <ng-select class="noFoundTextColor required2" placeholder="Rate Type" notFoundText="No matches found"
+              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Rate Type" notFoundText="No matches found"
                 [items]="docketService.rateList" bindLabel="codeDesc" bindValue="codeId"
                 (change)="docketService.onchangeRateType($event)" formControlName="rateType"
-                [readonly]="docketService.basicDetailForm.get('serviceType')?.value ==='1'"></ng-select>
+                [readOnly]="((docketService.basicDetailForm.get('serviceType')?.value ==='1' && docketService.basicDetailForm.value.billingType !== 'P04')|| docketService.basicDetailForm.value.billingType === 'P04')? true : false"></ng-select>
             </label>
             <div class="col-md-7">
-              <input class="clsAmount form-control text-end" placeholder="Freight Rate" formControlName="freightRate"
-                min="0.01" step="0.01" type="number" value="0" readonly
+              <input class="clsAmount form-control text-end" placeholder="Freight Rate" formControlName="freightRate" (blur)="docketService.onchangefrightRate()"
+                min="0.01" step="0.01" type="number" value="0"  [readOnly]="((docketService.basicDetailForm.get('serviceType')?.value ==='1' && docketService.basicDetailForm.value.billingType !== 'P04')|| docketService.basicDetailForm.value.billingType === 'P04')"
                 [ngClass]="{ 'border-danger': docketService.freightForm.get('freightRate')?.hasError('min') && docketService.freightForm.get('freightRate')?.touched}">
               </div>
             </div>
@@ -94,7 +94,7 @@
             <label class="control-label col-md-5">GST Paid By</label>
             <div class="col-md-7">
               <input type="text" formControlName="GSTPaidBy" class="clsAmount form-control text-end" placeholder="GST Paid By"
-                required
+                required [readOnly]="docketService.basicDetailForm.value.billingType === 'P04'"
                 [ngClass]="{ 'border-danger': docketService.freightForm.get('GSTPaidBy')?.invalid && docketService.freightForm.get('GSTPaidBy')?.touched}">
             </div>
           </div>
@@ -149,7 +149,7 @@
         </div>
       </div>
 
-      <div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB,'d-none': this.docketService.loginUserList.Type === '1' }">
+      <div class="row" [ngClass]="{ 'hidden': !docketService.isBillingTBB,'d-none': this.docketService.loginUserList.Type === '1' }">
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label col-md-5">FOV Rate (% of Invoice)</label>
@@ -200,7 +200,7 @@
         </div>
       </div>
 
-       <h3 class="pb-4 text-start appointment mt-5" [ngClass]="{ 'hidden': docketService.isBillingTBB ,'d-none': this.docketService.loginUserList.Type === '1'}">Charges Details
+       <h3 class="pb-4 text-start appointment mt-5" [ngClass]="{ 'hidden': !docketService.isBillingTBB ,'d-none': this.docketService.loginUserList.Type === '1'}">Charges Details
       </h3>
  
       <!--<div class="row" [ngClass]="{ 'hidden': docketService.isBillingTBB }">
@@ -238,7 +238,8 @@
                         (focus)="onFocus(charge.chargeCode)"
                         (blur)="onBlur(charge.chargeCode);
                                 docketService.subTotalCalculation();
-                                docketService.getGSTCalculation()" />
+                                docketService.getGSTCalculation()" 
+                              [readOnly]="docketService.basicDetailForm.value.billingType === 'P04'"/>
                   <i class="bold">{{charge.operator}}</i>
                 </div>
               </div>
@@ -262,7 +263,8 @@
                         (focus)="onFocus(charge.chargeCode)"
                         (blur)="onBlur(charge.chargeCode);
                                 docketService.subTotalCalculation();
-                                docketService.getGSTCalculation()" />
+                                docketService.getGSTCalculation()" 
+                                [readOnly]="docketService.basicDetailForm.value.billingType === 'P04'"/>
                   <i class="bold">{{charge.operator}}</i>
                 </div>
               </div>

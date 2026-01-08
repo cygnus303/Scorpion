@@ -845,24 +845,56 @@ getcontractservicecharge() {
     });
   }
 
-  onchangeRateType(event: any) {
-    let rateId = event.codeId;
+  onchangeRateType(event?: any) {
+    let rateId = event?event.codeId : this.freightForm.value.rateType;
     let actualWeight = this.invoiceform.value.finalActualWeight;
     let noOfpackages = this.invoiceform.value.totalNoOfPkgs;
     let freightCharges = this.freightForm.value.freightCharges;
+    var CHRGWT =  this.invoiceform.value.finalActualWeight;
     if (rateId === 'P') {
       this.freightForm.patchValue({
-        freightRate: (freightCharges / noOfpackages)
+        freightRate: (freightCharges / noOfpackages).toFixed(2),
       })
     } else if (rateId === 'W') {
       this.freightForm.patchValue({
-        freightRate: (freightCharges / actualWeight)
+        freightRate: (freightCharges / actualWeight).toFixed(2),
+      })
+    } else if (rateId == "T") {
+      this.freightForm.patchValue({
+        freightRate: (freightCharges / (CHRGWT * 1000)).toFixed(2),
+      })
+    }else {
+      this.freightForm.patchValue({
+        freightRate: freightCharges.toFixed(2),
+      })
+    }
+    this.subTotalCalculation()
+  }
+
+  onchangefrightRate() {
+    let rateId = this.freightForm.value.rateType;
+    let actualWeight = this.invoiceform.value.finalActualWeight;
+    let noOfpackages = this.invoiceform.value.totalNoOfPkgs;
+    let freightRate = this.freightForm.value.freightRate;
+    var CHRGWT =  this.invoiceform.value.finalActualWeight;
+    if (rateId === 'P') {
+      this.freightForm.patchValue({
+        freightCharges:(freightRate * noOfpackages)
+      })
+    } else if (rateId === 'W') {
+      this.freightForm.patchValue({
+        freightCharges: (freightRate * actualWeight)
+      })
+    }else if (rateId == "T") {
+      this.freightForm.patchValue({
+        freightCharges: (freightRate * (CHRGWT / 1000)).toFixed(2),
       })
     } else {
       this.freightForm.patchValue({
-        freightRate: freightCharges
+        freightCharges: freightRate
       })
     }
+    this.subTotalCalculation()
   }
 
   getProRataCharge() {
