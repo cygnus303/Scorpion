@@ -5,12 +5,12 @@
     <div class="row pb-3">
         <div class="col-3">
             <div class="row">
-                <label class="col-sm-5 col-form-label text-end text-danger">Origin Pin Code</label>
+                <label class="col-sm-5 col-form-label text-end">Origin Pin Code</label>
                 <div class="col-sm-7">
                     <ng-select class="required2 clear-icon" type="text" placeholder="Enter Origin Pin Code" formControlName="originPincode"
                     (search)="docketService.getpincodeData($event)" bindValue="value" [items]="docketService.pincodeList" 
                     (change)="getPincodeMasterList($event,'origin')" bindLabel="text" [notFoundText]="docketService.notPincodeValue"
-                    ></ng-select>
+                    [ngClass]="{ 'border-danger': DefaultcontractForm.get('originPincode')?.invalid  && DefaultcontractForm.get('originPincode')?.touched}"></ng-select>
                     <div *ngIf="DefaultcontractForm.get('originPincode')?.invalid && DefaultcontractForm.get('originPincode')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('originPincode')?.hasError('required')">Origin Pin Code is required.</small>
                     </div>
@@ -74,12 +74,12 @@
     <div class="row pb-3">
         <div class="col-3">
             <div class="row">
-                <label class="col-sm-5 col-form-label text-end text-danger">Destination Pin Code</label>
+                <label class="col-sm-5 col-form-label text-end">Destination Pin Code</label>
                 <div class="col-sm-7">
                     <ng-select class="required2" type="text" placeholder="Enter Destination Pin Code" formControlName="destination_pincode"
                     (search)="docketService.getpincodeData($event)" bindValue="value" [items]="docketService.pincodeList" 
-                    (change)="getPincodeMasterList($event,'destination')" bindLabel="text" [notFoundText]="docketService.notPincodeValue">
-                    </ng-select>
+                    (change)="getPincodeMasterList($event,'destination')" bindLabel="text" [notFoundText]="docketService.notPincodeValue"
+                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('destination_pincode')?.invalid  && DefaultcontractForm.get('destination_pincode')?.touched}"></ng-select>
                     <div *ngIf="DefaultcontractForm.get('destination_pincode')?.invalid && DefaultcontractForm.get('destination_pincode')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('destination_pincode')?.hasError('required')">Destination Pin Code is required.</small>
                     </div>
@@ -155,9 +155,7 @@
                 <label class="col-sm-5 col-form-label text-end">Transport Mode</label>
                 <div class="col-sm-7">
                     <ng-select formControlName="mode" placeholder="Select TransportMode" class="clear-icon"
-                    [items]="docketService.transportModeData" bindLabel="codeDesc" 
-                    bindValue="codeId">
-                    </ng-select>
+                    [items]="docketService.transportModeData" bindLabel="codeDesc" bindValue="codeId"></ng-select>
                 </div>
             </div> 
         </div>
@@ -190,9 +188,10 @@
     <div class="row pb-3">
      <div class="col-3">
             <div class="row">
-                <label class="col-sm-5 col-form-label text-end text-danger">Email</label>
+                <label class="col-sm-5 col-form-label text-end">Email</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="text" placeholder="Enter Email" formControlName="email">
+                    <input class="form-control required2" type="text" placeholder="Enter Email" formControlName="email"
+                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('email')?.invalid  && DefaultcontractForm.get('email')?.touched}">
                     <div *ngIf="DefaultcontractForm.get('email')?.invalid && DefaultcontractForm.get('email')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('email')?.hasError('required')">Email is required.</small>
                         <small *ngIf="DefaultcontractForm.get('email')?.hasError('email')">Please enter a valid email address.</small>
@@ -206,9 +205,10 @@
      <div class="row pb-3">
         <div class="col-2">
             <div class="row">
-                <label class="col-sm-5 col-form-label text-end text-danger">Weight Kgs</label>
+                <label class="col-sm-5 col-form-label text-end">Weight Kgs</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="number" placeholder="Enter Weight Kgs" formControlName="weightKG">
+                    <input class="form-control required2" type="number" placeholder="Enter Weight Kgs" formControlName="weightKG" (focus)="clearOnFocus('weightKG')" (blur)="resetOnBlur('weightKG')"
+                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('weightKG')?.invalid  && DefaultcontractForm.get('weightKG')?.touched}">
                      <div *ngIf="DefaultcontractForm.get('weightKG')?.invalid && DefaultcontractForm.get('weightKG')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('weightKG')?.hasError('required')">Weight Kgs is required.</small>
                     </div>
@@ -217,9 +217,10 @@
         </div>
         <div class="col-2">
             <div class="row">
-                <label class="col-sm-5 col-form-label text-end text-danger">Pkgs</label>
+                <label class="col-sm-5 col-form-label text-end">Pkgs</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="number" placeholder="Enter Pkgs" formControlName="Pkgs">
+                    <input class="form-control required2" type="number" placeholder="Enter Pkgs" formControlName="Pkgs" (focus)="clearOnFocus('Pkgs')" (blur)="resetOnBlur('Pkgs')"
+                    [ngClass]="{ 'border-danger': DefaultcontractForm.get('Pkgs')?.invalid  && DefaultcontractForm.get('Pkgs')?.touched}">
                     <div *ngIf="DefaultcontractForm.get('Pkgs')?.invalid && DefaultcontractForm.get('Pkgs')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('Pkgs')?.hasError('required')">Pkgs is required.</small>
                     </div>
@@ -228,9 +229,10 @@
         </div>
         <div class="col-2">
             <div class="row">
-                <label class="col-sm-5 col-form-label text-end text-danger">Invoice Value</label>
+                <label class="col-sm-5 col-form-label text-end">Invoice Value</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="number" placeholder="Enter Invoice Value" formControlName="invoiceValue">
+                    <input class="form-control required2" type="number" placeholder="Enter Invoice Value" formControlName="invoiceValue" (focus)="clearOnFocus('invoiceValue')" (blur)="resetOnBlur('invoiceValue')"
+                    [ngClass]="{ 'border-danger': DefaultcontractForm.get('invoiceValue')?.invalid  && DefaultcontractForm.get('invoiceValue')?.touched}">
                     <div *ngIf="DefaultcontractForm.get('invoiceValue')?.invalid && DefaultcontractForm.get('invoiceValue')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('invoiceValue')?.hasError('required')">Invoice Value is required.</small>
                     </div>
@@ -356,9 +358,10 @@
       <div class="row pb-3">
         <div class="col-3">
             <div class="row">
-                <label class="col-sm-5 col-form-label text-end text-danger">Fuel Surcharge</label>
+                <label class="col-sm-5 col-form-label text-end">Fuel Surcharge</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="text" placeholder="Enter Fuel Surcharge" formControlName="fuelSurcharge">
+                    <input class="form-control required2" type="text" placeholder="Enter Fuel Surcharge" formControlName="fuelSurcharge"
+                    [ngClass]="{ 'border-danger': DefaultcontractForm.get('fuelSurcharge')?.invalid  && DefaultcontractForm.get('fuelSurcharge')?.touched}">
                     <div *ngIf="DefaultcontractForm.get('fuelSurcharge')?.invalid && DefaultcontractForm.get('fuelSurcharge')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('fuelSurcharge')?.hasError('required')">Fuel Surcharge is required.</small>
                     </div>
@@ -465,7 +468,6 @@
 
 
      <div class="row pb-3 d-flex justify-content-end">
-        
          <div class="col-3">
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">{{'GST@'}}</label>

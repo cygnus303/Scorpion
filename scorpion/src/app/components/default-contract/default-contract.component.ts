@@ -76,30 +76,44 @@ export class DefaultContractComponent {
     })
   }
 
-  getPincodeMasterList(event: any,type:string) {
+  clearOnFocus(controlName: string) {
+    const control = this.DefaultcontractForm.get(controlName);
+    if (control && control.value === 0) {
+      control.setValue('');
+    }
+  }
+
+  resetOnBlur(controlName: string) {
+    const control = this.DefaultcontractForm.get(controlName);
+    if (control && !control.value) {
+      control.setValue(0);
+    }
+  }
+
+  getPincodeMasterList(event: any, type: string) {
     this.basicDetailService.getPincodeMasterList(event.value).subscribe({
       next: (response: any) => {
         if (response) {
           this.getPincodeMaster = response;
-          if(type==='origin'){
-          this.DefaultcontractForm.patchValue({
-            PickupArea:this.getPincodeMaster.area,
-            PickupODA:this.getPincodeMaster.is_ODA_Apply,
-            originCity:this.getPincodeMaster.location,
-            originZone:'',
-            fromState:''
-          })
-        }
-        if(type==='destination'){
-          this.DefaultcontractForm.patchValue({
-            destinationArea:this.getPincodeMaster.area,
-            ODA:this.getPincodeMaster.is_ODA_Apply,
-            destinationCity:this.getPincodeMaster.location,
-            destinationZone:'',
-            toState:'',
-            deliveryBranchCode:this.getPincodeMaster.locCode
-          })
-        }
+          if (type === 'origin') {
+            this.DefaultcontractForm.patchValue({
+              PickupArea: this.getPincodeMaster.area,
+              PickupODA: this.getPincodeMaster.is_ODA_Apply,
+              originCity: this.getPincodeMaster.location,
+              originZone: '',
+              fromState: ''
+            })
+          }
+          if (type === 'destination') {
+            this.DefaultcontractForm.patchValue({
+              destinationArea: this.getPincodeMaster.area,
+              ODA: this.getPincodeMaster.is_ODA_Apply,
+              destinationCity: this.getPincodeMaster.location,
+              destinationZone: '',
+              toState: '',
+              deliveryBranchCode: this.getPincodeMaster.locCode
+            })
+          }
         }
       }
     });
