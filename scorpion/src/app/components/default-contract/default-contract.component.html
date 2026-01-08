@@ -1,5 +1,5 @@
 <div class="form-grid p-4">
-    <form [formGroup]="contractPage">
+    <form [formGroup]="DefaultcontractForm">
     <!-- Origin Details Section -->
     <h3 class="pb-4 text-start challan-Details mb-4">Origin Destination Details</h3>
     <div class="row pb-3">
@@ -7,7 +7,10 @@
             <div class="row align-items-center">
                 <label class="col-sm-5 col-form-label text-end">Origin Pin Code</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Origin Pin Code" formControlName="originPincode">
+                    <ng-select class="form-control clear-icon" type="text" placeholder="Enter Origin Pin Code" formControlName="originPincode"
+                    (search)="docketService.getpincodeData($event)" bindValue="value" [items]="docketService.pincodeList" 
+                    (change)="getPincodeMasterList($event)" bindLabel="text" [notFoundText]="docketService.notPincodeValue"
+                    ></ng-select>
                 </div>
             </div>
         </div>
@@ -204,7 +207,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Invoice Value</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Invoice Value">
+                    <input class="form-control" type="number" placeholder="Enter Invoice Value" formControlName="invoiceValue">
                 </div>
             </div>
         </div>
@@ -212,7 +215,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Charge Wt Kgs</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Charge Weight Kgs">
+                    <input class="form-control" type="number" placeholder="Enter Charge Weight Kgs" formControlName="chargeWeightKG">
                 </div>
             </div>
         </div>
@@ -220,7 +223,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">CFT Weight</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter CFT Weight">
+                    <input class="form-control" type="number" placeholder="Enter CFT Weight" formControlName="CFTweight">
                 </div>
             </div>
         </div>
@@ -228,7 +231,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Rate/Kg</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Rate/Kg">
+                    <input class="form-control" type="number" placeholder="Enter Rate/Kg" formControlName="rate">
                 </div>
             </div>
         </div>
@@ -293,7 +296,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Length (in Inches)</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Length (in Inches)">
+                    <input class="form-control" type="number" placeholder="Enter Length (in Inches)" formControlName="length">
                 </div>
             </div>
         </div>
@@ -301,7 +304,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Breadth (in Inches)</label>
                 <div class="col-sm-7">
-                     <input class="form-control" type="number" placeholder="Enter Breadth (in Inches)">
+                     <input class="form-control" type="number" placeholder="Enter Breadth (in Inches)" formControlName="breadth">
                 </div>
             </div>
         </div>
@@ -309,7 +312,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Height (in Inches)</label>
                 <div class="col-sm-7">
-                     <input class="form-control" type="number" placeholder="Enter Height (in Inches)">
+                     <input class="form-control" type="number" placeholder="Enter Height (in Inches)" formControlName="height">
                 </div>
             </div>
         </div>
@@ -317,7 +320,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">CFT Ratio</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter CFT Ratio">
+                    <input class="form-control" type="number" placeholder="Enter CFT Ratio" formControlName="CFTRatio">
                 </div>
             </div>
         </div>
@@ -329,7 +332,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Fuel Surcharge</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Fuel Surcharge">
+                    <input class="form-control" type="number" placeholder="Enter Fuel Surcharge" formControlName="fuelSurcharge">
                 </div>
             </div>
         </div>
@@ -337,7 +340,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Freight Rs</label>
                 <div class="col-sm-7">
-                     <input class="form-control" type="number" placeholder="Enter Freight Rs">
+                     <input class="form-control" type="number" placeholder="Enter Freight Rs" formControlName="freightRs">
                 </div>
             </div>
         </div>
@@ -345,7 +348,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Fuel Surcharge Rs.</label>
                 <div class="col-sm-7">
-                     <input class="form-control" type="number" placeholder="Enter Fuel Surcharge Rs.">
+                     <input class="form-control" type="number" placeholder="Enter Fuel Surcharge Rs." formControlName="fuelSurchargeRs">
                 </div>
             </div>
         </div>
@@ -353,7 +356,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">ODA Rate/KG</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter ODA Rate/KG">
+                    <input class="form-control" type="number" placeholder="Enter ODA Rate/KG" formControlName="ODARate">
                 </div>
             </div>
         </div>
@@ -364,7 +367,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">{{'GST@'}}</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter GST@">
+                    <input class="form-control" type="number" placeholder="Enter GST@" formControlName="gst">
                 </div>
             </div>
         </div>
@@ -372,7 +375,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">State Charges Detail</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter State Charges Detail">
+                    <input class="form-control" type="number" placeholder="Enter State Charges Detail" formControlName="stateChargesDetail">
                 </div>
             </div>
         </div>
@@ -380,7 +383,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">State Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter State Charges">
+                    <input class="form-control" type="number" placeholder="Enter State Charges" formControlName="stateCharges">
                 </div>
             </div>
         </div>
@@ -388,7 +391,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">ODA Amount.</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter ODA Amount.">
+                    <input class="form-control" type="number" placeholder="Enter ODA Amount." formControlName="ODAAmount">
                 </div>
             </div>
         </div>
@@ -399,7 +402,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Docket Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Docket Charges">
+                    <input class="form-control" type="number" placeholder="Enter Docket Charges" formControlName="docketCharge">
                 </div>
             </div>
         </div>
@@ -407,7 +410,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Mall Delivery Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Mall Delivery Charges">
+                    <input class="form-control" type="number" placeholder="Enter Mall Delivery Charges" formControlName="mallDeliveryCharge">
                 </div>
             </div>
         </div>
@@ -415,7 +418,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Appointment Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Appointment Charges">
+                    <input class="form-control" type="number" placeholder="Enter Appointment Charges" formControlName="appoinmentCharge">
                 </div>
             </div>
         </div>
@@ -423,7 +426,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">CSD Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter CSD Charges">
+                    <input class="form-control" type="number" placeholder="Enter CSD Charges" formControlName="CSDCharge">
                 </div>
             </div>
         </div>
@@ -436,7 +439,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Insurance Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Insurance Charges">
+                    <input class="form-control" type="number" placeholder="Enter Insurance Charges" formControlName="InsuranceCharge">
                 </div>
             </div>
         </div>
@@ -444,7 +447,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Disc_Rate</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Disc_Rate">
+                    <input class="form-control" type="number" placeholder="Enter Disc_Rate" formControlName="Disc_Rate">
                 </div>
             </div>
         </div>
@@ -452,7 +455,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Discount_Amount</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Discount_Amount">
+                    <input class="form-control" type="number" placeholder="Enter Discount_Amount" formControlName="Disc_amount">
                 </div>
             </div>
         </div>
@@ -460,7 +463,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Disc_Sub_Total</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Disc_Sub_Total">
+                    <input class="form-control" type="number" placeholder="Enter Disc_Sub_Total" formControlName="Disc_Sub_Total">
                 </div>
             </div>
         </div>
@@ -471,7 +474,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Sub_Total</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Sub_Total">
+                    <input class="form-control" type="number" placeholder="Enter Sub_Total" formControlName="subTotal">
                 </div>
             </div>
         </div>
@@ -479,7 +482,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Grand Total</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Grand Total">
+                    <input class="form-control" type="number" placeholder="Enter Grand Total" formControlName="GrandTotal">
                 </div>
             </div>
         </div>

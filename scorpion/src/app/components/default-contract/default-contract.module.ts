@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { DefaultContractComponent } from './default-contract.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgSelectComponent, NgSelectModule } from "@ng-select/ng-select";
 
 export const Route: Routes = [
   {
@@ -16,7 +17,9 @@ export const Route: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(Route),
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+    NgSelectComponent,
+    NgSelectModule
+]
 })
 export class DefaultContractModule { }
