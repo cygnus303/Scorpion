@@ -11,12 +11,8 @@ import { DocketService } from 'app/shared/services/docket.service';
 })
 export class DefaultContractComponent {
   public getPincodeMaster: any;
-  DefaultcontractForm!:FormGroup;
-
-  constructor(
-    public docketService:DocketService,
-    public basicDetailService:BasicDetailService
-  ){}
+  public DefaultcontractForm!:FormGroup;
+  constructor(public docketService:DocketService,public basicDetailService:BasicDetailService){}
 
   ngOnInit(){
     this.buildForm();
@@ -45,38 +41,38 @@ export class DefaultContractComponent {
       TATNormal:new FormControl(''),
       TATODA:new FormControl(''),
       transitDays:new FormControl(''),
-      weightKG:new FormControl('', Validators.required),
-      Pkgs:new FormControl('', Validators.required),
+      weightKG:new FormControl(0, Validators.required),
+      Pkgs:new FormControl(0, Validators.required),
       VolumetricAppl:new FormControl(false),
       AppointmentDeliver:new FormControl(false),
       CSDDelivery:new FormControl(false),
       MallDelAppl:new FormControl(false),
-      invoiceValue:new FormControl('', Validators.required),
-      chargeWeightKG:new FormControl(''),
-      CFTweight:new FormControl(''),
-      rate:new FormControl(''),
+      invoiceValue:new FormControl(0, Validators.required),
+      chargeWeightKG:new FormControl(0),
+      CFTweight:new FormControl(0),
+      rate:new FormControl(0),
       length:new FormControl(''),
       breadth:new FormControl(''),
       height:new FormControl(''),
       CFTRatio:new FormControl(''),
       fuelSurcharge:new FormControl('',Validators.required),
-      freightRs:new FormControl(''),
-      fuelSurchargeRs:new FormControl(''),
-      ODARate:new FormControl(''),
-      gst:new FormControl(''),
-      stateChargesDetail:new FormControl(''),
-      stateCharges:new FormControl(''),
-      ODAAmount:new FormControl(''),
+      freightRs:new FormControl(0),
+      fuelSurchargeRs:new FormControl(0),
+      ODARate:new FormControl(0),
+      gst:new FormControl(0),
+      stateChargesDetail:new FormControl(0),
+      stateCharges:new FormControl(0),
+      ODAAmount:new FormControl(0),
       docketCharge:new FormControl(''),
-      mallDeliveryCharge:new FormControl(''),
-      appoinmentCharge:new FormControl(''),
-      CSDCharge:new FormControl(''),
-      InsuranceCharge:new FormControl(''),
-      Disc_Rate:new FormControl(''),
-      Disc_amount:new FormControl(''),
-      Disc_Sub_Total:new FormControl(''),
-      subTotal:new FormControl(''),
-      GrandTotal:new FormControl('')
+      mallDeliveryCharge:new FormControl(0),
+      appoinmentCharge:new FormControl(0),
+      CSDCharge:new FormControl(0),
+      InsuranceCharge:new FormControl(0),
+      Disc_Rate:new FormControl(0),
+      Disc_amount:new FormControl(0),
+      Disc_Sub_Total:new FormControl(0),
+      subTotal:new FormControl(0),
+      GrandTotal:new FormControl(0)
     })
   }
 
