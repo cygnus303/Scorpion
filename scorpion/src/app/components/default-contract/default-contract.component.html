@@ -9,7 +9,7 @@
                 <div class="col-sm-7">
                     <ng-select class="form-control clear-icon" type="text" placeholder="Enter Origin Pin Code" formControlName="originPincode"
                     (search)="docketService.getpincodeData($event)" bindValue="value" [items]="docketService.pincodeList" 
-                    (change)="getPincodeMasterList($event)" bindLabel="text" [notFoundText]="docketService.notPincodeValue"
+                    (change)="getPincodeMasterList($event,'origin')" bindLabel="text" [notFoundText]="docketService.notPincodeValue"
                     ></ng-select>
                 </div>
             </div>
@@ -18,7 +18,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Pickup Area</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Pickup Area" formControlName="PickupArea">
+                    <input class="form-control" type="text" placeholder="Enter Pickup Area" formControlName="PickupArea" readonly>
                 </div>
             </div>
         </div>
@@ -26,7 +26,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Pickup From ODA</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Pickup From ODA" formControlName="PickupODA">
+                    <input class="form-control" type="text" placeholder="Enter Pickup From ODA" formControlName="PickupODA" readonly>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Origin City</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Origin City" formControlName="originCity">
+                    <input class="form-control" type="text" placeholder="Enter Origin City" formControlName="originCity" readonly>
                 </div>
             </div>
         </div>
@@ -44,7 +44,7 @@
             <div class="row align-items-center">
                 <label class="col-sm-5 col-form-label text-end">From State</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter From State" formControlName="fromState">
+                    <input class="form-control" type="text" placeholder="Enter From State" formControlName="fromState" readonly>
                 </div>
             </div>
         </div>
@@ -52,7 +52,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Origin Zone</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Origin Zone" formControlName="originZone">
+                    <input class="form-control" type="text" placeholder="Enter Origin Zone" formControlName="originZone" readonly>
                 </div>
             </div>
         </div>
@@ -80,7 +80,10 @@
             <div class="row align-items-center">
                 <label class="col-sm-5 col-form-label text-end">Destination Pin Code</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Destination Pin Code" formControlName="destination_pincode">
+                    <ng-select class="form-control" type="text" placeholder="Enter Destination Pin Code" formControlName="destination_pincode"
+                    (search)="docketService.getpincodeData($event)" bindValue="value" [items]="docketService.pincodeList" 
+                    (change)="getPincodeMasterList($event,'destination')" bindLabel="text" [notFoundText]="docketService.notPincodeValue">
+                    </ng-select>
                 </div>
             </div>
         </div>
@@ -88,7 +91,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Destination Area</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Destination Area" formControlName="destinationArea">
+                    <input class="form-control" type="text" placeholder="Enter Destination Area" formControlName="destinationArea" readonly>
                 </div>
             </div>
         </div>
@@ -96,7 +99,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">ODA (Y/N)</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter ODA (Y/N)" formControlName="ODA">
+                    <input class="form-control" type="text" placeholder="Enter ODA (Y/N)" formControlName="ODA" readonly>
                 </div>
             </div>
         </div>
@@ -104,7 +107,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Destination City</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Destination City" formControlName="destinationCity">
+                    <input class="form-control" type="text" placeholder="Enter Destination City" formControlName="destinationCity" readonly>
                 </div>
             </div>
         </div>
@@ -114,7 +117,7 @@
             <div class="row align-items-center">
                 <label class="col-sm-5 col-form-label text-end">To State</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter To State" formControlName="toState">
+                    <input class="form-control" type="text" placeholder="Enter To State" formControlName="toState" readonly>
                 </div>
             </div>
         </div>
@@ -122,7 +125,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Destination Zone</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Destination Zone" formControlName="destinationZone">
+                    <input class="form-control" type="text" placeholder="Enter Destination Zone" formControlName="destinationZone" readonly>
                 </div>
             </div>
         </div>
@@ -130,7 +133,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Delivery Branch Code</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Delivery Branch Code" formControlName="deliveryBranchCode">
+                    <input class="form-control" type="text" placeholder="Enter Delivery Branch Code" formControlName="deliveryBranchCode" readonly>
                 </div>
             </div>
         </div>
@@ -152,11 +155,10 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Transport Mode</label>
                 <div class="col-sm-7">
-                    <select class="form-control" formControlName="mode">
-                        <option value="ROAD CARGO">ROAD CARGO</option>
-                        <option value="RAIL">RAIL</option>
-                        <option value="AIR">AIR</option>
-                    </select>
+                    <ng-select class="form-control" formControlName="mode" placeholder="Select TransportMode"
+                    [items]="docketService.transportModeData" bindLabel="codeDesc" 
+                    bindValue="codeId">
+                    </ng-select>
                 </div>
             </div>
         </div>
@@ -290,7 +292,7 @@
             </div>
         </div>
     </div>
-      <div class="row p-3 fade-in" *ngIf="contractPage.get('VolumetricAppl')?.value">
+      <div class="row p-3 fade-in" *ngIf="DefaultcontractForm.get('VolumetricAppl')?.value">
        <h3 class="pb-4 text-start challan-Details mb-4">Volumetric Applicable</h3>
         <div class="col-3">
             <div class="row">

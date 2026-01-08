@@ -19,12 +19,13 @@ export class DefaultContractComponent {
   ){}
 
   ngOnInit(){
-    this.buildForm()
+    this.buildForm();
+    this.docketService.getTransportModeData()
   }
 
   buildForm(){
     this.DefaultcontractForm=new FormGroup({
-      originPincode:new FormControl(''),
+      originPincode:new FormControl(null),
       PickupArea:new FormControl(''),
       PickupODA:new FormControl(''),
       originCity:new FormControl(''),
@@ -32,7 +33,7 @@ export class DefaultContractComponent {
       originZone:new FormControl(''),
       ODA_pickUp:new FormControl(''),
       email:new FormControl(''),
-      destination_pincode:new FormControl(''),
+      destination_pincode:new FormControl(null),
       destinationArea:new FormControl(''),
       ODA:new FormControl(''),
       destinationCity:new FormControl(''),
@@ -40,7 +41,7 @@ export class DefaultContractComponent {
       destinationZone:new FormControl(''),
       deliveryBranchCode:new FormControl(''),
       ODACategory:new FormControl(''),
-      mode:new FormControl(''),
+      mode:new FormControl(null),
       TATNormal:new FormControl(''),
       TATODA:new FormControl(''),
       transitDays:new FormControl(''),
@@ -79,15 +80,30 @@ export class DefaultContractComponent {
     })
   }
 
-  getPincodeMasterList(event: any) {
+  getPincodeMasterList(event: any,type:string) {
     this.basicDetailService.getPincodeMasterList(event.value).subscribe({
       next: (response: any) => {
         if (response) {
           this.getPincodeMaster = response;
+          if(type==='origin'){
           this.DefaultcontractForm.patchValue({
-            PickupArea:this.getPincodeMaster.PickupArea,
-
+            PickupArea:this.getPincodeMaster.area,
+            PickupODA:this.getPincodeMaster.is_ODA_Apply,
+            originCity:this.getPincodeMaster.location,
+            originZone:'',
+            fromState:''
           })
+        }
+        if(type==='destination'){
+          this.DefaultcontractForm.patchValue({
+            destinationArea:this.getPincodeMaster.area,
+            ODA:this.getPincodeMaster.is_ODA_Apply,
+            destinationCity:this.getPincodeMaster.location,
+            destinationZone:'',
+            toState:'',
+            deliveryBranchCode:this.getPincodeMaster.locCode
+          })
+        }
         }
       }
     });
