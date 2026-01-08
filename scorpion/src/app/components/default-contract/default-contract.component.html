@@ -210,7 +210,7 @@
         </div>
         <div class="col-2">
             <div class="row">
-                <label class="col-sm-5 col-form-label text-end">Charge Weight Kgs</label>
+                <label class="col-sm-5 col-form-label text-end">Charge Wt Kgs</label>
                 <div class="col-sm-7">
                     <input class="form-control" type="number" placeholder="Enter Charge Weight Kgs">
                 </div>
@@ -234,61 +234,61 @@
         </div>
     </div>
       <div class="row pb-3">
-        <div class="col-2">
+        <div class="col-12 col-sm-4 col-md-3 col-lg-3 col-xxl-2">
             <div class="row align-items-center">
-                <label class="col-sm-7 col-form-label text-end">Volumetric Applicable:</label>
-                <div class="col-sm-5">
+                <label class="col-sm-6 col-form-label text-center">Volumetric Applicable:</label>
+                <div class="col-sm-6 text-start">
                     <div class="btn-group btn-group-sm" role="group">
-                        <input type="radio" class="btn-check" [name]="'InsertRecordCHGWTAPPL'" id="InsertRecordCHGWTAPPLYes" [value]="true">
-                        <label class="btn btn-outline-success" for="InsertRecordCHGWTAPPLYes">Yes</label>
-                        <input type="radio" class="btn-check" [name]="'InsertRecordCHGWTAPPL'" id="InsertRecordCHGWTAPPLNo" [value]="false">
-                        <label class="btn btn-outline-danger" for="InsertRecordCHGWTAPPLNo">No</label>
+                        <input type="radio" class="btn-check" [name]="'VolumetricAppl'" id="VolumetricApplYes" formControlName="VolumetricAppl" [value]="true">
+                        <label class="btn btn-outline-success" for="VolumetricApplYes">Yes</label>
+                        <input type="radio" class="btn-check" [name]="'VolumetricAppl'" id="VolumetricApplNo"  formControlName="VolumetricAppl" [value]="false">
+                        <label class="btn btn-outline-danger" for="VolumetricApplNo">No</label>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-2">
+        <div class="col-12 col-sm-4 col-md-3 col-lg-3 col-xxl-2">
             <div class="row align-items-center">
-                <label class="col-sm-7 col-form-label text-end">Appointment Deliver:</label>
-                <div class="col-sm-5">
+                <label class="col-sm-6 col-form-label text-center">Appointment Deliver:</label>
+                <div class="col-sm-6 text-start">
                        <div class="btn-group btn-group-sm" role="group">
-                        <input type="radio" class="btn-check" [name]="'InsertRecordAPPTAPPL'" id="InsertRecordAPPTAPPLYes" [value]="true">
-                        <label class="btn btn-outline-success" for="InsertRecordAPPTAPPLYes">Yes</label>
-                        <input type="radio" class="btn-check" [name]="'InsertRecordAPPTAPPL'" id="InsertRecordAPPTAPPLNo" [value]="false">
-                        <label class="btn btn-outline-danger" for="InsertRecordAPPTAPPLNo">No</label>
+                        <input type="radio" class="btn-check" [name]="'AppointmentDeliver'" id="AppointmentDeliverYes" formControlName="AppointmentDeliver" [value]="true">
+                        <label class="btn btn-outline-success" for="AppointmentDeliverYes">Yes</label>
+                        <input type="radio" class="btn-check" [name]="'AppointmentDeliver'" id="AppointmentDeliverNo" formControlName="AppointmentDeliver" [value]="false">
+                        <label class="btn btn-outline-danger" for="AppointmentDeliverNo">No</label>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-2">
+        <div class="col-12 col-sm-4 col-md-3 col-lg-3 col-xxl-2">
             <div class="row align-items-center">
-                <label class="col-sm-7 col-form-label text-end">CSD Delivery:</label>
-                <div class="col-sm-5">
+                <label class="col-sm-5 col-form-label text-center">CSD Delivery:</label>
+                <div class="col-sm-7 text-start">
                        <div class="btn-group btn-group-sm" role="group">
-                        <input type="radio" class="btn-check" [name]="'InsertRecordCSDAPPL'" id="InsertRecordCSDAPPLYes" [value]="true">
-                        <label class="btn btn-outline-success" for="InsertRecordCSDAPPLYes">Yes</label>
-                        <input type="radio" class="btn-check" [name]="'InsertRecordCSDAPPL'" id="InsertRecordCSDAPPLNo" [value]="false">
-                        <label class="btn btn-outline-danger" for="InsertRecordCSDAPPLNo">No</label>
+                        <input type="radio" class="btn-check" [name]="'CSDDelivery'" id="CSDDeliveryYes" formControlName="CSDDelivery" [value]="true">
+                        <label class="btn btn-outline-success" for="CSDDeliveryYes">Yes</label>
+                        <input type="radio" class="btn-check" [name]="'CSDDelivery'" id="CSDDeliveryNo" formControlName="CSDDelivery" [value]="false">
+                        <label class="btn btn-outline-danger" for="CSDDeliveryNo">No</label>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-2">
+        <div class="col-12 col-sm-4 col-md-3 col-lg-3 col-xxl-2">
             <div class="row align-items-center">
-                <label class="col-sm-7 col-form-label text-end">Mall Delivery Applicable:</label>
-                <div class="col-sm-5">
+                <label class="col-sm-6 col-form-label text-center">Mall Delivery Applicable:</label>
+                <div class="col-sm-6 text-start">
                        <div class="btn-group btn-group-sm" role="group">
-                        <input type="radio" class="btn-check" [name]="'InsertRecordMALLDELAPPL'" id="InsertRecordMALLDELAPPLYes" [value]="true">
-                        <label class="btn btn-outline-success" for="InsertRecordMALLDELAPPLYes">Yes</label>
-                        <input type="radio" class="btn-check" [name]="'InsertRecordMALLDELAPPL'" id="InsertRecordMALLDELAPPLNo" [value]="false">
-                        <label class="btn btn-outline-danger" for="InsertRecordMALLDELAPPLNo">No</label>
+                        <input type="radio" class="btn-check" [name]="'MallDelAppl'" id="MallDelApplYes" formControlName="MallDelAppl" [value]="true">
+                        <label class="btn btn-outline-success" for="MallDelApplYes">Yes</label>
+                        <input type="radio" class="btn-check" [name]="'MallDelAppl'" id="MallDelApplNo" formControlName="MallDelAppl" [value]="false">
+                        <label class="btn btn-outline-danger" for="MallDelApplNo">No</label>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-        <div class="row pb-3" >
+      <div class="row p-3 fade-in" *ngIf="contractPage.get('VolumetricAppl')?.value">
+       <h3 class="pb-4 text-start challan-Details mb-4">Volumetric Applicable</h3>
         <div class="col-3">
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Length (in Inches)</label>
@@ -487,10 +487,8 @@
    
 
     <!-- Submit Button -->
-    <div class="row">
-        <div class="col-12 d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
+    <div class="d-flex justify-content-center text-center bg-secondary-subtle p-4 gap-2">
+        <button type="submit" class="btn btn-success"><i class="fas fa-check me-2"></i>Submit</button>
     </div>
     </form>
 </div>

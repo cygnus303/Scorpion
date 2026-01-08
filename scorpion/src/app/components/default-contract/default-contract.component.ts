@@ -37,7 +37,11 @@ export class DefaultContractComponent {
       TATODA:new FormControl(''),
       transitDays:new FormControl(''),
       weightKG:new FormControl(''),
-      Pkgs:new FormControl('')
+      Pkgs:new FormControl(''),
+      VolumetricAppl:new FormControl(false),
+      AppointmentDeliver:new FormControl(false),
+      CSDDelivery:new FormControl(false),
+      MallDelAppl:new FormControl(false),
     })
   }
 
