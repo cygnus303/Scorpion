@@ -233,41 +233,61 @@
         </div>
     </div>
       <div class="row pb-3">
-        <div class="col-3">
+        <div class="col-2">
             <div class="row align-items-center">
-                <label class="col-sm-5 col-form-label text-end">Volumetric Applicable:</label>
-                <div class="col-sm-7">
-                    <input type="checkbox">
+                <label class="col-sm-7 col-form-label text-end">Volumetric Applicable:</label>
+                <div class="col-sm-5">
+                    <div class="btn-group btn-group-sm" role="group">
+                        <input type="radio" class="btn-check" [name]="'InsertRecordCHGWTAPPL'" id="InsertRecordCHGWTAPPLYes" [value]="true">
+                        <label class="btn btn-outline-success" for="InsertRecordCHGWTAPPLYes">Yes</label>
+                        <input type="radio" class="btn-check" [name]="'InsertRecordCHGWTAPPL'" id="InsertRecordCHGWTAPPLNo" [value]="false">
+                        <label class="btn btn-outline-danger" for="InsertRecordCHGWTAPPLNo">No</label>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <div class="row align-items-center">
-                <label class="col-sm-5 col-form-label text-end">Appointment Deliver:</label>
-                <div class="col-sm-7">
-                      <input type="checkbox">
+                <label class="col-sm-7 col-form-label text-end">Appointment Deliver:</label>
+                <div class="col-sm-5">
+                       <div class="btn-group btn-group-sm" role="group">
+                        <input type="radio" class="btn-check" [name]="'InsertRecordAPPTAPPL'" id="InsertRecordAPPTAPPLYes" [value]="true">
+                        <label class="btn btn-outline-success" for="InsertRecordAPPTAPPLYes">Yes</label>
+                        <input type="radio" class="btn-check" [name]="'InsertRecordAPPTAPPL'" id="InsertRecordAPPTAPPLNo" [value]="false">
+                        <label class="btn btn-outline-danger" for="InsertRecordAPPTAPPLNo">No</label>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <div class="row align-items-center">
-                <label class="col-sm-5 col-form-label text-end">CSD Delivery:</label>
-                <div class="col-sm-7">
-                      <input type="checkbox">
+                <label class="col-sm-7 col-form-label text-end">CSD Delivery:</label>
+                <div class="col-sm-5">
+                       <div class="btn-group btn-group-sm" role="group">
+                        <input type="radio" class="btn-check" [name]="'InsertRecordCSDAPPL'" id="InsertRecordCSDAPPLYes" [value]="true">
+                        <label class="btn btn-outline-success" for="InsertRecordCSDAPPLYes">Yes</label>
+                        <input type="radio" class="btn-check" [name]="'InsertRecordCSDAPPL'" id="InsertRecordCSDAPPLNo" [value]="false">
+                        <label class="btn btn-outline-danger" for="InsertRecordCSDAPPLNo">No</label>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <div class="row align-items-center">
-                <label class="col-sm-5 col-form-label text-end">Mall Delivery Applicable:</label>
-                <div class="col-sm-7">
-                      <input type="checkbox">
+                <label class="col-sm-7 col-form-label text-end">Mall Delivery Applicable:</label>
+                <div class="col-sm-5">
+                       <div class="btn-group btn-group-sm" role="group">
+                        <input type="radio" class="btn-check" [name]="'InsertRecordMALLDELAPPL'" id="InsertRecordMALLDELAPPLYes" [value]="true">
+                        <label class="btn btn-outline-success" for="InsertRecordMALLDELAPPLYes">Yes</label>
+                        <input type="radio" class="btn-check" [name]="'InsertRecordMALLDELAPPL'" id="InsertRecordMALLDELAPPLNo" [value]="false">
+                        <label class="btn btn-outline-danger" for="InsertRecordMALLDELAPPLNo">No</label>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-        <div class="row pb-3">
+        <div class="row pb-3" >
         <div class="col-3">
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Length (in Inches)</label>
