@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { DocketService } from 'app/shared/services/docket.service';
 
@@ -25,15 +25,15 @@ export class DefaultContractComponent {
 
   buildForm(){
     this.DefaultcontractForm=new FormGroup({
-      originPincode:new FormControl(null),
+      originPincode:new FormControl(null, Validators.required),
       PickupArea:new FormControl(''),
       PickupODA:new FormControl(''),
       originCity:new FormControl(''),
       fromState:new FormControl(''),
       originZone:new FormControl(''),
       ODA_pickUp:new FormControl(''),
-      email:new FormControl(''),
-      destination_pincode:new FormControl(null),
+      email:new FormControl('',[Validators.required, Validators.email]),
+      destination_pincode:new FormControl(null, Validators.required),
       destinationArea:new FormControl(''),
       ODA:new FormControl(''),
       destinationCity:new FormControl(''),
@@ -45,13 +45,13 @@ export class DefaultContractComponent {
       TATNormal:new FormControl(''),
       TATODA:new FormControl(''),
       transitDays:new FormControl(''),
-      weightKG:new FormControl(''),
-      Pkgs:new FormControl(''),
+      weightKG:new FormControl('', Validators.required),
+      Pkgs:new FormControl('', Validators.required),
       VolumetricAppl:new FormControl(false),
       AppointmentDeliver:new FormControl(false),
       CSDDelivery:new FormControl(false),
       MallDelAppl:new FormControl(false),
-      invoiceValue:new FormControl(''),
+      invoiceValue:new FormControl('', Validators.required),
       chargeWeightKG:new FormControl(''),
       CFTweight:new FormControl(''),
       rate:new FormControl(''),
@@ -59,7 +59,7 @@ export class DefaultContractComponent {
       breadth:new FormControl(''),
       height:new FormControl(''),
       CFTRatio:new FormControl(''),
-      fuelSurcharge:new FormControl(''),
+      fuelSurcharge:new FormControl('',Validators.required),
       freightRs:new FormControl(''),
       fuelSurchargeRs:new FormControl(''),
       ODARate:new FormControl(''),
@@ -107,6 +107,14 @@ export class DefaultContractComponent {
         }
       }
     });
+  }
+
+  OnSubmit(){
+    if(this.DefaultcontractForm.valid){
+      console.log(this.DefaultcontractForm.value);
+    }else{
+      this.DefaultcontractForm.markAllAsTouched();
+    }
   }
 
 }
