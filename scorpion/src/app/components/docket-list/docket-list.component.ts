@@ -372,18 +372,18 @@ this.basicDetailService.getODADetail(pincode).subscribe({
       });
       const invoiceList = this.docketService.invoiceRows.value.map((row: any, index: number) => {
         const obj: any = {
-          SrNo: row.srNo,
+          SrNo:  Number(row.srNo),
           DOCKNO: this.docketService.basicDetailForm.value.cNoteNo,
           INVNO: row.invoiceNo || '',
           INVDT: row.ewayinvoiceDate?new Date(row.ewayinvoiceDate).toISOString():new Date().toISOString(),
-          DECLVAL: row.declaredvalue || 0,
+          DECLVAL: Number(row.declaredvalue) || 0,
           PKGSNO: Number(row.noOfPkgs) || 0,
-          ACTUWT: row.actualWeight || 0,
+          ACTUWT: Number(row.actualWeight) || 0,
           VOL_L: Number(row.length) || 0,
           VOL_B: Number(row.breadth) || 0,
           VOL_H: Number(row.height) || 0,
-          toT_CFT: row.cubicweight || 0,
-          vol_cft: row.cubicweight || 0,
+          toT_CFT: Number(row.cubicweight) || 0,
+          vol_cft:  Number(row.cubicweight) || 0,
           Part_No: '',
           EWayBillNo: row.ewayBillNo || '',
           EWayInvoicevalue: 0,
@@ -410,7 +410,7 @@ this.basicDetailService.getODADetail(pincode).subscribe({
       const DocketBoxLBHList = this.docketService.boxDetailRows.value.map((row: any, index: number) => {
         const obj: any = {
           ACTUWT: Number(row.actualWeight) || 0,
-          SrNo: row.srNo,
+          SrNo:  Number(row.srNo),
           VOL_L: Number(row.length) || 0,
           vol_cft: Number(row.cubicweight) || 0,
           PKGSNO: Number(row.noOfPkgs) || 0,

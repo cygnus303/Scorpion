@@ -48,7 +48,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="portlet-body mb-3 table-wrapper">
-                    <table class="table table-bordered table-striped table-condensed flip-content mb-0">
+                    <table class="table table-bordered table-striped table-condensed flip-content mb-0 table-width">
                       <thead class="flip-content">
                         <tr>
                           <th class="center">
@@ -200,7 +200,7 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="portlet-body mb-3 table-wrapper">
-                  <table class="table table-bordered table-striped table-condensed flip-content mb-0">
+                  <table class="table table-bordered table-striped table-condensed flip-content mb-0 table-responsive">
                     <thead class="flip-content">
                       <tr>
                         <th class="center">
@@ -208,17 +208,17 @@
                         </th>
                         <th class="center "
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                          Length ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ? 'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm' 
+                          L ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ? 'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm' 
                                   ? 'CM' : docketService.contractservicecharge?.[0]?.cft_Measure }})
                         </th>
                         <th class="center "
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                          Breadth ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ? 'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm' 
+                          B ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ? 'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm' 
                                   ? 'CM' : docketService.contractservicecharge?.[0]?.cft_Measure }})
                         </th>
                         <th class="center"
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                          Height ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ? 'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm' 
+                          H ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ? 'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm' 
                                   ? 'CM' : docketService.contractservicecharge?.[0]?.cft_Measure }})
                         </th>
                         <th class="center">
