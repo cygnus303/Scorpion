@@ -73,10 +73,11 @@
             <label class="col-md-5">CNote Date</label>
             <div class="col-md-7">
               <div class="input-group">
-                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue" 
-                  [minDate]="minDate" [maxDate]="maxDate"
-                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" placeholder="CNote Date" 
-                   formControlName="cNoteDate" required [class.disabled-input]="true" [attr.tabindex]="-1"
+                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
+                  [bsValue]="docketService.bsValue" [minDate]="docketService.loginUserList.Type === '2' ? undefined : minDate"
+                    [maxDate]="docketService.loginUserList.Type === '2' ? undefined : maxDate"
+                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                  placeholder="CNote Date"  formControlName="cNoteDate" required appFocusNext [class.disabled-input]="true" 
                   [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('cNoteDate')?.invalid  && docketService.basicDetailForm.get('cNoteDate')?.touched }">
                 <span class="input-group-text cursor-pointer" (click)="dp.toggle()"  [class.disabled-input]="this.docketService.isComplition" >
                   <i class="fa fa-calendar"></i>

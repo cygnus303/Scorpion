@@ -46,81 +46,12 @@ export class DocketListComponent implements OnInit {
       this.docketService.isComplition = true;
       this.getCompletionData();
     } 
-
-    // this.activatedRoute.queryParams.subscribe(params => {
-    //   const encrypted = params['data'];
-    //   const key = 'WebX';
-
-    //   if (!encrypted) {
-    //     this.router.navigate(['/error']);
-    //     return;
-    //   }
-
-    //   try {
-    //     const decrypted = this.decryptService.decrypt(encrypted, key);
-    //     const parsedData = JSON.parse(decrypted);
-
-    //     // 🔑 check current route
-    //     const currentRoute = this.router.url.split("?")[0];
-
-    //     if (currentRoute.includes("docketFinancialEdit")) {
-    //       this.handleFinancialEdit(parsedData);
-    //     } else if (currentRoute.includes("docketEditCretria") || currentRoute.includes("docket")) {
-    //       this.handleNormalDocket(parsedData);
-    //     } else {
-    //       this.router.navigate(['/error']);
-    //     }
-    //   } catch (err) {
-    //     console.error("Decryption/Parsing failed", err);
-    //     this.router.navigate(['/error']);
-    //   }
-    // });
   }
-
-  // handleNormalDocket(parsedData: any) {
-  //   const requiredKeys = [
-  //     "FinYear", "LocationCode", "LocationName",
-  //     "UserImage", "UserId", "BaseUserName", "Companycode"
-  //   ];
-  //   if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
-  //     this.docketService.loginUserList = parsedData;
-  //      this.docketService.Location = parsedData.LocationCode;
-  //     // this.docketService.Location = 'IDR';
-  //     this.docketService.BaseUserCode = parsedData.UserId;
-  //     this.docketService.baseUsername = parsedData.BaseUserName;
-  //     console.log("👉 Normal docket flow loaded");
-  //   } else {
-  //     this.router.navigate(['/error']);
-  //   }
-  // }
-
-  // handleFinancialEdit(parsedData: any) {
-  //   const requiredKeys = [
-  //     "FinYear", "LocationCode", "LocationName",
-  //     "UserImage", "UserId", "BaseUserName", "Companycode",
-  //     "DocketNo","IsFromBillGeneration","Type",
-  //     // "baseLocationCode","baseCompanyCode","baseUserName"
-  //   ];
-  //   if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
-  //     this.docketService.loginUserList = parsedData;
-  //     this.docketService.Location = parsedData.LocationCode;
-  //     // this.docketService.Location = 'NAG';
-  //     this.docketService.BaseUserCode = parsedData.UserId;
-  //     this.docketService.baseUsername = parsedData.BaseUserName;
-  //     this.docketService.isComplition=true;
-  //     this.isComplitionlist = parsedData;
-  //     setTimeout(() => {
-  //       this.getCompletionData();
-  //     }, 300);
-  //   } else {
-  //     this.router.navigate(['/error']);
-  //   }
-  // }
 
 getCompletionData() {
   const payload = {
     docketNo: this.docketService.loginUserList.DocketNo,
-    // docketNo: '63225175',
+    // docketNo: '62970132',
     isFromBillGeneration: this.docketService.loginUserList.IsFromBillGeneration || '',
     type: this.docketService.loginUserList.Type,
     baseLocationCode: this.docketService.loginUserList.LocationCode,

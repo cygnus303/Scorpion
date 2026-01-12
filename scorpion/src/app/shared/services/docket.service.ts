@@ -1229,17 +1229,19 @@ GetFreightContractDetails(type?:string) {
       if(this.freightData.chargedWeight > originalFinalWeight ){
           const newFinalWeight = Math.max(this.freightData.chargedWeight || 0, originalFinalWeight || 0);
          
-          const newPkgWeight = Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0);
           this.invoiceform.patchValue({
             finalActualWeight: newFinalWeight,
+          });
+        }
+
+          if(this.freightData.chargedPKGS > this.invoiceform.value.chargeWeightPerPkg){
+          const newPkgWeight = Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0);
+          this.invoiceform.patchValue({
             chargeWeightPerPkg: newPkgWeight
           });
         }
         this.validateAppointmentDate();
         this.getFuelSurcharge(this.freightData?.freightCharge);
-        // if(type==='isactaulweight'){
-        // this.calculateSummary.next(true);
-        // }
       }
     }
   });
