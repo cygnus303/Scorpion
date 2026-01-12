@@ -252,8 +252,8 @@ calculateSummary(i: number) {
   this.docketService.calculateChargeWeight()
 
 }
- 
 
+ 
   clearZero(row: any, controlName: string) {
     const control = row.get(controlName);
     if (control?.value === 0) {

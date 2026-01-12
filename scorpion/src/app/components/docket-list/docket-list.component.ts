@@ -656,6 +656,10 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
         formData.append("DVM.WMD.AppointmentDT",this.docketService.basicDetailForm.value.appointmentDT ? new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString() : new Date().toISOString()),
         formData.append("DVM.WMD.Version", String(Number('9')));
       formData.append("DVM.docketType", "DKT");
+              // RequestLogs............
+        const requestLogs = this.formDataToJson(formData); // Use formDataToJson for the RequestLogs
+        formData.append("RequestLogs", JSON.stringify(requestLogs));
+ 
       this.isSubmitting = true;
       if(!this.docketService.isComplition){
       this.basicDetailService.onSubmit(formData).subscribe({
@@ -730,6 +734,28 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
       }
     }
   }
+
+  formDataToJson(formData: FormData): object {
+  const obj: any = {};
+ 
+  formData.forEach((value, key) => {
+    // Check if the key already exists in the object
+    if (obj[key]) {
+      // If it exists and is an array, push the new value into the array
+      if (Array.isArray(obj[key])) {
+        obj[key].push(value);
+      } else {
+        // If it exists but is not an array, convert it into an array
+        obj[key] = [obj[key], value];
+      }
+    } else {
+      // Otherwise, just add the key-value pair
+      obj[key] = value;
+    }
+  });
+ 
+  return obj;
+}
 
   validateDocket(DVM: any, DKTsubTotal: number, docketcharges: any, DKTTotal: number): string | null {
     let CalculatedFREIGHT = 0;

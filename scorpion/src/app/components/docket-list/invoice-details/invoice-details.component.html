@@ -306,9 +306,9 @@
                         <td class="center ">
                           <input class="form-control required2 text-end" placeholder="No of Pkgs."
                             (focus)="clearZero(row, 'noOfPkgs')" (keypress)="docketService.allowNumericDecimal($event)"
-                            (blur)="restoreIfEmpty(row, 'noOfPkgs');docketService.freightAndOtherChar('')"
-                            type="text" formControlName="noOfPkgs" (input)="calculateSummary(i)"
-                            (change)="docketService.GetDKTGSTForGTA();">
+                            (blur)="restoreIfEmpty(row, 'noOfPkgs');"
+                            type="text" formControlName="noOfPkgs" 
+                            (change)="calculateSummary(i);docketService.freightAndOtherChar('');docketService.GetDKTGSTForGTA();">
                         </td>
                         <td class="center"
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
@@ -318,9 +318,9 @@
                         <td class="center">
                           <input class="form-control required2 text-end" placeholder="Actual Weight" type="text"
                             formControlName="actualWeight" 
-                            (keypress)="docketService.allowNumericDecimal($event)" (input)="calculateSummary(i)"
-                            (blur)="restoreIfEmpty(row, 'actualWeight');docketService.freightAndOtherChar('');"
-                            (change)="docketService.GetDKTGSTForGTA();" (focus)="clearZero(row, 'actualWeight')"
+                            (keypress)="docketService.allowNumericDecimal($event)" 
+                            (blur)="restoreIfEmpty(row, 'actualWeight');"
+                            (change)="calculateSummary(i);docketService.freightAndOtherChar('');docketService.GetDKTGSTForGTA();" (focus)="clearZero(row, 'actualWeight')"
                             [ngClass]="{ 'border-danger': row.get('actualWeight')?.invalid && row.get('actualWeight')?.touched }">
   
                           <div *ngIf="row.get('actualWeight')?.touched && row.get('actualWeight')?.errors"
