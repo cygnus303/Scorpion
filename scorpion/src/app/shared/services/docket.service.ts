@@ -5,7 +5,7 @@ import { BasicDetailService } from './basic-detail.service';
 import { EmailRegex, mobileNo } from '../constants/common';
 import { MobileNumberValidator } from '../directives/validators/mobile-number-validator';
 import { SweetAlertService } from './sweet-alert.service';
-import { Subject } from 'rxjs';
+import {  Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -45,6 +45,7 @@ export class DocketService {
   public depth: string = '';
   public flagprocedd: string = '';
   public contractMessage: string = '';
+  private requestId = 0;
   public freightData: any;
   public chargingData: any;
   public totalSubTotal: any;
@@ -1166,7 +1167,6 @@ calculateChargeWeight(){
 GetFreightContractDetails(type?:string) {
 
   const originalFinalWeight = this.invoiceform.value.finalActualWeight;
-
   const data = {
     chargeRule: this.ruleDetailForChargeRule?.defaultvalue || 'NONE',
     baseCode1: this.basicDetailForm.value?.BaseCode1 || 'NONE',
@@ -1206,10 +1206,14 @@ GetFreightContractDetails(type?:string) {
     console.warn("Required fields missing, API not called:", data);
     return;
   }
+    const currentRequestId = ++this.requestId;
 
   this.basicDetailService.GetFreightContractDetails(data).subscribe({
     next: (response: any) => {
       if (response) {
+         if (currentRequestId !== this.requestId) {
+          return;
+        }
         this.isSubmiting = true;
 
         this.freightData = response.result[0];
@@ -1226,22 +1230,23 @@ GetFreightContractDetails(type?:string) {
           billingState: this.freightData.billingState
         });
 
-        
         // ⭐ Update form weight ONLY if API gives higher value
       if(this.freightData.chargedWeight > originalFinalWeight ){
           const newFinalWeight = Math.max(this.freightData.chargedWeight || 0, originalFinalWeight || 0);
          
-          const newPkgWeight = Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0);
           this.invoiceform.patchValue({
             finalActualWeight: newFinalWeight,
+          });
+        }
+
+          if(this.freightData.chargedPKGS > this.invoiceform.value.chargeWeightPerPkg){
+          const newPkgWeight = Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0);
+          this.invoiceform.patchValue({
             chargeWeightPerPkg: newPkgWeight
           });
         }
         this.validateAppointmentDate();
         this.getFuelSurcharge(this.freightData?.freightCharge);
-        // if(type==='isactaulweight'){
-        // this.calculateSummary.next(true);
-        // }
       }
     }
   });
@@ -1573,7 +1578,6 @@ freightForm.valueChanges.subscribe((values) => {
       this.originalSubtotal = this.freightForm.value.subTotal;
     this.totalSubTotal = totalSubTotal;
     this.getGSTCalculation();
-    console.log("Subtotal (Freight + API charges):", totalSubTotal);
   }
 
   allowNumericDecimal(event: KeyboardEvent) {

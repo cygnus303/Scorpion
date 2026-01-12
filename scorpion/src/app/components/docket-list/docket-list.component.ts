@@ -46,81 +46,12 @@ export class DocketListComponent implements OnInit {
       this.docketService.isComplition = true;
       this.getCompletionData();
     } 
-
-    // this.activatedRoute.queryParams.subscribe(params => {
-    //   const encrypted = params['data'];
-    //   const key = 'WebX';
-
-    //   if (!encrypted) {
-    //     this.router.navigate(['/error']);
-    //     return;
-    //   }
-
-    //   try {
-    //     const decrypted = this.decryptService.decrypt(encrypted, key);
-    //     const parsedData = JSON.parse(decrypted);
-
-    //     // 🔑 check current route
-    //     const currentRoute = this.router.url.split("?")[0];
-
-    //     if (currentRoute.includes("docketFinancialEdit")) {
-    //       this.handleFinancialEdit(parsedData);
-    //     } else if (currentRoute.includes("docketEditCretria") || currentRoute.includes("docket")) {
-    //       this.handleNormalDocket(parsedData);
-    //     } else {
-    //       this.router.navigate(['/error']);
-    //     }
-    //   } catch (err) {
-    //     console.error("Decryption/Parsing failed", err);
-    //     this.router.navigate(['/error']);
-    //   }
-    // });
   }
-
-  // handleNormalDocket(parsedData: any) {
-  //   const requiredKeys = [
-  //     "FinYear", "LocationCode", "LocationName",
-  //     "UserImage", "UserId", "BaseUserName", "Companycode"
-  //   ];
-  //   if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
-  //     this.docketService.loginUserList = parsedData;
-  //      this.docketService.Location = parsedData.LocationCode;
-  //     // this.docketService.Location = 'IDR';
-  //     this.docketService.BaseUserCode = parsedData.UserId;
-  //     this.docketService.baseUsername = parsedData.BaseUserName;
-  //     console.log("👉 Normal docket flow loaded");
-  //   } else {
-  //     this.router.navigate(['/error']);
-  //   }
-  // }
-
-  // handleFinancialEdit(parsedData: any) {
-  //   const requiredKeys = [
-  //     "FinYear", "LocationCode", "LocationName",
-  //     "UserImage", "UserId", "BaseUserName", "Companycode",
-  //     "DocketNo","IsFromBillGeneration","Type",
-  //     // "baseLocationCode","baseCompanyCode","baseUserName"
-  //   ];
-  //   if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
-  //     this.docketService.loginUserList = parsedData;
-  //     this.docketService.Location = parsedData.LocationCode;
-  //     // this.docketService.Location = 'NAG';
-  //     this.docketService.BaseUserCode = parsedData.UserId;
-  //     this.docketService.baseUsername = parsedData.BaseUserName;
-  //     this.docketService.isComplition=true;
-  //     this.isComplitionlist = parsedData;
-  //     setTimeout(() => {
-  //       this.getCompletionData();
-  //     }, 300);
-  //   } else {
-  //     this.router.navigate(['/error']);
-  //   }
-  // }
 
 getCompletionData() {
   const payload = {
     docketNo: this.docketService.loginUserList.DocketNo,
-    // docketNo: '63225175',
+    // docketNo: '62970132',
     isFromBillGeneration: this.docketService.loginUserList.IsFromBillGeneration || '',
     type: this.docketService.loginUserList.Type,
     baseLocationCode: this.docketService.loginUserList.LocationCode,
@@ -372,18 +303,18 @@ this.basicDetailService.getODADetail(pincode).subscribe({
       });
       const invoiceList = this.docketService.invoiceRows.value.map((row: any, index: number) => {
         const obj: any = {
-          SrNo: row.srNo,
+          SrNo:  Number(row.srNo),
           DOCKNO: this.docketService.basicDetailForm.value.cNoteNo,
           INVNO: row.invoiceNo || '',
           INVDT: row.ewayinvoiceDate?new Date(row.ewayinvoiceDate).toISOString():new Date().toISOString(),
-          DECLVAL: row.declaredvalue || 0,
+          DECLVAL: Number(row.declaredvalue) || 0,
           PKGSNO: Number(row.noOfPkgs) || 0,
-          ACTUWT: row.actualWeight || 0,
+          ACTUWT: Number(row.actualWeight) || 0,
           VOL_L: Number(row.length) || 0,
           VOL_B: Number(row.breadth) || 0,
           VOL_H: Number(row.height) || 0,
-          toT_CFT: row.cubicweight || 0,
-          vol_cft: row.cubicweight || 0,
+          toT_CFT: Number(row.cubicweight) || 0,
+          vol_cft:  Number(row.cubicweight) || 0,
           Part_No: '',
           EWayBillNo: row.ewayBillNo || '',
           EWayInvoicevalue: 0,
@@ -410,7 +341,7 @@ this.basicDetailService.getODADetail(pincode).subscribe({
       const DocketBoxLBHList = this.docketService.boxDetailRows.value.map((row: any, index: number) => {
         const obj: any = {
           ACTUWT: Number(row.actualWeight) || 0,
-          SrNo: row.srNo,
+          SrNo:  Number(row.srNo),
           VOL_L: Number(row.length) || 0,
           vol_cft: Number(row.cubicweight) || 0,
           PKGSNO: Number(row.noOfPkgs) || 0,
@@ -725,6 +656,10 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
         formData.append("DVM.WMD.AppointmentDT",this.docketService.basicDetailForm.value.appointmentDT ? new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString() : new Date().toISOString()),
         formData.append("DVM.WMD.Version", String(Number('9')));
       formData.append("DVM.docketType", "DKT");
+              // RequestLogs............
+        const requestLogs = this.formDataToJson(formData); // Use formDataToJson for the RequestLogs
+        formData.append("RequestLogs", JSON.stringify(requestLogs));
+ 
       this.isSubmitting = true;
       if(!this.docketService.isComplition){
       this.basicDetailService.onSubmit(formData).subscribe({
@@ -799,6 +734,28 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
       }
     }
   }
+
+  formDataToJson(formData: FormData): object {
+  const obj: any = {};
+ 
+  formData.forEach((value, key) => {
+    // Check if the key already exists in the object
+    if (obj[key]) {
+      // If it exists and is an array, push the new value into the array
+      if (Array.isArray(obj[key])) {
+        obj[key].push(value);
+      } else {
+        // If it exists but is not an array, convert it into an array
+        obj[key] = [obj[key], value];
+      }
+    } else {
+      // Otherwise, just add the key-value pair
+      obj[key] = value;
+    }
+  });
+ 
+  return obj;
+}
 
   validateDocket(DVM: any, DKTsubTotal: number, docketcharges: any, DKTTotal: number): string | null {
     let CalculatedFREIGHT = 0;

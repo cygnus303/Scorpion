@@ -48,7 +48,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="portlet-body mb-3 table-wrapper">
-                    <table class="table table-bordered table-striped table-condensed flip-content mb-0">
+                    <table class="table table-bordered table-striped table-condensed flip-content mb-0 table-width">
                       <thead class="flip-content">
                         <tr>
                           <th class="center">
@@ -89,7 +89,7 @@
                           <td>
                             <div class="input-group">
                               <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
-                                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"  [readonly]="row.get('ewayBillNo')?.value?.length === 12"
+                                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }" [attr.tabindex]="-1" [readonly]="row.get('ewayBillNo')?.value?.length === 12"
                                 placeholder="dd/MMM/yyyy" formControlName="ewayBillExpiry" [ngClass]="{ 'border-danger': row.get('ewayBillExpiry')?.invalid && row.get('ewayBillExpiry')?.touched, 
                                                      'required2': isEwayRequired(row)}"[class.disabled-input]="true">
                               <span class="input-group-text cursor-pointer" (click)="dp.toggle()" [class.disabled-input]="true">
@@ -105,7 +105,7 @@
                           <td class="center">
                             <div class="input-group">
                               <input type="text" class="form-control uppercase-none" #dp2="bsDatepicker" bsDatepicker
-                                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"  [readonly]="row.get('ewayBillNo')?.value?.length === 12"
+                                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }" [attr.tabindex]="-1" [readonly]="row.get('ewayBillNo')?.value?.length === 12"
                                 placeholder="dd/MMM/yyyy" formControlName="ewayinvoiceDate" [ngClass]="{'border-danger': row.get('ewayinvoiceDate')?.invalid && row.get('ewayinvoiceDate')?.touched, 
                                               'required2': isEwayRequired(row)}" [class.disabled-input]="true">
                               <span class="input-group-text cursor-pointer" (click)="dp2.toggle()" >
@@ -200,7 +200,7 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="portlet-body mb-3 table-wrapper">
-                  <table class="table table-bordered table-striped table-condensed flip-content mb-0">
+                  <table class="table table-bordered table-striped table-condensed flip-content mb-0 table-responsive">
                     <thead class="flip-content">
                       <tr>
                         <th class="center">
@@ -208,17 +208,17 @@
                         </th>
                         <th class="center "
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                          Length ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ? 'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm' 
+                          L ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ? 'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm' 
                                   ? 'CM' : docketService.contractservicecharge?.[0]?.cft_Measure }})
                         </th>
                         <th class="center "
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                          Breadth ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ? 'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm' 
+                          B ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ? 'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm' 
                                   ? 'CM' : docketService.contractservicecharge?.[0]?.cft_Measure }})
                         </th>
                         <th class="center"
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                          Height ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ? 'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm' 
+                          H ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ? 'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm' 
                                   ? 'CM' : docketService.contractservicecharge?.[0]?.cft_Measure }})
                         </th>
                         <th class="center">
@@ -306,9 +306,9 @@
                         <td class="center ">
                           <input class="form-control required2 text-end" placeholder="No of Pkgs."
                             (focus)="clearZero(row, 'noOfPkgs')" (keypress)="docketService.allowNumericDecimal($event)"
-                            (blur)="restoreIfEmpty(row, 'noOfPkgs');docketService.freightAndOtherChar('')"
-                            type="text" formControlName="noOfPkgs" (input)="calculateSummary(i)"
-                            (change)="docketService.GetDKTGSTForGTA();">
+                            (blur)="restoreIfEmpty(row, 'noOfPkgs');"
+                            type="text" formControlName="noOfPkgs" 
+                            (change)="calculateSummary(i);docketService.freightAndOtherChar('');docketService.GetDKTGSTForGTA();">
                         </td>
                         <td class="center"
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
@@ -318,9 +318,9 @@
                         <td class="center">
                           <input class="form-control required2 text-end" placeholder="Actual Weight" type="text"
                             formControlName="actualWeight" 
-                            (keypress)="docketService.allowNumericDecimal($event)" (input)="calculateSummary(i)"
-                            (blur)="restoreIfEmpty(row, 'actualWeight');docketService.freightAndOtherChar('');"
-                            (change)="docketService.GetDKTGSTForGTA();" (focus)="clearZero(row, 'actualWeight')"
+                            (keypress)="docketService.allowNumericDecimal($event)" 
+                            (blur)="restoreIfEmpty(row, 'actualWeight');"
+                            (change)="calculateSummary(i);docketService.freightAndOtherChar('');docketService.GetDKTGSTForGTA();" (focus)="clearZero(row, 'actualWeight')"
                             [ngClass]="{ 'border-danger': row.get('actualWeight')?.invalid && row.get('actualWeight')?.touched }">
   
                           <div *ngIf="row.get('actualWeight')?.touched && row.get('actualWeight')?.errors"

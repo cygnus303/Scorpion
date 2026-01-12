@@ -18,10 +18,20 @@
   overflow-y: hidden;
 }
  
-.table {
+.table-width{
   min-width: 850px; /* <-- Table fixed width */
 }
 .table th,
 .table td {
   white-space: nowrap;  /* Column wrap*/
+}
+// .table-responsive{
+//   min-width: 850px;
+// }
+
+@media (max-width: 1298px) {
+  .table-responsive {
+    min-width: 850px;
+    overflow-x: auto;   /* scroll allow */
+  }
 }
