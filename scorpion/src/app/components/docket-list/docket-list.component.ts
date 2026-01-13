@@ -116,6 +116,7 @@ getCompletionData() {
               ISCounterPickUpPRS: basicDetail.isCounterPickUpPRS,
               ISCounterDelivery: basicDetail.isCounterDelivery,
               typeMovement: basicDetail.ftl_types,
+              vehicleno: basicDetail.vehicleNo,
               // isDACC: basicDetail.isDACC
             });
           this.getODAData(basicDetail.csgePinCode);

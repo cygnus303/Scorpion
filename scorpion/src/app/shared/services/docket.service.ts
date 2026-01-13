@@ -257,7 +257,7 @@ export class DocketService {
       this.invoiceRows.push(this.createInvoiceRow(this.invoiceRows.length + 1));
     }
   }
-
+  
   //  box Detail
   
   get boxDetailRows(): FormArray {
@@ -310,7 +310,7 @@ export class DocketService {
 //   this.freightAndOtherChar();
 // }, 500);
 
-freightAndOtherChar(type:string){
+freightAndOtherChar(){
   this.getBaseCode2();
   this.getBaseCode1();
   this.GetFreightContractDetails();
@@ -705,7 +705,7 @@ getcontractservicecharge() {
         },
         complete: () => {
           setTimeout(() => {
-            this.freightAndOtherChar('');
+            this.freightAndOtherChar();
           }, 200);
         }
       });
@@ -945,7 +945,7 @@ getGSTCalculation() {
       "isGstApplied": "1",
       "billingState": this.freightForm.value.billingState || 'MH'
   };
-  const currentId = ++this.lastRequestId;
+     const currentId = ++this.lastRequestId;
 
   this.basicDetailService.getGSTCalculation(payload).subscribe({
     next: (response: any) => {
@@ -1166,8 +1166,8 @@ calculateChargeWeight(){
       }
 }
 
-GetFreightContractDetails(type?:string) {
-
+GetFreightContractDetails() {
+  
   const originalFinalWeight = this.invoiceform.value.finalActualWeight;
   const data = {
     chargeRule: this.ruleDetailForChargeRule?.defaultvalue || 'NONE',
@@ -1205,15 +1205,14 @@ GetFreightContractDetails(type?:string) {
 
   // Validation
   if (!data.invAmt || !data.prodcd || !data.tostate ||data.noOfPkgs === "0" ||!data.transMode ||!data.serviceType ||this.invoiceform.value.totalActualWeight == 0) {
-    console.warn("Required fields missing, API not called:", data);
     return;
   }
-    const currentRequestId = ++this.requestId;
+  const currentRequestId = ++this.requestId;
 
   this.basicDetailService.GetFreightContractDetails(data).subscribe({
     next: (response: any) => {
       if (response) {
-         if (currentRequestId !== this.requestId) {
+        if (currentRequestId !== this.requestId) {
           return;
         }
         this.isSubmiting = true;
@@ -1286,8 +1285,8 @@ validateAppointmentDate() {
     if (!payload.contractID || !payload.riskType || !payload.invAmt) {
     console.warn("Skipping FOV API call — missing values", {
     });
-    return;
-  }
+      return;
+    }
     this.basicDetailService.getFovContractDetails(payload).subscribe({
       next: (response: any) => {
         if (response) {
@@ -1332,7 +1331,6 @@ validateAppointmentDate() {
       "destPincode": this.basicDetailForm.value.pincode || 0,
       "floorNo": 0
     };
-
      if (!payload.invAmt || !payload.fromCity || !payload.packType || !payload.noOfPkgs || !payload.transMode || !payload.serviceType || !payload.prodType || !payload.toCity) {
       console.warn("Required fields missing, API not called:", payload);
       return;
@@ -1425,22 +1423,13 @@ mergeAndPatchCharges(
   this.chargingData.forEach((chargeItem: any) => {
     const controlName = chargeItem.chargecode;
     const control = freightForm.get(controlName);
-    const apiChargeObj = apiCharges?.find(
-      (api) => (api.chargecode || "").toUpperCase() === controlName
-    );
+    const apiChargeObj = apiCharges?.find((api) => (api.chargecode || "").toUpperCase() === controlName);
     const apiValue = Number(apiChargeObj?.charge) || 0;
 
     if (control) {
       const currentValue = Number(control.value) || 0;
       const newValue = Number(chargeItem.charge) || 0;
 
-      /**
-       * Logic:
-       *  - If API has this code:
-       *      - If API value > 0 → override with API
-       *      - If API value = 0 → keep manual (don’t overwrite)
-       *  - If API doesn’t have code → keep manual
-       */
       if (apiChargeObj) {
         
         if (apiValue > 0) {
