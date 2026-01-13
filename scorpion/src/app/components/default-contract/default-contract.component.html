@@ -219,7 +219,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end text-danger">Pkgs</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="number" placeholder="Enter Pkgs" formControlName="Pkgs">
+                    <input class="form-control required2" type="number" placeholder="Enter Pkgs" formControlName="Pkgs" (change)="calculateRate()">
                     <div *ngIf="DefaultcontractForm.get('Pkgs')?.invalid && DefaultcontractForm.get('Pkgs')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('Pkgs')?.hasError('required')">Pkgs is required.</small>
                     </div>
@@ -230,7 +230,8 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end text-danger">Invoice Value</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="number" placeholder="Enter Invoice Value" formControlName="invoiceValue">
+                    <input class="form-control required2" type="text" placeholder="Enter Invoice Value" formControlName="invoiceValue" 
+                    (input)="calculateRate()">
                     <div *ngIf="DefaultcontractForm.get('invoiceValue')?.invalid && DefaultcontractForm.get('invoiceValue')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('invoiceValue')?.hasError('required')">Invoice Value is required.</small>
                     </div>
