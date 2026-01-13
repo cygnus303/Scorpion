@@ -157,7 +157,7 @@ onApplyReferenceDktChangeValidators() {
     refDocketCtrl.updateValueAndValidity();
   });
 
-  this.docketService.freightAndOtherChar('')
+  this.docketService.freightAndOtherChar()
 }
 
 applyTypeMovementValidation() {

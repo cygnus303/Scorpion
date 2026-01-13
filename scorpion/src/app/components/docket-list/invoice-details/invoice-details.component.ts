@@ -94,7 +94,7 @@ checkDuplicateInvoices(i: number,row: AbstractControl) {
     }
   });
   this.calculateSummary(i);
-  this.docketService.freightAndOtherChar('')
+  this.docketService.freightAndOtherChar()
   // this.docketService.getGSTCalculation()
   this.handleDeclaredValueChange(row)
 }
@@ -154,8 +154,7 @@ removeRow(index: number): void {
     this.docketService.reIndexSrNo();
     this.calculateSummary(index);
      this.docketService.calculateChargeWeight()
-    this.docketService.freightAndOtherChar('');
-    // this.docketService.getGSTCalculation()
+    this.docketService.freightAndOtherChar();
   }
  
    removeboxDetailRow(index: number): void {
@@ -163,15 +162,13 @@ removeRow(index: number): void {
      this.docketService.boxDetailIndexSrNo();
      this.calculateSummary(index);
      this.docketService.calculateChargeWeight()
-      this.docketService.freightAndOtherChar('');
-      // this.docketService.getGSTCalculation()
+      this.docketService.freightAndOtherChar();
    }
 
 
 
 calculateSummary(i: number) {
   const serviceType = this.docketService?.basicDetailForm?.get('serviceType')?.value;
-
   let volMeasureType = '';
   let cftWtRatio = 0;
   if (this.docketService?.contractservicecharge) {
@@ -180,20 +177,16 @@ calculateSummary(i: number) {
   }
   const boxDetailRows = this.docketService?.boxDetailRows.value;
   const invoiceDetailRows = this.docketService?.invoiceRows.value;
-
   let totalDeclaredValue = 0;
   let totalNoOfPkgs = 0;
   let totalCubicWeight = 0;
   let totalActualWeight = 0;
-
   boxDetailRows.forEach((r: any, idx: number) => {
     let length = +r.length || 0;
     let breadth = +r.breadth || 0;
     let height = +r.height || 0;
     const pkgsNo = +r.noOfPkgs || 0;
-
     let cubicweight = 0;
-
     // 👉 serviceType=2 → force reset
     if (serviceType === '2') {
       if (idx === i) {
@@ -229,9 +222,6 @@ calculateSummary(i: number) {
     totalNoOfPkgs += pkgsNo;
     totalCubicWeight += cubicweight;
     totalActualWeight += +r.actualWeight || 0;
-    // if (r.declaredvalue) {
-    //   totalDeclaredValue += +r.declaredvalue || 0;
-    // }
   });
 
  invoiceDetailRows.forEach((r: any) => {
@@ -250,7 +240,6 @@ calculateSummary(i: number) {
 }, { emitEvent: false });
   this.getCFTCalculation(i);
   this.docketService.calculateChargeWeight()
-
 }
 
  

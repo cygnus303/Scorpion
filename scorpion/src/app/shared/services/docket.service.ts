@@ -259,7 +259,7 @@ export class DocketService {
       this.invoiceRows.push(this.createInvoiceRow(this.invoiceRows.length + 1));
     }
   }
-
+  
   //  box Detail
   
   get boxDetailRows(): FormArray {
@@ -312,7 +312,7 @@ export class DocketService {
 //   this.freightAndOtherChar();
 // }, 500);
 
-freightAndOtherChar(type:string){
+freightAndOtherChar(){
   this.getBaseCode2();
   this.getBaseCode1();
   this.GetFreightContractDetails();
@@ -476,26 +476,40 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
     const billingParty = this.basicDetailForm.value.billingParty;
     const destination = this.basicDetailForm.value.destination;
     const billingType = this.basicDetailForm.value.billingType;
-
     if (billingParty && destination && billingType) {
       this.getStep2Details();
-      if(!this.basicDetailForm.value.ewayBillNo){
-        //  const oldValue = this.consignorForm?.value; 
-        // if (this.invoiceRows.length > 0) {
-        //   this.invoiceform.reset(this.invoicebuild());
-        // }
-        // this.freightbuild();
-        // this.getChargesData();
-        // this.consignorbuild();
-        // this.getIGSTchargesDetail();
-        // this.consignorForm.patchValue({
-        //   consigneePincode: oldValue?.consigneePincode,
-        //  consigneeCity:oldValue?.consigneeCity,
-        //   consignorCity:oldValue?.consignorCity,
-        // });
-      }
     }
-}
+  }
+
+  getBlockedCustomerList() {
+    const billingParty = this.basicDetailForm.value.billingParty;
+    const destination = this.basicDetailForm.value.destination;
+    const billingType = this.basicDetailForm.value.billingType;
+
+    const payload = {
+      custCode: this.basicDetailForm.value.billingParty,
+      pageNumber: 1,
+      pageSize: 1,
+      filters: ""
+    };
+    this.basicDetailService.getBlockedCustomerList(payload).subscribe((response) => {
+      // Check if the customer is blocked
+      if (response && response.data.activeFlagForBlockBooking === 'Y') {
+        this.sweetAlertService.info(`Customer Booking is blocked`, () => {
+          this.basicDetailForm.patchValue({
+            billingParty: null,
+            billingName: null
+          });
+        });
+      } else {
+        // Proceed with the API call only if the customer is not blocked
+        if (billingParty && destination && billingType) {
+          this.getStep2Details();
+        }
+      }
+    });
+  }
+
 
   validateDropdownValue(formControlName: string, newList: any[], key: string = 'codeId') {
     const currentValue = this.basicDetailForm.get(formControlName)?.value;
@@ -504,83 +518,73 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
     }
   }
 
-getStep2Details() {
-  const rawDate = new Date(); // or from your API
-  const formattedDate = rawDate.toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric'
-  });
-  const payload = {
-    PartyCode: this.basicDetailForm.value.billingParty,
-    Destination: this.basicDetailForm.value.destination,
-    Paybas: this.basicDetailForm.value.billingType,
-    Doctype: 'DKT',
-    DOCKDT: formattedDate,
-    orgncd: this.basicDetailForm.value.origin || this.Location
-  }
-
-  this.basicDetailService.GetStep2Details(payload).subscribe({
-    next: (response) => {
-      if (response) {
-        this.step2DetailsList = response;
-
-        this.freightForm.patchValue({
-          billedAt: this.step2DetailsList.billingLocation
-        });
-
-        this.consignorForm.patchValue({
-          riskType: this.step2DetailsList?.risktype,
-        });
-
-      this.basicDetailForm.patchValue({
-          isVolumetric: this.step2DetailsList?.isVolumentric === 'Y',
-          // isDACC: this.step2DetailsList?.isDACC === 'Y',
-          // IsCODDOD: this.step2DetailsList?.isCODDOD === 'Y'
-        });
-
-        // Load dependent data
-        this.getTransportModeData(this.step2DetailsList.transMode);
-        this.getPickUpData(this.step2DetailsList.pkgDelyType);
-        this.getContentsData();
-        this.getServiceTypeData(this.step2DetailsList.serviceType);
-        this.getPackagingTypeData();
-        this.getTypeofMovementData(this.step2DetailsList.ftlType);
-        this.getbusinessTypeData();
-        this.getexemptServicesData();
-        this.GetPincodeOrigin();
-        this.getRateData();
-        this.getcontractservicecharge();
-        this.getBaseCode2();
-        this.getBaseCode1();
-
-      // Contract validation
-      if (
-        (this.basicDetailForm.value.billingType === 'P02' &&
-            this.step2DetailsList.contractid === 'P028888') ||
-          !this.step2DetailsList.contractid
-      ) {
-        const billingParty = this.basicDetailForm.get('billingParty')?.value || '';
-        const billingName = this.basicDetailForm.get('billingName')?.value || '';
-        this.sweetAlertService.info(
-          `Customer Contract for <strong>${billingParty} - ${billingName}</strong> not found or may be expired. Please contact your administrator for further details.`,
-          () => {
-            this.basicDetailForm.patchValue({
-              billingParty: null,
-              billingName: null
-            });
-          }
-        );
-
-          // this.basicDetailForm.patchValue({
-          //   billingParty: null,
-          //   billingName: null
-          // });
-      }
-      }
+  getStep2Details() {
+    const rawDate = new Date(); // or from your API
+    const formattedDate = rawDate.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
+    });
+    const payload = {
+      PartyCode: this.basicDetailForm.value.billingParty,
+      Destination: this.basicDetailForm.value.destination,
+      Paybas: this.basicDetailForm.value.billingType,
+      Doctype: 'DKT',
+      DOCKDT: formattedDate,
+      orgncd: this.basicDetailForm.value.origin || this.Location
     }
-  });
-}
+
+    this.basicDetailService.GetStep2Details(payload).subscribe({
+      next: (response) => {
+        if (response) {
+          this.step2DetailsList = response;
+         // Contract validation
+          if ((this.basicDetailForm.value.billingType === 'P02' && this.step2DetailsList.contractid === 'P028888') || !this.step2DetailsList.contractid) {
+            const billingParty = this.basicDetailForm.get('billingParty')?.value || '';
+            const billingName = this.basicDetailForm.get('billingName')?.value || '';
+            this.sweetAlertService.info(`Customer Contract for <strong>${billingParty} - ${billingName}</strong> not found or may be expired. Please contact your administrator for further details.`,
+              () => {
+                this.basicDetailForm.patchValue({
+                  billingParty: null,
+                  billingName: null
+                });
+              }
+            );
+            return;
+          }
+
+          this.freightForm.patchValue({
+            billedAt: this.step2DetailsList.billingLocation
+          });
+
+          this.consignorForm.patchValue({
+            riskType: this.step2DetailsList?.risktype,
+          });
+
+          this.basicDetailForm.patchValue({
+            isVolumetric: this.step2DetailsList?.isVolumentric === 'Y',
+            // isDACC: this.step2DetailsList?.isDACC === 'Y',
+            // IsCODDOD: this.step2DetailsList?.isCODDOD === 'Y'
+          });
+
+          // Load dependent data
+          this.getTransportModeData(this.step2DetailsList.transMode);
+          this.getPickUpData(this.step2DetailsList.pkgDelyType);
+          this.getContentsData();
+          this.getServiceTypeData(this.step2DetailsList.serviceType);
+          this.getPackagingTypeData();
+          this.getTypeofMovementData(this.step2DetailsList.ftlType);
+          this.getbusinessTypeData();
+          this.getexemptServicesData();
+          this.GetPincodeOrigin();
+          this.getRateData();
+          this.getcontractservicecharge();
+          this.getBaseCode2();
+          this.getBaseCode1();
+        }
+      }
+    });
+  }
 
 
 
@@ -703,7 +707,7 @@ getcontractservicecharge() {
         },
         complete: () => {
           setTimeout(() => {
-            this.freightAndOtherChar('');
+            this.freightAndOtherChar();
           }, 200);
         }
       });
@@ -943,7 +947,7 @@ getGSTCalculation() {
       "isGstApplied": "1",
       "billingState": this.freightForm.value.billingState || 'MH'
   };
-  const currentId = ++this.lastRequestId;
+     const currentId = ++this.lastRequestId;
 
   this.basicDetailService.getGSTCalculation(payload).subscribe({
     next: (response: any) => {
@@ -1164,8 +1168,8 @@ calculateChargeWeight(){
       }
 }
 
-GetFreightContractDetails(type?:string) {
-
+GetFreightContractDetails() {
+  
   const originalFinalWeight = this.invoiceform.value.finalActualWeight;
   const data = {
     chargeRule: this.ruleDetailForChargeRule?.defaultvalue || 'NONE',
@@ -1203,15 +1207,14 @@ GetFreightContractDetails(type?:string) {
 
   // Validation
   if (!data.invAmt || !data.prodcd || !data.tostate ||data.noOfPkgs === "0" ||!data.transMode ||!data.serviceType ||this.invoiceform.value.totalActualWeight == 0) {
-    console.warn("Required fields missing, API not called:", data);
     return;
   }
-    const currentRequestId = ++this.requestId;
+  const currentRequestId = ++this.requestId;
 
   this.basicDetailService.GetFreightContractDetails(data).subscribe({
     next: (response: any) => {
       if (response) {
-         if (currentRequestId !== this.requestId) {
+        if (currentRequestId !== this.requestId) {
           return;
         }
         this.isSubmiting = true;
@@ -1284,8 +1287,8 @@ validateAppointmentDate() {
     if (!payload.contractID || !payload.riskType || !payload.invAmt) {
     console.warn("Skipping FOV API call — missing values", {
     });
-    return;
-  }
+      return;
+    }
     this.basicDetailService.getFovContractDetails(payload).subscribe({
       next: (response: any) => {
         if (response) {
@@ -1330,7 +1333,6 @@ validateAppointmentDate() {
       "destPincode": this.basicDetailForm.value.pincode || 0,
       "floorNo": 0
     };
-
      if (!payload.invAmt || !payload.fromCity || !payload.packType || !payload.noOfPkgs || !payload.transMode || !payload.serviceType || !payload.prodType || !payload.toCity) {
       console.warn("Required fields missing, API not called:", payload);
       return;
@@ -1423,22 +1425,13 @@ mergeAndPatchCharges(
   this.chargingData.forEach((chargeItem: any) => {
     const controlName = chargeItem.chargecode;
     const control = freightForm.get(controlName);
-    const apiChargeObj = apiCharges?.find(
-      (api) => (api.chargecode || "").toUpperCase() === controlName
-    );
+    const apiChargeObj = apiCharges?.find((api) => (api.chargecode || "").toUpperCase() === controlName);
     const apiValue = Number(apiChargeObj?.charge) || 0;
 
     if (control) {
       const currentValue = Number(control.value) || 0;
       const newValue = Number(chargeItem.charge) || 0;
 
-      /**
-       * Logic:
-       *  - If API has this code:
-       *      - If API value > 0 → override with API
-       *      - If API value = 0 → keep manual (don’t overwrite)
-       *  - If API doesn’t have code → keep manual
-       */
       if (apiChargeObj) {
         
         if (apiValue > 0) {
