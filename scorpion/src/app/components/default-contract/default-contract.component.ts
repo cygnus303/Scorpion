@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
+import { DefaultContractService } from 'app/shared/services/default-contract.service';
 import { DocketService } from 'app/shared/services/docket.service';
 
 @Component({
@@ -12,7 +13,12 @@ import { DocketService } from 'app/shared/services/docket.service';
 export class DefaultContractComponent {
   public getPincodeMaster: any;
   public DefaultcontractForm!:FormGroup;
-  constructor(public docketService:DocketService,public basicDetailService:BasicDetailService){}
+
+  constructor(
+    public docketService:DocketService,
+    public basicDetailService:BasicDetailService,
+    public defaultContractService:DefaultContractService
+  ){}
 
   ngOnInit(){
     this.buildForm();
@@ -117,7 +123,49 @@ export class DefaultContractComponent {
         }
       }
     });
+    this.calculateRate()
   }
+
+  calculateRate(){
+    const payload={
+    trnMode: this.DefaultcontractForm.value.mode,
+    contractID: "P018888",
+    invoiceAmount: this.DefaultcontractForm.value.invoiceValue || 0,
+    actualWeight: this.DefaultcontractForm.value.chargeWeightKG || 0,
+    totalCFT:  0,
+    packageCount: this.DefaultcontractForm.value.Pkgs || 0,
+    originPincode:this.DefaultcontractForm.value.originPincode,
+    destinationPincode: this.DefaultcontractForm.value.destination_pincode
+}
+
+if(!this.DefaultcontractForm.value.mode || !this.DefaultcontractForm.value.invoiceValue || 
+ !this.DefaultcontractForm.value.Pkgs || !this.DefaultcontractForm.value.originPincode || !this.DefaultcontractForm.value.destination_pincode
+){
+  return;
+}
+    this.defaultContractService.calculateRate(payload).subscribe({
+      next: (response: any) => {
+        if (response) {
+          console.log(response);
+          debugger
+          const csdCharge = response.otherCharges?.find((x: any) => x.chargecode === 'SCHG10')?.charge || 0;
+          const malldelivery=response.otherCharges?.find((x: any) => x.chargecode === 'SCHG17')?.charge || 0;
+          const appoinment=response.otherCharges?.find((x: any) => x.chargecode === 'UCHG08')?.charge || 0;
+          const fuelSurcharge=response.otherCharges?.find((x: any) => x.chargecode === 'SCHG20')?.charge || 0;
+          this.DefaultcontractForm.patchValue({
+            freightRs:response.freight.freightCharge,
+            chargeWeightKG:response.freight.chrgwt,
+            CSDCharge:csdCharge,
+            mallDeliveryCharge:malldelivery,
+            appoinmentCharge:appoinment,
+        
+          })
+          
+        }
+
+        }
+      })
+    }
 
   OnSubmit(){
     if(this.DefaultcontractForm.valid){

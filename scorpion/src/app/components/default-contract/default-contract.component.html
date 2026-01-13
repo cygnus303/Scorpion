@@ -219,7 +219,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Pkgs</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="number" placeholder="Enter Pkgs" formControlName="Pkgs" (focus)="clearOnFocus('Pkgs')" (blur)="resetOnBlur('Pkgs')"
+                    <input class="form-control required2" type="number" placeholder="Enter Pkgs" formControlName="Pkgs" (change)="calculateRate()" (focus)="clearOnFocus('Pkgs')" (blur)="resetOnBlur('Pkgs')"
                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('Pkgs')?.invalid  && DefaultcontractForm.get('Pkgs')?.touched}">
                     <div *ngIf="DefaultcontractForm.get('Pkgs')?.invalid && DefaultcontractForm.get('Pkgs')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('Pkgs')?.hasError('required')">Pkgs is required.</small>
@@ -231,7 +231,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Invoice Value</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="number" placeholder="Enter Invoice Value" formControlName="invoiceValue" (focus)="clearOnFocus('invoiceValue')" (blur)="resetOnBlur('invoiceValue')"
+                    <input class="form-control required2" type="number" placeholder="Enter Invoice Value" formControlName="invoiceValue"  (input)="calculateRate()" (focus)="clearOnFocus('invoiceValue')" (blur)="resetOnBlur('invoiceValue')"
                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('invoiceValue')?.invalid  && DefaultcontractForm.get('invoiceValue')?.touched}">
                     <div *ngIf="DefaultcontractForm.get('invoiceValue')?.invalid && DefaultcontractForm.get('invoiceValue')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('invoiceValue')?.hasError('required')">Invoice Value is required.</small>
