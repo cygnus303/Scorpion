@@ -474,26 +474,40 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
     const billingParty = this.basicDetailForm.value.billingParty;
     const destination = this.basicDetailForm.value.destination;
     const billingType = this.basicDetailForm.value.billingType;
-
     if (billingParty && destination && billingType) {
       this.getStep2Details();
-      if(!this.basicDetailForm.value.ewayBillNo){
-        //  const oldValue = this.consignorForm?.value; 
-        // if (this.invoiceRows.length > 0) {
-        //   this.invoiceform.reset(this.invoicebuild());
-        // }
-        // this.freightbuild();
-        // this.getChargesData();
-        // this.consignorbuild();
-        // this.getIGSTchargesDetail();
-        // this.consignorForm.patchValue({
-        //   consigneePincode: oldValue?.consigneePincode,
-        //  consigneeCity:oldValue?.consigneeCity,
-        //   consignorCity:oldValue?.consignorCity,
-        // });
-      }
     }
-}
+  }
+
+  getBlockedCustomerList() {
+    const billingParty = this.basicDetailForm.value.billingParty;
+    const destination = this.basicDetailForm.value.destination;
+    const billingType = this.basicDetailForm.value.billingType;
+
+    const payload = {
+      custCode: this.basicDetailForm.value.billingParty,
+      pageNumber: 1,
+      pageSize: 1,
+      filters: ""
+    };
+    this.basicDetailService.getBlockedCustomerList(payload).subscribe((response) => {
+      // Check if the customer is blocked
+      if (response && response.data.activeFlagForBlockBooking === 'Y') {
+        this.sweetAlertService.info(`Customer Booking is blocked`, () => {
+          this.basicDetailForm.patchValue({
+            billingParty: null,
+            billingName: null
+          });
+        });
+      } else {
+        // Proceed with the API call only if the customer is not blocked
+        if (billingParty && destination && billingType) {
+          this.getStep2Details();
+        }
+      }
+    });
+  }
+
 
   validateDropdownValue(formControlName: string, newList: any[], key: string = 'codeId') {
     const currentValue = this.basicDetailForm.get(formControlName)?.value;
@@ -569,6 +583,8 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
       }
     });
   }
+
+
 
   GetPincodeOrigin(type?: string ) {
     const payload = {

@@ -121,7 +121,7 @@
             <div class="col-md-7">
               <ng-select class="noFoundTextColor required2 remove-white-space" required placeholder="Billing Party" [searchable]="true"
                 [clearable]="true" (search)="getBillingPartyData($event)" appFocusNext
-                (change)="onChangeBillingParty($event);docketService.onFormFieldChange()" formControlName="billingParty"
+                (change)="onChangeBillingParty($event);docketService.getBlockedCustomerList()" formControlName="billingParty"
                 [notFoundText]="notFoundTextValue" (open)="resetBillingPartyDropdown()"
                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('billingParty')?.invalid  && docketService.basicDetailForm.get('billingParty')?.touched}">
                 <ng-option *ngFor="let item of billingPartyData" [value]="item">

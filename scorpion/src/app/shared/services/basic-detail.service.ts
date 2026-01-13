@@ -176,4 +176,8 @@ loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
     return this.apiHandlerService.Get(`Operation/max-discount?contractId=${payload.contractId}&docketDate=${payload.docketDate}`)
 
   }
+
+  getBlockedCustomerList(payload:any){
+    return this.apiHandlerService.Post(`Operation/Customer_List`,payload)
+  }
 }
