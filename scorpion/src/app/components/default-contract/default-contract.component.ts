@@ -164,6 +164,27 @@ export class DefaultContractComponent {
     })
   }
 
+  getcontractservicecharge() {
+    if (this.DefaultcontractForm.value.mode) {
+      this.basicDetailService
+        .contractservicecharge('P018888', this.DefaultcontractForm.value.mode)
+        .subscribe({
+          next: (response: any) => {
+            if (response) {
+              this.DefaultcontractForm.patchValue({
+                CFTRatio: response[0].cft_Ratio,
+                fuelSurcharge:response[0].fuelSurchrg,
+                fuelSurchrgBas:response[0].fuelSurchrgBas
+              });
+            }
+          },
+          error: (err) => {
+            console.error("Error in contractservicecharge:", err);
+          },
+        });
+    }
+  }
+
   OnSubmit() {
     if (this.DefaultcontractForm.valid) {
       console.log(this.DefaultcontractForm.value);
