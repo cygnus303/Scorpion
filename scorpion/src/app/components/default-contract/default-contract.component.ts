@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { DefaultContractService } from 'app/shared/services/default-contract.service';
 import { DocketService } from 'app/shared/services/docket.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 
 @Component({
@@ -16,12 +17,11 @@ export class DefaultContractComponent {
   public DefaultcontractForm!: FormGroup;
   public contractcharge:any;
   public defaultContractList: any;
-  public originalSubtotal:any;
 
   constructor(
     public docketService: DocketService,
     public basicDetailService: BasicDetailService,
-    public defaultContractService: DefaultContractService
+    public defaultContractService: DefaultContractService, private sweetAlertService: SweetAlertService
   ) { }
 
   ngOnInit() {
@@ -210,19 +210,17 @@ setMallDeliveryCharge() {
 }
 
 calculateSubTotal() {
-  const chargeFields = ['freightCharge','schG20','ODARate','stateChargesDetail','stateCharges','schG08',
-    'schG04','schG17','uchG08','schG10','ichG01','schG07','Disc_amount'];
-  const subTotal = chargeFields.reduce((sum, field) => {
+  const chargeFields = ['freightCharge','schG20','stateChargesDetail','stateCharges','schG08',
+    'schG04','schG17','uchG08','schG10','ichG01','schG07'];
+   var subTotal = 0;
+   subTotal = chargeFields.reduce((sum, field) => {
     const value = this.DefaultcontractForm.get(field)?.value || 0;
     return sum + value;
   }, 0);
-  const discAmount = this.DefaultcontractForm.get('Disc_amount')?.value || 0;
-  const grandTotal = subTotal - discAmount;
   this.DefaultcontractForm.patchValue({
     subTotal: subTotal,
-    GrandTotal: grandTotal
   }, { emitEvent: false }); 
-  this.originalSubtotal = this.DefaultcontractForm.value.subTotal;
+  this.calculateDiscount();
 }
 
   getcontractservicecharge() {
@@ -247,22 +245,18 @@ calculateSubTotal() {
     }
   }
 
-  getCFTCalculation() {
-
+getCFTCalculation() {
   let volMeasureType = '';
   let cftWtRatio = 0;
   if (this.contractcharge) {
     volMeasureType = this.contractcharge?.cft_Measure; // 'INCHES' | 'CM' | 'FEET'
     cftWtRatio = this.contractcharge?.cft_Ratio || 0;
   }
-
     let length = this.DefaultcontractForm.value.length || 0;
     let breadth = this.DefaultcontractForm.value.breadth || 0;
     let height = this.DefaultcontractForm.value.height || 0;
     const pkgsNo = this.DefaultcontractForm.value.Pkgs || 0;
-
     let cubicweight = 0;
-
       // Normal volume calculation
       let volume = 0;
       if (volMeasureType === 'INCHES') {
@@ -272,32 +266,25 @@ calculateSubTotal() {
       } else if (volMeasureType === 'FEET') {
         volume = length * breadth * height * cftWtRatio;
       }
-
       cubicweight = +(volume * pkgsNo).toFixed(2);
-
       this.DefaultcontractForm.patchValue({
         cftTotal:cubicweight
       })
   }
 
   calculateDiscount() {
-  let Subtotal = this.originalSubtotal || 0;
-
+  let Subtotal = this.DefaultcontractForm.value.subTotal || 0;
   let discounts = this.DefaultcontractForm.value.Disc_Rate;
   let gstRate = this.DefaultcontractForm.value.gstRate;
   discounts = parseFloat(Subtotal.toString()) * parseFloat(discounts) / 100;
-
   const discountSubTotal=Subtotal - discounts;
   const grandTotal= discountSubTotal - gstRate;
-
   this.DefaultcontractForm.patchValue({
     Disc_amount: discounts.toFixed(2),
     Disc_Sub_Total:discountSubTotal.toFixed(2),
     GrandTotal :grandTotal.toFixed(2)
   });
-
 }
-
 
   OnSubmit() {
     const data = this.DefaultcontractForm.value
@@ -327,20 +314,20 @@ calculateSubTotal() {
       isVolumetric:  data.VolumetricAppl,
       declval:  data.invoiceValue || 0,
       pkgsno:  data.Pkgs || 0,
-      actuwt:  data.weightKG || 0, //puchvanu
+      actuwt:  data.weightKG || 0, 
       chrgwt:  data.chrgwt || 0,
       voL_L:  data.length || 0,
       voL_B:  data.breadth || 0,
       voL_H:  data.height || 0,
       toT_CFT:  data.cftTotal || 0,
-      vol_cft:  data.cftTotal || 0,//puchvanu
+      vol_cft:  0,//puchvanu
       ratE_TYPE: this.defaultContractList.rateType,
       frT_RATE: data.freightRate,
-      freighT_CALC: data.freightRate,//puchvanu
+      freighT_CALC: data.freightCharge,
       freight: data.freightCharge,
       subTotal: data.subTotal,
-      isGSTApplied: true, //puchvanu
-      gstType: "string", //puchvanu
+      isGSTApplied: false, //puchvanu
+      gstType: "", //puchvanu
       igstRate: data.freightRate,
       igstAmount: 0, //puchvanu
       cgstRate: 0, //puchvanu
@@ -349,7 +336,7 @@ calculateSubTotal() {
       sgstAmount: 0, //puchvanu
       utgstRate: 0, //puchvanu
       utgstAmount: 0, //puchvanu
-      discount: data.Disc_Rate || 0, //puchvanu
+      discount: data.Disc_Rate || 0,
       discountValue: 0, //puchvanu
       discountAmt: data.Disc_amount, 
       discountType: "P",
@@ -359,9 +346,9 @@ calculateSubTotal() {
       isCSDDelivery: data.CSDDelivery,
       isMAllDelivery: data.MallDelAppl,
 
-      schG01:data.schG01, //puchvanu
-      schG25:data.schG25, //puchvanu
-      schG28:data.schG28, //puchvanu
+      schG01:0, //puchvanu
+      schG25:0, //puchvanu
+      schG28:0, //puchvanu
       schG10:data.schG10,
       schG20:data.schG20,
       schG07:data.schG07,
@@ -369,7 +356,7 @@ calculateSubTotal() {
       schG04:data.schG04,
       schG17:data.schG17,
       uchG08:data.uchG08,
-      uchG06:data.uchG06, //puchvanu
+      uchG06:0, //puchvanu
       ichG01:data.ichG01,
       customerEmail: data.email,
       quotationStatus: "",
@@ -379,7 +366,11 @@ calculateSubTotal() {
     if (this.DefaultcontractForm.valid) {
       console.log(this.DefaultcontractForm.value);
       this.defaultContractService.DocketEnquirySubmit(payload).subscribe({next: (response: any) => {
-          if (response) {
+          if (response.status) {
+             this.sweetAlertService.success("Docket Enquiry Submitted Successfully").then(() => {
+              this.DefaultcontractForm.reset();
+              this.buildForm();
+            });
           }
         }
       })
