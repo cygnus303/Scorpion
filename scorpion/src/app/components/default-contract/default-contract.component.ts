@@ -14,6 +14,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 export class DefaultContractComponent {
   public getPincodeMaster: any;
   public DefaultcontractForm!: FormGroup;
+  public defaultContractList: any;
 
   constructor(
     public docketService: DocketService,
@@ -23,7 +24,11 @@ export class DefaultContractComponent {
 
   ngOnInit() {
     this.buildForm();
-    this.docketService.getTransportModeData()
+    this.docketService.getTransportModeData();
+
+    this.DefaultcontractForm.get('AppointmentDeliver')?.valueChanges.subscribe(() => {this.setAppointmentCharge()});
+    this.DefaultcontractForm.get('CSDDelivery')?.valueChanges.subscribe(() => {this.setCSDDeliveryCharge()});
+    this.DefaultcontractForm.get('MallDelAppl')?.valueChanges.subscribe(() => {this.setMallDeliveryCharge()});
   }
 
   buildForm(){
@@ -34,7 +39,6 @@ export class DefaultContractComponent {
       originCity:new FormControl(''),
       fromState:new FormControl(''),
       originZone:new FormControl(''),
-      schG07:new FormControl(''),
       email:new FormControl('',[Validators.required, Validators.email]),
       destination_pincode:new FormControl(null, Validators.required),
       destinationArea:new FormControl(''),
@@ -62,16 +66,17 @@ export class DefaultContractComponent {
       breadth:new FormControl(''),
       height:new FormControl(''),
       CFTRatio:new FormControl(''),
-      fuelSurchrg:new FormControl('',Validators.required),
+      fuelSurchrg:new FormControl(0,Validators.required),
 
       freightCharge:new FormControl(0),
+      schG07:new FormControl(0),
       schG20:new FormControl(0),
       ODARate:new FormControl(0),
       gstRate:new FormControl(0),
       stateChargesDetail:new FormControl(0),
       stateCharges:new FormControl(0),
       schG08:new FormControl(0),
-      schG04:new FormControl(''),
+      schG04:new FormControl(0),
       schG17:new FormControl(0),
       uchG08:new FormControl(0),
       schG10:new FormControl(0),
@@ -161,32 +166,54 @@ export class DefaultContractComponent {
     this.defaultContractService.calculateRate(payload).subscribe({
       next: (response: any) => {
         if (response) {
+          this.defaultContractList = response;
           this.DefaultcontractForm.patchValue(response);
+          this.setAppointmentCharge();
+          this.setCSDDeliveryCharge();
+          this.setMallDeliveryCharge();
           this.calculateSubTotal();
         }
       }
     })
   }
 
+setAppointmentCharge() {
+  if (this.DefaultcontractForm.get('AppointmentDeliver')?.value) {
+    this.DefaultcontractForm.get('uchG08')?.setValue(this.defaultContractList.uchG08);
+  } else {
+    this.DefaultcontractForm.get('uchG08')?.setValue(0);
+  }
+}
+
+setCSDDeliveryCharge() {
+  if (this.DefaultcontractForm.get('CSDDelivery')?.value) {
+    this.DefaultcontractForm.get('schG10')?.setValue(this.defaultContractList.schG10);
+  } else {
+    this.DefaultcontractForm.get('schG10')?.setValue(0);
+  }
+}
+
+setMallDeliveryCharge() {
+  if (this.DefaultcontractForm.get('MallDelAppl')?.value) {
+    this.DefaultcontractForm.get('schG17')?.setValue(this.defaultContractList.schG17);
+  } else {
+    this.DefaultcontractForm.get('schG17')?.setValue(0);
+  }
+}
+
 calculateSubTotal() {
   const chargeFields = ['freightCharge','schG20','ODARate','stateChargesDetail','stateCharges','schG08',
-    'schG04','schG17','uchG08','schG10','ichG01','Disc_amount'];
-
-  // Calculate subTotal dynamically
+    'schG04','schG17','uchG08','schG10','ichG01','schG07','Disc_amount'];
   const subTotal = chargeFields.reduce((sum, field) => {
     const value = this.DefaultcontractForm.get(field)?.value || 0;
     return sum + value;
   }, 0);
-
-  // Discount amount
   const discAmount = this.DefaultcontractForm.get('Disc_amount')?.value || 0;
   const grandTotal = subTotal - discAmount;
-
-  // Update the form with the calculated values
   this.DefaultcontractForm.patchValue({
     subTotal: subTotal,
     GrandTotal: grandTotal
-  }, { emitEvent: false });  // Prevent triggering valueChanges again
+  }, { emitEvent: false }); 
 }
 
   getcontractservicecharge() {
@@ -223,6 +250,10 @@ calculateSubTotal() {
   }
 
   OnSubmit() {
+    const data ={
+      ...this.DefaultcontractForm.value
+    }
+    console.log(data);
     if (this.DefaultcontractForm.valid) {
       console.log(this.DefaultcontractForm.value);
     } else {

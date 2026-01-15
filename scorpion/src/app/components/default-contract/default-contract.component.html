@@ -136,7 +136,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">ODA Category</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter ODA Category" formControlName="ODACategory">
+                    <input class="form-control" type="text" placeholder="Enter ODA Category" formControlName="ODACategory" readonly>
                 </div>
             </div>
         </div>
@@ -159,7 +159,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">TAT Normal</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter TAT Normal" formControlName="tatNormal">
+                    <input class="form-control" type="number" placeholder="Enter TAT Normal" formControlName="tatNormal" readonly>
                 </div>
             </div>
         </div>
@@ -167,7 +167,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">TAT ODA</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter TAT ODA" formControlName="tatoda">
+                    <input class="form-control" type="number" placeholder="Enter TAT ODA" formControlName="tatoda" readonly>
                 </div>
             </div>
         </div>
@@ -175,7 +175,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Transit Days</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Transit Days" formControlName="trDays">
+                    <input class="form-control" type="number" placeholder="Enter Transit Days" formControlName="trDays" readonly>
                 </div>
             </div>
         </div>
@@ -345,7 +345,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">CFT Ratio</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter CFT Ratio" formControlName="CFTRatio" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                    <input class="form-control" type="text" placeholder="Enter CFT Ratio" formControlName="CFTRatio" oninput="this.value = this.value.replace(/[^0-9]/g,'');" readonly>
                 </div>
             </div>
         </div>
@@ -357,7 +357,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Fuel Surcharge</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="text" placeholder="Enter Fuel Surcharge" formControlName="fuelSurchrg"
+                    <input class="form-control required2" type="text" placeholder="Enter Fuel Surcharge" formControlName="fuelSurchrg" readonly
                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('fuelSurchrg')?.invalid  && DefaultcontractForm.get('fuelSurchrg')?.touched}">
                     <div *ngIf="DefaultcontractForm.get('fuelSurchrg')?.invalid && DefaultcontractForm.get('fuelSurchrg')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('fuelSurchrg')?.hasError('required')">Fuel Surcharge is required.</small>
