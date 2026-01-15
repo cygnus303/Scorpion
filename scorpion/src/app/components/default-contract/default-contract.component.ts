@@ -16,6 +16,7 @@ export class DefaultContractComponent {
   public DefaultcontractForm!: FormGroup;
   public contractcharge:any;
   public defaultContractList: any;
+  public originalSubtotal:any;
 
   constructor(
     public docketService: DocketService,
@@ -221,6 +222,7 @@ calculateSubTotal() {
     subTotal: subTotal,
     GrandTotal: grandTotal
   }, { emitEvent: false }); 
+  this.originalSubtotal = this.DefaultcontractForm.value.subTotal;
 }
 
   getcontractservicecharge() {
@@ -279,20 +281,19 @@ calculateSubTotal() {
   }
 
   calculateDiscount() {
-  // const discountType = event?.value || this.freightForm.value.discountType;
-  let Subtotal = this.DefaultcontractForm.value.subTotal || 0;
+  let Subtotal = this.originalSubtotal || 0;
 
   let discounts = this.DefaultcontractForm.value.Disc_Rate;
-  // if (discountType == "P") {
-    discounts = parseFloat(Subtotal.toString()) * parseFloat(discounts) / 100;
-    // this.getMaxDiscountLimit()
-  // }
+  let gstRate = this.DefaultcontractForm.value.gstRate;
+  discounts = parseFloat(Subtotal.toString()) * parseFloat(discounts) / 100;
 
-  const finalSubtotal = Subtotal - parseFloat(discounts);
+  const discountSubTotal=Subtotal - discounts;
+  const grandTotal= discountSubTotal - gstRate;
 
   this.DefaultcontractForm.patchValue({
-    subTotal: finalSubtotal.toFixed(2),
-    Disc_amount: discounts.toFixed(2)
+    Disc_amount: discounts.toFixed(2),
+    Disc_Sub_Total:discountSubTotal.toFixed(2),
+    GrandTotal :grandTotal.toFixed(2)
   });
 
 }
