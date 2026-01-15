@@ -68,6 +68,9 @@ export class DefaultContractComponent {
       height:new FormControl(''),
       CFTRatio:new FormControl(''),
       fuelSurchrg:new FormControl(0,Validators.required),
+      orgncd:new FormControl(''),
+      orgArea:new FormControl(''),
+      destArea:new FormControl(''),
 
       freightCharge:new FormControl(0),
       schG07:new FormControl(0),
@@ -131,7 +134,9 @@ export class DefaultContractComponent {
               PickupODA: this.getPincodeMaster.is_ODA_Apply,
               originCity: this.getPincodeMaster.location,
               originZone: this.getPincodeMaster.regionName,
-              fromState: this.getPincodeMaster.stnm
+              fromState: this.getPincodeMaster.stnm,
+              orgncd: this.getPincodeMaster.locCode,
+              orgArea: this.getPincodeMaster.area
             })
           }
           if (type === 'destination') {
@@ -142,7 +147,8 @@ export class DefaultContractComponent {
               destinationZone:this.getPincodeMaster.regionName,
               toState:  this.getPincodeMaster.stnm,
               deliveryBranchCode: this.getPincodeMaster.locCode,
-              ODACategory: this.getPincodeMaster.category
+              ODACategory: this.getPincodeMaster.category,
+              destArea: this.getPincodeMaster.area
             })
           }
         }
@@ -293,12 +299,89 @@ calculateSubTotal() {
 
 
   OnSubmit() {
-    const data ={
-      ...this.DefaultcontractForm.value
+    const data = this.DefaultcontractForm.value
+    const payload = {
+      enquiryID: 0,
+      enquiryNo: "",
+      enquiryDate: new Date().toISOString(),
+      orgncd:data.orgncd,
+      destcd: data.deliveryBranchCode,
+      fromloc: data.originCity,
+      toloc: data.destinationCity,
+      fromState: data.fromState,
+      toState: data.toState,
+      orgPincode: data.originPincode,
+      desTPincode: data.destination_pincode,
+      orgArea: data.orgArea,
+      destArea: data.destArea,
+      orgZone: data.originZone,
+      destZone: data.destinationZone,
+      pickup_From_ODA: data.PickupODA,
+      oda: data.ODA,
+      odA_Category: data.ODACategory,
+      taT_Normal:  Number(data.tatNormal),
+      taT_ODA:  Number(data.tatoda),
+      transDays:  Number(data.trDays),
+      transMode:  data.mode,
+      isVolumetric:  data.VolumetricAppl,
+      declval:  data.invoiceValue || 0,
+      pkgsno:  data.Pkgs || 0,
+      actuwt:  data.weightKG || 0, //puchvanu
+      chrgwt:  data.chrgwt || 0,
+      voL_L:  data.length || 0,
+      voL_B:  data.breadth || 0,
+      voL_H:  data.height || 0,
+      toT_CFT:  data.cftTotal || 0,
+      vol_cft:  data.cftTotal || 0,//puchvanu
+      ratE_TYPE: this.defaultContractList.rateType,
+      frT_RATE: data.freightRate,
+      freighT_CALC: data.freightRate,//puchvanu
+      freight: data.freightCharge,
+      subTotal: data.subTotal,
+      isGSTApplied: true, //puchvanu
+      gstType: "string", //puchvanu
+      igstRate: data.freightRate,
+      igstAmount: 0, //puchvanu
+      cgstRate: 0, //puchvanu
+      cgstAmount: 0, //puchvanu
+      sgstRate: 0, //puchvanu
+      sgstAmount: 0, //puchvanu
+      utgstRate: 0, //puchvanu
+      utgstAmount: 0, //puchvanu
+      discount: data.Disc_Rate || 0, //puchvanu
+      discountValue: 0, //puchvanu
+      discountAmt: data.Disc_amount, 
+      discountType: "P",
+      disSubTotal: data.Disc_Sub_Total || 0,
+      quotTOT:data.GrandTotal || 0,
+      isAppointmentDelivery:data.AppointmentDeliver,
+      isCSDDelivery: data.CSDDelivery,
+      isMAllDelivery: data.MallDelAppl,
+
+      schG01:data.schG01, //puchvanu
+      schG25:data.schG25, //puchvanu
+      schG28:data.schG28, //puchvanu
+      schG10:data.schG10,
+      schG20:data.schG20,
+      schG07:data.schG07,
+      schG08:data.schG08,
+      schG04:data.schG04,
+      schG17:data.schG17,
+      uchG08:data.uchG08,
+      uchG06:data.uchG06, //puchvanu
+      ichG01:data.ichG01,
+      customerEmail: data.email,
+      quotationStatus: "",
+      entryBy: ""
     }
-    console.log(data);
+    console.log(payload)
     if (this.DefaultcontractForm.valid) {
       console.log(this.DefaultcontractForm.value);
+      this.defaultContractService.DocketEnquirySubmit(payload).subscribe({next: (response: any) => {
+          if (response) {
+          }
+        }
+      })
     } else {
       this.DefaultcontractForm.markAllAsTouched();
     }

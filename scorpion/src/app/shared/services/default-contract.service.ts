@@ -13,4 +13,9 @@ export class DefaultContractService {
     return this.apiHandlerService.Post(`Docket/CalculateRate`,payload);
   }
 
+    DocketEnquirySubmit(payload:any){
+    return this.apiHandlerService.Post(`Docket/DocketEnquiry_Submit`,payload);
+  }
+
+
 }
