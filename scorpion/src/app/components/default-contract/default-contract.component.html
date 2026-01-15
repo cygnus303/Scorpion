@@ -1,3 +1,8 @@
+<div class="text-white px-3 py-0 d-flex align-items-center fw-semibold" style="background-color: rgb(237, 12, 52) !important;">
+     <img src="/assets/img/logos/logo.jpg" height="50" class="me-4">
+    Transit and Rate Finder
+  </div>
+
 <div class="form-grid p-4">
     <form [formGroup]="DefaultcontractForm">
     <!-- Origin Details Section -->
@@ -8,8 +13,8 @@
                 <label class="col-sm-5 col-form-label text-end">Origin Pin Code</label>
                 <div class="col-sm-7">
                     <ng-select class="required2 clear-icon" type="text" placeholder="Enter Origin Pin Code" formControlName="originPincode"
-                    (search)="docketService.getpincodeData($event)" bindValue="value" [items]="docketService.pincodeList" 
-                    (change)="getPincodeMasterList($event,'origin')" bindLabel="text" [notFoundText]="docketService.notPincodeValue"
+                    (search)="docketService.getpincodeData($event)" bindValue="value" bindLabel="text" [items]="docketService.pincodeList" 
+                    (change)="getPincodeMasterList($event,'origin')" [notFoundText]="docketService.notPincodeValue" (open)="docketService.resetPincodeDropdown()"
                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('originPincode')?.invalid  && DefaultcontractForm.get('originPincode')?.touched}"></ng-select>
                     <div *ngIf="DefaultcontractForm.get('originPincode')?.invalid && DefaultcontractForm.get('originPincode')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('originPincode')?.hasError('required')">Origin Pin Code is required.</small>
@@ -58,16 +63,7 @@
                     <input class="form-control" type="text" placeholder="Enter Origin Zone" formControlName="originZone" readonly>
                 </div>
             </div>
-        </div>
-        <div class="col-3">
-            <div class="row">
-                <label class="col-sm-5 col-form-label text-end">ODA_Pickup_Charges</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter ODA_Pickup_Charges" formControlName="ODA_pickUp">
-                </div>
-            </div>
-        </div>
-        
+        </div> 
     </div>
     
     <!-- Destination Details Section -->
@@ -77,8 +73,8 @@
                 <label class="col-sm-5 col-form-label text-end">Destination Pin Code</label>
                 <div class="col-sm-7">
                     <ng-select class="required2" type="text" placeholder="Enter Destination Pin Code" formControlName="destination_pincode"
-                    (search)="docketService.getpincodeData($event)" bindValue="value" [items]="docketService.pincodeList" 
-                    (change)="getPincodeMasterList($event,'destination')" bindLabel="text" [notFoundText]="docketService.notPincodeValue"
+                    (search)="docketService.getpincodeData($event)" bindValue="value" bindLabel="text" [items]="docketService.pincodeList" (open)="docketService.resetPincodeDropdown()"
+                    (change)="getPincodeMasterList($event,'destination')" [notFoundText]="docketService.notPincodeValue"
                      [ngClass]="{ 'border-danger': DefaultcontractForm.get('destination_pincode')?.invalid  && DefaultcontractForm.get('destination_pincode')?.touched}"></ng-select>
                     <div *ngIf="DefaultcontractForm.get('destination_pincode')?.invalid && DefaultcontractForm.get('destination_pincode')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('destination_pincode')?.hasError('required')">Destination Pin Code is required.</small>
@@ -163,7 +159,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">TAT Normal</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter TAT Normal" formControlName="TATNormal">
+                    <input class="form-control" type="number" placeholder="Enter TAT Normal" formControlName="tatNormal">
                 </div>
             </div>
         </div>
@@ -171,7 +167,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">TAT ODA</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter TAT ODA" formControlName="TATODA">
+                    <input class="form-control" type="number" placeholder="Enter TAT ODA" formControlName="tatoda">
                 </div>
             </div>
         </div>
@@ -179,7 +175,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Transit Days</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Transit Days" formControlName="transitDays">
+                    <input class="form-control" type="number" placeholder="Enter Transit Days" formControlName="trDays">
                 </div>
             </div>
         </div>
@@ -219,7 +215,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Pkgs</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="number" placeholder="Enter Pkgs" formControlName="Pkgs" (change)="calculateRate()" (focus)="clearOnFocus('Pkgs')" (blur)="resetOnBlur('Pkgs')"
+                    <input class="form-control required2" type="number" placeholder="Enter Pkgs" formControlName="Pkgs" (focus)="clearOnFocus('Pkgs')" (blur)="resetOnBlur('Pkgs')"
                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('Pkgs')?.invalid  && DefaultcontractForm.get('Pkgs')?.touched}">
                     <div *ngIf="DefaultcontractForm.get('Pkgs')?.invalid && DefaultcontractForm.get('Pkgs')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('Pkgs')?.hasError('required')">Pkgs is required.</small>
@@ -231,7 +227,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Invoice Value</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="number" placeholder="Enter Invoice Value" formControlName="invoiceValue"  (input)="calculateRate()" (focus)="clearOnFocus('invoiceValue')" (blur)="resetOnBlur('invoiceValue')"
+                    <input class="form-control required2" type="number" placeholder="Enter Invoice Value" formControlName="invoiceValue" (focus)="clearOnFocus('invoiceValue')" (blur)="resetOnBlur('invoiceValue')"
                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('invoiceValue')?.invalid  && DefaultcontractForm.get('invoiceValue')?.touched}">
                     <div *ngIf="DefaultcontractForm.get('invoiceValue')?.invalid && DefaultcontractForm.get('invoiceValue')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('invoiceValue')?.hasError('required')">Invoice Value is required.</small>
@@ -243,7 +239,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Charge Wt Kgs</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Charge Weight Kgs" formControlName="chargeWeightKG" readonly>
+                    <input class="form-control" type="number" placeholder="Enter Charge Weight Kgs" formControlName="chrgwt" readonly>
                 </div>
             </div>
         </div>
@@ -251,7 +247,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">CFT Weight</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter CFT Weight" formControlName="CFTweight" readonly>
+                    <input class="form-control" type="number" placeholder="Enter CFT Weight" formControlName="cftTotal" readonly>
                 </div>
             </div>
         </div>
@@ -259,7 +255,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Rate/Kg</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Rate/Kg" formControlName="rate" readonly>
+                    <input class="form-control" type="number" placeholder="Enter Rate/Kg" formControlName="freightRate" readonly>
                 </div>
             </div>
         </div>
@@ -355,15 +351,15 @@
     </div>
 
  <h3 class="pb-4 text-start challan-Details mb-4">Charges Details</h3>
-      <div class="row pb-3">
+   <div class="row pb-3">
         <div class="col-3">
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Fuel Surcharge</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="text" placeholder="Enter Fuel Surcharge" formControlName="fuelSurcharge"
-                    [ngClass]="{ 'border-danger': DefaultcontractForm.get('fuelSurcharge')?.invalid  && DefaultcontractForm.get('fuelSurcharge')?.touched}">
-                    <div *ngIf="DefaultcontractForm.get('fuelSurcharge')?.invalid && DefaultcontractForm.get('fuelSurcharge')?.touched" class="text-danger">
-                        <small *ngIf="DefaultcontractForm.get('fuelSurcharge')?.hasError('required')">Fuel Surcharge is required.</small>
+                    <input class="form-control required2" type="text" placeholder="Enter Fuel Surcharge" formControlName="schG20"
+                    [ngClass]="{ 'border-danger': DefaultcontractForm.get('schG20')?.invalid  && DefaultcontractForm.get('schG20')?.touched}">
+                    <div *ngIf="DefaultcontractForm.get('schG20')?.invalid && DefaultcontractForm.get('schG20')?.touched" class="text-danger">
+                        <small *ngIf="DefaultcontractForm.get('schG20')?.hasError('required')">Fuel Surcharge is required.</small>
                     </div>
                 </div>
             </div>
@@ -372,7 +368,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Freight Rs</label>
                 <div class="col-sm-7">
-                     <input class="form-control" type="number" placeholder="Enter Freight Rs" formControlName="freightRs" readonly>
+                     <input class="form-control" type="number" placeholder="Enter Freight Rs" formControlName="freightCharge" readonly>
                 </div>
             </div>
         </div>
@@ -388,14 +384,13 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Insurance Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Insurance Charges" formControlName="InsuranceCharge" readonly>
+                    <input class="form-control" type="number" placeholder="Enter Insurance Charges" formControlName="ichG01" readonly>
                 </div>
             </div>
         </div>
     </div>
 
-     <div class="row pb-3">
-       
+     <div class="row pb-3"> 
         <div class="col-3">
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">State Charges Detail</label>
@@ -424,7 +419,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">ODA Amount.</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter ODA Amount." formControlName="ODAAmount" readonly>
+                    <input class="form-control" type="number" placeholder="Enter ODA Amount." formControlName="schG08" readonly>
                 </div>
             </div>
         </div>
@@ -433,9 +428,9 @@
      <div class="row pb-3">
         <div class="col-3">
             <div class="row">
-                <label class="col-sm-5 col-form-label text-end">Docket Charges</label>
+                <label class="col-sm-5 col-form-label text-end">Document Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Docket Charges" formControlName="docketCharge">
+                    <input class="form-control" type="text" placeholder="Enter Document Charges" formControlName="schG04">
                 </div>
             </div>
         </div>
@@ -443,7 +438,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Mall Delivery Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Mall Delivery Charges" formControlName="mallDeliveryCharge" readonly>
+                    <input class="form-control" type="number" placeholder="Enter Mall Delivery Charges" formControlName="schG17" readonly>
                 </div>
             </div>
         </div>
@@ -451,7 +446,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Appointment Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Appointment Charges" formControlName="appoinmentCharge" readonly>
+                    <input class="form-control" type="number" placeholder="Enter Appointment Charges" formControlName="uchG08" readonly>
                 </div>
             </div>
         </div>
@@ -459,28 +454,36 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">CSD Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter CSD Charges" formControlName="CSDCharge" readonly>
+                    <input class="form-control" type="number" placeholder="Enter CSD Charges" formControlName="schG10" readonly>
                 </div>
             </div>
         </div>
     </div>
 
-
-
-     <div class="row pb-3 d-flex justify-content-end">
-         <div class="col-3">
+    <div class="row pb-3 d-flex justify-content-end">
+        <div class="col-3">
             <div class="row">
-                <label class="col-sm-5 col-form-label text-end">{{'GST@'}}</label>
+                <label class="col-sm-5 col-form-label text-end">ODA_Pickup_Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter GST@" formControlName="gst" readonly>
+                    <input class="form-control" type="text" placeholder="Enter ODA_Pickup_Charges" formControlName="schG07">
                 </div>
             </div>
         </div>
-          <div class="col-3">
+        <div class="col-3"></div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">{{'GST@'}}</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter GST@" formControlName="gstRate" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Sub_Total</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Sub_Total" formControlName="subTotal" readonly>
+                    <input class="form-control" type="number" placeholder="Enter Sub_Total" formControlName="subTotal"
+                        readonly>
                 </div>
             </div>
         </div>
@@ -525,7 +528,7 @@
 
     <!-- Submit Button -->
     <div class="d-flex justify-content-center text-center bg-secondary-subtle p-4 gap-2">
-        <button type="submit" class="btn btn-success" (click)="OnSubmit()"><i class="fas fa-check me-2"></i>Submit</button>
+        <button type="submit" class="btn btn-danger" (click)="OnSubmit()"><i class="fas fa-check me-2"></i>Submit</button>
     </div>
     </form>
 </div>

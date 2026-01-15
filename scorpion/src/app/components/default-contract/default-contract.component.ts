@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { DefaultContractService } from 'app/shared/services/default-contract.service';
 import { DocketService } from 'app/shared/services/docket.service';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 
 @Component({
   selector: 'default-contract',
@@ -25,63 +26,77 @@ export class DefaultContractComponent {
     this.docketService.getTransportModeData()
   }
 
-  buildForm() {
-    this.DefaultcontractForm = new FormGroup({
-      originPincode: new FormControl(null, Validators.required),
-      PickupArea: new FormControl(''),
-      PickupODA: new FormControl(''),
-      originCity: new FormControl(''),
-      fromState: new FormControl(''),
-      originZone: new FormControl(''),
-      ODA_pickUp: new FormControl(''),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      destination_pincode: new FormControl(null, Validators.required),
-      destinationArea: new FormControl(''),
-      ODA: new FormControl(''),
-      destinationCity: new FormControl(''),
-      toState: new FormControl(''),
-      destinationZone: new FormControl(''),
-      deliveryBranchCode: new FormControl(''),
-      ODACategory: new FormControl(''),
-      mode: new FormControl(null),
-      TATNormal: new FormControl(''),
-      TATODA: new FormControl(''),
-      transitDays: new FormControl(''),
-      weightKG: new FormControl(0, Validators.required),
-      Pkgs: new FormControl(0, Validators.required),
-      VolumetricAppl: new FormControl(false),
-      AppointmentDeliver: new FormControl(false),
-      CSDDelivery: new FormControl(false),
-      MallDelAppl: new FormControl(false),
-      invoiceValue: new FormControl(0, Validators.required),
-      chargeWeightKG: new FormControl(0),
-      CFTweight: new FormControl(0),
-      rate: new FormControl(0),
-      length: new FormControl(''),
-      breadth: new FormControl(''),
-      height: new FormControl(''),
-      CFTRatio: new FormControl(''),
-      fuelSurcharge: new FormControl('', Validators.required),
-      freightRs: new FormControl(0),
-      fuelSurchargeRs: new FormControl(0),
-      ODARate: new FormControl(0),
-      gst: new FormControl(0),
-      stateChargesDetail: new FormControl(0),
-      stateCharges: new FormControl(0),
-      ODAAmount: new FormControl(0),
-      docketCharge: new FormControl(''),
-      mallDeliveryCharge: new FormControl(0),
-      appoinmentCharge: new FormControl(0),
-      CSDCharge: new FormControl(0),
-      InsuranceCharge: new FormControl(0),
-      Disc_Rate: new FormControl(0),
-      Disc_amount: new FormControl(0),
-      Disc_Sub_Total: new FormControl(0),
-      subTotal: new FormControl(0),
-      GrandTotal: new FormControl(0),
+  buildForm(){
+    this.DefaultcontractForm=new FormGroup({
+      originPincode:new FormControl(null, Validators.required),
+      PickupArea:new FormControl(''),
+      PickupODA:new FormControl(''),
+      originCity:new FormControl(''),
+      fromState:new FormControl(''),
+      originZone:new FormControl(''),
+      schG07:new FormControl(''),
+      email:new FormControl('',[Validators.required, Validators.email]),
+      destination_pincode:new FormControl(null, Validators.required),
+      destinationArea:new FormControl(''),
+      ODA:new FormControl(''),
+      destinationCity:new FormControl(''),
+      toState:new FormControl(''),
+      destinationZone:new FormControl(''),
+      deliveryBranchCode:new FormControl(''),
+      ODACategory:new FormControl(''),
+      mode:new FormControl(null),
+      tatNormal:new FormControl(''),
+      tatoda:new FormControl(''),
+      trDays:new FormControl(''),
+      weightKG:new FormControl(0, Validators.required),
+      Pkgs:new FormControl(0, Validators.required),
+      VolumetricAppl:new FormControl(false),
+      AppointmentDeliver:new FormControl(false),
+      CSDDelivery:new FormControl(false),
+      MallDelAppl:new FormControl(false),
+      invoiceValue:new FormControl(0, Validators.required),
+      chrgwt:new FormControl(0),
+      cftTotal:new FormControl(0),
+      freightRate:new FormControl(0),
+      length:new FormControl(''),
+      breadth:new FormControl(''),
+      height:new FormControl(''),
+      CFTRatio:new FormControl(''),
+      schG20:new FormControl('',Validators.required),
+      freightCharge:new FormControl(0),
+      fuelSurchargeRs:new FormControl(0),
+      ODARate:new FormControl(0),
+      gstRate:new FormControl(0),
+      stateChargesDetail:new FormControl(0),
+      stateCharges:new FormControl(0),
+      schG08:new FormControl(0),
+      schG04:new FormControl(''),
+      schG17:new FormControl(0),
+      uchG08:new FormControl(0),
+      schG10:new FormControl(0),
+      ichG01:new FormControl(0),
+      Disc_Rate:new FormControl(0),
+      Disc_amount:new FormControl(0),
+      Disc_Sub_Total:new FormControl(0),
+      subTotal:new FormControl(0),
+      GrandTotal:new FormControl(0),
       fuelSurchrgBas:new FormControl()
-    })
+    });
+    this.listenDefaultContractChanges();
   }
+
+  listenDefaultContractChanges() {
+    this.DefaultcontractForm.valueChanges.pipe(debounceTime(500), map(form => ({
+      mode: form.mode,
+      invoiceValue: form.invoiceValue,
+      Pkgs: form.Pkgs,
+      originPincode: form.originPincode,
+      destinationPincode: form.destination_pincode
+    })),distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe(() => {
+        this.calculateRate();
+      });
+  }
+
 
   clearOnFocus(controlName: string) {
     const control = this.DefaultcontractForm.get(controlName);
@@ -124,7 +139,6 @@ export class DefaultContractComponent {
         }
       }
     });
-    this.calculateRate()
   }
 
   calculateRate() {
@@ -138,54 +152,16 @@ export class DefaultContractComponent {
       originPincode: this.DefaultcontractForm.value.originPincode,
       destinationPincode: this.DefaultcontractForm.value.destination_pincode
     }
-
-    if (!this.DefaultcontractForm.value.mode || !this.DefaultcontractForm.value.invoiceValue ||
-      !this.DefaultcontractForm.value.Pkgs || !this.DefaultcontractForm.value.originPincode || !this.DefaultcontractForm.value.destination_pincode
-    ) {
+    if (!payload.trnMode || !payload.invoiceAmount || !payload.packageCount || !payload.originPincode || !payload.destinationPincode) {
       return;
     }
     this.defaultContractService.calculateRate(payload).subscribe({
       next: (response: any) => {
         if (response) {
-          console.log(response);
-          const csdCharge = response.otherCharges?.find((x: any) => x.chargecode === 'SCHG10')?.charge || 0;
-          const malldelivery = response.otherCharges?.find((x: any) => x.chargecode === 'SCHG17')?.charge || 0;
-          const appoinment = response.otherCharges?.find((x: any) => x.chargecode === 'UCHG08')?.charge || 0;
-          const fuelSurcharge = response.otherCharges?.find((x: any) => x.chargecode === 'SCHG20')?.charge || 0;
-          this.DefaultcontractForm.patchValue({
-            freightRs: response.freight.freightCharge,
-            chargeWeightKG: response.freight.chrgwt,
-            CSDCharge: csdCharge,
-            mallDeliveryCharge: malldelivery,
-            appoinmentCharge: appoinment,
-
-          })
-
+          this.DefaultcontractForm.patchValue(response);
         }
-
       }
     })
-  }
-
-  getcontractservicecharge() {
-    if (this.DefaultcontractForm.value.mode) {
-      this.basicDetailService
-        .contractservicecharge('P018888', this.DefaultcontractForm.value.mode)
-        .subscribe({
-          next: (response: any) => {
-            if (response) {
-              this.DefaultcontractForm.patchValue({
-                CFTRatio: response[0].cft_Ratio,
-                fuelSurcharge:response[0].fuelSurchrg,
-                fuelSurchrgBas:response[0].fuelSurchrgBas
-              });
-            }
-          },
-          error: (err) => {
-            console.error("Error in contractservicecharge:", err);
-          },
-        });
-    }
   }
 
   OnSubmit() {
