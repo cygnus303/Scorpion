@@ -356,10 +356,10 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Fuel Surcharge</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="text" placeholder="Enter Fuel Surcharge" formControlName="schG20"
-                    [ngClass]="{ 'border-danger': DefaultcontractForm.get('schG20')?.invalid  && DefaultcontractForm.get('schG20')?.touched}">
-                    <div *ngIf="DefaultcontractForm.get('schG20')?.invalid && DefaultcontractForm.get('schG20')?.touched" class="text-danger">
-                        <small *ngIf="DefaultcontractForm.get('schG20')?.hasError('required')">Fuel Surcharge is required.</small>
+                    <input class="form-control required2" type="text" placeholder="Enter Fuel Surcharge" formControlName="fuelSurchrg"
+                    [ngClass]="{ 'border-danger': DefaultcontractForm.get('fuelSurchrg')?.invalid  && DefaultcontractForm.get('fuelSurchrg')?.touched}">
+                    <div *ngIf="DefaultcontractForm.get('fuelSurchrg')?.invalid && DefaultcontractForm.get('fuelSurchrg')?.touched" class="text-danger">
+                        <small *ngIf="DefaultcontractForm.get('fuelSurchrg')?.hasError('required')">Fuel Surcharge is required.</small>
                     </div>
                 </div>
             </div>
@@ -376,7 +376,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Fuel Surcharge Rs.</label>
                 <div class="col-sm-7">
-                     <input class="form-control" type="number" placeholder="Enter Fuel Surcharge Rs." formControlName="fuelSurchargeRs" readonly>
+                     <input class="form-control" type="number" placeholder="Enter Fuel Surcharge Rs." formControlName="schG20" readonly>
                 </div>
             </div>
         </div>

@@ -62,9 +62,9 @@ export class DefaultContractComponent {
       breadth:new FormControl(''),
       height:new FormControl(''),
       CFTRatio:new FormControl(''),
-      schG20:new FormControl('',Validators.required),
+      fuelSurchrg:new FormControl('',Validators.required),
       freightCharge:new FormControl(0),
-      fuelSurchargeRs:new FormControl(0),
+      schG20:new FormControl(0),
       ODARate:new FormControl(0),
       gstRate:new FormControl(0),
       stateChargesDetail:new FormControl(0),
@@ -122,8 +122,8 @@ export class DefaultContractComponent {
               PickupArea: this.getPincodeMaster.area,
               PickupODA: this.getPincodeMaster.is_ODA_Apply,
               originCity: this.getPincodeMaster.location,
-              originZone: '',
-              fromState: ''
+              originZone: this.getPincodeMaster.regionName,
+              fromState: this.getPincodeMaster.stnm
             })
           }
           if (type === 'destination') {
@@ -131,9 +131,10 @@ export class DefaultContractComponent {
               destinationArea: this.getPincodeMaster.area,
               ODA: this.getPincodeMaster.is_ODA_Apply,
               destinationCity: this.getPincodeMaster.location,
-              destinationZone: '',
-              toState: '',
-              deliveryBranchCode: this.getPincodeMaster.locCode
+              destinationZone:this.getPincodeMaster.regionName,
+              toState:  this.getPincodeMaster.stnm,
+              deliveryBranchCode: this.getPincodeMaster.locCode,
+              ODACategory: this.getPincodeMaster.category
             })
           }
         }
@@ -173,7 +174,7 @@ export class DefaultContractComponent {
             if (response) {
               this.DefaultcontractForm.patchValue({
                 CFTRatio: response[0].cft_Ratio,
-                fuelSurcharge:response[0].fuelSurchrg,
+                fuelSurchrg:response[0].fuelSurchrg,
                 fuelSurchrgBas:response[0].fuelSurchrgBas
               });
             }
