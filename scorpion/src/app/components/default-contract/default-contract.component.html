@@ -155,7 +155,7 @@
                 <label class="col-sm-5 col-form-label text-end">Transport Mode</label>
                 <div class="col-sm-7">
                     <ng-select formControlName="mode" placeholder="Select TransportMode" class="clear-icon"
-                    [items]="docketService.transportModeData" bindLabel="codeDesc" bindValue="codeId"></ng-select>
+                    [items]="docketService.transportModeData" bindLabel="codeDesc" bindValue="codeId" (change)="getcontractservicecharge()"></ng-select>
                 </div>
             </div> 
         </div>
