@@ -203,8 +203,8 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Weight Kgs</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="number" placeholder="Enter Weight Kgs" formControlName="weightKG" (focus)="clearOnFocus('weightKG')" (blur)="resetOnBlur('weightKG')"
-                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('weightKG')?.invalid  && DefaultcontractForm.get('weightKG')?.touched}">
+                    <input class="form-control required2" type="text" placeholder="Enter Weight Kgs" formControlName="weightKG" (focus)="clearOnFocus('weightKG')" (blur)="resetOnBlur('weightKG')"
+                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('weightKG')?.invalid  && DefaultcontractForm.get('weightKG')?.touched}" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                      <div *ngIf="DefaultcontractForm.get('weightKG')?.invalid && DefaultcontractForm.get('weightKG')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('weightKG')?.hasError('required')">Weight Kgs is required.</small>
                     </div>
@@ -215,9 +215,9 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Pkgs</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="number" placeholder="Enter Pkgs" formControlName="Pkgs" (focus)="clearOnFocus('Pkgs')" 
+                    <input class="form-control required2" type="text" placeholder="Enter Pkgs" formControlName="Pkgs" (focus)="clearOnFocus('Pkgs')" 
                     (blur)="resetOnBlur('Pkgs')" (input)="getCFTCalculation()"
-                    [ngClass]="{ 'border-danger': DefaultcontractForm.get('Pkgs')?.invalid  && DefaultcontractForm.get('Pkgs')?.touched}">
+                    [ngClass]="{ 'border-danger': DefaultcontractForm.get('Pkgs')?.invalid  && DefaultcontractForm.get('Pkgs')?.touched}" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                     <div *ngIf="DefaultcontractForm.get('Pkgs')?.invalid && DefaultcontractForm.get('Pkgs')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('Pkgs')?.hasError('required')">Pkgs is required.</small>
                     </div>
@@ -228,8 +228,8 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Invoice Value</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="number" placeholder="Enter Invoice Value" formControlName="invoiceValue" (focus)="clearOnFocus('invoiceValue')" (blur)="resetOnBlur('invoiceValue')"
-                    [ngClass]="{ 'border-danger': DefaultcontractForm.get('invoiceValue')?.invalid  && DefaultcontractForm.get('invoiceValue')?.touched}">
+                    <input class="form-control required2" type="text" placeholder="Enter Invoice Value" formControlName="invoiceValue" (focus)="clearOnFocus('invoiceValue')" (blur)="resetOnBlur('invoiceValue')"
+                    [ngClass]="{ 'border-danger': DefaultcontractForm.get('invoiceValue')?.invalid  && DefaultcontractForm.get('invoiceValue')?.touched}" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                     <div *ngIf="DefaultcontractForm.get('invoiceValue')?.invalid && DefaultcontractForm.get('invoiceValue')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('invoiceValue')?.hasError('required')">Invoice Value is required.</small>
                     </div>
@@ -321,7 +321,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Length (in Inches)</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Length (in Inches)" formControlName="length" (input)="getCFTCalculation()">
+                    <input class="form-control" type="text" placeholder="Enter Length (in Inches)" formControlName="length" (input)="getCFTCalculation()" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                 </div>
             </div>
         </div>
@@ -329,7 +329,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Breadth (in Inches)</label>
                 <div class="col-sm-7">
-                     <input class="form-control" type="number" placeholder="Enter Breadth (in Inches)" formControlName="breadth" (input)="getCFTCalculation()">
+                     <input class="form-control" type="text" placeholder="Enter Breadth (in Inches)" formControlName="breadth" (input)="getCFTCalculation()" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                 </div>
             </div>
         </div>
@@ -337,7 +337,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Height (in Inches)</label>
                 <div class="col-sm-7">
-                     <input class="form-control" type="number" placeholder="Enter Height (in Inches)" formControlName="height" (input)="getCFTCalculation()">
+                     <input class="form-control" type="text" placeholder="Enter Height (in Inches)" formControlName="height" (input)="getCFTCalculation()" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                 </div>
             </div>
         </div>
@@ -345,7 +345,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">CFT Ratio</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter CFT Ratio" formControlName="CFTRatio">
+                    <input class="form-control" type="text" placeholder="Enter CFT Ratio" formControlName="CFTRatio" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                 </div>
             </div>
         </div>

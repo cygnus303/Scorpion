@@ -63,6 +63,7 @@ export class DefaultContractComponent {
       height:new FormControl(''),
       CFTRatio:new FormControl(''),
       fuelSurchrg:new FormControl('',Validators.required),
+
       freightCharge:new FormControl(0),
       schG20:new FormControl(0),
       ODARate:new FormControl(0),
@@ -75,6 +76,7 @@ export class DefaultContractComponent {
       uchG08:new FormControl(0),
       schG10:new FormControl(0),
       ichG01:new FormControl(0),
+
       Disc_Rate:new FormControl(0),
       Disc_amount:new FormControl(0),
       Disc_Sub_Total:new FormControl(0),
@@ -160,10 +162,32 @@ export class DefaultContractComponent {
       next: (response: any) => {
         if (response) {
           this.DefaultcontractForm.patchValue(response);
+          this.calculateSubTotal();
         }
       }
     })
   }
+
+calculateSubTotal() {
+  const chargeFields = ['freightCharge','schG20','ODARate','stateChargesDetail','stateCharges','schG08',
+    'schG04','schG17','uchG08','schG10','ichG01','Disc_amount'];
+
+  // Calculate subTotal dynamically
+  const subTotal = chargeFields.reduce((sum, field) => {
+    const value = this.DefaultcontractForm.get(field)?.value || 0;
+    return sum + value;
+  }, 0);
+
+  // Discount amount
+  const discAmount = this.DefaultcontractForm.get('Disc_amount')?.value || 0;
+  const grandTotal = subTotal - discAmount;
+
+  // Update the form with the calculated values
+  this.DefaultcontractForm.patchValue({
+    subTotal: subTotal,
+    GrandTotal: grandTotal
+  }, { emitEvent: false });  // Prevent triggering valueChanges again
+}
 
   getcontractservicecharge() {
     if (this.DefaultcontractForm.value.mode) {
@@ -188,17 +212,13 @@ export class DefaultContractComponent {
 
   getCFTCalculation() {
     let totalCFT = 0;
- 
     const cftRatio = this.DefaultcontractForm?.get('CFTRatio')?.value || 0;
- 
       const length = Number(this.DefaultcontractForm.get('length')?.value) || 0;
       const breadth = Number(this.DefaultcontractForm.get('breadth')?.value) || 0;
       const height = Number(this.DefaultcontractForm.get('height')?.value) || 0;
       const noOfPkgs = Number(this.DefaultcontractForm.get('Pkgs')?.value) || 0;
- 
       const cftTotal = length * breadth * height * cftRatio * noOfPkgs;
       totalCFT += cftTotal;
- 
       this.DefaultcontractForm.patchValue( { cftTotal: parseFloat(cftTotal.toFixed(2)) }, { emitEvent: false });
   }
 
