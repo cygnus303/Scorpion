@@ -14,6 +14,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 export class DefaultContractComponent {
   public getPincodeMaster: any;
   public DefaultcontractForm!: FormGroup;
+  public contractcharge:any;
 
   constructor(
     public docketService: DocketService,
@@ -172,6 +173,7 @@ export class DefaultContractComponent {
         .subscribe({
           next: (response: any) => {
             if (response) {
+              this.contractcharge=response[0];
               this.DefaultcontractForm.patchValue({
                 CFTRatio: response[0].cft_Ratio,
                 fuelSurchrg:response[0].fuelSurchrg,
@@ -187,20 +189,57 @@ export class DefaultContractComponent {
   }
 
   getCFTCalculation() {
-    let totalCFT = 0;
- 
-    const cftRatio = this.DefaultcontractForm?.get('CFTRatio')?.value || 0;
- 
-      const length = Number(this.DefaultcontractForm.get('length')?.value) || 0;
-      const breadth = Number(this.DefaultcontractForm.get('breadth')?.value) || 0;
-      const height = Number(this.DefaultcontractForm.get('height')?.value) || 0;
-      const noOfPkgs = Number(this.DefaultcontractForm.get('Pkgs')?.value) || 0;
- 
-      const cftTotal = length * breadth * height * cftRatio * noOfPkgs;
-      totalCFT += cftTotal;
- 
-      this.DefaultcontractForm.patchValue( { cftTotal: parseFloat(cftTotal.toFixed(2)) }, { emitEvent: false });
+
+  let volMeasureType = '';
+  let cftWtRatio = 0;
+  if (this.contractcharge) {
+    volMeasureType = this.contractcharge?.cft_Measure; // 'INCHES' | 'CM' | 'FEET'
+    cftWtRatio = this.contractcharge?.cft_Ratio || 0;
   }
+
+    let length = this.DefaultcontractForm.value.length || 0;
+    let breadth = this.DefaultcontractForm.value.breadth || 0;
+    let height = this.DefaultcontractForm.value.height || 0;
+    const pkgsNo = this.DefaultcontractForm.value.Pkgs || 0;
+
+    let cubicweight = 0;
+
+      // Normal volume calculation
+      let volume = 0;
+      if (volMeasureType === 'INCHES') {
+        volume = (length * breadth * height * cftWtRatio) / 1728;
+      } else if (volMeasureType === 'CM') {
+        volume = (length * breadth * height * cftWtRatio) / 27000;
+      } else if (volMeasureType === 'FEET') {
+        volume = length * breadth * height * cftWtRatio;
+      }
+
+      cubicweight = +(volume * pkgsNo).toFixed(2);
+
+      this.DefaultcontractForm.patchValue({
+        cftTotal:cubicweight
+      })
+  }
+
+  calculateDiscount() {
+  // const discountType = event?.value || this.freightForm.value.discountType;
+  let Subtotal = this.DefaultcontractForm.value.subTotal || 0;
+
+  let discounts = this.DefaultcontractForm.value.Disc_Rate;
+  // if (discountType == "P") {
+    discounts = parseFloat(Subtotal.toString()) * parseFloat(discounts) / 100;
+    // this.getMaxDiscountLimit()
+  // }
+
+  const finalSubtotal = Subtotal - parseFloat(discounts);
+
+  this.DefaultcontractForm.patchValue({
+    subTotal: finalSubtotal.toFixed(2),
+    Disc_amount: discounts.toFixed(2)
+  });
+
+}
+
 
   OnSubmit() {
     if (this.DefaultcontractForm.valid) {
