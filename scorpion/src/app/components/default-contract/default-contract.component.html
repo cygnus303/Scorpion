@@ -215,7 +215,8 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Pkgs</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="number" placeholder="Enter Pkgs" formControlName="Pkgs" (focus)="clearOnFocus('Pkgs')" (blur)="resetOnBlur('Pkgs')"
+                    <input class="form-control required2" type="number" placeholder="Enter Pkgs" formControlName="Pkgs" (focus)="clearOnFocus('Pkgs')" 
+                    (blur)="resetOnBlur('Pkgs')" (input)="getCFTCalculation()"
                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('Pkgs')?.invalid  && DefaultcontractForm.get('Pkgs')?.touched}">
                     <div *ngIf="DefaultcontractForm.get('Pkgs')?.invalid && DefaultcontractForm.get('Pkgs')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('Pkgs')?.hasError('required')">Pkgs is required.</small>
@@ -320,7 +321,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Length (in Inches)</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Length (in Inches)" formControlName="length">
+                    <input class="form-control" type="number" placeholder="Enter Length (in Inches)" formControlName="length" (input)="getCFTCalculation()">
                 </div>
             </div>
         </div>
@@ -328,7 +329,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Breadth (in Inches)</label>
                 <div class="col-sm-7">
-                     <input class="form-control" type="number" placeholder="Enter Breadth (in Inches)" formControlName="breadth">
+                     <input class="form-control" type="number" placeholder="Enter Breadth (in Inches)" formControlName="breadth" (input)="getCFTCalculation()">
                 </div>
             </div>
         </div>
@@ -336,7 +337,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Height (in Inches)</label>
                 <div class="col-sm-7">
-                     <input class="form-control" type="number" placeholder="Enter Height (in Inches)" formControlName="height">
+                     <input class="form-control" type="number" placeholder="Enter Height (in Inches)" formControlName="height" (input)="getCFTCalculation()">
                 </div>
             </div>
         </div>

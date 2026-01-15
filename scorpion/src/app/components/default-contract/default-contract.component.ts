@@ -185,6 +185,22 @@ export class DefaultContractComponent {
     }
   }
 
+  getCFTCalculation() {
+    let totalCFT = 0;
+ 
+    const cftRatio = this.DefaultcontractForm?.get('CFTRatio')?.value || 0;
+ 
+      const length = Number(this.DefaultcontractForm.get('length')?.value) || 0;
+      const breadth = Number(this.DefaultcontractForm.get('breadth')?.value) || 0;
+      const height = Number(this.DefaultcontractForm.get('height')?.value) || 0;
+      const noOfPkgs = Number(this.DefaultcontractForm.get('Pkgs')?.value) || 0;
+ 
+      const cftTotal = length * breadth * height * cftRatio * noOfPkgs;
+      totalCFT += cftTotal;
+ 
+      this.DefaultcontractForm.patchValue( { cftTotal: parseFloat(cftTotal.toFixed(2)) }, { emitEvent: false });
+  }
+
   OnSubmit() {
     if (this.DefaultcontractForm.valid) {
       console.log(this.DefaultcontractForm.value);
