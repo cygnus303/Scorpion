@@ -92,7 +92,7 @@ getCompletionData() {
               mode: basicDetail.trN_MOD,
               serviceType: basicDetail.service_Class,
               pickup: basicDetail.pickup_Dely,
-              exemptServices: basicDetail.exemptServices,
+              exemptServices: basicDetail.exemptServices || null,
               isreferenceDKT: basicDetail.isReferenceDKT,
               iscsdDelivery: basicDetail.isCSDDelivery,
               isCODDOD: basicDetail.isCODDOD,
