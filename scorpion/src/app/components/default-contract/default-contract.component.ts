@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { DefaultContractService } from 'app/shared/services/default-contract.service';
 import { DocketService } from 'app/shared/services/docket.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 
 @Component({
@@ -21,7 +22,8 @@ export class DefaultContractComponent {
   constructor(
     public docketService: DocketService,
     public basicDetailService: BasicDetailService,
-    public defaultContractService: DefaultContractService
+    public defaultContractService: DefaultContractService,
+    private sweetAlertService:SweetAlertService
   ) { }
 
   ngOnInit() {
@@ -347,7 +349,7 @@ calculateSubTotal() {
       freight: data.freightCharge,
       subTotal: data.subTotal,
       isGSTApplied: true, //puchvanu
-      gstType: "string", //puchvanu
+      gstType: "", //puchvanu
       igstRate: data.freightRate,
       igstAmount: 0, //puchvanu
       cgstRate: 0, //puchvanu
@@ -387,6 +389,10 @@ calculateSubTotal() {
       console.log(this.DefaultcontractForm.value);
       this.defaultContractService.DocketEnquirySubmit(payload).subscribe({next: (response: any) => {
           if (response) {
+            this.buildForm();
+            this.sweetAlertService.success('Successfully Submitted!!!');
+          }else{
+            this.sweetAlertService.error('Error');
           }
         }
       })
