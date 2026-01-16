@@ -54,7 +54,7 @@ export class DefaultContractComponent {
       tatNormal:new FormControl(''),
       tatoda:new FormControl(''),
       trDays:new FormControl(''),
-      weightKG:new FormControl(0, Validators.required),
+      weightKG:new FormControl(25, Validators.required),
       Pkgs:new FormControl(0, Validators.required),
       VolumetricAppl:new FormControl(false),
       AppointmentDeliver:new FormControl(false),
@@ -210,20 +210,27 @@ setMallDeliveryCharge() {
 }
 
 calculateSubTotal() {
-  const chargeFields = ['freightCharge','schG20','ODARate','stateChargesDetail','stateCharges','schG08',
-    'schG04','schG17','uchG08','schG10','ichG01','schG07','Disc_amount'];
+  const chargeFields = [
+    'freightCharge','schG20','ODARate','stateChargesDetail',
+    'stateCharges','schG08','schG04','schG17','uchG08',
+    'schG10','ichG01','schG07'
+  ];
+
   const subTotal = chargeFields.reduce((sum, field) => {
-    const value = this.DefaultcontractForm.get(field)?.value || 0;
+    const value = Number(this.DefaultcontractForm.get(field)?.value) || 0;
     return sum + value;
   }, 0);
-  const discAmount = this.DefaultcontractForm.get('Disc_amount')?.value || 0;
-  const grandTotal = subTotal - discAmount;
+
+  const discAmount = Number(this.DefaultcontractForm.get('Disc_amount')?.value) || 0;
+
   this.DefaultcontractForm.patchValue({
-    subTotal: subTotal,
-    GrandTotal: grandTotal
-  }, { emitEvent: false }); 
-  this.originalSubtotal = this.DefaultcontractForm.value.subTotal;
+    subTotal,
+    GrandTotal: subTotal - discAmount
+  }, { emitEvent: false });
+
+  this.originalSubtotal = subTotal;
 }
+
 
   getcontractservicecharge() {
     if (this.DefaultcontractForm.value.mode) {

@@ -431,7 +431,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Document Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Document Charges" formControlName="schG04">
+                    <input class="form-control" type="text" placeholder="Enter Document Charges" formControlName="schG04" (input)=" this.calculateSubTotal()">
                 </div>
             </div>
         </div>
@@ -466,7 +466,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">ODA_Pickup_Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter ODA_Pickup_Charges" formControlName="schG07">
+                    <input class="form-control" type="text" placeholder="Enter ODA_Pickup_Charges" formControlName="schG07" (input)=" this.calculateSubTotal()">
                 </div>
             </div>
         </div>
