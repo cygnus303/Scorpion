@@ -224,6 +224,9 @@ onPilferageQtyChange(index: number): void {
     this.stockUpdateArray.controls.forEach((row: any) => {
       row.get('deliveryProcess')?.setValue(value.codeId);
     });
+    this.stockUpdateArray.controls.forEach((row: any) => {
+      this.toggleDeliveryProcessValidator(row);
+    });
   }
 
   onHeaderDamageChange() {
@@ -429,6 +432,10 @@ onRowDamageChange(index: number) {
         this.status = 'nodata';
       }
     });
+
+        this.stockUpdateArray.controls.forEach((row: any) => {
+      this.toggleDeliveryProcessValidator(row);
+    });
   }
 
   getWarehouseData(data:any) {
@@ -452,7 +459,7 @@ onRowDamageChange(index: number) {
   createForm(item: any): FormGroup {
   const [day, month, year] = item.dockdt.split('/');
   const formattedDate = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
-  return new FormGroup({
+ const form = new FormGroup({
     IsPartStockUpdate: new FormControl(false), 
     damage: new FormControl(false),
     pilferage: new FormControl(false),
@@ -506,6 +513,12 @@ onRowDamageChange(index: number) {
     isAllgood:new FormControl(item.isAllgood),
     dockSF:new FormControl(item.dockSF),
   });
+
+      setTimeout(() => {
+      this.toggleDeliveryProcessValidator(form);
+    });
+
+    return form;
 }
 
 removeFile(index: number, type: 'FRONT' | 'BACK') {
@@ -658,9 +671,9 @@ stockUpdate() {
       isAllgood: v.isAllgood,
       updateDate: new Date(),
       isMobileUser: 'N',
-      ac: v.condition,
-      wi: v.warehouse,
-      dp: v.deliveryProcess,
+      ac: v.condition ||'',
+      wi: v.warehouse ||'',
+      dp: v.deliveryProcess ||'',
       dockSF:  v.dockSF,
     };
   });
@@ -835,6 +848,34 @@ stockUpdate() {
     this.showShortageSection[index] = false;
   }
 }
+
+private shouldRequireDeliveryProcess(row: any): boolean {
+  const loc = this.docketService.loginUserList.LocationCode;
+  const desT_CD = row.get('desT_CD')?.value;
+  const isFTL = row.get('isFTLDelivery')?.value;
+  const thcbr = row.get('thcbr')?.value;
+
+  return (
+    loc === desT_CD ||
+    (isFTL === true && loc === thcbr && desT_CD === loc)
+  );
+}
+
+private toggleDeliveryProcessValidator(row: FormGroup) {
+  const ctrl = row.get('deliveryProcess');
+  if (!ctrl) return;
+
+  if (this.shouldRequireDeliveryProcess(row)) {
+    ctrl.setValidators([Validators.required]);
+  } else {
+    ctrl.clearValidators();
+    ctrl.setValue(null);
+  }
+
+  ctrl.updateValueAndValidity();
+}
+
+
 
 roundNumber(value: number, decimals: number): number {
   return Number(Math.round(Number(value + 'e' + decimals)) + 'e-' + decimals);

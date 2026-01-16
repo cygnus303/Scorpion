@@ -206,7 +206,11 @@
                                                 (row.get('isFTLDelivery')?.value === true && docketService.loginUserList.LocationCode === row.get('thcbr')?.value && row.get('desT_CD')?.value === docketService.loginUserList.LocationCode)">
                                     <ng-select class="clear-icon required2" bindLabel="codeDesc" bindValue="codeId"
                                         formControlName="deliveryProcess" [items]="generalMasterService.deliveryProcessData"
-                                        placeholder="Select Process"></ng-select></td>
+                                        placeholder="Select Process" [ngClass]="{'border-danger':row.get('deliveryProcess')?.touched && row.get('deliveryProcess')?.errors}"></ng-select>
+                                        <div *ngIf="row.get('deliveryProcess')?.touched && row.get('deliveryProcess')?.errors">
+                                        <div class="text-danger">Delivery Process is required</div>
+                                        </div>
+                                    </td>
                             </tr>
                             <tr *ngIf="row.get('deliveryProcess')?.value === '2'">
                                 <td class="text-center">POD :-</td>
