@@ -496,7 +496,15 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Disc_Rate</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Disc_Rate" formControlName="Disc_Rate" (input)="calculateDiscount()" oninput="this.value = this.value.replace(/[^0-9]/g,'');"> 
+                    <input class="form-control" type="text" placeholder="Enter Disc_Rate" formControlName="Disc_Rate" (input)="calculateDiscount()" oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                    [ngClass]="{ 'border-danger': DefaultcontractForm.get('Disc_Rate')?.touched &&
+                            DefaultcontractForm.get('Disc_Rate')?.errors?.['max']}"> 
+                <div class="text-danger"
+                    *ngIf="DefaultcontractForm.get('Disc_Rate')?.touched &&
+                            DefaultcontractForm.get('Disc_Rate')?.errors?.['max']">
+                Please enter less than or equal to 20
+                </div>
+
                 </div>
             </div>
         </div>

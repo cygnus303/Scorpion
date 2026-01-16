@@ -89,7 +89,7 @@ export class DefaultContractComponent {
       schG10:new FormControl(0),
       ichG01:new FormControl(0),
 
-      Disc_Rate:new FormControl(0),
+      Disc_Rate:new FormControl(0,[Validators.max(20)]),
       Disc_amount:new FormControl(0),
       Disc_Sub_Total:new FormControl(0),
       subTotal:new FormControl(0),
@@ -228,10 +228,11 @@ calculateSubTotal() {
     return sum + value;
   }, 0);
 
+  const fixedSubTotal = Number(subTotal.toFixed(2));
   const discAmount = Number(this.DefaultcontractForm.get('Disc_amount')?.value) || 0;
 
   this.DefaultcontractForm.patchValue({
-    subTotal,
+    subTotal: fixedSubTotal,
     GrandTotal: subTotal - discAmount
   }, { emitEvent: false });
 
@@ -296,22 +297,31 @@ calculateSubTotal() {
       this.calculateRate()
   }
 
-  calculateDiscount() {
+calculateDiscount() {
+  const discControl = this.DefaultcontractForm.get('Disc_Rate');
+
+  if (discControl?.invalid) {
+    this.DefaultcontractForm.patchValue({
+      Disc_amount: '0',
+      Disc_Sub_Total: this.originalSubtotal?.toFixed(2),
+      GrandTotal: this.originalSubtotal?.toFixed(2)
+    });
+    return;
+  }
+
   let Subtotal = this.originalSubtotal || 0;
+  let discounts = Number(discControl?.value || 0);
+  let gstRate = Number(this.DefaultcontractForm.value.gstRate || 0);
 
-  let discounts = this.DefaultcontractForm.value.Disc_Rate;
-  let gstRate = this.DefaultcontractForm.value.gstRate;
-  discounts = parseFloat(Subtotal.toString()) * parseFloat(discounts) / 100;
-
-  const discountSubTotal=Subtotal - discounts;
-  const grandTotal= discountSubTotal - gstRate;
+  let discountAmount = (Subtotal * discounts) / 100;
+  const discountSubTotal = Subtotal - discountAmount;
+  const grandTotal = discountSubTotal - gstRate;
 
   this.DefaultcontractForm.patchValue({
-    Disc_amount: discounts.toFixed(2),
-    Disc_Sub_Total:discountSubTotal.toFixed(2),
-    GrandTotal :grandTotal.toFixed(2)
+    Disc_amount: discountAmount.toFixed(2),
+    Disc_Sub_Total: discountSubTotal.toFixed(2),
+    GrandTotal: grandTotal.toFixed(2)
   });
-
 }
 
 
