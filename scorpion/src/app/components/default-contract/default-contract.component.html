@@ -319,25 +319,25 @@
        <h3 class="pb-4 text-start challan-Details mb-4">Volumetric Applicable</h3>
         <div class="col-3">
             <div class="row">
-                <label class="col-sm-5 col-form-label text-end">Length (in Inches)</label>
+                <label class="col-sm-5 col-form-label text-end">Length ({{this.contractcharge?.cft_Measure}})</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Length (in Inches)" formControlName="length" (input)="getCFTCalculation()" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                    <input class="form-control" type="text" placeholder="Enter Length" formControlName="length" (input)="getCFTCalculation()" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                 </div>
             </div>
         </div>
         <div class="col-3">
             <div class="row">
-                <label class="col-sm-5 col-form-label text-end">Breadth (in Inches)</label>
+                <label class="col-sm-5 col-form-label text-end">Breadth ({{this.contractcharge?.cft_Measure}})</label>
                 <div class="col-sm-7">
-                     <input class="form-control" type="text" placeholder="Enter Breadth (in Inches)" formControlName="breadth" (input)="getCFTCalculation()" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                     <input class="form-control" type="text" placeholder="Enter Breadth" formControlName="breadth" (input)="getCFTCalculation()" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                 </div>
             </div>
         </div>
         <div class="col-3">
             <div class="row">
-                <label class="col-sm-5 col-form-label text-end">Height (in Inches)</label>
+                <label class="col-sm-5 col-form-label text-end">Height ({{this.contractcharge?.cft_Measure}})</label>
                 <div class="col-sm-7">
-                     <input class="form-control" type="text" placeholder="Enter Height (in Inches)" formControlName="height" (input)="getCFTCalculation()" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                     <input class="form-control" type="text" placeholder="Enter Height" formControlName="height" (input)="getCFTCalculation()" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                 </div>
             </div>
         </div>
