@@ -204,6 +204,7 @@
                 <label class="col-sm-5 col-form-label text-end">Weight Kgs</label>
                 <div class="col-sm-7">
                     <input class="form-control required2" type="text" placeholder="Enter Weight Kgs" formControlName="weightKG" (focus)="clearOnFocus('weightKG')" (blur)="resetOnBlur('weightKG')"
+                    (input)="getCFTCalculation()"
                      [ngClass]="{ 'border-danger': DefaultcontractForm.get('weightKG')?.invalid  && DefaultcontractForm.get('weightKG')?.touched}" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                      <div *ngIf="DefaultcontractForm.get('weightKG')?.invalid && DefaultcontractForm.get('weightKG')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('weightKG')?.hasError('required')">Weight Kgs is required.</small>
@@ -431,7 +432,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Document Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Document Charges" formControlName="schG04" (input)=" this.calculateSubTotal()">
+                    <input class="form-control" type="text" placeholder="Enter Document Charges" formControlName="schG04" (input)=" this.calculateSubTotal()" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                 </div>
             </div>
         </div>
@@ -466,7 +467,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">ODA_Pickup_Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter ODA_Pickup_Charges" formControlName="schG07" (input)=" this.calculateSubTotal()">
+                    <input class="form-control" type="text" placeholder="Enter ODA_Pickup_Charges" formControlName="schG07" (input)=" this.calculateSubTotal()" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                 </div>
             </div>
         </div>
@@ -495,7 +496,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Disc_Rate</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Disc_Rate" formControlName="Disc_Rate" (input)="calculateDiscount()"> 
+                    <input class="form-control" type="text" placeholder="Enter Disc_Rate" formControlName="Disc_Rate" (input)="calculateDiscount()" oninput="this.value = this.value.replace(/[^0-9]/g,'');"> 
                 </div>
             </div>
         </div>
