@@ -164,8 +164,8 @@ export class DefaultContractComponent {
       trnMode: this.DefaultcontractForm.value.mode,
       contractID: "P018888",
       invoiceAmount: this.DefaultcontractForm.value.invoiceValue || 0,
-      actualWeight: this.DefaultcontractForm.value.chargeWeightKG || 0,
-      totalCFT: 0,
+      actualWeight: this.DefaultcontractForm.value.weightKG || 0,
+      totalCFT: this.DefaultcontractForm.value.cftTotal || 0,
       packageCount: this.DefaultcontractForm.value.Pkgs || 0,
       originPincode: this.DefaultcontractForm.value.originPincode,
       destinationPincode: this.DefaultcontractForm.value.destination_pincode
@@ -193,6 +193,7 @@ setAppointmentCharge() {
   } else {
     this.DefaultcontractForm.get('uchG08')?.setValue(0);
   }
+  this.calculateSubTotal()
 }
 
 setCSDDeliveryCharge() {
@@ -201,6 +202,8 @@ setCSDDeliveryCharge() {
   } else {
     this.DefaultcontractForm.get('schG10')?.setValue(0);
   }
+  this.calculateSubTotal()
+
 }
 
 setMallDeliveryCharge() {
@@ -209,6 +212,8 @@ setMallDeliveryCharge() {
   } else {
     this.DefaultcontractForm.get('schG17')?.setValue(0);
   }
+  this.calculateSubTotal()
+
 }
 
 calculateSubTotal() {
@@ -231,6 +236,7 @@ calculateSubTotal() {
   }, { emitEvent: false });
 
   this.originalSubtotal = subTotal;
+  this.calculateDiscount()
 }
 
 
@@ -286,7 +292,8 @@ calculateSubTotal() {
 
       this.DefaultcontractForm.patchValue({
         cftTotal:cubicweight
-      })
+      });
+      this.calculateRate()
   }
 
   calculateDiscount() {
