@@ -468,9 +468,14 @@
             <div class="row">
               <div class="col-md-11">
                 <div class="form-group">
-                  <label class="control-label col-md-5">Policy No</label>
+                  <label class="control-label col-md-5">PO Number</label>
                   <div class="col-md-7">
-                    <input class="form-control " formControlName="policyNo" placeholder="Policy No" type="text" appFocusNexts>
+                    <input class="form-control " formControlName="policyNo" placeholder="PO Number" type="text" appFocusNext
+                    [ngClass]="{ 'border-danger': docketService.consignorForm.get('policyNo')?.invalid  && docketService.consignorForm.get('policyNo')?.touched}">
+                    <div *ngIf="docketService.consignorForm.get('policyNo')?.invalid  && docketService.consignorForm.get('policyNo')?.touched"
+              class="text-danger col-md-7 text-start">
+              This field is required.
+            </div>
                   </div>
                 </div>
               </div>

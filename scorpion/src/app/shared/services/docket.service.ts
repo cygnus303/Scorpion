@@ -507,6 +507,17 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
           this.getStep2Details();
         }
       }
+
+      const PONumber = this.consignorForm.get('policyNo');
+      if(response.data.poNumber_Active){
+        PONumber?.setValidators([Validators.required]);
+        PONumber?.setValidators([Validators.required]);
+      }else{
+        PONumber?.clearValidators();
+        PONumber?.clearValidators();
+      }
+      PONumber?.updateValueAndValidity();
+      PONumber?.updateValueAndValidity();
     });
   }
 
