@@ -742,7 +742,7 @@ getcontractservicecharge() {
     });
   }
 
-  getTransportModeData(codeId: any) {
+  getTransportModeData(codeId?: any) {
     this.basicDetailService.getGeneralMasterList('TRN', '', codeId).subscribe({
       next: (response) => {
         if (response.success) {

@@ -1,0 +1,535 @@
+<div class="text-white px-3 py-0 d-flex align-items-center fw-semibold" style="background-color: rgb(237, 12, 52) !important;">
+     <img src="/assets/img/logos/logo.jpg" height="50" class="me-4">
+    Transit and Rate Finder
+  </div>
+
+<div class="form-grid p-4">
+    <form [formGroup]="DefaultcontractForm">
+    <!-- Origin Details Section -->
+    <h3 class="pb-4 text-start challan-Details mb-4">Origin Destination Details</h3>
+    <div class="row pb-3">
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Origin Pin Code</label>
+                <div class="col-sm-7">
+                    <ng-select class="required2 clear-icon" type="text" placeholder="Enter Origin Pin Code" formControlName="originPincode"
+                    (search)="docketService.getpincodeData($event)" bindValue="value" bindLabel="text" [items]="docketService.pincodeList" 
+                    (change)="getPincodeMasterList($event,'origin')" [notFoundText]="docketService.notPincodeValue" (open)="docketService.resetPincodeDropdown()"
+                    [ngClass]="{ 'border-danger': DefaultcontractForm.get('originPincode')?.invalid  && DefaultcontractForm.get('originPincode')?.touched}"></ng-select>
+                    <div *ngIf="DefaultcontractForm.get('originPincode')?.invalid && DefaultcontractForm.get('originPincode')?.touched" class="text-danger">
+                        <small *ngIf="DefaultcontractForm.get('originPincode')?.hasError('required')">Origin Pin Code is required.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Pickup Area</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" placeholder="Enter Pickup Area" formControlName="PickupArea" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Pickup From ODA</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" placeholder="Enter Pickup From ODA" formControlName="PickupODA" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Origin City</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" placeholder="Enter Origin City" formControlName="originCity" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row pb-3">
+        <div class="col-3">
+            <div class="row align-items-center">
+                <label class="col-sm-5 col-form-label text-end">From State</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" placeholder="Enter From State" formControlName="fromState" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Origin Zone</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" placeholder="Enter Origin Zone" formControlName="originZone" readonly>
+                </div>
+            </div>
+        </div> 
+    </div>
+    
+    <!-- Destination Details Section -->
+    <div class="row pb-3">
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Destination Pin Code</label>
+                <div class="col-sm-7">
+                    <ng-select class="required2" type="text" placeholder="Enter Destination Pin Code" formControlName="destination_pincode"
+                    (search)="docketService.getpincodeData($event)" bindValue="value" bindLabel="text" [items]="docketService.pincodeList" (open)="docketService.resetPincodeDropdown()"
+                    (change)="getPincodeMasterList($event,'destination')" [notFoundText]="docketService.notPincodeValue"
+                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('destination_pincode')?.invalid  && DefaultcontractForm.get('destination_pincode')?.touched}"></ng-select>
+                    <div *ngIf="DefaultcontractForm.get('destination_pincode')?.invalid && DefaultcontractForm.get('destination_pincode')?.touched" class="text-danger">
+                        <small *ngIf="DefaultcontractForm.get('destination_pincode')?.hasError('required')">Destination Pin Code is required.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Destination Area</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" placeholder="Enter Destination Area" formControlName="destinationArea" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">ODA (Y/N)</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" placeholder="Enter ODA (Y/N)" formControlName="ODA" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Destination City</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" placeholder="Enter Destination City" formControlName="destinationCity" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row pb-3">
+        <div class="col-3">
+            <div class="row align-items-center">
+                <label class="col-sm-5 col-form-label text-end">To State</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" placeholder="Enter To State" formControlName="toState" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Destination Zone</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" placeholder="Enter Destination Zone" formControlName="destinationZone" readonly>
+                </div>
+            </div>
+        </div>
+         <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Delivery Branch Code</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" placeholder="Enter Delivery Branch Code" formControlName="deliveryBranchCode" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">ODA Category</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" placeholder="Enter ODA Category" formControlName="ODACategory" readonly>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- Additional Details Section -->
+    
+    <div class="row pb-3">
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Transport Mode</label>
+                <div class="col-sm-7">
+                    <ng-select formControlName="mode" placeholder="Select TransportMode" class="clear-icon"
+                    [items]="docketService.transportModeData" bindLabel="codeDesc" bindValue="codeId" (change)="getcontractservicecharge()"></ng-select>
+                </div>
+            </div> 
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">TAT Normal</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter TAT Normal" formControlName="tatNormal" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">TAT ODA</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter TAT ODA" formControlName="tatoda" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Transit Days</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter Transit Days" formControlName="trDays" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row pb-3">
+     <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Email</label>
+                <div class="col-sm-7">
+                    <input class="form-control required2" type="text" placeholder="Enter Email" formControlName="email"
+                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('email')?.invalid  && DefaultcontractForm.get('email')?.touched}">
+                    <div *ngIf="DefaultcontractForm.get('email')?.invalid && DefaultcontractForm.get('email')?.touched" class="text-danger">
+                        <small *ngIf="DefaultcontractForm.get('email')?.hasError('required')">Email is required.</small>
+                        <small *ngIf="DefaultcontractForm.get('email')?.hasError('email')">Please enter a valid email address.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="pb-4 text-start challan-Details mb-4">Invoice Details</h3>
+     <div class="row pb-3">
+        <div class="col-2">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Weight Kgs</label>
+                <div class="col-sm-7">
+                    <input class="form-control required2" type="text" placeholder="Enter Weight Kgs" formControlName="weightKG" (focus)="clearOnFocus('weightKG')" (blur)="resetOnBlur('weightKG')"
+                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('weightKG')?.invalid  && DefaultcontractForm.get('weightKG')?.touched}" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                     <div *ngIf="DefaultcontractForm.get('weightKG')?.invalid && DefaultcontractForm.get('weightKG')?.touched" class="text-danger">
+                        <small *ngIf="DefaultcontractForm.get('weightKG')?.hasError('required')">Weight Kgs is required.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Pkgs</label>
+                <div class="col-sm-7">
+                    <input class="form-control required2" type="text" placeholder="Enter Pkgs" formControlName="Pkgs" (focus)="clearOnFocus('Pkgs')" 
+                    (blur)="resetOnBlur('Pkgs')" (input)="getCFTCalculation()"
+                    [ngClass]="{ 'border-danger': DefaultcontractForm.get('Pkgs')?.invalid  && DefaultcontractForm.get('Pkgs')?.touched}" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                    <div *ngIf="DefaultcontractForm.get('Pkgs')?.invalid && DefaultcontractForm.get('Pkgs')?.touched" class="text-danger">
+                        <small *ngIf="DefaultcontractForm.get('Pkgs')?.hasError('required')">Pkgs is required.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Invoice Value</label>
+                <div class="col-sm-7">
+                    <input class="form-control required2" type="text" placeholder="Enter Invoice Value" formControlName="invoiceValue" (focus)="clearOnFocus('invoiceValue')" (blur)="resetOnBlur('invoiceValue')"
+                    [ngClass]="{ 'border-danger': DefaultcontractForm.get('invoiceValue')?.invalid  && DefaultcontractForm.get('invoiceValue')?.touched}" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                    <div *ngIf="DefaultcontractForm.get('invoiceValue')?.invalid && DefaultcontractForm.get('invoiceValue')?.touched" class="text-danger">
+                        <small *ngIf="DefaultcontractForm.get('invoiceValue')?.hasError('required')">Invoice Value is required.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Charge Wt Kgs</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter Charge Weight Kgs" formControlName="chrgwt" readonly>
+                </div>
+            </div>
+        </div>
+          <div class="col-2">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">CFT Weight</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter CFT Weight" formControlName="cftTotal" readonly>
+                </div>
+            </div>
+        </div>
+         <div class="col-2">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Rate/Kg</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter Rate/Kg" formControlName="freightRate" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+      <div class="row pb-3">
+        <div class="col-12 col-sm-4 col-md-3 col-lg-3 col-xxl-2">
+            <div class="row align-items-center">
+                <label class="col-sm-6 col-form-label text-center">Volumetric Applicable:</label>
+                <div class="col-sm-6 text-start">
+                    <div class="btn-group btn-group-sm" role="group">
+                        <input type="radio" class="btn-check" [name]="'VolumetricAppl'" id="VolumetricApplYes" formControlName="VolumetricAppl" [value]="true">
+                        <label class="btn btn-outline-success" for="VolumetricApplYes">Yes</label>
+                        <input type="radio" class="btn-check" [name]="'VolumetricAppl'" id="VolumetricApplNo"  formControlName="VolumetricAppl" [value]="false">
+                        <label class="btn btn-outline-danger" for="VolumetricApplNo">No</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-4 col-md-3 col-lg-3 col-xxl-2">
+            <div class="row align-items-center">
+                <label class="col-sm-6 col-form-label text-center">Appointment Deliver:</label>
+                <div class="col-sm-6 text-start">
+                       <div class="btn-group btn-group-sm" role="group">
+                        <input type="radio" class="btn-check" [name]="'AppointmentDeliver'" id="AppointmentDeliverYes" formControlName="AppointmentDeliver" [value]="true">
+                        <label class="btn btn-outline-success" for="AppointmentDeliverYes">Yes</label>
+                        <input type="radio" class="btn-check" [name]="'AppointmentDeliver'" id="AppointmentDeliverNo" formControlName="AppointmentDeliver" [value]="false">
+                        <label class="btn btn-outline-danger" for="AppointmentDeliverNo">No</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-4 col-md-3 col-lg-3 col-xxl-2">
+            <div class="row align-items-center">
+                <label class="col-sm-5 col-form-label text-center">CSD Delivery:</label>
+                <div class="col-sm-7 text-start">
+                       <div class="btn-group btn-group-sm" role="group">
+                        <input type="radio" class="btn-check" [name]="'CSDDelivery'" id="CSDDeliveryYes" formControlName="CSDDelivery" [value]="true">
+                        <label class="btn btn-outline-success" for="CSDDeliveryYes">Yes</label>
+                        <input type="radio" class="btn-check" [name]="'CSDDelivery'" id="CSDDeliveryNo" formControlName="CSDDelivery" [value]="false">
+                        <label class="btn btn-outline-danger" for="CSDDeliveryNo">No</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-4 col-md-3 col-lg-3 col-xxl-2">
+            <div class="row align-items-center">
+                <label class="col-sm-6 col-form-label text-center">Mall Delivery Applicable:</label>
+                <div class="col-sm-6 text-start">
+                       <div class="btn-group btn-group-sm" role="group">
+                        <input type="radio" class="btn-check" [name]="'MallDelAppl'" id="MallDelApplYes" formControlName="MallDelAppl" [value]="true">
+                        <label class="btn btn-outline-success" for="MallDelApplYes">Yes</label>
+                        <input type="radio" class="btn-check" [name]="'MallDelAppl'" id="MallDelApplNo" formControlName="MallDelAppl" [value]="false">
+                        <label class="btn btn-outline-danger" for="MallDelApplNo">No</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+      <div class="row p-3 fade-in" *ngIf="DefaultcontractForm.get('VolumetricAppl')?.value">
+       <h3 class="pb-4 text-start challan-Details mb-4">Volumetric Applicable</h3>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Length ({{this.contractcharge?.cft_Measure}})</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" placeholder="Enter Length" formControlName="length" (input)="getCFTCalculation()" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Breadth ({{this.contractcharge?.cft_Measure}})</label>
+                <div class="col-sm-7">
+                     <input class="form-control" type="text" placeholder="Enter Breadth" formControlName="breadth" (input)="getCFTCalculation()" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Height ({{this.contractcharge?.cft_Measure}})</label>
+                <div class="col-sm-7">
+                     <input class="form-control" type="text" placeholder="Enter Height" formControlName="height" (input)="getCFTCalculation()" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">CFT Ratio</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" placeholder="Enter CFT Ratio" formControlName="CFTRatio" oninput="this.value = this.value.replace(/[^0-9]/g,'');" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ <h3 class="pb-4 text-start challan-Details mb-4">Charges Details</h3>
+   <div class="row pb-3">
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Fuel Surcharge</label>
+                <div class="col-sm-7">
+                    <input class="form-control required2" type="text" placeholder="Enter Fuel Surcharge" formControlName="fuelSurchrg" readonly
+                    [ngClass]="{ 'border-danger': DefaultcontractForm.get('fuelSurchrg')?.invalid  && DefaultcontractForm.get('fuelSurchrg')?.touched}">
+                    <div *ngIf="DefaultcontractForm.get('fuelSurchrg')?.invalid && DefaultcontractForm.get('fuelSurchrg')?.touched" class="text-danger">
+                        <small *ngIf="DefaultcontractForm.get('fuelSurchrg')?.hasError('required')">Fuel Surcharge is required.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Freight Rs</label>
+                <div class="col-sm-7">
+                     <input class="form-control" type="number" placeholder="Enter Freight Rs" formControlName="freightCharge" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Fuel Surcharge Rs.</label>
+                <div class="col-sm-7">
+                     <input class="form-control" type="number" placeholder="Enter Fuel Surcharge Rs." formControlName="schG20" readonly>
+                </div>
+            </div>
+        </div>
+          <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Insurance Charges</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter Insurance Charges" formControlName="ichG01" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <div class="row pb-3"> 
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">State Charges Detail</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter State Charges Detail" formControlName="stateChargesDetail" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">State Charges</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter State Charges" formControlName="stateCharges" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">ODA Rate/KG</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter ODA Rate/KG" formControlName="ODARate" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">ODA Amount.</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter ODA Amount." formControlName="schG08" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <div class="row pb-3">
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Document Charges</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" placeholder="Enter Document Charges" formControlName="schG04" (input)=" this.calculateSubTotal()">
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Mall Delivery Charges</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter Mall Delivery Charges" formControlName="schG17" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Appointment Charges</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter Appointment Charges" formControlName="uchG08" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">CSD Charges</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter CSD Charges" formControlName="schG10" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row pb-3 d-flex justify-content-end">
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">ODA_Pickup_Charges</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" placeholder="Enter ODA_Pickup_Charges" formControlName="schG07" (input)=" this.calculateSubTotal()">
+                </div>
+            </div>
+        </div>
+        <div class="col-3"></div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">{{'GST@'}}</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter GST@" formControlName="gstRate" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Sub_Total</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter Sub_Total" formControlName="subTotal"
+                        readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <div class="row pb-3 d-flex justify-content-end">
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Disc_Rate</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" placeholder="Enter Disc_Rate" formControlName="Disc_Rate" (input)="calculateDiscount()"> 
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Discount_Amount</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter Discount_Amount" formControlName="Disc_amount" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Disc_Sub_Total</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter Disc_Sub_Total" formControlName="Disc_Sub_Total" readonly>
+                </div>
+            </div>
+        </div>
+      
+        <div class="col-3">
+            <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Grand Total</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="number" placeholder="Enter Grand Total" formControlName="GrandTotal" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+
+    <!-- Submit Button -->
+    <div class="d-flex justify-content-center text-center bg-secondary-subtle p-4 gap-2">
+        <button type="submit" class="btn btn-success" (click)="OnSubmit()"><i class="fas fa-check me-2"></i>Submit</button>
+    </div>
+    </form>
+</div>
