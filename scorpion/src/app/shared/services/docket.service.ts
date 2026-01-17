@@ -73,6 +73,7 @@ export class DocketService {
   public isWeightRecalculated = false;
   public hasConfirmedNoEwayBill = false;
   public maxDiscountLimit: number = 0;
+  public isPORequired:boolean=false;
 
 
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
@@ -512,9 +513,11 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
       if(response.data.poNumber_Active){
         PONumber?.setValidators([Validators.required]);
         PONumber?.setValidators([Validators.required]);
+        this.isPORequired=true;
       }else{
         PONumber?.clearValidators();
         PONumber?.clearValidators();
+         this.isPORequired=false;
       }
       PONumber?.updateValueAndValidity();
       PONumber?.updateValueAndValidity();

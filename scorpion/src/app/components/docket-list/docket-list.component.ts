@@ -35,7 +35,7 @@ export class DocketListComponent implements OnInit {
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      // this.docketService.Location = 'PIM';
+      this.docketService.Location = 'PIM';
       this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
@@ -51,7 +51,7 @@ export class DocketListComponent implements OnInit {
 getCompletionData() {
   const payload = {
     docketNo: this.docketService.loginUserList.DocketNo,
-    // docketNo: '62970132',
+    // docketNo: '62970148',
     isFromBillGeneration: this.docketService.loginUserList.IsFromBillGeneration || '',
     type: this.docketService.loginUserList.Type,
     baseLocationCode: this.docketService.loginUserList.LocationCode,
@@ -81,6 +81,7 @@ getCompletionData() {
           }); 
            this.docketService.Location =  basicDetail.orgncd
           this.docketService.getRuleDetailForDepth();
+            this.docketService.getBlockedCustomerList();
           this.docketService.getRuleDetailForProceed()
           setTimeout(() => {
             // second patch
@@ -92,7 +93,7 @@ getCompletionData() {
               mode: basicDetail.trN_MOD,
               serviceType: basicDetail.service_Class,
               pickup: basicDetail.pickup_Dely,
-              exemptServices: basicDetail.exemptServices,
+              exemptServices: basicDetail.exemptServices || null,
               isreferenceDKT: basicDetail.isReferenceDKT,
               iscsdDelivery: basicDetail.isCSDDelivery,
               isCODDOD: basicDetail.isCODDOD,
@@ -158,6 +159,7 @@ getCompletionData() {
               consigneeMobile: basicDetail.csgemobile,
               consigneeGSTNo: basicDetail.csgeCustGSTNo,
               consignorGSTNo: basicDetail.custGSTNo,
+              policyNo:basicDetail.insupl
             });
             if (this.docketService.completiondata.listInVoice?.length) {
                const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
