@@ -332,7 +332,7 @@
                 <label class="col-sm-5 col-form-label text-end">Length ({{this.contractcharge?.cft_Measure}})</label>
                 <div class="col-sm-7">
                     <input class="form-control" type="text" placeholder="Enter Length" formControlName="length" (input)="getCFTCalculation()"
-                     oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                     oninput="this.value = this.value.replace(/[^0-9]/g,'');" (focus)="clearOnFocus('length')" (blur)="resetOnBlur('length')"
                      [ngClass]="{'border-danger':DefaultcontractForm.get('length')?.hasError('max') &&DefaultcontractForm.get('length')?.touched}">
                     <div class="text-danger" *ngIf="DefaultcontractForm.get('length')?.hasError('max')">
                         Please enter value less than or equal to
@@ -346,7 +346,7 @@
                 <label class="col-sm-5 col-form-label text-end">Breadth ({{this.contractcharge?.cft_Measure}})</label>
                 <div class="col-sm-7">
                      <input class="form-control" type="text" placeholder="Enter Breadth" formControlName="breadth" (input)="getCFTCalculation()"
-                     oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                     oninput="this.value = this.value.replace(/[^0-9]/g,'');" (focus)="clearOnFocus('breadth')" (blur)="resetOnBlur('breadth')"
                      [ngClass]="{'border-danger':DefaultcontractForm.get('breadth')?.hasError('max') &&DefaultcontractForm.get('breadth')?.touched}">
                      <div class="text-danger" *ngIf="DefaultcontractForm.get('breadth')?.hasError('max')">
                         Please enter value less than or equal to
@@ -360,7 +360,7 @@
                 <label class="col-sm-5 col-form-label text-end">Height ({{this.contractcharge?.cft_Measure}})</label>
                 <div class="col-sm-7">
                      <input class="form-control" type="text" placeholder="Enter Height" formControlName="height" (input)="getCFTCalculation()"
-                     oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                     oninput="this.value = this.value.replace(/[^0-9]/g,'');" (focus)="clearOnFocus('height')" (blur)="resetOnBlur('height')"
                      [ngClass]="{'border-danger':DefaultcontractForm.get('height')?.hasError('max') &&DefaultcontractForm.get('height')?.touched}">
                     <div class="text-danger" *ngIf="DefaultcontractForm.get('height')?.hasError('max')">
                         Please enter value less than or equal to
@@ -385,7 +385,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Fuel Surcharge</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="text" placeholder="Enter Fuel Surcharge" formControlName="fuelSurchrg" readonly
+                    <input class="form-control" type="text" placeholder="Enter Fuel Surcharge" formControlName="fuelSurchrg" readonly
                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('fuelSurchrg')?.invalid  && DefaultcontractForm.get('fuelSurchrg')?.touched}">
                     <div *ngIf="DefaultcontractForm.get('fuelSurchrg')?.invalid && DefaultcontractForm.get('fuelSurchrg')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('fuelSurchrg')?.hasError('required')">Fuel Surcharge is required.</small>
@@ -459,7 +459,9 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Document Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Document Charges" formControlName="schG04" (input)=" this.calculateSubTotal()" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                    <input class="form-control" type="text" placeholder="Enter Document Charges" formControlName="schG04" (input)=" this.calculateSubTotal()"
+                    (focus)="clearOnFocus('schG04')" (blur)="resetOnBlur('schG04')"
+                     oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                 </div>
             </div>
         </div>
@@ -494,7 +496,9 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">ODA_Pickup_Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter ODA_Pickup_Charges" formControlName="schG07" (input)=" this.calculateSubTotal()" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                    <input class="form-control" type="text" placeholder="Enter ODA_Pickup_Charges" formControlName="schG07" (input)=" this.calculateSubTotal()" 
+                    (focus)="clearOnFocus('schG07')" (blur)="resetOnBlur('schG07')"
+                    oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                 </div>
             </div>
         </div>
@@ -523,7 +527,9 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Disc_Rate</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Disc_Rate" formControlName="Disc_Rate" (input)="calculateDiscount()" oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                    <input class="form-control" type="text" placeholder="Enter Disc_Rate" formControlName="Disc_Rate" (input)="calculateDiscount()" 
+                    (focus)="clearOnFocus('Disc_Rate')" (blur)="resetOnBlur('Disc_Rate')"
+                    oninput="this.value = this.value.replace(/[^0-9]/g,'');"
                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('Disc_Rate')?.touched &&
                             DefaultcontractForm.get('Disc_Rate')?.errors?.['max']}"> 
                 <div class="text-danger"
@@ -565,7 +571,9 @@
 
     <!-- Submit Button -->
     <div class="d-flex justify-content-center text-center bg-secondary-subtle p-4 gap-2">
-        <button type="submit" class="btn btn-success" (click)="OnSubmit()"><i class="fas fa-check me-2"></i>Submit</button>
+        <button type="submit" class="btn btn-success" (click)="OnSubmit()" *ngIf="!(apiLoading.loading$ | async)"
+ ><i class="fas fa-check me-2"></i>Submit</button>
+ <div *ngIf="(apiLoading.loading$ | async)" class="d-flex align-items-center text-danger fw-semibold">Calculating charges, please wait…</div>
     </div>
     </form>
 </div>
