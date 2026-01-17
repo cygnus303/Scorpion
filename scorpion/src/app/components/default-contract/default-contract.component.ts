@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { DefaultContractService } from 'app/shared/services/default-contract.service';
 import { DocketService } from 'app/shared/services/docket.service';
+import { LoadingService } from 'app/shared/services/loading.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 
@@ -25,7 +26,8 @@ export class DefaultContractComponent {
     public docketService: DocketService,
     public basicDetailService: BasicDetailService,
     public defaultContractService: DefaultContractService,
-    private sweetAlertService:SweetAlertService
+    private sweetAlertService:SweetAlertService,
+    public apiLoading: LoadingService
   ) { }
 
   ngOnInit() {
@@ -399,7 +401,8 @@ calculateDiscount() {
 
   let discountAmount = (Subtotal * discounts) / 100;
   const discountSubTotal = Subtotal - discountAmount;
-  const grandTotal = discountSubTotal - gstRate;
+  const gstAmount  = Math.floor((discountSubTotal * gstRate)/100);
+  const grandTotal=discountSubTotal + gstAmount
 
   this.DefaultcontractForm.patchValue({
     Disc_amount: discountAmount.toFixed(2),
