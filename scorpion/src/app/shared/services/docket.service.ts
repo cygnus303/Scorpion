@@ -82,7 +82,7 @@ export class DocketService {
     const now = new Date();
     this.today = now.toISOString().split('T')[0];
     this.basicDetailForm = new FormGroup({
-      isODAApplicable: new FormControl({ value: false, disabled: true }),
+      isODAApplicable: new FormControl(false),
       isLocalNote: new FormControl(false),
       ewayBillNo: new FormControl(null),
       cNoteNo: new FormControl(null, [Validators.required]),

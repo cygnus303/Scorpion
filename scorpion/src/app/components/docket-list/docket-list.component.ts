@@ -35,7 +35,7 @@ export class DocketListComponent implements OnInit {
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      this.docketService.Location = 'PIM';
+      // this.docketService.Location = 'PIM';
       this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
@@ -471,7 +471,7 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
           "cft": this.docketService.invoiceform.value.cftTotal,
           "isVolumetric":  this.docketService.basicDetailForm.value.isVolumetric,
           "isCODDOD": this.docketService.basicDetailForm.value.isCODDOD === 'Y' ? true : false,
-          "isODA": this.docketService.step2DetailsList.IsODA === 'Y' ? true : false,
+          "isODA": this.docketService.basicDetailForm.value.isODAApplicable,
           "isDACC": this.docketService.basicDetailForm.value.isDACC,
           "isLocalDocket": this.docketService.basicDetailForm.value.IsLocalDocket ? true : false,
           "isStaxExemp": this.docketService.freightForm.value.isStaxExemp?true:false,

@@ -51,3 +51,11 @@ label:has(input[type='radio'][name='ani']) {
   margin-top: 1px;
   font-weight: 900;
 }
+.readonly-checkbox {
+  pointer-events: none;   /* click block */
+}
+
+.readonly-toggle {
+  pointer-events: none;   /* whole yes-no lock */
+  opacity: 0.6;           /* optional readonly look */
+}
