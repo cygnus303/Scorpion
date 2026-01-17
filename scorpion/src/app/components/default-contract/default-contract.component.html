@@ -332,7 +332,8 @@
                 <label class="col-sm-5 col-form-label text-end">Length ({{this.contractcharge?.cft_Measure}})</label>
                 <div class="col-sm-7">
                     <input class="form-control" type="text" placeholder="Enter Length" formControlName="length" (input)="getCFTCalculation()"
-                     oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                     oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                     [ngClass]="{'border-danger':DefaultcontractForm.get('length')?.hasError('max') &&DefaultcontractForm.get('length')?.touched}">
                     <div class="text-danger" *ngIf="DefaultcontractForm.get('length')?.hasError('max')">
                         Please enter value less than or equal to
                         {{ contractcharge?.cft_Measure === 'INCHES' ? '99.99' : '999.99' }}
@@ -345,7 +346,8 @@
                 <label class="col-sm-5 col-form-label text-end">Breadth ({{this.contractcharge?.cft_Measure}})</label>
                 <div class="col-sm-7">
                      <input class="form-control" type="text" placeholder="Enter Breadth" formControlName="breadth" (input)="getCFTCalculation()"
-                     oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                     oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                     [ngClass]="{'border-danger':DefaultcontractForm.get('breadth')?.hasError('max') &&DefaultcontractForm.get('breadth')?.touched}">
                      <div class="text-danger" *ngIf="DefaultcontractForm.get('breadth')?.hasError('max')">
                         Please enter value less than or equal to
                         {{ contractcharge?.cft_Measure === 'INCHES' ? '99.99' : '999.99' }}
@@ -358,7 +360,8 @@
                 <label class="col-sm-5 col-form-label text-end">Height ({{this.contractcharge?.cft_Measure}})</label>
                 <div class="col-sm-7">
                      <input class="form-control" type="text" placeholder="Enter Height" formControlName="height" (input)="getCFTCalculation()"
-                     oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                     oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                     [ngClass]="{'border-danger':DefaultcontractForm.get('height')?.hasError('max') &&DefaultcontractForm.get('height')?.touched}">
                     <div class="text-danger" *ngIf="DefaultcontractForm.get('height')?.hasError('max')">
                         Please enter value less than or equal to
                         {{ contractcharge?.cft_Measure === 'INCHES' ? '99.99' : '999.99' }}
