@@ -471,7 +471,7 @@
                   <label class="control-label col-md-5">PO Number</label>
                   <div class="col-md-7">
                     <input class="form-control " formControlName="policyNo" placeholder="PO Number" type="text" appFocusNext
-                    [ngClass]="{ 'border-danger': docketService.consignorForm.get('policyNo')?.invalid  && docketService.consignorForm.get('policyNo')?.touched}">
+                    [ngClass]="{ 'border-danger': docketService.consignorForm.get('policyNo')?.invalid  && docketService.consignorForm.get('policyNo')?.touched ,'required2': docketService.isPORequired }">
                     <div *ngIf="docketService.consignorForm.get('policyNo')?.invalid  && docketService.consignorForm.get('policyNo')?.touched"
               class="text-danger col-md-7 text-start">
               This field is required.

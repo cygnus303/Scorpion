@@ -35,7 +35,7 @@ export class DocketListComponent implements OnInit {
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      // this.docketService.Location = 'PIM';
+      this.docketService.Location = 'PIM';
       this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
@@ -81,6 +81,7 @@ getCompletionData() {
           }); 
            this.docketService.Location =  basicDetail.orgncd
           this.docketService.getRuleDetailForDepth();
+            this.docketService.getBlockedCustomerList();
           this.docketService.getRuleDetailForProceed()
           setTimeout(() => {
             // second patch
@@ -197,7 +198,6 @@ getCompletionData() {
               });
             }
             this.docketService.onFormFieldChange();
-            this.docketService.getBlockedCustomerList();
               this.docketService.invoiceform.patchValue({
                 totalNoOfPkgs: basicDetail.pkgsno,
                 totalActualWeight: basicDetail.actuwt,
