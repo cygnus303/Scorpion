@@ -51,7 +51,7 @@ export class DocketListComponent implements OnInit {
 getCompletionData() {
   const payload = {
     docketNo: this.docketService.loginUserList.DocketNo,
-    // docketNo: '62970132',
+    // docketNo: '62970148',
     isFromBillGeneration: this.docketService.loginUserList.IsFromBillGeneration || '',
     type: this.docketService.loginUserList.Type,
     baseLocationCode: this.docketService.loginUserList.LocationCode,
@@ -158,6 +158,7 @@ getCompletionData() {
               consigneeMobile: basicDetail.csgemobile,
               consigneeGSTNo: basicDetail.csgeCustGSTNo,
               consignorGSTNo: basicDetail.custGSTNo,
+              policyNo:basicDetail.insupl
             });
             if (this.docketService.completiondata.listInVoice?.length) {
                const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
@@ -196,6 +197,7 @@ getCompletionData() {
               });
             }
             this.docketService.onFormFieldChange();
+            this.docketService.getBlockedCustomerList();
               this.docketService.invoiceform.patchValue({
                 totalNoOfPkgs: basicDetail.pkgsno,
                 totalActualWeight: basicDetail.actuwt,
