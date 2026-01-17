@@ -18,6 +18,8 @@ export class DefaultContractComponent {
   public contractcharge:any;
   public defaultContractList: any;
   public originalSubtotal:any;
+  private lastRequestId = 0;
+  public isSubmitting:boolean=false;
 
   constructor(
     public docketService: DocketService,
@@ -33,7 +35,54 @@ export class DefaultContractComponent {
     this.DefaultcontractForm.get('AppointmentDeliver')?.valueChanges.subscribe(() => {this.setAppointmentCharge()});
     this.DefaultcontractForm.get('CSDDelivery')?.valueChanges.subscribe(() => {this.setCSDDeliveryCharge()});
     this.DefaultcontractForm.get('MallDelAppl')?.valueChanges.subscribe(() => {this.setMallDeliveryCharge()});
+
+    this.DefaultcontractForm.get('VolumetricAppl')?.valueChanges
+    .subscribe((isVolumetric: boolean) => {
+      this.applyLBHLogic(isVolumetric);
+    });
   }
+
+  applyLBHLogic(isVolumetric: boolean) {
+  const measure = this.contractcharge?.cft_Measure; // INCHES | CM | FEET
+  const maxValue =
+    measure === 'INCHES' ? 99.99 :
+    measure === 'CM' ? 999.99 :
+    null;
+
+  ['length', 'breadth', 'height'].forEach(field => {
+    const control = this.DefaultcontractForm.get(field);
+
+    if (isVolumetric) {
+      const validators = [Validators.required];
+
+      if (maxValue !== null) {
+        validators.push(Validators.max(maxValue));
+      }
+
+      control?.setValidators(validators);
+    } else {
+      // 🔥 IMPORTANT PART
+      control?.clearValidators();
+      control?.setValue(0); // <-- SET 0 WHEN FALSE
+    }
+
+    control?.updateValueAndValidity();
+  });
+
+  // Optional: recalc CFT
+  this.getCFTCalculation();
+}
+
+
+  resetLBHValues() {
+  this.DefaultcontractForm.patchValue({
+    length: 0,
+    breadth: 0,
+    height: 0,
+  });
+  this.getCFTCalculation()
+}
+
 
   buildForm(){
     this.DefaultcontractForm=new FormGroup({
@@ -56,13 +105,13 @@ export class DefaultContractComponent {
       tatNormal:new FormControl(''),
       tatoda:new FormControl(''),
       trDays:new FormControl(''),
-      weightKG:new FormControl(25, Validators.required),
-      Pkgs:new FormControl(0, Validators.required),
+      weightKG:new FormControl(25, [Validators.required,Validators.min(1)]),
+      Pkgs:new FormControl(0, [Validators.required, Validators.min(1)]),
       VolumetricAppl:new FormControl(false),
       AppointmentDeliver:new FormControl(false),
       CSDDelivery:new FormControl(false),
       MallDelAppl:new FormControl(false),
-      invoiceValue:new FormControl(0, Validators.required),
+      invoiceValue:new FormControl(0, [Validators.required, Validators.min(1)]),
       chrgwt:new FormControl(0),
       cftTotal:new FormControl(0),
       freightRate:new FormControl(0),
@@ -173,16 +222,19 @@ export class DefaultContractComponent {
     if (!payload.trnMode || !payload.invoiceAmount || !payload.packageCount || !payload.originPincode || !payload.destinationPincode) {
       return;
     }
+      const currentId = ++this.lastRequestId;
     this.defaultContractService.calculateRate(payload).subscribe({
       next: (response: any) => {
         if (response) {
           this.defaultContractList = response;
+          if(currentId === this.lastRequestId){
           this.DefaultcontractForm.patchValue(response);
           this.setAppointmentCharge();
           this.setCSDDeliveryCharge();
           this.setMallDeliveryCharge();
           this.calculateSubTotal();
         }
+      }
       }
     })
   }
@@ -255,6 +307,9 @@ calculateSubTotal() {
                 fuelSurchrgBas:response[0].fuelSurchrgBas
               });
             }
+               this.applyLBHLogic(
+              this.DefaultcontractForm.get('VolumetricAppl')?.value
+            );
           },
           error: (err) => {
             console.error("Error in contractservicecharge:", err);
@@ -262,6 +317,35 @@ calculateSubTotal() {
         });
     }
   }
+
+  setLBHValidators() {
+  const measure = this.contractcharge?.cft_Measure;
+
+  let maxValue = null;
+
+  if (measure === 'INCHES') {
+    maxValue = 99.99;
+  } else if (measure === 'CM') {
+    maxValue = 999.99;
+  }
+
+  const controls = ['length', 'breadth', 'height'];
+
+  controls.forEach(ctrl => {
+    const control = this.DefaultcontractForm.get(ctrl);
+    if (!control) return;
+
+    const validators = [Validators.required, Validators.min(0)];
+
+    if (maxValue !== null) {
+      validators.push(Validators.max(maxValue));
+    }
+
+    control.setValidators(validators);
+    control.updateValueAndValidity({ emitEvent: false });
+  });
+}
+
 
   getCFTCalculation() {
 
@@ -324,6 +408,15 @@ calculateDiscount() {
   });
 }
 
+logInvalidControls() {
+  Object.keys(this.DefaultcontractForm.controls).forEach(controlName => {
+    const control = this.DefaultcontractForm.get(controlName);
+
+    if (control && control.invalid) {
+      console.log(`❌ ${controlName} is invalid`, control.errors);
+    }
+  });
+}
 
   OnSubmit() {
     const data = this.DefaultcontractForm.value
@@ -360,7 +453,7 @@ calculateDiscount() {
       voL_H:  data.height || 0,
       toT_CFT:  data.cftTotal || 0,
       vol_cft:  data.cftTotal || 0,//puchvanu
-      ratE_TYPE: this.defaultContractList.rateType,
+      ratE_TYPE: this.defaultContractList?.rateType,
       frT_RATE: data.freightRate,
       freighT_CALC: data.freightRate,//puchvanu
       freight: data.freightCharge,
@@ -404,17 +497,21 @@ calculateDiscount() {
     console.log(payload)
     if (this.DefaultcontractForm.valid) {
       console.log(this.DefaultcontractForm.value);
+      this.isSubmitting=true;
       this.defaultContractService.DocketEnquirySubmit(payload).subscribe({next: (response: any) => {
           if (response) {
             this.buildForm();
             this.sweetAlertService.success('Successfully Submitted!!!');
+            this.isSubmitting = false;
           }else{
             this.sweetAlertService.error('Error');
+            this.isSubmitting = false;
           }
         }
       })
     } else {
       this.DefaultcontractForm.markAllAsTouched();
+       this.logInvalidControls();
     }
   }
 
