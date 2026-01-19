@@ -461,12 +461,21 @@
                 formControlName="sacDescription" readonly /></div>
           </div>
         </div>
-        <div class="col-md-4 form-column " *ngIf="docketService.basicDetailForm.get('exemptServices')?.value">
-          <div class="row align-items-center"><label class="col-md-5 text-end">Upload GST Declaraion</label>
-            <div class="col-md-7 text-start"><input type="file"  class="form-control py-2 pt-2 uppercase-none" formControlName="GSTDeclaration"
-                (change)="onFileSelect($event)" /></div>
+       <div class="col-md-4 form-column" *ngIf="docketService.basicDetailForm.get('exemptServices')?.value">
+          <div class="row">
+            <label class="col-md-5 text-end">
+              Upload GST Declaration
+            </label>
+            <div class="col-md-7 text-start">
+              <input type="file" class="form-control py-2 pt-2 uppercase-none" formControlName="GSTDeclaration"
+                (change)="onFileSelect($event)" [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('GSTDeclaration')?.invalid  && docketService.basicDetailForm.get('GSTDeclaration')?.touched}"/>
+              <div class="text-danger small mt-1" *ngIf="docketService.basicDetailForm.get('GSTDeclaration')?.touched && docketService.basicDetailForm.get('GSTDeclaration')?.hasError('required')">
+                GST Declaration is required
+              </div>
+            </div>
           </div>
         </div>
+ 
       </div>
       <div class="row" *ngIf="docketService.basicDetailForm.get('serviceType')?.value === '2'">
         <div class="col-md-4 form-column ">
