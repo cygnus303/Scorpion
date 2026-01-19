@@ -20,6 +20,12 @@ export class ConsignorDetailComponent {
  
   ngOnInit() {
     this.docketService.consignorbuild();
+     this.docketService.consignorForm.get('consignorEmail')?.valueChanges.subscribe(value => {
+      if (!value) return;
+      if (value.toLowerCase().endsWith('@scorpiongroup.in')) {
+        this.docketService.consignorForm.get('consignorEmail')?.patchValue(null, { emitEvent: false });
+      }
+    });
     // this.docketService.consignorForm.get('riskType')?.disable({ emitEvent: false });
   }
  

@@ -8,6 +8,7 @@ import { FormArray, Validators } from '@angular/forms';
 import { BasePayload } from 'app/shared/models/general-master.model';
 import { BasicDetailsComponent } from './basic-details/basic-details.component';
 import { ApiLoadingService } from 'app/shared/services/APILoading.service';
+import { EmailRegex } from 'app/shared/constants/common';
 @Component({
   selector: 'app-docket-list',
   standalone: false,
@@ -222,6 +223,22 @@ getCompletionData() {
               }
               freightCharges?.updateValueAndValidity();
               freightRate?.updateValueAndValidity();
+              
+             // consignorEmail Validators
+               const emailControl = this.docketService.consignorForm.get('consignorEmail');
+                  if (basicDetail.paybas === 'P01') {
+                    emailControl?.setValidators([
+                      Validators.required,
+                      Validators.pattern(EmailRegex),
+                      Validators.pattern(/^(?!.*@scorpiongroup\.in$).*/i)
+                    ]);
+                  } else {
+                    emailControl?.setValidators([
+                      Validators.pattern(EmailRegex),
+                      Validators.pattern(/^(?!.*@scorpiongroup\.in$).*/i)
+                    ]);
+                  }
+                  emailControl?.updateValueAndValidity();
 
           if(this.docketService.loginUserList?.Type === '2'){
             if (this.docketService.completiondata?.listCharges) {
