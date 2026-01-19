@@ -90,7 +90,19 @@ export class BasicDetailsComponent {
     this.docketService.validateAppointmentDate();
   });
 
-    this.dateAccess()
+    this.dateAccess();
+    const exemptCtrl = this.docketService.basicDetailForm.get('exemptServices');
+  const gstCtrl = this.docketService.basicDetailForm.get('GSTDeclaration');
+ 
+  exemptCtrl?.valueChanges.subscribe(value => {
+    if (value) {
+      gstCtrl?.setValidators([Validators.required]);
+    } else {
+      gstCtrl?.clearValidators();
+      gstCtrl?.reset(); // optional – file clear karva mate
+    }
+    gstCtrl?.updateValueAndValidity();
+  });
 
   }
 
