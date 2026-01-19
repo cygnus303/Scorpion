@@ -82,7 +82,7 @@ export class DocketService {
     const now = new Date();
     this.today = now.toISOString().split('T')[0];
     this.basicDetailForm = new FormGroup({
-      isODAApplicable: new FormControl(false),
+      isODAApplicable: new FormControl(false), 
       isLocalNote: new FormControl(false),
       ewayBillNo: new FormControl(null),
       cNoteNo: new FormControl(null, [Validators.required]),
@@ -133,9 +133,9 @@ export class DocketService {
       isDACC: new FormControl(false),
       custGSTState: new FormControl(),
       csgeCustGSTState: new FormControl(),
-      ISCounterDelivery: new FormControl({ value: false, disabled: true }),
+      ISCounterDelivery: new FormControl(false),
       applyreferencedktT: new FormControl(false),
-      ISCounterPickUpPRS: new FormControl({ value: false, disabled: true }),
+      ISCounterPickUpPRS: new FormControl(false),
       IsMAllDeliveryN: new FormControl(false),
       IsODA: new FormControl(false),
       BaseCode2: new FormControl(''),
@@ -504,10 +504,13 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
         });
       } else {
         // Proceed with the API call only if the customer is not blocked
-        if (billingParty && destination && billingType) {
-          this.getStep2Details();
+         if (billingParty && destination && billingType) {
+          const userType = this.loginUserList.Type;
+          if (userType !== '1' && userType !== '2') {
+            this.getStep2Details();
+          }
         }
-      }
+        }
 
       const PONumber = this.consignorForm.get('policyNo');
       if(response.data.poNumber_Active){
