@@ -512,18 +512,18 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
         }
         }
 
-      // const PONumber = this.consignorForm.get('policyNo');
-      // if(response.data.poNumber_Active){
-      //   PONumber?.setValidators([Validators.required]);
-      //   PONumber?.setValidators([Validators.required]);
-      //   this.isPORequired=true;
-      // }else{
-      //   PONumber?.clearValidators();
-      //   PONumber?.clearValidators();
-      //    this.isPORequired=false;
-      // }
-      // PONumber?.updateValueAndValidity();
-      // PONumber?.updateValueAndValidity();
+      const PONumber = this.consignorForm.get('policyNo');
+      if(response.data.poNumber_Active){
+        PONumber?.setValidators([Validators.required]);
+        PONumber?.setValidators([Validators.required]);
+        this.isPORequired=true;
+      }else{
+        PONumber?.clearValidators();
+        PONumber?.clearValidators();
+         this.isPORequired=false;
+      }
+      PONumber?.updateValueAndValidity();
+      PONumber?.updateValueAndValidity();
     });
   }
 
