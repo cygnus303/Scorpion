@@ -399,16 +399,16 @@
                 <input type="checkbox" formControlName="ISCounterPickUpPRS">
               </div> -->
               <div class="col-md-1 text-start">
-              <label class="yes-no">
-                <input type="checkbox" formControlName="ISCounterPickUpPRS"/>
+              <label class="yes-no readonly-toggle">
+                <input type="checkbox" formControlName="ISCounterPickUpPRS" class="cursor-pointer readonly-checkbox" readonly/>
                 <span class="slider"></span>
               </label>
             </div>
 
               <label class="col-md-4">Counter Delivery</label>
               <div class="col-md-1 text-start">
-              <label class="yes-no">
-                <input type="checkbox" formControlName="ISCounterDelivery">
+              <label class="yes-no readonly-toggle">
+                <input type="checkbox" formControlName="ISCounterDelivery" class="cursor-pointer readonly-checkbox" readonly>
                 <span class="slider"></span>
               </label>
             </div>
@@ -548,8 +548,8 @@
           <div class="form-group">
             <label for="ODA" class="col-md-5">ODA Applicable</label>
             <div class="disabled col-md-2 text-start">
-              <label class="yes-no readonly-toggle">
-                <input type="checkbox" formControlName="isODAApplicable" class="cursor-pointer readonly-checkbox" readonly />
+              <label class="yes-no readonly-toggle" >
+                <input type="checkbox" formControlName="isODAApplicable" class="cursor-pointer readonly-checkbox" readonly  />
                 <span class="slider"></span>
               </label>
             </div>
