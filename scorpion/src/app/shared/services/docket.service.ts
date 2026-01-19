@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BasePayload, generalMasterResponse, LoginUser, pinCodeResponse } from '../models/general-master.model';
-import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { BasicDetailService } from './basic-detail.service';
 import { EmailRegex, mobileNo } from '../constants/common';
 import { MobileNumberValidator } from '../directives/validators/mobile-number-validator';
@@ -152,7 +152,7 @@ export class DocketService {
       consignorCity: new FormControl(null),
       consignorPincode: new FormControl(null),
       consignorMobile: new FormControl(null, [Validators.pattern(mobileNo)]),
-      consignorEmail: new FormControl(null, [Validators.pattern(EmailRegex)]),
+      consignorEmail: new FormControl(null, [Validators.pattern(EmailRegex),Validators.pattern(/^(?!.*@scorpiongroup\.in$).*/i)]),
 
       // Consignee
       consigneeGSTNo: new FormControl(null),
@@ -510,18 +510,18 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
         }
         }
 
-      const PONumber = this.consignorForm.get('policyNo');
-      if(response.data.poNumber_Active){
-        PONumber?.setValidators([Validators.required]);
-        PONumber?.setValidators([Validators.required]);
-        this.isPORequired=true;
-      }else{
-        PONumber?.clearValidators();
-        PONumber?.clearValidators();
-         this.isPORequired=false;
-      }
-      PONumber?.updateValueAndValidity();
-      PONumber?.updateValueAndValidity();
+      // const PONumber = this.consignorForm.get('policyNo');
+      // if(response.data.poNumber_Active){
+      //   PONumber?.setValidators([Validators.required]);
+      //   PONumber?.setValidators([Validators.required]);
+      //   this.isPORequired=true;
+      // }else{
+      //   PONumber?.clearValidators();
+      //   PONumber?.clearValidators();
+      //    this.isPORequired=false;
+      // }
+      // PONumber?.updateValueAndValidity();
+      // PONumber?.updateValueAndValidity();
     });
   }
 

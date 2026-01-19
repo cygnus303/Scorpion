@@ -161,22 +161,50 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-md-12">
               <div class="form-group">
                 <label class="control-label col-md-5">Email Id </label>
                 <div class="col-md-7">
                   <input class="form-control uppercase-none" maxlength="255" placeholder="Email Id" appFocusNexts formControlName="consignorEmail" type="text"
                      />
-                    </div>
+                  </div>
                   </div>
                   <div class="form-group mb-1">
                     <div class="col-md-5"></div>
                     <div *ngIf="docketService.consignorForm.get('consignorEmail')?.touched && docketService.consignorForm.get('consignorEmail')?.invalid " class="text-danger col-md-7 text-start">
-                    <!-- <small *ngIf="docketService.consignorForm.get('consignorEmail')?.errors?.['required']">Email is required.</small> -->
+                    <small *ngIf="docketService.consignorForm.get('consignorEmail')?.errors?.['required']">Email is required.</small>
                     <small *ngIf="docketService.consignorForm.get('consignorEmail')?.errors?.['pattern']">Email is invalid.</small>
                   </div>
                   </div>
+            </div>
+          </div> -->
+           <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label col-md-5">Email Id </label>
+                <div class="col-md-7">
+                  <input class="form-control uppercase-none required2" maxlength="255" placeholder="Email Id" appFocusNexts
+                    formControlName="consignorEmail" type="text"
+                    [ngClass]="{
+    'border-danger': docketService.consignorForm.get('consignorEmail')?.invalid &&
+                     docketService.consignorForm.get('consignorEmail')?.touched,
+    'required2': docketService.basicDetailForm.get('billingType')?.value === 'P01'
+  }" />
+                </div>
+              </div>
+              <div class="form-group mb-1">
+                <div class="col-md-5"></div>
+                <div
+                  *ngIf="docketService.consignorForm.get('consignorEmail')?.touched && docketService.consignorForm.get('consignorEmail')?.invalid "
+                  class="text-danger col-md-7 text-start">
+                  <small *ngIf="docketService.consignorForm.get('consignorEmail')?.errors?.['required']">Email is
+                    required.</small>
+                <small *ngIf=" docketService.consignorForm.get('consignorEmail')?.errors?.['pattern'] ">
+                  Email is invalid.
+                </small>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -468,14 +496,10 @@
             <div class="row">
               <div class="col-md-11">
                 <div class="form-group">
-                  <label class="control-label col-md-5">PO Number</label>
+                  <label class="control-label col-md-5">Policy No</label>
                   <div class="col-md-7">
-                    <input class="form-control " formControlName="policyNo" placeholder="PO Number" type="text" appFocusNext
-                    [ngClass]="{ 'border-danger': docketService.consignorForm.get('policyNo')?.invalid  && docketService.consignorForm.get('policyNo')?.touched ,'required2': docketService.isPORequired }">
-                    <div *ngIf="docketService.consignorForm.get('policyNo')?.invalid  && docketService.consignorForm.get('policyNo')?.touched"
-              class="text-danger col-md-7 text-start">
-              This field is required.
-            </div>
+                    <input class="form-control " formControlName="policyNo" placeholder="Policy No" type="text" appFocusNext
+                   >
                   </div>
                 </div>
               </div>

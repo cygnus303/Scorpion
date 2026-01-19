@@ -5,7 +5,7 @@ import { DestinationsList, generalMasterResponse, billingPartyResponse, VehicleN
 import { cityResponse } from '../../../shared/models/general-master.model';
 import { GeneralMasterService } from '../../../shared/services/general-master.service';
 import { Validators } from '@angular/forms';
-import { mobileNo } from '../../../shared/constants/common';
+import { EmailRegex, mobileNo } from '../../../shared/constants/common';
 import { CommonDateService } from '../../../shared/services/common-date.service';
 
 @Component({
@@ -515,6 +515,22 @@ onFileSelect(event: Event) {
     freightCharges?.updateValueAndValidity();
     freightRate?.updateValueAndValidity();
     
+// consignorEmail Validators
+   const emailControl = this.docketService.consignorForm.get('consignorEmail');
+    if (event?.codeId === 'P01') {
+      emailControl?.setValidators([
+        Validators.required,
+        Validators.pattern(EmailRegex),
+        Validators.pattern(/^(?!.*@scorpiongroup\.in$).*/i)
+      ]);
+    } else {
+      emailControl?.setValidators([
+        Validators.pattern(EmailRegex),
+        Validators.pattern(/^(?!.*@scorpiongroup\.in$).*/i)
+      ]);
+    }
+    emailControl?.updateValueAndValidity();
+
     this.docketService.basicDetailForm.patchValue({
       billingParty: null,
       billingName: null
