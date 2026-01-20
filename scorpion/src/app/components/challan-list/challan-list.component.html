@@ -1106,96 +1106,98 @@
             <i class="fas fa-list me-2"></i>
             CNote Available For {{typeName}}
         </div>
-      <div class="cnote-entry-container p-3 pt-0"  style="max-height: 420px; overflow-y: auto;">
-          <table class="table table-bordered table-striped table-condensed flip-content mb-0">
-            <thead class="sticky-top bg-light">
-                <tr>
-                    <th class="p-3 fw-bolder"><input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox"  style="cursor: pointer;"(change)="toggleSelectAll($event)"></th>
-                    <th class="p-3 fw-bolder">CNote No. <div *ngIf="this.docketService.loginUserList.Type === '3'">Origin</div></th>
-                    <th class="p-3 fw-bolder">Pay Basis</th>
-                    <th class="p-3 fw-bolder">Booking Date EDD</th>
-                    <th class="p-3 fw-bolder">Arrival Date <div *ngIf="this.docketService.loginUserList.Type === '3'">Stock Update Date</div></th>
-                    <th class="p-3 fw-bolder">{{this.docketService.loginUserList.Type === '3' ? 'Actu. / Pend. /Arr. Pkgs.':'Pkgs.[L/B]'}}</th>
-                    <th class="p-3 fw-bolder">{{this.docketService.loginUserList.Type === '3' ? 'Act./Arr.Wt.' :'Wt.[L/B]'}}</th>
-                    <th class="p-3 fw-bolder">Chrg. Wt.</th>
-                    <th class="p-3 fw-bolder">Rate Type</th>
-                    <th class="p-3 fw-bolder">E-Way Bill No.</th>
-                    <th class="p-3 fw-bolder">Reason for Delay</th>
-                    <th class="p-3 fw-bolder">TAT in Hrs.</th>
-                    <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '3'">Billing Party Name</th>
-                    <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '3'">Consignor Name</th>
-                    <th class="p-3 fw-bolder">Contract Amount</th>
-                    <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type !== '3'">IsPRSPKGScan.</th>
-                </tr>
-            </thead>
-        <tbody formArrayName="avalabledocketinPRS">
-             <tr *ngIf="isLoading">
-                    <td colspan="16" class="text-center py-4">
-                        <div class="spinner-border" role="status" style="width:1.8rem; height:1.8rem;">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <span class="ms-2">Loading dockets...</span>
-                    </td>
-                </tr>
-                <ng-container *ngIf="!isLoading">
-            <tr *ngFor="let item of challanService.avalabledocket.controls; let i = index" [formGroupName]="i"
-                class="align-middle">
-                <td>
-                    <ng-container *ngIf="!item.value.Message; else showMessage">
-                        <input type="checkbox" formControlName="isSelected" class="form-check-input checkbox-lg custom-big-checkbox"  style="cursor: pointer;" (change)="onDocketSelectionChange(item)">
-                    </ng-container>
-                    <ng-template #showMessage>
-                        <span class="text-danger fw-semibold">{{ item.value.Message }}</span>
-                    </ng-template>
-                </td>
-        
-                <td>{{ item.value.DOCKNO + '.' }}<br>{{ docketService.loginUserList.Type === '3' ? item.value.ORGNCD : '' }}
-                </td>
-                <td>{{ item.value.PAYBAS_Str }}</td>
-                <td>{{ item.value.Bkg_Date }} <br> {{ item.value.Commited_Dely_Date }}</td>
-                <td>{{ item.value.Arrival_Date }} <div *ngIf="docketService.loginUserList.Type === '3'">{{
-                        item.value.Stock_Update_DT }}</div>
-                </td>
-        
-                <td>
-                    <input type="text" class="form-control text-end" formControlName="ArrPkgQty" readonly
-                        *ngIf="docketService.loginUserList.Type !== '3'">
-                    <br>{{ docketService.loginUserList.Type === '3' ? item.value.ArrPkgQty : '' }} / {{ item.value.ArrPkgQty }}
-                    / {{ item.value.PKGSNO }}
-                </td>
-        
-                <td>
-                    <input type="text" class="form-control text-end" formControlName="ArrWeightQty" readonly
-                        *ngIf="docketService.loginUserList.Type !== '3'">
-                    <br> / {{ item.value.ArrWeightQty }} / {{ item.value.ACTUWT }}
-                </td>
-        
-                <td>{{ item.value.CHRGWT }}</td>
-                <td>
-                    <ng-select class="required2" [items]="challanService.rateTypeData" formControlName="rateType"
-                        bindLabel="codeDesc" bindValue="codeId" placeholder="Type" [class.disabled-select]="this.challanService.filterList?.chrgType ? true : false">
-                    </ng-select>
-                    <input type="text" class="form-control required2" formControlName="NewRate"  [value]="item.value.NewRate" [readOnly]="this.challanService.filterList.loadingBycodeFor === 'XX5'">
-                    <div class="text-danger small mt-1" *ngIf="challanService.avalabledocket.at(i).get('rateError')?.value">
-                        {{ challanService.avalabledocket.at(i).get('rateError')?.value }}
-                    </div>
-                </td>
-        
-                <td>{{ item.value.EWayBillNo }}</td>
-                <td>{{ item.value.subreasoncode }}</td>
-                <td>{{ item.value.tatInHrs }}</td>
-                <td *ngIf="docketService.loginUserList.Type === '3'">{{ item.value.party_name }}</td>
-                <td *ngIf="docketService.loginUserList.Type === '3'">{{ item.value.Consignor_Name }}</td>
-                <td>{{ item.value.ContractAmount }}</td>
-                <td *ngIf="docketService.loginUserList.Type !== '3'">{{ item.value.BCSerialNo }}</td>
-            </tr>
-            <tr *ngIf="challanService.avalabledocket.length === 0">
-                        <td colspan="16" class="text-center">No CNote available</td>
-                    </tr>
-          </ng-container>
-        </tbody>
-
-        </table>
+      <div class="cnote-entry-container p-3 pt-0"  style="max-height: 550px; overflow-y: auto; overflow-x: auto;">
+        <div class="table-responsive-horizonta">
+            <table class="table table-bordered table-striped table-condensed flip-content mb-0">
+              <thead class="sticky-top bg-light">
+                  <tr>
+                      <th class="p-3 fw-bolder"><input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox"  style="cursor: pointer;"(change)="toggleSelectAll($event)"></th>
+                      <th class="p-3 fw-bolder">CNote No. <div *ngIf="this.docketService.loginUserList.Type === '3'">Origin</div></th>
+                      <th class="p-3 fw-bolder">Pay Basis</th>
+                      <th class="p-3 fw-bolder">Booking Date EDD</th>
+                      <th class="p-3 fw-bolder">Arrival Date <div *ngIf="this.docketService.loginUserList.Type === '3'">Stock Update Date</div></th>
+                      <th class="p-3 fw-bolder">{{this.docketService.loginUserList.Type === '3' ? 'Actu. / Pend. /Arr. Pkgs.':'Pkgs.[L/B]'}}</th>
+                      <th class="p-3 fw-bolder">{{this.docketService.loginUserList.Type === '3' ? 'Act./Arr.Wt.' :'Wt.[L/B]'}}</th>
+                      <th class="p-3 fw-bolder">Chrg. Wt.</th>
+                      <th class="p-3 fw-bolder">Rate Type</th>
+                      <th class="p-3 fw-bolder">E-Way Bill No.</th>
+                      <th class="p-3 fw-bolder">Reason for Delay</th>
+                      <th class="p-3 fw-bolder">TAT in Hrs.</th>
+                      <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '3'">Billing Party Name</th>
+                      <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '3'">Consignor Name</th>
+                      <th class="p-3 fw-bolder">Contract Amount</th>
+                      <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type !== '3'">IsPRSPKGScan.</th>
+                  </tr>
+              </thead>
+          <tbody formArrayName="avalabledocketinPRS">
+               <tr *ngIf="isLoading">
+                      <td colspan="16" class="text-center py-4">
+                          <div class="spinner-border" role="status" style="width:1.8rem; height:1.8rem;">
+                              <span class="visually-hidden">Loading...</span>
+                          </div>
+                          <span class="ms-2">Loading dockets...</span>
+                      </td>
+                  </tr>
+                  <ng-container *ngIf="!isLoading">
+              <tr *ngFor="let item of challanService.avalabledocket.controls; let i = index" [formGroupName]="i"
+                  class="align-middle">
+                  <td>
+                      <ng-container *ngIf="!item.value.Message; else showMessage">
+                          <input type="checkbox" formControlName="isSelected" class="form-check-input checkbox-lg custom-big-checkbox"  style="cursor: pointer;" (change)="onDocketSelectionChange(item)">
+                      </ng-container>
+                      <ng-template #showMessage>
+                          <span class="text-danger fw-semibold">{{ item.value.Message }}</span>
+                      </ng-template>
+                  </td>
+          
+                  <td>{{ item.value.DOCKNO + '.' }}<br>{{ docketService.loginUserList.Type === '3' ? item.value.ORGNCD : '' }}
+                  </td>
+                  <td>{{ item.value.PAYBAS_Str }}</td>
+                  <td>{{ item.value.Bkg_Date }} <br> {{ item.value.Commited_Dely_Date }}</td>
+                  <td>{{ item.value.Arrival_Date }} <div *ngIf="docketService.loginUserList.Type === '3'">{{
+                          item.value.Stock_Update_DT }}</div>
+                  </td>
+          
+                  <td>
+                      <input type="text" class="form-control text-end" formControlName="ArrPkgQty" readonly
+                          *ngIf="docketService.loginUserList.Type !== '3'">
+                      <br>{{ docketService.loginUserList.Type === '3' ? item.value.ArrPkgQty : '' }} / {{ item.value.ArrPkgQty }}
+                      / {{ item.value.PKGSNO }}
+                  </td>
+          
+                  <td>
+                      <input type="text" class="form-control text-end" formControlName="ArrWeightQty" readonly
+                          *ngIf="docketService.loginUserList.Type !== '3'">
+                      <br> / {{ item.value.ArrWeightQty }} / {{ item.value.ACTUWT }}
+                  </td>
+          
+                  <td>{{ item.value.CHRGWT }}</td>
+                  <td>
+                      <ng-select class="required2" [items]="challanService.rateTypeData" formControlName="rateType"
+                          bindLabel="codeDesc" bindValue="codeId" placeholder="Type" [class.disabled-select]="this.challanService.filterList?.chrgType || this.challanService.filterList?.loadingBy === 'XX9' ? true : false">
+                      </ng-select>
+                      <input type="text" class="form-control required2" formControlName="NewRate"  [value]="item.value.NewRate" [readOnly]="this.challanService?.filterList?.loadingBycodeFor === 'XX5' || this.challanService?.filterList?.loadingBy === 'XX9'">
+                      <div class="text-danger small mt-1" *ngIf="challanService.avalabledocket.at(i).get('rateError')?.value">
+                          {{ challanService.avalabledocket.at(i).get('rateError')?.value }}
+                      </div>
+                  </td>
+          
+                  <td>{{ item.value.EWayBillNo }}</td>
+                  <td>{{ item.value.subreasoncode }}</td>
+                  <td>{{ item.value.tatInHrs }}</td>
+                  <td *ngIf="docketService.loginUserList.Type === '3'">{{ item.value.party_name }}</td>
+                  <td *ngIf="docketService.loginUserList.Type === '3'">{{ item.value.Consignor_Name }}</td>
+                  <td>{{ item.value.ContractAmount }}</td>
+                  <td *ngIf="docketService.loginUserList.Type !== '3'">{{ item.value.BCSerialNo }}</td>
+              </tr>
+              <tr *ngIf="challanService.avalabledocket.length === 0">
+                          <td colspan="16" class="text-center">No CNote available</td>
+                      </tr>
+            </ng-container>
+          </tbody>
+  
+          </table>
+        </div>
       </div>
             <div class="row pb-3 pt-4">
                 <div class="col-4">

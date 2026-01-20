@@ -38,3 +38,39 @@
 .custom-big-checkbox:checked {
   background-color: #275a27 !important;  /* green */
 }
+
+.table-responsive-horizontal {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table-responsive-horizontal table {
+  min-width: 1600px; // adjust based on columns
+  white-space: nowrap;
+}
+
+  .table th,
+  .table td {
+    white-space: nowrap;
+    min-width: 140px;
+  }
+
+
+/* Horizontal scrollbar */
+.horizontal-scroll-wrapper::-webkit-scrollbar {
+  height: 4px;          // ⭐ nani height
+}
+
+.horizontal-scroll-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.horizontal-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: #9aa0a6;  // soft grey
+  border-radius: 10px;
+}
+
+.horizontal-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #6c757d;  // hover dark
+}
