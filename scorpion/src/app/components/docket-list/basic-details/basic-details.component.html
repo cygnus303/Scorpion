@@ -142,7 +142,15 @@
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Billing Name</label>
             <div class="col-md-7"><input type="text" class="form-control required2" placeholder="Billing Name"
-                formControlName="billingName" readonly>
+                formControlName="billingName" required readonly
+                [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('billingName')?.invalid  && docketService.basicDetailForm.get('billingName')?.touched}">
+            </div>
+          </div>
+          <div class="form-group mb-1">
+            <div class="col-md-5"></div>
+            <div *ngIf="docketService.basicDetailForm.get('billingName')?.invalid && docketService.basicDetailForm.get('billingName')?.touched"
+              class="text-danger col-md-7 text-start">
+              This field is required.
             </div>
           </div>
         </div>
@@ -461,21 +469,49 @@
                 formControlName="sacDescription" readonly /></div>
           </div>
         </div>
-       <div class="col-md-4 form-column" *ngIf="docketService.basicDetailForm.get('exemptServices')?.value">
-          <div class="row">
-            <label class="col-md-5 text-end">
-              Upload GST Declaration
-            </label>
-            <div class="col-md-7 text-start">
-              <input type="file" class="form-control py-2 pt-2 uppercase-none" formControlName="GSTDeclaration"
-                (change)="onFileSelect($event)" [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('GSTDeclaration')?.invalid  && docketService.basicDetailForm.get('GSTDeclaration')?.touched}"/>
-              <div class="text-danger small mt-1" *ngIf="docketService.basicDetailForm.get('GSTDeclaration')?.touched && docketService.basicDetailForm.get('GSTDeclaration')?.hasError('required')">
-                GST Declaration is required
-              </div>
-            </div>
+<div class="col-md-4 form-column" *ngIf="docketService.basicDetailForm.get('exemptServices')?.value">
+  <div class="row align-items-center">
+    <label class="col-md-5 text-end">Upload GST Declaration</label>
+    <div class="col-md-7 text-start">
+
+      <!-- FILE INPUT: Add / Change mode -->
+      <ng-container *ngIf="!docketService.isExistingFile || docketService.isChangingFile">
+        <input type="file"
+               class="form-control py-2 pt-2 uppercase-none"
+               formControlName="GSTDeclaration"
+               (change)="onFileSelect($event)"
+               [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('GSTDeclaration')?.invalid &&
+                            docketService.basicDetailForm.get('GSTDeclaration')?.touched }"/>
+        <div class="text-danger small mt-1"
+             *ngIf="docketService.basicDetailForm.get('GSTDeclaration')?.touched &&
+                    docketService.basicDetailForm.get('GSTDeclaration')?.hasError('required')">
+          GST Declaration is required
+        </div>
+      </ng-container>
+
+      <!-- THUMBNAIL + VIEW/CHANGE BUTTONS (existing file only) -->
+      <ng-container *ngIf="docketService.isExistingFile && !docketService.isChangingFile">
+        <div class="d-flex align-items-center gap-2">
+          <!-- Thumbnail Image -->
+          <img [src]="docketService.basicDetailForm.get('GSTDeclaration')?.value"
+               alt="GST Declaration"
+               style="width: 50px; height: 50px; object-fit: cover; border: 1px solid #ccc; border-radius: 4px;" />
+
+          <!-- Buttons stacked vertically -->
+          <div class="d-flex flex-column gap-1">
+            <button type="button" class="btn btn-sm btn-outline-primary" (click)="viewFile()">
+              View
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="changeFile()">
+              Change
+            </button>
           </div>
         </div>
- 
+      </ng-container>
+    </div>
+  </div>
+</div>
+
       </div>
       <div class="row" *ngIf="docketService.basicDetailForm.get('serviceType')?.value === '2'">
         <div class="col-md-4 form-column ">

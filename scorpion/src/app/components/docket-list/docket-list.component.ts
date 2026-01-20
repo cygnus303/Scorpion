@@ -121,6 +121,15 @@ getCompletionData() {
               vehicleno: basicDetail.vehicleNo,
               // isDACC: basicDetail.isDACC
             });
+          // const baseUrl = 'https://sepl.cygnux.in/UploadedDocumentsBAK/GSTDeclaration/Upload/';
+          const baseUrl = `${this.env.liveUrl}UploadedDocumentsBAK/GSTDeclaration/Upload/`;
+            // If editing and file exists
+            if (basicDetail?.gstDeclarationDoc) {
+              this.docketService.basicDetailForm.get('GSTDeclaration')?.setValue(baseUrl + basicDetail.gstDeclarationDoc);
+              this.docketService.isChangingFile = false; // initially not changing
+               this.docketService.isExistingFile = true; //
+               console.log(this.docketService.basicDetailForm.get('GSTDeclaration')?.value);
+            }
           this.getODAData(basicDetail.csgePinCode);
 
            const type = this.docketService.loginUserList.Type;
@@ -656,10 +665,11 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
 
       // GSTDeclaration file
       const gstFile = this.docketService?.selectedFile;
+      const existingGstDoc = this.docketService?.completiondata?.wmd?.gstDeclarationDoc || '';
       if (gstFile instanceof File) {
         formData.append("GSTDeclaration", gstFile, gstFile.name);
       } else {
-        formData.append("GSTDeclaration", "");
+        formData.append("GSTDeclaration", existingGstDoc);
       }
       formData.append("BaseFinYear", this.docketService.loginUserList.FinYear);
       formData.append("BaseCompanyCode", this.docketService.loginUserList.Companycode);
