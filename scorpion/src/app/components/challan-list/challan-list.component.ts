@@ -592,7 +592,7 @@ vendorCodeName(){
     }
     const params = {
       dlnumber: licenseNo.toUpperCase(),
-      dob: this.challanService.challanForm.value.d1_DOB ? this.challanService.challanForm.value.d1_DOB.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '',
+      dob: dob ? `${dob.getFullYear()}-${String(dob.getMonth() + 1).padStart(2, '0')}-${String(dob.getDate()).padStart(2, '0')}` : '',
       baseUserName: this.docketService.loginUserList.BaseUserName
     };
     this.deliveryAgentService.getLicenceDetail(params).subscribe({

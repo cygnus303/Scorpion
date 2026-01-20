@@ -300,7 +300,7 @@ SearchfilterForm(){
     BookedByType:new FormControl(''),
     BookedBy:new FormControl(),
     loadingByName:new FormControl(''),
- 
+    type: new FormControl(''),
     dateRange:new FormControl([fromDate, today]),
   })
 }
