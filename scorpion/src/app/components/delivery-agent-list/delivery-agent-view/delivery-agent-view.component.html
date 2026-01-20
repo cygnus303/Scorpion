@@ -26,15 +26,16 @@
         </tr>
         <tr>
           <td><strong>RC Book No:</strong> {{ deliveryAgentViewList.rcBookNo }}</td>
-          <td><strong>Permit validity Date:</strong> {{ deliveryAgentViewList.permitValidityDate | date:'dd/MM/yyy' }}</td>
+          <!-- <td><strong>Permit validity Date:</strong> {{ deliveryAgentViewList.permitValidityDate | date:'dd/MM/yyy' }}</td> -->
+          <td><strong>Insurance Validity Date:</strong> {{ deliveryAgentViewList.insuranceValidityDate  | date:'dd/MM/yyy'}}</td>
         </tr>
         <tr>
-          <td><strong>Insurance Validity Date:</strong> {{ deliveryAgentViewList.insuranceValidityDate  | date:'dd/MM/yyy'}}</td>
           <td><strong>Fitness Validity Date:</strong> {{ deliveryAgentViewList.fitnessValidityDate | date:'dd/MM/yyy' }}</td>
+          <td><strong>Date of Birth:</strong> {{ deliveryAgentViewList.dateOfBirth | date:'dd/MM/yyy' }}</td>
         </tr>
         <tr>
           <td><strong>License No:</strong> {{ deliveryAgentViewList.licenseNo }}</td>
-          <td><strong>Date of Birth:</strong> {{ deliveryAgentViewList.dateOfBirth | date:'dd/MM/yyy' }}</td>
+          <td><strong>Driver name:</strong> {{ deliveryAgentViewList.driverName }}</td>
         </tr>
         <tr>
           <td><strong>Issue By RTO:</strong> {{ deliveryAgentViewList.issueByRTO }}</td>

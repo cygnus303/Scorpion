@@ -133,7 +133,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6">
+        <!-- <div class="col-6">
           <div class="row">
             <label class="col-sm-5 col-form-label text-end">Permit validity Date</label>
             <div class="col-sm-7">
@@ -150,17 +150,7 @@
               </small>
             </div>
           </div>
-        </div>
-      </div>
-      <div  class="row pb-3">
-      <div class="col-6">
-          <div class="row">
-            <label class="col-sm-5 col-form-label text-end">Chassis No</label>
-            <div class="col-sm-7">
-              <input class="form-control" type="text" placeholder="Chassis No" formControlName="chassisNo">
-            </div>
-          </div>
-        </div>
+        </div> -->
         <div class="col-6">
           <div class="row">
             <label class="col-sm-5 col-form-label text-end">Fitness Validity Date</label>
@@ -180,7 +170,15 @@
           </div>
         </div>
       </div>
-      <div class="row pb-3">
+      <div  class="row pb-3">
+      <div class="col-6">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Chassis No</label>
+            <div class="col-sm-7">
+              <input class="form-control" type="text" placeholder="Chassis No" formControlName="chassisNo">
+            </div>
+          </div>
+        </div>
         <div class="col-6">
           <div class="row">
             <label class="col-sm-5 col-form-label text-end">Date of Birth</label>
@@ -198,19 +196,20 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="row pb-3">
           <div class="col-6">
-          <div class="row">
-            <label class="col-sm-5 col-form-label text-end">License No</label>
-            <div class="col-sm-7">
-               <div class="d-flex">
-                   <input class="form-control required2" placeholder="License No" type="text" formControlName="licenseNo" required 
-                    (input)="onChangeLicenceNumber($event)" [readOnly]="deliveryAgentCode" 
-                   [ngClass]="{ 'border-danger': dAForm.get('licenseNo')?.invalid  && dAForm.get('licenseNo')?.touched }">
-                  <button class="btn background-color text-white ms-2" type="button" *ngIf="deliveryAgentCode && showInvokeButton ? true:false" 
-                  (click)="onChangeLicenceNumber()"
-                  [disabled]="isLicenceLoading"
-                  >
-                   <ng-container *ngIf="!isLicenceLoading; else loading">
+            <div class="row">
+              <label class="col-sm-5 col-form-label text-end">License No</label>
+              <div class="col-sm-7">
+                <div class="d-flex">
+                  <input class="form-control required2" placeholder="License No" type="text" formControlName="licenseNo" required
+                    (input)="onChangeLicenceNumber($event)" [readOnly]="deliveryAgentCode"
+                    [ngClass]="{ 'border-danger': dAForm.get('licenseNo')?.invalid  && dAForm.get('licenseNo')?.touched }">
+                  <button class="btn background-color text-white ms-2" type="button"
+                    *ngIf="deliveryAgentCode && showInvokeButton ? true:false" (click)="onChangeLicenceNumber()"
+                    [disabled]="isLicenceLoading">
+                    <ng-container *ngIf="!isLicenceLoading; else loading">
                       Invoke
                     </ng-container>
                     <ng-template #loading>
@@ -219,13 +218,23 @@
                   </button>
                 </div>
                 <div class="text-danger" *ngIf="dAForm.get('licenseNo')?.touched">
-                    <div *ngIf="dAForm.get('licenseNo')?.hasError('required')"> This field is required.</div>
-                   <div *ngIf="dAForm.get('licenseNo')?.hasError('pattern')">Please enter a valid License Number. </div>
+                  <div *ngIf="dAForm.get('licenseNo')?.hasError('required')"> This field is required.</div>
+                  <div *ngIf="dAForm.get('licenseNo')?.hasError('pattern')">Please enter a valid License Number. </div>
                 </div>
                 <!-- <div class="text-danger" *ngIf="dAForm.get('licenseNo')?.invalid && dAForm.get('licenseNo')?.touched "> This field is required.</div> -->
+              </div>
             </div>
           </div>
-        </div>
+            <div class="col-6">
+              <div class="row">
+                <label class="col-sm-5 col-form-label text-end">Driver name</label>
+                <div class="col-sm-7">
+                  <div class="input-group">
+                    <input type="text" class="form-control uppercase-none" formControlName="driverName" placeholder="Driver name">
+                  </div>
+                </div>
+              </div>
+            </div>
       </div>
       <div class="row pb-3">
         <div class="col-6">

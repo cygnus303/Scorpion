@@ -69,6 +69,7 @@ export interface DeliveryAgentByCodeResponse {
     updatedDate:string;
     entryName:string;
     updateName:string;
+    driverName:string;
 }
 export interface VendorsListResponse {
  vendorCode:string;
