@@ -7,7 +7,7 @@
 
  <div class="form-grid p-4">
 <form [formGroup]="challanService.challanForm">
-        <div *ngIf="docketService.loginUserList && challanService.filterList && docketService.loginUserList.Type === '3' && challanService.filterList.DRSType === 'Y'">
+        <div *ngIf="docketService.loginUserList && challanService.filterList && (docketService.loginUserList.Type === '3' || docketService.loginUserList.Type === '2')  && challanService.filterList.DRSType === 'Y'">
             <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Delivery Agent Details</h3>
             <div class="row pb-3">
                 <div class="col-4">
