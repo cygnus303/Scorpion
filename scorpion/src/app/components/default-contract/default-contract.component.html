@@ -208,9 +208,7 @@
                      [ngClass]="{ 'border-danger': DefaultcontractForm.get('weightKG')?.invalid  && DefaultcontractForm.get('weightKG')?.touched}" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                      <div *ngIf="DefaultcontractForm.get('weightKG')?.invalid && DefaultcontractForm.get('weightKG')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('weightKG')?.hasError('required')">Weight Kgs is required.</small>
-                        <small *ngIf="DefaultcontractForm.get('weightKG')?.hasError('min')">
-    WeightKg must be greater than 0.
-  </small>
+                        <small *ngIf="DefaultcontractForm.get('weightKG')?.hasError('min')">WeightKg must be greater than 0.</small>
                     </div>
                 </div>
             </div>
@@ -224,9 +222,7 @@
                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('Pkgs')?.invalid  && DefaultcontractForm.get('Pkgs')?.touched}" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                     <div *ngIf="DefaultcontractForm.get('Pkgs')?.invalid && DefaultcontractForm.get('Pkgs')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('Pkgs')?.hasError('required')">Pkgs is required.</small>
-                         <small *ngIf="DefaultcontractForm.get('Pkgs')?.hasError('min')">
-    Pkgs must be greater than 0.
-  </small>
+                         <small *ngIf="DefaultcontractForm.get('Pkgs')?.hasError('min')">Pkgs must be greater than 0.</small>
                     </div>
                 </div>
             </div>
@@ -239,9 +235,7 @@
                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('invoiceValue')?.invalid  && DefaultcontractForm.get('invoiceValue')?.touched}" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                     <div *ngIf="DefaultcontractForm.get('invoiceValue')?.invalid && DefaultcontractForm.get('invoiceValue')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('invoiceValue')?.hasError('required')">Invoice Value is required.</small>
-                         <small *ngIf="DefaultcontractForm.get('invoiceValue')?.hasError('min')">
-    Invoice Value must be greater than 0.
-  </small>
+                         <small *ngIf="DefaultcontractForm.get('invoiceValue')?.hasError('min')">Invoice Value must be greater than 0.</small>
                     </div>
                 </div>
             </div>
@@ -411,9 +405,9 @@
         </div>
           <div class="col-3">
             <div class="row">
-                <label class="col-sm-5 col-form-label text-end">Insurance Charges</label>
+                <label class="col-sm-5 col-form-label text-end">FOV Charge</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="number" placeholder="Enter Insurance Charges" formControlName="ichG01" readonly>
+                    <input class="form-control" type="number" placeholder="Enter FOV Charge" formControlName="ichG01" readonly>
                 </div>
             </div>
         </div>
@@ -535,7 +529,7 @@
                 <div class="text-danger"
                     *ngIf="DefaultcontractForm.get('Disc_Rate')?.touched &&
                             DefaultcontractForm.get('Disc_Rate')?.errors?.['max']">
-                Please enter less than or equal to 20
+                Please enter a discount rate up to 20% only.
                 </div>
 
                 </div>

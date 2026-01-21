@@ -200,7 +200,7 @@ export class DefaultContractComponent {
               destinationCity: this.getPincodeMaster.location,
               destinationZone:this.getPincodeMaster.regionName,
               toState:  this.getPincodeMaster.stnm,
-              deliveryBranchCode: this.getPincodeMaster.locCode,
+              deliveryBranchCode: this.getPincodeMaster.handling_Location,
               ODACategory: this.getPincodeMaster.category,
               destArea: this.getPincodeMaster.area
             })
@@ -231,6 +231,14 @@ export class DefaultContractComponent {
           this.defaultContractList = response;
           if(currentId === this.lastRequestId){
           this.DefaultcontractForm.patchValue(response);
+       
+          let Subtotal = this.originalSubtotal || 0;
+          let gstRate = Number(this.defaultContractList.gstRate || 0);
+
+          let gstAmount = (Subtotal * gstRate) / 100;
+          this.DefaultcontractForm.patchValue({
+            gstRate:gstAmount
+          })
           this.setAppointmentCharge();
           this.setCSDDeliveryCharge();
           this.setMallDeliveryCharge();
@@ -401,7 +409,7 @@ calculateDiscount() {
 
   let discountAmount = (Subtotal * discounts) / 100;
   const discountSubTotal = Subtotal - discountAmount;
-  const gstAmount  = Math.floor((discountSubTotal * gstRate)/100);
+  const gstAmount  = Math.floor((discountSubTotal * gstRate) / 100);
   const grandTotal=discountSubTotal + gstAmount
 
   this.DefaultcontractForm.patchValue({
