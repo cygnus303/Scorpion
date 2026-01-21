@@ -173,7 +173,7 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
         if (ChargedBy === 'XX5' || ChargedBy === 'XX8') {
           this.challanService.branchWiseLoadingUnloading(this.challanService?.filterList?.loadingBycodeFor);
         }
-        if(this.docketService.loginUserList && this.challanService.filterList && this.docketService.loginUserList.Type === '3' && this.challanService.filterList.DRSType === 'Y'){
+        if(this.docketService.loginUserList && this.challanService.filterList && (this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '2') && this.challanService.filterList.DRSType === 'Y'){
           this.getDeliveryAgents();
         }else{
           this.challanService.generatePRSfilter();
@@ -1271,9 +1271,16 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
   getDeliveryAgentByCodeList(code: any) {
     this.deliveryAgentService.getDeliveryAgentByCodeList(code).subscribe({next: (response) => {
         if (response) {
-          // this.GetVehicleTypesForChallanFromRouteVendType(response.data.fTlType)
-          this.challanService.getVendorsList(this.challanService.challanForm.value.vendorType);
-          this.getPANnumberData(response.data.businessAssociateVendor);
+        this.getPANnumberData(response.data.businessAssociateVendor);
+          const exists = this.vehicleNoList?.some(
+            (v: any) => v.value === response.data.vehicleNo
+          );
+          if (!exists && response.data.vehicleNo) {
+            this.vehicleNoList = [
+              ...this.vehicleNoList,
+              { text: response.data.vehicleNo, value: response.data.vehicleNo }
+            ];
+          }
           this.challanService.challanForm.patchValue({
             deliveryAgentMoNo: response.data.deliveryAgentMobile,
             vendorType: '04',
@@ -1292,6 +1299,7 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
             registrationDate:this.datePipe.transform(response.data.registrationDate,"dd MMMM yyyy"),
             driver1Name:response.data.driverName
           });
+          this.challanService.getVendorsList(this.challanService.challanForm.value.vendorType);
         }
       }
     });
