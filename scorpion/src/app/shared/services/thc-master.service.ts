@@ -150,5 +150,7 @@ export class THCMasterService {
     return this.apiHandlerService.Get(`THC/GetLoadingCharge?brdc=${data.brdc}&loadingBy=${data.loadingBy}&chargeType=${data.chargeType}&typeModule=${data.typeModule}&vendorCode=${data.vendorCode}&loadUnloadType=${data.loadUnloadType}`);
    }
 
-
+  getDeliveryAgents(baseLocationCode: string) {
+    return this.apiHandlerService.Get(`THC/DeliveryAgents?baseLocationCode=${baseLocationCode}`);
+  }
 }

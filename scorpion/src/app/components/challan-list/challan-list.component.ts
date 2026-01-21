@@ -3,7 +3,7 @@ import {Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, Validators} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { generalMasterResponse, StatesFromPartyCodeRepsonse } from 'app/shared/models/general-master.model';
-import { AirportListResponse, AllCityByLocationResponse, CustomerListResponse, DeliveryZoneResponse, FlightsListResponse, VehicleTypeListResponse } from 'app/shared/models/thc-master.model';
+import { AirportListResponse, AllCityByLocationResponse, CustomerListResponse, DeliveryAgentsListResponse, DeliveryZoneResponse, FlightsListResponse, VehicleTypeListResponse } from 'app/shared/models/thc-master.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { ChallanService } from 'app/shared/services/challan.service';
 import { CommonDateService } from 'app/shared/services/common-date.service';
@@ -57,6 +57,7 @@ public approvalList:CustomerListResponse[]=[];
 public israteDisabled=false;
 public isLoading = false;
 public isVehicleLoading: boolean = false;
+public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
 
 @ViewChild('fileInput') fileInput!: ElementRef;
   constructor(
@@ -172,12 +173,16 @@ public isVehicleLoading: boolean = false;
         if (ChargedBy === 'XX5' || ChargedBy === 'XX8') {
           this.challanService.branchWiseLoadingUnloading(this.challanService?.filterList?.loadingBycodeFor);
         }
+        if(this.docketService.loginUserList && this.challanService.filterList && this.docketService.loginUserList.Type === '3' && this.challanService.filterList.DRSType === 'Y'){
+          this.getDeliveryAgents();
+        }else{
+          this.challanService.generatePRSfilter();
+        }
       }
     });
 
     if (this.docketService.loginUserList.Type !== '1') {
       this.challanService.getCityList();
-      this.challanService.generatePRSfilter();
       this.avalabledocketinPRS();
     }
   }
@@ -936,9 +941,7 @@ checkLicenseExpiry(event?:any) {
       baseCompanyCode: this.docketService.loginUserList.Companycode
     }
     this.isLoadingMF = true;
-    this.THCService.getMFListFromRoute(paylaod).pipe(
-      finalize(() => { this.isLoadingMF = false; })
-    ).subscribe({next: (response: any) => {
+    this.THCService.getMFListFromRoute(paylaod).pipe(finalize(() => { this.isLoadingMF = false; })).subscribe({next: (response: any) => {
         if (response) {
           const formArray = this.challanService.avalableForTHC;
           formArray.clear();
@@ -1247,6 +1250,31 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
           this.notApprovalValue = '';
         }
       },
+    });
+  }
+
+  getDeliveryAgents() {
+    this.THCService.getDeliveryAgents(this.docketService.loginUserList.LocationCode).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.deliveryAgentsList = response.data;
+        
+        } 
+      }
+    });
+  }
+
+  getDeliveryAgentByCodeList(code: any) {
+    this.deliveryAgentService.getDeliveryAgentByCodeList(code).subscribe({next: (response) => {
+        if (response) {
+          debugger
+          this.challanService.challanForm.patchValue({
+            deliveryAgentMoNo: response.data.deliveryAgentMobile,
+            vendorType: '04',
+            vendorCode: response.data.businessAssociatecode,
+          });
+        }
+      }
     });
   }
 

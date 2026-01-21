@@ -59,3 +59,8 @@ codeId: number;
   noOfDigits: number;
   codeFor: string;
 }
+
+export interface DeliveryAgentsListResponse{
+    id:string,
+    text:string
+}
