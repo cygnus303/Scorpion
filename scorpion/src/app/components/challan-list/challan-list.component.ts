@@ -1267,12 +1267,26 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
   getDeliveryAgentByCodeList(code: any) {
     this.deliveryAgentService.getDeliveryAgentByCodeList(code).subscribe({next: (response) => {
         if (response) {
-          debugger
+          // this.GetVehicleTypesForChallanFromRouteVendType(response.data.fTlType)
           this.challanService.challanForm.patchValue({
             deliveryAgentMoNo: response.data.deliveryAgentMobile,
             vendorType: '04',
-            vendorCode: response.data.businessAssociatecode,
+            vendorCode:response.data.businessAssociateVendor,
+            vehicleNO:response.data.vehicleNo,
+            vehicleType:response.data.fTlType,
+            eNGINENO:response.data.engineNo,
+            cHASISNO:response.data.chassisNo,
+            rCBOOKNO:response.data.rcBookNo,
+            fitnessDate: this.datePipe.transform(response.data.fitnessValidityDate,"dd MMMM yyyy"),
+            insuranceDate: this.datePipe.transform(response.data.updatedDate,"dd MMMM yyyy"),
+            driver1Licence:response.data.licenseNo,
+            d1_DOB:this.datePipe.transform(response.data.dateOfBirth,"dd MMMM yyyy"),
+            driver1RTONo:response.data.issueByRTO,
+            driver1LicenceValDate:this.datePipe.transform(response.data.licenseValidityDate,"dd MMMM yyyy"),
+            registrationDate:this.datePipe.transform(response.data.registrationDate,"dd MMMM yyyy")
           });
+          this.challanService.getVendorsList(this.challanService.challanForm.value.vendorType)
+          this.getPANnumberData(response.data.businessAssociateVendor)
         }
       }
     });
