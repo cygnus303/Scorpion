@@ -512,7 +512,7 @@ logInvalidControls() {
       this.defaultContractService.DocketEnquirySubmit(payload).subscribe({next: (response: any) => {
           if (response) {
             this.buildForm();
-            this.sweetAlertService.success('Successfully Submitted!!!');
+            this.sweetAlertService.success(`Successfully Submitted!! Enquiry No: <b>${response.enquiryNo}</b>`);
             this.isSubmitting = false;
           }else{
             this.sweetAlertService.error('Error');
