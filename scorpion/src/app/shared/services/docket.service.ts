@@ -74,7 +74,8 @@ export class DocketService {
   public hasConfirmedNoEwayBill = false;
   public maxDiscountLimit: number = 0;
   public isPORequired:boolean=false;
-
+  public isChangingFile = false;
+  public isExistingFile = false;
 
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
@@ -141,7 +142,7 @@ export class DocketService {
       BaseCode2: new FormControl(''),
       BaseCode1: new FormControl(''),
     });
-  }
+}
 
   consignorbuild() {
     this.consignorForm = new FormGroup({

@@ -428,9 +428,29 @@ onFileSelect(event: Event) {
     const file = input.files[0];
     this.docketService.selectedFile = file;
     this.docketService.basicDetailForm.get('GSTDeclaration')?.setValue(file);
+    this.docketService.isChangingFile = false;
+     this.docketService.isExistingFile = false;
   }
 }
 
+viewFile() {
+    const value = this.docketService.basicDetailForm.get('GSTDeclaration')?.value;
+    let url = '';
+    if (value instanceof File) {
+      url = URL.createObjectURL(value); // for new file
+    } else if (typeof value === 'string') {
+      url = value; // for existing file URL
+    }
+    if (url) {
+      window.open(url, '_blank');
+    }
+  }
+  // Trigger change to show file input
+  changeFile() {
+    this.docketService.isChangingFile = true;
+    this.docketService.isExistingFile = false;
+    this.docketService.basicDetailForm.get('GSTDeclaration')?.setValue(null);
+  }
 
   onChangeCityListList(event: any, type: any) {
     if (type === 'from') {

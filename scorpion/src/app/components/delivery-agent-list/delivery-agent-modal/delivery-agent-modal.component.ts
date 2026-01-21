@@ -29,7 +29,7 @@ export class DeliveryAgentModalComponent {
   public isSubmiiting : boolean = false;
   public isFitnessExpired : boolean = false;
   public isInsuranceExpired : boolean = false;
-  public isPermitExpired : boolean = false;
+  // public isPermitExpired : boolean = false;
   public isLicenseExpired : boolean = false;
   public today: Date = new Date();
   public licenseAttachmentName: string = '';
@@ -73,7 +73,7 @@ getVehicleDetail(event?: any) {
                 insuranceValidityDate: response.rc_insurance_upto ? new Date(response.rc_insurance_upto) : null,
                 fitnessValidityDate: response.rc_fit_upto ? new Date(response.rc_fit_upto) : null,
               });
-                this.checkPermitExpiry();
+                // this.checkPermitExpiry();
                 this.checkInsuranceExpiry();
                 this.checkFitnessExpiry();
             }
@@ -137,7 +137,7 @@ applyGPSProviderValidation(){
       this.licenseAttachmentName = data.licenseAttachment ?  data.licenseAttachment.split('/').pop() || '':'',
       this.dAForm.patchValue(patchData);
       // this.checkExpiryAndToggleButton()
-      this.checkPermitExpiry();
+      // this.checkPermitExpiry();
       this.checkInsuranceExpiry();
       this.checkFitnessExpiry();
       this.checkLicenseExpiry()
@@ -175,22 +175,22 @@ onGpsToggle() {
 }
 
 
-checkPermitExpiry(event?:any) {
-  const permit = event ? event: this.dAForm.value.permitValidityDate;
-  this.isPermitExpired = this.checkDateExpiry(permit);
-  this.showVehicleInvokeButton = this.isPermitExpired || this.isInsuranceExpired || this.isFitnessExpired;
-}
+// checkPermitExpiry(event?:any) {
+//   const permit = event ? event: this.dAForm.value.permitValidityDate;
+//   this.isPermitExpired = this.checkDateExpiry(permit);
+//   this.showVehicleInvokeButton = this.isPermitExpired || this.isInsuranceExpired || this.isFitnessExpired;
+// }
 
 checkInsuranceExpiry(event?:any) {
   const insurance =  event ? event: this.dAForm.value.insuranceValidityDate;
   this.isInsuranceExpired = this.checkDateExpiry(insurance);
-  this.showVehicleInvokeButton = this.isPermitExpired || this.isInsuranceExpired || this.isFitnessExpired;
+  this.showVehicleInvokeButton =  this.isInsuranceExpired || this.isFitnessExpired;
 }
 
 checkFitnessExpiry(event?:any) {
   const fitness =  event ? event: this.dAForm.value.fitnessValidityDate;
   this.isFitnessExpired = this.checkDateExpiry(fitness);
-  this.showVehicleInvokeButton = this.isPermitExpired || this.isInsuranceExpired || this.isFitnessExpired;
+  this.showVehicleInvokeButton = this.isInsuranceExpired || this.isFitnessExpired;
 }
 
 checkLicenseExpiry(event?:any) {
@@ -213,6 +213,7 @@ checkLicenseExpiry(event?:any) {
       insuranceValidityDate: new FormControl(''),
       fitnessValidityDate: new FormControl(''),
       licenseNo: new FormControl('', [Validators.required,Validators.pattern(/^[A-Za-z]{2}\d{2}\s?\d{11}$/)]),
+      driverName: new FormControl(null),
       dateOfBirth: new FormControl(''),
       issueByRTO: new FormControl(''),
       licenseValidityDate: new FormControl(''),
@@ -318,14 +319,15 @@ onChangeLicenceNumber(event?: any) {
       if (response?.message === 'No duplicate found. You can proceed to save data.') {
         const params = {
           dlnumber: licenseNo.toUpperCase(),
-          dob: dob ? dob.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '',
+          dob: dob ? `${dob.getFullYear()}-${String(dob.getMonth() + 1).padStart(2, '0')}-${String(dob.getDate()).padStart(2, '0')}` : '',
           baseUserName: this.docketService.loginUserList.BaseUserName
         };
         this.deliveryAgentService.getLicenceDetail(params).subscribe({next: (response: any) => {
             if (response && response.data) {
               this.dAForm.patchValue({
                 issueByRTO: response.data.omRtoFullname || '',
-                licenseValidityDate: response.data.validTillDate || ''
+                licenseValidityDate: response.data.validTillDate || '',
+                driverName: response.data.bioFullName || ''
               });
                 this.checkLicenseExpiry()
             }
@@ -346,12 +348,12 @@ onChangeLicenceNumber(event?: any) {
 }
 
   onSubmit() {
-    if(this.dAForm.valid && !this.isFitnessExpired && !this.isInsuranceExpired && !this.isPermitExpired && !this.isLicenseExpired){
+    if(this.dAForm.valid && !this.isFitnessExpired && !this.isInsuranceExpired && !this.isLicenseExpired){
       this.isSubmiiting=true; 
       const formData = new FormData();
        Object.keys(this.dAForm.value).forEach((key) => {
       let value = this.dAForm.value[key];
-      if ( ['registrationDate','permitValidityDate','insuranceValidityDate','fitnessValidityDate','dateOfBirth','licenseValidityDate','entryDate','updatedDate'].includes(key) && value) {
+      if ( ['registrationDate','insuranceValidityDate','fitnessValidityDate','dateOfBirth','licenseValidityDate','entryDate','updatedDate'].includes(key) && value) {
        const d = new Date(value);
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');
