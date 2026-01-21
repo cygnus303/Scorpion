@@ -493,12 +493,12 @@
       <ng-container *ngIf="docketService.isExistingFile && !docketService.isChangingFile">
         <div class="d-flex align-items-center gap-2">
           <!-- Thumbnail Image -->
-          <img [src]="docketService.basicDetailForm.get('GSTDeclaration')?.value"
+          <!-- <img [src]="docketService.basicDetailForm.get('GSTDeclaration')?.value"
                alt="GST Declaration"
-               style="width: 50px; height: 50px; object-fit: cover; border: 1px solid #ccc; border-radius: 4px;" />
+               style="width: 50px; height: 50px; object-fit: cover; border: 1px solid #ccc; border-radius: 4px;" /> -->
 
           <!-- Buttons stacked vertically -->
-          <div class="d-flex flex-column gap-1">
+          <div class="d-flex gap-1">
             <button type="button" class="btn btn-sm btn-outline-primary" (click)="viewFile()">
               View
             </button>
