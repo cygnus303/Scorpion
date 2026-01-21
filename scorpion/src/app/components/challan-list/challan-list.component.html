@@ -7,6 +7,37 @@
 
  <div class="form-grid p-4">
 <form [formGroup]="challanService.challanForm">
+        <div *ngIf="docketService.loginUserList && challanService.filterList && docketService.loginUserList.Type === '3' && challanService.filterList.DRSType === 'Y'">
+            <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Delivery Agent Details</h3>
+            <div class="row pb-3">
+                <div class="col-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">Delivery Agent</label>
+                        <div class="col-sm-7">
+                            <ng-select class=" required2" placeholder="Delivery Agent" formControlName="deliveryAgent" appFocusNext required (change)="getDeliveryAgentByCodeList($event)"
+                                [ngClass]="{ 'border-danger': challanService.challanForm.get('deliveryAgent')?.invalid  && challanService.challanForm.get('deliveryAgent')?.touched }">
+                                 <ng-option *ngFor="let item of deliveryAgentsList" [value]="item.id">
+                                    {{ item.id }} :{{ item.text }}</ng-option>
+                            </ng-select>
+                            <div class="text-danger text-start" *ngIf="challanService.challanForm.get('deliveryAgent')?.invalid && challanService.challanForm.get('deliveryAgent')?.touched "> This field is required.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <div class="row">
+                            <label class="col-sm-5 col-form-label text-end">Delivery Agent Mobile No.</label>
+                            <div class="col-sm-7">
+                                <input class="form-control" placeholder="Delivery Agent Mobile No." type="text"
+                                    formControlName="deliveryAgentMoNo" maxlength="10" pattern="[0-9]*" appFocusNext
+                                    (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
+                                    readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     <div>
         <h3 class="pb-4 text-start challan-Details mb-4">Basic Details</h3>
           <div class="row pb-3">
@@ -25,14 +56,6 @@
                               <app-date-time-picker controlName="tHCDate" [placeholder]="typeName + ' Date'"
                                [minDate]="minDate" [maxDate]="maxDate">
                             </app-date-time-picker>
-                            <!-- <div class="input-group">
-                                <input class="form-control required2" [placeholder]="typeName + ' Date'" type="text" #dv="bsDatepicker" appFocusNext
-                                    bsDatepicker  [bsValue]="docketService.bsValue" formControlName="tHCDate" [class.disabled-input]="true" [minDate]="minDate" [maxDate]="maxDate"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}" [disabled]="true">
-                                <span class="input-group-text cursor-pointer" (click)="dv.toggle()" disabled>
-                                    <i class="fa fa-calendar"></i>
-                                </span>
-                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -165,14 +188,6 @@
                              <app-date-time-picker controlName="scheduleDeptDate" placeholder="Schedule Dep. Date"
                               [minDate]="minDate" [maxDate]="maxDate">
                             </app-date-time-picker>
-                            <!-- <div class="input-group">
-                                <input class="form-control required2" placeholder="Schedule Dep. Date" type="text"  [class.disabled-input]="true" [minDate]="minDate" [maxDate]="maxDate"
-                                    #dvS="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue" formControlName="scheduleDeptDate" appFocusNext
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}">
-                                <span class="input-group-text cursor-pointer" (click)="dvS.toggle()">
-                                    <i class="fa fa-calendar"></i>
-                                </span>
-                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -182,8 +197,10 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Vendor Type</label>
                         <div class="col-sm-7">
-                            <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Type" formControlName="vendorType" required [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorType')?.invalid  && challanService.challanForm.get('vendorType')?.touched }"
-                                notFoundText="No matches found" [items]="challanService.vendtyData" bindLabel="codeDesc" [readonly]="this.challanService.filterList?.BookedByType === 'B'" bindValue="codeId" (change)="challanService.getVendorsList($event);vendorCodeName()" appFocusNext></ng-select>
+                            <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Type" formControlName="vendorType" required 
+                            [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorType')?.invalid  && challanService.challanForm.get('vendorType')?.touched }"
+                                notFoundText="No matches found" [items]="challanService.vendtyData" bindLabel="codeDesc" bindValue="codeId" 
+                                [readonly]="this.challanService.filterList?.BookedByType === 'B' || isFieldReadonly()" (change)="challanService.getVendorsList($event);vendorCodeName()" appFocusNext></ng-select>
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vendorType')?.invalid && challanService.challanForm.get('vendorType')?.touched "> This field is required.</div>
                         </div>
                     </div>
@@ -192,13 +209,8 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Vendor Code/Name</label>
                         <div class="col-sm-7">
-                             <!-- <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name" formControlName="vendorCode" 
-                             [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code" [readonly]="this.challanService.filterList?.BookedByType === 'B'"
-                              required [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorCode')?.invalid  && challanService.challanForm.get('vendorCode')?.touched }"
-                             (change)="getPANnumberData($event?.vendor_Code)" appFocusNext
-                             ></ng-select> -->
                             <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name" formControlName="vendorCode"
-                                [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code" [readonly]="this.challanService.filterList?.BookedByType === 'B'" 
+                                [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code" [readonly]="this.challanService.filterList?.BookedByType === 'B' || isFieldReadonly()" 
                                 required [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorCode')?.invalid && challanService.challanForm.get('vendorCode')?.touched }"
                                 (change)="getPANnumberData($event?.vendor_Code)" appFocusNext>
                                 <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
@@ -274,7 +286,6 @@
                         </div>
                     </div>
                 </div>
-                
             </div>
 
             <div class="row pb-3">
@@ -293,53 +304,26 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="col-4" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
-                    <div class="row align-items-center">
-                        <label class="col-sm-5 col-form-label text-end">Loading Slip Attachment :</label>
-                        <div class="col-sm-7">
-                            <input class="form-control py-2 pt-2 uppercase-none" type="file" formControlName="loadingSlipAttachment">
-                        </div>
-                    </div>
-                </div> -->
                 <div class="col-4" [ngClass]="this.docketService.loginUserList.Type === '1' ? '' : 'd-none'">
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Loading Slip Attachment :</label>
                         <div class="col-sm-7">
-                            <!-- <div *ngIf="previewUrl; else uploadBlock" class="d-flex align-items-center gap-2">
-                                                        <img [src]="previewUrl" alt="Preview" class="img-fluid rounded border mb-2 attachment-img" style="max-height: 100px;">
-                                                        <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*,application/pdf" class="d-none">
-                                                        <div class="d-flex align-items-center gap-2">
-                                                            <button type="button" class="btn btn-sm btn-success" (click)="triggerFileInput()">Change
-                                                                It!</button>
-                                                            <button type="button" class="btn btn-sm btn-danger" (click)="removeAttachment()">Remove</button>
-                                                        </div>
-                                                    </div>
-                                                    <ng-template #uploadBlock>
-                                                        <input type="file" #fileInput class="form-control py-2 pt-2 uppercase-none"
-                                                            (change)="onFileSelected($event)" accept="image/*,application/pdf">
-                                                    </ng-template> -->
                             <div *ngIf="previewUrl || selectedFileName; else uploadBlock" class="d-flex align-items-center gap-2">
                                 <!-- Image preview (only if image file) -->
-                                    <img *ngIf="isImageFile" [src]="previewUrl" alt="Preview"
-                                        class="img-fluid rounded border mb-2 attachment-img"
-                                    style="max-height: 100px;">
-                        
+                                 <img *ngIf="isImageFile" [src]="previewUrl" alt="Preview" class="img-fluid rounded border mb-2 attachment-img" style="max-height: 100px;">
                                 <!-- PDF filename (only if PDF file) -->
                                 <div *ngIf="!isImageFile" class="mb-2">
                                     <i class="bi bi-file-earmark-pdf text-danger fs-4"></i>
                                     <span class="ms-2 fw-semibold">{{ selectedFileName }}</span>
                                 </div>
-                        
                                 <!-- Hidden file input -->
                                 <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*,application/pdf" class="d-none">
-                        
                                 <!-- Action buttons -->
                                 <div class="d-flex align-items-center gap-2">
                                     <button type="button" class="btn btn-sm btn-success" (click)="triggerFileInput()">Change It!</button>
                                     <button type="button" class="btn btn-sm btn-danger" (click)="removeAttachment()">Remove</button>
                                 </div>
                             </div>
-                        
                             <ng-template #uploadBlock>
                                     <input type="file" #fileInput class="form-control py-2 pt-2 uppercase-none"
                                             (change)="onFileSelected($event)" accept="image/*,application/pdf">
@@ -437,7 +421,6 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
                     <div class="col-sm-7">
-                        <!-- <input class="form-control required2" placeholder="Vehicle No." type="text"> -->
                        <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vehicle No." [items]="vehicleNoList" formControlName="vehicleNO"
                        (change)="getTripSheetList($event)" appFocusNext
                         [ngClass]="{ 'border-danger': challanService.challanForm.get('vehicleNO')?.invalid  && challanService.challanForm.get('vehicleNO')?.touched }"
@@ -488,7 +471,7 @@
                     <label class="col-sm-5 col-form-label text-end">Vehicle Type</label>
                     <div class="col-sm-7">
                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vehicle Type" formControlName="vehicleType"
-                                [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode" appFocusNext
+                                [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode" appFocusNext [readonly]="isFieldReadonly()"
                                 [ngClass]="{ 'border-danger': challanService.challanForm.get('vehicleType')?.invalid  && challanService.challanForm.get('vehicleType')?.touched }"
                             notFoundText="No matches found" (change)="onChangeVehicleType($event)"></ng-select>
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vehicleType')?.invalid && challanService.challanForm.get('vehicleType')?.touched "> This field is required.</div>
@@ -512,14 +495,6 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Registration Date</label>
                     <div class="col-sm-7">
-                        <!-- <div class="input-group"  (click)="dvr.toggle(); $event.stopPropagation()" >
-                            <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'" 
-                                #dvr="bsDatepicker" bsDatepicker formControlName="registrationDate"  required [ngClass]="{ 'border-danger': challanService.challanForm.get('registrationDate')?.invalid  && challanService.challanForm.get('registrationDate')?.touched }"
-                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', maxDate:today}" appFocusNext>
-                            <span class="input-group-text cursor-pointer" (click)="dvr.toggle(); $event.stopPropagation()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
-                                <i class="fa fa-calendar"></i>
-                            </span>
-                        </div> -->
                     <div class="input-group" (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && dvr.toggle(); $event.stopPropagation()">
                         <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="true" #dvr="bsDatepicker" bsDatepicker
                             formControlName="registrationDate" required
@@ -576,15 +551,6 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Permit Validity Date</label>
                     <div class="col-sm-7">
-                        <!-- <div class="input-group"  (click)="pvp.toggle(); $event.stopPropagation()">
-                            <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
-                                #pvp="bsDatepicker" bsDatepicker formControlName="permitDate" (bsValueChange)="checkPermitExpiry($event)"  [class.disabled-input]="true"
-                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}" appFocusNext
-                                 required [ngClass]="{ 'border-danger': challanService.challanForm.get('permitDate')?.invalid  && challanService.challanForm.get('permitDate')?.touched || isPermitExpired}">
-                            <span class="input-group-text cursor-pointer" (click)="pvp.toggle(); $event.stopPropagation()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
-                                <i class="fa fa-calendar"></i>
-                            </span>
-                        </div> -->
                         <div class="input-group"
                             (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && pvp.toggle(); $event.stopPropagation()">
                         
@@ -599,9 +565,7 @@
                                 [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
                                 <i class="fa fa-calendar"></i>
                             </span>
-                        
                         </div>
-
                          <div *ngIf="isPermitExpired" class="text-danger text-start fw-bold mt-1">
                            Permit Date Will be Expired
                         </div>
@@ -613,15 +577,6 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Insurance Validity Date</label>
                     <div class="col-sm-7">
-                        <!-- <div class="input-group"  (click)="ins.toggle(); $event.stopPropagation()">
-                            <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
-                                #ins="bsDatepicker" bsDatepicker  formControlName="insuranceDate" (bsValueChange)="checkInsuranceExpiry($event)"  [class.disabled-input]="true"
-                                 required [ngClass]="{ 'border-danger': challanService.challanForm.get('insuranceDate')?.invalid  && challanService.challanForm.get('insuranceDate')?.touched || isInsuranceExpired}"
-                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}" appFocusNext>
-                            <span class="input-group-text cursor-pointer" (click)="ins.toggle(); $event.stopPropagation()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
-                                <i class="fa fa-calendar"></i>
-                            </span>
-                        </div> -->
                         <div class="input-group"
                             (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && ins.toggle(); $event.stopPropagation()">
                             <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" readonly #ins="bsDatepicker" bsDatepicker
@@ -649,28 +604,14 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Fitness Validity Date</label>
                     <div class="col-sm-7">
-                        <!-- <div class="input-group"  (click)="fit.toggle(); $event.stopPropagation()" >
-                            <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'"
-                                #fit="bsDatepicker" bsDatepicker formControlName="fitnessDate"  (bsValueChange)="checkFitnessExpiry($event)"  [class.disabled-input]="true"
-                                required [ngClass]="{ 'border-danger': challanService.challanForm.get('fitnessDate')?.invalid  && challanService.challanForm.get('fitnessDate')?.touched || isFitnessExpired}"
-                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}" appFocusNext>
-                            <span class="input-group-text cursor-pointer" (click)="fit.toggle(); $event.stopPropagation()" [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
-                                <i class="fa fa-calendar"></i>
-                            </span>
-                        </div> -->
                         <div class="input-group"
                             (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && fit.toggle(); $event.stopPropagation()">
                             <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" readonly #fit="bsDatepicker" bsDatepicker
                                 formControlName="fitnessDate" (bsValueChange)="checkFitnessExpiry($event)"
                                 [class.disabled-input]="true"
                                 required [ngClass]="{'border-danger': challanService.challanForm.get('fitnessDate')?.invalid &&challanService.challanForm.get('fitnessDate')?.touched ||isFitnessExpired}" 
-                                [bsConfig]="{
-                                    containerClass: 'theme-dark-blue',
-                                    dateInputFormat: 'DD MMMM YYYY',
-                                    minDate: today
-                                }" appFocusNext
+                                [bsConfig]="{containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY',minDate: today }" appFocusNext
                                 (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && fit.toggle(); $event.stopPropagation()" />
-                        
                             <span class="input-group-text cursor-pointer"
                                 (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && fit.toggle(); $event.stopPropagation()"
                                 [class.disabled-input]="challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O'">
@@ -692,7 +633,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Licence No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Licence No." type="text" formControlName="driver1Licence" (input)="onChangeLicenceNumber($event)" appFocusNext
+                            <input class="form-control required2" placeholder="Licence No." type="text" formControlName="driver1Licence" [readonly]="isFieldReadonly()" (input)="onChangeLicenceNumber($event)" appFocusNext
                             required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1Licence')?.invalid  && challanService.challanForm.get('driver1Licence')?.touched }">
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1Licence')?.touched">
                                 <div *ngIf="challanService.challanForm.get('driver1Licence')?.hasError('required')"> This field is required.</div>
@@ -705,11 +646,11 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Date Of Birth</label>
                         <div class="col-sm-7">
-                            <div class="input-group" (click)="dbv.toggle(); $event.stopPropagation()">
+                            <div class="input-group" (click)="!isFieldReadonly() && dbv.toggle(); $event.stopPropagation()">
                                 <input class="form-control required2" placeholder="Date Of Birth" type="text"  [class.disabled-input]="true" appFocusNext
                                     #dbv="bsDatepicker" bsDatepicker formControlName="d1_DOB" [ngClass]="{ 'border-danger': challanService.challanForm.get('d1_DOB')?.invalid  && challanService.challanForm.get('d1_DOB')?.touched }" 
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY',maxDate : today}" (ngModelChange)="onChangeLicenceNumber()">
-                                <span class="input-group-text cursor-pointer" (click)="dbv.toggle();$event.stopPropagation()">
+                                <span class="input-group-text cursor-pointer" (click)="!isFieldReadonly() && dbv.toggle();$event.stopPropagation()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
@@ -721,20 +662,21 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Mobile No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control" placeholder="Mobile No." type="text" formControlName="driver1MobileNo" maxlength="10" pattern="[0-9]*"
-              (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
-              [ngClass]="[ challanService.challanForm.get('driver1MobileNo')?.invalid && challanService.challanForm.get('driver1MobileNo')?.touched ? 'border-danger' : '',
-                docketService.loginUserList.Type === '1' ? 'required2' : '']" appFocusNext>
-              <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1MobileNo')?.invalid && challanService.challanForm.get('driver1MobileNo')?.touched "> 
-               <div *ngIf="challanService.challanForm.get('driver1MobileNo')?.errors?.['required']">
-                      This field is required.
+                            <input class="form-control" placeholder="Mobile No." type="text" formControlName="driver1MobileNo"
+                                maxlength="10" pattern="[0-9]*" [readonly]="isFieldReadonly()"
+                                (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
+                                [ngClass]="[ challanService.challanForm.get('driver1MobileNo')?.invalid && challanService.challanForm.get('driver1MobileNo')?.touched ? 'border-danger' : '', docketService.loginUserList.Type === '1' ? 'required2' : '']" appFocusNext>
+                            <div class="text-danger text-start"
+                                *ngIf="challanService.challanForm.get('driver1MobileNo')?.invalid && challanService.challanForm.get('driver1MobileNo')?.touched ">
+                                <div *ngIf="challanService.challanForm.get('driver1MobileNo')?.errors?.['required']">
+                                    This field is required.
+                                </div>
+                                <div *ngIf="challanService.challanForm.get('driver1MobileNo')?.errors?.['pattern']">
+                                    Please enter a valid Indian mobile number.
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div *ngIf="challanService.challanForm.get('driver1MobileNo')?.errors?.['pattern']">
-                        Please enter a valid Indian mobile number.
-                    </div>
-                </div>
-            </div>
-        </div>
                 </div>
             </div>
             <div class="row pb-3">
@@ -742,7 +684,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Driver Name</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Driver Name" type="text" formControlName="driver1Name" appFocusNext
+                            <input class="form-control required2" placeholder="Driver Name" type="text" formControlName="driver1Name" appFocusNext [readonly]="isFieldReadonly()"
                             required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1Name')?.invalid  && challanService.challanForm.get('driver1Name')?.touched }">
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1Name')?.invalid && challanService.challanForm.get('driver1Name')?.touched "> This field is required.</div>
                         </div>
@@ -752,7 +694,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Issue By RTO</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Issue By RTO" type="text" formControlName="driver1RTONo" appFocusNext
+                            <input class="form-control required2" placeholder="Issue By RTO" type="text" formControlName="driver1RTONo" appFocusNext [readonly]="isFieldReadonly()"
                             required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1RTONo')?.invalid  && challanService.challanForm.get('driver1RTONo')?.touched }">
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1RTONo')?.invalid && challanService.challanForm.get('driver1RTONo')?.touched "> This field is required.</div>
                         </div>
@@ -762,12 +704,12 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Licence Validity Date</label>
                         <div class="col-sm-7">
-                            <div class="input-group" (click)="lvd.toggle(); $event.stopPropagation()">
+                            <div class="input-group" (click)="!isFieldReadonly() && lvd.toggle(); $event.stopPropagation()">
                                 <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="true" appFocusNext
                                     #lvd="bsDatepicker" bsDatepicker formControlName="driver1LicenceValDate"  (bsValueChange)="checkLicenseExpiry($event)"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}" readonly
                                     required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1LicenceValDate')?.invalid  && challanService.challanForm.get('driver1LicenceValDate')?.touched || isLicenseExpired}">
-                                <span class="input-group-text cursor-pointer" (click)="lvd.toggle(); $event.stopPropagation()">
+                                <span class="input-group-text cursor-pointer" (click)="!isFieldReadonly() && lvd.toggle(); $event.stopPropagation()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
@@ -965,14 +907,13 @@
             </div>
         </div>
     </div>
-    <div *ngIf="docketService.loginUserList.Type === '3'">
+    <div *ngIf="docketService.loginUserList.Type === '3' && this.challanService.filterList?.DRSType !== 'Y'">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Delivery Agent Details</h3>
         <div class="row pb-3">
             <div class="col-4">
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">Delivery Agent</label>
                     <div class="col-sm-7">
-                        <!-- <input class="form-control required2" placeholder="Delivery Agent" type="text" formControlName="deliveryAgent"> -->
                           <ng-select class=" required2" [items]="deliverAgentData" bindLabel="name" bindValue="userId"
                             placeholder="Delivery Agent" formControlName="deliveryAgent"  (change)="getDAMobileNo($event)" appFocusNext
                             required [ngClass]="{ 'border-danger': challanService.challanForm.get('deliveryAgent')?.invalid  && challanService.challanForm.get('deliveryAgent')?.touched }"></ng-select>
@@ -1039,7 +980,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="this.docketService.loginUserList?.Type !== '1' && this.challanService?.filterList?.loadingBy !== 'XX9'">
+    <div *ngIf="docketService.loginUserList && challanService.filterList && docketService.loginUserList.Type !== '1' && challanService.filterList.loadingBy !== 'XX9'">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Loading Charges</h3>
         <div class="row pb-3">
             <div class="col-4">
@@ -1106,96 +1047,96 @@
             <i class="fas fa-list me-2"></i>
             CNote Available For {{typeName}}
         </div>
-      <div class="cnote-entry-container p-3 pt-0"  style="max-height: 420px; overflow-y: auto;">
-          <table class="table table-bordered table-striped table-condensed flip-content mb-0">
-            <thead class="sticky-top bg-light">
-                <tr>
-                    <th class="p-3 fw-bolder"><input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox"  style="cursor: pointer;"(change)="toggleSelectAll($event)"></th>
-                    <th class="p-3 fw-bolder">CNote No. <div *ngIf="this.docketService.loginUserList.Type === '3'">Origin</div></th>
-                    <th class="p-3 fw-bolder">Pay Basis</th>
-                    <th class="p-3 fw-bolder">Booking Date EDD</th>
-                    <th class="p-3 fw-bolder">Arrival Date <div *ngIf="this.docketService.loginUserList.Type === '3'">Stock Update Date</div></th>
-                    <th class="p-3 fw-bolder">{{this.docketService.loginUserList.Type === '3' ? 'Actu. / Pend. /Arr. Pkgs.':'Pkgs.[L/B]'}}</th>
-                    <th class="p-3 fw-bolder">{{this.docketService.loginUserList.Type === '3' ? 'Act./Arr.Wt.' :'Wt.[L/B]'}}</th>
-                    <th class="p-3 fw-bolder">Chrg. Wt.</th>
-                    <th class="p-3 fw-bolder">Rate Type</th>
-                    <th class="p-3 fw-bolder">E-Way Bill No.</th>
-                    <th class="p-3 fw-bolder">Reason for Delay</th>
-                    <th class="p-3 fw-bolder">TAT in Hrs.</th>
-                    <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '3'">Billing Party Name</th>
-                    <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '3'">Consignor Name</th>
-                    <th class="p-3 fw-bolder">Contract Amount</th>
-                    <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type !== '3'">IsPRSPKGScan.</th>
-                </tr>
-            </thead>
-        <tbody formArrayName="avalabledocketinPRS">
-             <tr *ngIf="isLoading">
-                    <td colspan="16" class="text-center py-4">
-                        <div class="spinner-border" role="status" style="width:1.8rem; height:1.8rem;">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <span class="ms-2">Loading dockets...</span>
-                    </td>
-                </tr>
-                <ng-container *ngIf="!isLoading">
-            <tr *ngFor="let item of challanService.avalabledocket.controls; let i = index" [formGroupName]="i"
-                class="align-middle">
-                <td>
-                    <ng-container *ngIf="!item.value.Message; else showMessage">
-                        <input type="checkbox" formControlName="isSelected" class="form-check-input checkbox-lg custom-big-checkbox"  style="cursor: pointer;" (change)="onDocketSelectionChange(item)">
-                    </ng-container>
-                    <ng-template #showMessage>
-                        <span class="text-danger fw-semibold">{{ item.value.Message }}</span>
-                    </ng-template>
-                </td>
-        
-                <td>{{ item.value.DOCKNO + '.' }}<br>{{ docketService.loginUserList.Type === '3' ? item.value.ORGNCD : '' }}
-                </td>
-                <td>{{ item.value.PAYBAS_Str }}</td>
-                <td>{{ item.value.Bkg_Date }} <br> {{ item.value.Commited_Dely_Date }}</td>
-                <td>{{ item.value.Arrival_Date }} <div *ngIf="docketService.loginUserList.Type === '3'">{{
-                        item.value.Stock_Update_DT }}</div>
-                </td>
-        
-                <td>
-                    <input type="text" class="form-control text-end" formControlName="ArrPkgQty" readonly
-                        *ngIf="docketService.loginUserList.Type !== '3'">
-                    <br>{{ docketService.loginUserList.Type === '3' ? item.value.ArrPkgQty : '' }} / {{ item.value.ArrPkgQty }}
-                    / {{ item.value.PKGSNO }}
-                </td>
-        
-                <td>
-                    <input type="text" class="form-control text-end" formControlName="ArrWeightQty" readonly
-                        *ngIf="docketService.loginUserList.Type !== '3'">
-                    <br> / {{ item.value.ArrWeightQty }} / {{ item.value.ACTUWT }}
-                </td>
-        
-                <td>{{ item.value.CHRGWT }}</td>
-                <td>
-                    <ng-select class="required2" [items]="challanService.rateTypeData" formControlName="rateType"
-                        bindLabel="codeDesc" bindValue="codeId" placeholder="Type" [class.disabled-select]="this.challanService.filterList?.chrgType ? true : false">
-                    </ng-select>
-                    <input type="text" class="form-control required2" formControlName="NewRate"  [value]="item.value.NewRate" [readOnly]="this.challanService.filterList.loadingBycodeFor === 'XX5'">
-                    <div class="text-danger small mt-1" *ngIf="challanService.avalabledocket.at(i).get('rateError')?.value">
-                        {{ challanService.avalabledocket.at(i).get('rateError')?.value }}
-                    </div>
-                </td>
-        
-                <td>{{ item.value.EWayBillNo }}</td>
-                <td>{{ item.value.subreasoncode }}</td>
-                <td>{{ item.value.tatInHrs }}</td>
-                <td *ngIf="docketService.loginUserList.Type === '3'">{{ item.value.party_name }}</td>
-                <td *ngIf="docketService.loginUserList.Type === '3'">{{ item.value.Consignor_Name }}</td>
-                <td>{{ item.value.ContractAmount }}</td>
-                <td *ngIf="docketService.loginUserList.Type !== '3'">{{ item.value.BCSerialNo }}</td>
-            </tr>
-            <tr *ngIf="challanService.avalabledocket.length === 0">
+      <div class="cnote-entry-container p-3 pt-0"  style="max-height: 550px; overflow-y: auto; overflow-x: auto;">
+        <div class="table-responsive-horizonta">
+            <table class="table table-bordered table-striped table-condensed flip-content mb-0">
+              <thead class="sticky-top bg-light">
+                  <tr>
+                      <th class="p-3 fw-bolder"><input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox"  style="cursor: pointer;"(change)="toggleSelectAll($event)"></th>
+                      <th class="p-3 fw-bolder">CNote No. <div *ngIf="this.docketService.loginUserList.Type === '3'">Origin</div></th>
+                      <th class="p-3 fw-bolder">Pay Basis</th>
+                      <th class="p-3 fw-bolder">Booking Date EDD</th>
+                      <th class="p-3 fw-bolder">Arrival Date <div *ngIf="this.docketService.loginUserList.Type === '3'">Stock Update Date</div></th>
+                      <th class="p-3 fw-bolder">{{this.docketService.loginUserList.Type === '3' ? 'Actu. / Pend. /Arr. Pkgs.':'Pkgs.[L/B]'}}</th>
+                      <th class="p-3 fw-bolder">{{this.docketService.loginUserList.Type === '3' ? 'Act./Arr.Wt.' :'Wt.[L/B]'}}</th>
+                      <th class="p-3 fw-bolder">Chrg. Wt.</th>
+                      <th class="p-3 fw-bolder">Rate Type</th>
+                      <th class="p-3 fw-bolder">E-Way Bill No.</th>
+                      <th class="p-3 fw-bolder">Reason for Delay</th>
+                      <th class="p-3 fw-bolder">TAT in Hrs.</th>
+                      <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '3'">Billing Party Name</th>
+                      <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '3'">Consignor Name</th>
+                      <th class="p-3 fw-bolder">Contract Amount</th>
+                      <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type !== '3'">IsPRSPKGScan.</th>
+                  </tr>
+              </thead>
+                <tbody formArrayName="avalabledocketinPRS">
+                    <tr *ngIf="isLoading">
+                            <td colspan="16" class="text-center py-4">
+                                <div class="spinner-border" role="status" style="width:1.8rem; height:1.8rem;">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <span class="ms-2">Loading dockets...</span>
+                            </td>
+                     </tr>
+                    <ng-container *ngIf="!isLoading">
+                    <tr *ngFor="let item of challanService.avalabledocket.controls; let i = index" [formGroupName]="i"
+                        class="align-middle">
+                        <td>
+                            <ng-container *ngIf="!item.value.Message; else showMessage">
+                                <input type="checkbox" formControlName="isSelected" class="form-check-input checkbox-lg custom-big-checkbox"  style="cursor: pointer;" (change)="onDocketSelectionChange(item)">
+                            </ng-container>
+                            <ng-template #showMessage>
+                                <span class="text-danger fw-semibold">{{ item.value.Message }}</span>
+                            </ng-template>
+                        </td>
+                
+                        <td>{{ item.value.DOCKNO + '.' }}<br>{{ docketService.loginUserList.Type === '3' ? item.value.ORGNCD : '' }}
+                        </td>
+                        <td>{{ item.value.PAYBAS_Str }}</td>
+                        <td>{{ item.value.Bkg_Date }} <br> {{ item.value.Commited_Dely_Date }}</td>
+                        <td>{{ item.value.Arrival_Date }} <div *ngIf="docketService.loginUserList.Type === '3'">{{ item.value.Stock_Update_DT }}</div>
+                        </td>
+                
+                        <td>
+                            <input type="text" class="form-control text-end" formControlName="ArrPkgQty" readonly
+                                *ngIf="docketService.loginUserList.Type !== '3'">
+                            <br>{{ docketService.loginUserList.Type === '3' ? item.value.ArrPkgQty : '' }} / {{ item.value.ArrPkgQty }}
+                            / {{ item.value.PKGSNO }}
+                        </td>
+                
+                        <td>
+                            <input type="text" class="form-control text-end" formControlName="ArrWeightQty" readonly
+                                *ngIf="docketService.loginUserList.Type !== '3'">
+                            <br> / {{ item.value.ArrWeightQty }} / {{ item.value.ACTUWT }}
+                        </td>
+                
+                        <td>{{ item.value.CHRGWT }}</td>
+                        <td>
+                            <ng-select class="required2" [items]="challanService.rateTypeData" formControlName="rateType"
+                                bindLabel="codeDesc" bindValue="codeId" placeholder="Type" [class.disabled-select]="challanService.filterList?.chrgType || challanService.filterList?.loadingBy === 'XX9' ? true : false">
+                            </ng-select>
+                            <input type="text" class="form-control required2" formControlName="NewRate"  [value]="item.value.NewRate" [readOnly]="challanService.filterList && (challanService.filterList.loadingBycodeFor === 'XX5' || challanService.filterList.loadingBy === 'XX9')">
+                            <div class="text-danger small mt-1" *ngIf="challanService.avalabledocket.at(i).get('rateError')?.value">
+                                {{ challanService.avalabledocket.at(i).get('rateError')?.value }}
+                            </div>
+                        </td>
+                
+                        <td>{{ item.value.EWayBillNo }}</td>
+                        <td>{{ item.value.subreasoncode }}</td>
+                        <td>{{ item.value.tatInHrs }}</td>
+                        <td *ngIf="docketService.loginUserList.Type === '3'">{{ item.value.party_name }}</td>
+                        <td *ngIf="docketService.loginUserList.Type === '3'">{{ item.value.Consignor_Name }}</td>
+                        <td>{{ item.value.ContractAmount }}</td>
+                        <td *ngIf="docketService.loginUserList.Type !== '3'">{{ item.value.BCSerialNo }}</td>
+                    </tr>
+                    <tr *ngIf="challanService.avalabledocket.length === 0">
                         <td colspan="16" class="text-center">No CNote available</td>
                     </tr>
-          </ng-container>
-        </tbody>
-
-        </table>
+                    </ng-container>
+                </tbody>
+          </table>
+        </div>
       </div>
             <div class="row pb-3 pt-4">
                 <div class="col-4">
@@ -1271,16 +1212,7 @@
                 </ng-container>
             </tbody>
         </table>
-        <!-- <div *ngIf="isLoadingMF" class="table-overlay d-flex align-items-center justify-content-center">
-            <div class="text-center">
-                <div class="spinner-border" role="status" style="width:2rem; height:2rem;">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                <div class="mt-2">Loading MF list...</div>
-            </div>
-        </div> -->
         </div>
-
             <div class="row pb-3 pt-4">
                 <div class="col-4">
                     <div class="row align-items-center">
@@ -1329,19 +1261,7 @@
                                 Please enter a value greater than or equal to 1.
                             </span>
                         </div>
-                        <!-- <div *ngIf="challanService.challanForm.get('contractAmount')?.errors?.['vendorContract']">
-                        Vendor Contract not found
-                            </div>
-                                <div *ngIf="challanService.challanForm.get('contractAmount')?.errors?.['vendorExpired']">
-                        Vendor Contract Expired
-                            </div> -->
                        <div *ngIf="contractAmtMsg" class="text-danger text-start mt-1 small">{{ contractAmtMsg }}</div>
-                        <!-- <div class="text-danger text-start mt-1 small" *ngIf="challanService.challanForm.get('contractAmount')?.hasError('vendorContract') && challanService.challanForm.get('contractAmount')?.touched">
-                            Vendor Contract not found.
-                        </div>
-                        <div class="text-danger text-start mt-1 small" *ngIf="challanService.challanForm.get('contractAmount')?.hasError('vendorExpired') && challanService.challanForm.get('contractAmount')?.touched">
-                            Vendor Contract has Expired.
-                        </div> -->
                     </div>
                 </div>
                 <div class="row mb-3 align-items-center"  *ngIf="!['04', '19', 'XX'].includes(challanService.challanForm.get('vendorType')?.value)">
@@ -1350,31 +1270,6 @@
                         <input type="checkbox" class="form-check-input me-4 checkbox-lg" formControlName="isMonthlyBillAllow" appFocusNext>
                     </div>
                 </div>
-    
-                <!-- <div class="row mb-3 align-items-center">
-                    <label class="col-sm-6 col-form-label text-end">Telephone Charges (+)</label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control text-end required2" formControlName="telephoneCharges"
-                        (input)="calculateNetAmount()"/>
-                    </div>
-                </div>
-    
-                <div class="row mb-3 align-items-center">
-                    <label class="col-sm-6 col-form-label text-end">Humali Charges (+)</label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control text-end required2" formControlName="humaliCharges"
-                        (input)="calculateNetAmount()"/>
-                    </div>
-                </div>
-    
-                <div class="row mb-3 align-items-center">
-                    <label class="col-sm-6 col-form-label text-end">Mamul Charges (-)</label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control text-end required2" formControlName="mamulCharges"
-                        (input)="calculateNetAmount()"/>
-                    </div>
-                </div> -->
-
                 <div formGroupName="charges">
                     <div *ngFor="let ch of challanService.chargesDetailsList" class="row mb-3 align-items-center">
                         <label class="col-sm-6 col-form-label text-end">
