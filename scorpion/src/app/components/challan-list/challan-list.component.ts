@@ -59,18 +59,18 @@ public isLoading = false;
 public isVehicleLoading: boolean = false;
 
 @ViewChild('fileInput') fileInput!: ElementRef;
-constructor(
-  public challanService:ChallanService,
-  public docketService:DocketService,
-  public basicDetailService:BasicDetailService,
-  public sweetAlertService:SweetAlertService,
-  private deliveryAgentService:DeliveryAgentService,
-  public THCService:THCMasterService,
-   private route: ActivatedRoute, 
-   public commonDateService:CommonDateService,
-   private datePipe: DatePipe
-){
-}
+  constructor(
+    public challanService: ChallanService,
+    public docketService: DocketService,
+    public basicDetailService: BasicDetailService,
+    public sweetAlertService: SweetAlertService,
+    private deliveryAgentService: DeliveryAgentService,
+    public THCService: THCMasterService,
+    private route: ActivatedRoute,
+    public commonDateService: CommonDateService,
+    private datePipe: DatePipe
+  ) { }
+
   ngOnInit() {
      const saved = localStorage.getItem("loginUserList");
     if (saved) {
@@ -93,49 +93,13 @@ constructor(
     this.challanService.getRateTypeData()
 
     setTimeout(() => {
-      this.route.queryParams.subscribe(params => {
-        if (params['start']) {
-          const formValues = JSON.parse(params['start']);
-          this.challanService.filterList = formValues;
-          if (this.challanService.filterList.BookedByType === "B") {
-            const vendorTypeCode = this.challanService.vendtyData?.find((v: any) => v.codeId === "04")?.codeId || '';
-            this.challanService.challanForm.patchValue({
-              vendorType: vendorTypeCode
-            });
-            this.challanService.getVendorsList(vendorTypeCode)
-            if (this.challanService.filterList.BookedBy) {
-              this.challanService.challanForm.patchValue({
-                vendorCode: this.challanService.filterList.BookedBy
-              });
-            }
-            this.getPANnumberData(this.challanService.challanForm.value.vendorCode);
-          }
-          const ChargedBy = this.challanService?.filterList?.loadingBycodeFor;
-          if(ChargedBy === 'B' || ChargedBy == '04'){
-            this.challanService.getChargesVendorsList('04');
-          }
-          if(ChargedBy === 'A' || ChargedBy == 'XX1'){
-            this.challanService.getChargesVendorsList('XX1');
-          }
-          if(ChargedBy === 'M'){
-            this.challanService.getChargesVendorsList('19');
-          }
-          if(ChargedBy === 'XX5' || ChargedBy === 'XX8'){
-            this.challanService.branchWiseLoadingUnloading(this.challanService?.filterList?.loadingBycodeFor);
-          }
-        }
-      });
-
-      if (this.docketService.loginUserList.Type !== '1') {
-        this.challanService.getCityList();
-        this.challanService.generatePRSfilter();
-        this.avalabledocketinPRS();
-      }
+    this.filterListpatchValue();
     }, 400); 
 
-       this.challanService.challanForm.get('netAmount')?.valueChanges.subscribe(() => {
+    this.challanService.challanForm.get('netAmount')?.valueChanges.subscribe(() => {
       this.challanService.challanForm.updateValueAndValidity({ onlySelf: false });
     });
+
     this.challanService.challanForm.get('advanceAmount')?.valueChanges.subscribe(() => {
       this.challanService.challanForm.updateValueAndValidity({ onlySelf: false });
     });
@@ -143,137 +107,164 @@ constructor(
     const type = this.docketService.loginUserList.Type;
     this.typeName = type === '3' ? 'DRS' : type === '1' ? 'THC' : type === '2' ? 'PRS' : '';
     this.challanService.challanForm.get('isEmpty')?.valueChanges.subscribe((isEmpty: boolean) => {
-    if (isEmpty) {this.challanService.challanForm.patchValue({customerName: null,routeCode: null});}});
+      if (isEmpty) { this.challanService.challanForm.patchValue({ customerName: null, routeCode: null }); }
+    });
 
     if (this.docketService.loginUserList.Type === '3') {
       this.getDeliveryZoneData()
     }
-      const dt = this.docketService.bsValue;
+    const dt = this.docketService.bsValue;
     this.actualDeptTime = this.formatTime(dt);
     this.challanDateAccess();
 
-     this.challanService.challanForm.get('vendorType')?.valueChanges.subscribe((vendorType) => {
-    this.updateVehicleRequiredValidator();
-    this.updateVehicleNoValidator(vendorType);
-  });
+    this.challanService.challanForm.get('vendorType')?.valueChanges.subscribe((vendorType) => {
+      this.updateVehicleRequiredValidator();
+      this.updateVehicleNoValidator(vendorType);
+    });
 
-  this.challanService.challanForm.get('vehicleNO')?.valueChanges.subscribe(() => {
-    this.updateVehicleRequiredValidator();
-  });
+    this.challanService.challanForm.get('vehicleNO')?.valueChanges.subscribe(() => {
+      this.updateVehicleRequiredValidator();
+    });
 
   this.updateVehicleRequiredValidator(); // initial call
   this.getApprovedByData();
-  this.challanService.challanForm.get('isEmpty')?.valueChanges.subscribe(isEmpty => {
-    const approvedByCtrl = this.challanService.challanForm.get('approvedBy');
 
-    if (isEmpty) {
-      approvedByCtrl?.setValidators([Validators.required]);
-    } else {
-      approvedByCtrl?.clearValidators();
-      approvedByCtrl?.setValue(null);  // optional → reset field
+    this.challanService.challanForm.get('isEmpty')?.valueChanges.subscribe(isEmpty => {
+      const approvedByCtrl = this.challanService.challanForm.get('approvedBy');
+      if (isEmpty) {
+        approvedByCtrl?.setValidators([Validators.required]);
+      } else {
+        approvedByCtrl?.clearValidators();
+        approvedByCtrl?.setValue(null);  // optional → reset field
+      }
+      approvedByCtrl?.updateValueAndValidity();
+    });
+  }
+
+  filterListpatchValue() {
+    this.route.queryParams.subscribe(params => {
+      if (params['start']) {
+        const formValues = JSON.parse(params['start']);
+        this.challanService.filterList = formValues;
+        if (this.challanService.filterList.BookedByType === "B") {
+          const vendorTypeCode = this.challanService.vendtyData?.find((v: any) => v.codeId === "04")?.codeId || '';
+          this.challanService.challanForm.patchValue({
+            vendorType: vendorTypeCode
+          });
+          this.challanService.getVendorsList(vendorTypeCode)
+          if (this.challanService.filterList.BookedBy) {
+            this.challanService.challanForm.patchValue({
+              vendorCode: this.challanService.filterList.BookedBy
+            });
+          }
+          this.getPANnumberData(this.challanService.challanForm.value.vendorCode);
+        }
+        const ChargedBy = this.challanService?.filterList?.loadingBycodeFor;
+        if (ChargedBy === 'B' || ChargedBy == '04') {
+          this.challanService.getChargesVendorsList('04');
+        }
+        if (ChargedBy === 'A' || ChargedBy == 'XX1') {
+          this.challanService.getChargesVendorsList('XX1');
+        }
+        if (ChargedBy === 'M') {
+          this.challanService.getChargesVendorsList('19');
+        }
+        if (ChargedBy === 'XX5' || ChargedBy === 'XX8') {
+          this.challanService.branchWiseLoadingUnloading(this.challanService?.filterList?.loadingBycodeFor);
+        }
+      }
+    });
+
+    if (this.docketService.loginUserList.Type !== '1') {
+      this.challanService.getCityList();
+      this.challanService.generatePRSfilter();
+      this.avalabledocketinPRS();
     }
-    approvedByCtrl?.updateValueAndValidity();
-  });
   }
 
   updateVehicleNoValidator(vendorType: string) {
-  const requiredTypes = ['XX1', '04', '19', '05', 'XX5'];
-  const vehicleControl = this.challanService.challanForm.get('vehicleNO');
-
-  if (requiredTypes.includes(vendorType)) {
-    vehicleControl?.setValidators([Validators.required]);
-  } else {
-    vehicleControl?.clearValidators();
-    vehicleControl?.setValue(null); // optional
-  }
-  vehicleControl?.updateValueAndValidity();
+    const requiredTypes = ['XX1', '04', '19', '05', 'XX5'];
+    const vehicleControl = this.challanService.challanForm.get('vehicleNO');
+    if (requiredTypes.includes(vendorType)) {
+      vehicleControl?.setValidators([Validators.required]);
+    } else {
+      vehicleControl?.clearValidators();
+      vehicleControl?.setValue(null); // optional
+    }
+    vehicleControl?.updateValueAndValidity();
   }
 
   clearZero(controlName: string) {
-  const ctrl = this.challanService.challanForm.get(controlName);
-  if (ctrl?.value === 0 || ctrl?.value === '0') {
-    ctrl.setValue('');
+    const ctrl = this.challanService.challanForm.get(controlName);
+    if (ctrl?.value === 0 || ctrl?.value === '0') {
+      ctrl.setValue('');
+    }
   }
-}
 
-clearchargesZero(controlName: string) {
-  const ctrl = this.challanService.challanForm.get('charges.' + controlName);
-
-  if (!ctrl) return;
-
-  const val = ctrl.value;
-
-  if (val === 0 || val === '0' || val === '0.0' || val === '0.00') {
-    ctrl.setValue('');
+  clearchargesZero(controlName: string) {
+    const ctrl = this.challanService.challanForm.get('charges.' + controlName);
+    if (!ctrl) return;
+    const val = ctrl.value;
+    if (val === 0 || val === '0' || val === '0.0' || val === '0.00') {
+      ctrl.setValue('');
+    }
   }
-}
 
-setZeroIfEmpty(controlName: string) {
-  const ctrl = this.challanService.challanForm.get('charges.' + controlName);
-  if (!ctrl) return;
-
-  const val = (ctrl.value || '').toString().trim();
-
-  if (val === '' || val === null) {
-    ctrl.setValue(0);
+  setZeroIfEmpty(controlName: string) {
+    const ctrl = this.challanService.challanForm.get('charges.' + controlName);
+    if (!ctrl) return;
+    const val = (ctrl.value || '').toString().trim();
+    if (val === '' || val === null) {
+      ctrl.setValue(0);
+    }
   }
-}
-restoreIfEmpty(controlName: string) {
-  const ctrl = this.challanService.challanForm.get(controlName);
-  if (ctrl && (ctrl.value === '' || ctrl.value == null)) {
-    ctrl.setValue(0);
+  restoreIfEmpty(controlName: string) {
+    const ctrl = this.challanService.challanForm.get(controlName);
+    if (ctrl && (ctrl.value === '' || ctrl.value == null)) {
+      ctrl.setValue(0);
+    }
   }
-}
 
   updateVehicleRequiredValidator() {
-  const form = this.challanService.challanForm;
-  const vendorType = form.get('vendorType')?.value;
-  const vehicleNo = form.get('vehicleNO')?.value;
-  const mktVehicleCtrl = form.get('mKTVehicleNo');
-
-  if (vendorType === 'XX' || vehicleNo === 'O') {
-    mktVehicleCtrl?.setValidators([Validators.required]);
-  } else {
-    mktVehicleCtrl?.clearValidators();
+    const form = this.challanService.challanForm;
+    const vendorType = form.get('vendorType')?.value;
+    const vehicleNo = form.get('vehicleNO')?.value;
+    const mktVehicleCtrl = form.get('mKTVehicleNo');
+    if (vendorType === 'XX' || vehicleNo === 'O') {
+      mktVehicleCtrl?.setValidators([Validators.required]);
+    } else {
+      mktVehicleCtrl?.clearValidators();
+    }
+    mktVehicleCtrl?.updateValueAndValidity();
   }
 
-  mktVehicleCtrl?.updateValueAndValidity();
-}
-
   formatTime(date: Date) {
-   return new Intl.DateTimeFormat('en-US', {
-       hour: '2-digit',
-       minute: '2-digit',
-       hour12: true
-   }).format(new Date(date));
-}
+    return new Intl.DateTimeFormat('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    }).format(new Date(date));
+  }
 
-    challanDateAccess() {
+  challanDateAccess() {
     const payload = {
       moduleCode: '04',
       baseUserName: this.docketService.baseUsername
     };
-
-  this.commonDateService.userDateSelection(payload).subscribe({
-    next: (res: any) => {
-      if (res && res.length > 0) {
-        const rule = res[0];
-
-        // API min_Date
-        this.minDate = new Date(rule.min_Date);
-
-        // BackDate days logic
-        if (rule.backDate_Days && rule.backDate_Days > 0) {
-          const today = new Date();
-          this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
+    this.commonDateService.userDateSelection(payload).subscribe({next: (res: any) => {
+        if (res && res.length > 0) {
+          const rule = res[0];
+          this.minDate = new Date(rule.min_Date);
+          if (rule.backDate_Days && rule.backDate_Days > 0) {
+            const today = new Date();
+            this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
+          }
+          this.maxDate = new Date();
         }
-
-        // Max date = today
-        this.maxDate = new Date();
       }
-    }
-  });
-}
+    });
+  }
+
 calculateBalanceAmount() {
   const netAmount = Number(this.challanService.challanForm.get('netAmount')?.value) || 0;
   const advanceAmount = Number(this.challanService.challanForm.get('advanceAmount')?.value) || 0;
@@ -284,9 +275,7 @@ calculateBalanceAmount() {
 }
 
 changeAmountApplicable(event:any){
-  this.challanService.challanForm.patchValue({
-       tDSOnAmount:event.target.value
-  });
+  this.challanService.challanForm.patchValue({tDSOnAmount:event.target.value});
   this.challanService.calculateNetAmount()
 }
 
@@ -298,12 +287,11 @@ onDocketSelectionChange(ctrl: AbstractControl) {
   }
 }
 
-checkArrivalTime(ctrl: AbstractControl) {
-  const docket = ctrl.value;
+  checkArrivalTime(ctrl: AbstractControl) {
+    const docket = ctrl.value;
     if (this.docketService.loginUserList.Type === '3') {
-
-      const arrivalDateText = docket.Arrival_Date; 
-      const reasonValue = docket.subreasoncode; 
+      const arrivalDateText = docket.Arrival_Date;
+      const reasonValue = docket.subreasoncode;
       if (!arrivalDateText) {
         console.log("1 - No arrival date, allow check");
         return;
@@ -311,7 +299,6 @@ checkArrivalTime(ctrl: AbstractControl) {
       const arrivalDate = new Date(arrivalDateText);
       const currentDate = new Date();
       const diffHours = (currentDate.getTime() - arrivalDate.getTime()) / (1000 * 60 * 60);
-
       if (diffHours > 48) {
         if (!reasonValue || reasonValue.trim() === '') {
           this.sweetAlertService.info("Arrival time is more than 48 hours ahead. Please add reason.");
@@ -319,39 +306,37 @@ checkArrivalTime(ctrl: AbstractControl) {
           return;
         }
       }
-  }
-}
-
-
-updateTotalDockets() {
-  const docketArray = this.challanService.challanForm.get('avalabledocketinPRS') as FormArray;
-  if (!docketArray) return;
-  let totalAmount = 0;
-  let selectedCount = 0;
-  let totalWeight=0;
-  docketArray.controls.forEach(control => {
-     const hasMessage = !!(control.get('Message')?.value || control.value?.Message);
-    const isSelected = !!control.get('isSelected')?.value;
-    if (!hasMessage && isSelected) {
-      selectedCount++;
-      totalAmount += Number(control.get('ContractAmount')?.value) || 0;
-      totalWeight += Number(control.get('ArrWeightQty')?.value) || 0;
     }
-  });
+  }
 
-  this.challanService.updateTotalLoadingCharge();
-  this.challanService.challanForm.patchValue({
-    contractAmount: totalAmount,
-    totalDockets: selectedCount,
-    tDSOnAmount:totalAmount,
-    wtLoaded:totalWeight
-  });
+  updateTotalDockets() {
+    const docketArray = this.challanService.challanForm.get('avalabledocketinPRS') as FormArray;
+    if (!docketArray) return;
+    let totalAmount = 0;
+    let selectedCount = 0;
+    let totalWeight = 0;
+    docketArray.controls.forEach(control => {
+      const hasMessage = !!(control.get('Message')?.value || control.value?.Message);
+      const isSelected = !!control.get('isSelected')?.value;
+      if (!hasMessage && isSelected) {
+        selectedCount++;
+        totalAmount += Number(control.get('ContractAmount')?.value) || 0;
+        totalWeight += Number(control.get('ArrWeightQty')?.value) || 0;
+      }
+    });
+
+    this.challanService.updateTotalLoadingCharge();
+    this.challanService.challanForm.patchValue({
+      contractAmount: totalAmount,
+      totalDockets: selectedCount,
+      tDSOnAmount: totalAmount,
+      wtLoaded: totalWeight
+    });
     const vehicleCapacity = this.challanService.challanForm.value.vehicleCapacity;
     const weightLoaded = this.challanService.challanForm.value.wtLoaded;
     if (vehicleCapacity && weightLoaded) {
       const utilization = (weightLoaded / (vehicleCapacity * 1000)) * 100;
       const roundedUtilization = Number(utilization.toFixed(2));
-
       this.challanService.challanForm.patchValue({
         vehicleCapacityUti: roundedUtilization
       });
@@ -360,147 +345,134 @@ updateTotalDockets() {
         vehicleCapacityUti: 0
       });
     }
-    if(this.challanService.challanForm.value.wtLoaded >  vehicleCapacity){
+    if (this.challanService.challanForm.value.wtLoaded > vehicleCapacity) {
       this.challanService.challanForm.patchValue({
-        isOverLoad:true
+        isOverLoad: true
       })
     }
-  this.challanService.calculateNetAmount();
-
-}
+    this.challanService.calculateNetAmount();
+  }
 
   toggleSelectAll(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
     const docketArray = this.challanService.challanForm.get('avalabledocketinPRS') as FormArray;
-
-    // docketArray.controls.forEach(control => {
-    //   control.get('isSelected')?.setValue(checked, { emitEvent: false });
-    // });
-     docketArray.controls.forEach(control => {
-    const message = control.get('Message')?.value;
-    if (message && message.trim() === "Docket Not Scan") {
-      control.get('isSelected')?.setValue(false, { emitEvent: false });
-    }
-    else {
-      control.get('isSelected')?.setValue(checked, { emitEvent: false });
-    }
-  });
-
+    docketArray.controls.forEach(control => {
+      const message = control.get('Message')?.value;
+      if (message && message.trim() === "Docket Not Scan") {
+        control.get('isSelected')?.setValue(false, { emitEvent: false });
+      }
+      else {
+        control.get('isSelected')?.setValue(checked, { emitEvent: false });
+      }
+    });
     this.updateTotalDockets();
   }
 
   getLoadingCharge(event: any) {
-  const data = {
-    loadUnloadType: 'L',
-    vendorCode: event,
-    typeModule: this.docketService.loginUserList.Type === "2" ? "P" : "D",
-    chargeType: this.challanService?.filterList?.chrgType,
-    brdc: this.docketService.loginUserList.LocationCode,
-    loadingBy: this.challanService?.filterList?.loadingBycodeFor,
-  };
-
-  this.THCService.getLoadingCharge(data).subscribe({
-    next: (response: any) => {
-      if(this.challanService.filterList?.loadingBycodeFor === 'XX5'){
-      if (response && response.rate && response.rate > 0) {
-        this.challanService.challanForm.patchValue({
-          rate: response.rate
-        });
-        this.challanService.avalabledocket.controls.forEach((item: any, index) => {
-          this.challanService.avalabledocket.controls[index].patchValue({
-            NewRate: response.rate
-          });
-          this.israteDisabled = true;
-        });
-
-        this.challanService.challanForm.get('rate')?.setErrors(null);
-      } else {
-        this.challanService.challanForm.patchValue({
-          rate: null
-        });
-        this.israteDisabled = false;
-        this.challanService.challanForm.get('vendorChargesCode')?.setErrors({ rateUnavailable: true });
-      }
-    }
-    },
-    error: (err) => {
-      console.error('Error fetching loading charge:', err);
-    }
-  });
-}
-
-
-getContractDetail(ctrl?: AbstractControl) {
-   this.contractAmtMsg = '';
-  const docket = ctrl?.value;
-
-  const payload = {
-    thctype: this.docketService.loginUserList.Type,
-    totalWeight: Number(this.challanService.challanForm.value.wtLoaded),
-    weightAdjust: 0,
-    isAllowAdhoc: false,
-    isAdhoc: false,
-    isAllowTAM: false,
-    vendorCode: this.challanService.challanForm.value.vendorCode,
-    routeCode: this.challanService.challanForm.value.routeCode || '',
-    routeMODE: this.challanService.challanForm.value.routeType || '',
-    ftL_Type: this.challanService.challanForm.value.fTLType || '',
-    vehicle: this.challanService.challanForm.value.vehicleNO || '',
-    from_City: this.challanService.challanForm.value.FROMCITY || '',
-    to_City: this.challanService.challanForm.value.TOCITY || '',
-    paybas: docket?.PayBas ? docket?.PayBas :this.challanService.avalabledocket.controls[0]?.value?.PayBas || '',
-    dockno:  docket?.DOCKNO ?  docket?.DOCKNO: this.challanService.avalabledocket.controls[0]?.value?.DOCKNO  || '',
-  };
-  if (payload.vendorCode !== "" && payload.vendorCode !== null && (payload.paybas === undefined || payload.paybas === "" || (this.docketService.loginUserList.Type === "2" && this.challanService.challanForm.value.vendorType === '04'))) {
-    this.THCService.getContractData(payload).subscribe({
-      next: (response: any) => {
-        if (response && response.data) {
-
-        this.handleContractResponse(response)
-      if(!response.data.contractExpire && !response.data.ContractID && this.docketService.loginUserList.Type!=='2'){
-        if(this.docketService.loginUserList.Type==='1'){
-          this.challanService.challanForm.patchValue({
-                contractAmount:response.data.contractAmount
-              });
+    const data = {
+      loadUnloadType: 'L',
+      vendorCode: event,
+      typeModule: this.docketService.loginUserList.Type === "2" ? "P" : "D",
+      chargeType: this.challanService?.filterList?.chrgType,
+      brdc: this.docketService.loginUserList.LocationCode,
+      loadingBy: this.challanService?.filterList?.loadingBycodeFor,
+    };
+    this.THCService.getLoadingCharge(data).subscribe({next: (response: any) => {
+        if (this.challanService.filterList?.loadingBycodeFor === 'XX5') {
+          if (response && response.rate && response.rate > 0) {
             this.challanService.challanForm.patchValue({
-                tDSOnAmount:response.data.contractAmount
+              rate: response.rate
             });
-            this.challanService.calculateNetAmount()
-        }
-        this.challanService.challanForm.patchValue({
-          standardContractAmount:response.data.standardContractAmount
-        })
-      }
+            this.challanService.avalabledocket.controls.forEach((item: any, index) => {
+              this.challanService.avalabledocket.controls[index].patchValue({
+                NewRate: response.rate
+              });
+              this.israteDisabled = true;
+            });
+            this.challanService.challanForm.get('rate')?.setErrors(null);
+          } else {
+            this.challanService.challanForm.patchValue({
+              rate: null
+            });
+            this.israteDisabled = false;
+            this.challanService.challanForm.get('vendorChargesCode')?.setErrors({ rateUnavailable: true });
+          }
         }
       },
       error: (err) => {
-        console.error('Error fetching contract details:', err.error.message);
+        console.error('Error fetching loading charge:', err);
       }
     });
   }
-}
 
-handleContractResponse(response: any) {
-  const THCTYPE = this.docketService.loginUserList.Type?.toString(); // '1' | '2' | '3'
-  const vendorType = this.challanService.challanForm.value.vendorType;
-  const data = response?.data || {};
-  const contractID = (data.contractID ?? '').toString();
-  const contractExpire = !!data.contractExpire;
-  this.contractAmtMsg = '';
-
-  if ((THCTYPE === '3' && vendorType === '04') || (THCTYPE === '1' && vendorType === 'XX1')) {
+  getContractDetail(ctrl?: AbstractControl) {
     this.contractAmtMsg = '';
+    const docket = ctrl?.value;
+    const payload = {
+      thctype: this.docketService.loginUserList.Type,
+      totalWeight: Number(this.challanService.challanForm.value.wtLoaded),
+      weightAdjust: 0,
+      isAllowAdhoc: false,
+      isAdhoc: false,
+      isAllowTAM: false,
+      vendorCode: this.challanService.challanForm.value.vendorCode,
+      routeCode: this.challanService.challanForm.value.routeCode || '',
+      routeMODE: this.challanService.challanForm.value.routeType || '',
+      ftL_Type: this.challanService.challanForm.value.fTLType || '',
+      vehicle: this.challanService.challanForm.value.vehicleNO || '',
+      from_City: this.challanService.challanForm.value.FROMCITY || '',
+      to_City: this.challanService.challanForm.value.TOCITY || '',
+      paybas: docket?.PayBas ? docket?.PayBas : this.challanService.avalabledocket.controls[0]?.value?.PayBas || '',
+      dockno: docket?.DOCKNO ? docket?.DOCKNO : this.challanService.avalabledocket.controls[0]?.value?.DOCKNO || '',
+    };
+    if (payload.vendorCode !== "" && payload.vendorCode !== null && (payload.paybas === undefined || payload.paybas === "" || (this.docketService.loginUserList.Type === "2" && this.challanService.challanForm.value.vendorType === '04'))) {
+      this.THCService.getContractData(payload).subscribe({
+        next: (response: any) => {
+          if (response && response.data) {
+            this.handleContractResponse(response)
+            if (!response.data.contractExpire && !response.data.ContractID && this.docketService.loginUserList.Type !== '2') {
+              if (this.docketService.loginUserList.Type === '1') {
+                this.challanService.challanForm.patchValue({
+                  contractAmount: response.data.contractAmount
+                });
+                this.challanService.challanForm.patchValue({
+                  tDSOnAmount: response.data.contractAmount
+                });
+                this.challanService.calculateNetAmount()
+              }
+              this.challanService.challanForm.patchValue({
+                standardContractAmount: response.data.standardContractAmount
+              })
+            }
+          }
+        },
+        error: (err) => {
+          console.error('Error fetching contract details:', err.error.message);
+        }
+      });
+    }
   }
-  else if (!contractExpire && contractID !== '' && THCTYPE === '2') {
-     this.contractAmtMsg = '';
+
+  handleContractResponse(response: any) {
+    const THCTYPE = this.docketService.loginUserList.Type?.toString(); // '1' | '2' | '3'
+    const vendorType = this.challanService.challanForm.value.vendorType;
+    const data = response?.data || {};
+    const contractID = (data.contractID ?? '').toString();
+    const contractExpire = !!data.contractExpire;
+    this.contractAmtMsg = '';
+    if ((THCTYPE === '3' && vendorType === '04') || (THCTYPE === '1' && vendorType === 'XX1')) {
+      this.contractAmtMsg = '';
+    }
+    else if (!contractExpire && contractID !== '' && THCTYPE === '2') {
+      this.contractAmtMsg = '';
+    }
+    else if (contractID === '' && (((THCTYPE === '3' || THCTYPE === '2') && vendorType === '04') || (THCTYPE === '1' && vendorType === 'XX1'))) {
+      this.contractAmtMsg = 'Vendor Contract not found';
+    }
+    else {
+      this.contractAmtMsg = 'Vendor Contract has Expired.';
+    }
   }
-  else if (contractID === '' && ( ((THCTYPE === '3' || THCTYPE === '2') && vendorType === '04') || (THCTYPE === '1' && vendorType === 'XX1'))) {
-    this.contractAmtMsg = 'Vendor Contract not found';
-  }
-  else {
-    this.contractAmtMsg = 'Vendor Contract has Expired.';
-  }
-}
 
   get isAllSelected(): boolean {
     const validRows = this.challanService.avalabledocket.controls.filter((c: any) => !c.value.Message);
@@ -519,7 +491,6 @@ onDigitChange(digit: number) {
 validateVehicleNo() {
   const control = this.challanService.challanForm.get('mKTVehicleNo');
   if (!control) return;
-
   let value = (control.value || '').toUpperCase();
   let filtered = '';
   const patternMap: { [key: number]: RegExp[] } = {
@@ -613,21 +584,8 @@ vendorCodeName(){
   }
 
   getTripSheetList(event: any) {
-    // this.THCService.getTripSheet(event.value).subscribe({
-    //   next: (response: any) => {
-    //     if (response && response.data) {
-    //      this.challanService.challanForm.patchValue({
-    //       // TDSPercent:response.data.tdsPercentage,
-    //      })
-    //     }
-    //   },
-    //   error: (err) => {
-    //     this.sweetAlertService.error(err.error.message)
-    //   }
-    // });
-    this.challanService.challanForm.patchValue({
-      mKTVehicleNo: '',
-    });
+    this.challanService.challanForm.patchValue({ mKTVehicleNo: ''});
+
     this.isVehicleType = false;
     if (event.value !== 'O') {
       this.getNewVehicleDetail(event.value)
@@ -654,8 +612,7 @@ vendorCodeName(){
   }
 
 getVehicleCapacity(id:string){
-  this.THCService.getVahicleCapacity(id).subscribe({
-    next: (response: any) => {
+  this.THCService.getVahicleCapacity(id).subscribe({next: (response: any) => {
       if (response && response.data) {
        this.challanService.challanForm.patchValue({
         vehicleCapacity:response.data.capacity,
@@ -666,14 +623,14 @@ getVehicleCapacity(id:string){
   });
 }
 
- checkDateExpiry(dateValue: any): boolean {
-  if (!dateValue) return false; // no message if empty
-  const date = new Date(dateValue);
-  date.setHours(0, 0, 0, 0);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return date < today;
-}
+  checkDateExpiry(dateValue: any): boolean {
+    if (!dateValue) return false; // no message if empty
+    const date = new Date(dateValue);
+    date.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return date < today;
+  }
 
 checkPermitExpiry(event?:any) {
   const permit = event ? event: this.challanService.challanForm.value.permitDate;
@@ -695,21 +652,19 @@ checkLicenseExpiry(event?:any) {
   this.isLicenseExpired = this.checkDateExpiry(license);
 }
 
-
-getPANnumberData(event:any){
-const vendorName= this.challanService.vendorsList.find((x:any)=>x.vendor_Code===event)?.vendor_Name
-  this.challanService.challanForm.patchValue({
-    vehicleType:null,
-    vehicleNO:null,
-    vendorName:vendorName || event
-  })
-  this.THCService.getPANnumber(event).subscribe({
-      next: (response: any) => {
+  getPANnumberData(event: any) {
+    const vendorName = this.challanService.vendorsList.find((x: any) => x.vendor_Code === event)?.vendor_Name
+    this.challanService.challanForm.patchValue({
+      vehicleType: null,
+      vehicleNO: null,
+      vendorName: vendorName || event
+    })
+    this.THCService.getPANnumber(event).subscribe({next: (response: any) => {
         if (response && response.data) {
-         this.challanService.challanForm.patchValue({
-          lorryOwnerPanNo:response.data[0]?.panno,
-          PANNO:response.data[0]?.panno
-         })
+          this.challanService.challanForm.patchValue({
+            lorryOwnerPanNo: response.data[0]?.panno,
+            PANNO: response.data[0]?.panno
+          })
         }
       },
       error: (err) => {
@@ -718,49 +673,47 @@ const vendorName= this.challanService.vendorsList.find((x:any)=>x.vendor_Code===
     });
     this.getTDSDetailsFromVendor(event);
     this.getVehicleFromVendorList(event);
-    if(this.challanService.challanForm.value.vendorType==='XX4'||this.challanService.challanForm.value.vendorType==='XX1'){
+    if (this.challanService.challanForm.value.vendorType === 'XX4' || this.challanService.challanForm.value.vendorType === 'XX1') {
       this.GetVehicleTypesForChallanFromRouteVendType()
-    }else{
+    } else {
       this.getVehicleType('O')
     }
     if (this.challanService.challanForm.value.vendorType === '04') {
-        this.avalabledocketinPRS(event);
+      this.avalabledocketinPRS(event);
     }
     this.getContractDetail()
-}
-
-getVehicleFromVendorList(vendor:string){
-  this.THCService.getvehicleDetailFromVendor(this.challanService.challanForm.value.vendorType,vendor).subscribe({
-      next: (response: any) => {
-        if (response && response.data) {
-         this.vehicleNoList=response.data;
-        }
-      },
-      error: (err) => {
-        this.sweetAlertService.error(err.error.message)
-      }
-    });
-}
-
-getTDSDetailsFromVendor(vendorCode:string){
-  const payload={
-    venderCode:vendorCode
   }
-  this.THCService.getTDSDetailsFromVendor(payload).subscribe({
-      next: (response: any) => {
+
+  getVehicleFromVendorList(vendor: string) {
+    this.THCService.getvehicleDetailFromVendor(this.challanService.challanForm.value.vendorType, vendor).subscribe({next: (response: any) => {
         if (response && response.data) {
-        this.challanService.challanForm.patchValue({
-          TDSAcccode:response.data.acccode,
-          TDSPercent:response.data.tdsPercentage,
-          isTDSEnabled:response.data.isTDSApplicable
-        })
+          this.vehicleNoList = response.data;
         }
       },
       error: (err) => {
         this.sweetAlertService.error(err.error.message)
       }
     });
-}
+  }
+
+  getTDSDetailsFromVendor(vendorCode: string) {
+    const payload = {
+      venderCode: vendorCode
+    }
+    this.THCService.getTDSDetailsFromVendor(payload).subscribe({next: (response: any) => {
+        if (response && response.data) {
+          this.challanService.challanForm.patchValue({
+            TDSAcccode: response.data.acccode,
+            TDSPercent: response.data.tdsPercentage,
+            isTDSEnabled: response.data.isTDSApplicable
+          })
+        }
+      },
+      error: (err) => {
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+  }
 
   onChangeCityListList(){
     this.toCityList = [];
@@ -779,9 +732,7 @@ getTDSDetailsFromVendor(vendorCode:string){
       }
       return;
     }
-
-    this.THCService.getAllCityByLocation(locCode, searchText).subscribe({
-      next: (response:any) => {
+    this.THCService.getAllCityByLocation(locCode, searchText).subscribe({next: (response: any) => {
         if (response) {
           if (type === 'from') {
             this.fromCityList = response;
@@ -822,13 +773,13 @@ getTDSDetailsFromVendor(vendorCode:string){
     }
   }
 
-getNewVehicleDetail(vehicleNo:string){
+  getNewVehicleDetail(vehicleNo: string) {
     this.THCService.getNewVehicleDetail(vehicleNo.toUpperCase()).subscribe({
       next: (response: any) => {
         if (response) {
-           this.challanService.challanForm.patchValue({
-            vehicleType:response.data.vehicle_Type,
-            fTLType:response.data.ftltyPe,
+          this.challanService.challanForm.patchValue({
+            vehicleType: response.data.vehicle_Type,
+            fTLType: response.data.ftltyPe,
             eNGINENO: response.data.engineNo || '',
             cHASISNO: response.data.chasisNo || '',
             rCBOOKNO: response.data.rcBookNo || '',
@@ -836,17 +787,13 @@ getNewVehicleDetail(vehicleNo:string){
             permitDate: response.data.vehprmdt ? new Date(response.data.vehprmdt) : null,
             insuranceDate: response.data.insuranceValDt ? new Date(response.data.insuranceValDt) : null,
             fitnessDate: response.data.fitnessValDt ? new Date(response.data.fitnessValDt) : null,
-            openKM:response.data.startKM
+            openKM: response.data.startKM
           });
-          // this.vehicleTypeList = [{
-          //   typeCode: response.data.vehicle_Type,
-          //   type_Name: response.data.type_Name
-          // }];
-            this.getContractDetail();
-          if(this.challanService.challanForm.value === 'XX4' || this.challanService.challanForm.value === 'XX1'){
+          this.getContractDetail();
+          if (this.challanService.challanForm.value === 'XX4' || this.challanService.challanForm.value === 'XX1') {
             this.GetVehicleTypesForChallanFromRouteVendType()
-          }else{
-            this.getVehicleType(vehicleNo?vehicleNo:'O')
+          } else {
+            this.getVehicleType(vehicleNo ? vehicleNo : 'O')
           }
           this.getVehicleCapacity(response.data.vehicle_Type)
         }
@@ -856,36 +803,34 @@ getNewVehicleDetail(vehicleNo:string){
         this.sweetAlertService.error(err.error.message)
       }
     });
-}
-GetVehicleTypesForChallanFromRouteVendType(){
-const payload={
-  vehicleNo:this.challanService.challanForm.value.vehicleNO?this.challanService.challanForm.value.vehicleNO:'O',
-  routeMode:this.challanService.challanForm.value.routeType?this.challanService.challanForm.value.routeType:'',
-  routeName:this.challanService.challanForm.value.routeCode?this.challanService.challanForm.value.routeCode:'',
-  vendorType:this.challanService.challanForm.value.vendorType?this.challanService.challanForm.value.vendorType:'',
-  vendorCode:this.challanService.challanForm.value.vendorCode?this.challanService.challanForm.value.vendorCode:'',
-  thcType:this.docketService.loginUserList.Type,
-  baseLocationCode:this.docketService.loginUserList.LocationCode
-}
-if(this.challanService.challanForm.value.vehicleNO || this.challanService.challanForm.value.routeType || this.challanService.challanForm.value.routeCode ||
-  this.challanService.challanForm.value.vendorType || this.challanService.challanForm.value.vendorCode){
-  this.THCService.getVehicleTypesForChallanFromRouteVendType(payload).subscribe({
-      next: (response: any) => {
-        if (response) {
-          this.vehicleTypeList=response.data;
-        }
-      },
-      error: (err) => {
-      }
-    });
   }
-}
 
-getVehicleType(vehicleNo:string){
-  this.THCService.getVehicleType(vehicleNo).subscribe({
-      next: (response: any) => {
+  GetVehicleTypesForChallanFromRouteVendType() {
+    const payload = {
+      vehicleNo: this.challanService.challanForm.value.vehicleNO ? this.challanService.challanForm.value.vehicleNO : 'O',
+      routeMode: this.challanService.challanForm.value.routeType ? this.challanService.challanForm.value.routeType : '',
+      routeName: this.challanService.challanForm.value.routeCode ? this.challanService.challanForm.value.routeCode : '',
+      vendorType: this.challanService.challanForm.value.vendorType ? this.challanService.challanForm.value.vendorType : '',
+      vendorCode: this.challanService.challanForm.value.vendorCode ? this.challanService.challanForm.value.vendorCode : '',
+      thcType: this.docketService.loginUserList.Type,
+      baseLocationCode: this.docketService.loginUserList.LocationCode
+    }
+    if (this.challanService.challanForm.value.vehicleNO || this.challanService.challanForm.value.routeType || this.challanService.challanForm.value.routeCode ||
+      this.challanService.challanForm.value.vendorType || this.challanService.challanForm.value.vendorCode) {
+      this.THCService.getVehicleTypesForChallanFromRouteVendType(payload).subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.vehicleTypeList = response.data;
+          }
+        }
+      });
+    }
+  }
+
+  getVehicleType(vehicleNo: string) {
+    this.THCService.getVehicleType(vehicleNo).subscribe({next: (response: any) => {
         if (response) {
-          this.vehicleTypeList=response.data;
+          this.vehicleTypeList = response.data;
         }
       },
       error: (err) => {
@@ -893,13 +838,12 @@ getVehicleType(vehicleNo:string){
         this.sweetAlertService.error(err.error.message)
       }
     });
-}
+  }
 
-getDAList(){
-  this.THCService.getDAList("7").subscribe({
-      next: (response: any) => {
+  getDAList() {
+    this.THCService.getDAList("7").subscribe({next: (response: any) => {
         if (response) {
-          this.deliverAgentData=response.data;
+          this.deliverAgentData = response.data;
         }
       },
       error: (err) => {
@@ -907,107 +851,63 @@ getDAList(){
         this.sweetAlertService.error(err.error.message)
       }
     });
-}
-formatDate(dateStr: string): string {
-  if (!dateStr) return '';
-  const date = new Date(dateStr);
-  return date.toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric'
-  }).replace(',', '');
-}
-
-// generatePRSfilter(event?:any){ 
-//   if(this.docketService.loginUserList.Type === '1'){
-//     return;
-//   }
-//   if(this.challanService.challanForm.value?.vendorType!=='04' && event){
-//       return;
-//   }
-//   const data = this.challanService.filterList;
-//   const payload = {
-//     gcno: '0',
-//     drsType: "",
-//     typ:this.docketService.loginUserList.Type === '2' ? 2 : 3,
-//     datetype: data.bookingDateType || '',
-//     vendorCode:this.challanService.challanForm.value?.vendorType ==='04'? this.challanService.challanForm.value.vendorCode:'',
-//     bookedBy:  data.BookedBy || '',
-//     bookedByType: data.BookedByType || '',
-//     fromDate: new Date(data?.dateRange[0]).toISOString(),
-//     toDate: new Date(data?.dateRange[1]).toISOString(),
-//     paybas: data.paybas? data.paybas:'ALL',
-//     trnmod: data.trnMod?data.trnMod:'ALL',
-//     bustype: data.bustyp?data.bustyp:'ALL',
-//     doctyp: this.docketService.loginUserList.Type === '2'?"PRS":"DRS",
-//     loadingBy: data.loadingBy || '',
-//     chargeType: data.chrgType?data.chrgType:"ALL",
-//     odaType: data.odaType?data.odaType:'',
-//   }
-//   const baseCompanydata = {
-//     TYP:this.docketService.loginUserList.Type === '2' ? 2 : 3,
-//     baseCompanyCode:this.docketService.loginUserList.Companycode,
-//     baseLocationCode:this.docketService.loginUserList.LocationCode,
-//   }
-//     this.THCService.generate(baseCompanydata,payload).subscribe({
-//     next: (response: any) => {
-//       if (response) {
-//           this.challanService.vendtyData = response.listVendorType.map((x: any) => ({
-//           codeId: x.vendor_Type_Code,
-//           codeDesc: x.vendor_Type
-//         }));
-//       }
-//       },error: (err) => {
-//         this.sweetAlertService.error(err.error.message)
-//       }
-//     });
-// }
-avalabledocketinPRS(event?:any){ 
-  if(this.docketService.loginUserList.Type === '1'){
-    return;
   }
-  if(this.challanService.challanForm.value?.vendorType!=='04' && event){
+
+  formatDate(dateStr: string): string {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    }).replace(',', '');
+  }
+
+  avalabledocketinPRS(event?: any) {
+    if (this.docketService.loginUserList.Type === '1') {
       return;
-  }
-  const data = this.challanService.filterList;
-  const payload = {
-    fromdt: this.formatDate(data?.dateRange[0]),
-    todt: this.formatDate(data?.dateRange[1]),
-    dttyp: data.dttyp ? data.dttyp :'',
-    paybas: data.paybas? data.paybas:'ALL',
-    trn: data.trnMod?data.trnMod:'ALL',
-    bustyp: data.bustyp?data.bustyp:'ALL',
-    status: this.challanService.challanForm.value?.vendorType === '04' ? 'B' : 'P' ,
-    doctyp: this.docketService.loginUserList.Type === '2'?"PRS":"DRS",
-    baseLocationCode:this.docketService.loginUserList.LocationCode,
-    docketList: data.docketList?data.docketList:'',
-    alloted_To:this.challanService.challanForm.value?.vendorType ==='04'? this.challanService.challanForm.value.vendorCode:'',
-    loadingBy: data.loadingBy,
-    chrgType: data.chrgType?data.chrgType:"ALL",
-    odaType: data.odaType?data.odaType:'',
-    baseCompanyCode:this.docketService.loginUserList.Companycode,
-    flag: data.flag,
-  }
+    }
+    if (this.challanService.challanForm.value?.vendorType !== '04' && event) {
+      return;
+    }
+    const data = this.challanService.filterList;
+    const payload = {
+      fromdt: this.formatDate(data?.dateRange[0]),
+      todt: this.formatDate(data?.dateRange[1]),
+      dttyp: data.dttyp ? data.dttyp : '',
+      paybas: data.paybas ? data.paybas : 'ALL',
+      trn: data.trnMod ? data.trnMod : 'ALL',
+      bustyp: data.bustyp ? data.bustyp : 'ALL',
+      status: this.challanService.challanForm.value?.vendorType === '04' ? 'B' : 'P',
+      doctyp: this.docketService.loginUserList.Type === '2' ? "PRS" : "DRS",
+      baseLocationCode: this.docketService.loginUserList.LocationCode,
+      docketList: data.docketList ? data.docketList : '',
+      alloted_To: this.challanService.challanForm.value?.vendorType === '04' ? this.challanService.challanForm.value.vendorCode : '',
+      loadingBy: data.loadingBy,
+      chrgType: data.chrgType ? data.chrgType : "ALL",
+      odaType: data.odaType ? data.odaType : '',
+      baseCompanyCode: this.docketService.loginUserList.Companycode,
+      flag: data.flag,
+    }
     this.isLoading = true;
-    this.THCService.avalabledocketinPRS(payload).pipe(finalize(() => { this.isLoading = false; })).subscribe({
-    next: (response: any) => {
-      if (response && response.data && Array.isArray(response.data)) {
-        const updatedData = response.data;
-        const docketArray = this.challanService.avalabledocket;
-        if (docketArray && docketArray.length > 0) {
-          updatedData.forEach((item: any) => {
-            const match = docketArray.controls.find(
-              (ctrl: any) => ctrl.value.DOCKNO === item.dockno
-            );
-            if (match) {
-              match.get('ContractAmount')?.setValue(item.contractAmount);
-              match.get('tDSOnAmount')?.setValue(item.contractAmount);
-            }
-          });
-        } else {
-          this.challanService.patchAvailableDockets(updatedData);
-        }
-         // filter chrgType
+    this.THCService.avalabledocketinPRS(payload).pipe(finalize(() => { this.isLoading = false; })).subscribe({next: (response: any) => {
+        if (response && response.data && Array.isArray(response.data)) {
+          const updatedData = response.data;
+          const docketArray = this.challanService.avalabledocket;
+          if (docketArray && docketArray.length > 0) {
+            updatedData.forEach((item: any) => {
+              const match = docketArray.controls.find(
+                (ctrl: any) => ctrl.value.DOCKNO === item.dockno
+              );
+              if (match) {
+                match.get('ContractAmount')?.setValue(item.contractAmount);
+                match.get('tDSOnAmount')?.setValue(item.contractAmount);
+              }
+            });
+          } else {
+            this.challanService.patchAvailableDockets(updatedData);
+          }
+          // filter chrgType
           const chrgTypeValue = this.challanService.filterList.chrgType;
           if (chrgTypeValue) {
             this.challanService.avalabledocket.controls.forEach((ctrl) => {
@@ -1016,37 +916,36 @@ avalabledocketinPRS(event?:any){
               });
             });
           }
-
-        this.updateTotalDockets();
-      }
-      },error: (err) => {
+          this.updateTotalDockets();
+        }
+      }, error: (err) => {
         this.sweetAlertService.error(err.error.message)
       }
     });
-}
-getMFListFromRoute(event:any){
-  this.challanService.challanForm.patchValue({
-    vendorCode:null,
-    routeName:event.text
-  })
-  const paylaod = {
-    location: event.value,
-    isBCProcess: "N",
-    thcDate:  this.datePipe.transform(this.challanService.challanForm.value.tHCDate,'dd MMM yyyy'),
-    baseCompanyCode: this.docketService.loginUserList.Companycode
   }
-  this.isLoadingMF = true;
-  this.THCService.getMFListFromRoute(paylaod).pipe(
+
+  getMFListFromRoute(event: any) {
+    this.challanService.challanForm.patchValue({
+      vendorCode: null,
+      routeName: event.text
+    })
+    const paylaod = {
+      location: event.value,
+      isBCProcess: "N",
+      thcDate: this.datePipe.transform(this.challanService.challanForm.value.tHCDate, 'dd MMM yyyy'),
+      baseCompanyCode: this.docketService.loginUserList.Companycode
+    }
+    this.isLoadingMF = true;
+    this.THCService.getMFListFromRoute(paylaod).pipe(
       finalize(() => { this.isLoadingMF = false; })
-    ).subscribe({
-      next: (response: any) => {
+    ).subscribe({next: (response: any) => {
         if (response) {
-           const formArray = this.challanService.avalableForTHC;
-           formArray.clear();
-         const list = Array.isArray(response) ? response : (response?.data || []);
-         for(let i = 0; i < list.length; i++){
-          formArray.push(this.challanService.buildMfGroup(list[i]));
-         };
+          const formArray = this.challanService.avalableForTHC;
+          formArray.clear();
+          const list = Array.isArray(response) ? response : (response?.data || []);
+          for (let i = 0; i < list.length; i++) {
+            formArray.push(this.challanService.buildMfGroup(list[i]));
+          };
         }
       },
       error: (err) => {
@@ -1054,64 +953,63 @@ getMFListFromRoute(event:any){
         this.sweetAlertService.error(err.error.message)
       }
     });
-  this.getContractDetail();
-  this.getERDDate()
-}
-
-getERDDate(){
-    const raw = this.challanService.challanForm.value.tHCDate;
-
-  const formatted = this.datePipe.transform(raw, "dd MMMM yyyy hh:mm a");
-  const payload={
-    routeCode:this.challanService.challanForm.value.routeCode,
-    thcDate:formatted
+    this.getContractDetail();
+    this.getERDDate()
   }
-  this.THCService.getERDDate(payload).subscribe({
+
+  getERDDate() {
+    const raw = this.challanService.challanForm.value.tHCDate;
+    const formatted = this.datePipe.transform(raw, "dd MMMM yyyy hh:mm a");
+    const payload = {
+      routeCode: this.challanService.challanForm.value.routeCode,
+      thcDate: formatted
+    }
+    this.THCService.getERDDate(payload).subscribe({
       next: (response: any) => {
-      this.challanService.challanForm.patchValue({
-        ERD:response.data.erD_DateTime
-      })
+        this.challanService.challanForm.patchValue({
+          ERD: response.data.erD_DateTime
+        })
       },
       error: (err) => {
         console.error('Error fetching vehicle details:', err.error.message);
       }
     });
-}
-
-updateTotalManifest(mfNo:string): void {
-  const payload = {
-    mfNo:mfNo
   }
-  this.THCService.getEWayBillExpiryDateByMF(payload).subscribe({
-      next: (response: any) => {
+
+  updateTotalManifest(mfNo: string): void {
+    const payload = {
+      mfNo: mfNo
+    }
+    this.THCService.getEWayBillExpiryDateByMF(payload).subscribe({ next: (response: any) => {
         if (response && response.data) {
           const result = response.data[0];
           if (result.message) {
             this.sweetAlertService.info(result.message);
           } else if (result.expiryDate) {
-            this.sweetAlertService.info( `This Manifest E-Way Bill expired on: ${result.expiryDate}. Please update or verify before continuing!`);
-            this.challanService.challanForm.patchValue({eWayBillExpiredDate:new Date(result.expiryDate)})
+            this.sweetAlertService.info(`This Manifest E-Way Bill expired on: ${result.expiryDate}. Please update or verify before continuing!`);
+            this.challanService.challanForm.patchValue({ eWayBillExpiredDate: new Date(result.expiryDate) })
           }
         }
-      this.getContractDetail();
-
+        this.getContractDetail();
       },
       error: (err) => {
         this.sweetAlertService.error(err.error.message)
       }
     });
-   
+
     const totals = this.challanService.avalableForTHC.controls.reduce((acc, g) => {
-    if (g.get('selected')?.value) {
-      acc.totalManifests += 1;
-      acc.totalWeight += Number(g.get('TOT_LOAD_ACTWT')?.value) || 0;
-    }
-    return acc; },{ totalManifests: 0, totalWeight: 0 });
-  this.challanService.challanForm.patchValue({
+      if (g.get('selected')?.value) {
+        acc.totalManifests += 1;
+        acc.totalWeight += Number(g.get('TOT_LOAD_ACTWT')?.value) || 0;
+      }
+      return acc;
+    }, { totalManifests: 0, totalWeight: 0 });
+    
+    this.challanService.challanForm.patchValue({
       TotalManifest: totals.totalManifests,
       wtLoaded: totals.totalWeight,
-    },{ emitEvent: false });
-    
+    }, { emitEvent: false });
+
     const vehicleCapacity = this.challanService.challanForm.value.vehicleCapacity;
     const weightLoaded = this.challanService.challanForm.value.wtLoaded;
     if (vehicleCapacity && weightLoaded) {
@@ -1126,27 +1024,26 @@ updateTotalManifest(mfNo:string): void {
         vehicleCapacityUti: 0
       });
     }
-    if(this.challanService.challanForm.value.wtLoaded >  vehicleCapacity){
+    if (this.challanService.challanForm.value.wtLoaded > vehicleCapacity) {
       this.challanService.challanForm.patchValue({
-        isOverLoad:true
+        isOverLoad: true
       })
     }
   }
 
-getRoutesFromRouteType(event:any){
-  this.challanService.challanForm.patchValue({
-    routeName:null,
-    vendorType:null,
-    vendorCode:null,
-    routeCode:null
-  })
-  const paylaod = {
-    routeType:event.codeId,
-    isEmpty:'N',
-    locationCode:this.docketService.loginUserList.LocationCode
-  }
-  this.THCService.getRoutesFromRouteType(paylaod).subscribe({
-      next: (response: any) => {
+  getRoutesFromRouteType(event: any) {
+    this.challanService.challanForm.patchValue({
+      routeName: null,
+      vendorType: null,
+      vendorCode: null,
+      routeCode: null
+    })
+    const paylaod = {
+      routeType: event.codeId,
+      isEmpty: 'N',
+      locationCode: this.docketService.loginUserList.LocationCode
+    }
+    this.THCService.getRoutesFromRouteType(paylaod).subscribe({next: (response: any) => {
         if (response) {
           this.routeNameList = response
         }
@@ -1156,32 +1053,31 @@ getRoutesFromRouteType(event:any){
         this.sweetAlertService.error(err.error.message)
       }
     });
-    if(event.codeId === 'S'){
+    if (event.codeId === 'S') {
       this.getVehicleType('O')
     }
-    if(event.codeId==='A'){
+    if (event.codeId === 'A') {
       this.getAirportDetail()
       this.getAirlineList()
     }
-}
-
-getDAMobileNo(event:any){
-  const paylaod={
-    agentCode:event.userId
   }
-  this.THCService.getDeliveryAgentMobileNo(paylaod).subscribe({
-      next: (response: any) => {
-        if(response){
-          if(response.data.counts!==0){
+
+  getDAMobileNo(event: any) {
+    const paylaod = {
+      agentCode: event.userId
+    }
+    this.THCService.getDeliveryAgentMobileNo(paylaod).subscribe({next: (response: any) => {
+        if (response) {
+          if (response.data.counts !== 0) {
             this.sweetAlertService.info(`Please Clear this Agent Previous Assign DRS And MR Collection, Documents :${response.data.docList}!!`);
             this.challanService.challanForm.patchValue({
-              deliveryAgent:null,
-               deliveryAgentMoNo:null
-         })
-          }else{
-             this.challanService.challanForm.patchValue({
-               deliveryAgentMoNo:response.data.mobileNo
-         })
+              deliveryAgent: null,
+              deliveryAgentMoNo: null
+            })
+          } else {
+            this.challanService.challanForm.patchValue({
+              deliveryAgentMoNo: response.data.mobileNo
+            })
           }
         }
       },
@@ -1189,16 +1085,15 @@ getDAMobileNo(event:any){
         this.sweetAlertService.error(err.error.message)
       }
     });
-}
+  }
 
-getAirportDetail(){
-   this.THCService.getAirport(this.docketService.loginUserList.LocationCode).subscribe({
-      next: (response: any) => {
+  getAirportDetail() {
+    this.THCService.getAirport(this.docketService.loginUserList.LocationCode).subscribe({next: (response: any) => {
         if (response && response.data) {
           this.airportList = response.data
-         this.challanService.challanForm.patchValue({
-          airportCode:response.data[0]?.codeId
-         });
+          this.challanService.challanForm.patchValue({
+            airportCode: response.data[0]?.codeId
+          });
         }
       },
       error: (err) => {
@@ -1206,11 +1101,10 @@ getAirportDetail(){
         this.sweetAlertService.error(err.error.message)
       }
     });
-}
+  }
 
- getAirlineList() {
-    this.basicDetailService.getGeneralMasterList('ALN ', '', '').subscribe({
-      next: (response) => {
+  getAirlineList() {
+    this.basicDetailService.getGeneralMasterList('ALN ', '', '').subscribe({next: (response) => {
         if (response.success) {
           this.airlineList = response.data;
         }
@@ -1218,14 +1112,13 @@ getAirportDetail(){
     });
   }
 
-  getFlights(){
+  getFlights() {
     const payload = {
-      airLine:this.challanService.challanForm.value.airLine,
-      airport:this.challanService.challanForm.value.airportCode
+      airLine: this.challanService.challanForm.value.airLine,
+      airport: this.challanService.challanForm.value.airportCode
     }
-    if (!payload.airLine || !payload.airport) { return;}
-   this.THCService.getFlights(payload).subscribe({
-      next: (response: any) => {
+    if (!payload.airLine || !payload.airport) { return; }
+    this.THCService.getFlights(payload).subscribe({next: (response: any) => {
         if (response && response.data) {
           this.flightsList = response.data
         }
@@ -1235,182 +1128,137 @@ getAirportDetail(){
         this.sweetAlertService.error(err.error.message)
       }
     });
-}
+  }
 
-onChangeVehicleType(event:any){
-  this.isVehicleType=true;
+  onChangeVehicleType(event: any) {
+    this.isVehicleType = true;
     this.getVehicleCapacity(event.typeCode);
-    this.challanService.challanForm.patchValue({
-      fTLType:event.typeCode
-    })
-}
+    this.challanService.challanForm.patchValue({fTLType: event.typeCode})
+  }
 
   getCustomerListForTHC(event?: any) {
     const searchText = event.term;
     if (!searchText || searchText.length < 1) {
-        this.customerList = [];
-        this.notCustomerListValue = 'Please enter at least 1 characters';
+      this.customerList = [];
+      this.notCustomerListValue = 'Please enter at least 1 characters';
       return;
     }
 
     this.notCustomerListValue = 'Searching...';
-    this.THCService.getCustomerListForTHC(searchText).subscribe({
-      next: (response:any) => {
+    this.THCService.getCustomerListForTHC(searchText).subscribe({next: (response: any) => {
         if (response) {
-            this.customerList = response;
-            this.notCustomerListValue = 'No matches found';
+          this.customerList = response;
+          this.notCustomerListValue = 'No matches found';
         } else {
-            this.customerList = [];
-            this.notCustomerListValue = '';
+          this.customerList = [];
+          this.notCustomerListValue = '';
         }
       },
       error: () => {
-          this.customerList = [];
-          this.notCustomerListValue = '';
+        this.customerList = [];
+        this.notCustomerListValue = '';
       }
     });
   }
 
   resetCustomerDropdown() {
-      this.customerList = [];
-      this.notCustomerListValue = 'Please enter at least 1 characters';
+    this.customerList = [];
+    this.notCustomerListValue = 'Please enter at least 1 characters';
   }
 
-  getFlightSchTime(){
+  getFlightSchTime() {
     const payload = {
-      flightCode:this.challanService.challanForm.value.flightCode,
-      airport:this.challanService.challanForm.value.airportCode
+      flightCode: this.challanService.challanForm.value.flightCode,
+      airport: this.challanService.challanForm.value.airportCode
     }
-    if (!payload.flightCode || !payload.airport) { return;}
-   this.THCService.getFlightSchTime(payload).subscribe({
-      next: (response: any) => {
+    if (!payload.flightCode || !payload.airport) { return; }
+    this.THCService.getFlightSchTime(payload).subscribe({next: (response: any) => {
         if (response) {
-          this.challanService.challanForm.patchValue({flightScheduleTime:response?.schTime})
+          this.challanService.challanForm.patchValue({ flightScheduleTime: response?.schTime })
         }
       },
       error: (err) => {
         this.sweetAlertService.error(err.error.message)
       }
     });
-}
-
-
-// onFileSelected(event: any) {
-//   const file = event.target.files[0];
-//   if (file) {
-//     this.challanService.selectedFile = file;
-//     this.selectedFileName = file.name;
-//     this.isImageFile = file.type.startsWith('image/');
-
-//     if (this.isImageFile) {
-//       // Show image preview
-//       const reader = new FileReader();
-//       reader.onload = () => this.previewUrl = reader.result;
-//       reader.readAsDataURL(file);
-//     } else {
-//       // For PDF, just show file name (no preview)
-//       this.previewUrl = null;
-//     }
-
-//     // Assign file to form control
-//     this.challanService.challanForm.patchValue({
-//       loadingSlipAttachment: file
-//     });
-//   }
-// }
-
-onFileSelected(event: any) {
-  const file = event.target.files[0];
-
-  if (!file) return;
-
-  const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf', 'application/vnd.ms-excel', // .xls
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
-
-  // Validate file type
-  if (!allowedTypes.includes(file.type)) {
-    this.sweetAlertService.error("Please upload a valid file (Image or PDF or Excel)");
-    event.target.value = ''; // reset file input
-    return;
   }
 
-   this.challanService.selectedFile = file;
-  this.selectedFileName = file.name;
-  this.isImageFile = file.type.startsWith('image');
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf', 'application/vnd.ms-excel', // .xls
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+    // Validate file type
+    if (!allowedTypes.includes(file.type)) {
+      this.sweetAlertService.error("Please upload a valid file (Image or PDF or Excel)");
+      event.target.value = ''; // reset file input
+      return;
+    }
+    this.challanService.selectedFile = file;
+    this.selectedFileName = file.name;
+    this.isImageFile = file.type.startsWith('image');
+    if (this.isImageFile) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewUrl = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      this.previewUrl = null;
+    }
+    this.challanService.challanForm.patchValue({loadingSlipAttachment: file});
+  }
 
-  if (this.isImageFile) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.previewUrl = reader.result as string;
-    };
-    reader.readAsDataURL(file);
-  } else {
+triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeElement.click();}
+
+  removeAttachment() {
+    this.challanService.selectedFile = null;
     this.previewUrl = null;
+    this.selectedFileName = null;
+    this.isImageFile = false;
+    this.challanService.challanForm.patchValue({loadingSlipAttachment: null});
   }
-    this.challanService.challanForm.patchValue({
-      loadingSlipAttachment: file
-    });
-}
 
-
-triggerFileInput() {
-  if (this.fileInput?.nativeElement) this.fileInput.nativeElement.click();
-}
-
-removeAttachment() {
-  this.challanService.selectedFile = null;
-  this.previewUrl = null;
-  this.selectedFileName = null;
-  this.isImageFile = false;
-  this.challanService.challanForm.patchValue({
-    loadingSlipAttachment: null
-  });
-}
-
-getDeliveryZoneData(){
-  this.THCService.getDeliveryDetail(this.docketService.loginUserList.LocationCode).subscribe({
-      next: (response: any) => {
+  getDeliveryZoneData() {
+    this.THCService.getDeliveryDetail(this.docketService.loginUserList.LocationCode).subscribe({next: (response: any) => {
         if (response) {
-          this.deliveryZoneData=response;
+          this.deliveryZoneData = response;
         }
       }
     });
-}
-
-getApprovedByData(event?: any) {
-  const searchText = event?.term;
-
-  // If no search text OR less than 3 characters → reset list & show message
-  if (!searchText || searchText.length < 3) {
-    this.approvalList = [];
-    this.notApprovalValue = 'Please enter at least 3 characters';
-    return;   // IMPORTANT: stop the function here
   }
-  const payload={
-    searchTerm:searchText
-  }
-this.notApprovalValue='searching...'
-  this.THCService.getUserList(payload).subscribe({
-    next: (response: any) => {
-      if(response){
-      this.approvalList = response ;
-      this.notApprovalValue = 'No matches found'; 
-      }else{
-      this.notApprovalValue = ''; 
-      }
-    },
-  });
-}
 
- onChangeApprovalList(){
+  getApprovedByData(event?: any) {
+    const searchText = event?.term;
+    if (!searchText || searchText.length < 3) {
+      this.approvalList = [];
+      this.notApprovalValue = 'Please enter at least 3 characters';
+      return;   // IMPORTANT: stop the function here
+    }
+    const payload = {
+      searchTerm: searchText
+    }
+    this.notApprovalValue = 'searching...'
+    this.THCService.getUserList(payload).subscribe({next: (response: any) => {
+        if (response) {
+          this.approvalList = response;
+          this.notApprovalValue = 'No matches found';
+        } else {
+          this.notApprovalValue = '';
+        }
+      },
+    });
+  }
+
+  onChangeApprovalList() {
     this.approvalList = [];
     this.notApprovalValue = 'Please enter at least 3 characters';
   }
 
-onFocus(chargeCode: string) {
-  const control = this.challanService.challanForm.get(chargeCode);
-  if (control?.value === 0) {
-    control.setValue(null);
+  onFocus(chargeCode: string) {
+    const control = this.challanService.challanForm.get(chargeCode);
+    if (control?.value === 0) {
+      control.setValue(null);
+    }
   }
-}
 }
