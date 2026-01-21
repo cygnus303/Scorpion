@@ -1264,10 +1264,16 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
     });
   }
 
+  isFieldReadonly(): boolean {
+    return (this.challanService.filterList?.DRSType === 'Y' && !!this.challanService.challanForm?.value?.deliveryAgent);
+  }
+
   getDeliveryAgentByCodeList(code: any) {
     this.deliveryAgentService.getDeliveryAgentByCodeList(code).subscribe({next: (response) => {
         if (response) {
           // this.GetVehicleTypesForChallanFromRouteVendType(response.data.fTlType)
+          this.challanService.getVendorsList(this.challanService.challanForm.value.vendorType);
+          this.getPANnumberData(response.data.businessAssociateVendor);
           this.challanService.challanForm.patchValue({
             deliveryAgentMoNo: response.data.deliveryAgentMobile,
             vendorType: '04',
@@ -1283,10 +1289,9 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
             d1_DOB:this.datePipe.transform(response.data.dateOfBirth,"dd MMMM yyyy"),
             driver1RTONo:response.data.issueByRTO,
             driver1LicenceValDate:this.datePipe.transform(response.data.licenseValidityDate,"dd MMMM yyyy"),
-            registrationDate:this.datePipe.transform(response.data.registrationDate,"dd MMMM yyyy")
+            registrationDate:this.datePipe.transform(response.data.registrationDate,"dd MMMM yyyy"),
+            driver1Name:response.data.driverName
           });
-          this.challanService.getVendorsList(this.challanService.challanForm.value.vendorType)
-          this.getPANnumberData(response.data.businessAssociateVendor)
         }
       }
     });
