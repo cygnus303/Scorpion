@@ -200,7 +200,7 @@
                             <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Type" formControlName="vendorType" required 
                             [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorType')?.invalid  && challanService.challanForm.get('vendorType')?.touched }"
                                 notFoundText="No matches found" [items]="challanService.vendtyData" bindLabel="codeDesc" bindValue="codeId" 
-                                [readonly]="this.challanService.filterList?.BookedByType === 'B'" (change)="challanService.getVendorsList($event);vendorCodeName()" appFocusNext></ng-select>
+                                [readonly]="this.challanService.filterList?.BookedByType === 'B' || isFieldReadonly()" (change)="challanService.getVendorsList($event);vendorCodeName()" appFocusNext></ng-select>
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vendorType')?.invalid && challanService.challanForm.get('vendorType')?.touched "> This field is required.</div>
                         </div>
                     </div>
@@ -210,7 +210,7 @@
                         <label class="col-sm-5 col-form-label text-end">Vendor Code/Name</label>
                         <div class="col-sm-7">
                             <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name" formControlName="vendorCode"
-                                [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code" [readonly]="this.challanService.filterList?.BookedByType === 'B'" 
+                                [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code" [readonly]="this.challanService.filterList?.BookedByType === 'B' || isFieldReadonly()" 
                                 required [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorCode')?.invalid && challanService.challanForm.get('vendorCode')?.touched }"
                                 (change)="getPANnumberData($event?.vendor_Code)" appFocusNext>
                                 <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
@@ -471,7 +471,7 @@
                     <label class="col-sm-5 col-form-label text-end">Vehicle Type</label>
                     <div class="col-sm-7">
                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vehicle Type" formControlName="vehicleType"
-                                [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode" appFocusNext
+                                [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode" appFocusNext [readonly]="isFieldReadonly()"
                                 [ngClass]="{ 'border-danger': challanService.challanForm.get('vehicleType')?.invalid  && challanService.challanForm.get('vehicleType')?.touched }"
                             notFoundText="No matches found" (change)="onChangeVehicleType($event)"></ng-select>
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vehicleType')?.invalid && challanService.challanForm.get('vehicleType')?.touched "> This field is required.</div>
@@ -633,7 +633,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Licence No.</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Licence No." type="text" formControlName="driver1Licence" (input)="onChangeLicenceNumber($event)" appFocusNext
+                            <input class="form-control required2" placeholder="Licence No." type="text" formControlName="driver1Licence" [readonly]="isFieldReadonly()" (input)="onChangeLicenceNumber($event)" appFocusNext
                             required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1Licence')?.invalid  && challanService.challanForm.get('driver1Licence')?.touched }">
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1Licence')?.touched">
                                 <div *ngIf="challanService.challanForm.get('driver1Licence')?.hasError('required')"> This field is required.</div>
@@ -646,11 +646,11 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Date Of Birth</label>
                         <div class="col-sm-7">
-                            <div class="input-group" (click)="dbv.toggle(); $event.stopPropagation()">
+                            <div class="input-group" (click)="!isFieldReadonly() && dbv.toggle(); $event.stopPropagation()">
                                 <input class="form-control required2" placeholder="Date Of Birth" type="text"  [class.disabled-input]="true" appFocusNext
                                     #dbv="bsDatepicker" bsDatepicker formControlName="d1_DOB" [ngClass]="{ 'border-danger': challanService.challanForm.get('d1_DOB')?.invalid  && challanService.challanForm.get('d1_DOB')?.touched }" 
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY',maxDate : today}" (ngModelChange)="onChangeLicenceNumber()">
-                                <span class="input-group-text cursor-pointer" (click)="dbv.toggle();$event.stopPropagation()">
+                                <span class="input-group-text cursor-pointer" (click)="!isFieldReadonly() && dbv.toggle();$event.stopPropagation()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
@@ -663,7 +663,7 @@
                         <label class="col-sm-5 col-form-label text-end">Mobile No.</label>
                         <div class="col-sm-7">
                             <input class="form-control" placeholder="Mobile No." type="text" formControlName="driver1MobileNo"
-                                maxlength="10" pattern="[0-9]*"
+                                maxlength="10" pattern="[0-9]*" [readonly]="isFieldReadonly()"
                                 (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
                                 [ngClass]="[ challanService.challanForm.get('driver1MobileNo')?.invalid && challanService.challanForm.get('driver1MobileNo')?.touched ? 'border-danger' : '', docketService.loginUserList.Type === '1' ? 'required2' : '']" appFocusNext>
                             <div class="text-danger text-start"
@@ -684,7 +684,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Driver Name</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Driver Name" type="text" formControlName="driver1Name" appFocusNext
+                            <input class="form-control required2" placeholder="Driver Name" type="text" formControlName="driver1Name" appFocusNext [readonly]="isFieldReadonly()"
                             required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1Name')?.invalid  && challanService.challanForm.get('driver1Name')?.touched }">
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1Name')?.invalid && challanService.challanForm.get('driver1Name')?.touched "> This field is required.</div>
                         </div>
@@ -694,7 +694,7 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Issue By RTO</label>
                         <div class="col-sm-7">
-                            <input class="form-control required2" placeholder="Issue By RTO" type="text" formControlName="driver1RTONo" appFocusNext
+                            <input class="form-control required2" placeholder="Issue By RTO" type="text" formControlName="driver1RTONo" appFocusNext [readonly]="isFieldReadonly()"
                             required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1RTONo')?.invalid  && challanService.challanForm.get('driver1RTONo')?.touched }">
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1RTONo')?.invalid && challanService.challanForm.get('driver1RTONo')?.touched "> This field is required.</div>
                         </div>
@@ -704,12 +704,12 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Licence Validity Date</label>
                         <div class="col-sm-7">
-                            <div class="input-group" (click)="lvd.toggle(); $event.stopPropagation()">
+                            <div class="input-group" (click)="!isFieldReadonly() && lvd.toggle(); $event.stopPropagation()">
                                 <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="true" appFocusNext
                                     #lvd="bsDatepicker" bsDatepicker formControlName="driver1LicenceValDate"  (bsValueChange)="checkLicenseExpiry($event)"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}" readonly
                                     required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1LicenceValDate')?.invalid  && challanService.challanForm.get('driver1LicenceValDate')?.touched || isLicenseExpired}">
-                                <span class="input-group-text cursor-pointer" (click)="lvd.toggle(); $event.stopPropagation()">
+                                <span class="input-group-text cursor-pointer" (click)="!isFieldReadonly() && lvd.toggle(); $event.stopPropagation()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
