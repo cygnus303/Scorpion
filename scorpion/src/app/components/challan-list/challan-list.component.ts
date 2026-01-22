@@ -12,6 +12,8 @@ import { DocketService } from 'app/shared/services/docket.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { finalize } from 'rxjs';
+import { Modal } from 'bootstrap';
+ 
 
 @Component({
   selector: 'app-challan-list',
@@ -1351,6 +1353,14 @@ getDeliveryAgentByCodeList(code: any) {
     const control = this.challanService.challanForm.get(chargeCode);
     if (control?.value === 0) {
       control.setValue(null);
+    }
+  }
+
+    openPopup(eWayBillNo: string) {
+    const modalElement = document.getElementById('showModal');
+    if (modalElement) {
+      const modal = new Modal(modalElement);
+      modal.show();
     }
   }
 }

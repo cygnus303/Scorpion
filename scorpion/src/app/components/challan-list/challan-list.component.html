@@ -1123,7 +1123,7 @@
                             </div>
                         </td>
                 
-                        <td>{{ item.value.EWayBillNo }}</td>
+                        <td (click)="openPopup(item.value.EWayBillNo)">{{ item.value.EWayBillNo }}</td>
                         <td *ngIf="this.docketService.loginUserList.Type === '2'">{{ item.value.subreasoncode }}</td>
                         <td *ngIf="this.docketService.loginUserList.Type === '3'">{{ item.value.subreasoncode }} / {{ item.value.Commited_Dely_Date }}</td>
                         <td>{{ item.value.tatInHrs }}</td>
@@ -1412,5 +1412,14 @@
   </div>
 </div>
 
-
+ <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div>
+                 dsffff
+                </div>
+              </div>
+            </div>
+          </div>
+ 
   
