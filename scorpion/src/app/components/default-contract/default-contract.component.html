@@ -204,7 +204,6 @@
                 <label class="col-sm-5 col-form-label text-end">Weight Kgs</label>
                 <div class="col-sm-7">
                     <input class="form-control required2" type="text" placeholder="Enter Weight Kgs" formControlName="weightKG" (focus)="clearOnFocus('weightKG')" (blur)="resetOnBlur('weightKG')"
-                    (input)="getCFTCalculation()"
                      [ngClass]="{ 'border-danger': DefaultcontractForm.get('weightKG')?.invalid  && DefaultcontractForm.get('weightKG')?.touched}" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                      <div *ngIf="DefaultcontractForm.get('weightKG')?.invalid && DefaultcontractForm.get('weightKG')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('weightKG')?.hasError('required')">Weight Kgs is required.</small>
@@ -218,7 +217,7 @@
                 <label class="col-sm-5 col-form-label text-end">Pkgs</label>
                 <div class="col-sm-7">
                     <input class="form-control required2" type="text" placeholder="Enter Pkgs" formControlName="Pkgs" (focus)="clearOnFocus('Pkgs')" 
-                    (blur)="resetOnBlur('Pkgs')" (input)="getCFTCalculation()"
+                    (blur)="resetOnBlur('Pkgs')"
                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('Pkgs')?.invalid  && DefaultcontractForm.get('Pkgs')?.touched}" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                     <div *ngIf="DefaultcontractForm.get('Pkgs')?.invalid && DefaultcontractForm.get('Pkgs')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('Pkgs')?.hasError('required')">Pkgs is required.</small>
@@ -325,7 +324,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Length ({{this.contractcharge?.cft_Measure}})</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Length" formControlName="length" (input)="getCFTCalculation()"
+                    <input class="form-control" type="text" placeholder="Enter Length" formControlName="length" 
                      oninput="this.value = this.value.replace(/[^0-9]/g,'');" (focus)="clearOnFocus('length')" (blur)="resetOnBlur('length')"
                      [ngClass]="{'border-danger':DefaultcontractForm.get('length')?.hasError('max') &&DefaultcontractForm.get('length')?.touched}">
                     <div class="text-danger" *ngIf="DefaultcontractForm.get('length')?.hasError('max')">
@@ -339,7 +338,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Breadth ({{this.contractcharge?.cft_Measure}})</label>
                 <div class="col-sm-7">
-                     <input class="form-control" type="text" placeholder="Enter Breadth" formControlName="breadth" (input)="getCFTCalculation()"
+                     <input class="form-control" type="text" placeholder="Enter Breadth" formControlName="breadth" 
                      oninput="this.value = this.value.replace(/[^0-9]/g,'');" (focus)="clearOnFocus('breadth')" (blur)="resetOnBlur('breadth')"
                      [ngClass]="{'border-danger':DefaultcontractForm.get('breadth')?.hasError('max') &&DefaultcontractForm.get('breadth')?.touched}">
                      <div class="text-danger" *ngIf="DefaultcontractForm.get('breadth')?.hasError('max')">
@@ -353,7 +352,7 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Height ({{this.contractcharge?.cft_Measure}})</label>
                 <div class="col-sm-7">
-                     <input class="form-control" type="text" placeholder="Enter Height" formControlName="height" (input)="getCFTCalculation()"
+                     <input class="form-control" type="text" placeholder="Enter Height" formControlName="height"
                      oninput="this.value = this.value.replace(/[^0-9]/g,'');" (focus)="clearOnFocus('height')" (blur)="resetOnBlur('height')"
                      [ngClass]="{'border-danger':DefaultcontractForm.get('height')?.hasError('max') &&DefaultcontractForm.get('height')?.touched}">
                     <div class="text-danger" *ngIf="DefaultcontractForm.get('height')?.hasError('max')">
