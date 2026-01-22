@@ -422,7 +422,7 @@
                     <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
                     <div class="col-sm-7">
                        <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vehicle No." [items]="vehicleNoList" formControlName="vehicleNO"
-                       (change)="getTripSheetList($event)" appFocusNext
+                       (change)="getTripSheetList($event)" appFocusNext [readonly]="isFieldReadonly()"
                         [ngClass]="{ 'border-danger': challanService.challanForm.get('vehicleNO')?.invalid  && challanService.challanForm.get('vehicleNO')?.touched }"
                             notFoundText="No matches found"  bindLabel="text" bindValue="value"></ng-select>
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vehicleNO')?.invalid && challanService.challanForm.get('vehicleNO')?.touched "> This field is required.</div>
