@@ -505,9 +505,9 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
         // Proceed with the API call only if the customer is not blocked
          if (billingParty && destination && billingType) {
           const userType = this.loginUserList.Type;
-          if (userType !== '1' && userType !== '2') {
+          // if (userType !== '1' && userType !== '2') {
             this.getStep2Details();
-          }
+          // }
         }
         }
 

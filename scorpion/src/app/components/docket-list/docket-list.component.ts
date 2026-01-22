@@ -82,7 +82,7 @@ getCompletionData() {
           }); 
            this.docketService.Location =  basicDetail.orgncd
           this.docketService.getRuleDetailForDepth();
-            this.docketService.getBlockedCustomerList();
+            // this.docketService.getBlockedCustomerList();
           this.docketService.getRuleDetailForProceed()
           setTimeout(() => {
             // second patch
