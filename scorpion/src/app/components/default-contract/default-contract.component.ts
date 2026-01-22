@@ -38,9 +38,14 @@ export class DefaultContractComponent {
     this.DefaultcontractForm.get('CSDDelivery')?.valueChanges.subscribe(() => {this.setCSDDeliveryCharge()});
     this.DefaultcontractForm.get('MallDelAppl')?.valueChanges.subscribe(() => {this.setMallDeliveryCharge()});
 
-    this.DefaultcontractForm.get('VolumetricAppl')?.valueChanges
-    .subscribe((isVolumetric: boolean) => {
+    this.DefaultcontractForm.get('VolumetricAppl')?.valueChanges.subscribe((isVolumetric: boolean) => {
       this.applyLBHLogic(isVolumetric);
+    });
+
+    const fields = ['Pkgs', 'weightKG', 'length', 'height', 'breadth'];
+    fields.forEach(field => {this.DefaultcontractForm.get(field)?.valueChanges.pipe(debounceTime(700),distinctUntilChanged()).subscribe(() => {
+        this.getCFTCalculation(); 
+      });
     });
   }
 
@@ -225,8 +230,7 @@ export class DefaultContractComponent {
       return;
     }
       const currentId = ++this.lastRequestId;
-    this.defaultContractService.calculateRate(payload).subscribe({
-      next: (response: any) => {
+    this.defaultContractService.calculateRate(payload).subscribe({next: (response: any) => {
         if (response) {
           this.defaultContractList = response;
           if(currentId === this.lastRequestId){
@@ -365,14 +369,11 @@ calculateSubTotal() {
     volMeasureType = this.contractcharge?.cft_Measure; // 'INCHES' | 'CM' | 'FEET'
     cftWtRatio = this.contractcharge?.cft_Ratio || 0;
   }
-
     let length = this.DefaultcontractForm.value.length || 0;
     let breadth = this.DefaultcontractForm.value.breadth || 0;
     let height = this.DefaultcontractForm.value.height || 0;
     const pkgsNo = this.DefaultcontractForm.value.Pkgs || 0;
-
     let cubicweight = 0;
-
       // Normal volume calculation
       let volume = 0;
       if (volMeasureType === 'INCHES') {
@@ -382,9 +383,7 @@ calculateSubTotal() {
       } else if (volMeasureType === 'FEET') {
         volume = length * breadth * height * cftWtRatio;
       }
-
       cubicweight = +(volume * pkgsNo).toFixed(2);
-
       this.DefaultcontractForm.patchValue({
         cftTotal:cubicweight
       });
