@@ -1063,7 +1063,7 @@
                       <th class="p-3 fw-bolder">Rate Type</th>
                       <th class="p-3 fw-bolder">E-Way Bill No.</th>
                       <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '2'">Reason for Delay</th>
-                      <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '3'">Reason for Delay / Delay Date</th>
+                      <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '3'">Reason for Delay /<br>Delay Date</th>
                       <th class="p-3 fw-bolder">TAT in Hrs.</th>
                       <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '3'">Billing Party Name</th>
                       <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '3'">Consignor Name</th>
@@ -1125,7 +1125,7 @@
                 
                         <td (click)="openPopup(item.value.EWayBillNo)">{{ item.value.EWayBillNo }}</td>
                         <td *ngIf="this.docketService.loginUserList.Type === '2'">{{ item.value.subreasoncode }}</td>
-                        <td *ngIf="this.docketService.loginUserList.Type === '3'">{{ item.value.subreasoncode }} / {{ item.value.Commited_Dely_Date }}</td>
+                        <td *ngIf="this.docketService.loginUserList.Type === '3'">{{ item.value.subreasoncode }} <br> {{ item.value.Commited_Dely_Date }}</td>
                         <td>{{ item.value.tatInHrs }}</td>
                         <td *ngIf="docketService.loginUserList.Type === '3'">{{ item.value.party_name }}</td>
                         <td *ngIf="docketService.loginUserList.Type === '3'">{{ item.value.Consignor_Name }}</td>
