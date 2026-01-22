@@ -495,7 +495,6 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
       filters: ""
     };
     this.basicDetailService.getBlockedCustomerList(payload).subscribe((response) => {
-      // Check if the customer is blocked
       if (response && response.data.activeFlagForBlockBooking === 'Y') {
         this.sweetAlertService.info(`Customer Booking is blocked`, () => {
           this.basicDetailForm.patchValue({
@@ -504,30 +503,57 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
           });
         });
       } else {
-        // Proceed with the API call only if the customer is not blocked
-         if (billingParty && destination && billingType) {
-          const userType = this.loginUserList.Type;
-          // if (userType !== '1' && userType !== '2') {
-            this.getStep2Details();
-          // }
+        if (billingParty && destination && billingType) {
+          this.getStep2Details();
         }
-        }
+      }
 
       const PONumber = this.consignorForm.get('policyNo');
-      if(response.data.poNumber_Active){
+      if (response.data.poNumber_Active) {
         PONumber?.setValidators([Validators.required]);
         PONumber?.setValidators([Validators.required]);
-        this.isPORequired=true;
-      }else{
+        this.isPORequired = true;
+      } else {
         PONumber?.clearValidators();
         PONumber?.clearValidators();
-         this.isPORequired=false;
+        this.isPORequired = false;
       }
       PONumber?.updateValueAndValidity();
       PONumber?.updateValueAndValidity();
     });
   }
 
+  getBlockedCustomerListAPI() {
+    const payload = {
+      custCode: this.basicDetailForm.value.billingParty,
+      pageNumber: 1,
+      pageSize: 1,
+      filters: ""
+    };
+    this.basicDetailService.getBlockedCustomerList(payload).subscribe((response) => {
+      // if (response && response.data.activeFlagForBlockBooking === 'Y') {
+      //   this.sweetAlertService.info(`Customer Booking is blocked`, () => {
+      //     this.basicDetailForm.patchValue({
+      //       billingParty: null,
+      //       billingName: null
+      //     });
+      //   });
+      // } 
+
+      const PONumber = this.consignorForm.get('policyNo');
+      if (response.data.poNumber_Active) {
+        PONumber?.setValidators([Validators.required]);
+        PONumber?.setValidators([Validators.required]);
+        this.isPORequired = true;
+      } else {
+        PONumber?.clearValidators();
+        PONumber?.clearValidators();
+        this.isPORequired = false;
+      }
+      PONumber?.updateValueAndValidity();
+      PONumber?.updateValueAndValidity();
+    });
+  }
 
   validateDropdownValue(formControlName: string, newList: any[], key: string = 'codeId') {
     const currentValue = this.basicDetailForm.get(formControlName)?.value;
