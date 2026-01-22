@@ -1122,8 +1122,8 @@
                                 {{ challanService.avalabledocket.at(i).get('rateError')?.value }}
                             </div>
                         </td>
-                
-                        <td (click)="openPopup(item.value.EWayBillNo)">{{ item.value.EWayBillNo }}</td>
+
+                        <td (click)="openPopup(item.value.EWayBillNo)" class="cursor-pointer">{{ item.value.EWayBillNo }}</td>
                         <td *ngIf="this.docketService.loginUserList.Type === '2'">{{ item.value.subreasoncode }}</td>
                         <td *ngIf="this.docketService.loginUserList.Type === '3'">{{ item.value.subreasoncode }} <br> {{ item.value.Commited_Dely_Date }}</td>
                         <td>{{ item.value.tatInHrs }}</td>
@@ -1412,14 +1412,49 @@
   </div>
 </div>
 
- <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div>
-                 dsffff
+<div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog custom-large-modal modal-dialog-centered">
+        <div class="modal-content p-5">
+            <div>
+                <div class="row">
+                    <!-- Docket No -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="docketNo">Docket No</label>
+                            <input id="docketNo" type="text" class="form-control" placeholder="Enter Docket No" />
+                        </div>
+                    </div>
+                    <!-- Docket Date -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="docketDate">Docket Date</label>
+                            <input id="docketDate" type="text" class="form-control" placeholder="Enter Docket Date" />
+                        </div>
+                    </div>
+                    <!-- E-Way Bill No -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="ewayBillNo">E-Way Bill No</label>
+                            <input id="ewayBillNo" type="text" class="form-control" placeholder="Enter E-Way Bill No" />
+                        </div>
+                    </div>
+                    <!-- E-Way Expiry Date -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="ewayExpiryDate">E-Way Expiry Date</label>
+                            <input id="ewayExpiryDate" type="date" class="form-control" />
+                        </div>
+                    </div>
                 </div>
-              </div>
+                <!-- Submit Button -->
+                <div class="row mt-4">
+                    <div class="col-md-12 text-center">
+                        <button class="btn btn-success">Submit</button>
+                    </div>
+                </div>
             </div>
-          </div>
+        </div>
+    </div>
+</div>
  
   
