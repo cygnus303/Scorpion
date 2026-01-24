@@ -38,9 +38,7 @@ export class DefaultContractComponent {
     this.DefaultcontractForm.get('CSDDelivery')?.valueChanges.subscribe(() => {this.setCSDDeliveryCharge()});
     this.DefaultcontractForm.get('MallDelAppl')?.valueChanges.subscribe(() => {this.setMallDeliveryCharge()});
 
-    this.DefaultcontractForm.get('VolumetricAppl')?.valueChanges.subscribe((isVolumetric: boolean) => {
-      this.applyLBHLogic(isVolumetric);
-    });
+    this.DefaultcontractForm.get('VolumetricAppl')?.valueChanges.subscribe((isVolumetric: boolean) => {this.applyLBHLogic(isVolumetric)});
 
     const fields = ['Pkgs', 'weightKG', 'length', 'height', 'breadth'];
     fields.forEach(field => {this.DefaultcontractForm.get(field)?.valueChanges.pipe(debounceTime(700),distinctUntilChanged()).subscribe(() => {
@@ -51,45 +49,32 @@ export class DefaultContractComponent {
 
   applyLBHLogic(isVolumetric: boolean) {
   const measure = this.contractcharge?.cft_Measure; // INCHES | CM | FEET
-  const maxValue =
-    measure === 'INCHES' ? 99.99 :
-    measure === 'CM' ? 999.99 :
-    null;
-
+  const maxValue = measure === 'INCHES' ? 99.99 : measure === 'CM' ? 999.99 :null;
   ['length', 'breadth', 'height'].forEach(field => {
     const control = this.DefaultcontractForm.get(field);
-
     if (isVolumetric) {
       const validators = [Validators.required];
-
       if (maxValue !== null) {
         validators.push(Validators.max(maxValue));
       }
-
       control?.setValidators(validators);
     } else {
-      // 🔥 IMPORTANT PART
       control?.clearValidators();
-      control?.setValue(0); // <-- SET 0 WHEN FALSE
+      control?.setValue(0);
     }
-
     control?.updateValueAndValidity();
   });
-
-  // Optional: recalc CFT
   this.getCFTCalculation();
 }
 
-
   resetLBHValues() {
-  this.DefaultcontractForm.patchValue({
-    length: 0,
-    breadth: 0,
-    height: 0,
-  });
-  this.getCFTCalculation()
-}
-
+    this.DefaultcontractForm.patchValue({
+      length: 0,
+      breadth: 0,
+      height: 0,
+    });
+    this.getCFTCalculation()
+  }
 
   buildForm(){
     this.DefaultcontractForm=new FormGroup({
@@ -164,7 +149,7 @@ export class DefaultContractComponent {
       destinationPincode: form.destination_pincode
     })),distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))).subscribe(() => {
         this.calculateRate();
-      });
+    });
   }
 
 
@@ -229,7 +214,7 @@ export class DefaultContractComponent {
     if (!payload.trnMode || !payload.invoiceAmount || !payload.packageCount || !payload.originPincode || !payload.destinationPincode) {
       return;
     }
-      const currentId = ++this.lastRequestId;
+    const currentId = ++this.lastRequestId;
     this.defaultContractService.calculateRate(payload).subscribe({next: (response: any) => {
         if (response) {
           this.defaultContractList = response;
@@ -248,9 +233,9 @@ export class DefaultContractComponent {
           this.setMallDeliveryCharge();
           this.calculateSubTotal();
         }
+       }
       }
-      }
-    })
+    });
   }
 
 setAppointmentCharge() {
@@ -288,15 +273,12 @@ calculateSubTotal() {
     'stateCharges','schG08','schG04','schG17','uchG08',
     'schG10','ichG01','schG07'
   ];
-
   const subTotal = chargeFields.reduce((sum, field) => {
     const value = Number(this.DefaultcontractForm.get(field)?.value) || 0;
     return sum + value;
   }, 0);
-
   const fixedSubTotal = Number(subTotal.toFixed(2));
   const discAmount = Number(this.DefaultcontractForm.get('Disc_amount')?.value) || 0;
-
   this.DefaultcontractForm.patchValue({
     subTotal: fixedSubTotal,
     GrandTotal: subTotal - discAmount
@@ -314,14 +296,14 @@ calculateSubTotal() {
         .subscribe({
           next: (response: any) => {
             if (response) {
-              this.contractcharge=response[0];
+              this.contractcharge = response[0];
               this.DefaultcontractForm.patchValue({
                 CFTRatio: response[0].cft_Ratio,
-                fuelSurchrg:response[0].fuelSurchrg,
-                fuelSurchrgBas:response[0].fuelSurchrgBas
+                fuelSurchrg: response[0].fuelSurchrg,
+                fuelSurchrgBas: response[0].fuelSurchrgBas
               });
             }
-               this.applyLBHLogic(
+            this.applyLBHLogic(
               this.DefaultcontractForm.get('VolumetricAppl')?.value
             );
           },
@@ -333,36 +315,28 @@ calculateSubTotal() {
   }
 
   setLBHValidators() {
-  const measure = this.contractcharge?.cft_Measure;
-
-  let maxValue = null;
-
-  if (measure === 'INCHES') {
-    maxValue = 99.99;
-  } else if (measure === 'CM') {
-    maxValue = 999.99;
-  }
-
-  const controls = ['length', 'breadth', 'height'];
-
-  controls.forEach(ctrl => {
-    const control = this.DefaultcontractForm.get(ctrl);
-    if (!control) return;
-
-    const validators = [Validators.required, Validators.min(0)];
-
-    if (maxValue !== null) {
-      validators.push(Validators.max(maxValue));
+    const measure = this.contractcharge?.cft_Measure;
+    let maxValue = null;
+    if (measure === 'INCHES') {
+      maxValue = 99.99;
+    } else if (measure === 'CM') {
+      maxValue = 999.99;
     }
-
-    control.setValidators(validators);
-    control.updateValueAndValidity({ emitEvent: false });
-  });
-}
+    const controls = ['length', 'breadth', 'height'];
+    controls.forEach(ctrl => {
+      const control = this.DefaultcontractForm.get(ctrl);
+      if (!control) return;
+      const validators = [Validators.required, Validators.min(0)];
+      if (maxValue !== null) {
+        validators.push(Validators.max(maxValue));
+      }
+      control.setValidators(validators);
+      control.updateValueAndValidity({ emitEvent: false });
+    });
+  }
 
 
   getCFTCalculation() {
-
   let volMeasureType = '';
   let cftWtRatio = 0;
   if (this.contractcharge) {
@@ -392,7 +366,6 @@ calculateSubTotal() {
 
 calculateDiscount() {
   const discControl = this.DefaultcontractForm.get('Disc_Rate');
-
   if (discControl?.invalid) {
     this.DefaultcontractForm.patchValue({
       Disc_amount: '0',
@@ -401,11 +374,9 @@ calculateDiscount() {
     });
     return;
   }
-
   let Subtotal = this.originalSubtotal || 0;
   let discounts = Number(discControl?.value || 0);
   let gstRate = Number(this.DefaultcontractForm.value.gstRate || 0);
-
   let discountAmount = (Subtotal * discounts) / 100;
   const discountSubTotal = Subtotal - discountAmount;
   const gstAmount  = Math.floor((discountSubTotal * gstRate) / 100);
@@ -421,7 +392,6 @@ calculateDiscount() {
 logInvalidControls() {
   Object.keys(this.DefaultcontractForm.controls).forEach(controlName => {
     const control = this.DefaultcontractForm.get(controlName);
-
     if (control && control.invalid) {
       console.log(`❌ ${controlName} is invalid`, control.errors);
     }
