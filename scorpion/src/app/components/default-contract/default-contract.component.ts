@@ -93,7 +93,7 @@ export class DefaultContractComponent {
       destinationZone:new FormControl(''),
       deliveryBranchCode:new FormControl(''),
       ODACategory:new FormControl(''),
-      mode:new FormControl(null),
+      mode:new FormControl('6'),
       tatNormal:new FormControl(''),
       tatoda:new FormControl(''),
       trDays:new FormControl(''),
@@ -177,7 +177,7 @@ export class DefaultContractComponent {
               PickupArea: this.getPincodeMaster.area,
               PickupODA: this.getPincodeMaster.is_ODA_Apply,
               originCity: this.getPincodeMaster.location,
-              originZone: this.getPincodeMaster.regionName,
+              // originZone: this.getPincodeMaster.regionName,
               fromState: this.getPincodeMaster.stnm,
               orgncd: this.getPincodeMaster.locCode,
               orgArea: this.getPincodeMaster.area
@@ -188,7 +188,7 @@ export class DefaultContractComponent {
               destinationArea: this.getPincodeMaster.area,
               ODA: this.getPincodeMaster.is_ODA_Apply,
               destinationCity: this.getPincodeMaster.location,
-              destinationZone:this.getPincodeMaster.regionName,
+              // destinationZone:this.getPincodeMaster.regionName,
               toState:  this.getPincodeMaster.stnm,
               deliveryBranchCode: this.getPincodeMaster.handling_Location,
               ODACategory: this.getPincodeMaster.category,
@@ -211,7 +211,7 @@ export class DefaultContractComponent {
       originPincode: this.DefaultcontractForm.value.originPincode,
       destinationPincode: this.DefaultcontractForm.value.destination_pincode
     }
-    if (!payload.trnMode || !payload.invoiceAmount || !payload.packageCount || !payload.originPincode || !payload.destinationPincode) {
+    if (!payload.trnMode) {
       return;
     }
     const currentId = ++this.lastRequestId;
@@ -226,7 +226,9 @@ export class DefaultContractComponent {
 
           let gstAmount = (Subtotal * gstRate) / 100;
           this.DefaultcontractForm.patchValue({
-            gstRate:gstAmount
+            gstRate:gstAmount,
+            originZone: this.defaultContractList.orgZone,
+            destinationZone: this.defaultContractList.destZone
           })
           this.setAppointmentCharge();
           this.setCSDDeliveryCharge();
