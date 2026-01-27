@@ -429,14 +429,14 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <!-- <div class="col-3">
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">ODA Rate/KG</label>
                 <div class="col-sm-7">
                     <input class="form-control" type="number" placeholder="Enter ODA Rate/KG" formControlName="ODARate" readonly>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="col-3">
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">ODA Amount.</label>
@@ -445,19 +445,18 @@
                 </div>
             </div>
         </div>
-    </div>
-
-     <div class="row pb-3">
         <div class="col-3">
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Document Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Document Charges" formControlName="schG04" (input)=" this.calculateSubTotal()"
-                    (focus)="clearOnFocus('schG04')" (blur)="resetOnBlur('schG04')"
-                     oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                    <input class="form-control" type="text" placeholder="Enter Document Charges" formControlName="schG04"
+                        (input)=" this.calculateSubTotal()" (focus)="clearOnFocus('schG04')" (blur)="resetOnBlur('schG04')"
+                        oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                 </div>
             </div>
         </div>
+    </div>
+     <div class="row pb-3">
         <div class="col-3">
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Mall Delivery Charges</label>
@@ -482,19 +481,19 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="row pb-3 d-flex justify-content-end">
         <div class="col-3">
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">ODA_Pickup_Charges</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter ODA_Pickup_Charges" formControlName="schG07" (input)=" this.calculateSubTotal()" 
-                    (focus)="clearOnFocus('schG07')" (blur)="resetOnBlur('schG07')"
-                    oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                    <input class="form-control" type="text" placeholder="Enter ODA_Pickup_Charges" formControlName="schG07"
+                        (input)=" this.calculateSubTotal()" (focus)="clearOnFocus('schG07')" (blur)="resetOnBlur('schG07')"
+                        oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row pb-3 d-flex justify-content-end">
+        <div class="col-3"></div>
         <div class="col-3"></div>
         <div class="col-3">
             <div class="row">
