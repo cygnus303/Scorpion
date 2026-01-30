@@ -89,19 +89,19 @@ getCompletionData() {
             this.docketService.basicDetailForm.patchValue({
               originState: basicDetail.originStateName,
               csgngstState: basicDetail.originStateCode,
-              fromCity: basicDetail.from_loc,
-              toCity: basicDetail.to_loc,
-              mode: basicDetail.trN_MOD,
-              serviceType: basicDetail.service_Class,
-              pickup: basicDetail.pickup_Dely,
+              fromCity: basicDetail.from_loc || null,
+              toCity: basicDetail.to_loc || null,
+              mode: basicDetail.trN_MOD || null,
+              serviceType: basicDetail.service_Class || null,
+              pickup: basicDetail.pickup_Dely || null,
               exemptServices: basicDetail.exemptServices || null,
               isreferenceDKT: basicDetail.isReferenceDKT,
               iscsdDelivery: basicDetail.isCSDDelivery,
               isCODDOD: basicDetail.isCODDOD,
               IsMAllDeliveryN: basicDetail.isMAllDelivery,
               IsODA: basicDetail.isODA,
-              contents: basicDetail.prodcd,
-              packingType: basicDetail.pkgsty,
+              contents: basicDetail.prodcd || null ,
+              packingType: basicDetail.pkgsty || null,
               sacCode: basicDetail.sacCode,
               sacDescription: basicDetail.sacCodeDesc,
               appointmentDT: basicDetail.appointmentDT !== '0001-01-01T00:00:00'?new Date(basicDetail.appointmentDT):new Date(),
@@ -684,7 +684,7 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
 
 
         formData.append("DVM.WMD.AppointmentDT",this.docketService.basicDetailForm.value.appointmentDT ? new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString() : new Date().toISOString()),
-        formData.append("DVM.WMD.Version", String(Number('12')));
+        formData.append("DVM.WMD.Version", String(Number('13')));
       formData.append("DVM.docketType", "DKT");
               // RequestLogs............
         const requestLogs = this.formDataToJson(formData); // Use formDataToJson for the RequestLogs

@@ -507,6 +507,12 @@ viewFile() {
     const type = this.docketService.loginUserList.Type;
     const billingType = this.docketService.basicDetailForm.value.billingType;
 
+    if(billingType === 'P02' && type !=='2'){
+      this.docketService.basicDetailForm.patchValue({
+        exemptServices:null
+      })
+    }
+
     if (type === '2') {
       this.docketService.isOtherCharge = true;
       this.docketService.isBillingTBB = true;
