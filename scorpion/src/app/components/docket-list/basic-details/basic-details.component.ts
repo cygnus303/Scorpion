@@ -507,7 +507,7 @@ viewFile() {
     const type = this.docketService.loginUserList.Type;
     const billingType = this.docketService.basicDetailForm.value.billingType;
 
-    if(billingType === 'P02' && type !=='2'){
+    if(billingType === 'P02'){
       this.docketService.basicDetailForm.patchValue({
         exemptServices:null
       })
