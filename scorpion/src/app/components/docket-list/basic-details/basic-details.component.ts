@@ -398,6 +398,17 @@ applyVehicleNoValidation(){
       billingParty: event.custcd,
       billingName: event.custnm
     });
+    if (this.docketService.loginUserList.Type === '2') {
+      if (this.docketService.completiondata && this.docketService.completiondata.listCharges?.length) {
+        this.docketService.completiondata.listCharges = [];
+      }
+      this.docketService.freightchargingData?.forEach((item: any) => {
+        const code = item.chargeCode;
+        if (this.docketService.freightForm.contains(code)) {
+          this.docketService.freightForm.get(code)?.patchValue(0, { emitEvent: false });
+        }
+      });
+    }
   }
 
   onChangedestinationsList(event: any) {
