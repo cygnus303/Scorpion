@@ -117,7 +117,7 @@ getCompletionData() {
               specialInstruction: basicDetail.spl_svc_req,
               ISCounterPickUpPRS: basicDetail.isCounterPickUpPRS,
               ISCounterDelivery: basicDetail.isCounterDelivery,
-              typeMovement: basicDetail.ftl_types,
+              typeMovement: basicDetail.ftl_types || null,
               vehicleno: basicDetail.vehicleNo,
               // isDACC: basicDetail.isDACC
             });
