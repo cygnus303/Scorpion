@@ -398,7 +398,7 @@ applyVehicleNoValidation(){
       billingParty: event.custcd,
       billingName: event.custnm
     });
-    if (this.docketService.loginUserList.Type === '2') {
+    if (this.docketService.loginUserList.Type === '2' || this.docketService.loginUserList.Type === '1') {
       if (this.docketService.completiondata && this.docketService.completiondata.listCharges?.length) {
         this.docketService.completiondata.listCharges = [];
       }
