@@ -50,7 +50,7 @@
               <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Rate Type" notFoundText="No matches found"
                 [items]="docketService.rateList" bindLabel="codeDesc" bindValue="codeId"
                 (change)="docketService.onchangeRateType($event)" formControlName="rateType"
-                [readOnly]="((docketService.basicDetailForm.get('serviceType')?.value ==='1' && docketService.basicDetailForm.value.billingType !== 'P04')|| docketService.basicDetailForm.value.billingType === 'P04')? true : false"></ng-select>
+                [readonly]="((docketService.basicDetailForm.get('serviceType')?.value ==='1' && docketService.basicDetailForm.value.billingType !== 'P04')|| docketService.basicDetailForm.value.billingType === 'P04')? true : false"></ng-select>
             </label>
             <div class="col-md-7">
               <input class="clsAmount form-control text-end" placeholder="Freight Rate" formControlName="freightRate" (input)="docketService.onchangefrightRate()"
