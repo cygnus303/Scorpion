@@ -76,7 +76,7 @@
                 <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
                   [bsValue]="docketService.bsValue" [minDate]="docketService.loginUserList.Type === '2' ? undefined : minDate"
                     [maxDate]="docketService.loginUserList.Type === '2' ? undefined : maxDate"
-                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" (bsValueChange)="docketService.onFormFieldChange($event)"
                   placeholder="CNote Date"  formControlName="cNoteDate" required appFocusNext [class.disabled-input]="true" 
                   [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('cNoteDate')?.invalid  && docketService.basicDetailForm.get('cNoteDate')?.touched }">
                 <span class="input-group-text cursor-pointer" (click)="dp.toggle()"  [class.disabled-input]="this.docketService.isComplition" >
