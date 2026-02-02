@@ -506,6 +506,7 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
         }
       }
 
+       if(this.loginUserList.Type !== '2'){
       const PONumber = this.consignorForm.get('policyNo');
       if (response.data.poNumber_Active) {
         PONumber?.setValidators([Validators.required]);
@@ -518,6 +519,7 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
       }
       PONumber?.updateValueAndValidity();
       PONumber?.updateValueAndValidity();
+    }
     });
   }
 
@@ -538,6 +540,7 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
       //   });
       // } 
 
+    if(this.loginUserList.Type !== '2'){
       const PONumber = this.consignorForm.get('policyNo');
       if (response.data.poNumber_Active) {
         PONumber?.setValidators([Validators.required]);
@@ -550,6 +553,7 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
       }
       PONumber?.updateValueAndValidity();
       PONumber?.updateValueAndValidity();
+    }
     });
   }
 
@@ -881,7 +885,7 @@ getcontractservicecharge() {
   }
 
   getStaxPaidBy() {
-    this.basicDetailService.getStaxPaidBy(this.contractservicecharge[0].stax_PaidBy_Opts || 0).subscribe({
+    this.basicDetailService.getStaxPaidBy(this.contractservicecharge[0].gstpaidby || 0).subscribe({
       next: (response: any) => {
         if (response) {
           this.freightForm.patchValue({
