@@ -478,13 +478,13 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
     const billingParty = this.basicDetailForm.value.billingParty;
     const destination = this.basicDetailForm.value.destination;
     const billingType = this.basicDetailForm.value.billingType;
-    const cNoteDate = this.basicDetailForm.value.cNoteDate;
-    if (date) {
-      this.basicDetailForm.patchValue({
-        cNoteDate: date
-      });
-    }
-    if (billingParty && destination && billingType && cNoteDate) {
+    // const cNoteDate = this.basicDetailForm.value.cNoteDate;
+    // if (date) {
+    //   this.basicDetailForm.patchValue({
+    //     cNoteDate: date
+    //   });
+    // }
+    if (billingParty && destination && billingType) {
       this.getStep2Details();
     }
   }
