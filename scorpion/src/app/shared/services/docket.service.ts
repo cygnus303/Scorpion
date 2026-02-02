@@ -474,11 +474,17 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
   }
 
 
-  onFormFieldChange() {
+  onFormFieldChange(date?: Date) {
     const billingParty = this.basicDetailForm.value.billingParty;
     const destination = this.basicDetailForm.value.destination;
     const billingType = this.basicDetailForm.value.billingType;
-    if (billingParty && destination && billingType) {
+    const cNoteDate = this.basicDetailForm.value.cNoteDate;
+    if (date) {
+      this.basicDetailForm.patchValue({
+        cNoteDate: date
+      });
+    }
+    if (billingParty && destination && billingType && cNoteDate) {
       this.getStep2Details();
     }
   }
@@ -508,6 +514,7 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
         }
       }
 
+       if(this.loginUserList.Type !== '2'){
       const PONumber = this.consignorForm.get('policyNo');
       if (response.data.poNumber_Active) {
         PONumber?.setValidators([Validators.required]);
@@ -520,6 +527,7 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
       }
       PONumber?.updateValueAndValidity();
       PONumber?.updateValueAndValidity();
+    }
     });
   }
 
@@ -540,6 +548,7 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
       //   });
       // } 
 
+    if(this.loginUserList.Type !== '2'){
       const PONumber = this.consignorForm.get('policyNo');
       if (response.data.poNumber_Active) {
         PONumber?.setValidators([Validators.required]);
@@ -552,6 +561,7 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
       }
       PONumber?.updateValueAndValidity();
       PONumber?.updateValueAndValidity();
+    }
     });
   }
 
@@ -563,7 +573,7 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
   }
 
   getStep2Details() {
-    const rawDate = new Date(); // or from your API
+    const rawDate = new Date(this.basicDetailForm.value.cNoteDate) // or from your API
     const formattedDate = rawDate.toLocaleDateString('en-GB', {
       day: '2-digit',
       month: 'long',
@@ -883,7 +893,7 @@ getcontractservicecharge() {
   }
 
   getStaxPaidBy() {
-    this.basicDetailService.getStaxPaidBy(this.contractservicecharge[0].stax_PaidBy_Opts || 0).subscribe({
+    this.basicDetailService.getStaxPaidBy(this.contractservicecharge[0].gstpaidby || 0).subscribe({
       next: (response: any) => {
         if (response) {
           this.freightForm.patchValue({
