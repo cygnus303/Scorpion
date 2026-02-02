@@ -1221,7 +1221,9 @@ calculateChargeWeight(){
 }
 
 GetFreightContractDetails() {
-  
+let cNoteDate = new Date(this.basicDetailForm.value.cNoteDate);
+let dockdt = new Date(Date.UTC(cNoteDate.getFullYear(), cNoteDate.getMonth(), cNoteDate.getDate())).toISOString();
+
   const originalFinalWeight = this.invoiceform.value.finalActualWeight;
   const data = {
     chargeRule: this.ruleDetailForChargeRule?.defaultvalue || 'NONE',
@@ -1249,7 +1251,7 @@ GetFreightContractDetails() {
     transMode: this.basicDetailForm.value.mode,
     orderID: this.step2DetailsList?.contractid,
     invAmt: this.invoiceform.value.totalDeclaredValue?.toString(),
-    dockdt: this.basicDetailForm.value.cNoteDate.toISOString(),
+    dockdt: dockdt,
     prodcd: this.basicDetailForm.value.contents,
     isPerPieceRate: this.step2DetailsList?.isPerPieceRate,
     fromPincode: this.consignorForm.value.consignorPincode,
