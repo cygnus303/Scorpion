@@ -131,6 +131,14 @@ export class DefaultContractComponent {
       ichG01:new FormControl(0),
       schG01:new FormControl(0),
 
+      schG23:new FormControl(0),
+      schG26:new FormControl(0),
+      schG29:new FormControl(0),
+      schG30:new FormControl(0),
+      uchG01:new FormControl(0),
+      uchG03:new FormControl(0),
+      uchG14:new FormControl(0),
+
       Disc_Rate:new FormControl(0,[Validators.max(20)]),
       Disc_amount:new FormControl(0),
       Disc_Sub_Total:new FormControl(0),
@@ -180,7 +188,7 @@ export class DefaultContractComponent {
               originCity: this.getPincodeMaster.location,
               // originZone: this.getPincodeMaster.regionName,
               fromState: this.getPincodeMaster.stnm,
-              orgncd: this.getPincodeMaster.locCode,
+              orgncd: this.getPincodeMaster.handling_Location,
               orgArea: this.getPincodeMaster.area
             })
           }
@@ -429,16 +437,16 @@ logInvalidControls() {
       isVolumetric:  data.VolumetricAppl,
       declval:  data.invoiceValue || 0,
       pkgsno:  data.Pkgs || 0,
-      actuwt:  data.weightKG || 0, //puchvanu
+      actuwt:  data.weightKG || 0, 
       chrgwt:  data.chrgwt || 0,
       voL_L:  data.length || 0,
       voL_B:  data.breadth || 0,
       voL_H:  data.height || 0,
       toT_CFT:  data.cftTotal || 0,
-      vol_cft:  data.cftTotal || 0,//puchvanu
+      vol_cft:  data.cftTotal || 0,
       ratE_TYPE: this.defaultContractList?.rateType,
       frT_RATE: data.freightRate,
-      freighT_CALC: data.freightRate,//puchvanu
+      freighT_CALC: data.freightRate,
       freight: data.freightCharge,
       subTotal: data.subTotal,
       isGSTApplied: true, //puchvanu
@@ -461,9 +469,9 @@ logInvalidControls() {
       isCSDDelivery: data.CSDDelivery,
       isMAllDelivery: data.MallDelAppl,
 
-      schG01:data.schG01, //puchvanu
-      schG25:data.schG25, //puchvanu
-      schG28:data.schG28, //puchvanu
+      schG01:data.schG01, 
+      schG25:data.schG25,
+      schG28:data.schG28,
       schG10:data.schG10,
       schG20:data.schG20,
       schG07:data.schG07,
@@ -471,8 +479,17 @@ logInvalidControls() {
       schG04:data.schG04,
       schG17:data.schG17,
       uchG08:data.uchG08,
-      uchG06:data.uchG06, //puchvanu
+      uchG06:data.uchG06, 
       ichG01:data.ichG01,
+
+      schG23:data.schG23,
+      schG26:data.schG26,
+      schG29:data.schG29,
+      schG30:data.schG30,
+      uchG01:data.uchG01,
+      uchG03:data.uchG03,
+      uchG14:data.uchG14,
+      
       customerEmail: data.email,
       quotationStatus: "",
       entryBy: ""
