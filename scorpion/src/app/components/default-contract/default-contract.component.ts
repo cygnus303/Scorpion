@@ -33,7 +33,7 @@ export class DefaultContractComponent {
   ngOnInit() {
     this.buildForm();
     this.docketService.getTransportModeData();
-
+    this.getcontractservicecharge();
     this.DefaultcontractForm.get('AppointmentDeliver')?.valueChanges.subscribe(() => {this.setAppointmentCharge()});
     this.DefaultcontractForm.get('CSDDelivery')?.valueChanges.subscribe(() => {this.setCSDDeliveryCharge()});
     this.DefaultcontractForm.get('MallDelAppl')?.valueChanges.subscribe(() => {this.setMallDeliveryCharge()});
@@ -212,7 +212,7 @@ export class DefaultContractComponent {
       originPincode: this.DefaultcontractForm.value.originPincode,
       destinationPincode: this.DefaultcontractForm.value.destination_pincode
     }
-    if (!payload.trnMode) {
+    if (!payload.trnMode || !payload.originPincode) {
       return;
     }
     const currentId = ++this.lastRequestId;
