@@ -129,6 +129,7 @@ export class DefaultContractComponent {
       uchG08:new FormControl(0),
       schG10:new FormControl(0),
       ichG01:new FormControl(0),
+      schG01:new FormControl(0),
 
       Disc_Rate:new FormControl(0,[Validators.max(20)]),
       Disc_amount:new FormControl(0),
