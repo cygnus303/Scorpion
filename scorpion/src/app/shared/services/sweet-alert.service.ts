@@ -119,6 +119,9 @@ info(message: string, onConfirm?: () => void): void {
     if (result.isConfirmed && onConfirm) {
       onConfirm();
     }
+     if (result.isDismissed && onConfirm) {
+      onConfirm();
+    }
   });
 }
 

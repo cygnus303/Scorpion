@@ -173,7 +173,7 @@
             <label class="control-label col-md-5">FOV Charged </label>
             <div class="col-md-7">
               <input class="required2 form-control clsAmount required text-end" formControlName="fovCharged"
-                placeholder="FOV Charged" type="text" readonly>
+                placeholder="FOV Charged" type="text" readonly (input)="docketService.subTotalCalculation()">
             </div>
           </div>
         </div>
