@@ -27,8 +27,7 @@
             <table class="table table-bordered align-middle w-100 vertical-align">
                 <thead class="table-secondary">
                     <tr>
-                        <th>Document Type <div style="min-width: 300px" class="mx-4"><ng-select placeholder="Select Condition"></ng-select></div>
-                        </th>
+                        <th>Document Type <div style="min-width: 300px" class="mx-4"><ng-select placeholder="Select Condition" (change)="updateAllRows($event)" [items]="generalMasterService.documentTypeList" bindValue="codeId" bindLabel="codeDesc"></ng-select></div></th>
                         <th>POD No.</th>
                         <th>Document No.</th>
                         <th>Front Scan Status</th>
@@ -43,10 +42,10 @@
                 <tbody formArrayName="documents">
                     <tr *ngFor="let row of documents.controls; let i = index" [formGroupName]="i" class="align-middle">
                         <td style="min-width: 300px">
-                            <ng-select formControlName="DocType" class="required2" placeholder="Select Condition"></ng-select>
+                            <ng-select formControlName="DocType" [items]="generalMasterService.documentTypeList" (change)="changeDocumentType($event , i)" bindValue="codeId" bindLabel="codeDesc" class="required2" placeholder="Select Condition"></ng-select>
                         </td>
                         <td><input type="text" formControlName="DocketNo" class="form-control required2" placeholder="POD No."></td>
-                        <td><input type="text" formControlName="DocumentNo" class="form-control required2" placeholder="Document No."></td>
+                        <td><input type="text" formControlName="DocumentNo" class="form-control required2" [readonly]="row.get('DocType')?.value !== '4'"  placeholder="Document No."></td>
                         <td>{{ row.get('Status')?.value }}</td>
                         <td><input type="text" formControlName="frontDoc" class="form-control"></td>
                         <td>{{ row.get('Status1')?.value }}</td>
