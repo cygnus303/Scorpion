@@ -74,3 +74,25 @@
 .horizontal-scroll-wrapper::-webkit-scrollbar-thumb:hover {
   background: #6c757d;  // hover dark
 }
+
+
+.form-group label {
+  font-weight: 600;
+  color: #333;
+}
+
+.form-control {
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.btn-success {
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+/* Custom modal width */
+.custom-large-modal {
+    max-width: 67%;  /* Increase this value for more width */
+    width: 90%;      /* This will control the actual width */
+}

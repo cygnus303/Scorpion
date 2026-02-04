@@ -12,6 +12,8 @@ import { DocketService } from 'app/shared/services/docket.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { finalize } from 'rxjs';
+import { Modal } from 'bootstrap';
+ 
 
 @Component({
   selector: 'app-challan-list',
@@ -160,6 +162,15 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
           }
           this.getPANnumberData(this.challanService.challanForm.value.vendorCode);
         }
+         if (this.challanService.filterList.DRSType === "Y") {
+      
+          const vendorTypeCode = this.challanService.vendtyData?.find((v: any) => v.codeId === "04")?.codeId || '';
+          this.challanService.challanForm.patchValue({
+            vendorType: vendorTypeCode
+          });
+          this.challanService.getVendorsList(vendorTypeCode)
+          // this.getPANnumberData(this.challanService.challanForm.value.vendorCode);
+        }
         const ChargedBy = this.challanService?.filterList?.loadingBycodeFor;
         if (ChargedBy === 'B' || ChargedBy == '04') {
           this.challanService.getChargesVendorsList('04');
@@ -183,7 +194,9 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
 
     if (this.docketService.loginUserList.Type !== '1') {
       this.challanService.getCityList();
-      this.avalabledocketinPRS();
+       if (this.challanService.filterList.DRSType !== "Y") {
+         this.avalabledocketinPRS();
+       }
     }
   }
 
@@ -1351,6 +1364,14 @@ getDeliveryAgentByCodeList(code: any) {
     const control = this.challanService.challanForm.get(chargeCode);
     if (control?.value === 0) {
       control.setValue(null);
+    }
+  }
+
+    openPopup(eWayBillNo: string) {
+    const modalElement = document.getElementById('showModal');
+    if (modalElement) {
+      const modal = new Modal(modalElement);
+      modal.show();
     }
   }
 }
