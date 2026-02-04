@@ -506,7 +506,9 @@ patchAvailableDockets(data: any[]) {
       tatInHrs: new FormControl(tatInHrs),
       rateType: new FormControl(this.challanForm.value.chrgType?this.challanForm.value.chrgType:null),
       charge: new FormControl(0),
-      rateError: new FormControl('')
+      rateError: new FormControl(''),
+      partY_CODE:new FormControl(item.partY_CODE || ''),
+      csgenm:new FormControl(item.csgenm || '')
     });
     group.get('rateType')?.valueChanges.subscribe(() => this.calculateCharge(group));
     group.get('NewRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
@@ -555,11 +557,24 @@ generatePRSfilter(event?:any){
     this.THCService.generate(baseCompanydata,payload).subscribe({
     next: (response: any) => {
       if (response) {
-          this.vendtyData = response.listVendorType.map((x: any) => ({
+        console.log(this.filterList?.DRSType)
+          if (this.filterList.DRSType === 'N') {
+      const allowedVendorCodes = ['XX1', '19', 'XX'];
+
+      this.vendtyData = response.listVendorType
+        .filter((x: any) => allowedVendorCodes.includes(x.vendor_Type_Code))
+        .map((x: any) => ({
           codeId: x.vendor_Type_Code,
           codeDesc: x.vendor_Type
         }));
-        this.generateData=response
+    } else {
+      // normal flow – all vendor types
+      this.vendtyData = response.listVendorType.map((x: any) => ({
+        codeId: x.vendor_Type_Code,
+        codeDesc: x.vendor_Type
+      }));
+    }
+     this.generateData = response;
       }
       },error: (err) => {
         this.sweetAlertService.error(err.error.message)
