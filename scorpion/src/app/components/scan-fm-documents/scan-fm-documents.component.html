@@ -24,10 +24,10 @@
         </div>
 
         <div class="table-wrapper position-relative pt-2">
-            <table class="table table-bordered table-striped table-condensed flip-content mb-0">
-                <thead>
+            <table class="table table-bordered align-middle w-100 vertical-align">
+                <thead class="table-secondary">
                     <tr>
-                        <th>Document Type <div style="min-width: 300px" class="mx-4"><ng-select></ng-select></div>
+                        <th>Document Type <div style="min-width: 300px" class="mx-4"><ng-select placeholder="Select Condition"></ng-select></div>
                         </th>
                         <th>POD No.</th>
                         <th>Document No.</th>
@@ -52,7 +52,7 @@
                         <td>{{ row.get('Status1')?.value }}</td>
                         <td><input type="text" formControlName="backDoc" class="form-control"></td>
                         <td class="text-center"><input type="checkbox" formControlName="IsPODChecked"></td>
-                        <td><textarea rows="2" formControlName="Remarks" class="form-control required2" placeholder="Remarks"></textarea></td>
+                        <td><textarea rows="2" formControlName="Remarks" class="form-control-textarea required2" placeholder="Remarks"></textarea></td>
                         <td class="text-danger fw-bold text-center" [class.cursor-pointer]="i !== 0" (click)="i !== 0 && removeRow(i)">
                             <span *ngIf="i !== 0">X</span>
                         </td>
@@ -61,4 +61,10 @@
             </table>
         </div>
     </form>
+
+    <div class="d-flex justify-content-center text-center bg-secondary-subtle p-4 gap-2">
+        <button class="btn btn-success">
+             <i class="fas fa-check"></i>  Submit
+        </button>
+    </div>
 </div>
