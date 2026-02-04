@@ -28,6 +28,42 @@ export class ScanFMDocumentsComponent {
     this.documents.push(this.createRow());
   }
 
+
+  onFileSelect(event: any, index: number, type: 'front' | 'back') {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    if (type === 'front') {
+      this.documents.at(index).patchValue({
+        frontDoc: file,
+        frontPreview: reader.result
+      });
+    } else {
+      this.documents.at(index).patchValue({
+        backDoc: file,
+        backPreview: reader.result
+      });
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+removeFile(index: number, type: 'front' | 'back') {
+  if (type === 'front') {
+    this.documents.at(index).patchValue({
+      frontDoc: null,
+      frontPreview: null
+    });
+  } else {
+    this.documents.at(index).patchValue({
+      backDoc: null,
+      backPreview: null
+    });
+  }
+}
+
   removeRow(index: number) {
     this.documents.removeAt(index);
   }
@@ -46,7 +82,9 @@ export class ScanFMDocumentsComponent {
       Status1: new FormControl('Not Scanned'),
       backDoc: new FormControl(''),
       IsPODChecked: new FormControl(false),
-      Remarks: new FormControl('', Validators.required)
+      Remarks: new FormControl('', Validators.required),
+      frontPreview: new FormControl(null),
+      backPreview: new FormControl(null),
     });
   }
 
