@@ -162,15 +162,11 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
           }
           this.getPANnumberData(this.challanService.challanForm.value.vendorCode);
         }
-         if (this.challanService.filterList.DRSType === "Y") {
-      
-          const vendorTypeCode = this.challanService.vendtyData?.find((v: any) => v.codeId === "04")?.codeId || '';
-          this.challanService.challanForm.patchValue({
-            vendorType: vendorTypeCode
-          });
-          this.challanService.getVendorsList(vendorTypeCode)
-          // this.getPANnumberData(this.challanService.challanForm.value.vendorCode);
-        }
+        if (this.challanService.filterList.DRSType === 'Y') {
+          const allowedVendorCodes = ['04'];
+          this.challanService.vendtyData = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId))
+        } 
+
         const ChargedBy = this.challanService?.filterList?.loadingBycodeFor;
         if (ChargedBy === 'B' || ChargedBy == '04') {
           this.challanService.getChargesVendorsList('04');
@@ -194,9 +190,7 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
 
     if (this.docketService.loginUserList.Type !== '1') {
       this.challanService.getCityList();
-       if (this.challanService.filterList.DRSType !== "Y") {
          this.avalabledocketinPRS();
-       }
     }
   }
 
