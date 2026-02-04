@@ -18,7 +18,6 @@ export class DefaultContractComponent {
   public DefaultcontractForm!: FormGroup;
   public contractcharge:any;
   public defaultContractList: any;
-  public originalSubtotal:any;
   private lastRequestId = 0;
   public isSubmitting:boolean=false;
 
@@ -229,13 +228,7 @@ export class DefaultContractComponent {
           this.defaultContractList = response;
           if(currentId === this.lastRequestId){
           this.DefaultcontractForm.patchValue(response);
-       
-          let Subtotal = this.originalSubtotal || 0;
-          let gstRate = Number(this.defaultContractList.gstRate || 0);
-
-          let gstAmount = (Subtotal * gstRate) / 100;
           this.DefaultcontractForm.patchValue({
-            gstRate:gstAmount,
             originZone: this.defaultContractList.orgZone,
             destinationZone: this.defaultContractList.destZone
           })
@@ -282,20 +275,21 @@ calculateSubTotal() {
   const chargeFields = [
     'freightCharge','schG20','ODARate','stateChargesDetail',
     'stateCharges','schG08','schG04','schG17','uchG08',
-    'schG10','ichG01','schG07'
+    'schG10','ichG01','schG07','schG01'
   ];
   const subTotal = chargeFields.reduce((sum, field) => {
     const value = Number(this.DefaultcontractForm.get(field)?.value) || 0;
     return sum + value;
   }, 0);
   const fixedSubTotal = Number(subTotal.toFixed(2));
+  let gstAmount = (fixedSubTotal * Number(this.defaultContractList.gstRate || 0)) / 100;
   const discAmount = Number(this.DefaultcontractForm.get('Disc_amount')?.value) || 0;
   this.DefaultcontractForm.patchValue({
+     gstRate:gstAmount,
     subTotal: fixedSubTotal,
     GrandTotal: subTotal - discAmount
   }, { emitEvent: false });
 
-  this.originalSubtotal = subTotal;
   this.calculateDiscount()
 }
 
@@ -371,8 +365,7 @@ calculateSubTotal() {
       cubicweight = +(volume * pkgsNo).toFixed(2);
       this.DefaultcontractForm.patchValue({
         cftTotal:cubicweight
-      });
-      this.calculateRate()
+      }); 
   }
 
 calculateDiscount() {
@@ -380,18 +373,17 @@ calculateDiscount() {
   if (discControl?.invalid) {
     this.DefaultcontractForm.patchValue({
       Disc_amount: '0',
-      Disc_Sub_Total: this.originalSubtotal?.toFixed(2),
-      GrandTotal: this.originalSubtotal?.toFixed(2)
+      Disc_Sub_Total: this.DefaultcontractForm.value.subTotal?.toFixed(2),
+      GrandTotal: this.DefaultcontractForm.value.subTotal?.toFixed(2)
     });
     return;
   }
-  let Subtotal = this.originalSubtotal || 0;
+  let Subtotal = this.DefaultcontractForm.value.subTotal || 0;
   let discounts = Number(discControl?.value || 0);
   let gstRate = Number(this.DefaultcontractForm.value.gstRate || 0);
   let discountAmount = (Subtotal * discounts) / 100;
   const discountSubTotal = Subtotal - discountAmount;
-  const gstAmount  = Math.floor((discountSubTotal * gstRate) / 100);
-  const grandTotal=discountSubTotal + gstAmount
+  const grandTotal = discountSubTotal + gstRate
 
   this.DefaultcontractForm.patchValue({
     Disc_amount: discountAmount.toFixed(2),
@@ -451,7 +443,7 @@ logInvalidControls() {
       subTotal: data.subTotal,
       isGSTApplied: true, //puchvanu
       gstType: "", //puchvanu
-      igstRate: data.freightRate,
+      igstRate: data.gstRate,
       igstAmount: 0, //puchvanu
       cgstRate: 0, //puchvanu
       cgstAmount: 0, //puchvanu
