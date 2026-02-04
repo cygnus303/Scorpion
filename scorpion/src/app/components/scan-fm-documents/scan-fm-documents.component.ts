@@ -12,7 +12,7 @@ import { GeneralMasterService } from 'app/shared/services/general-master.service
   styleUrl: './scan-fm-documents.component.scss'
 })
 export class ScanFMDocumentsComponent {
-  public documentForm!: FormGroup;
+public documentForm!: FormGroup;
  constructor(public generalMasterService:GeneralMasterService){}
   ngOnInit() {
     this.documentForm = new FormGroup({
@@ -21,7 +21,7 @@ export class ScanFMDocumentsComponent {
     });
 
     this.addRow();
-    this.generalMasterService.getDocumentType()
+    this.generalMasterService.getDocumentType();
   }
 
   addRow() {
@@ -105,7 +105,7 @@ removeFile(index: number, type: 'front' | 'back') {
     } else {
       formGroup.patchValue({ DocumentNo: 'N/A' });
     }
-  });
+   });
   }
 
   changeDocumentType($event: any, index: number): void {

@@ -11,10 +11,8 @@
                     <label class="control-label col-md-5">No Of Rows </label>
                     <div class="col-md-7">
                         <div class="input-group custom-input-group">
-                            <input type="number" class="form-control rounded-0 rounded-start" placeholder="Enter rows"
-                                min="1" formControlName="rowsCount" />
-                            <button type="button" class="btn btn-add text-light rounded-0 rounded-end" title="Add Row"
-                                (click)="addRowsFromInput()">
+                            <input type="number" class="form-control rounded-0 rounded-start" placeholder="Enter rows" min="1" formControlName="rowsCount" />
+                            <button type="button" class="btn btn-add text-light rounded-0 rounded-end" title="Add Row" (click)="addRowsFromInput()">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
@@ -50,10 +48,9 @@
                                 (change)="changeDocumentType($event , i)" bindValue="codeId" bindLabel="codeDesc"
                                 class="required2" placeholder="Select Condition"></ng-select>
                         </td>
-                        <td><input type="text" formControlName="DocketNo" class="form-control required2"
-                                placeholder="POD No."></td>
-                        <td><input type="text" formControlName="DocumentNo" class="form-control required2"
-                                [readonly]="row.get('DocType')?.value !== '4'" placeholder="Document No."></td>
+                        <td><input type="text" formControlName="DocketNo" class="form-control required2" placeholder="POD No."></td>
+                        <td><input type="text" formControlName="DocumentNo" class="form-control required2" 
+                            [readonly]="row.get('DocType')?.value !== '4' && row.get('DocType')?.value !== null && row.get('DocType')?.value !== undefined" placeholder="Document No."></td>
                         <td>{{ row.get('Status')?.value }}</td>
                         <!-- <td><input type="text" formControlName="frontDoc" class="form-control"></td> -->
                         <td>
@@ -123,7 +120,7 @@
                             (click)="i !== 0 && removeRow(i)">
                             <span *ngIf="i !== 0">X</span>
                         </td>
-                    </tr>
+                    </tr> 
                 </tbody>
             </table>
         </div>
