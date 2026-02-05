@@ -265,7 +265,7 @@
             <div class="col-md-7">
               <ng-select class="noFoundTextColor required2" placeholder="To City" appFocusNext 
                 (search)="getCityList($event,this.docketService.basicDetailForm.get('destination')?.value,'to')"
-                (change)="onChangeCityListList($event,'to');this.docketService.getGSTCalculation();docketService.freightAndOtherChar()"
+                (change)="removeCharges();onChangeCityListList($event,'to');this.docketService.getGSTCalculation();docketService.freightAndOtherChar()"
                 formControlName="toCity" [notFoundText]="notToCityValue">
                 <ng-option *ngFor="let item of toCityList" [value]="item.location">
                   <strong>{{ item.location }}</strong> : {{ item.location }}
