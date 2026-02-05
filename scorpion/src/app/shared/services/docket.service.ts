@@ -1454,6 +1454,14 @@ mergeAndPatchCharges(
   freightForm: FormGroup,
   basicDetailForm: FormGroup,
 ) {
+  if(this.loginUserList.Type !== '2'){
+    this?.freightchargingData?.forEach((item: any) => {
+       const code = item.chargeCode;
+       if (this.freightForm.contains(code)) {
+         this.freightForm.get(code)?.patchValue(0, { emitEvent: false });
+       }
+     });
+  }
   const mergedMap = new Map<string, number>();
   // 1️⃣ Collect API charges
   apiCharges?.forEach((item: any) => {
