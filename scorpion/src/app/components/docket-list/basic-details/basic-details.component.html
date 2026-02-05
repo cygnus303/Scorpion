@@ -433,7 +433,7 @@
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Exempt Services</label>
-            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="docketService.exemptServicesList" [readonly]="docketService.basicDetailForm.value.billingType==='P02'"
+            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="docketService.exemptServicesList" [readonly]="docketService.basicDetailForm.value.billingType==='P02' && docketService.loginUserList.Type !== '2'"
                 bindLabel="codeDesc" bindValue="codeId" placeholder="Exempt Services" appFocusNext formControlName="exemptServices" 
                 (change)="onExemptServicesChange($event)" (clear)="docketService.GetGSTFromTrnMode()"></ng-select></div>
           </div>
