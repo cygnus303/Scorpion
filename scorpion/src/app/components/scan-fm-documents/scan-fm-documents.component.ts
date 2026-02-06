@@ -2,7 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgSelectModule } from "@ng-select/ng-select";
+import { DocketService } from 'app/shared/services/docket.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
+import { PFMService } from 'app/shared/services/pfm.service';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-scan-fm-documents',
@@ -13,7 +16,15 @@ import { GeneralMasterService } from 'app/shared/services/general-master.service
 })
 export class ScanFMDocumentsComponent {
 public documentForm!: FormGroup;
- constructor(public generalMasterService:GeneralMasterService){}
+public scanFMList:any;
+env = environment;
+
+ constructor(
+  public generalMasterService:GeneralMasterService,
+  private pfmService:PFMService,
+  private docketService:DocketService
+){}
+
   ngOnInit() {
     this.documentForm = new FormGroup({
       rowsCount: new FormControl(1),
@@ -37,12 +48,12 @@ public documentForm!: FormGroup;
   reader.onload = () => {
     if (type === 'front') {
       this.documents.at(index).patchValue({
-        frontDoc: file,
+        DocumentName: file,
         frontPreview: reader.result
       });
     } else {
       this.documents.at(index).patchValue({
-        backDoc: file,
+        BackDocumentName: file,
         backPreview: reader.result
       });
     }
@@ -53,12 +64,12 @@ public documentForm!: FormGroup;
 removeFile(index: number, type: 'front' | 'back') {
   if (type === 'front') {
     this.documents.at(index).patchValue({
-      frontDoc: null,
+      DocumentName: null,
       frontPreview: null
     });
   } else {
     this.documents.at(index).patchValue({
-      backDoc: null,
+      BackDocumentName: null,
       backPreview: null
     });
   }
@@ -78,13 +89,19 @@ removeFile(index: number, type: 'front' | 'back') {
       DocketNo: new FormControl('', Validators.required),
       DocumentNo: new FormControl('', Validators.required),
       Status: new FormControl('Not Scanned'),
-      frontDoc: new FormControl(''),
       Status1: new FormControl('Not Scanned'),
-      backDoc: new FormControl(''),
       IsPODChecked: new FormControl(false),
       Remarks: new FormControl('', Validators.required),
       frontPreview: new FormControl(null),
       backPreview: new FormControl(null),
+      branch:new FormControl(''),
+      ScanStatus:new FormControl(''),
+      PartyName:new FormControl(''),
+      DocumentName:new FormControl(''),
+      ScanStatus1:new FormControl(''),
+      BackDocumentName:new FormControl(''),
+      frontPODView:new FormControl(''),
+      backPODView:new FormControl('')
     });
   }
 
@@ -117,5 +134,79 @@ removeFile(index: number, type: 'front' | 'back') {
       documentGroup.get('DocumentNo')?.setValue('N/A'); 
     }
   }
+
+scanFMDocNo(event: any, index: number) {
+  const documentsArray = this.documentForm.get('documents') as FormArray;
+  const rowGroup = documentsArray.at(index) as FormGroup;
+
+  const docType = rowGroup.get('DocType')?.value;
+  const docNo = event.target.value;
+
+  // DocType ન હોય તો API call નહીં
+  if (!docType) {
+    return;
+  }
+
+  const payload = {
+    docNo: docNo,
+    docType: docType,
+    documentNo: rowGroup.get('DocumentNo')?.value || 'N/A',
+    BaseLocationCode: this.docketService.loginUserList.LocationCode,
+    HeadOfficeCode: this.docketService.loginUserList.LocationCode
+  };
+
+  if (docType !== '5') {
+    this.pfmService.checkScanSFDocNo(payload).subscribe({
+      next: (response) => {
+        if (!response?.data) return;
+
+        const scanFMList = response.data;
+        rowGroup.patchValue({
+          branch: scanFMList.currLoc,
+          DocumentNo: scanFMList.dcoNo !== 'N/A' ? scanFMList.dcoNo : 'N/A',
+          Status: scanFMList.status,
+          ScanStatus: scanFMList.scanStatus,
+          PartyName: scanFMList.partyName ?? '',
+          DocumentName: scanFMList.documentName? scanFMList.documentName : '',
+          Status1: scanFMList.status1,
+          ScanStatus1: scanFMList.scanStatus1,
+          BackDocumentName: scanFMList.backDocumentName ? scanFMList.backDocumentName: ''
+        });
+
+        // ✅ VIEW URL generate only when scanned
+        if (scanFMList.scanStatus === 2 || scanFMList.scanStatus === 3) {
+          const frontUrl =
+            `${this.env.liveUrl}fmfiles/${rowGroup.get('DocumentName')?.value}`
+              .replace('/Document', '');
+
+          const backUrl = scanFMList.backDocumentName
+            ? `${this.env.liveUrl}fmfiles/${rowGroup.get('BackDocumentName')?.value}`
+                .replace('/Document', '')
+            : '';
+
+          rowGroup.patchValue({
+            frontPODView: frontUrl,
+            backPODView: backUrl
+          });
+        }
+      },
+      error: () => {
+        rowGroup.patchValue({
+          Status: 'Invalid POD'
+        });
+      }
+    });
+  }
+}
+
+
+showPOD(row: any, type: 'FRONT' | 'BACK' = 'BACK') {
+  const url = type === 'BACK' ? row.get('backPreview')?.value : row.get('frontPreview')?.value;
+
+  if (url) {
+    window.open(url, '_blank');
+  }
+}
+
 
 }

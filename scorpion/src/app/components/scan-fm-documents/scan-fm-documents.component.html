@@ -48,10 +48,18 @@
                                 (change)="changeDocumentType($event , i)" bindValue="codeId" bindLabel="codeDesc"
                                 class="required2" placeholder="Select Condition"></ng-select>
                         </td>
-                        <td><input type="text" formControlName="DocketNo" class="form-control required2" placeholder="POD No."></td>
+                        <td>
+                            <input type="text" formControlName="DocketNo" class="form-control required2" placeholder="POD No." 
+                            (blur)="scanFMDocNo($event,i)">
+                        </td>
                         <td><input type="text" formControlName="DocumentNo" class="form-control required2" 
                             [readonly]="row.get('DocType')?.value !== '4' && row.get('DocType')?.value !== null && row.get('DocType')?.value !== undefined" placeholder="Document No."></td>
-                        <td>{{ row.get('Status')?.value }}</td>
+                        <td>
+                            <b>{{ row.get('Status')?.value }}</b> <br>
+                           <span class="cursor-pointer" *ngIf="scanFMList?.documentName !== ''" (click)="showPOD(row, 'FRONT')">
+                               VIEW
+                            </span>
+                        </td>
                         <!-- <td><input type="text" formControlName="frontDoc" class="form-control"></td> -->
                         <td>
                             <div class="d-flex align-items-center gap-2">
@@ -84,7 +92,12 @@
                         </td>
 
 
-                        <td>{{ row.get('Status1')?.value }}</td>
+                        <td>
+                           <b>{{ row.get('Status1')?.value }}</b><br>
+                            <span class="cursor-pointer" *ngIf="scanFMList?.backDocumentName !== ''" (click)="showPOD(row, 'BACK')">
+                               VIEW
+                            </span>
+                        </td>
                         <!-- <td><input type="text" formControlName="backDoc" class="form-control"></td> -->
                         <td>
                             <div class="d-flex align-items-center gap-2">
