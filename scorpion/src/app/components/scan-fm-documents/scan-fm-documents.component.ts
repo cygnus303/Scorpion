@@ -207,6 +207,54 @@ showPOD(row: any, type: 'FRONT' | 'BACK' = 'BACK') {
     window.open(url, '_blank');
   }
 }
+  OnSubmit() {
+  const formData = new FormData();
+  const documentsArray = this.documentForm.get('documents') as FormArray;
+  const fmScanArray: any[] = [];
+  documentsArray.controls.forEach((row: any, index: number) => {
+    const v = row.value;
+    const fmScanObj = {
+      srno: index + 1,
+      scanStatus1: '',
+      docketNo: v.DocketNo,
+      documentName: v.frontDoc.name,
+      documentHref: '',
+      baseUserName: '',
+      toDate: '',
+      documentDate: '',
+      customerName: '',
+      doc_Fwd: '',
+      isPODChecked: v.IsPODChecked,
+      backDocumentName: v.backDoc.name,
+      scanStatus: '',
+      documentHrefID1: '',
+      thcNo: '',
+      docType: v.DocType,
+      status: v.Status,
+      baseLocationCode: '',
+      remarks: v.Remarks,
+      fromDate: '',
+      id: '',
+      documentNo: v.DocumentNo,
+      status1: v.Status1
+    };
+    fmScanArray.push(fmScanObj);
+
+    if (row.value.frontDoc) {
+      formData.append('Files', row.value.frontDoc);
+    }
+
+    if (row.value.backDoc) {
+      formData.append('BackFiles', row.value.backDoc);
+    }
+  });
+  formData.append('FMScan', JSON.stringify(fmScanArray));
+   console.log(fmScanArray , 'dsfffffffff')
+  // // API Call
+  // this.http.post('YOUR_API_URL', formData).subscribe(res => {
+  //   console.log('Upload Success', res);
+  // });
+}
 
 
 }
