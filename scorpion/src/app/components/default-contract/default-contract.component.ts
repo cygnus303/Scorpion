@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { DefaultContractService } from 'app/shared/services/default-contract.service';
@@ -26,7 +26,7 @@ export class DefaultContractComponent {
     public basicDetailService: BasicDetailService,
     public defaultContractService: DefaultContractService,
     private sweetAlertService:SweetAlertService,
-    public apiLoading: LoadingService
+    public apiLoading: LoadingService,private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -42,6 +42,7 @@ export class DefaultContractComponent {
     const fields = ['Pkgs', 'weightKG', 'length', 'height', 'breadth'];
     fields.forEach(field => {this.DefaultcontractForm.get(field)?.valueChanges.pipe(debounceTime(700),distinctUntilChanged()).subscribe(() => {
         this.getCFTCalculation(); 
+         this.cdr.detectChanges();
       });
     });
   }
@@ -366,6 +367,7 @@ calculateSubTotal() {
       this.DefaultcontractForm.patchValue({
         cftTotal:cubicweight
       }); 
+      this.calculateRate();
   }
 
 calculateDiscount() {
