@@ -209,7 +209,7 @@ export class DocketService {
       gstRate: new FormControl(),
       subTotal: new FormControl(),
       dktTotal: new FormControl(),
-      discountType:new FormControl(''),
+      discountType:new FormControl(null),
       discountAmount: new FormControl(),
       discount: new FormControl(),
       stax_exmpt_yn:new FormControl(),
@@ -1709,6 +1709,7 @@ calculateDiscount(event?: any) {
   }
   
   let Subtotal = this.originalSubtotal;
+   const discountControl = this.freightForm.get('discount');
 
   let discounts = this.freightForm.value.discount;
   if (discountType == "P") {
@@ -1716,11 +1717,24 @@ calculateDiscount(event?: any) {
     this.getMaxDiscountLimit()
   }
 
-  const finalSubtotal = Subtotal - parseFloat(discounts);
+  if (discountType === 'F') {
+    // ✅ SET VALIDATORS
+    discountControl?.setValidators([
+      Validators.min(0),
+      Validators.max(Subtotal)
+    ]);
+
+    // ✅ VERY IMPORTANT
+    discountControl?.markAsTouched();
+    discountControl?.updateValueAndValidity({ emitEvent: false });
+
+  }
+
+  const finalSubtotal = Number(Subtotal) - parseFloat(discounts);
 
   this.freightForm.patchValue({
-    subTotal: finalSubtotal.toFixed(2),
-    discountAmount: discounts.toFixed(2)
+    subTotal: finalSubtotal?.toFixed(2),
+    discountAmount: parseFloat(discounts)?.toFixed(2)
   });
 
   this.getGSTCalculation();

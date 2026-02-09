@@ -139,5 +139,6 @@ onCloseDiscountType(){
       discountAmount: null,
       subTotal:this.docketService.originalSubtotal
   })
+  this.docketService.getGSTCalculation();
 }
 }
