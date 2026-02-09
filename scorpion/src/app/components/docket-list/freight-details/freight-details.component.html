@@ -321,7 +321,7 @@
             <label class="control-label col-md-5">Discount Type</label>
             <div class="col-md-7">
               <ng-select class="noFoundTextColor required2" 
-                (close)="onCloseDiscountType()"
+                (close)="onCloseDiscountType()" (clear)="onCloseDiscountType()"
                  placeholder="Discount Type"  bindLabel="label" bindValue="value" formControlName="discountType"  [items]="discountTypes" (change)="docketService.calculateDiscount($event)"
                ></ng-select>
             </div>
@@ -331,20 +331,26 @@
           <div class="form-group" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
             <label class="control-label col-md-5">Discount</label>
             <div class="col-md-7">
-              <input class="form-control clsAmount" placeholder="Discount" type="number" formControlName="discount" (blur)="docketService.calculateDiscount($event)"
-              [ngClass]="{ 'border-danger': docketService.freightForm.get('discount')?.hasError('max') && docketService.freightForm.get('discount')?.touched&&docketService.freightForm.value.discountType === 'P' &&
+              <input class="form-control clsAmount" placeholder="Discount" type="text" formControlName="discount" (blur)="docketService.calculateDiscount($event)"
+              [ngClass]="{ 'border-danger':  docketService.freightForm.get('discount')?.touched &&
+    docketService.freightForm.get('discount')?.hasError('max') &&
        docketService.step2DetailsList?.maxDiscountY_N === 'Y'}">
             <div class="text-danger text-start"
                 *ngIf="
                   docketService.freightForm.get('discount')?.touched &&
                   docketService.freightForm.get('discount')?.errors &&
-                  docketService.freightForm.value.discountType === 'P' &&
                   docketService.step2DetailsList?.maxDiscountY_N === 'Y'
                 ">
 
-              <div *ngIf="docketService.freightForm.get('discount')?.errors?.['max']">
-                Please enter a value less than or equal to {{ docketService.maxDiscountLimit }}.
-              </div>
+               <span *ngIf="docketService.freightForm.value.discountType === 'F'">
+                Please enter a value less than or equal to
+                {{ docketService.originalSubtotal }}.
+              </span>
+
+              <span *ngIf="docketService.freightForm.value.discountType === 'P'">
+                Please enter a value less than or equal to
+                {{ docketService.maxDiscountLimit }}%.
+              </span>
 
             </div>
 
