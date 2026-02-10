@@ -909,6 +909,12 @@ getcontractservicecharge() {
   }
 
   getExemptData(customerCode:string){
+    if(this.basicDetailForm.value.exemptServices){
+      this.basicDetailForm.patchValue({
+            exemptServices: null,
+          });
+          this.GetGSTFromTrnMode()
+    }
     this.basicDetailService.getExemptData(customerCode).subscribe({
       next: (response: any) => {
         if (response) {
@@ -1654,6 +1660,7 @@ freightForm.valueChanges.subscribe((values) => {
       this.originalSubtotal = this.freightForm.value.subTotal;
     this.totalSubTotal = totalSubTotal;
     this.getGSTCalculation();
+     this.calculateDiscount();
   }
 
   allowNumericDecimal(event: KeyboardEvent) {
