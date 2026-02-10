@@ -41,14 +41,14 @@
     <div>
         <h3 class="pb-4 text-start challan-Details mb-4">Basic Details</h3>
           <div class="row pb-3">
-                <div class="col-4">
+                <!-- <div class="col-4">
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Manual {{typeName}} No.</label>
                         <div class="col-sm-7">
                             <input class="form-control" [placeholder]="'Manual ' + typeName + ' No.'" type="text" formControlName="manualTHCNo" appFocusNext>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-4">
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">{{typeName}} Date</label>
@@ -235,7 +235,7 @@
                 </div>
             </div>
             
-            <div class="row ">
+            <!-- <div class="row ">
                 <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? 'd-none' : ''">
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">From Address</label>
@@ -260,8 +260,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
+            </div> -->
+            <!-- <div class="row">
                 <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '1' ? 'd-none' : ''">
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">From City</label>
@@ -286,7 +286,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="row pb-3">
                    <div class="col-4" *ngIf="challanService.challanForm.value.isEmpty">
@@ -796,7 +796,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4 pb-3">
+            <!-- <div class="col-4 pb-3">
                 <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Start KMs.</label>
                         <div class="col-sm-7">
@@ -811,7 +811,7 @@
                         <input class="form-control" placeholder="End KMs." type="text" formControlName="closeKM" (keypress)="docketService.allowNumericDecimal($event)" appFocusNext>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '3' ? '' : 'd-none'">
                 <div class="row align-items-center ">
                     <label class="col-sm-5 col-form-label text-end">Delivery Zone</label>
