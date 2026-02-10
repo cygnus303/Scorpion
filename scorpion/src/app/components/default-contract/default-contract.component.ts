@@ -462,6 +462,7 @@ logInvalidControls() {
       isAppointmentDelivery:data.AppointmentDeliver,
       isCSDDelivery: data.CSDDelivery,
       isMAllDelivery: data.MallDelAppl,
+      chargename:data.statedetail,
 
       schG01:data.schG01, 
       schG25:data.schG25,
