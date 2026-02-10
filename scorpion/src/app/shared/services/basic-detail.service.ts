@@ -180,4 +180,8 @@ loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
   getBlockedCustomerList(payload:any){
     return this.apiHandlerService.Post(`Operation/Customer_List`,payload)
   }
+
+  getExemptData(customerCode:string){
+    return this.apiHandlerService.Get(`Operation/GetExemptData?custcd=${customerCode}`)
+  }
 }

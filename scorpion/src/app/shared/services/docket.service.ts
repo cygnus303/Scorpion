@@ -76,6 +76,7 @@ export class DocketService {
   public isPORequired:boolean=false;
   public isChangingFile = false;
   public isExistingFile = false;
+  public isExemptServiceReadonly:boolean=false;
 
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
@@ -877,6 +878,7 @@ getcontractservicecharge() {
       next: (response) => {
         if (response.success) {
           this.exemptServicesList = response.data;
+          this.getExemptData(this.basicDetailForm.value.billingParty)
         }
       },
     });
@@ -901,6 +903,23 @@ getcontractservicecharge() {
             stax_paidby: response.result[0].value
           })
           this.freightForm.get('GSTPaidBy')?.disable();
+        }
+      },
+    });
+  }
+
+  getExemptData(customerCode:string){
+    this.basicDetailService.getExemptData(customerCode).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.basicDetailForm.patchValue({
+            exemptServices: response.data.exmptServices,
+          });
+          this.isExemptServiceReadonly=true;
+           this.GetDKTGSTForGTA();
+            setTimeout(() => {
+              this.getGSTCalculation();
+            }, 300);
         }
       },
     });
