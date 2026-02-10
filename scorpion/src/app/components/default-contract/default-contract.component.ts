@@ -121,7 +121,7 @@ export class DefaultContractComponent {
       schG20:new FormControl(0),
       ODARate:new FormControl(0),
       gstRate:new FormControl(0),
-      stateChargesDetail:new FormControl(0),
+      statedetail:new FormControl(''),
       stateCharges:new FormControl(0),
       schG08:new FormControl(0),
       schG04:new FormControl(0),
@@ -274,7 +274,7 @@ setMallDeliveryCharge() {
 
 calculateSubTotal() {
   const chargeFields = [
-    'freightCharge','schG20','ODARate','stateChargesDetail',
+    'freightCharge','schG20','ODARate',
     'stateCharges','schG08','schG04','schG17','uchG08',
     'schG10','ichG01','schG07','schG01'
   ];
@@ -462,6 +462,7 @@ logInvalidControls() {
       isAppointmentDelivery:data.AppointmentDeliver,
       isCSDDelivery: data.CSDDelivery,
       isMAllDelivery: data.MallDelAppl,
+      chargename:data.statedetail,
 
       schG01:data.schG01, 
       schG25:data.schG25,
