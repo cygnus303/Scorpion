@@ -152,7 +152,7 @@ getCompletionData() {
             if(!basicDetail.exemptServices){
               this.docketService.GetGSTFromTrnMode()
             }
-            this.docketService.GetDKTGSTForGTA();
+            // this.docketService.GetDKTGSTForGTA();
             this.docketService.getpincodeData(basicDetail.csgnPinCode);
             this.docketService.consignorForm.patchValue({
               consignorName: basicDetail.csgncd,
