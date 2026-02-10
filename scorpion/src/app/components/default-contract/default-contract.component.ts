@@ -131,6 +131,10 @@ export class DefaultContractComponent {
       ichG01:new FormControl(0),
       schG01:new FormControl(0),
 
+      schG25:new FormControl(0),
+      schG28:new FormControl(0),
+      uchG06:new FormControl(0),
+
       schG23:new FormControl(0),
       schG26:new FormControl(0),
       schG29:new FormControl(0),
