@@ -152,7 +152,18 @@ getCompletionData() {
             if(!basicDetail.exemptServices){
               this.docketService.GetGSTFromTrnMode()
             }
-            // this.docketService.GetDKTGSTForGTA();
+            this.docketService.GetDKTGSTForGTA();
+              // if (this.docketService.completiondata?.wmdc?.isGSTApplied) {
+          //   this.docketService.freightForm.patchValue({
+          //     stax_exmpt_yn:'N',
+          //     isStaxExemp:false
+          //   })
+          // } else {
+          //   this.docketService.freightForm.patchValue({
+          //     stax_exmpt_yn:'Y',
+          //     isStaxExemp:true
+          //   })
+          // }
             this.docketService.getpincodeData(basicDetail.csgnPinCode);
             this.docketService.consignorForm.patchValue({
               consignorName: basicDetail.csgncd,
@@ -216,9 +227,11 @@ getCompletionData() {
               });
             this.docketService.freightForm.patchValue({
             EDD: basicDetail.cdeldt === '0001-01-01T00:00:00' ? '01 JAN 0001' : basicDetail.cdeldt ,
-            gstRate: basicDetail.gstRateType
+            gstRate: basicDetail.gstRateType,
+            discountType:this.docketService.completiondata?.wmdc?.discountType || null,
+            discount:this.docketService.completiondata?.wmdc?.discount,
+            discountAmount:this.docketService.completiondata?.wmdc?.discountValue
           });
-
           // added Validators
              const freightCharges = this.docketService.freightForm.get('freightCharges');
               const freightRate = this.docketService.freightForm.get('freightRate');
@@ -684,7 +697,7 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
 
 
         formData.append("DVM.WMD.AppointmentDT",this.docketService.basicDetailForm.value.appointmentDT ? new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString() : new Date().toISOString()),
-        formData.append("DVM.WMD.Version", String(Number('14')));
+        formData.append("DVM.WMD.Version", String(Number('15')));
       formData.append("DVM.docketType", "DKT");
               // RequestLogs............
         const requestLogs = this.formDataToJson(formData); // Use formDataToJson for the RequestLogs
