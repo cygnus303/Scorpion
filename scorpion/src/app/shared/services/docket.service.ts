@@ -1660,7 +1660,9 @@ freightForm.valueChanges.subscribe((values) => {
       this.originalSubtotal = this.freightForm.value.subTotal;
     this.totalSubTotal = totalSubTotal;
     this.getGSTCalculation();
-     this.calculateDiscount();
+    if(this.freightForm.value.discountType || this.freightForm.value.discount){
+      this.calculateDiscount();
+    }
   }
 
   allowNumericDecimal(event: KeyboardEvent) {
@@ -1738,7 +1740,7 @@ calculateDiscount(event?: any) {
   
   let Subtotal = this.originalSubtotal;
    const discountControl = this.freightForm.get('discount');
-
+if(this.freightForm.value.discount){
   let discounts = this.freightForm.value.discount;
   if (discountType == "P") {
     discounts = parseFloat(this.originalSubtotal.toString()) * parseFloat(discounts) / 100;
@@ -1766,6 +1768,7 @@ calculateDiscount(event?: any) {
   });
 
   this.getGSTCalculation();
+}
 }
 
 }
