@@ -160,13 +160,7 @@ export class ScanFMDocumentsComponent {
 
     const docType = rowGroup.get('DocType')?.value;
     const docNo = event.target.value;
-     const docketCtrl = rowGroup.get('DocketNo');
-
-    // DocType ન હોય તો API call નહીં
-    if (!docType) {
-      return;
-    }
-
+    const docketCtrl = rowGroup.get('DocketNo');
     const payload = {
       docNo: docNo,
       docType: docType,
@@ -175,13 +169,18 @@ export class ScanFMDocumentsComponent {
       HeadOfficeCode: this.docketService.loginUserList.LocationCode
     };
 
+    // DocType ન હોય તો API call નહીં
+    if (!payload.docType || !payload.docNo) {
+      return;
+    }
+
     if (docType !== '5') {
       this.pfmService.checkScanSFDocNo(payload).subscribe({
         next: (response) => {
           if (!response?.data) return;
 
           const scanFMList = response.data;
-          if (scanFMList.cnt !== '1') {
+          if (scanFMList.cnt !== 1) {
           docketCtrl?.setErrors({ invalidPOD: true });
           return;
         }
@@ -258,7 +257,6 @@ export class ScanFMDocumentsComponent {
   }
 
   onSubmit() {
-    if (this.isSubmitting) return;
   if (this.documentForm.invalid) {
     this.documentForm.markAllAsTouched();
     const invalidRows = this.getInvalidControlsByRow();
