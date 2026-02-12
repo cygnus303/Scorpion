@@ -1,57 +1,66 @@
 <div class="cnote-entry-container px-2">
-
     <!-- Header Bar -->
-      <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
         <i class="fas fa-list me-2"></i>
-         FM Query
+        FM Query
     </div>
-
-    <div class="container-fluid bg-white py-3 border">
-        <!-- Row 1 -->
-        <div class="row align-items-center mb-3">
-            <div class="col-md-2 text-end fw-semibold">Fm Type</div>
-            <div class="col-md-3">
-                <ng-select placeholder="Fm Type"></ng-select>
-            </div>
-        </div>
-
-        <!-- Row 2 -->
-        <div class="row align-items-center mb-3">
-            <div class="col-md-2 text-end fw-semibold">FM Forwarded To </div>
-            <div class="col-md-3">
-                <ng-select placeholder="FM Forwarded To"></ng-select>
-            </div>
-        </div>
-
-        <!-- Row 3 -->
-        <div class="row align-items-center mb-3">
-            <div class="col-md-2 text-end fw-semibold">Select Date</div>
-            <div class="col-md-3">
-               <div class="input-group">
-                    <input type="text" class="form-control date-range-input" placeholder="January 13, 2026 - February 11, 2026">
-                      <span class="input-group-text cursor-pointer">
-                      <i class="fa fa-calendar"></i>
-                    </span>
+    <form [formGroup]="acknowledgefilterForm">
+        <div class="form-grid p-4">
+            <!-- Row 1 -->
+            <div class="row pb-3">
+                <div class="col-md-2 col-form-label text-end">Fm Type :</div>
+                <div class="col-md-3">
+                    <ng-select class="required2" placeholder="Fm Type" [items]="DocTypelist" bindLabel="text" formControlName="FMType" bindValue="value"
+                     [ngClass]="{ 'border-danger': acknowledgefilterForm.get('FMType')?.invalid && acknowledgefilterForm.get('FMType')?.touched }"></ng-select>
+                    <div class="text-danger text-start" *ngIf="acknowledgefilterForm.get('FMType')?.invalid && acknowledgefilterForm.get('FMType')?.touched">
+                        This field is required.
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-md-2"></div>
-            <div class="col-md-3 text-start">
-                <span class="fw-bold text-dark">OR</span>
+
+            <!-- Row 2 -->
+            <div class="row pb-3">
+                <div class="col-md-2 col-form-label text-end">FM Forwarded To : </div>
+                <div class="col-md-3">
+                    <ng-select class="required2" placeholder="Enter FM Forwarded To" [items]="DocToList"  formControlName="Loccode" bindLabel="text" bindValue="value"
+                    [ngClass]="{ 'border-danger': acknowledgefilterForm.get('Loccode')?.invalid && acknowledgefilterForm.get('Loccode')?.touched }"></ng-select>
+                    <div class="text-danger text-start" *ngIf="acknowledgefilterForm.get('Loccode')?.invalid && acknowledgefilterForm.get('Loccode')?.touched">
+                        This field is required.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3 -->
+            <div class="row pb-3">
+                <div class="col-md-2 col-form-label text-end">Select Date :</div>
+                <div class="col-md-3">
+                    <div class="input-group shadow-sm rounded" (click)="dvr.toggle()">
+                        <span class="input-group-text bg-white border-end-0 p-2">
+                            <i class="fas fa-calendar-alt text-dark text-secondary"></i>
+                        </span>
+                        <input type="text" placeholder="Daterangepicker" class="form-control border-start-1 text-center line-height uppercase-none " bsDaterangepicker
+                            #dvr="bsDaterangepicker" [class.disabled-input]="true" formControlName="dateRange"
+                            [bsConfig]="{ ranges: commonService.ranges, rangeInputFormat: 'MMMM D, YYYY', containerClass: 'theme-dark-blue', dateInputFormat: 'MMMM D, YYYY'}" />
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-3">
+                <div class="col-md-2"></div>
+                <div class="col-md-3 text-start">
+                    <span class="fw-bold text-dark">OR</span>
+                </div>
+            </div>
+            <!-- Row 4 -->
+            <div class="row pb-3">
+                <div class="col-md-2 col-form-label text-end">FM No.(s). :</div>
+                <div class="col-md-3 d-flex align-items-center">
+                    <input type="text" class="form-control" placeholder="FM No.(s)" formControlName="FmNo">
+                </div>
+                <small class="ms-2 col-md-2 text-primary text-start col-form-label">[Seperated by Comma if multiple]</small>
             </div>
         </div>
-        <!-- Row 4 -->
-        <div class="row align-items-center">
-            <div class="col-md-2 text-end fw-semibold">FM No.(s).</div>
-            <div class="col-md-3 d-flex align-items-center">
-                <input type="text" class="form-control" placeholder="FM No.(s)">
-            </div>
-            <small class="ms-2 col-md-1 text-primary text-nowrap">[Seperated by Comma if multiple]</small>
-        </div>
-    </div>
-    
-    <div class="d-flex justify-content-center bg-secondary-subtle p-4 gap-2" >
+    </form>
+    <div class="d-flex justify-content-center bg-secondary-subtle p-4 gap-2">
         <button class="btn btn-success" (click)="goToForwardList()"> <i class="fas fa-search"></i> Get List</button>
     </div>
 </div>
