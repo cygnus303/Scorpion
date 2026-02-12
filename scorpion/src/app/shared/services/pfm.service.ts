@@ -16,4 +16,8 @@ export class PFMService {
   onSubmitScanFM(formData:any): Observable<any>{
     return this.apiHandlerService.Post(`Operation/add`,formData);
   }
+
+  getCustomerDetail(searchTerm:string): Observable<any>{
+    return this.apiHandlerService.Get(`Operation/dropdown?searchTerm=${searchTerm}`);
+  }
 }

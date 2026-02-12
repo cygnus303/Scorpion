@@ -65,7 +65,9 @@
                         <label class="col-sm-5 col-form-label text-end">Customer/Location</label>
                         <div class="col-sm-7">
                             <ng-select class="required2" placeholder="Enter Customer/Location" formControlName="Loc_Cust_Code"
-                                [items]="" bindLabel="text" bindValue="value"></ng-select>
+                                [items]="customerData" bindLabel="text" bindValue="id" (search)="getCustomerData($event)"
+                                [notFoundText]="notFoundTextValue"
+                                ></ng-select>
                         </div>
                     </div>
                 </div>
