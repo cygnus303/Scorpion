@@ -257,12 +257,12 @@ export class ScanFMDocumentsComponent {
   }
 
   onSubmit() {
-  if (this.documentForm.invalid) {
-    this.documentForm.markAllAsTouched();
-    const invalidRows = this.getInvalidControlsByRow();
-    console.log('Invalid Rows:', invalidRows);
-    return;
-  }
+    if (this.documentForm.invalid) {
+      this.documentForm.markAllAsTouched();
+      const invalidRows = this.getInvalidControlsByRow();
+      console.log('Invalid Rows:', invalidRows);
+      return;
+    }
 
     const formData = new FormData();
     const documentsArray = this.documentForm.get('documents') as FormArray;
@@ -307,26 +307,24 @@ export class ScanFMDocumentsComponent {
     formData.append('FMScan', JSON.stringify(fmScanArray));
     console.log(fmScanArray, 'Requestpayload');
     this.isSubmitting = true;
-   this.pfmService.onSubmitScanFM(formData).subscribe({
-  next: (response) => {
-    debugger;
-    if (response?.success) {
-      this.sweetAlertService.success('Done!!!');
+    this.pfmService.onSubmitScanFM(formData).subscribe({ next: (response) => {
+        if (response?.success) {
+          this.sweetAlertService.success('Done!!!');
 
-      window.parent.location.href =
-        `${this.env.liveUrl}Document/ScanFMDocumentsDone` +
-        `?DocketNo=${response.docketNo}&Tranxaction=${response.tranxaction}`;
-    }
+          window.parent.location.href =
+            `${this.env.liveUrl}Document/ScanFMDocumentsDone` +
+            `?DocketNo=${response.docketNo}&Tranxaction=${response.tranxaction}`;
+        }
 
-    this.isSubmitting = false; // ✅ loader stop on success
-  },
+        this.isSubmitting = false; // ✅ loader stop on success
+      },
 
-  error: (error) => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    this.docketService.submitErrorMsg = error?.error?.message || 'Something went wrong';
-    this.isSubmitting = false; // ✅ loader stop on error
-  }
-});
+      error: (error) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.docketService.submitErrorMsg = error?.error?.message || 'Something went wrong';
+        this.isSubmitting = false; // ✅ loader stop on error
+      }
+    });
   }
 
 
