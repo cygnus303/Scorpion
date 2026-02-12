@@ -1,0 +1,57 @@
+<div class="cnote-entry-container px-2">
+
+    <!-- Header Bar -->
+      <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+        <i class="fas fa-list me-2"></i>
+         FM Query
+    </div>
+
+    <div class="container-fluid bg-white py-3 border">
+        <!-- Row 1 -->
+        <div class="row align-items-center mb-3">
+            <div class="col-md-2 text-end fw-semibold">Fm Type</div>
+            <div class="col-md-3">
+                <ng-select placeholder="Fm Type"></ng-select>
+            </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="row align-items-center mb-3">
+            <div class="col-md-2 text-end fw-semibold">FM Forwarded To </div>
+            <div class="col-md-3">
+                <ng-select placeholder="FM Forwarded To"></ng-select>
+            </div>
+        </div>
+
+        <!-- Row 3 -->
+        <div class="row align-items-center mb-3">
+            <div class="col-md-2 text-end fw-semibold">Select Date</div>
+            <div class="col-md-3">
+               <div class="input-group">
+                    <input type="text" class="form-control date-range-input" placeholder="January 13, 2026 - February 11, 2026">
+                      <span class="input-group-text cursor-pointer">
+                      <i class="fa fa-calendar"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-2"></div>
+            <div class="col-md-3 text-start">
+                <span class="fw-bold text-dark">OR</span>
+            </div>
+        </div>
+        <!-- Row 4 -->
+        <div class="row align-items-center">
+            <div class="col-md-2 text-end fw-semibold">FM No.(s).</div>
+            <div class="col-md-3 d-flex align-items-center">
+                <input type="text" class="form-control" placeholder="FM No.(s)">
+            </div>
+            <small class="ms-2 col-md-1 text-primary text-nowrap">[Seperated by Comma if multiple]</small>
+        </div>
+    </div>
+    
+    <div class="d-flex justify-content-center bg-secondary-subtle p-4 gap-2" >
+        <button class="btn btn-success" (click)="goToForwardList()"> <i class="fas fa-search"></i> Get List</button>
+    </div>
+</div>

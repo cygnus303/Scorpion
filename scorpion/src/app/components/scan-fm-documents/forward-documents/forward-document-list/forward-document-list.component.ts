@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CommonService } from 'app/shared/services/common.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-forward-document-list',
@@ -20,7 +21,7 @@ export class ForwardDocumentListComponent {
     { text:"Location", value : "2" },
   ];
 
-  constructor(public commonService:CommonService){}
+  constructor(public commonService:CommonService, private router: Router){}
 
 
 ngOnInit() {
@@ -67,4 +68,7 @@ setCurrentDateTime() {
 
 
 
+ goToBackList() {
+    this.router.navigate(['/Document/ForwardFMDocumentsQuery']);
+  }
 }
