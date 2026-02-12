@@ -1,165 +1,192 @@
-<div class="cnote-entry-container px-2">
-    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
-        <i class="fas fa-list me-2"></i>
-        FM Query
-    </div>
-    <div class="form-grid p-4">
-        <div class="row pb-3">
-            <div class="col-4">
-                <div class="row">
-                    <label class="col-sm-5 col-form-label text-end">FM Number</label>
-                    <div class="col-sm-7">
-                        <input class="form-control" type="text" placeholder="Enter FM Number">
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="row">
-                    <label class="col-sm-5 col-form-label text-end">FM Date</label>
-                    <div class="col-sm-7">
-                        <input class="form-control" type="text" placeholder="Enter FM Date">
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="row">
-                    <label class="col-sm-5 col-form-label text-end">FM Entry Date</label>
-                    <div class="col-sm-7 text-start">
-                        {{'2/11/2026 6:05:11 PM'}}
-                    </div>
-                </div>
-            </div>
+<form [formGroup]="forwardDocForm">
+    <div class="cnote-entry-container px-2">
+        <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+            <i class="fas fa-list me-2"></i>
+            FM Query
         </div>
-        <div class="row pb-3">
-            <div class="col-4">
-                <div class="row">
-                    <label class="col-sm-5 col-form-label text-end">Manual FM Number</label>
-                    <div class="col-sm-7">
-                        <input class="form-control" type="text" placeholder="Enter Manual FM Number">
+        <div class="form-grid p-4">
+            <div class="row pb-3">
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">FM Number</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" placeholder="System Generated"
+                                formControlName="FM_No" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">FM Date</label>
+                        <div class="col-sm-7">
+                            <div class="input-group" (click)="dp.toggle()">
+                                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
+                                    [minDate]="commonService.minDate" [maxDate]="commonService.maxDate"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                                    placeholder="Enter FM Date" formControlName="FM_Date" required appFocusNext
+                                    [class.disabled-input]="true">
+                                <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">FM Entry Date</label>
+                        <div class="col-sm-7 text-start">
+                            {{ currentDateTime }}
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-4">
-                <div class="row">
-                    <label class="col-sm-5 col-form-label text-end">Forward To</label>
-                    <div class="col-sm-7">
-                        <input class="form-control" type="text" placeholder="Enter Forward To">
+            <div class="row pb-3">
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Manual FM Number</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" placeholder="Enter Manual FM Number"
+                                formControlName="Manual_FM_No">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Forward To</label>
+                        <div class="col-sm-7">
+                            <ng-select class="required2" placeholder="Enter Forward To" formControlName="Doc_FWD_To"
+                                [items]="DocToList" bindLabel="text" bindValue="value"></ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Customer/Location</label>
+                        <div class="col-sm-7">
+                            <ng-select class="required2" placeholder="Enter Customer/Location" formControlName="Loc_Cust_Code"
+                                [items]="" bindLabel="text" bindValue="value"></ng-select>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-4">
-                <div class="row">
-                    <label class="col-sm-5 col-form-label text-end">Customer/Location</label>
-                    <div class="col-sm-7">
-                        <input class="form-control" type="text" placeholder="Enter Customer/Location">
+            <div class="row pb-3">
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Document Type</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" placeholder="Enter Manual Document Type"
+                                formControlName="FM_Doc_Type" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Courier Name</label>
+                        <div class="col-sm-7">
+                            <input class="form-control required2" type="text" placeholder="Enter Courier Name"
+                                formControlName="Courier_Code">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Way Bill No</label>
+                        <div class="col-sm-7">
+                            <input class="form-control required2" type="text" placeholder="Enter Way Bill No"
+                                formControlName="Courier_Way_Bill_No">
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row pb-3">
-            <div class="col-4">
-                <div class="row">
-                    <label class="col-sm-5 col-form-label text-end">Document Type</label>
-                    <div class="col-sm-7">
-                        <input class="form-control" type="text" placeholder="Enter Manual Document Type">
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="row">
-                    <label class="col-sm-5 col-form-label text-end">Courier Name</label>
-                    <div class="col-sm-7">
-                        <input class="form-control" type="text" placeholder="Enter Courier Name">
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="row">
-                    <label class="col-sm-5 col-form-label text-end">Way Bill No</label>
-                    <div class="col-sm-7">
-                        <input class="form-control" type="text" placeholder="Enter Way Bill No">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row pb-3">
-            <div class="col-4">
-                <div class="row">
-                    <label class="col-sm-5 col-form-label text-end">Way Bill Date</label>
-                    <div class="col-sm-7">
-                        <input class="form-control" type="text" placeholder="Enter Way Bill Date">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+            <div class="row pb-3">
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Way Bill Date</label>
+                        <div class="col-sm-7">
+                               <div class="input-group" (click)="dp.toggle()">
+                                <input type="text" class="form-control uppercase-none required2" #dp="bsDatepicker" bsDatepicker
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY'}"
+                                    placeholder="Enter FM Date" formControlName="Courier_Way_Bill_Date" required appFocusNext
+                                    [class.disabled-input]="true">
+                                <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
 
-<div class="cnote-entry-container px-2">
-    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
-        <i class="fas fa-list me-2"></i>
-        Document List
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- Table Section -->
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover align-middle mb-0">
-            <thead class="table-light text-center">
-                <tr>
-                    <th style="width:40px;"><input type="checkbox"></th>
-                    <th>CNote</th>
-                    <th>Manual CNote</th>
-                    <th>Origin - Destination</th>
-                    <th>From - To</th>
-                    <th>Dely. Date</th>
-                    <th>Amount</th>
-                    <th>Scan Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="text-center"><input type="checkbox"></td>
-                    <td>62841503</td>
-                    <td>62841503</td>
-                    <td>MHP: MAHAPE - PIM: PIMPLAS</td>
-                    <td>MAHAPE: BHIWANDI</td>
-                    <td class="text-center">17 Jul 25</td>
-                    <td class="text-end">0.00</td>
-                    <td class="text-success fw-semibold">Scanned</td>
-                </tr>
-                <tr>
-                    <td class="text-center"><input type="checkbox"></td>
-                    <td>62911112</td>
-                    <td>62911112</td>
-                    <td>DMN: DAMAN - PIM: PIMPLAS</td>
-                    <td>VAPI: BHIWANDI</td>
-                    <td class="text-center">10 Feb 26</td>
-                    <td class="text-end">0.00</td>
-                    <td class="text-success fw-semibold">Scanned</td>
-                </tr>
-                <tr>
-                    <td class="text-center"><input type="checkbox"></td>
-                    <td>62918098</td>
-                    <td>62918098</td>
-                    <td>SRT: SURAT - PIM: PIMPLAS</td>
-                    <td>SURAT: BHIWANDI</td>
-                    <td class="text-center">10 Feb 26</td>
-                    <td class="text-end">0.00</td>
-                    <td class="text-success fw-semibold">Scanned</td>
-                </tr>
-                <tr>
-                    <td class="text-center"><input type="checkbox"></td>
-                    <td>62920658</td>
-                    <td>62920658</td>
-                    <td>LTT: MUMBAI - PIM: PIMPLAS</td>
-                    <td>MUMBAI: PIMPLAS</td>
-                    <td class="text-center">10 Feb 26</td>
-                    <td class="text-end">0.00</td>
-                    <td class="text-success fw-semibold">Scanned</td>
-                </tr>
-            </tbody>
-        </table>
+
+    <div class="cnote-entry-container px-2">
+        <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+            <i class="fas fa-list me-2"></i>
+            Document List
+        </div>
+        <!-- Table Section -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th style="width:40px;"><input type="checkbox"></th>
+                        <th>CNote</th>
+                        <th>Manual CNote</th>
+                        <th>Origin - Destination</th>
+                        <th>From - To</th>
+                        <th>Dely. Date</th>
+                        <th>Amount</th>
+                        <th>Scan Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center"><input type="checkbox"></td>
+                        <td>62841503</td>
+                        <td>62841503</td>
+                        <td>MHP: MAHAPE - PIM: PIMPLAS</td>
+                        <td>MAHAPE: BHIWANDI</td>
+                        <td class="text-center">17 Jul 25</td>
+                        <td class="text-end">0.00</td>
+                        <td class="text-success fw-semibold">Scanned</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center"><input type="checkbox"></td>
+                        <td>62911112</td>
+                        <td>62911112</td>
+                        <td>DMN: DAMAN - PIM: PIMPLAS</td>
+                        <td>VAPI: BHIWANDI</td>
+                        <td class="text-center">10 Feb 26</td>
+                        <td class="text-end">0.00</td>
+                        <td class="text-success fw-semibold">Scanned</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center"><input type="checkbox"></td>
+                        <td>62918098</td>
+                        <td>62918098</td>
+                        <td>SRT: SURAT - PIM: PIMPLAS</td>
+                        <td>SURAT: BHIWANDI</td>
+                        <td class="text-center">10 Feb 26</td>
+                        <td class="text-end">0.00</td>
+                        <td class="text-success fw-semibold">Scanned</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center"><input type="checkbox"></td>
+                        <td>62920658</td>
+                        <td>62920658</td>
+                        <td>LTT: MUMBAI - PIM: PIMPLAS</td>
+                        <td>MUMBAI: PIMPLAS</td>
+                        <td class="text-center">10 Feb 26</td>
+                        <td class="text-end">0.00</td>
+                        <td class="text-success fw-semibold">Scanned</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
+</form>
 
 <!-- Back Button -->
 <div class="d-flex justify-content-center bg-secondary-subtle p-4 gap-2 mt-4">

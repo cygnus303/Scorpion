@@ -5,38 +5,59 @@
         <i class="fas fa-list me-2"></i>
          FM Query
     </div>
-
+<form [formGroup]="filterForm">
     <div class="container-fluid bg-white py-3 border">
-        <!-- Row 1 -->
         <div class="row align-items-center mb-3">
             <div class="col-md-2 text-end fw-semibold">DocType :</div>
             <div class="col-md-3">
-                <ng-select placeholder="COD/DOD"></ng-select>
+                <ng-select class="required2" placeholder="COD/DOD" [items]="DocTypelist" formControlName="DocType" bindLabel="text" bindValue="value" 
+                (change)="onChangeDocType($event)"
+                [ngClass]="{ 'border-danger': filterForm.get('DocType')?.invalid && filterForm.get('DocType')?.touched }"
+                ></ng-select>
+                <div class="text-danger text-start"
+                *ngIf="filterForm.get('DocType')?.invalid && filterForm.get('DocType')?.touched">
+                This field is required.
+              </div>
             </div>
         </div>
 
-        <!-- Row 2 -->
         <div class="row align-items-center mb-3">
             <div class="col-md-2 text-end fw-semibold">Select Date :</div>
             <div class="col-md-3">
-                <ng-select placeholder="Delivery Date"></ng-select>
+                <ng-select class="required2" placeholder="Delivery Date" [items]="DateTypelist" formControlName="DT_TYPE" bindLabel="text" bindValue="value"
+                [ngClass]="{ 'border-danger': filterForm.get('DT_TYPE')?.invalid && filterForm.get('DT_TYPE')?.touched }"></ng-select>
+                <div class="text-danger text-start"
+                *ngIf="filterForm.get('DT_TYPE')?.invalid && filterForm.get('DT_TYPE')?.touched">
+                This field is required.
+              </div>
             </div>
 
             <div class="col-md-2">
-                <div class="input-group">
+                <!-- <div class="input-group">
                     <input type="text" class="form-control date-range-input" placeholder="January 13, 2026 - February 11, 2026">
                       <span class="input-group-text cursor-pointer">
                       <i class="fa fa-calendar"></i>
                     </span>
+                </div> -->
+                <div class="input-group shadow-sm rounded" (click)="dvr.toggle()">
+                            <span class="input-group-text bg-white border-end-0 p-2">
+                                <i class="fas fa-calendar-alt text-dark text-secondary"></i>
+                            </span>
+                            <input type="text" placeholder="Daterangepicker" class="form-control border-start-1 text-center line-height"
+                                bsDaterangepicker #dvr="bsDaterangepicker" formControlName="dateRange" [class.disabled-input]="true"  [bsConfig]="{ ranges: commonService.ranges, rangeInputFormat: 'MMMM D, YYYY', dateInputFormat: 'MMMM D, YYYY'}" />
                 </div>
             </div>
         </div>
-
         <!-- Row 3 -->
         <div class="row align-items-center mb-3">
             <div class="col-md-2 text-end fw-semibold">Paybas :</div>
             <div class="col-md-3">
-                <ng-select placeholder="Select Paybas"></ng-select>
+                <ng-select class="required2" placeholder="Select Paybas" formControlName="Paybas" [items]="PayBsData" bindLabel="codeDesc" bindValue="codeId"
+                [ngClass]="{ 'border-danger': filterForm.get('Paybas')?.invalid && filterForm.get('Paybas')?.touched }"></ng-select>
+                <div class="text-danger text-start"
+                *ngIf="filterForm.get('Paybas')?.invalid && filterForm.get('Paybas')?.touched">
+                This field is required.
+              </div>
             </div>
         </div>
 
@@ -44,13 +65,14 @@
         <div class="row align-items-center">
             <div class="col-md-2 text-end fw-semibold">Document No :</div>
             <div class="col-md-3 d-flex align-items-center">
-                <input type="text" class="form-control" placeholder="Dockets">
+                <input type="text" class="form-control" placeholder="Dockets" formControlName="Dockets">
             </div>
             <small class="ms-2 col-md-1 text-primary text-nowrap">[Seperated by Comma if multiple]</small>
         </div>
     </div>
+</form>
     
-    <div class="d-flex justify-content-center bg-secondary-subtle p-4 gap-2" (click)="goToForwardList()">
-        <button class="btn btn-success"> <i class="fas fa-check"></i> Get List</button>
+    <div class="d-flex justify-content-center bg-secondary-subtle p-4 gap-2" >
+        <button class="btn btn-success" (click)="goToForwardList()"> <i class="fas fa-check"></i> Get List</button>
     </div>
 </div>
