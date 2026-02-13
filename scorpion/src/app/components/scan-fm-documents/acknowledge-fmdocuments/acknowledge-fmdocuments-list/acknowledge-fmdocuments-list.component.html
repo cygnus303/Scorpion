@@ -51,7 +51,7 @@
                     <td class="text-center">{{document.from_to}}</td>
                     <td class="text-center">{{document.fM_Status}}</td>
                     <td class="text-center">
-                        <span
+                        <span (click)="OnEditPage(document.fm_no)"
                             class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer">
                             <i class="fas fa-pen me-2 text-Secondary"></i> Edit </span>
                     </td>
@@ -77,13 +77,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <div *ngIf="isDetailLoading" class="text-center p-3">
-                    <div class="spinner-border"></div>
-                </div>
-                <div *ngIf="!isDetailLoading && !detailList?.length" class="text-center text-muted">
-                    No Record Found
-                </div>
-                <table *ngIf="!isDetailLoading && detailList?.length" class="table table-bordered">
+                <table *ngIf="detailList?.length" class="table table-bordered">
                     <thead class="table-light">
                         <tr>
                             <th>SrNo</th>

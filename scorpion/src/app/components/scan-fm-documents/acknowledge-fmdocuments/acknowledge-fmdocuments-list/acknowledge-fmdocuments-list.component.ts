@@ -14,7 +14,6 @@ import { DocketService } from 'app/shared/services/docket.service';
 })
 export class AcknowledgeFmdocumentsListComponent {
    public detailList: any = null;
-   public isDetailLoading = false;
    public filterData: any;
    public isLoading = false;
    public responseData: any;
@@ -53,15 +52,13 @@ export class AcknowledgeFmdocumentsListComponent {
    }
 
    openDetails(document: any) {
-      this.isDetailLoading = true;
-      this.PFMService.getFMDOCDetail(document.fm_no).subscribe({
-         next: (res: any) => {
+      this.PFMService.getFMDOCDetail(document.fm_no).subscribe({ next: (res: any) => {
             this.detailList = res;
-            this.isDetailLoading = false;
-         },
-         error: () => {
-            this.isDetailLoading = false;
          }
       });
+   }
+
+   OnEditPage(fmNo: string) {
+      this.router.navigate(['/Document/ForwardFMDocumentsEdit'], { queryParams: { FMNO: fmNo, Type: 'Edit' } });
    }
 }
