@@ -20,4 +20,8 @@ export class PFMService {
   getCustomerDetail(searchTerm:string): Observable<any>{
     return this.apiHandlerService.Get(`Operation/dropdown?searchTerm=${searchTerm}`);
   }
+
+  getForwardFMDocuments(payload:any): Observable<any>{
+    return this.apiHandlerService.Post(`Operation/ForwardFMDocuments`,payload);
+  }
 }

@@ -55,19 +55,22 @@
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Forward To</label>
                         <div class="col-sm-7">
-                            <ng-select class="required2" placeholder="Enter Forward To" formControlName="Doc_FWD_To"
-                                [items]="DocToList" bindLabel="text" bindValue="value"></ng-select>
+                            <ng-select class="required2" placeholder="Enter Forward To" formControlName="Doc_FWD_To" (clear)="onClearForwardFeild()"
+                                [items]="DocToList" bindLabel="text" bindValue="value" (change)="onChangeForward($event)"></ng-select>
                         </div>
                     </div>
                 </div>
                 <div class="col-4">
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Customer/Location</label>
-                        <div class="col-sm-7">
+                        <div class="col-sm-7" *ngIf="forwardDocForm.value.Doc_FWD_To === '1'">
                             <ng-select class="required2" placeholder="Enter Customer/Location" formControlName="Loc_Cust_Code"
                                 [items]="customerData" bindLabel="text" bindValue="id" (search)="getCustomerData($event)"
-                                [notFoundText]="notFoundTextValue"
-                                ></ng-select>
+                                [notFoundText]="notFoundTextValue"></ng-select>
+                        </div>
+                        <div class="col-sm-7" *ngIf="forwardDocForm.value.Doc_FWD_To !== '1'">
+                                <input class="form-control required2" type="text" placeholder="Enter Customer/Location"
+                                formControlName="Loc_Cust_Code" readonly>
                         </div>
                     </div>
                 </div>
@@ -144,45 +147,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr *ngFor="let document of documentList">
                         <td class="text-center"><input type="checkbox"></td>
-                        <td>62841503</td>
-                        <td>62841503</td>
-                        <td>MHP: MAHAPE - PIM: PIMPLAS</td>
-                        <td>MAHAPE: BHIWANDI</td>
-                        <td class="text-center">17 Jul 25</td>
-                        <td class="text-end">0.00</td>
-                        <td class="text-success fw-semibold">Scanned</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center"><input type="checkbox"></td>
-                        <td>62911112</td>
-                        <td>62911112</td>
-                        <td>DMN: DAMAN - PIM: PIMPLAS</td>
-                        <td>VAPI: BHIWANDI</td>
-                        <td class="text-center">10 Feb 26</td>
-                        <td class="text-end">0.00</td>
-                        <td class="text-success fw-semibold">Scanned</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center"><input type="checkbox"></td>
-                        <td>62918098</td>
-                        <td>62918098</td>
-                        <td>SRT: SURAT - PIM: PIMPLAS</td>
-                        <td>SURAT: BHIWANDI</td>
-                        <td class="text-center">10 Feb 26</td>
-                        <td class="text-end">0.00</td>
-                        <td class="text-success fw-semibold">Scanned</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center"><input type="checkbox"></td>
-                        <td>62920658</td>
-                        <td>62920658</td>
-                        <td>LTT: MUMBAI - PIM: PIMPLAS</td>
-                        <td>MUMBAI: PIMPLAS</td>
-                        <td class="text-center">10 Feb 26</td>
-                        <td class="text-end">0.00</td>
-                        <td class="text-success fw-semibold">Scanned</td>
+                        <td>{{document.dockno}}</td>
+                        <td>{{document.manual_dockno}}</td>
+                        <td>{{document.loc}}</td>
+                        <td>{{document.from_to}}</td>
+                        <td class="text-center">{{document.dely_date}}</td>
+                        <td class="text-end">{{document.dkttot}}</td>
+                        <td class="text-success fw-semibold">{{document.scaned}}</td>
                     </tr>
                 </tbody>
             </table>

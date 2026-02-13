@@ -6,6 +6,7 @@ import { CommonService } from 'app/shared/services/common.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { Router } from '@angular/router';
 import { PFMService } from 'app/shared/services/pfm.service';
+import { DocketService } from 'app/shared/services/docket.service';
 
 @Component({
   selector: 'app-forward-document-list',
@@ -18,6 +19,8 @@ export class ForwardDocumentListComponent {
   public currentDateTime: string = '';
   public forwardDocForm !: FormGroup;
   public customerData: any[] = [];
+  public filterData:any;
+  public documentList:any[]=[];
   public notFoundTextValue = 'Please enter at least 1 characters';
 
   public DocToList = [
@@ -28,16 +31,18 @@ export class ForwardDocumentListComponent {
   constructor(
     public commonService: CommonService,
     private router: Router,
-    private PFMService: PFMService
+    private PFMService: PFMService,
+    private docketService:DocketService
   ) { }
 
 
   ngOnInit() {
     this.setCurrentDateTime();
     this.buildForm();
-    this.commonService.dateAccess('58')
-    const data = history.state.filterData;
-    console.log('Received:', data);
+    this.commonService.dateAccess('58');
+    this.filterData = history.state.filterData;
+    console.log('Received:', this.filterData);
+    this.getForwardFMDocumentList()
   }
 
   buildForm() {
@@ -73,7 +78,27 @@ export class ForwardDocumentListComponent {
       `${month}/${day}/${year} ${hours}:${minutes}:${seconds} ${ampm}`;
   }
 
-  getCustomerData(event: any) {
+  onChangeForward(event:any){
+     if(event.value){
+      this.forwardDocForm.patchValue({
+      Loc_Cust_Code: null
+  })
+}
+    if(event?.value==='2'){
+      this.forwardDocForm.patchValue({
+        Loc_Cust_Code: 'HQTR'
+      })
+    }
+  }
+
+  onClearForwardFeild() {
+  this.forwardDocForm.patchValue({
+    Loc_Cust_Code: null
+  });
+}
+
+
+  getCustomerData(event?: any) {
     const searchText = event.term;
     if (!searchText || searchText.length < 1) {
       this.customerData = [];
@@ -94,6 +119,31 @@ export class ForwardDocumentListComponent {
     });
   }
 
+  getForwardFMDocumentList(){
+    const fromDate = this.filterData?.dateRange?.[0]
+    ? new Date(this.filterData.dateRange[0]).toISOString()
+    : null;
+
+  const toDate = this.filterData?.dateRange?.[1]
+    ? new Date(this.filterData.dateRange[1]).toISOString()
+    : null;
+    const payload={
+      docType: this.filterData.DocType,
+      paybas:this.filterData.Paybas,
+      dockets: this.filterData.Dockets || '',
+      loccode: this.docketService.loginUserList.LocationCode,
+      dT_TYPE: this.filterData.DT_TYPE,
+      fromDate: fromDate,
+      toDate: toDate,
+      fmDate:this.forwardDocForm.value.FM_Date
+
+    }
+    this.PFMService.getForwardFMDocuments(payload).subscribe({
+      next:(response)=>{
+        this.documentList=response.data.docketList;
+      }
+    })
+  }
 
   goToBackList() {
     this.router.navigate(['/Document/ForwardFMDocumentsQuery']);

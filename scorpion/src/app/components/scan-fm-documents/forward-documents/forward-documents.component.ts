@@ -43,7 +43,7 @@ export class ForwardDocumentsComponent {
       DocType: new FormControl(null, [Validators.required]),
       DT_TYPE: new FormControl(null, [Validators.required]),
       Paybas: new FormControl(null, [Validators.required]),
-      Dockets: new FormControl(null),
+      Dockets: new FormControl(''),
       dateRange: new FormControl([startDate, endDate])
     })
   }
