@@ -36,4 +36,8 @@ export class PFMService {
   getFMDOCDetail(fmNo: any): Observable<any> {
     return this.apiHandlerService.Get(`Operation/GetFMDOCDetail?fmNo=${encodeURIComponent(fmNo)}`);
   }
+
+  onSubmitAcknowledge(payload:any): Observable<any>{
+    return this.apiHandlerService.Post(`Operation/ForwardFMAckDocumentsDone`,payload);
+  }
 }

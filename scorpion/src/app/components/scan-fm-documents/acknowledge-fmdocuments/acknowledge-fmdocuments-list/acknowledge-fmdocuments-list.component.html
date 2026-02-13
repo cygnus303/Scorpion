@@ -8,7 +8,7 @@
         <table class="table table-bordered table-hover align-middle mb-0 ">
             <thead class="table-light text-center">
                 <tr>
-                    <th style="width:40px;"><input type="checkbox"></th>
+                    <th style="width:40px;"><input type="checkbox" [checked]="isAllSelected()" (change)="toggleAll($event)"></th>
                     <th>FM No</th>
                     <th>Manual CNote No</th>
                     <th>PFM Date</th>
@@ -36,7 +36,7 @@
                     </td>
                 </tr>
                 <tr *ngFor="let document of responseData?.listVWFDFAM">
-                    <td class="text-center"><input type="checkbox"></td>
+                    <td class="text-center"><input type="checkbox" [checked]="document.active" (change)="toggleSingle($event, document)"></td>
                     <td>
                         <span class="text-primary-color cursor-pointer" data-bs-toggle="modal"
                             data-bs-target="#detailsModal" (click)="openDetails(document)">
@@ -66,7 +66,7 @@
     <button class="btn btn-secondary" (click)="goToBackList()">
         ← Back
     </button>
-    <button class="btn btn-success"> <i class="fas fa-check"></i> Submit</button>
+    <button class="btn btn-success" [disabled]="!isAnySelected()" (click)="onSubmit()"> <i class="fas fa-check"></i> Submit</button>
 </div>
 
 <div class="modal fade" id="detailsModal" tabindex="-1">
