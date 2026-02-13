@@ -34,9 +34,9 @@
                 </div>
                 <div class="col-4">
                     <div class="row">
-                        <label class="col-sm-5 col-form-label text-end">FM Entry Date</label>
+                        <label class="col-sm-5 text-end">FM Entry Date</label>
                         <div class="col-sm-7 text-start">
-                            {{ currentDateTime }}
+                            {{ responseData?.fmEntryDate | date: 'M/d/yyyy h:mm:ss a' }}
                         </div>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
                         </div>
                         <div class="col-sm-7" *ngIf="forwardDocForm.value.Doc_FWD_To !== '1'">
                                 <input class="form-control required2" type="text" placeholder="Enter Customer/Location"
-                                formControlName="Loc_Cust_Code" readonly>
+                                formControlName="Loc_Cust_Code" [readonly]="forwardDocForm.value.Doc_FWD_To === '2'">
                         </div>
                     </div>
                 </div>
@@ -147,7 +147,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let document of documentList">
+                    <tr *ngIf="isLoading">
+                        <td colspan="8" class="text-center p-3">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- If no data found -->
+                    <tr *ngIf="!isLoading && !(responseData?.docketList?.length)">
+                        <td colspan="8" class="text-center text-muted p-3">
+                            No Record Found.
+                        </td>
+                    </tr>
+                    <tr *ngFor="let document of responseData?.docketList">
                         <td class="text-center"><input type="checkbox"></td>
                         <td>{{document.dockno}}</td>
                         <td>{{document.manual_dockno}}</td>

@@ -16,11 +16,11 @@ import { DocketService } from 'app/shared/services/docket.service';
   styleUrl: './forward-document-list.component.scss'
 })
 export class ForwardDocumentListComponent {
-  public currentDateTime: string = '';
   public forwardDocForm !: FormGroup;
   public customerData: any[] = [];
   public filterData:any;
-  public documentList:any[]=[];
+  public responseData:any;
+  public isLoading = false;
   public notFoundTextValue = 'Please enter at least 1 characters';
 
   public DocToList = [
@@ -37,7 +37,6 @@ export class ForwardDocumentListComponent {
 
 
   ngOnInit() {
-    this.setCurrentDateTime();
     this.buildForm();
     this.commonService.dateAccess('58');
     this.filterData = history.state.filterData;
@@ -60,43 +59,22 @@ export class ForwardDocumentListComponent {
     })
   }
 
-  setCurrentDateTime() {
-    const now = new Date();
-
-    const day = now.getDate();
-    const month = now.getMonth() + 1;   // 👈 month first
-    const year = now.getFullYear();
-
-    let hours = now.getHours();
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
-
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12;
-
-    this.currentDateTime =
-      `${month}/${day}/${year} ${hours}:${minutes}:${seconds} ${ampm}`;
-  }
-
-  onChangeForward(event:any){
-     if(event.value){
-      this.forwardDocForm.patchValue({
-      Loc_Cust_Code: null
-  })
-}
-    if(event?.value==='2'){
+  onChangeForward(event: any) {
+    if (event.value) {
+      this.forwardDocForm.patchValue({ Loc_Cust_Code: null});
+    }
+    if (event?.value === '2') {
       this.forwardDocForm.patchValue({
         Loc_Cust_Code: 'HQTR'
-      })
+      });
     }
   }
 
   onClearForwardFeild() {
-  this.forwardDocForm.patchValue({
-    Loc_Cust_Code: null
-  });
-}
-
+    this.forwardDocForm.patchValue({
+      Loc_Cust_Code: null
+    });
+  }
 
   getCustomerData(event?: any) {
     const searchText = event.term;
@@ -106,9 +84,7 @@ export class ForwardDocumentListComponent {
       return;
     }
     this.notFoundTextValue = 'Searching...';
-
-    this.PFMService.getCustomerDetail(searchText).subscribe({
-      next: (response) => {
+    this.PFMService.getCustomerDetail(searchText).subscribe({next: (response) => {
         this.customerData = response;
         this.notFoundTextValue = 'No matches found';
       },
@@ -119,31 +95,33 @@ export class ForwardDocumentListComponent {
     });
   }
 
-  getForwardFMDocumentList(){
-    const fromDate = this.filterData?.dateRange?.[0]
-    ? new Date(this.filterData.dateRange[0]).toISOString()
-    : null;
-
-  const toDate = this.filterData?.dateRange?.[1]
-    ? new Date(this.filterData.dateRange[1]).toISOString()
-    : null;
-    const payload={
+getForwardFMDocumentList() {
+   this.isLoading = true; // Set loading to true when API call starts
+   const fromDate = this.filterData?.dateRange?.[0] ? new Date(this.filterData.dateRange[0]).toISOString() : null;
+   const toDate = this.filterData?.dateRange?.[1] ? new Date(this.filterData.dateRange[1]).toISOString() : null;
+   const payload = {
       docType: this.filterData.DocType,
-      paybas:this.filterData.Paybas,
+      paybas: this.filterData.Paybas,
       dockets: this.filterData.Dockets || '',
       loccode: this.docketService.loginUserList.LocationCode,
       dT_TYPE: this.filterData.DT_TYPE,
       fromDate: fromDate,
       toDate: toDate,
-      fmDate:this.forwardDocForm.value.FM_Date
+      fmDate: this.forwardDocForm.value.FM_Date
+   };
 
-    }
-    this.PFMService.getForwardFMDocuments(payload).subscribe({
-      next:(response)=>{
-        this.documentList=response.data.docketList;
+   this.PFMService.getForwardFMDocuments(payload).subscribe({
+      next: (response) => {
+         this.responseData = response.data;
+      },
+      complete: () => {
+         this.isLoading = false; // Set loading to false when the API call is completed
+      },
+      error: () => {
+         this.isLoading = false; // Set loading to false if an error occurs
       }
-    })
-  }
+   });
+}
 
   goToBackList() {
     this.router.navigate(['/Document/ForwardFMDocumentsQuery']);
