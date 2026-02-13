@@ -28,4 +28,12 @@ export class PFMService {
   onSubmitForward(payload:any): Observable<any>{
     return this.apiHandlerService.Post(`Operation/ForwardFMDocumentsDone`,payload);
   }
+
+   getForwardFMAckDocuments(payload:any): Observable<any>{
+    return this.apiHandlerService.Post(`Operation/ForwardFMAckDocuments`,payload);
+  }
+
+  getFMDOCDetail(fmNo: any): Observable<any> {
+    return this.apiHandlerService.Get(`Operation/GetFMDOCDetail?fmNo=${encodeURIComponent(fmNo)}`);
+  }
 }

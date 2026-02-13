@@ -21,29 +21,40 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="text-center"><input type="checkbox"></td>
-                    <td>62841503</td>
-                    <td>62841503</td>
-                    <td>MHP: MAHAPE - PIM: PIMPLAS</td>
-                    <td>MAHAPE: BHIWANDI</td>
-                    <td class="text-center">17 Jul 25</td>
-                    <td class="text-end">0.00</td>
-                    <td class="text-success fw-semibold">Scanned</td>
-                    <td class="text-success fw-semibold">Scanned</td>
-                    <td class="text-success fw-semibold">Scanned</td>
+                <tr *ngIf="isLoading">
+                    <td colspan="10" class="text-center p-3">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </td>
                 </tr>
-                 <tr>
+
+                <!-- If no data found -->
+                <tr *ngIf="!isLoading && !(responseData?.listVWFDFAM?.length)">
+                    <td colspan="10" class="text-center text-muted p-3">
+                        No Record Found.
+                    </td>
+                </tr>
+                <tr *ngFor="let document of responseData?.listVWFDFAM">
                     <td class="text-center"><input type="checkbox"></td>
-                    <td>62841503</td>
-                    <td>62841503</td>
-                    <td>MHP: MAHAPE - PIM: PIMPLAS</td>
-                    <td>MAHAPE: BHIWANDI</td>
-                    <td class="text-center">17 Jul 25</td>
-                    <td class="text-end">0.00</td>
-                    <td class="text-success fw-semibold">Scanned</td>
-                    <td class="text-success fw-semibold">Scanned</td>
-                    <td class="text-success fw-semibold">Scanned</td>
+                    <td>
+                        <span class="text-primary-color cursor-pointer" data-bs-toggle="modal"
+                            data-bs-target="#detailsModal" (click)="openDetails(document)">
+                            {{ document.fm_no }}
+                        </span>
+                    </td>
+                    <td></td>
+                    <td>{{document.pfmdt}}</td>
+                    <td>{{ document.fm_date | date:'M/d/yyyy h:mm:ss a' }}</td>
+                    <td class="text-center">{{document.fm_fwd_loccode}}</td>
+                    <td class="text-center">{{document.fm_ack_status}}</td>
+                    <td class="text-center">{{document.from_to}}</td>
+                    <td class="text-center">{{document.fM_Status}}</td>
+                    <td class="text-center">
+                        <span
+                            class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer">
+                            <i class="fas fa-pen me-2 text-Secondary"></i> Edit </span>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -56,4 +67,51 @@
         ← Back
     </button>
     <button class="btn btn-success"> <i class="fas fa-check"></i> Submit</button>
+</div>
+
+<div class="modal fade" id="detailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="isDetailLoading" class="text-center p-3">
+                    <div class="spinner-border"></div>
+                </div>
+                <div *ngIf="!isDetailLoading && !detailList?.length" class="text-center text-muted">
+                    No Record Found
+                </div>
+                <table *ngIf="!isDetailLoading && detailList?.length" class="table table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>SrNo</th>
+                            <th>Dock No</th>
+                            <th>Dock Date</th>
+                            <th>From-To</th>
+                            <th>Origin-Destination</th>
+                            <th>Delivery Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of detailList; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ item.dockNo }}</td>
+                            <td>{{ item.dockDt | date:'d MMM yyyy' }}</td>
+                            <td>{{ item.from_To }}</td>
+                            <td>{{ item.orgn_Dest }}</td>
+                            <td>{{ item.dely_Date | date:'d MMM yyyy' }}</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
 </div>

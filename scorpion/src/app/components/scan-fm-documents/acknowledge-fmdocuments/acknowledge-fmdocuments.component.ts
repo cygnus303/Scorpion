@@ -21,8 +21,8 @@ export class AcknowledgeFMDocumentsComponent {
     { text: "THC", value: "6" },
   ];
   public DocToList = [
-    { text: "Customer", value: "1" },
-    { text: "Location", value: "2" },
+    { text: "Customer", value: "Customer" },
+    { text: "Location", value: "Location" },
   ];
   
   constructor(private router: Router, public commonService: CommonService) { }
@@ -36,9 +36,9 @@ export class AcknowledgeFMDocumentsComponent {
     const startDate = new Date();
     startDate.setDate(endDate.getDate() - 29);
     this.acknowledgefilterForm = new FormGroup({
-      FMType: new FormControl(null, [Validators.required]),
-      Loccode: new FormControl(null, [Validators.required]),
-      FmNo: new FormControl(null),
+      fmType: new FormControl(null, [Validators.required]),
+      locCode: new FormControl(null, [Validators.required]),
+      fmNo: new FormControl(null),
       dateRange: new FormControl([startDate, endDate])
     })
   }
