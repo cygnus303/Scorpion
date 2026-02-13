@@ -4,9 +4,9 @@
         Forwarded Document List for Acknowledgement
     </div>
     <!-- Table Section -->
-    <div class="table-responsive p-3">
-        <table class="table table-bordered table-hover align-middle mb-0 ">
-            <thead class="table-light text-center">
+    <div class="table-responsive m-3" style="max-height: 650px; overflow-y: auto; overflow-x: auto;">
+        <table class="table table-bordered table-hover align-middle mb-0 table-striped table-condensed flip-content">
+            <thead class="table-light text-center sticky-top bg-light">
                 <tr>
                     <th style="width:40px;"><input type="checkbox" [checked]="isAllSelected()"
                             (change)="toggleAll($event)"></th>
