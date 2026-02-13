@@ -24,4 +24,8 @@ export class PFMService {
   getForwardFMDocuments(payload:any): Observable<any>{
     return this.apiHandlerService.Post(`Operation/ForwardFMDocuments`,payload);
   }
+
+  onSubmitForward(payload:any): Observable<any>{
+    return this.apiHandlerService.Post(`Operation/ForwardFMDocumentsDone`,payload);
+  }
 }
