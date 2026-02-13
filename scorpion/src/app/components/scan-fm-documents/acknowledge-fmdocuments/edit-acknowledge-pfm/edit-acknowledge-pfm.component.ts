@@ -2,7 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DocketService } from 'app/shared/services/docket.service';
 import { PFMService } from 'app/shared/services/pfm.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 
 @Component({
   selector: 'app-edit-acknowledge-pfm',
@@ -15,7 +17,7 @@ export class EditAcknowledgePFMComponent {
   public editMfform!: FormGroup;
   public fmNo: string = '';
   public type: string = '';
-  constructor(private route: ActivatedRoute,private PFMService: PFMService,private router: Router) {}
+  constructor(private route: ActivatedRoute,private PFMService: PFMService,private router: Router,private docketService:DocketService,private sweetAlertService:SweetAlertService) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -75,6 +77,20 @@ openDetails() {
 
   goToBackList() {
     this.router.navigate(['/Document/AcknowledgeFMDocumentsQuery']);
+  }
+
+  CheckValidateDocket(event:any,index: number){
+    const docketNo=event.target.value;
+     if (!docketNo) return;
+    this.PFMService.validateDocket(docketNo,this.docketService.loginUserList.LocationCode).subscribe({
+      next:(response)=>{
+      if(response.cnt===0){
+         this.sweetAlertService.info(`Please enter Valid Docket No.!!!`, () => {
+         this.dockets.at(index).get('docket')?.setValue(null);
+        });
+      }
+      }
+    })
   }
 
  onSubmit() {

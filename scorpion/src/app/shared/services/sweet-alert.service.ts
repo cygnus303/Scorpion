@@ -116,7 +116,7 @@ info(message: string, onConfirm?: () => void): void {
       icon: 'glassy-info-icon'
     }
   }).then((result) => {
-    if (result.isConfirmed && onConfirm) {
+    if ((result.isConfirmed || result.dismiss) && onConfirm) {
       onConfirm();
     }
      if (result.isDismissed && onConfirm) {

@@ -47,7 +47,7 @@
             <tbody formArrayName="dockets">
                 <tr *ngFor="let row of dockets.controls; let i = index" [formGroupName]="i">
                     <td>{{ i + 1 }}</td>
-                    <td><input class="form-control required2" formControlName="docket" placeholder="Enter Docket No"></td>
+                    <td><input class="form-control required2" formControlName="docket" placeholder="Enter Docket No" (blur)="CheckValidateDocket($event,i)"></td>
                     <td class="center">
                         <div style="color: Maroon; font-size: 14px; font-weight: bolder; text-decoration: none;" class="cursor-pointer" (click)="removeRow(i)">X</div>
                     </td>

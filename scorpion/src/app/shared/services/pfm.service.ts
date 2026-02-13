@@ -40,4 +40,8 @@ export class PFMService {
   onSubmitAcknowledge(payload:any): Observable<any>{
     return this.apiHandlerService.Post(`Operation/ForwardFMAckDocumentsDone`,payload);
   }
+  
+  validateDocket(dockNo:string,location:string): Observable<any>{
+    return this.apiHandlerService.Get(`Operation/GetValidDockForPFMEdit?dockNo=${dockNo}&location=${location}`);
+  }
 }
