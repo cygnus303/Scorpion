@@ -4,6 +4,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { Router } from '@angular/router';
 import { PFMService } from 'app/shared/services/pfm.service';
 import { DocketService } from 'app/shared/services/docket.service';
+import { environment } from 'environments/environment';
 
 @Component({
    selector: 'app-acknowledge-fmdocuments-list',
@@ -17,6 +18,7 @@ export class AcknowledgeFmdocumentsListComponent {
    public filterData: any;
    public isLoading = false;
    public responseData: any;
+   env = environment;
    constructor(private router: Router, private PFMService: PFMService, private docketService: DocketService) { }
    
    goToBackList() {
@@ -60,5 +62,45 @@ export class AcknowledgeFmdocumentsListComponent {
 
    OnEditPage(fmNo: string) {
       this.router.navigate(['/Document/ForwardFMDocumentsEdit'], { queryParams: { FMNO: fmNo, Type: 'Edit' } });
+   }
+
+   toggleAll(event: any) {
+      const checked = event.target.checked;
+      this.responseData?.listVWFDFAM?.forEach((item: any) => {
+         item.active = checked;
+      });
+   }
+
+   toggleSingle(event: any, item: any) {
+      item.active = event.target.checked;
+   }
+
+   isAllSelected(): boolean {
+      const list = this.responseData?.listVWFDFAM || [];
+      return list.length > 0 && list.every((item: any) => item.active);
+   }
+
+   isAnySelected(): boolean {
+      const list = this.responseData?.listVWFDFAM || [];
+      return list.some((item: any) => item.active);
+   }
+
+   onSubmit() {
+      const selectedList = (this.responseData?.listVWFDFAM || []).filter((item: any) => item.active);
+      const payload = {
+         fmType: this.filterData.fmType,
+         locCode: this.filterData.locCode,
+         baseUserName: this.docketService.loginUserList.BaseUserName,
+         ackList: selectedList.map((item: any) => ({
+            ...item,
+            manual_dockno: ''
+         }))
+      };
+      console.log(payload)
+      this.PFMService.onSubmitAcknowledge(payload).subscribe({
+         next: (response) => {
+            window.parent.location.href = `${this.env.liveUrl}Document/ForwardFMAckDocumentsDone&src=angular`;
+         }
+      })
    }
 }
