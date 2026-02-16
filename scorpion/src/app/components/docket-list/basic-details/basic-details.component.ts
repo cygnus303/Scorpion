@@ -398,6 +398,12 @@ applyVehicleNoValidation(){
       billingParty: event.custcd,
       billingName: event.custnm
     });
+    if(this.docketService.freightForm.value.discountType || this.docketService.freightForm.value.discount){
+      this.docketService.freightForm.patchValue({
+       discountType: null,
+       discount: "0"
+     });
+    }
     if (this.docketService.loginUserList.Type === '2' || this.docketService.loginUserList.Type === '1') {
       if (this.docketService.completiondata && this.docketService.completiondata.listCharges?.length) {
         this.docketService.completiondata.listCharges = [];
