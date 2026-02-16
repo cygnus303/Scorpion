@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DocketService } from 'app/shared/services/docket.service';
 import { PFMService } from 'app/shared/services/pfm.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-edit-acknowledge-pfm',
@@ -17,6 +18,7 @@ export class EditAcknowledgePFMComponent {
   public editMfform!: FormGroup;
   public fmNo: string = '';
   public type: string = '';
+  env = environment;
   constructor(private route: ActivatedRoute,private PFMService: PFMService,private router: Router,private docketService:DocketService,private sweetAlertService:SweetAlertService) {}
 
   ngOnInit() {
@@ -101,10 +103,21 @@ openDetails() {
   const formData = this.editMfform.getRawValue();
   const payload = {
     fmNo: this.fmNo,
-    type: this.type,
-    dockets: formData.dockets.map((item: any) => item.docket)
+    entryBy:this.docketService.loginUserList.BaseUserName,
+    dockList: formData.dockets.map((item: any, index: number) => ({
+      srno: index + 1,
+      dockno: item.docket
+    }))
   };
   console.log('Submit Payload:', payload);
+
+  this.PFMService.onSubmitAckEdit(payload).subscribe({
+    next:(response)=>{
+    if(response.tranXaction === 'Done'){
+      window.parent.location.href = `${this.env.liveUrl}Document/FMEditDone?FMNO=${response.fM_No}&Status=1`;
+    }
+    }
+  })
 }
 
 }
