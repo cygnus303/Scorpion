@@ -99,7 +99,10 @@ export class AcknowledgeFmdocumentsListComponent {
       console.log(payload)
       this.PFMService.onSubmitAcknowledge(payload).subscribe({
          next: (response) => {
-            window.parent.location.href = `${this.env.liveUrl}Document/ForwardFMAckDocumentsDone&src=angular`;
+            if(response.success){
+               this.router.navigate(['/Document/ForwardFMDocumentsDone'], { queryParams: { fmNo: response.fmNo,fmType:this.filterData.fmType, Type: '2' } });
+            }
+            // window.parent.location.href = `${this.env.liveUrl}Document/ForwardFMAckDocumentsDone&src=angular`;
          }
       })
    }

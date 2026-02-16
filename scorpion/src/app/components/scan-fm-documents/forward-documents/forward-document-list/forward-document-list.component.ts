@@ -286,7 +286,9 @@ isAnySelected(): boolean {
     if (this.forwardDocForm.valid) {
       this.PFMService.onSubmitForward(payload).subscribe({
         next: (response) => {
-
+          if(response.success){
+            this.router.navigate(['/Document/ForwardFMDocumentsDone'], { queryParams: { fmNo: response.fmNo,fmType:response.type, Type: '1' } });
+          }
         }
       })
     } else {

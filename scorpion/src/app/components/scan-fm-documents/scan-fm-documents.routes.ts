@@ -6,6 +6,7 @@ import { ForwardDocumentListComponent } from './forward-documents/forward-docume
 import { AcknowledgeFMDocumentsComponent } from './acknowledge-fmdocuments/acknowledge-fmdocuments.component';
 import { AcknowledgeFmdocumentsListComponent } from './acknowledge-fmdocuments/acknowledge-fmdocuments-list/acknowledge-fmdocuments-list.component';
 import { EditAcknowledgePFMComponent } from './acknowledge-fmdocuments/edit-acknowledge-pfm/edit-acknowledge-pfm.component';
+import { ForwardFMDocumentsDoneComponent } from './forward-fmdocuments-done/forward-fmdocuments-done.component';
 
 export const ScanFMRoutes: Routes = [
   {
@@ -32,6 +33,10 @@ export const ScanFMRoutes: Routes = [
    {
     path: 'ForwardFMDocumentsEdit',
     component: EditAcknowledgePFMComponent,
+  },
+  {
+    path: 'ForwardFMDocumentsDone',
+    component: ForwardFMDocumentsDoneComponent,
   },
 
 ];
