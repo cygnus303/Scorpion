@@ -72,10 +72,14 @@
                         <label class="col-sm-5 col-form-label text-end">Customer/Location</label>
                         <div class="col-sm-7" *ngIf="forwardDocForm.value.Doc_FWD_To === '1'">
                             <ng-select class="required2" placeholder="Enter Customer/Location" formControlName="Loc_Cust_Code"
-                                [items]="customerData" bindLabel="text" bindValue="id" (search)="getCustomerData($event)"
+                                (search)="getCustomerData($event)"
                                 [notFoundText]="notFoundTextValue"
                                 [ngClass]="{'border-danger':forwardDocForm.get('Loc_Cust_Code')?.invalid && forwardDocForm.get('Loc_Cust_Code')?.touched}"
-                                ></ng-select>
+                                >
+                                <ng-option *ngFor="let item of customerData" [value]="item">
+                                    <strong>{{ item.id }}</strong> : {{ item.text }}
+                                </ng-option>
+                            </ng-select>
                                 <div
                                 *ngIf="forwardDocForm.get('Loc_Cust_Code')?.invalid && forwardDocForm.get('Loc_Cust_Code')?.touched"
                                 class="text-danger col-md-7 text-start">
