@@ -759,7 +759,7 @@ getcontractservicecharge() {
             this.getStaxPaidBy();
           }else{
             this.isContarctService = true;
-            this.sweetAlertService.info('Please enter valid information');
+            this.sweetAlertService.info('Contract not Complete for this Billing party or Transit mode!!');
             this.contractservicecharge = [];
             this.invoiceform.patchValue({
               cft_Ratio: 0
