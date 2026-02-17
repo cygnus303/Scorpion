@@ -331,8 +331,8 @@
           <div class="form-group" *ngIf="docketService?.step2DetailsList?.maxDiscountY_N==='Y'">
             <label class="control-label col-md-5">Discount</label>
             <div class="col-md-7">
-              <input class="form-control clsAmount" placeholder="Discount" type="text" formControlName="discount" (blur)="docketService.calculateDiscount($event)"
-              (keypress)="docketService.allowNumericDecimal($event)" 
+              <input class="form-control clsAmount" placeholder="Discount" type="text" formControlName="discount" (blur)="restoreIfEmpty('discount');docketService.calculateDiscount($event)"
+              (keypress)="docketService.allowNumericDecimal($event)" (focus)="clearZero('discount')"
               [ngClass]="{ 'border-danger':  docketService.freightForm.get('discount')?.touched &&
     docketService.freightForm.get('discount')?.hasError('max') &&
        docketService.step2DetailsList?.maxDiscountY_N === 'Y'}">

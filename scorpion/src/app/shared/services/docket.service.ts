@@ -1749,7 +1749,7 @@ calculateDiscount(event?: any) {
   
   let Subtotal = this.originalSubtotal;
    const discountControl = this.freightForm.get('discount');
-if(this.freightForm.value.discount){
+if(this.freightForm.value.discount !== null && this.freightForm.value.discount !== '' && this.freightForm.value.discount !== undefined){
   let discounts = this.freightForm.value.discount;
   if (discountType == "P") {
     discounts = parseFloat(this.originalSubtotal.toString()) * parseFloat(discounts) / 100;

@@ -133,6 +133,21 @@ onBlur(chargeCode: string) {
   }
 }
 
+  clearZero(controlName: string) {
+  const control = this.docketService.freightForm.get(controlName);
+  if (control?.value === 0 || control?.value === '0') {
+    control.setValue('');
+  }
+}
+
+restoreIfEmpty(controlName: string) {
+  const control = this.docketService.freightForm.get(controlName);
+  if (control?.value === '' || control?.value === null) {
+    control.setValue(0);
+  }
+}
+
+
 onCloseDiscountType(){
   this.docketService.freightForm.patchValue({
     discount: null,
