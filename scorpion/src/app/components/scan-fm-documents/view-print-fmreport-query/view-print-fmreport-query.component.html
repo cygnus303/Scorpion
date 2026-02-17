@@ -1,0 +1,77 @@
+<div class="cnote-entry-container px-2">
+    <!-- Header Bar -->
+    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+        <i class="fas fa-list me-2"></i>
+        FM Query
+    </div>
+    <form >
+        <div class="form-grid p-4">
+            <!-- Row 1 -->
+            <div class="row pb-3">
+                <div class="col-md-2 col-form-label text-end">Select RO :</div>
+                <div class="col-md-3">
+                    <ng-select class="required2" placeholder="Select RO" ></ng-select>
+                </div>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="row pb-3">
+                <div class="col-md-2 col-form-label text-end">Select Location : </div>
+                <div class="col-md-3">
+                    <ng-select class="required2" placeholder="Enter Select Location"></ng-select>
+                </div>
+            </div>
+
+            <!-- Row 3 -->
+            <div class="row pb-3">
+                <div class="col-md-2 col-form-label text-end">Select Date :</div>
+                <div class="col-md-3">
+                    <div class="input-group shadow-sm rounded" (click)="dvr.toggle()">
+                        <span class="input-group-text bg-white border-end-0 p-2">
+                            <i class="fas fa-calendar-alt text-dark text-secondary"></i>
+                        </span>
+                        <input type="text" placeholder="Daterangepicker" class="form-control border-start-1 text-center line-height uppercase-none " bsDaterangepicker
+                            #dvr="bsDaterangepicker" [class.disabled-input]="true" formControlName="dateRange"
+                            [bsConfig]="{ ranges: commonService.ranges, rangeInputFormat: 'MMMM D, YYYY', containerClass: 'theme-dark-blue', dateInputFormat: 'MMMM D, YYYY'}" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row pb-3">
+                <div class="col-md-2 col-form-label text-end">FM No.</div>
+                <div class="col-md-3">
+                    <input class="form-control" placeholder="Enter FM No.">
+                </div>
+                 <small class="ms-2 col-md-2 text-primary text-start col-form-label">[Seperated by Comma if multiple]</small>
+            </div>
+
+        <div class="row pb-3">
+            <div class="col-md-2 col-form-label text-end" style="font-size: 1.2rem;">PFM Status :</div>
+            <div class="col-md-3 text-start d-flex align-items-center" style="gap: 15px;">
+                <div class="form-check form-check-inline" style="font-size: 1.2rem; margin-right: 20px;">
+                    <input class="form-check-input" type="radio" name="pfmStatus" id="allStatus" value="all" checked
+                        style="transform: scale(1.2);">
+                    <label class="form-check-label" for="allStatus">All</label>
+                </div>
+                <div class="form-check form-check-inline" style="font-size: 1.2rem; margin-right: 20px;">
+                    <input class="form-check-input" type="radio" name="pfmStatus" id="generatedStatus" value="generated"
+                        style="transform: scale(1.2);">
+                    <label class="form-check-label" for="generatedStatus">Generated</label>
+                </div>
+                <div class="form-check form-check-inline" style="font-size: 1.2rem;">
+                    <input class="form-check-input" type="radio" name="pfmStatus" id="receivedStatus" value="received"
+                        style="transform: scale(1.2);">
+                    <label class="form-check-label" for="receivedStatus">Received</label>
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </form>
+    <div class="bg-secondary-subtle p-4 gap-2">
+        <div class="row pb-3">
+            <div class="col-md-4 col-form-label text-center">
+                <button class="btn btn-success"  (click)="goToForwardList()"> <i class="fas fa-search"></i> Get List</button>
+            </div>
+        </div>
+    </div>

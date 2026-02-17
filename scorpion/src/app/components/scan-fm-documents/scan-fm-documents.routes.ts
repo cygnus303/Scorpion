@@ -7,6 +7,8 @@ import { AcknowledgeFMDocumentsComponent } from './acknowledge-fmdocuments/ackno
 import { AcknowledgeFmdocumentsListComponent } from './acknowledge-fmdocuments/acknowledge-fmdocuments-list/acknowledge-fmdocuments-list.component';
 import { EditAcknowledgePFMComponent } from './acknowledge-fmdocuments/edit-acknowledge-pfm/edit-acknowledge-pfm.component';
 import { ForwardFMDocumentsDoneComponent } from './forward-fmdocuments-done/forward-fmdocuments-done.component';
+import { ViewPrintFMReportQueryComponent } from './view-print-fmreport-query/view-print-fmreport-query.component';
+import { FMReportListComponent } from './view-print-fmreport-query/fmreport-list/fmreport-list.component';
 
 export const ScanFMRoutes: Routes = [
   {
@@ -37,6 +39,14 @@ export const ScanFMRoutes: Routes = [
   {
     path: 'ForwardFMDocumentsDone',
     component: ForwardFMDocumentsDoneComponent,
+  },
+   {
+    path: 'FMReportQuery',
+    component: ViewPrintFMReportQueryComponent,
+  },
+     {
+    path: 'FMReport',
+    component: FMReportListComponent,
   },
 
 ];
