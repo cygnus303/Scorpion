@@ -742,7 +742,7 @@ GetGSTFromTrnMode() {
 }
 
 getcontractservicecharge() {
-  if (this.basicDetailForm.value.mode) {
+  if (this.basicDetailForm.value.mode  && this.step2DetailsList?.contractid) {
     this.basicDetailService
       .contractservicecharge(this.step2DetailsList?.contractid, this.basicDetailForm.value.mode)
       .subscribe({
