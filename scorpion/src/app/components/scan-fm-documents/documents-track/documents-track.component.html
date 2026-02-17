@@ -1,0 +1,86 @@
+<div class="cnote-entry-container px-2">
+    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+        <i class="fas fa-list me-2"></i>
+        Documents Track
+    </div>
+    <form [formGroup]="documentsTrackForm">
+        <div class="form-grid p-4">
+            <div class="row pb-3">
+                <div class="col-md-2 col-form-label text-end">DocType :</div>
+                <div class="col-md-3">
+                    <ng-select class="required2" placeholder="Fm Type" [items]="DocTypelist" bindLabel="text"
+                        formControlName="docType" bindValue="value"
+                        [ngClass]="{ 'border-danger': documentsTrackForm.get('docType')?.invalid && documentsTrackForm.get('docType')?.touched }"></ng-select>
+                    <div class="text-danger text-start"
+                        *ngIf="documentsTrackForm.get('docType')?.invalid && documentsTrackForm.get('docType')?.touched">
+                        This field is required.
+                    </div>
+                </div>
+            </div>
+
+            <div class="row pb-3">
+                <div class="col-md-2 col-form-label text-end">Document No :</div>
+                <div class="col-md-3">
+                    <input class="form-control required2" placeholder="Document No :" formControlName="DocNo"
+                        [ngClass]="{ 'border-danger': documentsTrackForm.get('DocNo')?.invalid && documentsTrackForm.get('DocNo')?.touched }">
+                    <div class="text-danger text-start"
+                        *ngIf="documentsTrackForm.get('DocNo')?.invalid && documentsTrackForm.get('DocNo')?.touched">
+                        This field is required.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="bg-secondary-subtle p-4 gap-2">
+        <div class="row pb-3">
+            <div class="col-md-4 col-form-label text-center">
+                <button class="btn btn-success me-2" (click)="goToForwardList()"> <i class="fas fa-search "></i> Get
+                    List</button>
+                <button class="btn btn-success"> <i class="fas fa-list "></i> Download XLS</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="cnote-entry-container px-2 mt-4">
+        <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+            <i class="fas fa-list me-2"></i>
+            Document Track List
+        </div>
+        <div class="p-3">
+            <div class="row p-3">
+                <div class="col-md-1">
+                    <ng-select></ng-select>
+                </div>
+                <div class="col-md-2 col-form-label text-start">Records</div>
+                <div class="col-md-5"></div>
+                <div class="col-md-2 col-form-label text-end">Search</div>
+                <div class="col-md-2"><input class="form-control"></div>
+            </div>
+            <div class="table-responsive m-3" style="max-height: 650px; overflow-y: auto; overflow-x: auto;">
+                <table class="table table-bordered align-middle mb-0 table-condensed flip-content">
+                    <thead class="table-light text-center sticky-top bg-light">
+                        <tr>
+                            <th>PFM No.</th>
+                            <th>PFM Date</th>
+                            <th>From</th>
+                            <th>To</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">BFM/MDP_/2025/00000001</td>
+                            <td>24 Jun 25</td>
+                            <td>MDP:MANDIDEEP</td>
+                            <td>HQTR : CORPORATE OFFICE MUMBAI - (Location)</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">BFM/MDP_/2025/00000001</td>
+                            <td>24 Jun 25</td>
+                            <td>MDP:MANDIDEEP</td>
+                            <td>HQTR : CORPORATE OFFICE MUMBAI - (Location)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
