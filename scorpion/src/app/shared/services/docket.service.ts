@@ -77,6 +77,7 @@ export class DocketService {
   public isChangingFile = false;
   public isExistingFile = false;
   public isExemptServiceReadonly:boolean=false;
+  public isContarctService:boolean = false;
 
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
@@ -211,7 +212,7 @@ export class DocketService {
       coddodCollected: new FormControl(),
       gstRate: new FormControl(),
       subTotal: new FormControl(),
-      dktTotal: new FormControl(),
+      dktTotal: new FormControl(0,[Validators.required, Validators.min(0)]),
       discountType:new FormControl(null),
       discountAmount: new FormControl(),
       discount: new FormControl(),
@@ -748,13 +749,20 @@ getcontractservicecharge() {
       .contractservicecharge(this.step2DetailsList?.contractid, this.basicDetailForm.value.mode)
       .subscribe({
         next: (response: any) => {
-          if (response) {
+          if (response && response.length > 0) {
+            this.isContarctService = false;
             this.contractservicecharge = response;
             this.calculateSummary.next(true);
             this.invoiceform.patchValue({
               cft_Ratio: this.contractservicecharge[0].cft_Ratio
             });
             this.getStaxPaidBy();
+          }else{
+            this.isContarctService = true;
+            this.contractservicecharge = [];
+            this.invoiceform.patchValue({
+              cft_Ratio: 0
+            });
           }
         },
         error: (err) => {
