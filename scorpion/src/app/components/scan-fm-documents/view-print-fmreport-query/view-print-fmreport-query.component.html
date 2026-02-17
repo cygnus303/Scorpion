@@ -4,13 +4,21 @@
         <i class="fas fa-list me-2"></i>
         FM Query
     </div>
-    <form >
+    <form [formGroup]="viewFilterForm">
         <div class="form-grid p-4">
             <!-- Row 1 -->
             <div class="row pb-3">
                 <div class="col-md-2 col-form-label text-end">Select RO :</div>
                 <div class="col-md-3">
-                    <ng-select class="required2" placeholder="Select RO" ></ng-select>
+                    <ng-select class="required2" placeholder="Select RO" formControlName="RO" (change)="getLocationListFromROList($event)"
+                    [ngClass]="{ 'border-danger': viewFilterForm.get('RO')?.invalid && viewFilterForm.get('RO')?.touched }">
+                         <ng-option *ngFor="let item of ROData" [value]="item.id">
+                                    <strong>{{ item.id }}</strong> : {{ item.text }}
+                        </ng-option>
+                    </ng-select>
+                    <div class="text-danger text-start" *ngIf="viewFilterForm.get('RO')?.invalid && viewFilterForm.get('RO')?.touched">
+                        This field is required.
+                    </div>
                 </div>
             </div>
 
@@ -18,7 +26,12 @@
             <div class="row pb-3">
                 <div class="col-md-2 col-form-label text-end">Select Location : </div>
                 <div class="col-md-3">
-                    <ng-select class="required2" placeholder="Enter Select Location"></ng-select>
+                    <ng-select class="required2" placeholder="Enter Select Location" formControlName="Loccode" 
+                    [items]="locationList" bindLabel="text" bindValue="id"
+                    [ngClass]="{ 'border-danger': viewFilterForm.get('Loccode')?.invalid && viewFilterForm.get('Loccode')?.touched }"></ng-select>
+                    <div class="text-danger text-start" *ngIf="viewFilterForm.get('Loccode')?.invalid && viewFilterForm.get('Loccode')?.touched">
+                        This field is required.
+                    </div>
                 </div>
             </div>
 
@@ -31,7 +44,7 @@
                             <i class="fas fa-calendar-alt text-dark text-secondary"></i>
                         </span>
                         <input type="text" placeholder="Daterangepicker" class="form-control border-start-1 text-center line-height uppercase-none " bsDaterangepicker
-                            #dvr="bsDaterangepicker" [class.disabled-input]="true" formControlName="dateRange"
+                            #dvr="bsDaterangepicker" [class.disabled-input]="true" formControlName="dateRange" 
                             [bsConfig]="{ ranges: commonService.ranges, rangeInputFormat: 'MMMM D, YYYY', containerClass: 'theme-dark-blue', dateInputFormat: 'MMMM D, YYYY'}" />
                     </div>
                 </div>
@@ -40,7 +53,7 @@
             <div class="row pb-3">
                 <div class="col-md-2 col-form-label text-end">FM No.</div>
                 <div class="col-md-3">
-                    <input class="form-control" placeholder="Enter FM No.">
+                    <input class="form-control" placeholder="Enter FM No." formControlName="FmNo">
                 </div>
                  <small class="ms-2 col-md-2 text-primary text-start col-form-label">[Seperated by Comma if multiple]</small>
             </div>
@@ -49,18 +62,18 @@
             <div class="col-md-2 col-form-label text-end" style="font-size: 1.2rem;">PFM Status :</div>
             <div class="col-md-3 text-start d-flex align-items-center" style="gap: 15px;">
                 <div class="form-check form-check-inline" style="font-size: 1.2rem; margin-right: 20px;">
-                    <input class="form-check-input" type="radio" name="pfmStatus" id="allStatus" value="all" checked
-                        style="transform: scale(1.2);">
+                    <input class="form-check-input" type="radio" name="fM_Status" id="allStatus" value="All" checked
+                        style="transform: scale(1.2);" formControlName="fM_Status">
                     <label class="form-check-label" for="allStatus">All</label>
                 </div>
                 <div class="form-check form-check-inline" style="font-size: 1.2rem; margin-right: 20px;">
-                    <input class="form-check-input" type="radio" name="pfmStatus" id="generatedStatus" value="generated"
-                        style="transform: scale(1.2);">
+                    <input class="form-check-input" type="radio" name="fM_Status" id="generatedStatus" value="generated"
+                        style="transform: scale(1.2);" formControlName="fM_Status" >
                     <label class="form-check-label" for="generatedStatus">Generated</label>
                 </div>
                 <div class="form-check form-check-inline" style="font-size: 1.2rem;">
-                    <input class="form-check-input" type="radio" name="pfmStatus" id="receivedStatus" value="received"
-                        style="transform: scale(1.2);">
+                    <input class="form-check-input" type="radio" name="fM_Status" id="receivedStatus" value="received"
+                        style="transform: scale(1.2);" formControlName="fM_Status">
                     <label class="form-check-label" for="receivedStatus">Received</label>
                 </div>
             </div>

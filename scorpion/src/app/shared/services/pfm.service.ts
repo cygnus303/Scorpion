@@ -53,4 +53,15 @@ export class PFMService {
     return this.apiHandlerService.Get(`Operation/GetDocumentTrackList?docType=${data.docType}&docNo=${data.DocNo}`);
   }
 
+  getROList(locCode:string){
+    return this.apiHandlerService.Get(`Operation/GetLocationListFromROJson?locCode=${locCode}`);
+  }
+
+  getFMReport(payload:any): Observable<any>{
+    return this.apiHandlerService.Post(`Operation/FMReport`,payload);
+  }
+
+  GetLocationListFromRO(locCode:string){
+    return this.apiHandlerService.Get(`Operation/GetLocationListFromRO?locCode=${locCode}`);
+  }
 }

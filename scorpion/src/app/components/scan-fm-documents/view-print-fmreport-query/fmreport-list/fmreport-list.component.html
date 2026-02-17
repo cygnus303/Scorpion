@@ -12,7 +12,7 @@
                         From - To :
                     </label>
                     <div class="text-primary-color col-md-9 text-start">
-                        18 Jan 2026 12:00 AM - 16 Feb 2026 12:00 AM
+                          {{ filterData?.dateRange?.[0] | date:'dd MMM yyyy hh:mm a' }} - {{ filterData?.dateRange?.[1] | date:'dd MMM yyyy hh:mm a' }}
                     </div>
                 </div>
             </div>
@@ -22,7 +22,7 @@
                         Region :
                     </label>
                     <div class="col-md-6 text-primary-color text-start">
-                        All
+                        {{filterData?.RO}}
                     </div>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                         Location :
                     </label>
                     <div class="col-md-6 text-primary-color text-start">
-                        All
+                        {{filterData?.Loccode}}
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                         FM No. :
                     </label>
                     <div class="col-md-6 text-primary-color text-start">
-    
+                        {{filterData?.FmNo}}
                     </div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                         FM Status. :
                     </label>
                     <div class="col-md-6 text-primary-color text-start">
-                        Received At
+                        {{filterData?.fM_Status}}
                     </div>
                 </div>
             </div>
@@ -66,5 +66,47 @@
         <h5 class="mb-0">
             <i class="fas fa-list me-2"></i> FM List
         </h5>
+    </div>
+    <div class="row p-3">
+        <div class="col-md-1">
+            <ng-select></ng-select>
+        </div>
+        <div class="col-md-2 col-form-label text-start">Records</div>
+        <div class="col-md-5"></div>
+        <div class="col-md-2 col-form-label text-end">Search</div>
+           <div class="col-md-2">
+               <input class="form-control ">
+        </div>
+    </div>
+    <div class="table-responsive p-4">
+        <table class="table table-bordered table-hover align-middle mb-0">
+            <thead class="table-light text-center">
+                <tr>
+                    <th>FM No</th>
+                    <th>Manual FM No.</th>
+                    <th>FM Date.</th>
+                    <th>Document Forwarded To</th>
+                    <th>Further Forwarded Location</th>
+                    <th>Total Documents</th>
+                    <th>FM Status</th>
+                    <th>View</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of fmList">
+                    <td class="text-center">{{item.fm_no}}</td>
+                    <td>{{item.manual_fm_no}}</td>
+                    <td>{{item.fmdt}}</td>
+                    <td>{{item.doc_fwd_to}}</td>
+                    <td>{{item.fur_FWD_loc}}</td>
+                    <td class="text-center">{{item.total_Documents}}</td>
+                    <td class="text-center">{{item.fM_Status}}</td>
+                    <td class="text-center" (click)="onView(item)"><span
+                            class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer">
+                             View
+                        </span></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
