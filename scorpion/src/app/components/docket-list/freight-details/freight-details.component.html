@@ -332,6 +332,7 @@
             <label class="control-label col-md-5">Discount</label>
             <div class="col-md-7">
               <input class="form-control clsAmount" placeholder="Discount" type="text" formControlName="discount" (blur)="docketService.calculateDiscount($event)"
+              (keypress)="docketService.allowNumericDecimal($event)" 
               [ngClass]="{ 'border-danger':  docketService.freightForm.get('discount')?.touched &&
     docketService.freightForm.get('discount')?.hasError('max') &&
        docketService.step2DetailsList?.maxDiscountY_N === 'Y'}">
@@ -372,7 +373,11 @@
             <label class="control-label col-md-5"><b>TOTAL</b></label>
             <div class="col-md-7">
               <input class="required2 form-control clsAmount required text-end" formControlName="dktTotal"
-                placeholder="TOTAL" type="text" value="0" readonly>
+                placeholder="TOTAL" type="text" value="0" readonly 
+                [ngClass]="{ 'border-danger':  docketService.freightForm.get('dktTotal')?.touched && docketService.freightForm.get('dktTotal')?.errors?.['min']}">
+                <div class="text-danger" *ngIf="docketService.freightForm.get('dktTotal')?.touched && docketService.freightForm.get('dktTotal')?.errors?.['min']">
+                  Total must be greater than or equal to 0
+              </div>
             </div>
           </div>
         </div>
