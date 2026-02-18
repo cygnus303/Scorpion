@@ -64,4 +64,8 @@ export class PFMService {
   GetLocationListFromRO(locCode:string){
     return this.apiHandlerService.Get(`Operation/GetLocationListFromRO?locCode=${locCode}`);
   }
+
+  GetYetToScan(payload:any){
+    return this.apiHandlerService.Post(`Operation/yet-to-scan`,payload);
+  }
 }

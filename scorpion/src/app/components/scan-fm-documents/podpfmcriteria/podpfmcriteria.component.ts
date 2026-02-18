@@ -14,7 +14,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
   styleUrl: './podpfmcriteria.component.scss'
 })
 export class PODPFMCriteriaComponent {
-    public podpFmCriteriaForm !: FormGroup;
+  public podpFmCriteriaForm !: FormGroup;
   constructor(public commonService: CommonService, public scanFmDocumentsService: ScanFmDocumentsService) { }
   ngOnInit() {
     this.buildForm();

@@ -17,6 +17,9 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 })
 export class DocumentYetToScanComponent {
   public documentYetToScanForm !: FormGroup;
+  public documentYetToScan: any;
+  public loading = false;
+  public showDocumentList = false;
   public DocTypelist = [
     { text: "Bill", value: "2" },
     { text: "COD/DOD", value: "4" },
@@ -40,5 +43,34 @@ export class DocumentYetToScanComponent {
       dateRange: new FormControl([startDate, endDate]),
       fM_Status: new FormControl()
     })
+  }
+
+  getYetToScan() {
+    this.loading = true;
+    const payload = {
+      docType: this.documentYetToScanForm.get('docType')?.value,
+      ro: this.documentYetToScanForm.get('RO')?.value,
+      loc: this.documentYetToScanForm.get('Loccode')?.value,
+      fromDT: this.documentYetToScanForm.get('dateRange')?.value[0].toISOString().split('T')[0],
+      toDT: this.documentYetToScanForm.get('dateRange')?.value[1].toISOString().split('T')[0]
+    }
+    this.pfmService.GetYetToScan(payload).subscribe({
+      next: (response) => {
+        this.documentYetToScan = response.data;
+        this.loading = false;
+      }, error: () => {
+        this.loading = false;
+      }
+    })
+  }
+
+  goToForwardList() {
+    if (this.documentYetToScanForm.valid) {
+      this.showDocumentList = true;
+      this.documentYetToScan = [];
+      this.getYetToScan();
+    } else {
+      this.documentYetToScanForm.markAllAsTouched();
+    }
   }
 }
