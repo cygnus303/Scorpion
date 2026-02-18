@@ -11,6 +11,7 @@ import { ViewPrintFMReportQueryComponent } from './view-print-fmreport-query/vie
 import { FMReportListComponent } from './view-print-fmreport-query/fmreport-list/fmreport-list.component';
 import { DocumentsTrackComponent } from './documents-track/documents-track.component';
 import { DocumentYetToScanComponent } from './document-yet-to-scan/document-yet-to-scan.component';
+import { PODPFMCriteriaComponent } from './podpfmcriteria/podpfmcriteria.component';
 
 export const ScanFMRoutes: Routes = [
   {
@@ -18,11 +19,11 @@ export const ScanFMRoutes: Routes = [
     component: ScanFMDocumentsComponent,
     canActivate: [DocketGuard]
   },
-    {
+  {
     path: 'ForwardFMDocumentsQuery',
     component: ForwardDocumentsComponent,
   },
- {
+  {
     path: 'ForwardFMDocuments',
     component: ForwardDocumentListComponent,
   },
@@ -34,7 +35,7 @@ export const ScanFMRoutes: Routes = [
     path: 'ForwardFMAckDocuments',
     component: AcknowledgeFmdocumentsListComponent,
   },
-   {
+  {
     path: 'ForwardFMDocumentsEdit',
     component: EditAcknowledgePFMComponent,
   },
@@ -42,21 +43,25 @@ export const ScanFMRoutes: Routes = [
     path: 'ForwardFMDocumentsDone',
     component: ForwardFMDocumentsDoneComponent,
   },
-   {
+  {
     path: 'FMReportQuery',
     component: ViewPrintFMReportQueryComponent,
   },
-     {
+  {
     path: 'FMReport',
     component: FMReportListComponent,
   },
-      {
+  {
     path: 'DocumentsTrack',
     component: DocumentsTrackComponent,
   },
-      {
+  {
     path: 'PendingScanReportQuery',
     component: DocumentYetToScanComponent,
+  },
+  {
+    path: 'PODPFMCriteria',
+    component: PODPFMCriteriaComponent,
   },
 
 ];
