@@ -73,8 +73,8 @@
     </div>
     <div class="row p-2">
         <div class="col-md-1">
-            <ng-select [items]="recordOptions" bindLabel="label" bindValue="value" [(ngModel)]="selectedRecordCount"
-                (change)="onRecordCountChange()" [clearable]="false"></ng-select>
+            <ng-select class="clear-icon" [items]="recordOptions" bindLabel="label" bindValue="value" [(ngModel)]="selectedRecordCount"
+                (change)="onRecordCountChange()"></ng-select>
         </div>
         <div class="col-md-2 col-form-label text-start">Records</div>
         <div class="col-md-5"></div>

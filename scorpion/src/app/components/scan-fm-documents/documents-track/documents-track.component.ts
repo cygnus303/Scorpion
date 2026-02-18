@@ -4,6 +4,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators, É
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ExportService } from 'app/shared/services/export.service';
 import { PFMService } from 'app/shared/services/pfm.service';
+import { SortService } from 'app/shared/services/sort.service';
 
 @Component({
   selector: 'app-documents-track',
@@ -24,7 +25,30 @@ export class DocumentsTrackComponent {
     { text: "POD", value: "1" },
     { text: "THC", value: "6" },
   ];
-  constructor(private pfmService: PFMService, private exportService: ExportService) { }
+public filteredDocumentList: any[] = [];
+public paginatedList: any[] = [];
+public recordOptions = [
+  { label: '5', value: 5 },
+  { label: '10', value: 10 },
+  { label: '15', value: 15 },
+  { label: '20', value: 20 },
+  { label: 'All', value: 'all' }
+];
+
+public selectedRecordCount: any = 10;
+
+public currentPage = 1;
+public totalPages = 0;
+public pages: number[] = [];
+
+public startIndex = 0;
+public endIndex = 0;
+
+public sortColumn: string = '';
+public sortDirection: 'asc' | 'desc' = 'asc';
+
+
+  constructor(private pfmService: PFMService, private exportService: ExportService,private sortService:SortService) { }
 
   ngOnInit() {
     this.documentsTrackForm = new FormGroup({
@@ -45,28 +69,106 @@ export class DocumentsTrackComponent {
     );
   }
 
-  GetDocumentTrackList(tyep?: string) {
+  GetDocumentTrackList() {
     this.loading = true;
-    this.pfmService.getDocumentTrackList(this.documentsTrackForm.value).subscribe({
-      next: (response) => {
-        this.documentTrackList = response;
-        if (tyep === 'export') {
-          const formattedData = this.documentTrackList.map((item: any) => ({
-            Bill_No: item.bill_no,
-            fm_doc_type: item.fm_doc_type,
-            fm_no: item.fm_no,
-            fmdt: item.fmdt,
-            fromloc: item.fromloc,
-            toLoc: item.toLoc,
-            doc_status: item.doc_status
-          }));
-          this.exportService.exportToExcel(formattedData);
-        }
-        this.loading = false;
-      }, error: () => {
-        this.loading = false;
-      }
+    this.pfmService.getDocumentTrackList(this.documentsTrackForm.value)
+      .subscribe({
+
+        next: (response) => {
+          this.documentTrackList = response || [];
+          this.currentPage = 1;
+          this.applyFilterSortPagination();
+          this.loading = false;
+        },
+
+        error: () => this.loading = false
+      });
+  }
+
+   applyFilterSortPagination() {
+    this.filteredDocumentList = this.documentTrackList.filter((data: any) => {
+
+      if (!this.searchText) return true;
+
+      const text = this.searchText.toLowerCase();
+
+      return (
+        data.fm_no?.toLowerCase().includes(text) ||
+        data.fmdt?.toLowerCase().includes(text) ||
+        data.fromloc?.toLowerCase().includes(text) ||
+        data.toLoc?.toLowerCase().includes(text)
+      );
+
     });
+
+    if (this.sortColumn) {
+
+      this.filteredDocumentList.sort((a, b) => {
+
+        const valA = a[this.sortColumn];
+        const valB = b[this.sortColumn];
+
+        if (valA == null) return 1;
+        if (valB == null) return -1;
+
+        if (this.sortDirection === 'asc')
+          return valA > valB ? 1 : -1;
+        else
+          return valA < valB ? 1 : -1;
+
+      });
+
+    }
+
+    let pageSize = this.selectedRecordCount === 'all'? this.filteredDocumentList.length: this.selectedRecordCount;
+
+    this.totalPages = pageSize === 0 ? 0 : Math.ceil(this.filteredDocumentList.length / pageSize);
+    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    this.startIndex = (this.currentPage - 1) * pageSize;
+    this.endIndex = Math.min(this.startIndex + pageSize, this.filteredDocumentList.length);
+    this.paginatedList = this.filteredDocumentList.slice(this.startIndex, this.endIndex);
+  }
+
+   sort(column: string) {
+    if (this.sortColumn === column)
+      this.sortDirection =
+        this.sortDirection === 'asc' ? 'desc' : 'asc';
+    else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+    this.applyFilterSortPagination();
+  }
+
+  onSearchChange() {
+    this.currentPage = 1;
+    this.applyFilterSortPagination();
+  }
+
+  onRecordCountChange() {
+    this.currentPage = 1;
+    this.applyFilterSortPagination();
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+    this.applyFilterSortPagination();
+  }
+
+  goToPrevious() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.applyFilterSortPagination();
+    }
+  }
+
+  goToNext() {
+
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.applyFilterSortPagination();
+    }
+
   }
 
   goToForwardList() {
@@ -78,4 +180,14 @@ export class DocumentsTrackComponent {
       this.documentsTrackForm.markAllAsTouched();
     }
   }
+
+  downloadExcel() {
+
+  if (!this.documentTrackList || this.documentTrackList.length === 0) {
+    alert('No data available to export');
+    return;
+  }
+
+  this.exportService.exportToExcel(this.documentTrackList, 'Document_Track_List');
+}
 }
