@@ -48,4 +48,9 @@ export class PFMService {
   onSubmitAckEdit(payload:any): Observable<any>{
     return this.apiHandlerService.Post(`Operation/ForwardFMDocumentsEditDone`,payload);
   }
+
+  getDocumentTrackList(data:any): Observable<any> {
+    return this.apiHandlerService.Get(`Operation/GetDocumentTrackList?docType=${data.docType}&docNo=${data.DocNo}`);
+  }
+
 }

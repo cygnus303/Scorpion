@@ -36,12 +36,13 @@
             <div class="col-md-4 col-form-label text-center">
                 <button class="btn btn-success me-2" (click)="goToForwardList()"> <i class="fas fa-search "></i> Get
                     List</button>
-                <button class="btn btn-success"> <i class="fas fa-list "></i> Download XLS</button>
+                <button class="btn btn-success" (click)="GetDocumentTrackList('export')"> <i class="fas fa-list "></i>
+                    Download XLS</button>
             </div>
         </div>
     </div>
 
-    <div class="cnote-entry-container px-2 mt-4">
+    <div class="cnote-entry-container px-2 mt-4" *ngIf="showDocumentList">
         <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
             <i class="fas fa-list me-2"></i>
             Document Track List
@@ -54,7 +55,7 @@
                 <div class="col-md-2 col-form-label text-start">Records</div>
                 <div class="col-md-5"></div>
                 <div class="col-md-2 col-form-label text-end">Search</div>
-                <div class="col-md-2"><input class="form-control"></div>
+                <div class="col-md-2"><input class="form-control" placeholder="Search" [(ngModel)]="searchText"></div>
             </div>
             <div class="table-responsive m-3" style="max-height: 650px; overflow-y: auto; overflow-x: auto;">
                 <table class="table table-bordered align-middle mb-0 table-condensed flip-content">
@@ -67,17 +68,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="text-center">BFM/MDP_/2025/00000001</td>
-                            <td>24 Jun 25</td>
-                            <td>MDP:MANDIDEEP</td>
-                            <td>HQTR : CORPORATE OFFICE MUMBAI - (Location)</td>
+                        <tr *ngIf="loading">
+                            <td colspan="4" class="text-center p-3">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </td>
                         </tr>
-                        <tr>
-                            <td class="text-center">BFM/MDP_/2025/00000001</td>
-                            <td>24 Jun 25</td>
-                            <td>MDP:MANDIDEEP</td>
-                            <td>HQTR : CORPORATE OFFICE MUMBAI - (Location)</td>
+                        <!-- If no data found -->
+                        <tr *ngIf="!loading && !(filteredDocuments?.length)">
+                            <td colspan="4" class="text-center text-muted p-3">
+                                No Record Found.
+                            </td>
+                        </tr>
+                        <tr *ngFor="let data of filteredDocuments">
+                            <td class="text-center">{{data.fm_no}}</td>
+                            <td>{{data.fmdt}}</td>
+                            <td>{{data.fromloc}}</td>
+                            <td>{{data.toLoc}}</td>
                         </tr>
                     </tbody>
                 </table>
