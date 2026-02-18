@@ -1,0 +1,101 @@
+<div class="cnote-entry-container px-2">
+    <!-- Header Bar -->
+    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+        <i class="fas fa-filter me-2"></i>
+        Pending Scan Report Query
+    </div>
+    <form [formGroup]="documentYetToScanForm">
+        <div class="form-grid p-4">
+            <div class="row pb-3">
+                <div class="col-md-2 col-form-label text-end">DocType </div>
+                <div class="col-md-3">
+                        <ng-select class="required2" placeholder="DocType" [items]="DocTypelist" bindLabel="text"
+                            formControlName="docType" bindValue="value"
+                            [ngClass]="{ 'border-danger': documentYetToScanForm.get('docType')?.invalid && documentYetToScanForm.get('docType')?.touched }"></ng-select>
+                        <div class="text-danger text-start"
+                            *ngIf="documentYetToScanForm.get('docType')?.invalid && documentYetToScanForm.get('docType')?.touched">
+                            This field is required.
+                        </div>
+                </div>
+            </div>
+            <!-- Row 1 -->
+            <div class="row pb-3">
+                <div class="col-md-2 col-form-label text-end">Select RO :</div>
+                <div class="col-md-3">
+                    <ng-select class="required2 clear-icon" placeholder="Select RO" formControlName="RO"
+                        (change)="scanFmDocumentsService.getLocationListFromROList($event)"
+                        [ngClass]="{ 'border-danger': documentYetToScanForm.get('RO')?.invalid && documentYetToScanForm.get('RO')?.touched }">
+                        <ng-option *ngFor="let item of scanFmDocumentsService.ROData" [value]="item.id">
+                            <strong>{{ item.id }}</strong> : {{ item.text }}
+                        </ng-option>
+                    </ng-select>
+                    <div class="text-danger text-start"
+                        *ngIf="documentYetToScanForm.get('RO')?.invalid && documentYetToScanForm.get('RO')?.touched">
+                        This field is required.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="row pb-3">
+                <div class="col-md-2 col-form-label text-end">Select Location : </div>
+                <div class="col-md-3">
+                    <ng-select class="required2 clear-icon" placeholder="Enter Select Location" formControlName="Loccode"
+                        [items]="scanFmDocumentsService.locationList" bindLabel="text" bindValue="id"
+                        [ngClass]="{ 'border-danger': documentYetToScanForm.get('Loccode')?.invalid && documentYetToScanForm.get('Loccode')?.touched }"></ng-select>
+                    <div class="text-danger text-start"
+                        *ngIf="documentYetToScanForm.get('Loccode')?.invalid && documentYetToScanForm.get('Loccode')?.touched">
+                        This field is required.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3 -->
+            <div class="row pb-3">
+                <div class="col-md-2 col-form-label text-end">Select Date :</div>
+                <div class="col-md-3">
+                    <div class="input-group shadow-sm rounded" (click)="dvr.toggle()">
+                        <span class="input-group-text bg-white border-end-0 p-2">
+                            <i class="fas fa-calendar-alt text-dark text-secondary"></i>
+                        </span>
+                        <input type="text" placeholder="Daterangepicker"
+                            class="form-control border-start-1 text-center line-height uppercase-none "
+                            bsDaterangepicker #dvr="bsDaterangepicker" [class.disabled-input]="true"
+                            formControlName="dateRange"
+                            [bsConfig]="{ ranges: commonService.ranges, rangeInputFormat: 'MMMM D, YYYY', containerClass: 'theme-dark-blue', dateInputFormat: 'MMMM D, YYYY'}" />
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row pb-3">
+                <div class="col-md-2 col-form-label text-end" style="font-size: 1.2rem;">PFM Status :</div>
+                <div class="col-md-3 text-start d-flex align-items-center" style="gap: 15px;">
+                    <div class="form-check form-check-inline" style="font-size: 1.2rem; margin-right: 20px;">
+                        <input class="form-check-input" type="radio" name="fM_Status" id="allStatus" value="All" checked
+                            style="transform: scale(1.2);" formControlName="fM_Status">
+                        <label class="form-check-label" for="allStatus">All</label>
+                    </div>
+                    <div class="form-check form-check-inline" style="font-size: 1.2rem; margin-right: 20px;">
+                        <input class="form-check-input" type="radio" name="fM_Status" id="generatedStatus"
+                            value="generated" style="transform: scale(1.2);" formControlName="fM_Status">
+                        <label class="form-check-label" for="generatedStatus">Generated</label>
+                    </div>
+                    <div class="form-check form-check-inline" style="font-size: 1.2rem;">
+                        <input class="form-check-input" type="radio" name="fM_Status" id="receivedStatus"
+                            value="received" style="transform: scale(1.2);" formControlName="fM_Status">
+                        <label class="form-check-label" for="receivedStatus">Received</label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+    <div class="bg-secondary-subtle p-4 gap-2">
+        <div class="row pb-3">
+            <div class="col-md-4 col-form-label text-center">
+                <button class="btn btn-success"> <i class="fas fa-search"></i> Get List</button>
+            </div>
+        </div>
+    </div>

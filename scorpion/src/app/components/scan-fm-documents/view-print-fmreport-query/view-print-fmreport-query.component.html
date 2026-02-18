@@ -10,9 +10,9 @@
             <div class="row pb-3">
                 <div class="col-md-2 col-form-label text-end">Select RO :</div>
                 <div class="col-md-3">
-                    <ng-select class="required2" placeholder="Select RO" formControlName="RO" (change)="getLocationListFromROList($event)"
+                    <ng-select class="required2" placeholder="Select RO" formControlName="RO" (change)="scanFmDocumentsService.getLocationListFromROList($event)"
                     [ngClass]="{ 'border-danger': viewFilterForm.get('RO')?.invalid && viewFilterForm.get('RO')?.touched }">
-                         <ng-option *ngFor="let item of ROData" [value]="item.id">
+                         <ng-option *ngFor="let item of scanFmDocumentsService.ROData" [value]="item.id">
                                     <strong>{{ item.id }}</strong> : {{ item.text }}
                         </ng-option>
                     </ng-select>
@@ -27,7 +27,7 @@
                 <div class="col-md-2 col-form-label text-end">Select Location : </div>
                 <div class="col-md-3">
                     <ng-select class="required2" placeholder="Enter Select Location" formControlName="Loccode" 
-                    [items]="locationList" bindLabel="text" bindValue="id"
+                    [items]="scanFmDocumentsService.locationList" bindLabel="text" bindValue="id"
                     [ngClass]="{ 'border-danger': viewFilterForm.get('Loccode')?.invalid && viewFilterForm.get('Loccode')?.touched }"></ng-select>
                     <div class="text-danger text-start" *ngIf="viewFilterForm.get('Loccode')?.invalid && viewFilterForm.get('Loccode')?.touched">
                         This field is required.

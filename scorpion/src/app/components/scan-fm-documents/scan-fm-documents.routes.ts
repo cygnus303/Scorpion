@@ -10,6 +10,7 @@ import { ForwardFMDocumentsDoneComponent } from './forward-fmdocuments-done/forw
 import { ViewPrintFMReportQueryComponent } from './view-print-fmreport-query/view-print-fmreport-query.component';
 import { FMReportListComponent } from './view-print-fmreport-query/fmreport-list/fmreport-list.component';
 import { DocumentsTrackComponent } from './documents-track/documents-track.component';
+import { DocumentYetToScanComponent } from './document-yet-to-scan/document-yet-to-scan.component';
 
 export const ScanFMRoutes: Routes = [
   {
@@ -52,6 +53,10 @@ export const ScanFMRoutes: Routes = [
       {
     path: 'DocumentsTrack',
     component: DocumentsTrackComponent,
+  },
+      {
+    path: 'PendingScanReportQuery',
+    component: DocumentYetToScanComponent,
   },
 
 ];
