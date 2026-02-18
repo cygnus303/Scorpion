@@ -4,16 +4,19 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CommonService } from 'app/shared/services/common.service';
 import { DocketService } from 'app/shared/services/docket.service';
+import { ExportService } from 'app/shared/services/export.service';
 import { PFMService } from 'app/shared/services/pfm.service';
 import { ScanFmDocumentsService } from 'app/shared/services/scan-fm-documents.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-document-yet-to-scan',
   standalone: true,
   imports: [CommonModule, NgSelectModule, BsDatepickerModule, ReactiveFormsModule],
   templateUrl: './document-yet-to-scan.component.html',
-  styleUrl: './document-yet-to-scan.component.scss'
+  styleUrl: './document-yet-to-scan.component.scss',
+  providers: [DatePipe]
 })
 export class DocumentYetToScanComponent {
   public documentYetToScanForm !: FormGroup;
@@ -25,7 +28,7 @@ export class DocumentYetToScanComponent {
     { text: "COD/DOD", value: "4" },
     { text: "POD", value: "1" },
   ];
-  constructor(public commonService: CommonService, public pfmService: PFMService, public docketService: DocketService, public scanFmDocumentsService: ScanFmDocumentsService) { }
+  constructor(public commonService: CommonService, public pfmService: PFMService, public docketService: DocketService, private datePipe: DatePipe, public scanFmDocumentsService: ScanFmDocumentsService, private exportService: ExportService) { }
 
   ngOnInit() {
     this.buildForm();
@@ -69,8 +72,21 @@ export class DocumentYetToScanComponent {
       this.showDocumentList = true;
       this.documentYetToScan = [];
       this.getYetToScan();
+      this.scanFmDocumentsService.getCompanyMasterDetails();
     } else {
       this.documentYetToScanForm.markAllAsTouched();
     }
+  }
+
+  downloadExcel() {
+    const formattedData = this.documentYetToScan.map((item: any, i: number) => ({
+      "Sr No": i + 1,
+      "CNote": item.dockno,
+      "Origin - Destination": item.loc,
+      "From - To": item.from_to,
+      "Dely.Date": this.datePipe.transform(item.dely_date, 'dd MMM yy') || '01 Jan 00',
+      "Amount": item.dkttot
+    }));
+    this.exportService.exportToExcel(formattedData, 'Document_Track_List');
   }
 }

@@ -12,6 +12,15 @@ export class ScanFmDocumentsService {
   public nextLocationValue = 'Please enter atleast 1 character';
   public ROData: any;
   public locationList: any;
+  public companyMasterDetailsList: any;
+  public recordOptions = [
+    { label: '5', value: 5 },
+    { label: '10', value: 10 },
+    { label: '15', value: 15 },
+    { label: '20', value: 20 },
+    { label: 'All', value: 'all' }
+  ];
+
   constructor(public pfmService: PFMService, public docketService: DocketService,public loadingSheetApiService: LoadingSheetApiService,) { }
   getLocationData() {
     this.pfmService.getROList(this.docketService.loginUserList.LocationCode).subscribe({
@@ -52,6 +61,14 @@ export class ScanFmDocumentsService {
     resetNextLocationDropdown() {
     this.locationData = [];
     this.nextLocationValue = 'Please enter at least 1 characters';
+  }
+
+   getCompanyMasterDetails() {
+    this.pfmService.companyMasterDetails(this.docketService.loginUserList.Companycode).subscribe({
+      next: (response) => {
+        this.companyMasterDetailsList = response.data;
+      }
+    })
   }
 
 }

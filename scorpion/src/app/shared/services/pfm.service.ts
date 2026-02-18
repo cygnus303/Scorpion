@@ -68,4 +68,9 @@ export class PFMService {
   GetYetToScan(payload:any){
     return this.apiHandlerService.Post(`Operation/yet-to-scan`,payload);
   }
+  
+  companyMasterDetails(companyCode:string){
+    return this.apiHandlerService.Get(`Operation/CompanyMasterDetails?companyCode=${companyCode}`);
+  }
+
 }

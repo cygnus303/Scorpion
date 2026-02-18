@@ -4,6 +4,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators, É
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ExportService } from 'app/shared/services/export.service';
 import { PFMService } from 'app/shared/services/pfm.service';
+import { ScanFmDocumentsService } from 'app/shared/services/scan-fm-documents.service';
 import { SortService } from 'app/shared/services/sort.service';
 
 @Component({
@@ -27,13 +28,7 @@ export class DocumentsTrackComponent {
   ];
 public filteredDocumentList: any[] = [];
 public paginatedList: any[] = [];
-public recordOptions = [
-  { label: '5', value: 5 },
-  { label: '10', value: 10 },
-  { label: '15', value: 15 },
-  { label: '20', value: 20 },
-  { label: 'All', value: 'all' }
-];
+
 
 public selectedRecordCount: any = 10;
 
@@ -48,7 +43,7 @@ public sortColumn: string = '';
 public sortDirection: 'asc' | 'desc' = 'asc';
 
 
-  constructor(private pfmService: PFMService, private exportService: ExportService,private sortService:SortService) { }
+  constructor(private pfmService: PFMService, private exportService: ExportService,public scanFmDocumentsService:ScanFmDocumentsService) { }
 
   ngOnInit() {
     this.documentsTrackForm = new FormGroup({
@@ -69,59 +64,56 @@ public sortDirection: 'asc' | 'desc' = 'asc';
     );
   }
 
-  GetDocumentTrackList() {
+  GetDocumentTrackList(Type?: string) {
     this.loading = true;
-    this.pfmService.getDocumentTrackList(this.documentsTrackForm.value)
-      .subscribe({
-
-        next: (response) => {
-          this.documentTrackList = response || [];
-          this.currentPage = 1;
-          this.applyFilterSortPagination();
-          this.loading = false;
-        },
-
-        error: () => this.loading = false
-      });
+    this.pfmService.getDocumentTrackList(this.documentsTrackForm.value).subscribe({
+      next: (response) => {
+        this.documentTrackList = response || [];
+        this.currentPage = 1;
+        this.applyFilterSortPagination();
+        this.loading = false;
+        if (Type === 'excel') {
+          const formattedData = this.documentTrackList.map((item: any, i: number) => ({
+            Bill_No: item.bill_no,
+            fm_doc_type: item.fm_doc_type,
+            fm_no: item.fm_no,
+            fmdt: item.fmdt,
+            fromloc: item.fromloc,
+            toLoc: item.toLoc,
+            doc_status: item.doc_status
+          }));
+          this.exportService.exportToExcel(formattedData, 'Document_Track_List');
+        }
+      },
+      error: () => this.loading = false
+    });
   }
 
    applyFilterSortPagination() {
     this.filteredDocumentList = this.documentTrackList.filter((data: any) => {
-
       if (!this.searchText) return true;
-
       const text = this.searchText.toLowerCase();
-
       return (
         data.fm_no?.toLowerCase().includes(text) ||
         data.fmdt?.toLowerCase().includes(text) ||
         data.fromloc?.toLowerCase().includes(text) ||
         data.toLoc?.toLowerCase().includes(text)
       );
-
     });
 
     if (this.sortColumn) {
-
       this.filteredDocumentList.sort((a, b) => {
-
         const valA = a[this.sortColumn];
         const valB = b[this.sortColumn];
-
         if (valA == null) return 1;
         if (valB == null) return -1;
-
         if (this.sortDirection === 'asc')
           return valA > valB ? 1 : -1;
         else
           return valA < valB ? 1 : -1;
-
       });
-
     }
-
     let pageSize = this.selectedRecordCount === 'all'? this.filteredDocumentList.length: this.selectedRecordCount;
-
     this.totalPages = pageSize === 0 ? 0 : Math.ceil(this.filteredDocumentList.length / pageSize);
     this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
     this.startIndex = (this.currentPage - 1) * pageSize;
@@ -163,12 +155,10 @@ public sortDirection: 'asc' | 'desc' = 'asc';
   }
 
   goToNext() {
-
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
       this.applyFilterSortPagination();
     }
-
   }
 
   goToForwardList() {
@@ -181,13 +171,4 @@ public sortDirection: 'asc' | 'desc' = 'asc';
     }
   }
 
-  downloadExcel() {
-
-  if (!this.documentTrackList || this.documentTrackList.length === 0) {
-    alert('No data available to export');
-    return;
-  }
-
-  this.exportService.exportToExcel(this.documentTrackList, 'Document_Track_List');
-}
 }
