@@ -73,4 +73,8 @@ export class PFMService {
     return this.apiHandlerService.Get(`Operation/CompanyMasterDetails?companyCode=${companyCode}`);
   }
 
+
+  getPODReport(payload:any){
+    return this.apiHandlerService.Post(`Operation/Get-POD-PFM-Details`,payload);
+  }
 }

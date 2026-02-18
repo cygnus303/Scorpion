@@ -26,7 +26,7 @@
             <div class="row pb-3">
                 <div class="col-md-2 col-form-label text-end">Select Location : </div>
                 <div class="col-md-3">
-                    <ng-select class="noFoundTextColor" placeholder="Enter Branch" formControlName="fromloc"
+                    <ng-select class="noFoundTextColor clear-icon" placeholder="Enter Branch" formControlName="fromloc"
                         notFoundText="No matches found" (search)="scanFmDocumentsService.getLocationDetail($event)"
                         [notFoundText]="scanFmDocumentsService.nextLocationValue"
                         (open)="scanFmDocumentsService.resetNextLocationDropdown()">
@@ -42,12 +42,12 @@
     <div class="bg-secondary-subtle p-4 gap-2">
         <div class="row pb-3">
             <div class="col-md-4 col-form-label text-center">
-                <button class="btn btn-success"> <i class="fas fa-search"></i> Get List</button>
+                <button class="btn btn-success" (click)="goToForwardList()"> <i class="fas fa-search"></i> Get List</button>
             </div>
         </div>
     </div>
 
-    <div class="cnote-entry-container mt-4">
+    <div class="cnote-entry-container mt-4" *ngIf="showDocumentList">
         <!-- Header Bar -->
         <div
             class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
@@ -55,7 +55,7 @@
                 <i class="fas fa-list me-2"></i>
                 POD PFM List
             </div>
-            <button class="btn btn-success">Download XLS</button>
+            <button class="btn btn-success" (click)="downloadExcel()">Download XLS</button>
         </div>
 
         <!-- <div class="text-center p-3 ">
@@ -83,29 +83,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>62784900</td>
-                        <td>27 Mar 2025</td>
-                        <td>29 Jan 2026</td>
-                        <td>1/26/2026 6:48:35 PM</td>
-                        <td>CYGNUST EAM</td>
-                        <td>CYGNUSTEAM</td>
-                        <td>CNI</td>
-                        <td>YES</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>62872678</td>
-                        <td>10 Jul 2025</td>
-                        <td>28 Jan 2026</td>
-                        <td>1/28/2026 3:17:45 PM</td>
-                        <td>2807</td>
-                        <td>PRIYANKA HANDORE</td>
-                        <td>LDH</td>
-                        <td>YES</td>
+                    <tr *ngFor="let item of PODReport;let i=index">
+                        <td>{{i+1}}</td>
+                        <td>{{item.dockno}}</td>
+                        <td>{{item.dockdt}}</td>
+                        <td>{{item.dely_Date}}</td>
+                        <td>{{item.documentDate | date:'M/d/yyyy h:mm:ss a'}}</td>
+                        <td>{{item.entryBy}}</td>
+                        <td>{{item.userNm}}</td>
+                        <td>{{item.location}}</td>
+                        <td>{{item.isCP?'YES':'NO'}}</td>
                         <td></td>
                         <td></td>
                     </tr>
