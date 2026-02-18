@@ -79,7 +79,7 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      // this.docketService.loginUserList.LocationCode =  'PIM';
+      this.docketService.loginUserList.LocationCode =  'HQTR';
       // this.docketService.loginUserList.Type = '2'
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
@@ -1291,7 +1291,7 @@ getDeliveryAgentByCodeList(code: any) {
             { text: response.data.vehicleNo, value: response.data.vehicleNo }
           ];
         }
-
+debugger
         // ✅ 1️⃣ PATCH BASIC DATA IMMEDIATELY
         this.challanService.challanForm.patchValue({
           deliveryAgentMoNo: response.data.deliveryAgentMobile,
@@ -1303,7 +1303,7 @@ getDeliveryAgentByCodeList(code: any) {
           cHASISNO: response.data.chassisNo,
           rCBOOKNO: response.data.rcBookNo,
           fitnessDate: this.datePipe.transform(response.data.fitnessValidityDate,"dd MMMM yyyy"),
-          insuranceDate: this.datePipe.transform(response.data.updatedDate,"dd MMMM yyyy"),
+          insuranceDate: this.datePipe.transform(response.data.insuranceValidityDate,"dd MMMM yyyy"),
           driver1Licence: response.data.licenseNo,
           d1_DOB: this.datePipe.transform(response.data.dateOfBirth,"dd MMMM yyyy"),
           driver1RTONo: response.data.issueByRTO,
