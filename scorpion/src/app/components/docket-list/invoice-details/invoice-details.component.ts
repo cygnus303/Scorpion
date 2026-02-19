@@ -38,27 +38,28 @@ export class InvoiceDetailsComponent {
       }
     });
     this.docketService.basicDetailForm.get('serviceType')?.valueChanges.subscribe(value => {
-      const lengthControl = this.docketService.boxDetailRows.get('length');
-      const breadthControl = this.docketService.boxDetailRows.get('breadth');
-      const heightControl = this.docketService.boxDetailRows.get('height');
-
-      if (value === '1') {
-      lengthControl?.setValidators([Validators.required, Validators.min(1)]);
-      breadthControl?.setValidators([Validators.required, Validators.min(1)]);
-      heightControl?.setValidators([Validators.required, Validators.min(1)]);
-
-      } else {
-      lengthControl?.clearValidators();
-      lengthControl?.setErrors(null);
-      breadthControl?.clearValidators();
-      breadthControl?.setErrors(null);
-      heightControl?.clearValidators();
-      heightControl?.setErrors(null);
-      }
-      lengthControl?.updateValueAndValidity();
-      breadthControl?.updateValueAndValidity();
-      heightControl?.updateValueAndValidity();
+      this.docketService.boxDetailRows.controls.forEach(ctrl => {
+        const lengthControl = ctrl.get('length');
+        const breadthControl = ctrl.get('breadth');
+        const heightControl = ctrl.get('height');
+ 
+        if (value === '1') {
+          lengthControl?.setValidators([Validators.required, Validators.min(1)]);
+          breadthControl?.setValidators([Validators.required, Validators.min(1)]);
+          heightControl?.setValidators([Validators.required, Validators.min(1)]);
+        } else {
+          lengthControl?.clearValidators();
+          lengthControl?.setErrors(null);
+          breadthControl?.clearValidators();
+          breadthControl?.setErrors(null);
+          heightControl?.clearValidators();
+          heightControl?.setErrors(null);
+        }
+        lengthControl?.updateValueAndValidity();
+        breadthControl?.updateValueAndValidity();
+        heightControl?.updateValueAndValidity();
       });
+    });
   }
 
 checkDuplicateInvoices(i: number,row: AbstractControl) {
