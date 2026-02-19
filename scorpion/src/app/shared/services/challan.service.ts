@@ -35,6 +35,7 @@ public filterForm!:FormGroup;
 public isRedirect:boolean = false;
 public filterList:any;
 public generateData!:any;
+public isAgentSelected: boolean = false; 
 
 constructor(
   private basicDetailService: BasicDetailService,
@@ -365,7 +366,7 @@ SearchfilterForm(){
     tDSOnAmount : new FormControl(0),
     totalTDSAmount : new FormControl(0),
     netAmount : new FormControl(0),
-    advanceAmount : new FormControl(0, Validators.required),
+    advanceAmount : new FormControl(0, this.docketService.loginUserList.Type === '1' ? Validators.required : null),
     balanceAmount : new FormControl(0),
     advanceLocation : new FormControl(),
     balanceLocation : new FormControl(),
@@ -408,6 +409,7 @@ SearchfilterForm(){
     customerName:new FormControl(),
     vendorChargesCode:new FormControl(),
     rate:new FormControl(),
+    ISNEWDA:new FormControl(false),
   }, { validators: this.advanceNotGreaterThanNet.bind(this) }
 );
 }
@@ -726,7 +728,7 @@ onSubmit(){
     TotalChargeWt:0,
     FreeSpace:Number(challanForm?.freeSpace),
     WtLoaded:Number(challanForm?.wtLoaded),
-    IsOverLoad:challanForm?.isOverLoad?true:false,
+    IsOverLoad:challanForm?.isOverLoad ? true:false,
     OverLoadReason:challanForm?.overLoadReason,
     WtAdjust:0,
     TOTALWtAdjust:0,
@@ -976,7 +978,7 @@ onSubmit(){
       Driver2MobileNo:challanForm?.driver2MobileNo,
       Driver2RTONo:challanForm?.driver2RTONo,
       Driver2Licence:challanForm?.driver2Licence,
-      Driver2LicenceValDate:challanForm?.driver2LicenceValDate?.toISOString(),
+      // Driver2LicenceValDate:challanForm?.driver2LicenceValDate?.toISOString(),
       DriverPhotoPath:"",
       Make:0,
       Model:0,
@@ -989,7 +991,7 @@ onSubmit(){
       CertificateNo:"",
       InsuranceNo:"",
       RTONo:"",
-      RegistrationDate:challanForm?.registrationDate?.toISOString(),
+      // RegistrationDate:challanForm?.registrationDate?.toISOString(),
       FitnessDate:challanForm?.fitnessDate?.toISOString(),
       PermitDate:challanForm?.permitDate?.toISOString(),
       InsuranceDate:challanForm?.insuranceDate?.toISOString(),
@@ -1065,6 +1067,7 @@ onSubmit(){
    formData.append("BaseUserName", this.docketService.loginUserList.BaseUserName);
    formData.append("BaseUserType", '1');
    formData.append("BaseLocationCode", this.docketService.loginUserList.LocationCode);
+   formData.append("ISNEWDA", challanForm.ISNEWDA);
 
       if (!this.challanForm.valid) {
       const invalidKeys = Object.keys(this.challanForm.controls).filter(key => 
