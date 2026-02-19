@@ -26,7 +26,7 @@ public selectedDigit: number = 10;
 public typeName : string='';
 public today: Date = new Date();
 public vehicleNoList:any[]=[];
-public deliverAgentData:any[]=[];
+// public deliverAgentData:any[]=[];
 public isInsuranceExpired : boolean = false;
 public isFitnessExpired : boolean = false;
 public isPermitExpired : boolean = false;
@@ -79,7 +79,7 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      this.docketService.loginUserList.LocationCode =  'HQTR';
+      // this.docketService.loginUserList.LocationCode =  'PIM';
       // this.docketService.loginUserList.Type = '2'
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
@@ -92,7 +92,7 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
     this.challanService.getDepartmentReason();
     this.challanService.getTDSLedgerList();
     this.challanService.getLocationData();
-    this.getDAList(); 
+    // this.getDAList(); 
     this.challanService.getRateTypeData()
 
     setTimeout(() => {
@@ -107,19 +107,18 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
       this.challanService.challanForm.updateValueAndValidity({ onlySelf: false });
     });
 
-    const type = this.docketService.loginUserList.Type;
-    this.typeName = type === '3' ? 'DRS' : type === '1' ? 'THC' : type === '2' ? 'PRS' : '';
     this.challanService.challanForm.get('isEmpty')?.valueChanges.subscribe((isEmpty: boolean) => {
-      if (isEmpty) { this.challanService.challanForm.patchValue({ customerName: null, routeCode: null }); }
+      const approvedByCtrl = this.challanService.challanForm.get('approvedBy');
+      if (isEmpty) { 
+         approvedByCtrl?.setValidators([Validators.required]);
+        this.challanService.challanForm.patchValue({ customerName: null, routeCode: null }); 
+      } else {
+        approvedByCtrl?.clearValidators();
+        approvedByCtrl?.setValue(null);  // optional → reset field
+      }
+      approvedByCtrl?.updateValueAndValidity();
     });
-
-    if (this.docketService.loginUserList.Type === '3') {
-      this.getDeliveryZoneData()
-    }
-    const dt = this.docketService.bsValue;
-    this.actualDeptTime = this.formatTime(dt);
-    this.challanDateAccess();
-
+     
     this.challanService.challanForm.get('vendorType')?.valueChanges.subscribe((vendorType) => {
       this.updateVehicleRequiredValidator();
       this.updateVehicleNoValidator(vendorType);
@@ -129,19 +128,18 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
       this.updateVehicleRequiredValidator();
     });
 
+    const type = this.docketService.loginUserList.Type;
+    this.typeName = type === '3' ? 'DRS' : type === '1' ? 'THC' : type === '2' ? 'PRS' : '';
+    
+    if (this.docketService.loginUserList.Type === '3') {
+      this.getDeliveryZoneData()
+    }
+    const dt = this.docketService.bsValue;
+    this.actualDeptTime = this.formatTime(dt);
+    this.challanDateAccess();
+
   this.updateVehicleRequiredValidator(); // initial call
   this.getApprovedByData();
-
-    this.challanService.challanForm.get('isEmpty')?.valueChanges.subscribe(isEmpty => {
-      const approvedByCtrl = this.challanService.challanForm.get('approvedBy');
-      if (isEmpty) {
-        approvedByCtrl?.setValidators([Validators.required]);
-      } else {
-        approvedByCtrl?.clearValidators();
-        approvedByCtrl?.setValue(null);  // optional → reset field
-      }
-      approvedByCtrl?.updateValueAndValidity();
-    });
   }
 
   filterListpatchValue() {
@@ -189,7 +187,7 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
     });
 
     if (this.docketService.loginUserList.Type !== '1') {
-      this.challanService.getCityList();
+      // this.challanService.getCityList();
          this.avalabledocketinPRS();
     }
   }
@@ -852,18 +850,18 @@ checkLicenseExpiry(event?:any) {
     });
   }
 
-  getDAList() {
-    this.THCService.getDAList("7").subscribe({next: (response: any) => {
-        if (response) {
-          this.deliverAgentData = response.data;
-        }
-      },
-      error: (err) => {
-        console.error('Error fetching vehicle details:', err.error.message);
-        this.sweetAlertService.error(err.error.message)
-      }
-    });
-  }
+  // getDAList() {
+  //   this.THCService.getDAList("7").subscribe({next: (response: any) => {
+  //       if (response) {
+  //         this.deliverAgentData = response.data;
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('Error fetching vehicle details:', err.error.message);
+  //       this.sweetAlertService.error(err.error.message)
+  //     }
+  //   });
+  // }
 
   formatDate(dateStr: string): string {
     if (!dateStr) return '';
@@ -1259,7 +1257,7 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
       },
     });
   }
-
+ 
   getDeliveryAgents() {
     this.THCService.getDeliveryAgents(this.docketService.loginUserList.LocationCode).subscribe({
       next: (response: any) => {
@@ -1272,69 +1270,89 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
   }
 
   isFieldReadonly(): boolean {
-    return (this.challanService.filterList?.DRSType === 'Y' && !!this.challanService.challanForm?.value?.deliveryAgent);
+    return (this.challanService.filterList?.DRSType === 'Y' && !!this.challanService.challanForm?.value?.deliveryAgent && this.challanService.isAgentSelected);
   }
 
-getDeliveryAgentByCodeList(code: any) {
-  this.deliveryAgentService.getDeliveryAgentByCodeList(code).subscribe({
-    next: (response) => {
-      if (response) {
-
-        this.getPANnumberData(response.data.businessAssociateVendor);
-
-        const exists = this.vehicleNoList?.some(
-          (v: any) => v.value === response.data.vehicleNo
-        );
-        if (!exists && response.data.vehicleNo) {
-          this.vehicleNoList = [
-            ...this.vehicleNoList,
-            { text: response.data.vehicleNo, value: response.data.vehicleNo }
-          ];
-        }
-debugger
-        // ✅ 1️⃣ PATCH BASIC DATA IMMEDIATELY
-        this.challanService.challanForm.patchValue({
-          deliveryAgentMoNo: response.data.deliveryAgentMobile,
-          vendorType: '04',
-          vendorCode: response.data.businessAssociateVendor,
-          vehicleNO: response.data.vehicleNo,
-          fTLType: response.data.fTlType,
-          eNGINENO: response.data.engineNo,
-          cHASISNO: response.data.chassisNo,
-          rCBOOKNO: response.data.rcBookNo,
-          fitnessDate: this.datePipe.transform(response.data.fitnessValidityDate,"dd MMMM yyyy"),
-          insuranceDate: this.datePipe.transform(response.data.insuranceValidityDate,"dd MMMM yyyy"),
-          driver1Licence: response.data.licenseNo,
-          d1_DOB: this.datePipe.transform(response.data.dateOfBirth,"dd MMMM yyyy"),
-          driver1RTONo: response.data.issueByRTO,
-          driver1LicenceValDate: this.datePipe.transform(response.data.licenseValidityDate,"dd MMMM yyyy"),
-          registrationDate: this.datePipe.transform(response.data.registrationDate,"dd MMMM yyyy"),
-          driver1Name: response.data.driverName
-        });
-
-        this.challanService.getVendorsList('04');
-
-        // ✅ 2️⃣ CALL VEHICLE TYPE API
-        this.getVehicleType('O');
-
-        // ✅ 3️⃣ PATCH VEHICLE TYPE AFTER LIST LOAD
-        const interval = setInterval(() => {
-          if (this.vehicleTypeList && this.vehicleTypeList.length > 0) {
-
-            const vehicleTypeCode =
-              this.getVehicleTypeCodeByName(response.data.fTlName);
-
-            this.challanService.challanForm.patchValue({
-              vehicleType: vehicleTypeCode
-            });
-
-            clearInterval(interval);
+  getDeliveryAgentByCodeList(code: any) {
+    this.deliveryAgentService.getDeliveryAgentByCodeList(code).subscribe({next: (response) => {
+        if (response && response.data) {
+          this.challanService.isAgentSelected = true;
+          this.getPANnumberData(response.data.businessAssociateVendor);
+          const exists = this.vehicleNoList?.some(
+            (v: any) => v.value === response.data.vehicleNo
+          );
+          if (!exists && response.data.vehicleNo) {
+            this.vehicleNoList = [
+              ...this.vehicleNoList,
+              { text: response.data.vehicleNo, value: response.data.vehicleNo }
+            ];
           }
-        }, 100);
+          // ✅ 1️⃣ PATCH BASIC DATA IMMEDIATELY
+          this.challanService.challanForm.patchValue({
+            deliveryAgentMoNo: response.data.deliveryAgentMobile,
+            vendorType: '04',
+            vendorCode: response.data.businessAssociateVendor,
+            vehicleNO: response.data.vehicleNo,
+            fTLType: response.data.fTlType,
+            eNGINENO: response.data.engineNo,
+            cHASISNO: response.data.chassisNo,
+            rCBOOKNO: response.data.rcBookNo,
+            fitnessDate: this.datePipe.transform(response.data.fitnessValidityDate, "dd MMMM yyyy"),
+            insuranceDate: this.datePipe.transform(response.data.insuranceValidityDate, "dd MMMM yyyy"),
+            driver1Licence: response.data.licenseNo,
+            d1_DOB: this.datePipe.transform(response.data.dateOfBirth, "dd MMMM yyyy"),
+            driver1RTONo: response.data.issueByRTO,
+            driver1LicenceValDate: this.datePipe.transform(response.data.licenseValidityDate, "dd MMMM yyyy"),
+            registrationDate: this.datePipe.transform(response.data.registrationDate, "dd MMMM yyyy"),
+            driver1Name: response.data.driverName
+          });
+          this.challanService.challanForm.patchValue({ISNEWDA:false});
+
+          this.challanService.getVendorsList('04');
+
+          // ✅ 2️⃣ CALL VEHICLE TYPE API
+          this.getVehicleType('O');
+
+          // ✅ 3️⃣ PATCH VEHICLE TYPE AFTER LIST LOAD
+          const interval = setInterval(() => {
+            if (this.vehicleTypeList && this.vehicleTypeList.length > 0) {
+
+              const vehicleTypeCode = this.getVehicleTypeCodeByName(response.data.fTlName);
+
+              this.challanService.challanForm.patchValue({
+                vehicleType: vehicleTypeCode
+              });
+
+              clearInterval(interval);
+            }
+          }, 100);
+        } else{
+          this.challanService.challanForm.patchValue({ISNEWDA:true});
+
+          this.challanService.isAgentSelected = false;
+           this.challanService.challanForm.patchValue({
+            deliveryAgentMoNo: null,
+            vendorType: null,
+            vendorCode: null,
+            vehicleNO: null,
+            fTLType: null,
+            eNGINENO: null,
+            cHASISNO: null,
+            rCBOOKNO: null,
+            fitnessDate: null,
+            insuranceDate: null,
+            driver1Licence: null,
+            d1_DOB: null,
+            driver1RTONo: null,
+            driver1LicenceValDate: null,
+            registrationDate: null,
+            driver1Name: null,
+            vehicleType:null
+          });
+        }
       }
-    }
-  });
-}
+    });
+  }
 
 
 

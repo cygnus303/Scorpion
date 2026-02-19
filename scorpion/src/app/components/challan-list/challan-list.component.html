@@ -31,7 +31,7 @@
                                 <input class="form-control" placeholder="Delivery Agent Mobile No." type="text"
                                     formControlName="deliveryAgentMoNo" maxlength="10" pattern="[0-9]*" appFocusNext
                                     (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
-                                    readonly>
+                                   [readonly]="isFieldReadonly()">
                             </div>
                         </div>
                     </div>
@@ -41,14 +41,14 @@
     <div>
         <h3 class="pb-4 text-start challan-Details mb-4">Basic Details</h3>
           <div class="row pb-3">
-                <!-- <div class="col-4">
+                <div class="col-4" *ngIf="this.docketService.loginUserList.Type === '1'">
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Manual {{typeName}} No.</label>
                         <div class="col-sm-7">
                             <input class="form-control" [placeholder]="'Manual ' + typeName + ' No.'" type="text" formControlName="manualTHCNo" appFocusNext>
                         </div>
                     </div>
-                </div> -->
+                </div>
                 <div class="col-4">
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">{{typeName}} Date</label>
@@ -234,59 +234,6 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- <div class="row ">
-                <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? 'd-none' : ''">
-                    <div class="row">
-                        <label class="col-sm-5 col-form-label text-end">From Address</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" type="text" placeholder="From Address" formControlName="fromAddress" appFocusNext>
-                        </div>
-                    </div>
-                </div>
-                 <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? 'd-none' : ''">
-                    <div class="row">
-                        <label class="col-sm-5 col-form-label text-end">To Address</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" type="text" placeholder="To Address" formControlName="toAddress" appFocusNext>
-                        </div>
-                    </div>
-                </div>
-                   <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? 'd-none' : ''">
-                    <div class="row">
-                        <label class="col-sm-5 col-form-label text-end">Approx KMs.</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" type="text" placeholder="Approx KMs." formControlName="distanceInKM" readonly appFocusNext>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <!-- <div class="row">
-                <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '1' ? 'd-none' : ''">
-                    <div class="row align-items-center">
-                        <label class="col-sm-5 col-form-label text-end">From City</label>
-                        <div class="col-sm-7">
-                            <ng-select placeholder="From City" formControlName="from_City" appFocusNext>
-                                <ng-option *ngFor="let item of challanService.cityList" [value]="item.city_code">
-                                    <strong>{{ item.location }}</strong> : {{ item.location }}
-                                </ng-option>
-                            </ng-select>
-                        </div>
-                    </div>
-                </div>
-                  <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '1'? 'd-none' : ''">
-                    <div class="row">
-                        <label class="col-sm-5 col-form-label text-end">To City</label>
-                        <div class="col-sm-7">
-                            <ng-select  placeholder="To City" formControlName="to_City" appFocusNext>
-                                <ng-option *ngFor="let item of challanService.cityList" [value]="item.city_code">
-                                    <strong>{{ item.location }}</strong> : {{ item.location }}
-                                </ng-option>
-                            </ng-select>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
 
             <div class="row pb-3">
                    <div class="col-4" *ngIf="challanService.challanForm.value.isEmpty">
@@ -722,68 +669,6 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="p-2">
-            <h3 class="pb-2 text-start challan-Details mt-2 mb-4"> Driver 2</h3>
-            <div class="row pb-3">
-                <div class="col-4">
-                    <div class="row align-items-center">
-                        <label class="col-sm-5 col-form-label text-end">Driver Name</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" placeholder="Driver Name" type="text" formControlName="driver2Name" appFocusNext>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="row">
-                        <label class="col-sm-5 col-form-label text-end">Mobile No.</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" placeholder="Mobile No." type="text" formControlName="driver2MobileNo" maxlength="10" pattern="[0-9]*"
-                              (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" 
-                               [ngClass]="[ challanService.challanForm.get('driver2MobileNo')?.invalid && challanService.challanForm.get('driver2MobileNo')?.touched ? 'border-danger' : '']"
-                              appFocusNext>
-                              <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver2MobileNo')?.invalid && challanService.challanForm.get('driver2MobileNo')?.touched "> 
-                                <div *ngIf="challanService.challanForm.get('driver2MobileNo')?.errors?.['pattern']">
-                                    Please enter a valid Indian mobile number.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="row">
-                        <label class="col-sm-5 col-form-label text-end">Licence No.</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" placeholder="Licence No." type="text" formControlName="driver2Licence" appFocusNext>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row pb-3">
-                <div class="col-4">
-                    <div class="row">
-                        <label class="col-sm-5 col-form-label text-end">Issue By RTO</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" placeholder="Issue By RTO" type="text" formControlName="driver2RTONo" appFocusNext>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="row">
-                        <label class="col-sm-5 col-form-label text-end">Licence Validity Date</label>
-                        <div class="col-sm-7" (click)="liv.toggle(); $event.stopPropagation()">
-                            <div class="input-group">
-                                <input class="form-control" placeholder="dd/MM/yyyy" type="text"  [class.disabled-input]="true"
-                                    #liv="bsDatepicker" bsDatepicker formControlName="driver2LicenceValDate" appFocusNext
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}">
-                                <span class="input-group-text cursor-pointer" >
-                                    <i class="fa fa-calendar"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
     </div>
     <div>
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Vehicle Depart Details</h3>
@@ -796,7 +681,7 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-4 pb-3">
+            <div class="col-4 pb-3" *ngIf="this.docketService.loginUserList.Type === '1'">
                 <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Start KMs.</label>
                         <div class="col-sm-7">
@@ -804,14 +689,6 @@
                         </div>
                 </div>
             </div>
-            <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' || this.docketService.loginUserList.Type === '3' ? 'd-none' : ''">
-                <div class="row">
-                    <label class="col-sm-5 col-form-label text-end">End KMs.</label>
-                    <div class="col-sm-7">
-                        <input class="form-control" placeholder="End KMs." type="text" formControlName="closeKM" (keypress)="docketService.allowNumericDecimal($event)" appFocusNext>
-                    </div>
-                </div>
-            </div> -->
             <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '3' ? '' : 'd-none'">
                 <div class="row align-items-center ">
                     <label class="col-sm-5 col-form-label text-end">Delivery Zone</label>
@@ -907,35 +784,8 @@
             </div>
         </div>
     </div>
-    <div *ngIf="docketService.loginUserList.Type === '3' && this.challanService.filterList?.DRSType !== 'Y'">
-        <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Delivery Agent Details</h3>
-        <div class="row pb-3">
-            <div class="col-4">
-                <div class="row align-items-center">
-                    <label class="col-sm-5 col-form-label text-end">Delivery Agent</label>
-                    <div class="col-sm-7">
-                          <ng-select class=" required2" [items]="deliverAgentData" bindLabel="name" bindValue="userId"
-                            placeholder="Delivery Agent" formControlName="deliveryAgent"  (change)="getDAMobileNo($event)" appFocusNext
-                            required [ngClass]="{ 'border-danger': challanService.challanForm.get('deliveryAgent')?.invalid  && challanService.challanForm.get('deliveryAgent')?.touched }"></ng-select>
-                          <div class="text-danger text-start" *ngIf="challanService.challanForm.get('deliveryAgent')?.invalid && challanService.challanForm.get('deliveryAgent')?.touched "> This field is required.</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="row">
-                    <div class="row">
-                        <label class="col-sm-5 col-form-label text-end">Delivery Agent Mobile No.</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" placeholder="Delivery Agent Mobile No." type="text" formControlName="deliveryAgentMoNo" 
-                               maxlength="10" pattern="[0-9]*" appFocusNext
-                              (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" readonly>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div>
+
+    <div *ngIf="docketService.loginUserList.Type === '1'">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">E-Way Bill Details</h3>
         <div class="row pb-3">
             <div class="col-4">
@@ -962,7 +812,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4" *ngIf="challanService.challanForm.value.isEmpty">
+           
+        </div>
+    </div>
+     <div>
+        <div class="row pb-3">
+         <div class="col-4" *ngIf="challanService.challanForm.value.isEmpty">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Approved By</label>
                     <div class="col-sm-7">
@@ -980,6 +835,7 @@
             </div>
         </div>
     </div>
+    
     <div *ngIf="docketService.loginUserList && challanService.filterList && docketService.loginUserList.Type !== '1' && challanService.filterList.loadingBy !== 'XX9'">
         <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Loading Charges</h3>
         <div class="row pb-3">
@@ -1023,26 +879,49 @@
                 </div>
             </div>
         </div>
-    </div>
-     <div class="row pb-3" [ngClass]="this.docketService.loginUserList.Type === '1' ? 'd-none' : ''">
-            <div class="col-6">
-                <div class="row align-items-center">
-                    <label class="col-sm-3 col-form-label text-end">Local/ODA Charge Applicable?</label>
-                    <div class="col-sm-3 d-flex justify-content-end">
-                        <div class="me-5 d-flex align-items-center">
-                            <input type="radio" class="me-3" name="is_Local_ODA_id" value="local" formControlName="is_Local_ODA_id" appFocusNext>
-                            <label>Local</label>
+    </div>  
+    <div [ngClass]="this.docketService.loginUserList.Type === '1' ? 'd-none' : '' ">
+        <h3 class="pb-4 text-start challan-Details mt-3 mb-4">CNote Available For {{typeName}}</h3>
+        <div class="row pb-3 pt-4">
+                <div class="col-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-5 col-form-label text-end">Total CNote</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" placeholder="Total CNote" type="number" value="0" formControlName="totalDockets" readonly
+                             [ngClass]="{ 'border-danger': challanService.challanForm.get('totalDockets')?.invalid  && challanService.challanForm.get('totalDockets')?.touched }">
+                             <div class="text-danger text-start mt-1 small"  *ngIf="challanService.challanForm.get('totalDockets')?.touched && challanService.challanForm.get('totalDockets')?.errors">
+                                <span *ngIf="challanService.challanForm.get('totalDockets')?.hasError('min')">
+                                  Please select at least one record.
+                                </span>
+                             </div>
                         </div>
-                        <div class="me-5 d-flex align-items-center">
-                            <input type="radio" class="me-3" name="is_Local_ODA_id" value="ODA" formControlName="is_Local_ODA_id" appFocusNext>
-                            <label>ODA</label>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row mb-3 align-items-center">
+                        <label class="col-sm-6 col-form-label text-end fw-bold">Contract Amount</label>
+                        <div class="col-sm-6">
+                            <input min="1" max="99999999" type="text" class="form-control text-end" formControlName="contractAmount" appFocusNext
+                            [readOnly]="((this.docketService.loginUserList.Type === '2' ||this.docketService.loginUserList.Type === '3') && challanService.challanForm.value.vendorType === '04') ||
+                            (challanService.challanForm.value.vendorType === 'XX1' && this.docketService.loginUserList.Type === '1')" 
+                            (blur)="changeAmountApplicable($event);restoreIfEmpty('contractAmount')"  (focus)="clearZero('contractAmount')"
+                            required [ngClass]="{ 'border-danger': challanService.challanForm.get('contractAmount')?.invalid && challanService.challanForm.get('contractAmount')?.touched }"/>
+                            <div class="text-danger text-start mt-1 small" *ngIf="challanService.challanForm.get('contractAmount')?.touched && challanService.challanForm.get('contractAmount')?.errors">
+                                <span *ngIf="challanService.challanForm.get('contractAmount')?.hasError('required')">
+                                    Please enter a value.
+                                </span>
+                                <span *ngIf="challanService.challanForm.get('contractAmount')?.hasError('max')">
+                                    Please enter no more than 8 digits.
+                                </span>
+                                <span *ngIf="challanService.challanForm.get('contractAmount')?.hasError('min')">
+                                    Please enter a value greater than or equal to 1.
+                                </span>
+                            </div>
+                           <div *ngIf="contractAmtMsg" class="text-danger text-start mt-1 small">{{ contractAmtMsg }}</div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    <div [ngClass]="this.docketService.loginUserList.Type === '1' ? 'd-none' : '' ">
-        <h3 class="pb-4 text-start challan-Details mt-3 mb-4">CNote Available For {{typeName}}</h3>
         <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
             <i class="fas fa-list me-2"></i>
             CNote Available For {{typeName}}
@@ -1076,7 +955,7 @@
                                     <span class="visually-hidden">Loading...</span>
                                 </div>
                                 <span class="ms-2">Loading dockets...</span>
-                            </td>csgnnm
+                            </td>
                      </tr>
                     <ng-container *ngIf="!isLoading">
                     <tr *ngFor="let item of challanService.avalabledocket.controls; let i = index" [formGroupName]="i"
@@ -1123,24 +1002,8 @@
           </table>
         </div>
       </div>
-            <div class="row pb-3 pt-4">
-                <div class="col-4">
-                    <div class="row align-items-center">
-                        <label class="col-sm-5 col-form-label text-end">Total CNote</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" placeholder="Total CNote" type="number" value="0" formControlName="totalDockets" readonly
-                             [ngClass]="{ 'border-danger': challanService.challanForm.get('totalDockets')?.invalid  && challanService.challanForm.get('totalDockets')?.touched }">
-                             <div class="text-danger text-start mt-1 small"  *ngIf="challanService.challanForm.get('totalDockets')?.touched && challanService.challanForm.get('totalDockets')?.errors">
-                                <span *ngIf="challanService.challanForm.get('totalDockets')?.hasError('min')">
-                                  Please select at least one record.
-                                </span>
-                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
     </div>
-
+    
     <div [ngClass]="this.docketService.loginUserList.Type === '1' && !challanService.challanForm.value.isEmpty ? '' : 'd-none'">
         <h3 class="pb-4 text-start challan-Details mt-5 mb-4">MF Available For THC</h3>
         <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
@@ -1213,10 +1076,10 @@
                         </div>
                     </div>
                 </div>
-            </div>
+        </div>
     </div>
 
-    <div *ngIf="challanService.challanForm.value.vendorType !=='05'">
+    <div *ngIf="challanService.challanForm.value.vendorType !=='05' && this.docketService.loginUserList.Type === '1'">
         <div class="row">
             <div class="col-md-6 pe-4">
                 <h3 class="pb-4 text-start challan-Details mt-3 mb-4">Payment Details</h3>
@@ -1231,8 +1094,7 @@
                     <label class="col-sm-6 col-form-label text-end fw-bold">Contract Amount</label>
                     <div class="col-sm-6">
                         <input min="1" max="99999999" type="number" class="form-control text-end" formControlName="contractAmount" appFocusNext
-                        [readOnly]="((this.docketService.loginUserList.Type === '2' ||this.docketService.loginUserList.Type === '3') && challanService.challanForm.value.vendorType === '04') ||
-                        (challanService.challanForm.value.vendorType === 'XX1' && this.docketService.loginUserList.Type === '1')" 
+                        [readOnly]="(challanService.challanForm.value.vendorType === '04') || (challanService.challanForm.value.vendorType === 'XX1' && this.docketService.loginUserList.Type === '1')" 
                         (blur)="changeAmountApplicable($event);restoreIfEmpty('contractAmount')"  (focus)="clearZero('contractAmount')"
                         required [ngClass]="{ 'border-danger': challanService.challanForm.get('contractAmount')?.invalid && challanService.challanForm.get('contractAmount')?.touched }"/>
                         <div class="text-danger text-start mt-1 small" *ngIf="challanService.challanForm.get('contractAmount')?.touched && challanService.challanForm.get('contractAmount')?.errors">
@@ -1307,7 +1169,7 @@
                         <input type="text" class="form-control text-end" formControlName="totalTDSAmount" readonly appFocusNext/>
                     </div>
                 </div>
-                 <div class="row mb-3 align-items-center" [ngClass]="['XX1', '19', '04', 'XX'].includes(challanService.challanForm.get('vendorType')?.value) && this.docketService.loginUserList.Type !== '2' ? '' : 'd-none'">
+                 <div class="row mb-3 align-items-center" [ngClass]="['XX1', '19', '04', 'XX'].includes(challanService.challanForm.get('vendorType')?.value) ? '' : 'd-none'">
                     <label class="col-sm-4 col-form-label text-end">PAN Number</label>
                     <div class="col-sm-8">
                         <input type="text" class="form-control" formControlName="PANNO" [readonly]="this.docketService.loginUserList.Type === '1'" appFocusNext/>
@@ -1375,17 +1237,17 @@
                 </div>
             </div>
         </div>
-    
+           
     </div>
 </form>
 </div>
 </div>
-    <div class="d-flex justify-content-center text-center p-4">
+    <div class="d-flex justify-content-center text-center p-4 bg-secondary-subtle gap-2">
         <button class="btn btn-secondary me-2" (click)="challanService.onReset()">
-            <i class="bi bi-arrow-counterclockwise"></i> Reset
+             <i class="fas fa-sync"></i>&nbsp;Reset
         </button>
         <button class="btn btn-success" (click)="challanService.onSubmit()" [disabled]="challanService.isRedirect">
-            <i class="bi bi-check-circle"></i> Submit
+            <i class="fas fa-check"></i>&nbsp;Submit
         </button>
     </div>
     <div *ngIf="challanService.isSubmitting" class="loading-overlay">
