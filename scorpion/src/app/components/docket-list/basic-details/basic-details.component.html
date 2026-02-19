@@ -469,7 +469,7 @@
                 formControlName="sacDescription" readonly /></div>
           </div>
         </div>
-<div class="col-md-4 form-column" *ngIf="docketService.basicDetailForm.get('exemptServices')?.value">
+<div class="col-md-4 form-column" *ngIf="docketService.basicDetailForm.get('exemptServices')?.value && !docketService.isSezCustomer">
   <div class="row align-items-center">
     <label class="col-md-5 text-end">Upload GST Declaration</label>
     <div class="col-md-7 text-start">

@@ -78,6 +78,8 @@ export class DocketService {
   public isExistingFile = false;
   public isExemptServiceReadonly:boolean=false;
   public isContarctService:boolean = false;
+  public isSezCustomer: boolean = false;
+
 
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
@@ -930,6 +932,19 @@ getcontractservicecharge() {
           this.basicDetailForm.patchValue({
             exemptServices: response.data.exmptServices,
           });
+
+           const gstDeclarationControl = this.basicDetailForm.get('GSTDeclaration');
+          if(response.data.sez === true){
+            this.isSezCustomer = true;
+            gstDeclarationControl?.clearValidators();
+            gstDeclarationControl?.setValue(null);
+          }else{
+            this.isSezCustomer = false;
+            gstDeclarationControl?.setValidators([Validators.required]);
+          }
+
+          gstDeclarationControl?.updateValueAndValidity();
+
           this.isExemptServiceReadonly=true;
            this.GetDKTGSTForGTA();
             setTimeout(() => {
