@@ -1590,12 +1590,35 @@ freightForm.valueChanges.subscribe((values) => {
 
 
   getFuelSurcharge(data: any) {
-    const fuelRateType = this.contractservicecharge[0]?.fuelSurchrgBas;  // %, W, F
-    const fuelRate = this.contractservicecharge[0]?.fuelSurchrg;
-    const minFuelCharge = this.contractservicecharge[0]?.min_FuelSurchrg;
-    const maxFuelCharge = this.contractservicecharge[0]?.max_FuelSurchrg;
-    const chargedWeight = this.invoiceform.value?.finalActualWeight;
-    const freight = Number(data);
+  const freight = Number(data);
+  const chargedWeight = this.invoiceform.value?.finalActualWeight;
+  let fuelRateType;
+  let fuelRate;
+  let minFuelCharge;
+  let maxFuelCharge;
+
+    fuelRateType = this.contractservicecharge[0]?.fuelSurchrgBas;
+    fuelRate = this.contractservicecharge[0]?.fuelSurchrg;
+    minFuelCharge = this.contractservicecharge[0]?.min_FuelSurchrg;
+    maxFuelCharge = this.contractservicecharge[0]?.max_FuelSurchrg;
+
+    if (this.basicDetailForm.value.serviceType === '1') {
+
+      fuelRateType = this.contractservicecharge[0]?.fuelSurchrgBas;
+      fuelRate = this.contractservicecharge[0]?.fuelSurchrg;
+      minFuelCharge = this.contractservicecharge[0]?.min_FuelSurchrg;
+      maxFuelCharge = this.contractservicecharge[0]?.max_FuelSurchrg;
+
+    }
+
+    else if (this.basicDetailForm.value.serviceType === '2') {
+
+      fuelRateType = this.contractservicecharge[0]?.fuelSurchrgBas_FTL;
+      fuelRate = this.contractservicecharge[0]?.fuelSurchrg_FTL;
+      minFuelCharge = this.contractservicecharge[0]?.min_FuelSurchrg_FTL;
+      maxFuelCharge = this.contractservicecharge[0]?.max_FuelSurchrg_FTL;
+
+    }
 
     let fuelSurcharge = 0;
     let surcharge = 0;
@@ -1636,9 +1659,9 @@ freightForm.valueChanges.subscribe((values) => {
         this.freightForm.patchValue({
           SCHG20:0
         })
-      }
+    }
     this.subTotalCalculation()
-
+  
   }
 
   subTotalCalculation() {
