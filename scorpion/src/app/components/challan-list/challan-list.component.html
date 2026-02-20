@@ -429,8 +429,10 @@
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">FTL Type</label>
                     <div class="col-sm-7">
-                          <ng-select class="noFoundTextColor" placeholder="FTL Type" formControlName="fTLType" [readonly]="isFieldReadonly()" appFocusNext
-                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" [items]="docketService.typeofMovementList"></ng-select>
+                          <ng-select class="noFoundTextColor required2" placeholder="FTL Type" formControlName="fTLType" [readonly]="isFieldReadonly()" appFocusNext required
+                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" [items]="docketService.typeofMovementList"
+                            [ngClass]="{ 'border-danger': challanService.challanForm.get('fTLType')?.invalid  && challanService.challanForm.get('fTLType')?.touched }"></ng-select>
+                            <div class="text-danger text-start" *ngIf="challanService.challanForm.get('fTLType')?.invalid && challanService.challanForm.get('fTLType')?.touched "> This field is required.</div>
                         </div>
                     <!-- <div class="col-sm-7"  *ngIf="isVehicleType">
                         <ng-select class="noFoundTextColor" placeholder="FTL Type" formControlName="fTLType" readonly appFocusNext
