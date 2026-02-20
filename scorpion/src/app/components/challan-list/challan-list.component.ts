@@ -1274,81 +1274,86 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
   }
 
   getDeliveryAgentByCodeList(code: any) {
-    this.deliveryAgentService.getDeliveryAgentByCodeList(code).subscribe({next: (response) => {
+    this.challanService.challanForm.patchValue({
+    DeliveryAgentName:code.text
+   })
+    this.deliveryAgentService.getDeliveryAgentByCodeList(code).subscribe({
+      next: (response) => {
         if (response && response.data) {
-          this.challanService.isAgentSelected = true;
-          this.getPANnumberData(response.data.businessAssociateVendor);
-          const exists = this.vehicleNoList?.some(
-            (v: any) => v.value === response.data.vehicleNo
-          );
-          if (!exists && response.data.vehicleNo) {
-            this.vehicleNoList = [
-              ...this.vehicleNoList,
-              { text: response.data.vehicleNo, value: response.data.vehicleNo }
-            ];
-          }
-          // ✅ 1️⃣ PATCH BASIC DATA IMMEDIATELY
-          this.challanService.challanForm.patchValue({
-            deliveryAgentMoNo: response.data.deliveryAgentMobile,
-            vendorType: '04',
-            vendorCode: response.data.businessAssociateVendor,
-            vehicleNO: response.data.vehicleNo,
-            fTLType: response.data.fTlType,
-            eNGINENO: response.data.engineNo,
-            cHASISNO: response.data.chassisNo,
-            rCBOOKNO: response.data.rcBookNo,
-            fitnessDate: this.datePipe.transform(response.data.fitnessValidityDate, "dd MMMM yyyy"),
-            insuranceDate: this.datePipe.transform(response.data.insuranceValidityDate, "dd MMMM yyyy"),
-            driver1Licence: response.data.licenseNo,
-            d1_DOB: this.datePipe.transform(response.data.dateOfBirth, "dd MMMM yyyy"),
-            driver1RTONo: response.data.issueByRTO,
-            driver1LicenceValDate: this.datePipe.transform(response.data.licenseValidityDate, "dd MMMM yyyy"),
-            registrationDate: this.datePipe.transform(response.data.registrationDate, "dd MMMM yyyy"),
-            driver1Name: response.data.driverName
-          });
-          this.challanService.challanForm.patchValue({ISNEWDA:false});
-
-          this.challanService.getVendorsList('04');
-
-          // ✅ 2️⃣ CALL VEHICLE TYPE API
-          this.getVehicleType('O');
-
-          // ✅ 3️⃣ PATCH VEHICLE TYPE AFTER LIST LOAD
-          const interval = setInterval(() => {
-            if (this.vehicleTypeList && this.vehicleTypeList.length > 0) {
-
-              const vehicleTypeCode = this.getVehicleTypeCodeByName(response.data.fTlName);
-
-              this.challanService.challanForm.patchValue({
-                vehicleType: vehicleTypeCode
-              });
-
-              clearInterval(interval);
+          if (!response.data.isnewda) {
+            this.challanService.isAgentSelected = true;
+            this.getPANnumberData(response.data.businessAssociateVendor);
+            const exists = this.vehicleNoList?.some(
+              (v: any) => v.value === response.data.vehicleNo
+            );
+            if (!exists && response.data.vehicleNo) {
+              this.vehicleNoList = [
+                ...this.vehicleNoList,
+                { text: response.data.vehicleNo, value: response.data.vehicleNo }
+              ];
             }
-          }, 100);
-        } else{
-          this.challanService.challanForm.patchValue({ISNEWDA:true});
-
-          this.challanService.isAgentSelected = false;
-           this.challanService.challanForm.patchValue({
-            deliveryAgentMoNo: null,
-            vendorType: null,
-            vendorCode: null,
-            vehicleNO: null,
-            fTLType: null,
-            eNGINENO: null,
-            cHASISNO: null,
-            rCBOOKNO: null,
-            fitnessDate: null,
-            insuranceDate: null,
-            driver1Licence: null,
-            d1_DOB: null,
-            driver1RTONo: null,
-            driver1LicenceValDate: null,
-            registrationDate: null,
-            driver1Name: null,
-            vehicleType:null
-          });
+            // ✅ 1️⃣ PATCH BASIC DATA IMMEDIATELY
+            this.challanService.challanForm.patchValue({
+              deliveryAgentMoNo: response.data.deliveryAgentMobile,
+              vendorType: '04',
+              vendorCode: response.data.businessAssociateVendor,
+              vehicleNO: response.data.vehicleNo,
+              fTLType: response.data.fTlType,
+              eNGINENO: response.data.engineNo,
+              cHASISNO: response.data.chassisNo,
+              rCBOOKNO: response.data.rcBookNo,
+              fitnessDate: this.datePipe.transform(response.data.fitnessValidityDate, "dd MMMM yyyy"),
+              insuranceDate: this.datePipe.transform(response.data.insuranceValidityDate, "dd MMMM yyyy"),
+              driver1Licence: response.data.licenseNo,
+              d1_DOB: this.datePipe.transform(response.data.dateOfBirth, "dd MMMM yyyy"),
+              driver1RTONo: response.data.issueByRTO,
+              driver1LicenceValDate: this.datePipe.transform(response.data.licenseValidityDate, "dd MMMM yyyy"),
+              registrationDate: this.datePipe.transform(response.data.registrationDate, "dd MMMM yyyy"),
+              driver1Name: response.data.driverName
+            });
+            this.challanService.challanForm.patchValue({ ISNEWDA: false });
+ 
+            this.challanService.getVendorsList('04');
+ 
+            // ✅ 2️⃣ CALL VEHICLE TYPE API
+            this.getVehicleType('O');
+ 
+            // ✅ 3️⃣ PATCH VEHICLE TYPE AFTER LIST LOAD
+            const interval = setInterval(() => {
+              if (this.vehicleTypeList && this.vehicleTypeList.length > 0) {
+ 
+                const vehicleTypeCode = this.getVehicleTypeCodeByName(response.data.fTlName);
+ 
+                this.challanService.challanForm.patchValue({
+                  vehicleType: vehicleTypeCode
+                });
+ 
+                clearInterval(interval);
+              }
+            }, 100);
+          } else {
+            this.challanService.challanForm.patchValue({ ISNEWDA: true });
+            this.challanService.isAgentSelected = false;
+            this.challanService.challanForm.patchValue({
+              deliveryAgentMoNo: response.data.deliveryAgentMobile,
+              vendorType: null,
+              vendorCode: null,
+              vehicleNO: null,
+              fTLType: null,
+              eNGINENO: null,
+              cHASISNO: null,
+              rCBOOKNO: null,
+              fitnessDate: null,
+              insuranceDate: null,
+              driver1Licence: null,
+              d1_DOB: null,
+              driver1RTONo: null,
+              driver1LicenceValDate: null,
+              registrationDate: null,
+              driver1Name: null,
+              vehicleType: null
+            });
+          }
         }
       }
     });
