@@ -920,6 +920,7 @@ getcontractservicecharge() {
   }
 
   getExemptData(customerCode:string){
+    if(this.loginUserList.Type !== '2'){
     if(this.basicDetailForm.value.exemptServices){
       this.basicDetailForm.patchValue({
             exemptServices: null,
@@ -928,7 +929,8 @@ getcontractservicecharge() {
     }
     this.basicDetailService.getExemptData(customerCode).subscribe({
       next: (response: any) => {
-        if (response) {
+        if (response && response.data) {
+          this.isExemptServiceReadonly=true;
           this.basicDetailForm.patchValue({
             exemptServices: response.data.exmptServices,
           });
@@ -945,14 +947,18 @@ getcontractservicecharge() {
 
           gstDeclarationControl?.updateValueAndValidity();
 
-          this.isExemptServiceReadonly=true;
+        }else{
+            this.isSezCustomer = false;
+          this.isExemptServiceReadonly=false;
+        }
+
            this.GetDKTGSTForGTA();
             setTimeout(() => {
               this.getGSTCalculation();
             }, 300);
-        }
       },
     });
+  }
   }
 
   onchangeRateType(event?: any) {

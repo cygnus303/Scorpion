@@ -431,9 +431,16 @@
                 formControlName="specialInstruction" rows="2" cols="47"></textarea></div>
           </div>
         </div>
-        <div class="col-md-4 form-column ">
+        <!-- <div class="col-md-4 form-column ">
           <div class="form-group"><label class="col-md-5">Exempt Services</label>
             <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="docketService.exemptServicesList" [readonly]="(docketService.basicDetailForm.value.billingType==='P02' && docketService.loginUserList.Type !== '2' || docketService.isExemptServiceReadonly)"
+                bindLabel="codeDesc" bindValue="codeId" placeholder="Exempt Services" appFocusNext formControlName="exemptServices" 
+                (change)="onExemptServicesChange($event)" (clear)="docketService.GetDKTGSTForGTA();docketService.GetGSTFromTrnMode()"></ng-select></div>
+          </div>
+        </div> -->
+        <div class="col-md-4 form-column ">
+          <div class="form-group"><label class="col-md-5">Exempt Services</label>
+            <div class="col-md-7"><ng-select class="noFoundTextColor" [items]="docketService.exemptServicesList" [readonly]="(docketService.loginUserList.Type !== '2' && docketService.isExemptServiceReadonly)"
                 bindLabel="codeDesc" bindValue="codeId" placeholder="Exempt Services" appFocusNext formControlName="exemptServices" 
                 (change)="onExemptServicesChange($event)" (clear)="docketService.GetDKTGSTForGTA();docketService.GetGSTFromTrnMode()"></ng-select></div>
           </div>
@@ -475,7 +482,7 @@
     <div class="col-md-7 text-start">
 
       <!-- FILE INPUT: Add / Change mode -->
-      <ng-container *ngIf="!docketService.isExistingFile || docketService.isChangingFile">
+      <ng-container *ngIf="(!docketService.isExistingFile || docketService.isChangingFile)|| docketService.loginUserList.Type !=='2'">
         <input type="file"
                class="form-control py-2 pt-2 uppercase-none"
                formControlName="GSTDeclaration"
@@ -490,7 +497,7 @@
       </ng-container>
 
       <!-- THUMBNAIL + VIEW/CHANGE BUTTONS (existing file only) -->
-      <ng-container *ngIf="docketService.isExistingFile && !docketService.isChangingFile">
+      <ng-container *ngIf="docketService.isExistingFile && !docketService.isChangingFile && docketService.loginUserList.Type ==='2'">
         <div class="d-flex align-items-center gap-2">
           <!-- Thumbnail Image -->
           <!-- <img [src]="docketService.basicDetailForm.get('GSTDeclaration')?.value"
