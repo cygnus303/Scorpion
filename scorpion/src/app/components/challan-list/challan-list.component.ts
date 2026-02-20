@@ -1276,11 +1276,13 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
   getDeliveryAgentByCodeList(code: any) {
     this.challanService.challanForm.patchValue({
     DeliveryAgentName:code.text
-   })
-    this.deliveryAgentService.getDeliveryAgentByCodeList(code.id).subscribe({
-      next: (response) => {
-        if (response && response.data) {
-          if (!response.data.isnewda) {
+   });
+
+   this.deliveryAgentService.getDeliveryAgentByCodeList(code.id).subscribe({
+     next: (response) => {
+       if (response && response.data) {
+         if (!response.data.isnewda) {
+            this.getVehicleType('O');
             this.challanService.isAgentSelected = true;
             this.getPANnumberData(response.data.businessAssociateVendor);
             const exists = this.vehicleNoList?.some(
@@ -1299,9 +1301,11 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
               vendorCode: response.data.businessAssociateVendor,
               vehicleNO: response.data.vehicleNo,
               fTLType: response.data.fTlType,
+              vehicleType:response.data.fTlType,
               eNGINENO: response.data.engineNo,
               cHASISNO: response.data.chassisNo,
               rCBOOKNO: response.data.rcBookNo,
+              permitDate:this.datePipe.transform(response.data.permitValidityDate, "dd MMMM yyyy"),
               fitnessDate: this.datePipe.transform(response.data.fitnessValidityDate, "dd MMMM yyyy"),
               insuranceDate: this.datePipe.transform(response.data.insuranceValidityDate, "dd MMMM yyyy"),
               driver1Licence: response.data.licenseNo,
@@ -1314,23 +1318,25 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
             this.challanService.challanForm.patchValue({ ISNEWDA: false });
  
             this.challanService.getVendorsList('04');
+            this.isVehicleType = true;
+            this.avalabledocketinPRS();
  
             // ✅ 2️⃣ CALL VEHICLE TYPE API
-            this.getVehicleType('O');
+            // this.getVehicleType('O');
  
             // ✅ 3️⃣ PATCH VEHICLE TYPE AFTER LIST LOAD
-            const interval = setInterval(() => {
-              if (this.vehicleTypeList && this.vehicleTypeList.length > 0) {
+            // const interval = setInterval(() => {
+            //   if (this.vehicleTypeList && this.vehicleTypeList.length > 0) {
  
-                const vehicleTypeCode = this.getVehicleTypeCodeByName(response.data.fTlName);
+            //     const vehicleTypeCode = this.getVehicleTypeCodeByName(response.data.fTlName);
  
-                this.challanService.challanForm.patchValue({
-                  vehicleType: vehicleTypeCode
-                });
+            //     this.challanService.challanForm.patchValue({
+            //       vehicleType: vehicleTypeCode
+            //     });
  
-                clearInterval(interval);
-              }
-            }, 100);
+            //     clearInterval(interval);
+            //   }
+            // }, 100);
           } else {
             this.challanService.challanForm.patchValue({ ISNEWDA: true });
             this.challanService.isAgentSelected = false;
@@ -1344,6 +1350,7 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
               cHASISNO: null,
               rCBOOKNO: null,
               fitnessDate: null,
+              permitDate:null,
               insuranceDate: null,
               driver1Licence: null,
               d1_DOB: null,
