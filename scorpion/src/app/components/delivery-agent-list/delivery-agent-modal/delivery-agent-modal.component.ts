@@ -353,7 +353,7 @@ onChangeLicenceNumber(event?: any) {
       const formData = new FormData();
        Object.keys(this.dAForm.value).forEach((key) => {
       let value = this.dAForm.value[key];
-      if ( ['registrationDate','insuranceValidityDate','fitnessValidityDate','dateOfBirth','licenseValidityDate','entryDate','updatedDate'].includes(key) && value) {
+      if ( ['registrationDate','insuranceValidityDate','fitnessValidityDate','dateOfBirth','licenseValidityDate','entryDate','updatedDate','permitValidityDate'].includes(key) && value) {
        const d = new Date(value);
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');
