@@ -602,7 +602,7 @@ vendorCodeName(){
     } else {
       this.challanService.challanForm.patchValue({
         vehicleType: '',
-        fTLType: '',
+        fTLType: null,
         registrationDate: '',
         eNGINENO: '',
         cHASISNO: '',
@@ -1282,7 +1282,7 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
      next: (response) => {
        if (response && response.data) {
          if (!response.data.isnewda) {
-            this.getVehicleType('O');
+            // this.getVehicleType('O');
             this.challanService.isAgentSelected = true;
             this.getPANnumberData(response.data.businessAssociateVendor);
             const exists = this.vehicleNoList?.some(
@@ -1320,23 +1320,6 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
             this.challanService.getVendorsList('04');
             this.isVehicleType = true;
             this.avalabledocketinPRS();
- 
-            // ✅ 2️⃣ CALL VEHICLE TYPE API
-            // this.getVehicleType('O');
- 
-            // ✅ 3️⃣ PATCH VEHICLE TYPE AFTER LIST LOAD
-            // const interval = setInterval(() => {
-            //   if (this.vehicleTypeList && this.vehicleTypeList.length > 0) {
- 
-            //     const vehicleTypeCode = this.getVehicleTypeCodeByName(response.data.fTlName);
- 
-            //     this.challanService.challanForm.patchValue({
-            //       vehicleType: vehicleTypeCode
-            //     });
- 
-            //     clearInterval(interval);
-            //   }
-            // }, 100);
           } else {
             this.challanService.challanForm.patchValue({ ISNEWDA: true });
             this.challanService.isAgentSelected = false;

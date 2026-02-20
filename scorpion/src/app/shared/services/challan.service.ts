@@ -334,7 +334,7 @@ SearchfilterForm(){
     vehicleNo:new FormControl(),
     mKTVehicleNo:new FormControl(),
     tripSheetNo : new FormControl(),
-    vehicleType : new FormControl(null, !isType1 ? Validators.required : null),
+    vehicleType : new FormControl(null),
     fTLType : new FormControl(),
     registrationDate : new FormControl(),
     eNGINENO : new FormControl(),
