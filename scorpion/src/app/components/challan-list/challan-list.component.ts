@@ -1319,6 +1319,7 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
  
             this.challanService.getVendorsList('04');
             this.isVehicleType = true;
+            this.avalabledocketinPRS();
  
             // ✅ 2️⃣ CALL VEHICLE TYPE API
             // this.getVehicleType('O');
