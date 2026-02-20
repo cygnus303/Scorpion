@@ -1277,7 +1277,7 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
     this.challanService.challanForm.patchValue({
     DeliveryAgentName:code.text
    })
-    this.deliveryAgentService.getDeliveryAgentByCodeList(code).subscribe({
+    this.deliveryAgentService.getDeliveryAgentByCodeList(code.id).subscribe({
       next: (response) => {
         if (response && response.data) {
           if (!response.data.isnewda) {

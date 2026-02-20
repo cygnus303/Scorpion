@@ -864,7 +864,7 @@ onSubmit(){
     EWayBillNo:challanForm?.eWayBillNo,
     EWayBillExpiredDate:challanForm?.eWayBillExpiredDate,
     IsMonthlyBillAllow:challanForm?.isMonthlyBillAllow?true:false,
-    DeliveryAgent:challanForm?.deliveryAgent,
+    DeliveryAgent:challanForm?.deliveryAgent?.id,
     DeliveryAgentName:challanForm?.DeliveryAgentName,
     DeliveryAgentMoNo:challanForm?.deliveryAgentMoNo,
     LoadingDate:challanForm?.loadingDate?.toISOString(),
@@ -1102,8 +1102,8 @@ onSubmit(){
           window.parent.location.href = `${this.env.liveUrl}Operation/ChallanDone?DOCNO=${response.data.docno}&DOCTYP=${response.data.doctyp}&TranXaction=${response.data.tranXaction}&IsError=${response.data.isError}&src=angular`;
         }else{
              this.sweetAlertService.error('You have some form errors. Please check below.');
+             this.isSubmitting=false;
         }
-        this.isSubmitting=false;
       },error: (error) => {
           window.scrollTo({ top: 0, behavior: 'smooth' });
             this.sweetAlertService.error(error?.error?.message);
