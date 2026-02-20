@@ -981,7 +981,7 @@ onSubmit(){
       THCNO:"N/A",
       THCSF:"0",
       VehicleNO:challanForm?.vehicleNO?challanForm?.vehicleNO:'O',
-      VehicleType:challanForm?.vehicleType,
+      VehicleType:challanForm?.fTLType,
       FTLType:challanForm?.fTLType,
       VehicleCapacity:challanForm?.vehicleCapacity?challanForm?.vehicleCapacity:'0',
       VehicleSize:"",
