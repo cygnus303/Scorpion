@@ -16,7 +16,7 @@
                         <div class="col-sm-7">
                             <ng-select class=" required2" placeholder="Delivery Agent" formControlName="deliveryAgent" appFocusNext required (change)="getDeliveryAgentByCodeList($event)"
                                 [ngClass]="{ 'border-danger': challanService.challanForm.get('deliveryAgent')?.invalid  && challanService.challanForm.get('deliveryAgent')?.touched }">
-                                 <ng-option *ngFor="let item of deliveryAgentsList" [value]="item.id">
+                                 <ng-option *ngFor="let item of deliveryAgentsList" [value]="item">
                                     {{ item.id }} :{{ item.text }}</ng-option>
                             </ng-select>
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('deliveryAgent')?.invalid && challanService.challanForm.get('deliveryAgent')?.touched "> This field is required.</div>

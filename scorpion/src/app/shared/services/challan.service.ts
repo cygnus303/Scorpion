@@ -355,6 +355,7 @@ SearchfilterForm(){
     driver2RTONo:new FormControl(),
     driver2LicenceValDate:new FormControl(),
     deliveryAgent : new FormControl(),
+    DeliveryAgentName:new FormControl(),
     deliveryAgentMoNo : new FormControl(),
     eWayBillNo : new FormControl(),
     eWayBillExpiredDate : new FormControl(),
@@ -665,6 +666,21 @@ onReset(){
  window.location.reload();
 }
 
+formatDateWithoutTimezone(date: any): string | null {
+
+  if (!date) return null;
+
+  const d = new Date(date);
+
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}T00:00:00`;
+
+}
+
+
 onSubmit(){
   // const DocketList = (this.avalabledocket.controls as FormGroup[]).filter((group) => group.get('isSelected')?.value).map((group) => group.value);
     const DocketList = (this.avalabledocket.controls as FormGroup[]).filter(group => group.get('isSelected')?.value).map(group => {
@@ -848,7 +864,8 @@ onSubmit(){
     EWayBillNo:challanForm?.eWayBillNo,
     EWayBillExpiredDate:challanForm?.eWayBillExpiredDate,
     IsMonthlyBillAllow:challanForm?.isMonthlyBillAllow?true:false,
-    DeliveryAgent:challanForm?.deliveryAgent,
+    DeliveryAgent:challanForm?.deliveryAgent?.id,
+    DeliveryAgentName:challanForm?.DeliveryAgentName,
     DeliveryAgentMoNo:challanForm?.deliveryAgentMoNo,
     LoadingDate:challanForm?.loadingDate?.toISOString(),
     CityRouteCode:"",
@@ -972,7 +989,7 @@ onSubmit(){
       Driver1MobileNo:challanForm?.driver1MobileNo,
       Driver1RTONo:challanForm?.driver1RTONo,
       Driver1Licence:challanForm?.driver1Licence,
-      D1_DOB: challanForm?.d1_DOB ? new Date(challanForm.d1_DOB).toISOString() : null,
+      D1_DOB: challanForm?.d1_DOB ? this.formatDateWithoutTimezone(challanForm?.d1_DOB) : null,
       Driver1LicenceValDate:new Date(challanForm?.driver1LicenceValDate)?.toISOString(),
       Driver2Name:challanForm?.driver2Name,
       Driver2MobileNo:challanForm?.driver2MobileNo,
@@ -1077,7 +1094,7 @@ onSubmit(){
       console.log("Invalid controls:", invalidKeys);
     }
 
-  if(this.challanForm.valid){
+    if(this.challanForm.valid){
     this.isSubmitting = true;
     this.THCService.challanSubmit(formData).subscribe({next: (response:any) => {
         if (response && response.data && !response.data.isError) {
@@ -1085,8 +1102,8 @@ onSubmit(){
           window.parent.location.href = `${this.env.liveUrl}Operation/ChallanDone?DOCNO=${response.data.docno}&DOCTYP=${response.data.doctyp}&TranXaction=${response.data.tranXaction}&IsError=${response.data.isError}&src=angular`;
         }else{
              this.sweetAlertService.error('You have some form errors. Please check below.');
+             this.isSubmitting=false;
         }
-        this.isSubmitting=false;
       },error: (error) => {
           window.scrollTo({ top: 0, behavior: 'smooth' });
             this.sweetAlertService.error(error?.error?.message);
