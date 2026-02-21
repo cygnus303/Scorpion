@@ -237,6 +237,15 @@ applyVehicleNoValidation(){
   });
 }
 
+OnChangeCNoteDate(event:any){
+    if (event) {
+      this.docketService.basicDetailForm.patchValue({
+        cNoteDate: event
+      });
+    }
+  this.docketService.freightAndOtherChar()
+}
+
   getCityList(event?: any, locCode?: any, type?: 'from' | 'to') {
     const searchText = event.term;
     if (!searchText || searchText.length < 1) {

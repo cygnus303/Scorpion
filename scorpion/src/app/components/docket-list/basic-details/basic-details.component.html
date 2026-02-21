@@ -30,7 +30,7 @@
       <div class="row">
         <div class="col-md-4 form-column ">
           <div class="form-group mb-1"><label class="col-md-5">CNote No</label>
-            <div class="col-md-7"><input type="text" class="form-control required2" placeholder="CNote No" 
+            <div class="col-md-7"><input type="text" class="form-control required2" placeholder="CNote No"  
                 formControlName="cNoteNo" required (input)="CheckDocketValid($event)" appFocusNext  [readonly]="this.docketService.isComplition" 
                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('cNoteNo')?.invalid && docketService.basicDetailForm.get('cNoteNo')?.touched || docketService.inValidDocketMsg} " />
             </div>
@@ -76,7 +76,7 @@
                 <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
                   [bsValue]="docketService.bsValue" [minDate]="docketService.loginUserList.Type === '2' ? undefined : minDate"
                     [maxDate]="docketService.loginUserList.Type === '2' ? undefined : maxDate"
-                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" 
+                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" (bsValueChange)="OnChangeCNoteDate($event)"
                   placeholder="CNote Date"  formControlName="cNoteDate" required appFocusNext [class.disabled-input]="true" 
                   [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('cNoteDate')?.invalid  && docketService.basicDetailForm.get('cNoteDate')?.touched }">
                 <span class="input-group-text cursor-pointer" (click)="dp.toggle()"  [class.disabled-input]="this.docketService.isComplition" >
