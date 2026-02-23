@@ -563,32 +563,44 @@ vendorCodeName(){
   }
 
   onChangeLicenceNumber(event?: any) {
-     const dob = this.challanService.challanForm.value.d1_DOB;
-     const licenseNo = event ? event.target.value?.trim() : this.challanService.challanForm.value.driver1Licence?.trim();
-     const licenseControl = this.challanService.challanForm.get('driver1Licence');
-      if (!licenseControl || licenseControl.invalid || !dob) {
+    const dob = this.challanService.challanForm.value.d1_DOB;
+    const licenseNo = event ? event.target.value?.trim() : this.challanService.challanForm.value.driver1Licence?.trim();
+    const licenseControl = this.challanService.challanForm.get('driver1Licence');
+    if (!licenseControl || licenseControl.invalid || !dob) {
       licenseControl?.markAsTouched();
       this.challanService.challanForm.get('d1_DOB')?.markAsTouched();
       return;
     }
-    const params = {
-      dlnumber: licenseNo.toUpperCase(),
-      dob: dob ? `${dob.getFullYear()}-${String(dob.getMonth() + 1).padStart(2, '0')}-${String(dob.getDate()).padStart(2, '0')}` : '',
-      baseUserName: this.docketService.loginUserList.BaseUserName
-    };
-    this.deliveryAgentService.getLicenceDetail(params).subscribe({
-      next: (response: any) => {
-        if (response && response.data) {
-          this.challanService.challanForm.patchValue({
-            driver1Name:response.data.bioFullName, 
-            driver1RTONo: response.data.omRtoFullname || '',
-            driver1LicenceValDate: new Date(response.data.validTillDate) || ''
+    const payload = {
+      vehicleNo: '', // not needed here
+      licenseNo: licenseNo.toUpperCase(),
+      dA_Code: null
+    }
+    this.deliveryAgentService.validationData(payload).subscribe({next: (response: any) => {
+        if (response?.message === 'No duplicate found. You can proceed to save data.') {
+          const params = {
+            dlnumber: licenseNo.toUpperCase(),
+            dob: dob ? `${dob.getFullYear()}-${String(dob.getMonth() + 1).padStart(2, '0')}-${String(dob.getDate()).padStart(2, '0')}` : '',
+            baseUserName: this.docketService.loginUserList.BaseUserName
+          };
+          this.deliveryAgentService.getLicenceDetail(params).subscribe({ next: (response: any) => {
+              if (response && response.data) {
+                this.challanService.challanForm.patchValue({
+                  driver1Name: response.data.bioFullName,
+                  driver1RTONo: response.data.omRtoFullname || '',
+                  driver1LicenceValDate: new Date(response.data.validTillDate) || ''
+                });
+              }
+            },
+            error: (err) => {
+              console.error('Error fetching license detail:', err);
+              this.sweetAlertService.error(err.error.message)
+            }
           });
+        } else {
+          this.sweetAlertService.info(response.message);
+          this.challanService.challanForm.patchValue({ driver1Licence: null });
         }
-      },
-      error: (err) => {
-        console.error('Error fetching license detail:', err);
-        this.sweetAlertService.error(err.error.message)
       }
     });
   }
