@@ -36,7 +36,7 @@ export class DocketListComponent implements OnInit {
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      // this.docketService.Location = 'PIM';
+      // this.docketService.Location = 'TNP';
       this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
@@ -52,7 +52,7 @@ export class DocketListComponent implements OnInit {
 getCompletionData() {
   const payload = {
     docketNo: this.docketService.loginUserList.DocketNo,
-    // docketNo: '62970148',
+    // docketNo: '62839635',
     isFromBillGeneration: this.docketService.loginUserList.IsFromBillGeneration || '',
     type: this.docketService.loginUserList.Type,
     baseLocationCode: this.docketService.loginUserList.LocationCode,
