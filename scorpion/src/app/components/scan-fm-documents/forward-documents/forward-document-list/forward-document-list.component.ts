@@ -60,7 +60,7 @@ export class ForwardDocumentListComponent {
       FM_No: new FormControl(null),
       FM_Date: new FormControl(new Date()),
       Manual_FM_No: new FormControl(null),
-      FM_Doc_Type: new FormControl(data.DocType),
+      FM_Doc_Type: new FormControl(data?.DocType),
       Courier_Way_Bill_Date: new FormControl(new Date(),[Validators.required]),
       Doc_FWD_To: new FormControl(null,[Validators.required]),
       Courier_Code: new FormControl(null,[Validators.required]),
@@ -108,11 +108,11 @@ export class ForwardDocumentListComponent {
 getForwardFMDocumentList() {
    this.isLoading = true;
    const payload = {
-      docType: this.filterData.DocType,
-      paybas: this.filterData.Paybas,
-      dockets: this.filterData.Dockets || '',
+      docType: this.filterData?.DocType,
+      paybas: this.filterData?.Paybas,
+      dockets: this.filterData?.Dockets || '',
       loccode: this.docketService.loginUserList.LocationCode,
-      dT_TYPE: this.filterData.DT_TYPE,
+      dT_TYPE: this.filterData?.DT_TYPE,
       fromDate: this.filterData?.dateRange?.[0]? new Date(this.filterData.dateRange[0]).toISOString(): null,
       toDate: this.filterData?.dateRange?.[1]? new Date(this.filterData.dateRange[1]).toISOString(): null,
       fmDate: this.forwardDocForm.value.FM_Date
