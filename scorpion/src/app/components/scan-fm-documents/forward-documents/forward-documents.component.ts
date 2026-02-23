@@ -18,15 +18,20 @@ import { CommonService } from 'app/shared/services/common.service';
 export class ForwardDocumentsComponent {
   public filterForm!: FormGroup;
   public PayBsData: PRSGeneralMasterResponse[] = [];
+  public DateTypelist:any[] = [];
   public DocTypelist = [
     { text: "Bill", value: "2" },
     { text: "COD/DOD", value: "4" },
     { text: "POD", value: "1" },
     { text: "THC", value: "6" },
   ];
-  public DateTypelist = [
+  public THClist = [
     { text: "THC Date", value: "1" },
     { text: "Arrival Date", value: "2" }
+  ]
+    public dateType=[
+    {text:'Booking Date',value:'1'},
+    {text:'Delivery Date',value:'2'}
   ]
 
   constructor(private router: Router,public THCMasterService: THCMasterService,public commonService: CommonService) { }
@@ -55,6 +60,11 @@ export class ForwardDocumentsComponent {
     } else {
       this.PayBsData = [];
       this.getPaybsData('PAYTYP');
+    }
+    if(event?.value === '6') {
+      this.DateTypelist = this.THClist;
+    }else{
+      this.DateTypelist = this.dateType;
     }
   }
 

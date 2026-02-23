@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CommonService } from 'app/shared/services/common.service';
 import { DocketService } from 'app/shared/services/docket.service';
@@ -13,7 +13,7 @@ import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-document-yet-to-scan',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, ReactiveFormsModule],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, ReactiveFormsModule,FormsModule],
   templateUrl: './document-yet-to-scan.component.html',
   styleUrl: './document-yet-to-scan.component.scss',
   providers: [DatePipe]
@@ -23,6 +23,7 @@ export class DocumentYetToScanComponent {
   public documentYetToScan: any;
   public loading = false;
   public showDocumentList = false;
+  public searchText: string = '';    
   public DocTypelist = [
     { text: "Bill", value: "2" },
     { text: "COD/DOD", value: "4" },
@@ -47,6 +48,18 @@ export class DocumentYetToScanComponent {
       fM_Status: new FormControl()
     })
   }
+
+get filteredDocuments() {
+  if (!this.searchText) {
+    return this.documentYetToScan;
+  }
+  const search = this.searchText.toLowerCase();
+  return this.documentYetToScan.filter((item:any) =>
+    item.dockno?.toLowerCase().includes(search) ||
+    item.loc?.toLowerCase().includes(search) ||
+    item.from_to?.toLowerCase().includes(search)
+  );
+}
 
   getYetToScan() {
     this.loading = true;
