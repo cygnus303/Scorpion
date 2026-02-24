@@ -43,7 +43,7 @@ export class InvoiceDetailsComponent {
         const breadthControl = ctrl.get('breadth');
         const heightControl = ctrl.get('height');
  
-        if (value === '1') {
+        if (value === '1' && this.docketService?.step2DetailsList?.isVolumentric === 'Y') {
           lengthControl?.setValidators([Validators.required, Validators.min(1)]);
           breadthControl?.setValidators([Validators.required, Validators.min(1)]);
           heightControl?.setValidators([Validators.required, Validators.min(1)]);
