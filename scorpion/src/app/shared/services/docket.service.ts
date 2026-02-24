@@ -920,7 +920,7 @@ getcontractservicecharge() {
   }
 
   getExemptData(customerCode:string){
-    if(this.loginUserList.Type !== '2'){
+    // if(this.loginUserList.Type !== '2'){
     if(this.basicDetailForm.value.exemptServices){
       this.basicDetailForm.patchValue({
             exemptServices: null,
@@ -958,7 +958,7 @@ getcontractservicecharge() {
             }, 300);
       },
     });
-  }
+  // }
   }
 
   onchangeRateType(event?: any) {
