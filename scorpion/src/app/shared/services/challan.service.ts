@@ -301,7 +301,7 @@ SearchfilterForm(){
     BookedByType:new FormControl(''),
     BookedBy:new FormControl(),
     loadingByName:new FormControl(''),
-    DRSType: new FormControl(''),
+    DRSType: new FormControl('', Validators.required),
     dateRange:new FormControl([fromDate, today]),
   })
 }

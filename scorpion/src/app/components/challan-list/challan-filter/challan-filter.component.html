@@ -118,21 +118,26 @@
                     <label class="col-md-2 form-label fw-semibold text-start">
                         {{typeName}} type
                     </label>
-                    <div class="col-md-5 d-flex gap-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="DRSType" id="notThroughDa" value="N"
-                                formControlName="DRSType" />
+                    <div class="col-md-5 ">
+                       <div class="d-flex gap-4">
+                         <div class="form-check">
+                            <input class="form-check-input" type="radio" name="DRSType" id="notThroughDa" value="N" formControlName="DRSType"
+                                [ngClass]="{ 'border-danger': challanService.filterForm.get('DRSType')?.invalid  && challanService.filterForm.get('DRSType')?.touched }"/>
                             <label class="form-check-label" for="notThroughDa">
                                 Not Through DA
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="DRSType" id="throughDa" value="Y"
-                                formControlName="DRSType" />
+                            <input class="form-check-input" type="radio" name="DRSType" id="throughDa" value="Y" formControlName="DRSType" 
+                                [ngClass]="{ 'border-danger': challanService.filterForm.get('DRSType')?.invalid  && challanService.filterForm.get('DRSType')?.touched }"/>
                             <label class="form-check-label" for="throughDa">
                                 Through DA
                             </label>
                         </div>
+                       </div>
+                       <div class="text-danger text-start" *ngIf="challanService.filterForm.get('DRSType')?.invalid && challanService.filterForm.get('DRSType')?.touched">
+                           Please select a {{typeName}} type
+                       </div>
                     </div>
                 </div>
                     <div class="row align-items-center mb-3" *ngIf="this.docketService.loginUserList.Type === '3'">
