@@ -63,13 +63,11 @@
 
 
 <div class="cnote-entry-container px-2 mt-5">
-    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
-        <h5 class="mb-0">
+    <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
+        <div class="mb-0">
             <i class="fas fa-list me-2"></i> FM List
-        </h5>
-        <div class="text-end">
-            <button (click)="downloadExcel()">Download Excel</button>
         </div>
+            <button class="btn btn-success" (click)="downloadExcel()">Download Excel</button>
     </div>
     <div class="row p-2">
         <div class="col-md-1">

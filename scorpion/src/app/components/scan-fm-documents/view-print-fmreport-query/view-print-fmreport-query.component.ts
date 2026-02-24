@@ -29,14 +29,16 @@ export class ViewPrintFMReportQueryComponent {
   ngOnInit() {
     this.buildForm();
     this.scanFmDocumentsService.getLocationData();
+    this.scanFmDocumentsService.getLocationListFromROList()
   }
 
   buildForm() {
     const endDate = new Date(); // aaje ni date
     const startDate = new Date();
     startDate.setDate(endDate.getDate() - 29);
+    const isHQTR = this.docketService.loginUserList.LocationCode === 'HQTR';
     this.viewFilterForm = new FormGroup({
-      RO: new FormControl(null, [Validators.required]),
+      RO: new FormControl(null,  isHQTR ? [Validators.required] : []),
       Loccode: new FormControl(null, [Validators.required]),
       FmNo: new FormControl(null),
       dateRange: new FormControl([startDate, endDate]),

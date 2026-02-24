@@ -30,8 +30,8 @@ export class ScanFmDocumentsService {
     })
   }
 
-  getLocationListFromROList(event: any) {
-    this.pfmService.GetLocationListFromRO(event).subscribe({
+  getLocationListFromROList(event?: any) {
+    this.pfmService.GetLocationListFromRO(event?event:this.docketService.loginUserList.LocationCode).subscribe({
       next: (response) => {
         this.locationList = response;
       }

@@ -7,7 +7,7 @@
     <form [formGroup]="viewFilterForm">
         <div class="form-grid p-4">
             <!-- Row 1 -->
-            <div class="row pb-3">
+            <div class="row pb-3" *ngIf="docketService.loginUserList.LocationCode === 'HQTR'">
                 <div class="col-md-2 col-form-label text-end">Select RO :</div>
                 <div class="col-md-3">
                     <ng-select class="required2" placeholder="Select RO" formControlName="RO" (change)="scanFmDocumentsService.getLocationListFromROList($event)"
@@ -87,4 +87,7 @@
                 <button class="btn btn-success"  (click)="goToForwardList()"> <i class="fas fa-search"></i> Get List</button>
             </div>
         </div>
+    </div>
+    <div *ngIf="isfmReport">
+        <app-fmreport-list></app-fmreport-list> 
     </div>
