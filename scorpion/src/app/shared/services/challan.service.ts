@@ -780,7 +780,18 @@ onSubmit(){
     ERD:new Date(challanForm?.ERD).toISOString(),
     DAVendor:"",
     },
-    "CMR":null,
+     "CMR":{
+      Module_Title_desc:"",
+      RULEID:"",
+      Srno:0,
+      Module_Name:"",
+      RULE_Y_N:"",
+      ModuleID:"",
+      RULE_VALUE:"",
+      RULE_DESC:"",
+      IsFromTocityRequird:"",
+      IsFromTocityRequirdinthc:"",
+    },
     "CTFD":{
       THCNO:"N/A",
       ContractAmount:Number(challanForm?.contractAmount),
@@ -860,13 +871,20 @@ onSubmit(){
       VendorCode:"",
       ODAType:"",
       DRSType:this.filterList?.DRSType || '',
-    }
+    },
+    "CPML":{
+      Id:0,
+      BRCD:"",
+      RatePerGM:0,
+      VehicleSize:"",
+    },
   }
   const formData = new FormData();
    this.appendObjectToFormData(formData, payload.CTH, "CVM.CTH");
    this.appendObjectToFormData(formData, payload.CMR, "CVM.CMR");
   this.appendObjectToFormData(formData, payload.CTFD, "CVM.CTFD");
   this.appendObjectToFormData(formData, payload.CTVD, "CVM.CTVD");
+  this.appendObjectToFormData(formData, payload.CPML, "CVM.CPML");
   this.appendObjectToFormData(formData, payload.GC, "CVM.GC");
 
 
