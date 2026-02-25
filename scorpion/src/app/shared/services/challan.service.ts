@@ -526,64 +526,47 @@ advanceNotGreaterThanNet(control: AbstractControl) {
   return adv > net ? { advanceInvalid: true } : null;
 }
 
-generatePRSfilter(event?:any){ 
-  if(this.docketService.loginUserList.Type === '1'){
-    return;
-  }
-  if(this.challanForm.value?.vendorType!=='04' && event){
+  generatePRSfilter(event?: any) {
+    if (this.docketService.loginUserList.Type === '1') {
       return;
-  }
-  const data = this.filterList;
-  const payload = {
-    gcno: '0',
-    drsType: "",
-    typ:this.docketService.loginUserList.Type === '2' ? 2 : 3,
-    datetype: data.bookingDateType || '',
-    vendorCode:this.challanForm.value?.vendorType ==='04'? this.challanForm.value.vendorCode:'',
-    bookedBy:  data.BookedBy || '',
-    bookedByType: data.BookedByType || '',
-    fromDate: new Date(data?.dateRange[0]).toISOString(),
-    toDate: new Date(data?.dateRange[1]).toISOString(),
-    paybas: data.paybas? data.paybas:'ALL',
-    trnmod: data.trnMod?data.trnMod:'ALL',
-    bustype: data.bustyp?data.bustyp:'ALL',
-    doctyp: this.docketService.loginUserList.Type === '2'?"PRS":"DRS",
-    loadingBy: data.loadingBy || '',
-    chargeType: data.chrgType?data.chrgType:"ALL",
-    odaType: data.odaType?data.odaType:'',
-  }
-  const baseCompanydata = {
-    TYP:this.docketService.loginUserList.Type === '2' ? 2 : 3,
-    baseCompanyCode:this.docketService.loginUserList.Companycode,
-    baseLocationCode:this.docketService.loginUserList.LocationCode,
-  }
-    this.THCService.generate(baseCompanydata,payload).subscribe({
-    next: (response: any) => {
-      if (response) {
-        console.log(this.filterList?.DRSType)
-          if (this.filterList.DRSType === 'N') {
-      const allowedVendorCodes = ['XX1', '19', 'XX'];
-
-      this.vendtyData = response.listVendorType
-        .filter((x: any) => allowedVendorCodes.includes(x.vendor_Type_Code))
-        .map((x: any) => ({
-          codeId: x.vendor_Type_Code,
-          codeDesc: x.vendor_Type
-        }));
-    } else {
-      // normal flow – all vendor types
-      this.vendtyData = response.listVendorType.map((x: any) => ({
-        codeId: x.vendor_Type_Code,
-        codeDesc: x.vendor_Type
-      }));
     }
-     this.generateData = response;
-      }
-      },error: (err) => {
+    if (this.challanForm.value?.vendorType !== '04' && event) {
+      return;
+    }
+    const data = this.filterList;
+    const payload = {
+      gcno: '0',
+      drsType: "",
+      typ: this.docketService.loginUserList.Type === '2' ? 2 : 3,
+      datetype: data.bookingDateType || '',
+      vendorCode: this.challanForm.value?.vendorType === '04' ? this.challanForm.value.vendorCode : '',
+      bookedBy: data.BookedBy || '',
+      bookedByType: data.BookedByType || '',
+      fromDate: new Date(data?.dateRange[0]).toISOString(),
+      toDate: new Date(data?.dateRange[1]).toISOString(),
+      paybas: data.paybas ? data.paybas : 'ALL',
+      trnmod: data.trnMod ? data.trnMod : 'ALL',
+      bustype: data.bustyp ? data.bustyp : 'ALL',
+      doctyp: this.docketService.loginUserList.Type === '2' ? "PRS" : "DRS",
+      loadingBy: data.loadingBy || '',
+      chargeType: data.chrgType ? data.chrgType : "ALL",
+      odaType: data.odaType ? data.odaType : '',
+    }
+    const baseCompanydata = {
+      TYP: this.docketService.loginUserList.Type === '2' ? 2 : 3,
+      baseCompanyCode: this.docketService.loginUserList.Companycode,
+      baseLocationCode: this.docketService.loginUserList.LocationCode,
+    }
+    this.THCService.generate(baseCompanydata, payload).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.generateData = response;
+        }
+      }, error: (err) => {
         this.sweetAlertService.error(err.error.message)
       }
     });
-}
+  }
 
 validateRate(group: FormGroup): boolean {
   const loadingBy = this.filterList?.loadingBy;
@@ -1028,23 +1011,23 @@ onSubmit(){
       VehicleSize:"",
     },
     "GC":{
-      FromDate:"",
-      ToDate:"",
-      GCNO:"",
-      PAYBAS:"",
-      TRNMOD:"",
-      BUSTYPE:"",
-      DATETYPE:new Date().toISOString(),
-      BookedByType:"",
-      BookedBy:"",
-      DOCTYP:"",
-      TYP:"",
+      FromDate:new Date(this.filterForm.value.fromdt)?.toISOString(),
+      ToDate:new Date(this.filterForm.value.todt)?.toISOString(),
+      GCNO:'0',
+      PAYBAS:this.filterForm.value.paybas,
+      TRNMOD:this.filterForm.value.trnMod,
+      BUSTYPE:this.filterForm.value.bustyp,
+      DATETYPE:this.filterForm.value.bookingDateType,
+      BookedByType:this.filterForm.value.BookedByType,
+      BookedBy:this.filterForm.value.BookedBy,
+      DOCTYP:this.docketService.loginUserList.Type === '2' ? "PRS":"DRS",
+      TYP:this.docketService.loginUserList.Type === '2' ? 2 : 3,
       isBookedby:true,
-      LoadingBy:"",
-      ChargeType:"",
+      LoadingBy:this.filterForm.value.loadingBy,
+      ChargeType:this.filterForm.value.chrgType,
       VendorCode:"",
       ODAType:"",
-      DRSType:"",
+      DRSType:this.filterForm.value.DRSType,
     }
   }
   const formData = new FormData();

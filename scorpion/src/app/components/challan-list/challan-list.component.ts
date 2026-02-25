@@ -26,7 +26,6 @@ public selectedDigit: number = 10;
 public typeName : string='';
 public today: Date = new Date();
 public vehicleNoList:any[]=[];
-// public deliverAgentData:any[]=[];
 public isInsuranceExpired : boolean = false;
 public isFitnessExpired : boolean = false;
 public isPermitExpired : boolean = false;
@@ -79,46 +78,61 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      // this.docketService.loginUserList.LocationCode =  'PIM';
-      // this.docketService.loginUserList.Type = '2'
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
+
+    const type = this.docketService.loginUserList.Type;
+    this.typeName = type === '3' ? 'DRS' : type === '1' ? 'THC' : type === '2' ? 'PRS' : '';
+
     this.challanService.buildForm();
-    this.challanService.getChargesDetails();
-    this.challanService.getVendtyData();
     this.docketService.getTypeofMovementData();
-    this.challanService.getRouteMode();
-    this.challanService.getDepartmentReason();
-    this.challanService.getTDSLedgerList();
-    this.challanService.getLocationData();
-    // this.getDAList(); 
-    this.challanService.getRateTypeData()
+    this.challanService.getRateTypeData();
+    this.challanService.getVendtyData();
+    
+    if(this.docketService.loginUserList.Type === '1'){
+      this.challanService.getChargesDetails();
+      this.challanService.getRouteMode();
+      this.challanService.getDepartmentReason();
+      this.challanService.getLocationData();
+      this.challanService.getTDSLedgerList();
+      this.getApprovedByData();
 
-    setTimeout(() => {
-    this.filterListpatchValue();
-    }, 400); 
+      this.challanService.challanForm.get('netAmount')?.valueChanges.subscribe(() => {
+        this.challanService.challanForm.updateValueAndValidity({ onlySelf: false });
+      });
+  
+      this.challanService.challanForm.get('advanceAmount')?.valueChanges.subscribe(() => {
+        this.challanService.challanForm.updateValueAndValidity({ onlySelf: false });
+      });
 
-    this.challanService.challanForm.get('netAmount')?.valueChanges.subscribe(() => {
-      this.challanService.challanForm.updateValueAndValidity({ onlySelf: false });
-    });
+      this.challanService.challanForm.get('isEmpty')?.valueChanges.subscribe((isEmpty: boolean) => {
+        const approvedByCtrl = this.challanService.challanForm.get('approvedBy');
+        if (isEmpty) { 
+           approvedByCtrl?.setValidators([Validators.required]);
+          this.challanService.challanForm.patchValue({ customerName: null, routeCode: null }); 
+        } else {
+          approvedByCtrl?.clearValidators();
+          approvedByCtrl?.setValue(null);  // optional → reset field
+        }
+        approvedByCtrl?.updateValueAndValidity();
+      });
 
-    this.challanService.challanForm.get('advanceAmount')?.valueChanges.subscribe(() => {
-      this.challanService.challanForm.updateValueAndValidity({ onlySelf: false });
-    });
+      const dt = this.docketService.bsValue;
+      this.actualDeptTime = this.formatTime(dt);
+      this.challanDateAccess();
+    }
 
-    this.challanService.challanForm.get('isEmpty')?.valueChanges.subscribe((isEmpty: boolean) => {
-      const approvedByCtrl = this.challanService.challanForm.get('approvedBy');
-      if (isEmpty) { 
-         approvedByCtrl?.setValidators([Validators.required]);
-        this.challanService.challanForm.patchValue({ customerName: null, routeCode: null }); 
-      } else {
-        approvedByCtrl?.clearValidators();
-        approvedByCtrl?.setValue(null);  // optional → reset field
-      }
-      approvedByCtrl?.updateValueAndValidity();
-    });
-     
+     if (this.docketService.loginUserList.Type === '3') {
+      this.getDeliveryZoneData()
+    }
+ 
+    if(this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '2'){
+      setTimeout(() => {
+      this.filterListpatchValue();
+      }, 400); 
+    }
+
     this.challanService.challanForm.get('vendorType')?.valueChanges.subscribe((vendorType) => {
       this.updateVehicleRequiredValidator();
       this.updateVehicleNoValidator(vendorType);
@@ -127,19 +141,8 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
     this.challanService.challanForm.get('vehicleNO')?.valueChanges.subscribe(() => {
       this.updateVehicleRequiredValidator();
     });
-
-    const type = this.docketService.loginUserList.Type;
-    this.typeName = type === '3' ? 'DRS' : type === '1' ? 'THC' : type === '2' ? 'PRS' : '';
-    
-    if (this.docketService.loginUserList.Type === '3') {
-      this.getDeliveryZoneData()
-    }
-    const dt = this.docketService.bsValue;
-    this.actualDeptTime = this.formatTime(dt);
-    this.challanDateAccess();
-
-  this.updateVehicleRequiredValidator(); // initial call
-  this.getApprovedByData();
+  
+    this.updateVehicleRequiredValidator(); // initial call
   }
 
   filterListpatchValue() {
@@ -147,24 +150,18 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
       if (params['start']) {
         const formValues = JSON.parse(params['start']);
         this.challanService.filterList = formValues;
-        if (this.challanService.filterList.BookedByType === "B") {
-          const vendorTypeCode = this.challanService.vendtyData?.find((v: any) => v.codeId === "04")?.codeId || '';
-          this.challanService.challanForm.patchValue({
-            vendorType: vendorTypeCode
-          });
-          this.challanService.getVendorsList(vendorTypeCode)
-          if (this.challanService.filterList.BookedBy) {
-            this.challanService.challanForm.patchValue({
-              vendorCode: this.challanService.filterList.BookedBy
-            });
-          }
-          this.getPANnumberData(this.challanService.challanForm.value.vendorCode);
-        }
+        // Vendor Type specific filtering for DRS with DRSType 'Y' BA
         if (this.challanService.filterList.DRSType === 'Y') {
           const allowedVendorCodes = ['04'];
-          this.challanService.vendtyData = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId))
+          this.challanService.vendtyData = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
+          this.getDeliveryAgents();
+        }else{
+         const allowedVendorCodes = ['XX1', '19', 'XX'];
+         this.challanService.vendtyData = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
         } 
+        this.challanService.generatePRSfilter();
 
+        // auto select Vendor Code
         const ChargedBy = this.challanService?.filterList?.loadingBycodeFor;
         if (ChargedBy === 'B' || ChargedBy == '04') {
           this.challanService.getChargesVendorsList('04');
@@ -178,17 +175,11 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
         if (ChargedBy === 'XX5' || ChargedBy === 'XX8') {
           this.challanService.branchWiseLoadingUnloading(this.challanService?.filterList?.loadingBycodeFor);
         }
-        if(this.docketService.loginUserList && this.challanService.filterList && (this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '2') && this.challanService.filterList.DRSType === 'Y'){
-          this.getDeliveryAgents();
-        }else{
-          this.challanService.generatePRSfilter();
-        }
       }
     });
 
     if (this.docketService.loginUserList.Type !== '1') {
-      // this.challanService.getCityList();
-         this.avalabledocketinPRS();
+      this.avalabledocketinPRS();
     }
   }
 
@@ -249,11 +240,7 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
   }
 
   formatTime(date: Date) {
-    return new Intl.DateTimeFormat('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true
-    }).format(new Date(date));
+    return new Intl.DateTimeFormat('en-US', {hour: '2-digit',minute: '2-digit', hour12: true}).format(new Date(date));
   }
 
   challanDateAccess() {
@@ -615,13 +602,13 @@ vendorCodeName(){
       this.challanService.challanForm.patchValue({
         vehicleType: '',
         fTLType: null,
-        registrationDate: '',
+        registrationDate: null,
         eNGINENO: '',
         cHASISNO: '',
         rCBOOKNO: '',
-        permitDate: '',
-        insuranceDate: '',
-        fitnessDate: '',
+        permitDate: null,
+        insuranceDate: null,
+        fitnessDate: null,
       });
       if (event.value === 'O') {
         this.getVehicleType(event.value)
@@ -861,19 +848,6 @@ checkLicenseExpiry(event?:any) {
       }
     });
   }
-
-  // getDAList() {
-  //   this.THCService.getDAList("7").subscribe({next: (response: any) => {
-  //       if (response) {
-  //         this.deliverAgentData = response.data;
-  //       }
-  //     },
-  //     error: (err) => {
-  //       console.error('Error fetching vehicle details:', err.error.message);
-  //       this.sweetAlertService.error(err.error.message)
-  //     }
-  //   });
-  // }
 
   formatDate(dateStr: string): string {
     if (!dateStr) return '';

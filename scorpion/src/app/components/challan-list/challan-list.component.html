@@ -430,7 +430,7 @@
                     <label class="col-sm-5 col-form-label text-end">FTL Type</label>
                     <div class="col-sm-7">
                           <ng-select class="noFoundTextColor required2 clear-icon" placeholder="FTL Type" formControlName="fTLType" [readonly]="challanService.challanForm.value.vendorType === 'XX1' || isFieldReadonly()" appFocusNext required
-                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" [items]="docketService.typeofMovementList"
+                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" [items]="docketService.typeofMovementList" 
                             [ngClass]="{ 'border-danger': challanService.challanForm.get('fTLType')?.invalid  && challanService.challanForm.get('fTLType')?.touched }"></ng-select>
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('fTLType')?.invalid && challanService.challanForm.get('fTLType')?.touched "> This field is required.</div>
                         </div>
@@ -662,7 +662,7 @@
                                     <i class="fa fa-calendar"></i>
                                 </span>
                             </div>
-                             <div *ngIf="isLicenseExpired" class="text-danger fw-bold mt-1">
+                             <div *ngIf="isLicenseExpired" class="text-danger text-start">
                               License validity date is expired.      
                               </div>
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1LicenceValDate')?.invalid && challanService.challanForm.get('driver1LicenceValDate')?.touched "> This field is required.</div>
