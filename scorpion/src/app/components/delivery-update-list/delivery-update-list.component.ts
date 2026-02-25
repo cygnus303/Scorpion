@@ -46,7 +46,7 @@ ngOnInit(){
       //   this.docketService.loginUserList.LocationCode =  'PIM';
       // this.docketService.loginUserList.loadBy = "B";
       // this.docketService.loginUserList.chargeType='1';
-      this.docketService.loginUserList.drsId='DS/PIM/2526/002794';
+      // this.docketService.loginUserList.drsId='DS/PIM/2526/002794';
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
@@ -401,7 +401,7 @@ getPANnumberData(vendorCode:any){
     }
 }
 
- updateDeliveryValidators(row: FormGroup): void {
+updateDeliveryValidators(row: FormGroup): void {
   const delivered = Number(row.get('deliveredPkgs')?.value || 0);
   const pending = Number(row.get('pkgs_Pending')?.value || 0);
 
@@ -428,6 +428,10 @@ getPANnumberData(vendorCode:any){
     deliveredToCtrl?.clearValidators();
     personCtrl?.clearValidators();
     contactCtrl?.clearValidators();
+
+    deliveredToCtrl?.setValue(null, { emitEvent: false });
+    personCtrl?.setValue(null, { emitEvent: false });
+    contactCtrl?.setValue(null, { emitEvent: false });
 
   }
 
@@ -736,6 +740,10 @@ hasPODError(): boolean {
     payBasis: row.payBasis || '',
     coddodAmount: Number(row.coddodAmount) || 0,
     cboLateReason: "",
+    DeliveredTo:row.DeliveredTo,
+    DlyContactNo:row.DlyContactNo,
+    DlyPerson: row.DlyPerson || '',
+ 
   }));
 
   const formData = new FormData();

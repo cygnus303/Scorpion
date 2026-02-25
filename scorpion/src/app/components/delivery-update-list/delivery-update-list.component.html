@@ -274,7 +274,7 @@
                                     </div>
                                 </td>
                                  <td  style="width:50;">
-                                   <input class="form-control" formControlName="DlyPerson"  placeholder="Delivered Person" appFocusNext [readonly]="isRequired('DeliveredTo', i) ? false : true"
+                                   <input class="form-control" formControlName="DlyPerson"  placeholder="Delivered Person" appFocusNext [readonly]="isRequired('DlyPerson', i) ? false : true"
                                    [ngClass]="{ 'border-danger': drsList.at(i).get('DlyPerson')?.invalid && drsList.at(i).get('DlyPerson')?.touched ,'required2': isRequired('DlyPerson', i)}">
                                      <div class="text-danger text-start" *ngIf="drsList.at(i).get('DlyPerson')?.invalid && drsList.at(i).get('DlyPerson')?.touched">
                                         This field is required.
@@ -282,7 +282,7 @@
                                 </td>
                                  <td  style="width:50;">
                                    <input class="form-control" formControlName="DlyContactNo"  placeholder="Contact No" minlength="10" maxlength="10" 
-                                   oninput="this.value = this.value.replace(/[^0-9]/g,'');" appFocusNext [readonly]="isRequired('DeliveredTo', i) ? false : true"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g,'');" appFocusNext [readonly]="isRequired('DlyContactNo', i) ? false : true"
                                    [ngClass]="{ 'border-danger': drsList.at(i).get('DlyContactNo')?.invalid && drsList.at(i).get('DlyContactNo')?.touched,'required2': isRequired('DlyContactNo', i) }">
                                      <div class="text-danger text-start" *ngIf="drsList.at(i).get('DlyContactNo')?.invalid && drsList.at(i).get('DlyContactNo')?.touched">
                                         This field is required.
