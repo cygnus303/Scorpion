@@ -47,7 +47,6 @@ public previewUrl: string | ArrayBuffer | null = null;
 public contractAmtMsg:string='';
 public contractExpiredMsg:string='';
 public deliveryZoneData:DeliveryZoneResponse[]=[];
-public isVehicleType:boolean = false;
 public isLoadingMF = false;
 public selectedFileName: string | null = null;
 public isImageFile: boolean = false;
@@ -77,6 +76,7 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
      const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
+      // this.docketService.loginUserList.LocationCode =  'KOL';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
@@ -90,11 +90,11 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
     this.challanService.getRateTypeData();
     this.challanService.getVendtyData();
     
+    this.challanService.getLocationData();
     if(this.docketService.loginUserList.Type === '1'){
       this.challanService.getChargesDetails();
       this.challanService.getRouteMode();
       this.challanService.getDepartmentReason();
-      this.challanService.getLocationData();
       this.challanService.getTDSLedgerList();
       this.getApprovedByData();
 
@@ -366,9 +366,12 @@ onDocketSelectionChange(ctrl: AbstractControl) {
   }
 
   getLoadingCharge(event: any) {
+    this.challanService.challanForm.patchValue({
+      VendName : event?.text
+    })
     const data = {
       loadUnloadType: 'L',
-      vendorCode: event,
+      vendorCode:  event?.value,
       typeModule: this.docketService.loginUserList.Type === "2" ? "P" : "D",
       chargeType: this.challanService?.filterList?.chrgType,
       brdc: this.docketService.loginUserList.LocationCode,
@@ -595,7 +598,6 @@ vendorCodeName(){
   getTripSheetList(event: any) {
     this.challanService.challanForm.patchValue({ mKTVehicleNo: ''});
 
-    this.isVehicleType = false;
     if (event.value !== 'O') {
       this.getNewVehicleDetail(event.value)
     } else {
@@ -1124,10 +1126,9 @@ checkLicenseExpiry(event?:any) {
     });
   }
 
-  onChangeVehicleType(event: any) {
-    this.isVehicleType = true;
-    this.getVehicleCapacity(event.typeCode);
-    this.challanService.challanForm.patchValue({fTLType: event.typeCode})
+   onChangeFTLType(event: any) {
+    const data = event.codeId ?event.codeId:event
+    this.getVehicleCapacity(data);
   }
 
   getCustomerListForTHC(event?: any) {
@@ -1301,10 +1302,10 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
               registrationDate: this.datePipe.transform(response.data.registrationDate, "dd MMMM yyyy"),
               driver1Name: response.data.driverName
             });
+            this.onChangeFTLType(response.data.fTlType);
             this.challanService.challanForm.patchValue({ ISNEWDA: false });
  
             this.challanService.getVendorsList('04');
-            this.isVehicleType = true;
             this.avalabledocketinPRS();
           } else {
             this.challanService.challanForm.patchValue({ ISNEWDA: true });
@@ -1327,7 +1328,8 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
               driver1LicenceValDate: null,
               registrationDate: null,
               driver1Name: null,
-              vehicleType: null
+              vehicleType: null,
+              vehicleCapacity:0
             });
           }
         }
