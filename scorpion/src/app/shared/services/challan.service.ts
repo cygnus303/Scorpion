@@ -780,7 +780,9 @@ onSubmit(){
     ERD:new Date(challanForm?.ERD).toISOString(),
     DAVendor:"",
     },
+    "CMR":null,
     "CTFD":{
+      THCNO:"N/A",
       ContractAmount:Number(challanForm?.contractAmount),
       StandardContractAmount:Number(challanForm?.standardContractAmount),
       NetAmount:challanForm?.netAmount,
@@ -810,6 +812,7 @@ onSubmit(){
       TDSOnAmount:Number(challanForm?.tDSOnAmount),
     },
     "CTVD":{
+      THCNO:"N/A",
       VehicleNO:challanForm?.vehicleNO?challanForm?.vehicleNO:'O',
       VehicleType:challanForm?.fTLType,
       FTLType:challanForm?.fTLType,
@@ -861,6 +864,7 @@ onSubmit(){
   }
   const formData = new FormData();
    this.appendObjectToFormData(formData, payload.CTH, "CVM.CTH");
+   this.appendObjectToFormData(formData, payload.CMR, "CVM.CMR");
   this.appendObjectToFormData(formData, payload.CTFD, "CVM.CTFD");
   this.appendObjectToFormData(formData, payload.CTVD, "CVM.CTVD");
   this.appendObjectToFormData(formData, payload.GC, "CVM.GC");
