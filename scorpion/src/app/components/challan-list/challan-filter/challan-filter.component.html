@@ -1,182 +1,153 @@
-   <div class="d-flex row col-md-10">
-         <div class="cnote-entry-container px-1 ">
-            <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
-                <i class="fas fa-filter me-2"></i>
-                CNote Criteria for {{typeName}}
-            </div>
+<div class="d-flex row col-md-10">
+    <div class="cnote-entry-container px-1 ">
+        <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+            <i class="fas fa-filter me-2"></i>
+            CNote Criteria for {{typeName}}
+        </div>
         <form [formGroup]="challanService.filterForm">
             <div class="form-grid p-4">
-                     <div class="row align-items-center mb-3">
+                <div class="row align-items-center mb-3">
                     <div class="col-md-3 text-start">
-                        <ng-select class="noFoundTextColor" placeholder="CNote Booking Date" [items]="dateType" bindLabel="text" bindValue="value" formControlName="bookingDateType">
+                        <ng-select class="noFoundTextColor" placeholder="CNote Booking Date" [items]="dateType"
+                            bindLabel="text" bindValue="value" formControlName="bookingDateType">
                         </ng-select>
                     </div>
                     <div class="col-md-5">
-                        <!-- <div class="input-group shadow-sm rounded "><span class="input-group-text bg-white border-end-0 p-2">
-                          <i class="fas fa-calendar-alt text-dark text-secondary"></i></span>
-                            <input type="text" placeholder="Daterangepicker" class="form-control border-start-1 text-center line-height" readonly bsDaterangepicker
-                                formControlName="dateRange" [bsConfig]="{ ranges: commonService.ranges ,rangeInputFormat: 'MMMM D, YYYY', dateInputFormat:
-                                                     'MMMM D, YYYY'}">
-                        </div> -->
                         <div class="input-group shadow-sm rounded" (click)="dvr.toggle()">
                             <span class="input-group-text bg-white border-end-0 p-2">
                                 <i class="fas fa-calendar-alt text-dark text-secondary"></i>
                             </span>
-                            <input type="text" placeholder="Daterangepicker" class="form-control border-start-1 text-center line-height"
-                                bsDaterangepicker #dvr="bsDaterangepicker" formControlName="dateRange" [class.disabled-input]="true"  [bsConfig]="{ ranges: commonService.ranges,containerClass: 'theme-dark-blue', rangeInputFormat: 'MMMM D, YYYY', dateInputFormat: 'MMMM D, YYYY'}" />
+                            <input type="text" placeholder="Daterangepicker" class="form-control border-start-1 text-center line-height" bsDaterangepicker
+                                #dvr="bsDaterangepicker" formControlName="dateRange" [class.disabled-input]="true"
+                                [bsConfig]="{ ranges: commonService.ranges,containerClass: 'theme-dark-blue', rangeInputFormat: 'MMMM D, YYYY', dateInputFormat: 'MMMM D, YYYY'}" />
                         </div>
+                    </div>
+                </div>
 
-                    </div>
-                </div>
                 <div class="row align-items-center mb-3">
-                        <label class="control-label col-md-1" style="text-align: left;"></label>
-                        <label class="form-label col-md-2 text-start fw-semibold">
-                            Select Paybas
-                        </label>
-                    <div class="col-md-5">
-                          <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Paybas"
-                                formControlName="paybas" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.PayBsData">
-                            </ng-select>
-                    </div>
-                </div>
-                 <div class="row align-items-center mb-3">
                     <label class="control-label col-md-1" style="text-align: left;"></label>
-                        <label class="form-label col-md-2 text-start fw-semibold">
-                            Select Mode
-                        </label>
+                    <label class="form-label col-md-2 text-start fw-semibold">
+                        Select Paybas
+                    </label>
                     <div class="col-md-5">
-                       <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Mode"
-                                formControlName="trnMod" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.modeData">
-                            </ng-select>
+                        <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Paybas"
+                            formControlName="paybas" bindLabel="codeDesc" bindValue="codeId"
+                            [items]="generalMasterService.PayBsData">
+                        </ng-select>
                     </div>
                 </div>
-                 <!-- <div class="row align-items-center mb-3">
+
+                <div class="row align-items-center mb-3">
                     <label class="control-label col-md-1" style="text-align: left;"></label>
-                        <label class="form-label col-md-2 text-start fw-semibold">
-                            Select Business Type
-                        </label>
+                    <label class="form-label col-md-2 text-start fw-semibold">
+                        Select Mode
+                    </label>
                     <div class="col-md-5">
-                        <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Business Type"
-                                formControlName="bustyp" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.businessTypedata">
-                            </ng-select>
-                    </div>
-                </div> -->
-                 <div class="row align-items-center mb-3">
-                     <label class="control-label col-md-1" style="text-align: left;"></label>
-                        <label class="form-label col-md-2 text-start fw-semibold">
-                           Loading By
-                        </label>
-                    <div class="col-md-5">
-                         <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Loading By" (change)="changeLoadingBy($event)"
-                                formControlName="loadingBy" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.loadingData">
-                            </ng-select>
+                        <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Mode"
+                            formControlName="trnMod" bindLabel="codeDesc" bindValue="codeId"
+                            [items]="generalMasterService.modeData">
+                        </ng-select>
                     </div>
                 </div>
-                 <div class="row align-items-center mb-3">
-                     <label class="control-label col-md-1" style="text-align: left;"></label>
-                        <label class="form-label col-md-2 text-start fw-semibold">
-                            Charge type
-                        </label>
-                    <div class="col-md-5">
-                         <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Charge type" [readonly]="challanService.filterForm.value.loadingBy === 'XX9'"
-                                formControlName="chrgType" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.chargeTypeData"
-                                [ngClass]="{ 'border-danger': challanService.filterForm.get('chrgType')?.invalid  && challanService.filterForm.get('chrgType')?.touched }"
-                                >
-                            </ng-select>
-                            <div class="text-danger text-start" *ngIf="challanService.filterForm.get('chrgType')?.hasError('required') && challanService.filterForm.get('chrgType')?.touched">
-                                This field is required.
-                            </div>
-                    </div>
-                </div>
-                 <!-- <div class="row align-items-center mb-3" *ngIf="this.docketService.loginUserList.Type === '2'">
-                     <label class="control-label col-md-1" style="text-align: left;"></label>
-                        <label class="form-label col-md-2 text-start fw-semibold">
-                            Select Booked Type
-                        </label>
-                    <div class="col-md-5">
-                         <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Booked Type"
-                                formControlName="BookedByType" bindLabel="text" bindValue="value" [items]="bookByTypeData" (change)="this.getBookedByData($event.value)">
-                            </ng-select>
-                    </div>
-                </div>
-                 <div class="row align-items-center mb-3">
+
+                <div class="row align-items-center mb-3">
                     <label class="control-label col-md-1" style="text-align: left;"></label>
-                        <label class="form-label col-md-2 text-start fw-semibold">
-                            Select Booked By
-                        </label>
+                    <label class="form-label col-md-2 text-start fw-semibold">
+                        Loading By
+                    </label>
                     <div class="col-md-5">
-                         <ng-select class="noFoundTextColor clear-icon"  [ngClass]="{ 'required2': challanService.filterForm.get('BookedByType')?.value === 'B'}" placeholder="Select Booked By"
-                                formControlName="BookedBy" bindLabel="text" bindValue="value" [items]="bookByData" [ngClass]="{ 'border-danger': challanService.filterForm.get('BookedBy')?.invalid  && challanService.filterForm.get('BookedBy')?.touched }">
-                            </ng-select>
-                             <div class="text-danger text-start" *ngIf="challanService.filterForm.get('BookedBy')?.hasError('required') && challanService.filterForm.get('BookedBy')?.touched">
-                                This field is required.
-                            </div>
+                        <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Loading By"
+                            (change)="changeLoadingBy($event)" formControlName="loadingBy" bindLabel="codeDesc"
+                            bindValue="codeId" [items]="generalMasterService.loadingData">
+                        </ng-select>
                     </div>
-                </div> -->
+                </div>
+
+                <div class="row align-items-center mb-3">
+                    <label class="control-label col-md-1" style="text-align: left;"></label>
+                    <label class="form-label col-md-2 text-start fw-semibold">
+                        Charge type
+                    </label>
+                    <div class="col-md-5">
+                        <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Charge type"
+                            [readonly]="challanService.filterForm.value.loadingBy === 'XX9'" formControlName="chrgType"
+                            bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.chargeTypeData"
+                            [ngClass]="{ 'border-danger': challanService.filterForm.get('chrgType')?.invalid  && challanService.filterForm.get('chrgType')?.touched }">
+                        </ng-select>
+                        <div class="text-danger text-start" *ngIf="challanService.filterForm.get('chrgType')?.hasError('required') && challanService.filterForm.get('chrgType')?.touched">
+                            This field is required.
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row align-items-center mb-3">
                     <label class="col-md-1"></label>
                     <label class="col-md-2 form-label fw-semibold text-start">
                         {{typeName}} type
                     </label>
                     <div class="col-md-5 ">
-                       <div class="d-flex gap-4">
-                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="DRSType" id="notThroughDa" value="N" formControlName="DRSType"
-                                [ngClass]="{ 'border-danger': challanService.filterForm.get('DRSType')?.invalid  && challanService.filterForm.get('DRSType')?.touched }"/>
-                            <label class="form-check-label" for="notThroughDa">
-                                Not Through DA
-                            </label>
+                        <div class="d-flex gap-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="DRSType" id="notThroughDa" value="N"
+                                    formControlName="DRSType"
+                                    [ngClass]="{ 'border-danger': challanService.filterForm.get('DRSType')?.invalid  && challanService.filterForm.get('DRSType')?.touched }" />
+                                <label class="form-check-label" for="notThroughDa">
+                                    Not Through DA
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="DRSType" id="throughDa" value="Y"
+                                    formControlName="DRSType"
+                                    [ngClass]="{ 'border-danger': challanService.filterForm.get('DRSType')?.invalid  && challanService.filterForm.get('DRSType')?.touched }" />
+                                <label class="form-check-label" for="throughDa">
+                                    Through DA
+                                </label>
+                            </div>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="DRSType" id="throughDa" value="Y" formControlName="DRSType" 
-                                [ngClass]="{ 'border-danger': challanService.filterForm.get('DRSType')?.invalid  && challanService.filterForm.get('DRSType')?.touched }"/>
-                            <label class="form-check-label" for="throughDa">
-                                Through DA
-                            </label>
+                        <div class="text-danger text-start"
+                            *ngIf="challanService.filterForm.get('DRSType')?.invalid && challanService.filterForm.get('DRSType')?.touched">
+                            Please select a {{typeName}} type
                         </div>
-                       </div>
-                       <div class="text-danger text-start" *ngIf="challanService.filterForm.get('DRSType')?.invalid && challanService.filterForm.get('DRSType')?.touched">
-                           Please select a {{typeName}} type
-                       </div>
                     </div>
                 </div>
-                    <div class="row align-items-center mb-3" *ngIf="this.docketService.loginUserList.Type === '3'">
-                        <label class="control-label col-md-1" style="text-align: left;"></label>
-                        <label class="form-label col-md-2 text-start fw-semibold">
-                            ODA type
-                        </label>
-                        <div class="col-md-5">
-                            <ng-select class="noFoundTextColor clear-icon" placeholder="Select an type" formControlName="odaType"
-                                bindLabel="text" bindValue="value" [items]="odaTypeList">
-                            </ng-select>
-                        </div>
+
+                <div class="row align-items-center mb-3" *ngIf="this.docketService.loginUserList.Type === '3'">
+                    <label class="control-label col-md-1" style="text-align: left;"></label>
+                    <label class="form-label col-md-2 text-start fw-semibold">
+                        ODA type
+                    </label>
+                    <div class="col-md-5">
+                        <ng-select class="noFoundTextColor clear-icon" placeholder="Select an type"
+                            formControlName="odaType" bindLabel="text" bindValue="value" [items]="odaTypeList">
+                        </ng-select>
                     </div>
-                  <div class="row align-items-center mb-3">
+                </div>
+
+                <div class="row align-items-center mb-3">
                     <div class="col-md-3 text-start"> </div>
                     <div class="col-md-5 text-start">
                         OR
                     </div>
                 </div>
-                  <div class="row align-items-center mb-3">
+                
+                <div class="row align-items-center mb-3">
                     <label class="control-label col-md-1" style="text-align: left;"></label>
-                        <label class="form-label col-md-2 text-start fw-semibold">
-                           CNote No.
-                        </label>
+                    <label class="form-label col-md-2 text-start fw-semibold">
+                        CNote No.
+                    </label>
                     <div class="col-md-5">
                         <input type="text" class="form-control" placeholder="CNote No." formControlName="docketList">
                     </div>
                 </div>
- 
+
                 <div class="p-4 bg-light">
                     <div class="col-md-12 d-flex gap-2">
                         <div class="col-md-8">
-                            <button type="button" class="btn btn-primary text-white btn-sm px-3" (click)="onSearch()"><i
-                                    class="fas fa-search"></i>&nbsp;Search</button>
+                            <button type="button" class="btn btn-primary text-white btn-sm px-3" (click)="onSearch()"><i class="fas fa-search"></i>&nbsp;Search</button>
                         </div>
                     </div>
                 </div>
             </div>
         </form>
-        </div>
- 
-   </div>
+    </div>
+</div>
