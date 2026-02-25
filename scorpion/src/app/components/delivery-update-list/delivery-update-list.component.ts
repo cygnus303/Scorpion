@@ -55,7 +55,7 @@ ngOnInit(){
   this.getDeliveryDetail();
   this.generalMasterService.getChargeTypeData();
   this.generalMasterService.getLoadingBy()
-  this.generalMasterService.getDeliveredToData()
+  this.generalMasterService.getDeliveryProcessData()
 }
 
 buildForm(){
