@@ -805,7 +805,7 @@ onSubmit(){
        TotalTDSAmount:Number(challanForm?.totalTDSAmount),
       TDSPercent:challanForm?.TDSPercent ? Number(challanForm?.TDSPercent): 0,
       Loadingcharge:Number(challanForm?.Loadingcharge),
-      LoadedRateType:"",
+      LoadedRateType:this.filterList?.chrgType || '',
       LoadedBy:this.filterList?.loadingBy ? this.filterList?.loadingBy:'',
       Rate:Number(challanForm?.rate),
       MaxLimit:0,
@@ -903,7 +903,7 @@ onSubmit(){
    formData.append("CVM.RatePerGramContractAmount", "");
    formData.append("CVM.ISAttechedVendor", this.generateData?.isAttechedVendor ?this.generateData?.isAttechedVendor :false );
    formData.append("CVM.ISContractualVendor", this.generateData?.isContractualVendor ? this.generateData?.isContractualVendor :false );
-   formData.append("CVM.RateType", "0");
+   formData.append("CVM.RateType", this.filterList?.chrgType || '');
    formData.append("CVM.IsMobileUser","true");
    formData.append("CVM.DemurrageCharge", "");
    formData.append("CVM.DiscountRatio", "");

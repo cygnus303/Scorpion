@@ -277,11 +277,13 @@ changeAmountApplicable(event:any){
 }
 
 onDocketSelectionChange(ctrl: AbstractControl) {
-  this.updateTotalDockets();
   if (ctrl.get('isSelected')?.value) {
-    this.getContractDetail(ctrl);
-      this.checkArrivalTime(ctrl);
+    this.checkArrivalTime(ctrl);
+    if (ctrl.get('isSelected')?.value) {
+      this.getContractDetail(ctrl);
+    }
   }
+  this.updateTotalDockets();
 }
 
   checkArrivalTime(ctrl: AbstractControl) {
@@ -513,9 +515,9 @@ validateVehicleNo() {
     filtered = filtered.slice(0, this.selectedDigit);
   }
   control.setValue(filtered, { emitEvent: false });
-  if ( filtered.length === this.selectedDigit && filtered !== this.lastFetchedVehicleNo) {
+  if (filtered.length === this.selectedDigit) {
     this.lastFetchedVehicleNo = filtered;
-    this.getVehicleDetail(filtered);
+    this.getVehicleDetail(filtered);  
   }
 }
 
@@ -576,9 +578,9 @@ vendorCodeName(){
           this.deliveryAgentService.getLicenceDetail(params).subscribe({ next: (response: any) => {
               if (response && response.data) {
                 this.challanService.challanForm.patchValue({
-                  driver1Name: response.data.bioFullName,
-                  driver1RTONo: response.data.omRtoFullname || '',
-                  driver1LicenceValDate: new Date(response.data.validTillDate) || ''
+                  driver1Name: response.data.bioFullName ? response.data.bioFullName : '',
+                  driver1RTONo: response.data.omRtoFullname ? response.data.omRtoFullname : '',
+                  driver1LicenceValDate: response.data.validTillDate ? new Date(response.data.validTillDate) : null
                 });
               }
             },
@@ -851,15 +853,18 @@ checkLicenseExpiry(event?:any) {
     });
   }
 
-  formatDate(dateStr: string): string {
-    if (!dateStr) return '';
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    }).replace(',', '');
-  }
+ formatDate(dateStr: string): string {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+  const months = [
+    'Jan','Feb','Mar','Apr','May','Jun',
+    'Jul','Aug','Sep','Oct','Nov','Dec'
+  ];
+  const month = months[date.getMonth()];
+  return `${day} ${month} ${year}`;
+}
 
   avalabledocketinPRS(event?: any) {
     if (this.docketService.loginUserList.Type === '1') {
