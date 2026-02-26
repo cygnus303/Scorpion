@@ -262,8 +262,8 @@
                                 <td>
                                     <textarea rows="2" class="form-control-textarea" formControlName="otp" placeholder="Enter OTP"></textarea>
                                 </td>
-                                 <td style="width:200px; max-width: 200px;">
-                                    <ng-select class="noFoundTextColor required2 clear-icon" formControlName="DeliveredTo" bindLabel="codeDesc"
+                                <td style="width:200px; max-width: 200px;">
+                                    <ng-select class="noFoundTextColor required2 clear-icon remove-white-space" formControlName="DeliveredTo" bindLabel="codeDesc"
                                         bindValue="codeId" [items]="generalMasterService.deliveredToData" placeholder="Select Reason" appFocusNext
                                         [ngClass]="{ 'border-danger': drsList.at(i).get('DeliveredTo')?.invalid && drsList.at(i).get('DeliveredTo')?.touched , 'required2': isRequired('DeliveredTo', i)}">
                                         <ng-template ng-option-tmp let-item="item">
