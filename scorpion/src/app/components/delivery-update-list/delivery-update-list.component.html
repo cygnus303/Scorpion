@@ -177,6 +177,9 @@
                             <th>Rate Type</th>
                             <th>Pkg / Act</th>
                             <th>OTP</th>
+                            <th>Delivered To</th>
+                            <th>Person Name</th>
+                            <th>Contact No.</th>
                         </tr>
                     </thead>
 
@@ -259,11 +262,37 @@
                                 <td>
                                     <textarea rows="2" class="form-control-textarea" formControlName="otp" placeholder="Enter OTP"></textarea>
                                 </td>
+                                 <td  style="width:200px;">
+                                     <ng-select formControlName="DeliveredTo" placeholder="Select Delivered To" appFocusNext [readonly]="isRequired('DeliveredTo', i) ? false : true"
+                                     [ngClass]="{ 'border-danger': drsList.at(i).get('DeliveredTo')?.invalid && drsList.at(i).get('DeliveredTo')?.touched , 'required2': isRequired('DeliveredTo', i)}">
+                                        <ng-option *ngFor="let item of generalMasterService.deliveryProcessData" [value]="item.codeId" [title]="item.codeDesc">
+                                            {{ item.codeDesc }} 
+                                        </ng-option>
+                                    </ng-select>
+                                    <div class="text-danger text-start" *ngIf="drsList.at(i).get('DeliveredTo')?.invalid && drsList.at(i).get('DeliveredTo')?.touched">
+                                        This field is required.
+                                    </div>
+                                </td>
+                                 <td  style="width:50;">
+                                   <input class="form-control" formControlName="DlyPerson"  placeholder="Delivered Person" appFocusNext [readonly]="isRequired('DlyPerson', i) ? false : true"
+                                   [ngClass]="{ 'border-danger': drsList.at(i).get('DlyPerson')?.invalid && drsList.at(i).get('DlyPerson')?.touched ,'required2': isRequired('DlyPerson', i)}">
+                                     <div class="text-danger text-start" *ngIf="drsList.at(i).get('DlyPerson')?.invalid && drsList.at(i).get('DlyPerson')?.touched">
+                                        This field is required.
+                                    </div>
+                                </td>
+                                 <td  style="width:50;">
+                                   <input class="form-control" formControlName="DlyContactNo"  placeholder="Contact No" minlength="10" maxlength="10" 
+                                   oninput="this.value = this.value.replace(/[^0-9]/g,'');" appFocusNext [readonly]="isRequired('DlyContactNo', i) ? false : true"
+                                   [ngClass]="{ 'border-danger': drsList.at(i).get('DlyContactNo')?.invalid && drsList.at(i).get('DlyContactNo')?.touched,'required2': isRequired('DlyContactNo', i) }">
+                                     <div class="text-danger text-start" *ngIf="drsList.at(i).get('DlyContactNo')?.invalid && drsList.at(i).get('DlyContactNo')?.touched">
+                                        This field is required.
+                                    </div>
+                                </td>
                             </tr>
 
                             <!-- 🔹 SUB ROW -->
                             <tr style="border-bottom: 1px solid rgb(190, 190, 190);">
-                                <td colspan="12">
+                                <td colspan="15">
                                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 ">
                                     
                                         <!-- LEFT SIDE -->

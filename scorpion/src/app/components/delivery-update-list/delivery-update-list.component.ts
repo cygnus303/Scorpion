@@ -32,6 +32,7 @@ export class DeliveryUpdateListComponent {
   public isRedirect:boolean = false;
   public drsDeliveryList:any[]=[];
   public isSubmit:boolean=false;
+  public isdeliveryRequired:boolean=false;
   maxCloseKMValue: number = 900000;
   
 
@@ -45,7 +46,7 @@ ngOnInit(){
       //   this.docketService.loginUserList.LocationCode =  'PIM';
       // this.docketService.loginUserList.loadBy = "B";
       // this.docketService.loginUserList.chargeType='1';
-      // this.docketService.loginUserList.drsId='DS/PIM/2526/002778';
+      // this.docketService.loginUserList.drsId='DS/PIM/2526/002794';
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
@@ -54,6 +55,7 @@ ngOnInit(){
   this.getDeliveryDetail();
   this.generalMasterService.getChargeTypeData();
   this.generalMasterService.getLoadingBy()
+  this.generalMasterService.getDeliveryProcessData()
 }
 
 buildForm(){
@@ -189,13 +191,30 @@ resetNewRateOnBlur(index: number): void {
          docksf:new FormControl(item.docksf),
          coddodcollected:new FormControl(item.coddodcollected),
          coD_DOD:new FormControl(item.coD_DOD),
-         coddodAmount:new FormControl(item.coddodAmount)
+         coddodAmount:new FormControl(item.coddodAmount),
+         DeliveredTo:new FormControl(item.deliveredTo),
+         DlyPerson:new FormControl(item.dlyPerson),
+         DlyContactNo:new FormControl(item.dlyContactNo)
       });
       group.get('ratetype')?.valueChanges.subscribe(() => this.calculateCharge(group));
       group.get('newRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
+    group.get('deliveredPkgs')?.valueChanges.subscribe(() => {
+  this.updateDeliveryValidators(group);
+});
       this.drsList.push(group);
+     this.updateDeliveryValidators(group);
     });
   }
+
+  isRequired(controlName: string, index: number): boolean {
+  const control = (this.drsList.at(index) as FormGroup).get(controlName);
+
+  if (!control) return false;
+
+  const validator = control.validator?.({} as AbstractControl);
+
+  return validator?.['required'] ?? false;
+}
 
     maxPendingValidator(pendingKey: string) {
   return (control: AbstractControl) => {
@@ -382,10 +401,51 @@ getPANnumberData(vendorCode:any){
     }
 }
 
+updateDeliveryValidators(row: FormGroup): void {
+  const delivered = Number(row.get('deliveredPkgs')?.value || 0);
+  const pending = Number(row.get('pkgs_Pending')?.value || 0);
+
+  const deliveredToCtrl = row.get('DeliveredTo');
+  const personCtrl = row.get('DlyPerson');
+  const contactCtrl = row.get('DlyContactNo');
+
+  if (delivered === pending && pending > 0) {
+
+    deliveredToCtrl?.setValidators([Validators.required]);
+
+    personCtrl?.setValidators([
+      Validators.required,
+      Validators.minLength(2)
+    ]);
+
+    contactCtrl?.setValidators([
+      Validators.required,
+      Validators.pattern('^[0-9]{10}$')
+    ]);
+
+  } else {
+
+    deliveredToCtrl?.clearValidators();
+    personCtrl?.clearValidators();
+    contactCtrl?.clearValidators();
+
+    deliveredToCtrl?.setValue(null, { emitEvent: false });
+    personCtrl?.setValue(null, { emitEvent: false });
+    contactCtrl?.setValue(null, { emitEvent: false });
+
+  }
+
+  deliveredToCtrl?.updateValueAndValidity({ emitEvent: false });
+  personCtrl?.updateValueAndValidity({ emitEvent: false });
+  contactCtrl?.updateValueAndValidity({ emitEvent: false });
+}
+
 onDeliveredBlur(index: number): void {
   const row = this.drsList.at(index) as FormGroup;
   const delivered = Number(row.get('deliveredPkgs')?.value || 0);
   const pending = Number(row.get('pkgs_Pending')?.value || 0);
+
+  this.updateDeliveryValidators(row);
 
   // 🔹 Clear old validators first
   row.get('cboReason')?.clearValidators();
@@ -410,6 +470,7 @@ onDeliveredBlur(index: number): void {
     show = true;
     reasonType = 'LATE_D';
   }
+
 
   if (show) {
     row.patchValue({ showReason: true ,cboReason:null});
@@ -679,6 +740,10 @@ hasPODError(): boolean {
     payBasis: row.payBasis || '',
     coddodAmount: Number(row.coddodAmount) || 0,
     cboLateReason: "",
+    DeliveredTo:row.DeliveredTo,
+    DlyContactNo:row.DlyContactNo,
+    DlyPerson: row.DlyPerson || '',
+ 
   }));
 
   const formData = new FormData();
