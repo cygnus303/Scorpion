@@ -262,14 +262,16 @@
                                 <td>
                                     <textarea rows="2" class="form-control-textarea" formControlName="otp" placeholder="Enter OTP"></textarea>
                                 </td>
-                                 <td  style="width:200px;">
-                                     <ng-select formControlName="DeliveredTo" placeholder="Select Delivered To" appFocusNext [readonly]="isRequired('DeliveredTo', i) ? false : true"
-                                     [ngClass]="{ 'border-danger': drsList.at(i).get('DeliveredTo')?.invalid && drsList.at(i).get('DeliveredTo')?.touched , 'required2': isRequired('DeliveredTo', i)}">
-                                        <ng-option *ngFor="let item of generalMasterService.deliveredToData" [value]="item.codeId" [title]="item.codeDesc">
-                                            {{ item.codeDesc }} 
-                                        </ng-option>
+                                 <td style="width:200px; max-width: 200px;">
+                                    <ng-select class="noFoundTextColor required2 clear-icon" formControlName="DeliveredTo" bindLabel="codeDesc"
+                                        bindValue="codeId" [items]="generalMasterService.deliveredToData" placeholder="Select Reason" appFocusNext
+                                        [ngClass]="{ 'border-danger': drsList.at(i).get('DeliveredTo')?.invalid && drsList.at(i).get('DeliveredTo')?.touched , 'required2': isRequired('DeliveredTo', i)}">
+                                        <ng-template ng-option-tmp let-item="item">
+                                            <div [title]="item.codeDesc">{{ item.codeDesc }}</div>
+                                        </ng-template>
                                     </ng-select>
-                                    <div class="text-danger text-start" *ngIf="drsList.at(i).get('DeliveredTo')?.invalid && drsList.at(i).get('DeliveredTo')?.touched">
+                                    <div class="text-danger text-start"
+                                        *ngIf="drsList.at(i).get('DeliveredTo')?.invalid && drsList.at(i).get('DeliveredTo')?.touched">
                                         This field is required.
                                     </div>
                                 </td>
