@@ -666,7 +666,11 @@ checkLicenseExpiry(event?:any) {
 }
 
   getPANnumberData(event: any) {
-    const vendorName = this.challanService.vendorsList.find((x: any) => x.vendor_Code === event)?.vendor_Name
+    let vendorName = this.challanService.vendorsList.find((x: any) => x.vendor_Code === event)?.vendor_Name;
+    if (vendorName) {
+      const idx = vendorName.lastIndexOf(':');
+      if (idx !== -1) vendorName = vendorName.substring(0, idx).trim();
+    }
     this.challanService.challanForm.patchValue({
       vehicleType: null,
       vehicleNO: null,
@@ -678,7 +682,7 @@ checkLicenseExpiry(event?:any) {
             lorryOwnerPanNo: response.data[0]?.panno,
             PANNO: response.data[0]?.panno
           })
-        }
+        } 
       },
       error: (err) => {
         this.sweetAlertService.error(err.error.message)
