@@ -46,7 +46,7 @@ ngOnInit(){
       //   this.docketService.loginUserList.LocationCode =  'PIM';
       // this.docketService.loginUserList.loadBy = "B";
       // this.docketService.loginUserList.chargeType='1';
-      // this.docketService.loginUserList.drsId='DS/PIM/2526/002794';
+      // this.docketService.loginUserList.drsId='DS/PIM/2526/002772';
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
@@ -55,7 +55,7 @@ ngOnInit(){
   this.getDeliveryDetail();
   this.generalMasterService.getChargeTypeData();
   this.generalMasterService.getLoadingBy()
-  this.generalMasterService.getDeliveryProcessData()
+  this.generalMasterService.getDeliveredToData()
 }
 
 buildForm(){

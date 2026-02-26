@@ -19,6 +19,7 @@ export class GeneralMasterService {
   public reasonData:PRSGeneralMasterResponse[]=[];
   public deliveryProcessData:PRSGeneralMasterResponse[]=[];
   public damageData:PRSGeneralMasterResponse[]=[];
+   public deliveredToData:PRSGeneralMasterResponse[]=[];
 
 
  constructor(
@@ -125,5 +126,14 @@ export class GeneralMasterService {
     });
   }
 
+   getDeliveredToData() {
+    this.THCMasterService.getGeneralMasterDetail('DLYTO').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.deliveredToData = response.data;
+        }
+      }
+    });
+  }
  
 }
