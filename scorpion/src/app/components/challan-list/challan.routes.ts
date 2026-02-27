@@ -28,6 +28,10 @@ export const ChallanRoutes: Routes = [
     path: 'StockUpdateDetails',
     loadComponent: () => import('../arrival-stock-update-list/arrival-stock-update-list.component').then(m => m.ArrivalStockUpdateListComponent),
     canActivate: [DocketGuard]
+  },
+  {
+    path: 'PRSArrivalDetails',
+    loadComponent: () => import('../prs-arrival-details/prs-arrival-details.component').then(m => m.PRSArrivalDetailsComponent),
   }
 
 ];
