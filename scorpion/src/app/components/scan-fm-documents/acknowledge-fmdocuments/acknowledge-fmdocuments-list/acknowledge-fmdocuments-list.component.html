@@ -1,0 +1,117 @@
+<div class="cnote-entry-container px-2">
+    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+        <i class="fas fa-list me-2"></i>
+        Forwarded Document List for Acknowledgement
+    </div>
+    <!-- Table Section -->
+    <div class="table-responsive m-3" style="max-height: 650px; overflow-y: auto; overflow-x: auto;">
+        <table class="table table-bordered table-hover align-middle mb-0 table-striped table-condensed flip-content">
+            <thead class="table-light text-center sticky-top bg-light">
+                <tr>
+                    <th style="width:40px;"><input type="checkbox" [checked]="isAllSelected()"
+                            (change)="toggleAll($event)"></th>
+                    <th>FM No</th>
+                    <th>Manual CNote No</th>
+                    <th>PFM Date</th>
+                    <th>FM Date</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>From-To</th>
+                    <th>FM Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="isLoading">
+                    <td colspan="10" class="text-center p-3">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- If no data found -->
+                <tr *ngIf="!isLoading && !(responseData?.listVWFDFAM?.length)">
+                    <td colspan="10" class="text-center text-muted p-3">
+                        No Record Found.
+                    </td>
+                </tr>
+                <tr *ngFor="let document of responseData?.listVWFDFAM">
+                    <td class="text-center"><input type="checkbox" [checked]="document.active"
+                            (change)="toggleSingle($event, document)"></td>
+                    <td>
+                        <span class="text-primary-color cursor-pointer" data-bs-toggle="modal"
+                            data-bs-target="#detailsModal" (click)="openDetails(document)">
+                            {{ document.fm_no }}
+                        </span>
+                    </td>
+                    <td></td>
+                    <td>{{document.pfmdt}}</td>
+                    <td>{{ document.fm_date | date:'M/d/yyyy h:mm:ss a' }}</td>
+                    <td class="text-center">{{document.fm_fwd_loccode}}</td>
+                    <td class="text-center">{{document.fm_ack_status}}</td>
+                    <td class="text-center">{{document.from_to}}</td>
+                    <td class="text-center">{{document.fM_Status}}</td>
+                    <td class="text-center">
+                        <span (click)="OnEditPage(document.fm_no)"
+                            class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer">
+                            <i class="fas fa-pen me-2 text-Secondary"></i> Edit </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Back Button -->
+<div class="d-flex justify-content-center bg-secondary-subtle p-4 gap-2 mt-4">
+    <button class="btn btn-secondary" (click)="goToBackList()">
+        ← Back
+    </button>
+    <button class="btn btn-success" [disabled]="!isAnySelected()" (click)="onSubmit()"> <i class="fas fa-check"></i>
+        Submit</button>
+</div>
+
+<div class="modal fade" id="detailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="cnote-entry-container p-3 pt-0" style="max-height: 550px; overflow-y: auto; overflow-x: auto;">
+                <div class="modal-body ">
+                    <table *ngIf="detailList?.length"
+                        class="table table-bordered table-striped table-condensed flip-content mb-0">
+                        <thead class="table-light sticky-top bg-light">
+                            <tr>
+                                <th>SrNo</th>
+                                <th>Dock No</th>
+                                <th>Dock Date</th>
+                                <th>From-To</th>
+                                <th>Origin-Destination</th>
+                                <th>Delivery Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of detailList; let i = index">
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ item.dockNo }}</td>
+                                <td>{{ item.dockDt | date:'d MMM yyyy' }}</td>
+                                <td>{{ item.from_To }}</td>
+                                <td>{{ item.orgn_Dest }}</td>
+                                <td>{{ item.dely_Date | date:'d MMM yyyy' }}</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

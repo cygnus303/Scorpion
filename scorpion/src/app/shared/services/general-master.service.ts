@@ -20,6 +20,7 @@ export class GeneralMasterService {
   public deliveryProcessData:PRSGeneralMasterResponse[]=[];
   public damageData:PRSGeneralMasterResponse[]=[];
    public deliveredToData:PRSGeneralMasterResponse[]=[];
+  public documentTypeList:PRSGeneralMasterResponse[]=[];
 
 
  constructor(
@@ -135,5 +136,15 @@ export class GeneralMasterService {
       }
     });
   }
+   getDocumentType(){
+    this.THCMasterService.getGeneralMasterDetail('FMDOC').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.documentTypeList = response.data;
+        }
+      },
+    });
+  }
+
  
 }

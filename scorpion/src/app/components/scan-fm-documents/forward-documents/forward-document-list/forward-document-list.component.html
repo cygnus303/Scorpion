@@ -1,0 +1,228 @@
+<form [formGroup]="forwardDocForm">
+    <div class="cnote-entry-container px-2">
+        <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+            <i class="fas fa-edit me-2"></i>
+            FM Query
+        </div>
+        <div class="form-grid p-4">
+            <div class="row pb-3">
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">FM Number</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" placeholder="System Generated"
+                                formControlName="FM_No" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">FM Date</label>
+                        <div class="col-sm-7">
+                            <div class="input-group" (click)="dp.toggle()">
+                                <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
+                                    [minDate]="commonService.minDate" [maxDate]="commonService.maxDate"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                                    placeholder="Enter FM Date" formControlName="FM_Date" required appFocusNext
+                                    [class.disabled-input]="true">
+                                <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 text-end">FM Entry Date</label>
+                        <div class="col-sm-7 text-start">
+                            {{ responseData?.fmEntryDate | date: 'M/d/yyyy h:mm:ss a' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-3">
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Manual FM Number</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" placeholder="Enter Manual FM Number"
+                                formControlName="Manual_FM_No">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Forward To</label>
+                        <div class="col-sm-7">
+                            <ng-select class="required2" placeholder="Enter Forward To" formControlName="Doc_FWD_To" (clear)="onClearForwardFeild()"
+                                [items]="DocToList" bindLabel="text" bindValue="value" (change)="onChangeForward($event)"
+                                [ngClass]="{'border-danger':forwardDocForm.get('Doc_FWD_To')?.invalid && forwardDocForm.get('Doc_FWD_To')?.touched}"
+                                ></ng-select>
+                                <div
+                                *ngIf="forwardDocForm.get('Doc_FWD_To')?.invalid && forwardDocForm.get('Doc_FWD_To')?.touched"
+                                class="text-danger col-md-7 text-start">
+                                This field is required.
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Customer/Location</label>
+                        <div class="col-sm-7" *ngIf="forwardDocForm.value.Doc_FWD_To === '1'">
+                            <ng-select class="required2" placeholder="Enter Customer/Location" formControlName="Loc_Cust_Code"
+                                (search)="getCustomerData($event)"
+                                [notFoundText]="notFoundTextValue"
+                                [ngClass]="{'border-danger':forwardDocForm.get('Loc_Cust_Code')?.invalid && forwardDocForm.get('Loc_Cust_Code')?.touched}"
+                                >
+                                <ng-option *ngFor="let item of customerData" [value]="item">
+                                    <strong>{{ item.id }}</strong> : {{ item.text }}
+                                </ng-option>
+                            </ng-select>
+                                <div
+                                *ngIf="forwardDocForm.get('Loc_Cust_Code')?.invalid && forwardDocForm.get('Loc_Cust_Code')?.touched"
+                                class="text-danger col-md-7 text-start">
+                                This field is required.
+                            </div> 
+                        </div>
+                        <div class="col-sm-7" *ngIf="forwardDocForm.value.Doc_FWD_To !== '1'">
+                                <input class="form-control required2" type="text" placeholder="Enter Customer/Location"
+                                formControlName="Loc_Cust_Code" [readonly]="forwardDocForm.value.Doc_FWD_To === '2'"
+                                [ngClass]="{'border-danger':forwardDocForm.get('Loc_Cust_Code')?.invalid && forwardDocForm.get('Loc_Cust_Code')?.touched}">
+                                 <div
+                                *ngIf="forwardDocForm.get('Loc_Cust_Code')?.invalid && forwardDocForm.get('Loc_Cust_Code')?.touched"
+                                class="text-danger col-md-7 text-start">
+                                This field is required.
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-3">
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Document Type</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" placeholder="Enter Manual Document Type"
+                                formControlName="FM_Doc_Type" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Courier Name</label>
+                        <div class="col-sm-7">
+                            <input class="form-control required2" type="text" placeholder="Enter Courier Name"
+                                formControlName="Courier_Code"
+                                [ngClass]="{'border-danger':forwardDocForm.get('Courier_Code')?.invalid && forwardDocForm.get('Courier_Code')?.touched}">
+                                 <div
+                                *ngIf="forwardDocForm.get('Courier_Code')?.invalid && forwardDocForm.get('Courier_Code')?.touched"
+                                class="text-danger col-md-7 text-start">
+                                This field is required.
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Way Bill No</label>
+                        <div class="col-sm-7">
+                            <input class="form-control required2" type="text" placeholder="Enter Way Bill No"
+                                formControlName="Courier_Way_Bill_No"
+                                [ngClass]="{'border-danger':forwardDocForm.get('Courier_Way_Bill_No')?.invalid && forwardDocForm.get('Courier_Way_Bill_No')?.touched}">
+                                 <div
+                                *ngIf="forwardDocForm.get('Courier_Way_Bill_No')?.invalid && forwardDocForm.get('Courier_Way_Bill_No')?.touched"
+                                class="text-danger col-md-7 text-start">
+                                This field is required.
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-3">
+                <div class="col-4">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Way Bill Date</label>
+                        <div class="col-sm-7">
+                               <div class="input-group" >
+                                <input type="text" class="form-control uppercase-none required2" #dw="bsDatepicker" bsDatepicker
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY'}"
+                                    placeholder="Enter FM Date" formControlName="Courier_Way_Bill_Date" required appFocusNext
+                                    [class.disabled-input]="true"
+                                    [ngClass]="{'border-danger':forwardDocForm.get('Courier_Way_Bill_Date')?.invalid && forwardDocForm.get('Courier_Way_Bill_Date')?.touched}">
+                                <span class="input-group-text cursor-pointer" (click)="dw.toggle()">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                 <div
+                                *ngIf="forwardDocForm.get('Courier_Way_Bill_Date')?.invalid && forwardDocForm.get('Courier_Way_Bill_Date')?.touched"
+                                class="text-danger col-md-7 text-start">
+                                This field is required.
+                            </div> 
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cnote-entry-container px-2">
+        <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+            <i class="fas fa-list me-2"></i>
+            Document List
+        </div>
+        <!-- Table Section -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th style="width:40px;"><input type="checkbox" [checked]="isAllSelected()" (change)="toggleAll($event)"></th>
+                        <th>CNote</th>
+                        <th>Manual CNote</th>
+                        <th>Origin - Destination</th>
+                        <th>From - To</th>
+                        <th>Dely. Date</th>
+                        <th>Amount</th>
+                        <th>Scan Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="isLoading">
+                        <td colspan="8" class="text-center p-3">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- If no data found -->
+                    <tr *ngIf="!isLoading && !(responseData?.docketList?.length)">
+                        <td colspan="8" class="text-center text-muted p-3">
+                            No Record Found.
+                        </td>
+                    </tr>
+                    <tr *ngFor="let document of responseData?.docketList">
+                        <td class="text-center"><input type="checkbox" [checked]="document.isChecked" (change)="toggleSingle($event, document)"></td>
+                        <td>{{document.dockno}}</td>
+                        <td>{{document.manual_dockno}}</td>
+                        <td>{{document.loc}}</td>
+                        <td>{{document.from_to}}</td>
+                        <td class="text-center">{{document.dely_date}}</td>
+                        <td class="text-center">{{document.dkttot}}</td>
+                        <td class="text-center">{{document.scaned}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+
+<!-- Back Button -->
+<div class="d-flex justify-content-center bg-secondary-subtle p-4 gap-2 mt-4">
+    <button class="btn btn-secondary" (click)="goToBackList()">
+        ← Back to Criteria
+    </button>
+    <button class="btn btn-success" [disabled]="!isAnySelected()" (click)="onSubmit()"> <i class="fas fa-check"></i> Submit</button>
+</div>

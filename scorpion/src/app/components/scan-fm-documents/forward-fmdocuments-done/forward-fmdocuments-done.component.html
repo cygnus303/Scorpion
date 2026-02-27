@@ -1,0 +1,46 @@
+<div class="d-flex align-items-center justify-content-center" style="margin-top:10%;">
+  <div class="card shadow-lg border-0" style="width: 50%;">
+    
+    <!-- Header -->
+    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+      <i class="fas fa-check me-2"></i>
+      Forward FM Ack Documents is Successfully DONE
+    </div>
+    
+    <!-- Body -->
+    <div class="card-body">
+      <table class="table table-bordered table-striped text-center align-middle">
+        <thead class="table-light">
+          <tr>
+            <th class="text-center">FM No.</th>
+            <th class="text-center">Document Type</th>
+            <th class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-center"><b>{{ fmNo }}</b></td>
+            <td class="text-center"><b>{{ fmType }}</b></td>
+            <td class="text-center">
+              <a  class="text-decoration-none cursor-pointer" >
+                <i class="fas fa-print me-1"></i>View 
+                <span class="mx-1">||</span> 
+                  Print
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Footer Section -->
+      <div class="mt-3">
+        <span class="p-2 bg-danger text-light">NOTE!</span>
+        <span class="ms-2 cursor-pointer">
+            <span *ngIf="this.type === '2'"  [routerLink]="['Document/AcknowledgeFMDocumentsQuery']">Acknowledge documents |  </span>
+            <span [routerLink]="['Document/ForwardFMDocumentsQuery']"> Forward Document |</span>
+            <span> Click here to Scan Document</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

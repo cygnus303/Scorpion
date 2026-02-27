@@ -1,0 +1,118 @@
+<div class="cnote-entry-container px-2">
+    <!-- Header Bar -->
+    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+        <i class="fas fa-filter me-2"></i>
+        POD PFM Uplaod
+    </div>
+    <form [formGroup]="podpFmCriteriaForm">
+        <div class="form-grid p-4">
+            <!-- Row 3 -->
+            <div class="row pb-3">
+                <div class="col-md-2 col-form-label text-end">Select Location :</div>
+                <div class="col-md-3">
+                    <div class="input-group shadow-sm rounded" (click)="dvr.toggle()">
+                        <span class="input-group-text bg-white border-end-0 p-2">
+                            <i class="fas fa-calendar-alt text-dark text-secondary"></i>
+                        </span>
+                        <input type="text" placeholder="Daterangepicker"
+                            class="form-control border-start-1 text-center line-height uppercase-none "
+                            bsDaterangepicker #dvr="bsDaterangepicker" [class.disabled-input]="true"
+                            formControlName="dateRange"
+                            [bsConfig]="{ ranges: commonService.ranges, rangeInputFormat: 'MMMM D, YYYY', containerClass: 'theme-dark-blue', dateInputFormat: 'MMMM D, YYYY'}" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row pb-3">
+                <div class="col-md-2 col-form-label text-end">Select Location : </div>
+                <div class="col-md-3">
+                    <ng-select class="noFoundTextColor clear-icon" placeholder="Enter Branch" formControlName="fromloc"
+                        notFoundText="No matches found" (search)="scanFmDocumentsService.getLocationDetail($event)"
+                        [notFoundText]="scanFmDocumentsService.nextLocationValue"
+                        (open)="scanFmDocumentsService.resetNextLocationDropdown()">
+                        <ng-option *ngFor="let item of scanFmDocumentsService.locationData" [value]="item.id">
+                            <strong>{{ item.id }}</strong> : {{ item.text }}
+                        </ng-option>
+                    </ng-select>
+                </div>
+            </div>
+
+        </div>
+    </form>
+    <div class="bg-secondary-subtle p-4 gap-2">
+        <div class="row pb-3">
+            <div class="col-md-4 col-form-label text-center">
+                <button class="btn btn-success" (click)="goToForwardList()"> <i class="fas fa-search"></i> Get List</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="cnote-entry-container mt-4" *ngIf="showDocumentList">
+        <!-- Header Bar -->
+        <div
+            class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
+            <div>
+                <i class="fas fa-list me-2"></i>
+                POD PFM List
+            </div>
+            <div class="gap-2 d-flex align-items-center">
+                <input class="form-control" placeholder="Enter Search" [(ngModel)]="searchText">
+                <button class="btn btn-success" style="width: 200px;" (click)="downloadExcel()">Download XLS</button>
+            </div>
+        </div>
+
+          <div class="text-center p-3 ">
+                <p><strong>{{scanFmDocumentsService.companyMasterDetailsList?.companY_NAME}}</strong></p>
+                <p><strong>Address</strong> : {{scanFmDocumentsService.companyMasterDetailsList?.address}}</p>
+                <p><strong>WhatsApp No.</strong> : {{scanFmDocumentsService.companyMasterDetailsList?.whatsAppNo}} <strong>/</strong> <strong>E-Mail</strong> :{{scanFmDocumentsService.companyMasterDetailsList?.eMailId}}</p>
+                <p class="mb-0"><strong>Web</strong> : <a [href]="scanFmDocumentsService.companyMasterDetailsList?.webSite" target="_blank">{{scanFmDocumentsService.companyMasterDetailsList?.webSite}}</a></p>
+        </div>
+
+        <div class="table-responsive m-3 p-3" style="max-height: 650px; overflow-y: auto; overflow-x: auto;">
+            <table class="table table-bordered align-middle mb-0 table-condensed flip-content">
+                <thead class="table-light text-center sticky-top bg-light">
+                    <tr>
+                        <th>Sr No</th>
+                        <th>Docket No</th>
+                        <th>Docket Date</th>
+                        <th>Delivery Date</th>
+                        <th>Upload Date Time</th>
+                        <th>User Id</th>
+                        <th>User Name</th>
+                        <th>Branch</th>
+                        <th>Is New Portal</th>
+                        <th>POD Type</th>
+                        <th>POD Remark</th>
+                    </tr>
+                </thead>
+                <tbody>
+                     <tr *ngIf="loading">
+                        <td colspan="11" class="text-center p-3">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- If no data found -->
+                    <tr *ngIf="!loading && !(filteredDocuments?.length)">
+                        <td colspan="11" class="text-center text-muted p-3">
+                            No Record Found.
+                        </td>
+                    </tr>
+                    <tr *ngFor="let item of filteredDocuments;let i=index">
+                        <td>{{i+1}}</td>
+                        <td>{{item.dockno}}</td>
+                        <td>{{item.dockdt}}</td>
+                        <td>{{item.dely_Date}}</td>
+                        <td>{{item.documentDate | date:'M/d/yyyy h:mm:ss a'}}</td>
+                        <td>{{item.entryBy}}</td>
+                        <td>{{item.userNm}}</td>
+                        <td>{{item.location}}</td>
+                        <td>{{item.isCP?'YES':'NO'}}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
