@@ -608,3 +608,18 @@ input[readonly] {
 .text-primary-color{
   color: #428bca !important;
 }
+
+/* Input + button group */
+.custom-input-group {
+  .form-control {
+    border-radius: 0 !important;
+  }
+
+  .btn-add {
+    background-color: #003366; /* Dark blue (section header color) */
+
+    &:hover {
+      background-color: #00509e; /* Lighter blue on hover */
+    }
+  }
+}

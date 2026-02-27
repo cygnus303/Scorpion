@@ -44,7 +44,7 @@ export class DocketGuard implements CanActivate {
        else if (currentRoute.includes("Challan") || currentRoute.includes("ChallanList")) {
         return this.handleChallanfilter(parsedData);
       } 
-      else if (currentRoute.includes("docketEditCretria") || currentRoute.includes("docket") || currentRoute.includes("delivery-agent")) {
+      else if (currentRoute.includes("docketEditCretria") || currentRoute.includes("docket") || currentRoute.includes("delivery-agent") || currentRoute.includes("ScanFMDocuments")) {
         return this.handleNormalDocket(parsedData);
       } 
       else {
