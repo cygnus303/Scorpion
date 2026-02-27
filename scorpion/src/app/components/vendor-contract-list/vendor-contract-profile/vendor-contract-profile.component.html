@@ -1,0 +1,265 @@
+<div class="cnote-entry-container px-1">
+    <!-- <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+    <i class="fa fa-edit me-2"></i>
+    Vendor Contract Profile
+  </div> -->
+    <div class="form-grid p-4">
+        <form [formGroup]="vendorProfileForm">
+            <div class="row">
+                <div class="col-md-4 form-column ">
+                    <div class="form-group">
+                        <label class="col-md-5">Contract Code</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " placeholder="System Generated" formControlName="CONTRACTCD">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column">
+                    <div class="form-group">
+                        <label class="col-md-5">Vendor Name</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " placeholder="Vendor Name" formControlName="VendorName"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column">
+                    <div class="form-group">
+                        <label class="col-md-5">Vendor Type</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " placeholder="Vendor Type" formControlName="VendorTypeName"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-column ">
+                    <div class="form-group mb-1"><label class="col-md-5">Contract Date</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control required2" placeholder="Contract Date" formControlName="ContractDt"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column ">
+                    <div class="form-group mb-1"><label class="col-md-5">Effective From Date</label>
+                        <div class="col-md-7">
+                            <ng-select class="noFoundTextColor required2" placeholder="Effective From Date" formControlName="Start_Dt"></ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column">
+                    <div class="form-group mb-1">
+                        <label class="col-md-5">Valid Until</label>
+                        <div class="col-md-7">
+                            <div class="input-group">
+                                <input type="text" class="form-control uppercase-none required2" #dp="bsDatepicker"
+                                    bsDatepicker placeholder="Valid Until" required formControlName="Valid_uptodt"
+                                    [class.disabled-input]="true">
+                                <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-column ">
+                    <div class="form-group mb-1"><label class="col-md-5">Contract Location</label>
+                        <div class="col-md-7">
+                            <ng-select class="noFoundTextColor" placeholder="Contract Signing Location" formControlName="Contract_loccode"></ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column ">
+                    <div class="form-group mb-1"><label class="col-md-5">Representative</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " placeholder="Vendor Representative" formControlName="VendorPerName"/>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column">
+                    <div class="form-group mb-1">
+                        <label class="col-md-5">Designation</label>
+                        <div class="col-md-7">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Vendor Designation" formControlName="VendorPerDesg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-column ">
+                    <div class="form-group mb-1"><label class="col-md-5">Employee Name</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " placeholder="Company employee name" formControlName="CompEmpName"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column ">
+                    <div class="form-group mb-1"><label class="col-md-5">Vendor Witness</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " placeholder="Vendor Witness" formControlName="VendorWitness"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column">
+                    <div class="form-group mb-1">
+                        <label class="col-md-5">Designation</label>
+                        <div class="col-md-7">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Employee Designation" formControlName="CompEmpDesg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-column ">
+                    <div class="form-group mb-1"><label class="col-md-5">Vendor Address</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " placeholder="Vendor Address" formControlName="Vendor_Address"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column ">
+                    <div class="form-group mb-1"><label class="col-md-5">Company Witness</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " placeholder="Company Witness" formControlName="CompWitness"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column">
+                    <div class="form-group mb-1">
+                        <label class="col-md-5">City- Pin</label>
+                        <div class="col-md-7">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Vendor City" formControlName="VendorCity">
+                                <input type="text" class="form-control" placeholder="Vendor City" formControlName="VendorPin">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-column ">
+                    <div class="form-group mb-1"><label class="col-md-5">TDS Applicable</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column ">
+                    <div class="form-group mb-1"><label class="col-md-5">Vendor Category</label>
+                        <div class="col-md-7">
+                            <ng-select class="noFoundTextColor required2"
+                                placeholder="Select Vendor Category"></ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column">
+                    <div class="form-group mb-1">
+                        <label class="col-md-5">Contract Category</label>
+                        <div class="col-md-7">
+                            <div class="input-group">
+                                <ng-select class="noFoundTextColor required2"
+                                    placeholder="select Contract Category"></ng-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-column ">
+                    <div class="form-group mb-1"><label class="col-md-5">TDS Rate</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " placeholder="Select TDS Rate" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column ">
+                    <div class="form-group mb-1"><label class="col-md-5">Deposit Cheque(s)</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " placeholder="Security Deposit Cheque(s)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column">
+                    <div class="form-group mb-1">
+                        <label class="col-md-5">Payment Interval</label>
+                        <div class="col-md-7">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Select Payment Interval">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-column ">
+                    <div class="form-group mb-1"><label class="col-md-5">Deposit Date</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " placeholder="Deposit Date" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column ">
+                    <div class="form-group mb-1"><label class="col-md-5">Deposit Amount</label>
+                        <div class="col-md-7">
+                            <input class="form-control" placeholder="Deposit Amount">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column">
+                    <div class="form-group mb-1">
+                        <label class="col-md-5">Payment Basis</label>
+                        <div class="col-md-7">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Select Security Payment Basis">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-column ">
+                    <div class="form-group mb-1"><label class="col-md-5">Payment Location</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " placeholder="Select Payment Location" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column ">
+                    <div class="form-group mb-1"><label class="col-md-5">Phone Charges</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " placeholder="Phone Charges" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column">
+                    <div class="form-group mb-1">
+                        <label class="col-md-5">Default Charges</label>
+                        <div class="col-md-7">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Default Charges">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-column ">
+                    <div class="form-group mb-1"><label class="col-md-5">Attachments</label>
+                        <div class="col-md-7">
+                            <input type="file" class="form-control " />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="d-flex justify-content-center bg-secondary-subtle p-4 gap-2 mt-4">
+    <button class="btn btn-primary"> Continue</button>
+</div>
