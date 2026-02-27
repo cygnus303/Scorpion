@@ -83,8 +83,8 @@
                             </span>
                         </td>
                         <!-- <td><input type="text" formControlName="frontDoc" class="form-control"></td> -->
-                        <td>
-                            <div class="d-flex align-items-center gap-2">
+                        <td style="min-width: 150px">
+                            <div class="d-flex align-items-center gap-2 justify-content-center">
 
                                 <!-- Image Preview -->
                                 <img *ngIf="row.get('frontPreview')?.value" [src]="row.get('frontPreview')?.value"
@@ -120,8 +120,8 @@
                             </span>
                         </td>
                         <!-- <td><input type="text" formControlName="backDoc" class="form-control"></td> -->
-                        <td>
-                            <div class="d-flex align-items-center gap-2">
+                        <td style="min-width: 150px">
+                            <div class="d-flex align-items-center gap-2 justify-content-center">
 
                                 <img *ngIf="row.get('backPreview')?.value" [src]="row.get('backPreview')?.value"
                                     width="60" height="60" class="border rounded" />

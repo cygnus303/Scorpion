@@ -21,9 +21,6 @@ export class ForwardDocumentListComponent {
   public filterData:any;
   public responseData:any;
   public isLoading = false;
-  public documentList: any[] = [];
-  public fromDate:any;
-  public toDate:any;
   public notFoundTextValue = 'Please enter at least 1 characters';
 
   public DocToList = [
@@ -116,9 +113,9 @@ getForwardFMDocumentList() {
       fromDate: this.filterData?.dateRange?.[0]? new Date(this.filterData.dateRange[0]).toISOString(): null,
       toDate: this.filterData?.dateRange?.[1]? new Date(this.filterData.dateRange[1]).toISOString(): null,
       fmDate: this.forwardDocForm.value.FM_Date
+   };
 
-    }
-    this.PFMService.getForwardFMDocuments(payload).subscribe({
+   this.PFMService.getForwardFMDocuments(payload).subscribe({
       next: (response) => {
          this.responseData = response.data;
       },

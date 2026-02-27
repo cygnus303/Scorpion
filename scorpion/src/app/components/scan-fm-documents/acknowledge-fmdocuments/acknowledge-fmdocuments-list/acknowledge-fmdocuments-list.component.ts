@@ -20,7 +20,7 @@ export class AcknowledgeFmdocumentsListComponent {
    public responseData: any;
    env = environment;
    constructor(private router: Router, private PFMService: PFMService, private docketService: DocketService) { }
-   
+
    goToBackList() {
       this.router.navigate(['/Document/AcknowledgeFMDocumentsQuery']);
    }
