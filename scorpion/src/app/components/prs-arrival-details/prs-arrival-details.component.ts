@@ -44,10 +44,10 @@ ngOnInit(){
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      this.docketService.loginUserList.LocationCode =  'PIM';
-      this.docketService.loginUserList.loadBy = "B";
-      this.docketService.loginUserList.chargeType='1';
-      this.docketService.loginUserList.id='PS/PIM/2526/002510';
+      // this.docketService.loginUserList.LocationCode =  'PIM';
+      // this.docketService.loginUserList.loadBy = "B";
+      // this.docketService.loginUserList.chargeType='1';
+      // this.docketService.loginUserList.id='PS/PIM/2526/002515';
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
@@ -333,14 +333,14 @@ onSubmit() {
     console.log("FINAL PAYLOAD", payload);
     this.isSubmitting=true;
     this.THCService.prsArrival(params, payload).subscribe({
-      next: (res) => {
-        if(res){
+      next: (res:any) => {
+        if(res.success){
           console.log("Success", res);
              this.isRedirect = true;
-            // window.parent.location.href = `${this.env.liveUrl}Operation/PRSArrivalDone?PDCNo=PS%2FPIM%2F2526%2F002511&Tot_Charge=480.00&HcNumber=HC%2FPIM%2F2526%2F005051&TranXaction=Done`;
+            window.parent.location.href = `${this.env.liveUrl}Operation/PRSArrivalDone?PDCNo=${res.pdcNo}&Tot_Charge=${res.totCharge}&HcNumber=${res.hcNumber}&TranXaction=Done`;
           this.isSubmitting=false;
         }else{
-          // this.sweetAlertService.error(res?.message)
+          this.sweetAlertService.error(res?.message)
         }
       },
       error: (err) => {
