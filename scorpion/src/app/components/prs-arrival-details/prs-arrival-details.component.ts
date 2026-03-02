@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, FormArray } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, FormArray, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DocketService } from 'app/shared/services/docket.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { PrsArrivalDetailsService } from 'app/shared/services/prs-arrival-details.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
+import { environment } from 'environments/environment';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @Component({
@@ -20,8 +22,22 @@ export class PRSArrivalDetailsComponent {
   public prsArrivalForm!:FormGroup;
   public PRSArrivalDetails:any;
   public dockList: any[] = [];
+  public docketList:[]=[];
+  public isLoading = false;
+  public isSubmitting:boolean = false;
+  env = environment;
+  public isRedirect:boolean = false;
+
   
-  constructor(public docketService:DocketService,public generalMasterService:GeneralMasterService,private THCService:THCMasterService , public prsArrivalDetailsService:PrsArrivalDetailsService){}
+
+  
+  constructor(
+    public docketService:DocketService,
+    public generalMasterService:GeneralMasterService,
+    private THCService:THCMasterService , 
+    public prsArrivalDetailsService:PrsArrivalDetailsService,
+    private sweetAlertService:SweetAlertService
+  ){}
   
 ngOnInit(){
    const saved = localStorage.getItem("loginUserList");
@@ -46,6 +62,8 @@ get pdcControls() {
   }
 
   getDeliveryDetail() {
+   this.isLoading = true;
+
     const payload = {
       id: this.docketService.loginUserList.id,
       rateType: this.docketService.loginUserList.chargeType,
@@ -59,19 +77,23 @@ get pdcControls() {
           actuwt: response.pavm.actuwt,
           LoadingBy: this.docketService.loginUserList.loadBy
         });
-        const docketList = response.listPAVM || [];
-        docketList.forEach((item: any) => {
+        this.docketList = response.listPAVM || [];
+        this.docketList.forEach((item: any) => {
           item.rateType = this.docketService.loginUserList.chargeType;
         });
         const arr = this.prsArrivalForm.get('pdcDetails') as FormArray;
         if (arr) {
           arr.clear();
-          docketList.forEach((item: any) => arr.push(this.createPdcGroup(item)));
+          this.docketList.forEach((item: any) => arr.push(this.createPdcGroup(item)));
         }
         this.prsArrivalDetailsService.getVendorsList(this.docketService.loginUserList.loadBy);
       },
+       complete: () => {
+         this.isLoading = false;
+      },
       error: (err) => {
         console.error('Delivery Detail API Error', err);
+         this.isLoading = false;
       }
     });
   }
@@ -149,12 +171,12 @@ buildForm(){
   this.prsArrivalForm = new FormGroup({
     arrivalDate:new FormControl(new Date()),
     actuwt:new FormControl(null),
-    LoadingBy:new FormControl(null),
+    LoadingBy:new FormControl(null,[Validators.required]),
     LoadingCharge:new FormControl(0),
     rate:new FormControl(null),
     closeKM:new FormControl(0),
     ratetype:new FormControl(null),
-    vendorCode:new FormControl(null),
+    vendorCode:new FormControl(null,[Validators.required]),
     vendorName:new FormControl(null),
     pdcDetails: new FormArray([])
   })
@@ -182,7 +204,6 @@ private createPdcGroup(item: any): FormGroup {
 }
 
   calculateCharge(group: FormGroup): void {
-    debugger
     const isValid = this.validateRate(group);
     if (!isValid) {
       group.get('totalLoadingCharge')?.setValue((0).toFixed(2), { emitEvent: false });
@@ -261,4 +282,76 @@ private createPdcGroup(item: any): FormGroup {
 
     this.prsArrivalForm.get('LoadingCharge')?.setValue(total.toFixed(2), { emitEvent: false });
   }
+
+onSubmit() {
+  if (this.prsArrivalForm.valid) {
+    const params = {
+      baseLocationCode: this.docketService.loginUserList.LocationCode,
+      BaseCompanyCode: this.docketService.loginUserList.Companycode,
+      userid: this.docketService.loginUserList.UserId
+    };
+
+    const payload = {
+      pavm: {
+        ...this.PRSArrivalDetails,
+        unloadBy: this.docketService.loginUserList.loadBy,
+        rateType: this.docketService.loginUserList.chargeType,
+        vendorCode_new: this.prsArrivalForm.value.vendorCode,
+        vendorName_new: this.prsArrivalForm.value.vendorName,
+        ratetype1: this.docketService.loginUserList.chargeType,
+        monthlyRate: "",
+        arrivalDT: this.prsArrivalForm.value.arrivalDate
+          ? new Date(this.prsArrivalForm.value.arrivalDate).toISOString()
+          : new Date().toISOString(),
+
+        dockdt: this.PRSArrivalDetails?.dockdt,
+        isEnabled: true,
+        loadingCharge: this.prsArrivalForm.value.LoadingCharge
+      },
+      pdcDetail: this.docketList.map((item: any, index: number) => {
+        const formItem = this.prsArrivalForm.value.pdcDetails[index];
+        return {
+          ...item,
+          unloadBy: this.docketService.loginUserList.loadBy,
+          rateType: formItem.ratetype,
+          vendorCode_new: this.prsArrivalForm.value.vendorCode,
+          vendorName_new: this.prsArrivalForm.value.vendorName,
+          ratetype1: formItem.ratetype,
+          monthlyRate: "",
+          newRate: formItem.newRate,
+          arrivalDT: this.prsArrivalForm.value.arrivalDate
+            ? new Date(this.prsArrivalForm.value.arrivalDate).toISOString()
+            : new Date().toISOString(),
+          dockdt: item.dockdt,
+          isEnabled: true
+        };
+
+      }),
+
+    };
+
+    console.log("FINAL PAYLOAD", payload);
+    this.isSubmitting=true;
+    this.THCService.prsArrival(params, payload).subscribe({
+      next: (res) => {
+        if(res){
+          console.log("Success", res);
+             this.isRedirect = true;
+            // window.parent.location.href = `${this.env.liveUrl}Operation/PRSArrivalDone?PDCNo=PS%2FPIM%2F2526%2F002511&Tot_Charge=480.00&HcNumber=HC%2FPIM%2F2526%2F005051&TranXaction=Done`;
+          this.isSubmitting=false;
+        }else{
+          // this.sweetAlertService.error(res?.message)
+        }
+      },
+      error: (err) => {
+        console.error("Error", err);
+        this.isSubmitting=false;
+         this.isRedirect = false;
+      }
+    });
+
+  } else {
+    this.prsArrivalForm.markAllAsTouched();
+  }
+}
 }

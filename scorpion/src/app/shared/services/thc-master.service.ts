@@ -161,4 +161,8 @@ export class THCMasterService {
   getPRSArrivalDetails(data: any) {
     return this.apiHandlerService.Get(`THC/PRSArrivalDetails?id=${data.id}&rateType=${data.rateType}&unloadBy=${data.unloadBy}&baseLocationCode=${data.baseLocationCode}`);
   }
+
+  prsArrival(params:any,paylaod:any){
+    return this.apiHandlerService.Post(`THC/PRSArrivalDetailsSubmit?baseLocationCode=${params.baseLocationCode}&BaseCompanyCode=${params.BaseCompanyCode}&userid=${params.userid}`,paylaod);
+  }
 }
