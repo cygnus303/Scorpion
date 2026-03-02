@@ -11,7 +11,11 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
   styleUrl: './vendor-contract-profile.component.scss'
 })
 export class VendorContractProfileComponent {
-  vendorProfileForm !: FormGroup;
+  public vendorProfileForm !: FormGroup;
+
+  ngOnInit() {
+    this.buildForm()
+  }
 
   buildForm() {
     this.vendorProfileForm = new FormGroup({
@@ -31,8 +35,6 @@ export class VendorContractProfileComponent {
       VendorCity: new FormControl(null),
       VendorPin: new FormControl(null),
       Vendor_Address: new FormControl(null),
-
-
     })
   }
 
