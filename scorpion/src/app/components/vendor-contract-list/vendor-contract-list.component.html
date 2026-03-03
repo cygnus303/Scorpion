@@ -6,44 +6,63 @@
         </div>
     </div>
     <div class="form-grid p-4">
-        <form>
+        <form [formGroup]="criteriaform">
             <div class="row">
                 <div class="col-md-4 form-column ">
                     <div class="form-group">
                         <label class="col-md-5">Vendor Type</label>
                         <div class="col-md-7">
                             <div>
-                                <ng-select class="noFoundTextColor required2" placeholder="Vendor Type"></ng-select>
+                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Type" [items]="vendorTypeList" bindLabel="text" bindValue="value"
+                                formControlName="VedorType"
+                                [ngClass]="{ 'border-danger': criteriaform.get('VedorType')?.invalid  && criteriaform.get('VedorType')?.touched }"></ng-select>
+                            </div>
+                            <div class="text-danger text-start" *ngIf="criteriaform.get('VedorType')?.invalid && criteriaform.get('VedorType')?.touched">
+                                This field is required.
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column ">
+                <div class="col-md-4 form-column" *ngIf="criteriaform.value.VedorType === 'XX1'">
                     <div class="form-group">
                         <label class="col-md-5">Contract Type</label>
                         <div class="col-md-7">
                             <div class="radio-group ">
-                                <ng-select class="noFoundTextColor required2" placeholder="Contract Type"></ng-select>
+                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Contract Type" formControlName="ContractType"
+                                [items]="AttechedTypelist" bindLabel="text" bindValue="value"
+                                [ngClass]="{ 'border-danger': criteriaform.get('ContractType')?.invalid  && criteriaform.get('ContractType')?.touched }"></ng-select>
+                            </div>
+                            <div class="text-danger text-start" *ngIf="criteriaform.get('ContractType')?.invalid && criteriaform.get('ContractType')?.touched">
+                                This field is required.
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column ">
+                <div class="col-md-4 form-column" *ngIf="criteriaform.value.VedorType === 'XX1'">
                     <div class="form-group">
                         <label class="col-md-5">Contract For</label>
                         <div class="col-md-7">
                             <div>
-                                <ng-select class="noFoundTextColor required2" placeholder="Contract For"></ng-select>
+                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Contract For" formControlName="ContractFor"
+                                [items]="Contractlist" bindLabel="text" bindValue="value"
+                                [ngClass]="{ 'border-danger': criteriaform.get('ContractFor')?.invalid  && criteriaform.get('ContractFor')?.touched }"></ng-select>
+                            </div>
+                            <div class="text-danger text-start" *ngIf="criteriaform.get('ContractFor')?.invalid && criteriaform.get('ContractFor')?.touched">
+                                This field is required.
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column ">
+                <div class="col-md-4 form-column">
                     <div class="form-group">
                         <label class="col-md-5">Vendor</label>
                         <div class="col-md-7">
                             <div>
-                                <ng-select class="noFoundTextColor required2" placeholder="Vendor"></ng-select>
+                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor" formControlName="VendorCode"
+                                [ngClass]="{ 'border-danger': criteriaform.get('VendorCode')?.invalid  && criteriaform.get('VendorCode')?.touched }"></ng-select>
+                            </div>
+                            <div class="text-danger text-start" *ngIf="criteriaform.get('VendorCode')?.invalid && criteriaform.get('VendorCode')?.touched">
+                                This field is required.
                             </div>
                         </div>
                     </div>
@@ -56,7 +75,7 @@
     <button class="btn btn-success" (click)="goToBackList()">
         <i class="fas fa-check"></i> Add vendor Contract
     </button>
-    <button class="btn btn-success"> <i class="fas fa-check"></i> Get Vendor Contract List</button>
+    <button class="btn btn-success" (click)="getContractList()"> <i class="fas fa-check"></i> Get Vendor Contract List</button>
 </div>
 
 <div class="cnote-entry-container px-2 mt-5">
