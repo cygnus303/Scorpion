@@ -35,6 +35,17 @@ export class VendorContractProfileComponent {
       VendorCity: new FormControl(null),
       VendorPin: new FormControl(null),
       Vendor_Address: new FormControl(null),
+      TDSAppl_YN: new FormControl(false),
+      VendorCategory: new FormControl(null),
+      VendorContractCat: new FormControl(null),
+      TDS_Rate: new FormControl(null),
+      Security_deposit_chq: new FormControl(null),
+      Payment_interval: new FormControl(null),
+      Security_deposit_date: new FormControl(null),
+      Security_deposit_Amt: new FormControl(null),
+      Payment_Basis: new FormControl(null),
+      Payment_loc: new FormControl(null),
+      Monthly_Phone_Charges: new FormControl(null),
     })
   }
 

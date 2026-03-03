@@ -147,14 +147,14 @@
                 <div class="col-md-4 form-column ">
                     <div class="form-group mb-1"><label class="col-md-5">TDS Applicable</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " />
+                            <input type="text" class="form-control " formControlName="TDSAppl_YN"/>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 form-column ">
                     <div class="form-group mb-1"><label class="col-md-5">Vendor Category</label>
                         <div class="col-md-7">
-                            <ng-select class="noFoundTextColor required2"
+                            <ng-select class="noFoundTextColor required2" formControlName="VendorCategory"
                                 placeholder="Select Vendor Category"></ng-select>
                         </div>
                     </div>
@@ -164,7 +164,7 @@
                         <label class="col-md-5">Contract Category</label>
                         <div class="col-md-7">
                             <div class="input-group">
-                                <ng-select class="noFoundTextColor required2"
+                                <ng-select class="noFoundTextColor required2" formControlName="VendorContractCat"
                                     placeholder="select Contract Category"></ng-select>
                             </div>
                         </div>
@@ -175,14 +175,14 @@
                 <div class="col-md-4 form-column ">
                     <div class="form-group mb-1"><label class="col-md-5">TDS Rate</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="Select TDS Rate" />
+                            <input type="text" class="form-control " placeholder="Select TDS Rate" formControlName="TDS_Rate" />
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 form-column ">
                     <div class="form-group mb-1"><label class="col-md-5">Deposit Cheque(s)</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="Security Deposit Cheque(s)" />
+                            <input type="text" class="form-control " placeholder="Security Deposit Cheque(s)"  formControlName="Security_deposit_chq" />
                         </div>
                     </div>
                 </div>
@@ -191,7 +191,7 @@
                         <label class="col-md-5">Payment Interval</label>
                         <div class="col-md-7">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Select Payment Interval">
+                                <input type="text" class="form-control" placeholder="Select Payment Interval"  formControlName="Payment_interval" >
                             </div>
                         </div>
                     </div>
@@ -201,14 +201,14 @@
                 <div class="col-md-4 form-column ">
                     <div class="form-group mb-1"><label class="col-md-5">Deposit Date</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="Deposit Date" />
+                            <input type="text" class="form-control " placeholder="Deposit Date" formControlName="Security_deposit_date" />
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 form-column ">
                     <div class="form-group mb-1"><label class="col-md-5">Deposit Amount</label>
                         <div class="col-md-7">
-                            <input class="form-control" placeholder="Deposit Amount">
+                            <input class="form-control" placeholder="Deposit Amount" formControlName="Security_deposit_Amt">
                         </div>
                     </div>
                 </div>
@@ -217,7 +217,7 @@
                         <label class="col-md-5">Payment Basis</label>
                         <div class="col-md-7">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Select Security Payment Basis">
+                                <input type="text" class="form-control" placeholder="Select Security Payment Basis" formControlName="Payment_Basis">
                             </div>
                         </div>
                     </div>
@@ -227,14 +227,14 @@
                 <div class="col-md-4 form-column ">
                     <div class="form-group mb-1"><label class="col-md-5">Payment Location</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="Select Payment Location" />
+                            <input type="text" class="form-control " placeholder="Select Payment Location"formControlName="Payment_loc" />
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 form-column ">
                     <div class="form-group mb-1"><label class="col-md-5">Phone Charges</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="Phone Charges" />
+                            <input type="text" class="form-control " placeholder="Phone Charges" formControlName="Monthly_Phone_Charges"/>
                         </div>
                     </div>
                 </div>
@@ -243,7 +243,7 @@
                         <label class="col-md-5">Default Charges</label>
                         <div class="col-md-7">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Default Charges">
+                                <input type="text" class="form-control" placeholder="Default Charges" formControlName="Payment_interval">
                             </div>
                         </div>
                     </div>
