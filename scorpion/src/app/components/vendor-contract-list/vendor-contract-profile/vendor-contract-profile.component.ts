@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DocketService } from 'app/shared/services/docket.service';
+import { MasterService } from 'app/shared/services/master.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ScanFmDocumentsService } from 'app/shared/services/scan-fm-documents.service';
 import { CommonModule } from '@angular/common';
@@ -35,9 +36,15 @@ public paymentBasisList = [
   }
 
   constructor(public docketService: DocketService,public scanFmDocumentsService:ScanFmDocumentsService,
-    public vendorContractService:VendorContractService) { }
+    public vendorContractService:VendorContractService,private masterService:MasterService,) { }
 
  
+  getVendorContractList(){
+    this.masterService.getVendorContractTypeWise(this.docketService.loginUserList.Type).subscribe({
+      next:(response)=>{
 
+      }
+    })
+  }
 
 }

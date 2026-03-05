@@ -6,25 +6,43 @@ import { PaginationService } from 'app/shared/services/pagination.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MasterService } from 'app/shared/services/master.service';
+import { SharedModule } from 'app/shared/shared/shared.module';
+import { DocketService } from 'app/shared/services/docket.service';
 
 @Component({
   selector: 'app-vendor-contract-list',
   standalone: true,
-  imports: [ReactiveFormsModule, NgSelectModule, FormsModule, RouterModule,CommonModule],
+  imports: [ReactiveFormsModule, NgSelectModule, FormsModule, RouterModule, CommonModule, SharedModule],
   templateUrl: './vendor-contract-list.component.html',
   styleUrl: './vendor-contract-list.component.scss'
 })
 export class VendorContractListComponent {
   public criteriaform!: FormGroup;
   public notFoundTextValue = 'Please enter at least 1 characters';
-  public AttechedTypelist=[{ text:'Route based for THC and Distance based for PRS/DRS', value : 'RB'}];
-  public Contractlist=[ { text:'Vendor', value : '1'}]
+  public AttechedTypelist = [{ text: 'Route based for THC and Distance based for PRS/DRS', value: 'RB' }];
+  public Contractlist = [{ text: 'Vendor', value: '1' }]
   public vendorTypeList = [
-    { text:'Attached', value : 'XX1'},
-    { text:'Business Associate', value : '04'}
+    { text: 'Attached', value: 'XX1' },
+    { text: 'Business Associate', value: '04' }
   ];
+  public contractList: any[] = [];
+  public isListShow: boolean = false;
   public vendorList: any[] = [];
-  constructor(public paginationService: PaginationService, public router: Router, public masterService:MasterService) { }
+  public filteredList: any[] = [];
+  public paginatedList: any[] = [];
+  public isLoading = false;
+  public searchText = '';
+
+  public startIndex = 0;
+  public endIndex = 0;
+  public totalPages = 0;
+
+  constructor(
+    public paginationService: PaginationService,
+    public router: Router,
+    public masterService: MasterService,
+    public docketService: DocketService
+  ) { }
 
   ngOnInit() {
     this.buildForm();
@@ -33,66 +51,199 @@ export class VendorContractListComponent {
 
   buildForm() {
     this.criteriaform = new FormGroup({
-      VedorType:new FormControl(null,[Validators.required]),
-      ContractType:new FormControl(null),
-      ContractFor:new FormControl(null),
-      VendorCode:new FormControl(null,[Validators.required])
+      VedorType: new FormControl(null, [Validators.required]),
+      ContractType: new FormControl(null),
+      ContractFor: new FormControl(null),
+      VendorCode: new FormControl(null, [Validators.required])
     })
   }
 
-  OnChangeVendorType(){
+  OnChangeVendorType() {
     this.criteriaform.get('VedorType')?.valueChanges.subscribe(value => {
-    const contractTypeControl = this.criteriaform.get('ContractType');
-    const contractForControl = this.criteriaform.get('ContractFor');
+      const contractTypeControl = this.criteriaform.get('ContractType');
+      const contractForControl = this.criteriaform.get('ContractFor');
 
-    if (value === 'XX1') {
-      // Add required validator
-      contractTypeControl?.setValidators([Validators.required]);
-      contractForControl?.setValidators([Validators.required]);
-    } else {
-      // Remove validator
-      contractTypeControl?.clearValidators();
-      contractForControl?.clearValidators();
+      if (value === 'XX1') {
+        // Add required validator
+        contractTypeControl?.setValidators([Validators.required]);
+        contractForControl?.setValidators([Validators.required]);
+      } else {
+        // Remove validator
+        contractTypeControl?.clearValidators();
+        contractForControl?.clearValidators();
 
-      // Reset values when hidden
-      contractTypeControl?.setValue(null);
-      contractForControl?.setValue(null);
-    }
+        // Reset values when hidden
+        contractTypeControl?.setValue(null);
+        contractForControl?.setValue(null);
+      }
 
-    // Update validation status
-    contractTypeControl?.updateValueAndValidity();
-    contractForControl?.updateValueAndValidity();
-  });
+      // Update validation status
+      contractTypeControl?.updateValueAndValidity();
+      contractForControl?.updateValueAndValidity();
+    });
   }
 
-getVendorList(searchTerm: string = '') {
-  const params = {
-    flag: 'Add',
-    vendorType: this.criteriaform.get('VedorType')?.value,
-    searchTerm: searchTerm
-  };
+  getVendorList(searchTerm: string = '') {
+    const params = {
+      flag: this.docketService.loginUserList.Type === 'A' ? 'Add' : 'Edit',
+      vendorType: this.criteriaform.get('VedorType')?.value,
+      searchTerm: searchTerm
+    };
+    this.notFoundTextValue = 'Searching';
 
-  this.masterService.getVendorData(params).subscribe({
-    next: (response: any) => {
-      this.vendorList = response
-    }
-  });
-}
+    this.masterService.getVendorData(params).subscribe({
+      next: (response: any) => {
+        this.vendorList = response;
+        this.notFoundTextValue = 'No matches found';
+      }
+    });
+  }
 
   resetVendorDropdown() {
     this.vendorList = [];
-    this.notFoundTextValue = 'Enter at least 3 characters';
+    this.notFoundTextValue = 'Enter at least 1 characters';
   }
 
-  getContractList(){
-    if(this.criteriaform.valid){
+  getVendorContract() {
+    if (this.criteriaform.valid) {
+      this.isListShow = true;
 
-    }else{
-      this.criteriaform.markAllAsTouched()
+      const contractType = this.criteriaform.value.ContractType;
+      const contractFor = this.criteriaform.value.ContractFor;
+      const Type = this.criteriaform.value.VedorType;
+      var matrix = '';
+
+      if (contractType != null && contractType != "") {
+        if (contractType == "RB") {
+          if (contractFor == "1") {
+            matrix = "01";
+          }
+          else if (contractFor == "2") {
+            matrix = "02";
+          }
+          else {
+            matrix = "03";
+          }
+        } else if (contractType == "CB") {
+          if (contractFor == "1") {
+            matrix = "09";
+          }
+          else if (contractFor == "2") {
+            matrix = "10";
+          }
+          else {
+            matrix = "11";
+          }
+        } else {
+          if (contractFor == "1") {
+            matrix = "04";
+          }
+          else if (contractFor == "2") {
+            matrix = "05";
+          }
+          else {
+            matrix = "06";
+          }
+        }
+      }else{
+        if (Type == "08" || Type == "XX5" || Type == "04") {
+          matrix = "07";
+        }
+      }
+      this.getContractList(matrix)
+      
+      } else {
+        this.criteriaform.markAllAsTouched();
+        this.isListShow = true;
+      }
+    }
+
+
+    getContractList(matrixType : string){
+      this.isLoading = true;
+
+      const parmas = {
+        vendorCode: this.criteriaform.value.VendorCode,
+        matrixType: matrixType,
+        vType:  this.criteriaform.value.VedorType
+      }
+
+      this.masterService.getVendorList(parmas).subscribe({
+        next: (response: any) => {
+          this.contractList = response;
+        },
+        complete: () => {
+          this.isLoading = false;
+        },
+        error: () => {
+          this.isLoading = false;
+        }
+      })
+    }
+
+    updateTable() {
+
+      const result = this.paginationService.paginate(
+        this.contractList,
+        this.searchText
+      );
+
+      this.filteredList = result.filtered;
+      this.paginatedList = result.paginatedList;
+      this.startIndex = result.startIndex;
+      this.endIndex = result.endIndex;
+      this.totalPages = result.totalPages;
+
+    }
+
+    goToPage(page: number) {
+
+      this.paginationService.currentPage = page;
+      this.updateTable();
+
+    }
+
+    goToNext() {
+
+      this.paginationService.currentPage++;
+      this.updateTable();
+
+    }
+
+    sort(column: string) {
+
+      this.paginationService.sort(column);
+      this.updateTable();
+
+    }
+
+    goToPrevious() {
+
+      this.paginationService.currentPage--;
+      this.updateTable();
+
+    }
+
+    goToBackList() {
+      this.router.navigate(['/Master/VendorContract']);
+    }
+
+    onSort(event: any){
+
+      const { column, direction } = event;
+
+      this.contractList.sort((a: any, b: any) => {
+
+        const valueA = a[column];
+        const valueB = b[column];
+
+        if (valueA < valueB) return direction === 'asc' ? -1 : 1;
+        if (valueA > valueB) return direction === 'asc' ? 1 : -1;
+
+        return 0;
+
+      });
+
+      this.updateTable();
     }
   }
-
-  goToBackList() {
-    this.router.navigate(['/Master/VendorContract']);
-  }
-}
