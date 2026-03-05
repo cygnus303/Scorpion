@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { DocketService } from 'app/shared/services/docket.service';
+import { MasterService } from 'app/shared/services/master.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @Component({
@@ -12,6 +14,11 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 })
 export class VendorContractProfileComponent {
   public vendorProfileForm !: FormGroup;
+
+  constructor(
+    private masterService:MasterService,
+    private docketService:DocketService
+  ){}
 
   ngOnInit() {
     this.buildForm()
@@ -46,6 +53,14 @@ export class VendorContractProfileComponent {
       Payment_Basis: new FormControl(null),
       Payment_loc: new FormControl(null),
       Monthly_Phone_Charges: new FormControl(null),
+    })
+  }
+  
+  getVendorContractList(){
+    this.masterService.getVendorContractTypeWise(this.docketService.loginUserList.Type).subscribe({
+      next:(response)=>{
+
+      }
     })
   }
 

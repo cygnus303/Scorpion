@@ -11,5 +11,13 @@ export class MasterService {
    getVendorData(params:any){
     return this.apiHandlerService.Get(`Operation/SearchVendorListJsonByFlag?flag=${params.flag}&vendorType=${params.vendorType}&searchTerm=${params.searchTerm}`);
    }
+
+   getVendorList(params:any){
+    return this.apiHandlerService.Get(`Operation/GetVendorContractslist?vendorCode=${params.vendorCode}&matrixType=${params.matrixType}&vType=${params.vType}`);
+   }
+
+   getVendorContractTypeWise(params:any){
+    return this.apiHandlerService.Get(`Operation/VendorContractTypeWise?Type=${params.Type}`);
+   }
  
 }

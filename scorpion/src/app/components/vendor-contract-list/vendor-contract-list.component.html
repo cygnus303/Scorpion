@@ -13,11 +13,13 @@
                         <label class="col-md-5">Vendor Type</label>
                         <div class="col-md-7">
                             <div>
-                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Type" [items]="vendorTypeList" bindLabel="text" bindValue="value"
-                                formControlName="VedorType"
-                                [ngClass]="{ 'border-danger': criteriaform.get('VedorType')?.invalid  && criteriaform.get('VedorType')?.touched }"></ng-select>
+                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Type"
+                                    [items]="vendorTypeList" bindLabel="text" bindValue="value"
+                                    formControlName="VedorType"
+                                    [ngClass]="{ 'border-danger': criteriaform.get('VedorType')?.invalid  && criteriaform.get('VedorType')?.touched }"></ng-select>
                             </div>
-                            <div class="text-danger text-start" *ngIf="criteriaform.get('VedorType')?.invalid && criteriaform.get('VedorType')?.touched">
+                            <div class="text-danger text-start"
+                                *ngIf="criteriaform.get('VedorType')?.invalid && criteriaform.get('VedorType')?.touched">
                                 This field is required.
                             </div>
                         </div>
@@ -28,11 +30,13 @@
                         <label class="col-md-5">Contract Type</label>
                         <div class="col-md-7">
                             <div class="radio-group ">
-                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Contract Type" formControlName="ContractType"
-                                [items]="AttechedTypelist" bindLabel="text" bindValue="value"
-                                [ngClass]="{ 'border-danger': criteriaform.get('ContractType')?.invalid  && criteriaform.get('ContractType')?.touched }"></ng-select>
+                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Contract Type"
+                                    formControlName="ContractType" [items]="AttechedTypelist" bindLabel="text"
+                                    bindValue="value"
+                                    [ngClass]="{ 'border-danger': criteriaform.get('ContractType')?.invalid  && criteriaform.get('ContractType')?.touched }"></ng-select>
                             </div>
-                            <div class="text-danger text-start" *ngIf="criteriaform.get('ContractType')?.invalid && criteriaform.get('ContractType')?.touched">
+                            <div class="text-danger text-start"
+                                *ngIf="criteriaform.get('ContractType')?.invalid && criteriaform.get('ContractType')?.touched">
                                 This field is required.
                             </div>
                         </div>
@@ -43,11 +47,13 @@
                         <label class="col-md-5">Contract For</label>
                         <div class="col-md-7">
                             <div>
-                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Contract For" formControlName="ContractFor"
-                                [items]="Contractlist" bindLabel="text" bindValue="value"
-                                [ngClass]="{ 'border-danger': criteriaform.get('ContractFor')?.invalid  && criteriaform.get('ContractFor')?.touched }"></ng-select>
+                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Contract For"
+                                    formControlName="ContractFor" [items]="Contractlist" bindLabel="text"
+                                    bindValue="value"
+                                    [ngClass]="{ 'border-danger': criteriaform.get('ContractFor')?.invalid  && criteriaform.get('ContractFor')?.touched }"></ng-select>
                             </div>
-                            <div class="text-danger text-start" *ngIf="criteriaform.get('ContractFor')?.invalid && criteriaform.get('ContractFor')?.touched">
+                            <div class="text-danger text-start"
+                                *ngIf="criteriaform.get('ContractFor')?.invalid && criteriaform.get('ContractFor')?.touched">
                                 This field is required.
                             </div>
                         </div>
@@ -58,15 +64,17 @@
                         <label class="col-md-5">Vendor</label>
                         <div class="col-md-7">
                             <div>
-                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor" formControlName="VendorCode"
-                                [notFoundText]="notFoundTextValue" (open)="resetVendorDropdown()" (search)="getVendorList($event.term)"
-                                [ngClass]="{ 'border-danger': criteriaform.get('VendorCode')?.invalid  && criteriaform.get('VendorCode')?.touched }">
+                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor"
+                                    formControlName="VendorCode" [notFoundText]="notFoundTextValue"
+                                    (open)="resetVendorDropdown()" (search)="getVendorList($event.term)"
+                                    [ngClass]="{ 'border-danger': criteriaform.get('VendorCode')?.invalid  && criteriaform.get('VendorCode')?.touched }">
                                     <ng-option *ngFor="let vendor of vendorList" [value]="vendor.id">
-                                       {{vendor.id}} : {{ vendor.text }}
+                                        {{vendor.id}} : {{ vendor.text }}
                                     </ng-option>
-                            </ng-select>
+                                </ng-select>
                             </div>
-                            <div class="text-danger text-start" *ngIf="criteriaform.get('VendorCode')?.invalid && criteriaform.get('VendorCode')?.touched">
+                            <div class="text-danger text-start"
+                                *ngIf="criteriaform.get('VendorCode')?.invalid && criteriaform.get('VendorCode')?.touched">
                                 This field is required.
                             </div>
                         </div>
@@ -77,13 +85,16 @@
     </div>
 </div>
 <div class="d-flex justify-content-center bg-secondary-subtle p-4 gap-2 mt-4">
-    <button class="btn btn-success" (click)="goToBackList()">
-        <i class="fas fa-check"></i> Add vendor Contract
-    </button>
-    <button class="btn btn-success" (click)="getContractList()"> <i class="fas fa-check"></i> Get Vendor Contract List</button>
+    <div *ngIf="isListShow && docketService.loginUserList.Type !=='E'">
+        <button class="btn btn-success" (click)="goToBackList()">
+            <i class="fas fa-check"></i> Add vendor Contract
+        </button>
+    </div>
+    <button class="btn btn-success" (click)="getVendorContract()"> <i class="fas fa-check"></i> Get Vendor Contract
+        List</button>
 </div>
 
-<div class="cnote-entry-container px-2 mt-5">
+<div class="cnote-entry-container px-2 mt-5" *ngIf="isListShow && docketService.loginUserList.Type !=='A'">
     <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
         <div class="mb-0">
             <i class="fas fa-list me-2"></i> Detail Of Vendor Contract
@@ -91,115 +102,135 @@
     </div>
     <div class="d-flex justify-content-between align-items-center px-4 pt-3">
         <div class="d-flex align-items-center gap-2">
-            <ng-select class="clear-icon" style="min-width: 150px;" [items]="paginationService.recordOptions" bindLabel="label" bindValue="value" 
-            [(ngModel)]="paginationService.selectedRecordCount"></ng-select>
+            <ng-select class="clear-icon" style="min-width: 150px;" [items]="paginationService.recordOptions"
+                bindLabel="label" bindValue="value" [(ngModel)]="paginationService.selectedRecordCount"></ng-select>
             <div class="col-form-label text-start">Records</div>
         </div>
         <div class="d-flex align-items-center gap-2">
             <div class="col-form-label text-end">Search</div>
-            <input class="form-control" style="min-width: 250px;" type="text" placeholder="Search...">
+            <input class="form-control" style="min-width: 250px;" type="text" placeholder="Search..."
+                [(ngModel)]="searchText" (input)="updateTable()">
         </div>
     </div>
     <div class="table-responsive p-4">
         <table class="table table-bordered table-hover align-middle mb-0">
             <thead class="table-light text-center">
                 <tr>
-                    <th  class="cursor-pointer">
-                        ACTION
+                    <th>ACTION</th>
+
+                    <th appSort column="CONTRACTCD" (sort)="onSort($event)" class="cursor-pointer">
+                        Contract ID
+                        <span class="ms-1">
+                            <i class="fas fa-arrow-up"></i>
+                            <i class="fas fa-arrow-down"></i>
+                        </span>
                     </th>
 
-                    <th  class="cursor-pointer">
-                        ContractID
-                    </th>
-
-                    <th  class="cursor-pointer">
+                    <th appSort column="Vendor_Type" (sort)="onSort($event)" class="cursor-pointer">
                         Vendor Type
+                        <span class="ms-1">
+                            <i class="fas fa-arrow-up"></i>
+                            <i class="fas fa-arrow-down"></i>
+                        </span>
                     </th>
 
-                    <th  class="cursor-pointer">
+                    <th appSort column="Start_Dt" (sort)="onSort($event)" class="cursor-pointer">
                         Start Date
+                        <span class="ms-1">
+                            <i class="fas fa-arrow-up"></i>
+                            <i class="fas fa-arrow-down"></i>
+                        </span>
                     </th>
-
-                    <th  class="cursor-pointer">
+                    <th appSort column="Valid_uptodt" (sort)="onSort($event)" class="cursor-pointer">
                         End Date
+                        <span class="ms-1">
+                            <i class="fas fa-arrow-up"></i>
+                            <i class="fas fa-arrow-down"></i>
+                        </span>
+
                     </th>
 
-                    <th  class="cursor-pointer">
+                    <th appSort column="ContractDt" class="cursor-pointer" (sort)="onSort($event)">
                         Effective Date
+                        <span class="ms-1">
+                            <i class="fas fa-arrow-up"></i>
+                            <i class="fas fa-arrow-down"></i>
+                        </span>
                     </th>
 
-                    <th  class="cursor-pointer">
-                        Status 
+                    <th appSort column="Status" class="cursor-pointer" (sort)="onSort($event)">
+                        Status
+                        <span class="ms-1">
+                            <i class="fas fa-arrow-up"></i>
+                            <i class="fas fa-arrow-down"></i>
+                        </span>
                     </th>
-                    <th  class="cursor-pointer">
-                        Copy Contract  
+                    <th class="cursor-pointer">
+                        Copy Contract
+                        <span class="ms-1">
+                            <i class="fas fa-arrow-up"></i>
+                            <i class="fas fa-arrow-down"></i>
+                        </span>
                     </th>
-                     <th  class="cursor-pointer">
-                        View/Print 
+                    <th class="cursor-pointer">
+                        View/Print
+                        <span class="ms-1">
+                            <i class="fas fa-arrow-up"></i>
+                            <i class="fas fa-arrow-down"></i>
+                        </span>
                     </th>
-                    <th  class="cursor-pointer">
+                    <th class="cursor-pointer">
                         Document
+                        <span class="ms-1">
+                            <i class="fas fa-arrow-up"></i>
+                            <i class="fas fa-arrow-down"></i>
+                        </span>
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <!-- <tr >
-                   <td colspan="8" class="text-center p-3">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </td>
+                <tr *ngIf="isLoading">
+                    <td colspan="10" class="text-center p-3">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </td>
                 </tr>
-                <tr >
-                    <td colspan="8" class="text-center text-muted p-3">
-                            No Record Found.
-                        </td>
-                </tr> -->
-                <tr>
-                    <td class="text-center">
-                        <span class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer">
-                        <i class="fas fa-pen me-2 text-Secondary"></i> Edit </span>
+                <tr *ngIf="!isLoading && contractList?.length === 0">
+                    <td colspan="10" class="text-center text-muted p-3">
+                        No Record Found.
                     </td>
-                    <td>VC000163</td>
-                    <td>ATTACHED</td>
-                    <td>25 Jun 2016</td>
-                    <td>31 Mar 2020</td>
-                    <td class="text-center">25 Jun 2016</td>
-                    <td class="text-center">InActive</td>
-                    <td class="text-center">Copy Contract</td>
-                    <td class="text-center">
-                        <span class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer">
-                        <i class="fas fa-print me-2 text-Secondary"></i> View </span>
-                    </td>
-                    <td class="text-center">No Document Uploaded</td>
                 </tr>
-                 <tr>
+                <tr *ngFor="let item of contractList">
                     <td class="text-center">
-                        <span class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer">
-                        <i class="fas fa-pen me-2 text-Secondary"></i> Edit </span>
+                        <span
+                            class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer">
+                            <i class="fas fa-pen me-2 text-Secondary"></i> Edit </span>
                     </td>
-                    <td>VC000163</td>
-                    <td>ATTACHED</td>
-                    <td>25 Jun 2016</td>
-                    <td>31 Mar 2020</td>
-                    <td class="text-center">25 Jun 2016</td>
-                    <td class="text-center">Active</td>
-                    <td class="text-center">Copy Contract</td>
+                    <td>{{item.contractcd}}</td>
+                    <td>{{item.vendor_Type}}</td>
+                    <td>{{item.start_Dt}}</td>
+                    <td>{{item.valid_uptodt}}</td>
+                    <td class="text-center">{{item.contractDt}}</td>
+                    <td class="text-center">{{item.status === 'Y' ? 'ACTIVE':'INACTIVE'}}</td>
+                    <td class="text-center">{{item.vendorContractCat}}</td>
                     <td class="text-center">
-                        <span class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer">
-                        <i class="fas fa-print me-2 text-Secondary"></i> View </span>
+                        <span
+                            class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer">
+                            <i class="fas fa-print me-2 text-Secondary"></i> View </span>
                     </td>
-                    <td class="text-center">No Document Uploaded</td>
+                    <td class="text-center">{{item.Document}}</td>
                 </tr>
             </tbody>
         </table>
     </div>
     <div class="d-flex justify-content-between align-items-center px-4 pb-3">
-        <div>Showing 0 to 0 of 10 entries</div>
+        <div>Showing {{ filteredList?.length === 0 ? 0 : startIndex + 1 }} to {{ endIndex }} of {{ filteredList?.length
+            }} entries</div>
         <div class="d-flex justify-content-center">
             <button class="btn btn-light border me-1">‹</button>
-            <button  class="btn border me-1"></button>
-            <button class="btn btn-light border" > ›</button>
+            <button class="btn border me-1"></button>
+            <button class="btn btn-light border"> ›</button>
         </div>
     </div>
 </div>

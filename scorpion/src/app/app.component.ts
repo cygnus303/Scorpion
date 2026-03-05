@@ -27,7 +27,7 @@ export class AppComponent {
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       // this.docketService.loginUserList.LocationCode =  'KOL';
-      // this.docketService.loginUserList.Type = '1';
+      this.docketService.loginUserList.Type = 'E';
       // this.docketService.loginUserList.loadBy = "B";
       // this.docketService.loginUserList.chargeType='1';
       // this.docketService.loginUserList.drsId='DS/PIM/2526/002766';
