@@ -74,10 +74,10 @@ get pdcControls() {
       next: (response: any) => {
         this.PRSArrivalDetails = response.pavm;
         this.prsArrivalForm.patchValue({
-          actuwt: response.pavm.actuwt,
+          actuwt: response?.pavm?.actuwt,
           LoadingBy: this.docketService.loginUserList.loadBy
         });
-        this.docketList = response.listPAVM || [];
+        this.docketList = response?.listPAVM || [];
         this.docketList.forEach((item: any) => {
           item.rateType = this.docketService.loginUserList.chargeType;
         });
