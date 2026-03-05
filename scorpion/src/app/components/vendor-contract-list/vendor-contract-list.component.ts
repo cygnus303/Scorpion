@@ -5,6 +5,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { PaginationService } from 'app/shared/services/pagination.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MasterService } from 'app/shared/services/master.service';
 
 @Component({
   selector: 'app-vendor-contract-list',
@@ -15,6 +16,7 @@ import { CommonModule } from '@angular/common';
 })
 export class VendorContractListComponent {
   public criteriaform!: FormGroup;
+  public notFoundTextValue = 'Please enter at least 1 characters';
   public vendorTypeList = [
     { text:'Attached', value : 'XX1'},
      { text:'Business Associate', value : '04'}
@@ -25,7 +27,11 @@ export class VendorContractListComponent {
   public Contractlist=[
     { text:'Vendor', value : '1'},
   ]
-  constructor(public paginationService: PaginationService,public router: Router) { }
+  constructor(
+    public paginationService: PaginationService,
+    public router: Router,
+    public masterService:MasterService
+  ) { }
 
   ngOnInit() {
     this.buildForm();
@@ -64,6 +70,23 @@ export class VendorContractListComponent {
     contractTypeControl?.updateValueAndValidity();
     contractForControl?.updateValueAndValidity();
   });
+  }
+
+  getVendorList(){
+    // const params={
+    //   flag:'Add',
+    //   vendorType:,
+    //   searchTerm:,
+    // }
+    // this.masterService.getVendorData(params).subscribe({
+    //   next:(response)=>{
+        
+    //   }
+    // })
+  }
+
+    resetVendorDropdown() {
+    this.notFoundTextValue = 'Enter at least 3 characters';
   }
 
   getContractList(){
