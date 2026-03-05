@@ -17,21 +17,14 @@ import { MasterService } from 'app/shared/services/master.service';
 export class VendorContractListComponent {
   public criteriaform!: FormGroup;
   public notFoundTextValue = 'Please enter at least 1 characters';
+  public AttechedTypelist=[{ text:'Route based for THC and Distance based for PRS/DRS', value : 'RB'}];
+  public Contractlist=[ { text:'Vendor', value : '1'}]
   public vendorTypeList = [
     { text:'Attached', value : 'XX1'},
-     { text:'Business Associate', value : '04'}
+    { text:'Business Associate', value : '04'}
   ];
-  public AttechedTypelist=[
-    { text:'Route based for THC and Distance based for PRS/DRS', value : 'RB'},
-  ];
-  public Contractlist=[
-    { text:'Vendor', value : '1'},
-  ]
-  constructor(
-    public paginationService: PaginationService,
-    public router: Router,
-    public masterService:MasterService
-  ) { }
+  public vendorList: any[] = [];
+  constructor(public paginationService: PaginationService, public router: Router, public masterService:MasterService) { }
 
   ngOnInit() {
     this.buildForm();
@@ -72,20 +65,22 @@ export class VendorContractListComponent {
   });
   }
 
-  getVendorList(){
-    // const params={
-    //   flag:'Add',
-    //   vendorType:,
-    //   searchTerm:,
-    // }
-    // this.masterService.getVendorData(params).subscribe({
-    //   next:(response)=>{
-        
-    //   }
-    // })
-  }
+getVendorList(searchTerm: string = '') {
+  const params = {
+    flag: 'Add',
+    vendorType: this.criteriaform.get('VedorType')?.value,
+    searchTerm: searchTerm
+  };
 
-    resetVendorDropdown() {
+  this.masterService.getVendorData(params).subscribe({
+    next: (response: any) => {
+      this.vendorList = response
+    }
+  });
+}
+
+  resetVendorDropdown() {
+    this.vendorList = [];
     this.notFoundTextValue = 'Enter at least 3 characters';
   }
 

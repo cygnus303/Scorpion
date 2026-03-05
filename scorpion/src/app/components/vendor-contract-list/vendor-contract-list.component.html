@@ -59,8 +59,12 @@
                         <div class="col-md-7">
                             <div>
                                 <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor" formControlName="VendorCode"
-                                [notFoundText]="notFoundTextValue" (open)="resetVendorDropdown()"
-                                [ngClass]="{ 'border-danger': criteriaform.get('VendorCode')?.invalid  && criteriaform.get('VendorCode')?.touched }"></ng-select>
+                                [notFoundText]="notFoundTextValue" (open)="resetVendorDropdown()" (search)="getVendorList($event.term)"
+                                [ngClass]="{ 'border-danger': criteriaform.get('VendorCode')?.invalid  && criteriaform.get('VendorCode')?.touched }">
+                                    <ng-option *ngFor="let vendor of vendorList" [value]="vendor.id">
+                                       {{vendor.id}} : {{ vendor.text }}
+                                    </ng-option>
+                            </ng-select>
                             </div>
                             <div class="text-danger text-start" *ngIf="criteriaform.get('VendorCode')?.invalid && criteriaform.get('VendorCode')?.touched">
                                 This field is required.
