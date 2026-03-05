@@ -5,83 +5,125 @@
     Vendor Contract Profile
   </div>
     <div class="form-grid p-4">
-        <form [formGroup]="vendorProfileForm">
-            <div class="row">
-                <div class="col-md-4 form-column ">
-                    <div class="form-group">
-                        <label class="col-md-5">Contract Code</label>
+        <form [formGroup]="vendorContractService.vendorProfileForm">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-md-5 col-form-label text-end">Contract Code</label>
                         <div class="col-md-7">
                             <input type="text" class="form-control " placeholder="System Generated" formControlName="CONTRACTCD">
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column">
-                    <div class="form-group">
-                        <label class="col-md-5">Vendor Name</label>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-md-5 col-form-label text-end">Vendor Name</label>
                         <div class="col-md-7">
                             <input type="text" class="form-control " placeholder="Vendor Name" formControlName="VendorName"/>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column">
-                    <div class="form-group">
-                        <label class="col-md-5">Vendor Type</label>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-md-5 col-form-label text-end">Vendor Type</label>
                         <div class="col-md-7">
                             <input type="text" class="form-control " placeholder="Vendor Type" formControlName="VendorTypeName"/>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-4 form-column ">
-                    <div class="form-group mb-1"><label class="col-md-5">Contract Date</label>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-md-5 col-form-label text-end">Contract Date</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control required2" placeholder="Contract Date" formControlName="ContractDt"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 form-column ">
-                    <div class="form-group mb-1"><label class="col-md-5">Effective From Date</label>
-                        <div class="col-md-7">
-                            <ng-select class="noFoundTextColor required2" placeholder="Effective From Date" formControlName="Start_Dt"></ng-select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 form-column">
-                    <div class="form-group mb-1">
-                        <label class="col-md-5">Valid Until</label>
-                        <div class="col-md-7">
-                            <div class="input-group">
-                                <input type="text" class="form-control uppercase-none required2" #dp="bsDatepicker"
-                                    bsDatepicker placeholder="Valid Until" required formControlName="Valid_uptodt"
-                                    [class.disabled-input]="true">
-                                <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                            <div class="input-group" (click)="cd.toggle(); $event.stopPropagation()">
+                                <input type="text" class="form-control required2" required placeholder="Contract Date" formControlName="ContractDt"
+                                    #cd="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue" [class.disabled-input]="true"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" 
+                                     [ngClass]="{ 'border-danger': vendorContractService.vendorProfileForm.get('ContractDt')?.invalid  && vendorContractService.vendorProfileForm.get('ContractDt')?.touched}"/>
+                                <span class="input-group-text cursor-pointer">
                                     <i class="fa fa-calendar"></i>
                                 </span>
+                            </div>
+                            <div *ngIf="vendorContractService.vendorProfileForm.get('ContractDt')?.invalid && vendorContractService.vendorProfileForm.get('ContractDt')?.touched"
+                                class="text-danger text-start">
+                                <small *ngIf="vendorContractService.vendorProfileForm.get('ContractDt')?.hasError('required')">Contract Date is required.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-md-5 col-form-label text-end">Effective From Date</label>
+                        <div class="col-md-7">
+                            <div class="input-group" (click)="efd.toggle(); $event.stopPropagation()">
+                                <input class="form-control required2" required placeholder="Effective From Date" [class.disabled-input]="true"
+                                    formControlName="Start_Dt" #efd="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" 
+                                     [ngClass]="{ 'border-danger': vendorContractService.vendorProfileForm.get('Start_Dt')?.invalid  && vendorContractService.vendorProfileForm.get('Start_Dt')?.touched}"/>
+                                <span class="input-group-text cursor-pointer">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                            <div *ngIf="vendorContractService.vendorProfileForm.get('Start_Dt')?.invalid && vendorContractService.vendorProfileForm.get('Start_Dt')?.touched"
+                                class="text-danger text-start">
+                                <small *ngIf="vendorContractService.vendorProfileForm.get('Start_Dt')?.hasError('required')">Effective From Date is required.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-md-5 col-form-label text-end">Valid Until</label>
+                        <div class="col-md-7">
+                            <div class="input-group" (click)="dp.toggle(); $event.stopPropagation()">
+                                <input type="text" class="form-control uppercase-none required2" placeholder="Valid Until" required formControlName="Valid_uptodt"
+                                    [class.disabled-input]="true" 
+                                    #dp="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" 
+                                     [ngClass]="{ 'border-danger': vendorContractService.vendorProfileForm.get('Valid_uptodt')?.invalid  && vendorContractService.vendorProfileForm.get('Valid_uptodt')?.touched}">
+                                <span class="input-group-text cursor-pointer" >
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                            <div *ngIf="vendorContractService.vendorProfileForm.get('Valid_uptodt')?.invalid && vendorContractService.vendorProfileForm.get('Valid_uptodt')?.touched"
+                                class="text-danger text-start">
+                                <small *ngIf="vendorContractService.vendorProfileForm.get('Valid_uptodt')?.hasError('required')">Valid Until is required.</small>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-4 form-column ">
-                    <div class="form-group mb-1"><label class="col-md-5">Contract Location</label>
+            <div class="row mb-3">
+                <div class="col-md-4 ">
+                    <div class="row">
+                        <label class="col-md-5 col-form-label text-end">Contract Location</label>
                         <div class="col-md-7">
-                            <ng-select class="noFoundTextColor" placeholder="Contract Signing Location" formControlName="Contract_loccode"></ng-select>
+                            <ng-select class="noFoundTextColor clear-icon" placeholder="Contract Signing Location"
+                                formControlName="Contract_loccode" notFoundText="No matches found"
+                                (search)="scanFmDocumentsService.getLocationDetail($event)"
+                                [notFoundText]="scanFmDocumentsService.nextLocationValue"
+                                (open)="scanFmDocumentsService.resetNextLocationDropdown()">
+                                <ng-option *ngFor="let item of scanFmDocumentsService.locationData" [value]="item.id">
+                                    <strong>{{ item.id }}</strong> : {{ item.text }}
+                                </ng-option>
+                            </ng-select>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column ">
-                    <div class="form-group mb-1"><label class="col-md-5">Representative</label>
+                <div class="col-md-4">
+                    <div class="row">           
+                        <label class="col-md-5 col-form-label text-end">Vendor Representative</label>
                         <div class="col-md-7">
                             <input type="text" class="form-control " placeholder="Vendor Representative" formControlName="VendorPerName"/>
 
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column">
-                    <div class="form-group mb-1">
-                        <label class="col-md-5">Designation</label>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-md-5 col-form-label text-end">Designation</label>
                         <div class="col-md-7">
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="Vendor Designation" formControlName="VendorPerDesg">
@@ -90,24 +132,26 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-4 form-column ">
-                    <div class="form-group mb-1"><label class="col-md-5">Employee Name</label>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-md-5 col-form-label text-end">Employee Name</label>
                         <div class="col-md-7">
                             <input type="text" class="form-control " placeholder="Company employee name" formControlName="CompEmpName"/>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column ">
-                    <div class="form-group mb-1"><label class="col-md-5">Vendor Witness</label>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-md-5 col-form-label text-end">Vendor Witness</label>
                         <div class="col-md-7">
                             <input type="text" class="form-control " placeholder="Vendor Witness" formControlName="VendorWitness"/>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column">
-                    <div class="form-group mb-1">
-                        <label class="col-md-5">Designation</label>
+                <div class="col-md-4 ">
+                    <div class="row">
+                        <label class="col-md-5 col-form-label text-end">Designation</label>
                         <div class="col-md-7">
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="Employee Designation" formControlName="CompEmpDesg">
@@ -116,142 +160,164 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-4 form-column ">
-                    <div class="form-group mb-1"><label class="col-md-5">Vendor Address</label>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <div class="row"><label class="col-md-5 col-form-label text-end">Vendor Address</label>
                         <div class="col-md-7">
                             <input type="text" class="form-control " placeholder="Vendor Address" formControlName="Vendor_Address"/>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column ">
-                    <div class="form-group mb-1"><label class="col-md-5">Company Witness</label>
+                <div class="col-md-4 ">
+                    <div class="row"><label class="col-md-5 col-form-label text-end">Company Witness</label>
                         <div class="col-md-7">
                             <input type="text" class="form-control " placeholder="Company Witness" formControlName="CompWitness"/>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column">
-                    <div class="form-group mb-1">
-                        <label class="col-md-5">City- Pin</label>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-md-5 col-form-label text-end">City- Pin</label>
                         <div class="col-md-7">
-                            <div class="input-group">
+                            <div class="input-group gap-2">
                                 <input type="text" class="form-control" placeholder="Vendor City" formControlName="VendorCity">
-                                <input type="text" class="form-control" placeholder="Vendor City" formControlName="VendorPin">
+                                <input type="text" class="form-control" placeholder="Vendor Pin" formControlName="VendorPin"  (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"  maxlength="6">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-4 form-column ">
-                    <div class="form-group mb-1"><label class="col-md-5">TDS Applicable</label>
-                        <div class="col-md-7">
-                            <input type="text" class="form-control " formControlName="TDSAppl_YN"/>
+            <div class="row mb-3">
+                <div class="col-md-4 ">
+                    <div class="row"><label class="col-md-5 col-form-label text-end">TDS Applicable</label>
+                        <div class="col-md-7 text-start">
+                            <input type="checkbox" formControlName="TDSAppl_YN"/>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column ">
-                    <div class="form-group mb-1"><label class="col-md-5">Vendor Category</label>
+                <div class="col-md-4 ">
+                    <div class="row"><label class="col-md-5 col-form-label text-end">Vendor Category</label>
                         <div class="col-md-7">
-                            <ng-select class="noFoundTextColor required2" formControlName="VendorCategory"
-                                placeholder="Select Vendor Category"></ng-select>
+                            <ng-select class="noFoundTextColor required2" formControlName="VendorCategory" required [items]="vendorCategoryList" bindLabel="text" bindValue="value"
+                                placeholder="Select Vendor Category"   [ngClass]="{ 'border-danger': vendorContractService.vendorProfileForm.get('VendorCategory')?.invalid  && vendorContractService.vendorProfileForm.get('VendorCategory')?.touched}"></ng-select>
+                                <div *ngIf="vendorContractService.vendorProfileForm.get('VendorCategory')?.invalid && vendorContractService.vendorProfileForm.get('VendorCategory')?.touched" class="text-danger text-start">
+                                    <small *ngIf="vendorContractService.vendorProfileForm.get('VendorCategory')?.hasError('required')">Vendor Category is required.</small>
+                                </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column">
-                    <div class="form-group mb-1">
-                        <label class="col-md-5">Contract Category</label>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-md-5 col-form-label text-end">Contract Category</label>
                         <div class="col-md-7">
-                            <div class="input-group">
-                                <ng-select class="noFoundTextColor required2" formControlName="VendorContractCat"
-                                    placeholder="select Contract Category"></ng-select>
+                            <ng-select class="noFoundTextColor required2" formControlName="VendorContractCat" required
+                                [items]="vendorCategoryList" bindLabel="text" bindValue="value" placeholder="select Contract Category"
+                                [ngClass]="{ 'border-danger': vendorContractService.vendorProfileForm.get('VendorContractCat')?.invalid  && vendorContractService.vendorProfileForm.get('VendorContractCat')?.touched}"></ng-select>
+                            <div *ngIf="vendorContractService.vendorProfileForm.get('VendorContractCat')?.invalid && vendorContractService.vendorProfileForm.get('VendorContractCat')?.touched" class="text-danger text-start">
+                                <small *ngIf="vendorContractService.vendorProfileForm.get('VendorContractCat')?.hasError('required')">Contract Category is
+                                    required.</small>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-4 form-column ">
-                    <div class="form-group mb-1"><label class="col-md-5">TDS Rate</label>
+            <div class="row mb-3">
+                <div class="col-md-4 ">
+                    <div class="row"><label class="col-md-5 col-form-label text-end">TDS Rate</label>
                         <div class="col-md-7">
                             <input type="text" class="form-control " placeholder="Select TDS Rate" formControlName="TDS_Rate" />
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column ">
-                    <div class="form-group mb-1"><label class="col-md-5">Deposit Cheque(s)</label>
+                <div class="col-md-4 ">
+                    <div class="row"><label class="col-md-5 col-form-label text-end">Deposit Cheque(s)</label>
                         <div class="col-md-7">
                             <input type="text" class="form-control " placeholder="Security Deposit Cheque(s)"  formControlName="Security_deposit_chq" />
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column">
-                    <div class="form-group mb-1">
-                        <label class="col-md-5">Payment Interval</label>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-md-5 col-form-label text-end">Payment Interval</label>
                         <div class="col-md-7">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Select Payment Interval"  formControlName="Payment_interval" >
+                                <ng-select class="noFoundTextColor" formControlName="Payment_interval"
+                                [items]="paymentIntervalList" bindLabel="text" bindValue="value" placeholder="Select Payment Interval" ></ng-select>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-4 form-column ">
-                    <div class="form-group mb-1"><label class="col-md-5">Deposit Date</label>
+            <div class="row mb-3">
+                <div class="col-md-4 ">
+                    <div class="row"><label class="col-md-5 col-form-label text-end">Deposit Date</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="Deposit Date" formControlName="Security_deposit_date" />
+                             <div class="input-group" (click)="dp.toggle(); $event.stopPropagation()">
+                                <input type="text" class="form-control uppercase-none required2" placeholder="Deposit Date" required formControlName="Security_deposit_date"
+                                    [class.disabled-input]="true"
+                                    #dp="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" >
+                                <span class="input-group-text cursor-pointer" >
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column ">
-                    <div class="form-group mb-1"><label class="col-md-5">Deposit Amount</label>
+                <div class="col-md-4 ">
+                    <div class="row"><label class="col-md-5 col-form-label text-end">Deposit Amount</label>
                         <div class="col-md-7">
                             <input class="form-control" placeholder="Deposit Amount" formControlName="Security_deposit_Amt">
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column">
-                    <div class="form-group mb-1">
-                        <label class="col-md-5">Payment Basis</label>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-md-5 col-form-label text-end">Payment Basis</label>
                         <div class="col-md-7">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Select Security Payment Basis" formControlName="Payment_Basis">
+                                 <ng-select class="noFoundTextColor" formControlName="Payment_Basis"
+                                [items]="paymentBasisList" bindLabel="text" bindValue="value" placeholder="Payment Basis" ></ng-select>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-4 form-column ">
-                    <div class="form-group mb-1"><label class="col-md-5">Payment Location</label>
+            <div class="row mb-3">
+                <div class="col-md-4 ">
+                    <div class="row"><label class="col-md-5 col-form-label text-end">Payment Location</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="Select Payment Location"formControlName="Payment_loc" />
+                             <ng-select class="noFoundTextColor clear-icon" placeholder="Payment Location"
+                                formControlName="Payment_loc" notFoundText="No matches found"
+                                (search)="scanFmDocumentsService.getLocationDetail($event)"
+                                [notFoundText]="scanFmDocumentsService.nextLocationValue"
+                                (open)="scanFmDocumentsService.resetNextLocationDropdown()">
+                                <ng-option *ngFor="let item of scanFmDocumentsService.locationData" [value]="item.id">
+                                    <strong>{{ item.id }}</strong> : {{ item.text }}
+                                </ng-option>
+                            </ng-select>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column ">
-                    <div class="form-group mb-1"><label class="col-md-5">Phone Charges</label>
+                <div class="col-md-4 ">
+                    <div class="row"><label class="col-md-5 col-form-label text-end">Phone Charges</label>
                         <div class="col-md-7">
                             <input type="text" class="form-control " placeholder="Phone Charges" formControlName="Monthly_Phone_Charges"/>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column">
-                    <div class="form-group mb-1">
-                        <label class="col-md-5">Default Charges</label>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-md-5 col-form-label text-end">Default Charges</label>
                         <div class="col-md-7">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Default Charges" formControlName="Payment_interval">
-                            </div>
+                            <input type="text" class="form-control " placeholder="Default Charges" formControlName="Default_Charge"/>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-4 form-column ">
-                    <div class="form-group mb-1"><label class="col-md-5">Attachments</label>
+            <div class="row mb-3">
+                <div class="col-md-4 ">
+                    <div class="row"><label class="col-md-5 col-form-label text-end">Attachments</label>
                         <div class="col-md-7">
                             <input type="file" class="form-control " />
                         </div>
@@ -260,7 +326,4 @@
             </div>
         </form>
     </div>
-</div>
-<div class="d-flex justify-content-center bg-secondary-subtle p-4 gap-2 mt-4">
-    <button class="btn btn-primary">  Continue <i class="fas fa-arrow-circle-right md-2"></i></button>
 </div>

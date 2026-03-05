@@ -3,6 +3,7 @@ import { VendorContractProfileComponent } from '../vendor-contract-profile/vendo
 import { VendorContractChargesComponent } from '../vendor-contract-charges/vendor-contract-charges.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { VendorContractService } from 'app/shared/services/vendor-contract.service';
 
 @Component({
   selector: 'app-vendor-contract-layout',
@@ -13,7 +14,7 @@ import { Router } from '@angular/router';
 })
 export class VendorContractLayoutComponent {
   selectedTab: string = 'profile';
-  constructor(public router: Router) { }
+  constructor(public router: Router,public vendorContractService:VendorContractService) { }
   selectTab(tab: string) {
     this.selectedTab = tab;
   }
@@ -21,4 +22,17 @@ export class VendorContractLayoutComponent {
   goBack() {
     this.router.navigate(['/Master/VendorContractTypeWise']);
   }
+
+  onContinue(){
+    if(this.vendorContractService.vendorProfileForm.valid){
+      this.selectedTab = 'charges';
+    }else {
+      this.vendorContractService.vendorProfileForm.markAllAsTouched();
+    }
+  }
+
+  onBack(){
+    this.selectedTab = 'profile';
+  }
+  
 }

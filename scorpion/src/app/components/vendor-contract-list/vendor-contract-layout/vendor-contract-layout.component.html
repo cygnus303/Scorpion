@@ -22,12 +22,20 @@
 
 <div>
   <!-- Contract Profile Section -->
-  <div *ngIf="selectedTab === 'profile'">
+  <div [hidden]="selectedTab !== 'profile'">
     <app-vendor-contract-profile></app-vendor-contract-profile>
+    <div class="d-flex justify-content-center bg-secondary-subtle p-4 gap-2 mt-4">
+      <button class="btn btn-primary" (click)="onContinue()"> Continue <i
+          class="fas fa-arrow-circle-right md-2"></i></button>
+    </div>
   </div>
 
   <!-- Contract Charges Detail Section -->
-  <div *ngIf="selectedTab === 'charges'">
+  <div [hidden]="selectedTab !== 'charges'">
     <app-vendor-contract-charges></app-vendor-contract-charges>
+    <div class="d-flex justify-content-center bg-secondary-subtle p-4 gap-2 mt-4">
+      <button class="btn btn-light" (click)="onBack()"> <i class="fas fa-arrow-circle-left me-2"></i> Back</button>
+      <button class="btn btn-success"> <i class="fas fa-arrow-circle-right me-2"></i> Submit </button>
+    </div>
   </div>
 </div>
