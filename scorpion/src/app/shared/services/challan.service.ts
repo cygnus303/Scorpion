@@ -767,7 +767,7 @@ onSubmit(){
     To_City:challanForm?.to_City,
     ToAddress:challanForm?.toAddress,
    distanceInKM:challanForm?.distanceInKM,
-    EWayBillNo:challanForm?.eWayBillNo,
+    // EWayBillNo:challanForm?.eWayBillNo,
     EWayBillExpiredDate:challanForm?.eWayBillExpiredDate,
     IsMonthlyBillAllow:challanForm?.isMonthlyBillAllow?true:false,
     DeliveryAgent:challanForm?.deliveryAgent,
