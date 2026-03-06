@@ -202,23 +202,23 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
     }
   }
 
-  clearchargesZero(controlName: string) {
-    const ctrl = this.challanService.challanForm.get('charges.' + controlName);
-    if (!ctrl) return;
-    const val = ctrl.value;
-    if (val === 0 || val === '0' || val === '0.0' || val === '0.00') {
-      ctrl.setValue('');
-    }
-  }
+  // clearchargesZero(controlName: string) {
+  //   const ctrl = this.challanService.challanForm.get('charges.' + controlName);
+  //   if (!ctrl) return;
+  //   const val = ctrl.value;
+  //   if (val === 0 || val === '0' || val === '0.0' || val === '0.00') {
+  //     ctrl.setValue('');
+  //   }
+  // }
 
-  setZeroIfEmpty(controlName: string) {
-    const ctrl = this.challanService.challanForm.get('charges.' + controlName);
-    if (!ctrl) return;
-    const val = (ctrl.value || '').toString().trim();
-    if (val === '' || val === null) {
-      ctrl.setValue(0);
-    }
-  }
+  // setZeroIfEmpty(controlName: string) {
+  //   const ctrl = this.challanService.challanForm.get('charges.' + controlName);
+  //   if (!ctrl) return;
+  //   const val = (ctrl.value || '').toString().trim();
+  //   if (val === '' || val === null) {
+  //     ctrl.setValue(0);
+  //   }
+  // }
   restoreIfEmpty(controlName: string) {
     const ctrl = this.challanService.challanForm.get(controlName);
     if (ctrl && (ctrl.value === '' || ctrl.value == null)) {
@@ -471,8 +471,10 @@ onDocketSelectionChange(ctrl: AbstractControl) {
     else if (contractID === '' && (((THCTYPE === '3' || THCTYPE === '2') && vendorType === '04') || (THCTYPE === '1' && vendorType === 'XX1'))) {
       this.contractAmtMsg = 'Vendor Contract not found';
     }
-    else {
+    else  if(THCTYPE === '1' && vendorType === 'XX1'){
       this.contractAmtMsg = 'Vendor Contract has Expired.';
+    }else{
+      this.contractAmtMsg = '';
     }
   }
 
