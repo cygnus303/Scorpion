@@ -204,7 +204,7 @@
                 </tr>
                 <tr *ngFor="let item of paginatedList">
                     <td class="text-center">
-                        <span
+                        <span (click)="goToBackList()"
                             class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer">
                             <i class="fas fa-pen me-2 text-Secondary"></i> Edit </span>
                     </td>
