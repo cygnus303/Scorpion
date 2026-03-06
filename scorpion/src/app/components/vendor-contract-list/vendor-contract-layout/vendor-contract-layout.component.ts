@@ -4,6 +4,7 @@ import { VendorContractChargesComponent } from '../vendor-contract-charges/vendo
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { VendorContractService } from 'app/shared/services/vendor-contract.service';
+import { DocketService } from 'app/shared/services/docket.service';
 
 @Component({
   selector: 'app-vendor-contract-layout',
@@ -14,7 +15,22 @@ import { VendorContractService } from 'app/shared/services/vendor-contract.servi
 })
 export class VendorContractLayoutComponent {
   selectedTab: string = 'profile';
-  constructor(public router: Router,public vendorContractService:VendorContractService) { }
+  constructor(public router: Router,public vendorContractService:VendorContractService,public docketService:DocketService,) {
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.loginUserList.LocationCode =  'PIM';
+      // this.docketService.loginUserList.loadBy = "B";
+      // this.docketService.loginUserList.chargeType='1';
+      // this.docketService.loginUserList.drsId='DS/PIM/2526/002766';
+      this.docketService.loginUserList.Type = 'A';
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      this.docketService.isComplition = false;
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
+  }
+
   selectTab(tab: string) {
     this.selectedTab = tab;
   }

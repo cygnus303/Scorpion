@@ -17,7 +17,7 @@ export class MasterService {
    }
 
    getVendorContractTypeWise(params:any){
-    return this.apiHandlerService.Get(`Operation/VendorContractTypeWise?Type=${params.Type}`);
+    return this.apiHandlerService.Get(`Operation/VendorContractTypeWise?Type=${params}`);
    }
  
 }

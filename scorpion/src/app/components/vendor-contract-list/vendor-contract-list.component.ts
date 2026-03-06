@@ -43,7 +43,7 @@ export class VendorContractListComponent {
     public masterService: MasterService,
     public docketService: DocketService
   ) { }
-
+  
   ngOnInit() {
     this.buildForm();
     this.OnChangeVendorType();
@@ -224,9 +224,10 @@ export class VendorContractListComponent {
 
     }
 
-    goToBackList() {
-      this.router.navigate(['/Master/VendorContract']);
-    }
+  goToBackList() {
+    const formValues = this.criteriaform.value;
+    this.router.navigate(['/Master/VendorContract'], { queryParams: formValues });
+  }
 
     onSort(event: any){
 

@@ -7,6 +7,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ScanFmDocumentsService } from 'app/shared/services/scan-fm-documents.service';
 import { CommonModule } from '@angular/common';
 import { VendorContractService } from 'app/shared/services/vendor-contract.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-vendor-contract-profile',
@@ -14,7 +15,6 @@ import { VendorContractService } from 'app/shared/services/vendor-contract.servi
   imports: [CommonModule,NgSelectModule, BsDatepickerModule, ReactiveFormsModule],
   templateUrl: './vendor-contract-profile.component.html',
   styleUrl: './vendor-contract-profile.component.scss',
-  providers: [DocketService, ScanFmDocumentsService]
 })
 export class VendorContractProfileComponent {
   public vendorCategoryList = [
@@ -32,17 +32,28 @@ public paymentBasisList = [
   { text: 'DD', value: '3' }
 ];
   ngOnInit() {
-    this.vendorContractService.buildForm()
+    this.vendorContractService.buildForm();
+    this.getVendorContractList();
+     this.route.queryParams.subscribe(params => {
+       this.vendorContractService.vendorProfileForm.patchValue({
+         VendorName: params['VendorCode'],
+         VendorTypeName: params['VedorType']
+       })
+     });
   }
 
   constructor(public docketService: DocketService,public scanFmDocumentsService:ScanFmDocumentsService,
-    public vendorContractService:VendorContractService,private masterService:MasterService,) { }
+    public vendorContractService:VendorContractService,private masterService:MasterService,private route: ActivatedRoute) { }
 
  
   getVendorContractList(){
     this.masterService.getVendorContractTypeWise(this.docketService.loginUserList.Type).subscribe({
-      next:(response)=>{
-
+      next:(response:any)=>{
+       if(response.wvcsV1){
+        this.vendorContractService.vendorProfileForm.patchValue({
+          tdS_Rate:response.wvcsV1.tdS_Rate
+        })
+       }
       }
     })
   }

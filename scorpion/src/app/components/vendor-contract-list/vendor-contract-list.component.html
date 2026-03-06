@@ -15,7 +15,7 @@
                             <div>
                                 <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Type"
                                     [items]="vendorTypeList" bindLabel="text" bindValue="value"
-                                    formControlName="VedorType"
+                                    formControlName="VedorType" 
                                     [ngClass]="{ 'border-danger': criteriaform.get('VedorType')?.invalid  && criteriaform.get('VedorType')?.touched }"></ng-select>
                             </div>
                             <div class="text-danger text-start"
