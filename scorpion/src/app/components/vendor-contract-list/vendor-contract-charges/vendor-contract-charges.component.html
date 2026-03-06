@@ -1,3 +1,4 @@
+<form [formGroup]="vendorContractService.vendorProfileForm">
 <div class="cnote-entry-container m-4" >
     <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
         <div>
@@ -7,11 +8,11 @@
         <div class="gap-2 d-flex align-items-center">
             <button class="btn btn-success"><i class="fas fa-upload me-2"></i>Upload Excel</button>
             <button class="btn btn-success"><i class="fas fa-download me-2"></i>Download Excel Templete</button>
-             <button class="btn btn-success">+ Add Item</button>
+             <button class="btn btn-success"  (click)="vendorContractService.addRouteContract()">+ Add Item</button>
         </div>
     </div>
     
- <div class="table-responsive p-4">
+ <div class="">
         <table class="table table-bordered table-hover align-middle mb-0">
             <thead class="table-light text-center">
                 <tr>
@@ -26,18 +27,24 @@
                             class="cursor-pointer">X</div></th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td class="text-center">
-                        <input type="text" class="form-control" placeholder="Mode" formControlName="TransMode">
+            <tbody formArrayName="routeBasedContracts">
+                <tr  *ngFor="let contract of vendorContractService.routeBasedContracts.controls; let i = index" [formGroupName]="i">
+                    <td class="text-center" style="width: 200px;">
+                        <ng-select [items]="modeList" bindLabel="text" bindValue="value" placeholder="Select Mode" formControlName="TransMode"></ng-select>
                     </td>
                     <td><input type="text" class="form-control" placeholder="Route" formControlName="RouteCode"></td>
-                    <td><input type="text" class="form-control" placeholder="Type of Movement" formControlName="FTL_Type"></td>
-                    <td><input type="text" class="form-control" placeholder="Minimum" formControlName="Min_Charge"></td>
-                    <td><input type="text" class="form-control" placeholder="Maximum" formControlName="Max_Charge"></td>
-                    <td class="text-center"><input type="text" class="form-control" placeholder="Rate Type" formControlName="Rate_Type"></td>
-                    <td class="text-center"><input type="text" class="form-control" placeholder="Rate" formControlName="Chg_Rate"></td>
-                    <th> <div style="color: Maroon; font-size: 14px; font-weight: bolder; text-decoration: none;"
+                    <td style="width: 300px;">
+                        <ng-select [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId"
+                            placeholder="Type of Movement" formControlName="FTL_Type" notFoundText="No matches found"></ng-select>
+                    </td>
+                    <td><input type="text" class="form-control" placeholder="Minimum" formControlName="Min_Charge" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" ></td>
+                    <td><input type="text" class="form-control" placeholder="Maximum" formControlName="Max_Charge" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" ></td>
+                    <td class="text-center" style="width: 250px;">
+                      <ng-select [items]="generalMasterService.rateTypeList" bindLabel="codeDesc" bindValue="codeId"
+                            placeholder="Rate Type" formControlName="Rate_Type" notFoundText="No matches found"></ng-select>
+                    </td>
+                    <td class="text-center"><input type="text" class="form-control" placeholder="Rate" formControlName="Chg_Rate" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" ></td>
+                    <th> <div *ngIf="i !== 0" style="color: Maroon; font-size: 14px; font-weight: bolder; text-decoration: none;" (click)="vendorContractService.removeRouteBasedContract(i)"
                             class="cursor-pointer">X</div></th>
                 </tr>
             </tbody>
@@ -54,11 +61,11 @@
         <div class="gap-2 d-flex align-items-center">
             <button class="btn btn-success"><i class="fas fa-upload me-2"></i>Upload Excel</button>
             <button class="btn btn-success"><i class="fas fa-download me-2"></i>Download Excel Templete</button>
-             <button class="btn btn-success">+ Add Item</button>
+             <button class="btn btn-success"   (click)="vendorContractService.addDistanceContract()">+ Add Item</button>
         </div>
     </div>
     
- <div class="table-responsive p-4">
+ <div class="">
         <table class="table table-bordered table-hover align-middle mb-0">
             <thead class="table-light text-center">
                 <tr>
@@ -74,23 +81,127 @@
                             class="cursor-pointer">X</div></th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td class="text-center">
-                        <input type="text" class="form-control" placeholder="Type of Movement">
-                    </td>
-                    <td><input type="text" class="form-control"  placeholder="Vehicle Type"></td>
-                    <td><input type="text" class="form-control"  placeholder="Vehicle Number"></td>
-                    <td><input type="text" class="form-control"  placeholder="Min. Amt. Committed"></td>
-                    <td><input type="text" class="form-control"  placeholder="Committed Km."></td>
-                    <td class="text-center"><input type="text" class="form-control" placeholder="Charge Per Additional Km."></td>
-                    <td class="text-center"><input type="text" class="form-control" placeholder="Max. Payment"></td>
-                    <td class="text-center"><input type="text" class="form-control" placeholder="Committed No."></td>
-                    <th> <div style="color: Maroon; font-size: 14px; font-weight: bolder; text-decoration: none;"
-                            class="cursor-pointer">X</div></th>
-                </tr>
+            <tbody formArrayName="distanceBasedContracts">
+                 <tr *ngFor="let contract of vendorContractService.distanceBasedContracts.controls; let i = index" [formGroupName]="i">
+                        <td class="text-center"  style="width: 300px;">
+                             <ng-select [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId"
+                            placeholder="Type of Movement" formControlName="FTL_Type" notFoundText="No matches found"></ng-select>
+                        </td>
+                        <td><input type="text" class="form-control" placeholder="Vehicle Type" formControlName="Vehicle_Type"></td>
+                        <td><input type="text" class="form-control" placeholder="Vehicle Number" formControlName="Vehicle_Number"></td>
+                        <td><input type="text" class="form-control" placeholder="Min. Amt. Committed" formControlName="Min_Amt_Committed" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                        <td><input type="text" class="form-control" placeholder="Committed Km." formControlName="Committed_Km" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                        <td class="text-center"><input type="text" class="form-control" placeholder="Charge Per Additional Km." formControlName="Chg_Per_Add_Km" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                        <td class="text-center"><input type="text" class="form-control" placeholder="Max. Payment" formControlName="Max_Amt_Committed" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                        <td class="text-center"><input type="text" class="form-control" placeholder="Committed No." formControlName="Trips_PM" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                        <th><div *ngIf="i !== 0" style="color: Maroon; font-size: 14px; font-weight: bolder;" class="cursor-pointer" (click)="vendorContractService.removeDistanceBasedContract(i)">X</div></th>
+                    </tr>
             </tbody>
         </table>
     </div>
 </div>
 
+<div class="cnote-entry-container m-4">
+    <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
+        <div>
+            <i class="fas fa-list me-2"></i>
+            CNote Based Contract : Booking Charges
+        </div>
+        <div class="gap-2 d-flex align-items-center">
+            <button class="btn btn-success"><i class="fas fa-upload me-2"></i>Upload Excel</button>
+            <button class="btn btn-success"><i class="fas fa-download me-2"></i>Download Excel Templete</button>
+             <button class="btn btn-success"   (click)="vendorContractService.addCnoteContract()">+ Add Item</button>
+        </div>
+    </div>
+    
+ <div class="">
+        <table class="table table-bordered table-hover align-middle mb-0">
+            <thead class="table-light text-center">
+                <tr>
+                    <th class="cursor-pointer">From City</th>
+                    <th class="cursor-pointer">Location</th>
+                    <th class="cursor-pointer">Pay Basis</th>
+                    <th class="cursor-pointer">Mode</th>
+                    <th class="cursor-pointer">Min. Chg/CNote</th>
+                    <th class="cursor-pointer">Service Type</th>
+                    <th class="cursor-pointer">Rate Type</th>
+                    <th class="cursor-pointer">Rate/CNote</th>
+                    <th class="cursor-pointer">Max. Chg./CNote</th>
+                    <th> <div style="color: Maroon; font-size: 14px; font-weight: bolder; text-decoration: none;"
+                            class="cursor-pointer">X</div></th>
+                </tr>
+            </thead>
+            <tbody formArrayName="cnoteBasedContracts">
+                 <tr *ngFor="let contract of vendorContractService.cnoteBasedContracts.controls; let i = index" [formGroupName]="i">
+                        <td class="text-center"  style="width: 300px;">
+                             <ng-select [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId"
+                            placeholder="Select City" formControlName="City" notFoundText="No matches found"></ng-select>
+                        </td>
+                        <td><input type="text" class="form-control" placeholder="Select Location" formControlName="Location"></td>
+                        <td><input type="text" class="form-control" placeholder="Select PayBas" formControlName="PayBas"></td>
+                        <td><input type="text" class="form-control" placeholder="Select Mode" formControlName="TransMode"></td>
+                        <td><input type="text" class="form-control" placeholder="Min. Chg/CNote" formControlName="Min_Charge"></td>
+                        <td class="text-center"><input type="text" class="form-control" placeholder="Select ServiceType" formControlName="ServiceType"></td>
+                        <td class="text-center"><input type="text" class="form-control" placeholder="Select Rate Type" formControlName="Rate_Type"></td>
+                        <td class="text-center"><input type="text" class="form-control" placeholder="Rate/CNote" formControlName="Chg_Rate"></td>
+                        <td class="text-center"><input type="text" class="form-control" placeholder="Max. Chg./CNote" formControlName="Max_Charge"></td>
+                        <th><div *ngIf="i !== 0" style="color: Maroon; font-size: 14px; font-weight: bolder;" class="cursor-pointer" (click)="vendorContractService.removeCnoteBasedContract(i)">X</div></th>
+                 </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="cnote-entry-container m-4">
+    <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
+        <div>
+            <i class="fas fa-list me-2"></i>
+            CNote Based Contract : Delivery Charges
+        </div>
+        <div class="gap-2 d-flex align-items-center">
+            <button class="btn btn-success"><i class="fas fa-upload me-2"></i>Upload Excel</button>
+            <button class="btn btn-success"><i class="fas fa-download me-2"></i>Download Excel Templete</button>
+             <button class="btn btn-success"   (click)="vendorContractService.addDeliveryCharges()">+ Add Item</button>
+        </div>
+    </div>
+    
+ <div class="">
+        <table class="table table-bordered table-hover align-middle mb-0">
+            <thead class="table-light text-center">
+                <tr>
+                    <th class="cursor-pointer">Location</th>
+                    <th class="cursor-pointer">To City</th>
+                    <th class="cursor-pointer">Pay Basis</th>
+                    <th class="cursor-pointer">Mode</th>
+                    <th class="cursor-pointer">ODA OR NON ODA</th>
+                    <th class="cursor-pointer">Min. Chg/CNote</th>
+                    <th class="cursor-pointer">Service Type</th>
+                    <th class="cursor-pointer">Rate Type</th>
+                    <th class="cursor-pointer">Rate/Cnote</th>
+                    <th class="cursor-pointer">Max. Chg./CNote</th>
+                    <th> <div style="color: Maroon; font-size: 14px; font-weight: bolder; text-decoration: none;"
+                            class="cursor-pointer">X</div></th>
+                </tr>
+            </thead>
+            <tbody formArrayName="cnoteDeliveryCharges">
+                 <tr *ngFor="let contract of vendorContractService.cnoteDeliveryCharges.controls; let i = index" [formGroupName]="i">
+                        <td class="text-center"  style="width: 300px;">
+                             <ng-select [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId"
+                            placeholder="Select Location" formControlName="Location" notFoundText="No matches found"></ng-select>
+                        </td>
+                        <td><input type="text" class="form-control" placeholder="Select To City" formControlName="City"></td>
+                        <td><input type="text" class="form-control" placeholder="Select Pay Basis" formControlName="PayBas"></td>
+                        <td><input type="text" class="form-control" placeholder="Select Mode" formControlName="TransMode"></td>
+                        <td><input type="text" class="form-control" placeholder="ODA OR NON ODA" formControlName="Oda"></td>
+                        <td class="text-center"><input type="text" class="form-control" placeholder="Min. Chg/CNote" formControlName="Min_Charge"></td>
+                        <td class="text-center"><input type="text" class="form-control" placeholder="Service Type" formControlName="ServiceType"></td>
+                        <td class="text-center"><input type="text" class="form-control" placeholder="Rate Type" formControlName="Rate_Type"></td>
+                        <td class="text-center"><input type="text" class="form-control" placeholder="Rate/Cnote" formControlName="Chg_Rate"></td>
+                         <td class="text-center"><input type="text" class="form-control" placeholder="Max. Chg./CNote" formControlName="Max_Charge"></td>
+                        <th><div *ngIf="i !== 0" style="color: Maroon; font-size: 14px; font-weight: bolder;" class="cursor-pointer" (click)="vendorContractService.removeCnoteDeliveryCharges(i)">X</div></th>
+                 </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</form>

@@ -31,9 +31,18 @@ export class VendorContractLayoutComponent {
     }
   }
 
-  selectTab(tab: string) {
+selectTab(tab: string) {
+  if (tab === 'charges') {
+    if (this.vendorContractService.vendorProfileForm.valid) {
+      this.selectedTab = 'charges';
+    } else {
+      this.vendorContractService.vendorProfileForm.markAllAsTouched();
+      this.selectedTab = 'profile';
+    }
+  } else {
     this.selectedTab = tab;
   }
+}
 
   goBack() {
     this.router.navigate(['/Master/VendorContractTypeWise']);

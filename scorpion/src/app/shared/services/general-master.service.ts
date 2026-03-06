@@ -21,6 +21,7 @@ export class GeneralMasterService {
   public damageData:PRSGeneralMasterResponse[]=[];
    public deliveredToData:PRSGeneralMasterResponse[]=[];
   public documentTypeList:PRSGeneralMasterResponse[]=[];
+  public rateTypeList:PRSGeneralMasterResponse[]=[];
 
 
  constructor(
@@ -42,6 +43,16 @@ export class GeneralMasterService {
       next: (response) => {
         if (response.success) {
           this.modeData = response.data;
+        }
+      }
+    });
+  }
+
+  getRateTypeData() {
+    this.THCMasterService.getGeneralMasterDetail('VCRATETYP').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.rateTypeList = response.data;
         }
       }
     });
