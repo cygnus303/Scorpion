@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { MasterService } from 'app/shared/services/master.service';
 import { SharedModule } from 'app/shared/shared/shared.module';
 import { DocketService } from 'app/shared/services/docket.service';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-vendor-contract-list',
@@ -36,6 +37,7 @@ export class VendorContractListComponent {
   public startIndex = 0;
   public endIndex = 0;
   public totalPages = 0;
+  public env=environment;
 
   constructor(
     public paginationService: PaginationService,
@@ -204,10 +206,14 @@ export class VendorContractListComponent {
 }
 
   goToPage(page: number) {
-
     this.paginationService.currentPage = page;
     this.updateTable();
+  }
 
+  onView(item:any){
+   const url = `${this.env.liveUrl}/Operation/VendorContractViewPrint?ContractID=${item.contractcd}&Type=${item.vendorType}`;
+
+  window.open(url, '_blank');
   }
 
   goToNext() {

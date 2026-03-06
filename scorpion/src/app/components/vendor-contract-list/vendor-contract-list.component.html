@@ -213,10 +213,10 @@
                     <td>{{item.start_Dt}}</td>
                     <td>{{item.valid_uptodt}}</td>
                     <td class="text-center">{{item.contractDt}}</td>
-                    <td class="text-center">{{item.status === 'Y' ? 'ACTIVE':'INACTIVE'}}</td>
+                    <td class="text-center" [ngClass]="item.status === 'Y' ? 'text-success' : 'text-danger'">{{item.status === 'Y' ? 'ACTIVE':'INACTIVE'}}</td>
                     <td class="text-center">{{item.vendorContractCat}}</td>
                     <td class="text-center">
-                        <span
+                        <span (click)="onView(item)"
                             class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer">
                             <i class="fas fa-print me-2 text-Secondary"></i> View </span>
                     </td>
