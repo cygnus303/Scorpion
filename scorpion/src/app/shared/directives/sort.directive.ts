@@ -9,18 +9,18 @@ export class SortDirective {
  @Input() column: string = '';
   @Output() sort = new EventEmitter<{column:string, direction:string}>();
 
-  direction: string = 'asc';
+  direction: 'asc' | 'desc' = 'asc';
 
-  @HostListener('click')
-  onClick() {
+@HostListener('click')
+onClick() {
 
-    this.direction = this.direction === 'asc' ? 'desc' : 'asc';
+  this.sort.emit({
+    column: this.column,
+    direction: this.direction
+  });
 
-    this.sort.emit({
-      column: this.column,
-      direction: this.direction
-    });
+  this.direction = this.direction === 'asc' ? 'desc' : 'asc';
 
-  }
+}
 
 }

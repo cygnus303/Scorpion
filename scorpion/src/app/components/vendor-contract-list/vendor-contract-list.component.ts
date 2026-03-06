@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { MasterService } from 'app/shared/services/master.service';
 import { SharedModule } from 'app/shared/shared/shared.module';
 import { DocketService } from 'app/shared/services/docket.service';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-vendor-contract-list',
@@ -32,10 +33,11 @@ export class VendorContractListComponent {
   public paginatedList: any[] = [];
   public isLoading = false;
   public searchText = '';
-
+  public totalRecords = 0;
   public startIndex = 0;
   public endIndex = 0;
   public totalPages = 0;
+  public env=environment;
 
   constructor(
     public paginationService: PaginationService,
@@ -145,106 +147,107 @@ export class VendorContractListComponent {
             matrix = "06";
           }
         }
-      }else{
+      } else {
         if (Type == "08" || Type == "XX5" || Type == "04") {
           matrix = "07";
         }
       }
       this.getContractList(matrix)
-      
-      } else {
-        this.criteriaform.markAllAsTouched();
-        this.isListShow = true;
+
+    } else {
+      this.criteriaform.markAllAsTouched();
+      this.isListShow = true;
+    }
+  }
+
+
+  getContractList(matrixType: string) {
+    this.isLoading = true;
+
+    const parmas = {
+      vendorCode: this.criteriaform.value.VendorCode,
+      matrixType: matrixType,
+      vType: this.criteriaform.value.VedorType
+    }
+
+    this.masterService.getVendorList(parmas).subscribe({
+      next: (response: any) => {
+        this.contractList = response;
+        this.paginationService.currentPage = 1;
+        this.updateTable();
+      },
+      complete: () => {
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
       }
-    }
+    })
+  }
 
+  updateTable() {
 
-    getContractList(matrixType : string){
-      this.isLoading = true;
+    const result = this.paginationService.paginate(
+      this.contractList,
+      this.searchText
+    );
 
-      const parmas = {
-        vendorCode: this.criteriaform.value.VendorCode,
-        matrixType: matrixType,
-        vType:  this.criteriaform.value.VedorType
-      }
+    this.filteredList = result.filtered;
+    this.paginatedList = result.paginatedList;
+    this.startIndex = result.startIndex;
+    this.endIndex = result.endIndex;
+    this.totalPages = result.totalPages;
+    this.totalRecords = result.filtered.length;
 
-      this.masterService.getVendorList(parmas).subscribe({
-        next: (response: any) => {
-          this.contractList = response;
-        },
-        complete: () => {
-          this.isLoading = false;
-        },
-        error: () => {
-          this.isLoading = false;
-        }
-      })
-    }
+  }
 
-    updateTable() {
+  getPages(): number[] {
+  return Array(this.totalPages).fill(0).map((x, i) => i + 1);
+}
 
-      const result = this.paginationService.paginate(
-        this.contractList,
-        this.searchText
-      );
+  goToPage(page: number) {
+    this.paginationService.currentPage = page;
+    this.updateTable();
+  }
 
-      this.filteredList = result.filtered;
-      this.paginatedList = result.paginatedList;
-      this.startIndex = result.startIndex;
-      this.endIndex = result.endIndex;
-      this.totalPages = result.totalPages;
+  onView(item:any){
+   const url = `${this.env.liveUrl}/Operation/VendorContractViewPrint?ContractID=${item.contractcd}&Type=${item.vendorType}`;
 
-    }
+  window.open(url, '_blank');
+  }
 
-    goToPage(page: number) {
-
-      this.paginationService.currentPage = page;
-      this.updateTable();
-
-    }
-
-    goToNext() {
-
+  goToNext() {
+    if (this.paginationService.currentPage < this.totalPages) {
       this.paginationService.currentPage++;
       this.updateTable();
-
     }
+  }
 
-    sort(column: string) {
-
-      this.paginationService.sort(column);
-      this.updateTable();
-
-    }
-
-    goToPrevious() {
-
+  goToPrevious() {
+    if (this.paginationService.currentPage > 1) {
       this.paginationService.currentPage--;
       this.updateTable();
-
     }
+  }
 
-  goToBackList() {
+goToBackList() {
     const formValues = this.criteriaform.value;
     this.router.navigate(['/Master/VendorContract'], { queryParams: formValues });
   }
 
-    onSort(event: any){
-
-      const { column, direction } = event;
-
-      this.contractList.sort((a: any, b: any) => {
-
-        const valueA = a[column];
-        const valueB = b[column];
-
-        if (valueA < valueB) return direction === 'asc' ? -1 : 1;
-        if (valueA > valueB) return direction === 'asc' ? 1 : -1;
-
-        return 0;
-
-      });
-
-      this.updateTable();
-    }
+  onSearch() {
+    this.paginationService.currentPage = 1;
+    this.updateTable();
   }
+
+onSort(event: any) {
+
+  this.paginationService.sortColumn = event.column;
+  this.paginationService.sortDirection = event.direction;
+
+  this.paginationService.currentPage = 1;
+
+  this.updateTable();
+
+}
+}
