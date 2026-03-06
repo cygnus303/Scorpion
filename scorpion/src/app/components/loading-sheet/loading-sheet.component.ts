@@ -81,9 +81,9 @@ ngOnInit(){
       this.loadingSheetService.LSForm.get('LoadingSupervisor')?.setValue('');
     }
 
-      this.loadingSheetService.LSForm.get('rdVehicle')?.valueChanges.subscribe((value) => {
-      this.loadingSheetService.LSForm.get('vehno')?.setValue('');
-});
+//       this.loadingSheetService.LSForm.get('rdVehicle')?.valueChanges.subscribe((value) => {
+//       this.loadingSheetService.LSForm.get('vehno')?.setValue('');
+// });
   }
   
   getvendoCodeData(event: any) {
