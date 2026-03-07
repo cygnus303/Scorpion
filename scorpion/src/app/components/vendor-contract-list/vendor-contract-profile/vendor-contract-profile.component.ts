@@ -36,8 +36,9 @@ public paymentBasisList = [
     this.getVendorContractList();
      this.route.queryParams.subscribe(params => {
        this.vendorContractService.vendorProfileForm.patchValue({
-         VendorName: params['VendorCode'],
-         VendorTypeName: params['VedorType']
+         VendorName: params['Vendorname'],
+         VendorTypeName: params['Text'],
+         VendorType: params['VedorType']
        })
      });
   }

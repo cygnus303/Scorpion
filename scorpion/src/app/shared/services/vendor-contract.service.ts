@@ -39,6 +39,7 @@ export class VendorContractService {
       Payment_loc: new FormControl(null),
       Monthly_Phone_Charges: new FormControl(0),
       Default_Charge:new FormControl(0),
+      VendorType:new FormControl(null),
       routeBasedContracts: new FormArray([]), 
       distanceBasedContracts: new FormArray([]),
       cnoteBasedContracts: new FormArray([]),

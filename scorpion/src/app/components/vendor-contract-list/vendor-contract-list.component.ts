@@ -51,12 +51,27 @@ export class VendorContractListComponent {
     this.OnChangeVendorType();
   }
 
+  changeVendorType(event: any) {
+    this.criteriaform.patchValue({
+      Text: event.text
+    });
+  }
+
+  changeVendor(event: any) {
+    this.criteriaform.patchValue({
+      Vendorname: event.text,
+      VendorCode:event.id
+    });
+  }
+
   buildForm() {
     this.criteriaform = new FormGroup({
       VedorType: new FormControl(null, [Validators.required]),
       ContractType: new FormControl(null),
       ContractFor: new FormControl(null),
-      VendorCode: new FormControl(null, [Validators.required])
+      VendorCode: new FormControl(null, [Validators.required]),
+      Text: new FormControl(''),
+      Vendorname: new FormControl('')
     })
   }
 
