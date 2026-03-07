@@ -26,7 +26,14 @@ constructor(public vendorContractService:VendorContractService,public docketServ
     this.vendorContractService.addDistanceContract();
     this.vendorContractService.addCnoteBasedContract();
     this.vendorContractService.addCnoteDeliveryCharges();
+    this.vendorContractService.getVehicleType('O');
     this.docketService.getTypeofMovementData();
     this.generalMasterService.getRateTypeData()
+  }
+
+  onModeChange(index: number) {
+    const row = this.vendorContractService.routeBasedContracts.at(index);
+    row.get('RouteCode')?.reset();
+    row.get('FTL_Type')?.reset();
   }
 }

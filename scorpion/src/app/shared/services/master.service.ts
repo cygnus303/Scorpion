@@ -19,5 +19,9 @@ export class MasterService {
    getVendorContractTypeWise(params:any){
     return this.apiHandlerService.Get(`Operation/VendorContractTypeWise?Type=${params}`);
    }
+
+    getRouteByMode(params:any){
+    return this.apiHandlerService.Get(`Master/GetRouteByMode?id=${params.id}&searchTerm=${params.searchTerm}`);
+   }
  
 }

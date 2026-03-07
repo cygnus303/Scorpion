@@ -31,11 +31,23 @@
                 <tbody formArrayName="routeBasedContracts">
                     <tr  *ngFor="let contract of vendorContractService.routeBasedContracts.controls; let i = index" [formGroupName]="i">
                         <td class="text-center" style="width: 200px;">
-                            <ng-select [items]="modeList" bindLabel="text" bindValue="value" placeholder="Select Mode" formControlName="TransMode"></ng-select>
+                            <ng-select [items]="modeList" bindLabel="text" bindValue="value" placeholder="Select Mode" formControlName="TransMode" (change)="onModeChange(i)"></ng-select>
                         </td>
-                        <td><input type="text" class="form-control" placeholder="Route" formControlName="RouteCode"></td>
-                        <td style="width: 300px;">
-                            <ng-select [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId"
+                        <td style="width: 290px;">
+                        <input *ngIf="!contract.get('TransMode')?.value" type="text" class="form-control" placeholder="Route" formControlName="RouteCode">
+                          <ng-select *ngIf="contract.get('TransMode')?.value" class="noFoundTextColor clear-icon" placeholder="Route"
+                                formControlName="RouteCode" notFoundText="No matches found"
+                                (search)="vendorContractService.getRouteDetail($event, i)"
+                                [notFoundText]="vendorContractService.nextRouteValue"
+                                (open)="vendorContractService.resetNextRouteDropdown()">
+                                <ng-option *ngFor="let item of vendorContractService.RouteData" [value]="item.id">
+                                    <strong>{{ item.id }}</strong> : {{ item.text }}
+                                </ng-option>
+                            </ng-select>
+                        </td>
+                        
+                        <td style="width: 360px;">
+                            <ng-select [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId" [readonly]="contract.get('TransMode')?.value && contract.get('TransMode')?.value !== 'S'"
                                 placeholder="Type of Movement" formControlName="FTL_Type" notFoundText="No matches found"></ng-select>
                         </td>
                         <td><input type="text" class="form-control" placeholder="Minimum" formControlName="Min_Charge" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" ></td>
@@ -88,8 +100,20 @@
                                  <ng-select [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId"
                                 placeholder="Type of Movement" formControlName="FTL_Type" notFoundText="No matches found"></ng-select>
                             </td>
-                            <td><input type="text" class="form-control" placeholder="Vehicle Type" formControlName="Vehicle_Type"></td>
-                            <td><input type="text" class="form-control" placeholder="Vehicle Number" formControlName="Vehicle_Number"></td>
+                            <td style="width: 300px;">
+                                 <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vehicle Type" formControlName="Vehicle_Type"
+                                [items]="vendorContractService.vehicleTypeList" bindLabel="type_Name" bindValue="typeCode"
+                                notFoundText="No matches found"></ng-select>
+                            </td>
+                            <td style="width: 300px;">
+                                <ng-select class="noFoundTextColor clear-icon" placeholder="Vehicle Number" formControlName="Vehicle_Number"
+                                    (search)="vendorContractService.getVehicleNumberDetail($event)" [notFoundText]="vendorContractService.noVehicleValue"
+                                     (open)="vendorContractService.resetvehicleNoDropdown()">
+                                    <ng-option *ngFor="let item of vendorContractService.vehicleNumberData" [value]="item.vehno">
+                                        {{ item.vehno }}
+                                    </ng-option>
+                                </ng-select>
+                            </td>
                             <td><input type="text" class="form-control" placeholder="Min. Amt. Committed" formControlName="Min_Amt_Committed" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
                             <td><input type="text" class="form-control" placeholder="Committed Km." formControlName="Committed_Km" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
                             <td class="text-center"><input type="text" class="form-control" placeholder="Charge Per Additional Km." formControlName="Chg_Per_Add_Km" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>

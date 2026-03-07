@@ -1,13 +1,23 @@
 import { Injectable } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { MasterService } from './master.service';
+import { VehicleNumbersResponse } from '../models/general-master.model';
+import { BasicDetailService } from './basic-detail.service';
+import { THCMasterService } from 'app/shared/services/thc-master.service';
+import { VehicleTypeListResponse } from '../models/thc-master.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VendorContractService {
+  public RouteData: any[] = [];
+  public nextRouteValue = 'Please enter atleast 1 character';
+  public noVehicleValue = 'Please enter atleast 1 character';
+  public vehicleNumberData: VehicleNumbersResponse[] = [];
+  public vehicleTypeList:VehicleTypeListResponse[]=[];
   public vendorProfileForm !: FormGroup;
 
-  constructor() { }
+  constructor(private masterService:MasterService,public basicDetailService: BasicDetailService,public THCMasterService: THCMasterService) { }
 
    buildForm() {
     this.vendorProfileForm = new FormGroup({
@@ -105,7 +115,7 @@ export class VendorContractService {
   addCnoteBasedContract() {
     const group = new FormGroup({
       City: new FormControl(null),
-      Location: new FormControl(null),
+      Route: new FormControl(null),
       PayBas: new FormControl(null),
       TransMode: new FormControl(null),
       Min_Charge: new FormControl(null),
@@ -154,5 +164,71 @@ export class VendorContractService {
 
   addDeliveryCharges() {
     this.addCnoteDeliveryCharges();
+  }
+
+   getRouteDetail(event: any, index: number) {
+    const searchText = event.term;
+    if (!searchText || searchText.length < 1) {
+      this.nextRouteValue = 'Please enter at least 1 characters';
+      return;
+    }
+     const mode =
+       this.routeBasedContracts.at(index).get('TransMode')?.value;
+     const data = {
+       searchTerm: searchText,
+       id: mode
+     };
+    this.nextRouteValue = 'Searching..'
+    this.masterService.getRouteByMode(data).subscribe({
+      next: (response:any) => {
+        if (response) {
+          this.RouteData = response;
+          this.nextRouteValue = 'No matches found';
+        } else {
+          this.RouteData = []
+          this.nextRouteValue = ''
+        }
+      }
+    });
+  }
+
+    resetNextRouteDropdown() {
+    this.RouteData = [];
+    this.nextRouteValue = 'Please enter at least 1 characters';
+  }
+
+  
+  getVehicleNumberDetail(event: any) {
+    const searchText = event.term;
+    if (!searchText || searchText.length < 1) {
+      this.noVehicleValue = 'Please enter at least 1 characters';
+      return;
+    }
+    this.noVehicleValue = 'Searching..'
+    this.basicDetailService.getGetVehicleNumbers(searchText).subscribe({
+      next: (response) => {
+        if (response) {
+          this.vehicleNumberData = response;
+          this.noVehicleValue = 'No matches found';
+        } else {
+          this.vehicleNumberData = []
+          this.noVehicleValue = ''
+        }
+      }
+    });
+  }
+
+  resetvehicleNoDropdown() {
+    this.vehicleNumberData = [];
+    this.noVehicleValue = 'Please enter at least 1 characters';
+  }
+
+  getVehicleType(vehicleNo: string) {
+    this.THCMasterService.getVehicleType(vehicleNo).subscribe({next: (response: any) => {
+        if (response) {
+          this.vehicleTypeList = response.data;
+        }
+      }
+    });
   }
 }
