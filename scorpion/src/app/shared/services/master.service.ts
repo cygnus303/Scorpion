@@ -24,4 +24,7 @@ export class MasterService {
     return this.apiHandlerService.Get(`Master/GetRouteByMode?id=${params.id}&searchTerm=${params.searchTerm}`);
    }
  
+  AddEditVendorContract(payload: any) {
+    return this.apiHandlerService.Post(`Master/AddEditVendorContract`, payload);
+  }
 }

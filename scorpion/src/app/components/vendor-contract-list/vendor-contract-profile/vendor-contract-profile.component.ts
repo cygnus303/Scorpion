@@ -38,7 +38,8 @@ public paymentBasisList = [
        this.vendorContractService.vendorProfileForm.patchValue({
          VendorName: params['Vendorname'],
          VendorTypeName: params['Text'],
-         VendorType: params['VedorType']
+         VendorType: params['VedorType'],
+         VendorCode: params['VendorCode']
        })
      });
   }
