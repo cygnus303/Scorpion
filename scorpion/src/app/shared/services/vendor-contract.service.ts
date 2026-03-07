@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MasterService } from './master.service';
 import { VehicleNumbersResponse } from '../models/general-master.model';
 import { BasicDetailService } from './basic-detail.service';
@@ -60,6 +60,8 @@ export class VendorContractService {
       Monthly_Phone_Charges: new FormControl(0),
       Default_Charge:new FormControl(0),
       VendorType:new FormControl(null),
+      VendorCode:new FormControl(null),
+      MetrixType:new FormControl(null),
       routeBasedContracts: new FormArray([]), 
       distanceBasedContracts: new FormArray([]),
       cnoteBasedContracts: new FormArray([]),
@@ -73,8 +75,8 @@ export class VendorContractService {
 
   addRouteBasedContract() {
     const routeContract = new FormGroup({
-      TransMode: new FormControl(null),
-      RouteCode: new FormControl(null),
+      TransMode: new FormControl(null,this.vendorProfileForm.value.VendorType === 'XX1' ? Validators.required :null),
+      RouteCode: new FormControl(null,this.vendorProfileForm.value.VendorType === 'XX1' ? Validators.required :null),
       FTL_Type: new FormControl(null),
       Min_Charge: new FormControl(0),
       Max_Charge: new FormControl(0),

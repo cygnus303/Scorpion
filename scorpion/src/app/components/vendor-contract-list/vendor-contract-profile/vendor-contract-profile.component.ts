@@ -36,14 +36,14 @@ public routeParams:any;
   ngOnInit() {
     this.vendorContractService.buildForm();
     this.route.queryParams.subscribe(params => {
-      this.routeParams=params;
       this.vendorContractService.vendorProfileForm.patchValue({
         VendorName: params['Vendorname'],
         VendorTypeName: params['Text'],
-        VendorType: params['VedorType']
+        VendorType: params['VedorType'],
+        VendorCode: params['VendorCode']
       })
-      this.getVendorContractList();
-     });
+    });
+    this.getVendorContractList();
   }
 
   constructor(public docketService: DocketService,public scanFmDocumentsService:ScanFmDocumentsService,public generalMasterService:GeneralMasterService,

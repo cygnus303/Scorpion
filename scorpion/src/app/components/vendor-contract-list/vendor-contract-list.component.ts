@@ -47,6 +47,21 @@ export class VendorContractListComponent {
   ) { }
   
   ngOnInit() {
+     const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.loginUserList.LocationCode =  'PIM';
+      // this.docketService.loginUserList.loadBy = "B";
+      // this.docketService.loginUserList.chargeType='1';
+      // this.docketService.loginUserList.drsId='DS/PIM/2526/002766';
+      this.docketService.loginUserList.Type = 'E';
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      this.docketService.isComplition = false;
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+      console.log(this.docketService.loginUserList , 'gggggggggg')
+    }
+
     this.buildForm();
     this.OnChangeVendorType();
   }
@@ -184,7 +199,6 @@ export class VendorContractListComponent {
 
   getContractList(matrixType: string) {
     this.isLoading = true;
-
     const parmas = {
       vendorCode: this.criteriaform.value.VendorCode,
       matrixType: matrixType,
@@ -207,12 +221,10 @@ export class VendorContractListComponent {
   }
 
   updateTable() {
-
     const result = this.paginationService.paginate(
       this.contractList,
       this.searchText
     );
-
     this.filteredList = result.filtered;
     this.paginatedList = result.paginatedList;
     this.startIndex = result.startIndex;
@@ -233,8 +245,7 @@ export class VendorContractListComponent {
 
   onView(item:any){
    const url = `${this.env.liveUrl}/Operation/VendorContractViewPrint?ContractID=${item.contractcd}&Type=${item.vendorType}`;
-
-  window.open(url, '_blank');
+   window.open(url, '_blank');
   }
 
   goToNext() {
@@ -262,14 +273,10 @@ goToBackList() {
   }
 
 onSort(event: any) {
-
   this.paginationService.sortColumn = event.column;
   this.paginationService.sortDirection = event.direction;
-
   this.paginationService.currentPage = 1;
-
   this.updateTable();
-
 }
 
 onEditPage(item:any){

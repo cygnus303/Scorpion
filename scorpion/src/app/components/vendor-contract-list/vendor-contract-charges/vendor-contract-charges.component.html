@@ -31,19 +31,28 @@
                 <tbody formArrayName="routeBasedContracts">
                     <tr  *ngFor="let contract of vendorContractService.routeBasedContracts.controls; let i = index" [formGroupName]="i">
                         <td class="text-center" style="width: 200px;">
-                            <ng-select [items]="modeList" bindLabel="text" bindValue="value" placeholder="Select Mode" formControlName="TransMode" (change)="onModeChange(i)"></ng-select>
+                            <ng-select [items]="modeList" bindLabel="text" bindValue="value" placeholder="Select Mode" formControlName="TransMode" (change)="onModeChange(i)"
+                             [ngClass]="{ 'border-danger': contract.get('TransMode')?.touched && contract.get('TransMode')?.errors?.['required']}"></ng-select>
+                            <div class="text-danger text-start">
+                                <small *ngIf="contract.get('TransMode')?.touched && contract.get('TransMode')?.errors?.['required']">Mode is required</small>
+                            </div>
                         </td>
                         <td style="width: 290px;">
-                        <input *ngIf="!contract.get('TransMode')?.value" type="text" class="form-control" placeholder="Route" formControlName="RouteCode">
-                          <ng-select *ngIf="contract.get('TransMode')?.value" class="noFoundTextColor clear-icon" placeholder="Route"
+                        <input *ngIf="!contract.get('TransMode')?.value" type="text" class="form-control required2" placeholder="Route" formControlName="RouteCode"
+                        [ngClass]="{ 'border-danger': contract.get('RouteCode')?.touched && contract.get('RouteCode')?.errors?.['required']}">
+                          <ng-select *ngIf="contract.get('TransMode')?.value" class="noFoundTextColor clear-icon required2" placeholder="Route"
                                 formControlName="RouteCode" notFoundText="No matches found"
                                 (search)="vendorContractService.getRouteDetail($event, i)"
                                 [notFoundText]="vendorContractService.nextRouteValue"
-                                (open)="vendorContractService.resetNextRouteDropdown()">
+                                (open)="vendorContractService.resetNextRouteDropdown()"
+                                 [ngClass]="{ 'border-danger': contract.get('RouteCode')?.touched && contract.get('RouteCode')?.errors?.['required']}">
                                 <ng-option *ngFor="let item of vendorContractService.RouteData" [value]="item.id">
                                     <strong>{{ item.id }}</strong> : {{ item.text }}
                                 </ng-option>
                             </ng-select>
+                            <div class="text-danger text-start">
+                                <small *ngIf="contract.get('RouteCode')?.touched && contract.get('RouteCode')?.errors?.['required']">Route is required</small>
+                            </div>
                         </td>
                         
                         <td style="width: 360px;">
@@ -101,7 +110,7 @@
                                 placeholder="Type of Movement" formControlName="FTL_Type" notFoundText="No matches found"></ng-select>
                             </td>
                             <td style="width: 300px;">
-                                 <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vehicle Type" formControlName="Vehicle_Type"
+                                 <ng-select class="noFoundTextColor clear-icon" placeholder="Vehicle Type" formControlName="Vehicle_Type"
                                 [items]="vendorContractService.vehicleTypeList" bindLabel="type_Name" bindValue="typeCode"
                                 notFoundText="No matches found"></ng-select>
                             </td>

@@ -26,5 +26,8 @@ export class MasterService {
   getVendorContract(payload: any) {
     return this.apiHandlerService.Post(`Master/VendorContract`, payload);
   }
-
+ 
+  AddEditVendorContract(payload: any) {
+    return this.apiHandlerService.Post(`Master/AddEditVendorContract`, payload);
+  }
 }
