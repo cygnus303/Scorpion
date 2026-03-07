@@ -8,6 +8,7 @@ import { ScanFmDocumentsService } from 'app/shared/services/scan-fm-documents.se
 import { CommonModule } from '@angular/common';
 import { VendorContractService } from 'app/shared/services/vendor-contract.service';
 import { ActivatedRoute } from '@angular/router';
+import { GeneralMasterService } from 'app/shared/services/general-master.service';
 
 @Component({
   selector: 'app-vendor-contract-profile',
@@ -31,24 +32,35 @@ public paymentBasisList = [
   { text: 'Cheque', value: '2' },
   { text: 'DD', value: '3' }
 ];
+public routeParams:any;
   ngOnInit() {
     this.vendorContractService.buildForm();
-    this.getVendorContractList();
-     this.route.queryParams.subscribe(params => {
-       this.vendorContractService.vendorProfileForm.patchValue({
-         VendorName: params['Vendorname'],
-         VendorTypeName: params['Text'],
-         VendorType: params['VedorType']
-       })
+    this.route.queryParams.subscribe(params => {
+      this.routeParams=params;
+      this.vendorContractService.vendorProfileForm.patchValue({
+        VendorName: params['Vendorname'],
+        VendorTypeName: params['Text'],
+        VendorType: params['VedorType']
+      })
+      this.getVendorContractList();
      });
   }
 
-  constructor(public docketService: DocketService,public scanFmDocumentsService:ScanFmDocumentsService,
+  constructor(public docketService: DocketService,public scanFmDocumentsService:ScanFmDocumentsService,public generalMasterService:GeneralMasterService,
     public vendorContractService:VendorContractService,private masterService:MasterService,private route: ActivatedRoute) { }
 
  
   getVendorContractList(){
-    this.masterService.getVendorContractTypeWise(this.docketService.loginUserList.Type).subscribe({
+    const payload = {
+      type:this.routeParams.VedorType ,
+      text:this.routeParams.Text,
+      flag:this.docketService.loginUserList.Type === 'A'?'Add':'Edit',
+      vendorCode:this.routeParams.VendorCode,
+      contractType:this.routeParams.ContractType,
+      matrix:this.routeParams.matrix,
+      contractId:this.routeParams.ContractFor
+    }
+    this.masterService.getVendorContract(payload).subscribe({
       next:(response:any)=>{
        if(response.wvcsV1){
         this.vendorContractService.vendorProfileForm.patchValue({
@@ -57,6 +69,15 @@ public paymentBasisList = [
        }
       }
     })
+    // this.masterService.getVendorContractTypeWise(this.docketService.loginUserList.Type).subscribe({
+    //   next:(response:any)=>{
+    //    if(response.wvcsV1){
+    //     this.vendorContractService.vendorProfileForm.patchValue({
+    //       tdS_Rate:response.wvcsV1.tdS_Rate
+    //     })
+    //    }
+    //   }
+    // })
   }
 
 }

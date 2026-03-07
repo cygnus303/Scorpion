@@ -22,6 +22,10 @@ export class GeneralMasterService {
    public deliveredToData:PRSGeneralMasterResponse[]=[];
   public documentTypeList:PRSGeneralMasterResponse[]=[];
   public rateTypeList:PRSGeneralMasterResponse[]=[];
+  public PayBsList:PRSGeneralMasterResponse[]=[];
+  public serviceTypeList:PRSGeneralMasterResponse[]=[];
+  public VendorRateList:PRSGeneralMasterResponse[]=[];
+  public odaList:PRSGeneralMasterResponse[]=[];
 
 
  constructor(
@@ -154,6 +158,42 @@ export class GeneralMasterService {
           this.documentTypeList = response.data;
         }
       },
+    });
+  }
+
+    getPaybs(codeType: string) {
+    this.THCMasterService.getGeneralMasterDetail(codeType).subscribe({ next: (response) => {
+        if (response.success) {
+          this.PayBsList = response.data;
+        }
+      }
+    });
+  }
+
+  getServiceType(){
+    this.THCMasterService.getGeneralMasterDetail('VENDCONTSVCTYP').subscribe({ next: (response) => {
+        if (response.success) {
+          this.serviceTypeList = response.data;
+        }
+      }
+    });
+  }
+
+  getVendorRateType(){
+     this.THCMasterService.getGeneralMasterDetail('VBRATETYPE').subscribe({ next: (response) => {
+        if (response.success) {
+          this.VendorRateList = response.data;
+        }
+      }
+    });
+  }
+
+  getODADetail(){
+     this.THCMasterService.getGeneralMasterDetail('VENDODA').subscribe({ next: (response) => {
+        if (response.success) {
+          this.odaList = response.data;
+        }
+      }
     });
   }
 

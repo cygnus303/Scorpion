@@ -4,7 +4,9 @@ import { MasterService } from './master.service';
 import { VehicleNumbersResponse } from '../models/general-master.model';
 import { BasicDetailService } from './basic-detail.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
-import { VehicleTypeListResponse } from '../models/thc-master.model';
+import { CityResponse, VehicleTypeListResponse } from '../models/thc-master.model';
+import { LocationResponse } from '../models/loading-sheet.model';
+import { LoadingSheetApiService } from './loading-sheet-api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +18,16 @@ export class VendorContractService {
   public vehicleNumberData: VehicleNumbersResponse[] = [];
   public vehicleTypeList:VehicleTypeListResponse[]=[];
   public vendorProfileForm !: FormGroup;
+    public nextLocationValue = 'Please enter atleast 1 character';
+  public locationData: LocationResponse[] = [];
+  public cityList:CityResponse[]=[];
 
-  constructor(private masterService:MasterService,public basicDetailService: BasicDetailService,public THCMasterService: THCMasterService) { }
+  constructor(
+    private masterService:MasterService,
+    public basicDetailService: BasicDetailService,
+    public THCMasterService: THCMasterService,
+    public loadingSheetApiService:LoadingSheetApiService,
+  ) { }
 
    buildForm() {
     this.vendorProfileForm = new FormGroup({
@@ -229,6 +239,36 @@ export class VendorContractService {
           this.vehicleTypeList = response.data;
         }
       }
+    });
+  }
+
+  getLocationDetail(event: any) {
+    const searchText = event.term;
+    if (!searchText || searchText.length < 1) {
+      this.nextLocationValue = 'Please enter at least 1 characters';
+      return;
+    }
+    this.nextLocationValue = 'Searching..'
+    this.loadingSheetApiService.getLocationList(searchText).subscribe({
+      next: (response) => {
+        if (response && response.data) {
+          this.locationData = response.data;
+          this.nextLocationValue = 'No matches found';
+        } else {
+          this.locationData = []
+          this.nextLocationValue = ''
+        }
+      }
+    });
+  }
+
+    getCityList() {
+    this.THCMasterService.getCityList().subscribe({
+      next: (response) => {
+        if (response) {
+          this.cityList = response;
+        }
+      },
     });
   }
 }

@@ -71,7 +71,8 @@ export class VendorContractListComponent {
       ContractFor: new FormControl(null),
       VendorCode: new FormControl(null, [Validators.required]),
       Text: new FormControl(''),
-      Vendorname: new FormControl('')
+      Vendorname: new FormControl(''),
+      matrix:new FormControl('')
     })
   }
 
@@ -167,6 +168,11 @@ export class VendorContractListComponent {
           matrix = "07";
         }
       }
+
+      this.criteriaform.patchValue({
+        matrix:matrix
+      })
+
       this.getContractList(matrix)
 
     } else {
@@ -264,5 +270,14 @@ onSort(event: any) {
 
   this.updateTable();
 
+}
+
+onEditPage(item:any){
+
+      const formValues = {
+        ...this.criteriaform.value,
+        ContractId:item.contractcd
+      };
+    this.router.navigate(['/Master/VendorContract'], { queryParams: formValues });
 }
 }

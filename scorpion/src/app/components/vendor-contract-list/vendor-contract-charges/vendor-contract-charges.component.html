@@ -160,16 +160,24 @@
                 </thead>
                 <tbody formArrayName="cnoteBasedContracts">
                      <tr *ngFor="let contract of vendorContractService.cnoteBasedContracts.controls; let i = index" [formGroupName]="i">
-                            <td class="text-center"  style="width: 300px;">
-                                 <ng-select [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId"
+                            <td class="text-center"  style="width: 250px;">
+                                 <ng-select [items]="vendorContractService.cityList" bindValue="city_code" bindLabel="location"
                                 placeholder="Select City" formControlName="City" notFoundText="No matches found"></ng-select>
                             </td>
-                            <td><input type="text" class="form-control" placeholder="Select Location" formControlName="Location"></td>
-                            <td><input type="text" class="form-control" placeholder="Select PayBas" formControlName="PayBas"></td>
-                            <td><input type="text" class="form-control" placeholder="Select Mode" formControlName="TransMode"></td>
+                            <td style="width: 250px;"><ng-select placeholder="Select Location" formControlName="Location"
+                                [notFoundText]="vendorContractService.nextLocationValue" bindLabel="text" bindValue="id" (search)="vendorContractService.getLocationDetail($event)"
+                                [items]="vendorContractService.locationData"></ng-select></td>
+                            <td style="width: 150px;"><ng-select placeholder="Select PayBas" formControlName="PayBas"
+                                bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.PayBsList"></ng-select>
+                            <td style="width: 250px;"><ng-select placeholder="Select Mode" formControlName="TransMode"
+                                 [items]="generalMasterService.modeData" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
                             <td><input type="text" class="form-control" placeholder="Min. Chg/CNote" formControlName="Min_Charge"></td>
-                            <td class="text-center"><input type="text" class="form-control" placeholder="Select ServiceType" formControlName="ServiceType"></td>
-                            <td class="text-center"><input type="text" class="form-control" placeholder="Select Rate Type" formControlName="Rate_Type"></td>
+                            <td class="text-center" style="width: 100px;"><ng-select placeholder="Select ServiceType" formControlName="ServiceType"
+                                [items]="generalMasterService.serviceTypeList" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
+                            <td class="text-center" style="width: 150px;"><ng-select  placeholder="Select Rate Type" formControlName="Rate_Type"
+                                [items]="generalMasterService.VendorRateList" bindLabel="codeDesc" bindValue="codeId">
+                                </ng-select>
+                            </td>
                             <td class="text-center"><input type="text" class="form-control" placeholder="Rate/CNote" formControlName="Chg_Rate"></td>
                             <td class="text-center"><input type="text" class="form-control" placeholder="Max. Chg./CNote" formControlName="Max_Charge"></td>
                             <th><div *ngIf="i !== 0" style="color: Maroon; font-size: 14px; font-weight: bolder;" class="cursor-pointer" (click)="vendorContractService.removeCnoteBasedContract(i)">X</div></th>
@@ -212,17 +220,24 @@
                 </thead>
                 <tbody formArrayName="cnoteDeliveryCharges">
                      <tr *ngFor="let contract of vendorContractService.cnoteDeliveryCharges.controls; let i = index" [formGroupName]="i">
-                            <td class="text-center"  style="width: 300px;">
-                                 <ng-select [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId"
-                                placeholder="Select Location" formControlName="Location" notFoundText="No matches found"></ng-select>
+                            <td class="text-center"  style="width: 250px;">
+                                 <ng-select placeholder="Select Location" formControlName="Location" notFoundText="No matches found"
+                                [notFoundText]="vendorContractService.nextLocationValue" bindLabel="text" bindValue="id" (search)="vendorContractService.getLocationDetail($event)"
+                                [items]="vendorContractService.locationData"></ng-select>
                             </td>
-                            <td><input type="text" class="form-control" placeholder="Select To City" formControlName="City"></td>
-                            <td><input type="text" class="form-control" placeholder="Select Pay Basis" formControlName="PayBas"></td>
-                            <td><input type="text" class="form-control" placeholder="Select Mode" formControlName="TransMode"></td>
-                            <td><input type="text" class="form-control" placeholder="ODA OR NON ODA" formControlName="Oda"></td>
+                            <td style="width: 250px;"><ng-select placeholder="Select To City" formControlName="City"
+                                [items]="vendorContractService.cityList" bindValue="city_code" bindLabel="location"></ng-select></td>
+                            <td style="width: 150px;"><ng-select  placeholder="Select Pay Basis" formControlName="PayBas"
+                                 bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.PayBsList"></ng-select></td>
+                            <td style="width: 250px;"><ng-select  placeholder="Select Mode" formControlName="TransMode"
+                                [items]="generalMasterService.modeData" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
+                            <td style="width: 150px;"><ng-select  placeholder="ODA OR NON ODA" formControlName="Oda"
+                                [items]="generalMasterService.odaList" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
                             <td class="text-center"><input type="text" class="form-control" placeholder="Min. Chg/CNote" formControlName="Min_Charge"></td>
-                            <td class="text-center"><input type="text" class="form-control" placeholder="Service Type" formControlName="ServiceType"></td>
-                            <td class="text-center"><input type="text" class="form-control" placeholder="Rate Type" formControlName="Rate_Type"></td>
+                            <td class="text-center" style="width: 200px;"><ng-select placeholder="Service Type" formControlName="ServiceType"
+                                [items]="generalMasterService.serviceTypeList" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
+                            <td class="text-center" style="width: 150px;"><ng-select placeholder="Rate Type" formControlName="Rate_Type"
+                                [items]="generalMasterService.VendorRateList" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
                             <td class="text-center"><input type="text" class="form-control" placeholder="Rate/Cnote" formControlName="Chg_Rate"></td>
                              <td class="text-center"><input type="text" class="form-control" placeholder="Max. Chg./CNote" formControlName="Max_Charge"></td>
                             <th><div *ngIf="i !== 0" style="color: Maroon; font-size: 14px; font-weight: bolder;" class="cursor-pointer" (click)="vendorContractService.removeCnoteDeliveryCharges(i)">X</div></th>
