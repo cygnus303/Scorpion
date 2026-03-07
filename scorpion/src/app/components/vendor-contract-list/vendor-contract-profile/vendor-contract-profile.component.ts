@@ -36,11 +36,14 @@ public routeParams:any;
   ngOnInit() {
     this.vendorContractService.buildForm();
     this.route.queryParams.subscribe(params => {
+      this.routeParams = params;
       this.vendorContractService.vendorProfileForm.patchValue({
         VendorName: params['Vendorname'],
         VendorTypeName: params['Text'],
         VendorType: params['VedorType'],
-        VendorCode: params['VendorCode']
+        VendorCode: params['VendorCode'],
+        MetrixType:params['matrix'],
+        ContractType:params['ContractType']
       })
     });
     this.getVendorContractList();

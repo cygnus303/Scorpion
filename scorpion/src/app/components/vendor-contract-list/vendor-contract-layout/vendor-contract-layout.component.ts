@@ -100,25 +100,23 @@ onContinue() {
           Valid_uptodt: form.Valid_uptodt,
           MetrixType: form.MetrixType || '',
           ContractType: form.ContractType || '',
-          Flag: 'I',
-          contract_YN: 'Y',
+          Flag: this.docketService.loginUserList.Type ,///
+          // contract_YN: 'Y',
           VendorTypeName: form.VendorTypeName || '',
-          FTLFixAmount: form.FTLFixAmount || 0,
-          Local_Feeder_Rate_Type: form.Local_Feeder_Rate_Type || '',
-          Local_Feeder_Rate: form.Local_Feeder_Rate || 0,
-          ODAPickupApply: form.ODAPickupApply || false,
-          ODAPickupStartKM: form.ODAPickupStartKM || 0,
-          ODAPickupRateType: form.ODAPickupRateType || '',
-          ODAPickupRate: form.ODAPickupRate || 0,
-          ODADeliveryApply: form.ODADeliveryApply || false,
-          ODADeliveryStartKM: form.ODADeliveryStartKM || 0,
-          ODADeliveryRateType: form.ODADeliveryRateType || '',
-          ODADeliveryRate: form.ODADeliveryRate || 0,
-          Document: form.Document || '',
-          CopyVendor: form.CopyVendor || ''
-
+          // FTLFixAmount: form.FTLFixAmount || 0,
+          // Local_Feeder_Rate_Type: form.Local_Feeder_Rate_Type || '',
+          // Local_Feeder_Rate: form.Local_Feeder_Rate || 0,
+          // ODAPickupApply: form.ODAPickupApply || false,
+          // ODAPickupStartKM: form.ODAPickupStartKM || 0,
+          // ODAPickupRateType: form.ODAPickupRateType || '',
+          // ODAPickupRate: form.ODAPickupRate || 0,
+          // ODADeliveryApply: form.ODADeliveryApply || false,
+          // ODADeliveryStartKM: form.ODADeliveryStartKM || 0,
+          // ODADeliveryRateType: form.ODADeliveryRateType || '',
+          // ODADeliveryRate: form.ODADeliveryRate || 0,
+          // Document: form.Document || '',
+          // CopyVendor: form.CopyVendor || ''
         },
-
         listWVCRM: this.vendorContractService.routeBasedContracts.value
       }
     };
