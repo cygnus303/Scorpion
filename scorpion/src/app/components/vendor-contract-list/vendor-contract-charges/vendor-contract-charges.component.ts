@@ -8,11 +8,12 @@ import { GeneralMasterService } from 'app/shared/services/general-master.service
 import { LoadingSheetApiService } from 'app/shared/services/loading-sheet-api.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { VendorContractService } from 'app/shared/services/vendor-contract.service';
+import { SharedModule } from 'app/shared/shared/shared.module';
 
 @Component({
   selector: 'app-vendor-contract-charges',
   standalone: true,
-  imports: [CommonModule ,FormsModule ,ReactiveFormsModule,NgSelectModule],
+  imports: [CommonModule ,FormsModule ,ReactiveFormsModule,NgSelectModule,SharedModule],
   templateUrl: './vendor-contract-charges.component.html',
   styleUrl: './vendor-contract-charges.component.scss'
 })
