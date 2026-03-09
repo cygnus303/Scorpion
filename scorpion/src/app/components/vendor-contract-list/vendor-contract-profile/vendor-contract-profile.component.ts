@@ -46,7 +46,9 @@ public routeParams:any;
         ContractType:params['ContractType']
       })
     });
-    this.getVendorContractList();
+    if(this.docketService.loginUserList.Type === 'E'){
+      this.getVendorContractList();
+    }
   }
 
   constructor(public docketService: DocketService,public scanFmDocumentsService:ScanFmDocumentsService,public generalMasterService:GeneralMasterService,
@@ -59,28 +61,47 @@ public routeParams:any;
       text:this.routeParams.Text,
       flag:this.docketService.loginUserList.Type === 'A'?'Add':'Edit',
       vendorCode:this.routeParams.VendorCode,
-      contractType:this.routeParams.ContractType,
+      contractType:this.routeParams.ContractType ? this.routeParams.ContractType :'',
       matrix:this.routeParams.matrix,
-      contractId:this.routeParams.ContractFor
+      contractId:this.routeParams.ContractId
     }
     this.masterService.getVendorContract(payload).subscribe({
       next:(response:any)=>{
        if(response.wvcsV1){
         this.vendorContractService.vendorProfileForm.patchValue({
-          tdS_Rate:response.wvcsV1.tdS_Rate
+          tdS_Rate:response.wvcsV1.tdS_Rate,
+          CONTRACTCD:response.wvcsV1.contractcd,
+          VendorName:response.wvcsV1.vendorName,
+          VendorTypeName:response.wvcsV1.vendorTypeName,
+         ContractDt: new Date(response.wvcsV1.contractDt),
+          Start_Dt: new Date(response.wvcsV1.start_Dt),
+          Valid_uptodt: new Date(response.wvcsV1.valid_uptodt),
+          Contract_loccode:response.wvcsV1.contract_loccode,
+          VendorPerName:response.wvcsV1.vendorPerName,
+          VendorPerDesg:response.wvcsV1.vendorPerDesg,
+          Vendor_Address:response.wvcsV1.vendor_Address,
+          VendorCity:response.wvcsV1.vendorCity,
+          VendorPin:response.wvcsV1.vendorPin,
+          TDSAppl_YN:response.wvcsV1.tdsAppl_YN,
+          VendorCategory:response.wvcsV1.vendorCategory,
+          VendorContractCat:response.wvcsV1.vendorContractCat,
+          TDS_Rate:response.wvcsV1.tdS_Rate,
+          Security_deposit_chq:response.wvcsV1.security_deposit_chq,
+          payment_interval:response.wvcsV1.Payment_interval,
+          Security_deposit_date:response.wvcsV1.security_deposit_date,
+          Security_deposit_Amt:response.wvcsV1.security_deposit_Amt,
+          Payment_Basis:response.wvcsV1.payment_Basis,
+          Payment_loc:response.wvcsV1.payment_loc,
+          Monthly_Phone_Charges:response.wvcsV1.monthly_Phone_Charges,
+          Default_Charge:response.wvcsV1.default_Charge,
+          CompEmpName:response.wvcsV1.compEmpName,
+          VendorWitness:response.wvcsV1.vendorWitness,
+          CompEmpDesg:response.wvcsV1.compEmpDesg,
+          CompWitness:response.wvcsV1.compWitness,
         })
        }
       }
     })
-    // this.masterService.getVendorContractTypeWise(this.docketService.loginUserList.Type).subscribe({
-    //   next:(response:any)=>{
-    //    if(response.wvcsV1){
-    //     this.vendorContractService.vendorProfileForm.patchValue({
-    //       tdS_Rate:response.wvcsV1.tdS_Rate
-    //     })
-    //    }
-    //   }
-    // })
   }
 
 }
