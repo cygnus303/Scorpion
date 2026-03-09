@@ -132,7 +132,6 @@ export class VendorContractService {
   addCnoteBasedContract() {
     const group = new FormGroup({
       city: new FormControl(null),
-      Route: new FormControl(null),
       location:new FormControl(null),
       payBas: new FormControl(null),
       transMode: new FormControl(null),
@@ -141,6 +140,7 @@ export class VendorContractService {
       rate_Type: new FormControl(null),
       chg_Rate: new FormControl(null),
       max_Charge: new FormControl(null),
+      id: new FormControl(0),
     });
 
     this.cnoteBasedContracts.push(group);
@@ -171,8 +171,8 @@ export class VendorContractService {
       rate_Type: new FormControl(null),
       chg_Rate: new FormControl(null),
       max_Charge: new FormControl(null),
+      id: new FormControl(0),
     });
-
     this.cnoteDeliveryCharges.push(group);
   }
 

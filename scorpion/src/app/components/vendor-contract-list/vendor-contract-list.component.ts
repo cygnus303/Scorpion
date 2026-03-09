@@ -279,12 +279,11 @@ onSort(event: any) {
   this.updateTable();
 }
 
-onEditPage(item:any){
-
-      const formValues = {
-        ...this.criteriaform.value,
-        ContractId:item.contractcd
-      };
+  onEditPage(item: any) {
+    const formValues = {
+      ...this.criteriaform.value,
+      ContractId: item.contractcd
+    };
     this.router.navigate(['/Master/VendorContract'], { queryParams: formValues });
-}
+  }
 }

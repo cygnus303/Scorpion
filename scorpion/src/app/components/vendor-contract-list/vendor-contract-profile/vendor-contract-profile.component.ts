@@ -122,6 +122,16 @@ public routeParams:any;
           });
         }
 
+        if (response.listWVCDoBCM) {
+         const routeArray = this.vendorContractService.cnoteBasedContracts;
+         routeArray.clear();
+         response.listWVCDoBCM.forEach((item: any) => {
+           this.vendorContractService.addCnoteBasedContract();
+           const index = routeArray.length - 1;
+           routeArray.at(index).patchValue(item);
+         });
+       }
+       
         if (response.listWVCDoDCM) {
           const routeArray = this.vendorContractService.cnoteDeliveryCharges;
           routeArray.clear();
@@ -132,15 +142,6 @@ public routeParams:any;
           });
         }
 
-         if (response.listWVCDoBCM) {
-          const routeArray = this.vendorContractService.cnoteBasedContracts;
-          routeArray.clear();
-          response.listWVCDoBCM.forEach((item: any) => {
-            this.vendorContractService.addCnoteBasedContract();
-            const index = routeArray.length - 1;
-            routeArray.at(index).patchValue(item);
-          });
-        }
       }
     })
   }

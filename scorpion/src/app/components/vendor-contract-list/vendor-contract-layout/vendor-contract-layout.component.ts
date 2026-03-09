@@ -20,6 +20,23 @@ export class VendorContractLayoutComponent {
   constructor(public router: Router,public vendorContractService:VendorContractService,public docketService:DocketService,public masterService: MasterService) {
   }
 
+    ngOnInit() {
+     const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.loginUserList.LocationCode =  'PIM';
+      // this.docketService.loginUserList.loadBy = "B";
+      // this.docketService.loginUserList.chargeType='1';
+      // this.docketService.loginUserList.drsId='DS/PIM/2526/002766';
+      this.docketService.loginUserList.Type = 'E';
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      this.docketService.isComplition = false;
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+      console.log(this.docketService.loginUserList , 'gggggggggg')
+    }
+  }
+
 selectTab(tab: string) {
   if (tab === 'charges') {
     if (this.validateProfileFields()) {
@@ -129,6 +146,8 @@ onContinue() {
 
     const routeContracts = this.vendorContractService.routeBasedContracts.value;
     const distanceContracts = this.vendorContractService.distanceBasedContracts.value;
+    const cnoteBasedContracts = this.vendorContractService.cnoteBasedContracts.value;
+    const cnoteDeliveryCharges = this.vendorContractService.cnoteDeliveryCharges.value;
     
     const hasRouteData = routeContracts.some((contract: any) => 
       contract.transMode || contract.routeCode || contract.ftL_Type || 
@@ -139,12 +158,26 @@ onContinue() {
       contract.ftL_Type || contract.vehicle_Type || contract.vehicle_Number ||
       contract.min_Amt_Committed || contract.committed_Km || contract.chg_Per_Add_Km
     );
+
+    const hascnoteBasedContracts = cnoteBasedContracts.some((contract: any) =>      
+      contract.city || contract.location || contract.payBas || contract.transMode
+    );
+
+    const hasCnoteDeliveryCharges = cnoteDeliveryCharges.some((contract: any) =>      
+      contract.location || contract.city || contract.payBas || contract.transMode
+    );
     
     if (hasRouteData) {
       formData.append("WVCSV1VM.listWVCRM", JSON.stringify(routeContracts));
     }
     if (hasDistanceData) {
       formData.append("WVCSV1VM.listWVCDM", JSON.stringify(distanceContracts));
+    }
+    if (hascnoteBasedContracts) {
+      formData.append("WVCSV1VM.listWVCDoBCM", JSON.stringify(cnoteBasedContracts));
+    }
+    if (hasCnoteDeliveryCharges) {
+      formData.append("WVCSV1VM.listWVCDoDCM", JSON.stringify(cnoteDeliveryCharges));
     }
 
     if (this.vendorContractService.vendorProfileForm.valid) {
