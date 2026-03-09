@@ -7,6 +7,7 @@ import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { CityResponse, VehicleTypeListResponse } from '../models/thc-master.model';
 import { LocationResponse } from '../models/loading-sheet.model';
 import { LoadingSheetApiService } from './loading-sheet-api.service';
+import { DocketService } from './docket.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class VendorContractService {
     private masterService:MasterService,
     public basicDetailService: BasicDetailService,
     public THCMasterService: THCMasterService,
-    public loadingSheetApiService:LoadingSheetApiService,
+    public loadingSheetApiService:LoadingSheetApiService,private docketService:DocketService
   ) { }
 
    buildForm() {
@@ -76,13 +77,14 @@ export class VendorContractService {
 
   addRouteBasedContract() {
     const routeContract = new FormGroup({
-      TransMode: new FormControl(null,this.vendorProfileForm.value.VendorType === 'XX1' ? Validators.required :null),
-      RouteCode: new FormControl(null,this.vendorProfileForm.value.VendorType === 'XX1' ? Validators.required :null),
-      FTL_Type: new FormControl(null),
-      Min_Charge: new FormControl(0),
-      Max_Charge: new FormControl(0),
-      Rate_Type: new FormControl(null),
-      Chg_Rate: new FormControl(0)
+      transMode: new FormControl(null,this.vendorProfileForm.value.VendorType === 'XX1' ? Validators.required :null),
+      routeCode: new FormControl(null,this.vendorProfileForm.value.VendorType === 'XX1' ? Validators.required :null),
+      ftL_Type: new FormControl(null),
+      min_Charge: new FormControl(0),
+      max_Charge: new FormControl(0),
+      rate_Type: new FormControl(null),
+      chg_Rate: new FormControl(0),
+      id: new FormControl(0),
     });
     this.routeBasedContracts.push(routeContract);
   }
@@ -101,14 +103,15 @@ export class VendorContractService {
 
    addDistanceBasedContract() {
     const distanceContract = new FormGroup({
-      FTL_Type: new FormControl(null),
-      Vehicle_Type: new FormControl(null),
-      Vehicle_Number: new FormControl(null),
-      Min_Amt_Committed: new FormControl(0),
-      Committed_Km: new FormControl(0),
-      Chg_Per_Add_Km: new FormControl(0),
-      Max_Amt_Committed: new FormControl(0),
-      Trips_PM: new FormControl(0)
+      ftL_Type: new FormControl(null),
+      vehicle_Type: new FormControl(null),
+      vehicle_Number: new FormControl(null),
+      min_Amt_Committed: new FormControl(0),
+      committed_Km: new FormControl(0),
+      chg_Per_Add_Km: new FormControl(0),
+      max_Amt_Committed: new FormControl(0),
+      trips_PM: new FormControl(0),
+      id: new FormControl(0),
     });
     this.distanceBasedContracts.push(distanceContract);
   }
@@ -186,7 +189,7 @@ export class VendorContractService {
       return;
     }
      const mode =
-       this.routeBasedContracts.at(index).get('TransMode')?.value;
+       this.routeBasedContracts.at(index).get('transMode')?.value;
      const data = {
        searchTerm: searchText,
        id: mode

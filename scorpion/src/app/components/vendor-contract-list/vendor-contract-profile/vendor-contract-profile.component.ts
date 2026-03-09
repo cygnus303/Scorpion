@@ -46,8 +46,8 @@ public routeParams:any;
         ContractType:params['ContractType']
       })
     });
-    this.getVendorContractList();
-  }
+      this.getVendorContractList();
+    }
 
   constructor(public docketService: DocketService,public scanFmDocumentsService:ScanFmDocumentsService,public generalMasterService:GeneralMasterService,
     public vendorContractService:VendorContractService,private masterService:MasterService,private route: ActivatedRoute) { }
@@ -61,15 +61,33 @@ public routeParams:any;
       vendorCode:this.routeParams.VendorCode,
       contractType:this.routeParams.ContractType,
       matrix:this.routeParams.matrix,
-      contractId:this.routeParams.ContractFor
+      contractId:this.routeParams.ContractId
     }
     this.masterService.getVendorContract(payload).subscribe({
       next:(response:any)=>{
        if(response.wvcsV1){
-        this.vendorContractService.vendorProfileForm.patchValue({
-          tdS_Rate:response.wvcsV1.tdS_Rate
-        })
+        this.vendorContractService.vendorProfileForm.patchValue(response.wvcsV1)
        }
+       
+        if (response.listWVCRM) {
+          const routeArray = this.vendorContractService.routeBasedContracts;
+          routeArray.clear();
+          response.listWVCRM.forEach((item: any) => {
+            this.vendorContractService.addRouteBasedContract();
+            const index = routeArray.length - 1;
+            routeArray.at(index).patchValue(item);
+          });
+        }
+
+        if (response.listWVCDM) {
+          const routeArray = this.vendorContractService.distanceBasedContracts;
+          routeArray.clear();
+          response.listWVCDM.forEach((item: any) => {
+            this.vendorContractService.addDistanceBasedContract();
+            const index = routeArray.length - 1;
+            routeArray.at(index).patchValue(item);
+          });
+        }
       }
     })
     // this.masterService.getVendorContractTypeWise(this.docketService.loginUserList.Type).subscribe({

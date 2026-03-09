@@ -52,8 +52,8 @@ constructor(
 
   onModeChange(index: number) {
     const row = this.vendorContractService.routeBasedContracts.at(index);
-    row.get('RouteCode')?.reset();
-    row.get('FTL_Type')?.reset();
+    row.get('routeCode')?.reset();
+    row.get('ftL_Type')?.reset();
   }
 
 

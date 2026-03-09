@@ -31,41 +31,41 @@
                 <tbody formArrayName="routeBasedContracts">
                     <tr  *ngFor="let contract of vendorContractService.routeBasedContracts.controls; let i = index" [formGroupName]="i">
                         <td class="text-center" style="width: 200px;">
-                            <ng-select [items]="modeList" bindLabel="text" bindValue="value" placeholder="Select Mode" formControlName="TransMode" (change)="onModeChange(i)"
-                             [ngClass]="{ 'border-danger': contract.get('TransMode')?.touched && contract.get('TransMode')?.errors?.['required']}"></ng-select>
+                            <ng-select [items]="modeList" bindLabel="text" bindValue="value" placeholder="Select Mode" formControlName="transMode" (change)="onModeChange(i)"
+                             [ngClass]="{ 'border-danger': contract.get('transMode')?.touched && contract.get('transMode')?.errors?.['required']}"></ng-select>
                             <div class="text-danger text-start">
-                                <small *ngIf="contract.get('TransMode')?.touched && contract.get('TransMode')?.errors?.['required']">Mode is required</small>
+                                <small *ngIf="contract.get('transMode')?.touched && contract.get('transMode')?.errors?.['required']">Mode is required</small>
                             </div>
                         </td>
                         <td style="width: 290px;">
-                        <input *ngIf="!contract.get('TransMode')?.value" type="text" class="form-control required2" placeholder="Route" formControlName="RouteCode"
-                        [ngClass]="{ 'border-danger': contract.get('RouteCode')?.touched && contract.get('RouteCode')?.errors?.['required']}">
-                          <ng-select *ngIf="contract.get('TransMode')?.value" class="noFoundTextColor clear-icon required2" placeholder="Route"
-                                formControlName="RouteCode" notFoundText="No matches found"
+                        <input *ngIf="!contract.get('transMode')?.value" type="text" class="form-control required2" placeholder="Route" formControlName="routeCode"
+                        [ngClass]="{ 'border-danger': contract.get('routeCode')?.touched && contract.get('routeCode')?.errors?.['required']}">
+                          <ng-select *ngIf="contract.get('transMode')?.value" class="noFoundTextColor clear-icon required2" placeholder="Route"
+                                formControlName="routeCode" notFoundText="No matches found"
                                 (search)="vendorContractService.getRouteDetail($event, i)"
                                 [notFoundText]="vendorContractService.nextRouteValue"
                                 (open)="vendorContractService.resetNextRouteDropdown()"
-                                 [ngClass]="{ 'border-danger': contract.get('RouteCode')?.touched && contract.get('RouteCode')?.errors?.['required']}">
+                                 [ngClass]="{ 'border-danger': contract.get('routeCode')?.touched && contract.get('routeCode')?.errors?.['required']}">
                                 <ng-option *ngFor="let item of vendorContractService.RouteData" [value]="item.id">
                                     <strong>{{ item.id }}</strong> : {{ item.text }}
                                 </ng-option>
                             </ng-select>
                             <div class="text-danger text-start">
-                                <small *ngIf="contract.get('RouteCode')?.touched && contract.get('RouteCode')?.errors?.['required']">Route is required</small>
+                                <small *ngIf="contract.get('routeCode')?.touched && contract.get('routeCode')?.errors?.['required']">Route is required</small>
                             </div>
                         </td>
                         
                         <td style="width: 360px;">
-                            <ng-select [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId" [readonly]="contract.get('TransMode')?.value && contract.get('TransMode')?.value !== 'S'"
-                                placeholder="Type of Movement" formControlName="FTL_Type" notFoundText="No matches found"></ng-select>
+                            <ng-select [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId" [readonly]="contract.get('transMode')?.value && contract.get('transMode')?.value !== 'S'"
+                                placeholder="Type of Movement" formControlName="ftL_Type" notFoundText="No matches found"></ng-select>
                         </td>
-                        <td><input type="text" class="form-control" placeholder="Minimum" formControlName="Min_Charge" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" ></td>
-                        <td><input type="text" class="form-control" placeholder="Maximum" formControlName="Max_Charge" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" ></td>
+                        <td><input type="text" class="form-control" placeholder="Minimum" formControlName="min_Charge" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" ></td>
+                        <td><input type="text" class="form-control" placeholder="Maximum" formControlName="max_Charge" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" ></td>
                         <td class="text-center" style="width: 250px;">
                           <ng-select [items]="generalMasterService.rateTypeList" bindLabel="codeDesc" bindValue="codeId"
-                                placeholder="Rate Type" formControlName="Rate_Type" notFoundText="No matches found"></ng-select>
+                                placeholder="Rate Type" formControlName="rate_Type" notFoundText="No matches found"></ng-select>
                         </td>
-                        <td class="text-center"><input type="text" class="form-control" placeholder="Rate" formControlName="Chg_Rate" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" ></td>
+                        <td class="text-center"><input type="text" class="form-control" placeholder="Rate" formControlName="chg_Rate" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" ></td>
                         <th> <div *ngIf="i !== 0" style="color: Maroon; font-size: 14px; font-weight: bolder; text-decoration: none;" (click)="vendorContractService.removeRouteBasedContract(i)"
                                 class="cursor-pointer">X</div></th>
                     </tr>
@@ -107,15 +107,15 @@
                      <tr *ngFor="let contract of vendorContractService.distanceBasedContracts.controls; let i = index" [formGroupName]="i">
                             <td class="text-center"  style="width: 300px;">
                                  <ng-select [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId"
-                                placeholder="Type of Movement" formControlName="FTL_Type" notFoundText="No matches found"></ng-select>
+                                placeholder="Type of Movement" formControlName="ftL_Type" notFoundText="No matches found"></ng-select>
                             </td>
                             <td style="width: 300px;">
-                                 <ng-select class="noFoundTextColor clear-icon" placeholder="Vehicle Type" formControlName="Vehicle_Type"
+                                 <ng-select class="noFoundTextColor clear-icon" placeholder="Vehicle Type" formControlName="vehicle_Type"
                                 [items]="vendorContractService.vehicleTypeList" bindLabel="type_Name" bindValue="typeCode"
                                 notFoundText="No matches found"></ng-select>
                             </td>
                             <td style="width: 300px;">
-                                <ng-select class="noFoundTextColor clear-icon" placeholder="Vehicle Number" formControlName="Vehicle_Number"
+                                <ng-select class="noFoundTextColor clear-icon" placeholder="Vehicle Number" formControlName="vehicle_Number"
                                     (search)="vendorContractService.getVehicleNumberDetail($event)" [notFoundText]="vendorContractService.noVehicleValue"
                                      (open)="vendorContractService.resetvehicleNoDropdown()">
                                     <ng-option *ngFor="let item of vendorContractService.vehicleNumberData" [value]="item.vehno">
@@ -123,11 +123,11 @@
                                     </ng-option>
                                 </ng-select>
                             </td>
-                            <td><input type="text" class="form-control" placeholder="Min. Amt. Committed" formControlName="Min_Amt_Committed" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
-                            <td><input type="text" class="form-control" placeholder="Committed Km." formControlName="Committed_Km" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
-                            <td class="text-center"><input type="text" class="form-control" placeholder="Charge Per Additional Km." formControlName="Chg_Per_Add_Km" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
-                            <td class="text-center"><input type="text" class="form-control" placeholder="Max. Payment" formControlName="Max_Amt_Committed" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
-                            <td class="text-center"><input type="text" class="form-control" placeholder="Committed No." formControlName="Trips_PM" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td><input type="text" class="form-control" placeholder="Min. Amt. Committed" formControlName="min_Amt_Committed" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td><input type="text" class="form-control" placeholder="Committed Km." formControlName="committed_Km" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td class="text-center"><input type="text" class="form-control" placeholder="Charge Per Additional Km." formControlName="chg_Per_Add_Km" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td class="text-center"><input type="text" class="form-control" placeholder="Max. Payment" formControlName="max_Amt_Committed" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td class="text-center"><input type="text" class="form-control" placeholder="Committed No." formControlName="trips_PM" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
                             <th><div *ngIf="i !== 0" style="color: Maroon; font-size: 14px; font-weight: bolder;" class="cursor-pointer" (click)="vendorContractService.removeDistanceBasedContract(i)">X</div></th>
                         </tr>
                 </tbody>

@@ -59,6 +59,25 @@ onContinue() {
     this.selectedTab = 'profile';
   }
 
+objectToFormData(obj: any, formData: FormData = new FormData(), parentKey?: string): FormData {
+  Object.keys(obj).forEach(key => {
+    const value = obj[key];
+    const formKey = parentKey ? `${parentKey}.${key}` : key;
+    if (Array.isArray(value)) {
+      value.forEach((v, i) => {
+        this.objectToFormData(v, formData, `${formKey}[${i}]`);
+      });
+    } else if (value instanceof Date) {
+      formData.append(formKey, value.toISOString());
+    } else if (value !== null && typeof value === 'object') {
+      this.objectToFormData(value, formData, formKey);
+    } else {
+      formData.append(formKey, value ?? '');
+    }
+  });
+  return formData;
+}
+
   onSubmit() {
     const form = this.vendorContractService.vendorProfileForm.value;
     const payload = {
@@ -117,12 +136,13 @@ onContinue() {
           // Document: form.Document || '',
           // CopyVendor: form.CopyVendor || ''
         },
-        listWVCRM: this.vendorContractService.routeBasedContracts.value
+        listWVCRM: this.vendorContractService.routeBasedContracts.value,
+        listWVCDM: this.vendorContractService.distanceBasedContracts.value
       }
     };
-
+  const formData = this.objectToFormData(payload);
     if (this.vendorContractService.vendorProfileForm.valid) {
-      this.masterService.AddEditVendorContract(payload).subscribe({
+      this.masterService.AddEditVendorContract(formData).subscribe({
         next: (response: any) => {
           debugger
         }
