@@ -16,6 +16,7 @@ import { MasterService } from 'app/shared/services/master.service';
 })
 export class VendorContractLayoutComponent {
   selectedTab: string = 'profile';
+  public isSubmitting:boolean=false;
   constructor(public router: Router,public vendorContractService:VendorContractService,public docketService:DocketService,public masterService: MasterService) {
   }
 
@@ -59,26 +60,8 @@ onContinue() {
     this.selectedTab = 'profile';
   }
 
-objectToFormData(obj: any, formData: FormData = new FormData(), parentKey?: string): FormData {
-  Object.keys(obj).forEach(key => {
-    const value = obj[key];
-    const formKey = parentKey ? `${parentKey}.${key}` : key;
-    if (Array.isArray(value)) {
-      value.forEach((v, i) => {
-        this.objectToFormData(v, formData, `${formKey}[${i}]`);
-      });
-    } else if (value instanceof Date) {
-      formData.append(formKey, value.toISOString());
-    } else if (value !== null && typeof value === 'object') {
-      this.objectToFormData(value, formData, formKey);
-    } else {
-      formData.append(formKey, value ?? '');
-    }
-  });
-  return formData;
-}
-
   onSubmit() {
+     this.isSubmitting = true;
     const form = this.vendorContractService.vendorProfileForm.value;
     const payload = {
       WVCSV1VM: {
@@ -119,7 +102,7 @@ objectToFormData(obj: any, formData: FormData = new FormData(), parentKey?: stri
           Valid_uptodt: form.Valid_uptodt,
           MetrixType: form.MetrixType || '',
           ContractType: form.ContractType || '',
-          Flag: this.docketService.loginUserList.Type ,///
+          Flag: this.docketService.loginUserList.Type === 'A'?'Add':'Edit' ,///
           // contract_YN: 'Y',
           VendorTypeName: form.VendorTypeName || '',
           // FTLFixAmount: form.FTLFixAmount || 0,
@@ -136,21 +119,57 @@ objectToFormData(obj: any, formData: FormData = new FormData(), parentKey?: stri
           // Document: form.Document || '',
           // CopyVendor: form.CopyVendor || ''
         },
-        listWVCRM: this.vendorContractService.routeBasedContracts.value,
-        listWVCDM: this.vendorContractService.distanceBasedContracts.value
       }
     };
-  const formData = this.objectToFormData(payload);
+    const formData = new FormData();
+    this.appendObjectToFormData(formData, payload.WVCSV1VM.WVCSV1, "DVM.WMD");
+    formData.append("WVCSV1VM.ContractID", this.vendorContractService.vendorProfileForm.value.ContractId || '');
+    formData.append("EntryBy", this.docketService.loginUserList?.UserId);
+    formData.append("Flag", this.docketService.loginUserList.Type === 'A'?'Add':'Edit');
+
+    const routeContracts = this.vendorContractService.routeBasedContracts.value;
+    const distanceContracts = this.vendorContractService.distanceBasedContracts.value;
+    
+    const hasRouteData = routeContracts.some((contract: any) => 
+      contract.transMode || contract.routeCode || contract.ftL_Type || 
+      contract.min_Charge || contract.max_Charge || contract.chg_Rate
+    );
+    
+    const hasDistanceData = distanceContracts.some((contract: any) => 
+      contract.ftL_Type || contract.vehicle_Type || contract.vehicle_Number ||
+      contract.min_Amt_Committed || contract.committed_Km || contract.chg_Per_Add_Km
+    );
+    
+    if (hasRouteData) {
+      formData.append("WVCSV1VM.listWVCRM", JSON.stringify(routeContracts));
+    }
+    if (hasDistanceData) {
+      formData.append("WVCSV1VM.listWVCDM", JSON.stringify(distanceContracts));
+    }
+
     if (this.vendorContractService.vendorProfileForm.valid) {
-      this.masterService.AddEditVendorContract(formData).subscribe({
-        next: (response: any) => {
-          debugger
+      this.masterService.AddEditVendorContract(formData).subscribe({next: (response: any) => {
+           this.isSubmitting = false;
         }
       });
       console.log(this.vendorContractService.vendorProfileForm.value)
     } else {
+       this.isSubmitting = false;
       this.vendorContractService.vendorProfileForm.markAllAsTouched();
     }
   }
   
+  appendObjectToFormData(formData: FormData, obj: any, parentKey: string = "") {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        const value = obj[key];
+        const formKey = parentKey ? `${parentKey}.${key}` : key;
+        if (value !== null && typeof value === "object" && !Array.isArray(value)) {
+          this.appendObjectToFormData(formData, value, formKey);
+        } else {
+          formData.append(formKey, value !== null && value !== undefined ? String(value) : "");
+        }
+      }
+    }
+  }
 }

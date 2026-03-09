@@ -43,7 +43,8 @@ public routeParams:any;
         VendorType: params['VedorType'],
         VendorCode: params['VendorCode'],
         MetrixType:params['matrix'],
-        ContractType:params['ContractType']
+        ContractType:params['ContractType'],
+        ContractId:params['ContractId']
       })
     });
     if(this.docketService.loginUserList.Type === 'E'){
