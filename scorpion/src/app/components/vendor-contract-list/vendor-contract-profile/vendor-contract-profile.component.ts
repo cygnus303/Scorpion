@@ -100,7 +100,7 @@ public routeParams:any;
         })
        }
        
-        if (response.listWVCRM) {
+        if (response.listWVCRM && response.listWVCRM.length > 0) {
           const routeArray = this.vendorContractService.routeBasedContracts;
           routeArray.clear();
           response.listWVCRM.forEach((item: any) => {
@@ -110,7 +110,7 @@ public routeParams:any;
           });
         }
 
-        if (response.listWVCDM) {
+        if (response.listWVCDM && response.listWVCDM.length > 0) {
           const routeArray = this.vendorContractService.distanceBasedContracts;
           routeArray.clear();
           response.listWVCDM.forEach((item: any) => {
@@ -120,7 +120,7 @@ public routeParams:any;
           });
         }
 
-        if (response.listWVCDoBCM) {
+        if (response.listWVCDoBCM && response.listWVCDoBCM.length > 0) {
          const routeArray = this.vendorContractService.cnoteBasedContracts;
          routeArray.clear();
          response.listWVCDoBCM.forEach((item: any) => {
@@ -130,7 +130,7 @@ public routeParams:any;
          });
        }
        
-        if (response.listWVCDoDCM) {
+        if (response.listWVCDoDCM && response.listWVCDoDCM.length > 0) {
           const routeArray = this.vendorContractService.cnoteDeliveryCharges;
           routeArray.clear();
           response.listWVCDoDCM.forEach((item: any) => {
