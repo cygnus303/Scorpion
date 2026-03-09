@@ -54,7 +54,7 @@ export class VendorContractListComponent {
       // this.docketService.loginUserList.loadBy = "B";
       // this.docketService.loginUserList.chargeType='1';
       // this.docketService.loginUserList.drsId='DS/PIM/2526/002766';
-      this.docketService.loginUserList.Type = 'A';
+      this.docketService.loginUserList.Type = 'E';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;

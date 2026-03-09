@@ -11,7 +11,7 @@
                     <div class="row">
                         <label class="col-md-5 col-form-label text-end">Contract Code</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="System Generated" formControlName="CONTRACTCD">
+                            <input type="text" class="form-control " placeholder="System Generated" formControlName="CONTRACTCD" readonly>
                         </div>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                             <div class="input-group" (click)="cd.toggle(); $event.stopPropagation()">
                                 <input type="text" class="form-control required2" required placeholder="Contract Date" formControlName="ContractDt"
                                     #cd="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue" [class.disabled-input]="true"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" 
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY'}" 
                                      [ngClass]="{ 'border-danger': vendorContractService.vendorProfileForm.get('ContractDt')?.invalid  && vendorContractService.vendorProfileForm.get('ContractDt')?.touched}"/>
                                 <span class="input-group-text cursor-pointer">
                                     <i class="fa fa-calendar"></i>
@@ -60,7 +60,7 @@
                             <div class="input-group" (click)="efd.toggle(); $event.stopPropagation()">
                                 <input class="form-control required2" required placeholder="Effective From Date" [class.disabled-input]="true"
                                     formControlName="Start_Dt" #efd="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" 
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY'}" 
                                      [ngClass]="{ 'border-danger': vendorContractService.vendorProfileForm.get('Start_Dt')?.invalid  && vendorContractService.vendorProfileForm.get('Start_Dt')?.touched}"/>
                                 <span class="input-group-text cursor-pointer">
                                     <i class="fa fa-calendar"></i>
@@ -81,7 +81,7 @@
                                 <input type="text" class="form-control uppercase-none required2" placeholder="Valid Until" required formControlName="Valid_uptodt"
                                     [class.disabled-input]="true" 
                                     #dp="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" 
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY'}" 
                                      [ngClass]="{ 'border-danger': vendorContractService.vendorProfileForm.get('Valid_uptodt')?.invalid  && vendorContractService.vendorProfileForm.get('Valid_uptodt')?.touched}">
                                 <span class="input-group-text cursor-pointer" >
                                     <i class="fa fa-calendar"></i>
