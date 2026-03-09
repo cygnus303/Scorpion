@@ -263,7 +263,11 @@ export class VendorContractListComponent {
   }
 
 goToBackList() {
-    const formValues = this.criteriaform.value;
+      const { Vendorname, ContractFor, ...rest } = this.criteriaform.value;
+    const formValues = {
+      ...rest,
+      flag:this.docketService.loginUserList.Type
+    };
     this.router.navigate(['/Master/VendorContract'], { queryParams: formValues });
   }
 
@@ -280,9 +284,11 @@ onSort(event: any) {
 }
 
   onEditPage(item: any) {
+    const { Vendorname, ContractFor, ...rest } = this.criteriaform.value;
     const formValues = {
-      ...this.criteriaform.value,
-      ContractId: item.contractcd
+      ...rest,
+      ContractId: item.contractcd,
+      flag:this.docketService.loginUserList.Type
     };
     this.router.navigate(['/Master/VendorContract'], { queryParams: formValues });
   }
