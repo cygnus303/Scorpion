@@ -64,6 +64,7 @@ export class VendorContractService {
       VendorCode:new FormControl(null),
       MetrixType:new FormControl(null),
       ContractType:new FormControl(null),
+      ContractId:new FormControl(null),
       routeBasedContracts: new FormArray([]), 
       distanceBasedContracts: new FormArray([]),
       cnoteBasedContracts: new FormArray([]),
