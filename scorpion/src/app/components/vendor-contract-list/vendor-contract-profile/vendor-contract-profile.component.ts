@@ -89,7 +89,7 @@ public routeParams:any;
           TDS_Rate:response.wvcsV1.tdS_Rate,
           Security_deposit_chq:response.wvcsV1.security_deposit_chq,
           payment_interval:response.wvcsV1.Payment_interval,
-          Security_deposit_date:response.wvcsV1.security_deposit_date,
+          Security_deposit_date:new Date(response.wvcsV1.security_deposit_date),
           Security_deposit_Amt:response.wvcsV1.security_deposit_Amt,
           Payment_Basis:response.wvcsV1.payment_Basis,
           Payment_loc:response.wvcsV1.payment_loc,

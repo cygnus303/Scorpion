@@ -8,7 +8,7 @@
             </div>
             <div class="gap-2 d-flex align-items-center">
                 <button class="btn btn-success"><i class="fas fa-upload me-2"></i>Upload Excel</button>
-                <button class="btn btn-success"><i class="fas fa-download me-2"></i>Download Excel Templete</button>
+                <button class="btn btn-success"  (click)="vendorContractService.DownloadContractExcelTemplate()"><i class="fas fa-download me-2"></i>Download Excel Templete</button>
                  <button class="btn btn-success"  (click)="vendorContractService.addRouteContract()">+ Add Item</button>
             </div>
         </div>
@@ -180,15 +180,15 @@
                                 bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.PayBsList"></ng-select>
                             <td style="width: 250px;"><ng-select placeholder="Select Mode" formControlName="transMode"
                                  [items]="generalMasterService.modeData" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
-                            <td><input type="text" class="form-control" placeholder="Min. Chg/CNote" formControlName="min_Charge"></td>
+                            <td><input type="text" class="form-control" placeholder="Min. Chg/CNote" formControlName="min_Charge"  (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
                             <td class="text-center" style="width: 100px;"><ng-select placeholder="Select ServiceType" formControlName="serviceType"
                                 [items]="generalMasterService.serviceTypeList" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
                             <td class="text-center" style="width: 150px;"><ng-select  placeholder="Select Rate Type" formControlName="rate_Type"
                                 [items]="generalMasterService.VendorRateList" bindLabel="codeDesc" bindValue="codeId">
                                 </ng-select>
                             </td>
-                            <td class="text-center"><input type="text" class="form-control" placeholder="Rate/CNote" formControlName="chg_Rate"></td>
-                            <td class="text-center"><input type="text" class="form-control" placeholder="Max. Chg./CNote" formControlName="max_Charge"></td>
+                            <td class="text-center"><input type="text" class="form-control" placeholder="Rate/CNote" formControlName="chg_Rate"  (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td class="text-center"><input type="text" class="form-control" placeholder="Max. Chg./CNote" formControlName="max_Charge" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
                             <th><div *ngIf="i !== 0" style="color: Maroon; font-size: 14px; font-weight: bolder;" class="cursor-pointer" (click)="vendorContractService.removeCnoteBasedContract(i)">X</div></th>
                      </tr>
                 </tbody>
@@ -242,13 +242,13 @@
                                 [items]="generalMasterService.modeData" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
                             <td style="width: 150px;"><ng-select  placeholder="ODA OR NON ODA" formControlName="oda"
                                 [items]="generalMasterService.odaList" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
-                            <td class="text-center"><input type="text" class="form-control" placeholder="Min. Chg/CNote" formControlName="min_Charge"></td>
+                            <td class="text-center"><input type="text" class="form-control" placeholder="Min. Chg/CNote" formControlName="min_Charge"  (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
                             <td class="text-center" style="width: 200px;"><ng-select placeholder="Service Type" formControlName="serviceType"
                                 [items]="generalMasterService.serviceTypeList" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
                             <td class="text-center" style="width: 150px;"><ng-select placeholder="Rate Type" formControlName="rate_Type"
                                 [items]="generalMasterService.VendorRateList" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
-                            <td class="text-center"><input type="text" class="form-control" placeholder="Rate/Cnote" formControlName="chg_Rate"></td>
-                             <td class="text-center"><input type="text" class="form-control" placeholder="Max. Chg./CNote" formControlName="max_Charge"></td>
+                            <td class="text-center"><input type="text" class="form-control" placeholder="Rate/Cnote" formControlName="chg_Rate" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                             <td class="text-center"><input type="text" class="form-control" placeholder="Max. Chg./CNote" formControlName="max_Charge"  (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
                             <th><div *ngIf="i !== 0" style="color: Maroon; font-size: 14px; font-weight: bolder;" class="cursor-pointer" (click)="vendorContractService.removeCnoteDeliveryCharges(i)">X</div></th>
                      </tr>
                 </tbody>

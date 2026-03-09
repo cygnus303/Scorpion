@@ -28,7 +28,7 @@ export class VendorContractLayoutComponent {
       // this.docketService.loginUserList.loadBy = "B";
       // this.docketService.loginUserList.chargeType='1';
       // this.docketService.loginUserList.drsId='DS/PIM/2526/002766';
-      this.docketService.loginUserList.Type = 'E';
+      this.docketService.loginUserList.Type = 'A';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
@@ -105,7 +105,7 @@ onContinue() {
           TDS_Rate: form.TDS_Rate || 0,
           Vendor_Type: form.VendorType || '',
           Payment_interval: form.Payment_interval || '',
-          // Status: form.Status || '',
+          Status: form.Status || '', ///
           VendorCity: form.VendorCity || '',
           EntryDt: new Date(),
           Security_deposit_Amt: form.Security_deposit_Amt || 0,
@@ -120,21 +120,21 @@ onContinue() {
           MetrixType: form.MetrixType || '',
           ContractType: form.ContractType || '',
           Flag: this.docketService.loginUserList.Type === 'A'?'Add':'Edit' ,///
-          // contract_YN: 'Y',
+          contract_YN: 'Y',//
           VendorTypeName: form.VendorTypeName || '',
-          // FTLFixAmount: form.FTLFixAmount || 0,
-          // Local_Feeder_Rate_Type: form.Local_Feeder_Rate_Type || '',
-          // Local_Feeder_Rate: form.Local_Feeder_Rate || 0,
-          // ODAPickupApply: form.ODAPickupApply || false,
-          // ODAPickupStartKM: form.ODAPickupStartKM || 0,
-          // ODAPickupRateType: form.ODAPickupRateType || '',
-          // ODAPickupRate: form.ODAPickupRate || 0,
-          // ODADeliveryApply: form.ODADeliveryApply || false,
-          // ODADeliveryStartKM: form.ODADeliveryStartKM || 0,
-          // ODADeliveryRateType: form.ODADeliveryRateType || '',
-          // ODADeliveryRate: form.ODADeliveryRate || 0,
-          // Document: form.Document || '',
-          // CopyVendor: form.CopyVendor || ''
+          FTLFixAmount: form.FTLFixAmount || 0,//
+          Local_Feeder_Rate_Type: form.Local_Feeder_Rate_Type || '',//
+          Local_Feeder_Rate: form.Local_Feeder_Rate || 0,//
+          ODAPickupApply: form.ODAPickupApply || false,//
+          ODAPickupStartKM: form.ODAPickupStartKM || 0,//
+          ODAPickupRateType: form.ODAPickupRateType || '',//
+          ODAPickupRate: form.ODAPickupRate || 0,//
+          ODADeliveryApply: form.ODADeliveryApply || false,//
+          ODADeliveryStartKM: form.ODADeliveryStartKM || 0,//
+          ODADeliveryRateType: form.ODADeliveryRateType || '',//
+          ODADeliveryRate: form.ODADeliveryRate || 0,//
+          Document: form.Document || '',//
+          CopyVendor: form.CopyVendor || ''//
         },
       }
     };

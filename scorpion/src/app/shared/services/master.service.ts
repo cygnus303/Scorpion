@@ -30,4 +30,8 @@ export class MasterService {
   AddEditVendorContract(payload: any) {
     return this.apiHandlerService.Post(`Master/AddEditVendorContract`, payload);
   }
+
+   DownloadContractExcelTemplate(params: any) {
+    return this.apiHandlerService.DownloadFile(`Master/DownloadContractExcelTemplate?matrixType=${params.matrixType}&contractId=${params.contractId}&moduleType=${params.moduleType}`);
+  }
 }

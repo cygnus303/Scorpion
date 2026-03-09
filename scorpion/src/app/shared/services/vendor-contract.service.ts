@@ -8,6 +8,7 @@ import { CityResponse, VehicleTypeListResponse } from '../models/thc-master.mode
 import { LocationResponse } from '../models/loading-sheet.model';
 import { LoadingSheetApiService } from './loading-sheet-api.service';
 import { DocketService } from './docket.service';
+import saveAs from 'file-saver';
 
 @Injectable({
   providedIn: 'root'
@@ -277,6 +278,20 @@ export class VendorContractService {
           this.cityList = response;
         }
       },
+    });
+  }
+
+  DownloadContractExcelTemplate() {
+    const parmas = {
+      matrixType: this.vendorProfileForm.value.MetrixType,
+      contractId: this.vendorProfileForm.value.ContractId || 0,
+      moduleType: '1'
+    }
+    this.masterService.DownloadContractExcelTemplate(parmas).subscribe({
+      next: (blob: Blob) => {
+        saveAs(blob, 'VendorRouteBaseContractTemplate.xlsx');
+      },
+      error: (err) => console.error('Excel export failed', err)
     });
   }
 }
