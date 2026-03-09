@@ -47,9 +47,7 @@ public routeParams:any;
         ContractId:params['ContractId']
       })
     });
-    if(this.docketService.loginUserList.Type === 'E'){
       this.getVendorContractList();
-    }
   }
 
   constructor(public docketService: DocketService,public scanFmDocumentsService:ScanFmDocumentsService,public generalMasterService:GeneralMasterService,

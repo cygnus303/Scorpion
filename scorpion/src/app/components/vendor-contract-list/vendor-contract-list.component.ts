@@ -54,7 +54,7 @@ export class VendorContractListComponent {
       // this.docketService.loginUserList.loadBy = "B";
       // this.docketService.loginUserList.chargeType='1';
       // this.docketService.loginUserList.drsId='DS/PIM/2526/002766';
-      this.docketService.loginUserList.Type = 'E';
+      this.docketService.loginUserList.Type = 'A';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
@@ -263,7 +263,11 @@ export class VendorContractListComponent {
   }
 
 goToBackList() {
-    const formValues = this.criteriaform.value;
+      const { Vendorname, ContractFor, ...rest } = this.criteriaform.value;
+    const formValues = {
+      ...rest,
+      flag:this.docketService.loginUserList.Type
+    };
     this.router.navigate(['/Master/VendorContract'], { queryParams: formValues });
   }
 
@@ -280,9 +284,11 @@ onSort(event: any) {
 }
 
   onEditPage(item: any) {
+    const { Vendorname, ContractFor, ...rest } = this.criteriaform.value;
     const formValues = {
-      ...this.criteriaform.value,
-      ContractId: item.contractcd
+      ...rest,
+      ContractId: item.contractcd,
+      flag:this.docketService.loginUserList.Type
     };
     this.router.navigate(['/Master/VendorContract'], { queryParams: formValues });
   }

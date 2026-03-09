@@ -131,8 +131,8 @@ export class VendorContractService {
 
   addCnoteBasedContract() {
     const group = new FormGroup({
-      city: new FormControl(null),
-      location:new FormControl(null),
+      city: new FormControl(null,Validators.required),
+      location:new FormControl(null,Validators.required),
       payBas: new FormControl(null),
       transMode: new FormControl(null),
       min_Charge: new FormControl(null),
@@ -161,8 +161,8 @@ export class VendorContractService {
 
   addCnoteDeliveryCharges() {
     const group = new FormGroup({
-      location: new FormControl(null),
-      city: new FormControl(null),
+      location: new FormControl(null,Validators.required),
+      city: new FormControl(null,Validators.required),
       payBas: new FormControl(null),
       transMode: new FormControl(null),
       oda: new FormControl(null),
@@ -260,7 +260,13 @@ export class VendorContractService {
     this.loadingSheetApiService.getLocationList(searchText).subscribe({
       next: (response) => {
         if (response && response.data) {
-          this.locationData = response.data;
+          this.locationData = [
+          {
+            id: 'All',
+            text: 'All'
+          },
+          ...response.data
+        ];
           this.nextLocationValue = 'No matches found';
         } else {
           this.locationData = []
@@ -274,7 +280,13 @@ export class VendorContractService {
     this.THCMasterService.getCityList().subscribe({
       next: (response) => {
         if (response) {
-          this.cityList = response;
+          this.cityList = [
+          {
+            city_code: 'All',
+            location: 'All'
+          },
+          ...response
+        ];
         }
       },
     });
