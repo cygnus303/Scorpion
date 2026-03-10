@@ -9,11 +9,12 @@ import { CommonModule } from '@angular/common';
 import { VendorContractService } from 'app/shared/services/vendor-contract.service';
 import { ActivatedRoute } from '@angular/router';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
+import { SharedModule } from 'app/shared/shared/shared.module';
 
 @Component({
   selector: 'app-vendor-contract-profile',
   standalone: true,
-  imports: [CommonModule,NgSelectModule, BsDatepickerModule, ReactiveFormsModule],
+  imports: [CommonModule,NgSelectModule, BsDatepickerModule, ReactiveFormsModule,SharedModule],
   templateUrl: './vendor-contract-profile.component.html',
   styleUrl: './vendor-contract-profile.component.scss',
 })

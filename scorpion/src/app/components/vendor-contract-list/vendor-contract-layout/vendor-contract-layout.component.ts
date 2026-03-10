@@ -35,7 +35,6 @@ export class VendorContractLayoutComponent {
       this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
-      console.log(this.docketService.loginUserList , 'gggggggggg')
     }
   }
 

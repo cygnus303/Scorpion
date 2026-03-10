@@ -11,7 +11,7 @@
                     <div class="row">
                         <label class="col-md-5 col-form-label text-end">Contract Code</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="System Generated" formControlName="CONTRACTCD" readonly>
+                            <input type="text" class="form-control " placeholder="System Generated" formControlName="CONTRACTCD" readonly appFocusNext>
                         </div>
                     </div>
                 </div>
@@ -19,7 +19,7 @@
                     <div class="row">
                         <label class="col-md-5 col-form-label text-end">Vendor Name</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="Vendor Name" formControlName="VendorName" readonly/>
+                            <input type="text" class="form-control " placeholder="Vendor Name" formControlName="VendorName" readonly appFocusNext/>
                         </div>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                     <div class="row">
                         <label class="col-md-5 col-form-label text-end">Vendor Type</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="Vendor Type" formControlName="VendorTypeName" readonly/>
+                            <input type="text" class="form-control " placeholder="Vendor Type" formControlName="VendorTypeName" readonly appFocusNext/>
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                         <div class="col-md-7">
                             <div class="input-group" (click)="cd.toggle(); $event.stopPropagation()">
                                 <input type="text" class="form-control required2" required placeholder="Contract Date" formControlName="ContractDt"
-                                    #cd="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue" [class.disabled-input]="true"
+                                    #cd="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue" [class.disabled-input]="true" appFocusNext
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY'}" 
                                      [ngClass]="{ 'border-danger': vendorContractService.vendorProfileForm.get('ContractDt')?.invalid  && vendorContractService.vendorProfileForm.get('ContractDt')?.touched}"/>
                                 <span class="input-group-text cursor-pointer">
@@ -59,7 +59,7 @@
                         <div class="col-md-7">
                             <div class="input-group" (click)="efd.toggle(); $event.stopPropagation()">
                                 <input class="form-control required2" required placeholder="Effective From Date" [class.disabled-input]="true"
-                                    formControlName="Start_Dt" #efd="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue"
+                                    formControlName="Start_Dt" #efd="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue" appFocusNext
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY'}" 
                                      [ngClass]="{ 'border-danger': vendorContractService.vendorProfileForm.get('Start_Dt')?.invalid  && vendorContractService.vendorProfileForm.get('Start_Dt')?.touched}"/>
                                 <span class="input-group-text cursor-pointer">
@@ -79,7 +79,7 @@
                         <div class="col-md-7">
                             <div class="input-group" (click)="dp.toggle(); $event.stopPropagation()">
                                 <input type="text" class="form-control uppercase-none required2" placeholder="Valid Until" required formControlName="Valid_uptodt"
-                                    [class.disabled-input]="true" 
+                                    [class.disabled-input]="true"  appFocusNext
                                     #dp="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY'}" 
                                      [ngClass]="{ 'border-danger': vendorContractService.vendorProfileForm.get('Valid_uptodt')?.invalid  && vendorContractService.vendorProfileForm.get('Valid_uptodt')?.touched}">
@@ -101,7 +101,7 @@
                         <label class="col-md-5 col-form-label text-end">Contract Location</label>
                         <div class="col-md-7">
                             <ng-select class="noFoundTextColor clear-icon" placeholder="Contract Signing Location"
-                                formControlName="Contract_loccode" notFoundText="No matches found"
+                                formControlName="Contract_loccode" notFoundText="No matches found" appFocusNext
                                 (search)="scanFmDocumentsService.getLocationDetail($event)"
                                 [notFoundText]="scanFmDocumentsService.nextLocationValue"
                                 (open)="scanFmDocumentsService.resetNextLocationDropdown()">
@@ -116,7 +116,7 @@
                     <div class="row">           
                         <label class="col-md-5 col-form-label text-end">Vendor Representative</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="Vendor Representative" formControlName="VendorPerName"/>
+                            <input type="text" class="form-control " placeholder="Vendor Representative" formControlName="VendorPerName" appFocusNext/>
 
                         </div>
                     </div>
@@ -126,7 +126,7 @@
                         <label class="col-md-5 col-form-label text-end">Designation</label>
                         <div class="col-md-7">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Vendor Designation" formControlName="VendorPerDesg">
+                                <input type="text" class="form-control" placeholder="Vendor Designation" formControlName="VendorPerDesg" appFocusNext>
                             </div>
                         </div>
                     </div>
@@ -137,7 +137,7 @@
                     <div class="row">
                         <label class="col-md-5 col-form-label text-end">Employee Name</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="Company employee name" formControlName="CompEmpName"/>
+                            <input type="text" class="form-control " placeholder="Company employee name" formControlName="CompEmpName" appFocusNext/>
                         </div>
                     </div>
                 </div>
@@ -145,7 +145,7 @@
                     <div class="row">
                         <label class="col-md-5 col-form-label text-end">Vendor Witness</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="Vendor Witness" formControlName="VendorWitness"/>
+                            <input type="text" class="form-control " placeholder="Vendor Witness" formControlName="VendorWitness" appFocusNext/>
                         </div>
                     </div>
                 </div>
@@ -154,7 +154,7 @@
                         <label class="col-md-5 col-form-label text-end">Designation</label>
                         <div class="col-md-7">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Employee Designation" formControlName="CompEmpDesg">
+                                <input type="text" class="form-control" placeholder="Employee Designation" formControlName="CompEmpDesg" appFocusNext>
                             </div>
                         </div>
                     </div>
@@ -164,14 +164,14 @@
                 <div class="col-md-4">
                     <div class="row"><label class="col-md-5 col-form-label text-end">Vendor Address</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="Vendor Address" formControlName="Vendor_Address"/>
+                            <textarea rows="2" class="form-control-textarea" placeholder="Vendor Address" formControlName="Vendor_Address" appFocusNext></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 ">
                     <div class="row"><label class="col-md-5 col-form-label text-end">Company Witness</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="Company Witness" formControlName="CompWitness"/>
+                            <input type="text" class="form-control " placeholder="Company Witness" formControlName="CompWitness" appFocusNext/>
                         </div>
                     </div>
                 </div>
@@ -180,8 +180,8 @@
                         <label class="col-md-5 col-form-label text-end">City- Pin</label>
                         <div class="col-md-7">
                             <div class="input-group gap-2">
-                                <input type="text" class="form-control" placeholder="Vendor City" formControlName="VendorCity">
-                                <input type="text" class="form-control" placeholder="Vendor Pin" formControlName="VendorPin"  (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"  maxlength="6">
+                                <input type="text" class="form-control" placeholder="Vendor City" formControlName="VendorCity" appFocusNext>
+                                <input type="text" class="form-control" placeholder="Vendor Pin" formControlName="VendorPin" appFocusNext  (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"  maxlength="6">
                             </div>
                         </div>
                     </div>
@@ -191,7 +191,7 @@
                 <div class="col-md-4 ">
                     <div class="row"><label class="col-md-5 col-form-label text-end">TDS Applicable</label>
                         <div class="col-md-7 text-start">
-                            <input type="checkbox" formControlName="TDSAppl_YN"/>
+                            <input type="checkbox" formControlName="TDSAppl_YN" appFocusNext/>
                         </div>
                     </div>
                 </div>
@@ -199,7 +199,7 @@
                     <div class="row"><label class="col-md-5 col-form-label text-end">Vendor Category</label>
                         <div class="col-md-7">
                             <ng-select class="noFoundTextColor required2" formControlName="VendorCategory" required [items]="vendorCategoryList" bindLabel="text" bindValue="value"
-                                placeholder="Select Vendor Category"   [ngClass]="{ 'border-danger': vendorContractService.vendorProfileForm.get('VendorCategory')?.invalid  && vendorContractService.vendorProfileForm.get('VendorCategory')?.touched}"></ng-select>
+                                placeholder="Select Vendor Category" appFocusNext  [ngClass]="{ 'border-danger': vendorContractService.vendorProfileForm.get('VendorCategory')?.invalid  && vendorContractService.vendorProfileForm.get('VendorCategory')?.touched}"></ng-select>
                                 <div *ngIf="vendorContractService.vendorProfileForm.get('VendorCategory')?.invalid && vendorContractService.vendorProfileForm.get('VendorCategory')?.touched" class="text-danger text-start">
                                     <small *ngIf="vendorContractService.vendorProfileForm.get('VendorCategory')?.hasError('required')">Vendor Category is required.</small>
                                 </div>
@@ -210,7 +210,7 @@
                     <div class="row">
                         <label class="col-md-5 col-form-label text-end">Contract Category</label>
                         <div class="col-md-7">
-                            <ng-select class="noFoundTextColor required2" formControlName="VendorContractCat" required
+                            <ng-select class="noFoundTextColor required2" formControlName="VendorContractCat" required appFocusNext
                                 [items]="contractCategory" bindLabel="text" bindValue="value" placeholder="Select Contract Category"
                                 [ngClass]="{ 'border-danger': vendorContractService.vendorProfileForm.get('VendorContractCat')?.invalid  && vendorContractService.vendorProfileForm.get('VendorContractCat')?.touched}"></ng-select>
                             <div *ngIf="vendorContractService.vendorProfileForm.get('VendorContractCat')?.invalid && vendorContractService.vendorProfileForm.get('VendorContractCat')?.touched" class="text-danger text-start">
@@ -225,14 +225,14 @@
                 <div class="col-md-4 ">
                     <div class="row"><label class="col-md-5 col-form-label text-end">TDS Rate</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="Select TDS Rate" formControlName="TDS_Rate" />
+                            <input type="text" class="form-control " placeholder="Select TDS Rate" formControlName="TDS_Rate" appFocusNext/>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 ">
                     <div class="row"><label class="col-md-5 col-form-label text-end">Deposit Cheque(s)</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="Security Deposit Cheque(s)"  formControlName="Security_deposit_chq" />
+                            <input type="text" class="form-control " placeholder="Security Deposit Cheque(s)"  formControlName="Security_deposit_chq" appFocusNext/>
                         </div>
                     </div>
                 </div>
@@ -242,7 +242,7 @@
                         <div class="col-md-7">
                             <div class="input-group">
                                 <ng-select class="noFoundTextColor" formControlName="Payment_interval"
-                                [items]="paymentIntervalList" bindLabel="text" bindValue="value" placeholder="Select Payment Interval" ></ng-select>
+                                [items]="paymentIntervalList" bindLabel="text" bindValue="value" placeholder="Select Payment Interval" appFocusNext></ng-select>
                             </div>
                         </div>
                     </div>
@@ -254,7 +254,7 @@
                         <div class="col-md-7">
                              <div class="input-group" (click)="dp1.toggle(); $event.stopPropagation()">
                                 <input type="text" class="form-control uppercase-none required2" placeholder="Deposit Date" required formControlName="Security_deposit_date"
-                                    [class.disabled-input]="true"
+                                    [class.disabled-input]="true" appFocusNext
                                     #dp1="bsDatepicker" bsDatepicker [bsValue]="docketService.bsValue"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                                      [ngClass]="{ 'border-danger': vendorContractService.vendorProfileForm.get('Security_deposit_date')?.invalid  && vendorContractService.vendorProfileForm.get('Security_deposit_date')?.touched}" >
@@ -272,7 +272,7 @@
                 <div class="col-md-4 ">
                     <div class="row"><label class="col-md-5 col-form-label text-end">Deposit Amount</label>
                         <div class="col-md-7">
-                            <input class="form-control" placeholder="Deposit Amount" formControlName="Security_deposit_Amt">
+                            <input class="form-control" placeholder="Deposit Amount" formControlName="Security_deposit_Amt" appFocusNext>
                         </div>
                     </div>
                 </div>
@@ -282,7 +282,7 @@
                         <div class="col-md-7">
                             <div class="input-group">
                                  <ng-select class="noFoundTextColor" formControlName="Payment_Basis"
-                                [items]="paymentBasisList" bindLabel="text" bindValue="value" placeholder="Payment Basis" ></ng-select>
+                                [items]="paymentBasisList" bindLabel="text" bindValue="value" placeholder="Payment Basis" appFocusNext ></ng-select>
                             </div>
                         </div>
                     </div>
@@ -293,7 +293,7 @@
                     <div class="row"><label class="col-md-5 col-form-label text-end">Payment Location</label>
                         <div class="col-md-7">
                              <ng-select class="noFoundTextColor clear-icon" placeholder="Payment Location"
-                                formControlName="Payment_loc" notFoundText="No matches found"
+                                formControlName="Payment_loc" notFoundText="No matches found" appFocusNext
                                 (search)="scanFmDocumentsService.getLocationDetail($event)"
                                 [notFoundText]="scanFmDocumentsService.nextLocationValue"
                                 (open)="scanFmDocumentsService.resetNextLocationDropdown()">
@@ -307,7 +307,7 @@
                 <div class="col-md-4 ">
                     <div class="row"><label class="col-md-5 col-form-label text-end">Phone Charges</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="Phone Charges" formControlName="Monthly_Phone_Charges"/>
+                            <input type="text" class="form-control " placeholder="Phone Charges" formControlName="Monthly_Phone_Charges" appFocusNext/>
                         </div>
                     </div>
                 </div>
@@ -315,7 +315,7 @@
                     <div class="row">
                         <label class="col-md-5 col-form-label text-end">Default Charges</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control " placeholder="Default Charges" formControlName="Default_Charge"/>
+                            <input type="text" class="form-control " placeholder="Default Charges" formControlName="Default_Charge" appFocusNext/>
                         </div>
                     </div>
                 </div>

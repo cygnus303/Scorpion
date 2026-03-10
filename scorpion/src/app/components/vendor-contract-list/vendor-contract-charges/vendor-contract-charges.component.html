@@ -171,7 +171,7 @@
                      <tr *ngFor="let contract of vendorContractService.cnoteBasedContracts.controls; let i = index" [formGroupName]="i">
                             <td class="text-center"  style="width: 250px;">
                                  <ng-select class="required2" [items]="vendorContractService.cityList" bindValue="location" bindLabel="location"
-                                placeholder="Select City" formControlName="city" notFoundText="No matches found"
+                                placeholder="Select City" formControlName="city" notFoundText="No matches found" appFocusNext
                                  [ngClass]="{ 'border-danger': contract.get('city')?.invalid  && contract.get('city')?.touched }"></ng-select>
                                  <div *ngIf="contract.get('city')?.touched && contract.get('city')?.errors">
                                                 <div class="text-danger text-start"
@@ -182,7 +182,7 @@
                             </td>
                             <td style="width: 250px;"><ng-select class="required2" placeholder="Select Location" formControlName="location"
                                 [notFoundText]="vendorContractService.nextLocationValue" bindLabel="text" bindValue="text" (search)="vendorContractService.getLocationDetail($event)"
-                                [items]="vendorContractService.locationData"
+                                [items]="vendorContractService.locationData" appFocusNext
                                 [ngClass]="{ 'border-danger': contract.get('location')?.invalid  && contract.get('location')?.touched }"></ng-select>
                             <div *ngIf="contract.get('location')?.touched && contract.get('location')?.errors">
                                                 <div class="text-danger text-start"
@@ -190,19 +190,19 @@
                                                     This field is required.
                                                 </div>
                                             </div></td>
-                            <td style="width: 150px;"><ng-select placeholder="Select PayBas" formControlName="payBas"
+                            <td style="width: 150px;"><ng-select placeholder="Select PayBas" formControlName="payBas" appFocusNext
                                 bindLabel="codeDesc" bindValue="codeId" [items]="PayBsList"></ng-select>
-                            <td style="width: 250px;"><ng-select placeholder="Select Mode" formControlName="transMode"
+                            <td style="width: 250px;"><ng-select placeholder="Select Mode" formControlName="transMode" appFocusNext
                                  [items]="generalMasterService.modeData" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
-                            <td><input type="text" class="form-control" placeholder="Min. Chg/CNote" formControlName="min_Charge"  (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
-                            <td class="text-center" style="width: 100px;"><ng-select placeholder="Select ServiceType" formControlName="serviceType"
+                            <td><input type="text" class="form-control" placeholder="Min. Chg/CNote" formControlName="min_Charge" appFocusNext (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td class="text-center" style="width: 100px;"><ng-select placeholder="Select ServiceType" formControlName="serviceType" appFocusNext
                                 [items]="generalMasterService.serviceTypeList" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
-                            <td class="text-center" style="width: 150px;"><ng-select  placeholder="Select Rate Type" formControlName="rate_Type"
+                            <td class="text-center" style="width: 150px;"><ng-select  placeholder="Select Rate Type" formControlName="rate_Type" appFocusNext
                                 [items]="generalMasterService.VendorRateList" bindLabel="codeDesc" bindValue="codeId">
                                 </ng-select>
                             </td>
-                            <td class="text-center"><input type="text" class="form-control" placeholder="Rate/CNote" formControlName="chg_Rate"  (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
-                            <td class="text-center"><input type="text" class="form-control" placeholder="Max. Chg./CNote" formControlName="max_Charge" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td class="text-center"><input type="text" class="form-control" placeholder="Rate/CNote" appFocusNext formControlName="chg_Rate"  (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td class="text-center"><input type="text" class="form-control" placeholder="Max. Chg./CNote" appFocusNext  formControlName="max_Charge" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
                             <th><div *ngIf="i !== 0" style="color: Maroon; font-size: 14px; font-weight: bolder;" class="cursor-pointer" (click)="vendorContractService.removeCnoteBasedContract(i)">X</div></th>
                      </tr>
                 </tbody>
@@ -244,7 +244,7 @@
                 <tbody formArrayName="cnoteDeliveryCharges">
                      <tr *ngFor="let contract of vendorContractService.cnoteDeliveryCharges.controls; let i = index" [formGroupName]="i">
                             <td class="text-center"  style="width: 250px;">
-                                 <ng-select class="required2" placeholder="Select Location" formControlName="location" notFoundText="No matches found"
+                                 <ng-select class="required2" placeholder="Select Location" formControlName="location" notFoundText="No matches found" appFocusNext
                                 [notFoundText]="vendorContractService.nextLocationValue" bindLabel="text" bindValue="text" (search)="vendorContractService.getLocationDetail($event)"
                                 [items]="vendorContractService.locationData"
                                 [ngClass]="{ 'border-danger': contract.get('location')?.invalid  && contract.get('location')?.touched }"></ng-select>
@@ -256,7 +256,7 @@
                                             </div>
                             </td>
                             <td style="width: 250px;"><ng-select  class="required2" placeholder="Select To City" formControlName="city"
-                                [items]="vendorContractService.cityList" bindValue="location" bindLabel="location"
+                                [items]="vendorContractService.cityList" bindValue="location" bindLabel="location" appFocusNext
                                 [ngClass]="{ 'border-danger': contract.get('city')?.invalid  && contract.get('city')?.touched }"></ng-select>
                             <div *ngIf="contract.get('city')?.touched && contract.get('city')?.errors">
                                                 <div class="text-danger text-start"
@@ -265,19 +265,19 @@
                                                 </div>
                                             </div>
                             </td>
-                            <td style="width: 150px;"><ng-select  placeholder="Select Pay Basis" formControlName="payBas"
+                            <td style="width: 150px;"><ng-select  placeholder="Select Pay Basis" formControlName="payBas" appFocusNext
                                  bindLabel="codeDesc" bindValue="codeId" [items]="PayBsList"></ng-select></td>
-                            <td style="width: 250px;"><ng-select  placeholder="Select Mode" formControlName="transMode"
+                            <td style="width: 250px;"><ng-select  placeholder="Select Mode" formControlName="transMode" appFocusNext
                                 [items]="generalMasterService.modeData" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
-                            <td style="width: 150px;"><ng-select  placeholder="ODA OR NON ODA" formControlName="oda"
+                            <td style="width: 150px;"><ng-select  placeholder="ODA OR NON ODA" formControlName="oda" appFocusNext
                                 [items]="generalMasterService.odaList" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
-                            <td class="text-center"><input type="text" class="form-control" placeholder="Min. Chg/CNote" formControlName="min_Charge"  (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
-                            <td class="text-center" style="width: 200px;"><ng-select placeholder="Service Type" formControlName="serviceType"
+                            <td class="text-center"><input type="text" class="form-control" placeholder="Min. Chg/CNote" formControlName="min_Charge" appFocusNext  (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td class="text-center" style="width: 200px;"><ng-select placeholder="Service Type" formControlName="serviceType" appFocusNext
                                 [items]="generalMasterService.serviceTypeList" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
-                            <td class="text-center" style="width: 150px;"><ng-select placeholder="Rate Type" formControlName="rate_Type"
+                            <td class="text-center" style="width: 150px;"><ng-select placeholder="Rate Type" formControlName="rate_Type" appFocusNext
                                 [items]="generalMasterService.VendorRateList" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
-                            <td class="text-center"><input type="text" class="form-control" placeholder="Rate/Cnote" formControlName="chg_Rate" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
-                             <td class="text-center"><input type="text" class="form-control" placeholder="Max. Chg./CNote" formControlName="max_Charge"  (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td class="text-center"><input type="text" class="form-control" placeholder="Rate/Cnote" formControlName="chg_Rate" appFocusNext (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                             <td class="text-center"><input type="text" class="form-control" placeholder="Max. Chg./CNote" formControlName="max_Charge" appFocusNext  (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
                             <th><div *ngIf="i !== 0" style="color: Maroon; font-size: 14px; font-weight: bolder;" class="cursor-pointer" (click)="vendorContractService.removeCnoteDeliveryCharges(i)">X</div></th>
                      </tr>
                 </tbody>
