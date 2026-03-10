@@ -56,6 +56,8 @@ constructor(
       })
       if (params['VedorType'] === '04') {
         this.getPaybs();
+        this.vendorContractService.addCnoteBasedContract();
+        this.vendorContractService.addCnoteDeliveryCharges();
         this.generalMasterService.getModeData();
         this.generalMasterService.getServiceType();
         this.generalMasterService.getVendorRateType();
@@ -65,8 +67,6 @@ constructor(
        if (params['VedorType'] === 'XX1') {
         this.vendorContractService.addRouteContract();
         this.vendorContractService.addDistanceContract();
-        this.vendorContractService.addCnoteBasedContract();
-        this.vendorContractService.addCnoteDeliveryCharges();
         this.vendorContractService.getVehicleType('O');
         this.docketService.getTypeofMovementData();
         this.generalMasterService.getRateTypeData();

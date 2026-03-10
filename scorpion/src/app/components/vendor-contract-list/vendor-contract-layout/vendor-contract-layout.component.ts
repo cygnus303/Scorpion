@@ -7,6 +7,7 @@ import { VendorContractService } from 'app/shared/services/vendor-contract.servi
 import { DocketService } from 'app/shared/services/docket.service';
 import { MasterService } from 'app/shared/services/master.service';
 import { environment } from 'environments/environment';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 
 @Component({
   selector: 'app-vendor-contract-layout',
@@ -19,7 +20,8 @@ export class VendorContractLayoutComponent {
   env = environment;
   selectedTab: string = 'profile';
   public isSubmitting:boolean=false;
-  constructor(public router: Router,public vendorContractService:VendorContractService,public docketService:DocketService,public masterService: MasterService) {
+  public isRedirect:boolean = false;
+  constructor(public router: Router,public vendorContractService:VendorContractService,public docketService:DocketService,public masterService: MasterService ,public sweetAlertService:SweetAlertService,) {
   }
 
     ngOnInit() {
@@ -79,7 +81,7 @@ onContinue() {
   }
 
   onSubmit() {
-     this.isSubmitting = true;
+   
     const form = this.vendorContractService.vendorProfileForm.value;
     const payload = {
       WVCSV1VM: {
@@ -186,14 +188,24 @@ onContinue() {
     }
 
     if (this.vendorContractService.vendorProfileForm.valid) {
-      this.masterService.AddEditVendorContract(formData).subscribe({next: (response: any) => {
-           this.isSubmitting = false;
-          window.parent.location.href = `${this.env.liveUrl}Master/VendorContractDone?ContractCode=${response.contractCode}&type=${response.type}&TranXaction=${response.tranXaction}&src=angular`;
+      this.isSubmitting = true;
+      this.masterService.AddEditVendorContract(formData).subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.isRedirect = true;
+            window.parent.location.href = `${this.env.liveUrl}Master/VendorContractDone?ContractCode=${response.contractCode}&type=${response.type}&TranXaction=${response.tranXaction}&src=angular`;
+          } else {
+            this.sweetAlertService.error('You have some form errors. Please check below.');
+            this.isSubmitting = false;
+          }
+        }, error: (error) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.sweetAlertService.error(error?.error?.message);
+          this.isSubmitting = false;
+          this.isRedirect = false;
         }
       });
-      console.log(this.vendorContractService.vendorProfileForm.value)
     } else {
-       this.isSubmitting = false;
       this.vendorContractService.vendorProfileForm.markAllAsTouched();
     }
   }
