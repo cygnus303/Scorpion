@@ -34,4 +34,9 @@ export class MasterService {
    DownloadContractExcelTemplate(params: any) {
     return this.apiHandlerService.DownloadFile(`Master/DownloadContractExcelTemplate?matrixType=${params.matrixType}&contractId=${params.contractId}&moduleType=${params.moduleType}`);
   }
+
+  uploadExcel(formData:any){
+    return this.apiHandlerService.Post(`Master/BookingCharges_UploadExcel`,formData);
+
+  }
 }
