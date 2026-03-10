@@ -22,6 +22,11 @@ export class VendorContractProfileComponent {
     { text:'Contract', value : 'C'},
     { text:'Non Contract', value : 'NC'}
   ];
+
+   public contractCategory = [
+    { text:'Contract', value : 'C'},
+    { text:'Subcontract', value : 'S'}
+  ];
   public paymentIntervalList = [
   { text: 'Quarterly', value: 'Q' },
   { text: 'Monthly', value: 'M' },

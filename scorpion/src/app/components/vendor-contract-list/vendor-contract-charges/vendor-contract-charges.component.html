@@ -125,9 +125,9 @@
                             </td>
                             <td><input type="text" class="form-control" placeholder="Min. Amt. Committed" formControlName="min_Amt_Committed" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
                             <td><input type="text" class="form-control" placeholder="Committed Km." formControlName="committed_Km" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
-                            <td class="text-center"><input type="text" class="form-control" placeholder="Charge Per Additional Km." formControlName="chg_Per_Add_Km" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td class="text-center"  style="width: 250px;"><input type="text" class="form-control" placeholder="Charge Per Additional Km." formControlName="chg_Per_Add_Km" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
                             <td class="text-center"><input type="text" class="form-control" placeholder="Max. Payment" formControlName="max_Amt_Committed" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
-                            <td class="text-center"><input type="text" class="form-control" placeholder="Committed No." formControlName="trips_PM" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td class="text-center" style="width: 250px;"><input type="text" class="form-control" placeholder="Committed No." formControlName="trips_PM" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
                             <th><div *ngIf="i !== 0" style="color: Maroon; font-size: 14px; font-weight: bolder;" class="cursor-pointer" (click)="vendorContractService.removeDistanceBasedContract(i)">X</div></th>
                         </tr>
                 </tbody>

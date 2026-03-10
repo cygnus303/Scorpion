@@ -132,8 +132,8 @@ export class VendorContractService {
 
   addCnoteBasedContract() {
     const group = new FormGroup({
-      city: new FormControl(null,Validators.required),
-      location:new FormControl(null,Validators.required),
+      city: new FormControl(null,this.vendorProfileForm.value.VendorType === '04' ? Validators.required :null),
+      location:new FormControl(null,this.vendorProfileForm.value.VendorType === '04' ? Validators.required :null),
       payBas: new FormControl(null),
       transMode: new FormControl(null),
       min_Charge: new FormControl(null),
@@ -162,8 +162,8 @@ export class VendorContractService {
 
   addCnoteDeliveryCharges() {
     const group = new FormGroup({
-      location: new FormControl(null,Validators.required),
-      city: new FormControl(null,Validators.required),
+      location: new FormControl(null,this.vendorProfileForm.value.VendorType === '04' ? Validators.required :null),
+      city: new FormControl(null,this.vendorProfileForm.value.VendorType === '04' ? Validators.required :null),
       payBas: new FormControl(null),
       transMode: new FormControl(null),
       oda: new FormControl(null),

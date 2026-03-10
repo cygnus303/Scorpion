@@ -211,7 +211,7 @@
                         <label class="col-md-5 col-form-label text-end">Contract Category</label>
                         <div class="col-md-7">
                             <ng-select class="noFoundTextColor required2" formControlName="VendorContractCat" required
-                                [items]="vendorCategoryList" bindLabel="text" bindValue="value" placeholder="Select Contract Category"
+                                [items]="contractCategory" bindLabel="text" bindValue="value" placeholder="Select Contract Category"
                                 [ngClass]="{ 'border-danger': vendorContractService.vendorProfileForm.get('VendorContractCat')?.invalid  && vendorContractService.vendorProfileForm.get('VendorContractCat')?.touched}"></ng-select>
                             <div *ngIf="vendorContractService.vendorProfileForm.get('VendorContractCat')?.invalid && vendorContractService.vendorProfileForm.get('VendorContractCat')?.touched" class="text-danger text-start">
                                 <small *ngIf="vendorContractService.vendorProfileForm.get('VendorContractCat')?.hasError('required')">Contract Category is

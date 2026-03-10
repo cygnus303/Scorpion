@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { VendorContractService } from 'app/shared/services/vendor-contract.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { MasterService } from 'app/shared/services/master.service';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-vendor-contract-layout',
@@ -15,6 +16,7 @@ import { MasterService } from 'app/shared/services/master.service';
   styleUrl: './vendor-contract-layout.component.scss'
 })
 export class VendorContractLayoutComponent {
+  env = environment;
   selectedTab: string = 'profile';
   public isSubmitting:boolean=false;
   constructor(public router: Router,public vendorContractService:VendorContractService,public docketService:DocketService,public masterService: MasterService) {
@@ -84,17 +86,17 @@ onContinue() {
       WVCSV1VM: {
         WVCSV1: {
           Contract_loccode: form.Contract_loccode || '',
-          Start_Dt: form.Start_Dt,
+          Start_Dt: form.Start_Dt ? new Date(form.Start_Dt).toISOString() : '',
           CompWitness: form.CompWitness || '',
-          ContractDt: form.ContractDt,
+          ContractDt: form.ContractDt ? new Date(form.ContractDt).toISOString() : '',
           CONTRACTCD: form.CONTRACTCD || '',
           VendorPerDesg: form.VendorPerDesg || '',
           Payment_loc: form.Payment_loc || '',
           VendorContractCat: form.VendorContractCat,
           VendorCode: form.VendorCode || '',
           TDSAppl_YN: form.TDSAppl_YN || '',
-          Security_deposit_date: form.Security_deposit_date,
-          UpdateDt: new Date(),
+          Security_deposit_date: form.Security_deposit_date ? new Date(form.Security_deposit_date).toISOString() : '',
+          UpdateDt: new Date().toISOString(),
           VendorWitness: form.VendorWitness || '',
           Vendor_Address: form.Vendor_Address || '',
           CompEmpDesg: form.CompEmpDesg || '',
@@ -107,7 +109,7 @@ onContinue() {
           Payment_interval: form.Payment_interval || '',
           Status: form.Status || '', ///
           VendorCity: form.VendorCity || '',
-          EntryDt: new Date(),
+          EntryDt: new Date().toISOString(),
           Security_deposit_Amt: form.Security_deposit_Amt || 0,
           Payment_Basis: form.Payment_Basis || '',
           Default_Charge: form.Default_Charge || 0,
@@ -116,7 +118,7 @@ onContinue() {
           VendorCategory: form.VendorCategory,
           UpdateBy: this.docketService.loginUserList?.UserId,
           Monthly_Phone_Charges: form.Monthly_Phone_Charges || 0,
-          Valid_uptodt: form.Valid_uptodt,
+          Valid_uptodt: form.Valid_uptodt ? new Date(form.Valid_uptodt).toISOString() : '',
           MetrixType: form.MetrixType || '',
           ContractType: form.ContractType || '',
           Flag: this.docketService.loginUserList.Type === 'A'?'Add':'Edit' ,///
@@ -139,7 +141,7 @@ onContinue() {
       }
     };
     const formData = new FormData();
-    this.appendObjectToFormData(formData, payload.WVCSV1VM.WVCSV1, "DVM.WMD");
+    this.appendObjectToFormData(formData, payload.WVCSV1VM.WVCSV1, "WVCSV1VM.WVCSV1");
     formData.append("WVCSV1VM.ContractID", this.vendorContractService.vendorProfileForm.value.ContractId || '');
     formData.append("EntryBy", this.docketService.loginUserList?.UserId);
     formData.append("Flag", this.docketService.loginUserList.Type === 'A'?'Add':'Edit');
@@ -169,20 +171,25 @@ onContinue() {
     
     if (hasRouteData) {
       formData.append("WVCSV1VM.listWVCRM", JSON.stringify(routeContracts));
+      formData.append("RouteBasedContract", JSON.stringify(routeContracts));
     }
     if (hasDistanceData) {
       formData.append("WVCSV1VM.listWVCDM", JSON.stringify(distanceContracts));
+      formData.append("DistanceBasedContract", JSON.stringify(distanceContracts));
     }
     if (hascnoteBasedContracts) {
       formData.append("WVCSV1VM.listWVCDoBCM", JSON.stringify(cnoteBasedContracts));
+      formData.append("DocketBasedContractBC", JSON.stringify(cnoteBasedContracts));
     }
     if (hasCnoteDeliveryCharges) {
       formData.append("WVCSV1VM.listWVCDoDCM", JSON.stringify(cnoteDeliveryCharges));
+      formData.append("DocketBasedContractDC", JSON.stringify(cnoteDeliveryCharges));
     }
 
     if (this.vendorContractService.vendorProfileForm.valid) {
       this.masterService.AddEditVendorContract(formData).subscribe({next: (response: any) => {
            this.isSubmitting = false;
+          window.parent.location.href = `${this.env.liveUrl}Master/VendorContractDone?ContractCode=${response.contractCode}&type=${response.type}&TranXaction=${response.tranXaction}&src=angular`;
         }
       });
       console.log(this.vendorContractService.vendorProfileForm.value)
