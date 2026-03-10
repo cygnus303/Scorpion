@@ -7,7 +7,16 @@
                 Route Based Contract Matrix
             </div>
             <div class="gap-2 d-flex align-items-center">
-                <button class="btn btn-success"><i class="fas fa-upload me-2"></i>Upload Excel</button>
+                  <button class="btn btn-success"(click)="routeFileInput.click()">
+                        <i class="fas fa-upload me-2"></i>
+                        {{ routeFile  ? 'Change File' : 'Upload Excel' }}
+                  </button>
+
+            <input type="file" #routeFileInput accept=".xls,.xlsx" style="display:none" (change)="onFileSelected($event,'route',routeFileInput)">
+            <!-- Selected File Name -->
+            <span *ngIf="routeFile" class="ms-2">
+                {{ routeFile.name }}
+            </span>
                 <button class="btn btn-success"  (click)="vendorContractService.DownloadContractExcelTemplate()"><i class="fas fa-download me-2"></i>Download Excel Templete</button>
                  <button class="btn btn-success"  (click)="vendorContractService.addRouteContract()">+ Add Item</button>
             </div>
@@ -81,8 +90,17 @@
                 Distance Based Contract
             </div>
             <div class="gap-2 d-flex align-items-center">
-                <button class="btn btn-success"><i class="fas fa-upload me-2"></i>Upload Excel</button>
-                <button class="btn btn-success"><i class="fas fa-download me-2"></i>Download Excel Templete</button>
+                <button class="btn btn-success" (click)="distanceFileInput.click()">
+                        <i class="fas fa-upload me-2"></i>
+                        {{ distanceFile  ? 'Change File' : 'Upload Excel' }}
+                  </button>
+
+            <input type="file" #distanceFileInput accept=".xls,.xlsx" style="display:none" (change)="onFileSelected($event,'distance',distanceFileInput)">
+            <!-- Selected File Name -->
+            <span *ngIf="distanceFile " class="ms-2">
+                {{ distanceFile .name }}
+            </span>
+                <button class="btn btn-success"  (click)="vendorContractService.DownloadContractExcelTemplate()"><i class="fas fa-download me-2"></i>Download Excel Templete</button>
                  <button class="btn btn-success"   (click)="vendorContractService.addDistanceContract()">+ Add Item</button>
             </div>
         </div>
@@ -144,8 +162,17 @@
                 CNote Based Contract : Booking Charges
             </div>
             <div class="gap-2 d-flex align-items-center">
-                <button class="btn btn-success"><i class="fas fa-upload me-2"></i>Upload Excel</button>
-                <button class="btn btn-success"><i class="fas fa-download me-2"></i>Download Excel Templete</button>
+                 <button class="btn btn-success" (click)="bookingInput.click()">
+                        <i class="fas fa-upload me-2"></i>
+                        {{ bookingFile ? 'Change File' : 'Upload Excel' }}
+                  </button>
+
+            <input type="file" #bookingInput accept=".xls,.xlsx" style="display:none" (change)="onFileSelected($event,'booking',bookingInput)">
+            <!-- Selected File Name -->
+            <span *ngIf="bookingFile" class="ms-2">
+                {{ bookingFile.name }}
+            </span>
+                <button class="btn btn-success" (click)="vendorContractService.DownloadContractExcelTemplate()"><i class="fas fa-download me-2"></i>Download Excel Templete</button>
                  <button class="btn btn-success"   (click)="vendorContractService.addCnoteContract()">+ Add Item</button>
             </div>
         </div>
@@ -217,8 +244,17 @@
                 CNote Based Contract : Delivery Charges
             </div>
             <div class="gap-2 d-flex align-items-center">
-                <button class="btn btn-success"><i class="fas fa-upload me-2"></i>Upload Excel</button>
-                <button class="btn btn-success"><i class="fas fa-download me-2"></i>Download Excel Templete</button>
+                 <button class="btn btn-success" (click)="deliveryInput.click()">
+                        <i class="fas fa-upload me-2"></i>
+                        {{ deliveryFile  ? 'Change File' : 'Upload Excel' }}
+                  </button>
+
+            <input type="file" #deliveryInput accept=".xls,.xlsx" style="display:none" (change)="onFileSelected($event,'delivery',deliveryInput)">
+            <!-- Selected File Name -->
+            <span *ngIf="deliveryFile " class="ms-2">
+                {{ deliveryFile .name }}
+            </span>
+                <button class="btn btn-success" (click)="vendorContractService.DownloadContractExcelTemplate()"><i class="fas fa-download me-2"></i>Download Excel Templete</button>
                  <button class="btn btn-success"   (click)="vendorContractService.addDeliveryCharges()">+ Add Item</button>
             </div>
         </div>

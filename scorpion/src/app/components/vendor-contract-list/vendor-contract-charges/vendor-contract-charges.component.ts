@@ -6,6 +6,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { DocketService } from 'app/shared/services/docket.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { LoadingSheetApiService } from 'app/shared/services/loading-sheet-api.service';
+import { MasterService } from 'app/shared/services/master.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { VendorContractService } from 'app/shared/services/vendor-contract.service';
 import { SharedModule } from 'app/shared/shared/shared.module';
@@ -18,8 +20,11 @@ import { SharedModule } from 'app/shared/shared/shared.module';
   styleUrl: './vendor-contract-charges.component.scss'
 })
 export class VendorContractChargesComponent {
-    public PayBsList:any[]=[];
-
+ public PayBsList:any[]=[];
+public routeFile: File | null = null;
+public distanceFile: File | null = null;
+public bookingFile: File | null = null;
+public deliveryFile: File | null = null;
   public modeList = [
   { text: 'Air', value: 'A' },
   { text: 'Train', value: 'R' },
@@ -32,7 +37,9 @@ constructor(
   public generalMasterService:GeneralMasterService,
   public loadingSheetApiService:LoadingSheetApiService,
   public THCMasterService:THCMasterService,
-  private route: ActivatedRoute
+  private route: ActivatedRoute,
+  public masterService:MasterService,
+  private sweetAlertService:SweetAlertService
   
 ){}
 
@@ -89,6 +96,38 @@ constructor(
   }
 
 
+onFileSelected(event: any, type: string, fileInput: any) {
+
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  const allowedExtensions = ['xls', 'xlsx'];
+  const fileExtension = file.name.split('.').pop()?.toLowerCase();
+
+  if (!allowedExtensions.includes(fileExtension || '')) {
+    this.sweetAlertService.error('Invalid file format. Please upload only Excel file.');
+    fileInput.value = '';
+    return;
+  }
+
+  if (type === 'route') {
+    this.routeFile = file;
+  }
+
+  const formData = new FormData();
+  formData.append('uploadFile', file);
+
+  this.masterService.uploadExcel(formData).subscribe({
+    next: () => {
+      this.sweetAlertService.success('Excel Uploaded Successfully');
+    },
+    error: (error: any) => {
+      const message = error?.error?.Error?.Message || 'Upload Failed';
+      this.sweetAlertService.error(message);
+    }
+  });
+
+}
     
   
 }
