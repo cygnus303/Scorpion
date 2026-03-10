@@ -49,7 +49,7 @@ constructor(
         VendorName: params['Vendorname'],
         VendorTypeName: params['Text'],
         VendorType: params['VedorType'],
-        VendorCode: params['VendorCode'],
+        VendorCode: params['vendorCode'],
         MetrixType:params['matrix'],
         ContractType:params['ContractType'],
         ContractId:params['ContractId']

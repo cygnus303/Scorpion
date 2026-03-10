@@ -47,7 +47,7 @@ public routeParams:any;
         VendorName: params['Vendorname'],
         VendorTypeName: params['Text'],
         VendorType: params['VedorType'],
-        VendorCode: params['VendorCode'],
+        VendorCode: params['vendorCode'],
         MetrixType:params['matrix'],
         ContractType:params['ContractType'],
         ContractId:params['ContractId']
@@ -65,7 +65,7 @@ public routeParams:any;
       type:this.routeParams.VedorType ,
       text:this.routeParams.Text,
       flag:this.docketService.loginUserList.Type === 'A'?'Add':'Edit',
-      vendorCode:this.routeParams.VendorCode,
+      vendorCode:this.routeParams.vendorCode,
       contractType:this.routeParams.ContractType ? this.routeParams.ContractType :'',
       matrix:this.routeParams.matrix,
       contractId:this.routeParams.ContractId
@@ -149,5 +149,17 @@ public routeParams:any;
       }
     })
   }
+
+onFileSelect(event: any) {
+  const file = event.target.files[0];
+
+  if (file) {
+    this.vendorContractService.selectedFile = file;
+
+    this.vendorContractService.vendorProfileForm.patchValue({
+      Document: file.name
+    });
+  }
+}
 
 }

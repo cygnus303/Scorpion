@@ -143,6 +143,7 @@ onContinue() {
     this.appendObjectToFormData(formData, payload.WVCSV1VM.WVCSV1, "WVCSV1VM.WVCSV1");
     formData.append("WVCSV1VM.ContractID", this.vendorContractService.vendorProfileForm.value.ContractId || '');
     formData.append("EntryBy", this.docketService.loginUserList?.UserId);
+    formData.append('Attachments',this.vendorContractService.selectedFile)
     formData.append("Flag", this.docketService.loginUserList.Type === 'A'?'Add':'Edit');
 
     const routeContracts = this.vendorContractService.routeBasedContracts.value;

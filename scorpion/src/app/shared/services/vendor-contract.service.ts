@@ -23,6 +23,7 @@ export class VendorContractService {
     public nextLocationValue = 'Please enter atleast 1 character';
   public locationData: LocationResponse[] = [];
   public cityList:CityResponse[]=[];
+  selectedFile!: File;
 
   constructor(
     private masterService:MasterService,
@@ -59,6 +60,8 @@ export class VendorContractService {
       Security_deposit_Amt: new FormControl(0),
       Payment_Basis: new FormControl(null),
       Payment_loc: new FormControl(null),
+      Document:new FormControl(null),
+      attachments : new FormControl(null),
       Monthly_Phone_Charges: new FormControl(0),
       Default_Charge:new FormControl(0),
       VendorType:new FormControl(null),

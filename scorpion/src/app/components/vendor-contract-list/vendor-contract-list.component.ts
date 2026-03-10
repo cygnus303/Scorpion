@@ -75,7 +75,7 @@ export class VendorContractListComponent {
   changeVendor(event: any) {
     this.criteriaform.patchValue({
       Vendorname: event.text,
-      VendorCode:event.id
+      vendorCode:event.id
     });
   }
 
@@ -85,6 +85,7 @@ export class VendorContractListComponent {
       ContractType: new FormControl(null),
       ContractFor: new FormControl(null),
       VendorCode: new FormControl(null, [Validators.required]),
+      vendorCode:new FormControl(null),
       Text: new FormControl(''),
       Vendorname: new FormControl(''),
       matrix:new FormControl('')
@@ -200,7 +201,7 @@ export class VendorContractListComponent {
   getContractList(matrixType: string) {
     this.isLoading = true;
     const parmas = {
-      vendorCode: this.criteriaform.value.VendorCode,
+      vendorCode: this.criteriaform.value.vendorCode,
       matrixType: matrixType,
       vType: this.criteriaform.value.VedorType
     }
@@ -263,7 +264,7 @@ export class VendorContractListComponent {
   }
 
 goToBackList() {
-      const { Vendorname, ContractFor, ...rest } = this.criteriaform.value;
+      const { Vendorname, ContractFor, VendorCode,...rest } = this.criteriaform.value;
     const formValues = {
       ...rest,
       flag:this.docketService.loginUserList.Type
@@ -284,7 +285,7 @@ onSort(event: any) {
 }
 
   onEditPage(item: any) {
-    const { Vendorname, ContractFor, ...rest } = this.criteriaform.value;
+    const { Vendorname, ContractFor,VendorCode, ...rest } = this.criteriaform.value;
     const formValues = {
       ...rest,
       ContractId: item.contractcd,
