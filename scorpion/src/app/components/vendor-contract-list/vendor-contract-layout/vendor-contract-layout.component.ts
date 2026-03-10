@@ -181,10 +181,12 @@ onContinue() {
     if (hascnoteBasedContracts) {
       formData.append("WVCSV1VM.listWVCDoBCM", JSON.stringify(cnoteBasedContracts));
       formData.append("DocketBasedContractBC", JSON.stringify(cnoteBasedContracts));
+      formData.append("DocketBasedContractBCfranchise", JSON.stringify(cnoteBasedContracts));
     }
     if (hasCnoteDeliveryCharges) {
       formData.append("WVCSV1VM.listWVCDoDCM", JSON.stringify(cnoteDeliveryCharges));
       formData.append("DocketBasedContractDC", JSON.stringify(cnoteDeliveryCharges));
+      formData.append("DocketBasedContractDCfranchise", JSON.stringify(cnoteDeliveryCharges));
     }
 
     if (this.vendorContractService.vendorProfileForm.valid) {

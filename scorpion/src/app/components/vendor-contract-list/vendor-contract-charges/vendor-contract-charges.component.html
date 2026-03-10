@@ -196,27 +196,27 @@
                 </thead>
                 <tbody formArrayName="cnoteBasedContracts">
                      <tr *ngFor="let contract of vendorContractService.cnoteBasedContracts.controls; let i = index" [formGroupName]="i">
-                            <td class="text-center"  style="width: 250px;">
-                                 <ng-select class="required2" [items]="vendorContractService.cityList" bindValue="location" bindLabel="location"
-                                placeholder="Select City" formControlName="city" notFoundText="No matches found" appFocusNext
-                                 [ngClass]="{ 'border-danger': contract.get('city')?.invalid  && contract.get('city')?.touched }"></ng-select>
-                                 <div *ngIf="contract.get('city')?.touched && contract.get('city')?.errors">
-                                                <div class="text-danger text-start"
-                                                    *ngIf="contract.get('city')?.hasError('required')">
-                                                    This field is required.
-                                                </div>
-                                            </div>
+                            <td class="text-center" style="width: 250px;">
+                                <ng-select class="required2" [items]="vendorContractService.cityList" bindValue="location" bindLabel="location"
+                                    placeholder="Select City" formControlName="city" notFoundText="No matches found" appFocusNext
+                                    [ngClass]="{ 'border-danger': contract.get('city')?.invalid  && contract.get('city')?.touched }"></ng-select>
+                                <div *ngIf="contract.get('city')?.touched && contract.get('city')?.errors">
+                                    <div class="text-danger text-start" *ngIf="contract.get('city')?.hasError('required')">
+                                        This field is required.
+                                    </div>
+                                </div>
                             </td>
                             <td style="width: 250px;"><ng-select class="required2" placeholder="Select Location" formControlName="location"
-                                [notFoundText]="vendorContractService.nextLocationValue" bindLabel="text" bindValue="text" (search)="vendorContractService.getLocationDetail($event)"
-                                [items]="vendorContractService.locationData" appFocusNext
-                                [ngClass]="{ 'border-danger': contract.get('location')?.invalid  && contract.get('location')?.touched }"></ng-select>
-                            <div *ngIf="contract.get('location')?.touched && contract.get('location')?.errors">
-                                                <div class="text-danger text-start"
-                                                    *ngIf="contract.get('location')?.hasError('required')">
-                                                    This field is required.
-                                                </div>
-                                            </div></td>
+                                    [notFoundText]="vendorContractService.nextLocationValue" bindLabel="text" bindValue="text"
+                                    (search)="vendorContractService.getLocationDetail($event)" [items]="vendorContractService.locationData"
+                                    appFocusNext
+                                    [ngClass]="{ 'border-danger': contract.get('location')?.invalid  && contract.get('location')?.touched }"></ng-select>
+                                <div *ngIf="contract.get('location')?.touched && contract.get('location')?.errors">
+                                    <div class="text-danger text-start" *ngIf="contract.get('location')?.hasError('required')">
+                                        This field is required.
+                                    </div>
+                                </div>
+                            </td>
                             <td style="width: 150px;"><ng-select placeholder="Select PayBas" formControlName="payBas" appFocusNext
                                 bindLabel="codeDesc" bindValue="codeId" [items]="PayBsList"></ng-select>
                             <td style="width: 250px;"><ng-select placeholder="Select Mode" formControlName="transMode" appFocusNext
