@@ -51,4 +51,16 @@ export class MasterService {
     return this.apiHandlerService.Post(`Master/RouteBasedContract_UploadExcel`,formData);
 
   }
+
+  DownloadDistanceBasedContractExcel() {
+    return this.apiHandlerService.DownloadFile(`Master/DownloadDistanceBasedContractExcel`);
+  }
+
+  DownloadBookingchargesExcel() {
+    return this.apiHandlerService.DownloadFile(`Master/DownloadBookingchargesExcel`);
+  }
+
+  DownloadDeliveryChargesExcel() {
+    return this.apiHandlerService.DownloadFile(`Master/DownloadDeliveryChargesExcel`);
+  }
 }
