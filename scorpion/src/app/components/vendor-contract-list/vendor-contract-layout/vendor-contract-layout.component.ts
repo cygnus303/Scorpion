@@ -28,11 +28,11 @@ export class VendorContractLayoutComponent {
      const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
-      this.docketService.loginUserList.LocationCode =  'PIM';
+      // this.docketService.loginUserList.LocationCode =  'PIM';
       // this.docketService.loginUserList.loadBy = "B";
       // this.docketService.loginUserList.chargeType='1';
       // this.docketService.loginUserList.drsId='DS/PIM/2526/002766';
-      this.docketService.loginUserList.Type = 'A';
+      // this.docketService.loginUserList.Type = 'E';
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
@@ -179,15 +179,15 @@ onContinue() {
       formData.append("WVCSV1VM.listWVCDM", JSON.stringify(distanceContracts));
       formData.append("DistanceBasedContract", JSON.stringify(distanceContracts));
     }
-    if (hascnoteBasedContracts) {
+    if (hascnoteBasedContracts) { 
       formData.append("WVCSV1VM.listWVCDoBCM", JSON.stringify(cnoteBasedContracts));
       formData.append("DocketBasedContractBC", JSON.stringify(cnoteBasedContracts));
-      formData.append("DocketBasedContractBCfranchise", JSON.stringify(cnoteBasedContracts));
+      // formData.append("DocketBasedContractBCfranchise", JSON.stringify(cnoteBasedContracts));
     }
     if (hasCnoteDeliveryCharges) {
       formData.append("WVCSV1VM.listWVCDoDCM", JSON.stringify(cnoteDeliveryCharges));
-      formData.append("DocketBasedContractDC", JSON.stringify(cnoteDeliveryCharges));
-      formData.append("DocketBasedContractDCfranchise", JSON.stringify(cnoteDeliveryCharges));
+      formData.append("DocketBasedContractDC", JSON.stringify(cnoteDeliveryCharges)); 
+      // formData.append("DocketBasedContractDCfranchise", JSON.stringify(cnoteDeliveryCharges));
     }
 
     if (this.vendorContractService.vendorProfileForm.valid) {
