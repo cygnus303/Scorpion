@@ -20,5 +20,9 @@ export const routes: Routes = [
     {
       path: 'Document',
       loadChildren: () =>import('./components/scan-fm-documents/scan-fm-documents.module').then( (m) => m.ScanFMModule),
+    },
+    {
+      path: 'Contract',
+      loadChildren: () =>import('./components/customer-contract/customer-contract.module').then( (m) => m.CustomerContractModule),
     }
 ];

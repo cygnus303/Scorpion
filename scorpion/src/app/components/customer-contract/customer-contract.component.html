@@ -1,0 +1,53 @@
+<div class="cnote-entry-container px-1">
+    <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
+        <div>
+            <i class="fas fa-list me-2"></i>
+            Select criteria for Customer Contract
+        </div>
+    </div>
+    <div class="form-grid p-4">
+         <form [formGroup]="criteriaform">
+            <div class="row">
+                <div class="col-md-4 form-column" >
+                    <div class="form-group">
+                        <label class="col-md-5">Select Contract Type</label>
+                        <div class="col-md-7">
+                            <div>
+                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Contract Type"
+                                    formControlName="contract_Type"  bindLabel="text"
+                                    bindValue="value"
+                                    [ngClass]="{ 'border-danger': criteriaform.get('contract_Type')?.invalid  && criteriaform.get('contract_Type')?.touched }"></ng-select>
+                            </div>
+                            <div class="text-danger text-start"
+                                *ngIf="criteriaform.get('contract_Type')?.invalid && criteriaform.get('contract_Type')?.touched">
+                                This field is required.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-column">
+                    <div class="form-group">
+                        <label class="col-md-5">Select Customer</label>
+                        <div class="col-md-7">
+                            <div>
+                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Customer"
+                                    formControlName="contractname"  bindLabel="text"
+                                    bindValue="value"
+                                    [ngClass]="{ 'border-danger': criteriaform.get('contractname')?.invalid  && criteriaform.get('contractname')?.touched }"></ng-select>
+                            </div>
+                            <div class="text-danger text-start"
+                                *ngIf="criteriaform.get('contractname')?.invalid && criteriaform.get('contractname')?.touched">
+                                This field is required.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="m-3">
+        <button class="btn btn-success" >
+            <i class="fas fa-plus"></i> Add New Contract
+        </button>
+    </div>
+    </div>
+</div>
