@@ -12,7 +12,7 @@
                         {{ routeFile  ? 'Change File' : 'Upload Excel' }}
                   </button>
 
-            <input type="file" #routeFileInput accept=".xls,.xlsx" style="display:none" (change)="onFileSelected($event,'route',routeFileInput)">
+            <input type="file" #routeFileInput accept=".xls,.xlsx" style="display:none" (change)="uploadRouteFile($event)">
             <!-- Selected File Name -->
             <span *ngIf="routeFile" class="ms-2">
                 {{ routeFile.name }}
@@ -95,7 +95,7 @@
                         {{ distanceFile  ? 'Change File' : 'Upload Excel' }}
                   </button>
 
-            <input type="file" #distanceFileInput accept=".xls,.xlsx" style="display:none" (change)="onFileSelected($event,'distance',distanceFileInput)">
+            <input type="file" #distanceFileInput accept=".xls,.xlsx" style="display:none" (change)="uploadDistanceFile($event)">
             <!-- Selected File Name -->
             <span *ngIf="distanceFile " class="ms-2">
                 {{ distanceFile .name }}
@@ -167,7 +167,7 @@
                         {{ bookingFile ? 'Change File' : 'Upload Excel' }}
                   </button>
 
-            <input type="file" #bookingInput accept=".xls,.xlsx" style="display:none" (change)="onFileSelected($event,'booking',bookingInput)">
+            <input type="file" #bookingInput accept=".xls,.xlsx" style="display:none" (change)="uploadBookingFile($event)">
             <!-- Selected File Name -->
             <span *ngIf="bookingFile" class="ms-2">
                 {{ bookingFile.name }}
@@ -249,7 +249,7 @@
                         {{ deliveryFile  ? 'Change File' : 'Upload Excel' }}
                   </button>
 
-            <input type="file" #deliveryInput accept=".xls,.xlsx" style="display:none" (change)="onFileSelected($event,'delivery',deliveryInput)">
+            <input type="file" #deliveryInput accept=".xls,.xlsx" style="display:none" (change)="uploadDeliveryCharge($event)">
             <!-- Selected File Name -->
             <span *ngIf="deliveryFile " class="ms-2">
                 {{ deliveryFile .name }}

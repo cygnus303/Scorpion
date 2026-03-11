@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ActivatedRoute } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DocketService } from 'app/shared/services/docket.service';
@@ -96,38 +96,165 @@ constructor(
   }
 
 
-onFileSelected(event: any, type: string, fileInput: any) {
-
-  const file = event.target.files?.[0];
+uploadDistanceFile(event:any) {
+ const file = event.target.files?.[0];
   if (!file) return;
 
-  const allowedExtensions = ['xls', 'xlsx'];
+  const allowedExtensions = ['xls','xlsx'];
   const fileExtension = file.name.split('.').pop()?.toLowerCase();
 
   if (!allowedExtensions.includes(fileExtension || '')) {
     this.sweetAlertService.error('Invalid file format. Please upload only Excel file.');
-    fileInput.value = '';
+    event.target.value = '';
+    this.distanceFile = null;
     return;
   }
 
-  if (type === 'route') {
-    this.routeFile = file;
-  }
+  this.distanceFile = file;
 
   const formData = new FormData();
-  formData.append('uploadFile', file);
+  if (this.distanceFile) {
+   formData.append('uploadFile', this.distanceFile);
+}
 
-  this.masterService.uploadExcel(formData).subscribe({
-    next: () => {
-      this.sweetAlertService.success('Excel Uploaded Successfully');
+  this.masterService.uploadDistance(formData).subscribe({
+    next: (response:any) => {
+      this.sweetAlertService.success('Excel Uploaded and Parsed Successfully');
+        if (response?.status === 'success' && response?.data?.length) {
+        response?.data.forEach((item:any)=>{
+          this.vendorContractService.addDistanceContract();
+          const index = this.vendorContractService.distanceBasedContracts.length - 1;
+          this.vendorContractService.distanceBasedContracts.at(index).patchValue({...item });
+        });
+      }
     },
-    error: (error: any) => {
-      const message = error?.error?.Error?.Message || 'Upload Failed';
-      this.sweetAlertService.error(message);
+    error: (error:any) => {
+      this.sweetAlertService.error(error?.error?.Error?.Message || 'Upload Failed');
     }
   });
-
 }
-    
+
+uploadBookingFile(event: any) {
+
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  const allowedExtensions = ['xls','xlsx'];
+  const fileExtension = file.name.split('.').pop()?.toLowerCase();
+
+  if (!allowedExtensions.includes(fileExtension || '')) {
+    this.sweetAlertService.error('Invalid file format. Please upload only Excel file.');
+    event.target.value = '';
+    this.bookingFile = null;
+    return;
+  }
+
+  this.bookingFile = file;
+
+  const formData = new FormData();
+  if(this.bookingFile){
+    formData.append('uploadFile', this.bookingFile);
+  }
+
+  this.masterService.uploadBookingExcel(formData).subscribe({
+
+    next: (response:any) => {
+      this.sweetAlertService.success('Excel Uploaded and Parsed Successfully');
+
+      if (response?.status === 'success' && response?.data?.length) {
+
+        response?.data.forEach((item:any)=>{
+          this.vendorContractService.addCnoteBasedContract();
+          const index = this.vendorContractService.cnoteBasedContracts.length - 1;
+          this.vendorContractService.cnoteBasedContracts.at(index).patchValue({...item });
+        });
+      }
+    },
+
+    error: (error:any) => {
+      this.sweetAlertService.error(error?.error?.Error?.Message || 'Upload Failed');
+    }
+  });
+}
+ 
+
+uploadDeliveryCharge(event:any){
+    const file = event.target.files?.[0];
+  if (!file) return;
+
+  const allowedExtensions = ['xls','xlsx'];
+  const fileExtension = file.name.split('.').pop()?.toLowerCase();
+
+  if (!allowedExtensions.includes(fileExtension || '')) {
+    this.sweetAlertService.error('Invalid file format. Please upload only Excel file.');
+    event.target.value = '';
+    this.deliveryFile = null;
+    return;
+  }
+
+  this.deliveryFile = file;
+
+  const formData = new FormData();
+  if (this.deliveryFile) {
+   formData.append('uploadFile', this.deliveryFile);
+}
+
+  this.masterService.uploadDeliveryCharges(formData).subscribe({
+    next: (response:any) => {
+      this.sweetAlertService.success('Excel Uploaded and Parsed Successfully');
+
+    if (response?.status === 'success' && response?.data?.length) {
+       response?.data.forEach((item:any)=>{
+          this.vendorContractService.addCnoteDeliveryCharges();
+          const index = this.vendorContractService.cnoteDeliveryCharges.length - 1;
+          this.vendorContractService.cnoteDeliveryCharges.at(index).patchValue({...item });
+        });
+      }
+    },
+    error: (error:any) => {
+      this.sweetAlertService.error(error?.error?.Error?.Message || 'Upload Failed');
+    }
+  });
+}
+
+uploadRouteFile(event:any){
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  const allowedExtensions = ['xls','xlsx'];
+  const fileExtension = file.name.split('.').pop()?.toLowerCase();
+
+  if (!allowedExtensions.includes(fileExtension || '')) {
+    this.sweetAlertService.error('Invalid file format. Please upload only Excel file.');
+    event.target.value = '';
+    this.routeFile = null;
+    return;
+  }
+
+  this.routeFile = file;
+
+  const formData = new FormData();
+  if (this.routeFile) {
+   formData.append('uploadFile', this.routeFile);
+}
+
+  this.masterService.uploadRouteExcel(formData).subscribe({
+    next: (response) => {
+      const data = response.data;
+
+      if(data && data.length){
+
+        data.forEach((item:any)=>{
+          this.vendorContractService.addRouteBasedContract();
+          const index = this.vendorContractService.routeBasedContracts.length - 1;
+          this.vendorContractService.routeBasedContracts.at(index).patchValue({...item });
+        });
+      }
+    },
+    error: (error:any) => {
+      this.sweetAlertService.error(error?.error?.Error?.Message || 'Upload Failed');
+    }
+  });
+}
   
 }

@@ -35,8 +35,20 @@ export class MasterService {
     return this.apiHandlerService.DownloadFile(`Master/DownloadContractExcelTemplate?matrixType=${params.matrixType}&contractId=${params.contractId}&moduleType=${params.moduleType}`);
   }
 
-  uploadExcel(formData:any){
+  uploadBookingExcel(formData:any){
     return this.apiHandlerService.Post(`Master/BookingCharges_UploadExcel`,formData);
+  }
+
+  uploadDistance(formData:any){
+    return this.apiHandlerService.Post(`Master/DistanceBasedContract_UploadExcel`,formData);
+  }
+
+  uploadDeliveryCharges(formData:any){
+    return this.apiHandlerService.Post(`Master/DeliveryCharges_UploadExcel`,formData);
+  }
+
+  uploadRouteExcel(formData:any){
+    return this.apiHandlerService.Post(`Master/RouteBasedContract_UploadExcel`,formData);
 
   }
 }
