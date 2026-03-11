@@ -17,7 +17,10 @@
             <span *ngIf="routeFile" class="ms-2">
                 {{ routeFile.name }}
             </span>
-                <button class="btn btn-success"  (click)="vendorContractService.DownloadContractExcelTemplate()"><i class="fas fa-download me-2"></i>Download Excel Templete</button>
+                <button class="btn btn-success"  (click)="vendorContractService.DownloadContractExcelTemplate()" [disabled]="vendorContractService.isDownloadingTemplate">
+                    <i class="fas me-2" [ngClass]="{'fa-download': !vendorContractService.isDownloadingTemplate, 'fa-spinner fa-spin': vendorContractService.isDownloadingTemplate}"></i>
+                    {{ vendorContractService.isDownloadingTemplate ? 'Downloading...' : 'Download Excel Template' }}
+                </button>
                  <button class="btn btn-success"  (click)="vendorContractService.addRouteContract()">+ Add Item</button>
             </div>
         </div>
@@ -100,7 +103,10 @@
             <span *ngIf="distanceFile " class="ms-2">
                 {{ distanceFile .name }}
             </span>
-                <button class="btn btn-success"  (click)="vendorContractService.DownloadContractExcelTemplate()"><i class="fas fa-download me-2"></i>Download Excel Templete</button>
+                <button class="btn btn-success"  (click)="vendorContractService.DownloadDistanceBasedContractExcel()" [disabled]="vendorContractService.isDownloadingDistance">
+                    <i class="fas me-2" [ngClass]="{'fa-download': !vendorContractService.isDownloadingDistance, 'fa-spinner fa-spin': vendorContractService.isDownloadingDistance}"></i>
+                    {{ vendorContractService.isDownloadingDistance ? 'Downloading...' : 'Download Excel Template' }}
+                </button>
                  <button class="btn btn-success"   (click)="vendorContractService.addDistanceContract()">+ Add Item</button>
             </div>
         </div>
@@ -172,7 +178,10 @@
             <span *ngIf="bookingFile" class="ms-2">
                 {{ bookingFile.name }}
             </span>
-                <button class="btn btn-success" (click)="vendorContractService.DownloadContractExcelTemplate()"><i class="fas fa-download me-2"></i>Download Excel Templete</button>
+                <button class="btn btn-success" (click)="vendorContractService.DownloadBookingchargesExcel()" [disabled]="vendorContractService.isDownloadingBooking">
+                    <i class="fas me-2" [ngClass]="{'fa-download': !vendorContractService.isDownloadingBooking, 'fa-spinner fa-spin': vendorContractService.isDownloadingBooking}"></i>
+                    {{ vendorContractService.isDownloadingBooking ? 'Downloading...' : 'Download Excel Template' }}
+                </button>
                  <button class="btn btn-success"   (click)="vendorContractService.addCnoteContract()">+ Add Item</button>
             </div>
         </div>
@@ -254,7 +263,10 @@
             <span *ngIf="deliveryFile " class="ms-2">
                 {{ deliveryFile .name }}
             </span>
-                <button class="btn btn-success" (click)="vendorContractService.DownloadContractExcelTemplate()"><i class="fas fa-download me-2"></i>Download Excel Templete</button>
+                <button class="btn btn-success" (click)="vendorContractService.DownloadDeliveryChargesExcel()" [disabled]="vendorContractService.isDownloadingDelivery">
+                    <i class="fas me-2" [ngClass]="{'fa-download': !vendorContractService.isDownloadingDelivery, 'fa-spinner fa-spin': vendorContractService.isDownloadingDelivery}"></i>
+                    {{ vendorContractService.isDownloadingDelivery ? 'Downloading...' : 'Download Excel Template' }}
+                </button>
                  <button class="btn btn-success"   (click)="vendorContractService.addDeliveryCharges()">+ Add Item</button>
             </div>
         </div>

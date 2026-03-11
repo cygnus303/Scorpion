@@ -23,6 +23,10 @@ export class VendorContractService {
     public nextLocationValue = 'Please enter atleast 1 character';
   public locationData: LocationResponse[] = [];
   public cityList:CityResponse[]=[];
+  public isDownloadingTemplate = false;
+  public isDownloadingDistance = false;
+  public isDownloadingBooking = false;
+  public isDownloadingDelivery = false;
   selectedFile!: File;
 
   constructor(
@@ -297,6 +301,7 @@ export class VendorContractService {
   }
 
   DownloadContractExcelTemplate() {
+    this.isDownloadingTemplate = true;
     const parmas = {
       matrixType: this.vendorProfileForm.value.MetrixType,
       contractId: this.vendorProfileForm.value.ContractId || 0,
@@ -305,8 +310,54 @@ export class VendorContractService {
     this.masterService.DownloadContractExcelTemplate(parmas).subscribe({
       next: (blob: Blob) => {
         saveAs(blob, 'VendorRouteBaseContractTemplate.xlsx');
+        this.isDownloadingTemplate = false;
       },
-      error: (err) => console.error('Excel export failed', err)
+      error: (err) => {
+        console.error('Excel export failed', err);
+        this.isDownloadingTemplate = false;
+      }
+    });
+  }
+
+  DownloadDistanceBasedContractExcel() {
+    this.isDownloadingDistance = true;
+    this.masterService.DownloadDistanceBasedContractExcel().subscribe({
+      next: (blob: Blob) => {
+        saveAs(blob, 'VendorDistanceBasedContractTemplate.xlsx');
+        this.isDownloadingDistance = false;
+      },
+      error: (err) => {
+        console.error('Excel export failed', err);
+        this.isDownloadingDistance = false;
+      }
+    });
+  }
+
+  DownloadBookingchargesExcel() {
+    this.isDownloadingBooking = true;
+    this.masterService.DownloadBookingchargesExcel().subscribe({
+      next: (blob: Blob) => {
+        saveAs(blob, 'BookingchargesVendorExcel.xlsx');
+        this.isDownloadingBooking = false;
+      },
+      error: (err) => {
+        console.error('Excel export failed', err);
+        this.isDownloadingBooking = false;
+      }
+    });
+  }
+
+  DownloadDeliveryChargesExcel() {
+    this.isDownloadingDelivery = true;
+    this.masterService.DownloadDeliveryChargesExcel().subscribe({
+      next: (blob: Blob) => {
+        saveAs(blob, 'Delivery charges Vendor Excel.xlsx');
+        this.isDownloadingDelivery = false;
+      },
+      error: (err) => {
+        console.error('Excel export failed', err);
+        this.isDownloadingDelivery = false;
+      }
     });
   }
 }

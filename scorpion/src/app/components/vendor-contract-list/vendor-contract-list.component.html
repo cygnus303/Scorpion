@@ -197,7 +197,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr *ngIf="!isLoading && contractList?.length === 0">
+                <tr *ngIf="((!isLoading) && (contractList && contractList.length === 0))">
                     <td colspan="10" class="text-center text-muted p-3">
                         No Record Found.
                     </td>
