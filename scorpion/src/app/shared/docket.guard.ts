@@ -44,6 +44,9 @@ export class DocketGuard implements CanActivate {
       else if (currentRoute.includes("LoadingSheet")) {
         return this.handleLoadingSheet(parsedData);
       } 
+      else if (currentRoute.includes("VendorContractTypeWise")) {
+        return this.handleVendorContractTypeWise(parsedData);
+      } 
        else if (currentRoute.includes("Challan") || currentRoute.includes("ChallanList")) {
         return this.handleChallanfilter(parsedData);
       } 
@@ -198,6 +201,25 @@ export class DocketGuard implements CanActivate {
     const requiredKeys = [
       "FinYear", "LocationCode", "LocationName",
       "UserImage", "UserId", "BaseUserName", "Companycode", "loadBy", "chargeType", "id"
+       ];
+    if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
+      // this.docketService.loginUserList = parsedData;
+      this.docketService.Location = parsedData.LocationCode;
+      this.docketService.BaseUserCode = parsedData.UserId;
+      this.docketService.baseUsername = parsedData.BaseUserName;
+      localStorage.setItem("loginUserList", JSON.stringify(parsedData));
+      this.docketService.isComplition = true;
+      // 👇 parsedData save so component can later call getCompletionData
+      return true;
+    }
+    this.router.navigate(['/error']);
+    return false;
+  }
+
+  private handleVendorContractTypeWise(parsedData: any): boolean {
+    const requiredKeys = [
+      "FinYear", "LocationCode", "LocationName",
+      "UserImage", "UserId", "BaseUserName", "Companycode", "Type"
     ];
     if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
       // this.docketService.loginUserList = parsedData;
