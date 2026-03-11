@@ -13,6 +13,7 @@ export const DeliveryRoutes: Routes = [
     {
      path: 'VendorContractTypeWise',
      component: VendorContractListComponent,
+     canActivate: [DocketGuard]
   },
    {
      path: 'VendorContract',
