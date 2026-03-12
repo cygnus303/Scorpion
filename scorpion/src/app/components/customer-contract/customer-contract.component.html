@@ -1,130 +1,64 @@
 <form [formGroup]="criteriaform">
-    <div class="cnote-entry-container px-1">
+    <div class="cnote-entry-container px-3">
         <div
             class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
             <div>
-                <i class="fas fa-list me-2"></i>
-                Select criteria for Customer Contract
+                <i class="fas fa-list me-2"></i> Select Criteria for Customer Contract
             </div>
         </div>
+
         <div class="form-grid p-4">
             <div class="row">
-                <div class="col-md-4 form-column">
-                    <div class="form-group">
-                        <label class="col-md-5">Select Contract Type</label>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-md-5 col-form-label text-end">Select Contract Type</label>
                         <div class="col-md-7">
-                            <div>
-                                <ng-select class="noFoundTextColor required2 clear-icon"
-                                    placeholder="Select Contract Type" formControlName="contract_Type" bindLabel="text"
-                                    bindValue="value"
-                                    [ngClass]="{ 'border-danger': criteriaform.get('contract_Type')?.invalid  && criteriaform.get('contract_Type')?.touched }"></ng-select>
-                            </div>
-                            <div class="text-danger text-start"
-                                *ngIf="criteriaform.get('contract_Type')?.invalid && criteriaform.get('contract_Type')?.touched">
+                            <ng-select class="required2 clear-icon" placeholder="Select Contract Type"
+                                formControlName="contract_Type" bindLabel="text" bindValue="value"
+                                [ngClass]="{ 'border-danger': criteriaform.get('contract_Type')?.invalid && criteriaform.get('contract_Type')?.touched }">
+                            </ng-select>
+                            <div *ngIf="criteriaform.get('contract_Type')?.invalid && criteriaform.get('contract_Type')?.touched"
+                                class="text-danger">
                                 This field is required.
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 form-column">
-                    <div class="form-group">
-                        <label class="col-md-5">Select Customer</label>
+                <div class="col-md-4">
+                    <div class="row">
+                        <label class="col-md-5 col-form-label text-end">Select Customer</label>
                         <div class="col-md-7">
-                            <div>
-                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Customer"
-                                    formControlName="contractname" bindLabel="text" bindValue="value"
-                                    [ngClass]="{ 'border-danger': criteriaform.get('contractname')?.invalid  && criteriaform.get('contractname')?.touched }"></ng-select>
-                            </div>
-                            <div class="text-danger text-start"
-                                *ngIf="criteriaform.get('contractname')?.invalid && criteriaform.get('contractname')?.touched">
+                            <ng-select class="required2 clear-icon" placeholder="Select Customer"
+                                formControlName="contractname" bindLabel="text" bindValue="value"
+                                [ngClass]="{ 'border-danger': criteriaform.get('contractname')?.invalid && criteriaform.get('contractname')?.touched }">
+                            </ng-select>
+                            <div *ngIf="criteriaform.get('contractname')?.invalid && criteriaform.get('contractname')?.touched"
+                                class="text-danger">
                                 This field is required.
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="m-3">
-                <button class="btn btn-success" (click)="openAddContractModal()">
-                    <i class="fas fa-plus"></i> Add New Contract
-                </button>
-            </div>
-            <div class="m-3" *ngIf="docketService.loginUserList.Type ==='E'">
-                <button class="btn btn-success" (click)="getCustomerContractList()">
-                    <i class="fas fa-check"></i> Get Customer Contract List
-                </button>
+
+            <!-- Action Buttons -->
+            <div class="row mt-4">
+                <div class="col-md-12 text-center">
+                    <button class="btn btn-success me-2" (click)="openAddContractModal()">
+                        <i class="fas fa-plus me-1"></i> Add New Contract
+                    </button>
+                    <button class="btn btn-success" (click)="getCustomerContractList()"
+                        *ngIf="docketService.loginUserList.Type ==='E'">
+                        <i class="fas fa-check me-1"></i> Get Customer Contract List
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- <div class="cnote-entry-container px-2 mt-5" >
-    <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
-        <div class="mb-0">
-            <i class="fas fa-plus me-2"></i> Add New Contract
-        </div>
-    </div>
-    <div class="form-grid p-4">
-        <div class="row">
-            <div class="col-md-4 form-column">
-                <div class="form-group">
-                    <label class="col-md-5">Select Payment Basis </label>
-                    <div class="col-md-7">
-                        <div>
-                            <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Payment Basis"
-                                formControlName="custaccperson" bindLabel="text" bindValue="value"
-                                [ngClass]="{ 'border-danger': criteriaform.get('custaccperson')?.invalid  && criteriaform.get('custaccperson')?.touched }"></ng-select>
-                        </div>
-                        <div class="text-danger text-start"
-                            *ngIf="criteriaform.get('custaccperson')?.invalid && criteriaform.get('custaccperson')?.touched">
-                            This field is required.
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 form-column">
-                <div class="form-group">
-                    <label class="col-md-5">Start Date</label>
-                    <div class="col-md-7">
-                        <div class="input-group" (click)="cd.toggle(); $event.stopPropagation()">
-                            <input type="text" class="form-control required2" required placeholder="Start Date"
-                                formControlName="startdate" #cd="bsDatepicker" bsDatepicker
-                                [bsValue]="docketService.bsValue" [class.disabled-input]="true" appFocusNext
-                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY'}" />
-                            <span class="input-group-text cursor-pointer">
-                                <i class="fa fa-calendar"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 form-column">
-                <div class="form-group">
-                    <label class="col-md-5">End Date</label>
-                    <div class="col-md-7">
-                        <div class="input-group" (click)="cd.toggle(); $event.stopPropagation()">
-                            <input type="text" class="form-control required2" required placeholder="End Date"
-                                formControlName="enddate" #cd="bsDatepicker" bsDatepicker
-                                [bsValue]="docketService.bsValue" [class.disabled-input]="true" appFocusNext
-                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY'}" />
-                            <span class="input-group-text cursor-pointer">
-                                <i class="fa fa-calendar"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-    <div class="d-flex justify-content-center bg-secondary-subtle p-4 gap-2 mt-4">
-    <div >
-        <button class="btn btn-success" (click)="onSubmit()">
-            <i class="fas fa-check"></i> Submit Contract
-        </button>
-    </div>
-</div>
-</div> -->
-    <div class="modal fade editDialog" id="exampleModalLong" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <!-- Modal for Adding Contract -->
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-primary background-color text-white">
@@ -133,11 +67,9 @@
                 </div>
 
                 <div class="modal-body p-4">
-
                     <div class="mb-4">
                         <label class="form-label fw-semibold">Select Payment Basis</label>
-                        <ng-select placeholder="Select Payment Basis" formControlName="custaccperson">
-                        </ng-select>
+                        <ng-select placeholder="Select Payment Basis" formControlName="custaccperson"></ng-select>
                     </div>
 
                     <div class="row">
@@ -157,14 +89,12 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="modal-footer">
                     <button class="btn btn-outline-secondary">
                         <i class="fas fa-rotate-left me-1"></i> Reset
                     </button>
-
                     <button class="btn btn-success">
                         <i class="fas fa-check me-1"></i> Submit
                     </button>
@@ -174,63 +104,43 @@
     </div>
 </form>
 
+<!-- Customer Contract Table Section -->
 <div class="cnote-entry-container px-2 mt-5">
     <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
         <div class="mb-0">
-            <i class="fas fa-list me-2"></i> Detail Of Customer Contract
+            <i class="fas fa-list me-2"></i> Detail Of Coustomer Contract
         </div>
     </div>
-    <div class="table-responsive p-4">
-        <table class="table table-bordered table-hover align-middle mb-0">
-            <thead class="table-light text-center">
-                <th>Edit</th>
-                <th>ContractID</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Contract Type</th>
-                <th>View/Print</th>
-                <th>Status</th>
-                <th>Action</th>
-                <th>Copy Contract</th>
-                <th>Contract Agreement View</th>
-                <th>Phy Scan Copy Upload</th>
+
+    <div class="table-wrapper p-2 pt-4">
+        <table class="table table-bordered align-middle stock-table table-fixed vertical-align">
+            <thead class="table-light sticky-top bg-light">
+                <tr>
+                    <th>Edit</th>
+                    <th>ContractID</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Contract Type</th>
+                    <th>View/Print</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                    <th>Copy Contract</th>
+                    <th>Contract Agreement View</th>
+                    <th>Physical Scan Copy Upload</th>
+                </tr>
             </thead>
             <tbody>
-                <!-- <tr *ngIf="isLoading">
-                    <td colspan="10" class="text-center p-3">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </td>
-                </tr>
-                <tr *ngIf="((!isLoading) && (contractList && contractList.length === 0))">
-                    <td colspan="10" class="text-center text-muted p-3">
-                        No Record Found.
-                    </td>
-                </tr> -->
                 <tr>
-                    <td><button>Edit</button></td>
-                    <td>CN0000006320</td>
-                    <td>01 Oct 2020</td>
-                    <td>31 Mar 2021</td>
-                    <td>To Pay</td>
-                    <td><button>View</button></td>
+                    <td>Edit</td>
+                    <td>CN0000006321</td>
+                    <td>01 Nov 2020</td>
+                    <td>30 Apr 2021</td>
+                    <td>Paid</td>
+                    <td>View</td>
                     <td>Active</td>
-                    <td>DeActive</td>
+                    <td>Deactivate</td>
                     <td>Copy Contract</td>
-                    <td>No Agreement Available</td>
-                </tr>
-                <tr>
-                    <td><button>Edit</button></td>
-                    <td>CN0000006320</td>
-                    <td>01 Oct 2020</td>
-                    <td>31 Mar 2021</td>
-                    <td>To Pay</td>
-                    <td><button>View</button></td>
-                    <td>Active</td>
-                    <td>DeActive</td>
-                    <td>Copy Contract</td>
-                    <td>No Agreement Available</td>
+                    <td>Agreement Available</td>
                 </tr>
             </tbody>
         </table>
