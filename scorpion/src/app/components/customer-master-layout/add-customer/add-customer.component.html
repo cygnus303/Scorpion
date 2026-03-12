@@ -1,1 +1,84 @@
-<p>add-customer works!</p>
+<div class="cnote-entry-container px-1">
+    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+        <i class="fa fa-edit me-2"></i>
+        Add Customer
+    </div>
+    <div class="form-grid p-4">
+        <form>
+            <div class="row pb-3">
+                <div class="col-3">
+                    <div class="form-group">
+                        <label class="col-md-5">Registration Type</label>
+                        <div class="col-md-7">
+                            <div class="radio-group ">
+                                <label for="radio2" class="d-flex">
+                                    <input id="radio2" name="radio" type="radio" class="radio me-2" cheked />Registered
+                                    <input id="radio2" name="radio" type="radio" class="radio me-2"
+                                        cheked />Unregistered
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">GST No.</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" placeholder="Enter GST No." readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">PAN Number</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" placeholder="Enter PAN Number" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Trade Name</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" placeholder="Enter Trade Name" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+               <div class="row pb-3">
+                <div class="col-3">
+                    <div class="form-group">
+                        <label class="col-md-5">Customer Code</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control " placeholder="SYSTEM GENERATED" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Customer Password</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" placeholder="SYSTEM GENERATED" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Tax Payer Type</label>
+                        <div class="col-sm-7">
+                            <input class="form-control" type="text" placeholder="Enter Tax Payer Type">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row">
+                        <label class="col-sm-5 col-form-label text-end">Group Code</label>
+                        <div class="col-sm-7">
+                            <ng-select class="noFoundTextColor required2"></ng-select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           </form>
+    </div>
+</div>

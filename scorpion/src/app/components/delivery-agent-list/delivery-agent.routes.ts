@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { DeliveryAgentListComponent } from './delivery-agent-list.component';
 import { DocketGuard } from 'app/shared/docket.guard';
 import { VendorContractListComponent } from '../vendor-contract-list/vendor-contract-list.component';
-import { VendorContractLayoutComponent } from '../vendor-contract-list/vendor-contract-layout/vendor-contract-layout.component';
 import { CustomerMasterLayoutComponent } from '../customer-master-layout/customer-master-layout.component';
 
 export const DeliveryRoutes: Routes = [
