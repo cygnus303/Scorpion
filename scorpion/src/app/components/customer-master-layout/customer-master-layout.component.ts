@@ -11,5 +11,8 @@ import { AddCustomerComponent } from "./add-customer/add-customer.component";
   styleUrl: './customer-master-layout.component.scss'
 })
 export class CustomerMasterLayoutComponent {
-
+ selectedTab: string = 'customer';
+  selectTab(tab: string) {
+    this.selectedTab = tab;
+  }
 }

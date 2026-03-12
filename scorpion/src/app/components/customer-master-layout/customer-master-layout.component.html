@@ -1,1 +1,37 @@
-<app-add-customer></app-add-customer>
+
+
+<div class="cnote-entry-container px-1">
+    <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
+        <div>
+            <i class="fas fa-filter me-2"></i>
+             Step selection
+        </div>
+    </div>
+    
+    <div class="p-3 d-flex gap-2">
+        <h3 class="fw-semibold border-radius p-3 tab-button" 
+            [class.active-tab]="selectedTab === 'customer'" 
+            (click)="selectTab('customer')">
+           <i class="fas fa-user-plus me-2"></i> 
+            Add Customer
+        </h3>
+        <h3 class="fw-semibold border-radius p-3 tab-button" 
+            [class.active-tab]="selectedTab === 'billingInformation'" 
+            (click)="selectTab('billingInformation')">
+            <i class="fas fa-file-invoice-dollar me-2"></i>
+            Customer Billing Information
+        </h3>
+    </div>
+
+     <div class="m-3 mt-0 border-radius">
+      <!-- Contract Information Tab -->
+      <div *ngIf="selectedTab === 'customer'">
+        <app-add-customer></app-add-customer>
+      </div>
+      
+      <!-- Service Selection Tab -->
+      <div *ngIf="selectedTab === 'billingInformation'">
+        3
+      </div>
+</div>
+

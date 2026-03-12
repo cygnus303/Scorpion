@@ -1,0 +1,30 @@
+
+.tab-button {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+    color: #6c757d;
+    
+    &:hover {
+        background: #f8f9fa;
+        color: #495057;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    &.active-tab {
+        background: #1852a8;
+        color: white;
+        border-color: #1852a8;
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+        
+        i {
+            color: white;
+        }
+    }
+}
+
+.border-radius{
+    border-radius: 7px;
+    border: 2px solid #dee2e6;
+}
