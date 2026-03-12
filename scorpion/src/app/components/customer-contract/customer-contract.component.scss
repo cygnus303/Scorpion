@@ -1,0 +1,21 @@
+.modal-header {
+    display: flex;
+    justify-content: space-between; /* Ensure title and close button are spaced */
+    align-items: center; /* Center items vertically */
+}
+
+.bs-blue{
+    background-color: #171829;
+    color: rgb(233, 233, 233);
+}
+.modal-content{
+    border: 0 !important;
+}
+
+.close{
+    background: none;
+    filter: invert(1);
+    border: antiquewhite;
+}
+  
+  
