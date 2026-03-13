@@ -492,7 +492,7 @@
             </div>
         </div>
         <div class="row pb-3">
-            <div class="col-4">
+            <!-- <div class="col-4">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Permit Validity Date</label>
                     <div class="col-sm-7">
@@ -517,7 +517,7 @@
                         <div class="text-danger text-start" *ngIf="challanService.challanForm.get('permitDate')?.invalid && challanService.challanForm.get('permitDate')?.touched ">This field is required.</div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="col-4">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Insurance Validity Date</label>
@@ -579,7 +579,7 @@
                         <label class="col-sm-5 col-form-label text-end">Licence No.</label>
                         <div class="col-sm-7">
                             <input class="form-control required2" placeholder="Licence No." type="text" formControlName="driver1Licence" [readonly]="isFieldReadonly()" (input)="onChangeLicenceNumber($event)" appFocusNext
-                            required [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1Licence')?.invalid  && challanService.challanForm.get('driver1Licence')?.touched }">
+                             [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1Licence')?.invalid  && challanService.challanForm.get('driver1Licence')?.touched }">
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1Licence')?.touched">
                                 <div *ngIf="challanService.challanForm.get('driver1Licence')?.hasError('required')"> This field is required.</div>
                                 <div *ngIf="challanService.challanForm.get('driver1Licence')?.hasError('pattern')">Please enter a valid License Number. </div>

@@ -542,7 +542,7 @@ vendorCodeName(){
             cHASISNO: response.rc_chasi_no || '',
             rCBOOKNO: response.rc_regn_no || '',
             registrationDate: response.rc_regn_dt ? new Date(response.rc_regn_dt) : null,
-            permitDate: response.rc_permit_valid_upto ? new Date(response.rc_permit_valid_upto) : null,
+            // permitDate: response.rc_permit_valid_upto ? new Date(response.rc_permit_valid_upto) : null,
             insuranceDate: response.rc_insurance_upto ? new Date(response.rc_insurance_upto) : null,
             fitnessDate: response.rc_fit_upto ? new Date(response.rc_fit_upto) : null
           });
@@ -612,7 +612,7 @@ vendorCodeName(){
         eNGINENO: '',
         cHASISNO: '',
         rCBOOKNO: '',
-        permitDate: null,
+        // permitDate: null,
         insuranceDate: null,
         fitnessDate: null,
       });
@@ -620,7 +620,7 @@ vendorCodeName(){
         this.getVehicleType(event.value)
       }
     }
-    this.checkPermitExpiry();
+    // this.checkPermitExpiry();
     this.checkInsuranceExpiry();
     this.checkFitnessExpiry();
     this.checkLicenseExpiry()
@@ -647,10 +647,10 @@ getVehicleCapacity(id:string){
     return date < today;
   }
 
-checkPermitExpiry(event?:any) {
-  const permit = event ? event: this.challanService.challanForm.value.permitDate;
-  this.isPermitExpired = this.checkDateExpiry(permit);
-}
+// checkPermitExpiry(event?:any) {
+//   const permit = event ? event: this.challanService.challanForm.value.permitDate;
+//   this.isPermitExpired = this.checkDateExpiry(permit);
+// }
 
 checkInsuranceExpiry(event?:any) {
   const insurance =  event ? event: this.challanService.challanForm.value.insuranceDate;
@@ -803,7 +803,7 @@ checkLicenseExpiry(event?:any) {
             cHASISNO: response.data.chasisNo || '',
             rCBOOKNO: response.data.rcBookNo || '',
             registrationDate: response.data.registrationDt ? new Date(response.data.registrationDt) : null,
-            permitDate: response.data.vehprmdt ? new Date(response.data.vehprmdt) : null,
+            // permitDate: response.data.vehprmdt ? new Date(response.data.vehprmdt) : null,
             insuranceDate: response.data.insuranceValDt ? new Date(response.data.insuranceValDt) : null,
             fitnessDate: response.data.fitnessValDt ? new Date(response.data.fitnessValDt) : null,
             openKM: response.data.startKM
@@ -1303,7 +1303,7 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
               eNGINENO: response.data.engineNo,
               cHASISNO: response.data.chassisNo,
               rCBOOKNO: response.data.rcBookNo,
-              permitDate:this.datePipe.transform(response.data.permitValidityDate, "dd MMMM yyyy"),
+              // permitDate:this.datePipe.transform(response.data.permitValidityDate, "dd MMMM yyyy"),
               fitnessDate: this.datePipe.transform(response.data.fitnessValidityDate, "dd MMMM yyyy"),
               insuranceDate: this.datePipe.transform(response.data.insuranceValidityDate, "dd MMMM yyyy"),
               driver1Licence: response.data.licenseNo,
@@ -1331,7 +1331,7 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
               cHASISNO: null,
               rCBOOKNO: null,
               fitnessDate: null,
-              permitDate:null,
+              // permitDate:null,
               insuranceDate: null,
               driver1Licence: null,
               d1_DOB: null,
