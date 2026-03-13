@@ -15,10 +15,6 @@ import { Validators } from '@angular/forms';
 })
 export class ChallanFilterComponent {
   public typeName : string='';
-  public dateType=[
-    {text:'CNote Booking Date',value:'1'},
-    {text:'CNote Arrived Date',value:'2'}
-  ]
    public odaTypeList=[
     { text:'ODA', value:'ODA'},
     { text:'Non ODA',value:'NonODA'}
