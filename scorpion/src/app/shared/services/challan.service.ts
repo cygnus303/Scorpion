@@ -770,7 +770,7 @@ onSubmit(){
     // EWayBillNo:challanForm?.eWayBillNo,
     EWayBillExpiredDate:challanForm?.eWayBillExpiredDate,
     IsMonthlyBillAllow:challanForm?.isMonthlyBillAllow?true:false,
-    DeliveryAgent:challanForm?.deliveryAgent.id,
+    DeliveryAgent:challanForm?.deliveryAgent?.id,
     DeliveryAgentMoNo:challanForm?.deliveryAgentMoNo,
     LoadingDate:challanForm?.loadingDate?.toISOString(),
     CityRouteCode:"",
