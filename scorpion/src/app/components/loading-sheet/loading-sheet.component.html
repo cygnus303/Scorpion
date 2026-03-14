@@ -264,7 +264,7 @@
             <div class="col-sm-7">
               <ng-select class="noFoundTextColor  clear-icon" placeholder="Select Vendor Name"
                 formControlName="vendorCode" notFoundText="No matches found" appFocusNext
-                [items]="challanService.branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"
+                [items]="challanService.branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value" [readonly]="loadingSheetService.LSForm.value.loadingBy === 'XX9'"
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('vendorCode')?.invalid  && loadingSheetService.LSForm.get('vendorCode')?.touched }"></ng-select>
                  <div class="text-danger text-start"
                 *ngIf="loadingSheetService.LSForm.get('vendorCode')?.invalid && loadingSheetService.LSForm.get('vendorCode')?.touched">

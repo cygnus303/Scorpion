@@ -102,13 +102,27 @@ ngOnInit(){
       this.challanService.branchWiseLoadingUnloading(event?.codeId);
     }
     const rateType = this.loadingSheetService.LSForm.get('rateType');
+     const vendorCode = this.loadingSheetService.LSForm.get('vendorCode');
+    const loadingCharge=this.loadingSheetService.LSForm.get('loadingCharge');
     if (this.loadingSheetService.LSForm.value.loadingBy && this.loadingSheetService.LSForm.value.loadingBy !== 'XX9') {
       rateType?.setValidators([Validators.required]);
+      vendorCode?.setValidators([Validators.required]);
+      loadingCharge?.setValidators([Validators.required]);
     } else {
       rateType?.setValidators(null);
       rateType?.setValue(null);
+ 
+      vendorCode?.setValidators(null);
+      vendorCode?.setValue(null);
+ 
+      loadingCharge?.setValidators(null);
+      loadingCharge?.setValue(null);
     }
    rateType?.updateValueAndValidity();
+ 
+   vendorCode?.updateValueAndValidity();
+ 
+   loadingCharge?.updateValueAndValidity();
   }
 
 
