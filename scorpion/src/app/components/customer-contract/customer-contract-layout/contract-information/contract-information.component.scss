@@ -1,0 +1,11 @@
+.border-radius{
+    border: 2px solid #dee2e6;
+}
+
+.collapse-icon {
+    transition: transform 0.3s ease;
+}
+
+.collapsed .collapse-icon {
+    transform: rotate(180deg);
+}

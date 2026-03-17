@@ -1,0 +1,436 @@
+<div class="container-fluid p-3">
+    <!-- Sidebar Section -->
+    <div class="row">
+        <div class="col-md-2">
+            <div class="gap-2 flex-column">
+                <div class="border-radius p-3 mb-2 sidebar-item cursor-pointer"
+                     [class.active-sidebar]="selectedSection === 'service'"
+                     (click)="selectSection('service')">
+                    <h5>Service Selection</h5>
+                </div>
+                <div class="border-radius p-3 mb-2 sidebar-item cursor-pointer"
+                     [class.active-sidebar]="selectedSection === 'freight'"
+                     (click)="selectSection('freight')">
+                    <h5>Freight Related Services</h5>
+                </div>
+                <div class="border-radius p-3 mb-2 sidebar-item cursor-pointer"
+                     [class.active-sidebar]="selectedSection === 'demurrage'"
+                     (click)="selectSection('demurrage')">
+                    <h5>Demurrage Information</h5>
+                </div>
+                <div class="border-radius p-3 mb-2 sidebar-item cursor-pointer"
+                     [class.active-sidebar]="selectedSection === 'risk'"
+                     (click)="selectSection('risk')">
+                    <h5>Risk Information</h5>
+                </div>
+                <div class="border-radius p-3 mb-2 sidebar-item cursor-pointer"
+                     [class.active-sidebar]="selectedSection === 'diesel'"
+                     (click)="selectSection('diesel')">
+                    <h5>Diesel Hike</h5>
+                </div>
+                 <div class="border-radius p-3 mb-2 sidebar-item cursor-pointer"
+                     [class.active-sidebar]="selectedSection === 'billing'"
+                     (click)="selectSection('billing')">
+                    <h5>Billing Information</h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Form Section -->
+        <div class="col-md-10">
+            <!-- Service Selection Content -->
+            <div *ngIf="selectedSection === 'service'">
+                <div class="border-radius p-4">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="row">
+                                <label class="col-md-5 col-form-label text-end">Transit Mode</label>
+                                <div class="col-md-7">
+                                    <input class="form-control" type="text" placeholder="Transit Mode">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <label class="col-md-5 col-form-label text-end">Rate Types Allowed</label>
+                                <div class="col-md-7">
+                                    <input class="form-control" type="text" placeholder="Rate Types Allowed">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <label class="col-md-5 col-form-label text-end">Matrices Allowed</label>
+                                <div class="col-md-7">
+                                    <input class="form-control" type="text" placeholder="Matrices Allowed">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <div class="row">
+                                <label class="col-md-5 col-form-label text-end">Zone Matrics</label>
+                                <div class="col-sm-6 text-start">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <input type="radio" class="btn-check" [name]="'ZoneMatrics'" id="ZoneMatricsYes"
+                                             [value]="true">
+                                        <label class="btn btn-outline-success" for="ZoneMatricsYes"> Old Zone </label>
+                                        <input type="radio" class="btn-check" [name]="'ZoneMatrics'" id="ZoneMatricsNo"
+                                             [value]="false">
+                                        <label class="btn btn-outline-danger" for="ZoneMatricsNo">New Zone</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <label class="col-md-5 col-form-label text-end">Pickup/Delivery</label>
+                                <div class="col-md-7">
+                                    <input class="form-control" type="text" placeholder="Pickup/Delivery">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <label class="col-md-5 col-form-label text-end">Weight to Consider</label>
+                                <div class="col-md-7">
+                                    <input class="form-control" type="text" placeholder="Weight to Consider">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <div class="row">
+                                <label class="col-md-5 col-form-label text-end">Service Type</label>
+                                <div class="col-md-7">
+                                    <input class="form-control" type="text" placeholder="Service Type">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-column">
+                            <div class="form-group">
+                                <label for="refDkt" class="col-md-5">Volumetric:</label>
+                                <div class="col-md-2 text-start">
+                                    <label class="yes-no">
+                                        <input type="checkbox" />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <label for="CSD" class="col-md-3 text-end transform">Per Piece Rate:</label>
+                                <div class="col-md-2 ">
+                                    <label class="yes-no">
+                                        <input type="checkbox"><span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-column">
+                            <div class="form-group">
+                                <label for="refDkt" class="col-md-5">Use Invoice No.:</label>
+                                <div class="col-md-2 text-start">
+                                    <label class="yes-no">
+                                        <input type="checkbox" />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <label for="CSD" class="col-md-3 text-end transform">User Invoice Date:</label>
+                                <div class="col-md-2 ">
+                                    <label class="yes-no">
+                                        <input type="checkbox"><span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4 form-column">
+                            <div class="form-group">
+                                <label for="refDkt" class="col-md-5">Location Wise Min. Freight :</label>
+                                <div class="col-md-2 text-start">
+                                    <label class="yes-no">
+                                        <input type="checkbox" />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <label for="CSD" class="col-md-3 text-end transform">Max Discount:</label>
+                                <div class="col-md-2 ">
+                                    <label class="yes-no">
+                                        <input type="checkbox"><span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <label class="col-md-5 text-end">Customer Wise Freight Charge: </label>
+                              <div class="col-md-2 text-start">
+                                    <label class="yes-no">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Freight Related Services Content -->
+            <div *ngIf="selectedSection === 'freight'">
+               <div class="border-radius p-4">
+                    <div class="row">
+                        <div class="col-md-4 form-column">
+                            <div class="form-group">
+                                <label for="refDkt" class="col-md-5">Deferment allowed :</label>
+                                <div class="col-md-2 text-start">
+                                    <label class="yes-no">
+                                        <input type="checkbox" />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <label for="CSD" class="col-md-3 text-end transform">Freight as % of Invoice:</label>
+                                <div class="col-md-2 ">
+                                    <label class="yes-no">
+                                        <input type="checkbox"><span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <label class="col-md-5 col-form-label text-end">Deferment days</label>
+                                <div class="col-md-7">
+                                    <input class="form-control" type="text" placeholder="Deferment days">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <label class="col-md-5 col-form-label text-end">Discount(In %)</label>
+                                <div class="col-md-7">
+                                    <input class="form-control" type="text" placeholder="Discount(In %)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <div class="row">
+                                <label class="col-md-5 col-form-label text-end">Zone Matrics</label>
+                                <div class="col-sm-6 text-start">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <input type="radio" class="btn-check" [name]="'ZoneMatrics'" id="ZoneMatricsYes"
+                                             [value]="true">
+                                        <label class="btn btn-outline-success" for="ZoneMatricsYes"> Old Zone </label>
+                                        <input type="radio" class="btn-check" [name]="'ZoneMatrics'" id="ZoneMatricsNo"
+                                             [value]="false">
+                                        <label class="btn btn-outline-danger" for="ZoneMatricsNo">New Zone</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <label class="col-md-5 col-form-label text-end">Pickup/Delivery</label>
+                                <div class="col-md-7">
+                                    <input class="form-control" type="text" placeholder="Pickup/Delivery">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <label class="col-md-5 col-form-label text-end">Weight to Consider</label>
+                                <div class="col-md-7">
+                                    <input class="form-control" type="text" placeholder="Weight to Consider">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <div class="row">
+                                <label class="col-md-5 col-form-label text-end">Service Type</label>
+                                <div class="col-md-7">
+                                    <input class="form-control" type="text" placeholder="Service Type">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-column">
+                            <div class="form-group">
+                                <label for="refDkt" class="col-md-5">Volumetric:</label>
+                                <div class="col-md-2 text-start">
+                                    <label class="yes-no">
+                                        <input type="checkbox" />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <label for="CSD" class="col-md-3 text-end transform">Per Piece Rate:</label>
+                                <div class="col-md-2 ">
+                                    <label class="yes-no">
+                                        <input type="checkbox"><span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-column">
+                            <div class="form-group">
+                                <label for="refDkt" class="col-md-5">Use Invoice No.:</label>
+                                <div class="col-md-2 text-start">
+                                    <label class="yes-no">
+                                        <input type="checkbox" />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <label for="CSD" class="col-md-3 text-end transform">User Invoice Date:</label>
+                                <div class="col-md-2 ">
+                                    <label class="yes-no">
+                                        <input type="checkbox"><span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4 form-column">
+                            <div class="form-group">
+                                <label for="refDkt" class="col-md-5">Location Wise Min. Freight :</label>
+                                <div class="col-md-2 text-start">
+                                    <label class="yes-no">
+                                        <input type="checkbox" />
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <label for="CSD" class="col-md-3 text-end transform">Max Discount:</label>
+                                <div class="col-md-2 ">
+                                    <label class="yes-no">
+                                        <input type="checkbox"><span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <label class="col-md-5 text-end">Customer Wise Freight Charge: </label>
+                              <div class="col-md-2 text-start">
+                                    <label class="yes-no">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demurrage Information Content -->
+            <div *ngIf="selectedSection === 'demurrage'">
+                <div class="card p-4">
+                    <h5>Demurrage Information</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="demurrageRate">Demurrage Rate <span class="text-danger">*</span></label>
+                            <input class="form-control" type="number" id="demurrageRate" placeholder="0.00">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="freeHours">Free Hours <span class="text-danger">*</span></label>
+                            <input class="form-control" type="number" id="freeHours" placeholder="0">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="gracePeriod">Grace Period (hours) <span class="text-danger">*</span></label>
+                            <input class="form-control" type="number" id="gracePeriod" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Information Content -->
+            <div *ngIf="selectedSection === 'risk'">
+                <div class="card p-4">
+                    <h5>Risk Information</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="insuranceType">Insurance Type <span class="text-danger">*</span></label>
+                            <select class="form-control" id="insuranceType">
+                                <option>Basic</option>
+                                <option>Premium</option>
+                                <option>Comprehensive</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="coverageAmount">Coverage Amount <span class="text-danger">*</span></label>
+                            <input class="form-control" type="number" id="coverageAmount" placeholder="0.00">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="deductible">Deductible <span class="text-danger">*</span></label>
+                            <input class="form-control" type="number" id="deductible" placeholder="0.00">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diesel Hike Content -->
+            <div *ngIf="selectedSection === 'diesel'">
+                <div class="card p-4">
+                    <h5>Diesel Hike</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="basePrice">Base Diesel Price <span class="text-danger">*</span></label>
+                            <input class="form-control" type="number" id="basePrice" placeholder="0.00">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="hikePercentage">Hike Percentage <span class="text-danger">*</span></label>
+                            <input class="form-control" type="number" id="hikePercentage" placeholder="0.00">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="effectiveFrom">Effective From <span class="text-danger">*</span></label>
+                            <input class="form-control" type="date" id="effectiveFrom">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Billing Information Content -->
+            <div *ngIf="selectedSection === 'billing'">
+                <div class="card p-4">
+                    <h5>Billing Information</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="billingCycle">Billing Cycle <span class="text-danger">*</span></label>
+                            <select class="form-control" id="billingCycle">
+                                <option>Weekly</option>
+                                <option>Bi-weekly</option>
+                                <option>Monthly</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="paymentTerms">Payment Terms <span class="text-danger">*</span></label>
+                            <select class="form-control" id="paymentTerms">
+                                <option>Net 15</option>
+                                <option>Net 30</option>
+                                <option>Net 45</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="creditLimit">Credit Limit <span class="text-danger">*</span></label>
+                            <input class="form-control" type="number" id="creditLimit" placeholder="0.00">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-outline-secondary px-4 py-2">
+                <i class="fas fa-arrow-left me-2"></i>
+                Back To Contract
+            </button>
+            <button class="btn btn-primary px-4 py-2">
+                <i class="fas fa-save me-2"></i>
+                Save & Continue
+                <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+        </div>
+    </div>
+</div>
