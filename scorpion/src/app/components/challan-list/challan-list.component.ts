@@ -92,7 +92,7 @@ public vendorTypeList:generalMasterResponse[]=[]
     this.challanService.getRateTypeData();
     this.challanService.getVendtyData();
     
-    this.challanService.getLocationData();
+    // this.challanService.getLocationData();
     if(this.docketService.loginUserList.Type === '1'){
       this.isFilterApplied = true;
       this.challanService.getChargesDetails();
@@ -154,6 +154,7 @@ public vendorTypeList:generalMasterResponse[]=[]
         this.challanService.filterList = event;
         this.isFilterApplied = true;
          this.challanService.buildForm();
+         this.challanService.getLocationData();
         // Vendor Type specific filtering for DRS with DRSType 'Y' BA
         if (this.challanService.filterList.DRSType === 'Y') {
           debugger
