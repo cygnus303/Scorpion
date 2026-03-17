@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { ChallanService } from 'app/shared/services/challan.service';
 import { CommonService } from 'app/shared/services/common.service';
 import { DocketService } from 'app/shared/services/docket.service';
@@ -14,6 +14,7 @@ import { Validators } from '@angular/forms';
   styleUrl: './challan-filter.component.scss'
 })
 export class ChallanFilterComponent {
+@Output() filterApplied = new EventEmitter<any>();
   public typeName : string='';
    public odaTypeList=[
     { text:'ODA', value:'ODA'},
@@ -86,16 +87,17 @@ constructor(
     });
   }
  
-
 onSearch() {
   if (this.challanService.filterForm.valid) {
-    this.router.navigate(['Operation/ChallanList'],{
-        queryParams: {
-          data: this.route.snapshot.queryParams['data'],
-          start: JSON.stringify(this.challanService.filterForm.value) // must stringify
-        }
-      }
-    );
+    // this.router.navigate(['Operation/ChallanList'],{
+    //     queryParams: {
+    //       data: this.route.snapshot.queryParams['data'],
+    //       start: JSON.stringify(this.challanService.filterForm.value) // must stringify
+    //     }
+    //   }
+    // );
+    const filterData = this.challanService.filterForm.value;
+    this.filterApplied.emit(filterData);
   } else {
     this.challanService.filterForm.markAllAsTouched();
   }

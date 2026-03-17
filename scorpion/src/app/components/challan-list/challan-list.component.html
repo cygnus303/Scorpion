@@ -1,5 +1,6 @@
-<!-- <challan-filter></challan-filter> -->
-<div class="cnote-entry-container">
+<div *ngIf="this.docketService.loginUserList.Type !== '1'"><challan-filter  (filterApplied)="filterListpatchValue($event)"></challan-filter></div>
+
+<div class="cnote-entry-container fade-in m-1" *ngIf="isFilterApplied">
   <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
     <i class="fa fa-edit me-2"></i>
     Prepare New {{typeName}}
@@ -199,7 +200,7 @@
                         <div class="col-sm-7">
                             <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Type" formControlName="vendorType" required 
                             [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorType')?.invalid  && challanService.challanForm.get('vendorType')?.touched }"
-                                notFoundText="No matches found" [items]="challanService.vendtyData" bindLabel="codeDesc" bindValue="codeId" 
+                                notFoundText="No matches found" [items]="vendorTypeList" bindLabel="codeDesc" bindValue="codeId" 
                                 [readonly]="this.challanService.filterList?.BookedByType === 'B' || isFieldReadonly()" (change)="challanService.getVendorsList($event);vendorCodeName()" appFocusNext></ng-select>
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vendorType')?.invalid && challanService.challanForm.get('vendorType')?.touched "> This field is required.</div>
                         </div>
@@ -1139,7 +1140,7 @@
 </form>
 </div>
 </div>
-    <div class="d-flex justify-content-center text-center p-4 bg-secondary-subtle gap-2">
+    <div  *ngIf="isFilterApplied" class="d-flex justify-content-center text-center p-4 bg-secondary-subtle gap-2">
         <button class="btn btn-secondary me-2" (click)="challanService.onReset()">
              <i class="fas fa-sync"></i>&nbsp;Reset
         </button>

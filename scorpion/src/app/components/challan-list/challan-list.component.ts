@@ -58,6 +58,8 @@ public israteDisabled=false;
 public isLoading = false;
 public isVehicleLoading: boolean = false;
 public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
+isFilterApplied: boolean = false;
+public vendorTypeList:generalMasterResponse[]=[]
 
 @ViewChild('fileInput') fileInput!: ElementRef;
   constructor(
@@ -92,6 +94,7 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
     
     this.challanService.getLocationData();
     if(this.docketService.loginUserList.Type === '1'){
+      this.isFilterApplied = true;
       this.challanService.getChargesDetails();
       this.challanService.getRouteMode();
       this.challanService.getDepartmentReason();
@@ -127,11 +130,11 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
       this.getDeliveryZoneData()
     }
  
-    if(this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '2'){
-      setTimeout(() => {
-      this.filterListpatchValue();
-      }, 400); 
-    }
+    // if(this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '2'){
+    //   setTimeout(() => {
+    //   this.filterListpatchValue();
+    //   }, 400); 
+    // }
 
     this.challanService.challanForm.get('vendorType')?.valueChanges.subscribe((vendorType) => {
       this.updateVehicleRequiredValidator();
@@ -145,19 +148,21 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
     this.updateVehicleRequiredValidator(); // initial call
   }
 
-  filterListpatchValue() {
-    this.route.queryParams.subscribe(params => {
-      if (params['start']) {
-        const formValues = JSON.parse(params['start']);
-        this.challanService.filterList = formValues;
+  filterListpatchValue(event: any) {
+    // this.route.queryParams.subscribe(params => {
+      if (event) {
+        this.challanService.filterList = event;
+        this.isFilterApplied = true;
+         this.challanService.buildForm();
         // Vendor Type specific filtering for DRS with DRSType 'Y' BA
         if (this.challanService.filterList.DRSType === 'Y') {
+          debugger
           const allowedVendorCodes = ['04'];
-          this.challanService.vendtyData = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
+          this.vendorTypeList = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
           this.getDeliveryAgents();
         }else{
          const allowedVendorCodes = ['XX1', '19', 'XX'];
-         this.challanService.vendtyData = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
+         this.vendorTypeList = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
         } 
         this.challanService.generatePRSfilter();
 
@@ -175,9 +180,10 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
         if (ChargedBy === 'XX5' || ChargedBy === 'XX8') {
           this.challanService.branchWiseLoadingUnloading(this.challanService?.filterList?.loadingBycodeFor);
         }
+      }else{
+        this.isFilterApplied = false;
       }
-    });
-
+    // });
     if (this.docketService.loginUserList.Type !== '1') {
       this.avalabledocketinPRS();
     }
