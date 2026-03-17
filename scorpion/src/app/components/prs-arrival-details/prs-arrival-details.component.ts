@@ -176,7 +176,7 @@ buildForm(){
     rate:new FormControl(null),
     closeKM:new FormControl(0),
     ratetype:new FormControl(null),
-    vendorCode:new FormControl(null,[Validators.required]),
+    vendorCode:new FormControl(null,this.docketService.loginUserList.loadBy === 'XX9' ? null : Validators.required),
     vendorName:new FormControl(null),
     pdcDetails: new FormArray([])
   })
