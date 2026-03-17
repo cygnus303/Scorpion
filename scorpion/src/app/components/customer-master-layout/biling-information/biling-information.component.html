@@ -1,0 +1,320 @@
+<div class="m-3 ">
+    <div class="px-1">
+        <form>
+            <div class="mt-3">
+                <div class="background-color text-white rounded-top px-3 py-3 text-start cursor-pointer d-flex justify-content-between align-items-center"
+                    data-bs-toggle="collapse" href="#collapseExample" aria-expanded="true"
+                    aria-controls="collapseExample">
+                    <div>
+                        <i class="fas fa-rupee me-2"></i>
+                        Customer Billing Information
+                    </div>
+                    <i class="fas fa-chevron-down collapse-icon" id="companyIcon"></i>
+                </div>
+                <div class="collapse show" id="collapseExample" data-bs-parent="#companyInfo">
+                    <div class="rounded-bottom border-radius p-3">
+                        <div class="row pb-4">
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">Customer Address</label>
+                                    <input type="text" class="form-control" placeholder="Customer Address">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">Customer City</label>
+                                    <input type="text" class="form-control" placeholder="Customer City">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">Customer Pincode</label>
+                                    <input type="text" class="form-control" placeholder="Customer Pincode">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">Billing Address</label>
+                                    <input type="text" class="form-control" placeholder="Billing Address">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pb-4">
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">Billing City</label>
+                                    <input type="text" class="form-control" placeholder="Customer Address">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">Billing Pincode</label>
+                                    <input type="text" class="form-control" placeholder="Billing Pincode">
+                                </div>
+                            </div>
+                            <div class="col-3 d-print-inline-block align-content-end">
+                                <div class="toggle-container">
+                                    <span class="toggle-label"
+                                        title="Billing Address Same As Customer Address ?">Billing Address Same As
+                                        Customer Address ?</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="autoToggle">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <div class="background-color text-white rounded-top px-3 py-3 text-start cursor-pointer d-flex justify-content-between align-items-center"
+                    data-bs-toggle="collapse" href="#ConsignorcollapseExample" aria-expanded="true"
+                    aria-controls="ConsignorcollapseExample">
+                    <div>
+                        <i class="fas fa-exchange-alt me-2"></i>
+                        Consignor & Consignee Mapping
+                    </div>
+                    <i class="fas fa-chevron-down collapse-icon" id="companyIcon"></i>
+                </div>
+                <div class="collapse show" id="ConsignorcollapseExample" data-bs-parent="#companyInfo">
+                    <div class="rounded-bottom border-radius p-3">
+                        <div class="row pb-4">
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">Map Consignor </label>
+                                    <input type="text" class="form-control" placeholder="Map Consignor">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">Map Consignee</label>
+                                    <input type="text" class="form-control" placeholder="Map Consignee">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group mt-4">
+                                    <label class="form-label">Pay Basis Allowed</label>
+                                    <div class="checkbox-group">
+                                        <div class="checkbox-option checked">
+                                            <input type="checkbox" id="paid" checked="">
+                                            <label for="paid">Paid</label>
+                                        </div>
+                                        <div class="checkbox-option">
+                                            <input type="checkbox" id="tbb">
+                                            <label for="tbb">To Be Billed (TBB)</label>
+                                        </div>
+                                        <div class="checkbox-option">
+                                            <input type="checkbox" id="topay">
+                                            <label for="topay">To Pay</label>
+                                        </div>
+                                        <div class="checkbox-option">
+                                            <input type="checkbox" id="foc">
+                                            <label for="foc">Free of Charge (FOC)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <div class="background-color text-white rounded-top px-3 py-3 text-start cursor-pointer d-flex justify-content-between align-items-center"
+                    data-bs-toggle="collapse" href="#BankcollapseExample" aria-expanded="true"
+                    aria-controls="BankcollapseExample">
+                    <div>
+                        <i class="fas fa-university me-2"></i>
+                        Bank Information
+                    </div>
+                    <i class="fas fa-chevron-down collapse-icon" id="companyIcon"></i>
+                </div>
+                <div class="collapse show" id="BankcollapseExample" data-bs-parent="#companyInfo">
+                    <div class="rounded-bottom border-radius p-3">
+                        <div class="row pb-4">
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">Bank Name </label>
+                                    <input type="text" class="form-control" placeholder="Bank Name">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">Name of Branch</label>
+                                    <input type="text" class="form-control" placeholder="Name of Branch">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">Bank Account No </label>
+                                    <input type="text" class="form-control" placeholder="Bank Account No">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">Turnover (Rs in Cr)</label>
+                                    <input type="text" class="form-control" placeholder="Turnover (Rs in Cr)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row pb-4">
+                            <div class="col-3 d-print-inline-block align-content-end">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="Is Allow For Cheque Collection ?">Is Allow For
+                                        Cheque Collection ?</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="isAllowForChequeCollectionToggle">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-3 d-print-inline-block align-content-end">
+                                <div class="toggle-container ">
+                                    <span class="toggle-label" title="DRS Generation SMS">Special Bill
+                                        Needed</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="drsGenerationSmsToggle">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-3 d-print-inline-block align-content-end">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="TDS Applicable">TDS Applicable</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="tdsApplicableToggle">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">Service Opted For </label>
+                                    <div class="radio-group">
+                                        <div class="radio-option selected">
+                                            <input type="radio" id="reg" name="regType" value="Transportation">
+                                            <label for="reg">Transportation</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="unreg" name="regType" value="Warehouse">
+                                            <label for="unreg">Warehouse</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row pb-4">
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">TIN No </label>
+                                    <input type="text" class="form-control" placeholder="TIN No">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">TAN No</label>
+                                    <input type="text" class="form-control" placeholder="TAN No">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">Business Type </label>
+                                    <input type="text" class="form-control" placeholder="Bank Account No">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">TDS Percentage(%) </label>
+                                    <input type="text" class="form-control" placeholder="TDS Percentage(%) ">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+               <div class="mt-3">
+                <div class="background-color text-white rounded-top px-3 py-3 text-start cursor-pointer d-flex justify-content-between align-items-center"
+                    data-bs-toggle="collapse" href="#BankcollapseExample" aria-expanded="true"
+                    aria-controls="BankcollapseExample">
+                    <div>
+                        <i class="fas fa-user-tie me-2"></i>
+                        Decision Maker
+                    </div>
+                    <i class="fas fa-chevron-down collapse-icon" id="companyIcon"></i>
+                </div>
+                <div class="collapse show" id="BankcollapseExample" data-bs-parent="#companyInfo">
+                    <div class="rounded-bottom border-radius p-3">
+                        <div class="row pb-4">
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">Name </label>
+                                    <input type="text" class="form-control" placeholder="Name">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">Designation </label>
+                                    <input type="text" class="form-control" placeholder="Designation ">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">Mobile  </label>
+                                    <input type="text" class="form-control" placeholder="Mobile ">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label">Email </label>
+                                    <input type="text" class="form-control" placeholder="Email ">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row pb-4">
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <div class="toggle-container">
+                                        <span class="toggle-label" title="Allow cheque collection for this customer">Cheque Collection</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="isAllowForChequeCollectionToggle">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <div class="toggle-container">
+                                        <span class="toggle-label" title="Enable special billing requirements">Special Bill</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="drsGenerationSmsToggle">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <div class="toggle-container">
+                                        <span class="toggle-label" title="Apply TDS (Tax Deducted at Source)">TDS Applicable</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="tdsApplicableToggle">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
