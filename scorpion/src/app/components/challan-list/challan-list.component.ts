@@ -96,6 +96,7 @@ public vendorTypeList:generalMasterResponse[]=[]
     if(this.docketService.loginUserList.Type === '1'){
       this.isFilterApplied = true;
       this.challanService.getChargesDetails();
+      this.challanService.getLocationData();
       this.challanService.getRouteMode();
       this.challanService.getDepartmentReason();
       this.challanService.getTDSLedgerList();
