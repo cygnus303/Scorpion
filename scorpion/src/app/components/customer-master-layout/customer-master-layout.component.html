@@ -1,5 +1,3 @@
-
-
 <div class="cnote-entry-container px-1">
     <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
         <div>
@@ -7,31 +5,102 @@
              Step selection
         </div>
     </div>
-    
-    <div class="p-3 d-flex gap-2">
-        <h3 class="fw-semibold border-radius p-3 tab-button" 
-            [class.active-tab]="selectedTab === 'customer'" 
-            (click)="selectTab('customer')">
-           <i class="fas fa-user-plus me-2"></i> 
-            Add Customer
-        </h3>
-        <h3 class="fw-semibold border-radius p-3 tab-button" 
-            [class.active-tab]="selectedTab === 'billingInformation'" 
-            (click)="selectTab('billingInformation')">
-            <i class="fas fa-file-invoice-dollar me-2"></i>
-            Customer Billing Information
-        </h3>
-    </div>
 
-     <div class="m-3 mt-0 border-radius">
-      <!-- Contract Information Tab -->
-      <div *ngIf="selectedTab === 'customer'">
-        <app-add-customer></app-add-customer>
-      </div>
-      
-      <!-- Service Selection Tab -->
-      <div *ngIf="selectedTab === 'billingInformation'">
-        3
-      </div>
+    <div class="row g-0">
+        <div class="col-2 g-3">
+            <h5 class="fw-semibold border-radius rounded p-3 tab-button" 
+                [class.active-tab]="selectedTab === 'customer'" 
+                (click)="selectTab('customer')">
+               <i class="fas fa-user-plus me-2"></i> 
+                Customer Master
+            </h5>
+            <h5 class="fw-semibold border-radius rounded p-3 tab-button" 
+                [class.active-tab]="selectedTab === 'billingInformation'" 
+                (click)="selectTab('billingInformation')">
+                <i class="fas fa-file-invoice-dollar me-2"></i>
+                 Billing Information
+            </h5>
+              <h5 class="fw-semibold border-radius rounded p-3 tab-button" 
+                [class.active-tab]="selectedTab === 'address'" 
+                (click)="selectTab('address')">
+               <i class="fas fa-user-plus me-2"></i> 
+                Address
+            </h5>
+            <h5 class="fw-semibold border-radius rounded p-3 tab-button" 
+                [class.active-tab]="selectedTab === 'gstDetails'" 
+                (click)="selectTab('gstDetails')">
+                <i class="fas fa-file-invoice-dollar me-2"></i>
+                GST Details
+            </h5>
+                <h5 class="fw-semibold border-radius rounded p-3 tab-button" 
+                [class.active-tab]="selectedTab === 'settings'" 
+                (click)="selectTab('settings')">
+                <i class="fas fa-file-invoice-dollar me-2"></i>
+                Settings
+            </h5>
+        </div>
+        <div class="col-10">
+            <div class="customer-page m-3">
+                <div class="customer-card">
+                    <div class="top">
+                        <h6 class="glassy-info-title">{{ title }}</h6>
+                    </div>
+                    <div class="stepper" aria-label="Customer creation steps">
+                        <div class="steps">
+                            <div class="customer-step" *ngFor="let s of steps" [class.active]="isActive(s.id)"
+                                [class.completed]="s.id < activeStep" (click)="setActive(s.id)"
+                                [attr.aria-current]="isActive(s.id) ? 'step' : null" role="button" tabindex="0">
+                                <!-- IMPORTANT: dot always renders (fixes missing '1' issue) -->
+                                <div class="dot" [class.active]="isActive(s.id)" [class.inactive]="!isActive(s.id)"
+                                    [class.completed]="s.id < activeStep">
+                                    <ng-container *ngIf="s.id < activeStep; else stepNumber">
+                                        <i class="fas fa-check"></i>
+                                    </ng-container>
+                                    <ng-template #stepNumber>{{ s.id }}</ng-template>
+                                </div>
+                                <div class="customer-label" [class.active]="isActive(s.id)">
+                                    {{ s.label }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <!-- Basic Info Tab -->
+                <div *ngIf="selectedTab === 'customer'">
+                    <app-add-customer></app-add-customer>
+                </div>
+    
+                <!-- Business Tab -->
+                <div *ngIf="selectedTab === 'billingInformation'">
+                     <app-biling-information></app-biling-information>
+                </div>
+    
+                <!-- Address Tab -->
+                <div *ngIf="selectedTab === 'address'">
+                    <div class="p-4 bg-light">
+                        <h4>Address Information</h4>
+                        <p>This is where the address form will go.</p>
+                    </div>
+                </div>
+    
+                <!-- GST Details Tab -->
+                <div *ngIf="selectedTab === 'gstDetails'">
+                    <div class="p-4 bg-light">
+                        <h4>GST Details</h4>
+                        <p>This is where the GST details form will go.</p>
+                    </div>
+                </div>
+    
+                <!-- Settings Tab -->
+                <div *ngIf="selectedTab === 'settings'">
+                    <div class="p-4 bg-light">
+                        <h4>Settings</h4>
+                        <p>This is where the settings form will go.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 </div>
 
