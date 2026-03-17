@@ -159,11 +159,11 @@ public vendorTypeList:generalMasterResponse[]=[]
         if (this.challanService.filterList.DRSType === 'Y') {
           debugger
           const allowedVendorCodes = ['04'];
-          this.vendorTypeList = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
+          this.challanService.vendorTypeList = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
           this.getDeliveryAgents();
         }else{
          const allowedVendorCodes = ['XX1', '19', 'XX'];
-         this.vendorTypeList = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
+         this.challanService.vendorTypeList = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
         } 
         this.challanService.generatePRSfilter();
 

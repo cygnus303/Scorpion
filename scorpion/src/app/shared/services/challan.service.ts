@@ -19,6 +19,7 @@ export class ChallanService {
 env = environment;
 public challanForm!:FormGroup;
 public vendtyData:generalMasterResponse[]=[]
+public vendorTypeList:generalMasterResponse[]=[]
 public vendorsList:VendeorsResponse[]=[]
 public vendorsChargesList:VendeorsResponse[]=[]
 public cityList:CityResponse[]=[];
@@ -49,6 +50,7 @@ constructor(
       next: (response) => {
         if (response.success) {
           this.vendtyData = response.data;
+          this.vendorTypeList = response.data;
         }
       },
     });
