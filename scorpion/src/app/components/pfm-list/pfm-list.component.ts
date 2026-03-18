@@ -33,7 +33,7 @@ ngOnInit() {
   this.rows = [
     { lrNo: 'LR001', origin: 'Surat', dest: 'Mumbai', billingParty: 'ABC', status: 'pending', lrDate: '2026-03-10' },
     { lrNo: 'LR002', origin: 'Rajkot', dest: 'Delhi', billingParty: 'XYZ', status: 'generated', lrDate: '2026-03-12' },
-      { lrNo: 'LR003', origin: 'Rajkot', dest: 'Delhi', billingParty: 'XYZ', status: 'forwarded', lrDate: '2026-03-12' }
+    { lrNo: 'LR003', origin: 'Rajkot', dest: 'Delhi', billingParty: 'XYZ', status: 'forwarded', lrDate: '2026-03-12' }
   ];
 
   this.filteredRows = [...this.rows];
