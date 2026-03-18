@@ -1,0 +1,88 @@
+<ng-template #Templatepod>
+    sadsa
+<div >
+  <div style="max-width:760px;max-height:90vh;">
+    <div >
+      <div >
+        <div style="background:#e6f4ea;border:1px solid #82c995;">📋</div>
+        <div><div class="modal-title">Add PFM</div><div class="modal-subtitle">POD Forwarding Module — New Entry</div></div>
+      </div>
+      <button class="modal-close" onclick="closeModal('addPfmModal')">✕</button>
+    </div>
+    <div >
+      <!-- S1: LR Details -->
+      <div class="form-section">
+        <div class="form-section-title"><span class="sec-num">1</span>LR Details</div>
+        <div class="form-grid col-2">
+          <div class="form-field"><label class="form-label">LR Number <span class="req">*</span></label><input class="form-input" type="text" placeholder="e.g. LR-2025-00412"></div>
+          <div class="form-field"><label class="form-label">LR Date <span class="req">*</span></label><input class="form-input" type="date"></div>
+        </div>
+        <div class="form-grid col-2">
+          <div class="form-field"><label class="form-label">Origin <span class="req">*</span></label>
+            <select class="form-select"><option value="">— Select Origin —</option><option>Mumbai</option><option>Delhi</option><option>Bangalore</option><option>Hyderabad</option><option>Ahmedabad</option><option>Kolkata</option><option>Chennai</option><option>Pune</option></select>
+          </div>
+          <div class="form-field"><label class="form-label">Destination <span class="req">*</span></label>
+            <select class="form-select"><option value="">— Select Destination —</option><option>Mumbai</option><option>Delhi</option><option>Bangalore</option><option>Hyderabad</option><option>Ahmedabad</option><option>Kolkata</option><option>Chennai</option><option>Pune</option></select>
+          </div>
+        </div>
+        <div class="form-grid col-3">
+          <div class="form-field"><label class="form-label">Vehicle Number</label><input class="form-input" type="text" placeholder="MH-12-AB-1234"></div>
+          <div class="form-field"><label class="form-label">Weight (kg)</label><input class="form-input" type="number" placeholder="850"></div>
+          <div class="form-field"><label class="form-label">No. of Packages</label><input class="form-input" type="number" placeholder="12"></div>
+        </div>
+      </div>
+      <!-- S2: Consignor & Consignee -->
+      <div class="form-section">
+        <div class="form-section-title"><span class="sec-num">2</span>Consignor &amp; Consignee Information</div>
+        <div class="form-grid col-2">
+          <div class="form-field"><label class="form-label">Consignor Name <span class="req">*</span></label><input class="form-input" type="text" placeholder="Sender company / person"></div>
+          <div class="form-field"><label class="form-label">Consignor Contact</label><input class="form-input" type="tel" placeholder="+91 XXXXX XXXXX"></div>
+        </div>
+        <div class="form-field"><label class="form-label">Consignor Address</label><input class="form-input" type="text" placeholder="Street, City, State, PIN"></div>
+        <div class="form-grid col-2">
+          <div class="form-field"><label class="form-label">Consignee Name <span class="req">*</span></label><input class="form-input" type="text" placeholder="Receiver company / person"></div>
+          <div class="form-field"><label class="form-label">Consignee Contact</label><input class="form-input" type="tel" placeholder="+91 XXXXX XXXXX"></div>
+        </div>
+        <div class="form-field"><label class="form-label">Consignee Address</label><input class="form-input" type="text" placeholder="Street, City, State, PIN"></div>
+      </div>
+      <!-- S3: Upload -->
+      <div class="form-section">
+        <div class="form-section-title"><span class="sec-num">3</span>POD / Document Upload</div>
+        <div class="upload-zone" id="uploadZone"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="handleDrop(event)"
+          onclick="document.getElementById('fileInput').click()">
+          <div style="font-size:26px">📂</div>
+          <div class="upload-text">Drag &amp; drop files here, or <span>browse</span></div>
+          <div class="upload-hint">PDF, JPG, PNG, TIFF · Max 10 MB per file</div>
+          <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.tiff" style="display:none" onchange="handleFiles(this.files)">
+        </div>
+        <div class="upload-files" id="fileList"></div>
+      </div>
+      <!-- S4: Remarks -->
+      <div class="form-section">
+        <div class="form-section-title"><span class="sec-num">4</span>Remarks &amp; Notes</div>
+        <div class="form-grid col-2">
+          <div class="form-field"><label class="form-label">Priority</label>
+            <select class="form-select"><option>Normal</option><option>High</option><option>Urgent</option></select>
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Internal Remarks</label>
+          <textarea class="form-textarea" placeholder="Add any internal notes or special instructions…"></textarea>
+          <span class="form-hint">Visible only to internal staff.</span>
+        </div>
+      </div>
+    </div>
+    <div >
+      <div style="font-size:12px;color:var(--text-muted)"><span class="req">*</span> Required fields</div>
+      <div class="modal-footer-right">
+        <button class="btn-ghost" onclick="closeModal('addPfmModal')">Cancel</button>
+        <button class="btn-ghost" onclick="resetAddForm()">↺ Reset</button>
+        <button class="btn-submit">＋ Save PFM Entry</button>
+      </div>
+    </div>
+  </div>
+</div>
+</ng-template>
