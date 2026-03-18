@@ -1068,11 +1068,13 @@ input:checked+.toggle-slider:before {
     flex-wrap: wrap;
   }
 
+
   .radio-option {
     padding: 8px 16px;
     border-radius: 8px;
     min-width: 80px;
     text-align: center;
+
 
     &.selected {
       border-color: var(--primary);
