@@ -41,8 +41,8 @@
         <div class="btn-group gap-3 ms-auto">
             <button class="btn btn-outline-primary px-4 py-2 rounded">⟳ Fetch LRs</button>
             <button class="btn btn-success px-4 py-2 rounded" (click)="openAddPFM()">＋ Add PFM</button>
-            <button class="btn btn-primary px-4 py-2 rounded">↗ Forward PFM</button>
-            <button class="btn rounded px-4 py-2" style="background: var(--btn-ack); color: white;">✓ Acknowledge
+            <button class="btn btn-primary px-4 py-2 rounded" (click)="openForwardPFM()">↗ Forward PFM</button>
+            <button class="btn rounded px-4 py-2" style="background: var(--btn-ack); color: white;" (click)="openAcknowledgePFM()">✓ Acknowledge
                 PFM</button>
         </div>
     </div>
@@ -190,3 +190,6 @@
 
 
 <app-add-pfm-popup #AddPfmPopupComponent></app-add-pfm-popup>
+<app-pfm-number-generated #PFMNumberGeneratedComponent></app-pfm-number-generated>
+<app-forward-pfm #ForwardPFMComponent></app-forward-pfm>
+<app-acknowledge-pfm #AcknowledgePFMComponent></app-acknowledge-pfm>

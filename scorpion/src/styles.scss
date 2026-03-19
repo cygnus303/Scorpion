@@ -14,6 +14,7 @@
   --text: #0f172a;
   --muted: #6b7280;
   --muted2: #475569;
+  --text-muted: #8c959f;
   --blue: #2563eb;
   --btn-dark: #4b5563;
   --orange: #9a6700;
@@ -1633,4 +1634,12 @@ input:checked+.toggle-slider:before {
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+.meta-label {
+  font-size: 10px !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted) !important;
 }
