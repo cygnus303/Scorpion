@@ -1,6 +1,6 @@
 * {
   font-family: Verdana !important;
-  font-size: 11px;
+  font-size: 11px !important;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -760,6 +760,32 @@ input[readonly] {
   }
 }
 
+.data-table th {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.data-table thead {
+    background: var(--light);
+}
+
+.data-table td {
+    padding: 4px 6px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+}
+
 .dot {
   width: 26px;
   height: 26px;
@@ -973,3 +999,4 @@ input:checked+.toggle-slider:before {
   border-color: var(--primary);
   background: #eff6ff;
 }
+

@@ -32,3 +32,22 @@
         color: #1852a8;
     }
 }
+
+.btn-icon {
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    font-size: 16px !important;
+    color: var(--secondary);
+}
+
+.btn-icon i{
+    font-size: 16px !important;
+}
+
+.btn-icon.delete:hover {
+    background: #fee;
+}

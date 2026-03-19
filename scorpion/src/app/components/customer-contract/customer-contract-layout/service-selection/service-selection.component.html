@@ -41,136 +41,135 @@
             <!-- Service Selection Content -->
             <div *ngIf="selectedSection === 'service'">
                 <div class="border-radius p-4">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="row">
-                                <label class="col-md-5 col-form-label text-end">Transit Mode</label>
-                                <div class="col-md-7">
-                                    <input class="form-control" type="text" placeholder="Transit Mode">
-                                </div>
+                    <div class="row pb-4">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Transit Mode</label>
+                                <input type="text" class="form-control" placeholder="Transit Mode">
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="row">
-                                <label class="col-md-5 col-form-label text-end">Rate Types Allowed</label>
-                                <div class="col-md-7">
-                                    <input class="form-control" type="text" placeholder="Rate Types Allowed">
-                                </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Rate Types Allowed</label>
+                                <input type="text" class="form-control" placeholder="Rate Types Allowed">
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="row">
-                                <label class="col-md-5 col-form-label text-end">Matrices Allowed</label>
-                                <div class="col-md-7">
-                                    <input class="form-control" type="text" placeholder="Matrices Allowed">
-                                </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Matrices Allowed</label>
+                                <input type="text" class="form-control" placeholder="Matrices Allowed">
                             </div>
                         </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-4">
-                            <div class="row">
-                                <label class="col-md-5 col-form-label text-end">Zone Matrics</label>
-                                <div class="col-sm-6 text-start">
-                                    <div class="btn-group btn-group-sm" role="group">
-                                        <input type="radio" class="btn-check" [name]="'ZoneMatrics'" id="ZoneMatricsYes"
-                                             [value]="true">
-                                        <label class="btn btn-outline-success" for="ZoneMatricsYes"> Old Zone </label>
-                                        <input type="radio" class="btn-check" [name]="'ZoneMatrics'" id="ZoneMatricsNo"
-                                             [value]="false">
-                                        <label class="btn btn-outline-danger" for="ZoneMatricsNo">New Zone</label>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Zone Matrics </label>
+                                <div class="radio-group">
+                                    <div class="radio-option selected">
+                                        <input type="radio" id="reg" name="regType" value="registered" checked="">
+                                        <label for="reg">Old Zone</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="unreg" name="regType" value="unregistered">
+                                        <label for="unreg">New Zone</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="row">
-                                <label class="col-md-5 col-form-label text-end">Pickup/Delivery</label>
-                                <div class="col-md-7">
-                                    <input class="form-control" type="text" placeholder="Pickup/Delivery">
-                                </div>
+                    </div>
+                    <div class="row pb-4">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Pickup/Delivery</label>
+                                <input type="text" class="form-control" placeholder="Pickup/Delivery">
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Weight to Consider</label>
+                                <input type="text" class="form-control" placeholder="Weight to Consider">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Service Type</label>
+                                <input type="text" class="form-control" placeholder="Service Type">
+                            </div>
+                        </div>
+                        <div class="col-3 d-print-inline-block align-content-end">
                             <div class="row">
-                                <label class="col-md-5 col-form-label text-end">Weight to Consider</label>
-                                <div class="col-md-7">
-                                    <input class="form-control" type="text" placeholder="Weight to Consider">
+                                <div class="col-6">
+                                    <div class="toggle-container">
+                                        <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Volumetric">Volumetric</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="volumetricToggle">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="toggle-container">
+                                        <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Per Piece Rate">Per Piece Rate</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="perPieceRateToggle">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-md-4">
+                    <div class="row pb-4">
+                        <div class="col-3 d-print-inline-block align-content-end">
                             <div class="row">
-                                <label class="col-md-5 col-form-label text-end">Service Type</label>
-                                <div class="col-md-7">
-                                    <input class="form-control" type="text" placeholder="Service Type">
+                                <div class="col-6">
+                                    <div class="toggle-container">
+                                        <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Max Discount">Max Discount</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="maxDiscountToggle">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="toggle-container">
+                                        <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Use Invoice No.">Use Invoice
+                                            No.</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="useInvoiceNoToggle">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 form-column">
-                            <div class="form-group">
-                                <label for="refDkt" class="col-md-5">Volumetric:</label>
-                                <div class="col-md-2 text-start">
-                                    <label class="yes-no">
-                                        <input type="checkbox" />
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                                <label for="CSD" class="col-md-3 text-end transform">Per Piece Rate:</label>
-                                <div class="col-md-2 ">
-                                    <label class="yes-no">
-                                        <input type="checkbox"><span class="slider"></span>
-                                    </label>
-                                </div>
+                        <div class="col-3">
+                            <div class="toggle-container">
+                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="User Invoice Date">User Invoice
+                                    Date</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="userInvoiceDateToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
                             </div>
                         </div>
-                        <div class="col-md-4 form-column">
-                            <div class="form-group">
-                                <label for="refDkt" class="col-md-5">Use Invoice No.:</label>
-                                <div class="col-md-2 text-start">
-                                    <label class="yes-no">
-                                        <input type="checkbox" />
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                                <label for="CSD" class="col-md-3 text-end transform">User Invoice Date:</label>
-                                <div class="col-md-2 ">
-                                    <label class="yes-no">
-                                        <input type="checkbox"><span class="slider"></span>
-                                    </label>
-                                </div>
+                        <div class="col-3">
+                            <div class="toggle-container">
+                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Location Wise Min. Freight">Location Wise
+                                    Min. Freight</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="locationToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
                             </div>
                         </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-4 form-column">
-                            <div class="form-group">
-                                <label for="refDkt" class="col-md-5">Location Wise Min. Freight :</label>
-                                <div class="col-md-2 text-start">
-                                    <label class="yes-no">
-                                        <input type="checkbox" />
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                                <label for="CSD" class="col-md-3 text-end transform">Max Discount:</label>
-                                <div class="col-md-2 ">
-                                    <label class="yes-no">
-                                        <input type="checkbox"><span class="slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="row">
-                                <label class="col-md-5 text-end">Customer Wise Freight Charge: </label>
-                              <div class="col-md-2 text-start">
-                                    <label class="yes-no">
-                                        <input type="checkbox">
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
+                        <div class="col-3">
+                            <div class="toggle-container">
+                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Customer Wise Freight Charge">Customer
+                                    Wise Freight Charge</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="customerToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -179,145 +178,82 @@
 
             <!-- Freight Related Services Content -->
             <div *ngIf="selectedSection === 'freight'">
-               <div class="border-radius p-4">
-                    <div class="row">
-                        <div class="col-md-4 form-column">
-                            <div class="form-group">
-                                <label for="refDkt" class="col-md-5">Deferment allowed :</label>
-                                <div class="col-md-2 text-start">
-                                    <label class="yes-no">
-                                        <input type="checkbox" />
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                                <label for="CSD" class="col-md-3 text-end transform">Freight as % of Invoice:</label>
-                                <div class="col-md-2 ">
-                                    <label class="yes-no">
-                                        <input type="checkbox"><span class="slider"></span>
-                                    </label>
-                                </div>
+                <div class="border-radius p-4">
+                    <div class="row pb-4">
+                        <div class="col-3 d-print-inline-block align-content-end">
+                            <div class="toggle-container">
+                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Deferment allowed">Deferment
+                                    allowed</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="DefermentToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="row">
-                                <label class="col-md-5 col-form-label text-end">Deferment days</label>
-                                <div class="col-md-7">
-                                    <input class="form-control" type="text" placeholder="Deferment days">
-                                </div>
+                        <div class="col-3 d-print-inline-block align-content-end">
+                            <div class="toggle-container">
+                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Freight as % of Invoice">Freight as % of
+                                    Invoice</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="freightAsPercentageToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="row">
-                                <label class="col-md-5 col-form-label text-end">Discount(In %)</label>
-                                <div class="col-md-7">
-                                    <input class="form-control" type="text" placeholder="Discount(In %)">
-                                </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Deferment days</label>
+                                <input type="text" class="form-control" placeholder="Deferment days">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Discount(In %)</label>
+                                <input type="text" class="form-control" placeholder="Discount(In %)">
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-md-4">
-                            <div class="row">
-                                <label class="col-md-5 col-form-label text-end">Zone Matrics</label>
-                                <div class="col-sm-6 text-start">
-                                    <div class="btn-group btn-group-sm" role="group">
-                                        <input type="radio" class="btn-check" [name]="'ZoneMatrics'" id="ZoneMatricsYes"
-                                             [value]="true">
-                                        <label class="btn btn-outline-success" for="ZoneMatricsYes"> Old Zone </label>
-                                        <input type="radio" class="btn-check" [name]="'ZoneMatrics'" id="ZoneMatricsNo"
-                                             [value]="false">
-                                        <label class="btn btn-outline-danger" for="ZoneMatricsNo">New Zone</label>
+                    <div class="row pb-4">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Rate(% of Inv)</label>
+                                <div class="input-group gap-3">
+                                    <input type="text" class="form-control" placeholder="Rate(% of Inv)">
+                                    <input type="text" class="form-control" placeholder="In % of Freight">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Type of Minimum Freight </label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="reg" name="regType" value="registered">
+                                        <label for="reg">Base Wise </label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="unreg" name="regType" value="unregistered">
+                                        <label for="unreg">Percent Wise</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="row">
-                                <label class="col-md-5 col-form-label text-end">Pickup/Delivery</label>
-                                <div class="col-md-7">
-                                    <input class="form-control" type="text" placeholder="Pickup/Delivery">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="row">
-                                <label class="col-md-5 col-form-label text-end">Weight to Consider</label>
-                                <div class="col-md-7">
-                                    <input class="form-control" type="text" placeholder="Weight to Consider">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-4">
-                            <div class="row">
-                                <label class="col-md-5 col-form-label text-end">Service Type</label>
-                                <div class="col-md-7">
-                                    <input class="form-control" type="text" placeholder="Service Type">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 form-column">
+                        <div class="col-5 d-print-inline-block align-content-end">
                             <div class="form-group">
-                                <label for="refDkt" class="col-md-5">Volumetric:</label>
-                                <div class="col-md-2 text-start">
-                                    <label class="yes-no">
-                                        <input type="checkbox" />
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                                <label for="CSD" class="col-md-3 text-end transform">Per Piece Rate:</label>
-                                <div class="col-md-2 ">
-                                    <label class="yes-no">
-                                        <input type="checkbox"><span class="slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 form-column">
-                            <div class="form-group">
-                                <label for="refDkt" class="col-md-5">Use Invoice No.:</label>
-                                <div class="col-md-2 text-start">
-                                    <label class="yes-no">
-                                        <input type="checkbox" />
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                                <label for="CSD" class="col-md-3 text-end transform">User Invoice Date:</label>
-                                <div class="col-md-2 ">
-                                    <label class="yes-no">
-                                        <input type="checkbox"><span class="slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-4 form-column">
-                            <div class="form-group">
-                                <label for="refDkt" class="col-md-5">Location Wise Min. Freight :</label>
-                                <div class="col-md-2 text-start">
-                                    <label class="yes-no">
-                                        <input type="checkbox" />
-                                        <span class="slider"></span>
-                                    </label>
-                                </div>
-                                <label for="CSD" class="col-md-3 text-end transform">Max Discount:</label>
-                                <div class="col-md-2 ">
-                                    <label class="yes-no">
-                                        <input type="checkbox"><span class="slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="row">
-                                <label class="col-md-5 text-end">Customer Wise Freight Charge: </label>
-                              <div class="col-md-2 text-start">
-                                    <label class="yes-no">
-                                        <input type="checkbox">
-                                        <span class="slider"></span>
-                                    </label>
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Type of Service </label>
+                                <div class="radio-group">
+                                    <div class="radio-option selected">
+                                        <input type="radio" id="group" name="customerGroup" value="group">
+                                        <label for="group">COD/DOD Charges</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="corporate" name="customerGroup" value="corporate">
+                                        <label for="corporate">DACC Charges</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="nonGroup" name="customerGroup" value="non-group">
+                                        <label for="nonGroup">ODA Charges</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -327,20 +263,51 @@
 
             <!-- Demurrage Information Content -->
             <div *ngIf="selectedSection === 'demurrage'">
-                <div class="card p-4">
-                    <h5>Demurrage Information</h5>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label for="demurrageRate">Demurrage Rate <span class="text-danger">*</span></label>
-                            <input class="form-control" type="number" id="demurrageRate" placeholder="0.00">
+                <div class="border-radius p-4">
+                    <div class="row pb-4">
+                      <div class="col-3 d-print-inline-block align-content-end">
+                            <div class="toggle-container">
+                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Fuel Surcharge Applicable">Demurrage Charge applicable?</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="demurrageChargeToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="freeHours">Free Hours <span class="text-danger">*</span></label>
-                            <input class="form-control" type="number" id="freeHours" placeholder="0">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Demurrage Calculation Basis</label>
+                                <input type="text" class="form-control" placeholder="Demurrage Calculation Basis">
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="gracePeriod">Grace Period (hours) <span class="text-danger">*</span></label>
-                            <input class="form-control" type="number" id="gracePeriod" placeholder="0">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Free Storage Days</label>
+                                <input type="text" class="form-control" placeholder="Free Storage Days">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Min Demurrage Charges</label>
+                                <input type="text" class="form-control" placeholder="Min Demurrage Charges">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pb-4">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Demurrage Rate & Rate Type</label>
+                                <div class="input-group gap-3">
+                                    <input type="text" class="form-control" placeholder="Rate">
+                                    <input type="text" class="form-control" placeholder="Rate Type">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Max Demuarrge Charges</label>
+                                <input type="text" class="form-control" placeholder="Max Demuarrge Charges">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -348,24 +315,91 @@
 
             <!-- Risk Information Content -->
             <div *ngIf="selectedSection === 'risk'">
-                <div class="card p-4">
-                    <h5>Risk Information</h5>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label for="insuranceType">Insurance Type <span class="text-danger">*</span></label>
-                            <select class="form-control" id="insuranceType">
-                                <option>Basic</option>
-                                <option>Premium</option>
-                                <option>Comprehensive</option>
-                            </select>
+                <div class="border-radius p-4">
+                    <div class="row pb-4">
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Risk Type </label>
+                                <div class="radio-group">
+                                    <div class="radio-option selected">
+                                        <input type="radio" id="carrierRisk" name="customerGroup" value="carrierRisk">
+                                        <label for="carrierRisk"> Carrier Risk </label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="ownerRisk" name="customerGroup" value="ownerRisk">
+                                        <label for="ownerRisk"> Owner Risk</label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="coverageAmount">Coverage Amount <span class="text-danger">*</span></label>
-                            <input class="form-control" type="number" id="coverageAmount" placeholder="0.00">
+                         <div class="col-3">
+                            <div class="toggle-container">
+                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Fuel Surcharge Applicable">Fuel Surcharge Applicable</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="fuelSurchargeToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="deductible">Deductible <span class="text-danger">*</span></label>
-                            <input class="form-control" type="number" id="deductible" placeholder="0.00">
+                    </div>
+
+                    <div class="background-color text-white rounded-top px-3 py-3 text-start cursor-pointer d-flex justify-content-between align-items-center"
+                        data-bs-toggle="collapse" data-bs-target="#fovMatrixOwnerRisk" aria-expanded="true" aria-controls="fovMatrixOwnerRisk">
+                        <div>
+                            <i class="fas fa-rupee me-2"></i>FOV Matrix Owner Risk / PTL
+                        </div>
+                        <i class="fas fa-chevron-down collapse-icon" id="companyIcon"></i>
+                    </div>
+                    <div class="collapse show" id="fovMatrixOwnerRisk">
+                        <div class="rounded-bottom border-radius ">
+                                <table class="w-100 data-table rounded-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>To</th>
+                                            <th>Rate</th>
+                                            <th>Rate Type</th>
+                                            <th>Min</th>
+                                            <th>Max</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="gstTableBody">
+                                        <tr>
+                                            <td>1</td>
+                                            <td><input type="text" class="form-control" placeholder="27AABCU9603R1ZM"></td>
+                                            <td>
+                                                <ng-select class="noFoundTextColor" placeholder="Select State"></ng-select>
+                                            </td>
+                                            <td><input type="text" class="form-control" placeholder="Address"></td>
+                                            <td><input type="text" class="form-control" placeholder="400001"></td>
+                                            <td>
+                                                <button type="button" class="btn-icon delete text-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td><input type="text" class="form-control" placeholder="27AABCU9603R1ZM"></td>
+                                            <td>
+                                                <ng-select class="noFoundTextColor" placeholder="Select State"></ng-select>
+                                            </td>
+                                            <td><input type="text" class="form-control" placeholder="Address"></td>
+                                            <td><input type="text" class="form-control" placeholder="400001"></td>
+                                            <td>
+                                                <button type="button" class="btn-icon delete text-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            <div class="m-3 d-flex align-items-center gap-3">
+                                <button type="button" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> Add New Row
+                                </button>
+                                <span class="text-muted">Total Rows: <strong>3</strong></span>
+                            </div>
                         </div>
                     </div>
                 </div>
