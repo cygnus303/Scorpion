@@ -26,6 +26,12 @@ export class GeneralMasterService {
   public serviceTypeList:PRSGeneralMasterResponse[]=[];
   public VendorRateList:PRSGeneralMasterResponse[]=[];
   public odaList:PRSGeneralMasterResponse[]=[];
+  public KMAList:PRSGeneralMasterResponse[]=[];
+  public IndustryList:PRSGeneralMasterResponse[]=[];
+  public ownerList:PRSGeneralMasterResponse[]=[];
+
+
+
 
 
  constructor(
@@ -192,6 +198,33 @@ export class GeneralMasterService {
      this.THCMasterService.getGeneralMasterDetail('VENDODA').subscribe({ next: (response) => {
         if (response.success) {
           this.odaList = response.data;
+        }
+      }
+    });
+  }
+
+  getKMADetail(){
+    this.THCMasterService.getGeneralMasterDetail('KMA').subscribe({ next: (response) => {
+        if (response.success) {
+          this.KMAList = response.data;
+        }
+      }
+    });
+  }
+
+  getIndustryDetail(){
+    this.THCMasterService.getGeneralMasterDetail('IND').subscribe({ next: (response) => {
+        if (response.success) {
+          this.IndustryList = response.data;
+        }
+      }
+    });
+  }
+
+    getOwnerDetail(){
+    this.THCMasterService.getGeneralMasterDetail('CONRSHP').subscribe({ next: (response) => {
+        if (response.success) {
+          this.ownerList = response.data;
         }
       }
     });

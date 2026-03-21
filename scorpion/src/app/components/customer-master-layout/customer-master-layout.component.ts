@@ -3,11 +3,13 @@ import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AddCustomerComponent } from "./add-customer/add-customer.component";
 import { BilingInformationComponent } from "./biling-information/biling-information.component";
+import { KamDetailsComponent } from "./kam-details/kam-details.component";
+import { GstDetailsComponent } from './gst-details/gst-details.component';
 type Step = { id: number; label: string };
 @Component({
   selector: 'app-customer-master-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, AddCustomerComponent, BilingInformationComponent],
+  imports: [CommonModule, RouterModule, AddCustomerComponent, BilingInformationComponent, KamDetailsComponent,GstDetailsComponent],
   templateUrl: './customer-master-layout.component.html',
   styleUrl: './customer-master-layout.component.scss'
 })
@@ -23,7 +25,7 @@ export class CustomerMasterLayoutComponent {
   steps: Step[] = [
     { id: 1, label: 'Customer Master' },
     { id: 2, label: 'Customer Billing Information' },
-    { id: 3, label: 'Address' },
+    { id: 3, label: 'Customer wise KAM Details' },
     { id: 4, label: 'GST Details' },
     { id: 5, label: 'Settings' },
   ];
@@ -49,9 +51,9 @@ export class CustomerMasterLayoutComponent {
         this.activeStep = 2;
         this.title = 'Customer Billing Information';
         break;
-      case 'address':
+      case 'kamDetails':
         this.activeStep = 3;
-        this.title = 'Address';
+        this.title = 'Customer wise KAM Details';
         break;
       case 'gstDetails':
         this.activeStep = 4;
