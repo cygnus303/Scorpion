@@ -764,30 +764,31 @@ input[readonly] {
   }
 }
 
-.data-table th {
-    padding: 8px 13px;
-    text-align: left;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--dark);
-    border-bottom: 2px solid var(--border);
-    white-space: nowrap;
-}
-
 .data-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-}
+  border-collapse: collapse;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
 
-.data-table thead {
-    background: var(--light);
-}
+  tr:hover td {
+    background-color: #f8fafc;
+  }
 
-.data-table td {
-    padding: 4px 6px;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
+
+  th {
+    background-color: #f1f5f9;
+    color: #475569;
+    font-weight: 600;
+    padding: 10px;
+    border: 1px solid #e2e8f0;
+    font-size: 12px;
+  }
+
+  td {
+    padding: 4px 8px;
+    border: 1px solid #e2e8f0;
+    vertical-align: middle;
+  }
 }
 
 .dot {
@@ -1000,3 +1001,22 @@ input:checked+.toggle-slider:before {
   background: #eff6ff;
 }
 
+// delete icon
+.btn-icon-delete {
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    font-size: 16px !important;
+    color: var(--secondary);
+}
+
+.btn-icon-delete i{
+    font-size: 16px !important;
+}
+
+.btn-icon-delete.delete:hover {
+    background: #fee;
+}

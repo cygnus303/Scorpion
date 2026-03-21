@@ -1,109 +1,93 @@
 <div class="cnote-entry-container px-1">
-    <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
-        <div>
-            <i class="fas fa-filter me-2"></i>
-             Step selection
-        </div>
+  <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
+    <div>
+      <i class="fas fa-filter me-2"></i>
+      Step selection
     </div>
-    
-    <div class="p-3 d-flex gap-2">
-        <h3 class="fw-semibold border-radius p-3 tab-button" 
-            [class.active-tab]="selectedTab === 'contract'" 
-            (click)="selectTab('contract')">
-           <i class="fas fa-cogs me-2"></i> 
-            Contract Information
-        </h3>
-        <h3 class="fw-semibold border-radius p-3 tab-button" 
-            [class.active-tab]="selectedTab === 'service'" 
-            (click)="selectTab('service')">
-            <i class="fas fa-check-circle me-2"></i>
-            Service Selection
-        </h3>
-        <h3 class="fw-semibold border-radius p-3 tab-button" 
-            [class.active-tab]="selectedTab === 'mode'" 
-            (click)="selectTab('mode')">
-            <i class="fas fa-truck me-2"></i>
-            Mode Wise Services
-        </h3>
-        <h3 class="fw-semibold border-radius p-3 tab-button" 
-            [class.active-tab]="selectedTab === 'matrix'" 
-            (click)="selectTab('matrix')">
-            <i class="fas fa-table me-2"></i>
-            Charge Matrix
-        </h3>
-        <h3 class="fw-semibold border-radius p-3 tab-button" 
-            [class.active-tab]="selectedTab === 'standard'" 
-            (click)="selectTab('standard')">
-            <i class="fas fa-dollar-sign me-2"></i>
-            Standard Charges
-        </h3>
-        <h3 class="fw-semibold border-radius p-3 tab-button" 
-            [class.active-tab]="selectedTab === 'sundry'" 
-            (click)="selectTab('sundry')">
-            <i class="fas fa-truck-loading me-2"></i>
-            Freight Charge -SUNDRY
-        </h3>
-        <h3 class="fw-semibold border-radius p-3 tab-button" 
-            [class.active-tab]="selectedTab === 'ftl'" 
-            (click)="selectTab('ftl')">
-            <i class="fas fa-boxes me-2"></i> 
-             Freight Charge -FTL
-        </h3>
-        <h3 class="fw-semibold border-radius p-3 tab-button" 
-            [class.active-tab]="selectedTab === 'oda'" 
-            (click)="selectTab('oda')">
-             <i class="fas fa-balance-scale me-2"></i>
-             ODA Charges
-        </h3>
+  </div>
+
+  <div class="p-3 d-flex gap-2">
+    <h3 class="fw-semibold border-radius p-3 tab-button" [class.active-tab]="selectedTab === 'contract'"
+      (click)="selectTab('contract')">
+      <i class="fas fa-cogs me-2"></i>
+      Contract Information
+    </h3>
+    <h3 class="fw-semibold border-radius p-3 tab-button" [class.active-tab]="selectedTab === 'service'"
+      (click)="selectTab('service')">
+      <i class="fas fa-check-circle me-2"></i>
+      Service Selection
+    </h3>
+    <h3 class="fw-semibold border-radius p-3 tab-button" [class.active-tab]="selectedTab === 'mode'"
+      (click)="selectTab('mode')">
+      <i class="fas fa-truck me-2"></i>
+      Mode Wise Services
+    </h3>
+    <h3 class="fw-semibold border-radius p-3 tab-button" [class.active-tab]="selectedTab === 'matrix'"
+      (click)="selectTab('matrix')">
+      <i class="fas fa-table me-2"></i>
+      Charge Matrix
+    </h3>
+    <h3 class="fw-semibold border-radius p-3 tab-button" [class.active-tab]="selectedTab === 'standard'"
+      (click)="selectTab('standard')">
+      <i class="fas fa-dollar-sign me-2"></i>
+      Standard Charges
+    </h3>
+    <h3 class="fw-semibold border-radius p-3 tab-button" [class.active-tab]="selectedTab === 'sundry'"
+      (click)="selectTab('sundry')">
+      <i class="fas fa-truck-loading me-2"></i>
+      Freight Charge -SUNDRY
+    </h3>
+    <h3 class="fw-semibold border-radius p-3 tab-button" [class.active-tab]="selectedTab === 'ftl'"
+      (click)="selectTab('ftl')">
+      <i class="fas fa-boxes me-2"></i>
+      Freight Charge -FTL
+    </h3>
+    <h3 class="fw-semibold border-radius p-3 tab-button" [class.active-tab]="selectedTab === 'oda'"
+      (click)="selectTab('oda')">
+      <i class="fas fa-balance-scale me-2"></i>
+      ODA Charges
+    </h3>
+  </div>
+
+  <div class="m-3 mt-0 border-radius">
+    <!-- Contract Information Tab -->
+    <div *ngIf="selectedTab === 'contract'">
+      <app-contract-information></app-contract-information>
     </div>
 
-     <div class="m-3 mt-0 border-radius">
-      <!-- Contract Information Tab -->
-      <div *ngIf="selectedTab === 'contract'">
-        <app-contract-information></app-contract-information>
-      </div>
-      
-      <!-- Service Selection Tab -->
-      <div *ngIf="selectedTab === 'service'">
-        <app-service-selection></app-service-selection>
-      </div>
-      
-      <!-- Mode Wise Services Tab -->
-      <div *ngIf="selectedTab === 'mode'">
-        <app-mode-wise-services></app-mode-wise-services>
-      </div>
-      
-      <!-- Charge Matrix Tab -->
-      <div *ngIf="selectedTab === 'matrix'">
-        <app-charge-matrix></app-charge-matrix>
-      </div>
-      
-      <!-- Standard Charges Tab -->
-      <div *ngIf="selectedTab === 'standard'">
-        <app-standard-charges></app-standard-charges>
-      </div>
-      
-      <!-- Freight Charge - SUNDRY Tab -->
-      <div *ngIf="selectedTab === 'sundry'">
-        <app-freight-charge-sundry></app-freight-charge-sundry>
-      </div>
-      
-      <!-- Freight Charge - FTL Tab -->
-      <div *ngIf="selectedTab === 'ftl'">
-        <div class="p-4 text-center">
-          <i class="fas fa-boxes fa-3x text-primary mb-3"></i>
-          <h4>Freight Charge - FTL</h4>
-          <p class="text-muted">Configure FTL freight charges here</p>
-        </div>
-      </div>
-      
-      <!-- ODA Charges Tab -->
-      <div *ngIf="selectedTab === 'oda'">
-        <div class="p-4 text-center">
-          <i class="fas fa-balance-scale fa-3x text-primary mb-3"></i>
-          <h4>ODA Charges</h4>
-          <p class="text-muted">Configure ODA charges here</p>
-        </div>
-      </div>
+    <!-- Service Selection Tab -->
+    <div *ngIf="selectedTab === 'service'">
+      <app-service-selection></app-service-selection>
     </div>
+
+    <!-- Mode Wise Services Tab -->
+    <div *ngIf="selectedTab === 'mode'">
+      <app-mode-wise-services></app-mode-wise-services>
+    </div>
+
+    <!-- Charge Matrix Tab -->
+    <div *ngIf="selectedTab === 'matrix'">
+      <app-charge-matrix></app-charge-matrix>
+    </div>
+
+    <!-- Standard Charges Tab -->
+    <div *ngIf="selectedTab === 'standard'">
+      <app-standard-charges></app-standard-charges>
+    </div>
+
+    <!-- Freight Charge - SUNDRY Tab -->
+    <div *ngIf="selectedTab === 'sundry'">
+      <app-freight-charge-sundry></app-freight-charge-sundry>
+    </div>
+
+    <!-- Freight Charge - FTL Tab -->
+    <div *ngIf="selectedTab === 'ftl'">
+      <app-freight-charge-ftl></app-freight-charge-ftl>
+    </div>
+
+    <!-- ODA Charges Tab -->
+    <div *ngIf="selectedTab === 'oda'">
+      <app-oda-charges></app-oda-charges>
+    </div>
+  </div>
 </div>
