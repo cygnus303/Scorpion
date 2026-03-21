@@ -6,6 +6,7 @@ import { CustomerService } from 'app/shared/services/customer.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { response } from 'express';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { DocketService } from 'app/shared/services/docket.service';
 
 @Component({
   selector: 'app-kam-details',
@@ -21,12 +22,22 @@ export class KamDetailsComponent {
   constructor(
     public generalMasterService:GeneralMasterService,
     private customerService:CustomerService,
-    public customerMasterService:CustomerMasterService
+    public customerMasterService:CustomerMasterService,
+    private docketService:DocketService
   ){}
 
   ngOnInit(){
     this.customerMasterService.buildKAMForm();
     this.generalMasterService.getKMADetail();
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      // this.docketService.Location = 'TNP';
+      this.docketService.isComplition = false;
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
   }
 
   getEmployeeDetail(event:any){
@@ -38,7 +49,7 @@ export class KamDetailsComponent {
     }
         this.notFoundEmployeeValue = 'searching...';
 
-    this.customerService.getEmployeeDropdown().subscribe({
+    this.customerService.getEmployeeDropdown(searchText,this.docketService.loginUserList.BaseUserName).subscribe({
       next:(response)=>{
         if(response){
           this.employeeList=response;

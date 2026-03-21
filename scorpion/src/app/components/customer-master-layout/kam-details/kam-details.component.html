@@ -43,7 +43,7 @@
 
 
 
-
+<form [formGroup]="customerMasterService.KAMForm">
   <div class="form-section">
     <div class="section-body">
       <div class="table-responsive">
@@ -61,15 +61,13 @@
             </tr>
           </thead>
 
-          <tbody formArrayName="KAMArray">
+          <tbody>
 
-            <tr *ngFor="let ctrl of customerMasterService.KAMArray.controls; let i = index">
+            <tr *ngFor="let item of generalMasterService.KMAList;let i=index">
 
               <td>{{ i + 1 }}</td>
-
-              <!-- Use API list separately -->
               <td style="text-align: left;">
-                {{ generalMasterService.KMAList[i]?.codeDesc }}
+                {{ item.codeDesc }}
               </td>
 
               <td>
@@ -109,3 +107,4 @@
       </div>
     </div>
   </div>
+  </form>

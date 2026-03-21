@@ -111,7 +111,7 @@ public gstForm!: FormGroup;
   }
 
  buildKAMForm() {
- return new FormGroup({
+ this.KAMForm= new FormGroup({
     EmployeeName: new FormControl(null),
     EmployeeID: new FormControl(null),
     Designation: new FormControl(null),

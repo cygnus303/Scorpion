@@ -22,8 +22,8 @@ export class CustomerService {
       return this.apiHandlerService.Get(`Master/GetBusinessTypeCategory`);
     }
 
-    getEmployeeDropdown(): Observable<any> {
-      return this.apiHandlerService.Get(`Ticket/EmployeeDropDownList`);
+    getEmployeeDropdown(searchTerm:any,baseUserName:string): Observable<any> {
+      return this.apiHandlerService.Get(`Ticket/EmployeeDropDownList?searchTerm=${searchTerm}&baseUserName=${baseUserName}`);
     }
 
     getEmployeeDetail(userId:string): Observable<any> {
