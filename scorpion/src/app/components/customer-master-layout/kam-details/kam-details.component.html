@@ -13,37 +13,50 @@
             <th>Email</th>
           </tr>
         </thead>
-        <tbody>
-          <tr *ngFor="let item of generalMasterService.KMAList;let i=index">
-            <td>{{ i + 1 }}</td>
-            <td style="text-align: left;">
-              {{ item.codeDesc }}
-            </td>
+  <tbody formArrayName="KAMArray">
 
-            <td>
-              <ng-select placeholder="Enter employee name" [items]="employeeList" bindLabel="employeeName"
-                bindValue="employeeName" [notFoundText]="notFoundEmployeeValue" formControlName="EmployeeName"
-                (search)="getEmployeeDetail($event)" (change)="onChangeEmployeeName($event, i)">
-              </ng-select>
-            </td>
+            <tr *ngFor="let row of customerMasterService.KAMArray.controls; let i = index"
+                [formGroupName]="i">
+              <td>{{ i + 1 }}</td>
+              <td style="text-align: left;">
+                {{ KMAList[i]?.codeDesc }}
+              </td>
+              <td>
+                <ng-select
+                  placeholder="Enter employee name"
+                  [notFoundText]="notFoundEmployeeValue"
+                  formControlName="EmployeeName"
+                  (search)="getEmployeeDetail($event)"
+                  (open)="onOpenDropdown()"
+                  (change)="onChangeEmployeeName($event, i)">
+                  <ng-option *ngFor="let item of employeeList" [value]="item.id">
+                  <strong>{{ item.id }}</strong> : {{ item.text }}
+                </ng-option>
 
-            <td>
-              <input type="text" class="form-control" formControlName="EmployeeID">
-            </td>
-
-            <td>
-              <input type="text" class="form-control" formControlName="Designation">
-            </td>
-
-            <td>
-              <input type="text" class="form-control" formControlName="Mobile">
-            </td>
-
-            <td>
-              <input type="text" class="form-control" formControlName="Email">
-            </td>
-          </tr>
-        </tbody>
+                </ng-select>
+              </td>
+              <td>
+                <input type="text"
+                       class="form-control"
+                       formControlName="EmployeeID">
+              </td>
+              <td>
+                <input type="text"
+                       class="form-control"
+                       formControlName="Designation">
+              </td>
+              <td>
+                <input type="text"
+                       class="form-control"
+                       formControlName="Mobile">
+              </td>
+              <td>
+                <input type="text"
+                       class="form-control"
+                       formControlName="Email">
+              </td>
+            </tr>
+          </tbody>
       </table>
     </div>
 </div>  -->
