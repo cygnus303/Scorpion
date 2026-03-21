@@ -32,3 +32,24 @@
         color: #1852a8;
     }
 }
+
+
+.collapse-icon {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    &.rotated {
+        transform: rotate(180deg);
+    }
+}
+
+.collapse {
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    
+    &.show {
+        max-height: 2000px;
+        opacity: 1;
+    }
+}

@@ -11,8 +11,18 @@ import { NgSelectModule } from '@ng-select/ng-select';
 })
 export class ServiceSelectionComponent {
   selectedSection: string = 'service';
+  isPTLCollapsed = false;
+  isFTLCollapsed = false;
 
   selectSection(section: string) {
     this.selectedSection = section;
+  }
+
+  togglePTL() {
+    this.isPTLCollapsed = !this.isPTLCollapsed;
+  }
+
+  toggleFTL() {
+    this.isFTLCollapsed = !this.isFTLCollapsed;
   }
 }
