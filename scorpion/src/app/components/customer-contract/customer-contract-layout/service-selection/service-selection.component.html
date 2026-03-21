@@ -4,33 +4,27 @@
         <div class="col-md-2">
             <div class="gap-2 flex-column">
                 <div class="border-radius p-3 mb-2 sidebar-item cursor-pointer"
-                     [class.active-sidebar]="selectedSection === 'service'"
-                     (click)="selectSection('service')">
+                    [class.active-sidebar]="selectedSection === 'service'" (click)="selectSection('service')">
                     <h5>Service Selection</h5>
                 </div>
                 <div class="border-radius p-3 mb-2 sidebar-item cursor-pointer"
-                     [class.active-sidebar]="selectedSection === 'freight'"
-                     (click)="selectSection('freight')">
+                    [class.active-sidebar]="selectedSection === 'freight'" (click)="selectSection('freight')">
                     <h5>Freight Related Services</h5>
                 </div>
                 <div class="border-radius p-3 mb-2 sidebar-item cursor-pointer"
-                     [class.active-sidebar]="selectedSection === 'demurrage'"
-                     (click)="selectSection('demurrage')">
+                    [class.active-sidebar]="selectedSection === 'demurrage'" (click)="selectSection('demurrage')">
                     <h5>Demurrage Information</h5>
                 </div>
                 <div class="border-radius p-3 mb-2 sidebar-item cursor-pointer"
-                     [class.active-sidebar]="selectedSection === 'risk'"
-                     (click)="selectSection('risk')">
+                    [class.active-sidebar]="selectedSection === 'risk'" (click)="selectSection('risk')">
                     <h5>Risk Information</h5>
                 </div>
                 <div class="border-radius p-3 mb-2 sidebar-item cursor-pointer"
-                     [class.active-sidebar]="selectedSection === 'diesel'"
-                     (click)="selectSection('diesel')">
+                    [class.active-sidebar]="selectedSection === 'diesel'" (click)="selectSection('diesel')">
                     <h5>Diesel Hike</h5>
                 </div>
-                 <div class="border-radius p-3 mb-2 sidebar-item cursor-pointer"
-                     [class.active-sidebar]="selectedSection === 'billing'"
-                     (click)="selectSection('billing')">
+                <div class="border-radius p-3 mb-2 sidebar-item cursor-pointer"
+                    [class.active-sidebar]="selectedSection === 'billing'" (click)="selectSection('billing')">
                     <h5>Billing Information</h5>
                 </div>
             </div>
@@ -65,7 +59,7 @@
                                 <label class="form-label fw-bold lh-1 fs-6 text-secondary">Zone Matrics </label>
                                 <div class="radio-group">
                                     <div class="radio-option selected">
-                                        <input type="radio" id="reg" name="regType" value="registered" checked="">
+                                        <input type="radio" id="reg" name="regType" value="registered">
                                         <label for="reg">Old Zone</label>
                                     </div>
                                     <div class="radio-option">
@@ -99,7 +93,8 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="toggle-container">
-                                        <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Volumetric">Volumetric</span>
+                                        <span class="toggle-label fw-bold lh-1 fs-6 text-secondary"
+                                            title="Volumetric">Volumetric</span>
                                         <label class="toggle-switch">
                                             <input type="checkbox" id="volumetricToggle">
                                             <span class="toggle-slider"></span>
@@ -108,7 +103,8 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="toggle-container">
-                                        <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Per Piece Rate">Per Piece Rate</span>
+                                        <span class="toggle-label fw-bold lh-1 fs-6 text-secondary"
+                                            title="Per Piece Rate">Per Piece Rate</span>
                                         <label class="toggle-switch">
                                             <input type="checkbox" id="perPieceRateToggle">
                                             <span class="toggle-slider"></span>
@@ -123,7 +119,8 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="toggle-container">
-                                        <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Max Discount">Max Discount</span>
+                                        <span class="toggle-label fw-bold lh-1 fs-6 text-secondary"
+                                            title="Max Discount">Max Discount</span>
                                         <label class="toggle-switch">
                                             <input type="checkbox" id="maxDiscountToggle">
                                             <span class="toggle-slider"></span>
@@ -132,7 +129,8 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="toggle-container">
-                                        <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Use Invoice No.">Use Invoice
+                                        <span class="toggle-label fw-bold lh-1 fs-6 text-secondary"
+                                            title="Use Invoice No.">Use Invoice
                                             No.</span>
                                         <label class="toggle-switch">
                                             <input type="checkbox" id="useInvoiceNoToggle">
@@ -144,7 +142,8 @@
                         </div>
                         <div class="col-3">
                             <div class="toggle-container">
-                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="User Invoice Date">User Invoice
+                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary"
+                                    title="User Invoice Date">User Invoice
                                     Date</span>
                                 <label class="toggle-switch">
                                     <input type="checkbox" id="userInvoiceDateToggle">
@@ -154,7 +153,8 @@
                         </div>
                         <div class="col-3">
                             <div class="toggle-container">
-                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Location Wise Min. Freight">Location Wise
+                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary"
+                                    title="Location Wise Min. Freight">Location Wise
                                     Min. Freight</span>
                                 <label class="toggle-switch">
                                     <input type="checkbox" id="locationToggle">
@@ -164,7 +164,8 @@
                         </div>
                         <div class="col-3">
                             <div class="toggle-container">
-                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Customer Wise Freight Charge">Customer
+                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary"
+                                    title="Customer Wise Freight Charge">Customer
                                     Wise Freight Charge</span>
                                 <label class="toggle-switch">
                                     <input type="checkbox" id="customerToggle">
@@ -182,7 +183,8 @@
                     <div class="row pb-4">
                         <div class="col-3 d-print-inline-block align-content-end">
                             <div class="toggle-container">
-                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Deferment allowed">Deferment
+                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary"
+                                    title="Deferment allowed">Deferment
                                     allowed</span>
                                 <label class="toggle-switch">
                                     <input type="checkbox" id="DefermentToggle">
@@ -192,7 +194,8 @@
                         </div>
                         <div class="col-3 d-print-inline-block align-content-end">
                             <div class="toggle-container">
-                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Freight as % of Invoice">Freight as % of
+                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary"
+                                    title="Freight as % of Invoice">Freight as % of
                                     Invoice</span>
                                 <label class="toggle-switch">
                                     <input type="checkbox" id="freightAsPercentageToggle">
@@ -225,7 +228,8 @@
                         </div>
                         <div class="col-3">
                             <div class="form-group-input">
-                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Type of Minimum Freight </label>
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Type of Minimum Freight
+                                </label>
                                 <div class="radio-group">
                                     <div class="radio-option">
                                         <input type="radio" id="reg" name="regType" value="registered">
@@ -265,9 +269,10 @@
             <div *ngIf="selectedSection === 'demurrage'">
                 <div class="border-radius p-4">
                     <div class="row pb-4">
-                      <div class="col-3 d-print-inline-block align-content-end">
+                        <div class="col-3 d-print-inline-block align-content-end">
                             <div class="toggle-container">
-                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Fuel Surcharge Applicable">Demurrage Charge applicable?</span>
+                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary"
+                                    title="Demurrage Charge applicable?">Demurrage Charge applicable?</span>
                                 <label class="toggle-switch">
                                     <input type="checkbox" id="demurrageChargeToggle">
                                     <span class="toggle-slider"></span>
@@ -276,7 +281,8 @@
                         </div>
                         <div class="col-3">
                             <div class="form-group-input">
-                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Demurrage Calculation Basis</label>
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Demurrage Calculation
+                                    Basis</label>
                                 <input type="text" class="form-control" placeholder="Demurrage Calculation Basis">
                             </div>
                         </div>
@@ -296,7 +302,8 @@
                     <div class="row pb-4">
                         <div class="col-3">
                             <div class="form-group-input">
-                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Demurrage Rate & Rate Type</label>
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Demurrage Rate & Rate
+                                    Type</label>
                                 <div class="input-group gap-3">
                                     <input type="text" class="form-control" placeholder="Rate">
                                     <input type="text" class="form-control" placeholder="Rate Type">
@@ -316,7 +323,7 @@
             <!-- Risk Information Content -->
             <div *ngIf="selectedSection === 'risk'">
                 <div class="border-radius p-4">
-                    <div class="row pb-4">
+                    <div class="row">
                         <div class="col-3">
                             <div class="form-group">
                                 <label class="form-label fw-bold lh-1 fs-6 text-secondary">Risk Type </label>
@@ -332,9 +339,10 @@
                                 </div>
                             </div>
                         </div>
-                         <div class="col-3">
+                        <div class="col-3">
                             <div class="toggle-container">
-                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="Fuel Surcharge Applicable">Fuel Surcharge Applicable</span>
+                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary"
+                                    title="Fuel Surcharge Applicable">Fuel Surcharge Applicable</span>
                                 <label class="toggle-switch">
                                     <input type="checkbox" id="fuelSurchargeToggle">
                                     <span class="toggle-slider"></span>
@@ -342,58 +350,111 @@
                             </div>
                         </div>
                     </div>
-
+                </div>
+                <div class="mt-3">
                     <div class="background-color text-white rounded-top px-3 py-3 text-start cursor-pointer d-flex justify-content-between align-items-center"
-                        data-bs-toggle="collapse" data-bs-target="#fovMatrixOwnerRisk" aria-expanded="true" aria-controls="fovMatrixOwnerRisk">
+                        (click)="togglePTL()" role="button" aria-expanded="false" aria-controls="collapsePTL">
                         <div>
-                            <i class="fas fa-rupee me-2"></i>FOV Matrix Owner Risk / PTL
+                            <i class="fas fa-list me-2"></i>FOV Matrix Owner Risk / PTL
                         </div>
-                        <i class="fas fa-chevron-down collapse-icon" id="companyIcon"></i>
+                        <i class="fas fa-chevron-down collapse-icon" id="ptlIcon" [class.rotated]="isPTLCollapsed"></i>
                     </div>
-                    <div class="collapse show" id="fovMatrixOwnerRisk">
-                        <div class="rounded-bottom border-radius ">
-                                <table class="w-100 data-table rounded-0">
-                                    <thead>
-                                        <tr>
-                                            <th>Id</th>
-                                            <th>To</th>
-                                            <th>Rate</th>
-                                            <th>Rate Type</th>
-                                            <th>Min</th>
-                                            <th>Max</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="gstTableBody">
-                                        <tr>
-                                            <td>1</td>
-                                            <td><input type="text" class="form-control" placeholder="27AABCU9603R1ZM"></td>
-                                            <td>
-                                                <ng-select class="noFoundTextColor" placeholder="Select State"></ng-select>
-                                            </td>
-                                            <td><input type="text" class="form-control" placeholder="Address"></td>
-                                            <td><input type="text" class="form-control" placeholder="400001"></td>
-                                            <td>
-                                                <button type="button" class="btn-icon delete text-danger">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td><input type="text" class="form-control" placeholder="27AABCU9603R1ZM"></td>
-                                            <td>
-                                                <ng-select class="noFoundTextColor" placeholder="Select State"></ng-select>
-                                            </td>
-                                            <td><input type="text" class="form-control" placeholder="Address"></td>
-                                            <td><input type="text" class="form-control" placeholder="400001"></td>
-                                            <td>
-                                                <button type="button" class="btn-icon delete text-danger">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                    <div class="collapse" [class.show]="!isPTLCollapsed" id="collapsePTL">
+                        <div class="rounded-bottom border-color">
+                            <table class="w-100 data-table rounded-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Id</th>
+                                        <th class="text-center">To</th>
+                                        <th class="text-center">Rate</th>
+                                        <th class="text-center">Rate Type</th>
+                                        <th class="text-center">Min</th>
+                                        <th class="text-center">Max</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td><input type="text" class="form-control" placeholder="27AABCU9603R1ZM"></td>
+                                        <td>
+                                            <ng-select class="noFoundTextColor" placeholder="Select State"></ng-select>
+                                        </td>
+                                        <td><input type="text" class="form-control" placeholder="Address"></td>
+                                        <td><input type="text" class="form-control" placeholder="400001"></td>
+                                        <td><input type="text" class="form-control" placeholder="400001"></td>
+                                        <td>
+                                            <button type="button" class="btn-icon delete text-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td><input type="text" class="form-control" placeholder="27AABCU9603R1ZM"></td>
+                                        <td>
+                                            <ng-select class="noFoundTextColor" placeholder="Select State"></ng-select>
+                                        </td>
+                                        <td><input type="text" class="form-control" placeholder="Address"></td>
+                                        <td><input type="text" class="form-control" placeholder="400001"></td>
+                                        <td><input type="text" class="form-control" placeholder="400001"></td>
+                                        <td>
+                                            <button type="button" class="btn-icon delete text-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="m-3 d-flex align-items-center gap-3">
+                                <button type="button" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> Add New Row
+                                </button>
+                                <span class="text-muted">Total Rows: <strong>3</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="background-color text-white rounded-top px-3 py-3 text-start cursor-pointer d-flex justify-content-between align-items-center"
+                        (click)="toggleFTL()" role="button" aria-expanded="false" aria-controls="collapseFTL">
+                        <div>
+                            <i class="fas fa-list me-2"></i>FOV Matrix Owner Risk / FTL
+                        </div>
+                        <i class="fas fa-chevron-down collapse-icon" id="ftlIcon" [class.rotated]="isFTLCollapsed"></i>
+                    </div>
+                    <div class="collapse" [class.show]="!isFTLCollapsed" id="collapseFTL">
+                        <div class="rounded-bottom border-color">
+                            <table class="w-100 data-table rounded-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Id</th>
+                                        <th class="text-center">To</th>
+                                        <th class="text-center">Rate</th>
+                                        <th class="text-center">Rate Type</th>
+                                        <th class="text-center">Min</th>
+                                        <th class="text-center">Max</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td><input type="text" class="form-control" placeholder="27AABCU9603R1ZM"></td>
+                                        <td>
+                                            <ng-select class="noFoundTextColor" placeholder="Select State"></ng-select>
+                                        </td>
+                                        <td><input type="text" class="form-control" placeholder="Address"></td>
+                                        <td><input type="text" class="form-control" placeholder="400001"></td>
+                                        <td><input type="text" class="form-control" placeholder="400001"></td>
+                                        <td>
+                                            <button type="button" class="btn-icon delete text-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                             <div class="m-3 d-flex align-items-center gap-3">
                                 <button type="button" class="btn btn-primary">
                                     <i class="fas fa-plus"></i> Add New Row
@@ -407,20 +468,87 @@
 
             <!-- Diesel Hike Content -->
             <div *ngIf="selectedSection === 'diesel'">
-                <div class="card p-4">
-                    <h5>Diesel Hike</h5>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label for="basePrice">Base Diesel Price <span class="text-danger">*</span></label>
-                            <input class="form-control" type="number" id="basePrice" placeholder="0.00">
+                <div class="border-radius p-4">
+                    <div class="row pb-4">
+                        <div class="col-3 d-print-inline-block align-content-end">
+                            <div class="toggle-container">
+                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="DPH Billing">DPH Billing?</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="dphBillingToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="hikePercentage">Hike Percentage <span class="text-danger">*</span></label>
-                            <input class="form-control" type="number" id="hikePercentage" placeholder="0.00">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Review Type</label>
+                                <input type="text" class="form-control" placeholder="Review Type">
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="effectiveFrom">Effective From <span class="text-danger">*</span></label>
-                            <input class="form-control" type="date" id="effectiveFrom">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Base Diesel Rate</label>
+                                <input type="text" class="form-control" placeholder="Base Diesel Rate">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Current Diesel Rate</label>
+                                <input type="text" class="form-control" placeholder="Current Diesel Rate">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pb-4">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Hike Amount(Rs.)</label>
+                                <input type="text" class="form-control" placeholder="Hike Amount(Rs.)">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Effective Amount(Rs.)</label>
+                                <input type="text" class="form-control" placeholder="Effective Amount(Rs.)">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Hike (%)</label>
+                                <input type="text" class="form-control" placeholder="Hike (%)">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Effective (%)</label>
+                                <input type="text" class="form-control" placeholder="Effective (%)">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pb-4">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Diesel (%)</label>
+                                <input type="text" class="form-control" placeholder="Diesel (%)">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">EffectedOn Date</label>
+                                <input type="text" class="form-control" placeholder="EffectedOn Date">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Diesel Hike Rate
+                                    Details?</label>
+                                <input type="text" class="form-control" placeholder="Diesel Hike Rate Details?">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">DPHRate Type</label>
+                                <input type="text" class="form-control" placeholder="DPHRate Type">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -428,28 +556,145 @@
 
             <!-- Billing Information Content -->
             <div *ngIf="selectedSection === 'billing'">
-                <div class="card p-4">
-                    <h5>Billing Information</h5>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label for="billingCycle">Billing Cycle <span class="text-danger">*</span></label>
-                            <select class="form-control" id="billingCycle">
-                                <option>Weekly</option>
-                                <option>Bi-weekly</option>
-                                <option>Monthly</option>
-                            </select>
+                <div class="border-radius p-4">
+                    <div class="row pb-4">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Bill Generation
+                                    Location</label>
+                                <input type="text" class="form-control" placeholder="Bill Generation Location">
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="paymentTerms">Payment Terms <span class="text-danger">*</span></label>
-                            <select class="form-control" id="paymentTerms">
-                                <option>Net 15</option>
-                                <option>Net 30</option>
-                                <option>Net 45</option>
-                            </select>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Billing Instance</label>
+                                <input type="text" class="form-control" placeholder="Billing Instance">
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="creditLimit">Credit Limit <span class="text-danger">*</span></label>
-                            <input class="form-control" type="number" id="creditLimit" placeholder="0.00">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Billing Schedule</label>
+                                <input type="text" class="form-control" placeholder="Billing Schedule">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Bill Submission
+                                    Location</label>
+                                <input type="text" class="form-control" placeholder="Bill Submission Location">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pb-4">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Com.Business(pm)</label>
+                                <input type="text" class="form-control" placeholder="Com.Business(pm)">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Billing State</label>
+                                <input type="text" class="form-control" placeholder="Billing State">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Bill Collection
+                                    Location</label>
+                                <input type="text" class="form-control" placeholder="Bill Collection Location">
+                            </div>
+                        </div>
+                        <div class="col-3 d-print-inline-block align-content-end">
+                            <div class="toggle-container">
+                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary" title="SKU Wise Y/N">SKU
+                                    Wise Y/N</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="skuWiseToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pb-4">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">GST Payer</label>
+                                <input type="text" class="form-control" placeholder="GST Payer">
+                            </div>
+                        </div>
+                        <div class="col-3 d-print-inline-block align-content-end">
+                            <div class="toggle-container">
+                                <span class="toggle-label fw-bold lh-1 fs-6 text-secondary"
+                                    title="Credit Limit Active Y/N">Credit Limit Active Y/N</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="creditLimitActiveToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Credit Limit(In Rs)</label>
+                                <input type="text" class="form-control" placeholder="Credit Limit(In Rs)">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Credit Days</label>
+                                <input type="text" class="form-control" placeholder="Credit Days">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row pb-4">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Grace Period (In
+                                    Days)</label>
+                                <input type="text" class="form-control" placeholder="Grace Period (In Days)">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Grace Limit</label>
+                                <input type="text" class="form-control" placeholder="Grace Limit">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">GST - Billing
+                                    Preference</label>
+                                <input type="text" class="form-control" placeholder="GST - Billing Preference">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Bill Generation Cycle</label>
+                                <input type="text" class="form-control" placeholder="Bill Generation Cycle">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pb-4">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Bill Generation Type</label>
+                                <input type="text" class="form-control" placeholder="Bill Generation Type">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Bill Submission Type</label>
+                                <input type="text" class="form-control" placeholder="Bill Submission Type">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold lh-1 fs-6 text-secondary">Maximum Deduction Allowed in
+                                    Case of Damage/Shortage</label>
+                                <input type="text" class="form-control"
+                                    placeholder="Maximum Deduction Allowed in Case of Damage/Shortage">
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -70,38 +70,22 @@
       
       <!-- Mode Wise Services Tab -->
       <div *ngIf="selectedTab === 'mode'">
-        <div class="p-4 text-center">
-          <i class="fas fa-truck fa-3x text-primary mb-3"></i>
-          <h4>Mode Wise Services</h4>
-          <p class="text-muted">Configure mode-wise services here</p>
-        </div>
+        <app-mode-wise-services></app-mode-wise-services>
       </div>
       
       <!-- Charge Matrix Tab -->
       <div *ngIf="selectedTab === 'matrix'">
-        <div class="p-4 text-center">
-          <i class="fas fa-table fa-3x text-primary mb-3"></i>
-          <h4>Charge Matrix</h4>
-          <p class="text-muted">Configure charge matrix here</p>
-        </div>
+        <app-charge-matrix></app-charge-matrix>
       </div>
       
       <!-- Standard Charges Tab -->
       <div *ngIf="selectedTab === 'standard'">
-        <div class="p-4 text-center">
-          <i class="fas fa-dollar-sign fa-3x text-primary mb-3"></i>
-          <h4>Standard Charges</h4>
-          <p class="text-muted">Configure standard charges here</p>
-        </div>
+        <app-standard-charges></app-standard-charges>
       </div>
       
       <!-- Freight Charge - SUNDRY Tab -->
       <div *ngIf="selectedTab === 'sundry'">
-        <div class="p-4 text-center">
-          <i class="fas fa-truck-loading fa-3x text-primary mb-3"></i>
-          <h4>Freight Charge - SUNDRY</h4>
-          <p class="text-muted">Configure sundry freight charges here</p>
-        </div>
+        <app-freight-charge-sundry></app-freight-charge-sundry>
       </div>
       
       <!-- Freight Charge - FTL Tab -->

@@ -693,6 +693,10 @@ input[readonly] {
     border: 2px solid #dee2e6;
 }
 
+.border-color{
+    border: 2px solid #dee2e6;
+}
+
 
 /* Helps avoid the “black empty block” type layout issues */
 .customer-page {
@@ -761,7 +765,7 @@ input[readonly] {
 }
 
 .data-table th {
-    padding: 14px 16px;
+    padding: 8px 13px;
     text-align: left;
     font-size: 13px;
     font-weight: 700;
@@ -953,10 +957,6 @@ input:checked+.toggle-slider:before {
   border-color: var(--primary);
   background: #eff6ff;
 }
-.border-radius {
-  border: 2px solid #dee2e6;
-}
-
 
 /* Checkbox */
 .checkbox-group {

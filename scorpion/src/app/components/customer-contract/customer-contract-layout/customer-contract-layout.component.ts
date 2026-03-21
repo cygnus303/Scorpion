@@ -4,11 +4,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ContractInformationComponent } from './contract-information/contract-information.component';
 import { ServiceSelectionComponent } from "./service-selection/service-selection.component";
+import { ModeWiseServicesComponent } from "./mode-wise-services/mode-wise-services.component";
+import { ChargeMatrixComponent } from './charge-matrix/charge-matrix.component';
+import { StandardChargesComponent } from './standard-charges/standard-charges.component';       
+import { FreightChargeSundryComponent } from './freight-charge-sundry/freight-charge-sundry.component';
 
 @Component({
   selector: 'app-customer-contract-layout',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgSelectModule, ContractInformationComponent, ServiceSelectionComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgSelectModule, ContractInformationComponent, ServiceSelectionComponent, ModeWiseServicesComponent,ChargeMatrixComponent,StandardChargesComponent,FreightChargeSundryComponent],
   templateUrl: './customer-contract-layout.component.html',
   styleUrl: './customer-contract-layout.component.scss'
 })
@@ -19,3 +23,4 @@ export class CustomerContractLayoutComponent {
   }
 
 }
+  
