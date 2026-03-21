@@ -1,0 +1,27 @@
+.gst-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.add-btn {
+  background: #2f5bd3;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-btn:hover {
+  background: #244bb5;
+}
+
+.row-count {
+  color: #6c757d;
+  font-size: 16px;
+}

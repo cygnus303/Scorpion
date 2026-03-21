@@ -21,10 +21,10 @@
                  Billing Information
             </h6>
               <h6 class="fw-semibold border-radius rounded p-3 tab-button" 
-                [class.active-tab]="selectedTab === 'address'" 
-                (click)="selectTab('address')">
+                [class.active-tab]="selectedTab === 'kamDetails'" 
+                (click)="selectTab('kamDetails')">
                <i class="fas fa-user-plus me-2"></i> 
-                Address
+                Customer wise KAM Details
             </h6>
             <h6 class="fw-semibold border-radius rounded p-3 tab-button" 
                 [class.active-tab]="selectedTab === 'gstDetails'" 
@@ -32,15 +32,9 @@
                 <i class="fas fa-file-invoice-dollar me-2"></i>
                 GST Details
             </h6>
-                <h6 class="fw-semibold border-radius rounded p-3 tab-button" 
-                [class.active-tab]="selectedTab === 'settings'" 
-                (click)="selectTab('settings')">
-                <i class="fas fa-file-invoice-dollar me-2"></i>
-                Settings
-            </h6>
         </div>
         <div class="col-10">
-            <div class="customer-page m-3">
+            <!-- <div class="customer-page m-3">
                 <div class="customer-card">
                     <div class="top">
                         <h6 class="glassy-info-title">{{ title }}</h6>
@@ -50,7 +44,6 @@
                             <div class="customer-step" *ngFor="let s of steps" [class.active]="isActive(s.id)"
                                 [class.completed]="s.id < activeStep" (click)="setActive(s.id)"
                                 [attr.aria-current]="isActive(s.id) ? 'step' : null" role="button" tabindex="0">
-                                <!-- IMPORTANT: dot always renders (fixes missing '1' issue) -->
                                 <div class="dot" [class.active]="isActive(s.id)" [class.inactive]="!isActive(s.id)"
                                     [class.completed]="s.id < activeStep">
                                     <ng-container *ngIf="s.id < activeStep; else stepNumber">
@@ -65,7 +58,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div>
                 <!-- Basic Info Tab -->
                 <div *ngIf="selectedTab === 'customer'">
@@ -78,19 +71,17 @@
                 </div>
     
                 <!-- Address Tab -->
-                <div *ngIf="selectedTab === 'address'">
-                    <div class="p-4 bg-light">
-                        <h4>Address Information</h4>
-                        <p>This is where the address form will go.</p>
-                    </div>
+                <div *ngIf="selectedTab === 'kamDetails'">
+                   <app-kam-details></app-kam-details>
                 </div>
     
                 <!-- GST Details Tab -->
                 <div *ngIf="selectedTab === 'gstDetails'">
-                    <div class="p-4 bg-light">
+                    <!-- <div class="p-4 bg-light">
                         <h4>GST Details</h4>
                         <p>This is where the GST details form will go.</p>
-                    </div>
+                    </div> -->
+                    <app-gst-details></app-gst-details>
                 </div>
     
                 <!-- Settings Tab -->
