@@ -12,6 +12,7 @@ import { FMReportListComponent } from './view-print-fmreport-query/fmreport-list
 import { DocumentsTrackComponent } from './documents-track/documents-track.component';
 import { DocumentYetToScanComponent } from './document-yet-to-scan/document-yet-to-scan.component';
 import { PODPFMCriteriaComponent } from './podpfmcriteria/podpfmcriteria.component';
+import { PFMListComponent } from '../pfm-list/pfm-list.component';
 
 export const ScanFMRoutes: Routes = [
   {
@@ -62,6 +63,10 @@ export const ScanFMRoutes: Routes = [
   {
     path: 'PODPFMCriteria',
     component: PODPFMCriteriaComponent,
+  },
+  {
+    path: 'PFM',
+    component: PFMListComponent,
   },
 
 ];

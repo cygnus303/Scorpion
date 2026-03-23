@@ -1,0 +1,28 @@
+<ng-template #Templatepod>
+    <div class="modal-header">
+        <div class="d-flex align-items-center gap-3">
+            <div class="pfm-icon" style="background:#e0f7fa;border:1px solid #67d2e8;">🎫</div>
+            <div>
+                <div class="fw-bold">PFM Number Generated</div>
+                <div class="pfm-subtitle">The following PFM number has been assigned</div>
+            </div>
+        </div>
+        <button type="button" class="btn-close pfm-close" (click)="modalRef.hide()"></button>
+    </div>
+    <div class="modal-body" style="padding:20px 22px;">
+        <div class="alert-pfm">PFM/25/MUMBAI/000001</div>
+        <div style="font-size:12px;color:var(--secondary);text-align:center;margin-top:8px;">Assigned to the following
+            LR(s):</div>
+        <div class="d-flex flex-column gap-3 mt-3">
+            <div class="input-background-color rounded p-2">LR-2025-00437 · Delhi → Jaipur</div>
+            <div class="input-background-color rounded p-2">LR-2025-00445 · Ahmedabad → Surat</div>
+        </div>
+    </div>
+    <div class="modal-footer input-background-color" style="justify-content:flex-end;">
+        <div class="modal-footer-right ">
+            <button class="btn btn-info px-4 py-2 rounded text-light" style="background:var(--teal);"
+                (click)="modalRef.hide()">✓
+                Done</button>
+        </div>
+    </div>
+</ng-template>
