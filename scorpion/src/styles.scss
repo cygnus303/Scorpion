@@ -248,7 +248,7 @@ ng-select .ng-input input[type='text'] {
 }
 
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
-  padding: 6px !important; // Reduce top/bottom padding
+  padding: 8px !important; // Reduce top/bottom padding
   font-size: 11px !important;
   line-height: 1.2 !important;
   min-height: unset !important;
@@ -1251,11 +1251,6 @@ input:checked+.toggle-slider:before {
     display: inline-block;
     margin-right: 8px;
   }
-}
-
-.ng-dropdown-panel {
-  border-radius: 10px !important;
-  padding: 6px;
 }
 
 .status-option {
