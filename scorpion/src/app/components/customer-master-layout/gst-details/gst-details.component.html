@@ -1,68 +1,59 @@
-<form [formGroup]="customerMasterService.gstForm">
-
-  <div class="form-section" id="section-gst">
-    <div class="section-body">
-
-      <div class="table-responsive">
-        <table class="data-table">
-
-          <thead>
-            <tr>
-              <th>Sr. No.</th>
-              <th>GSTIN</th>
-              <th>GST State</th>
-              <th>Address</th>
-              <th>Pincode</th>
-              <th>City</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-
-          <tbody formArrayName="gstDetails">
-            <tr *ngFor="let item of customerMasterService.gstControls; let i = index;"
-                [formGroupName]="i">
-              <td>{{ i + 1 }}</td>
-              <td>
-                <input type="text" class="form-control" formControlName="gst_registration_no">
-              </td>
-              <td>
-                <input type="text" class="form-control" formControlName="statename">
-              </td>
-              <td>
-                <input type="text" class="form-control" formControlName="CSGEAddress">
-              </td>
-              <td>
-                <input type="text" class="form-control" formControlName="pincode">
-              </td>
-              <td>
-                <ng-select formControlName="city_code"></ng-select>
-              </td>
-              <td>
-                <svg _ngcontent-ng-c455910338="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(255,83,112,1)" height="20" class="m-0" (click)="customerMasterService.removeGSTRow(i)">
-                    <path _ngcontent-ng-c455910338="" d="M17 4H22V6H20V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V6H2V4H7V2H17V4ZM9 9V17H11V9H9ZM13 9V17H15V9H13Z"></path>
-                </svg>
-              </td>
-            </tr>
-          </tbody>
-
-        </table>
+<div class="m-3 border-radius rounded">
+  <form [formGroup]="customerMasterService.gstForm">
+    <div class="row p-3">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label class="control-label col-md-5">No Of Rows </label>
+          <div class="col-md-7">
+            <div class="input-group custom-input-group">
+              <input type="number" class="form-control rounded-0 rounded-start" min="1" placeholder="Enter rows" />
+              <button type="button" class="btn btn-add text-light rounded-0 rounded-end" title="Add Row">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-
-    <div class="gst-header mt-4">
-
-  <button type="button"
-          class="add-btn"
-          (click)="customerMasterService.addGSTRow()">
-    <i class="fas fa-plus"></i> Add New Row
-  </button>
-
-  <span class="row-count">
-    Total Rows: {{ customerMasterService.gstDetails.length }}
-  </span>
-
-</div>
-
     </div>
-  </div>
-
-</form>
+    <div class="">
+      <table class="w-100 data-table rounded-0">
+        <thead>
+          <tr>
+            <th>Sr. No.</th>
+            <th>GSTIN</th>
+            <th>GST State</th>
+            <th>Address</th>
+            <th>Pincode</th>
+            <th>City</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody formArrayName="gstDetails">
+          <tr *ngFor="let item of customerMasterService.gstControls; let i = index;" [formGroupName]="i">
+            <td>{{ i + 1 }}</td>
+            <td>
+              <input type="text" class="form-control" formControlName="gst_registration_no">
+            </td>
+            <td>
+              <input type="text" class="form-control" formControlName="statename">
+            </td>
+            <td>
+              <input type="text" class="form-control" formControlName="CSGEAddress">
+            </td>
+            <td>
+              <input type="text" class="form-control" formControlName="pincode">
+            </td>
+            <td>
+              <ng-select type="text" formControlName="city_code" placeholder="Select City"></ng-select>
+            </td>
+            <td>
+              <button type="button" class="btn-icon-delete delete text-danger">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </form>
+</div>

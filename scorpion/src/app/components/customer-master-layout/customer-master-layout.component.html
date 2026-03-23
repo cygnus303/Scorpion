@@ -2,33 +2,29 @@
     <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
         <div>
             <i class="fas fa-filter me-2"></i>
-             Step selection
+            Step selection
         </div>
     </div>
 
     <div class="row g-0">
         <div class="col-2 g-3">
-            <h6 class="fw-semibold border-radius rounded p-3 tab-button" 
-                [class.active-tab]="selectedTab === 'customer'" 
+            <h6 class="fw-semibold border-radius rounded p-3 tab-button" [class.active-tab]="selectedTab === 'customer'"
                 (click)="selectTab('customer')">
-               <i class="fas fa-user-plus me-2"></i> 
+                <i class="fas fa-user-plus me-2"></i>
                 Customer Master
             </h6>
-            <h6 class="fw-semibold border-radius rounded p-3 tab-button" 
-                [class.active-tab]="selectedTab === 'billingInformation'" 
-                (click)="selectTab('billingInformation')">
+            <h6 class="fw-semibold border-radius rounded p-3 tab-button"
+                [class.active-tab]="selectedTab === 'billingInformation'" (click)="selectTab('billingInformation')">
                 <i class="fas fa-file-invoice-dollar me-2"></i>
-                 Billing Information
+                Billing Information
             </h6>
-              <h6 class="fw-semibold border-radius rounded p-3 tab-button" 
-                [class.active-tab]="selectedTab === 'kamDetails'" 
-                (click)="selectTab('kamDetails')">
-               <i class="fas fa-user-plus me-2"></i> 
+            <h6 class="fw-semibold border-radius rounded p-3 tab-button"
+                [class.active-tab]="selectedTab === 'kamDetails'" (click)="selectTab('kamDetails')">
+                <i class="fas fa-user-plus me-2"></i>
                 Customer wise KAM Details
             </h6>
-            <h6 class="fw-semibold border-radius rounded p-3 tab-button" 
-                [class.active-tab]="selectedTab === 'gstDetails'" 
-                (click)="selectTab('gstDetails')">
+            <h6 class="fw-semibold border-radius rounded p-3 tab-button"
+                [class.active-tab]="selectedTab === 'gstDetails'" (click)="selectTab('gstDetails')">
                 <i class="fas fa-file-invoice-dollar me-2"></i>
                 GST Details
             </h6>
@@ -64,17 +60,20 @@
                 <div *ngIf="selectedTab === 'customer'">
                     <app-add-customer></app-add-customer>
                 </div>
-    
+
                 <!-- Business Tab -->
                 <div *ngIf="selectedTab === 'billingInformation'">
-                     <app-biling-information></app-biling-information>
+                    <app-biling-information></app-biling-information>
                 </div>
-    
+
                 <!-- Address Tab -->
                 <div *ngIf="selectedTab === 'kamDetails'">
-                   <app-kam-details></app-kam-details>
+                    <<<<<<< HEAD <app-kam-details></app-kam-details>
+                        =======
+                        <app-kam-details></app-kam-details>
+                        >>>>>>> 2559a93 (implemneted customer master api)
                 </div>
-    
+
                 <!-- GST Details Tab -->
                 <div *ngIf="selectedTab === 'gstDetails'">
                     <!-- <div class="p-4 bg-light">
@@ -83,7 +82,7 @@
                     </div> -->
                     <app-gst-details></app-gst-details>
                 </div>
-    
+
                 <!-- Settings Tab -->
                 <div *ngIf="selectedTab === 'settings'">
                     <div class="p-4 bg-light">
@@ -93,5 +92,4 @@
                 </div>
             </div>
         </div>
-</div>
-
+    </div>
