@@ -13,12 +13,12 @@
                     <div class="row">
                         <label class="col-md-5 col-form-label text-end">Select Contract Type</label>
                         <div class="col-md-7">
-                            <ng-select class="required2 clear-icon" placeholder="Select Contract Type"
-                                formControlName="contract_Type" bindLabel="text" bindValue="value"
+                            <ng-select class="required2 clear-icon" placeholder="Select Contract Type" [items]="PayBsList"
+                                formControlName="contract_Type" bindLabel="codeDesc" bindValue="codeId"
                                 [ngClass]="{ 'border-danger': criteriaform.get('contract_Type')?.invalid && criteriaform.get('contract_Type')?.touched }">
                             </ng-select>
                             <div *ngIf="criteriaform.get('contract_Type')?.invalid && criteriaform.get('contract_Type')?.touched"
-                                class="text-danger">
+                                class="text-danger text-start">
                                 This field is required.
                             </div>
                         </div>
@@ -33,7 +33,7 @@
                                 [ngClass]="{ 'border-danger': criteriaform.get('contractname')?.invalid && criteriaform.get('contractname')?.touched }">
                             </ng-select>
                             <div *ngIf="criteriaform.get('contractname')?.invalid && criteriaform.get('contractname')?.touched"
-                                class="text-danger">
+                                class="text-danger text-start">
                                 This field is required.
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Start Date</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" formControlName="startdate" bsDatepicker>
+                                <input type="text" class="form-control" formControlName="startdate" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }">
                                 <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">End Date</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" formControlName="enddate" bsDatepicker>
+                                <input type="text" class="form-control" formControlName="enddate" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }">
                                 <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                             </div>
                         </div>

@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DocketService } from 'app/shared/services/docket.service';
+import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { Modal } from 'bootstrap';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
@@ -19,12 +20,17 @@ export class CustomerContractComponent {
   public isAddContract :boolean= false;
   public isGetList:boolean = false;
   public showAddContractModal: boolean = false;
+   public PayBsList:any[]=[];
 
-  constructor(public docketService: DocketService){}
+
+  constructor(
+    public docketService: DocketService,
+    public THCMasterService:THCMasterService){}
 
   ngOnInit(){
     this.buildForm();
     this.buildContractForm();
+    this.getPaybs();
   }
 
   buildForm(){
@@ -65,6 +71,21 @@ export class CustomerContractComponent {
         this.contractForm.get(key)?.markAsTouched();
       });
     }
+  }
+
+    getPaybs() {
+    this.THCMasterService.getGeneralMasterDetail('PAYTYP').subscribe({ next: (response) => {
+        if (response.success) {
+          this.PayBsList = [
+          {
+            codeId: 'P00',
+            codeDesc: 'All'
+          },
+          ...response.data
+        ];
+        }
+      }
+    });
   }
 
   addNewContract(){
