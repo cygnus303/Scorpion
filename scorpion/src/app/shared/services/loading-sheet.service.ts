@@ -24,7 +24,7 @@ export class LoadingSheetService {
 
     this.LSForm=new FormGroup({
       lsNO:new FormControl(''),
-      lsDate:new FormControl(this.formatDate(today)),
+      lsDate:new FormControl(this.formatDateLSDate(today)),
       manualLsNO:new FormControl('N/A'),
       loadingBy:new FormControl(null),
       nextStopLocation:new FormControl(null,Type ? Validators.required : null),
@@ -61,6 +61,10 @@ export class LoadingSheetService {
      this.LSForm.get('vendorCode')?.setValidators([Validators.required]);
     }
   }
+
+  formatDateLSDate(date: Date) {
+  return date.toISOString().split('T')[0];
+}
 
   setDocketList(list: any[]) {
   const fa = this.LSForm.get('docketList') as FormArray;
@@ -213,7 +217,7 @@ calculateTotal() {
       const payload = {
         vm: {
           ...formValuesWithoutRange,
-          lsDate:new Date(this.LSForm.value.lsDate).toISOString() === "0000-12-31T18:06:32.000Z" ? new Date(): new Date(this.LSForm.value.lsDate).toISOString(),
+          lsDate:new Date(this.LSForm.value.lsDate).toISOString() === "0000-12-31T18:06:32.000Z" ? new Date().toISOString().split('T')[0]: new Date(this.LSForm.value.lsDate).toISOString().split('T')[0],
           mathadiDate: new Date(this.LSForm.value.mathadiDate).toISOString(),
           vendorCode: this.LSForm.value.vendorCode ? this.LSForm.value.vendorCode : '',
           vehno: this.LSForm.value.vehno ? this.LSForm.value.vehno : '',
