@@ -11,13 +11,17 @@
     </div>
     <div class="modal-body" style="padding:20px 22px;gap:12px;">
         <div style="font-size:13px;color:var(--secondary);text-align:center;line-height:1.7;">
-            You are about to mark the selected PFM record(s) as <strong style="color:#1a7f37;">Acknowledged</strong>.<br>
+            You are about to mark the selected PFM record(s) as <strong
+                style="color:#1a7f37;">Acknowledged</strong>.<br>
             This action confirms receipt of the forwarded POD documents.
         </div>
-        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);margin-top:4px;"> Selected PFM(s):</div>
+        <div
+            style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);margin-top:4px;">
+            Selected PFM(s):</div>
         <div class="d-flex flex-wrap gap-2 mt-3">
-            <span class="input-background-color px-4 py-2 rounded">PFM/25/MUMBAI/000003</span>
-            <span class="input-background-color px-4 py-2 rounded">PFM/25/MUMBAI/000004</span>
+            <span *ngFor="let pfm of uniquePFMs" class="input-background-color px-4 py-2 rounded">
+                {{ pfm }}
+            </span>
         </div>
 
         <div class="form-group-input mb-2 mt-3">
@@ -35,7 +39,8 @@
         <!-- ── Remarks ── -->
         <div class="form-group-input mb-2 ">
             <label>Remarks</label>
-            <textarea class="form-control-textarea input-background-color mb-2" placeholder="Optional acknowledgement remarks…"></textarea>
+            <textarea class="form-control-textarea input-background-color mb-2"
+                placeholder="Optional acknowledgement remarks…"></textarea>
         </div>
     </div>
     <div class="modal-footer d-flex justify-content-end gap-3">

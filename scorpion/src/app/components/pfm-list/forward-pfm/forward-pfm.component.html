@@ -35,7 +35,8 @@
                 <div class="col-4">
                     <div class="form-group-input">
                         <label class="form-label meta-label">Courier Number</label>
-                        <input class="form-control input-background-color" type="text" placeholder="Tracking / docket number" style="margin-top:3px;">
+                        <input class="form-control input-background-color" type="text"
+                            placeholder="Tracking / docket number" style="margin-top:3px;">
                     </div>
                 </div>
             </div>
@@ -43,17 +44,18 @@
                 <div class="col-6">
                     <div class="form-group-input">
                         <label class="form-label meta-label">Courier Company Name</label>
-                        <input class="form-control input-background-color" type="text" id="fwdCompany" placeholder="e.g. DTDC, BlueDart"
-                            style="margin-top:3px;">
+                        <input class="form-control input-background-color" type="text" id="fwdCompany"
+                            placeholder="e.g. DTDC, BlueDart" style="margin-top:3px;">
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group-input" style="flex:1;min-width:180px;position:relative;" id="fwdToWrap">
                         <label class="form-label meta-label">Forwarded To</label>
                         <div style="position:relative;margin-top:3px;">
-                            <span style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text-muted);pointer-events:none;">📍</span>
-                            <input class="form-control input-background-color" type="text" placeholder="Search city…" autocomplete="off"
-                                style="padding-left:30px;" >
+                            <span
+                                style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text-muted);pointer-events:none;">📍</span>
+                            <input class="form-control input-background-color" type="text" placeholder="Search city…"
+                                autocomplete="off" style="padding-left:30px;">
                         </div>
                         <div id="cityDropdown"
                             style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:600;max-height:200px;overflow-y:auto;margin-top:2px;">
@@ -74,12 +76,13 @@
                     Unchecked LRs
                     will be reset to Pending</div>
             </div>
-            <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden; " class="input-background-color">
+            <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden; "
+                class="input-background-color">
                 <table style="width:100%;border-collapse:collapse;font-size:13px;">
                     <thead>
                         <tr style="background:var(--surface2);border-bottom:1px solid var(--border);">
-                            <th style="padding:9px 12px;text-align:center;width:38px;"><input type="checkbox" id="fwdChkAll"
-                                    onchange="toggleAllFwdLrs(this)"></th>
+                            <th style="padding:9px 12px;text-align:center;width:38px;"><input type="checkbox"
+                                    id="fwdChkAll" onchange="toggleAllFwdLrs(this)"></th>
                             <th
                                 style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
                                 LR Date</th>
@@ -98,7 +101,8 @@
                         </tr>
                     </thead>
                     <tbody id="fwdLrBody">
-                        <tr id="fwd-row-4" style="border-bottom: 1px solid var(--border-light); background: var(--accent-glow);">
+                        <tr id="fwd-row-4"
+                            style="border-bottom: 1px solid var(--border-light); background: var(--accent-glow);">
                             <td style="text-align:center;padding:9px 12px;">
                                 <input type="checkbox" checked="" onchange="toggleFwdLr(4, this.checked)"
                                     style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer;">
@@ -117,7 +121,8 @@
                             </td>
                             <td style="padding:9px 12px;font-size:12px;color:var(--text-secondary);">Infosys Ltd</td>
                         </tr>
-                        <tr id="fwd-row-5" style="border-bottom: 1px solid var(--border-light); background: var(--accent-glow);">
+                        <tr id="fwd-row-5"
+                            style="border-bottom: 1px solid var(--border-light); background: var(--accent-glow);">
                             <td style="text-align:center;padding:9px 12px;">
                                 <input type="checkbox" checked="" onchange="toggleFwdLr(5, this.checked)"
                                     style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer;">
@@ -134,7 +139,8 @@
                                     <div class="loc-dot dest"></div>Nagpur
                                 </div>
                             </td>
-                            <td style="padding:9px 12px;font-size:12px;color:var(--text-secondary);">Dr. Reddy's Labs</td>
+                            <td style="padding:9px 12px;font-size:12px;color:var(--text-secondary);">Dr. Reddy's Labs
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -154,7 +160,8 @@
         <div><span class="text-danger">*</span> Required fields</div>
         <div class="gap-3 d-flex">
             <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Cancel</button>
-            <button type="button" class="btn btn-primary px-4 py-2 rounded"><span class="me-2 fs-5">↗</span> Submit Forward</button>
+            <button type="button" class="btn btn-primary px-4 py-2 rounded"><span class="me-2 fs-5">↗</span> Submit
+                Forward</button>
         </div>
     </div>
 </ng-template>

@@ -11,20 +11,28 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
   providers: [BsModalService]
 })
 export class PFMNumberGeneratedComponent {
-public modalRef!: BsModalRef;
+  public modalRef!: BsModalRef;
+  public selectedRecords: any[] = [];
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   constructor(private modalService: BsModalService) { }
-  
-  showPopup() {
+
+  showPopup(data: any) {
+    console.log('PFM Selected Data:', data);
+    this.selectedRecords = data || [];
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-lg modal-dialog-centered', backdrop: true });
   }
-  
+
+  formatFromTo(val: string): string {
+    if (!val) return '—';
+    return val.replace(':', ' → ');
+  }
+
   resetForm() {
     console.log('Resetting form...');
     // Reset form logic here
   }
-  
+
   savePFM() {
     console.log('Saving PFM...');
     this.modalRef.hide();

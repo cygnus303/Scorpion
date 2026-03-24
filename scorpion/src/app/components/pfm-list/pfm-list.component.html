@@ -3,17 +3,17 @@
         <div class="date-range-group">
             <span class="date-label">Date Range</span>
             <div class="date-input-wrap" style="padding:0;">
-                <input type="date" id="dateFrom" value="2025-06-01"
+                <input type="date" id="dateFrom" [(ngModel)]="config.fromDateStr"
                     style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;"
-                    onchange="renderTable()">
+                    (change)="fetchData()">
                 <span
                     style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
             </div>
             <span class="date-sep">→</span>
             <div class="date-input-wrap" style="padding:0;">
-                <input type="date" id="dateTo" value="2025-06-30"
+                <input type="date" id="dateTo" [(ngModel)]="config.toDateStr"
                     style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;"
-                    onchange="renderTable()">
+                    (change)="fetchData()">
                 <span
                     style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
             </div>
@@ -22,7 +22,7 @@
         <div class="filter-group">
             <span class="filter-label">Status</span>
             <ng-select type="text" placeholder="Status" [items]="statusList" bindLabel="label" bindValue="value"
-                class="custom-status-select clear-icon">
+                [(ngModel)]="config.statusFilter" (change)="fetchData()" class="custom-status-select clear-icon">
                 <ng-template ng-label-tmp let-item="item">
                     <span class="dot" [style.background]="item.bg"></span>
                     {{ item.label }}
@@ -39,10 +39,13 @@
             </ng-select>
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn btn-outline-primary px-4 py-2 rounded">⟳ Fetch LRs</button>
-            <button class="btn btn-success px-4 py-2 rounded" (click)="openAddPFM()">＋ Add PFM</button>
-            <button class="btn btn-primary px-4 py-2 rounded" (click)="openForwardPFM()">↗ Forward PFM</button>
-            <button class="btn rounded px-4 py-2" style="background: var(--btn-ack); color: white;" (click)="openAcknowledgePFM()">✓ Acknowledge
+            <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="fetchData()">⟳ Fetch LRs</button>
+            <button class="btn btn-success px-4 py-2 rounded" [disabled]="!canAddPFM" (click)="openAddPFM()">＋ Add
+                PFM</button>
+            <button class="btn btn-primary px-4 py-2 rounded" [disabled]="!canForwardPFM" (click)="openForwardPFM()">↗
+                Forward PFM</button>
+            <button class="btn rounded px-4 py-2" style="background: var(--btn-ack); color: white;"
+                [disabled]="!canAcknowledgePFM" (click)="openAcknowledgePFM()">✓ Acknowledge
                 PFM</button>
         </div>
     </div>
@@ -51,23 +54,23 @@
     <div class="summary-strip">
         <div class="summary-card c-blue">
             <div class="s-label">Total LRs</div>
-            <div class="s-val" id="sumTotal">12</div>
+            <div class="s-val" id="sumTotal">{{ summaryData.total_LRs }}</div>
         </div>
         <div class="summary-card c-orange">
             <div class="s-label">Pending</div>
-            <div class="s-val" id="sumPending">3</div>
+            <div class="s-val" id="sumPending">{{ summaryData.pending }}</div>
         </div>
         <div class="summary-card c-teal">
             <div class="s-label">Generated</div>
-            <div class="s-val" id="sumGenerated">3</div>
+            <div class="s-val" id="sumGenerated">{{ summaryData.generated }}</div>
         </div>
         <div class="summary-card c-blue">
             <div class="s-label">Forwarded</div>
-            <div class="s-val" id="sumForwarded">3</div>
+            <div class="s-val" id="sumForwarded">{{ summaryData.forwarded }}</div>
         </div>
         <div class="summary-card c-green">
             <div class="s-label">Acknowledged</div>
-            <div class="s-val" id="sumAcknowledged">3</div>
+            <div class="s-val" id="sumAcknowledged">{{ summaryData.acknowledged }}</div>
         </div>
     </div>
 
@@ -77,7 +80,7 @@
         <div class="table-toolbar d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center gap-2">
                 <span class="table-title">LORRY RECEIPTS</span>
-                <span class="badge">12 Records</span>
+                <span class="badge">{{ config.totalRecords }} Records</span>
             </div>
             <div class="d-flex align-items-center gap-2">
                 <div class="search-box d-flex align-items-center">
@@ -85,17 +88,18 @@
                     <input type="text" class="form-control border-0 shadow-none"
                         placeholder="Search LR No, Origin, Destination">
                 </div>
-                <button class="btn btn-light btn-sm download-btn">
+                <button class="btn btn-light btn-sm download-btn px-4 py-3">
                     ⬇ Download CSV
                 </button>
             </div>
         </div>
         <!-- Table -->
         <div class="table-wrap">
-            <table class="table align-middle mb-0">
+            <table class="table align-middle data-table mb-0">
                 <thead>
                     <tr>
-                        <th class="text-center"><input type="checkbox"></th>
+                        <th class="text-center"><input type="checkbox" (change)="toggleAll($event)"
+                                [checked]="isAllSelected()"></th>
                         <th>LR DATE</th>
                         <th>LR NO</th>
                         <th>DELIVERY BRANCH</th>
@@ -109,52 +113,73 @@
                         <th>ACTIONS</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr *ngFor="let r of filteredRows">
+                <tbody *ngIf="isLoading">
+                    <tr>
+                        <td colspan="12" class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div class="mt-2 text-muted fw-bold">Fetching LRs...</div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && filteredRows.length === 0">
+                    <tr>
+                        <td colspan="12" class="text-center py-4 text-muted fs-5">
+                            No records found.
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && filteredRows.length > 0">
+                    <tr *ngFor="let row of filteredRows">
                         <td class="text-center">
-                            <input type="checkbox">
+                            <input type="checkbox" [(ngModel)]="row.checked"
+                                [disabled]="row.displayStatus === 'Acknowledged'" (change)="onRowSelect(row)">
                         </td>
-                        <td class="lr-date">{{ r.lrDate }}</td>
-                        <td class="lr-no">{{ r.lrNo }}</td>
-                        <td>
-                            <span class="branch-badge">🏢 PIM</span>
+                        <td class="lr-date">{{ row.dockDt | date:'dd-MM-yyyy' }}</td>
+                        <td class="lr-no">{{ row.dockNo }}</td>
+                        <td class="text-center">
+                            <span class="branch-badge" *ngIf="row.orgn_Dest">{{ extractBranch(row.orgn_Dest) }}</span>
+                            <span *ngIf="!row.orgn_Dest">—</span>
                         </td>
                         <td>
-                            <div class="location-cell fs-5">
+                            <div class="location-cell fs-6">
                                 <span class="loc-dot origin"></span>
-                                {{ r.origin }}
+                                {{ extractOrigin(row.from_To) }}
                             </div>
                         </td>
                         <td>
-                            <div class="location-cell fs-5">
+                            <div class="location-cell fs-6">
                                 <span class="loc-dot dest"></span>
-                                {{ r.dest }}
+                                {{ extractDestination(row.from_To) }}
                             </div>
                         </td>
-                        <td class="text-muted small fs-5">
-                            {{ r.billingParty }}
+                        <td class="text-muted small fs-6 text-center">
+                            {{row.party_name}}
                         </td>
                         <td>
-                            <span class="status-badge" [ngClass]="statusMap[r.status][0]">
-                                {{ statusMap[r.status][1] }}
+                            <span class="status-badge" [ngClass]="getStatusBadge(row.displayStatus)[0]">
+                                {{ getStatusBadge(row.displayStatus)[1] }}
                             </span>
                         </td>
-                        <td class="lr-date fs-5">
-                            {{ r.docDate || '—' }}
+                        <td class="lr-date fs-6">
+                            {{ row.fM_Date ? (row.fM_Date | date:'dd-MM-yyyy') : '—' }}
                         </td>
-                        <td class="days-text fs-6">
-                            {{ getDays(r) }}d
+                        <td class="days-text fs-6 text-center">
+                            {{ row.daysSince }}d
                         </td>
                         <td>
-                            <span *ngIf="r.pfmNo" class="pfm-no">
-                                {{ r.pfmNo }}
+                            <span *ngIf="row.fM_No" class="pfm-no">
+                                {{ row.fM_No }}
                             </span>
-                            <span *ngIf="!r.pfmNo" class="pfm-none">—</span>
+                            <span *ngIf="!row.fM_No" class="pfm-none">—</span>
                         </td>
                         <td>
                             <div class="d-flex gap-1">
-                                <button class="btn btn-sm btn-view fw-bolder fs-6">👁 View</button>
-                                <button *ngIf="r.status==='forwarded'" class="btn btn-sm btn-edit fw-bolder fs-6">✎ Edit</button>
+                                <button type="button" class="btn btn-sm btn-view fw-bolder fs-6"
+                                    (click)="openViewPFM()">👁 View</button>
+                                <button type="button" *ngIf="row.displayStatus === 'Forwarded'"
+                                    class="btn btn-sm btn-edit fw-bolder fs-6">✎ Edit</button>
                             </div>
                         </td>
                     </tr>
@@ -164,20 +189,25 @@
         <!-- Pagination -->
         <div class="table-pagination d-flex justify-content-between align-items-center p-3 border-top">
             <div class="pagination-info">
-                <span class="text-muted small">Showing 1-10 of 12 records</span>
+                <span class="text-muted small">Showing {{ config.totalRecords === 0 ? 0 : (config.page - 1) *
+                    config.pageSize + 1 }}-{{ (config.page * config.pageSize) > config.totalRecords ?
+                    config.totalRecords : (config.page * config.pageSize) }} of {{ config.totalRecords }} records</span>
             </div>
-            <nav aria-label="Page navigation example">
+            <nav aria-label="Page navigation example" *ngIf="config.totalPages > 0">
                 <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
+                    <li class="page-item" [class.disabled]="config.page === 1">
+                        <a class="page-link" href="#" (click)="setPage(config.page - 1, $event)" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <li class="page-item fs-5"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item fs-5"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item fs-5"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item fs-5">
-                        <a class="page-link" href="#" aria-label="Next">
+                    <li class="page-item" *ngFor="let p of visiblePages" [class.active]="config.page === p"
+                        [class.disabled]="p === '...'">
+                        <a class="page-link" href="#" (click)="p !== '...' && setPage(p, $event)">
+                            {{ p }}
+                        </a>
+                    </li>
+                    <li class="page-item fs-5" [class.disabled]="config.page === config.totalPages">
+                        <a class="page-link" href="#" (click)="setPage(config.page + 1, $event)" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
@@ -187,9 +217,8 @@
     </div>
 </div>
 
-
-
 <app-add-pfm-popup #AddPfmPopupComponent></app-add-pfm-popup>
 <app-pfm-number-generated #PFMNumberGeneratedComponent></app-pfm-number-generated>
 <app-forward-pfm #ForwardPFMComponent></app-forward-pfm>
 <app-acknowledge-pfm #AcknowledgePFMComponent></app-acknowledge-pfm>
+<app-view-pfm #ViewPfmComponent></app-view-pfm>
