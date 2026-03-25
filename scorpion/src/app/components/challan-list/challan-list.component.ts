@@ -470,9 +470,13 @@ onDocketSelectionChange(ctrl: AbstractControl) {
     const contractID = (data.contractID ?? '').toString();
     const contractExpire = !!data.contractExpire;
     this.contractAmtMsg = '';
-    if ((THCTYPE === '3' && vendorType === '04') || (THCTYPE === '1' && vendorType === 'XX1')) {
-      this.contractAmtMsg = '';
-    }
+
+    // if ((THCTYPE === '3' && vendorType === '04') || (THCTYPE === '1' && vendorType === 'XX1')) {
+    //   this.contractAmtMsg = '';
+    // }
+    if (!contractExpire && contractID !== '' && THCTYPE !== '2') {
+    this.contractAmtMsg = '';
+  }
     else if (!contractExpire && contractID !== '' && THCTYPE === '2') {
       this.contractAmtMsg = '';
     }
@@ -992,26 +996,8 @@ checkLicenseExpiry(event?:any) {
   }
 
   updateTotalManifest(mfNo: string): void {
-    const payload = {
-      mfNo: mfNo
-    }
-    this.THCService.getEWayBillExpiryDateByMF(payload).subscribe({ next: (response: any) => {
-        if (response && response.data) {
-          const result = response.data[0];
-          if (result.message) {
-            this.sweetAlertService.info(result.message);
-          } else if (result.expiryDate) {
-            this.sweetAlertService.info(`This Manifest E-Way Bill expired on: ${result.expiryDate}. Please update or verify before continuing!`);
-            this.challanService.challanForm.patchValue({ eWayBillExpiredDate: new Date(result.expiryDate) })
-          }
-        }
-        this.getContractDetail();
-      },
-      error: (err) => {
-        this.sweetAlertService.error(err.error.message)
-      }
-    });
-
+    
+    this.getContractDetail();
     const totals = this.challanService.avalableForTHC.controls.reduce((acc, g) => {
       if (g.get('selected')?.value) {
         acc.totalManifests += 1;
