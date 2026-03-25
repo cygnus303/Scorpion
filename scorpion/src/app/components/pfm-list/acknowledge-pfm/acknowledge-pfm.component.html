@@ -26,11 +26,11 @@
 
         <div class="form-group-input mb-2 mt-3">
             <label>Acknowledgement Date</label>
-            <div class="input-group">
+            <div class="input-group" (click)="dp.toggle(); $event.stopPropagation()">
                 <input type="text" class="form-control input-background-color" #dp="bsDatepicker" bsDatepicker
                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
-                    placeholder="Acknowledgement Date">
-                <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                    placeholder="Acknowledgement Date" [class.disabled-input]="true">
+                <span class="input-group-text cursor-pointer">
                     <i class="fa fa-calendar"></i>
                 </span>
             </div>

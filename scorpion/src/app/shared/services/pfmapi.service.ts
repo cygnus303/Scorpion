@@ -11,4 +11,12 @@ export class PFMapiService {
   PODForwardingList(payload: any) {
     return this.apiHandlerService.Post(`Operation/PODForwardingList`, payload);
   }
+
+  PFMgenerate(payload: any) {
+    return this.apiHandlerService.Post(`Operation/PFMgenerate`, payload);
+  }
+
+  PFMForward(payload: any) {
+    return this.apiHandlerService.Post(`Operation/PFMforward`, payload);
+  }
 }

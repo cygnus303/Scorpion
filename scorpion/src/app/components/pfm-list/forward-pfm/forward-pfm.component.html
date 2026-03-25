@@ -10,158 +10,175 @@
         </div>
         <button type="button" class="btn-close pfm-close" (click)="modalRef.hide()"></button>
     </div>
-
-    <div class="modal-body" style="padding:0;gap:0;">
-        <div style="padding:16px 22px;border-bottom:1px solid var(--border-light);" class="input-background-color">
-            <div class="row">
-                <div class="col-3">
-                    <div class="form-group-input">
-                        <label class="form-label meta-label">PFM Number</label>
-                        <div class="fw-bold text-info">PFM/25/MUMBAI/000001</div>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="form-group-input">
-                        <label class="form-label meta-label">Forwarding Date</label>
-                        <input class="form-control input-background-color" type="date">
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="form-group-input">
-                        <label class="form-label meta-label">No. of LRs</label>
-                        <div class="fw-bold text-primary">2</div>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="form-group-input">
-                        <label class="form-label meta-label">Courier Number</label>
-                        <input class="form-control input-background-color" type="text"
-                            placeholder="Tracking / docket number" style="margin-top:3px;">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group-input">
-                        <label class="form-label meta-label">Courier Company Name</label>
-                        <input class="form-control input-background-color" type="text" id="fwdCompany"
-                            placeholder="e.g. DTDC, BlueDart" style="margin-top:3px;">
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group-input" style="flex:1;min-width:180px;position:relative;" id="fwdToWrap">
-                        <label class="form-label meta-label">Forwarded To</label>
-                        <div style="position:relative;margin-top:3px;">
-                            <span
-                                style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text-muted);pointer-events:none;">📍</span>
-                            <input class="form-control input-background-color" type="text" placeholder="Search city…"
-                                autocomplete="off" style="padding-left:30px;">
-                        </div>
-                        <div id="cityDropdown"
-                            style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:600;max-height:200px;overflow-y:auto;margin-top:2px;">
-                            <!-- options injected by JS -->
+    <form [formGroup]="forwardForm">
+        <div class="modal-body" style="padding:0;gap:0;">
+            <div style="padding:16px 22px;border-bottom:1px solid var(--border-light);" class="input-background-color">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group-input">
+                            <label class="form-label meta-label d-flex align-items-center gap-2">
+                                PFM Number
+                                <span class="text-primary border border-primary-subtle px-2 rounded"
+                                    *ngIf="uniquePFMCount > 0">
+                                    {{uniquePFMCount}}
+                                </span>
+                            </label>
+                            <div class="fw-bold text-primary" style="word-break: break-all;">
+                                {{displayPFMs}}
+                            </div>
                         </div>
                     </div>
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label meta-label">Forwarding Date</label>
+                            <div class="input-group" (click)="dp.toggle(); $event.stopPropagation()"
+                                [ngClass]="{ 'border-danger': forwardForm.get('fwdDate')?.invalid && forwardForm.get('fwdDate')?.touched}">
+                                <input class="form-control required2 input-background-color" type="text"
+                                    #dp="bsDatepicker" bsDatepicker [class.disabled-input]="true"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                                    formControlName="fwdDate">
+                                <span class="input-group-text cursor-pointer">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                            <div *ngIf="forwardForm.get('fwdDate')?.invalid && forwardForm.get('fwdDate')?.touched"
+                                class="text-danger fs-xs">This field is required.</div>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group-input">
+                            <label class="form-label meta-label">No. of LRs</label>
+                            <div class="fw-bold text-primary">{{totalLRs}}</div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label meta-label">Courier Number</label>
+                            <input class="form-control required2 input-background-color" type="text"
+                                placeholder="Tracking / docket number" style="margin-top:3px;"
+                                [ngClass]="{ 'border-danger': forwardForm.get('courierNo')?.invalid && forwardForm.get('courierNo')?.touched}"
+                                formControlName="courierNo">
+                            <div *ngIf="forwardForm.get('courierNo')?.invalid && forwardForm.get('courierNo')?.touched"
+                                class="text-danger fs-xs">This field is required.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <div class="form-group-input">
+                            <label class="form-label meta-label">Courier Company Name</label>
+                            <input class="form-control required2 input-background-color" type="text" id="fwdCompany"
+                                placeholder="e.g. DTDC, BlueDart" style="margin-top:3px;"
+                                [ngClass]="{ 'border-danger': forwardForm.get('courierName')?.invalid && forwardForm.get('courierName')?.touched}"
+                                formControlName="courierName">
+                            <div *ngIf="forwardForm.get('courierName')?.invalid && forwardForm.get('courierName')?.touched"
+                                class="text-danger fs-xs">This field is required.</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group-input" style="flex:1;min-width:180px;position:relative;" id="fwdToWrap">
+                            <label class="form-label meta-label">Forwarded To</label>
+                            <div style="position:relative;margin-top:3px;">
+                                <span
+                                    style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text-muted);pointer-events:none;">📍</span>
+                                <input class="form-control required2 input-background-color" type="text"
+                                    [ngClass]="{ 'border-danger': forwardForm.get('forwardedTo')?.invalid && forwardForm.get('forwardedTo')?.touched}"
+                                    placeholder="Search city…" autocomplete="off" style="padding-left:30px;"
+                                    formControlName="forwardedTo">
+                            </div>
+                            <div *ngIf="forwardForm.get('forwardedTo')?.invalid && forwardForm.get('forwardedTo')?.touched"
+                                class="text-danger fs-xs">This field is required.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── LR Listing ── -->
+            <div style="padding:14px 22px 0;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                    <div
+                        style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);">
+                        LR Details — Uncheck to exclude from forwarding</div>
+                    <div id="fwdExcludeNote" style="font-size:11px;color:var(--orange);font-weight:600;"
+                        *ngIf="totalLRs < pfmData.length">⚠ Unchecked LRs will be reset to Pending</div>
+                </div>
+                <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden; ">
+                    <div style="max-height: 250px; overflow-y: auto;">
+                        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                            <thead style="position: sticky; top: 0; z-index: 1;">
+                                <tr class="input-background-color" style="border-bottom:1px solid var(--border);">
+                                    <th style="padding:9px 12px;text-align:center;width:38px;">
+                                        <input type="checkbox" (change)="toggleAllFwdLrs($event)"
+                                            [checked]="totalLRs === pfmData.length && pfmData.length > 0">
+                                    </th>
+                                    <th
+                                        style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
+                                        LR Date</th>
+                                    <th
+                                        style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
+                                        LR No</th>
+                                    <th
+                                        style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
+                                        Origin</th>
+                                    <th
+                                        style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
+                                        Destination</th>
+                                    <th
+                                        style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
+                                        Billing Party</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fwdLrBody">
+                                <tr *ngFor="let row of pfmData" style="border-bottom: 1px solid var(--border-light);"
+                                    [style.background]="row.checked ? 'var(--accent-glow)' : 'transparent'">
+                                    <td style="text-align:center;padding:9px 12px;">
+                                        <input type="checkbox" [(ngModel)]="row.checked"
+                                            [ngModelOptions]="{standalone: true}" (change)="toggleFwdLr(row)"
+                                            style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer;">
+                                    </td>
+                                    <td style="padding:9px 12px;">
+                                        <span class="lr-date">{{row.dockDt | date:'dd MMM yyyy'}}</span>
+                                    </td>
+                                    <td style="padding:9px 12px;">
+                                        <span class="lr-no">{{row.dockNo}}</span>
+                                    </td>
+                                    <td style="padding:9px 12px;">
+                                        <div class="location-cell">
+                                            <div class="loc-dot origin"></div>{{row.from_To?.split(':')[0]}}
+                                        </div>
+                                    </td>
+                                    <td style="padding:9px 12px;">
+                                        <div class="location-cell">
+                                            <div class="loc-dot dest"></div>{{row.from_To?.split(':')[1]}}
+                                        </div>
+                                    </td>
+                                    <td style="padding:9px 12px;font-size:12px;color:var(--text-secondary);">
+                                        {{row.party_name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Remarks ── -->
+            <div style="padding:14px 22px 18px;">
+                <div class="form-group-input">
+                    <label class="fw-bolder mb-2">Remarks</label>
+                    <textarea class="form-control-textarea input-background-color mb-2" formControlName="remarks"
+                        placeholder="Any special forwarding instructions or notes…"></textarea>
                 </div>
             </div>
         </div>
-
-        <!-- ── LR Listing ── -->
-        <div style="padding:14px 22px 0;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-                <div
-                    style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);">
-                    LR Details — Uncheck to exclude from forwarding</div>
-                <div id="fwdExcludeNote" style="font-size:11px;color:var(--orange);font-weight:600;display:none;">⚠
-                    Unchecked LRs
-                    will be reset to Pending</div>
-            </div>
-            <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden; "
-                class="input-background-color">
-                <table style="width:100%;border-collapse:collapse;font-size:13px;">
-                    <thead>
-                        <tr style="background:var(--surface2);border-bottom:1px solid var(--border);">
-                            <th style="padding:9px 12px;text-align:center;width:38px;"><input type="checkbox"
-                                    id="fwdChkAll" onchange="toggleAllFwdLrs(this)"></th>
-                            <th
-                                style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
-                                LR Date</th>
-                            <th
-                                style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
-                                LR No</th>
-                            <th
-                                style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
-                                Origin</th>
-                            <th
-                                style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
-                                Destination</th>
-                            <th
-                                style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
-                                Billing Party</th>
-                        </tr>
-                    </thead>
-                    <tbody id="fwdLrBody">
-                        <tr id="fwd-row-4"
-                            style="border-bottom: 1px solid var(--border-light); background: var(--accent-glow);">
-                            <td style="text-align:center;padding:9px 12px;">
-                                <input type="checkbox" checked="" onchange="toggleFwdLr(4, this.checked)"
-                                    style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer;">
-                            </td>
-                            <td style="padding:9px 12px;"><span class="lr-date">10 Jun 2025</span></td>
-                            <td style="padding:9px 12px;"><span class="lr-no">LR-2025-00461</span></td>
-                            <td style="padding:9px 12px;">
-                                <div class="location-cell">
-                                    <div class="loc-dot origin"></div>Bangalore
-                                </div>
-                            </td>
-                            <td style="padding:9px 12px;">
-                                <div class="location-cell">
-                                    <div class="loc-dot dest"></div>Chennai
-                                </div>
-                            </td>
-                            <td style="padding:9px 12px;font-size:12px;color:var(--text-secondary);">Infosys Ltd</td>
-                        </tr>
-                        <tr id="fwd-row-5"
-                            style="border-bottom: 1px solid var(--border-light); background: var(--accent-glow);">
-                            <td style="text-align:center;padding:9px 12px;">
-                                <input type="checkbox" checked="" onchange="toggleFwdLr(5, this.checked)"
-                                    style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer;">
-                            </td>
-                            <td style="padding:9px 12px;"><span class="lr-date">11 Jun 2025</span></td>
-                            <td style="padding:9px 12px;"><span class="lr-no">LR-2025-00478</span></td>
-                            <td style="padding:9px 12px;">
-                                <div class="location-cell">
-                                    <div class="loc-dot origin"></div>Hyderabad
-                                </div>
-                            </td>
-                            <td style="padding:9px 12px;">
-                                <div class="location-cell">
-                                    <div class="loc-dot dest"></div>Nagpur
-                                </div>
-                            </td>
-                            <td style="padding:9px 12px;font-size:12px;color:var(--text-secondary);">Dr. Reddy's Labs
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- ── Remarks ── -->
-        <div style="padding:14px 22px 18px;">
-            <div class="form-group-input">
-                <label class="fw-bolder mb-2">Remarks</label>
-                <textarea class="form-control-textarea input-background-color mb-2"
-                    placeholder="Any special forwarding instructions or notes…"></textarea>
-            </div>
-        </div>
-    </div>
+    </form>
     <div class="modal-footer d-flex justify-content-between">
         <div><span class="text-danger">*</span> Required fields</div>
         <div class="gap-3 d-flex">
             <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Cancel</button>
-            <button type="button" class="btn btn-primary px-4 py-2 rounded"><span class="me-2 fs-5">↗</span> Submit
-                Forward</button>
+            <button type="button" class="btn btn-primary px-4 py-2 rounded" [disabled]="totalLRs === 0"
+                (click)="submitForward()">
+                <span class="me-2 fs-5">↗</span> Submit Forward
+            </button>
         </div>
     </div>
 </ng-template>

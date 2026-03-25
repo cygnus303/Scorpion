@@ -1,0 +1,61 @@
+<ng-template #Templatepod>
+    <!-- ══ EDIT COURIER MODAL ══ -->
+    <div class="modal-header">
+        <div class="d-flex align-items-center gap-3">
+            <div class="pfm-icon fs-4 fw-bold" style="background:#fff8e1;border:1px solid #f0c030;">✎</div>
+            <div>
+                <div class="fw-bold fs-5">Edit Courier Details</div>
+                <div class="pfm-subtitle">Update courier information</div>
+            </div>
+        </div>
+        <button type="button" class="btn-close pfm-close" (click)="modalRef.hide()"></button>
+    </div>
+
+    <div class="modal-body p-4" style="padding:0;gap:0;">
+        <div style="padding:16px 22px;border-bottom:1px solid var(--border-light);border-radius:8px;"
+            class="input-background-color">
+            <div class="row">
+                <div class="col-4">
+                    <label class="meta-label">PFM Number</label>
+                    <div class="fw-bold text-info">{{pfmData?.fM_No}}</div>
+                </div>
+                <div class="col-4">
+                    <label class="meta-label">LR Number</label>
+                    <div class="fw-bold">{{pfmData?.dockNo}}</div>
+                </div>
+                <div class="col-4">
+                    <label class="meta-label">Route</label>
+                    <div class="fw-bold">{{formatFromTo(pfmData?.from_To)}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group-input mb-2 mt-3">
+            <label>Courier Company Name</label>
+            <div class="input-group">
+                <input type="text" class="form-control input-background-color" placeholder="Courier Company Name">
+            </div>
+        </div>
+
+        <div class="form-group-input mb-2 mt-3">
+            <label>Courier Number</label>
+            <div class="input-group">
+                <input type="text" class="form-control input-background-color" placeholder="Courier Number">
+            </div>
+        </div>
+
+        <div class="mt-3"
+            style="background:#fff8e1;border:1px solid #f0c030;border-radius:7px;padding:10px 14px;font-size:12px;color:#9a6700;display:flex;align-items:flex-start;gap:8px;">
+            <span style="font-size:14px;flex-shrink:0;">⚠</span>
+            <span>Editing courier details will update all LRs grouped under the same PFM number.</span>
+        </div>
+    </div>
+
+    <div class="modal-footer d-flex justify-content-between">
+        <div><span class="text-danger">*</span> Required fields</div>
+        <div class="gap-3 d-flex">
+            <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Cancel</button>
+            <button type="button" class="btn btn-success px-4 py-2 rounded">✎ Save Changes</button>
+        </div>
+    </div>
+</ng-template>

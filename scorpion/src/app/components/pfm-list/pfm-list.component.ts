@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, debounceTime } from 'rxjs';
 import { NgSelectModule } from "@ng-select/ng-select";
 import { AddPfmPopupComponent } from './add-pfm-popup/add-pfm-popup.component';
 import { PFMNumberGeneratedComponent } from './pfm-number-generated/pfm-number-generated.component';
@@ -9,29 +9,35 @@ import { AcknowledgePFMComponent } from "./acknowledge-pfm/acknowledge-pfm.compo
 import { PFMapiService } from 'app/shared/services/pfmapi.service';
 import { ViewPfmComponent } from './view-pfm/view-pfm.component';
 import { CommonModule } from '@angular/common';
+import { PaginationComponent } from 'app/shared/components/pagination/pagination.component';
+import { DocketService } from 'app/shared/services/docket.service';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { EditForwardedPFMComponent } from './edit-forwarded-pfm/edit-forwarded-pfm.component';
 
 @Component({
   selector: 'app-pfm-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, FormsModule, AddPfmPopupComponent, PFMNumberGeneratedComponent, ForwardPFMComponent, AcknowledgePFMComponent, ViewPfmComponent],
+  imports: [CommonModule, NgSelectModule, FormsModule, AddPfmPopupComponent, PFMNumberGeneratedComponent, BsDatepickerModule, ForwardPFMComponent, AcknowledgePFMComponent, ViewPfmComponent, PaginationComponent, EditForwardedPFMComponent],
   templateUrl: './pfm-list.component.html',
   styleUrl: './pfm-list.component.scss',
   providers: [PFMapiService]
 })
 export class PFMListComponent implements OnInit, OnDestroy {
   public listSubscription?: Subscription;
+  private fetchSubject = new Subject<void>();
   @ViewChild('AddPfmPopupComponent') AddPfmPopupComponent!: AddPfmPopupComponent;
   @ViewChild('PFMNumberGeneratedComponent') PFMNumberGeneratedComponent!: PFMNumberGeneratedComponent;
   @ViewChild('ForwardPFMComponent') ForwardPFMComponent!: ForwardPFMComponent;
   @ViewChild('AcknowledgePFMComponent') AcknowledgePFMComponent!: AcknowledgePFMComponent;
   @ViewChild('ViewPfmComponent') ViewPfmComponent!: ViewPfmComponent;
+  @ViewChild('EditForwardedPFMComponent') EditForwardedPFMComponent!: EditForwardedPFMComponent;
 
   public rows: any[] = [];
   public filteredRows: any[] = [];
   public isLoading: boolean = false;
   public config = {
-    fromDateStr: '',
-    toDateStr: '',
+    fromDateStr: new Date(new Date().setDate(new Date().getDate() - 7)),
+    toDateStr: new Date(),
     statusFilter: 'All',
     page: 1,
     pageSize: 15,
@@ -63,31 +69,33 @@ export class PFMListComponent implements OnInit, OnDestroy {
     'Received By': ['s-ack', '✓ Acknowledged']
   };
 
-  constructor(public PFMapiService: PFMapiService) { }
+  constructor(public PFMapiService: PFMapiService, public docketService: DocketService) { }
 
   ngOnInit() {
-    this.setDateDefaults();
-    this.PODForwardingList();
-  }
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      // this.docketService.loginUserList.LocationCode = 'PIM';
+      this.docketService.isComplition = false;
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
 
-  setDateDefaults() {
-    const today = new Date();
-    this.config.toDateStr = today.toISOString().split('T')[0];
+    this.fetchSubject.pipe(debounceTime(300)).subscribe(() => {
+      this.PODForwardingList();
+    });
 
-    const lastMonth = new Date();
-    lastMonth.setMonth(today.getMonth() - 1);
-    this.config.fromDateStr = lastMonth.toISOString().split('T')[0];
+    this.fetchData();
   }
 
   fetchData() {
     this.config.page = 1;
-    this.PODForwardingList();
+    this.fetchSubject.next();
   }
 
-  setPage(p: any, event?: Event) {
-    if (typeof p === 'string') return;
-    if (event) event.preventDefault();
-    if (p < 1 || p > this.config.totalPages) return;
+  setPage(p: number) {
+    if (this.config.page === p) return;
     this.config.page = p;
     this.PODForwardingList();
   }
@@ -103,9 +111,11 @@ export class PFMListComponent implements OnInit, OnDestroy {
     return parts.length > 1 ? parts[1].trim() : '—';
   }
 
-  extractBranch(orgnDest: string): string {
-    if (!orgnDest) return '—';
-    return orgnDest.split('-')[0]?.split(':')[0]?.trim() || '—';
+  extractBranch(loc: string): string {
+    if (!loc) return '—';
+    const parts = loc.split('-');
+    const target = parts.length > 1 ? parts[1].trim() : parts[0].trim();
+    return target.split(':')[0].trim() || '—';
   }
 
   getStatusBadge(status: string) {
@@ -119,7 +129,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
     const payload = {
       fromDate: new Date(this.config.fromDateStr).toISOString(),
       toDate: new Date(this.config.toDateStr).toISOString(),
-      locCode: null,
+      locCode: this.docketService.loginUserList.LocationCode,
       statusFilter: this.config.statusFilter || 'All',
       page: this.config.page,
       pageSize: this.config.pageSize
@@ -165,30 +175,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.listSubscription) { this.listSubscription.unsubscribe(); }
-  }
-
-  get visiblePages(): (number | string)[] {
-    const total = this.config.totalPages;
-    const current = this.config.page;
-    const pages: (number | string)[] = [];
-
-    if (total <= 7) {
-      for (let i = 1; i <= total; i++) pages.push(i);
-    } else {
-      pages.push(1);
-      if (current > 4) pages.push('...');
-
-      const start = Math.max(2, current - 2);
-      const end = Math.min(total - 1, current + 2);
-
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
-      }
-
-      if (current < total - 3) pages.push('...');
-      pages.push(total);
-    }
-    return pages;
+    this.fetchSubject.complete();
   }
 
   get canAddPFM(): boolean {
@@ -222,6 +209,10 @@ export class PFMListComponent implements OnInit, OnDestroy {
   openViewPFM() {
     const selectedData = this.filteredRows.filter(r => r.checked);
     this.ViewPfmComponent.showPopup(selectedData);
+  }
+
+  openEditForwardedPFM(data: any) {
+    this.EditForwardedPFMComponent.showPopup(data);
   }
 
   isAllSelected(): boolean {

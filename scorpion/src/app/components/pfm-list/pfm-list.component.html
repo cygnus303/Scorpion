@@ -3,17 +3,19 @@
         <div class="date-range-group">
             <span class="date-label">Date Range</span>
             <div class="date-input-wrap" style="padding:0;">
-                <input type="date" id="dateFrom" [(ngModel)]="config.fromDateStr"
+                <input type="text" id="dateFrom" [(ngModel)]="config.fromDateStr" bsDatepicker
+                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                     style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;"
-                    (change)="fetchData()">
+                    (bsValueChange)="fetchData()">
                 <span
                     style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
             </div>
             <span class="date-sep">→</span>
             <div class="date-input-wrap" style="padding:0;">
-                <input type="date" id="dateTo" [(ngModel)]="config.toDateStr"
+                <input type="text" id="dateTo" [(ngModel)]="config.toDateStr" bsDatepicker
+                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                     style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;"
-                    (change)="fetchData()">
+                    (bsValueChange)="fetchData()">
                 <span
                     style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
             </div>
@@ -53,24 +55,34 @@
     <!-- Summary Strip -->
     <div class="summary-strip">
         <div class="summary-card c-blue">
-            <div class="s-label">Total LRs</div>
-            <div class="s-val" id="sumTotal">{{ summaryData.total_LRs }}</div>
+            <div>
+                <div class="s-label">Total LRs</div>
+                <div class="s-val">{{ summaryData.total_LRs }}</div>
+            </div>
         </div>
         <div class="summary-card c-orange">
-            <div class="s-label">Pending</div>
-            <div class="s-val" id="sumPending">{{ summaryData.pending }}</div>
+            <div>
+                <div class="s-label">Pending</div>
+                <div class="s-val">{{ summaryData.pending }}</div>
+            </div>
         </div>
         <div class="summary-card c-teal">
-            <div class="s-label">Generated</div>
-            <div class="s-val" id="sumGenerated">{{ summaryData.generated }}</div>
+            <div>
+                <div class="s-label">Generated</div>
+                <div class="s-val">{{ summaryData.generated }}</div>
+            </div>
         </div>
-        <div class="summary-card c-blue">
-            <div class="s-label">Forwarded</div>
-            <div class="s-val" id="sumForwarded">{{ summaryData.forwarded }}</div>
+        <div class="summary-card c-purple">
+            <div>
+                <div class="s-label">Forwarded</div>
+                <div class="s-val">{{ summaryData.forwarded }}</div>
+            </div>
         </div>
         <div class="summary-card c-green">
-            <div class="s-label">Acknowledged</div>
-            <div class="s-val" id="sumAcknowledged">{{ summaryData.acknowledged }}</div>
+            <div>
+                <div class="s-label">Acknowledged</div>
+                <div class="s-val">{{ summaryData.acknowledged }}</div>
+            </div>
         </div>
     </div>
 
@@ -178,7 +190,8 @@
                             <div class="d-flex gap-1">
                                 <button type="button" class="btn btn-sm btn-view fw-bolder fs-6"
                                     (click)="openViewPFM()">👁 View</button>
-                                <button type="button" *ngIf="row.displayStatus === 'Forwarded'"
+                                <button type="button" (click)="openEditForwardedPFM(row)"
+                                    *ngIf="row.displayStatus === 'Forwarded'"
                                     class="btn btn-sm btn-edit fw-bolder fs-6">✎ Edit</button>
                             </div>
                         </td>
@@ -187,38 +200,15 @@
             </table>
         </div>
         <!-- Pagination -->
-        <div class="table-pagination d-flex justify-content-between align-items-center p-3 border-top">
-            <div class="pagination-info">
-                <span class="text-muted small">Showing {{ config.totalRecords === 0 ? 0 : (config.page - 1) *
-                    config.pageSize + 1 }}-{{ (config.page * config.pageSize) > config.totalRecords ?
-                    config.totalRecords : (config.page * config.pageSize) }} of {{ config.totalRecords }} records</span>
-            </div>
-            <nav aria-label="Page navigation example" *ngIf="config.totalPages > 0">
-                <ul class="pagination">
-                    <li class="page-item" [class.disabled]="config.page === 1">
-                        <a class="page-link" href="#" (click)="setPage(config.page - 1, $event)" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item" *ngFor="let p of visiblePages" [class.active]="config.page === p"
-                        [class.disabled]="p === '...'">
-                        <a class="page-link" href="#" (click)="p !== '...' && setPage(p, $event)">
-                            {{ p }}
-                        </a>
-                    </li>
-                    <li class="page-item fs-5" [class.disabled]="config.page === config.totalPages">
-                        <a class="page-link" href="#" (click)="setPage(config.page + 1, $event)" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+        <app-pagination [page]="config.page" [pageSize]="config.pageSize" [totalRecords]="config.totalRecords"
+            [totalPages]="config.totalPages" (pageChange)="setPage($event)">
+        </app-pagination>
     </div>
 </div>
 
-<app-add-pfm-popup #AddPfmPopupComponent></app-add-pfm-popup>
-<app-pfm-number-generated #PFMNumberGeneratedComponent></app-pfm-number-generated>
-<app-forward-pfm #ForwardPFMComponent></app-forward-pfm>
-<app-acknowledge-pfm #AcknowledgePFMComponent></app-acknowledge-pfm>
+<app-add-pfm-popup #AddPfmPopupComponent (dataEmitter)="fetchData()"></app-add-pfm-popup>
+<app-pfm-number-generated #PFMNumberGeneratedComponent (dataEmitter)="fetchData()"></app-pfm-number-generated>
+<app-forward-pfm #ForwardPFMComponent (dataEmitter)="fetchData()"></app-forward-pfm>
+<app-acknowledge-pfm #AcknowledgePFMComponent (dataEmitter)="fetchData()"></app-acknowledge-pfm>
 <app-view-pfm #ViewPfmComponent></app-view-pfm>
+<app-edit-forwarded-pfm #EditForwardedPFMComponent (dataEmitter)="fetchData()"></app-edit-forwarded-pfm>
