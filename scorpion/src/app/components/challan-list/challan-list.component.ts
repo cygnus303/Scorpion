@@ -92,10 +92,11 @@ public vendorTypeList:generalMasterResponse[]=[]
     this.challanService.getRateTypeData();
     this.challanService.getVendtyData();
     
-    this.challanService.getLocationData();
+    // this.challanService.getLocationData();
     if(this.docketService.loginUserList.Type === '1'){
       this.isFilterApplied = true;
       this.challanService.getChargesDetails();
+      this.challanService.getLocationData();
       this.challanService.getRouteMode();
       this.challanService.getDepartmentReason();
       this.challanService.getTDSLedgerList();
@@ -154,15 +155,16 @@ public vendorTypeList:generalMasterResponse[]=[]
         this.challanService.filterList = event;
         this.isFilterApplied = true;
          this.challanService.buildForm();
+         this.challanService.getLocationData();
         // Vendor Type specific filtering for DRS with DRSType 'Y' BA
         if (this.challanService.filterList.DRSType === 'Y') {
           debugger
           const allowedVendorCodes = ['04'];
-          this.vendorTypeList = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
+          this.challanService.vendorTypeList = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
           this.getDeliveryAgents();
         }else{
          const allowedVendorCodes = ['XX1', '19', 'XX'];
-         this.vendorTypeList = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
+         this.challanService.vendorTypeList = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
         } 
         this.challanService.generatePRSfilter();
 
