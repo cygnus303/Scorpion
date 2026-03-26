@@ -53,7 +53,20 @@ export class ExportService {
   private convertToCSV(data: any[]): string {
     if (data.length === 0) return '';
     const header = Object.keys(data[0]).join(',');
-    const rows = data.map((row) => Object.values(row).join(','));
+    const rows = data.map((row) => {
+      return Object.values(row).map(value => {
+        // Format dates to readable format
+        if (value && typeof value === 'string' && value.includes('T00:00:00')) {
+          const date = new Date(value);
+          return date.toLocaleDateString('en-GB', { 
+            day: '2-digit', 
+            month: 'short', 
+            year: 'numeric' 
+          });
+        }
+        return value;
+      }).join(',');
+    });
     return [header, ...rows].join('\n');
   }
 }

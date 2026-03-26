@@ -98,10 +98,13 @@
                 <div class="search-box d-flex align-items-center">
                     <span class="text-muted">🔍</span>
                     <input type="text" class="form-control border-0 shadow-none"
+                        [(ngModel)]="searchKeyword" (keyup)="onSearchChange()"
                         placeholder="Search LR No, Origin, Destination">
                 </div>
-                <button class="btn btn-light btn-sm download-btn px-4 py-3">
-                    ⬇ Download CSV
+                <button class="btn btn-light btn-sm download-btn px-4 py-3" (click)="downloadCSV()" [disabled]="isLoading">
+                    <span *ngIf="!isCSVLoading">⬇ Download CSV</span>
+                    <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
+                    <span *ngIf="isCSVLoading">Downloading...</span>
                 </button>
             </div>
         </div>

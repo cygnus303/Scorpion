@@ -13,6 +13,7 @@ import { PaginationComponent } from 'app/shared/components/pagination/pagination
 import { DocketService } from 'app/shared/services/docket.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { EditForwardedPFMComponent } from './edit-forwarded-pfm/edit-forwarded-pfm.component';
+import { ExportService } from 'app/shared/services/export.service';
 
 @Component({
   selector: 'app-pfm-list',
@@ -35,6 +36,8 @@ export class PFMListComponent implements OnInit, OnDestroy {
   public rows: any[] = [];
   public filteredRows: any[] = [];
   public isLoading: boolean = false;
+  public isCSVLoading: boolean = false;
+  public searchKeyword: string = '';
   public config = {
     fromDateStr: new Date(new Date().setDate(new Date().getDate() - 7)),
     toDateStr: new Date(),
@@ -69,7 +72,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
     'Received By': ['s-ack', '✓ Acknowledged']
   };
 
-  constructor(public PFMapiService: PFMapiService, public docketService: DocketService) { }
+  constructor(public PFMapiService: PFMapiService, public docketService: DocketService, public exportService: ExportService) { }
 
   ngOnInit() {
     const saved = localStorage.getItem("loginUserList");
@@ -132,7 +135,9 @@ export class PFMListComponent implements OnInit, OnDestroy {
       locCode: this.docketService.loginUserList.LocationCode,
       statusFilter: this.config.statusFilter || 'All',
       page: this.config.page,
-      pageSize: this.config.pageSize
+      pageSize: this.config.pageSize,
+      isDownload: 0,
+      lrFilter: this.searchKeyword
     };
 
     this.listSubscription = this.PFMapiService.PODForwardingList(payload).subscribe({
@@ -169,6 +174,36 @@ export class PFMListComponent implements OnInit, OnDestroy {
         console.error('Error fetching PFM List', err);
         this.rows = [];
         this.filteredRows = [];
+      }
+    });
+  }
+
+  onSearchChange() {
+    this.config.page = 1;
+    this.fetchSubject.next();
+  }
+
+  downloadCSV() {
+    this.isCSVLoading = true;
+    const payload = {
+      fromDate: new Date(this.config.fromDateStr).toISOString(),
+      toDate: new Date(this.config.toDateStr).toISOString(),
+      locCode: this.docketService.loginUserList.LocationCode,
+      statusFilter: this.config.statusFilter || 'All',
+      page: this.config.page,
+      pageSize: this.config.pageSize,
+      isDownload: 1
+    };
+    this.listSubscription = this.PFMapiService.PODForwardingList(payload).subscribe({
+      next: (response: any) => {
+        this.isCSVLoading = false;
+        if (response && response.data) {
+          this.exportService.exportToCSV(response.data, `PFM_List`);
+        }
+      },
+      error: (err: any) => {
+        this.isCSVLoading = false;
+        console.error('Error downloading CSV', err);
       }
     });
   }
