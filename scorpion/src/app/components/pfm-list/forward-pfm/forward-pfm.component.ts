@@ -77,8 +77,8 @@ export class ForwardPFMComponent {
     const payload = {
       fM_No: uniquePFMs.join(','),
       doc_FWD_To: formVals.forwardedTo,
-      courier_Code: "",
-      loc_Cust_Code: formVals.courierName,
+      courier_Code: formVals.courierName,
+      loc_Cust_Code: '',
       fM_FWD_LocCode: this.docketService.loginUserList.LocationCode,
       courier_Way_Bill_No: formVals.courierNo,
       courier_Way_Bill_Date: new Date(formVals.fwdDate).toISOString(),

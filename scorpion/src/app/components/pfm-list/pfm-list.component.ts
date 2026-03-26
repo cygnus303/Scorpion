@@ -231,10 +231,10 @@ export class PFMListComponent implements OnInit, OnDestroy {
   }
 
   onRowSelect(row: any) {
-    if (['Generated At', 'Generated', 'Forwarded'].includes(row.displayStatus) && row.fM_No) {
+    if (['Generated At', 'Generated', 'Forwarded'].includes(row.displayStatus) && row.fM_No && row.checked) {
       this.filteredRows.forEach(r => {
         if (r.fM_No === row.fM_No && r.displayStatus !== 'Acknowledged') {
-          r.checked = row.checked;
+          r.checked = true;
         }
       });
     }

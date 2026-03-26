@@ -19,4 +19,8 @@ export class PFMapiService {
   PFMForward(payload: any) {
     return this.apiHandlerService.Post(`Operation/PFMforward`, payload);
   }
+
+  NewForwardFMAckDocumentsDone(payload: any) {
+    return this.apiHandlerService.Post(`Operation/NewForwardFMAckDocumentsDone`, payload);
+  }
 }
