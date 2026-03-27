@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import {Component, ElementRef, ViewChild } from '@angular/core';
-import { AbstractControl, FormArray, Validators} from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { generalMasterResponse, StatesFromPartyCodeRepsonse } from 'app/shared/models/general-master.model';
 import { AirportListResponse, AllCityByLocationResponse, CustomerListResponse, DeliveryAgentsListResponse, DeliveryZoneResponse, FlightsListResponse, VehicleTypeListResponse } from 'app/shared/models/thc-master.model';
@@ -59,7 +59,9 @@ public isLoading = false;
 public isVehicleLoading: boolean = false;
 public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
 isFilterApplied: boolean = false;
-public vendorTypeList:generalMasterResponse[]=[]
+public vendorTypeList:generalMasterResponse[]=[];
+public EwaybillForm!:FormGroup;
+public modalInstance: any;
 
 @ViewChild('fileInput') fileInput!: ElementRef;
   constructor(
@@ -128,7 +130,8 @@ public vendorTypeList:generalMasterResponse[]=[]
     }
 
      if (this.docketService.loginUserList.Type === '3') {
-      this.getDeliveryZoneData()
+      this.buildEwayBill();
+      this.getDeliveryZoneData();
     }
  
     // if(this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '2'){
@@ -158,7 +161,6 @@ public vendorTypeList:generalMasterResponse[]=[]
          this.challanService.getLocationData();
         // Vendor Type specific filtering for DRS with DRSType 'Y' BA
         if (this.challanService.filterList.DRSType === 'Y') {
-          debugger
           const allowedVendorCodes = ['04'];
           this.challanService.vendorTypeList = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
           this.getDeliveryAgents();
@@ -208,6 +210,15 @@ public vendorTypeList:generalMasterResponse[]=[]
     if (ctrl?.value === 0 || ctrl?.value === '0') {
       ctrl.setValue('');
     }
+  }
+
+  buildEwayBill(){
+    this.EwaybillForm=new FormGroup({
+      dockno:new FormControl(null),
+      dockdt:new FormControl(null),
+      eWayBillNo:new FormControl(null),
+      eWayBillExpiredDate:new FormControl(null),
+    })
   }
 
   // clearchargesZero(controlName: string) {
@@ -1367,11 +1378,57 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
     }
   }
 
-    openPopup(eWayBillNo: string) {
+    openPopup(item:any) {
+       if (item.value.Message !== 'E-Way Bill Date Expired') {
+          return;
+      }
+      this.getInvoiceDetail(item.value.DOCKNO)
     const modalElement = document.getElementById('showModal');
-    if (modalElement) {
-      const modal = new Modal(modalElement);
-      modal.show();
+  if (modalElement) {
+    this.modalInstance = new Modal(modalElement);
+    this.modalInstance.show();
+  }
+  }
+
+  getInvoiceDetail(docketNo:string){
+    this.THCService.getDocketInvoiceDetails(docketNo).subscribe({
+      next: (response: any) => {
+        if (response) {
+        const data = response[0];
+
+        this.EwaybillForm.patchValue({
+          ...data,
+          eWayBillExpiredDate: data.eWayBillExpiredDate 
+            ? new Date(data.eWayBillExpiredDate) 
+            : null
+        });
+        }
+      },
+      error: (err) => {
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+  }
+
+  onSubmitEwayBillDetail(){
+    const payload={
+      eWayBillNo: this.EwaybillForm.value.eWayBillNo,
+      eWayBillExpiredDate: this.EwaybillForm.value.eWayBillExpiredDate,
+      empCode: this.docketService.loginUserList.UserId
     }
+    this.THCService.onSubmitEwaybill(payload).subscribe({
+      next: (response: any) => {
+        if (response.status) {
+          this.sweetAlertService.success('E-Waybill Extended Successfully!!');
+           if (this.modalInstance) {
+          this.modalInstance.hide();
+        }
+          this.avalabledocketinPRS();
+        }
+      },
+      error: (err) => {
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
   }
 }

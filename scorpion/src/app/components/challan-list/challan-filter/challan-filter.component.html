@@ -153,7 +153,7 @@
 
         <div class="p-3">
             <div class="row">
-                <div class="mb-3 col-md-2">
+                <div class="mb-3 col-md-3">
                     <label class="input-group form-label fw-semibold">Date Range</label>
                     <div class="input-group shadow-sm rounded" (click)="dvr.toggle()">
                         <span class="input-group-text bg-white border-end-0 p-2">
@@ -165,23 +165,23 @@
                             [bsConfig]="{ ranges: commonService.ranges,containerClass: 'theme-dark-blue', rangeInputFormat: 'MMMM D, YYYY', dateInputFormat: 'MMMM D, YYYY'}" />
                     </div>
                 </div>
-                <div class="mb-3 col-md-2">
+                <div class="mb-3 col-md-3">
                     <label class="input-group form-label fw-semibold">Select Paybas</label>
-                    <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Paybas"
+                    <ng-select class="noFoundTextColor clear-icon" placeholder="Select Paybas"
                         formControlName="paybas" bindLabel="codeDesc" bindValue="codeId" appFocusNext
                         [items]="generalMasterService.PayBsData" (change)="onSearch()">
                     </ng-select>
                 </div>
-                <div class="mb-3 col-md-2">
+                <div class="mb-3 col-md-3">
                     <label class="input-group form-label fw-semibold">Loading By</label>
-                    <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Loading By" appFocusNext
+                    <ng-select class="noFoundTextColor clear-icon" placeholder="Select Loading By" appFocusNext
                         (change)="changeLoadingBy($event)" formControlName="loadingBy" bindLabel="codeDesc" bindValue="codeId"
                         [items]="generalMasterService.loadingData" (change)="onSearch()">
                     </ng-select>
                 </div>
-                <div class="mb-3 col-md-2">
+                <div class="mb-3 col-md-3">
                     <label class="input-group form-label fw-semibold">Charge type</label>
-                    <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Charge type" appFocusNext
+                    <ng-select class="noFoundTextColor  clear-icon" placeholder="Select Charge type" appFocusNext
                         [readonly]="challanService.filterForm.value.loadingBy === 'XX9'" formControlName="chrgType"
                         bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.chargeTypeData" (change)="onSearch()"
                         [ngClass]="{ 'border-danger': challanService.filterForm.get('chrgType')?.invalid  && challanService.filterForm.get('chrgType')?.touched }">
@@ -191,12 +191,16 @@
                         This field is required.
                     </div>
                 </div>
-                <div class="mb-3 col-md-2">
+                <div class="mb-3 col-md-3">
                     <label class="input-group form-label fw-semibold">Select Mode</label>
-                    <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Mode" appFocusNext (change)="onSearch()" formControlName="trnMod"
+                    <ng-select class="noFoundTextColor  clear-icon" placeholder="Select Mode" appFocusNext (change)="onSearch()" formControlName="trnMod"
                         bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.modeData">
                     </ng-select>
                 </div>
+               
+        
+            </div>
+            <div class="row">
                 <div class="mb-3 col-md-2">
                     <label class="input-group form-label fw-semibold">{{typeName}} type</label>
                     <div class="d-flex gap-4">
@@ -222,16 +226,15 @@
                         Please select a {{typeName}} type
                     </div>
                 </div>
-        
-            </div>
-            <div class="row align-items-center">
-                <label class="fw-semibold col-md-1">CNote No.</label>
-                <div class="col-md-7">
-                    <input type="text" class="form-control" placeholder="CNote No." formControlName="docketList" appFocusNext (blur)="onSearch()">
+                <div class="mb-3 col-md-9">
+                    <label class="input-group form-label fw-semibold">CNote No.</label>
+                    <div class="input-group d-flex align-items-center">
+                        <input type="text" class="form-control" placeholder="CNote No." formControlName="docketList" appFocusNext (blur)="onSearch()">
+                        <span class="ms-3 text-start">[seperated by <b>comma</b> if multiple]</span>
+                    </div>
                 </div>
-                <span class="col-md-2 text-start">[seperated by <b>comma</b> if multiple]</span>
-                <div class="col-md-2 d-flex align-items-center justify-content-end">
-                    <button type="button" class="btn btn-primary text-white btn-sm px-3 p-2" style="width: 200px;"
+                <div class="col-md-1 d-flex align-items-center">
+                    <button type="button" class="btn btn-primary text-white btn-sm px-3 p-2" style="width: 100px;"
                         (click)="onSearch()"><i class="fas fa-search"></i>&nbsp;Apply</button>
                 </div>
             </div>
