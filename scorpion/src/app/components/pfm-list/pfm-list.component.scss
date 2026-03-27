@@ -27,6 +27,41 @@
         border-left-width: 8px;
     }
 
+    &.active-card {
+        border-color: rgba(59, 130, 246, 0.2);
+        position: relative;
+        
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        &::after {
+            content: '';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px currentColor;
+        }
+        
+        .s-label {
+            font-weight: 700;
+            color: #475569;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+    }
+
     .s-label {
         font-size: 12px;
         font-weight: 600;
@@ -49,12 +84,22 @@
         .s-val {
             color: #2563eb;
         }
+
+        &.active-card {
+            border-left-color: #2563eb;
+            color: #2563eb;
+        }
     }
 
     &.c-orange {
         border-left-color: #f59e0b;
 
         .s-val {
+            color: #d97706;
+        }
+
+        &.active-card {
+            border-left-color: #d97706;
             color: #d97706;
         }
     }
@@ -65,12 +110,22 @@
         .s-val {
             color: #0e7490;
         }
+
+        &.active-card {
+            border-left-color: #0e7490;
+            color: #0e7490;
+        }
     }
 
     &.c-purple {
         border-left-color: #8b5cf6;
 
         .s-val {
+            color: #7c3aed;
+        }
+
+        &.active-card {
+            border-left-color: #7c3aed;
             color: #7c3aed;
         }
     }
@@ -81,5 +136,25 @@
         .s-val {
             color: #059669;
         }
+
+        &.active-card {
+            border-left-color: #059669;
+            color: #059669;
+        }
+    }
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
     }
 }

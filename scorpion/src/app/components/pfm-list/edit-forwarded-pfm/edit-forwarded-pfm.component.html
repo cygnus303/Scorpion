@@ -11,51 +11,77 @@
         <button type="button" class="btn-close pfm-close" (click)="modalRef.hide()"></button>
     </div>
 
-    <div class="modal-body p-4" style="padding:0;gap:0;">
-        <div style="padding:16px 22px;border-bottom:1px solid var(--border-light);border-radius:8px;"
-            class="input-background-color">
-            <div class="row">
-                <div class="col-4">
-                    <label class="meta-label">PFM Number</label>
-                    <div class="fw-bold text-info">{{pfmData?.fM_No}}</div>
+    <form [formGroup]="editForm">
+        <div class="modal-body p-4" style="padding:0;gap:0;">
+            <div style="padding:16px 22px;border-bottom:1px solid var(--border-light);border-radius:8px;"
+                class="input-background-color">
+                <div class="row">
+                    <div class="col-4">
+                        <label class="meta-label">PFM Number</label>
+                        <div class="fw-bold text-info">{{editForm.value.fM_No}}</div>
+                    </div>
+                    <div class="col-8">
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="meta-label">LR Number</label>
+                                <div class="fw-bold">{{editForm.value?.lR_Number}}</div>
+                            </div>
+                            <div class="col-6">
+                                <label class="meta-label">Route</label>
+                                <div class="fw-bold">{{formatFromTo(editForm.value?.route)}}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-4">
-                    <label class="meta-label">LR Number</label>
-                    <div class="fw-bold">{{pfmData?.dockNo}}</div>
+            </div>
+
+            <div class="mt-2">
+                <div class="form-group-input mb-3">
+                    <label>Courier Company Name </label>
+                    <input type="text" class="form-control required2 input-background-color"
+                        placeholder="Courier Company Name" formControlName="courier_Code"
+                        [ngClass]="{ 'border-danger': editForm.get('courier_Code')?.invalid && editForm.get('courier_Code')?.touched }">
+                    <div *ngIf="editForm.get('courier_Code')?.invalid && editForm.get('courier_Code')?.touched"
+                        class="text-danger small mt-1">This field is required.</div>
                 </div>
-                <div class="col-4">
-                    <label class="meta-label">Route</label>
-                    <div class="fw-bold">{{formatFromTo(pfmData?.from_To)}}</div>
+
+                <div class="form-group-input mb-3">
+                    <label>Courier Number </label>
+                    <input type="text" class="form-control required2 input-background-color"
+                        placeholder="Courier Number" formControlName="courier_Way_Bill_No"
+                        [ngClass]="{ 'border-danger': editForm.get('courier_Way_Bill_No')?.invalid && editForm.get('courier_Way_Bill_No')?.touched }">
+                    <div *ngIf="editForm.get('courier_Way_Bill_No')?.invalid && editForm.get('courier_Way_Bill_No')?.touched"
+                        class="text-danger small mt-1">This field is required.</div>
+                </div>
+
+                <!-- <div class="form-group-input mb-3">
+                    <label>Courier Way Bill Date </label>
+                    <div class="input-group" (click)="dp.toggle(); $event.stopPropagation()"
+                        [ngClass]="{ 'border-danger': editForm.get('courier_Way_Bill_Date')?.invalid && editForm.get('courier_Way_Bill_Date')?.touched }">
+                        <input type="text" class="form-control input-background-color" #dp="bsDatepicker" bsDatepicker
+                            [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"
+                            formControlName="courier_Way_Bill_Date">
+                        <span class="input-group-text cursor-pointer"><i class="fa fa-calendar"></i></span>
+                    </div>
+                    <div *ngIf="editForm.get('courier_Way_Bill_Date')?.invalid && editForm.get('courier_Way_Bill_Date')?.touched"
+                        class="text-danger small mt-1">This field is required.</div>
+                </div> -->
+
+                <div class="mt-2"
+                    style="background:#fff8e1;border:1px solid #f0c030;border-radius:7px;padding:10px 14px;font-size:12px;color:#9a6700;display:flex;align-items:flex-start;gap:8px;">
+                    <span style="font-size:14px;flex-shrink:0;">⚠</span>
+                    <span>Editing courier details will update all LRs grouped under the same PFM number.</span>
                 </div>
             </div>
         </div>
-
-        <div class="form-group-input mb-2 mt-3">
-            <label>Courier Company Name</label>
-            <div class="input-group">
-                <input type="text" class="form-control input-background-color" placeholder="Courier Company Name">
-            </div>
-        </div>
-
-        <div class="form-group-input mb-2 mt-3">
-            <label>Courier Number</label>
-            <div class="input-group">
-                <input type="text" class="form-control input-background-color" placeholder="Courier Number">
-            </div>
-        </div>
-
-        <div class="mt-3"
-            style="background:#fff8e1;border:1px solid #f0c030;border-radius:7px;padding:10px 14px;font-size:12px;color:#9a6700;display:flex;align-items:flex-start;gap:8px;">
-            <span style="font-size:14px;flex-shrink:0;">⚠</span>
-            <span>Editing courier details will update all LRs grouped under the same PFM number.</span>
-        </div>
-    </div>
+    </form>
 
     <div class="modal-footer d-flex justify-content-between">
         <div><span class="text-danger">*</span> Required fields</div>
         <div class="gap-3 d-flex">
             <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Cancel</button>
-            <button type="button" class="btn btn-success px-4 py-2 rounded">✎ Save Changes</button>
+            <button type="button" class="btn btn-success px-4 py-2 rounded" (click)="saveChanges()">✎ Save
+                Changes</button>
         </div>
     </div>
 </ng-template>

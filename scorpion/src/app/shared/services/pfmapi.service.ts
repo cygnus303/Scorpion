@@ -23,4 +23,12 @@ export class PFMapiService {
   NewForwardFMAckDocumentsDone(payload: any) {
     return this.apiHandlerService.Post(`Operation/NewForwardFMAckDocumentsDone`, payload);
   }
+
+  PFMCourierUpdate(payload: any) {
+    return this.apiHandlerService.Post(`Operation/PFMCourierUpdate`, payload);
+  }
+
+  GetCourierDetails(fmNo: string) {
+    return this.apiHandlerService.Get(`Operation/GetCourierDetails?fmNo=${encodeURIComponent(fmNo)}`);
+  }
 }

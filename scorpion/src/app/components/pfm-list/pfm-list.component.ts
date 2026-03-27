@@ -79,7 +79,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      // this.docketService.loginUserList.LocationCode = 'PIM';
+      this.docketService.loginUserList.LocationCode = 'PIM';
       this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
@@ -89,6 +89,19 @@ export class PFMListComponent implements OnInit, OnDestroy {
       this.PODForwardingList();
     });
 
+    this.fetchData();
+  }
+
+  fetchLRsData() {
+    this.config = {
+      fromDateStr: new Date(new Date().setDate(new Date().getDate() - 7)),
+      toDateStr: new Date(),
+      statusFilter: 'All',
+      page: 1,
+      pageSize: 15,
+      totalRecords: 0,
+      totalPages: 1
+    };
     this.fetchData();
   }
 
@@ -178,6 +191,11 @@ export class PFMListComponent implements OnInit, OnDestroy {
     });
   }
 
+  filterByStatus(status: string) {
+    this.config.statusFilter = status;
+    this.fetchData();
+  }
+
   onSearchChange() {
     this.config.page = 1;
     this.fetchSubject.next();
@@ -241,9 +259,8 @@ export class PFMListComponent implements OnInit, OnDestroy {
     this.AcknowledgePFMComponent.showPopup(selectedData);
   }
 
-  openViewPFM() {
-    const selectedData = this.filteredRows.filter(r => r.checked);
-    this.ViewPfmComponent.showPopup(selectedData);
+  openViewPFM(data: any) {
+    this.ViewPfmComponent.showPopup(data);
   }
 
   openEditForwardedPFM(data: any) {
@@ -266,12 +283,34 @@ export class PFMListComponent implements OnInit, OnDestroy {
   }
 
   onRowSelect(row: any) {
-    if (['Generated At', 'Generated', 'Forwarded'].includes(row.displayStatus) && row.fM_No && row.checked) {
+    // For Forwarded status, allow group selection for same fM_No
+    if (row.displayStatus === 'Forwarded' && row.fM_No) {
+      // Check/uncheck all rows with the same fM_No
+      this.filteredRows.forEach(r => {
+        if (r.fM_No === row.fM_No && r.displayStatus === 'Forwarded') {
+          r.checked = row.checked;
+        }
+      });
+      return;
+    }
+
+    // For Generated status, apply mutual exclusion logic
+    if (['Generated At', 'Generated'].includes(row.displayStatus) && row.fM_No) {
+      // If this row is being checked, uncheck all other rows with different fM_No
+      if (row.checked) {
+        this.filteredRows.forEach(r => {
+          if (r.fM_No !== row.fM_No && r.displayStatus !== 'Acknowledged') {
+            r.checked = false;
+          }
+        });
+      }
+      // Check/uncheck all rows with the same fM_No
       this.filteredRows.forEach(r => {
         if (r.fM_No === row.fM_No && r.displayStatus !== 'Acknowledged') {
-          r.checked = true;
+          r.checked = row.checked;
         }
       });
     }
   }
+
 }

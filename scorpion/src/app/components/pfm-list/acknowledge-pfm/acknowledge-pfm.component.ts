@@ -30,7 +30,7 @@ export class AcknowledgePFMComponent {
 
   createForm() {
     this.ackForm = new FormGroup({
-      ackDate: new FormControl(new Date().toISOString().split('T')[0], Validators.required),
+      ackDate: new FormControl(new Date(), Validators.required),
       remarks: new FormControl('')
     });
   }

@@ -68,7 +68,7 @@
                         <div class="form-group-input">
                             <label class="form-label meta-label">Courier Company Name</label>
                             <input class="form-control required2 input-background-color" type="text" id="fwdCompany"
-                                placeholder="e.g. DTDC, BlueDart" style="margin-top:3px;"
+                                placeholder="Courier Company Name" style="margin-top:3px;"
                                 [ngClass]="{ 'border-danger': forwardForm.get('courierName')?.invalid && forwardForm.get('courierName')?.touched}"
                                 formControlName="courierName">
                             <div *ngIf="forwardForm.get('courierName')?.invalid && forwardForm.get('courierName')?.touched"
@@ -78,14 +78,9 @@
                     <div class="col-6">
                         <div class="form-group-input" style="flex:1;min-width:180px;position:relative;" id="fwdToWrap">
                             <label class="form-label meta-label">Forwarded To</label>
-                            <div style="position:relative;margin-top:3px;">
-                                <span
-                                    style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text-muted);pointer-events:none;">📍</span>
-                                <input class="form-control required2 input-background-color" type="text"
-                                    [ngClass]="{ 'border-danger': forwardForm.get('forwardedTo')?.invalid && forwardForm.get('forwardedTo')?.touched}"
-                                    placeholder="Search city…" autocomplete="off" style="padding-left:30px;"
-                                    formControlName="forwardedTo">
-                            </div>
+                            <input class="form-control required2 input-background-color" type="text"
+                                [ngClass]="{ 'border-danger': forwardForm.get('forwardedTo')?.invalid && forwardForm.get('forwardedTo')?.touched}"
+                                placeholder="Forwarded To" autocomplete="off" readonly formControlName="forwardedTo">
                             <div *ngIf="forwardForm.get('forwardedTo')?.invalid && forwardForm.get('forwardedTo')?.touched"
                                 class="text-danger fs-xs">This field is required.</div>
                         </div>
@@ -107,10 +102,10 @@
                         <table style="width:100%;border-collapse:collapse;font-size:13px;">
                             <thead style="position: sticky; top: 0; z-index: 1;">
                                 <tr class="input-background-color" style="border-bottom:1px solid var(--border);">
-                                    <th style="padding:9px 12px;text-align:center;width:38px;">
+                                    <!-- <th style="padding:9px 12px;text-align:center;width:38px;">
                                         <input type="checkbox" (change)="toggleAllFwdLrs($event)"
                                             [checked]="totalLRs === pfmData.length && pfmData.length > 0">
-                                    </th>
+                                    </th> -->
                                     <th
                                         style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
                                         LR Date</th>
@@ -131,11 +126,11 @@
                             <tbody id="fwdLrBody">
                                 <tr *ngFor="let row of pfmData" style="border-bottom: 1px solid var(--border-light);"
                                     [style.background]="row.checked ? 'var(--accent-glow)' : 'transparent'">
-                                    <td style="text-align:center;padding:9px 12px;">
+                                    <!-- <td style="text-align:center;padding:9px 12px;">
                                         <input type="checkbox" [(ngModel)]="row.checked"
                                             [ngModelOptions]="{standalone: true}" (change)="toggleFwdLr(row)"
                                             style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer;">
-                                    </td>
+                                    </td> -->
                                     <td style="padding:9px 12px;">
                                         <span class="lr-date">{{row.dockDt | date:'dd MMM yyyy'}}</span>
                                     </td>

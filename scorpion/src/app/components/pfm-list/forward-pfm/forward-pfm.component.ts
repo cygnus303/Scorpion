@@ -35,7 +35,7 @@ export class ForwardPFMComponent {
       fwdDate: new FormControl(new Date().toISOString().split('T')[0], Validators.required),
       courierNo: new FormControl('', Validators.required),
       courierName: new FormControl('', Validators.required),
-      forwardedTo: new FormControl('', Validators.required),
+      forwardedTo: new FormControl(this.docketService.loginUserList.LocationCode, Validators.required),
       remarks: new FormControl('')
     });
   }
