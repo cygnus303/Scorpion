@@ -583,7 +583,7 @@
                              [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1Licence')?.invalid  && challanService.challanForm.get('driver1Licence')?.touched }">
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1Licence')?.touched">
                                 <div *ngIf="challanService.challanForm.get('driver1Licence')?.hasError('required')"> This field is required.</div>
-                                <div *ngIf="challanService.challanForm.get('driver1Licence')?.hasError('pattern')">Please enter a valid License Number. </div>
+                                <!-- <div *ngIf="challanService.challanForm.get('driver1Licence')?.hasError('pattern')">Please enter a valid License Number. </div> -->
                             </div>
                         </div>
                     </div>
@@ -954,7 +954,8 @@
                             </div>
                         </td>
 
-                        <td (click)="openPopup(item.value.EWayBillNo)" class="cursor-pointer" *ngIf="this.docketService.loginUserList.Type === '3'">{{ item.value.EWayBillNo }}</td>
+                        <td (click)="openPopup(item)" class="cursor-pointer" *ngIf="this.docketService.loginUserList.Type === '3'"
+                        [ngClass]="{'text-danger fw-bold': item.value.Message === 'E-Way Bill Date Expired'}">{{ item.value.EWayBillNo }}</td>
                         <td *ngIf="this.docketService.loginUserList.Type === '3'">{{ item.value.subreasoncode }} <br> {{ item.value.Commited_Dely_Date }}</td>
                         <td *ngIf="this.docketService.loginUserList.Type === '3'">{{ item.value.tatInHrs }}</td>
                         <td>{{ item.value.party_name }}</td>
@@ -1155,49 +1156,61 @@
   </div>
 </div>
 
-<div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel">
-    <div class="modal-dialog custom-large-modal modal-dialog-centered">
-        <div class="modal-content p-5">
-            <div>
-                <div class="row">
-                    <!-- Docket No -->
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="docketNo">Docket No</label>
-                            <input id="docketNo" type="text" class="form-control" placeholder="Enter Docket No" />
-                        </div>
-                    </div>
-                    <!-- Docket Date -->
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="docketDate">Docket Date</label>
-                            <input id="docketDate" type="text" class="form-control" placeholder="Enter Docket Date" />
-                        </div>
-                    </div>
-                    <!-- E-Way Bill No -->
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="ewayBillNo">E-Way Bill No</label>
-                            <input id="ewayBillNo" type="text" class="form-control" placeholder="Enter E-Way Bill No" />
-                        </div>
-                    </div>
-                    <!-- E-Way Expiry Date -->
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="ewayExpiryDate">E-Way Expiry Date</label>
-                            <input id="ewayExpiryDate" type="date" class="form-control" />
-                        </div>
-                    </div>
-                </div>
-                <!-- Submit Button -->
-                <div class="row mt-4">
-                    <div class="col-md-12 text-center">
-                        <button class="btn btn-success">Submit</button>
-                    </div>
+<div class="modal fade" id="showModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg rounded-4">
+
+      <div class="modal-header background-color text-white rounded-top-4">
+        <i class="fa fa-edit me-2"></i>
+        <h5 class="modal-title ">E-Way Bill Details</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+<form [formGroup]="EwaybillForm">
+    <div class="modal-body px-4 py-4">
+        <div class="row g-4">
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Docket No</label>
+                <input type="text" class="form-control rounded-3" placeholder="Enter Docket No" formControlName="dockno" readonly>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Docket Date</label>
+                <input type="text" class="form-control rounded-3" placeholder="Enter Docket Date" formControlName="dockdt" readonly>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">E-Way Bill No</label>
+                <input type="text" class="form-control rounded-3" placeholder="Enter E-Way Bill No" formControlName="eWayBillNo">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Expiry Date</label>
+                <div class="input-group">
+                    <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
+                        [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                        placeholder="Expiry Date" formControlName="eWayBillExpiredDate">
+                    <span class="input-group-text cursor-pointer" (click)="dp.toggle()"
+                        [class.disabled-input]="this.docketService.isComplition">
+                        <i class="fa fa-calendar"></i>
+                    </span>
                 </div>
             </div>
+
         </div>
     </div>
+</form>
+      <div class="modal-footer border-0 px-4 pb-4">
+        <button class="btn btn-secondary px-4 py-3" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button class="btn btn-success rounded-3 px-4 py-3" (click)="onSubmitEwayBillDetail()">
+          Submit
+        </button>
+      </div>
+
+    </div>
+  </div>
 </div>
  
   
