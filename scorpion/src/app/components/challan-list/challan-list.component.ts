@@ -93,6 +93,8 @@ public modalInstance: any;
     this.docketService.getTypeofMovementData();
     this.challanService.getRateTypeData();
     this.challanService.getVendtyData();
+      this.buildEwayBill();
+
     
     // this.challanService.getLocationData();
     if(this.docketService.loginUserList.Type === '1'){
@@ -130,7 +132,6 @@ public modalInstance: any;
     }
 
      if (this.docketService.loginUserList.Type === '3') {
-      this.buildEwayBill();
       this.getDeliveryZoneData();
     }
  
@@ -934,6 +935,8 @@ checkLicenseExpiry(event?:any) {
               if (match) {
                 match.get('ContractAmount')?.setValue(item.contractAmount);
                 match.get('tDSOnAmount')?.setValue(item.contractAmount);
+                match.get('Message')?.setValue(null);
+
               }
             });
           } else {
@@ -1412,8 +1415,7 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
 
   onSubmitEwayBillDetail(){
     const payload={
-      eWayBillNo: this.EwaybillForm.value.eWayBillNo,
-      eWayBillExpiredDate: this.EwaybillForm.value.eWayBillExpiredDate,
+     ...this.EwaybillForm.value,
       empCode: this.docketService.loginUserList.UserId
     }
     this.THCService.onSubmitEwaybill(payload).subscribe({

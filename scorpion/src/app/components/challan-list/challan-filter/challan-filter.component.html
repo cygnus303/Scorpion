@@ -174,10 +174,15 @@
                 </div>
                 <div class="mb-3 col-md-3">
                     <label class="input-group form-label fw-semibold">Loading By</label>
-                    <ng-select class="noFoundTextColor clear-icon" placeholder="Select Loading By" appFocusNext
+                    <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Loading By" appFocusNext
                         (change)="changeLoadingBy($event)" formControlName="loadingBy" bindLabel="codeDesc" bindValue="codeId"
-                        [items]="generalMasterService.loadingData" (change)="onSearch()">
+                        [items]="generalMasterService.loadingData" (change)="onSearch()"
+                        [ngClass]="{ 'border-danger': challanService.filterForm.get('loadingBy')?.invalid  && challanService.filterForm.get('loadingBy')?.touched }">
                     </ng-select>
+                    <div class="text-danger text-start"
+                        *ngIf="challanService.filterForm.get('loadingBy')?.hasError('required') && challanService.filterForm.get('loadingBy')?.touched">
+                        This field is required.
+                    </div>
                 </div>
                 <div class="mb-3 col-md-3">
                     <label class="input-group form-label fw-semibold">Charge type</label>
@@ -191,14 +196,6 @@
                         This field is required.
                     </div>
                 </div>
-                <div class="mb-3 col-md-3">
-                    <label class="input-group form-label fw-semibold">Select Mode</label>
-                    <ng-select class="noFoundTextColor  clear-icon" placeholder="Select Mode" appFocusNext (change)="onSearch()" formControlName="trnMod"
-                        bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.modeData">
-                    </ng-select>
-                </div>
-               
-        
             </div>
             <div class="row">
                 <div class="mb-3 col-md-2">

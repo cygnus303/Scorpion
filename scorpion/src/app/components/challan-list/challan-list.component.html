@@ -583,7 +583,7 @@
                              [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1Licence')?.invalid  && challanService.challanForm.get('driver1Licence')?.touched }">
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1Licence')?.touched">
                                 <div *ngIf="challanService.challanForm.get('driver1Licence')?.hasError('required')"> This field is required.</div>
-                                <div *ngIf="challanService.challanForm.get('driver1Licence')?.hasError('pattern')">Please enter a valid License Number. </div>
+                                <!-- <div *ngIf="challanService.challanForm.get('driver1Licence')?.hasError('pattern')">Please enter a valid License Number. </div> -->
                             </div>
                         </div>
                     </div>
