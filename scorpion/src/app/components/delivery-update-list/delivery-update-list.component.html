@@ -249,7 +249,7 @@
 
                                 <td>
                                     <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type" appFocusNext
-                                        [items]="generalMasterService.chargeTypeData" [readonly]="this.DRSSummaryForm.value.LoadingBy ==='XX9' || this.DRSSummaryForm.value.LoadingBy ==='XX5'? true : false"></ng-select>
+                                        [items]="generalMasterService.chargeTypeData" [readonly]="this.DRSSummaryForm.value.LoadingBy !=='XX9' ? true : false"></ng-select>
                                     <input type="number" class="form-control form-control-sm mt-1" formControlName="newRate" appFocusNext
                                         [readOnly]="this.DRSSummaryForm.value.LoadingBy === 'XX5'" (focus)="clearNewRateOnFocus(i)" (blur)="resetNewRateOnBlur(i)"/>
                                     <div class="text-danger small mt-1" *ngIf="drsList.at(i).get('rateError')?.value">
