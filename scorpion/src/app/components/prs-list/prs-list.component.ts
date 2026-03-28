@@ -229,7 +229,7 @@ export class PrsListComponent {
 
   onPDCNo(){
 
-  }
+  } 
 
 
 }
