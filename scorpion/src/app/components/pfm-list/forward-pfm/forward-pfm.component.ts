@@ -41,6 +41,7 @@ export class ForwardPFMComponent {
   }
 
   showPopup(data: any[]) {
+    console.log(data);
     this.createForm();
     this.pfmData = (data || []).map(r => ({ ...r, checked: true }));
     this.updateSummary();
@@ -74,8 +75,8 @@ export class ForwardPFMComponent {
     const uniquePFMs = [...new Set(selected.map(r => r.fM_No))];
     const formVals = this.forwardForm.value;
 
-    const payload = {
-      fM_No: uniquePFMs.join(','),
+    const pfmForwardArray = uniquePFMs.map(fM_No => ({
+      fM_No: fM_No,
       doc_FWD_To: '2',
       courier_Code: formVals.courierName,
       loc_Cust_Code: 'HQTR',
@@ -83,7 +84,13 @@ export class ForwardPFMComponent {
       courier_Way_Bill_No: formVals.courierNo,
       courier_Way_Bill_Date: new Date(formVals.fwdDate).toISOString(),
       entryBy: this.docketService.loginUserList.UserId
+    }));
+
+    const payload = {
+      pfmForward: pfmForwardArray
     };
+
+    console.log('Forward Payload:', payload);
 
     this.PFMapiService.PFMForward(payload).subscribe({
       next: (response: any) => {

@@ -282,29 +282,39 @@ export class PFMListComponent implements OnInit, OnDestroy {
     });
   }
 
-  onRowSelect(row: any) {
-    // For Forwarded status, allow group selection for same fM_No
-    if (row.displayStatus === 'Forwarded' && row.fM_No) {
-      // Check/uncheck all rows with the same fM_No
-      this.filteredRows.forEach(r => {
-        if (r.fM_No === row.fM_No && r.displayStatus === 'Forwarded') {
-          r.checked = row.checked;
-        }
-      });
-      return;
-    }
+  // onRowSelect(row: any) {
+  //   // For Forwarded status, allow group selection for same fM_No
+  //   if (row.displayStatus === 'Forwarded' && row.fM_No) {
+  //     // Check/uncheck all rows with the same fM_No
+  //     this.filteredRows.forEach(r => {
+  //       if (r.fM_No === row.fM_No && r.displayStatus === 'Forwarded') {
+  //         r.checked = row.checked;
+  //       }
+  //     });
+  //     return;
+  //   }
 
-    // For Generated status, apply mutual exclusion logic
-    if (['Generated At', 'Generated'].includes(row.displayStatus) && row.fM_No) {
-      // If this row is being checked, uncheck all other rows with different fM_No
-      if (row.checked) {
-        this.filteredRows.forEach(r => {
-          if (r.fM_No !== row.fM_No && r.displayStatus !== 'Acknowledged') {
-            r.checked = false;
-          }
-        });
-      }
-      // Check/uncheck all rows with the same fM_No
+  //   // For Generated status, apply mutual exclusion logic
+  //   if (['Generated At', 'Generated'].includes(row.displayStatus) && row.fM_No) {
+  //     // If this row is being checked, uncheck all other rows with different fM_No
+  //     if (row.checked) {
+  //       this.filteredRows.forEach(r => {
+  //         if (r.fM_No !== row.fM_No && r.displayStatus !== 'Acknowledged') {
+  //           r.checked = false;
+  //         }
+  //       });
+  //     }
+  //     // Check/uncheck all rows with the same fM_No
+  //     this.filteredRows.forEach(r => {
+  //       if (r.fM_No === row.fM_No && r.displayStatus !== 'Acknowledged') {
+  //         r.checked = row.checked;
+  //       }
+  //     });
+  //   }
+  // }
+
+  onRowSelect(row: any) {
+    if (['Generated At', 'Generated', 'Forwarded'].includes(row.displayStatus) && row.fM_No) {
       this.filteredRows.forEach(r => {
         if (r.fM_No === row.fM_No && r.displayStatus !== 'Acknowledged') {
           r.checked = row.checked;
