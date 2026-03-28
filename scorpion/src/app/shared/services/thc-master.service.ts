@@ -173,4 +173,7 @@ export class THCMasterService {
   onSubmitEwaybill(payload:any){
     return this.apiHandlerService.Post(`THC/SubmitEwayBillExpiryDateChange`,payload);
   }
+  getPRSArrivalList(payload:any){
+    return this.apiHandlerService.Post(`THC/arrival-listPage`,payload);
+  }
 }
