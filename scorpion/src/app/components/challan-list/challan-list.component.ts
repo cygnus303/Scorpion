@@ -936,7 +936,7 @@ checkLicenseExpiry(event?:any) {
               if (match) {
                 match.get('ContractAmount')?.setValue(item.contractAmount);
                 match.get('tDSOnAmount')?.setValue(item.contractAmount);
-                match.get('Message')?.setValue(null);
+                match.get('Message')?.setValue(item.message);
 
               }
             });
