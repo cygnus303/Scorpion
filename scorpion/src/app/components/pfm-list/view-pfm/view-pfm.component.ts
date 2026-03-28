@@ -18,16 +18,16 @@ export class ViewPfmComponent {
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
 
   public pfmData: any = {};
+  public pfmDataViewList: any = {};
   public isLoading: boolean = false;
 
   constructor(private modalService: BsModalService, private pfmapiService: PFMapiService, public docketService: DocketService) { }
 
   showPopup(data: any) {
-    debugger
+    this.pfmDataViewList = data;
     console.log('View PFM Selected Data:', data);
     this.isLoading = true;
     const fM_No = data?.fM_No;
-    debugger
     if (fM_No) {
       this.pfmapiService.GetCourierDetails(fM_No).subscribe({
         next: (response: any) => {

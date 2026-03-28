@@ -59,11 +59,11 @@
                     <div class="col-3"
                         *ngIf="pfmData.header?.fM_Status === 'Forwarded' || pfmData.header?.fM_Status === 'Acknowledged'">
                         <label class="meta-label">Forwarded To</label>
-                        <div class="fw-bold">{{ pfmData.header.doc_FWD_To}}</div>
+                        <div class="fw-bold">{{ pfmData.header.loc_Cust_Code}}</div>
                     </div>
                     <div class="col-3" *ngIf="pfmData.header?.fM_Status === 'Acknowledged'">
                         <label class="meta-label">Acknowledged Date</label>
-                        <div class="fw-bold">{{ pfmData.header.acknowledged_Date | date:'dd MMM yyyy' }}</div>
+                        <div class="fw-bold">{{ pfmDataViewList.fM_Date | date:'dd MMM yyyy' }}</div>
                     </div>
                 </div>
             </div>

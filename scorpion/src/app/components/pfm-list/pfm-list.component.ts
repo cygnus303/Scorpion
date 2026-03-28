@@ -43,7 +43,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
     toDateStr: new Date(),
     statusFilter: 'All',
     page: 1,
-    pageSize: 15,
+    pageSize: 10,
     totalRecords: 0,
     totalPages: 1
   };
@@ -79,7 +79,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      this.docketService.loginUserList.LocationCode = 'PIM';
+      // this.docketService.loginUserList.LocationCode = 'PIM';
       this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
@@ -98,7 +98,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
       toDateStr: new Date(),
       statusFilter: 'All',
       page: 1,
-      pageSize: 15,
+      pageSize: 10,
       totalRecords: 0,
       totalPages: 1
     };
@@ -163,7 +163,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
             this.config.totalRecords = response.pagination.totalRecords || items.length;
             this.config.totalPages = response.pagination.totalPages || 1;
             this.config.page = response.pagination.currentPage || 1;
-            this.config.pageSize = response.pagination.pageSize || 15;
+            this.config.pageSize = response.pagination.pageSize || 10;
           } else {
             this.config.totalRecords = items.length;
             this.config.totalPages = Math.ceil(this.config.totalRecords / this.config.pageSize) || 1;

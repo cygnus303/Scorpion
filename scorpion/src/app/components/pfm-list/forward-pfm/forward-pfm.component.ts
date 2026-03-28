@@ -35,7 +35,7 @@ export class ForwardPFMComponent {
       fwdDate: new FormControl(new Date().toISOString().split('T')[0], Validators.required),
       courierNo: new FormControl('', Validators.required),
       courierName: new FormControl('', Validators.required),
-      forwardedTo: new FormControl(this.docketService.loginUserList.LocationCode, Validators.required),
+      forwardedTo: new FormControl('HQTR', Validators.required),
       remarks: new FormControl('')
     });
   }
@@ -76,9 +76,9 @@ export class ForwardPFMComponent {
 
     const payload = {
       fM_No: uniquePFMs.join(','),
-      doc_FWD_To: formVals.forwardedTo,
+      doc_FWD_To: '2',
       courier_Code: formVals.courierName,
-      loc_Cust_Code: '',
+      loc_Cust_Code: 'HQTR',
       fM_FWD_LocCode: this.docketService.loginUserList.LocationCode,
       courier_Way_Bill_No: formVals.courierNo,
       courier_Way_Bill_Date: new Date(formVals.fwdDate).toISOString(),

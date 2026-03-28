@@ -141,7 +141,7 @@
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">Loading...</span>
                             </div>
-                            <div class="mt-2 text-muted fw-bold">Fetching LRs...</div>
+                            <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
                         </td>
                     </tr>
                 </tbody>
@@ -156,7 +156,7 @@
                     <tr *ngFor="let row of filteredRows">
                         <td class="text-center">
                             <input type="checkbox" [(ngModel)]="row.checked"
-                                [disabled]="row.displayStatus === 'Acknowledged'" (change)="onRowSelect(row)">
+                                [disabled]="row.displayStatus === 'Acknowledged' || (row.displayStatus === 'Forwarded' && this.docketService.loginUserList.LocationCode === row.fM_FWD_LocCode)" (change)="onRowSelect(row)">
                         </td>
                         <td class="lr-date">{{ row.dockDt | date:'dd-MM-yyyy' }}</td>
                         <td class="lr-no">{{ row.dockNo }}</td>

@@ -45,7 +45,7 @@ export class PFMNumberGeneratedComponent {
       },
       dockets: this.selectedRecords.map(({ party_name, fM_Status, fM_Ack_Status, displayStatus, daysSince, checked, ...rest }) => ({
         ...rest,
-        currLoc: this.docketService.loginUserList.LocationCode,
+        currLoc:'HQTR',
         documentNo: 'N/A',
         DocumentDate: new Date().toISOString(),
         Scan_Status_New: ''
