@@ -51,7 +51,7 @@ constructor(
 
     this.challanService.filterForm.get('loadingBy')?.valueChanges.subscribe((value) => {
       const chargeTypeControl = this.challanService.filterForm.get('chrgType');
-      if (value !== 'XX9') {
+      if (value !== 'XX9' && value !== 'XX5') {
         chargeTypeControl?.setValidators([Validators.required]);
       } else {
         chargeTypeControl?.clearValidators();

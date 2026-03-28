@@ -407,6 +407,7 @@ onDocketSelectionChange(ctrl: AbstractControl) {
             });
             this.challanService.avalabledocket.controls.forEach((item: any, index) => {
               this.challanService.avalabledocket.controls[index].patchValue({
+                rateType:response.rateType,
                 NewRate: response.rate
               });
               this.israteDisabled = true;

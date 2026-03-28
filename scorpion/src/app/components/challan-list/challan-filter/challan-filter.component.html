@@ -187,7 +187,7 @@
                 <div class="mb-3 col-md-3">
                     <label class="input-group form-label fw-semibold">Charge type</label>
                     <ng-select class="noFoundTextColor  clear-icon" placeholder="Select Charge type" appFocusNext
-                        [readonly]="challanService.filterForm.value.loadingBy === 'XX9'" formControlName="chrgType"
+                        [readonly]="challanService.filterForm.value.loadingBy === 'XX9'|| challanService.filterForm.value.loadingBy === 'XX5'" formControlName="chrgType"
                         bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.chargeTypeData" (change)="onSearch()"
                         [ngClass]="{ 'border-danger': challanService.filterForm.get('chrgType')?.invalid  && challanService.filterForm.get('chrgType')?.touched }">
                     </ng-select>
