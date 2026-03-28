@@ -394,7 +394,7 @@ validateCloseKM() {
         status: this.arrivalForm.value.s2id_Status,
         thcno: this.arrivalDetail?.thcno,
         openkm: this.arrivalDetail?.openkm,
-        closekm: this.arrivalForm.value.CLOSEKM,
+        closekm: this.arrivalForm.value.CLOSEKM?.toString(),
         ad: new Date(this.arrivalForm.value.AD)?.toISOString(),
         at: "",
         lar: this.arrivalForm.value.LAR,
