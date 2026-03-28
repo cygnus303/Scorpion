@@ -945,8 +945,10 @@
                         <td>{{item.value.PKGSNO}}</td>
                         <td>{{ item.value.ACTUWT }}/{{ item.value.CHRGWT }}</td>
                         <td>
-                            <ng-select class="required2" [items]="challanService.rateTypeData" formControlName="rateType"
-                                bindLabel="codeDesc" bindValue="codeId" placeholder="Type" [class.disabled-select]="challanService.filterList?.chrgType || challanService.filterList?.loadingBy === 'XX9' ? true : false">
+                            <ng-select class="required2 clear-icon" [items]="challanService.rateTypeData" formControlName="rateType"
+                                bindLabel="codeDesc" bindValue="codeId" placeholder="Type" 
+                                [class.disabled-select]="challanService.filterList?.loadingBy === 'XX5' || challanService.filterList?.loadingBy === 'XX9' ? true : false"
+                                >
                             </ng-select>
                             <input type="text" class="form-control required2" formControlName="NewRate"  [value]="item.value.NewRate" [readOnly]="challanService.filterList && (challanService.filterList.loadingBycodeFor === 'XX5' || challanService.filterList.loadingBy === 'XX9')">
                             <div class="text-danger small mt-1" *ngIf="challanService.avalabledocket.at(i).get('rateError')?.value">
