@@ -423,7 +423,7 @@ validateCloseKM() {
         next: (response) => {
           if (response.success) {
             this.isRedirect = true;
-            window.parent.location.href = `${this.env.liveUrl}Operation/ArrivalUpdateDone?ThcNo=${this.arrivalDetail?.thcno}&TranXaction=True&view=Arrival&angular`;
+            window.parent.location.href = `${this.env.liveUrl}Operation/ArrivalUpdateDone?ThcNo=${this.arrivalDetail?.thcno}&TranXaction=True&view=Arrival&src=angular`;
           } else {
             this.arrivalForm.markAllAsTouched();
           }
