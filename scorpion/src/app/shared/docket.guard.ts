@@ -10,7 +10,7 @@ export class DocketGuard implements CanActivate {
     private decryptService: DecryptService,
     private docketService: DocketService,
     private router: Router
-  ) {}
+  ) { }
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
     const encrypted = route.queryParams['data'];
@@ -28,7 +28,7 @@ export class DocketGuard implements CanActivate {
       const currentRoute = route.routeConfig?.path ?? '';
       if (currentRoute.includes("docketFinancialEdit")) {
         return this.handleFinancialEdit(parsedData);
-      } 
+      }
       // else if (currentRoute.includes("ChallanList")) {
       //   return this.handleChallan(parsedData);
       // } 
@@ -37,22 +37,22 @@ export class DocketGuard implements CanActivate {
       }
       else if (currentRoute.includes("UpdateDRS")) {
         return this.handleUpdateDRS(parsedData);
-      } 
+      }
       else if (currentRoute.includes("PRSArrivalDetails")) {
         return this.handlePRSArrivalDetails(parsedData);
-      } 
+      }
       else if (currentRoute.includes("LoadingSheet")) {
         return this.handleLoadingSheet(parsedData);
-      } 
+      }
       else if (currentRoute.includes("VendorContractTypeWise")) {
         return this.handleVendorContractTypeWise(parsedData);
-      } 
-       else if (currentRoute.includes("Challan") || currentRoute.includes("ChallanList")) {
+      }
+      else if (currentRoute.includes("Challan") || currentRoute.includes("ChallanList")) {
         return this.handleChallanfilter(parsedData);
-      } 
-      else if (currentRoute.includes("docketEditCretria") || currentRoute.includes("docket") || currentRoute.includes("delivery-agent") || currentRoute.includes("ScanFMDocuments")) {
+      }
+      else if (currentRoute.includes("docketEditCretria") || currentRoute.includes("docket") || currentRoute.includes("delivery-agent") || currentRoute.includes("ScanFMDocuments") || currentRoute.includes("PFM")) {
         return this.handleNormalDocket(parsedData);
-      } 
+      }
       else {
         this.router.navigate(['/error']);
         return false;
@@ -86,7 +86,7 @@ export class DocketGuard implements CanActivate {
     const requiredKeys = [
       "FinYear", "LocationCode", "LocationName",
       "UserImage", "UserId", "BaseUserName", "Companycode",
-      "DocketNo","IsFromBillGeneration","Type"
+      "DocketNo", "IsFromBillGeneration", "Type"
     ];
     if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
       // this.docketService.loginUserList = parsedData;
@@ -102,11 +102,11 @@ export class DocketGuard implements CanActivate {
     return false;
   }
 
-    private handleChallan(parsedData: any): boolean {
-      const requiredKeys = [
-        "fromdt","todt", "dttyp","paybas", "trnMod", "bustyp", "docketList", "loadingBy","chrgType", "odaType",
-        "flag","LocationCode","BookedByType","BookedBy"
-      ];
+  private handleChallan(parsedData: any): boolean {
+    const requiredKeys = [
+      "fromdt", "todt", "dttyp", "paybas", "trnMod", "bustyp", "docketList", "loadingBy", "chrgType", "odaType",
+      "flag", "LocationCode", "BookedByType", "BookedBy"
+    ];
     if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
       // this.docketService.loginUserList = parsedData;
       this.docketService.Location = parsedData.LocationCode;
@@ -121,29 +121,10 @@ export class DocketGuard implements CanActivate {
     return false;
   }
 
-      private handleChallanfilter(parsedData: any): boolean {
-      const requiredKeys = [
-        "FinYear", "LocationCode", "LocationName",
+  private handleChallanfilter(parsedData: any): boolean {
+    const requiredKeys = [
+      "FinYear", "LocationCode", "LocationName",
       "UserImage", "UserId", "BaseUserName", "Companycode"
-      ];
-    if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
-      // this.docketService.loginUserList = parsedData;
-      this.docketService.Location = parsedData.LocationCode;
-      this.docketService.BaseUserCode = parsedData.UserId;
-      this.docketService.baseUsername = parsedData.BaseUserName;
-      localStorage.setItem("loginUserList", JSON.stringify(parsedData));
-      this.docketService.isComplition = true;
-      // 👇 parsedData save so component can later call getCompletionData
-      return true;
-    }
-    this.router.navigate(['/error']);
-    return false;
-  }
-
-    private handleLoadingSheet(parsedData: any): boolean {
-    const requiredKeys = [
-      "FinYear", "LocationCode", "LocationName",
-      "UserImage", "UserId", "BaseUserName", "Companycode" , "Type"
     ];
     if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
       // this.docketService.loginUserList = parsedData;
@@ -159,10 +140,29 @@ export class DocketGuard implements CanActivate {
     return false;
   }
 
-    private handleUpdateDRS(parsedData: any): boolean {
+  private handleLoadingSheet(parsedData: any): boolean {
     const requiredKeys = [
       "FinYear", "LocationCode", "LocationName",
-      "UserImage", "UserId", "BaseUserName", "Companycode","loadBy" ,"chargeType","drsId"
+      "UserImage", "UserId", "BaseUserName", "Companycode", "Type"
+    ];
+    if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
+      // this.docketService.loginUserList = parsedData;
+      this.docketService.Location = parsedData.LocationCode;
+      this.docketService.BaseUserCode = parsedData.UserId;
+      this.docketService.baseUsername = parsedData.BaseUserName;
+      localStorage.setItem("loginUserList", JSON.stringify(parsedData));
+      this.docketService.isComplition = true;
+      // 👇 parsedData save so component can later call getCompletionData
+      return true;
+    }
+    this.router.navigate(['/error']);
+    return false;
+  }
+
+  private handleUpdateDRS(parsedData: any): boolean {
+    const requiredKeys = [
+      "FinYear", "LocationCode", "LocationName",
+      "UserImage", "UserId", "BaseUserName", "Companycode", "loadBy", "chargeType", "drsId"
     ];
     if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
       // this.docketService.loginUserList = parsedData;
@@ -196,12 +196,12 @@ export class DocketGuard implements CanActivate {
     this.router.navigate(['/error']);
     return false;
   }
-  
-   private handlePRSArrivalDetails(parsedData: any): boolean {
+
+  private handlePRSArrivalDetails(parsedData: any): boolean {
     const requiredKeys = [
       "FinYear", "LocationCode", "LocationName",
       "UserImage", "UserId", "BaseUserName", "Companycode", "loadBy", "chargeType", "id"
-       ];
+    ];
     if (requiredKeys.every(key => parsedData.hasOwnProperty(key))) {
       // this.docketService.loginUserList = parsedData;
       this.docketService.Location = parsedData.LocationCode;
@@ -234,5 +234,5 @@ export class DocketGuard implements CanActivate {
     this.router.navigate(['/error']);
     return false;
   }
-}  
+}
 
