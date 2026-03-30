@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { VehicleNumbersResponse } from 'app/shared/models/general-master.model';
@@ -46,6 +46,7 @@ export class LoadingSheetComponent {
     public commonService: CommonService,
     public challanService: ChallanService,
     public THCMasterService: THCMasterService,
+    public THCService:THCMasterService,
     public loadingSheetApiService: LoadingSheetApiService,
     public basicDetailService: BasicDetailService,private cd: ChangeDetectorRef
   ) { }
@@ -148,6 +149,47 @@ ngOnInit(){
         }
       }
     });
+  }
+
+  getLoadingCharge(event: any) {
+    if (!event) {
+      this.loadingSheetService.LSForm.patchValue({
+        vendorName: null
+      });
+      return;
+    }
+  
+    this.loadingSheetService.LSForm.patchValue({
+      vendorName: event.text   // 👈 Vendor Name store
+    });
+    const data = {
+      loadUnloadType: 'L',
+      vendorCode: event.value,
+      typeModule: 'M',
+      chargeType: this.docketService.loginUserList.chargeType,
+      brdc: this.docketService.loginUserList.LocationCode,
+      loadingBy: this.loadingSheetService.LSForm.value.loadingBy,
+    };
+  if(['XX5'].includes(this.loadingSheetService.LSForm.get('loadingBy')?.value)){
+    this.THCService.getLoadingCharge(data).subscribe({
+      next: (response: any) => {
+      this.loadingSheetService.LSForm.patchValue({
+          Rate:response.rate,
+          loadedRateType:response.rateType
+        });
+        const lsArray = this.loadingSheetService.LSForm.get('docketList') as FormArray;
+        lsArray?.controls.forEach((item: any, index) => {        
+          lsArray.controls[index].patchValue({
+            newRate: response.rate,
+            ratetype:response.rateType
+          });
+        });
+      },
+      error: (err) => {
+        console.error('Error fetching loading charge:', err);
+      }
+    });
+  }
   }
 
    getLoadingSheet() {

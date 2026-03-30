@@ -31,7 +31,7 @@ export class LoadingSheetService {
       rateType:new FormControl(null),
       mF_TransportMode:new FormControl('S',Type ? Validators.required : null),
       rdVehicle:new FormControl('Own'),
-      loadedRateType:new FormControl('1'),
+      loadedRateType:new FormControl(null),
       sealNo:new FormControl(''),
       vehno:new FormControl(null),
       preparedBy:new FormControl(''),
