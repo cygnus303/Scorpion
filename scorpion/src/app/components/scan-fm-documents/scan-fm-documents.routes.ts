@@ -67,6 +67,7 @@ export const ScanFMRoutes: Routes = [
   {
     path: 'PFM',
     component: PFMListComponent,
+    canActivate: [DocketGuard]
   },
 
 ];
