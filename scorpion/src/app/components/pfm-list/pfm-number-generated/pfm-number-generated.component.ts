@@ -3,6 +3,7 @@ import { Component, Output, EventEmitter, ViewChild, TemplateRef } from '@angula
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PFMapiService } from 'app/shared/services/pfmapi.service';
 import { DocketService } from 'app/shared/services/docket.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 
 @Component({
   selector: 'app-pfm-number-generated',
@@ -18,7 +19,7 @@ export class PFMNumberGeneratedComponent {
   public fM_No: string = '';
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
-  constructor(private modalService: BsModalService, public PFMapiService: PFMapiService, public docketService: DocketService) { }
+  constructor(private modalService: BsModalService, public PFMapiService: PFMapiService, public docketService: DocketService,private sweetAlertService:SweetAlertService) { }
 
   showPopup(data: any) {
     console.log('PFM Selected Data:', data);
@@ -58,12 +59,13 @@ export class PFMNumberGeneratedComponent {
       next: (response: any) => {
         if (response) {
           this.fM_No = response.fM_No;
+          this.sweetAlertService.success('PFM Generated Successfully!!');
           this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-lg modal-dialog-centered', backdrop: true });
           this.dataEmitter.emit('PFM saved successfully');
         }
       },
       error: (err) => {
-        console.error('Error generating PFM:', err);
+        this.sweetAlertService.error(err);
       }
     });
   }

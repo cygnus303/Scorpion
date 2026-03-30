@@ -5,6 +5,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PFMapiService } from 'app/shared/services/pfmapi.service';
 import { DocketService } from 'app/shared/services/docket.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 
 @Component({
   selector: 'app-acknowledge-pfm',
@@ -18,6 +19,8 @@ export class AcknowledgePFMComponent {
   public modalRef!: BsModalRef;
   public uniquePFMs: string[] = [];
   public ackForm!: FormGroup;
+  public minDate: any;
+  public maxDate: any;
 
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
@@ -25,7 +28,8 @@ export class AcknowledgePFMComponent {
   constructor(
     private modalService: BsModalService,
     private pfmApiService: PFMapiService,
-    private docketService: DocketService
+    private docketService: DocketService,
+    private sweetAlertService:SweetAlertService
   ) { }
 
   createForm() {
@@ -37,6 +41,16 @@ export class AcknowledgePFMComponent {
 
   showPopup(data: any) {
     console.log('Acknowledge PFM Selected Data:', data);
+    const fmDate = Array.isArray(data) 
+    ? data?.[0]?.fM_Date 
+    : data?.fM_Date;
+
+  if (fmDate) {
+    this.minDate = new Date(fmDate);
+  }
+
+  this.maxDate = new Date();
+
     if (Array.isArray(data)) {
       const pfmSet = new Set<string>();
       data.forEach(item => {
@@ -47,6 +61,7 @@ export class AcknowledgePFMComponent {
       this.uniquePFMs = [];
     }
     this.createForm();
+    
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-lg modal-dialog-centered', backdrop: true });
   }
 
@@ -66,11 +81,12 @@ export class AcknowledgePFMComponent {
 
     this.pfmApiService.NewForwardFMAckDocumentsDone(payload).subscribe({
       next: (res: any) => {
+        this.sweetAlertService.success('PFM Acknowledged Successfully!!');
         this.dataEmitter.emit('PFM Acknowledged Successfully');
         this.modalRef.hide();
       },
       error: (err: any) => {
-        console.error('Error acknowledging PFM:', err);
+        this.sweetAlertService.error(err);
       }
     });
   }

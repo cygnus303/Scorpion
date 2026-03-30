@@ -29,7 +29,7 @@
             <div class="input-group" (click)="dp.toggle(); $event.stopPropagation()"
                 [ngClass]="{ 'border-danger': ackForm.get('ackDate')?.invalid && ackForm.get('ackDate')?.touched}">
                 <input type="text" class="form-control required2 input-background-color" #dp="bsDatepicker" bsDatepicker
-                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" [minDate]="minDate" [maxDate]="maxDate"
                     placeholder="Acknowledgement Date" [class.disabled-input]="true" formControlName="ackDate">
                 <span class="input-group-text cursor-pointer">
                     <i class="fa fa-calendar"></i>
