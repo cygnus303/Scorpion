@@ -375,6 +375,7 @@ if(['XX5'].includes(this.DRSSummaryForm.get('LoadingBy')?.value)){
       this.drsList.controls.forEach((item: any, index) => {
         this.drsList.controls[index].patchValue({
           newRate: response.rate,
+          ratetype:response.rateType
         });
       });
     },
