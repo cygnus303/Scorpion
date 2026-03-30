@@ -156,7 +156,8 @@
                     <tr *ngFor="let row of filteredRows">
                         <td class="text-center">
                             <input type="checkbox" [(ngModel)]="row.checked"
-                                [disabled]="row.displayStatus === 'Acknowledged' || (row.displayStatus === 'Forwarded' && this.docketService.loginUserList.LocationCode === row.fM_FWD_LocCode)" (change)="onRowSelect(row)">
+                                [disabled]="row.displayStatus === 'Acknowledged' || (row.displayStatus === 'Forwarded' && this.docketService.loginUserList.LocationCode === row.fM_FWD_LocCode)"
+                                (change)="onRowSelect(row)">
                         </td>
                         <td class="lr-date">{{ row.dockDt | date:'dd-MM-yyyy' }}</td>
                         <td class="lr-no">{{ row.dockNo }}</td>
@@ -191,7 +192,9 @@
                             {{ row.daysSince }}d
                         </td>
                         <td>
-                            <span *ngIf="row.fM_No" class="pfm-no">
+                            <span *ngIf="row.fM_No"
+                                class="pfm-no cursor-pointer fw-bold text-decoration-underline-hover"
+                                (click)="openViewPFM(row)" title="Click to view timeline">
                                 {{ row.fM_No }}
                             </span>
                             <span *ngIf="!row.fM_No" class="pfm-none">—</span>
@@ -201,7 +204,7 @@
                                 <button type="button" class="btn btn-sm btn-view fw-bolder fs-6"
                                     (click)="openViewPFM(row)">👁 View</button>
                                 <button type="button" (click)="openEditForwardedPFM(row)"
-                                    *ngIf="row.displayStatus === 'Forwarded'"
+                                    *ngIf="row.displayStatus === 'Forwarded' && this.docketService.loginUserList.LocationCode === row.fM_FWD_LocCode"
                                     class="btn btn-sm btn-edit fw-bolder fs-6">✎ Edit</button>
                             </div>
                         </td>

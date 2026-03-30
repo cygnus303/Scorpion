@@ -30,7 +30,7 @@
     &.active-card {
         border-color: rgba(59, 130, 246, 0.2);
         position: relative;
-        
+
         &::before {
             content: '';
             position: absolute;
@@ -41,7 +41,7 @@
             background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.4), transparent);
             animation: shimmer 2s infinite;
         }
-        
+
         &::after {
             content: '';
             position: absolute;
@@ -54,7 +54,7 @@
             animation: pulse 2s infinite;
             box-shadow: 0 0 10px currentColor;
         }
-        
+
         .s-label {
             font-weight: 700;
             color: #475569;
@@ -149,12 +149,39 @@
         opacity: 1;
         transform: scale(1);
     }
+
     50% {
         opacity: 0.5;
         transform: scale(1.2);
     }
+
     100% {
         opacity: 1;
         transform: scale(1);
     }
+}
+
+.pfm-no {
+    color: #2563eb;
+    padding: 4px 10px;
+    background: #eff6ff;
+    border: 1px solid #dbeafe;
+    border-radius: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    transition: all 0.2s ease;
+    display: inline-block;
+
+    &:hover {
+        background: #2563eb;
+        color: #fff;
+        border-color: #2563eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+    }
+}
+
+.pfm-none {
+    color: #94a3b8;
+    font-style: italic;
 }

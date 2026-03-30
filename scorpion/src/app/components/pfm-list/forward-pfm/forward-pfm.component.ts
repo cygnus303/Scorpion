@@ -72,24 +72,31 @@ export class ForwardPFMComponent {
       return;
     }
     const selected = this.pfmData.filter(r => r.checked);
-    const uniquePFMs = [...new Set(selected.map(r => r.fM_No))];
+    const uniquePFMs = [...new Set(selected.map(r => r.fM_No).filter(f => f))];
     const formVals = this.forwardForm.value;
 
-    const pfmForwardArray = uniquePFMs.map(fM_No => ({
-      fM_No: fM_No,
-      doc_FWD_To: '2',
-      courier_Code: formVals.courierName,
-      loc_Cust_Code: 'HQTR',
-      fM_FWD_LocCode: this.docketService.loginUserList.LocationCode,
-      courier_Way_Bill_No: formVals.courierNo,
-      courier_Way_Bill_Date: new Date(formVals.fwdDate).toISOString(),
-      entryBy: this.docketService.loginUserList.UserId
-    }));
+    const pfmForwardArray = uniquePFMs.map(fM_No => {
+      const groupedLrs = selected
+        .filter(r => r.fM_No === fM_No)
+        .map(r => r.dockNo)
+        .join(',');
+
+      return {
+        fM_No: fM_No,
+        DockNo: groupedLrs,
+        doc_FWD_To: '2',
+        courier_Code: formVals.courierName,
+        loc_Cust_Code: 'HQTR',
+        fM_FWD_LocCode: this.docketService.loginUserList.LocationCode,
+        courier_Way_Bill_No: formVals.courierNo,
+        courier_Way_Bill_Date: formVals.fwdDate ? new Date(formVals.fwdDate).toISOString().split('T')[0] : '',
+        entryBy: this.docketService.loginUserList.UserId
+      };
+    });
 
     const payload = {
       pfmForward: pfmForwardArray
     };
-
     console.log('Forward Payload:', payload);
 
     this.PFMapiService.PFMForward(payload).subscribe({
