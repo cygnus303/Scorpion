@@ -1,0 +1,182 @@
+<div class="d-flex row col-md-10">
+    <div class="cnote-entry-container px-1 ">
+        <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+            <i class="fas fa-list me-2"></i>
+            PRS Arrival
+        </div>
+        <form [formGroup]="arrivalFilterForm">
+            <div class="form-grid p-4">
+                <div class="row align-items-center mb-3">
+                    <div class="row align-items-center mb-3">
+                        <label class="control-label col-md-1" style="text-align: left;"></label>
+                        <label class="form-label col-md-2 text-start fw-semibold">
+                            Date Range
+                        </label>
+                        <div class="col-md-5">
+                            <div class="input-group shadow-sm rounded" (click)="dvr.toggle()">
+                                <span class="input-group-text bg-white border-end-0 p-2">
+                                    <i class="fas fa-calendar-alt text-dark text-secondary"></i>
+                                </span>
+                                <input type="text" placeholder="Daterangepicker"
+                                    class="form-control border-start-1 text-center line-height" bsDaterangepicker
+                                    #dvr="bsDaterangepicker" formControlName="reportrange" [class.disabled-input]="true"
+                                    [class.disabled-input]="true"
+                                    [bsConfig]="{ ranges: commonService.ranges,containerClass: 'theme-dark-blue', rangeInputFormat: 'MMMM D, YYYY', dateInputFormat: 'MMMM D, YYYY'}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row align-items-center mb-3">
+                    <label class="control-label col-md-1" style="text-align: left;"></label>
+                    <label class="form-label col-md-2 text-start fw-semibold">
+                        Document No
+                    </label>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control" placeholder="Enter Document No" formControlName="DocNo">
+                    </div>
+                </div>
+
+                <div class="row align-items-center mb-3">
+                    <label class="control-label col-md-1" style="text-align: left;"></label>
+                    <label class="form-label col-md-2 text-start fw-semibold">
+                        UnLoad By
+                    </label>
+                    <div class="col-md-5">
+                        <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Loading By"
+                            formControlName="UnloadBy" bindLabel="codeDesc" bindValue="codeId"
+                            [items]="generalMasterService.loadingData">
+                        </ng-select>
+                    </div>
+                </div>
+
+                <div class="row align-items-center mb-3">
+                    <label class="control-label col-md-1" style="text-align: left;"></label>
+                    <label class="form-label col-md-2 text-start fw-semibold">
+                        Rate Type
+                    </label>
+                    <div class="col-md-5">
+                        <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Charge type"
+                            formControlName="RateType" bindLabel="codeDesc" bindValue="codeId"
+                            [items]="generalMasterService.chargeTypeData" 
+                            [readonly]="arrivalFilterForm.value.UnloadBy ==='XX9' || arrivalFilterForm.value.UnloadBy ==='XX5'"
+                            [ngClass]="{ 'border-danger': arrivalFilterForm.get('RateType')?.invalid  && arrivalFilterForm.get('RateType')?.touched }">
+                        </ng-select>
+                        <div class="text-danger text-start"
+                            *ngIf="arrivalFilterForm.get('RateType')?.hasError('required') && arrivalFilterForm.get('RateType')?.touched">
+                            This field is required.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 bg-light">
+                    <div class="col-md-12 d-flex gap-2">
+                        <div class="col-md-8">
+                            <button type="button" class="btn btn-success text-white btn-sm px-3" (click)="getArrivalList()"><i class="fas fa-check"></i>&nbsp;Get List</button>
+                        </div>
+                    </div>
+                </div>
+        </form>
+    </div>
+</div>
+
+<div class="cnote-entry-container px-2 mt-4">
+    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+        <i class="fas fa-list me-2"></i>
+        Arrival List
+    </div>
+    <div class="p-3">
+        <div class="row p-3">
+            <div class="col-md-1">
+                <ng-select class="clear-icon" [items]="recordOptions" bindLabel="label" bindValue="value" [(ngModel)]="selectedRecordCount"
+                (change)="onRecordCountChange()"></ng-select>
+            </div>
+            <div class="col-md-2 col-form-label text-start">Records</div>
+            <div class="col-md-5"></div>
+            <div class="col-md-2 col-form-label text-end">Search</div>
+            <div class="col-md-2"><input class="form-control" placeholder="Search" [(ngModel)]="searchText" (input)="applyFilter()"></div>
+        </div>
+        <div class="table-responsive m-3" style="max-height: 650px; overflow-y: auto; overflow-x: auto;">
+            <table class="table table-bordered align-middle mb-0 table-condensed flip-content">
+                <thead class="table-light text-center sticky-top bg-light">
+                    <tr>
+                        <th (click)="sort('pdcno')" class="cursor-pointer">
+                            PDC NO
+                            <span *ngIf="sortColumn==='pdcno'">
+                            {{sortDirection==='asc' ? '▲' : '▼'}}
+                        </span>
+                        </th>
+                        <th (click)="sort('pdcdt')" class="cursor-pointer">
+                            PDC Date
+                            <span *ngIf="sortColumn==='pdcdt'">
+                                {{sortDirection==='asc' ? '▲' : '▼'}}
+                            </span>
+                        </th>
+                        <th (click)="sort('vendorCode')" class="cursor-pointer">
+                            Vendor Code
+                            <span *ngIf="sortColumn==='vendorCode'">
+                                {{sortDirection==='asc' ? '▲' : '▼'}}
+                            </span>
+                        </th>
+                        <th (click)="sort('vehno')" class="cursor-pointer">
+                            Vehicle No
+                            <span *ngIf="sortColumn==='vehno'">
+                                {{sortDirection==='asc' ? '▲' : '▼'}}
+                            </span>
+                        </th>
+                         <th (click)="sort('pdcbr')" class="cursor-pointer">
+                           PDC Branch
+                            <span *ngIf="sortColumn==='pdcbr'">
+                                {{sortDirection==='asc' ? '▲' : '▼'}}
+                            </span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="isLoading">
+                            <td colspan="4" class="text-center p-3">
+                                <div class="spinner-border"></div>
+                            </td>
+                        </tr>
+                        <tr *ngIf="!isLoading && paginatedList.length === 0">
+                            <td colspan="4" class="text-center text-muted p-3">
+                                No Record Found.
+                            </td>
+                        </tr>
+                    <tr *ngFor="let data of paginatedList">
+                        <td class="text-center " (click)="onPDCNo()">{{data.pdcno}}</td>
+                        <td>{{data.pdcdt}}</td>
+                        <td>{{data.vendorCode}}</td>
+                        <td>{{data.vehno}}</td>
+                        <td>{{data.pdcbr}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center px-4 pb-3">
+
+            <div>
+                    Showing {{filteredArrivalList.length === 0 ? 0 : startIndex + 1}}
+                    to {{endIndex}}
+                    of {{filteredArrivalList.length}} entries
+                </div>
+
+            <div class="d-flex justify-content-center">
+
+                <button class="btn btn-light border me-1">
+                    ‹
+                </button>
+
+                <button *ngFor="let page of pages" class="btn border me-1"
+                        [class.btn-primary]="currentPage === page" (click)="goToPage(page)">
+                        {{page}}
+                    </button>
+
+                    <button class="btn btn-light border" (click)="goToNext()" [disabled]="currentPage === totalPages">
+                        ›
+                    </button>
+            </div>
+        </div>
+    </div>
+</div>

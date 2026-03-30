@@ -151,12 +151,14 @@ if(['XX5'].includes(this.prsArrivalForm.get('LoadingBy')?.value)){
   this.THCService.getLoadingCharge(data).subscribe({
     next: (response: any) => {
     this.prsArrivalForm.patchValue({
-        Rate:response.rate
+        Rate:response.rate,
+        ratetype:response.rateType
       });
       const pdcArray = this.prsArrivalForm.get('pdcDetails') as FormArray;
       pdcArray?.controls.forEach((item: any, index) => {        
         pdcArray.controls[index].patchValue({
           newRate: response.rate,
+          ratetype:response.rateType
         });
       });
     },
