@@ -263,7 +263,7 @@
             <label class="col-sm-5 col-form-label text-end">Vendor Code </label>
             <div class="col-sm-7">
               <ng-select class="noFoundTextColor  clear-icon" placeholder="Select Vendor Name"
-                formControlName="vendorCode" notFoundText="No matches found" appFocusNext
+                formControlName="vendorCode" notFoundText="No matches found" appFocusNext (change)="getLoadingCharge($event)"
                 [items]="challanService.branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value" [readonly]="loadingSheetService.LSForm.value.loadingBy === 'XX9'"
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('vendorCode')?.invalid  && loadingSheetService.LSForm.get('vendorCode')?.touched }"></ng-select>
                  <div class="text-danger text-start"
@@ -395,9 +395,9 @@
               <th class="p-3 fw-bolder">Comm. Dely Date</th>
               <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === 'LS'">
                 Rate
-                <ng-select class="required2 clear-icon" bindLabel="codeDesc" bindValue="codeId"  formControlName="loadedRateType" 
+                <!-- <ng-select class="required2 clear-icon" bindLabel="codeDesc" bindValue="codeId"  formControlName="loadedRateType" 
                 [readonly]="loadingSheetService.LSForm.value.loadingBy === 'XX5'"
-                [items]="generalMasterService.chargeTypeData" appFocusNext></ng-select>
+                [items]="generalMasterService.chargeTypeData" appFocusNext></ng-select> -->
               </th>
               <th class="p-3 fw-bolder">Pkgs.[L/B]</th>
               <th class="p-3 fw-bolder">Wt.[L/B]</th>
@@ -442,7 +442,7 @@
                 <td>{{ row.value.commited_DelyDate }}</td>
                 
                 <td *ngIf="docketService.loginUserList.Type === 'LS'">
-                  <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"
+                  <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId" placeholder="Enter rateType"
                   [items]="generalMasterService.chargeTypeData" [readonly]="loadingSheetService.LSForm.value.loadingBy === 'XX5'" appFocusNext></ng-select>
                   <input type="text" class="form-control" formControlName="newRate" (blur)="loadingSheetService.loadingRateCalc(row)">
                   <span class="text-danger small d-flex justify-content-start" *ngIf="loadingSheetService.docketFormArray.at(i).get('rateError')?.errors?.['rateLimit']">
