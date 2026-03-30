@@ -19,7 +19,7 @@ export class PFMNumberGeneratedComponent {
   public fM_No: string = '';
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
-  constructor(private modalService: BsModalService, public PFMapiService: PFMapiService, public docketService: DocketService,private sweetAlertService:SweetAlertService) { }
+  constructor(private modalService: BsModalService, public PFMapiService: PFMapiService, public docketService: DocketService, private sweetAlertService: SweetAlertService) { }
 
   showPopup(data: any) {
     console.log('PFM Selected Data:', data);
@@ -46,7 +46,7 @@ export class PFMNumberGeneratedComponent {
       },
       dockets: this.selectedRecords.map(({ party_name, fM_Status, fM_Ack_Status, displayStatus, daysSince, checked, ...rest }) => ({
         ...rest,
-        currLoc:'HQTR',
+        currLoc: 'HQTR',
         documentNo: 'N/A',
         DocumentDate: new Date().toISOString(),
         Scan_Status_New: ''
@@ -59,7 +59,7 @@ export class PFMNumberGeneratedComponent {
       next: (response: any) => {
         if (response) {
           this.fM_No = response.fM_No;
-          this.sweetAlertService.success('PFM Generated Successfully!!');
+          // this.sweetAlertService.success('PFM Generated Successfully!!');
           this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-lg modal-dialog-centered', backdrop: true });
           this.dataEmitter.emit('PFM saved successfully');
         }
