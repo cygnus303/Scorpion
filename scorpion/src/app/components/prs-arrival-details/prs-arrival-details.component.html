@@ -147,7 +147,7 @@
                             <th>DESTCD</th>
                             <th>PAYBAS</th>
                             <th> <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type"
-                                        [items]="generalMasterService.chargeTypeData"></ng-select></th>
+                                        [items]="generalMasterService.chargeTypeData" [readonly]="this.prsArrivalForm.value.LoadingBy ==='XX9' || this.prsArrivalForm.value.LoadingBy ==='XX5'"></ng-select></th>
                             <th>ACTUWT</th>
                             <th>PKGSNO</th>
                             <th>CHRGWT</th>
@@ -176,7 +176,7 @@
                             <td>{{ctrl.value.paybas}}</td>
                             <td style="width:290px; max-width: 290px;">
                                     <ng-select class="clear-icon required2" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type"
-                                        [items]="generalMasterService.chargeTypeData" [readonly]="this.prsArrivalForm.value.LoadingBy !=='XX9'"></ng-select>
+                                        [items]="generalMasterService.chargeTypeData" [readonly]="this.prsArrivalForm.value.LoadingBy ==='XX9' || this.prsArrivalForm.value.LoadingBy ==='XX5'"></ng-select>
                                     <input type="text" class="form-control form-control-sm mt-1" formControlName="newRate" appFocusNext
                                         [readOnly]="this.prsArrivalForm.value.LoadingBy === 'XX5'" (focus)="clearNewRateOnFocus(i)" (blur)="resetNewRateOnBlur(i)"/>
                                     <div class="text-danger small mt-1" *ngIf="ctrl.get('rateError')?.value">
@@ -194,7 +194,7 @@
     </form>
 
     <div class="d-flex justify-content-center text-center bg-secondary-subtle p-4 gap-2">
-         <button class="btn btn-secondary controls"> <i class="fas fa-arrow-left"></i>&nbsp; Back to PRS Arrival </button>
+         <!-- <button class="btn btn-secondary controls"> <i class="fas fa-arrow-left"></i>&nbsp; Back to PRS Arrival </button> -->
         <button type="button" id="btnSubmit" class="btn btn-success controls" (click)="onSubmit()" [disabled]="isSubmitting || isRedirect"><i class="fas fa-check"></i>&nbsp; Update PRS Arrival Data</button>
     </div>
     <div *ngIf="isSubmitting" class="loading-overlay">

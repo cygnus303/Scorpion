@@ -1,0 +1,48 @@
+<div class="cnote-entry-container px-1 mb-3">
+  <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
+    <div class="mb-0">
+      <i class="fas fa-edit me-2"></i>Vendor Contract - Step 1 of 2
+    </div>
+    <button class="btn btn-light" (click)="goBack()"> ← Back to Vendor Criteria</button>
+  </div>
+</div>
+
+<ul class="nav nav-tabs px-3 pt-3">
+  <li class="nav-item">
+    <button class="nav-link fw-semibold larger-font" style="width: 250px;" [class.active]="selectedTab === 'profile'" (click)="selectTab('profile')">
+      Contract Profile
+    </button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link fw-semibold larger-font" style="width: 250px;" [class.active]="selectedTab === 'charges'" (click)="selectTab('charges')">
+      Contract Charges Detail
+    </button>
+  </li>
+</ul>
+
+<div>
+  <!-- Contract Profile Section -->
+  <div [hidden]="selectedTab !== 'profile'">
+    <app-vendor-contract-profile></app-vendor-contract-profile>
+    <div class="d-flex justify-content-center bg-secondary-subtle p-4 gap-2 mt-4">
+      <button class="btn btn-primary" (click)="onContinue()"> Continue <i
+          class="fas fa-arrow-circle-right md-2"></i></button>
+    </div>
+  </div>
+
+  <!-- Contract Charges Detail Section -->
+  <div [hidden]="selectedTab !== 'charges'">
+    <app-vendor-contract-charges></app-vendor-contract-charges>
+    <div class="d-flex justify-content-center bg-secondary-subtle p-4 gap-2 mt-4">
+      <button class="btn btn-light" (click)="onBack()"> <i class="fas fa-arrow-circle-left me-2"></i> Back</button>
+      <button class="btn btn-success"(click)="onSubmit()"   [disabled]="isRedirect"> <i class="fas fa-arrow-circle-right me-2"></i> Submit </button>
+    </div>
+  </div>
+</div>
+
+    <div *ngIf="isSubmitting" class="loading-spinner-overlay">
+      <div class="spinner-container">
+        <i class="fas fa-spinner fa-spin custom-spinner"></i>
+        <div class="mt-3 custom-text">Submitting...</div>
+      </div>
+    </div>

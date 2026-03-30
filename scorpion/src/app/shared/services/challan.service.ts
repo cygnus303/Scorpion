@@ -19,6 +19,7 @@ export class ChallanService {
 env = environment;
 public challanForm!:FormGroup;
 public vendtyData:generalMasterResponse[]=[]
+public vendorTypeList:generalMasterResponse[]=[]
 public vendorsList:VendeorsResponse[]=[]
 public vendorsChargesList:VendeorsResponse[]=[]
 public cityList:CityResponse[]=[];
@@ -49,6 +50,7 @@ constructor(
       next: (response) => {
         if (response.success) {
           this.vendtyData = response.data;
+          this.vendorTypeList = response.data;
         }
       },
     });
@@ -284,7 +286,7 @@ SearchfilterForm(){
   // format to yyyy-MM-dd (HTML date input compatible)
   const formatDate = (d: Date) => d.toISOString().split('T')[0];
   this.filterForm=new FormGroup({
-    bookingDateType:new FormControl('1'),
+    // bookingDateType:new FormControl('1'),
     fromdt:new FormControl(formatDate(fromDate)),
     todt:new FormControl(formatDate(today)),
     dttyp:new FormControl('1'),
@@ -292,8 +294,8 @@ SearchfilterForm(){
     trnMod:new FormControl(),
     bustyp:new FormControl(),
     docketList:new FormControl(),
-    loadingBy:new FormControl('XX9'),
-    loadingBycodeFor:new FormControl('XX9'),
+    loadingBy:new FormControl(null,Validators.required),
+    loadingBycodeFor:new FormControl(),
     chrgType:new FormControl(),
     odaType:new FormControl(),
     flag:new FormControl(2),
@@ -340,11 +342,11 @@ SearchfilterForm(){
     eNGINENO : new FormControl(),
     cHASISNO : new FormControl(),
     rCBOOKNO : new FormControl(),
-    permitDate : new FormControl(),
+    // permitDate : new FormControl(),
     insuranceDate : new FormControl(),
     fitnessDate : new FormControl(),
-    driver1Licence:new FormControl('',[Validators.required,Validators.pattern(/^[A-Za-z]{2}\d{2}\s?\d{11}$/)]),
-    d1_DOB:new FormControl('',Validators.required),
+    driver1Licence:new FormControl('',Validators.required),
+    d1_DOB:new FormControl(''),
     driver1Name:new FormControl(),
     driver1RTONo:new FormControl(),
     driver1LicenceValDate:new FormControl(),
@@ -539,14 +541,14 @@ advanceNotGreaterThanNet(control: AbstractControl) {
       gcno: '0',
       drsType: "",
       typ: this.docketService.loginUserList.Type === '2' ? 2 : 3,
-      datetype: data.bookingDateType || '',
+      // datetype: data.bookingDateType || '',
       vendorCode: this.challanForm.value?.vendorType === '04' ? this.challanForm.value.vendorCode : '',
       bookedBy: data.BookedBy || '',
       bookedByType: data.BookedByType || '',
       fromDate: new Date(data?.dateRange[0]).toISOString(),
       toDate: new Date(data?.dateRange[1]).toISOString(),
       paybas: data.paybas ? data.paybas : 'ALL',
-      trnmod: data.trnMod ? data.trnMod : 'ALL',
+      // trnmod: data.trnMod ? data.trnMod : 'ALL',
       bustype: data.bustyp ? data.bustyp : 'ALL',
       doctyp: this.docketService.loginUserList.Type === '2' ? "PRS" : "DRS",
       loadingBy: data.loadingBy || '',
@@ -767,10 +769,10 @@ onSubmit(){
     To_City:challanForm?.to_City,
     ToAddress:challanForm?.toAddress,
    distanceInKM:challanForm?.distanceInKM,
-    EWayBillNo:challanForm?.eWayBillNo,
+    // EWayBillNo:challanForm?.eWayBillNo,
     EWayBillExpiredDate:challanForm?.eWayBillExpiredDate,
     IsMonthlyBillAllow:challanForm?.isMonthlyBillAllow?true:false,
-    DeliveryAgent:challanForm?.deliveryAgent,
+    DeliveryAgent:challanForm?.deliveryAgent?.id,
     DeliveryAgentMoNo:challanForm?.deliveryAgentMoNo,
     LoadingDate:challanForm?.loadingDate?.toISOString(),
     CityRouteCode:"",
@@ -805,7 +807,7 @@ onSubmit(){
        TotalTDSAmount:Number(challanForm?.totalTDSAmount),
       TDSPercent:challanForm?.TDSPercent ? Number(challanForm?.TDSPercent): 0,
       Loadingcharge:Number(challanForm?.Loadingcharge),
-      LoadedRateType:this.filterList?.chrgType || '',
+      LoadedRateType:this.filterList ? this.filterList?.chrgType : '',
       LoadedBy:this.filterList?.loadingBy ? this.filterList?.loadingBy:'',
       Rate:Number(challanForm?.rate),
       MaxLimit:0,
@@ -844,7 +846,7 @@ onSubmit(){
       RCBOOKNO:challanForm?.rCBOOKNO,
       RegistrationDate: new Date(challanForm?.registrationDate)?.toISOString(),
       FitnessDate: new Date(challanForm?.fitnessDate)?.toISOString(),
-      PermitDate:new Date(challanForm?.permitDate)?.toISOString(),
+      // PermitDate:new Date(challanForm?.permitDate)?.toISOString(),
       InsuranceDate: new Date(challanForm?.insuranceDate)?.toISOString(),
       tabletNumber:"",
       StaffName:"",
@@ -854,23 +856,23 @@ onSubmit(){
       Driver:"",
     },
     "GC":{
-      FromDate:new Date(this.filterList?.fromdt)?.toISOString() || '',
-      ToDate:new Date(this.filterList?.todt)?.toISOString() || '',
+      FromDate:this.filterList ? new Date(this.filterList?.fromdt)?.toISOString() : '',
+      ToDate:this.filterList ? new Date(this.filterList?.todt)?.toISOString() : '',
       GCNO:'0',
-      PAYBAS:this.filterList?.paybas || '',
-      TRNMOD:this.filterList?.trnMod || '',
-      BUSTYPE:this.filterList?.bustyp || '',
-      DATETYPE:this.filterList?.bookingDateType || '',
-      BookedByType:this.filterList?.BookedByType || '',
-      BookedBy:this.filterList?.BookedBy || '',
+      PAYBAS:this.filterList ? this.filterList?.paybas : '',
+      // TRNMOD:this.filterList ? this.filterList?.trnMod : '',
+      BUSTYPE:this.filterList ? this.filterList?.bustyp : '',
+      // DATETYPE:this.filterList ? this.filterList?.bookingDateType : '',
+      BookedByType:this.filterList ? this.filterList?.BookedByType : '',
+      BookedBy:this.filterList ? this.filterList?.BookedBy : '',
       DOCTYP:this.docketService.loginUserList.Type === '2' ? "PRS":"DRS",
       TYP:this.docketService.loginUserList.Type === '2' ? 2 : 3,
       isBookedby:true,
-      LoadingBy:this.filterList?.loadingBy || '',
-      ChargeType:this.filterList?.chrgType || '',
+      LoadingBy:this.filterList ? this.filterList?.loadingBy : '',
+      ChargeType:this.filterList ? this.filterList?.chrgType : '',
       VendorCode:"",
       ODAType:"",
-      DRSType:this.filterList?.DRSType || '',
+      DRSType:this.filterList ? this.filterList?.DRSType : '',
     },
     "CPML":{
       Id:0,

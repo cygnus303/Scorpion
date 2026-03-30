@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import {Component, ElementRef, ViewChild } from '@angular/core';
-import { AbstractControl, FormArray, Validators} from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { generalMasterResponse, StatesFromPartyCodeRepsonse } from 'app/shared/models/general-master.model';
 import { AirportListResponse, AllCityByLocationResponse, CustomerListResponse, DeliveryAgentsListResponse, DeliveryZoneResponse, FlightsListResponse, VehicleTypeListResponse } from 'app/shared/models/thc-master.model';
@@ -58,6 +58,10 @@ public israteDisabled=false;
 public isLoading = false;
 public isVehicleLoading: boolean = false;
 public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
+isFilterApplied: boolean = false;
+public vendorTypeList:generalMasterResponse[]=[];
+public EwaybillForm!:FormGroup;
+public modalInstance: any;
 
 @ViewChild('fileInput') fileInput!: ElementRef;
   constructor(
@@ -89,10 +93,14 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
     this.docketService.getTypeofMovementData();
     this.challanService.getRateTypeData();
     this.challanService.getVendtyData();
+      this.buildEwayBill();
+
     
-    this.challanService.getLocationData();
+    // this.challanService.getLocationData();
     if(this.docketService.loginUserList.Type === '1'){
+      this.isFilterApplied = true;
       this.challanService.getChargesDetails();
+      this.challanService.getLocationData();
       this.challanService.getRouteMode();
       this.challanService.getDepartmentReason();
       this.challanService.getTDSLedgerList();
@@ -124,14 +132,14 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
     }
 
      if (this.docketService.loginUserList.Type === '3') {
-      this.getDeliveryZoneData()
+      this.getDeliveryZoneData();
     }
  
-    if(this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '2'){
-      setTimeout(() => {
-      this.filterListpatchValue();
-      }, 400); 
-    }
+    // if(this.docketService.loginUserList.Type === '3' || this.docketService.loginUserList.Type === '2'){
+    //   setTimeout(() => {
+    //   this.filterListpatchValue();
+    //   }, 400); 
+    // }
 
     this.challanService.challanForm.get('vendorType')?.valueChanges.subscribe((vendorType) => {
       this.updateVehicleRequiredValidator();
@@ -145,19 +153,21 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
     this.updateVehicleRequiredValidator(); // initial call
   }
 
-  filterListpatchValue() {
-    this.route.queryParams.subscribe(params => {
-      if (params['start']) {
-        const formValues = JSON.parse(params['start']);
-        this.challanService.filterList = formValues;
+  filterListpatchValue(event: any) {
+    // this.route.queryParams.subscribe(params => {
+      if (event) {
+        this.challanService.filterList = event;
+        this.isFilterApplied = true;
+         this.challanService.buildForm();
+         this.challanService.getLocationData();
         // Vendor Type specific filtering for DRS with DRSType 'Y' BA
         if (this.challanService.filterList.DRSType === 'Y') {
           const allowedVendorCodes = ['04'];
-          this.challanService.vendtyData = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
+          this.challanService.vendorTypeList = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
           this.getDeliveryAgents();
         }else{
          const allowedVendorCodes = ['XX1', '19', 'XX'];
-         this.challanService.vendtyData = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
+         this.challanService.vendorTypeList = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
         } 
         this.challanService.generatePRSfilter();
 
@@ -175,9 +185,10 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
         if (ChargedBy === 'XX5' || ChargedBy === 'XX8') {
           this.challanService.branchWiseLoadingUnloading(this.challanService?.filterList?.loadingBycodeFor);
         }
+      }else{
+        this.isFilterApplied = false;
       }
-    });
-
+    // });
     if (this.docketService.loginUserList.Type !== '1') {
       this.avalabledocketinPRS();
     }
@@ -202,23 +213,32 @@ public deliveryAgentsList:DeliveryAgentsListResponse[]=[];
     }
   }
 
-  clearchargesZero(controlName: string) {
-    const ctrl = this.challanService.challanForm.get('charges.' + controlName);
-    if (!ctrl) return;
-    const val = ctrl.value;
-    if (val === 0 || val === '0' || val === '0.0' || val === '0.00') {
-      ctrl.setValue('');
-    }
+  buildEwayBill(){
+    this.EwaybillForm=new FormGroup({
+      dockno:new FormControl(null),
+      dockdt:new FormControl(null),
+      eWayBillNo:new FormControl(null),
+      eWayBillExpiredDate:new FormControl(null),
+    })
   }
 
-  setZeroIfEmpty(controlName: string) {
-    const ctrl = this.challanService.challanForm.get('charges.' + controlName);
-    if (!ctrl) return;
-    const val = (ctrl.value || '').toString().trim();
-    if (val === '' || val === null) {
-      ctrl.setValue(0);
-    }
-  }
+  // clearchargesZero(controlName: string) {
+  //   const ctrl = this.challanService.challanForm.get('charges.' + controlName);
+  //   if (!ctrl) return;
+  //   const val = ctrl.value;
+  //   if (val === 0 || val === '0' || val === '0.0' || val === '0.00') {
+  //     ctrl.setValue('');
+  //   }
+  // }
+
+  // setZeroIfEmpty(controlName: string) {
+  //   const ctrl = this.challanService.challanForm.get('charges.' + controlName);
+  //   if (!ctrl) return;
+  //   const val = (ctrl.value || '').toString().trim();
+  //   if (val === '' || val === null) {
+  //     ctrl.setValue(0);
+  //   }
+  // }
   restoreIfEmpty(controlName: string) {
     const ctrl = this.challanService.challanForm.get(controlName);
     if (ctrl && (ctrl.value === '' || ctrl.value == null)) {
@@ -387,6 +407,7 @@ onDocketSelectionChange(ctrl: AbstractControl) {
             });
             this.challanService.avalabledocket.controls.forEach((item: any, index) => {
               this.challanService.avalabledocket.controls[index].patchValue({
+                rateType:response.rateType,
                 NewRate: response.rate
               });
               this.israteDisabled = true;
@@ -462,17 +483,23 @@ onDocketSelectionChange(ctrl: AbstractControl) {
     const contractID = (data.contractID ?? '').toString();
     const contractExpire = !!data.contractExpire;
     this.contractAmtMsg = '';
-    if ((THCTYPE === '3' && vendorType === '04') || (THCTYPE === '1' && vendorType === 'XX1')) {
-      this.contractAmtMsg = '';
-    }
+
+    // if ((THCTYPE === '3' && vendorType === '04') || (THCTYPE === '1' && vendorType === 'XX1')) {
+    //   this.contractAmtMsg = '';
+    // }
+    if (!contractExpire && contractID !== '' && THCTYPE !== '2') {
+    this.contractAmtMsg = '';
+  }
     else if (!contractExpire && contractID !== '' && THCTYPE === '2') {
       this.contractAmtMsg = '';
     }
     else if (contractID === '' && (((THCTYPE === '3' || THCTYPE === '2') && vendorType === '04') || (THCTYPE === '1' && vendorType === 'XX1'))) {
       this.contractAmtMsg = 'Vendor Contract not found';
     }
-    else {
+    else  if(THCTYPE === '1' && vendorType === 'XX1'){
       this.contractAmtMsg = 'Vendor Contract has Expired.';
+    }else{
+      this.contractAmtMsg = '';
     }
   }
 
@@ -540,7 +567,7 @@ vendorCodeName(){
             cHASISNO: response.rc_chasi_no || '',
             rCBOOKNO: response.rc_regn_no || '',
             registrationDate: response.rc_regn_dt ? new Date(response.rc_regn_dt) : null,
-            permitDate: response.rc_permit_valid_upto ? new Date(response.rc_permit_valid_upto) : null,
+            // permitDate: response.rc_permit_valid_upto ? new Date(response.rc_permit_valid_upto) : null,
             insuranceDate: response.rc_insurance_upto ? new Date(response.rc_insurance_upto) : null,
             fitnessDate: response.rc_fit_upto ? new Date(response.rc_fit_upto) : null
           });
@@ -610,7 +637,7 @@ vendorCodeName(){
         eNGINENO: '',
         cHASISNO: '',
         rCBOOKNO: '',
-        permitDate: null,
+        // permitDate: null,
         insuranceDate: null,
         fitnessDate: null,
       });
@@ -618,7 +645,7 @@ vendorCodeName(){
         this.getVehicleType(event.value)
       }
     }
-    this.checkPermitExpiry();
+    // this.checkPermitExpiry();
     this.checkInsuranceExpiry();
     this.checkFitnessExpiry();
     this.checkLicenseExpiry()
@@ -645,10 +672,10 @@ getVehicleCapacity(id:string){
     return date < today;
   }
 
-checkPermitExpiry(event?:any) {
-  const permit = event ? event: this.challanService.challanForm.value.permitDate;
-  this.isPermitExpired = this.checkDateExpiry(permit);
-}
+// checkPermitExpiry(event?:any) {
+//   const permit = event ? event: this.challanService.challanForm.value.permitDate;
+//   this.isPermitExpired = this.checkDateExpiry(permit);
+// }
 
 checkInsuranceExpiry(event?:any) {
   const insurance =  event ? event: this.challanService.challanForm.value.insuranceDate;
@@ -801,7 +828,7 @@ checkLicenseExpiry(event?:any) {
             cHASISNO: response.data.chasisNo || '',
             rCBOOKNO: response.data.rcBookNo || '',
             registrationDate: response.data.registrationDt ? new Date(response.data.registrationDt) : null,
-            permitDate: response.data.vehprmdt ? new Date(response.data.vehprmdt) : null,
+            // permitDate: response.data.vehprmdt ? new Date(response.data.vehprmdt) : null,
             insuranceDate: response.data.insuranceValDt ? new Date(response.data.insuranceValDt) : null,
             fitnessDate: response.data.fitnessValDt ? new Date(response.data.fitnessValDt) : null,
             openKM: response.data.startKM
@@ -909,6 +936,8 @@ checkLicenseExpiry(event?:any) {
               if (match) {
                 match.get('ContractAmount')?.setValue(item.contractAmount);
                 match.get('tDSOnAmount')?.setValue(item.contractAmount);
+                match.get('Message')?.setValue(item.message);
+
               }
             });
           } else {
@@ -982,26 +1011,8 @@ checkLicenseExpiry(event?:any) {
   }
 
   updateTotalManifest(mfNo: string): void {
-    const payload = {
-      mfNo: mfNo
-    }
-    this.THCService.getEWayBillExpiryDateByMF(payload).subscribe({ next: (response: any) => {
-        if (response && response.data) {
-          const result = response.data[0];
-          if (result.message) {
-            this.sweetAlertService.info(result.message);
-          } else if (result.expiryDate) {
-            this.sweetAlertService.info(`This Manifest E-Way Bill expired on: ${result.expiryDate}. Please update or verify before continuing!`);
-            this.challanService.challanForm.patchValue({ eWayBillExpiredDate: new Date(result.expiryDate) })
-          }
-        }
-        this.getContractDetail();
-      },
-      error: (err) => {
-        this.sweetAlertService.error(err.error.message)
-      }
-    });
-
+    
+    this.getContractDetail();
     const totals = this.challanService.avalableForTHC.controls.reduce((acc, g) => {
       if (g.get('selected')?.value) {
         acc.totalManifests += 1;
@@ -1301,7 +1312,7 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
               eNGINENO: response.data.engineNo,
               cHASISNO: response.data.chassisNo,
               rCBOOKNO: response.data.rcBookNo,
-              permitDate:this.datePipe.transform(response.data.permitValidityDate, "dd MMMM yyyy"),
+              // permitDate:this.datePipe.transform(response.data.permitValidityDate, "dd MMMM yyyy"),
               fitnessDate: this.datePipe.transform(response.data.fitnessValidityDate, "dd MMMM yyyy"),
               insuranceDate: this.datePipe.transform(response.data.insuranceValidityDate, "dd MMMM yyyy"),
               driver1Licence: response.data.licenseNo,
@@ -1329,7 +1340,7 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
               cHASISNO: null,
               rCBOOKNO: null,
               fitnessDate: null,
-              permitDate:null,
+              // permitDate:null,
               insuranceDate: null,
               driver1Licence: null,
               d1_DOB: null,
@@ -1371,11 +1382,56 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
     }
   }
 
-    openPopup(eWayBillNo: string) {
+    openPopup(item:any) {
+       if (item.value.Message !== 'E-Way Bill Date Expired') {
+          return;
+      }
+      this.getInvoiceDetail(item.value.DOCKNO)
     const modalElement = document.getElementById('showModal');
-    if (modalElement) {
-      const modal = new Modal(modalElement);
-      modal.show();
+  if (modalElement) {
+    this.modalInstance = new Modal(modalElement);
+    this.modalInstance.show();
+  }
+  }
+
+  getInvoiceDetail(docketNo:string){
+    this.THCService.getDocketInvoiceDetails(docketNo).subscribe({
+      next: (response: any) => {
+        if (response) {
+        const data = response[0];
+
+        this.EwaybillForm.patchValue({
+          ...data,
+          eWayBillExpiredDate: data.eWayBillExpiredDate 
+            ? new Date(data.eWayBillExpiredDate) 
+            : null
+        });
+        }
+      },
+      error: (err) => {
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+  }
+
+  onSubmitEwayBillDetail(){
+    const payload={
+     ...this.EwaybillForm.value,
+      empCode: this.docketService.loginUserList.UserId
     }
+    this.THCService.onSubmitEwaybill(payload).subscribe({
+      next: (response: any) => {
+        if (response.status) {
+          this.sweetAlertService.success('E-Waybill Extended Successfully!!');
+           if (this.modalInstance) {
+          this.modalInstance.hide();
+        }
+          this.avalabledocketinPRS();
+        }
+      },
+      error: (err) => {
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
   }
 }

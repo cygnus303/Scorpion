@@ -6,11 +6,12 @@ import { NgbDatepickerModule, NgbModule, NgbTimepickerModule } from '@ng-bootstr
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { SortDirective } from '../directives/sort.directive';
 
 
 
 @NgModule({
-  declarations: [FocusNextDirective,DateTimePickerComponent],
+  declarations: [FocusNextDirective,DateTimePickerComponent,SortDirective],
   imports: [
     CommonModule,
     NgbDatepickerModule,
@@ -23,7 +24,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
   ],
   exports:[
     DateTimePickerComponent,
-    FocusNextDirective
+    FocusNextDirective,
+    SortDirective
   ]
 })
 export class SharedModule { }

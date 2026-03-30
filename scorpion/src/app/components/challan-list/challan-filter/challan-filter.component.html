@@ -1,17 +1,21 @@
-<div class="d-flex row col-md-10">
+<div class="d-flex row col-md-12">
     <div class="cnote-entry-container px-1 ">
         <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
             <i class="fas fa-filter me-2"></i>
             CNote Criteria for {{typeName}}
         </div>
         <form [formGroup]="challanService.filterForm">
-            <div class="form-grid p-4">
+            <!-- <div class="form-grid p-4">
                 <div class="row align-items-center mb-3">
                     <div class="col-md-3 text-start">
                         <ng-select class="noFoundTextColor" placeholder="CNote Booking Date" [items]="dateType"
                             bindLabel="text" bindValue="value" formControlName="bookingDateType">
                         </ng-select>
-                    </div>
+                    </div> 
+                    <label class="control-label col-md-1" style="text-align: left;"></label>
+                    <label class="form-label col-md-2 text-start fw-semibold">
+                        Select DateRange
+                    </label>
                     <div class="col-md-5">
                         <div class="input-group shadow-sm rounded" (click)="dvr.toggle()">
                             <span class="input-group-text bg-white border-end-0 p-2">
@@ -122,14 +126,12 @@
                         </ng-select>
                     </div>
                 </div>
-
                 <div class="row align-items-center mb-3">
                     <div class="col-md-3 text-start"> </div>
                     <div class="col-md-5 text-start">
                         OR
                     </div>
                 </div>
-                
                 <div class="row align-items-center mb-3">
                     <label class="control-label col-md-1" style="text-align: left;"></label>
                     <label class="form-label col-md-2 text-start fw-semibold">
@@ -147,7 +149,93 @@
                         </div>
                     </div>
                 </div>
+            </div> -->
+
+        <div class="p-3">
+            <div class="row">
+                <div class="mb-3 col-md-3">
+                    <label class="input-group form-label fw-semibold">Date Range</label>
+                    <div class="input-group shadow-sm rounded" (click)="dvr.toggle()">
+                        <span class="input-group-text bg-white border-end-0 p-2">
+                            <i class="fas fa-calendar-alt text-dark text-secondary"></i>
+                        </span>
+                        <input type="text" placeholder="Daterangepicker"
+                            class="form-control border-start-0 text-center" bsDaterangepicker [placement]="'bottom'"
+                            #dvr="bsDaterangepicker" formControlName="dateRange" [class.disabled-input]="true" (ngModelChange)="onSearch()"
+                            [bsConfig]="{ ranges: commonService.ranges,containerClass: 'theme-dark-blue', rangeInputFormat: 'MMMM D, YYYY', dateInputFormat: 'MMMM D, YYYY'}" />
+                    </div>
+                </div>
+                <div class="mb-3 col-md-3">
+                    <label class="input-group form-label fw-semibold">Select Paybas</label>
+                    <ng-select class="noFoundTextColor clear-icon" placeholder="Select Paybas"
+                        formControlName="paybas" bindLabel="codeDesc" bindValue="codeId" appFocusNext
+                        [items]="generalMasterService.PayBsData" (change)="onSearch()">
+                    </ng-select>
+                </div>
+                <div class="mb-3 col-md-3">
+                    <label class="input-group form-label fw-semibold">Loading By</label>
+                    <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Loading By" appFocusNext
+                        (change)="changeLoadingBy($event)" formControlName="loadingBy" bindLabel="codeDesc" bindValue="codeId"
+                        [items]="generalMasterService.loadingData" (change)="onSearch()"
+                        [ngClass]="{ 'border-danger': challanService.filterForm.get('loadingBy')?.invalid  && challanService.filterForm.get('loadingBy')?.touched }">
+                    </ng-select>
+                    <div class="text-danger text-start"
+                        *ngIf="challanService.filterForm.get('loadingBy')?.hasError('required') && challanService.filterForm.get('loadingBy')?.touched">
+                        This field is required.
+                    </div>
+                </div>
+                <div class="mb-3 col-md-3">
+                    <label class="input-group form-label fw-semibold">Charge type</label>
+                    <ng-select class="noFoundTextColor  clear-icon" placeholder="Select Charge type" appFocusNext
+                        [readonly]="challanService.filterForm.value.loadingBy === 'XX9'|| challanService.filterForm.value.loadingBy === 'XX5'" formControlName="chrgType"
+                        bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.chargeTypeData" (change)="onSearch()"
+                        [ngClass]="{ 'border-danger': challanService.filterForm.get('chrgType')?.invalid  && challanService.filterForm.get('chrgType')?.touched }">
+                    </ng-select>
+                    <div class="text-danger text-start"
+                        *ngIf="challanService.filterForm.get('chrgType')?.hasError('required') && challanService.filterForm.get('chrgType')?.touched">
+                        This field is required.
+                    </div>
+                </div>
             </div>
+            <div class="row">
+                <div class="mb-3 col-md-2">
+                    <label class="input-group form-label fw-semibold">{{typeName}} type</label>
+                    <div class="d-flex gap-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="DRSType" id="notThroughDa" value="N"
+                                formControlName="DRSType" (change)="onSearch()" appFocusNext
+                                [ngClass]="{ 'border-danger': challanService.filterForm.get('DRSType')?.invalid  && challanService.filterForm.get('DRSType')?.touched }" />
+                            <label class="form-check-label" for="notThroughDa">
+                                Not Through DA
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="DRSType" id="throughDa" value="Y"
+                                formControlName="DRSType" (change)="onSearch()" appFocusNext
+                                [ngClass]="{ 'border-danger': challanService.filterForm.get('DRSType')?.invalid  && challanService.filterForm.get('DRSType')?.touched }" />
+                            <label class="form-check-label" for="throughDa">
+                                Through DA
+                            </label>
+                        </div>
+                    </div>
+                    <div class="text-danger text-start"
+                        *ngIf="challanService.filterForm.get('DRSType')?.invalid && challanService.filterForm.get('DRSType')?.touched">
+                        Please select a {{typeName}} type
+                    </div>
+                </div>
+                <div class="mb-3 col-md-9">
+                    <label class="input-group form-label fw-semibold">CNote No.</label>
+                    <div class="input-group d-flex align-items-center">
+                        <input type="text" class="form-control" placeholder="CNote No." formControlName="docketList" appFocusNext (blur)="onSearch()">
+                        <span class="ms-3 text-start">[seperated by <b>comma</b> if multiple]</span>
+                    </div>
+                </div>
+                <div class="col-md-1 d-flex align-items-center">
+                    <button type="button" class="btn btn-primary text-white btn-sm px-3 p-2" style="width: 100px;"
+                        (click)="onSearch()"><i class="fas fa-search"></i>&nbsp;Apply</button>
+                </div>
+            </div>
+        </div>
         </form>
     </div>
 </div>

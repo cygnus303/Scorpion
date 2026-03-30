@@ -331,23 +331,43 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                     ? new Date(response.eWayBillExpiredDate)
                     : null;
                 const invDate = response.invdt ? new Date(response.invdt) : null;
-               
+
+                  // check age of eWayBill
+                if (invoiceDate) {
+                  const today = new Date();
+                  const diffTime = Math.abs(today.getTime() - invoiceDate.getTime());
+                  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                  if (diffDays > 15) {
+                    this.sweetAlertService.warning("Error! E-Way Bill is older than 15 days.");
+                    this.docketService.basicDetailForm.patchValue({ ewayBillNo: null });
+                    row.patchValue({
+                      ewayinvoiceDate: null,
+                      ewayBillExpiry: null,
+                      invoicedate: null,
+                      ewayBillNo: null,
+                      invoiceNo: null,
+                      declaredvalue: null
+                    });
+                    return;
+                  }
+                }
+ 
                 // check expiry date
                 if (expiryDate && expiryDate < new Date()) {
                   this.sweetAlertService.warning("Please Check EWayBill Expired Date !!!!");
-                  if(!isInvoice){
-                    this.docketService.basicDetailForm.patchValue({ewayBillNo:null});
+                  if (!isInvoice) {
+                    this.docketService.basicDetailForm.patchValue({ ewayBillNo: null });
                   }
                   row.patchValue({
                     ewayinvoiceDate: null,
                     ewayBillExpiry: null,
                     invoicedate: null,
                     ewayBillNo: null,
-                    invoiceNo:null,
-                    declaredvalue:null
+                    invoiceNo: null,
+                    declaredvalue: null
                   });
-                  return; // stop further execution if expired
-                }
+                  return;
+                } 
                 this.docketService.invoiceRows.controls[index].patchValue({
                   ewayinvoiceDate: invDate,
                   ewayBillExpiry: expiryDate,

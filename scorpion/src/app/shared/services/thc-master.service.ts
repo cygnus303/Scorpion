@@ -165,4 +165,15 @@ export class THCMasterService {
   prsArrival(params:any,paylaod:any){
     return this.apiHandlerService.Post(`THC/PRSArrivalDetailsSubmit?baseLocationCode=${params.baseLocationCode}&BaseCompanyCode=${params.BaseCompanyCode}&userid=${params.userid}`,paylaod);
   }
+
+  getDocketInvoiceDetails(dockNo:string){
+    return this.apiHandlerService.Get(`THC/GetDocketInvoiceDetails?dockNo=${dockNo}`);
+  }
+
+  onSubmitEwaybill(payload:any){
+    return this.apiHandlerService.Post(`THC/SubmitEwayBillExpiryDateChange`,payload);
+  }
+  getPRSArrivalList(payload:any){
+    return this.apiHandlerService.Post(`THC/arrival-listPage`,payload);
+  }
 }

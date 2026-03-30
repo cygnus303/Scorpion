@@ -101,7 +101,7 @@
             </div>
           </div>
         </div>
-        <div class="col-4">
+        <!-- <div class="col-4" >
           <div class="row align-items-center">
             <label class="col-sm-5 col-form-label text-end"> Select Vehicle</label>
             <div class="col-sm-7 d-flex align-items-center">
@@ -115,7 +115,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="col-4">
           <div class="row">
             <label class="col-sm-5 col-form-label text-end"> Seal No</label>
@@ -264,7 +264,7 @@
             <div class="col-sm-7">
               <ng-select class="noFoundTextColor  clear-icon" placeholder="Select Vendor Name"
                 formControlName="vendorCode" notFoundText="No matches found" appFocusNext
-                [items]="challanService.branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"
+                [items]="challanService.branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value" [readonly]="loadingSheetService.LSForm.value.loadingBy === 'XX9'"
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('vendorCode')?.invalid  && loadingSheetService.LSForm.get('vendorCode')?.touched }"></ng-select>
                  <div class="text-danger text-start"
                 *ngIf="loadingSheetService.LSForm.get('vendorCode')?.invalid && loadingSheetService.LSForm.get('vendorCode')?.touched">
@@ -310,8 +310,10 @@
           <label class="col-sm-5 col-form-label text-end">Loading By</label>
           <div class="col-sm-7">
              <ng-select class="noFoundTextColor required2" placeholder="Select Loading By" formControlName="loadingByUser"
-                notFoundText="No matches found" bindLabel="name" bindValue="userId" [items]="unLoaderUserList"
-                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('loadingByUser')?.invalid  && loadingSheetService.LSForm.get('loadingByUser')?.touched }"></ng-select>
+                notFoundText="No matches found"
+                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('loadingByUser')?.invalid  && loadingSheetService.LSForm.get('loadingByUser')?.touched }">
+                 <ng-option *ngFor="let data of unLoaderUserList" [value]="data.userId">{{data.userId}} : {{data.name}}</ng-option>
+              </ng-select>
                 <div class="text-danger text-start" appFocusNext
                 *ngIf="loadingSheetService.LSForm.get('loadingByUser')?.invalid && loadingSheetService.LSForm.get('loadingByUser')?.touched">
                 This field is required.
@@ -324,8 +326,10 @@
           <label class="col-sm-5 col-form-label text-end">Loading Supervisor</label>
           <div class="col-sm-7">
              <ng-select class="noFoundTextColor required2" placeholder="Loading Supervisor" formControlName="LoadingSupervisor"
-                notFoundText="No matches found" bindLabel="name" bindValue="userId" [items]="unLoaderUserList" appFocusNext
-                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('LoadingSupervisor')?.invalid  && loadingSheetService.LSForm.get('LoadingSupervisor')?.touched }"></ng-select>
+                notFoundText="No matches found" appFocusNext
+                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('LoadingSupervisor')?.invalid  && loadingSheetService.LSForm.get('LoadingSupervisor')?.touched }">
+                 <ng-option *ngFor="let data of unLoaderUserList" [value]="data.userId">{{data.userId}} : {{data.name}}</ng-option>
+              </ng-select>
                 <div class="text-danger text-start"
                 *ngIf="loadingSheetService.LSForm.get('LoadingSupervisor')?.invalid && loadingSheetService.LSForm.get('LoadingSupervisor')?.touched">
                 This field is required.

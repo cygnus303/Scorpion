@@ -1,0 +1,336 @@
+<form [formGroup]="vendorContractService.vendorProfileForm">
+<div *ngIf="this.vendorContractService.vendorProfileForm.value.VendorType === 'XX1'">
+    <div class="cnote-entry-container m-4" >
+        <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
+            <div>
+                <i class="fas fa-list me-2"></i>
+                Route Based Contract Matrix
+            </div>
+            <div class="gap-2 d-flex align-items-center">
+                  <button class="btn btn-success"(click)="routeFileInput.click()">
+                        <i class="fas fa-upload me-2"></i>
+                        {{ routeFile  ? 'Change File' : 'Upload Excel' }}
+                  </button>
+
+            <input type="file" #routeFileInput accept=".xls,.xlsx" style="display:none" (change)="uploadRouteFile($event)">
+            <!-- Selected File Name -->
+            <span *ngIf="routeFile" class="ms-2">
+                {{ routeFile.name }}
+            </span>
+                <button class="btn btn-success"  (click)="vendorContractService.DownloadContractExcelTemplate()" [disabled]="vendorContractService.isDownloadingTemplate">
+                    <i class="fas me-2" [ngClass]="{'fa-download': !vendorContractService.isDownloadingTemplate, 'fa-spinner fa-spin': vendorContractService.isDownloadingTemplate}"></i>
+                    {{ vendorContractService.isDownloadingTemplate ? 'Downloading...' : 'Download Excel Template' }}
+                </button>
+                 <button class="btn btn-success"  (click)="vendorContractService.addRouteContract()">+ Add Item</button>
+            </div>
+        </div>
+        
+     <div class="p-4">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th class="cursor-pointer">Mode</th>
+                        <th class="cursor-pointer">Route</th>
+                        <th class="cursor-pointer">Type of Movement</th>
+                        <th class="cursor-pointer">Minimum</th>
+                        <th class="cursor-pointer">Maximum</th>
+                        <th class="cursor-pointer">Rate Type</th>
+                        <th class="cursor-pointer">Rate</th>
+                        <th> <div style="color: Maroon; font-size: 14px; font-weight: bolder; text-decoration: none;"
+                                class="cursor-pointer">X</div></th>
+                    </tr>
+                </thead>
+                <tbody formArrayName="routeBasedContracts">
+                    <tr  *ngFor="let contract of vendorContractService.routeBasedContracts.controls; let i = index" [formGroupName]="i">
+                        <td class="text-center" style="width: 200px;">
+                            <ng-select [items]="modeList" bindLabel="text" bindValue="value" placeholder="Select Mode" formControlName="transMode" (change)="onModeChange(i)"
+                             [ngClass]="{ 'border-danger': contract.get('transMode')?.touched && contract.get('transMode')?.errors?.['required']}"></ng-select>
+                            <div class="text-danger text-start">
+                                <small *ngIf="contract.get('transMode')?.touched && contract.get('transMode')?.errors?.['required']">Mode is required</small>
+                            </div>
+                        </td>
+                        <td style="width: 290px;">
+                        <input *ngIf="!contract.get('transMode')?.value" type="text" class="form-control required2" placeholder="Route" formControlName="routeCode"
+                        [ngClass]="{ 'border-danger': contract.get('routeCode')?.touched && contract.get('routeCode')?.errors?.['required']}">
+                          <ng-select *ngIf="contract.get('transMode')?.value" class="noFoundTextColor clear-icon required2" placeholder="Route"
+                                formControlName="routeCode" notFoundText="No matches found"
+                                (search)="vendorContractService.getRouteDetail($event, i)"
+                                [notFoundText]="vendorContractService.nextRouteValue"
+                                (open)="vendorContractService.resetNextRouteDropdown()"
+                                 [ngClass]="{ 'border-danger': contract.get('routeCode')?.touched && contract.get('routeCode')?.errors?.['required']}">
+                                <ng-option *ngFor="let item of vendorContractService.RouteData" [value]="item.id">
+                                    <strong>{{ item.id }}</strong> : {{ item.text }}
+                                </ng-option>
+                            </ng-select>
+                            <div class="text-danger text-start">
+                                <small *ngIf="contract.get('routeCode')?.touched && contract.get('routeCode')?.errors?.['required']">Route is required</small>
+                            </div>
+                        </td>
+                        
+                        <td style="width: 360px;">
+                            <ng-select [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId" [readonly]="contract.get('transMode')?.value && contract.get('transMode')?.value !== 'S'"
+                                placeholder="Type of Movement" formControlName="ftL_Type" notFoundText="No matches found"></ng-select>
+                        </td>
+                        <td><input type="text" class="form-control" placeholder="Minimum" formControlName="min_Charge" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" ></td>
+                        <td><input type="text" class="form-control" placeholder="Maximum" formControlName="max_Charge" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" ></td>
+                        <td class="text-center" style="width: 250px;">
+                          <ng-select [items]="generalMasterService.rateTypeList" bindLabel="codeDesc" bindValue="codeId"
+                                placeholder="Rate Type" formControlName="rate_Type" notFoundText="No matches found"></ng-select>
+                        </td>
+                        <td class="text-center"><input type="text" class="form-control" placeholder="Rate" formControlName="chg_Rate" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" ></td>
+                        <th> <div *ngIf="i !== 0" style="color: Maroon; font-size: 14px; font-weight: bolder; text-decoration: none;" (click)="vendorContractService.removeRouteBasedContract(i)"
+                                class="cursor-pointer">X</div></th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="cnote-entry-container m-4">
+        <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
+            <div>
+                <i class="fas fa-list me-2"></i>
+                Distance Based Contract
+            </div>
+            <div class="gap-2 d-flex align-items-center">
+                <button class="btn btn-success" (click)="distanceFileInput.click()">
+                        <i class="fas fa-upload me-2"></i>
+                        {{ distanceFile  ? 'Change File' : 'Upload Excel' }}
+                  </button>
+
+            <input type="file" #distanceFileInput accept=".xls,.xlsx" style="display:none" (change)="uploadDistanceFile($event)">
+            <!-- Selected File Name -->
+            <span *ngIf="distanceFile " class="ms-2">
+                {{ distanceFile .name }}
+            </span>
+                <button class="btn btn-success"  (click)="vendorContractService.DownloadDistanceBasedContractExcel()" [disabled]="vendorContractService.isDownloadingDistance">
+                    <i class="fas me-2" [ngClass]="{'fa-download': !vendorContractService.isDownloadingDistance, 'fa-spinner fa-spin': vendorContractService.isDownloadingDistance}"></i>
+                    {{ vendorContractService.isDownloadingDistance ? 'Downloading...' : 'Download Excel Template' }}
+                </button>
+                 <button class="btn btn-success"   (click)="vendorContractService.addDistanceContract()">+ Add Item</button>
+            </div>
+        </div>
+        
+     <div class="p-4">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th class="cursor-pointer">Type of Movement</th>
+                        <th class="cursor-pointer">Vehicle Type</th>
+                        <th class="cursor-pointer">Vehicle Number</th>
+                        <th class="cursor-pointer">Min. Amt. Committed</th>
+                        <th class="cursor-pointer">Committed Km.</th>
+                        <th class="cursor-pointer">Charge Per Additional Km.</th>
+                        <th class="cursor-pointer">Max. Payment</th>
+                        <th class="cursor-pointer">Committed No. Of Trips/Month</th>
+                        <th> <div style="color: Maroon; font-size: 14px; font-weight: bolder; text-decoration: none;"
+                                class="cursor-pointer">X</div></th>
+                    </tr>
+                </thead>
+                <tbody formArrayName="distanceBasedContracts">
+                     <tr *ngFor="let contract of vendorContractService.distanceBasedContracts.controls; let i = index" [formGroupName]="i">
+                            <td class="text-center"  style="width: 300px;">
+                                 <ng-select [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId"
+                                placeholder="Type of Movement" formControlName="ftL_Type" notFoundText="No matches found"></ng-select>
+                            </td>
+                            <td style="width: 300px;">
+                                 <ng-select class="noFoundTextColor clear-icon" placeholder="Vehicle Type" formControlName="vehicle_Type"
+                                [items]="vendorContractService.vehicleTypeList" bindLabel="type_Name" bindValue="typeCode"
+                                notFoundText="No matches found"></ng-select>
+                            </td>
+                            <td style="width: 300px;">
+                                <ng-select class="noFoundTextColor clear-icon" placeholder="Vehicle Number" formControlName="vehicle_Number"
+                                    (search)="vendorContractService.getVehicleNumberDetail($event)" [notFoundText]="vendorContractService.noVehicleValue"
+                                     (open)="vendorContractService.resetvehicleNoDropdown()">
+                                    <ng-option *ngFor="let item of vendorContractService.vehicleNumberData" [value]="item.vehno">
+                                        {{ item.vehno }}
+                                    </ng-option>
+                                </ng-select>
+                            </td>
+                            <td><input type="text" class="form-control" placeholder="Min. Amt. Committed" formControlName="min_Amt_Committed" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td><input type="text" class="form-control" placeholder="Committed Km." formControlName="committed_Km" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td class="text-center"  style="width: 250px;"><input type="text" class="form-control" placeholder="Charge Per Additional Km." formControlName="chg_Per_Add_Km" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td class="text-center"><input type="text" class="form-control" placeholder="Max. Payment" formControlName="max_Amt_Committed" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td class="text-center" style="width: 250px;"><input type="text" class="form-control" placeholder="Committed No." formControlName="trips_PM" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <th><div *ngIf="i !== 0" style="color: Maroon; font-size: 14px; font-weight: bolder;" class="cursor-pointer" (click)="vendorContractService.removeDistanceBasedContract(i)">X</div></th>
+                        </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="this.vendorContractService.vendorProfileForm.value.VendorType === '04'">
+    <div class="cnote-entry-container m-4">
+        <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
+            <div>
+                <i class="fas fa-list me-2"></i>
+                CNote Based Contract : Booking Charges
+            </div>
+            <div class="gap-2 d-flex align-items-center">
+                 <button class="btn btn-success" (click)="bookingInput.click()">
+                        <i class="fas fa-upload me-2"></i>
+                        {{ bookingFile ? 'Change File' : 'Upload Excel' }}
+                  </button>
+
+            <input type="file" #bookingInput accept=".xls,.xlsx" style="display:none" (change)="uploadBookingFile($event)">
+            <!-- Selected File Name -->
+            <span *ngIf="bookingFile" class="ms-2">
+                {{ bookingFile.name }}
+            </span>
+                <button class="btn btn-success" (click)="vendorContractService.DownloadBookingchargesExcel()" [disabled]="vendorContractService.isDownloadingBooking">
+                    <i class="fas me-2" [ngClass]="{'fa-download': !vendorContractService.isDownloadingBooking, 'fa-spinner fa-spin': vendorContractService.isDownloadingBooking}"></i>
+                    {{ vendorContractService.isDownloadingBooking ? 'Downloading...' : 'Download Excel Template' }}
+                </button>
+                 <button class="btn btn-success"   (click)="vendorContractService.addCnoteContract()">+ Add Item</button>
+            </div>
+        </div>
+        
+     <div class="p-4">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th class="cursor-pointer">From City</th>
+                        <th class="cursor-pointer">Location</th>
+                        <th class="cursor-pointer">Pay Basis</th>
+                        <th class="cursor-pointer">Mode</th>
+                        <th class="cursor-pointer">Min. Chg/CNote</th>
+                        <th class="cursor-pointer">Service Type</th>
+                        <th class="cursor-pointer">Rate Type</th>
+                        <th class="cursor-pointer">Rate/CNote</th>
+                        <th class="cursor-pointer">Max. Chg./CNote</th>
+                        <th> <div style="color: Maroon; font-size: 14px; font-weight: bolder; text-decoration: none;"
+                                class="cursor-pointer">X</div></th>
+                    </tr>
+                </thead>
+                <tbody formArrayName="cnoteBasedContracts">
+                     <tr *ngFor="let contract of vendorContractService.cnoteBasedContracts.controls; let i = index" [formGroupName]="i">
+                            <td class="text-center" style="width: 250px;">
+                                <ng-select class="required2" [items]="vendorContractService.cityList" bindValue="location" bindLabel="location"
+                                    placeholder="Select City" formControlName="city" notFoundText="No matches found" appFocusNext
+                                    [ngClass]="{ 'border-danger': contract.get('city')?.invalid  && contract.get('city')?.touched }"></ng-select>
+                                <div *ngIf="contract.get('city')?.touched && contract.get('city')?.errors">
+                                    <div class="text-danger text-start" *ngIf="contract.get('city')?.hasError('required')">
+                                        This field is required.
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 250px;"><ng-select class="required2" placeholder="Select Location" formControlName="location"
+                                    [notFoundText]="vendorContractService.nextLocationValue" bindLabel="text" bindValue="text"
+                                    (search)="vendorContractService.getLocationDetail($event)" [items]="vendorContractService.locationData"
+                                    appFocusNext
+                                    [ngClass]="{ 'border-danger': contract.get('location')?.invalid  && contract.get('location')?.touched }"></ng-select>
+                                <div *ngIf="contract.get('location')?.touched && contract.get('location')?.errors">
+                                    <div class="text-danger text-start" *ngIf="contract.get('location')?.hasError('required')">
+                                        This field is required.
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 150px;"><ng-select placeholder="Select PayBas" formControlName="payBas" appFocusNext
+                                bindLabel="codeDesc" bindValue="codeId" [items]="PayBsList"></ng-select>
+                            <td style="width: 250px;"><ng-select placeholder="Select Mode" formControlName="transMode" appFocusNext
+                                 [items]="generalMasterService.modeData" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
+                            <td><input type="text" class="form-control" placeholder="Min. Chg/CNote" formControlName="min_Charge" appFocusNext (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td class="text-center" style="width: 100px;"><ng-select placeholder="Select ServiceType" formControlName="serviceType" appFocusNext
+                                [items]="generalMasterService.serviceTypeList" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
+                            <td class="text-center" style="width: 150px;"><ng-select  placeholder="Select Rate Type" formControlName="rate_Type" appFocusNext
+                                [items]="generalMasterService.VendorRateList" bindLabel="codeDesc" bindValue="codeId">
+                                </ng-select>
+                            </td>
+                            <td class="text-center"><input type="text" class="form-control" placeholder="Rate/CNote" appFocusNext formControlName="chg_Rate"  (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td class="text-center"><input type="text" class="form-control" placeholder="Max. Chg./CNote" appFocusNext  formControlName="max_Charge" (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <th><div *ngIf="i !== 0" style="color: Maroon; font-size: 14px; font-weight: bolder;" class="cursor-pointer" (click)="vendorContractService.removeCnoteBasedContract(i)">X</div></th>
+                     </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="cnote-entry-container m-4">
+        <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
+            <div>
+                <i class="fas fa-list me-2"></i>
+                CNote Based Contract : Delivery Charges
+            </div>
+            <div class="gap-2 d-flex align-items-center">
+                 <button class="btn btn-success" (click)="deliveryInput.click()">
+                        <i class="fas fa-upload me-2"></i>
+                        {{ deliveryFile  ? 'Change File' : 'Upload Excel' }}
+                  </button>
+
+            <input type="file" #deliveryInput accept=".xls,.xlsx" style="display:none" (change)="uploadDeliveryCharge($event)">
+            <!-- Selected File Name -->
+            <span *ngIf="deliveryFile " class="ms-2">
+                {{ deliveryFile .name }}
+            </span>
+                <button class="btn btn-success" (click)="vendorContractService.DownloadDeliveryChargesExcel()" [disabled]="vendorContractService.isDownloadingDelivery">
+                    <i class="fas me-2" [ngClass]="{'fa-download': !vendorContractService.isDownloadingDelivery, 'fa-spinner fa-spin': vendorContractService.isDownloadingDelivery}"></i>
+                    {{ vendorContractService.isDownloadingDelivery ? 'Downloading...' : 'Download Excel Template' }}
+                </button>
+                 <button class="btn btn-success"   (click)="vendorContractService.addDeliveryCharges()">+ Add Item</button>
+            </div>
+        </div>
+        
+     <div class="p-4">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th class="cursor-pointer">Location</th>
+                        <th class="cursor-pointer">To City</th>
+                        <th class="cursor-pointer">Pay Basis</th>
+                        <th class="cursor-pointer">Mode</th>
+                        <th class="cursor-pointer">ODA OR NON ODA</th>
+                        <th class="cursor-pointer">Min. Chg/CNote</th>
+                        <th class="cursor-pointer">Service Type</th>
+                        <th class="cursor-pointer">Rate Type</th>
+                        <th class="cursor-pointer">Rate/Cnote</th>
+                        <th class="cursor-pointer">Max. Chg./CNote</th>
+                        <th> <div style="color: Maroon; font-size: 14px; font-weight: bolder; text-decoration: none;"
+                                class="cursor-pointer">X</div></th>
+                    </tr>
+                </thead>
+                <tbody formArrayName="cnoteDeliveryCharges">
+                     <tr *ngFor="let contract of vendorContractService.cnoteDeliveryCharges.controls; let i = index" [formGroupName]="i">
+                            <td class="text-center"  style="width: 250px;">
+                                 <ng-select class="required2" placeholder="Select Location" formControlName="location" notFoundText="No matches found" appFocusNext
+                                [notFoundText]="vendorContractService.nextLocationValue" bindLabel="text" bindValue="text" (search)="vendorContractService.getLocationDetail($event)"
+                                [items]="vendorContractService.locationData"
+                                [ngClass]="{ 'border-danger': contract.get('location')?.invalid  && contract.get('location')?.touched }"></ng-select>
+                                <div *ngIf="contract.get('location')?.touched && contract.get('location')?.errors">
+                                                <div class="text-danger text-start"
+                                                    *ngIf="contract.get('location')?.hasError('required')">
+                                                    This field is required.
+                                                </div>
+                                            </div>
+                            </td>
+                            <td style="width: 250px;"><ng-select  class="required2" placeholder="Select To City" formControlName="city"
+                                [items]="vendorContractService.cityList" bindValue="location" bindLabel="location" appFocusNext
+                                [ngClass]="{ 'border-danger': contract.get('city')?.invalid  && contract.get('city')?.touched }"></ng-select>
+                            <div *ngIf="contract.get('city')?.touched && contract.get('city')?.errors">
+                                                <div class="text-danger text-start"
+                                                    *ngIf="contract.get('city')?.hasError('required')">
+                                                    This field is required.
+                                                </div>
+                                            </div>
+                            </td>
+                            <td style="width: 150px;"><ng-select  placeholder="Select Pay Basis" formControlName="payBas" appFocusNext
+                                 bindLabel="codeDesc" bindValue="codeId" [items]="PayBsList"></ng-select></td>
+                            <td style="width: 250px;"><ng-select  placeholder="Select Mode" formControlName="transMode" appFocusNext
+                                [items]="generalMasterService.modeData" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
+                            <td style="width: 150px;"><ng-select  placeholder="ODA OR NON ODA" formControlName="oda" appFocusNext
+                                [items]="generalMasterService.odaList" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
+                            <td class="text-center"><input type="text" class="form-control" placeholder="Min. Chg/CNote" formControlName="min_Charge" appFocusNext  (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <td class="text-center" style="width: 200px;"><ng-select placeholder="Service Type" formControlName="serviceType" appFocusNext
+                                [items]="generalMasterService.serviceTypeList" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
+                            <td class="text-center" style="width: 150px;"><ng-select placeholder="Rate Type" formControlName="rate_Type" appFocusNext
+                                [items]="generalMasterService.VendorRateList" bindLabel="codeDesc" bindValue="codeId"></ng-select></td>
+                            <td class="text-center"><input type="text" class="form-control" placeholder="Rate/Cnote" formControlName="chg_Rate" appFocusNext (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                             <td class="text-center"><input type="text" class="form-control" placeholder="Max. Chg./CNote" formControlName="max_Charge" appFocusNext  (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"></td>
+                            <th><div *ngIf="i !== 0" style="color: Maroon; font-size: 14px; font-weight: bolder;" class="cursor-pointer" (click)="vendorContractService.removeCnoteDeliveryCharges(i)">X</div></th>
+                     </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</form>
