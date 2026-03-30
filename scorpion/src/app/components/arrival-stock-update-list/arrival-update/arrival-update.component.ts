@@ -184,6 +184,7 @@ export class ArrivalUpdateComponent {
           this.arrivalForm.patchValue({
             Rate: response.rate
           });
+          this.arrivalDetail.rateType = response.rateType;
 
         },
         error: (err) => {
