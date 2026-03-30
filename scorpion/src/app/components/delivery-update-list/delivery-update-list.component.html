@@ -303,8 +303,8 @@
                                             <app-date-time-picker controlName="DELYDATE" [maxDate]="maxDate" [placeholder]="'Delivery Date & Time'"
                                                 [minDate]="row.value.booking_Date" appFocusNext>
                                             </app-date-time-picker>
-                                            <span class="fw-semibold text-muted ms-2">Person</span>
-                                            <div>
+                                            <span class="fw-semibold text-muted ms-2" *ngIf="drsList.at(i).get('showReason')?.value">Person</span>
+                                            <div *ngIf="drsList.at(i).get('showReason')?.value"> 
                                                 <input class="form-control form-control-sm required2" style="width: 160px;" placeholder="Person Name" appFocusNext
                                                 formControlName="DELYPERSON" [ngClass]="{ 'border-danger': drsList.at(i).get('DELYPERSON')?.invalid && drsList.at(i).get('DELYPERSON')?.touched}"/>
                                                 <div class="text-danger text-start"
