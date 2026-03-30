@@ -449,6 +449,7 @@ onDeliveredBlur(index: number): void {
   this.updateDeliveryValidators(row);
 
   // 🔹 Clear old validators first
+  row.get('DELYPERSON')?.clearValidators();
   row.get('cboReason')?.clearValidators();
   row.get('cboEmail')?.clearValidators();
   row.get('cboMobileNo')?.clearValidators();
@@ -478,6 +479,7 @@ onDeliveredBlur(index: number): void {
     this.generalMasterService.getReason(reasonType);
 
     // 🔹 Apply validators ONLY when showReason = true
+    row.get('DELYPERSON')?.setValidators([Validators.required]);
     row.get('cboReason')?.setValidators([Validators.required]);
     row.get('cboEmail')?.setValidators([Validators.required, Validators.email]);
     row.get('cboMobileNo')?.setValidators([
@@ -489,6 +491,7 @@ onDeliveredBlur(index: number): void {
   }
 
   // 🔹 Refresh validation state
+  row.get('DELYPERSON')?.updateValueAndValidity();
   row.get('cboReason')?.updateValueAndValidity();
   row.get('cboEmail')?.updateValueAndValidity();
   row.get('cboMobileNo')?.updateValueAndValidity();
