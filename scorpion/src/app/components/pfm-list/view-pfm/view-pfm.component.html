@@ -1,0 +1,126 @@
+<!-- ══ VIEW PFM MODAL ══ -->
+<ng-template #Templatepod>
+    <div class="modal-header">
+        <div class="d-flex align-items-center gap-3">
+            <div class="pfm-icon fs-4 fw-bold" style="background:#e8f0fe;border:1px solid #aac4f5;">👁</div>
+            <div>
+                <div class="fw-bold fs-5">{{ pfmData.header?.pfM_Number || pfmData.lrList[0].dockNo }}</div>
+                <div class="pfm-subtitle">Status: {{ pfmData.header?.fM_Status || 'Loading...' }} · {{
+                    pfmData.lrList?.length || 0 }} LR(s)</div>
+            </div>
+        </div>
+        <button type="button" class="btn-close pfm-close" (click)="modalRef.hide()"></button>
+    </div>
+
+    <div class="modal-body p-4" style="padding:0;gap:0;">
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="mt-2 text-muted">Loading PFM Details...</div>
+        </div>
+
+        <!-- PFM Details -->
+        <div *ngIf="!isLoading && pfmData.header">
+            <div style="padding:16px 22px;border-bottom:1px solid var(--border-light);border-radius:8px;"
+                class="input-background-color">
+                <div class="row">
+                    <div class="col-3">
+                        <label class="meta-label">PFM Number</label>
+                        <div class="fw-bold text-info">{{ pfmData.header.pfM_Number || '—' }}</div>
+                    </div>
+                    <div class="col-3">
+                        <label class="meta-label">Branch</label>
+                        <div class="fw-bold">{{ pfmData.header.fM_FWD_LocCode ||
+                            this.docketService.loginUserList.LocationCode }}</div>
+                    </div>
+                    <div class="col-3">
+                        <label class="meta-label">Status</label>
+                        <div class="fw-bold">{{ pfmData.header.fM_Status }}</div>
+                    </div>
+                    <div class="col-3"
+                        *ngIf="pfmData.header?.fM_Status === 'Forwarded' || pfmData.header?.fM_Status === 'Acknowledged'">
+                        <label class="meta-label">Courier Date</label>
+                        <div class="fw-bold">{{ pfmData.header.courier_Way_Bill_Date | date:'dd MMM yyyy'}}</div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-3"
+                        *ngIf="pfmData.header?.fM_Status === 'Forwarded' || pfmData.header?.fM_Status === 'Acknowledged'">
+                        <label class="meta-label">Courier No</label>
+                        <div class="fw-bold">{{ pfmData.header.courier_Number }}</div>
+                    </div>
+                    <div class="col-3"
+                        *ngIf="pfmData.header?.fM_Status === 'Forwarded' || pfmData.header?.fM_Status === 'Acknowledged'">
+                        <label class="meta-label">Courier Company</label>
+                        <div class="fw-bold">{{ pfmData.header.courier_Company_Name }}</div>
+                    </div>
+                    <div class="col-3"
+                        *ngIf="pfmData.header?.fM_Status === 'Forwarded' || pfmData.header?.fM_Status === 'Acknowledged'">
+                        <label class="meta-label">Forwarded To</label>
+                        <div class="fw-bold">{{ pfmData.header.loc_Cust_Code}}</div>
+                    </div>
+                    <div class="col-3" *ngIf="pfmData.header?.fM_Status === 'Acknowledged'">
+                        <label class="meta-label">Acknowledged Date</label>
+                        <div class="fw-bold">{{ pfmDataViewList.fM_Date | date:'dd MMM yyyy' }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── LR Listing ── -->
+            <div class="mt-3">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <div
+                        style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);">
+                        Lorry Receipts</div>
+                </div>
+                <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden; ">
+                    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                        <thead class="input-background-color">
+                            <tr style="background:var(--surface2);border-bottom:1px solid var(--border);">
+                                <th
+                                    style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:center;">
+                                    #</th>
+                                <th
+                                    style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
+                                    LR No</th>
+                                <th
+                                    style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
+                                    LR Date</th>
+                                <th
+                                    style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
+                                    Origin</th>
+                                <th
+                                    style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
+                                    Destination</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let lr of pfmData.lrList; let i = index"
+                                style="border-bottom: 1px solid var(--border-light); background: var(--accent-glow);">
+                                <td style="text-align:center;padding:9px 12px;">
+                                    {{ i + 1 }}
+                                </td>
+                                <td style="padding:9px 12px;"><span class="lr-no">{{ lr.dockNo }}</span></td>
+                                <td style="padding:9px 12px;"><span class="lr-date">{{ lr.dockDt | date:'dd MMM yyyy'
+                                        }}</span></td>
+                                <td style="padding:9px 12px;">
+                                    <div class="location-cell">
+                                        {{ extractOrigin(lr.from_To) }}
+                                    </div>
+                                </td>
+                                <td style="padding:9px 12px;">
+                                    <div class="location-cell">{{ extractDestination(lr.from_To) }}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-end">
+        <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Close</button>
+    </div>
+</ng-template>

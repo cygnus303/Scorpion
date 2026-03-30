@@ -1,0 +1,38 @@
+.collapse-icon {
+  transition: transform 0.3s ease;
+
+  &.rotated {
+    transform: rotate(-180deg);
+  }
+}
+
+.btn-primary {
+  background-color: #1e2b5c;
+  border-color: #1e2b5c;
+
+  &:hover {
+    background-color: #2c3e8a;
+    border-color: #2c3e8a;
+  }
+}
+
+.btn-success {
+  background-color: #10b981;
+  border-color: #10b981;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.ng-select {
+  &.ng-select-focused {
+    .ng-select-container {
+      border-color: #1e2b5c !important;
+      box-shadow: 0 0 0 1px rgba(30, 43, 92, 0.1) !important;
+    }
+  }
+}

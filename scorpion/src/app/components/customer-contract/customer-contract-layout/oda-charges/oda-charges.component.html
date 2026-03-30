@@ -1,0 +1,122 @@
+<div class="cnote-entry-container p-3">
+    <!-- Header -->
+    <div class="background-color text-white py-2 px-3 rounded-top text-start mb-3">
+        <h6 class="mb-0"><i class="fas fa-table me-2"></i>ODA Charges Charge Matrix</h6>
+    </div>
+
+    <!-- Top Selection -->
+    <div class="border-radius p-3 mb-4">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <div class="form-group-input">
+                    <label class="form-label fw-bold small text-secondary">Select Slab Type</label>
+                    <ng-select [items]="slabTypes" [(ngModel)]="slabType" placeholder="Slab Type"></ng-select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group-input">
+                    <label class="form-label fw-bold small text-secondary">Rate Type</label>
+                    <ng-select [items]="rateTypes" [(ngModel)]="rateType" placeholder="Rate Type"></ng-select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group-input">
+                    <label class="form-label fw-bold small text-secondary">Minimum ODA Charges Charge</label>
+                    <input type="number" class="form-control" [(ngModel)]="minOdaCharge" placeholder="0.00">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Weight/Package Slab -->
+    <div class="section-container mb-4">
+        <div class="section-header py-1 px-3 bg-light border text-center small fw-bold">Define Weight/Package Slab</div>
+        <div class="border border-top-0 p-2">
+            <div class="row g-1">
+                <div class="col border-end p-0" *ngFor="let slab of weightSlabs; let i = index">
+                    <div class="border-bottom text-center small py-1 fw-semibold">Slab {{ i + 1 }}</div>
+                    <div class="d-flex p-1 gap-1">
+                        <div class="w-50">
+                            <label class="x-small text-muted d-block text-center">From</label>
+                            <input type="number" class="form-control form-control-sm text-center"
+                                [(ngModel)]="slab.from">
+                        </div>
+                        <div class="w-50">
+                            <label class="x-small text-muted d-block text-center">To</label>
+                            <input type="number" class="form-control form-control-sm text-center" [(ngModel)]="slab.to">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Distance Slab -->
+    <div class="section-container mb-4">
+        <div class="section-header py-1 px-3 bg-light border text-center small fw-bold">Define ODA Charges Distance (ODA
+            Charges In Km)</div>
+        <div class="border border-top-0 p-2">
+            <div class="row g-1">
+                <div class="col border-end p-0" *ngFor="let slab of distanceSlabs; let i = index">
+                    <div class="border-bottom text-center small py-1 fw-semibold">ODA Charges {{ i + 1 }}</div>
+                    <div class="d-flex p-1 gap-1">
+                        <div class="w-50">
+                            <label class="x-small text-muted d-block text-center">From</label>
+                            <input type="number" class="form-control form-control-sm text-center"
+                                [(ngModel)]="slab.from">
+                        </div>
+                        <div class="w-50">
+                            <label class="x-small text-muted d-block text-center">To</label>
+                            <input type="number" class="form-control form-control-sm text-center" [(ngModel)]="slab.to">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Table -->
+    <div class="section-container mb-4">
+        <div class="section-header py-1 px-3 bg-light border text-center small fw-bold">Define ODA Charges Charges</div>
+        <div class="table-responsive">
+            <table class="data-table border-top-0">
+                <thead>
+                    <tr>
+                        <th class="text-center small">Distance From Delivery Location</th>
+                        <th class="text-center small" style="width: 100px;">Extra Transit Days</th>
+                        <ng-container *ngFor="let i of [1,2,3,4,5,6]">
+                            <th class="text-center small">Minimum Slab {{i}}</th>
+                            <th class="text-center small">Slab {{i}}</th>
+                        </ng-container>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let cat of chargeCategories">
+                        <td class="small fw-semibold text-start px-3">{{ cat.name }}</td>
+                        <td>
+                            <input type="number" class="form-control form-control-sm text-center"
+                                [(ngModel)]="cat.extraTransitDays">
+                        </td>
+                        <ng-container *ngFor="let s of cat.slabs">
+                            <td>
+                                <input type="number" class="form-control form-control-sm text-center"
+                                    [(ngModel)]="s.min">
+                            </td>
+                            <td>
+                                <input type="number" class="form-control form-control-sm text-center"
+                                    [(ngModel)]="s.rate">
+                            </td>
+                        </ng-container>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Action -->
+    <div class="d-flex justify-content-center mt-3">
+        <button class="btn btn-success px-5 py-2 fw-semibold" (click)="onSubmit()">
+            <i class="fas fa-check me-2"></i>Submit
+        </button>
+    </div>
+</div>

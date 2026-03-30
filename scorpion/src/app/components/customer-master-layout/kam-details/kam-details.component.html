@@ -1,0 +1,49 @@
+<div class="m-3 border-radius rounded">
+  <form [formGroup]="customerMasterService.KAMForm">
+    <div class="table-responsive">
+      <table class="w-100 data-table rounded-0">
+        <thead>
+          <tr>
+            <th>Sr. No.</th>
+            <th>KAM Type</th>
+            <th>Employee Name</th>
+            <th>Employee ID</th>
+            <th>Designation</th>
+            <th>Mobile</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody formArrayName="KAMArray">
+
+          <tr *ngFor="let row of customerMasterService.KAMArray.controls; let i = index" [formGroupName]="i">
+            <td>{{ i + 1 }}</td>
+            <td style="text-align: left;">
+              {{ KMAList[i]?.codeDesc }}
+            </td>
+            <td>
+              <ng-select placeholder="Enter employee name" [notFoundText]="notFoundEmployeeValue"
+                formControlName="EmployeeName" (search)="getEmployeeDetail($event)" (open)="onOpenDropdown()"
+                (change)="onChangeEmployeeName($event, i)">
+                <ng-option *ngFor="let item of employeeList" [value]="item.id">
+                  <strong>{{ item.id }}</strong> : {{ item.text }}
+                </ng-option>
+
+              </ng-select>
+            </td>
+            <td>
+              <input type="text" class="form-control" formControlName="EmployeeID">
+            </td>
+            <td>
+              <input type="text" class="form-control" formControlName="Designation">
+            </td>
+            <td>
+              <input type="text" class="form-control" formControlName="Mobile">
+            </td>
+            <td>
+              <input type="text" class="form-control" formControlName="Email">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </form>

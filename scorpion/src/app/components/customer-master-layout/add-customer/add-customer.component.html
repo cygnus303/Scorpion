@@ -1,0 +1,481 @@
+<div class="m-3 border-radius rounded">
+    <div class="cnote-entry-container px-1 " >
+        <div class="form-grid p-4">
+            <form [formGroup]="customerMasterService.customerForm">
+                <div class="row pb-4">
+                    <div class="col-md-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Registration Type </label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="reg" name="CUSEntryType" value="registered" formControlName="CUSEntryType">
+                                    <label for="reg">Registered</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="unreg" name="CUSEntryType" value="unregistered" formControlName="CUSEntryType">
+                                    <label for="unreg">Unregistered</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3" *ngIf="customerMasterService.customerForm.value.CUSEntryType === 'registered'">
+                        <div class="form-group-input">
+                            <label class="form-label">GST No.</label>
+                            <input type="text" class="form-control required2" placeholder="GST No." formControlName="GSTNO"
+                            maxlength="15"
+                            (input)="onGSTInput($event)">
+      
+  
+                        </div>
+                    </div>      
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">PAN Number</label>
+                            <input type="text" class="form-control" placeholder="PAN Number" formControlName="pan_no" 
+                                (keypress)="validatePanKey($event)"
+                                (input)="onPanInput($event)"
+                            [readOnly]="customerMasterService.customerForm.value.CUSEntryType === 'registered'">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Trade Name</label>
+                            <input type="text" class="form-control required2" placeholder="Trade Name" formControlName="CUSTNM">
+                        </div>
+                    </div>
+                </div>
+                <div class="row pb-4">
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Customer Code.</label>
+                            <input type="text" class="form-control" placeholder="Customer Code." formControlName="CUSTCD" [readOnly]="customerMasterService.customerForm.value.CUSEntryType === 'registered'">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Customer Password</label>
+                            <input type="text" class="form-control" placeholder="Customer Password" formControlName="CUSTPASS" [readOnly]="customerMasterService.customerForm.value.CUSEntryType === 'registered'">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Tax Payer Type</label>
+                            <input type="text" class="form-control" placeholder="Tax Payer Type" formControlName="TaxpayerType" [readOnly]="customerMasterService.customerForm.value.CUSEntryType === 'registered'">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Group Code</label>
+                            <input type="text" class="form-control required2" placeholder="Group Code" formControlName="GRPCD">
+                        </div>
+                    </div>
+                </div>
+                <div class="row pb-4">
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Telephone Number</label>
+                            <input type="text" class="form-control" placeholder="Telephone Number" formControlName="telno">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">E-mail</label>
+                            <input type="text" class="form-control" placeholder="E-mail" formControlName="EMAILIDS">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Mobile Number</label>
+                            <input type="text" class="form-control" placeholder="Mobile Number" formControlName="MOBILENO">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Customer State</label>
+                            <input type="text" class="form-control required2" placeholder="Customer State" formControlName="Cust_State">
+                        </div>
+                    </div>
+                </div>
+                <div class="row pb-4">
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Employee Name</label>
+                            <input type="text" class="form-control" placeholder="Employee Name" formControlName="EmployeeID">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Website</label>
+                            <input type="text" class="form-control" placeholder="Website" formControlName="Website">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Legal Name of the Business</label>
+                            <input type="text" class="form-control required2" placeholder="Legal Name of Business" formControlName="Businessname">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Status</label>
+                            <input type="text" class="form-control required2" placeholder="Status" formControlName="OwnershipStatus" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pb-4">
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Type of ownership</label>
+                            <ng-select class="required2" placeholder="Type of ownership" formControlName="Ownership"
+                            [items]="generalMasterService.ownerList" bindLabel="codeDesc" bindValue="codeId"></ng-select>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Remark</label>
+                            <input type="text" class="form-control" placeholder="Remark" formControlName="Remark">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Industry</label>
+                            <ng-select class="required2" placeholder="Industry" formControlName="Industry"
+                            [items]="generalMasterService.IndustryList" bindLabel="codeDesc" bindValue="codeId"></ng-select>
+                        </div>
+                    </div>
+                     <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Customer Creation date</label>
+                              <div class="input-group">
+                                <input type="text" class="form-control uppercase-none required2" #dp="bsDatepicker" bsDatepicker
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY'}"
+                                placeholder="Customer Creation date"  formControlName="Cust_Date" required appFocusNext [class.disabled-input]="true" 
+                                >
+                            <span class="input-group-text cursor-pointer" (click)="dp.toggle()"  [class.disabled-input]="true" >
+                            <i class="fa fa-calendar"></i>
+                            </span>
+                    </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pb-4">
+                    <div class="col-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="Consignor">Consignor</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="consignorToggle" formControlName="Consignnor">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="Consignee">Consignee</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="ConsigneeToggle" formControlName="Consignee">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="Third Party">Third Party</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="thirdPartyToggle" formControlName="ThirdParty">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="Mobile Service">Mobile Service</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="mobileServiceToggle" formControlName="MOBSERV_ENABLED">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="Auto Bill Cycle Allowed?">Auto Bill Cycle..?</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="autoBillCycleToggle" formControlName="AutoBillAllowed">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="Active">Active</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="activeToggle" formControlName="CUST_ACTIVE">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="Billing at Destination">Dest Billing?</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="billingAtDestinationToggle" formControlName="BillingAtDestination">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="E Invoice">E Invoice</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="eInvoiceToggle" formControlName="EInvoice">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="row pb-4">
+                    <div class="col-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="E WAY API ENABLE">E-Way API Enable</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="eWayEnabledToggle" formControlName="EWayBillAPIEnable">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="Is Exempted">Is Exempted</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="isExemptedToggle" formControlName="SEZ">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="DRS Closure SMS">DRS Closure SMS</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="drsClosureSmsToggle" formControlName="DRSCLO_SMS">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="Is Bill Audit">PO Number</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="isBillAuditToggle" formControlName="PONumber_Active">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="Is Loading Slip Recieved">Is Loading Slip Recieved</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="isLoadingSlipReceivedToggle" formControlName="LoadingSlipRecieved">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="Block Booking">Block Booking</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="blockBookingToggle" formControlName="ActiveFlagForBlockBooking">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="Block Delivery">Block Delivery</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="blockDeliveryToggle" formControlName="ActiveFlagForBlockDelivery">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="Outstanding Mail">Outstanding Mail</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="outstandingMailToggle" formControlName="OutstandingMailEnable">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="row pb-4">
+                    <div class="col-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="Business">Business</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="consignorToggle" formControlName="IsBusiness">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="GTA">GTA</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="GTAToggle" formControlName="IsGTA">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="Audit Applicable">Audit Applicable</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="Audit ApplicableToggle" formControlName="IsBillAudit">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="Auto MIS Email">Auto MIS Email</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="autoMisEmailToggle" formControlName="AutoMISMailEnable">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="DRS Generation SMS">DRS Gen SMS</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="drsGenerationSmsToggle" formControlName="DRSGEN_SMS">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="toggle-container">
+                                    <span class="toggle-label" title="GST API Enable?">GST API Enable</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="gstApiEnableToggle" formControlName="IsGstEnable">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="toggle-container">
+                            <span class="toggle-label" title="Is Transpoter">Is Transpoter</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="isTranspoterToggle" formcont="IsTransporter">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pb-4">
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Outstanding Mail Ids</label>
+                            <input type="text" class="form-control" placeholder="Outstanding Mail Ids" formControlName="OutstandingEmailIds">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Auto MIS Email Ids</label>
+                            <input type="text" class="form-control" placeholder="Auto MIS Email Ids" formControlName="AutoMISEmailIds">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">Customer Classification</label>
+                            <input type="text" class="form-control" placeholder="Customer Classification" formControlName="CUSTClassification">
+                        </div>
+                    </div>
+                    <div class="col-3 d-print-inline-block align-content-end">
+                        <div class="form-group-input">
+                            <input type="text" class="form-control" placeholder="Transporter Id" formControlName="TransId">
+                        </div>
+                    </div>
+                </div>
+                <div class="row pb-4">
+                      <div class="col-3">
+                        <div class="form-group-input">
+                            <label class="form-label">CRM Email Ids</label>
+                            <input type="text" class="form-control" placeholder="CRM Email Ids" formControlName="CRMEmailIds">
+                        </div>
+                    </div>
+                    <div class="col-4 d-print-inline-block align-content-end">
+                        <div class="form-group">
+                            <label class="form-label">Customer Group </label>
+                            <div class="radio-group">
+                                <div class="radio-option selected">
+                                    <input type="radio" id="group" name="customerGroup" value="group" checked="">
+                                    <label for="group">Group</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="corporate" name="customerGroup" value="corporate">
+                                    <label for="corporate">Corporate</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="nonGroup" name="customerGroup" value="non-group">
+                                    <label for="nonGroup">Non-Group</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-5 d-print-inline-block align-content-end">
+                        <div class="row">
+                            <label class="col-sm-3 col-form-label text-end">Customer Locations</label>
+                            <div class="col-sm-9">
+                                <input class="form-control required2" type="text" placeholder="Enter Customer Locations" formControlName="CUSTLOC">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

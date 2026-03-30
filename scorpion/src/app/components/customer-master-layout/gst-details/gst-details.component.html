@@ -1,0 +1,59 @@
+<div class="m-3 border-radius rounded">
+  <form [formGroup]="customerMasterService.gstForm">
+    <div class="row p-3">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label class="control-label col-md-5">No Of Rows </label>
+          <div class="col-md-7">
+            <div class="input-group custom-input-group">
+              <input type="number" class="form-control rounded-0 rounded-start" min="1" placeholder="Enter rows" />
+              <button type="button" class="btn btn-add text-light rounded-0 rounded-end" title="Add Row">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="">
+      <table class="w-100 data-table rounded-0">
+        <thead>
+          <tr>
+            <th>Sr. No.</th>
+            <th>GSTIN</th>
+            <th>GST State</th>
+            <th>Address</th>
+            <th>Pincode</th>
+            <th>City</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody formArrayName="gstDetails">
+          <tr *ngFor="let item of customerMasterService.gstControls; let i = index;" [formGroupName]="i">
+            <td>{{ i + 1 }}</td>
+            <td>
+              <input type="text" class="form-control" formControlName="gst_registration_no">
+            </td>
+            <td>
+              <input type="text" class="form-control" formControlName="statename">
+            </td>
+            <td>
+              <input type="text" class="form-control" formControlName="CSGEAddress">
+            </td>
+            <td>
+              <input type="text" class="form-control" formControlName="pincode">
+            </td>
+            <td>
+              <ng-select type="text" formControlName="city_code" placeholder="Select City"></ng-select>
+            </td>
+            <td>
+              <button type="button" class="btn-icon-delete delete text-danger">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </form>
+</div>

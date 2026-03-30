@@ -1,0 +1,152 @@
+<ng-template #Templatepod>
+    <div class="modal-header">
+      <div class="d-flex align-items-center gap-3">
+        <div class="pfm-icon" style="background:#e6f4ea;border:1px solid #82c995;">📋</div>
+        <div>
+          <div class="pfm-title">Add PFM</div>
+          <div class="pfm-subtitle">POD Forwarding Module — New Entry</div>
+        </div>
+      </div>
+      <button type="button" class="btn-close pfm-close" (click)="modalRef.hide()"></button>
+    </div>
+    <div class="modal-body pfm-body">
+      <!-- S1: LR Details -->
+      <div class="d-flex flex-column gap-3 pb-3">
+        <div class="form-section-title"><span class="sec-num">1</span>LR Details</div>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group-input">
+              <label class="form-label">LR Number</label>
+              <input type="text" class="form-control input-background-color" placeholder="e.g. LR-2025-00412">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group-input">
+              <label class="form-label">LR Date</label>
+              <input class="form-control input-background-color" type="text">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group-input">
+              <label class="form-label">Origin</label>
+              <ng-select placeholder="Select Origin" class="input-background-color"></ng-select>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group-input">
+              <label class="form-label">Destination</label>
+              <ng-select placeholder="Select Destination" class="input-background-color"></ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <div class="form-group-input">
+              <label class="form-label">Vehicle Number</label>
+              <input class="form-control input-background-color" type="text" placeholder="MH-12-AB-1234">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group-input">
+              <label class="form-label">Weight (kg)</label>
+              <input class="form-control input-background-color" type="number" placeholder="850">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group-input">
+              <label class="form-label">No. of Packages</label>
+              <input class="form-control input-background-color" type="number" placeholder="12">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- S2: Consignor & Consignee -->
+      <div class="d-flex flex-column gap-3 pb-3 mt-3">
+        <div class="form-section-title"><span class="sec-num">2</span>Consignor &amp; Consignee Information</div>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group-input">
+              <label class="form-label">Consignor Name <span class="req">*</span></label>
+              <input class="form-control input-background-color" type="text" placeholder="Sender company / person">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group-input">
+              <label class="form-label">Consignor Contact</label>
+              <input class="form-control input-background-color" type="tel" placeholder="+91 XXXXX XXXXX">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group-input">
+              <label class="form-label">Consignor Address</label>
+              <input class="form-control input-background-color" type="text" placeholder="Street, City, State, PIN">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group-input">
+              <label class="form-label">Consignee Name <span class="req">*</span></label>
+              <input class="form-control input-background-color" type="text" placeholder="Receiver company / person">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group-input">
+              <label class="form-label">Consignee Contact</label>
+              <input class="form-control input-background-color" type="tel" placeholder="+91 XXXXX XXXXX">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group-input">
+              <label class="form-label">Consignee Address</label>
+              <input class="form-control input-background-color" type="text" placeholder="Street, City, State, PIN">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- S3: Upload -->
+      <div class="flex-column gap-3 pb-3">
+        <div class="form-section-title mb-3 mt-3"><span class="sec-num">3</span>POD / Document Upload</div>
+        <div class="upload-zone" id="uploadZone"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="handleDrop(event)"
+          onclick="document.getElementById('fileInput').click()">
+          <div style="font-size:26px">📂</div>
+          <div class="upload-text">Drag &amp; drop files here, or <span>browse</span></div>
+          <div class="upload-hint">PDF, JPG, PNG, TIFF · Max 10 MB per file</div>
+          <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.tiff" style="display:none" onchange="handleFiles(this.files)">
+        </div>
+        <div class="upload-files" id="fileList"></div>
+      </div>
+      <!-- S4: Remarks -->
+      <div class="d-flex flex-column gap-3 pb-3">
+        <div class="form-section-title mt-2"><span class="sec-num">4</span>Remarks &amp; Notes</div>
+        <div class="col-6">
+          <div class="form-group-input">
+            <label class="form-label">Priority</label>
+            <ng-select placeholder="Select Priority" class="input-background-color"></ng-select>
+          </div>
+        </div>
+        <div class="form-group-input">
+          <label class="fw-bolder mb-2">Internal Remarks</label>
+          <textarea class="form-control-textarea input-background-color mb-2" placeholder="Add any internal notes or special instructions…"></textarea>
+          <span>Visible only to internal staff.</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-between">
+      <div><span class="text-danger">*</span> Required fields</div>
+      <div class="gap-3 d-flex" >
+        <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Cancel</button>
+        <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="resetForm()">↺ Reset</button>
+        <button type="button" class="btn btn-success px-4 py-2 rounded" (click)="savePFM()">＋ Save PFM Entry</button>
+      </div>
+    </div>
+</ng-template>
