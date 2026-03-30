@@ -34,7 +34,7 @@
                             <div class="input-group" (click)="dp.toggle(); $event.stopPropagation()"
                                 [ngClass]="{ 'border-danger': forwardForm.get('fwdDate')?.invalid && forwardForm.get('fwdDate')?.touched}">
                                 <input class="form-control required2 input-background-color" type="text"
-                                    #dp="bsDatepicker" bsDatepicker [class.disabled-input]="true"
+                                    #dp="bsDatepicker" bsDatepicker [class.disabled-input]="true" [minDate]="minDate" [maxDate]="maxDate"
                                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                                     formControlName="fwdDate">
                                 <span class="input-group-text cursor-pointer">

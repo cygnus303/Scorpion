@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PFMapiService } from 'app/shared/services/pfmapi.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 
 @Component({
   selector: 'app-edit-forwarded-pfm',
@@ -23,7 +24,8 @@ export class EditForwardedPFMComponent {
 
   constructor(
     private modalService: BsModalService,
-    private pfmApiService: PFMapiService
+    private pfmApiService: PFMapiService,
+    private sweetAlertService:SweetAlertService
   ) { }
 
   showPopup(data: any) {
@@ -77,11 +79,12 @@ export class EditForwardedPFMComponent {
 
     this.pfmApiService.PFMCourierUpdate(payload).subscribe({
       next: (res: any) => {
+        this.sweetAlertService.success('Courier updated Successfully!!')
         this.dataEmitter.emit('Courier updated successfully');
         this.modalRef.hide();
       },
       error: (err: any) => {
-        console.error('Error updating courier details:', err);
+        this.sweetAlertService.error(err);
       }
     });
   }

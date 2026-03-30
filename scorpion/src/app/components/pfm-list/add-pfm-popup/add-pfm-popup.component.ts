@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 
 @Component({
   selector: 'app-add-pfm-popup',
@@ -15,7 +16,7 @@ export class AddPfmPopupComponent {
   public modalRef!: BsModalRef;
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
-  constructor(private modalService: BsModalService) { }
+  constructor(private modalService: BsModalService,private sweetAlertService:SweetAlertService) { }
   
   showPopup() {
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-lg modal-dialog-centered', backdrop: true });
@@ -28,6 +29,7 @@ export class AddPfmPopupComponent {
   
   savePFM() {
     console.log('Saving PFM...');
+    this.sweetAlertService.success('PFM Saved Successfully!!');
     this.modalRef.hide();
     this.dataEmitter.emit('PFM saved successfully');
   }

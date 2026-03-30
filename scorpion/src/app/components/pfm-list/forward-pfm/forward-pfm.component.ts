@@ -5,6 +5,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PFMapiService } from 'app/shared/services/pfmapi.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 
 @Component({
   selector: 'app-forward-pfm',
@@ -21,6 +22,8 @@ export class ForwardPFMComponent {
   public displayPFMs: string = '';
   public totalLRs: number = 0;
   public uniquePFMCount: number = 0;
+  public minDate: any;
+  public maxDate: any;
 
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
@@ -28,11 +31,12 @@ export class ForwardPFMComponent {
   constructor(
     private modalService: BsModalService,
     public PFMapiService: PFMapiService,
-    private docketService: DocketService) { }
+    private docketService: DocketService,
+    private sweetAlertService:SweetAlertService) { }
 
   createForm() {
     this.forwardForm = new FormGroup({
-      fwdDate: new FormControl(new Date().toISOString().split('T')[0], Validators.required),
+      fwdDate: new FormControl(new Date(), Validators.required),
       courierNo: new FormControl('', Validators.required),
       courierName: new FormControl('', Validators.required),
       forwardedTo: new FormControl('HQTR', Validators.required),
@@ -45,6 +49,11 @@ export class ForwardPFMComponent {
     this.createForm();
     this.pfmData = (data || []).map(r => ({ ...r, checked: true }));
     this.updateSummary();
+    const firstItem = data?.[0];
+    if (firstItem?.fM_Date) {
+      this.minDate = new Date(firstItem.fM_Date);
+    }
+    this.maxDate = new Date();
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
 
@@ -101,11 +110,12 @@ export class ForwardPFMComponent {
 
     this.PFMapiService.PFMForward(payload).subscribe({
       next: (response: any) => {
+        this.sweetAlertService.success('PFM Forwarded Successfully!!');
         this.dataEmitter.emit('PFM forwarded successfully');
         this.modalRef.hide();
       },
       error: (err: any) => {
-        console.error('Error forwarding PFM:', err);
+         this.sweetAlertService.error(err);
       }
     });
   }
