@@ -104,7 +104,7 @@ ngOnInit(){
     const rateType = this.loadingSheetService.LSForm.get('rateType');
      const vendorCode = this.loadingSheetService.LSForm.get('vendorCode');
     const loadingCharge=this.loadingSheetService.LSForm.get('loadingCharge');
-    if (this.loadingSheetService.LSForm.value.loadingBy && this.loadingSheetService.LSForm.value.loadingBy !== 'XX9') {
+    if (this.loadingSheetService.LSForm.value.loadingBy && this.loadingSheetService.LSForm.value.loadingBy !== 'XX9' && this.loadingSheetService.LSForm.value.loadingBy !== 'XX5') {
       rateType?.setValidators([Validators.required]);
       vendorCode?.setValidators([Validators.required]);
       loadingCharge?.setValidators([Validators.required]);
