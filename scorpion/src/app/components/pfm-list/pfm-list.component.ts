@@ -59,7 +59,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
   statusList = [
     { value: 'All', label: 'All Status', color: 'all', bg: 'var(--muted)', count: 0 },
     { value: 'Pending', label: 'Pending', color: 'pending', bg: 'var(--orange)', count: 0 },
-    { value: 'Generated At', label: 'Generated', color: 'generated', bg: 'var(--teal)', count: 0 },
+    { value: 'Generated', label: 'Generated', color: 'generated', bg: 'var(--teal)', count: 0 },
     { value: 'Forwarded', label: 'Forwarded', color: 'forwarded', bg: 'var(--accent-hover)', count: 0 },
     { value: 'Acknowledged', label: 'Acknowledged', color: 'acknowledged', bg: 'var(--green)', count: 0 }
   ];
