@@ -339,7 +339,7 @@ onSubmit() {
         if(res.success){
           console.log("Success", res);
              this.isRedirect = true;
-            window.parent.location.href = `${this.env.liveUrl}Operation/PRSArrivalDone?PDCNo=${res.pdcNo}&Tot_Charge=${res.totCharge}&HcNumber=${res.hcNumber}&TranXaction=Done`;
+            window.parent.location.href = `${this.env.liveUrl}Operation/PRSArrivalDone?PDCNo=${res.pdcNo}&Tot_Charge=${res.totCharge}&HcNumber=${res.hcNumber}&TranXaction=Done&src=angular`;
           this.isSubmitting=false;
         }else{
           this.sweetAlertService.error(res?.message)
