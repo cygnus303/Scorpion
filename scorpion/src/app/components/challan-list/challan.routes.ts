@@ -42,6 +42,10 @@ export const ChallanRoutes: Routes = [
   {
     path: 'PRSGenerationList',
     loadComponent: () => import('../prs-generation-list/prs-generation-list.component').then(m => m.PRSGenerationListComponent),
+  },
+  {
+    path: 'DRSList',
+    loadComponent: () => import('../drs-generation-list/drs-generation-list.component').then(m => m.DrsGenerationListComponent),
   }
 
 ];
