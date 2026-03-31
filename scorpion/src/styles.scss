@@ -1088,40 +1088,6 @@ input:checked+.toggle-slider:before {
   margin-top: 16px;
 }
 
-.data-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-}
-
-.data-table thead {
-  background: var(--light);
-}
-
-.data-table th {
-  padding: 14px 16px;
-  text-align: left;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--dark);
-  border-bottom: 2px solid var(--border);
-  white-space: nowrap;
-}
-
-.data-table td {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border);
-  font-size: 14px;
-}
-
-.data-table tbody tr {
-  transition: all 0.2s ease;
-}
-
-.data-table tbody tr:hover {
-  background: var(--light);
-}
-
 .table-input {
   padding: 8px 12px;
   border: 2px solid var(--border);
@@ -1730,5 +1696,39 @@ input:checked+.toggle-slider:before {
       border-left-color: #059669;
       color: #059669;
     }
+  }
+}
+
+// PRS DRS 
+.page-title {
+  font-size: 22px !important;
+  font-weight: 700;
+  color: #1a237e;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-title .icon {
+  background: #e8eaf6;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 20px !important;
+}
+
+
+/* PRS Action Button Hover & Active Effects */
+.btn-sm[class*="bg-"][class*="-subtle"] {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    filter: brightness(0.95) contrast(1.02);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: none;
   }
 }

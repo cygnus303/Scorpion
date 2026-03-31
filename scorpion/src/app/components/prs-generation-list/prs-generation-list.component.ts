@@ -1,18 +1,54 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { AddPRSDRSComponent } from './add-prsdrs/add-prsdrs.component';
+import { PaginationComponent } from 'app/shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-prs-generation-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, AddPRSDRSComponent, PaginationComponent],
   templateUrl: './prs-generation-list.component.html',
   styleUrl: './prs-generation-list.component.scss'
 })
 export class PRSGenerationListComponent {
+  @ViewChild('AddPRSDRSComponent') AddPRSDRSComponent!: AddPRSDRSComponent;
+  public config = {
+    fromDateStr: new Date(new Date().setDate(new Date().getDate() - 7)),
+    toDateStr: new Date(),
+    statusFilter: 'All',
+    page: 1,
+    pageSize: 10,
+    totalRecords: 0,
+    totalPages: 1
+  };
   public prsData = [
+    {
+      prsNo: 'PRS/2526/00101',
+      date: '21-Mar-26',
+      totalDockets: 24,
+      vendorType: 'Transporter',
+      vendorName: 'Fast Freight Carriers',
+      vendorBillNo: '—',
+      loadingHccNo: 'NO HCC',
+      unloadingHccNo: 'NO HCC',
+      status: 'Generated',
+      vendorClass: 'v-purple'
+    },
+    {
+      prsNo: 'PRS/2526/00101',
+      date: '21-Mar-26',
+      totalDockets: 24,
+      vendorType: 'Transporter',
+      vendorName: 'Fast Freight Carriers',
+      vendorBillNo: '—',
+      loadingHccNo: 'NO HCC',
+      unloadingHccNo: 'NO HCC',
+      status: 'Generated',
+      vendorClass: 'v-purple'
+    },
     {
       prsNo: 'PRS/2526/00101',
       date: '21-Mar-26',
@@ -123,5 +159,9 @@ export class PRSGenerationListComponent {
 
   isHccValid(hcc: string): boolean {
     return hcc !== 'NO HCC';
+  }
+
+  openAddPRSDRS() {
+    this.AddPRSDRSComponent.showPopup();
   }
 }
