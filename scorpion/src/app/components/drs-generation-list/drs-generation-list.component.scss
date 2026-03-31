@@ -35,3 +35,17 @@
     background: #ede7f6;
     color: #6a1b9a;
 }
+
+.filter-bar {
+    padding: 6px 11px;
+    border: 1.5px solid #c5cae9;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #222;
+    outline: none;
+    background: #f8f9ff;
+}
+
+.s-billed:hover {
+    transform: translateY(-1px);
+}
