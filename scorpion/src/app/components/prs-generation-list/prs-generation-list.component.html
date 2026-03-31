@@ -1,0 +1,206 @@
+<div style="background: var(--bg);" class="p-3">
+    <div class="control-bar">
+        <div class="date-range-group">
+            <span class="date-label">Date Range</span>
+            <div class="date-input-wrap" style="padding:0;">
+                <input type="text" id="dateFrom" bsDatepicker
+                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                    style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
+                <span
+                    style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+            </div>
+            <span class="date-sep">→</span>
+            <div class="date-input-wrap" style="padding:0;">
+                <input type="text" id="dateTo" bsDatepicker
+                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                    style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
+                <span
+                    style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+            </div>
+        </div>
+        <div class="divider-v"></div>
+        <div class="filter-group">
+            <span class="filter-label">Status</span>
+            <ng-select type="text" placeholder="Status" class="custom-status-select clear-icon">
+            </ng-select>
+        </div>
+        <div class="btn-group gap-3 ms-auto">
+            <button class="btn btn-success px-4 py-2 rounded">＋ Add PRS</button>
+            <button class="btn btn-primary px-4 py-2 rounded">📥 Download XLS</button>
+        </div>
+    </div>
+
+    <!-- Summary Strip -->
+    <div class="summary-strip">
+        <!-- TOTAL PRS -->
+        <div class="summary-card c-blue active-card cursor-pointer">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="card-content">
+                    <div class="s-label">Total PRS</div>
+                    <div class="s-val">18</div>
+                    <div class="s-sub">All records today</div>
+                </div>
+                <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">
+                    📋
+                </div>
+            </div>
+        </div>
+
+        <!-- PENDING FOR ARRIVAL -->
+        <div class="summary-card c-orange cursor-pointer">
+            <div class="card-content">
+                <div class="s-label">Pending for Arrival</div>
+                <div class="s-val">6</div>
+                <div class="s-sub">Awaiting arrival</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">
+                ⏳
+            </div>
+        </div>
+
+        <!-- TOTAL PRS ARRIVED -->
+        <div class="summary-card c-teal cursor-pointer">
+            <div class="card-content">
+                <div class="s-label">Total PRS Arrived</div>
+                <div class="s-val">7</div>
+                <div class="s-sub">Arrived at hub</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">
+                ✅
+            </div>
+        </div>
+
+        <!-- CANCELLED -->
+        <div class="summary-card c-red cursor-pointer">
+            <div class="card-content">
+                <div class="s-label">Cancelled</div>
+                <div class="s-val">2</div>
+                <div class="s-sub">Cancelled today</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">
+                🚫
+            </div>
+        </div>
+
+        <!-- PRS BILLED -->
+        <div class="summary-card c-purple cursor-pointer">
+            <div class="card-content">
+                <div class="s-label">PRS Billed</div>
+                <div class="s-val">2</div>
+                <div class="s-sub">Vendor bill exists</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">
+                🧾
+            </div>
+        </div>
+
+        <!-- HCC GENERATED -->
+        <div class="summary-card c-green cursor-pointer">
+            <div class="card-content">
+                <div class="s-label">HCC Generated</div>
+                <div class="s-val">2</div>
+                <div class="s-sub">HCC generated</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">
+                💰
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Panel -->
+    <div class="table-panel mt-4">
+        <div class="table-header d-flex justify-content-between align-items-center p-3">
+            <div class="d-flex align-items-center gap-2">
+                <i class="fa fa-list-alt text-primary fs-5"></i>
+                <span class="fw-bold fs-6 text-dark fw-normal">PRS Listing — Today</span>
+            </div>
+            <div class="text-muted fs-7">
+                Showing records for <span class="fw-bold text-dark fst-italic">{{ prsData[0]?.date }}</span>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table class="table align-middle  data-table mb-0">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>PRS No. / Date</th>
+                        <th class="text-center">Total Dockets</th>
+                        <th>Vendor Type / Name</th>
+                        <th>Vendor Bill No.</th>
+                        <th>Loading HCC No.</th>
+                        <th>Unloading HCC No.</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let row of prsData; let i = index">
+                        <td class="text-center text-muted fs-7">{{ i + 1 }}</td>
+                        <td>
+                            <div class="fw-bold text-primary"><a>{{ row.prsNo }}</a></div>
+                            <div class="text-muted fs-7 mt-1">{{ row.date }}</div>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge rounded-pill text-secondary bg-light fw-semibold px-2 py-1 border">{{
+                                row.totalDockets }}</span>
+                        </td>
+                        <td class="text-center">
+                            <div class="d-flex gap-2 flex-column">
+                                <span class="d-block rounded p-1 fw-bold mb-1 vt-transporter">{{ row.vendorType
+                                    }}</span>
+                                <span class="fw-bold">{{ row.vendorName }}</span>
+                            </div>
+                        </td>
+                        <td class="text-center fs-7 text-muted">{{ row.vendorBillNo }}</td>
+                        <td class="text-center">
+                            <span class="px-4 py-2 rounded fw-bold border "
+                                [ngClass]="isHccValid(row.loadingHccNo) ? 'bg-success-subtle text-success border-success-subtle' : 'bg-danger-subtle text-danger border-danger-subtle'">
+                                {{ row.loadingHccNo }}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <span class="px-4 py-2 rounded fw-bold border"
+                                [ngClass]="isHccValid(row.unloadingHccNo) ? 'bg-success-subtle text-success border-success-subtle' : 'bg-danger-subtle text-danger border-danger-subtle'">
+                                {{ row.unloadingHccNo }}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <span class="pill-badge" [ngClass]="getStatusClass(row.status)">
+                                {{ row.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                <button
+                                    class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3"
+                                    style="font-size: 11px; font-weight: 700;">
+                                    <i class="fa fa-eye"></i> View
+                                </button>
+                                <button
+                                    class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
+                                    [disabled]="row.status === 'Cancelled'" style="font-size: 11px; font-weight: 700;">
+                                    📦 PRS Arrival
+                                </button>
+                                <button
+                                    class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3"
+                                    style="font-size: 11px; font-weight: 700;">
+                                    ✏️ Edit
+                                </button>
+                                <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
+                                    [disabled]="row.status === 'Cancelled'" style="font-size: 11px; font-weight: 700;">
+                                    🚫 Cancel
+                                </button>
+                                <button
+                                    class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
+                                    [disabled]="row.status === 'Cancelled'" style="font-size: 11px; font-weight: 700;">
+                                    🏷 HCC
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
