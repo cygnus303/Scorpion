@@ -5,7 +5,7 @@
             DRS Generation
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn btn-outline-primary px-4 py-2 rounded">✕ Clear</button>
+            <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="refreshFilter()">✕ Clear</button>
             <button class="btn btn-success px-4 py-2 rounded">＋ Add DRS</button>
             <button class="btn btn-primary px-4 py-2 rounded">📥 Download XLS</button>
         </div>
@@ -14,11 +14,11 @@
     <!-- Summary Strip -->
     <div class="summary-strip">
         <!-- TOTAL DRS -->
-        <div class="summary-card px-3 py-3 c-blue active-card cursor-pointer">
+        <div class="summary-card px-3 py-3 c-blue active-card cursor-pointer" (click)="filterByStatus('All')">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="card-content">
                     <div class="s-label">Total DRS</div>
-                    <div class="s-val fs-2 fw-bold lh-1">18</div>
+                    <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.total_LRs || 0 }}</div>
                     <div class="small text-body-tertiary">All records today</div>
                 </div>
                 <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📋</div>
@@ -26,41 +26,50 @@
         </div>
 
         <!-- PENDING FOR ARRIVAL -->
-        <div class="summary-card px-3 py-3 c-orange cursor-pointer">
+        <div class="summary-card px-3 py-3 c-orange cursor-pointer" (click)="filterByStatus('Generated')">
             <div class="card-content">
                 <div class="s-label">Pending for Update</div>
-                <div class="s-val fs-2 fw-bold lh-1">6</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.generated || 0}}</div>
                 <div class="small text-body-tertiary">Awaiting Update</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
         </div>
 
         <!-- TOTAL DRS ARRIVED -->
-        <div class="summary-card px-3 py-3 c-teal cursor-pointer">
+        <div class="summary-card px-3 py-3 c-teal cursor-pointer" (click)="filterByStatus('Updated')">
             <div class="card-content">
                 <div class="s-label">DRS Updated</div>
-                <div class="s-val fs-2 fw-bold lh-1">7</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.updated || 0}}</div>
                 <div class="small text-body-tertiary">Delivery Updated</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">✅</div>
         </div>
 
         <!-- CANCELLED -->
-        <div class="summary-card px-3 py-3 c-red cursor-pointer">
+        <div class="summary-card px-3 py-3 c-red cursor-pointer" (click)="filterByStatus('Cancelled')">
             <div class="card-content">
                 <div class="s-label">Cancelled</div>
-                <div class="s-val fs-2 fw-bold lh-1">2</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.cancelled || 0}}</div>
                 <div class="small text-body-tertiary">Cancelled today</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🚫</div>
         </div>
 
-        <!-- DRS BILLED -->
-        <div class="summary-card px-3 py-3 c-green cursor-pointer">
+        <div class="summary-card c-purple cursor-pointer" (click)="filterByStatus('Billed')">
             <div class="card-content">
-                <div class="s-label">DRS Billed</div>
-                <div class="s-val fs-2 fw-bold lh-1">2</div>
-                <div class="small text-body-tertiary">HCC Generated</div>
+                <div class="s-label">Billed</div>
+               <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.billed || 0}}</div>
+                <div class="small text-body-tertiary">Billed today</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🧾</div>
+        </div>
+
+        <!-- DRS BILLED -->
+        <div class="summary-card px-3 py-3 c-green cursor-pointer" (click)="filterByStatus('HCC Generated')">
+            <div class="card-content">
+                <div class="s-label">HCC Generated</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.hccGenerated || 0}}</div>
+                <div class="small text-body-tertiary">HCC generated today</div>
             </div>
                 <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
         </div>
@@ -69,17 +78,18 @@
 
     <!-- Table Panel -->
     <div>
+        <form [formGroup]="DRSFilterForm">
         <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
             <div class="control-bar border-0 shadow-none mb-0">
                 <div class="filter-group">
                 <span class="filter-label">🔍 Search</span>
-                <input type="text" placeholder="search..." class="filter-bar" style="width:200px;">
+                <input type="text" placeholder="search..." class="filter-bar" style="width:200px;" formControlName="searchText">
                 
             </div>
             <div class="date-range-group">
                 <span class="date-label">Date Range</span>
                 <div class="date-input-wrap" style="padding:0;">
-                    <input type="text" id="dateFrom" bsDatepicker
+                    <input type="text" id="dateFrom" bsDatepicker formControlName="fromDate"
                         [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                         style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
                     <span
@@ -87,7 +97,7 @@
                 </div>
                 <span class="date-sep">→</span>
                 <div class="date-input-wrap" style="padding:0;">
-                    <input type="text" id="dateTo" bsDatepicker
+                    <input type="text" id="dateTo" bsDatepicker formControlName="toDate"
                         [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                         style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
                     <span
@@ -97,13 +107,15 @@
             <div class="divider-v"></div>
             <div class="filter-group">
                 <span class="filter-label">Status</span>
-                <ng-select type="text" placeholder="Status" class="custom-status-select clear-icon">
+                <ng-select type="text" placeholder="Status" class="custom-status-select clear-icon" formControlName="statusFilter" [items]="statusList"
+                bindLabel="label" bindValue="value">
                 </ng-select>
             </div>
             <div class="divider-v"></div>
             <div class="filter-group">
                 <span class="filter-label">ODA Type</span>
-                <ng-select type="text" placeholder="ODA Type" class="custom-status-select clear-icon">
+                <ng-select type="text" placeholder="ODA Type" class="custom-status-select clear-icon" formControlName="odaType"
+                [items]="odaTypeList" bindLabel="label" bindValue="value">
                 </ng-select>
             </div>
             <!-- <div class="btn-group gap-3 ms-auto">
@@ -113,6 +125,7 @@
             </div> -->
         </div>
         </div>
+        </form>
 
         <div class="table-wrap">
             <table class="table align-middle  data-table mb-0">
@@ -121,7 +134,7 @@
                         <th class="text-center">#</th>
                         <th class="text-center">DRS No. / Date</th>
                         <th class="text-center">ODA Type</th>
-                        <th class="text-center">Total / Delivered Dockets</th>
+                        <th class="text-center" style="width: 140px;">Total / Delivered Dockets</th>
                         <th class="text-center">Vendor Type / Name</th>
                         <th class="text-center">Vendor Bill No.</th>
                         <th class="text-center">Loading HCC No.</th>
@@ -130,47 +143,63 @@
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr *ngFor="let row of DRSData; let i = index">
+                <tbody *ngIf="isLoading">
+                    <tr>
+                        <td colspan="12" class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && DRSData.length === 0">
+                    <tr>
+                        <td colspan="12" class="text-center py-4 text-muted fs-5">
+                            No records found.
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && DRSData.length > 0">
+                    <tr *ngFor="let data of DRSData; let i = index">
                         <td class="text-center text-muted fs-7">{{ i + 1 }}</td>
                         <td>
-                            <div class="fw-bold text-primary"><a>{{ row.DRSNo }}</a></div>
-                            <div class="text-muted fs-7 mt-1">{{ row.date }}</div>
+                            <div class="fw-bold text-primary"><a>{{ data.drsNo }}</a></div>
+                            <div class="text-muted fs-7 mt-1">{{ data.drsDate | date:'dd-MMM-yy' }}</div>
                         </td>
                         <td class="text-center">
-                            <span class="pill-badge" [ngClass]="getODAClass(row.ODAType)">{{
-                                row.ODAType }}</span>
+                            <span class="pill-badge" [ngClass]="getODAClass(data.odaType)">{{
+                                data.odaType }}</span>
                         </td>
-                        <td class="text-center">
+                        <td class="text-center" style="width: 140px;">
                             <div class="d-flex gap-2 flex-column">
-                                <span class="d-block rounded p-1 fw-bold mb-1">{{ row.totalDockets
-                                    }}</span>
-                                <span class="fw-bold text-success">Delivered:{{ row.DeliveryDocket }}</span>
+                                <span class="d-block rounded p-1 fw-bold mb-1">{{ data.totalDockets}}</span>
+                                <span class="fw-bold text-success">Delivered:{{ data.deliveredCount }}</span>
                             </div>
                         </td>
                         <td class="text-center">
                             <div class="d-flex gap-2 flex-column">
-                                <span class="d-block rounded p-1 fw-bold mb-1 vt-transporter">{{ row.vendorType
+                                <span class="d-block rounded p-1 fw-bold mb-1 vt-transporter">{{ data.vendorType
                                     }}</span>
-                                <span class="fw-bold">{{ row.vendorName }}</span>
+                                <span class="fw-bold">{{ data.vendorName }}</span>
                             </div>
                         </td>
-                        <td class="text-center fs-7 text-primary fw-bold">{{ row.vendorBillNo }}</td>
+                        <td class="text-center fs-7" [ngClass]="(data.vendorBillNo) ? 'text-primary fw-bold' : 'text-muted'">{{ data.vendorBillNo || '—' }}</td>
                         <td class="text-center">
                             <span class="px-4 py-2"
-                                [ngClass]="isHccValid(row.loadingHccNo) ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'">
-                                {{ row.loadingHccNo }}
+                                [ngClass]="(data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'">
+                                {{ data.loadingHCCNo || 'NO HCC' }}
                             </span>
                         </td>
                         <td class="text-center">
                             <span class="px-4 py-2"
-                                [ngClass]="isHccValid(row.unloadingHccNo) ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'">
-                                {{ row.unloadingHccNo }}
+                                [ngClass]="(data.unloadingHccNo && data.unloadingHccNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'">
+                                {{ data.unloadingHccNo || 'NO HCC' }}
                             </span>
                         </td>
                         <td class="text-center">
-                            <span class="pill-badge" [ngClass]="getStatusClass(row.status)">
-                                {{ row.status }}
+                            <span class="pill-badge px-2 py-1" [ngClass]="getStatusClass(data.status)">
+                                {{ data.status }}
                             </span>
                         </td>
                         <td>
@@ -181,7 +210,7 @@
                                 </button>
                                 <button
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
-                                    [disabled]="row.status === 'Cancelled'">
+                                    [disabled]="data.status === 'Cancelled'">
                                     🔄 DRS Update
                                 </button>
                                 <button
@@ -189,17 +218,17 @@
                                     ✏️ Edit
                                 </button>
                                 <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
-                                    [disabled]="row.status === 'Cancelled'">
+                                    [disabled]="data.status === 'Cancelled'">
                                     🚫 Cancel
                                 </button>
                                 <button
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
-                                    [disabled]="row.status === 'Cancelled'">
+                                    [disabled]="data.status === 'Cancelled'">
                                     🏷 HCC
                                 </button>
                                 <button
-                                    class="btn btn-sm pill-badge s-billed px-3 py-1"
-                                    [disabled]="row.status === 'Cancelled'">
+                                    class="btn btn-sm single-cnote px-3 py-1"
+                                    [disabled]="data.status === 'Cancelled'">
                                    📝 Single C Note Update
                                 </button>
                             </div>
@@ -208,5 +237,8 @@
                 </tbody>
             </table>
         </div>
+         <app-pagination [page]="pagination.page" [pageSize]="pagination.pageSize" [totalRecords]="pagination.totalRecords" [totalPages]="pagination.totalPages"
+         (pageChange)="setPage($event)">
+        </app-pagination>
     </div>
 </div>
