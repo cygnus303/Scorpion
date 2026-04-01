@@ -1,20 +1,49 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AddPRSDRSComponent } from './add-prsdrs/add-prsdrs.component';
 import { PaginationComponent } from 'app/shared/components/pagination/pagination.component';
+import { Subject, Subscription, debounceTime } from 'rxjs';
+import { PFMapiService } from 'app/shared/services/pfmapi.service';
+import { DocketService } from 'app/shared/services/docket.service';
+import { ExportService } from 'app/shared/services/export.service';
 
 @Component({
   selector: 'app-prs-generation-list',
   standalone: true,
   imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, AddPRSDRSComponent, PaginationComponent],
   templateUrl: './prs-generation-list.component.html',
-  styleUrl: './prs-generation-list.component.scss'
+  styleUrl: './prs-generation-list.component.scss',
+  providers: [PFMapiService]
 })
-export class PRSGenerationListComponent {
+export class PRSGenerationListComponent implements OnInit, OnDestroy {
   @ViewChild('AddPRSDRSComponent') AddPRSDRSComponent!: AddPRSDRSComponent;
+
+  public listSubscription?: Subscription;
+  private fetchSubject = new Subject<void>();
+  public isLoading: boolean = false;
+  public isCSVLoading: boolean = false;
+
+  public summaryData: any = {
+    total_PRS: 0,
+    pending_for_Arrival: 0,
+    prs_Billed: 0,
+    hcc_Generated: 0,
+    cancelled: 0,
+    total_PRS_Arrived: 0
+  };
+
+  statusList = [
+    { label: 'All Status', value: 'All' },
+    { label: 'Generated', value: 'Generated' },
+    { label: 'Arrived', value: 'Arrived' },
+    { label: 'Billed', value: 'Billed' },
+    { label: 'Cancelled', value: 'Cancelled' },
+    { label: 'HCC Generated', value: 'HCC Generated' }
+  ];
+
   public config = {
     fromDateStr: new Date(new Date().setDate(new Date().getDate() - 7)),
     toDateStr: new Date(),
@@ -22,130 +51,132 @@ export class PRSGenerationListComponent {
     page: 1,
     pageSize: 10,
     totalRecords: 0,
-    totalPages: 1
+    totalPages: 1,
+    searchText: ''
   };
-  public prsData = [
-    {
-      prsNo: 'PRS/2526/00101',
-      date: '21-Mar-26',
-      totalDockets: 24,
-      vendorType: 'Transporter',
-      vendorName: 'Fast Freight Carriers',
-      vendorBillNo: '—',
-      loadingHccNo: 'NO HCC',
-      unloadingHccNo: 'NO HCC',
-      status: 'Generated',
-      vendorClass: 'v-purple'
-    },
-    {
-      prsNo: 'PRS/2526/00101',
-      date: '21-Mar-26',
-      totalDockets: 24,
-      vendorType: 'Transporter',
-      vendorName: 'Fast Freight Carriers',
-      vendorBillNo: '—',
-      loadingHccNo: 'NO HCC',
-      unloadingHccNo: 'NO HCC',
-      status: 'Generated',
-      vendorClass: 'v-purple'
-    },
-    {
-      prsNo: 'PRS/2526/00101',
-      date: '21-Mar-26',
-      totalDockets: 24,
-      vendorType: 'Transporter',
-      vendorName: 'Fast Freight Carriers',
-      vendorBillNo: '—',
-      loadingHccNo: 'NO HCC',
-      unloadingHccNo: 'NO HCC',
-      status: 'Generated',
-      vendorClass: 'v-purple'
-    },
-    {
-      prsNo: 'PRS/2526/00102',
-      date: '21-Mar-26',
-      totalDockets: 36,
-      vendorType: 'Agent',
-      vendorName: 'Blue Dart Express',
-      vendorBillNo: 'VB/2526/00202',
-      loadingHccNo: 'NO HCC',
-      unloadingHccNo: 'NO HCC',
-      status: 'Billed',
-      vendorClass: 'v-blue'
-    },
-    {
-      prsNo: 'PRS/2526/00103',
-      date: '21-Mar-26',
-      totalDockets: 18,
-      vendorType: 'Own Vehicle',
-      vendorName: 'Mahindra Logistics',
-      vendorBillNo: '—',
-      loadingHccNo: 'NO HCC',
-      unloadingHccNo: 'NO HCC',
-      status: 'Generated',
-      vendorClass: 'v-pink'
-    },
-    {
-      prsNo: 'PRS/2526/00104',
-      date: '21-Mar-26',
-      totalDockets: 42,
-      vendorType: 'Transporter',
-      vendorName: 'Gati Kintetsu Express',
-      vendorBillNo: 'VB/2526/00204',
-      loadingHccNo: 'HCC/2526/00441',
-      unloadingHccNo: 'HCC/2526/00451',
-      status: 'HCC Generated',
-      vendorClass: 'v-purple'
-    },
-    {
-      prsNo: 'PRS/2526/00105',
-      date: '21-Mar-26',
-      totalDockets: 9,
-      vendorType: 'Agent',
-      vendorName: 'DTDC Courier',
-      vendorBillNo: '—',
-      loadingHccNo: 'NO HCC',
-      unloadingHccNo: 'NO HCC',
-      status: 'Cancelled',
-      vendorClass: 'v-blue'
-    },
-    {
-      prsNo: 'PRS/2526/00106',
-      date: '21-Mar-26',
-      totalDockets: 29,
-      vendorType: 'Transporter',
-      vendorName: 'TCI Express Ltd.',
-      vendorBillNo: 'VB/2526/00206',
-      loadingHccNo: 'NO HCC',
-      unloadingHccNo: 'NO HCC',
-      status: 'Billed',
-      vendorClass: 'v-purple'
-    },
-    {
-      prsNo: 'PRS/2526/00107',
-      date: '21-Mar-26',
-      totalDockets: 55,
-      vendorType: 'Agent',
-      vendorName: 'Xpressbees Logistics',
-      vendorBillNo: 'VB/2526/00207',
-      loadingHccNo: 'HCC/2526/00442',
-      unloadingHccNo: 'HCC/2526/00452',
-      status: 'HCC Generated',
-      vendorClass: 'v-blue'
-    },
-    {
-      prsNo: 'PRS/2526/00108',
-      date: '21-Mar-26',
-      totalDockets: 15,
-      vendorType: 'Own Vehicle',
-      vendorName: 'SpotOn Logistics',
-      vendorBillNo: '—',
-      loadingHccNo: 'NO HCC',
-      unloadingHccNo: 'NO HCC',
-      status: 'Cancelled',
-      vendorClass: 'v-pink'
+
+  public prsData: any[] = [];
+
+  constructor(
+    public PFMapiService: PFMapiService,
+    public docketService: DocketService,
+    public exportService: ExportService
+  ) { }
+
+  ngOnInit() {
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      this.docketService.loginUserList.LocationCode = 'PIM'
+      this.docketService.isComplition = false;
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
-  ];
+
+    this.fetchSubject.pipe(debounceTime(300)).subscribe(() => {
+      this.fetchPRSList();
+    });
+
+    this.fetchData();
+  }
+
+  fetchData() {
+    this.config.page = 1;
+    this.fetchSubject.next();
+  }
+
+  setPage(p: number) {
+    if (this.config.page === p) return;
+    this.config.page = p;
+    this.fetchPRSList();
+  }
+
+  onSearchChange() {
+    this.config.page = 1;
+    this.fetchSubject.next();
+  }
+
+  fetchPRSList() {
+    if (this.listSubscription) { this.listSubscription.unsubscribe(); }
+    this.isLoading = true;
+    const payload = {
+      fromDate: new Date(this.config.fromDateStr).toISOString(),
+      toDate: new Date(this.config.toDateStr).toISOString(),
+      locCode: this.docketService.loginUserList.LocationCode || null,
+      statusFilter: this.config.statusFilter || 'All',
+      pageNumber: this.config.page,
+      pageSize: this.config.pageSize,
+      isDownload: 0,
+      searchText: this.config.searchText || null
+    };
+
+    this.listSubscription = this.PFMapiService.GetPrsList(payload).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+        if (response && response.data) {
+          this.prsData = response.data;
+
+          if (response.pagination) {
+            this.config.totalRecords = response.pagination.totalRecords || this.prsData.length;
+            this.config.totalPages = response.pagination.totalPages || 1;
+            this.config.page = response.pagination.currentPage || 1;
+            this.config.pageSize = response.pagination.pageSize || 50;
+          }
+
+          if (response.summary) {
+            this.summaryData = response.summary;
+          }
+        } else {
+          this.prsData = [];
+          this.config.totalRecords = 0;
+          this.config.totalPages = 1;
+        }
+      },
+      error: (err: any) => {
+        this.isLoading = false;
+        console.error('Error fetching PRS List', err);
+        this.prsData = [];
+      }
+    });
+  }
+
+  filterByStatus(status: string) {
+    this.config.statusFilter = status;
+    this.fetchData();
+  }
+
+  downloadCSV() {
+    this.isCSVLoading = true;
+    const payload = {
+      fromDate: new Date(this.config.fromDateStr).toISOString(),
+      toDate: new Date(this.config.toDateStr).toISOString(),
+      locCode: this.docketService.loginUserList.LocationCode || null,
+      statusFilter: this.config.statusFilter || 'All',
+      pageNumber: this.config.page,
+      pageSize: this.config.pageSize, // High page size or handling from backend for CSV.
+      isDownload: 1,
+      searchText: this.config.searchText || null
+    };
+
+    this.listSubscription = this.PFMapiService.GetPrsList(payload).subscribe({
+      next: (response: any) => {
+        this.isCSVLoading = false;
+        if (response && response.data) {
+          this.exportService.exportToCSV(response.data, `PRS_List`);
+        }
+      },
+      error: (err: any) => {
+        this.isCSVLoading = false;
+        console.error('Error downloading CSV', err);
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.listSubscription) { this.listSubscription.unsubscribe(); }
+    this.fetchSubject.complete();
+  }
 
   getStatusClass(status: string): string {
     switch (status) {
