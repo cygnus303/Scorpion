@@ -174,7 +174,9 @@
                             <div class="d-flex gap-2 flex-column">
                                 <span class="d-block rounded fw-bold py-1 vt-transporter" *ngIf="row.vendorType">
                                     {{row.vendorType}}</span>
-                                <span class="fs-6 text-body-secondary">{{ row.vendorName }}</span>
+                                <span class="fs-6 text-body-secondary text-truncate d-inline-block"
+                                    *ngIf="row.vendorName" style="max-width: 180px;" [title]="row.vendorName">{{
+                                    row.vendorName }}</span>
                             </div>
                         </td>
                         <td class="text-center fs-6 text-muted">{{ row.vendorBillNo || '—' }}</td>

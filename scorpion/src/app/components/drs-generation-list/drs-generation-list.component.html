@@ -9,12 +9,13 @@
             <button class="btn btn-success px-4 py-2 rounded">＋ Add DRS</button>
             <button class="btn btn-primary px-4 py-2 rounded">📥 Download XLS</button>
         </div>
-</div>
+    </div>
 
     <!-- Summary Strip -->
     <div class="summary-strip">
         <!-- TOTAL DRS -->
-        <div class="summary-card px-3 py-3 c-blue active-card cursor-pointer" (click)="filterByStatus('All')">
+        <div class="summary-card px-3 py-3 c-blue cursor-pointer"
+            [class.active-card]="DRSFilterForm.get('statusFilter')?.value === 'All'" (click)="filterByStatus('All')">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="card-content">
                     <div class="s-label">Total DRS</div>
@@ -26,7 +27,9 @@
         </div>
 
         <!-- PENDING FOR ARRIVAL -->
-        <div class="summary-card px-3 py-3 c-orange cursor-pointer" (click)="filterByStatus('Generated')">
+        <div class="summary-card px-3 py-3 c-orange cursor-pointer"
+            [class.active-card]="DRSFilterForm.get('statusFilter')?.value === 'Generated'"
+            (click)="filterByStatus('Generated')">
             <div class="card-content">
                 <div class="s-label">Pending for Update</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.generated || 0}}</div>
@@ -36,7 +39,9 @@
         </div>
 
         <!-- TOTAL DRS ARRIVED -->
-        <div class="summary-card px-3 py-3 c-teal cursor-pointer" (click)="filterByStatus('Updated')">
+        <div class="summary-card px-3 py-3 c-teal cursor-pointer"
+            [class.active-card]="DRSFilterForm.get('statusFilter')?.value === 'Updated'"
+            (click)="filterByStatus('Updated')">
             <div class="card-content">
                 <div class="s-label">DRS Updated</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.updated || 0}}</div>
@@ -46,7 +51,9 @@
         </div>
 
         <!-- CANCELLED -->
-        <div class="summary-card px-3 py-3 c-red cursor-pointer" (click)="filterByStatus('Cancelled')">
+        <div class="summary-card px-3 py-3 c-red cursor-pointer"
+            [class.active-card]="DRSFilterForm.get('statusFilter')?.value === 'Cancelled'"
+            (click)="filterByStatus('Cancelled')">
             <div class="card-content">
                 <div class="s-label">Cancelled</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.cancelled || 0}}</div>
@@ -55,23 +62,27 @@
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🚫</div>
         </div>
 
-        <div class="summary-card c-purple cursor-pointer" (click)="filterByStatus('Billed')">
+        <div class="summary-card c-purple cursor-pointer px-3 py-3"
+            [class.active-card]="DRSFilterForm.get('statusFilter')?.value === 'Billed'"
+            (click)="filterByStatus('Billed')">
             <div class="card-content">
                 <div class="s-label">Billed</div>
-               <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.billed || 0}}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.billed || 0}}</div>
                 <div class="small text-body-tertiary">Billed today</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🧾</div>
         </div>
 
         <!-- DRS BILLED -->
-        <div class="summary-card px-3 py-3 c-green cursor-pointer" (click)="filterByStatus('HCC Generated')">
+        <div class="summary-card px-3 py-3 c-green cursor-pointer"
+            [class.active-card]="DRSFilterForm.get('statusFilter')?.value === 'HCC Generated'"
+            (click)="filterByStatus('HCC Generated')">
             <div class="card-content">
                 <div class="s-label">HCC Generated</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.hccGenerated || 0}}</div>
                 <div class="small text-body-tertiary">HCC generated today</div>
             </div>
-                <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
         </div>
 
     </div>
@@ -79,52 +90,53 @@
     <!-- Table Panel -->
     <div>
         <form [formGroup]="DRSFilterForm">
-        <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
-            <div class="control-bar border-0 shadow-none mb-0">
-                <div class="filter-group">
-                <span class="filter-label">🔍 Search</span>
-                <input type="text" placeholder="search..." class="filter-bar" style="width:200px;" formControlName="searchText">
-                
-            </div>
-            <div class="date-range-group">
-                <span class="date-label">Date Range</span>
-                <div class="date-input-wrap" style="padding:0;">
-                    <input type="text" id="dateFrom" bsDatepicker formControlName="fromDate"
-                        [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
-                        style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
-                    <span
-                        style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
-                </div>
-                <span class="date-sep">→</span>
-                <div class="date-input-wrap" style="padding:0;">
-                    <input type="text" id="dateTo" bsDatepicker formControlName="toDate"
-                        [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
-                        style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
-                    <span
-                        style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
-                </div>
-            </div>
-            <div class="divider-v"></div>
-            <div class="filter-group">
-                <span class="filter-label">Status</span>
-                <ng-select type="text" placeholder="Status" class="custom-status-select clear-icon" formControlName="statusFilter" [items]="statusList"
-                bindLabel="label" bindValue="value">
-                </ng-select>
-            </div>
-            <div class="divider-v"></div>
-            <div class="filter-group">
-                <span class="filter-label">ODA Type</span>
-                <ng-select type="text" placeholder="ODA Type" class="custom-status-select clear-icon" formControlName="odaType"
-                [items]="odaTypeList" bindLabel="label" bindValue="value">
-                </ng-select>
-            </div>
-            <!-- <div class="btn-group gap-3 ms-auto">
+            <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
+                <div class="control-bar border-0 shadow-none mb-0">
+                    <div class="filter-group">
+                        <span class="filter-label">🔍 Search</span>
+                        <input type="text" placeholder="search..." class="filter-bar" style="width:200px;"
+                            formControlName="searchText">
+
+                    </div>
+                    <div class="date-range-group">
+                        <span class="date-label">Date Range</span>
+                        <div class="date-input-wrap" style="padding:0;">
+                            <input type="text" id="dateFrom" bsDatepicker formControlName="fromDate"
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                                style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
+                            <span
+                                style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+                        </div>
+                        <span class="date-sep">→</span>
+                        <div class="date-input-wrap" style="padding:0;">
+                            <input type="text" id="dateTo" bsDatepicker formControlName="toDate"
+                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                                style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
+                            <span
+                                style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+                        </div>
+                    </div>
+                    <div class="divider-v"></div>
+                    <div class="filter-group">
+                        <span class="filter-label">Status</span>
+                        <ng-select type="text" placeholder="Status" class="custom-status-select clear-icon"
+                            formControlName="statusFilter" [items]="statusList" bindLabel="label" bindValue="value">
+                        </ng-select>
+                    </div>
+                    <div class="divider-v"></div>
+                    <div class="filter-group">
+                        <span class="filter-label">ODA Type</span>
+                        <ng-select type="text" placeholder="ODA Type" class="custom-status-select clear-icon"
+                            formControlName="odaType" [items]="odaTypeList" bindLabel="label" bindValue="value">
+                        </ng-select>
+                    </div>
+                    <!-- <div class="btn-group gap-3 ms-auto">
                 <button class="btn btn-outline-primary px-4 py-2 rounded">✕ Clear</button>
                 <button class="btn btn-success px-4 py-2 rounded">＋ Add DRS</button>
                 <button class="btn btn-primary px-4 py-2 rounded">📥 Download XLS</button>
             </div> -->
-        </div>
-        </div>
+                </div>
+            </div>
         </form>
 
         <div class="table-wrap">
@@ -179,12 +191,15 @@
                         </td>
                         <td class="text-center">
                             <div class="d-flex gap-2 flex-column">
-                                <span class="d-block rounded p-1 fw-bold mb-1 vt-transporter">{{ data.vendorType
-                                    }}</span>
-                                <span class="fw-bold">{{ data.vendorName }}</span>
+                                <span class="d-block rounded p-1 fw-bold mb-1 vt-transporter" *ngIf="data.vendorType">
+                                    {{ data.vendorType}}</span>
+                                <span class="fw-bold text-truncate d-inline-block" *ngIf="data.vendorName"
+                                    style="max-width: 180px;" [title]="data.vendorName">{{ data.vendorName }}</span>
                             </div>
                         </td>
-                        <td class="text-center fs-7" [ngClass]="(data.vendorBillNo) ? 'text-primary fw-bold' : 'text-muted'">{{ data.vendorBillNo || '—' }}</td>
+                        <td class="text-center fs-7"
+                            [ngClass]="(data.vendorBillNo) ? 'text-primary fw-bold' : 'text-muted'">{{ data.vendorBillNo
+                            || '—' }}</td>
                         <td class="text-center">
                             <span class="px-4 py-2"
                                 [ngClass]="(data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'">
@@ -226,10 +241,9 @@
                                     [disabled]="data.status === 'Cancelled'">
                                     🏷 HCC
                                 </button>
-                                <button
-                                    class="btn btn-sm single-cnote px-3 py-1"
+                                <button class="btn btn-sm single-cnote px-3 py-1"
                                     [disabled]="data.status === 'Cancelled'">
-                                   📝 Single C Note Update
+                                    📝 Single C Note Update
                                 </button>
                             </div>
                         </td>
@@ -237,8 +251,9 @@
                 </tbody>
             </table>
         </div>
-         <app-pagination [page]="pagination.page" [pageSize]="pagination.pageSize" [totalRecords]="pagination.totalRecords" [totalPages]="pagination.totalPages"
-         (pageChange)="setPage($event)">
+        <app-pagination [page]="pagination.page" [pageSize]="pagination.pageSize"
+            [totalRecords]="pagination.totalRecords" [totalPages]="pagination.totalPages"
+            (pageChange)="setPage($event)">
         </app-pagination>
     </div>
 </div>
