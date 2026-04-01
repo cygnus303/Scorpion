@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { NgSelectModule } from '@ng-select/ng-select';
 import { PaginationComponent } from 'app/shared/components/pagination/pagination.component';
 import { DocketService } from 'app/shared/services/docket.service';
+import { ExportService } from 'app/shared/services/export.service';
 import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { debounceTime, Subscription } from 'rxjs';
@@ -27,6 +28,7 @@ export class DrsGenerationListComponent {
   public isLoading: boolean = false;
   private listSubscription?: Subscription;
   public summaryData:any;
+  public isdownload: boolean = false;
 
 
   statusList = [
@@ -163,6 +165,7 @@ export class DrsGenerationListComponent {
   constructor(
     private prsdrsApiService: PRSDRSApiService,
     private fb: FormBuilder,
+    private exportService: ExportService,
     private dockerService: DocketService
   ) { }
 
@@ -250,7 +253,7 @@ this.fetchData()
       "statusFilter": this.DRSFilterForm.value.statusFilter,
       "pageNumber": this.pagination.page,
       "pageSize": this.pagination.pageSize,
-      "isDownload": 0,
+      "isDownload":false,
       "odaType": this.DRSFilterForm.value.odaType,
       "searchText": this.DRSFilterForm.value.searchText
 }
@@ -269,5 +272,32 @@ this.fetchData()
       this.isLoading = false;
     }
   });
+  }
+
+    downloadList() {
+    this.isdownload = true;
+    const payload = {
+      "fromDate":  this.formatDate(this.DRSFilterForm.value.fromDate),
+      "toDate": this.formatDate(this.DRSFilterForm.value.toDate),
+      "locCode":null,
+      "statusFilter": this.DRSFilterForm.value.statusFilter,
+      "pageNumber": this.pagination.page,
+      "pageSize": this.pagination.pageSize,
+      "isDownload":true,
+      "odaType": this.DRSFilterForm.value.odaType,
+      "searchText": this.DRSFilterForm.value.searchText
+    };
+    this.listSubscription = this.prsdrsApiService.getDRSList(payload).subscribe({
+      next: (response: any) => {
+        this.isdownload= false;
+        if (response && response.data) {
+          this.exportService.exportToExcel(response.data, `DRS_Export`);
+        }
+      },
+      error: (err: any) => {
+        this.isdownload= false;
+        console.error('Error downloading Excel', err);
+      }
+    });
   }
 }
