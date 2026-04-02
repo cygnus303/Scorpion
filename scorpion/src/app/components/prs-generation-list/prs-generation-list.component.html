@@ -167,16 +167,14 @@
                             <div class="text-muted fs-7 mt-1">{{ row.pdcdt | date:'dd-MMM-yyyy' }}</div>
                         </td>
                         <td class="text-center">
-                            <span class="badge rounded-pill text-secondary bg-light fw-semibold px-3 py-1 border">{{
-                                row.totalDockets }}</span>
+                            <span class="badge rounded-pill text-secondary bg-light fw-semibold px-3 py-1 border">
+                                {{ row.totalDockets }}</span>
                         </td>
                         <td class="text-center">
                             <div class="d-flex gap-2 flex-column">
                                 <span class="d-block rounded fw-bold py-1 vt-transporter" *ngIf="row.vendorType">
                                     {{row.vendorType}}</span>
-                                <span class="fs-6 text-body-secondary text-truncate d-inline-block"
-                                    *ngIf="row.vendorName" style="max-width: 180px;" [title]="row.vendorName">{{
-                                    row.vendorName }}</span>
+                                <span class="fs-6 text-body-secondary">{{ row.vendorName }}</span>
                             </div>
                         </td>
                         <td class="text-center fs-6 text-muted">{{ row.vendorBillNo || '—' }}</td>
