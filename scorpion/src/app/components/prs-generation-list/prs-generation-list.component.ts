@@ -9,17 +9,19 @@ import { Subject, Subscription, debounceTime } from 'rxjs';
 import { PFMapiService } from 'app/shared/services/pfmapi.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { ExportService } from 'app/shared/services/export.service';
+import { PRSArrivalComponent } from './prsarrival/prsarrival.component';
 
 @Component({
   selector: 'app-prs-generation-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, AddPRSDRSComponent, PaginationComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, AddPRSDRSComponent, PaginationComponent, PRSArrivalComponent],
   templateUrl: './prs-generation-list.component.html',
   styleUrl: './prs-generation-list.component.scss',
   providers: [PFMapiService]
 })
 export class PRSGenerationListComponent implements OnInit, OnDestroy {
   @ViewChild('AddPRSDRSComponent') AddPRSDRSComponent!: AddPRSDRSComponent;
+  @ViewChild('PRSArrivalComponent') PRSArrivalComponent!: PRSArrivalComponent;
 
   public listSubscription?: Subscription;
   private fetchSubject = new Subject<void>();
@@ -194,5 +196,9 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
 
   openAddPRSDRS() {
     this.AddPRSDRSComponent.showPopup();
+  }
+
+  openPRSArrival(row: any) {
+    this.PRSArrivalComponent.showPopup(row);
   }
 }

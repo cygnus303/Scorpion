@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, FormArray, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -14,55 +14,67 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 @Component({
   selector: 'app-prs-arrival-details',
   standalone: true,
-  imports: [CommonModule, RouterModule,NgSelectModule,ReactiveFormsModule,BsDatepickerModule],
+  imports: [CommonModule, RouterModule, NgSelectModule, ReactiveFormsModule, BsDatepickerModule],
   templateUrl: './prs-arrival-details.component.html',
   styleUrl: './prs-arrival-details.component.scss'
 })
 export class PRSArrivalDetailsComponent {
-  public prsArrivalForm!:FormGroup;
-  public PRSArrivalDetails:any;
+  public prsArrivalForm!: FormGroup;
+  public PRSArrivalDetails: any;
   public dockList: any[] = [];
-  public docketList:[]=[];
+  public docketList: [] = [];
   public isLoading = false;
-  public isSubmitting:boolean = false;
+  public isSubmitting: boolean = false;
   env = environment;
-  public isRedirect:boolean = false;
-
-  
-
-  
+  public isRedirect: boolean = false;
+  @Input() arrivalData: any;
+  @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   constructor(
-    public docketService:DocketService,
-    public generalMasterService:GeneralMasterService,
-    private THCService:THCMasterService , 
-    public prsArrivalDetailsService:PrsArrivalDetailsService,
-    private sweetAlertService:SweetAlertService
-  ){}
-  
-ngOnInit(){
-   const saved = localStorage.getItem("loginUserList");
+    public docketService: DocketService,
+    public generalMasterService: GeneralMasterService,
+    private THCService: THCMasterService,
+    public prsArrivalDetailsService: PrsArrivalDetailsService,
+    private sweetAlertService: SweetAlertService
+  ) { }
+
+  ngOnInit() {
+    const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      // this.docketService.loginUserList.LocationCode =  'PIM';
-      // this.docketService.loginUserList.loadBy = "B";
-      // this.docketService.loginUserList.chargeType='1';
-      // this.docketService.loginUserList.id='PS/PIM/2526/002515';
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
-  this.buildForm();
-  this.getDeliveryDetail();
-  this.generalMasterService.getLoadingBy();
-  this.generalMasterService.getChargeTypeData();
-}
+    if (this.arrivalData) {
+      this.refreshData();
+    } else {
+      this.buildForm();
+      this.getDeliveryDetail();
+    }
+    this.generalMasterService.getLoadingBy();
+    this.generalMasterService.getChargeTypeData();
+  }
 
-get pdcControls() {
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['arrivalData'] && !changes['arrivalData'].firstChange) {
+      this.refreshData();
+    }
+  }
+
+  refreshData() {
+    this.docketService.loginUserList.loadBy = this.arrivalData.loadBy;
+    this.docketService.loginUserList.chargeType = this.arrivalData.chargeType;
+    this.docketService.loginUserList.id = this.arrivalData.pdcno;
+    this.buildForm();
+    this.getDeliveryDetail();
+  }
+
+  get pdcControls() {
     return (this.prsArrivalForm.get('pdcDetails') as FormArray)?.controls || [];
   }
 
   getDeliveryDetail() {
-   this.isLoading = true;
+    this.isLoading = true;
 
     const payload = {
       id: this.docketService.loginUserList.id,
@@ -88,122 +100,122 @@ get pdcControls() {
         }
         this.prsArrivalDetailsService.getVendorsList(this.docketService.loginUserList.loadBy);
       },
-       complete: () => {
-         this.isLoading = false;
+      complete: () => {
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Delivery Detail API Error', err);
-         this.isLoading = false;
+        this.isLoading = false;
       }
     });
   }
 
-clearNewRateOnFocus(index: number): void {
-  if (this.prsArrivalForm.value.LoadingBy === 'XX5') {
-    return;
-  }
-
-  const pdcArray = this.prsArrivalForm.get('pdcDetails') as FormArray;
-  const control = pdcArray.at(index)?.get('newRate');
-  const value = control?.value;
-
-  if (value === 0 || value === '0') {
-    setTimeout(() => {
-      control?.setValue('');
-    });
-  }
-}
-
-resetNewRateOnBlur(index: number): void {
-  if (this.prsArrivalForm.value.LoadingBy === 'XX5') {
-    return;
-  }
-
-  const pdcArray = this.prsArrivalForm.get('pdcDetails') as FormArray;
-  const control = pdcArray.at(index)?.get('newRate');
-  const value = control?.value;
-
-  if (value === null || value === '' || value === undefined) {
-    control?.setValue(0);
-  }
-}
-
-getLoadingCharge(event: any) {
-  if (!event) {
-    this.prsArrivalForm.patchValue({
-      vendorName: null
-    });
-    return;
-  }
-
-  this.prsArrivalForm.patchValue({
-    vendorName: event.text   // 👈 Vendor Name store
-  });
-  const data = {
-    loadUnloadType: 'U',
-    vendorCode: event.value,
-    typeModule: this.docketService.loginUserList.Type === "2" ? "P" : "D",
-    chargeType: this.docketService.loginUserList.chargeType,
-    brdc: this.docketService.loginUserList.LocationCode,
-    loadingBy: this.prsArrivalForm.value.LoadingBy,
-  };
-if(['XX5'].includes(this.prsArrivalForm.get('LoadingBy')?.value)){
-  this.THCService.getLoadingCharge(data).subscribe({
-    next: (response: any) => {
-    this.prsArrivalForm.patchValue({
-        Rate:response.rate,
-        ratetype:response.rateType
-      });
-      const pdcArray = this.prsArrivalForm.get('pdcDetails') as FormArray;
-      pdcArray?.controls.forEach((item: any, index) => {        
-        pdcArray.controls[index].patchValue({
-          newRate: response.rate,
-          ratetype:response.rateType
-        });
-      });
-    },
-    error: (err) => {
-      console.error('Error fetching loading charge:', err);
+  clearNewRateOnFocus(index: number): void {
+    if (this.prsArrivalForm.value.LoadingBy === 'XX5') {
+      return;
     }
-  });
-}
-}
 
-buildForm(){
-  this.prsArrivalForm = new FormGroup({
-    arrivalDate:new FormControl(new Date()),
-    actuwt:new FormControl(null),
-    LoadingBy:new FormControl(null,[Validators.required]),
-    LoadingCharge:new FormControl(0),
-    rate:new FormControl(null),
-    closeKM:new FormControl(0),
-    ratetype:new FormControl(null),
-    vendorCode:new FormControl(null,this.docketService.loginUserList.loadBy === 'XX9' ? null : Validators.required),
-    vendorName:new FormControl(null),
-    pdcDetails: new FormArray([])
-  })
-}
+    const pdcArray = this.prsArrivalForm.get('pdcDetails') as FormArray;
+    const control = pdcArray.at(index)?.get('newRate');
+    const value = control?.value;
 
-private createPdcGroup(item: any): FormGroup {
-  const group = new FormGroup({
-    dockno: new FormControl(item.dockno || item.pdcno || ''),
-    orgncd: new FormControl(item.orgncd || ''),
-    destcd: new FormControl(item.destcd || ''),
-    paybas: new FormControl(item.paybas || item.paybascd || ''),
-    ratetype: new FormControl(item.rateType ?? null),
-    actuwt: new FormControl(item.actuwt ?? 0),
-    pkgsno: new FormControl(item.pkgsno ?? 0),
-    chrgwt: new FormControl(item.chrgwt ?? 0),
-    vendorcode: new FormControl(item.vendorcode || ''),
-    vendorname: new FormControl(item.vendorname || ''),
-    newRate: new FormControl(0),
-    rateError: new FormControl(''),
-    totalLoadingCharge: new FormControl(''),
-  });
-   group.get('ratetype')?.valueChanges.subscribe(() => this.calculateCharge(group));
-   group.get('newRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
-  return group;
-}
+    if (value === 0 || value === '0') {
+      setTimeout(() => {
+        control?.setValue('');
+      });
+    }
+  }
+
+  resetNewRateOnBlur(index: number): void {
+    if (this.prsArrivalForm.value.LoadingBy === 'XX5') {
+      return;
+    }
+
+    const pdcArray = this.prsArrivalForm.get('pdcDetails') as FormArray;
+    const control = pdcArray.at(index)?.get('newRate');
+    const value = control?.value;
+
+    if (value === null || value === '' || value === undefined) {
+      control?.setValue(0);
+    }
+  }
+
+  getLoadingCharge(event: any) {
+    if (!event) {
+      this.prsArrivalForm.patchValue({
+        vendorName: null
+      });
+      return;
+    }
+
+    this.prsArrivalForm.patchValue({
+      vendorName: event.text   // 👈 Vendor Name store
+    });
+    const data = {
+      loadUnloadType: 'U',
+      vendorCode: event.value,
+      typeModule: this.docketService.loginUserList.Type === "2" ? "P" : "D",
+      chargeType: this.docketService.loginUserList.chargeType,
+      brdc: this.docketService.loginUserList.LocationCode,
+      loadingBy: this.prsArrivalForm.value.LoadingBy,
+    };
+    if (['XX5'].includes(this.prsArrivalForm.get('LoadingBy')?.value)) {
+      this.THCService.getLoadingCharge(data).subscribe({
+        next: (response: any) => {
+          this.prsArrivalForm.patchValue({
+            Rate: response.rate,
+            ratetype: response.rateType
+          });
+          const pdcArray = this.prsArrivalForm.get('pdcDetails') as FormArray;
+          pdcArray?.controls.forEach((item: any, index) => {
+            pdcArray.controls[index].patchValue({
+              newRate: response.rate,
+              ratetype: response.rateType
+            });
+          });
+        },
+        error: (err) => {
+          console.error('Error fetching loading charge:', err);
+        }
+      });
+    }
+  }
+
+  buildForm() {
+    this.prsArrivalForm = new FormGroup({
+      arrivalDate: new FormControl(new Date()),
+      actuwt: new FormControl(null),
+      LoadingBy: new FormControl(null, [Validators.required]),
+      LoadingCharge: new FormControl(0),
+      Rate: new FormControl(null),
+      closeKM: new FormControl(0),
+      ratetype: new FormControl(null),
+      vendorCode: new FormControl(null, this.docketService.loginUserList.loadBy === 'XX9' ? null : Validators.required),
+      vendorName: new FormControl(null),
+      pdcDetails: new FormArray([])
+    })
+  }
+
+  private createPdcGroup(item: any): FormGroup {
+    const group = new FormGroup({
+      dockno: new FormControl(item.dockno || item.pdcno || ''),
+      orgncd: new FormControl(item.orgncd || ''),
+      destcd: new FormControl(item.destcd || ''),
+      paybas: new FormControl(item.paybas || item.paybascd || ''),
+      ratetype: new FormControl(item.rateType ?? null),
+      actuwt: new FormControl(item.actuwt ?? 0),
+      pkgsno: new FormControl(item.pkgsno ?? 0),
+      chrgwt: new FormControl(item.chrgwt ?? 0),
+      vendorcode: new FormControl(item.vendorcode || ''),
+      vendorname: new FormControl(item.vendorname || ''),
+      newRate: new FormControl(0),
+      rateError: new FormControl(''),
+      totalLoadingCharge: new FormControl(''),
+    });
+    group.get('ratetype')?.valueChanges.subscribe(() => this.calculateCharge(group));
+    group.get('newRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
+    return group;
+  }
 
   calculateCharge(group: FormGroup): void {
     const isValid = this.validateRate(group);
@@ -285,75 +297,85 @@ private createPdcGroup(item: any): FormGroup {
     this.prsArrivalForm.get('LoadingCharge')?.setValue(total.toFixed(2), { emitEvent: false });
   }
 
-onSubmit() {
-  if (this.prsArrivalForm.valid) {
-    const params = {
-      baseLocationCode: this.docketService.loginUserList.LocationCode,
-      BaseCompanyCode: this.docketService.loginUserList.Companycode,
-      userid: this.docketService.loginUserList.UserId
-    };
+  onSubmit() {
+    if (this.prsArrivalForm.valid) {
+      const params = {
+        baseLocationCode: this.docketService.loginUserList.LocationCode,
+        BaseCompanyCode: this.docketService.loginUserList.Companycode,
+        userid: this.docketService.loginUserList.UserId
+      };
 
-    const payload = {
-      pavm: {
-        ...this.PRSArrivalDetails,
-        unloadBy: this.docketService.loginUserList.loadBy,
-        rateType: this.docketService.loginUserList.chargeType,
-        vendorCode_new: this.prsArrivalForm.value.vendorCode,
-        vendorName_new: this.prsArrivalForm.value.vendorName,
-        ratetype1: this.docketService.loginUserList.chargeType,
-        monthlyRate: "",
-        arrivalDT: this.prsArrivalForm.value.arrivalDate
-          ? new Date(this.prsArrivalForm.value.arrivalDate).toISOString()
-          : new Date().toISOString(),
-
-        dockdt: this.PRSArrivalDetails?.dockdt,
-        isEnabled: true,
-        loadingCharge: this.prsArrivalForm.value.LoadingCharge
-      },
-      pdcDetail: this.docketList.map((item: any, index: number) => {
-        const formItem = this.prsArrivalForm.value.pdcDetails[index];
-        return {
-          ...item,
+      const payload = {
+        pavm: {
+          ...this.PRSArrivalDetails,
           unloadBy: this.docketService.loginUserList.loadBy,
-          rateType: formItem.ratetype,
+          rateType: this.docketService.loginUserList.chargeType,
           vendorCode_new: this.prsArrivalForm.value.vendorCode,
           vendorName_new: this.prsArrivalForm.value.vendorName,
-          ratetype1: formItem.ratetype,
+          ratetype1: this.docketService.loginUserList.chargeType,
           monthlyRate: "",
-          newRate: formItem.newRate,
           arrivalDT: this.prsArrivalForm.value.arrivalDate
             ? new Date(this.prsArrivalForm.value.arrivalDate).toISOString()
             : new Date().toISOString(),
-          dockdt: item.dockdt,
-          isEnabled: true
-        };
 
-      }),
+          dockdt: this.PRSArrivalDetails?.dockdt,
+          isEnabled: true,
+          loadingCharge: this.prsArrivalForm.value.LoadingCharge
+        },
+        pdcDetail: this.docketList.map((item: any, index: number) => {
+          const formItem = this.prsArrivalForm.value.pdcDetails[index];
+          return {
+            ...item,
+            unloadBy: this.docketService.loginUserList.loadBy,
+            rateType: formItem.ratetype,
+            vendorCode_new: this.prsArrivalForm.value.vendorCode,
+            vendorName_new: this.prsArrivalForm.value.vendorName,
+            ratetype1: formItem.ratetype,
+            monthlyRate: "",
+            newRate: formItem.newRate,
+            arrivalDT: this.prsArrivalForm.value.arrivalDate
+              ? new Date(this.prsArrivalForm.value.arrivalDate).toISOString()
+              : new Date().toISOString(),
+            dockdt: item.dockdt,
+            isEnabled: true
+          };
 
-    };
+        }),
 
-    console.log("FINAL PAYLOAD", payload);
-    this.isSubmitting=true;
-    this.THCService.prsArrival(params, payload).subscribe({
-      next: (res:any) => {
-        if(res.success){
-          console.log("Success", res);
-             this.isRedirect = true;
-            window.parent.location.href = `${this.env.liveUrl}Operation/PRSArrivalDone?PDCNo=${res.pdcNo}&Tot_Charge=${res.totCharge}&HcNumber=${res.hcNumber}&TranXaction=Done&src=angular`;
-          this.isSubmitting=false;
-        }else{
-          this.sweetAlertService.error(res?.message)
+      };
+
+      console.log("FINAL PAYLOAD", payload);
+      this.isSubmitting = true;
+      this.THCService.prsArrival(params, payload).subscribe({
+        next: (res: any) => {
+          if (res.success) {
+            console.log("Success", res);
+            this.isRedirect = true;
+            if (this.arrivalData) {
+              this.sweetAlertService.success(`<div style="text-align:center;">
+                 <div class="fw-bold fs-3 mb-2">PRS Arrival Success</div>
+                 <p class="fs-5 mb-1"><strong>PDC No:</strong> ${res.pdcNo}</p>
+                 <p class="fs-5 mb-1"><strong>HC Number:</strong> ${res.hcNumber}</p>
+                 <p class="fs-5 mb-1"><strong>Total Charge:</strong> ${res.totCharge}</p>
+              </div>`);
+              this.dataEmitter.emit()
+            } else {
+              window.parent.location.href = `${this.env.liveUrl}Operation/PRSArrivalDone?PDCNo=${res.pdcNo}&Tot_Charge=${res.totCharge}&HcNumber=${res.hcNumber}&TranXaction=Done&src=angular`;
+            }
+            this.isSubmitting = false;
+          } else {
+            this.sweetAlertService.error(res?.message)
+          }
+        },
+        error: (err) => {
+          console.error("Error", err);
+          this.isSubmitting = false;
+          this.isRedirect = false;
         }
-      },
-      error: (err) => {
-        console.error("Error", err);
-        this.isSubmitting=false;
-         this.isRedirect = false;
-      }
-    });
+      });
 
-  } else {
-    this.prsArrivalForm.markAllAsTouched();
+    } else {
+      this.prsArrivalForm.markAllAsTouched();
+    }
   }
-}
 }

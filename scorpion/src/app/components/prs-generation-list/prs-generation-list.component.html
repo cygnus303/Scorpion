@@ -203,7 +203,7 @@
                                 </button>
                                 <button
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
-                                    [disabled]="row.status !== 'Generated'">
+                                    [disabled]="row.status !== 'Generated'" (click)="openPRSArrival(row)">
                                     📦 PRS Arrival
                                 </button>
                                 <button
@@ -235,3 +235,4 @@
 </div>
 
 <app-add-prsdrs #AddPRSDRSComponent></app-add-prsdrs>
+<app-prsarrival #PRSArrivalComponent (dataEmitter)="fetchData()"></app-prsarrival>

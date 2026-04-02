@@ -1,0 +1,170 @@
+<div style="background: var(--bg);" class="p-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="page-title">
+            <span class="icon">📦</span>
+            Stock Update
+        </div>
+        <div class="btn-group gap-3 ms-auto">
+            <button class="btn btn-success px-4 py-2 rounded fw-bold">
+                <span> <span class="fs-5 me-1">📥</span> Download XLS</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Summary Strip -->
+    <div class="summary-strip">
+        <!-- TOTAL PRS -->
+        <div class="summary-card c-blue cursor-pointer px-3 py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="card-content">
+                    <div class="s-label">Total Stock</div>
+                    <div class="s-val fs-2 fw-bold lh-1">08</div>
+                    <div class="small text-body-tertiary">All records today</div>
+                </div>
+                <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📋</div>
+            </div>
+        </div>
+
+        <!-- PENDING -->
+        <div class="summary-card px-3 py-3 c-orange cursor-pointer">
+            <div class="card-content">
+                <div class="s-label">Pending Update</div>
+                <div class="s-val fs-2 fw-bold lh-1">08</div>
+                <div class="small text-body-tertiary">Awaiting update</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
+        </div>
+
+        <!-- UPDATED -->
+        <div class="summary-card px-3 py-3 c-teal cursor-pointer">
+            <div class="card-content">
+                <div class="s-label">Stock Updated</div>
+                <div class="s-val fs-2 fw-bold lh-1">00</div>
+                <div class="small text-body-tertiary">Updated today</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">✅</div>
+        </div>
+    </div>
+
+    <!-- Table Panel -->
+    <div>
+        <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
+            <div class="control-bar border-0 shadow-none mb-0">
+                <div class="date-range-group">
+                    <span class="date-label">Date Range</span>
+                    <div class="date-input-wrap" style="padding:0;">
+                        <input type="text" id="dateFrom" bsDatepicker
+                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                            [(ngModel)]="config.fromDateStr"
+                            style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
+                        <span
+                            style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+                    </div>
+                    <span class="date-sep">→</span>
+                    <div class="date-input-wrap" style="padding:0;">
+                        <input type="text" id="dateTo" bsDatepicker
+                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                            [(ngModel)]="config.toDateStr"
+                            style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
+                        <span
+                            style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+                    </div>
+                </div>
+            </div>
+            <div class="table-toolbar">
+                <div class="search-box d-flex align-items-center"><span class="text-muted">🔍</span>
+                    <input type="text" placeholder="THC No. / Vendor name…" class="form-control border-0 shadow-none"
+                        [(ngModel)]="config.searchText">
+                </div>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table class="table align-middle  data-table mb-0">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">THC No. / Date</th>
+                        <th class="text-center">Total Dockets</th>
+                        <th class="text-center">Total MF</th>
+                        <th class="text-center">Pending C Note</th>
+                        <th class="text-center">Vendor Type / Name</th>
+                        <th class="text-center">Arrival Date</th>
+                        <th class="text-center">THC Location</th>
+                        <th class="text-center">Unloading Sheet No.</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="isLoading">
+                    <tr>
+                        <td colspan="10" class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && prsData.length === 0">
+                    <tr>
+                        <td colspan="10" class="text-center py-4 text-muted fs-5">
+                            No records found.
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && prsData.length > 0">
+                    <tr *ngFor="let row of prsData; let i = index">
+                        <td class="text-center text-muted fs-7">{{ (config.page - 1) * config.pageSize + i + 1 }}</td>
+                        <td>
+                            <div class="fw-bold text-primary"><a>{{ row.thcNo }}</a></div>
+                            <div class="text-muted fs-7 mt-1">{{ row.date }}</div>
+                        </td>
+                        <td class="text-center">
+                            <span
+                                class="badge rounded-pill text-primary bg-primary-subtle fw-semibold px-3 py-1 border border-primary-subtle">
+                                {{ row.dockets }}</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="text-primary fw-medium text-decoration-underline" style="cursor: pointer;">{{
+                                row.mf }}</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge rounded-circle bg-warning-subtle text-warning-emphasis p-2"
+                                style="width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center;">
+                                {{ row.pending }}</span>
+                        </td>
+                        <td class="text-center">
+                            <div class="d-flex gap-2 flex-column">
+                                <span class="d-block rounded fw-bold py-1 vt-transporter" *ngIf="row.vType">
+                                    {{row.vType}}</span>
+                                <span class="fs-6 text-body-secondary">{{ row.vName }}</span>
+                            </div>
+                        </td>
+                        <td class="text-center text-muted fs-7">{{ row.arrival }}</td>
+                        <td class="text-center fw-medium text-secondary">{{ row.location }}</td>
+                        <td class="text-center">
+                            <span class="text-primary-emphasis fw-bold">{{ row.unloading }}</span>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                <button
+                                    class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3 d-flex align-items-center gap-1">
+                                    <i class="fa fa-eye"></i> View
+                                </button>
+                                <button
+                                    class="btn btn-sm bg-success-subtle border-success-subtle text-success py-1 px-3 d-flex align-items-center gap-1">
+                                    <i class="fa fa-edit"></i> Stock Update
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <app-pagination [page]="config.page" [pageSize]="config.pageSize" [totalRecords]="config.totalRecords"
+            [totalPages]="config.totalPages">
+        </app-pagination>
+    </div>
+</div>
