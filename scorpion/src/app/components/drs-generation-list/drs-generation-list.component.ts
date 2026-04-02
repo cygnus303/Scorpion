@@ -18,19 +18,17 @@ import { debounceTime, Subscription } from 'rxjs';
 })
 export class DrsGenerationListComponent {
   public DRSFilterForm !:FormGroup;
+  public DRSData:any[]=[];
+  public isLoading: boolean = false;
+  private listSubscription?: Subscription;
+  public summaryData:any;
+  public isdownload: boolean = false;
   public pagination={
     page: 1,
     pageSize: 10,
     totalRecords: 0,
     totalPages: 0,
   };
-  public DRSData:any[]=[];
-  public isLoading: boolean = false;
-  private listSubscription?: Subscription;
-  public summaryData:any;
-  public isdownload: boolean = false;
-
-
   statusList = [
     { value: 'All', label: 'All Status', color: 'all', bg: 'var(--muted)', count: 0 },
     { value: 'Generated', label: 'Generated', color: 'generated', bg: 'var(--teal)', count: 0 },
@@ -38,129 +36,12 @@ export class DrsGenerationListComponent {
     { value: 'Billed', label: 'Billed', color: 'billed', bg: 'var(--accent-hover)', count: 0 },
     { value: 'Cancelled', label: 'Cancelled', color: 'cancelled', bg: 'var(--red)', count: 0 },
     { value: 'HCC Generated', label: 'HCC Generated', color: 'hcc-generated', bg: 'var(--green)', count: 0 },
-
   ];
-
   odaTypeList = [
     { value: '', label: 'All' },
     { value: 'ODA', label: 'ODA' },
     { value: 'Non ODA', label: 'Non ODA' }
   ];
-
-  // public DRSData = [
-  //     {
-  //       DRSNo: 'DRS/2526/00101',
-  //       date: '21-Mar-26',
-  //       ODAType: 'ODA',
-  //       totalDockets:22,
-  //       DeliveryDocket:38,
-  //       vendorType: 'Transporter',
-  //       vendorName: 'Fast Freight Carriers',
-  //       vendorBillNo: '—',
-  //       loadingHccNo: 'NO HCC',
-  //       unloadingHccNo: 'NO HCC',
-  //       status: 'Generated',
-  //       vendorClass: 'v-purple'
-  //     },
-  //     {
-  //       DRSNo: 'DRS/2526/00102',
-  //       date: '21-Mar-26',
-  //       ODAType: 'ODA',
-  //       totalDockets:22,
-  //       DeliveryDocket:38,
-  //       vendorType: 'Agent',
-  //       vendorName: 'Blue Dart Express',
-  //       vendorBillNo: 'VB/2526/00202',
-  //       loadingHccNo: 'NO HCC',
-  //       unloadingHccNo: 'NO HCC',
-  //       status: 'Billed',
-  //       vendorClass: 'v-blue'
-  //     },
-  //     {
-  //       DRSNo: 'DRS/2526/00103',
-  //       date: '21-Mar-26',
-  //       ODAType: 'Non ODA',
-  //       totalDockets:22,
-  //       DeliveryDocket:38,
-  //       vendorType: 'Own Vehicle',
-  //       vendorName: 'Mahindra Logistics',
-  //       vendorBillNo: '—',
-  //       loadingHccNo: 'NO HCC',
-  //       unloadingHccNo: 'NO HCC',
-  //       status: 'Generated',
-  //       vendorClass: 'v-pink'
-  //     },
-  //     {
-  //       DRSNo: 'DRS/2526/00104',
-  //       date: '21-Mar-26',
-  //       ODAType: 'Non ODA',
-  //       totalDockets:22,
-  //       DeliveryDocket:38,
-  //       vendorType: 'Transporter',
-  //       vendorName: 'Gati Kintetsu Express',
-  //       vendorBillNo: 'VB/2526/00204',
-  //       loadingHccNo: 'HCC/2526/00441',
-  //       unloadingHccNo: 'HCC/2526/00451',
-  //       status: 'HCC Generated',
-  //       vendorClass: 'v-purple'
-  //     },
-  //     {
-  //       DRSNo: 'DRS/2526/00105',
-  //       date: '21-Mar-26',
-  //       ODAType: 'ODA',
-  //       totalDockets:22,
-  //       DeliveryDocket:38,
-  //       vendorType: 'Agent',
-  //       vendorName: 'DTDC Courier',
-  //       vendorBillNo: '—',
-  //       loadingHccNo: 'NO HCC',
-  //       unloadingHccNo: 'NO HCC',
-  //       status: 'Cancelled',
-  //       vendorClass: 'v-blue'
-  //     },
-  //     {
-  //       DRSNo: 'DRS/2526/00106',
-  //       date: '21-Mar-26',
-  //       ODAType: 'Non ODA',
-  //       totalDockets:22,
-  //       DeliveryDocket:38,
-  //       vendorType: 'Transporter',
-  //       vendorName: 'TCI Express Ltd.',
-  //       vendorBillNo: 'VB/2526/00206',
-  //       loadingHccNo: 'NO HCC',
-  //       unloadingHccNo: 'NO HCC',
-  //       status: 'Billed',
-  //       vendorClass: 'v-purple'
-  //     },
-  //     {
-  //       DRSNo: 'DRS/2526/00107',
-  //       date: '21-Mar-26',
-  //       ODAType: 'ODA',
-  //       totalDockets:22,
-  //       DeliveryDocket:38,
-  //       vendorType: 'Agent',
-  //       vendorName: 'Xpressbees Logistics',
-  //       vendorBillNo: 'VB/2526/00207',
-  //       loadingHccNo: 'HCC/2526/00442',
-  //       unloadingHccNo: 'HCC/2526/00452',
-  //       status: 'HCC Generated',
-  //       vendorClass: 'v-blue'
-  //     },
-  //     {
-  //       DRSNo: 'DRS/2526/00108',
-  //       date: '21-Mar-26',
-  //       ODAType: 'Non ODA',
-  //       totalDockets:22,
-  //       DeliveryDocket:38,
-  //       vendorType: 'Own Vehicle',
-  //       vendorName: 'SpotOn Logistics',
-  //       vendorBillNo: '—',
-  //       loadingHccNo: 'NO HCC',
-  //       unloadingHccNo: 'NO HCC',
-  //       status: 'Cancelled',
-  //       vendorClass: 'v-pink'
-  //     }
-  // ];
 
   constructor(
     private prsdrsApiService: PRSDRSApiService,
@@ -219,8 +100,8 @@ export class DrsGenerationListComponent {
   }
 
   refreshFilter(){
-this.buildFilterForm();
-this.fetchData()
+    this.buildFilterForm();
+    this.fetchData()
   }
 
   setPage(p: number) {
@@ -244,8 +125,9 @@ this.fetchData()
 
   getDRSdetail(){
      if (this.listSubscription) {
-    this.listSubscription.unsubscribe(); // 🔥 cancel previous API
+    this.listSubscription.unsubscribe();
   }
+
     const payload={
       "fromDate":  this.formatDate(this.DRSFilterForm.value.fromDate),
       "toDate": this.formatDate(this.DRSFilterForm.value.toDate),
