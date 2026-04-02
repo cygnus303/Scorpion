@@ -10,6 +10,8 @@ import { PFMapiService } from 'app/shared/services/pfmapi.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { ExportService } from 'app/shared/services/export.service';
 import { PRSArrivalComponent } from './prsarrival/prsarrival.component';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 
 @Component({
   selector: 'app-prs-generation-list',
@@ -62,7 +64,9 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
   constructor(
     public PFMapiService: PFMapiService,
     public docketService: DocketService,
-    public exportService: ExportService
+    public exportService: ExportService,
+    private sweetAlertService: SweetAlertService,
+    private prsdrsApiService: PRSDRSApiService,
   ) { }
 
   ngOnInit() {
@@ -200,5 +204,33 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
 
   openPRSArrival(row: any) {
     this.PRSArrivalComponent.showPopup(row);
+
+  }
+   onCancel(prsNo: string){
+    this.sweetAlertService.cancel(
+    `Are You Sure You Want to Cancel ${prsNo}?`,
+    () => {
+      this.onCancelDrs(prsNo);
+    }
+  );
+  }
+
+  onCancelDrs(prsNo:string){
+    const payload={
+    "baseUserName": this.docketService.loginUserList?.BaseUserName,
+    "filterType": "P",
+    "pdcno": prsNo
+    }
+    this.prsdrsApiService.onCancelDRS(payload).subscribe({
+        next: (response: any) => {
+         if(response) {
+          this.sweetAlertService.success(`PRS ${prsNo} has been cancelled successfully.`);
+          this.fetchData();
+         }
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
   }
 }

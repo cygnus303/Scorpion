@@ -6,7 +6,7 @@
         </div>
         <div class="btn-group gap-3 ms-auto">
             <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="refreshFilter()">✕ Clear</button>
-            <button class="btn btn-success px-4 py-2 rounded">＋ Add DRS</button>
+            <button class="btn btn-success px-4 py-2 rounded" (click)="onAddDRS()">＋ Add DRS</button>
             <button class="btn btn-primary px-4 py-2 rounded" (click)="downloadList()"
              [disabled]="isdownload">
                 <span *ngIf="!isdownload">📥 Download XLS</span>
@@ -238,7 +238,7 @@
                                     ✏️ Edit
                                 </button>
                                 <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
-                                    [disabled]="data.status === 'Cancelled'">
+                                    [disabled]="data.status === 'Cancelled'" (click)="onCancel(data.drsNo)">
                                     🚫 Cancel
                                 </button>
                                 <button

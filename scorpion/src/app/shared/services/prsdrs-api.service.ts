@@ -11,5 +11,9 @@ export class PRSDRSApiService {
    getDRSList(payload: any) {
     return this.apiHandlerService.Post('THC/DRSNewList', payload);
    }
+
+   onCancelDRS(payload: any) {
+    return this.apiHandlerService.Post(`THC/PDCCancellationSubmit`, payload);
+   }
   
 }

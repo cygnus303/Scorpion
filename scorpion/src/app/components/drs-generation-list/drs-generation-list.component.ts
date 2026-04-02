@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { PaginationComponent } from 'app/shared/components/pagination/pagination.component';
 import { DocketService } from 'app/shared/services/docket.service';
@@ -8,6 +9,7 @@ import { ExportService } from 'app/shared/services/export.service';
 import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { debounceTime, Subscription } from 'rxjs';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 
 @Component({
   selector: 'app-drs-generation-list',
@@ -47,7 +49,9 @@ export class DrsGenerationListComponent {
     private prsdrsApiService: PRSDRSApiService,
     private fb: FormBuilder,
     private exportService: ExportService,
-    private dockerService: DocketService
+    private dockerService: DocketService,
+    private route:Router,
+    private sweetAlertService: SweetAlertService
   ) { }
 
   ngOnInit() {
@@ -181,5 +185,37 @@ export class DrsGenerationListComponent {
         console.error('Error downloading Excel', err);
       }
     });
+  }
+
+  onAddDRS(){
+    this.route.navigate(['Operation/ChallanList']);
+  }
+
+  onCancel(drsNo: string){
+    this.sweetAlertService.cancel(
+    `Are You Sure You Want to Cancel ${drsNo}?`,
+    () => {
+      this.onCancelDrs(drsNo);
+    }
+  );
+  }
+
+  onCancelDrs(drsNo:string){
+    const payload={
+    "baseUserName": this.dockerService.loginUserList?.BaseUserName,
+    "filterType": "D",
+    "pdcno": drsNo
+    }
+    this.prsdrsApiService.onCancelDRS(payload).subscribe({
+        next: (response: any) => {
+         if(response) {
+          this.sweetAlertService.success(`DRS ${drsNo} has been cancelled successfully.`);
+          this.fetchData();
+         }
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
   }
 }
