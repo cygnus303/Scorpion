@@ -7,11 +7,10 @@
         <div class="btn-group gap-3 ms-auto">
             <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="refreshFilter()">✕ Clear</button>
             <button class="btn btn-success px-4 py-2 rounded" (click)="onAddDRS()">＋ Add DRS</button>
-            <button class="btn btn-primary px-4 py-2 rounded" (click)="downloadList()"
-             [disabled]="isdownload">
+            <button class="btn btn-primary px-4 py-2 rounded" (click)="downloadList()" [disabled]="isdownload">
                 <span *ngIf="!isdownload">📥 Download XLS</span>
-                    <span *ngIf="isdownload" class="spinner-border spinner-border-sm me-2"></span>
-                    <span *ngIf="isdownload">Downloading...</span>
+                <span *ngIf="isdownload" class="spinner-border spinner-border-sm me-2"></span>
+                <span *ngIf="isdownload">Downloading...</span>
             </button>
         </div>
     </div>
@@ -264,24 +263,20 @@
 </div>
 
 <!-- UPDATE DRS MODAL -->
-<div class="modal fade show" tabindex="-1" *ngIf="showUpdateModal" style="display:block; background: rgba(0,0,0,0.5);">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
-    <div class="modal-content">
-
-      <!-- HEADER -->
-      <div class="modal-header">
-        <h5 class="modal-title">🔄 Update DRS</h5>
-        <button type="button" class="btn-close" (click)="closeModal()"></button>
-      </div>
-
-      <!-- BODY -->
-      <div class="modal-body">
-        <app-delivery-update-list
-          [drsData]="selectedDRS" (dataEmitter)="closeModal()"
-          >
-        </app-delivery-update-list>
-      </div>
-
+<div class="modal fade show" tabindex="-1" *ngIf="showUpdateModal" style="display:block; background: rgba(0,0,0,0.5);"
+     (click)="closeModal()">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" (click)="$event.stopPropagation()">
+        <div class="modal-content">
+            <!-- HEADER -->
+            <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+                <i class="fas fa-list me-2"></i> Update DRS Information
+                <i class="fas fa-times ms-auto cursor-pointer" (click)="closeModal()"></i>
+            </div>
+            <!-- BODY -->
+            <div class="modal-body">
+                <app-delivery-update-list [drsData]="selectedDRS"
+                    (dataEmitter)="closeModal()"></app-delivery-update-list>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
