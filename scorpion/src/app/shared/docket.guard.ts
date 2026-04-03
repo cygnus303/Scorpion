@@ -17,6 +17,10 @@ export class DocketGuard implements CanActivate {
     const key = 'WebX';
 
     if (!encrypted) {
+      const saved = localStorage.getItem("loginUserList");
+      if (saved) {
+        return true;
+      }
       this.router.navigate(['/error']);
       return false;
     }

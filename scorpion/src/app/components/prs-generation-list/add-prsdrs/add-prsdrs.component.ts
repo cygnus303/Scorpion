@@ -2,10 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
+import { ChallanModule } from 'app/components/challan-list/challan.module';
+
 @Component({
   selector: 'app-add-prsdrs',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ChallanModule],
   templateUrl: './add-prsdrs.component.html',
   styleUrl: './add-prsdrs.component.scss',
   providers: [BsModalService]

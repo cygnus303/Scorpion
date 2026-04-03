@@ -19,13 +19,13 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
   styleUrl: './drs-generation-list.component.scss'
 })
 export class DrsGenerationListComponent {
-  public DRSFilterForm !:FormGroup;
-  public DRSData:any[]=[];
+  public DRSFilterForm !: FormGroup;
+  public DRSData: any[] = [];
   public isLoading: boolean = false;
   private listSubscription?: Subscription;
-  public summaryData:any;
+  public summaryData: any;
   public isdownload: boolean = false;
-  public pagination={
+  public pagination = {
     page: 1,
     pageSize: 10,
     totalRecords: 0,
@@ -50,7 +50,7 @@ export class DrsGenerationListComponent {
     private fb: FormBuilder,
     private exportService: ExportService,
     private dockerService: DocketService,
-    private route:Router,
+    private route: Router,
     private sweetAlertService: SweetAlertService
   ) { }
 
@@ -77,7 +77,7 @@ export class DrsGenerationListComponent {
     }
   }
 
-  buildFilterForm(){
+  buildFilterForm() {
     this.DRSFilterForm = this.fb.group({
       fromDate: [new Date(new Date().setDate(new Date().getDate() - 7))],
       toDate: [new Date()],
@@ -94,16 +94,16 @@ export class DrsGenerationListComponent {
   }
 
   filterByStatus(status: string) {
-    this.DRSFilterForm.patchValue({ statusFilter: status },{ emitEvent: false });
+    this.DRSFilterForm.patchValue({ statusFilter: status }, { emitEvent: false });
     this.fetchData();
   }
 
   fetchData() {
-  this.pagination.page = 1;
-  this.getDRSdetail();
+    this.pagination.page = 1;
+    this.getDRSdetail();
   }
 
-  refreshFilter(){
+  refreshFilter() {
     this.buildFilterForm();
     this.fetchData()
   }
@@ -120,102 +120,109 @@ export class DrsGenerationListComponent {
   }
 
   formatDate(date: any): string {
-  const d = new Date(date);
-  const year = d.getFullYear();
-  const month = ('0' + (d.getMonth() + 1)).slice(-2);
-  const day = ('0' + d.getDate()).slice(-2);
-  return `${year}-${month}-${day}`;
-}
-
-  getDRSdetail(){
-     if (this.listSubscription) {
-    this.listSubscription.unsubscribe();
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+    const day = ('0' + d.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
   }
 
-    const payload={
-      "fromDate":  this.formatDate(this.DRSFilterForm.value.fromDate),
+  getDRSdetail() {
+    if (this.listSubscription) {
+      this.listSubscription.unsubscribe();
+    }
+
+    const payload = {
+      "fromDate": this.formatDate(this.DRSFilterForm.value.fromDate),
       "toDate": this.formatDate(this.DRSFilterForm.value.toDate),
-      "locCode":null,
+      "locCode": null,
       "statusFilter": this.DRSFilterForm.value.statusFilter,
       "pageNumber": this.pagination.page,
       "pageSize": this.pagination.pageSize,
-      "isDownload":false,
+      "isDownload": false,
       "odaType": this.DRSFilterForm.value.odaType,
       "searchText": this.DRSFilterForm.value.searchText
-}
+    }
     this.isLoading = true;
 
     this.listSubscription = this.prsdrsApiService.getDRSList(payload).subscribe({
-    next: (response: any) => {
-      this.DRSData = response.data;
-      this.pagination.totalRecords = response.pagination.totalRecords;
-      this.pagination.totalPages = response.pagination.totalPages;
-      this.summaryData=response.summary;
-      this.isLoading = false;
-    },
-    error: (err) => {
-      console.error(err);
-      this.isLoading = false;
-    }
-  });
+      next: (response: any) => {
+        this.DRSData = response.data;
+        this.pagination.totalRecords = response.pagination.totalRecords;
+        this.pagination.totalPages = response.pagination.totalPages;
+        this.summaryData = response.summary;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.isLoading = false;
+      }
+    });
   }
 
-    downloadList() {
+  downloadList() {
     this.isdownload = true;
     const payload = {
-      "fromDate":  this.formatDate(this.DRSFilterForm.value.fromDate),
+      "fromDate": this.formatDate(this.DRSFilterForm.value.fromDate),
       "toDate": this.formatDate(this.DRSFilterForm.value.toDate),
-      "locCode":null,
+      "locCode": null,
       "statusFilter": this.DRSFilterForm.value.statusFilter,
       "pageNumber": this.pagination.page,
       "pageSize": this.pagination.pageSize,
-      "isDownload":true,
+      "isDownload": true,
       "odaType": this.DRSFilterForm.value.odaType,
       "searchText": this.DRSFilterForm.value.searchText
     };
     this.listSubscription = this.prsdrsApiService.getDRSList(payload).subscribe({
       next: (response: any) => {
-        this.isdownload= false;
+        this.isdownload = false;
         if (response && response.data) {
           this.exportService.exportToExcel(response.data, `DRS_Export`);
         }
       },
       error: (err: any) => {
-        this.isdownload= false;
+        this.isdownload = false;
         console.error('Error downloading Excel', err);
       }
     });
   }
 
-  onAddDRS(){
+  onAddDRS() {
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      let user = JSON.parse(saved);
+      user.Type = '3';
+      this.dockerService.loginUserList = user;
+      localStorage.setItem("loginUserList", JSON.stringify(user));
+    }
     this.route.navigate(['Operation/ChallanList']);
   }
 
-  onCancel(drsNo: string){
+  onCancel(drsNo: string) {
     this.sweetAlertService.cancel(
-    `Are You Sure You Want to Cancel ${drsNo}?`,
-    () => {
-      this.onCancelDrs(drsNo);
-    }
-  );
+      `Are You Sure You Want to Cancel ${drsNo}?`,
+      () => {
+        this.onCancelDrs(drsNo);
+      }
+    );
   }
 
-  onCancelDrs(drsNo:string){
-    const payload={
-    "baseUserName": this.dockerService.loginUserList?.BaseUserName,
-    "filterType": "D",
-    "pdcno": drsNo
+  onCancelDrs(drsNo: string) {
+    const payload = {
+      "baseUserName": this.dockerService.loginUserList?.BaseUserName,
+      "filterType": "D",
+      "pdcno": drsNo
     }
     this.prsdrsApiService.onCancelDRS(payload).subscribe({
-        next: (response: any) => {
-         if(response) {
+      next: (response: any) => {
+        if (response) {
           this.sweetAlertService.success(`DRS ${drsNo} has been cancelled successfully.`);
           this.fetchData();
-         }
-        },
-        error: (err) => {
-          console.error(err);
         }
-      });
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
   }
 }

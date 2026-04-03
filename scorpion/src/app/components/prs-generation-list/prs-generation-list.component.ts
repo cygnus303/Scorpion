@@ -3,7 +3,6 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { AddPRSDRSComponent } from './add-prsdrs/add-prsdrs.component';
 import { PaginationComponent } from 'app/shared/components/pagination/pagination.component';
 import { Subject, Subscription, debounceTime } from 'rxjs';
 import { PFMapiService } from 'app/shared/services/pfmapi.service';
@@ -13,16 +12,17 @@ import { PRSArrivalComponent } from './prsarrival/prsarrival.component';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-prs-generation-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, AddPRSDRSComponent, PaginationComponent, PRSArrivalComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, PRSArrivalComponent],
   templateUrl: './prs-generation-list.component.html',
   styleUrl: './prs-generation-list.component.scss',
   providers: [PFMapiService]
 })
 export class PRSGenerationListComponent implements OnInit, OnDestroy {
-  @ViewChild('AddPRSDRSComponent') AddPRSDRSComponent!: AddPRSDRSComponent;
   @ViewChild('PRSArrivalComponent') PRSArrivalComponent!: PRSArrivalComponent;
 
   public listSubscription?: Subscription;
@@ -67,6 +67,7 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     public exportService: ExportService,
     private sweetAlertService: SweetAlertService,
     private prsdrsApiService: PRSDRSApiService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -199,7 +200,14 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
   }
 
   openAddPRSDRS() {
-    this.AddPRSDRSComponent.showPopup();
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      let user = JSON.parse(saved);
+      user.Type = '2';
+      this.docketService.loginUserList = user;
+      localStorage.setItem("loginUserList", JSON.stringify(user));
+    }
+    this.router.navigate(['Operation/ChallanList']);
   }
 
   openPRSArrival(row: any) {

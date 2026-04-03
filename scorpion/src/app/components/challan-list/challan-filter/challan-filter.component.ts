@@ -14,22 +14,22 @@ import { Validators } from '@angular/forms';
   styleUrl: './challan-filter.component.scss'
 })
 export class ChallanFilterComponent {
-@Output() filterApplied = new EventEmitter<any>();
-  public typeName : string='';
-   public odaTypeList=[
-    { text:'ODA', value:'ODA'},
-    { text:'Non ODA',value:'NonODA'}
+  @Output() filterApplied = new EventEmitter<any>();
+  public typeName: string = '';
+  public odaTypeList = [
+    { text: 'ODA', value: 'ODA' },
+    { text: 'Non ODA', value: 'NonODA' }
   ];
 
-constructor(
-  public docketService:DocketService , 
-  public commonService:CommonService,
-  public THCMasterService:THCMasterService,
-  public challanService:ChallanService,
-  public generalMasterService:GeneralMasterService,
-  private route: ActivatedRoute,
-  private router: Router,
-){}
+  constructor(
+    public docketService: DocketService,
+    public commonService: CommonService,
+    public THCMasterService: THCMasterService,
+    public challanService: ChallanService,
+    public generalMasterService: GeneralMasterService,
+    private route: ActivatedRoute,
+    private router: Router,
+  ) { }
 
   ngOnInit() {
     const saved = localStorage.getItem("loginUserList");
@@ -47,7 +47,7 @@ constructor(
     this.generalMasterService.getModeData();
     this.getVendorType();
     this.generalMasterService.getChargeTypeData();
-    this.challanService.filterForm.patchValue({BookedByType:'P'})
+    this.challanService.filterForm.patchValue({ BookedByType: 'P' })
 
     this.challanService.filterForm.get('loadingBy')?.valueChanges.subscribe((value) => {
       const chargeTypeControl = this.challanService.filterForm.get('chrgType');
@@ -79,28 +79,38 @@ constructor(
       }
     });
   }
- 
+
   changeLoadingBy(event: any) {
     this.challanService.filterForm.patchValue({
-      loadingByName:event.codeDesc,
-      loadingBycodeFor:event.codeFor || event.codeId
+      loadingByName: event.codeDesc,
+      loadingBycodeFor: event.codeFor || event.codeId
     });
   }
- 
-onSearch() {
-  if (this.challanService.filterForm.valid) {
-    // this.router.navigate(['Operation/ChallanList'],{
-    //     queryParams: {
-    //       data: this.route.snapshot.queryParams['data'],
-    //       start: JSON.stringify(this.challanService.filterForm.value) // must stringify
-    //     }
-    //   }
-    // );
-    const filterData = this.challanService.filterForm.value;
-    this.filterApplied.emit(filterData);
-  } else {
-    this.challanService.filterForm.markAllAsTouched();
-  }
-}
 
+  onSearch() {
+    if (this.challanService.filterForm.valid) {
+      // this.router.navigate(['Operation/ChallanList'],{
+      //     queryParams: {
+      //       data: this.route.snapshot.queryParams['data'],
+      //       start: JSON.stringify(this.challanService.filterForm.value) // must stringify
+      //     }
+      //   }
+      // );
+      const filterData = this.challanService.filterForm.value;
+      this.filterApplied.emit(filterData);
+    } else {
+    }
+  }
+
+  onBack() {
+    const type = this.docketService.loginUserList.Type;
+    if (type === '2') {
+      this.router.navigate(['Operation/PRSList']);
+    } else if (type === '3') {
+      this.router.navigate(['Operation/DRSList']);
+    } else {
+      // Default to THCList if not specified
+      this.router.navigate(['Operation/THCList']);
+    }
+  }
 }

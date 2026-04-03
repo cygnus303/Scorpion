@@ -40,7 +40,7 @@ export const ChallanRoutes: Routes = [
     canActivate: [DocketGuard]
   },
   {
-    path: 'PRSGenerationList',
+    path: 'PRSList',
     loadComponent: () => import('../prs-generation-list/prs-generation-list.component').then(m => m.PRSGenerationListComponent),
   },
   {

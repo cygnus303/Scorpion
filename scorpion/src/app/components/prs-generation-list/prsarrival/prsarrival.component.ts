@@ -32,8 +32,6 @@ export class PRSArrivalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getVendorType();
-    this.generalMasterService.getChargeTypeData();
   }
 
   getVendorType() {
@@ -56,6 +54,8 @@ export class PRSArrivalComponent implements OnInit {
       loadBy: null,
       chargeType: null
     };
+    this.getVendorType();
+    this.generalMasterService.getChargeTypeData();
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
 
