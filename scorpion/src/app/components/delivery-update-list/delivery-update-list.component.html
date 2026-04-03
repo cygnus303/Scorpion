@@ -1,3 +1,39 @@
+<div *ngIf="drsData">
+    <form [formGroup]="DRSFilterForm">
+    <div class="row">
+                <div class="col-md-3 d-print-inline-block align-content-end">
+                    <div class="d-flex gap-2">
+                        <label class=" form-label meta-label d-flex align-items-center gap-2">
+                            DRS Number :
+                        </label>
+                        <div class="fw-bold text-primary" style="word-break: break-all;">
+                            {{drsData.drsNo || '---'}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group-input">
+                        <ng-select [items]="generalMasterService.loadingData" bindLabel="codeDesc" bindValue="codeId"
+                            (change)="refreshData()" placeholder="Select Loading By" formControlName="loadBy"
+                            [clearable]="false">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group-input">
+                        <ng-select [items]="generalMasterService.chargeTypeData" bindLabel="codeDesc" bindValue="codeId"
+                            (change)="refreshData()" formControlName="chargeType"
+                            placeholder="Select Charge Type" [clearable]="false">
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+            </form>
+</div>
+
+
+
+
 <form [formGroup]="DRSSummaryForm">
     <div class="cnote-entry-container">
         <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">

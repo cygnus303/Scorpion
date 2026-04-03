@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -34,12 +34,18 @@ export class DeliveryUpdateListComponent {
   public isSubmit:boolean=false;
   public isdeliveryRequired:boolean=false;
   maxCloseKMValue: number = 900000;
+  public DRSFilterForm!:FormGroup;
+  @Input() drsData: any;
+  @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   
 
-  constructor( public challanService:ChallanService,public deliveryUpdateService:DeliveryUpdateService, public docketService:DocketService,private THCService:THCMasterService,public generalMasterService:GeneralMasterService,public sweetAlertService:SweetAlertService){}
+  constructor( public challanService:ChallanService,public deliveryUpdateService:DeliveryUpdateService, 
+    public THCMasterService:THCMasterService,
+    public docketService:DocketService,private THCService:THCMasterService,public generalMasterService:GeneralMasterService,public sweetAlertService:SweetAlertService){}
 
 ngOnInit(){
    const saved = localStorage.getItem("loginUserList");
+   console.log(this.drsData)
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
@@ -50,13 +56,61 @@ ngOnInit(){
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
+    this.buildFilterForm()
 
-  this.buildForm();
-  this.getDeliveryDetail();
+    if(this.drsData){
+      this.getVendorType();
+    this.generalMasterService.getChargeTypeData();
+      this.refreshData();
+    }else{
+      this.buildForm();
+      this.getDeliveryDetail();
+    }
   this.generalMasterService.getChargeTypeData();
   this.generalMasterService.getLoadingBy()
   this.generalMasterService.getDeliveredToData()
 }
+
+buildFilterForm(){
+  this.DRSFilterForm = new FormGroup({
+    loadBy:new FormControl(null),
+    chargeType:new FormControl(null)
+  })
+}
+
+refreshData() {
+    this.docketService.loginUserList.loadBy = this.DRSFilterForm.value.loadBy;
+    this.docketService.loginUserList.chargeType = this.DRSFilterForm.value.chargeType;
+    this.docketService.loginUserList.drsId = this.drsData.drsNo;
+    this.buildForm();
+    this.getDeliveryDetail();
+  }
+  ngOnChanges(changes: SimpleChanges) {
+      if (changes['drsData'] && !changes['drsData'].firstChange) {
+        this.refreshData();
+      }
+    }
+  
+
+  getVendorType() {
+    this.THCMasterService.getVendorType(this.docketService.loginUserList.LocationCode).subscribe({
+      next: (response) => {
+        if (response && response.data) {
+          const mTypeRow = response.data.find((x: any) => x.documentType === 'M');
+          if (mTypeRow) {
+            const vendorTypes = mTypeRow.loading_VendorType.split(',');
+            this.generalMasterService.getLoadingByDetail(vendorTypes);
+          }
+        }
+      }
+    });
+  }
+
+  triggerRefresh() {
+    this.drsData = { ...this.drsData };
+  }
+
+
 
 buildForm(){
   this.DRSSummaryForm = new FormGroup({
@@ -784,9 +838,14 @@ const podError = this.hasPODError();
     this.isSubmit = true;
     this.deliveryUpdateService.deliveryUpdate(formData).subscribe({next: (response:any) => {
         if (response && response.data && !response.data.isError) {
-          this.isRedirect = true;
-          // https://sepluat.cygnux.in/Operation/UpdateDRSResult?DRSNO=DS%2FPIM%2F2526%2F002770
-          window.parent.location.href = `${this.env.liveUrl}Operation/UpdateDRSResult?DRSNO=${this.DRSInformation?.pdcno}&src=angular`;
+          if(this.drsData){
+            this.sweetAlertService.success('DRS update successfully!!');
+            this.dataEmitter.emit();
+          }else{
+            this.isRedirect = true;
+            window.parent.location.href = `${this.env.liveUrl}Operation/UpdateDRSResult?DRSNO=${this.DRSInformation?.pdcno}&src=angular`;
+          }
+
         }else{
              this.sweetAlertService.error('You have some form errors. Please check below.');
         }

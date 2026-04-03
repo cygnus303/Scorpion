@@ -10,11 +10,12 @@ import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { debounceTime, Subscription } from 'rxjs';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { DeliveryUpdateListComponent } from '../delivery-update-list/delivery-update-list.component';
 
 @Component({
   selector: 'app-drs-generation-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, ReactiveFormsModule],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, ReactiveFormsModule,DeliveryUpdateListComponent],
   templateUrl: './drs-generation-list.component.html',
   styleUrl: './drs-generation-list.component.scss'
 })
@@ -25,7 +26,9 @@ export class DrsGenerationListComponent {
   private listSubscription?: Subscription;
   public summaryData: any;
   public isdownload: boolean = false;
-  public pagination = {
+  public showUpdateModal: boolean = false;
+  public selectedDRS: any;
+  public pagination={
     page: 1,
     pageSize: 10,
     totalRecords: 0,
@@ -225,4 +228,13 @@ export class DrsGenerationListComponent {
       }
     });
   }
+
+  openUpdateModal(data:any){
+    this.selectedDRS = data;
+    this.showUpdateModal = true;
+  }
+  closeModal() {
+  this.showUpdateModal = false;
+  this.fetchData();
+}
 }

@@ -230,7 +230,7 @@
                                 </button>
                                 <button
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
-                                    [disabled]="data.status === 'Cancelled'">
+                                    [disabled]="data.status === 'Cancelled'" (click)="openUpdateModal(data)">
                                     🔄 DRS Update
                                 </button>
                                 <button
@@ -261,4 +261,27 @@
             (pageChange)="setPage($event)">
         </app-pagination>
     </div>
+</div>
+
+<!-- UPDATE DRS MODAL -->
+<div class="modal fade show" tabindex="-1" *ngIf="showUpdateModal" style="display:block; background: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <!-- HEADER -->
+      <div class="modal-header">
+        <h5 class="modal-title">🔄 Update DRS</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <!-- BODY -->
+      <div class="modal-body">
+        <app-delivery-update-list
+          [drsData]="selectedDRS" (dataEmitter)="closeModal()"
+          >
+        </app-delivery-update-list>
+      </div>
+
+    </div>
+  </div>
 </div>
