@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -11,11 +11,14 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { debounceTime, Subscription } from 'rxjs';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { DeliveryUpdateListComponent } from '../delivery-update-list/delivery-update-list.component';
+import { SingleCnoteDrsUpdateComponent } from '../single-cnote-drs-update/single-cnote-drs-update.component';
+import { BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-drs-generation-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, ReactiveFormsModule,DeliveryUpdateListComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, ReactiveFormsModule, DeliveryUpdateListComponent,SingleCnoteDrsUpdateComponent],
+  providers:[BsModalService],
   templateUrl: './drs-generation-list.component.html',
   styleUrl: './drs-generation-list.component.scss'
 })
@@ -47,6 +50,8 @@ export class DrsGenerationListComponent {
     { value: 'ODA', label: 'ODA' },
     { value: 'Non ODA', label: 'Non ODA' }
   ];
+    @ViewChild('SingleCnoteDrsUpdateComponent') SingleCnoteDrsUpdateComponent!: SingleCnoteDrsUpdateComponent;
+  
 
   constructor(
     private prsdrsApiService: PRSDRSApiService,
@@ -233,7 +238,12 @@ export class DrsGenerationListComponent {
     this.selectedDRS = data;
     this.showUpdateModal = true;
   }
+
   closeModal() {
     this.showUpdateModal = false;
+  }
+
+  openSingleDRSUpdate(data: any) {
+    this.SingleCnoteDrsUpdateComponent.showPopup(data);
   }
 }

@@ -246,7 +246,7 @@
                                     🏷 HCC
                                 </button>
                                 <button class="btn btn-sm single-cnote px-3 py-1"
-                                    [disabled]="data.status === 'Cancelled'">
+                                    [disabled]="data.status === 'Cancelled'" (click)="openSingleDRSUpdate(data)">
                                     📝 Single C Note Update
                                 </button>
                             </div>
