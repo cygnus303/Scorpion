@@ -234,7 +234,6 @@ export class DrsGenerationListComponent {
     this.showUpdateModal = true;
   }
   closeModal() {
-  this.showUpdateModal = false;
-  this.fetchData();
-}
+    this.showUpdateModal = false;
+  }
 }
