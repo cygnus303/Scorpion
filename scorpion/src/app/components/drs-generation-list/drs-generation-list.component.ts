@@ -246,4 +246,9 @@ export class DrsGenerationListComponent {
   openSingleDRSUpdate(data: any) {
     this.singleCnoteDrsUpdateComponent.showPopup(data);
   }
+
+openHCCModal(hccNo: string) {
+  const url = `https://sepluat.cygnux.in/Tracking/TripAllView?LsNO=${hccNo}&VPType=LoadingUnloading&src=angular`;
+  window.open(url, '_blank');
+}
 }

@@ -206,7 +206,8 @@
                             || '—' }}</td>
                         <td class="text-center">
                             <span class="px-4 py-2"
-                                [ngClass]="(data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'">
+                                [ngClass]="(data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
+                                (click)="data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC'? openHCCModal(data.loadingHCCNo) : null" style="cursor: pointer;">
                                 {{ data.loadingHCCNo || 'NO HCC' }}
                             </span>
                         </td>
