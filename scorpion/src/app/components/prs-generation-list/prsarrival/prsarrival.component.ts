@@ -63,6 +63,13 @@ export class PRSArrivalComponent implements OnInit {
     this.arrivalData = { ...this.arrivalData };
   }
 
+  onLoadingByChange() {
+    if (this.arrivalData.loadBy === 'XX5' || this.arrivalData.loadBy === 'XX9') {
+      this.arrivalData.chargeType = null;
+    }
+    this.triggerRefresh();
+  }
+
   onDataSubmit(event: any) {
     this.dataEmitter.emit(event);
     if (this.modalRef) {

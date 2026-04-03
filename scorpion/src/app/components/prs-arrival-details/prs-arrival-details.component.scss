@@ -1,0 +1,12 @@
+.table-wrapper {
+    max-height: 480px;
+    overflow-y: auto;
+
+    table {
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+    }
+}

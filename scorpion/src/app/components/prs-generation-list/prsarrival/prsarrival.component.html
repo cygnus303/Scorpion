@@ -20,8 +20,8 @@
                 <div class="col-md-4">
                     <div class="form-group-input">
                         <ng-select [items]="generalMasterService.loadingData" bindLabel="codeDesc" bindValue="codeId"
-                            [(ngModel)]="arrivalData.loadBy" (change)="triggerRefresh()" placeholder="Select Loading By"
-                            [clearable]="false">
+                            [(ngModel)]="arrivalData.loadBy" (change)="onLoadingByChange()"
+                            placeholder="Select Loading By" [clearable]="false">
                         </ng-select>
                     </div>
                 </div>
@@ -29,23 +29,29 @@
                     <div class="form-group-input">
                         <ng-select [items]="generalMasterService.chargeTypeData" bindLabel="codeDesc" bindValue="codeId"
                             [(ngModel)]="arrivalData.chargeType" (change)="triggerRefresh()"
-                            placeholder="Select Charge Type" [clearable]="false">
+                            placeholder="Select Charge Type" [clearable]="false"
+                            [readonly]="arrivalData.loadBy === 'XX5' || arrivalData.loadBy === 'XX9'">
                         </ng-select>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Content Area -->
-        <div class="p-0" *ngIf="arrivalData.loadBy && arrivalData.chargeType">
-            <app-prs-arrival-details [arrivalData]="arrivalData"
-                (dataEmitter)="onDataSubmit($event)"></app-prs-arrival-details>
-        </div>
+        <div style="min-height: 500px;">
+            <!-- Content Area -->
+            <div class="p-0"
+                *ngIf="arrivalData.loadBy && (arrivalData.chargeType || arrivalData.loadBy === 'XX5' || arrivalData.loadBy === 'XX9')">
+                <app-prs-arrival-details [arrivalData]="arrivalData"
+                    (dataEmitter)="onDataSubmit($event)"></app-prs-arrival-details>
+            </div>
 
-        <!-- Empty State Prompt -->
-        <div class="p-5 text-center text-muted" *ngIf="!arrivalData.loadBy || !arrivalData.chargeType">
-            <div class="py-5">
-                <i class="fas fa-hand-pointer fa-3x mb-3 opacity-25"></i>
-                <p>Please select <b>Loading By</b> and <b>Charge Type</b> to view arrival details.</p>
+            <!-- Empty State Prompt -->
+            <div class="p-5 text-center text-muted d-flex align-items-center justify-content-center"
+                *ngIf="!arrivalData.loadBy || (!arrivalData.chargeType && arrivalData.loadBy !== 'XX5' && arrivalData.loadBy !== 'XX9')"
+                style="min-height: 500px;">
+                <div class="py-5">
+                    <i class="fas fa-hand-pointer fa-3x mb-3 opacity-25"></i>
+                    <p>Please select <b>Loading By</b> and <b>Charge Type</b> to view arrival details.</p>
+                </div>
             </div>
         </div>
     </div>
