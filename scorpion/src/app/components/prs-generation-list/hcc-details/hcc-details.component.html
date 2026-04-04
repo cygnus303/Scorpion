@@ -1,0 +1,243 @@
+<!-- ══ FORWARD PFM MODAL ══ -->
+<ng-template #Templatepod>
+    <div class="modal-header">
+        <div class="d-flex align-items-center gap-3">
+            <div class="pfm-icon fs-4 fw-bold" style="background:#e8f0fe;border:1px solid #aac4f5;">📋</div>
+            <div>
+                <div class="fw-bold fs-5">HCC Details</div>
+                <div class="pfm-subtitle">Complete HHC details below</div>
+            </div>
+        </div>
+        <button type="button" class="btn-close pfm-close" (click)="modalRef.hide()"></button>
+    </div>
+    <form>
+        <div class="modal-body input-background-color" style="padding:0;gap:0;">
+            <div class="p-3">
+                <div class="control-bar d-block gap-2 mb-0"> 
+                     <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
+                            <div class="fw-bold"><i class="fas fa-info-circle me-2"></i>Basic Info</div>
+                        </div>
+                        <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
+                    <div class="row mb-4">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label meta-label d-flex align-items-center gap-2">
+                                    HCC Location :
+                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                        {{'ABH'}}
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label meta-label d-flex align-items-center gap-2">
+                                    HCC No :
+                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                        {{'HC/PIM/2526/005097'}}
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label meta-label d-flex align-items-center gap-2">
+                                    Document No :
+                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                        {{'MF/ABH/2526/006904'}}
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label meta-label d-flex align-items-center gap-2">
+                                    Route :
+                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                        {{'ABH'}}
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label meta-label d-flex align-items-center gap-2">
+                                    Labor Type :
+                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                        demo
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label meta-label d-flex align-items-center gap-2">
+                                    HCC Pay Type :
+                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                        demo
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label meta-label d-flex align-items-center gap-2">
+                                    HCC Total Amount :
+                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                        {{'0.00'}}
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label meta-label d-flex align-items-center gap-2">
+                                    HCC Type :
+                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                        {{'Unloading'}}
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-bar d-block gap-2 mb-0 mt-3">
+                     <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
+                            <div class="fw-bold"><i class="fas fa-coins me-2"></i>Charges</div>
+                        </div>
+                        <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
+                    <div class="row mb-4 ">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Charged By
+                                </label>
+                                <ng-select class="clear-icon" placeholder="Select Charged By"
+                                    notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
+                                    [items]="generalMasterService.loadingData"
+                                    (change)="prsArrivalDetailsService.getVendorsList($event.codeId)"></ng-select>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Vendor
+                                </label>
+                                <ng-select class="clear-icon" placeholder="Select Vendor"
+                                    notFoundText="No matches found"
+                                    [items]="prsArrivalDetailsService.branchWiseLoadingUnloadingList" bindLabel="text"
+                                    bindValue="value"></ng-select>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Rate Type
+                                </label>
+                                <ng-select class="clear-icon"
+                                    [items]="generalMasterService.chargeTypeData" bindLabel="codeDesc"
+                                    bindValue="codeId" placeholder="Rate Type">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Charge Rate
+                                </label>
+                                <input class="form-control" type="text"
+                                    placeholder="Charge Rate">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ── LR Listing ── -->
+                 <div  class="control-bar d-block gap-2 mb-0 mt-3">
+                     <div >
+                        <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
+                            <div class="fw-bold"><i class="fas fa-list me-2"></i>Docket Details</div>
+                        </div>
+                        <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
+                         <div style="border:2px solid var(--border);border-radius:3px; ">
+                             <div>
+                                 <table style="width:100%;border-collapse:collapse;font-size:13px;"
+                                     class="data-table align-middle">
+                                     <thead style="position: sticky; top: 0; z-index: 1;">
+                                         <tr class="input-background-color" style="border-bottom:1px solid var(--border);">
+                                             <th class="text-center">LR</th>
+                                             <th class="text-center">Origin</th>
+                                             <th class="text-center">Destination</th>
+                                             <th class="text-center">PKG</th>
+                                             <th class="text-center">Weight</th>
+                                             <th class="text-center">LR Wise HCC Amount</th>
+                                         </tr>
+                                     </thead>
+                                     <tbody>
+                                         <tr>
+                                             <td class="text-center">
+                                                 62935593
+                                             </td>
+                                             <td class="text-center">
+                                                 ALP
+                                             </td>
+                                             <td class="text-center">RANI</td>
+                                             <td class="text-center">
+                                                 21.00
+                                             </td>
+                                             <td class="text-center">
+                                                 294.00
+                                             </td>
+                                             <td>
+                                                 <div class="d-flex gap-3">
+                                                     <label class="toggle-switch">
+                                                         <input type="checkbox">
+                                                         <span class="toggle-slider"></span>
+                                                     </label>
+                                                     <input type="text" class="form-control form-control-sm">
+                                                 </div>
+                                             </td>
+                                         </tr>
+                                     </tbody>
+                                 </table>
+                             </div>
+                         </div>
+                     </div>
+         
+                     <div class="mt-3">
+                         <div class="row mb-4">
+                             <div class="col-4">
+                                 <div class="form-group-input">
+                                     <label class="form-label d-flex align-items-center gap-2 fw-bold"> Total Weight
+                                     </label>
+                                     <input type="text" class="form-control form-control-sm" placeholder="Total Weight">
+                                 </div>
+                             </div>
+                             <div class="col-4">
+                                 <div class="form-group-input">
+                                     <label class="form-label d-flex align-items-center gap-2 fw-bold"> Total PKG
+                                     </label>
+                                     <input type="text" class="form-control form-control-sm" placeholder="Total PKG">
+                                 </div>
+                             </div>
+                             <div class="col-4">
+                                 <div class="form-group-input">
+                                     <label class="form-label d-flex align-items-center gap-2 fw-bold"> Total LR HCC Amount
+                                     </label>
+                                     <input type="text" class="form-control form-control-sm" placeholder="Total LR HCC Amount">
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+            </div>
+
+        </div>
+    </form>
+    <div class="modal-footer d-flex justify-content-between">
+        <div><span class="text-danger">*</span> Required fields</div>
+        <div class="gap-3 d-flex">
+            <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Cancel</button>
+            <button type="button" class="btn btn-primary px-4 py-2 rounded">
+                <span class="me-2 fs-5">↗</span> Submit
+            </button>
+        </div>
+    </div>
+</ng-template>

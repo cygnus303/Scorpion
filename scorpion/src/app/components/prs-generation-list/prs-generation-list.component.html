@@ -217,7 +217,7 @@
                                 </button>
                                 <button
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
-                                    [disabled]="row.status === 'HCC Generated' || row.status === 'Cancelled'">
+                                    (click)="openHHCDetails()">
                                     🏷 HCC
                                 </button>
                             </div>
@@ -236,3 +236,4 @@
 
 
 <app-prsarrival #PRSArrivalComponent (dataEmitter)="fetchData()"></app-prsarrival>
+<app-hcc-details #HCCDetailsComponent (dataEmitter)="fetchData()"></app-hcc-details>

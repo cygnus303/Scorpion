@@ -2,6 +2,8 @@ import { Injectable, Inject } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { DocketService } from './docket.service';
 import { CommonDateService } from './common-date.service';
+import { THCMasterService } from 'app/shared/services/thc-master.service';
+import { GeneralMasterService } from './general-master.service';
 interface IRange {
   value: Date[];
   label: string;
@@ -18,15 +20,15 @@ export class CommonService {
   maxDate: Date | undefined;
 
   constructor(
-    public docketService:DocketService,
-    public commonDateService:CommonDateService
-  ){}
+    public docketService: DocketService,
+    public commonDateService: CommonDateService, private THCMasterService: THCMasterService, public generalMasterService: GeneralMasterService,
+  ) { }
 
   updateLoader(isLoading: boolean) {
     this.loading.next(isLoading);
   }
 
-   ranges: IRange[] = [
+  ranges: IRange[] = [
     {
       value: [new Date(new Date().setDate(new Date().getDate() - 7)), new Date()],
       label: 'Last 7 Days',
@@ -69,30 +71,44 @@ export class CommonService {
     },
   ];
 
-  dateAccess(moduleCode:string) {
-  const payload = {
-    moduleCode: moduleCode,
-    baseUserName: this.docketService.baseUsername
-  };
+  dateAccess(moduleCode: string) {
+    const payload = {
+      moduleCode: moduleCode,
+      baseUserName: this.docketService.baseUsername
+    };
 
-  this.commonDateService.userDateSelection(payload).subscribe({
-    next: (res: any) => {
-      if (res && res.length > 0) {
-        const rule = res[0];
+    this.commonDateService.userDateSelection(payload).subscribe({
+      next: (res: any) => {
+        if (res && res.length > 0) {
+          const rule = res[0];
 
-        // API min_Date
-        this.minDate = new Date(rule.min_Date);
+          // API min_Date
+          this.minDate = new Date(rule.min_Date);
 
-        // BackDate days logic
-        if (rule.backDate_Days && rule.backDate_Days > 0) {
-          const today = new Date();
-          this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
+          // BackDate days logic
+          if (rule.backDate_Days && rule.backDate_Days > 0) {
+            const today = new Date();
+            this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
+          }
+
+          // Max date = today
+          this.maxDate = new Date();
         }
-
-        // Max date = today
-        this.maxDate = new Date();
       }
-    }
-  });
-}
+    });
+  }
+
+  getVendorType(documentType: string) {
+    this.THCMasterService.getVendorType(this.docketService.loginUserList.LocationCode).subscribe({
+      next: (response) => {
+        if (response && response.data) {
+          const mTypeRow = response.data.find((x: any) => x.documentType === documentType);//documentType = P,M,D
+          if (mTypeRow) {
+            const vendorTypes = mTypeRow.loading_VendorType.split(',');
+            this.generalMasterService.getLoadingByDetail(vendorTypes);
+          }
+        }
+      }
+    });
+  }
 }

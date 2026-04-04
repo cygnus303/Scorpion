@@ -13,17 +13,20 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 
 import { Router } from '@angular/router';
+import { HCCDetailsComponent } from './hcc-details/hcc-details.component';
+import { BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-prs-generation-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, PRSArrivalComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, PRSArrivalComponent, HCCDetailsComponent],
   templateUrl: './prs-generation-list.component.html',
   styleUrl: './prs-generation-list.component.scss',
-  providers: [PFMapiService]
+  providers: [PFMapiService, BsModalService]
 })
 export class PRSGenerationListComponent implements OnInit, OnDestroy {
   @ViewChild('PRSArrivalComponent') PRSArrivalComponent!: PRSArrivalComponent;
+  @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
 
   public listSubscription?: Subscription;
   private fetchSubject = new Subject<void>();
@@ -76,7 +79,6 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.loginUserList.LocationCode = 'PIM'
-      this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
@@ -212,22 +214,22 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
 
   openPRSArrival(row: any) {
     this.PRSArrivalComponent.showPopup(row);
-
   }
-   onCancel(prsNo: string){
-    this.sweetAlertService.cancel(
-    `Are You Sure You Want to Cancel ${prsNo}?`,
-    () => {
+  openHHCDetails() {
+    this.HCCDetailsComponent.showPopup();
+  }
+
+  onCancel(prsNo: string) {
+    this.sweetAlertService.cancel(`Are You Sure You Want to Cancel ${prsNo}?`, () => {
       this.onCancelDrs(prsNo);
-    }
-  );
+    });
   }
 
-  onCancelDrs(prsNo:string){
-    const payload={
-    "baseUserName": this.docketService.loginUserList?.BaseUserName,
-    "filterType": "P",
-    "pdcno": prsNo
+  onCancelDrs(prsNo: string) {
+    const payload = {
+      baseUserName: this.docketService.loginUserList?.BaseUserName,
+      filterType: "P",
+      pdcno: prsNo
     }
     this.prsdrsApiService.onCancelDRS(payload).subscribe({
         next: (response: any) => {
