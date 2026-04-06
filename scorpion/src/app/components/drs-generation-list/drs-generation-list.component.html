@@ -202,13 +202,14 @@
                             </div>
                         </td>
                         <td class="text-center fs-7"
-                            [ngClass]="(data.vendorBillNo) ? 'text-primary fw-bold' : 'text-muted'">{{ data.vendorBillNo
-                            || '—' }}</td>
+                            [ngClass]="(data.vendorBillNo) ? 'text-primary fw-bold' : 'text-muted'">
+                            {{ data.vendorBillNo || '—' }}</td>
                         <td class="text-center">
-                            <span class="px-4 py-2"
+                            <span class="px-4 py-2 cursor-pointer"
                                 [ngClass]="(data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
-                                (click)="data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC'? openHCCModal(data.loadingHCCNo) : null" style="cursor: pointer;">
-                                {{ data.loadingHCCNo || 'NO HCC' }}
+                                (click)="data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC'? openHCCModal(data.loadingHCCNo) : null">
+                                <a *ngIf="data.loadingHCCNo">{{ data.loadingHCCNo}}</a>
+                                <span *ngIf="!data.loadingHCCNo">NO HCC</span>
                             </span>
                         </td>
                         <td class="text-center">
@@ -243,7 +244,7 @@
                                 </button>
                                 <button
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
-                                    [disabled]="data.status === 'Cancelled'">
+                                    [disabled]="data.status === 'Cancelled'" (click)="openHHCDetails()">
                                     🏷 HCC
                                 </button>
                                 <button class="btn btn-sm single-cnote px-3 py-1"
@@ -283,3 +284,4 @@
 </div>
 
 <single-cnote-drs-update #singleCnoteDrsUpdateComponent></single-cnote-drs-update>
+<app-hcc-details #HCCDetailsComponent (dataEmitter)="fetchData()"></app-hcc-details>

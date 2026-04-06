@@ -13,11 +13,12 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { DeliveryUpdateListComponent } from '../delivery-update-list/delivery-update-list.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { SingleCnoteDrsUpdateComponent } from './single-cnote-drs-update/single-cnote-drs-update.component';
+import { HCCDetailsComponent } from '../prs-generation-list/hcc-details/hcc-details.component';
 
 @Component({
   selector: 'app-drs-generation-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, ReactiveFormsModule, DeliveryUpdateListComponent, SingleCnoteDrsUpdateComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, ReactiveFormsModule, DeliveryUpdateListComponent, SingleCnoteDrsUpdateComponent, HCCDetailsComponent],
   providers: [BsModalService],
   templateUrl: './drs-generation-list.component.html',
   styleUrl: './drs-generation-list.component.scss'
@@ -51,6 +52,7 @@ export class DrsGenerationListComponent {
     { value: 'Non ODA', label: 'Non ODA' }
   ];
   @ViewChild('singleCnoteDrsUpdateComponent') singleCnoteDrsUpdateComponent!: SingleCnoteDrsUpdateComponent;
+  @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
 
 
   constructor(
@@ -141,15 +143,15 @@ export class DrsGenerationListComponent {
     }
 
     const payload = {
-      "fromDate": this.formatDate(this.DRSFilterForm.value.fromDate),
-      "toDate": this.formatDate(this.DRSFilterForm.value.toDate),
-      "locCode": null,
-      "statusFilter": this.DRSFilterForm.value.statusFilter,
-      "pageNumber": this.pagination.page,
-      "pageSize": this.pagination.pageSize,
-      "isDownload": false,
-      "odaType": this.DRSFilterForm.value.odaType,
-      "searchText": this.DRSFilterForm.value.searchText
+      fromDate: this.formatDate(this.DRSFilterForm.value.fromDate),
+      toDate: this.formatDate(this.DRSFilterForm.value.toDate),
+      locCode: null,
+      statusFilter: this.DRSFilterForm.value.statusFilter,
+      pageNumber: this.pagination.page,
+      pageSize: this.pagination.pageSize,
+      isDownload: false,
+      odaType: this.DRSFilterForm.value.odaType,
+      searchText: this.DRSFilterForm.value.searchText
     }
     this.isLoading = true;
 
@@ -171,15 +173,15 @@ export class DrsGenerationListComponent {
   downloadList() {
     this.isdownload = true;
     const payload = {
-      "fromDate": this.formatDate(this.DRSFilterForm.value.fromDate),
-      "toDate": this.formatDate(this.DRSFilterForm.value.toDate),
-      "locCode": null,
-      "statusFilter": this.DRSFilterForm.value.statusFilter,
-      "pageNumber": this.pagination.page,
-      "pageSize": this.pagination.pageSize,
-      "isDownload": true,
-      "odaType": this.DRSFilterForm.value.odaType,
-      "searchText": this.DRSFilterForm.value.searchText
+      fromDate: this.formatDate(this.DRSFilterForm.value.fromDate),
+      toDate: this.formatDate(this.DRSFilterForm.value.toDate),
+      locCode: null,
+      statusFilter: this.DRSFilterForm.value.statusFilter,
+      pageNumber: this.pagination.page,
+      pageSize: this.pagination.pageSize,
+      isDownload: true,
+      odaType: this.DRSFilterForm.value.odaType,
+      searchText: this.DRSFilterForm.value.searchText
     };
     this.listSubscription = this.prsdrsApiService.getDRSList(payload).subscribe({
       next: (response: any) => {
@@ -207,19 +209,16 @@ export class DrsGenerationListComponent {
   }
 
   onCancel(drsNo: string) {
-    this.sweetAlertService.cancel(
-      `Are You Sure You Want to Cancel ${drsNo}?`,
-      () => {
-        this.onCancelDrs(drsNo);
-      }
-    );
+    this.sweetAlertService.cancel(`Are You Sure You Want to Cancel ${drsNo}?`, () => {
+      this.onCancelDrs(drsNo);
+    });
   }
 
   onCancelDrs(drsNo: string) {
     const payload = {
-      "baseUserName": this.dockerService.loginUserList?.BaseUserName,
-      "filterType": "D",
-      "pdcno": drsNo
+      baseUserName: this.dockerService.loginUserList?.BaseUserName,
+      filterType: "D",
+      pdcno: drsNo
     }
     this.prsdrsApiService.onCancelDRS(payload).subscribe({
       next: (response: any) => {
@@ -247,8 +246,12 @@ export class DrsGenerationListComponent {
     this.singleCnoteDrsUpdateComponent.showPopup(data);
   }
 
-openHCCModal(hccNo: string) {
-  const url = `https://sepluat.cygnux.in/Tracking/TripAllView?LsNO=${hccNo}&VPType=LoadingUnloading&src=angular`;
-  window.open(url, '_blank');
-}
+  openHCCModal(hccNo: string) {
+    const url = `https://sepluat.cygnux.in/Tracking/TripAllView?LsNO=${hccNo}&VPType=LoadingUnloading&src=angular`;
+    window.open(url, '_blank', 'width=1200,height=600');
+  }
+
+  openHHCDetails() {
+    this.HCCDetailsComponent.showPopup();
+  }
 }

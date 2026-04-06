@@ -15,9 +15,9 @@
             <div class="p-3">
                 <div class="control-bar d-block gap-2 mb-0">
                     <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
-                            <div class="fw-bold"><i class="fas fa-info-circle me-2"></i>Basic Info</div>
-                        </div>
-                        <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
+                        <div class="fw-bold"><i class="fas fa-info-circle me-2"></i>Basic Info</div>
+                    </div>
+                    <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
                     <div class="row mb-4">
                         <div class="col-3">
                             <div class="form-group-input">
@@ -66,7 +66,7 @@
                 <div class="control-bar d-block gap-2 mb-0 mt-3">
                     <!-- ── LR Listing ── -->
                     <div>
-                      <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
+                        <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
                             <div class="fw-bold"><i class="fas fa-list me-2"></i>Docket Details</div>
                         </div>
                         <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
@@ -75,7 +75,8 @@
                                 <table style="width:100%;border-collapse:collapse;font-size:13px;"
                                     class="data-table align-middle">
                                     <thead style="position: sticky; top: 0; z-index: 1;">
-                                        <tr class="input-background-color" style="border-bottom:1px solid var(--border);">
+                                        <tr class="input-background-color"
+                                            style="border-bottom:1px solid var(--border);">
                                             <th class="text-center">IS Bad Pod</th>
                                             <th class="text-center">AXB Bkg. Dt.</th>
                                             <th class="text-center">Bkg-Dely Dest.Loc Pay Basis</th>
@@ -90,11 +91,11 @@
                                         <tr>
                                             <td class="text-center">
                                                 <div class="btn-group btn-group-sm" role="group">
-                                                    <input type="radio" class="btn-check" [name]="'badpod'" id="badpodYes"
-                                                        [value]="true">
+                                                    <input type="radio" class="btn-check" [name]="'badpod'"
+                                                        id="badpodYes" [value]="true">
                                                     <label class="btn btn-outline-success" for="badpodYes">Yes</label>
-                                                    <input type="radio" class="btn-check" [name]="'badpod'" id="badpodNo"
-                                                        [value]="false">
+                                                    <input type="radio" class="btn-check" [name]="'badpod'"
+                                                        id="badpodNo" [value]="false">
                                                     <label class="btn btn-outline-danger" for="badpodNo">No</label>
                                                 </div>
                                             </td>
@@ -133,21 +134,22 @@
                                                 </div>
                                             </td>
                                         </tr>
-        
+
                                         <!-- 🔹 SUB ROW -->
                                         <tr style="border-bottom: 1px solid rgb(190, 190, 190);">
                                             <td colspan="15">
-                                                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 ">
+                                                <div
+                                                    class="d-flex justify-content-between align-items-center flex-wrap gap-3 ">
                                                     <!-- LEFT SIDE -->
                                                     <div class="d-flex align-items-center flex-wrap gap-3">
                                                         <span class="fw-semibold text-muted">Delivery Date &
                                                             Time</span>
-                                                        <input class="form-control form-control-sm" style="width: 160px;"
-                                                            placeholder="Delivery Date & Time" />
+                                                        <input class="form-control form-control-sm"
+                                                            style="width: 160px;" placeholder="Delivery Date & Time" />
                                                         <span class="fw-semibold text-muted ms-2">Person</span>
                                                         <div>
-                                                            <input class="form-control form-control-sm" style="width: 160px;"
-                                                                placeholder="Person Name" />
+                                                            <input class="form-control form-control-sm"
+                                                                style="width: 160px;" placeholder="Person Name" />
                                                         </div>
                                                         <div class="d-flex align-items-center gap-2">
                                                             <span class="fw-semibold text-muted">Reason:</span>
@@ -155,7 +157,8 @@
                                                                 <ng-select class="noFoundTextColor clear-icon"
                                                                     style="width:250px;" placeholder="Select Reason">
                                                                     <ng-template ng-option-tmp let-item="item">
-                                                                        <div [title]="item.codeDesc">{{ item.codeDesc }}</div>
+                                                                        <div [title]="item.codeDesc">{{ item.codeDesc }}
+                                                                        </div>
                                                                     </ng-template>
                                                                 </ng-select>
                                                             </div>
@@ -167,7 +170,8 @@
                                                             (click)="frontInput.click()">
                                                             ⬆ POD Front UPLOAD
                                                         </button>
-                                                        <input type="file" type="file" #frontInput hidden accept="image/*" />
+                                                        <input type="file" type="file" #frontInput hidden
+                                                            accept="image/*" />
                                                         <button type="button" class="btn btn-outline-primary btn-sm"
                                                             (click)="backInput.click()">
                                                             ⬆ POD Back UPLOAD
@@ -191,7 +195,7 @@
         <div class="gap-3 d-flex">
             <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Cancel</button>
             <button type="button" class="btn btn-primary px-4 py-2 rounded">
-                <span class="me-2 fs-5">↗</span> Submit Forward
+                <span class="me-2 fs-5">↗</span> Submit
             </button>
         </div>
     </div>
