@@ -144,49 +144,41 @@
                                             <div>
                                                 {{ row.get('pkgs_Booked')?.value }}
                                             </div>
-                                        </div>
-                                    </td>
-                        
-                                    <td>
-                                        {{ row.get('comm_Dely_Dt')?.value }}
-                                    </td>
-                        
-                                    <!-- INPUT BIND -->
-                                    <td>
-                                        <div class="d-flex flex-column">
-                                            <input class="form-control form-control-sm required2" formControlName="PKGSDELIVERED" placeholder="Pkgs.Dely"
-                                            (input)="onDeliveredInput($event, row)">
-                                        </div>
-                                        <div class="text-danger mt-1"
-                                            *ngIf="row.get('PKGSDELIVERED')?.hasError('maxPending')">
-                                        Please enter a value less than or equal to {{ row.get('pkgs_Pending')?.value }}
-                                        </div>
-                                    </td>
-                                    
-                                    <td>
-                                        <div class="d-flex flex-column">
-                                            <input type="checkbox" formControlName="IsChecked">
-                                            <ng-select  formControlName="DelyLocation"
-                                                placeholder="Delivery Control Loc" [readonly]="row.value.Ischecked"></ng-select>
-                                        </div>
-                                    </td>
-                                </tr>
-                        
-                                <!-- 🔹 SUB ROW (DESIGN SAME) -->
-                                <tr style="border-bottom: 1px solid rgb(190, 190, 190);">
-                                    <td colspan="15">
-                                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 ">
-                        
-                                            <!-- LEFT SIDE -->
-                                            <div class="d-flex align-items-center flex-wrap gap-3">
-                        
-                                                <span class="fw-semibold text-muted">Delivery Date & Time</span>
-                                                    <app-date-time-picker controlName="DELYDATE"
-                                                    [maxDate]="today"
-                                                    [placeholder]="'Delivery Date & Time'"
-                                                    [minDate]="row.value.booking_Date"
-                                                    
-                                                        >
+                                              <div class="text-danger mt-1"
+                                                *ngIf="row.get('PKGSDELIVERED')?.hasError('required') 
+                                                        && (row.get('PKGSDELIVERED')?.touched || isSubmit)">
+                                                This field is required
+                                            </div>
+                                            <div class="text-danger mt-1"
+                                                *ngIf="row.get('PKGSDELIVERED')?.hasError('maxPending')">
+                                                Please enter a value less than or equal to {{
+                                                row.get('pkgs_Pending')?.value }}
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="d-flex flex-column">
+                                                <input type="checkbox" formControlName="IsChecked">
+                                                <ng-select formControlName="DelyLocation"
+                                                    placeholder="Delivery Control Loc"
+                                                    [readonly]="row.value.Ischecked"></ng-select>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- 🔹 SUB ROW (DESIGN SAME) -->
+                                    <tr style="border-bottom: 1px solid rgb(190, 190, 190);">
+                                        <td colspan="15">
+                                            <div
+                                                class="d-flex justify-content-between align-items-center flex-wrap gap-3 ">
+
+                                                <!-- LEFT SIDE -->
+                                                <div class="d-flex align-items-center flex-wrap gap-3">
+
+                                                    <span class="fw-semibold text-muted">Delivery Date & Time</span>
+                                                    <app-date-time-picker controlName="DELYDATE" [maxDate]="today"
+                                                        [placeholder]="'Delivery Date & Time'"
+                                                        [minDate]="row.value.booking_Date">
                                                     </app-date-time-picker>
                         
                                                 <span class="fw-semibold text-muted ms-2">Person</span>
@@ -279,8 +271,8 @@
         <div><span class="text-danger">*</span> Required fields</div>
         <div class="gap-3 d-flex">
             <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Cancel</button>
-            <button type="button" class="btn btn-primary px-4 py-2 rounded">
-                <span class="me-2 fs-5">↗</span> Submit Single cnote DRS Update
+            <button type="button" class="btn btn-primary px-4 py-2 rounded" (click)="onSubmit()">
+                    <span class="me-2 fs-5">↗</span> Submit Single cnote DRS Update
             </button>
         </div>
     </div>

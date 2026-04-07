@@ -3,6 +3,7 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DeliveryUpdateService } from 'app/shared/services/delivery-update.service';
+import { DocketService } from 'app/shared/services/docket.service';
 import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { SharedModule } from 'app/shared/shared/shared.module';
@@ -36,7 +37,8 @@ export class SingleCnoteDrsUpdateComponent {
     private fb: FormBuilder,
     private prsDrsApiService: PRSDRSApiService, 
     private deliveryUpdateService: DeliveryUpdateService,
-    private sweetAlertService: SweetAlertService
+    private sweetAlertService: SweetAlertService,
+    private docketService: DocketService
   ) { }
 
   ngOnInit(){
@@ -80,6 +82,47 @@ createCnoteForm(item: any): FormGroup {
     backFiles: [[]],
     frontPreview: [null],
     backPreview: [null],
+
+    autoNo: [item.autoNo],
+    docksf: [item.docksf],
+    dockDt: [item.dockDt],
+    curr_loc: [item.curr_loc],
+    payBasCode: [item.payBasCode],
+
+    pkgQty: [item.pkgQty],
+    booked_Wt: [item.booked_Wt],
+    wt_Arrived: [item.wt_Arrived],
+
+    freight: [item.freight],
+    docket_Total: [item.docket_Total],
+    service_Tax: [item.service_Tax],
+
+    delyLocationApi: [item.delyLocation],
+
+    coD_DOD: [item.coD_DOD],
+    coddod: [item.coddod],
+    coddodAmount: [item.coddodAmount],
+
+    coddodcollected: [item.coddodcollected],
+    coddodno: [item.coddodno],
+
+    dlypdcno: [item.dlypdcno],
+
+    cdeldT_ddmmyyyy: [item.cdeldT_ddmmyyyy],
+    dockDt_ddmmyyyy: [item.dockDt_ddmmyyyy],
+
+    delydate_api: [item.delydate],
+    delytime_api: [item.delytime],
+
+    actQty: [item.actQty],
+    rate: [item.rate],
+    maxLimit: [item.maxLimit],
+    newRate: [item.newRate],
+
+    isEnabled: [item.isEnabled],
+
+//     remark:[''],
+// otp:['']
     });
   return form;
 }
@@ -304,5 +347,126 @@ removeFile(index: number, type: 'FRONT' | 'BACK') {
     !frontPreview &&
     (row.get('frontFiles')?.touched || this.isSubmit)
   );
+}
+
+  hasPODError(): boolean {
+    let hasError = false;
+
+    this.cnoteList.controls.forEach((row: any) => {
+      const deliveredPkgs = Number(row.get('deliveredPkgs')?.value || 0);
+      const frontFiles = row.get('frontFiles')?.value || [];
+
+      if (deliveredPkgs > 0 && frontFiles.length === 0) {
+        hasError = true;
+        row.get('frontFiles')?.markAsTouched();
+      }
+    });
+
+    return hasError;
+  }
+
+onSubmit(){
+ const DRSDocketsUpdateList = this.cnoteList.getRawValue().map((row: any) => ({
+
+    pkgs_Booked: Number(row.pkgs_Booked) || 0,
+    rate: Number(row.rate) || 0,
+    newRate: Number(row.newRate) || 0,
+    remark: row.remark || '',
+    coddod: row.coddod ?? false,
+    service_Tax: Number(row.service_Tax) || 0,
+    coddodno: Number(row.coddodno) || 0,
+    dockDt: row.dockDt,
+    destcd: row.destcd,
+    delyperson: row.DELYPERSON || '',
+    freight: Number(row.freight) || 0,
+    delyLocation: row.DelyLocation || row.delyLocationApi || '',
+    actQty: Number(row.actQty) || 0,
+    docksf: row.docksf,
+    cdeldT_ddmmyyyy: row.cdeldT_ddmmyyyy,
+    docket_Total: Number(row.docket_Total) || 0,
+    coddodcollected: Number(row.coddodcollected) || 0,
+    pkgQty: Number(row.pkgQty) || 0,
+    wt_Arrived: Number(row.wt_Arrived) || 0,
+    otp: row.otp || '',
+    orgncd: row.orgncd,
+    isEnabledBadPodoption: row.IsEnabledBadPodoption ?? false,
+    cboEmail: row.cboEmail || '',
+    csgenm: row.csgenm,
+    comm_Dely_Dt: row.comm_Dely_Dt,
+    csgecd: row.csgecd,
+    autoNo: Number(row.autoNo) || 0,
+    coD_DOD: row.coD_DOD,
+    cboMobileNo: row.cboMobileNo || '',
+    curr_loc: row.curr_loc,
+    booked_Wt: Number(row.booked_Wt) || 0,
+    cboReason: row.cboReason || '',
+    dockno: row.dockno,
+    booking_Date: row.booking_Date,
+    pkgs_Arrived: Number(row.pkgs_Arrived) || 0,
+    payBasis: row.payBasis,
+    csgnnm: row.csgnnm,
+    maxLimit: Number(row.maxLimit) || 0,
+    isEnabled: row.isEnabled ?? false,
+    hDcboReason: row.hDcboReason || '',
+    csgncd: row.csgncd,
+    coddodAmount: Number(row.coddodAmount) || 0,
+    payBasCode: row.payBasCode,
+    ratetype: row.ratetype || '',
+    cboLateReason: row.cboLateReason || '',
+    delydate: row.DELYDATE,
+    delytime: row.DELYDATE,
+    dockDt_ddmmyyyy: row.dockDt_ddmmyyyy,
+    pkgsdelivered: Number(row.PKGSDELIVERED) || 0,
+    isChecked: row.IsChecked ?? false,
+    dlypdcno: row.dlypdcno,
+    pkgs_Pending: Number(row.pkgs_Pending) || 0
+  }));
+
+   const formData = new FormData();
+    formData.append("DRSsingleDocketsUpdateList", JSON.stringify(DRSDocketsUpdateList));
+    formData.append("pdcno", this.drsSummary.pdcno);
+    // formData.append("LoadingBy", this.DRSSummaryForm.value.LoadingBy);
+    // formData.append("VendorCode", this.drsSummary.VendorCode);
+    // formData.append("VendorName", this.drsSummary.VendorName);
+    formData.append("IsMonthly", this.drsSummary.isMonthly);
+    formData.append("LoadingCharge", this.drsSummary.loadingCharge);
+    formData.append("MaxLimit", this.drsSummary.maxLimit);
+    formData.append("CloseKM", this.drsSummary.closeKM);
+    formData.append("IsMathadi", this.drsSummary.isMathadi);
+    // formData.append("RateType", this.drsSummary.rateType);
+    formData.append("Rate", this.drsSummary.rate);
+    formData.append("MathadiDate", this.drsSummary.mathadiDate);
+    formData.append("MathadiAmt", this.drsSummary.mathadiAmt);
+    formData.append("LocationCode", this.docketService.loginUserList.LocationCode);
+    formData.append("BaseUserName", this.docketService.loginUserList.BaseUserName);
+    formData.append("FinYear", this.docketService.loginUserList.FinYear);
+
+    this.cnoteList.controls.forEach((ctrl: any) => {
+      ctrl.value.frontFiles.forEach((file: File) => {
+        formData.append('Files', file, `${ctrl.value.dockno}_FRONT_${file.name}`);
+      });
+
+      ctrl.value.backFiles.forEach((file: File) => {
+        formData.append('BackFiles', file, `${ctrl.value.dockno}_BACK_${file.name}`);
+      });
+    });
+    const podError = this.hasPODError();
+
+  if(this.DRSUpdateForm.valid && !podError){
+  this.prsDrsApiService.submitSingleCnoteDRSUpdate(formData).subscribe({
+    next: (response:any) => {
+      if(response && response.success){
+        this.sweetAlertService.success('Single Cnote DRS Update submitted successfully');
+        this.modalRef.hide();
+      }
+    },
+    error: (err:any) => {
+      console.error(err);
+      this.sweetAlertService.error('Error submitting Single Cnote DRS Update');
+    }
+  });
+}else{
+  this.DRSUpdateForm.markAllAsTouched();
+}
 }
 }

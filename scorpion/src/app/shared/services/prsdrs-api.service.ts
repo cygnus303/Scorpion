@@ -26,7 +26,10 @@ export class PRSDRSApiService {
 
    getDeliveryDetail(){
     return this.apiHandlerService.Get(`THC/delivery-reasons`);
+   }
 
+   submitSingleCnoteDRSUpdate(payload:any){
+    return this.apiHandlerService.Post(`THC/update-single-drs`, payload);
    }
   
 }
