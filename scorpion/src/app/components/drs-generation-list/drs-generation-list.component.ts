@@ -10,17 +10,17 @@ import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { debounceTime, Subscription } from 'rxjs';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
-import { DeliveryUpdateListComponent } from '../delivery-update-list/delivery-update-list.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { SingleCnoteDrsUpdateComponent } from './single-cnote-drs-update/single-cnote-drs-update.component';
 import { HCCDetailsComponent } from '../prs-generation-list/hcc-details/hcc-details.component';
 import { environment } from 'environments/environment';
 import { PRSDRSEditComponent } from '../prs-generation-list/prsdrs-edit/prsdrs-edit.component';
+import { DRSUpdateListComponent } from './drs-update-list/drs-update-list.component';
 
 @Component({
   selector: 'app-drs-generation-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, ReactiveFormsModule, DeliveryUpdateListComponent, PRSDRSEditComponent, SingleCnoteDrsUpdateComponent, HCCDetailsComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, ReactiveFormsModule, DRSUpdateListComponent, PRSDRSEditComponent, SingleCnoteDrsUpdateComponent, HCCDetailsComponent],
   providers: [BsModalService],
   templateUrl: './drs-generation-list.component.html',
   styleUrl: './drs-generation-list.component.scss'
