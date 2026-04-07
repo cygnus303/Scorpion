@@ -180,8 +180,9 @@
                         <td class="text-center fs-6 text-muted">{{ row.vendorBillNo || '—' }}</td>
                         <td class="text-center">
                             <span class="px-3 py-2"
-                                 [ngClass]="(row.loadingHCC && row.loadingHCC !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
-                                (click)="row.loadingHCC && row.loadingHCC !== 'NO HCC'? openHCCModal(row.loadingHCC) : null" style="cursor: pointer;">
+                                [ngClass]="(row.loadingHCC && row.loadingHCC !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
+                                (click)="row.loadingHCC && row.loadingHCC !== 'NO HCC'? openHCCModal(row.loadingHCC) : null"
+                                style="cursor: pointer;">
                                 {{ row.loadingHCC || 'NO HCC' }}
                             </span>
                         </td>
@@ -199,7 +200,8 @@
                         <td>
                             <div class="d-flex flex-wrap gap-2 justify-content-center">
                                 <button
-                                    class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3" (click)="openView(row.pdcno)">
+                                    class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3"
+                                    (click)="openView(row.pdcno)">
                                     <i class="fa fa-eye"></i> View
                                 </button>
                                 <button
@@ -209,7 +211,7 @@
                                 </button>
                                 <button
                                     class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3"
-                                    [disabled]="row.status === 'HCC Generated' || row.status === 'Cancelled'">
+                                    (click)="openPRSDRSEdit()">
                                     ✏️ Edit
                                 </button>
                                 <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
@@ -238,3 +240,4 @@
 
 <app-prsarrival #PRSArrivalComponent (dataEmitter)="fetchData()"></app-prsarrival>
 <app-hcc-details #HCCDetailsComponent (dataEmitter)="fetchData()"></app-hcc-details>
+<app-prsdrs-edit #PRSDRSEditComponent (dataEmitter)="fetchData()"></app-prsdrs-edit>

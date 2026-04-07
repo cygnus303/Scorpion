@@ -1,25 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
-import { ChallanModule } from 'app/components/challan-list/challan.module';
-
 @Component({
-  selector: 'app-add-prsdrs',
+  selector: 'app-prsdrs-edit',
   standalone: true,
-  imports: [CommonModule, ChallanModule],
-  templateUrl: './add-prsdrs.component.html',
-  styleUrl: './add-prsdrs.component.scss',
-  providers: [BsModalService]
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule],
+  templateUrl: './prsdrs-edit.component.html',
+  styleUrl: './prsdrs-edit.component.scss'
 })
-export class AddPRSDRSComponent {
+export class PRSDRSEditComponent {
   public modalRef!: BsModalRef;
-
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
-
   constructor(
-    private modalService: BsModalService) { }
+    private modalService: BsModalService,
+  ) { }
 
   showPopup() {
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });

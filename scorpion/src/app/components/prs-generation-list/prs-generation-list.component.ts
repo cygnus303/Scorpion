@@ -16,11 +16,12 @@ import { Router } from '@angular/router';
 import { HCCDetailsComponent } from './hcc-details/hcc-details.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { environment } from 'environments/environment';
+import { PRSDRSEditComponent } from './prsdrs-edit/prsdrs-edit.component';
 
 @Component({
   selector: 'app-prs-generation-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, PRSArrivalComponent, HCCDetailsComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, PRSArrivalComponent, HCCDetailsComponent, PRSDRSEditComponent],
   templateUrl: './prs-generation-list.component.html',
   styleUrl: './prs-generation-list.component.scss',
   providers: [PFMapiService, BsModalService]
@@ -29,6 +30,7 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
   @ViewChild('PRSArrivalComponent') PRSArrivalComponent!: PRSArrivalComponent;
   @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
   public  env = environment;
+  @ViewChild('PRSDRSEditComponent') PRSDRSEditComponent!: PRSDRSEditComponent;
 
   public listSubscription?: Subscription;
   private fetchSubject = new Subject<void>();
@@ -219,6 +221,10 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
   }
   openHHCDetails() {
     this.HCCDetailsComponent.showPopup();
+  }
+
+  openPRSDRSEdit() {
+    this.PRSDRSEditComponent.showPopup();
   }
 
   onCancel(prsNo: string) {

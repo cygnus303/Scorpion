@@ -1,0 +1,154 @@
+<!-- ══ FORWARD PFM MODAL ══ -->
+<ng-template #Templatepod>
+    <div class="modal-header">
+        <div class="d-flex align-items-center gap-3">
+            <div class="pfm-icon shadow-sm">
+                <i class="fas fa-edit text-primary"></i>
+            </div>
+            <div>
+                <div class="fw-bold fs-5">Update PDC Financial Details</div>
+                <div class="pfm-subtitle">Complete PDC Financial Details below</div>
+            </div>
+        </div>
+        <button type="button" class="btn-close pfm-close" (click)="modalRef.hide()"></button>
+    </div>
+    <form>
+        <div class="modal-body input-background-color" style="padding:0;gap:0;">
+            <div class="p-3">
+                <div class="control-bar d-block gap-2 mb-0">
+                    <div class="row">
+                        <div class="col-3 align-items-center d-flex">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold d-flex align-items-center gap-2">
+                                    PDC No :
+                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                        {{'DS/PIM/2627/000002'}}
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-3 align-items-center d-flex">
+                            <div class="form-group-input">
+                                <label class="form-label fw-bold d-flex align-items-center gap-2">
+                                    Contract Type :
+                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                        {{'--'}}
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-flex justify-content-end">
+                                <button class=" btn btn-primary">Invoke Contract</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-bar d-block gap-2 mb-0 mt-3">
+                    <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
+                        <div class="fw-bold"><i class="fas fa-credit-card me-2"></i>Payment Details</div>
+                    </div>
+                    <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
+                    <div class="row mb-4 ">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Contract Amt.
+                                </label>
+                                <input type="text" class="form-control" placeholder="Contract Amt.">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Advance Amount
+                                </label>
+                                <input type="text" class="form-control" placeholder="Advance Amount">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Advance Amount Paid
+                                    At
+                                </label>
+                                <input type="text" class="form-control" placeholder="Advance Amount Paid At">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Balance Amount Paid
+                                    At
+                                </label>
+                                <input class="form-control" type="text" placeholder="Balance Amount Paid At">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── LR Listing ── -->
+                <div class="control-bar d-block gap-2 mb-0 mt-3">
+                    <div>
+                        <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
+                            <div class="fw-bold"><i class="fas fa-list me-2"></i>CNote List</div>
+                        </div>
+                        <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
+                        <div style="border:2px solid var(--border);border-radius:3px; ">
+                            <div>
+                                <table style="width:100%;border-collapse:collapse;font-size:13px;"
+                                    class="data-table align-middle">
+                                    <thead style="position: sticky; top: 0; z-index: 1;">
+                                        <tr class="input-background-color"
+                                            style="border-bottom:1px solid var(--border);">
+                                            <th class="text-center">Cnote No.</th>
+                                            <th class="text-center">Pay Basis</th>
+                                            <th class="text-center">Origin</th>
+                                            <th class="text-center">Destination</th>
+                                            <th class="text-center">Packges [B/L]</th>
+                                            <th class="text-center">Weight [B/L]</th>
+                                            <th class="text-center">Charge Weight [B/L]</th>
+                                            <th class="text-center">Contract Amt</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-center">
+                                                62935593
+                                            </td>
+                                            <td class="text-center">
+                                                Paid
+                                            </td>
+                                            <td class="text-center">NIDA</td>
+                                            <td class="text-center">
+                                                PIM
+                                            </td>
+                                            <td class="text-center">
+                                                2.00
+                                            </td>
+                                            <td class="text-center">
+                                                44.00
+                                            </td>
+                                            <td class="text-center">
+                                                44.00
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control form-control-sm">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+    <div class="modal-footer d-flex justify-content-end">
+        <div class="gap-3 d-flex">
+            <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Cancel</button>
+            <button type="button" class="btn btn-success px-4 py-2 rounded">
+                <span class="me-2 fs-5">↗</span> Submit
+            </button>
+        </div>
+    </div>
+</ng-template>

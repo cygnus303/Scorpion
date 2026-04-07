@@ -15,11 +15,12 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { SingleCnoteDrsUpdateComponent } from './single-cnote-drs-update/single-cnote-drs-update.component';
 import { HCCDetailsComponent } from '../prs-generation-list/hcc-details/hcc-details.component';
 import { environment } from 'environments/environment';
+import { PRSDRSEditComponent } from '../prs-generation-list/prsdrs-edit/prsdrs-edit.component';
 
 @Component({
   selector: 'app-drs-generation-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, ReactiveFormsModule, DeliveryUpdateListComponent, SingleCnoteDrsUpdateComponent, HCCDetailsComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, ReactiveFormsModule, DeliveryUpdateListComponent, PRSDRSEditComponent, SingleCnoteDrsUpdateComponent, HCCDetailsComponent],
   providers: [BsModalService],
   templateUrl: './drs-generation-list.component.html',
   styleUrl: './drs-generation-list.component.scss'
@@ -56,6 +57,7 @@ export class DrsGenerationListComponent {
   ];
   @ViewChild('singleCnoteDrsUpdateComponent') singleCnoteDrsUpdateComponent!: SingleCnoteDrsUpdateComponent;
   @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
+  @ViewChild('PRSDRSEditComponent') PRSDRSEditComponent!: PRSDRSEditComponent;
 
 
   constructor(
@@ -247,6 +249,10 @@ export class DrsGenerationListComponent {
 
   openSingleDRSUpdate(data: any) {
     this.singleCnoteDrsUpdateComponent.showPopup(data);
+  }
+
+  openPRSDRSEdit() {
+    this.PRSDRSEditComponent.showPopup();
   }
 
   openHCCModal(hccNo: string) {

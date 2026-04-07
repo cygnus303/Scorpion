@@ -226,7 +226,8 @@
                         <td>
                             <div class="d-flex flex-wrap gap-2 justify-content-center">
                                 <button
-                                    class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3" (click)="openView(data.drsNo)">
+                                    class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3"
+                                    (click)="openView(data.drsNo)">
                                     <i class="fa fa-eye"></i> View
                                 </button>
                                 <button
@@ -234,7 +235,7 @@
                                     [disabled]="data.status === 'Cancelled'" (click)="openUpdateModal(data)">
                                     🔄 DRS Update
                                 </button>
-                                <button
+                                <button (click)="openPRSDRSEdit()"
                                     class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3">
                                     ✏️ Edit
                                 </button>
@@ -285,3 +286,4 @@
 
 <single-cnote-drs-update #singleCnoteDrsUpdateComponent></single-cnote-drs-update>
 <app-hcc-details #HCCDetailsComponent (dataEmitter)="fetchData()"></app-hcc-details>
+<app-prsdrs-edit #PRSDRSEditComponent (dataEmitter)="fetchData()"></app-prsdrs-edit>
