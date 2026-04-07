@@ -14,6 +14,7 @@ import { DeliveryUpdateListComponent } from '../delivery-update-list/delivery-up
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { SingleCnoteDrsUpdateComponent } from './single-cnote-drs-update/single-cnote-drs-update.component';
 import { HCCDetailsComponent } from '../prs-generation-list/hcc-details/hcc-details.component';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-drs-generation-list',
@@ -32,7 +33,9 @@ export class DrsGenerationListComponent {
   public isdownload: boolean = false;
   public showUpdateModal: boolean = false;
   public selectedDRS: any;
-  public pagination={
+  public  env = environment;
+  
+  public pagination = {
     page: 1,
     pageSize: 10,
     totalRecords: 0,
@@ -247,11 +250,24 @@ export class DrsGenerationListComponent {
   }
 
   openHCCModal(hccNo: string) {
-    const url = `https://sepluat.cygnux.in/Tracking/TripAllView?LsNO=${hccNo}&VPType=LoadingUnloading&src=angular`;
-    window.open(url, '_blank', 'width=1200,height=600');
+    const url = `${this.env.liveUrl}Tracking/TripAllView?LsNO=${hccNo}&VPType=LoadingUnloading&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
+    }
   }
 
-  openHHCDetails() {
-    this.HCCDetailsComponent.showPopup();
+  openView(drsNo: string) {
+    const url = `${this.env.liveUrl}ViewPrint/DRSViewPrint?DocumentNo=${drsNo}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
+    }
   }
 }

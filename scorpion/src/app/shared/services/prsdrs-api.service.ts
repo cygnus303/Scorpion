@@ -15,5 +15,18 @@ export class PRSDRSApiService {
    onCancelDRS(payload: any) {
     return this.apiHandlerService.Post(`THC/PDCCancellationSubmit`, payload);
    }
+
+   docketList(drsNo:string){
+    return this.apiHandlerService.Get(`THC/pending-docketsDrs?drsNo=${drsNo}`);
+   }
+
+   singleDRSUpdateDetail(params:any){
+    return this.apiHandlerService.Get(`THC/GetUpdateDRSDataById?dockNo=${params.dockNo}&drsCode=${params.drsCode}&dockSf=${params.dockSf}`);
+   }
+
+   getDeliveryDetail(){
+    return this.apiHandlerService.Get(`THC/delivery-reasons`);
+
+   }
   
 }
