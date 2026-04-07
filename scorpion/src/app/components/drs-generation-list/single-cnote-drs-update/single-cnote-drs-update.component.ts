@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DeliveryUpdateService } from 'app/shared/services/delivery-update.service';
@@ -27,6 +27,7 @@ export class SingleCnoteDrsUpdateComponent {
   public isSubmit: boolean = false;
   today: Date = new Date();
   public isLoading = false;
+  @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
 
 
@@ -418,15 +419,16 @@ export class SingleCnoteDrsUpdateComponent {
     const formData = new FormData();
     formData.append("DRSsingleDocketsUpdateList", JSON.stringify(DRSDocketsUpdateList));
     formData.append("pdcno", this.drsSummary.pdcno);
-    // formData.append("LoadingBy", this.DRSSummaryForm.value.LoadingBy);
-    // formData.append("VendorCode", this.drsSummary.VendorCode);
-    // formData.append("VendorName", this.drsSummary.VendorName);
+    formData.append("LoadingBy", '');
+    formData.append("VendorCode", '');
+    formData.append("VendorName", '');
     formData.append("IsMonthly", this.drsSummary.isMonthly);
     formData.append("LoadingCharge", this.drsSummary.loadingCharge);
     formData.append("MaxLimit", this.drsSummary.maxLimit);
+    formData.append("MathadiSlipNo", '');
     formData.append("CloseKM", this.drsSummary.closeKM);
     formData.append("IsMathadi", this.drsSummary.isMathadi);
-    // formData.append("RateType", this.drsSummary.rateType);
+    formData.append("RateType", '');
     formData.append("Rate", this.drsSummary.rate);
     formData.append("MathadiDate", this.drsSummary.mathadiDate);
     formData.append("MathadiAmt", this.drsSummary.mathadiAmt);
@@ -451,6 +453,8 @@ export class SingleCnoteDrsUpdateComponent {
           if (response && response.success) {
             this.sweetAlertService.success('Single Cnote DRS Update submitted successfully');
             this.modalRef.hide();
+            this.dataEmitter.emit();
+
           }
         },
         error: (err: any) => {

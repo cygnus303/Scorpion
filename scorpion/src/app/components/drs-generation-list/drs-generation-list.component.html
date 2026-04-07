@@ -214,7 +214,8 @@
                         </td>
                         <td class="text-center">
                             <span class="px-4 py-2"
-                                [ngClass]="(data.unloadingHccNo && data.unloadingHccNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'">
+                                [ngClass]="(data.unloadingHccNo && data.unloadingHccNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
+                                (click)="data.unloadingHccNo && data.unloadingHccNo !== 'NO HCC'? openHCCModal(data.unloadingHccNo) : null">
                                 {{ data.unloadingHccNo || 'NO HCC' }}
                             </span>
                         </td>
@@ -284,6 +285,6 @@
     </div>
 </div>
 
-<single-cnote-drs-update #singleCnoteDrsUpdateComponent></single-cnote-drs-update>
+<single-cnote-drs-update #singleCnoteDrsUpdateComponent (dataEmitter)="fetchData()"></single-cnote-drs-update>
 <app-hcc-details #HCCDetailsComponent (dataEmitter)="fetchData()"></app-hcc-details>
 <app-prsdrs-edit #PRSDRSEditComponent (dataEmitter)="fetchData()"></app-prsdrs-edit>
