@@ -141,8 +141,18 @@
                                             <div>
                                                 {{ row.get('pkgs_Arrived')?.value }} /
                                             </div>
-                                            <div>
-                                                {{ row.get('pkgs_Booked')?.value }}
+                                        </td>
+
+                                        <td>
+                                            {{ row.get('comm_Dely_Dt')?.value }}
+                                        </td>
+
+                                        <!-- INPUT BIND -->
+                                        <td>
+                                            <div class="d-flex flex-column">
+                                                <input class="form-control form-control-sm required2"
+                                                    formControlName="PKGSDELIVERED" placeholder="Pkgs.Dely"  oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                                                    (input)="onDeliveredInput($event, row)">
                                             </div>
                                             <div class="text-danger mt-1" *ngIf="row.get('PKGSDELIVERED')?.hasError('required') 
                                                         && (row.get('PKGSDELIVERED')?.touched || isSubmit)">
