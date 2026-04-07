@@ -1,0 +1,86 @@
+<div class="input-background-color" style="padding:0;gap:0;">
+  <div class="p-3">
+
+    <div class="d-flex justify-content-between align-items-center pb-3">
+      <div class="d-flex align-items-center gap-2">
+        <i class="fa fa-list-alt text-primary fs-3"></i>
+        <span class="fw-bold text-dark fs-3">
+          Menu Access
+        </span>
+      </div>
+    </div>
+    <div class="table-panel p-4">
+      <div class="control-bar d-block gap-2 mb-3">
+        <div class="row">
+          <div class="col-3">
+            <input type="text" class="form-control" placeholder="Search Module...">
+          </div>
+          <div class="col-3">
+            <div class="row">
+              <label class="col-sm-2 col-form-label fw-bold">Role : </label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" placeholder="Role">
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="row">
+              <label class="col-sm-2 col-form-label fw-bold">User : </label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" placeholder="User">
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="d-flex justify-content-end gap-3">
+              <button type="button" class="btn btn-primary px-4 py-2 rounded" (click)="onSubmit()">
+                <span class="me-2 fs-5">✓</span> Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <table class="table table-bordered w-100 data-table">
+        <thead>
+          <tr>
+            <th scope="col" class="text-secondary small fw-bold">
+              <div class="d-flex align-items-center">
+                <input type="checkbox" class="form-check-label mt-0 me-3" [checked]="isAllSelected()"
+                  (change)="toggleAll($event)">
+                <span>MODULE</span>
+              </div>
+            </th>
+            <th *ngFor="let col of permissionColumns" scope="col" class="text-center text-secondary small fw-bold">
+              <div class="d-flex align-items-center justify-content-center gap-1">
+                <input type="checkbox" class="form-check-label mt-0 me-3" [checked]="isColumnAllSelected(col)"
+                  (change)="toggleColumn(col, $event)">
+                <span class="text-uppercase">{{col}}</span>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let module of permissionsList">
+            <td class="fw-medium text-dark small ps-3">
+              <div class="d-flex align-items-center">
+                <input type="checkbox" class="form-check-label m-0 me-3" [checked]="isRowSelected(module)"
+                  (change)="toggleRow(module, $event)">
+                {{module.displayName}}
+              </div>
+            </td>
+            <td *ngFor="let col of permissionColumns" class="text-center">
+              <ng-container *ngIf="getPermission(module, col) as perm; else noPerm">
+                <div class="d-flex align-items-center justify-content-center gap-1">
+                  <input type="checkbox" class="form-check-label m-0 me-3" [(ngModel)]="perm.isUSERACCESS">
+                </div>
+              </ng-container>
+              <ng-template #noPerm>
+                <span class="text-muted opacity-50">—</span>
+              </ng-template>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
