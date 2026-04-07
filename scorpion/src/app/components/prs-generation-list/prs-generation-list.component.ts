@@ -15,6 +15,7 @@ import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 import { Router } from '@angular/router';
 import { HCCDetailsComponent } from './hcc-details/hcc-details.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-prs-generation-list',
@@ -27,6 +28,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 export class PRSGenerationListComponent implements OnInit, OnDestroy {
   @ViewChild('PRSArrivalComponent') PRSArrivalComponent!: PRSArrivalComponent;
   @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
+  public  env = environment;
 
   public listSubscription?: Subscription;
   private fetchSubject = new Subject<void>();
@@ -242,5 +244,27 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
           console.error(err);
         }
       });
+  }
+
+   openHCCModal(hccNo: string) {
+    const url = `${this.env.liveUrl}ViewPrint/LoadingUnloadingViewPrint?LsNO=${hccNo}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
+    }
+  }
+
+    openView(pdcNo: string) {
+    const url = `${this.env.liveUrl}ViewPrint/ViewPrint?DocumentNo=${pdcNo}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
+    }
   }
 }
