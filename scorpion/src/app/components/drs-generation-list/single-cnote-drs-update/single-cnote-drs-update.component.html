@@ -144,8 +144,7 @@
                                             <div>
                                                 {{ row.get('pkgs_Booked')?.value }}
                                             </div>
-                                              <div class="text-danger mt-1"
-                                                *ngIf="row.get('PKGSDELIVERED')?.hasError('required') 
+                                            <div class="text-danger mt-1" *ngIf="row.get('PKGSDELIVERED')?.hasError('required') 
                                                         && (row.get('PKGSDELIVERED')?.touched || isSubmit)">
                                                 This field is required
                                             </div>
@@ -157,8 +156,8 @@
                                         </td>
 
                                         <td>
-                                            <div class="d-flex flex-column">
-                                                <input type="checkbox" formControlName="IsChecked">
+                                            <div class="d-flex ">
+                                                <input type="checkbox" formControlName="IsChecked" class="me-3">
                                                 <ng-select formControlName="DelyLocation"
                                                     placeholder="Delivery Control Loc"
                                                     [readonly]="row.value.Ischecked"></ng-select>
@@ -272,7 +271,7 @@
         <div class="gap-3 d-flex">
             <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Cancel</button>
             <button type="button" class="btn btn-primary px-4 py-2 rounded" (click)="onSubmit()">
-                    <span class="me-2 fs-5">↗</span> Submit Single cnote DRS Update
+                <span class="me-2 fs-5">↗</span> Submit Single cnote DRS Update
             </button>
         </div>
     </div>

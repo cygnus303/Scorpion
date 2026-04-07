@@ -13,204 +13,204 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 @Component({
   selector: 'single-cnote-drs-update',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule,ReactiveFormsModule,FormsModule,SharedModule],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, ReactiveFormsModule, FormsModule, SharedModule],
   templateUrl: './single-cnote-drs-update.component.html',
   styleUrl: './single-cnote-drs-update.component.scss'
 })
 export class SingleCnoteDrsUpdateComponent {
   public modalRef!: BsModalRef;
-  public DRSUpdateForm !:FormGroup;
+  public DRSUpdateForm !: FormGroup;
   public selectedData: any;
-  public docketData:any[]=[];
-  public deliveryReason:any[]=[];
-  public drsSummary:any;
+  public docketData: any[] = [];
+  public deliveryReason: any[] = [];
+  public drsSummary: any;
   public isSubmit: boolean = false;
   today: Date = new Date();
   public isLoading = false;
-  frontPreview: string | ArrayBuffer | null = null;
-  backPreview: string | ArrayBuffer | null = null;
+  // frontPreview: string | ArrayBuffer | null = null;
+  // backPreview: string | ArrayBuffer | null = null;
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
 
 
   constructor(
     private modalService: BsModalService,
     private fb: FormBuilder,
-    private prsDrsApiService: PRSDRSApiService, 
+    private prsDrsApiService: PRSDRSApiService,
     private deliveryUpdateService: DeliveryUpdateService,
     private sweetAlertService: SweetAlertService,
     private docketService: DocketService
   ) { }
 
-  ngOnInit(){
+  ngOnInit() {
     this.buildForm();
   }
 
- buildForm() {
-   this.DRSUpdateForm = this.fb.group({
+  buildForm() {
+    this.DRSUpdateForm = this.fb.group({
       cnoteList: this.fb.array([])
     });
- }
-
-createCnoteForm(item: any): FormGroup {
-  const [day, month, year] = item.booking_Date.split('/').map(Number);
-  const formattedDate = new Date(year, month - 1, day);
-
-  const form = this.fb.group({
-    dockno: [item.dockno],
-    booking_Date: [formattedDate],
-    orgncd: [item.orgncd],
-    destcd: [item.destcd],
-    payBasis: [item.payBasis],
-    csgncd: [item.csgncd],
-    csgnnm: [item.csgnnm],
-    csgecd: [item.csgecd],
-    csgenm: [item.csgenm],
-    pkgs_Pending: [item.pkgs_Pending],
-    pkgs_Arrived: [item.pkgs_Arrived],
-    pkgs_Booked: [item.pkgs_Booked],
-    comm_Dely_Dt: [item.comm_Dely_Dt],
-    IsEnabledBadPodoption: [item.isEnabledBadPodoption || false],
-    IsChecked: [''],
-    PKGSDELIVERED: ['', [Validators.required, this.maxPendingValidator('pkgs_Pending')]],
-    DelyLocation: [null],
-    DELYDATE: [this.getCurrentDateTime()],
-    DELYPERSON: [''],
-    cboReason: [''],
-    podFront: [null],
-    podBack: [null],
-    frontFiles: [[]],
-    backFiles: [[]],
-    frontPreview: [null],
-    backPreview: [null],
-
-    autoNo: [item.autoNo],
-    docksf: [item.docksf],
-    dockDt: [item.dockDt],
-    curr_loc: [item.curr_loc],
-    payBasCode: [item.payBasCode],
-
-    pkgQty: [item.pkgQty],
-    booked_Wt: [item.booked_Wt],
-    wt_Arrived: [item.wt_Arrived],
-
-    freight: [item.freight],
-    docket_Total: [item.docket_Total],
-    service_Tax: [item.service_Tax],
-
-    delyLocationApi: [item.delyLocation],
-
-    coD_DOD: [item.coD_DOD],
-    coddod: [item.coddod],
-    coddodAmount: [item.coddodAmount],
-
-    coddodcollected: [item.coddodcollected],
-    coddodno: [item.coddodno],
-
-    dlypdcno: [item.dlypdcno],
-
-    cdeldT_ddmmyyyy: [item.cdeldT_ddmmyyyy],
-    dockDt_ddmmyyyy: [item.dockDt_ddmmyyyy],
-
-    delydate_api: [item.delydate],
-    delytime_api: [item.delytime],
-
-    actQty: [item.actQty],
-    rate: [item.rate],
-    maxLimit: [item.maxLimit],
-    newRate: [item.newRate],
-
-    isEnabled: [item.isEnabled],
-
-//     remark:[''],
-// otp:['']
-    });
-  return form;
-}
-
-onDeliveredInput(event: any, row: AbstractControl) {
-  let value = +event.target.value;
-  const pending = +row.get('pkgs_Pending')?.value;
-
-  if (value > pending) {
-    row.get('PKGSDELIVERED')?.setErrors({ maxPending: true });
-  } else {
-    row.get('PKGSDELIVERED')?.setErrors(null);
   }
-}
+
+  createCnoteForm(item: any): FormGroup {
+    const [day, month, year] = item.booking_Date.split('/').map(Number);
+    const formattedDate = new Date(year, month - 1, day);
+
+    const form = this.fb.group({
+      dockno: [item.dockno],
+      booking_Date: [formattedDate],
+      orgncd: [item.orgncd],
+      destcd: [item.destcd],
+      payBasis: [item.payBasis],
+      csgncd: [item.csgncd],
+      csgnnm: [item.csgnnm],
+      csgecd: [item.csgecd],
+      csgenm: [item.csgenm],
+      pkgs_Pending: [item.pkgs_Pending],
+      pkgs_Arrived: [item.pkgs_Arrived],
+      pkgs_Booked: [item.pkgs_Booked],
+      comm_Dely_Dt: [item.comm_Dely_Dt],
+      IsEnabledBadPodoption: [item.isEnabledBadPodoption || false],
+      IsChecked: [''],
+      PKGSDELIVERED: ['', [Validators.required, this.maxPendingValidator('pkgs_Pending')]],
+      DelyLocation: [null],
+      DELYDATE: [this.getCurrentDateTime()],
+      DELYPERSON: [''],
+      cboReason: [''],
+      podFront: [null],
+      podBack: [null],
+      frontFiles: [[]],
+      backFiles: [[]],
+      frontPreview: [null],
+      backPreview: [null],
+
+      autoNo: [item.autoNo],
+      docksf: [item.docksf],
+      dockDt: [item.dockDt],
+      curr_loc: [item.curr_loc],
+      payBasCode: [item.payBasCode],
+
+      pkgQty: [item.pkgQty],
+      booked_Wt: [item.booked_Wt],
+      wt_Arrived: [item.wt_Arrived],
+
+      freight: [item.freight],
+      docket_Total: [item.docket_Total],
+      service_Tax: [item.service_Tax],
+
+      delyLocationApi: [item.delyLocation],
+
+      coD_DOD: [item.coD_DOD],
+      coddod: [item.coddod],
+      coddodAmount: [item.coddodAmount],
+
+      coddodcollected: [item.coddodcollected],
+      coddodno: [item.coddodno],
+
+      dlypdcno: [item.dlypdcno],
+
+      cdeldT_ddmmyyyy: [item.cdeldT_ddmmyyyy],
+      dockDt_ddmmyyyy: [item.dockDt_ddmmyyyy],
+
+      delydate_api: [item.delydate],
+      delytime_api: [item.delytime],
+
+      actQty: [item.actQty],
+      rate: [item.rate],
+      maxLimit: [item.maxLimit],
+      newRate: [item.newRate],
+
+      isEnabled: [item.isEnabled],
+
+      //     remark:[''],
+      // otp:['']
+    });
+    return form;
+  }
+
+  onDeliveredInput(event: any, row: AbstractControl) {
+    let value = +event.target.value;
+    const pending = +row.get('pkgs_Pending')?.value;
+
+    if (value > pending) {
+      row.get('PKGSDELIVERED')?.setErrors({ maxPending: true });
+    } else {
+      row.get('PKGSDELIVERED')?.setErrors(null);
+    }
+  }
 
   maxPendingValidator(pendingKey: string) {
-  return (control: AbstractControl) => {
-    const parent = control.parent;
-    if (!parent) return null;
+    return (control: AbstractControl) => {
+      const parent = control.parent;
+      if (!parent) return null;
 
-    const pending = parent.get(pendingKey)?.value;
-    const delivered = control.value;
+      const pending = parent.get(pendingKey)?.value;
+      const delivered = control.value;
 
-    if (delivered && pending && delivered > pending) {
-      return { maxPending: true };
-    }
-    return null;
-  };
-}
+      if (delivered && pending && delivered > pending) {
+        return { maxPending: true };
+      }
+      return null;
+    };
+  }
 
- get cnoteList(): FormArray {
-  return this.DRSUpdateForm.get('cnoteList') as FormArray;
-}
+  get cnoteList(): FormArray {
+    return this.DRSUpdateForm.get('cnoteList') as FormArray;
+  }
 
   showPopup(data: any) {
     console.log('Data received for Single C Note Update:', data);
-    this.selectedData=data;
-    this.drsSummary=null;
+    this.selectedData = data;
+    this.drsSummary = null;
     this.DRSUpdateForm.reset();
     this.cnoteList.clear();
-    this.frontPreview = null;
-    this.backPreview = null;
+    // this.frontPreview = null;
+    // this.backPreview = null;
     this.docketDetail(data.drsNo);
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
-  } 
+  }
 
-  docketDetail(drsNo:string){
+  docketDetail(drsNo: string) {
     this.prsDrsApiService.docketList(drsNo).subscribe({
-      next: (response:any) => {
+      next: (response: any) => {
         this.docketData = response;
       }
     })
   }
 
-   getDRSDetail(event:any){
+  getDRSDetail(event: any) {
     const params = {
       "dockNo": event.dockNo,
-      "drsCode":this.selectedData.drsNo,
+      "drsCode": this.selectedData.drsNo,
       "dockSf": "."
     }
 
-      this.isLoading = true;
-   this.prsDrsApiService.singleDRSUpdateDetail(params).subscribe({
+    this.isLoading = true;
+    this.prsDrsApiService.singleDRSUpdateDetail(params).subscribe({
       next: (response: any) => {
         const list = response?.data?.updateDRSLits || [];
-        this.drsSummary=response?.data?.drsSummary;
-      this.cnoteList.clear();
+        this.drsSummary = response?.data?.drsSummary;
+        this.cnoteList.clear();
 
-      // 🔹 Push new data
-      list.forEach((item: any) => {
-        this.cnoteList.push(this.createCnoteForm(item));
-      });
-      this.getDeliveryReason();
-      this.isLoading = false;
+        // 🔹 Push new data
+        list.forEach((item: any) => {
+          this.cnoteList.push(this.createCnoteForm(item));
+        });
+        this.getDeliveryReason();
+        this.isLoading = false;
       },
-      error: (err:any) => {
+      error: (err: any) => {
         console.error(err);
-      this.isLoading = false;
+        this.isLoading = false;
       }
     });
   }
 
-  getDeliveryReason(){
+  getDeliveryReason() {
     this.prsDrsApiService.getDeliveryDetail().subscribe({
       next: (response: any) => {
-       this.deliveryReason=response.data;
+        this.deliveryReason = response.data;
       },
-      error: (err:any) => {
+      error: (err: any) => {
         console.error(err);
       }
     });
@@ -232,61 +232,61 @@ onDeliveredInput(event: any, row: AbstractControl) {
     return `${day} ${month} ${year} ${hours}:${minutes} ${ampm}`;
   }
 
-removeFile(index: number, type: 'FRONT' | 'BACK') {
-  const row = this.cnoteList.at(index) as FormGroup;
+  removeFile(index: number, type: 'FRONT' | 'BACK') {
+    const row = this.cnoteList.at(index) as FormGroup;
 
-  if (type === 'FRONT') {
-    const url = row.get('frontPreview')?.value;
-    if (url) URL.revokeObjectURL(url);
+    if (type === 'FRONT') {
+      const url = row.get('frontPreview')?.value;
+      if (url) URL.revokeObjectURL(url);
 
-    row.patchValue({
-      frontFiles: [],
-      frontPreview: null
-    });
+      row.patchValue({
+        frontFiles: [],
+        frontPreview: null
+      });
 
-    row.get('frontFiles')?.markAsTouched();
-  } else {
-    const url = row.get('backPreview')?.value;
-    if (url) URL.revokeObjectURL(url);
+      row.get('frontFiles')?.markAsTouched();
+    } else {
+      const url = row.get('backPreview')?.value;
+      if (url) URL.revokeObjectURL(url);
 
-    row.patchValue({
-      backFiles: [],
-      backPreview: null
-    });
-  }
-}
-
- onFileSelected(event: any, index: number, type: 'FRONT' | 'BACK') {
-  const file = event.target.files?.[0];
-  if (!file) return;
-
-  const row = this.cnoteList.at(index) as FormGroup;
-  const previewUrl = URL.createObjectURL(file);
-
-  if (type === 'FRONT') {
-    const old = row.get('frontPreview')?.value;
-    if (old) URL.revokeObjectURL(old);
-
-    row.patchValue({
-      frontFiles: [file],
-      frontPreview: previewUrl
-    });
-
-    row.get('frontFiles')?.markAsTouched();
-  } else {
-    const old = row.get('backPreview')?.value;
-    if (old) URL.revokeObjectURL(old);
-
-    row.patchValue({
-      backFiles: [file],
-      backPreview: previewUrl
-    });
+      row.patchValue({
+        backFiles: [],
+        backPreview: null
+      });
+    }
   }
 
-  event.target.value = '';
+  onFileSelected(event: any, index: number, type: 'FRONT' | 'BACK') {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-  this.validatePOD(index);
-}
+    const row = this.cnoteList.at(index) as FormGroup;
+    const previewUrl = URL.createObjectURL(file);
+
+    if (type === 'FRONT') {
+      const old = row.get('frontPreview')?.value;
+      if (old) URL.revokeObjectURL(old);
+
+      row.patchValue({
+        frontFiles: [file],
+        frontPreview: previewUrl
+      });
+
+      row.get('frontFiles')?.markAsTouched();
+    } else {
+      const old = row.get('backPreview')?.value;
+      if (old) URL.revokeObjectURL(old);
+
+      row.patchValue({
+        backFiles: [file],
+        backPreview: previewUrl
+      });
+    }
+
+    event.target.value = '';
+
+    this.validatePOD(index);
+  }
 
   validatePOD(index: number) {
 
@@ -337,23 +337,22 @@ removeFile(index: number, type: 'FRONT' | 'BACK') {
   }
 
   isPodFrontRequired(index: number): boolean {
-  const row = this.cnoteList.at(index) as FormGroup;
+    const row = this.cnoteList.at(index) as FormGroup;
 
-  const deliveredPkgs = Number(row.get('deliveredPkgs')?.value || 0);
-  const frontPreview = row.get('frontPreview')?.value;
+    const deliveredPkgs = Number(row.get('PKGSDELIVERED')?.value || 0);
+    const frontPreview = row.get('frontPreview')?.value;
 
-  return (
-    deliveredPkgs > 0 &&
-    !frontPreview &&
-    (row.get('frontFiles')?.touched || this.isSubmit)
-  );
-}
+    return (
+      deliveredPkgs > 0 &&
+      !frontPreview &&
+      (row.get('frontFiles')?.touched || this.isSubmit)
+    );
+  }
 
   hasPODError(): boolean {
     let hasError = false;
-
     this.cnoteList.controls.forEach((row: any) => {
-      const deliveredPkgs = Number(row.get('deliveredPkgs')?.value || 0);
+      const deliveredPkgs = Number(row.get('PKGSDELIVERED')?.value || 0);
       const frontFiles = row.get('frontFiles')?.value || [];
 
       if (deliveredPkgs > 0 && frontFiles.length === 0) {
@@ -361,68 +360,66 @@ removeFile(index: number, type: 'FRONT' | 'BACK') {
         row.get('frontFiles')?.markAsTouched();
       }
     });
-
     return hasError;
   }
 
-onSubmit(){
- const DRSDocketsUpdateList = this.cnoteList.getRawValue().map((row: any) => ({
+  onSubmit() {
+    const DRSDocketsUpdateList = this.cnoteList.getRawValue().map((row: any) => ({
+      pkgs_Booked: Number(row.pkgs_Booked) || 0,
+      rate: Number(row.rate) || 0,
+      newRate: Number(row.newRate) || 0,
+      remark: row.remark || '',
+      coddod: row.coddod ?? false,
+      service_Tax: Number(row.service_Tax) || 0,
+      coddodno: Number(row.coddodno) || 0,
+      dockDt: row.dockDt,
+      destcd: row.destcd,
+      delyperson: row.DELYPERSON || '',
+      freight: Number(row.freight) || 0,
+      delyLocation: row.DelyLocation || row.delyLocationApi || '',
+      actQty: Number(row.actQty) || 0,
+      docksf: row.docksf,
+      cdeldT_ddmmyyyy: row.cdeldT_ddmmyyyy,
+      docket_Total: Number(row.docket_Total) || 0,
+      coddodcollected: Number(row.coddodcollected) || 0,
+      pkgQty: Number(row.pkgQty) || 0,
+      wt_Arrived: Number(row.wt_Arrived) || 0,
+      otp: row.otp || '',
+      orgncd: row.orgncd,
+      isEnabledBadPodoption: row.IsEnabledBadPodoption ?? false,
+      cboEmail: row.cboEmail || '',
+      csgenm: row.csgenm,
+      comm_Dely_Dt: row.comm_Dely_Dt,
+      csgecd: row.csgecd,
+      autoNo: Number(row.autoNo) || 0,
+      coD_DOD: row.coD_DOD,
+      cboMobileNo: row.cboMobileNo || '',
+      curr_loc: row.curr_loc,
+      booked_Wt: Number(row.booked_Wt) || 0,
+      cboReason: row.cboReason || '',
+      dockno: row.dockno,
+      booking_Date: row.booking_Date,
+      pkgs_Arrived: Number(row.pkgs_Arrived) || 0,
+      payBasis: row.payBasis,
+      csgnnm: row.csgnnm,
+      maxLimit: Number(row.maxLimit) || 0,
+      isEnabled: row.isEnabled ?? false,
+      hDcboReason: row.hDcboReason || '',
+      csgncd: row.csgncd,
+      coddodAmount: Number(row.coddodAmount) || 0,
+      payBasCode: row.payBasCode,
+      ratetype: row.ratetype || '',
+      cboLateReason: row.cboLateReason || '',
+      delydate: row.DELYDATE,
+      delytime: row.DELYDATE,
+      dockDt_ddmmyyyy: row.dockDt_ddmmyyyy,
+      pkgsdelivered: Number(row.PKGSDELIVERED) || 0,
+      isChecked: row.IsChecked ?? false,
+      dlypdcno: row.dlypdcno,
+      pkgs_Pending: Number(row.pkgs_Pending) || 0
+    }));
 
-    pkgs_Booked: Number(row.pkgs_Booked) || 0,
-    rate: Number(row.rate) || 0,
-    newRate: Number(row.newRate) || 0,
-    remark: row.remark || '',
-    coddod: row.coddod ?? false,
-    service_Tax: Number(row.service_Tax) || 0,
-    coddodno: Number(row.coddodno) || 0,
-    dockDt: row.dockDt,
-    destcd: row.destcd,
-    delyperson: row.DELYPERSON || '',
-    freight: Number(row.freight) || 0,
-    delyLocation: row.DelyLocation || row.delyLocationApi || '',
-    actQty: Number(row.actQty) || 0,
-    docksf: row.docksf,
-    cdeldT_ddmmyyyy: row.cdeldT_ddmmyyyy,
-    docket_Total: Number(row.docket_Total) || 0,
-    coddodcollected: Number(row.coddodcollected) || 0,
-    pkgQty: Number(row.pkgQty) || 0,
-    wt_Arrived: Number(row.wt_Arrived) || 0,
-    otp: row.otp || '',
-    orgncd: row.orgncd,
-    isEnabledBadPodoption: row.IsEnabledBadPodoption ?? false,
-    cboEmail: row.cboEmail || '',
-    csgenm: row.csgenm,
-    comm_Dely_Dt: row.comm_Dely_Dt,
-    csgecd: row.csgecd,
-    autoNo: Number(row.autoNo) || 0,
-    coD_DOD: row.coD_DOD,
-    cboMobileNo: row.cboMobileNo || '',
-    curr_loc: row.curr_loc,
-    booked_Wt: Number(row.booked_Wt) || 0,
-    cboReason: row.cboReason || '',
-    dockno: row.dockno,
-    booking_Date: row.booking_Date,
-    pkgs_Arrived: Number(row.pkgs_Arrived) || 0,
-    payBasis: row.payBasis,
-    csgnnm: row.csgnnm,
-    maxLimit: Number(row.maxLimit) || 0,
-    isEnabled: row.isEnabled ?? false,
-    hDcboReason: row.hDcboReason || '',
-    csgncd: row.csgncd,
-    coddodAmount: Number(row.coddodAmount) || 0,
-    payBasCode: row.payBasCode,
-    ratetype: row.ratetype || '',
-    cboLateReason: row.cboLateReason || '',
-    delydate: row.DELYDATE,
-    delytime: row.DELYDATE,
-    dockDt_ddmmyyyy: row.dockDt_ddmmyyyy,
-    pkgsdelivered: Number(row.PKGSDELIVERED) || 0,
-    isChecked: row.IsChecked ?? false,
-    dlypdcno: row.dlypdcno,
-    pkgs_Pending: Number(row.pkgs_Pending) || 0
-  }));
-
-   const formData = new FormData();
+    const formData = new FormData();
     formData.append("DRSsingleDocketsUpdateList", JSON.stringify(DRSDocketsUpdateList));
     formData.append("pdcno", this.drsSummary.pdcno);
     // formData.append("LoadingBy", this.DRSSummaryForm.value.LoadingBy);
@@ -452,21 +449,21 @@ onSubmit(){
     });
     const podError = this.hasPODError();
 
-  if(this.DRSUpdateForm.valid && !podError){
-  this.prsDrsApiService.submitSingleCnoteDRSUpdate(formData).subscribe({
-    next: (response:any) => {
-      if(response && response.success){
-        this.sweetAlertService.success('Single Cnote DRS Update submitted successfully');
-        this.modalRef.hide();
-      }
-    },
-    error: (err:any) => {
-      console.error(err);
-      this.sweetAlertService.error('Error submitting Single Cnote DRS Update');
+    if (this.DRSUpdateForm.valid && !podError) {
+      this.prsDrsApiService.submitSingleCnoteDRSUpdate(formData).subscribe({
+        next: (response: any) => {
+          if (response && response.success) {
+            this.sweetAlertService.success('Single Cnote DRS Update submitted successfully');
+            this.modalRef.hide();
+          }
+        },
+        error: (err: any) => {
+          console.error(err);
+          this.sweetAlertService.error('Error submitting Single Cnote DRS Update');
+        }
+      });
+    } else {
+      this.DRSUpdateForm.markAllAsTouched();
     }
-  });
-}else{
-  this.DRSUpdateForm.markAllAsTouched();
-}
-}
+  }
 }
