@@ -69,7 +69,7 @@ export class SingleCnoteDrsUpdateComponent {
       pkgs_Booked: [item.pkgs_Booked],
       comm_Dely_Dt: [item.comm_Dely_Dt],
       IsEnabledBadPodoption: [item.isEnabledBadPodoption || false],
-      IsChecked: [''],
+      IsChecked: [false],
       PKGSDELIVERED: ['', [Validators.required, this.maxPendingValidator('pkgs_Pending')]],
       DelyLocation: [null],
       DELYDATE: [this.getCurrentDateTime()],
@@ -411,7 +411,7 @@ export class SingleCnoteDrsUpdateComponent {
       delytime: row.DELYDATE,
       dockDt_ddmmyyyy: row.dockDt_ddmmyyyy,
       pkgsdelivered: Number(row.PKGSDELIVERED) || 0,
-      isChecked: row.IsChecked ?? false,
+      isChecked: row.IsChecked || false,
       dlypdcno: row.dlypdcno,
       pkgs_Pending: Number(row.pkgs_Pending) || 0
     }));
@@ -419,19 +419,6 @@ export class SingleCnoteDrsUpdateComponent {
     const formData = new FormData();
     formData.append("DRSsingleDocketsUpdateList", JSON.stringify(DRSDocketsUpdateList));
     formData.append("pdcno", this.drsSummary.pdcno);
-    formData.append("LoadingBy", '');
-    formData.append("VendorCode", '');
-    formData.append("VendorName", '');
-    formData.append("IsMonthly", this.drsSummary.isMonthly);
-    formData.append("LoadingCharge", this.drsSummary.loadingCharge);
-    formData.append("MaxLimit", this.drsSummary.maxLimit);
-    formData.append("MathadiSlipNo", '');
-    formData.append("CloseKM", this.drsSummary.closeKM);
-    formData.append("IsMathadi", this.drsSummary.isMathadi);
-    formData.append("RateType", '');
-    formData.append("Rate", this.drsSummary.rate);
-    formData.append("MathadiDate", this.drsSummary.mathadiDate);
-    formData.append("MathadiAmt", this.drsSummary.mathadiAmt);
     formData.append("LocationCode", this.docketService.loginUserList.LocationCode);
     formData.append("BaseUserName", this.docketService.loginUserList.BaseUserName);
     formData.append("FinYear", this.docketService.loginUserList.FinYear);
