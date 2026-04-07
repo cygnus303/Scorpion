@@ -28,7 +28,7 @@
                 <div class="col-md-4">
                     <div class="form-group-input">
                         <ng-select [items]="generalMasterService.chargeTypeData" bindLabel="codeDesc" bindValue="codeId"
-                            [(ngModel)]="arrivalData.chargeType" (change)="triggerRefresh()"
+                            [(ngModel)]="arrivalData.chargeType" (change)="refreshData()"
                             placeholder="Select Charge Type" [clearable]="false"
                             [readonly]="arrivalData.loadBy === 'XX5' || arrivalData.loadBy === 'XX9'">
                         </ng-select>
@@ -40,8 +40,234 @@
             <!-- Content Area -->
             <div class="p-0"
                 *ngIf="arrivalData.loadBy && (arrivalData.chargeType || arrivalData.loadBy === 'XX5' || arrivalData.loadBy === 'XX9')">
-                <app-prs-arrival-details [arrivalData]="arrivalData"
-                    (dataEmitter)="onDataSubmit($event)"></app-prs-arrival-details>
+                <form [formGroup]="prsArrivalForm">
+                    <!-- <div class="cnote-entry-container"> -->
+                    <!-- <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+            <i class="fas fa-list me-2"></i>
+            PRS Arrival Details
+        </div> -->
+                    <div class="form-grid p-2 input-background-color rounded">
+                        <div class="row pb-2">
+                            <div class="col-4">
+                                <div class="row align-items-center">
+                                    <label class="col-sm-3 col-form-label text-end">PDC No :</label>
+                                    <div class="col-sm-7 text-start fw-bold text-primary-color">
+                                        {{PRSArrivalDetails?.pdcno}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="row align-items-center">
+                                    <label class="col-sm-3 col-form-label text-end">PDC Date :</label>
+                                    <div class="col-sm-7 text-start fw-bold text-primary-color">
+                                        {{PRSArrivalDetails?.pdcdt | date:'dd-MM-yyyy'}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="row align-items-center">
+                                    <label class="col-sm-3 col-form-label text-end">Vendor :</label>
+                                    <div class="col-sm-9 text-start fw-bold text-primary-color">
+                                        {{PRSArrivalDetails?.vendorcode}} {{PRSArrivalDetails?.vendorname}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pb-3">
+                            <div class="col-4">
+                                <div class="row align-items-center">
+                                    <label class="col-sm-3 col-form-label text-end">ORGCD :</label>
+                                    <div class="col-sm-7 text-start fw-bold text-primary-color">
+                                        {{PRSArrivalDetails?.orgncd}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="row align-items-center">
+                                    <label class="col-sm-3 col-form-label text-end">Arrival Date :</label>
+                                    <div class="col-sm-6 text-start fw-bold ">
+                                        <div class="input-group" (click)="dp.toggle(); $event.stopPropagation()">
+                                            <input class="form-control" type="text" placeholder="Arrival Date"
+                                                formControlName="arrivalDate" #dp="bsDatepicker" bsDatepicker
+                                                [bsValue]="docketService.bsValue" [class.disabled-input]="true"
+                                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+                                            <span class="input-group-text cursor-pointer">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="row align-items-center">
+                                    <label class="col-sm-3 col-form-label text-end">Total Weight :</label>
+                                    <div class="col-sm-9 text-start fw-bold">
+                                        <input class="form-control" type="text" placeholder="Total Weight"
+                                            formControlName="actuwt" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="pb-4 text-start appointment mt-2">Unloading Charge</h3>
+                        <div class="row pb-3 pt-2">
+                            <div class="col-3">
+                                <div class="row align-items-center">
+                                    <label class="col-sm-3 col-form-label text-end">Unload By:</label>
+                                    <div class="col-sm-8 text-start">
+                                        <ng-select class="noFoundTextColor required2 clear-icon"
+                                            placeholder="Select Unloader By" readonly formControlName="LoadingBy"
+                                            bindLabel="codeDesc" bindValue="codeId"
+                                            [items]="generalMasterService.loadingBy"
+                                            [ngClass]="{ 'border-danger': prsArrivalForm.get('LoadingBy')?.invalid && prsArrivalForm.get('LoadingBy')?.touched}">
+                                        </ng-select>
+                                        <div class="text-danger text-start"
+                                            *ngIf="prsArrivalForm.get('LoadingBy')?.invalid && prsArrivalForm.get('LoadingBy')?.touched">
+                                            This field is required.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @if (['M', 'B', 'A','XX1','XX5'].includes(prsArrivalForm.get('LoadingBy')?.value)){
+                            <div class="col-3">
+                                <div class="row">
+                                    <label class="col-sm-4 col-form-label text-end">Vendor Code :</label>
+                                    <div class="col-sm-8 text-start">
+                                        <ng-select class="noFoundTextColor required2 clear-icon"
+                                            placeholder="Vendor Code" formControlName="vendorCode"
+                                            [items]="prsArrivalDetailsService.branchWiseLoadingUnloadingList"
+                                            bindLabel="text" bindValue="value" (change)="getLoadingCharge($event)"
+                                            required
+                                            [ngClass]="{ 'border-danger': prsArrivalForm.get('vendorCode')?.invalid && prsArrivalForm.get('vendorCode')?.touched}">
+                                            <ng-template ng-option-tmp let-item="item">
+                                                <div [title]="item.text">
+                                                    {{ item.text }}
+                                                </div>
+                                            </ng-template>
+                                        </ng-select>
+                                        <div class="text-danger text-start"
+                                            *ngIf="prsArrivalForm.get('vendorCode')?.invalid && prsArrivalForm.get('vendorCode')?.touched">
+                                            This field is required.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                            <div class="col-3">
+                                @if(['XX5'].includes(prsArrivalForm.get('LoadingBy')?.value)){
+                                <div class="row align-items-center">
+                                    <label class="col-sm-3 col-form-label text-end">Rate :</label>
+                                    <div class="col-sm-7 text-start">
+                                        <input class="form-control required2" placeholder="Rate" type="text"
+                                            formControlName="Rate" readonly appFocusNext>
+                                    </div>
+                                </div>
+                                }
+                            </div>
+                            @if (['M', 'A', 'XX5','XX8', 'B', 'XX1'].includes(prsArrivalForm.get('LoadingBy')?.value)){
+                            <div class="col-3">
+                                <div class="row">
+                                    <label class="col-sm-5 col-form-label text-end">UnLoading Charge:</label>
+                                    <div class="col-sm-7 text-start">
+                                        <input class="form-control required2" placeholder="UnLoading Charge" type="text"
+                                            formControlName="LoadingCharge" readonly min="0.01" appFocusNext
+                                            [ngClass]="{ 'border-danger': prsArrivalForm.get('LoadingCharge')?.hasError('min') && prsArrivalForm.get('LoadingCharge')?.touched}">
+                                        <div *ngIf="prsArrivalForm.get('LoadingCharge')?.hasError('min') && prsArrivalForm.get('LoadingCharge')?.touched"
+                                            class="text-danger text-start">
+                                            Please enter a value greater than or equal to 0.01.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    <!-- </div> -->
+
+                    <div class="cnote-entry-container">
+                        <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+                            <i class="fas fa-list me-2"></i>
+                            PDC Detail
+                        </div>
+                        <div class="table-wrapper position-relative pt-2">
+                            <table class="table table-bordered align-middle w-100 vertical-align">
+                                <thead class="table-secondary align-middle">
+                                    <tr>
+                                        <th>DocNO</th>
+                                        <th>ORGNCD</th>
+                                        <th>DESTCD</th>
+                                        <th>PAYBAS</th>
+                                        <th> <ng-select class="clear-icon" formControlName="ratetype"
+                                                bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type"
+                                                [items]="generalMasterService.chargeTypeData"
+                                                [readonly]="this.prsArrivalForm.value.LoadingBy ==='XX9' || this.prsArrivalForm.value.LoadingBy ==='XX5'"></ng-select>
+                                        </th>
+                                        <th>ACTUWT</th>
+                                        <th>PKGSNO</th>
+                                        <th>CHRGWT</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody formArrayName="pdcDetails">
+                                    <tr *ngIf="isLoading">
+                                        <td colspan="8" class="text-center p-3">
+                                            <div class="spinner-border" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- If no data found -->
+                                    <tr *ngIf="!isLoading && !(pdcControls.length)">
+                                        <td colspan="8" class="text-center text-muted p-3">
+                                            No Record Found.
+                                        </td>
+                                    </tr>
+                                    <tr *ngFor="let ctrl of pdcControls; let i = index" [formGroupName]="i">
+                                        <td>{{ctrl.value.dockno}}</td>
+                                        <td>{{ctrl.value.orgncd}}</td>
+                                        <td>{{ctrl.value.destcd}}</td>
+                                        <td>{{ctrl.value.paybas}}</td>
+                                        <td style="width:290px; max-width: 290px;">
+                                            <ng-select class="clear-icon required2" formControlName="ratetype"
+                                                bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type"
+                                                [items]="generalMasterService.chargeTypeData"
+                                                [readonly]="this.prsArrivalForm.value.LoadingBy ==='XX9' || this.prsArrivalForm.value.LoadingBy ==='XX5'"></ng-select>
+                                            <input type="text" class="form-control form-control-sm mt-1"
+                                                formControlName="newRate" appFocusNext
+                                                [readOnly]="this.prsArrivalForm.value.LoadingBy === 'XX5'"
+                                                (focus)="clearNewRateOnFocus(i)" (blur)="resetNewRateOnBlur(i)" />
+                                            <div class="text-danger small mt-1" *ngIf="ctrl.get('rateError')?.value">
+                                                {{ ctrl.get('rateError')?.value }}
+                                            </div>
+                                        </td>
+                                        <td style="width:200px; max-width: 200px;"><input
+                                                class="form-control form-control-sm" formControlName="actuwt"
+                                                type="number" readonly /></td>
+                                        <td style="width:200px; max-width: 200px;"><input
+                                                class="form-control form-control-sm" formControlName="pkgsno"
+                                                type="number" readonly /></td>
+                                        <td style="width:200px; max-width: 200px;"><input
+                                                class="form-control form-control-sm" formControlName="chrgwt"
+                                                type="number" readonly /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="d-flex justify-content-end text-end bg-secondary-subtle p-4 gap-2">
+                    <!-- <button class="btn btn-secondary controls"> <i class="fas fa-arrow-left"></i>&nbsp; Back to PRS Arrival </button> -->
+                    <button type="button" id="btnSubmit" class="btn btn-success controls" (click)="onSubmit()"
+                        [disabled]="isSubmitting || isRedirect"><i class="fas fa-check"></i>&nbsp; Update PRS Arrival
+                        Data</button>
+                </div>
+                <div *ngIf="isSubmitting" class="loading-overlay">
+                    <div class="spinner-container">
+                        <i class="fas fa-spinner fa-spin custom-spinner"></i>
+                        <div class="mt-3 custom-text">Submitting...</div>
+                    </div>
+                </div>
             </div>
 
             <!-- Empty State Prompt -->

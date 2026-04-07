@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, FormArray, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -27,8 +27,10 @@ export class PRSArrivalDetailsComponent {
   public isSubmitting: boolean = false;
   env = environment;
   public isRedirect: boolean = false;
-  @Input() arrivalData: any;
-  @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
+
+
+
+
   constructor(
     public docketService: DocketService,
     public generalMasterService: GeneralMasterService,
@@ -42,31 +44,17 @@ export class PRSArrivalDetailsComponent {
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      // this.docketService.loginUserList.LocationCode =  'PIM';
+      // this.docketService.loginUserList.loadBy = "B";
+      // this.docketService.loginUserList.chargeType='1';
+      // this.docketService.loginUserList.id='PS/PIM/2526/002515';
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
-    if (this.arrivalData) {
-      this.refreshData();
-    } else {
-      this.buildForm();
-      this.getDeliveryDetail();
-    }
-    this.generalMasterService.getLoadingBy();
-    this.generalMasterService.getChargeTypeData();
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['arrivalData'] && !changes['arrivalData'].firstChange) {
-      this.refreshData();
-    }
-  }
-
-  refreshData() {
-    this.docketService.loginUserList.loadBy = this.arrivalData.loadBy;
-    this.docketService.loginUserList.chargeType = this.arrivalData.chargeType;
-    this.docketService.loginUserList.id = this.arrivalData.pdcno;
     this.buildForm();
     this.getDeliveryDetail();
+    this.generalMasterService.getLoadingBy();
+    this.generalMasterService.getChargeTypeData();
   }
 
   get pdcControls() {
@@ -187,7 +175,7 @@ export class PRSArrivalDetailsComponent {
       actuwt: new FormControl(null),
       LoadingBy: new FormControl(null, [Validators.required]),
       LoadingCharge: new FormControl(0),
-      Rate: new FormControl(null),
+      rate: new FormControl(null),
       closeKM: new FormControl(0),
       ratetype: new FormControl(null),
       vendorCode: new FormControl(null, this.docketService.loginUserList.loadBy === 'XX9' ? null : Validators.required),
@@ -351,17 +339,7 @@ export class PRSArrivalDetailsComponent {
           if (res.success) {
             console.log("Success", res);
             this.isRedirect = true;
-            if (this.arrivalData) {
-              this.sweetAlertService.success(`<div style="text-align:center;">
-                 <div class="fw-bold fs-3 mb-2">PRS Arrival Success</div>
-                 <p class="fs-5 mb-1"><strong>PDC No:</strong> ${res.pdcNo}</p>
-                 <p class="fs-5 mb-1"><strong>HC Number:</strong> ${res.hcNumber}</p>
-                 <p class="fs-5 mb-1"><strong>Total Charge:</strong> ${res.totCharge}</p>
-              </div>`);
-              this.dataEmitter.emit()
-            } else {
-              window.parent.location.href = `${this.env.liveUrl}Operation/PRSArrivalDone?PDCNo=${res.pdcNo}&Tot_Charge=${res.totCharge}&HcNumber=${res.hcNumber}&TranXaction=Done&src=angular`;
-            }
+            window.parent.location.href = `${this.env.liveUrl}Operation/PRSArrivalDone?PDCNo=${res.pdcNo}&Tot_Charge=${res.totCharge}&HcNumber=${res.hcNumber}&TranXaction=Done&src=angular`;
             this.isSubmitting = false;
           } else {
             this.sweetAlertService.error(res?.message)

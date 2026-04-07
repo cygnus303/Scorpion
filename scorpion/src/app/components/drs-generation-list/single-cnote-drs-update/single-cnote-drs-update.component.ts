@@ -27,8 +27,6 @@ export class SingleCnoteDrsUpdateComponent {
   public isSubmit: boolean = false;
   today: Date = new Date();
   public isLoading = false;
-  // frontPreview: string | ArrayBuffer | null = null;
-  // backPreview: string | ArrayBuffer | null = null;
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
 
 
@@ -163,8 +161,6 @@ export class SingleCnoteDrsUpdateComponent {
     this.drsSummary = null;
     this.DRSUpdateForm.reset();
     this.cnoteList.clear();
-    // this.frontPreview = null;
-    // this.backPreview = null;
     this.docketDetail(data.drsNo);
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
