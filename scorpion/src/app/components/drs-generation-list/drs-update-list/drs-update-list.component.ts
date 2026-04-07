@@ -60,15 +60,7 @@ export class DRSUpdateListComponent {
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
     this.buildFilterForm()
-
-    if (this.drsData) {
-      this.getVendorType();
-      this.generalMasterService.getChargeTypeData();
-      this.refreshData();
-    } else {
-      this.buildForm();
-      this.getDeliveryDetail();
-    }
+    this.getVendorType();
     this.generalMasterService.getChargeTypeData();
     this.generalMasterService.getLoadingBy()
     this.generalMasterService.getDeliveredToData()
@@ -87,12 +79,6 @@ export class DRSUpdateListComponent {
     this.docketService.loginUserList.drsId = this.drsData.drsNo;
     this.buildForm();
     this.getDeliveryDetail();
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['drsData'] && !changes['drsData'].firstChange) {
-      this.refreshData();
-    }
   }
 
   onLoadingByChange() {
