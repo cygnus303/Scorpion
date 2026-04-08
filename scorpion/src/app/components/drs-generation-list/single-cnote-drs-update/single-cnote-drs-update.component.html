@@ -170,7 +170,7 @@
                                                 <input type="checkbox" formControlName="IsChecked" class="me-3">
                                                 <ng-select formControlName="DelyLocation"
                                                     placeholder="Delivery Control Loc"
-                                                    [readonly]="row.value.Ischecked"></ng-select>
+                                                    [readonly]="row.get('IsChecked')?.value"></ng-select>
                                             </div>
                                         </td>
                                     </tr>
