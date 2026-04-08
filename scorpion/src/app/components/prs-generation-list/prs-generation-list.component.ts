@@ -219,8 +219,9 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
   openPRSArrival(row: any) {
     this.PRSArrivalComponent.showPopup(row);
   }
-  openHHCDetails() {
-    this.HCCDetailsComponent.showPopup();
+
+  openHHCDetails(data: any) {
+    this.HCCDetailsComponent.showPopup(data);
   }
 
   openPRSDRSEdit() {

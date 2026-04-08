@@ -10,7 +10,30 @@
         </div>
         <button type="button" class="btn-close pfm-close" (click)="modalRef.hide()"></button>
     </div>
+   <!-- Radio button only if both HCC numbers are missing -->
+<div *ngIf="!selectedHccDetails.loadingHCCNo && !selectedHccDetails.unloadingHCCNo" class="mb-3">
+  <label class="fw-bold">Select HCC Type:</label>
+  <div class="d-flex gap-3">
+    <label>
+      <input type="radio" name="hccType" value="L" [(ngModel)]="selectedHccType"> Loading
+    </label>
+    <label>
+      <input type="radio" name="hccType" value="U" [(ngModel)]="selectedHccType"> Unloading
+    </label>
+  </div>
+</div>
+
+<div *ngIf="selectedHccType === 'loading' || selectedHccDetails.loadingHCCNo">
+  <h6 class="fw-bold">Loading HCC Details</h6>
+</div>
+
+<div *ngIf="selectedHccType === 'unloading' || selectedHccDetails.unloadingHCCNo">
+  <h6 class="fw-bold">Unloading HCC Details</h6>
+</div>
+
+<div *ngIf="selectedHccDetails.loadingHCCNo || selectedHccDetails.unloadingHCCNo || selectedHccType">
     <form>
+        
         <div class="modal-body input-background-color" style="padding:0;gap:0;">
             <div class="p-3">
                 <div class="control-bar d-block gap-2 mb-0"> 
@@ -239,5 +262,6 @@
                 <span class="me-2 fs-5">↗</span> Submit
             </button>
         </div>
+    </div>
     </div>
 </ng-template>

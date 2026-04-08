@@ -266,6 +266,10 @@ export class DrsGenerationListComponent {
     }
   }
 
+  openHHCDetails(data:any) {
+    this.HCCDetailsComponent.showPopup(data);
+  }
+
   openView(drsNo: string) {
     const url = `${this.env.liveUrl}ViewPrint/DRSViewPrint?DocumentNo=${drsNo}&src=angular`;
     const popup = window.open('', 'popupWindow',

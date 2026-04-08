@@ -214,9 +214,10 @@
                         </td>
                         <td class="text-center">
                             <span class="px-4 py-2"
-                                [ngClass]="(data.unloadingHccNo && data.unloadingHccNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
-                                (click)="data.unloadingHccNo && data.unloadingHccNo !== 'NO HCC'? openHCCModal(data.unloadingHccNo) : null">
-                                {{ data.unloadingHccNo || 'NO HCC' }}
+                                [ngClass]="(data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
+                                (click)="data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC'? openHCCModal(data.unloadingHCCNo) : null">
+                                <a *ngIf="data.unloadingHCCNo">{{ data.unloadingHCCNo}}</a>
+                                <span *ngIf="!data.unloadingHCCNo">NO HCC</span>
                             </span>
                         </td>
                         <td class="text-center">
@@ -246,7 +247,7 @@
                                 </button>
                                 <button
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
-                                    [disabled]="data.status === 'Cancelled'" (click)="openHHCDetails()">
+                                    [disabled]="data.status === 'Cancelled'" (click)="openHHCDetails(data)">
                                     🏷 HCC
                                 </button>
                                 <button class="btn btn-sm single-cnote px-3 py-1"
