@@ -6,25 +6,49 @@ import { forkJoin } from 'rxjs';
 import { DocketService } from 'app/shared/services/docket.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { LoadingSheetService } from 'app/shared/services/loading-sheet.service';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-menu-access',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgSelectModule],
   templateUrl: './menu-access.component.html',
   styleUrl: './menu-access.component.scss'
 })
 export class MenuAccessComponent implements OnInit {
   permissionsList: any[] = [];
   permissionColumns: any[] = [];
+  searchText: string = '';
+  selectedUserId: string = '';
+
+  get filteredPermissionsList() {
+    if (!this.searchText) {
+      return this.permissionsList;
+    }
+    const search = this.searchText.toLowerCase();
+    return this.permissionsList.filter(module =>
+      module.displayName.toLowerCase().includes(search)
+    );
+  }
 
   constructor(
     @Inject(MenuAccessService) private menuAccessService: MenuAccessService,
     private docketService: DocketService,
-    private generalMasterService: GeneralMasterService, private sweetAlertService: SweetAlertService
+    private generalMasterService: GeneralMasterService, private sweetAlertService: SweetAlertService, public LoadingSheetService: LoadingSheetService,
   ) { }
 
   ngOnInit() {
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      // this.docketService.loginUserList.LocationCode = 'PIM';
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
+    this.selectedUserId = this.docketService.loginUserList.UserId;
+    this.LoadingSheetService.getUnLoaderUserList();
     this.fetchData();
   }
 
@@ -45,7 +69,8 @@ export class MenuAccessComponent implements OnInit {
   }
 
   fetchUserMenus() {
-    this.menuAccessService.getMenus(this.docketService.loginUserList.UserId).subscribe({
+    const userId = this.selectedUserId || this.docketService.loginUserList.UserId;
+    this.menuAccessService.getMenus(userId).subscribe({
       next: (response: any) => {
         const { menus, userPermissions } = response;
         this.permissionsList = menus.map((menu: any) => {
@@ -75,7 +100,7 @@ export class MenuAccessComponent implements OnInit {
 
   toggleAll(event: any) {
     const checked = event.target.checked;
-    this.permissionsList.forEach(module => {
+    this.filteredPermissionsList.forEach(module => {
       module.permissions?.forEach((p: any) => p.isUSERACCESS = checked);
     });
   }
@@ -87,7 +112,7 @@ export class MenuAccessComponent implements OnInit {
 
   toggleColumn(col: any, event: any) {
     const checked = event.target.checked;
-    this.permissionsList.forEach(module => {
+    this.filteredPermissionsList.forEach(module => {
       const p = module.permissions?.find((perm: any) => perm.menuaccess.toUpperCase() === col.action.toUpperCase());
       if (p) p.isUSERACCESS = checked;
     });
@@ -98,7 +123,7 @@ export class MenuAccessComponent implements OnInit {
   }
 
   isColumnAllSelected(col: any): boolean {
-    const modulesWithPermission = this.permissionsList.filter(m =>
+    const modulesWithPermission = this.filteredPermissionsList.filter(m =>
       m.permissions?.some((p: any) => p.menuaccess.toUpperCase() === col.action.toUpperCase())
     );
     if (modulesWithPermission.length === 0) return false;
@@ -109,7 +134,7 @@ export class MenuAccessComponent implements OnInit {
   }
 
   isAllSelected(): boolean {
-    return this.permissionsList.length > 0 && this.permissionsList.every(module => this.isRowSelected(module));
+    return this.filteredPermissionsList.length > 0 && this.filteredPermissionsList.every(module => this.isRowSelected(module));
   }
 
   onSubmit() {
@@ -127,7 +152,7 @@ export class MenuAccessComponent implements OnInit {
     });
 
     const payload = {
-      userId: this.docketService.loginUserList?.UserId || 'CYGNUSTEAM',
+      userId: this.selectedUserId || this.docketService.loginUserList.UserId,
       userPermission: userPermissionArray
     };
 
