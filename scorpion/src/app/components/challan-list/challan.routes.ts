@@ -37,6 +37,7 @@ export const ChallanRoutes: Routes = [
   {
     path: 'THCDepartureSubmit',
     loadComponent: () => import('../thc-departure/thc-departure.component').then(m => m.ThcDepartureComponent),
+    canActivate: [DocketGuard]
   }
 
 ];

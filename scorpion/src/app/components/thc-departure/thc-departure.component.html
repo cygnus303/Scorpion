@@ -62,25 +62,36 @@
           <div class="row align-items-center">
             <label class="col-sm-5 col-form-label text-end">Out VFS (%)</label>
             <div class="col-sm-7">
-              <input class="form-control required2" placeholder="Out VFS" formControlName="VFS">
+              <input class="form-control required2" placeholder="Out VFS" formControlName="VFS"
+                [ngClass]="{ 'border-danger': departureForm.get('VFS')?.invalid  && departureForm.get('VFS')?.touched }">
+              <div class="text-danger text-start"
+                *ngIf="departureForm.get('VFS')?.invalid && departureForm.get('VFS')?.touched">
+                This field is required.
+              </div>
             </div>
           </div>
         </div>
         <div class="col-4 pb-3">
           <div class="row">
             <label class="col-sm-5 col-form-label text-end">Seal No.</label>
-            <div class="col-sm-7 d-flex justify-content-between">
-              <input class="form-control required2" placeholder="Seal No." formControlName="sealno_in">
+            <div class="col-sm-7">
+              <input class="form-control required2" placeholder="Seal No." formControlName="sealno_in"
+                [ngClass]="{ 'border-danger': departureForm.get('sealno_in')?.invalid  && departureForm.get('sealno_in')?.touched }">
+              <div class="text-danger text-start"
+                *ngIf="departureForm.get('sealno_in')?.invalid && departureForm.get('sealno_in')?.touched">
+                Seal No does not exist {{'@' + docketService.loginUserList.LocationCode}}. Enter "Open Body" or valid
+                Seal
+                No.
+              </div>
             </div>
           </div>
         </div>
         <div class="col-4 pb-3">
           <div class="row">
             <label class="col-sm-5 col-form-label text-end">ATD</label>
-            <div class="col-sm-7">
+            <div class="col-sm-7 d-flex gap-2">
               <input class="form-control" placeholder="ATD" formControlName="ATD" readonly>
               <input class="form-control" formControlName="deptime_flight" readonly>
-
             </div>
           </div>
         </div>
@@ -97,8 +108,13 @@
         <div class="col-4 pb-3">
           <div class="row">
             <label class="col-sm-5 col-form-label text-end">Outgoing Remarks</label>
-            <div class="col-sm-7 d-flex justify-content-between">
-              <input class="form-control" placeholder="Outgoing Remarks" formControlName="OutRemarks">
+            <div class="col-sm-7">
+              <input class="form-control required2" placeholder="Outgoing Remarks" formControlName="OutRemarks"
+                [ngClass]="{ 'border-danger': departureForm.get('OutRemarks')?.invalid  && departureForm.get('OutRemarks')?.touched }">
+              <div class="text-danger text-start"
+                *ngIf="departureForm.get('OutRemarks')?.invalid && departureForm.get('OutRemarks')?.touched">
+                This field is required.
+              </div>
             </div>
           </div>
         </div>
