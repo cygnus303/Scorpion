@@ -451,8 +451,8 @@ patchAvailableDockets(data: any[]) {
 
   data.forEach((item) => {
     let tatInHrs = '-';
-    if (item.arrival_Date) {
-      const arrival = new Date(item.arrival_Date);
+    if (item.Commited_Dely_Date) {
+      const arrival = new Date(item.Commited_Dely_Date);
       const now = new Date();
       const diffMs = now.getTime() - arrival.getTime();
       const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
@@ -509,7 +509,7 @@ patchAvailableDockets(data: any[]) {
       RequestCNT: new FormControl(item.requestCNT ?? 0),
       ContractAmount: new FormControl(item.contractAmount ?? 0),
       bcSerialNo: new FormControl(item.bcSerialNo),
-      tatInHrs: new FormControl(tatInHrs),
+      tatInHrs: new FormControl(item.tatInHrs),
       rateType: new FormControl(this.challanForm.value.chrgType?this.challanForm.value.chrgType:null),
       charge: new FormControl(0),
       rateError: new FormControl(''),

@@ -958,7 +958,7 @@
 
                         <td (click)="openPopup(item)" class="cursor-pointer" *ngIf="this.docketService.loginUserList.Type === '3'"
                         [ngClass]="{'text-danger fw-bold': item.value.Message === 'E-Way Bill Date Expired'}">{{ item.value.EWayBillNo }}</td>
-                        <td *ngIf="this.docketService.loginUserList.Type === '3'">{{ item.value.subreasoncode }} <br> {{ item.value.Commited_Dely_Date }}</td>
+                        <td *ngIf="this.docketService.loginUserList.Type === '3'">{{ item.value.subreasoncode }} <br> {{ item.value.Commited_Dely_Date  | date :'dd MMM yyyy'}}</td>
                         <td *ngIf="this.docketService.loginUserList.Type === '3'">{{ item.value.tatInHrs }}</td>
                         <td>{{ item.value.party_name }}</td>
                         <td *ngIf="this.docketService.loginUserList.Type === '2'">{{ item.value.Consignor_Name }}</td>
