@@ -35,9 +35,9 @@ export const ChallanRoutes: Routes = [
     canActivate: [DocketGuard]
   },
   {
-    path: 'PRSArrivalDetails',
-    loadComponent: () => import('../prs-arrival-details/prs-arrival-details.component').then(m => m.PRSArrivalDetailsComponent),
-    // canActivate: [DocketGuard]
+    path: 'THCDepartureSubmit',
+    loadComponent: () => import('../thc-departure/thc-departure.component').then(m => m.ThcDepartureComponent),
+    canActivate: [DocketGuard]
   }
 
 ];

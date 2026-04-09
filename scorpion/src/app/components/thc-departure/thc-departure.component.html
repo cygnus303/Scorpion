@@ -1,0 +1,168 @@
+<form [formGroup]="departureForm">
+  <div class="cnote-entry-container px-1">
+    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+      <i class="fa fa-edit me-2"></i>
+      THC Departure Submit
+    </div>
+    <div class="form-grid p-4">
+      <div class="row">
+        <div class="col-4 pb-3">
+          <div class="row align-items-center">
+            <label class="col-sm-5 col-form-label text-end">THC No.</label>
+            <div class="col-sm-7">
+              <input class="form-control" placeholder="THC No." formControlName="THCNO" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="col-4 pb-3">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">THC Date</label>
+            <div class="col-sm-7 d-flex justify-content-between">
+              <input class="form-control" placeholder="THC Date" formControlName="THCDT" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="col-4 pb-3">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Route</label>
+            <div class="col-sm-7">
+              <input class="form-control" placeholder="Route" formControlName="Route" readonly>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4 pb-3">
+          <div class="row align-items-center">
+            <label class="col-sm-5 col-form-label text-end">Vehicle No.</label>
+            <div class="col-sm-7">
+              <input class="form-control" placeholder="Vehicle No." formControlName="Vehno" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="col-4 pb-3">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">ATA</label>
+            <div class="col-sm-7 d-flex justify-content-between">
+              <input class="form-control" placeholder="ATA" formControlName="ATA" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="col-4 pb-3">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">ETD</label>
+            <div class="col-sm-7">
+              <input class="form-control" placeholder="ETD" formControlName="ETD" readonly>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4 pb-3">
+          <div class="row align-items-center">
+            <label class="col-sm-5 col-form-label text-end">Out VFS (%)</label>
+            <div class="col-sm-7">
+              <input class="form-control required2" placeholder="Out VFS" formControlName="VFS"
+                [ngClass]="{ 'border-danger': departureForm.get('VFS')?.invalid  && departureForm.get('VFS')?.touched }">
+              <div class="text-danger text-start"
+                *ngIf="departureForm.get('VFS')?.invalid && departureForm.get('VFS')?.touched">
+                This field is required.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4 pb-3">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Seal No.</label>
+            <div class="col-sm-7">
+              <input class="form-control required2" placeholder="Seal No." formControlName="sealno_in"
+                [ngClass]="{ 'border-danger': departureForm.get('sealno_in')?.invalid  && departureForm.get('sealno_in')?.touched }">
+              <div class="text-danger text-start"
+                *ngIf="departureForm.get('sealno_in')?.invalid && departureForm.get('sealno_in')?.touched">
+                Seal No does not exist {{'@' + docketService.loginUserList.LocationCode}}. Enter "Open Body" or valid
+                Seal
+                No.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4 pb-3">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">ATD</label>
+            <div class="col-sm-7 d-flex gap-2">
+              <input class="form-control" placeholder="ATD" formControlName="ATD" readonly>
+              <input class="form-control" formControlName="deptime_flight" readonly>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4 pb-3">
+          <div class="row align-items-center">
+            <label class="col-sm-5 col-form-label text-end">Emp. Code</label>
+            <div class="col-sm-7">
+              <input class="form-control" placeholder="Emp. Code" formControlName="EmpCode" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="col-4 pb-3">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Outgoing Remarks</label>
+            <div class="col-sm-7">
+              <input class="form-control required2" placeholder="Outgoing Remarks" formControlName="OutRemarks"
+                [ngClass]="{ 'border-danger': departureForm.get('OutRemarks')?.invalid  && departureForm.get('OutRemarks')?.touched }">
+              <div class="text-danger text-start"
+                *ngIf="departureForm.get('OutRemarks')?.invalid && departureForm.get('OutRemarks')?.touched">
+                This field is required.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cnote-entry-container">
+      <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
+        <i class="fas fa-list me-2"></i>
+        MFs available for THC Departure
+      </div>
+      <div class="table-wrapper p-2 pt-4">
+        <table class="table table-bordered align-middle stock-table table-fixed vertical-align">
+          <thead class="table-secondary">
+            <tr>
+              <th>#</th>
+              <th>Sys. MF No.</th>
+              <th>Manual MF No.</th>
+              <th>MF Br.</th>
+              <th>MF Date</th>
+              <th>Next Stop</th>
+              <th>Total Dkts.</th>
+              <th>Pkgs L/B</th>
+              <th>Wt. L/B</th>
+            </tr>
+          </thead>
+          <tbody formArrayName="thcDepList">
+            <tr *ngFor="let row of thcDepList.controls; let i = index" [formGroupName]="i">
+              <td class="text-center">
+                <input type="checkbox" formControlName="isChecked" class="form-check-input fs-5">
+              </td>
+              <td class="text-center">{{ row.value.tcno }}</td>
+              <td class="text-center">-</td>
+              <td class="text-center">{{ row.value.tcbr }}</td>
+              <td class="text-center">{{ row.value.mF_Date | date:'dd/MM/yyyy' }}</td>
+              <td class="text-center">{{ row.value.toBH_Code }}</td>
+              <td class="text-center">{{ row.value.tot_dkt }}</td>
+              <td class="text-center">{{ row.value.pkgs }}</td>
+              <td class="text-center">{{ row.value.wts }}</td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex justify-content-center text-center bg-secondary-subtle p-4 gap-2">
+    <button class="btn btn-success" (click)="onsubmit()">
+      <i class="fas fa-check"></i>Submit
+    </button>
+  </div>
+</form>
