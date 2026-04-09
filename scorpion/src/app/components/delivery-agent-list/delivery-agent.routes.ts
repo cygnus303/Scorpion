@@ -23,5 +23,6 @@ export const DeliveryRoutes: Routes = [
   {
     path: 'MenuAccess',
     component: MenuAccessComponent,
+    canActivate: [DocketGuard]
   },
 ];
