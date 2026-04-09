@@ -1,7 +1,13 @@
 .form-check-input:checked {
-    background-color: var(--bs-primary);
-    border-color: var(--bs-primary);
-    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.15);
+    background-color: #2952a9;
+    border-color: #2952a9;
+    box-shadow: 0 0 0 0.25rem #2952a926;
+}
+
+.form-check-input{
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
 }
 
 
