@@ -16,7 +16,9 @@ import { environment } from 'environments/environment';
 export class ThcDepartureComponent {
   public departureForm!: FormGroup;
   public departureDetail: any;
-  public   env = environment;
+  public env = environment;
+  public isSubmit: boolean = false;
+  public isRedirect: boolean = false;
 
   constructor(private thcmasterService: THCMasterService, public docketService: DocketService) { }
 
@@ -100,8 +102,6 @@ export class ThcDepartureComponent {
         })
 
         this.thcDepList.clear();
-
-        // 👉 Add rows
         response.thcDepList.forEach((item: any) => {
           this.thcDepList.push(this.createMFGroup(item));
         });
@@ -109,7 +109,7 @@ export class ThcDepartureComponent {
     })
   }
 
-  onsubmit() {
+onsubmit() {
     const selectedList = this.thcDepList.value
       .filter((item: any) => item.isChecked === true)
       .map((item: any) => ({
@@ -129,15 +129,19 @@ export class ThcDepartureComponent {
       "baseLocationCode": this.docketService.loginUserList.LocationCode,
       "companyCode": this.docketService.loginUserList.Companycode
     }
+      this.isSubmit = true;
     this.thcmasterService.submitTHCDeparture(payload).subscribe({
        next: (response: any) => {
           if (response) {
+            this.isRedirect = true;
              window.parent.location.href = `${this.env.liveUrl}Operation/THCDepartureDone?TCNO=${response.tcno}&THCNO=${response.thcno}&src=angular`;
           }
+          this.isSubmit = false;
         },
         error: (error) => {
           this.docketService.submitErrorMsg = error?.error?.message;
-
+          this.isSubmit = false;
+          this.isRedirect = false;
         }
     })
   }
