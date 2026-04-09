@@ -3,3 +3,10 @@
     border-color: var(--bs-primary);
     box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.15);
 }
+
+
+::ng-deep .remove-select-color{
+    .ng-select-container{
+       background: #fff !important;
+    }
+}
