@@ -312,7 +312,7 @@
              <ng-select class="noFoundTextColor required2" placeholder="Select Loading By" formControlName="loadingByUser"
                 notFoundText="No matches found"
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('loadingByUser')?.invalid  && loadingSheetService.LSForm.get('loadingByUser')?.touched }">
-                 <ng-option *ngFor="let data of unLoaderUserList" [value]="data.userId">{{data.userId}} : {{data.name}}</ng-option>
+                 <ng-option *ngFor="let data of loadingSheetService.unLoaderUserList" [value]="data.userId">{{data.userId}} : {{data.name}}</ng-option>
               </ng-select>
                 <div class="text-danger text-start" appFocusNext
                 *ngIf="loadingSheetService.LSForm.get('loadingByUser')?.invalid && loadingSheetService.LSForm.get('loadingByUser')?.touched">
@@ -328,7 +328,7 @@
              <ng-select class="noFoundTextColor required2" placeholder="Loading Supervisor" formControlName="LoadingSupervisor"
                 notFoundText="No matches found" appFocusNext
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('LoadingSupervisor')?.invalid  && loadingSheetService.LSForm.get('LoadingSupervisor')?.touched }">
-                 <ng-option *ngFor="let data of unLoaderUserList" [value]="data.userId">{{data.userId}} : {{data.name}}</ng-option>
+                 <ng-option *ngFor="let data of loadingSheetService.unLoaderUserList" [value]="data.userId">{{data.userId}} : {{data.name}}</ng-option>
               </ng-select>
                 <div class="text-danger text-start"
                 *ngIf="loadingSheetService.LSForm.get('LoadingSupervisor')?.invalid && loadingSheetService.LSForm.get('LoadingSupervisor')?.touched">

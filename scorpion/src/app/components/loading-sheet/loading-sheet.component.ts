@@ -29,7 +29,6 @@ export class LoadingSheetComponent {
   public noVehicleValue = 'Please enter atleast 1 character';
   public locationData: LocationResponse[] = [];
   public vehicleNumberData: VehicleNumbersResponse[] = [];
-  public unLoaderUserList: UnLoaderUserListResponse[] = [];
   public totalDocketSelected!:number;
   public totalPkgs: number = 0;
   public totalActWt: number = 0;
@@ -52,7 +51,7 @@ export class LoadingSheetComponent {
   ) { }
 
 ngOnInit(){
-   const saved = localStorage.getItem("loginUserList");
+    const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       // this.docketService.loginUserList.LocationCode =  'BWH';
@@ -65,9 +64,9 @@ ngOnInit(){
     }
     this.isgetLoadingList =  this.docketService.loginUserList.Type === 'ULS' ? true :false;
     this.loadingSheetService.buildForm();
-    
+
     if(this.docketService.loginUserList.Type === 'ULS'){
-      this.getUnLoaderUserList();
+      this.loadingSheetService.getUnLoaderUserList();
       this.getLoadingSheet();
       this.loadingSheetService.LSForm.get('loadingByUser')?.setValidators([Validators.required]);
       this.loadingSheetService.LSForm.get('LoadingSupervisor')?.setValidators([Validators.required]);
@@ -82,11 +81,11 @@ ngOnInit(){
       this.loadingSheetService.LSForm.get('LoadingSupervisor')?.setValue('');
     }
 
-//       this.loadingSheetService.LSForm.get('rdVehicle')?.valueChanges.subscribe((value) => {
-//       this.loadingSheetService.LSForm.get('vehno')?.setValue('');
-// });
+    //       this.loadingSheetService.LSForm.get('rdVehicle')?.valueChanges.subscribe((value) => {
+    //       this.loadingSheetService.LSForm.get('vehno')?.setValue('');
+    // });
   }
-  
+
   getvendoCodeData(event: any) {
     this.loadingSheetService.LSForm.patchValue({ vendorName: event?.codeDesc })
     const ChargedBy = event?.codeId;
@@ -103,7 +102,7 @@ ngOnInit(){
       this.challanService.branchWiseLoadingUnloading(event?.codeId);
     }
     const rateType = this.loadingSheetService.LSForm.get('rateType');
-     const vendorCode = this.loadingSheetService.LSForm.get('vendorCode');
+    const vendorCode = this.loadingSheetService.LSForm.get('vendorCode');
     const loadingCharge=this.loadingSheetService.LSForm.get('loadingCharge');
     if (this.loadingSheetService.LSForm.value.loadingBy && this.loadingSheetService.LSForm.value.loadingBy !== 'XX9' && this.loadingSheetService.LSForm.value.loadingBy !== 'XX5') {
       rateType?.setValidators([Validators.required]);
@@ -112,18 +111,18 @@ ngOnInit(){
     } else {
       rateType?.setValidators(null);
       rateType?.setValue(null);
- 
+
       vendorCode?.setValidators(null);
       vendorCode?.setValue(null);
- 
+
       loadingCharge?.setValidators(null);
       loadingCharge?.setValue(null);
     }
-   rateType?.updateValueAndValidity();
- 
-   vendorCode?.updateValueAndValidity();
- 
-   loadingCharge?.updateValueAndValidity();
+    rateType?.updateValueAndValidity();
+
+    vendorCode?.updateValueAndValidity();
+
+    loadingCharge?.updateValueAndValidity();
   }
 
 
@@ -141,16 +140,6 @@ ngOnInit(){
     });
   }
 
-  getUnLoaderUserList() {
-    this.loadingSheetApiService.getUnLoaderUserList(this.docketService.loginUserList.LocationCode).subscribe({
-      next: (response) => {
-        if (response && response.data) {
-          this.unLoaderUserList = response.data;
-        }
-      }
-    });
-  }
-
   getLoadingCharge(event: any) {
     if (!event) {
       this.loadingSheetService.LSForm.patchValue({
@@ -158,7 +147,7 @@ ngOnInit(){
       });
       return;
     }
-  
+
     this.loadingSheetService.LSForm.patchValue({
       vendorName: event.text   // 👈 Vendor Name store
     });
@@ -171,28 +160,28 @@ ngOnInit(){
       loadingBy: this.loadingSheetService.LSForm.value.loadingBy,
     };
   if(['XX5'].includes(this.loadingSheetService.LSForm.get('loadingBy')?.value)){
-    this.THCService.getLoadingCharge(data).subscribe({
-      next: (response: any) => {
-      this.loadingSheetService.LSForm.patchValue({
+      this.THCService.getLoadingCharge(data).subscribe({
+        next: (response: any) => {
+          this.loadingSheetService.LSForm.patchValue({
           Rate:response.rate,
           loadedRateType:response.rateType
-        });
-        const lsArray = this.loadingSheetService.LSForm.get('docketList') as FormArray;
-        lsArray?.controls.forEach((item: any, index) => {        
-          lsArray.controls[index].patchValue({
-            newRate: response.rate,
-            ratetype:response.rateType
           });
-        });
-      },
-      error: (err) => {
-        console.error('Error fetching loading charge:', err);
-      }
-    });
-  }
+          const lsArray = this.loadingSheetService.LSForm.get('docketList') as FormArray;
+          lsArray?.controls.forEach((item: any, index) => {
+            lsArray.controls[index].patchValue({
+              newRate: response.rate,
+            ratetype:response.rateType
+            });
+          });
+        },
+        error: (err) => {
+          console.error('Error fetching loading charge:', err);
+        }
+      });
+    }
   }
 
-   getLoadingSheet() {
+  getLoadingSheet() {
      const payload ={
      type:this.docketService.loginUserList.Type,
      tcno:this.docketService.loginUserList.TCNO,
@@ -202,9 +191,9 @@ ngOnInit(){
     this.isLoadingSheet = true;
     this.loadingSheetApiService.getLoadingSheet(payload).subscribe({
       next: (response:any) => {
-        if (response) { 
+        if (response) {
           this.isLoadingSheet = false;
-           this.loadingSheetService.LSForm.patchValue({
+          this.loadingSheetService.LSForm.patchValue({
              lsType:response.lsType,
              NEXTLOC:response.nextloc,
              mathadiAmt:response.mathadiAmt,
@@ -213,7 +202,7 @@ ngOnInit(){
              lsDate:new Date(response.lsDate),
              loadingCharge:response.loadingCharge,
              isMathadi:response.isMathadi,
-           });
+          });
           if (response && Array.isArray(response.docketListForMFGeneration)) {
             this.loadingSheetService.setDocketList(response.docketListForMFGeneration);
           }
@@ -285,18 +274,18 @@ ngOnInit(){
       this.isgetLoadingList = true;
     } else {
       this.isgetLoadingList = false;
-       form.get('loadingBy')?.markAsTouched();
-       form.get('nextStopLocation')?.markAsTouched();
-       form.get('rateType')?.markAsTouched();
+      form.get('loadingBy')?.markAsTouched();
+      form.get('nextStopLocation')?.markAsTouched();
+      form.get('rateType')?.markAsTouched();
     }
   }
 
-formatDateNoTimezone(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}T00:00:00`;
-}
+  formatDateNoTimezone(date: Date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}T00:00:00`;
+  }
 
   lSTransportMode(event: any) {
     if (event?.codeId === 'S') {
@@ -346,74 +335,74 @@ formatDateNoTimezone(date: Date) {
         this.isLoadingSheet = false;   // 🔥 always stop loader
       }
     });
-    
+
   }
 
-toggleSelectAll(event: any) {
-  const checked = event.target.checked;
-  const formArray = this.loadingSheetService.docketFormArray;
+  toggleSelectAll(event: any) {
+    const checked = event.target.checked;
+    const formArray = this.loadingSheetService.docketFormArray;
 
-  formArray.controls.forEach((group: any) => {
-    if (!group.value.message) { // message wali row par checkbox nathi
-      group.get('isChecked')?.setValue(checked, { emitEvent: false });
-    }
-  });
+    formArray.controls.forEach((group: any) => {
+      if (!group.value.message) { // message wali row par checkbox nathi
+        group.get('isChecked')?.setValue(checked, { emitEvent: false });
+      }
+    });
 
-  this.updateSelectedCount();
-}
-
-updateSelectedCount() {
-  const formArray = this.loadingSheetService.docketFormArray;
-  let selected = formArray.controls.filter((g: any) => g.value.isChecked);
-  this.totalDocketSelected = selected.length;
-  // SUM calculation
-  this.totalPkgs = selected.reduce((sum: number, row: any) => {
-    return sum + (Number(row.value.PackageLB) || 0);
-  }, 0);
-  this.totalActWt = selected.reduce((sum: number, row: any) => {
-    return sum + (Number(row.value.WeightsLB) || 0);
-  }, 0);
-    selected.forEach((row: any) => {
-    this.loadingSheetService.loadingRateCalc(row);
-  });
-  this.loadingSheetService.calculateTotal()
-}
- 
-  onPackageBlur(row: any) {
-  const packageLB = Number(row.get('PackageLB')?.value);
-  const max = Number(row.value.packagesLB);
-  if (packageLB > max) {
-    row.get('PackageLB')?.setErrors({ maxLimit: true });
-  } else if(packageLB < 1){
-    row.get('PackageLB')?.setErrors({ minLimit: true });
-  }else {
-    row.get('PackageLB')?.setErrors(null);
-    this.onPackagesFocusOut(row);
     this.updateSelectedCount();
   }
-}
- 
-onPackagesFocusOut(row: any) {
-  const enteredPackages = Number(row.get('PackageLB')?.value || 0);
-  const originalPackages = Number(row.get('PackagesLB_old')?.value || 0);
-  const originalWeight = Number(row.get('WeightLB_old')?.value || 0);
-  const finalWeight = Math.round((originalWeight * enteredPackages) / originalPackages);
-  row.get('WeightsLB')?.setValue(finalWeight);
-  row.get('WeightsLB')?.setValue(finalWeight);
-  row.get('autoPatchWeight')?.setValue(finalWeight);
-  row.get('WeightEdited')?.setValue(false);
-}
 
-get isSubmitDisabled(): boolean {
-  const type = this.docketService.loginUserList.Type;
-  if (type === 'ULS' || type === 'LS') {
-    const selected = this.loadingSheetService.docketFormArray.controls
-      .filter((g: any) => g.value.isChecked);
-
-    return selected.length === 0;
+  updateSelectedCount() {
+    const formArray = this.loadingSheetService.docketFormArray;
+    let selected = formArray.controls.filter((g: any) => g.value.isChecked);
+    this.totalDocketSelected = selected.length;
+    // SUM calculation
+    this.totalPkgs = selected.reduce((sum: number, row: any) => {
+      return sum + (Number(row.value.PackageLB) || 0);
+    }, 0);
+    this.totalActWt = selected.reduce((sum: number, row: any) => {
+      return sum + (Number(row.value.WeightsLB) || 0);
+    }, 0);
+    selected.forEach((row: any) => {
+      this.loadingSheetService.loadingRateCalc(row);
+    });
+    this.loadingSheetService.calculateTotal()
   }
-  return false; 
-}
+
+  onPackageBlur(row: any) {
+    const packageLB = Number(row.get('PackageLB')?.value);
+    const max = Number(row.value.packagesLB);
+    if (packageLB > max) {
+      row.get('PackageLB')?.setErrors({ maxLimit: true });
+  } else if(packageLB < 1){
+      row.get('PackageLB')?.setErrors({ minLimit: true });
+  }else {
+      row.get('PackageLB')?.setErrors(null);
+      this.onPackagesFocusOut(row);
+      this.updateSelectedCount();
+    }
+  }
+
+  onPackagesFocusOut(row: any) {
+    const enteredPackages = Number(row.get('PackageLB')?.value || 0);
+    const originalPackages = Number(row.get('PackagesLB_old')?.value || 0);
+    const originalWeight = Number(row.get('WeightLB_old')?.value || 0);
+    const finalWeight = Math.round((originalWeight * enteredPackages) / originalPackages);
+    row.get('WeightsLB')?.setValue(finalWeight);
+    row.get('WeightsLB')?.setValue(finalWeight);
+    row.get('autoPatchWeight')?.setValue(finalWeight);
+    row.get('WeightEdited')?.setValue(false);
+  }
+
+  get isSubmitDisabled(): boolean {
+    const type = this.docketService.loginUserList.Type;
+    if (type === 'ULS' || type === 'LS') {
+      const selected = this.loadingSheetService.docketFormArray.controls
+        .filter((g: any) => g.value.isChecked);
+
+      return selected.length === 0;
+    }
+    return false;
+  }
 
 
 }
