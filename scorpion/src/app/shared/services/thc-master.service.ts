@@ -176,4 +176,13 @@ export class THCMasterService {
   getPRSArrivalList(payload:any){
     return this.apiHandlerService.Post(`THC/arrival-listPage`,payload);
   }
+  
+  getDepartureDetail(payload:any){
+    return this.apiHandlerService.Post(`Operation/departure`,payload);
+
+  }
+
+  submitTHCDeparture(payload:any){
+    return this.apiHandlerService.Post(`THC/THCDepartureSubmit`,payload); 
+  }
 }
