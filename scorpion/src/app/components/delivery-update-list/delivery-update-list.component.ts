@@ -178,7 +178,7 @@ resetNewRateOnBlur(index: number): void {
         cboReason:new FormControl(),
         cboEmail: new FormControl(''),
         cboMobileNo: new FormControl(''),
-        DELYPERSON: new FormControl('',Validators.required),
+        DELYPERSON: new FormControl(''),
         totalLoadingCharge: new FormControl(''),
         showReason: new FormControl(false),
         rateError: new FormControl(''),
