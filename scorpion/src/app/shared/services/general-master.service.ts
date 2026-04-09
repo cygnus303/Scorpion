@@ -9,34 +9,34 @@ import { BasicDetailService } from './basic-detail.service';
   providedIn: 'root'
 })
 export class GeneralMasterService {
-  public PayBsData:PRSGeneralMasterResponse[]=[];
-  public modeData:PRSGeneralMasterResponse[]=[];
-  public businessTypedata:PRSGeneralMasterResponse[]=[];
-  public loadingData:PRSGeneralMasterResponse[]=[];
-  public chargeTypeData:PRSGeneralMasterResponse[]=[];
-  public LsTransportModeData:PRSGeneralMasterResponse[]=[];
-  public loadingBy:PRSGeneralMasterResponse[]=[];
-  public reasonData:PRSGeneralMasterResponse[]=[];
-  public deliveryProcessData:PRSGeneralMasterResponse[]=[];
-  public damageData:PRSGeneralMasterResponse[]=[];
-   public deliveredToData:PRSGeneralMasterResponse[]=[];
-  public documentTypeList:PRSGeneralMasterResponse[]=[];
-  public rateTypeList:PRSGeneralMasterResponse[]=[];
-  public PayBsList:PRSGeneralMasterResponse[]=[];
-  public serviceTypeList:PRSGeneralMasterResponse[]=[];
-  public VendorRateList:PRSGeneralMasterResponse[]=[];
-  public odaList:PRSGeneralMasterResponse[]=[];
-  public KMAList:PRSGeneralMasterResponse[]=[];
-  public IndustryList:PRSGeneralMasterResponse[]=[];
-  public ownerList:PRSGeneralMasterResponse[]=[];
+  public PayBsData: PRSGeneralMasterResponse[] = [];
+  public modeData: PRSGeneralMasterResponse[] = [];
+  public businessTypedata: PRSGeneralMasterResponse[] = [];
+  public loadingData: PRSGeneralMasterResponse[] = [];
+  public chargeTypeData: PRSGeneralMasterResponse[] = [];
+  public LsTransportModeData: PRSGeneralMasterResponse[] = [];
+  public loadingBy: PRSGeneralMasterResponse[] = [];
+  public reasonData: PRSGeneralMasterResponse[] = [];
+  public deliveryProcessData: PRSGeneralMasterResponse[] = [];
+  public damageData: PRSGeneralMasterResponse[] = [];
+  public deliveredToData: PRSGeneralMasterResponse[] = [];
+  public documentTypeList: PRSGeneralMasterResponse[] = [];
+  public rateTypeList: PRSGeneralMasterResponse[] = [];
+  public PayBsList: PRSGeneralMasterResponse[] = [];
+  public serviceTypeList: PRSGeneralMasterResponse[] = [];
+  public VendorRateList: PRSGeneralMasterResponse[] = [];
+  public odaList: PRSGeneralMasterResponse[] = [];
+  public KMAList: PRSGeneralMasterResponse[] = [];
+  public IndustryList: PRSGeneralMasterResponse[] = [];
+  public ownerList: PRSGeneralMasterResponse[] = [];
+  public menuAccessList: PRSGeneralMasterResponse[] = [];
 
 
 
 
-
- constructor(
-     public THCMasterService: THCMasterService, private basicDetailService: BasicDetailService,
-    ) { }
+  constructor(
+    public THCMasterService: THCMasterService, private basicDetailService: BasicDetailService,
+  ) { }
 
   getPaybsData() {
     this.THCMasterService.getGeneralMasterDetail('PAYTYP').subscribe({
@@ -48,7 +48,7 @@ export class GeneralMasterService {
     });
   }
 
-    getModeData() {
+  getModeData() {
     this.THCMasterService.getGeneralMasterDetail('TRN').subscribe({
       next: (response) => {
         if (response.success) {
@@ -68,7 +68,7 @@ export class GeneralMasterService {
     });
   }
 
-   getBusinessTypeData() {
+  getBusinessTypeData() {
     this.THCMasterService.getGeneralMasterDetail('BUT').subscribe({
       next: (response) => {
         if (response.success) {
@@ -78,8 +78,8 @@ export class GeneralMasterService {
     });
   }
 
-  getLoadingBy(){
-      this.THCMasterService.getGeneralMasterDetail('LOADBY').subscribe({
+  getLoadingBy() {
+    this.THCMasterService.getGeneralMasterDetail('LOADBY').subscribe({
       next: (response) => {
         if (response.success) {
           this.loadingBy = response.data;
@@ -88,7 +88,7 @@ export class GeneralMasterService {
     });
   }
 
-    getLoadingByDetail(vendorCode:any) {
+  getLoadingByDetail(vendorCode: any) {
     this.basicDetailService.getGeneralMasterList('LOADBY', '', vendorCode).subscribe({
       next: (response) => {
         if (response.success) {
@@ -98,7 +98,7 @@ export class GeneralMasterService {
     });
   }
 
-   getChargeTypeData(){
+  getChargeTypeData() {
     this.THCMasterService.getGeneralMasterDetail('HANDCHRG').subscribe({
       next: (response) => {
         if (response.success) {
@@ -108,7 +108,7 @@ export class GeneralMasterService {
     });
   }
 
-  getLSModedata(){
+  getLSModedata() {
     this.THCMasterService.getGeneralMasterDetail('RTMD').subscribe({
       next: (response) => {
         if (response.success) {
@@ -118,7 +118,7 @@ export class GeneralMasterService {
     });
   }
 
-   getDeliveryProcessData() {
+  getDeliveryProcessData() {
     this.THCMasterService.getGeneralMasterDetail('DLYPRC').subscribe({
       next: (response) => {
         if (response.success) {
@@ -128,7 +128,7 @@ export class GeneralMasterService {
     });
   }
 
-    getReason(codeType:string){
+  getReason(codeType: string) {
     this.THCMasterService.getGeneralMasterDetail(codeType).subscribe({
       next: (response) => {
         if (response.success) {
@@ -138,7 +138,7 @@ export class GeneralMasterService {
     });
   }
 
-  getDamageData(){
+  getDamageData() {
     this.THCMasterService.getGeneralMasterDetail('DEPSTYP').subscribe({
       next: (response) => {
         if (response.success) {
@@ -148,7 +148,7 @@ export class GeneralMasterService {
     });
   }
 
-   getDeliveredToData() {
+  getDeliveredToData() {
     this.THCMasterService.getGeneralMasterDetail('DLYTO').subscribe({
       next: (response) => {
         if (response.success) {
@@ -157,7 +157,7 @@ export class GeneralMasterService {
       }
     });
   }
-   getDocumentType(){
+  getDocumentType() {
     this.THCMasterService.getGeneralMasterDetail('FMDOC').subscribe({
       next: (response) => {
         if (response.success) {
@@ -167,8 +167,9 @@ export class GeneralMasterService {
     });
   }
 
-    getPaybs(codeType: string) {
-    this.THCMasterService.getGeneralMasterDetail(codeType).subscribe({ next: (response) => {
+  getPaybs(codeType: string) {
+    this.THCMasterService.getGeneralMasterDetail(codeType).subscribe({
+      next: (response) => {
         if (response.success) {
           this.PayBsList = response.data;
         }
@@ -176,8 +177,9 @@ export class GeneralMasterService {
     });
   }
 
-  getServiceType(){
-    this.THCMasterService.getGeneralMasterDetail('VENDCONTSVCTYP').subscribe({ next: (response) => {
+  getServiceType() {
+    this.THCMasterService.getGeneralMasterDetail('VENDCONTSVCTYP').subscribe({
+      next: (response) => {
         if (response.success) {
           this.serviceTypeList = response.data;
         }
@@ -185,8 +187,9 @@ export class GeneralMasterService {
     });
   }
 
-  getVendorRateType(){
-     this.THCMasterService.getGeneralMasterDetail('VBRATETYPE').subscribe({ next: (response) => {
+  getVendorRateType() {
+    this.THCMasterService.getGeneralMasterDetail('VBRATETYPE').subscribe({
+      next: (response) => {
         if (response.success) {
           this.VendorRateList = response.data;
         }
@@ -194,8 +197,9 @@ export class GeneralMasterService {
     });
   }
 
-  getODADetail(){
-     this.THCMasterService.getGeneralMasterDetail('VENDODA').subscribe({ next: (response) => {
+  getODADetail() {
+    this.THCMasterService.getGeneralMasterDetail('VENDODA').subscribe({
+      next: (response) => {
         if (response.success) {
           this.odaList = response.data;
         }
@@ -203,8 +207,9 @@ export class GeneralMasterService {
     });
   }
 
-  getKMADetail(){
-    this.THCMasterService.getGeneralMasterDetail('KMA').subscribe({ next: (response) => {
+  getKMADetail() {
+    this.THCMasterService.getGeneralMasterDetail('KMA').subscribe({
+      next: (response) => {
         if (response.success) {
           this.KMAList = response.data;
         }
@@ -212,8 +217,9 @@ export class GeneralMasterService {
     });
   }
 
-  getIndustryDetail(){
-    this.THCMasterService.getGeneralMasterDetail('IND').subscribe({ next: (response) => {
+  getIndustryDetail() {
+    this.THCMasterService.getGeneralMasterDetail('IND').subscribe({
+      next: (response) => {
         if (response.success) {
           this.IndustryList = response.data;
         }
@@ -221,8 +227,9 @@ export class GeneralMasterService {
     });
   }
 
-    getOwnerDetail(){
-    this.THCMasterService.getGeneralMasterDetail('CONRSHP').subscribe({ next: (response) => {
+  getOwnerDetail() {
+    this.THCMasterService.getGeneralMasterDetail('CONRSHP').subscribe({
+      next: (response) => {
         if (response.success) {
           this.ownerList = response.data;
         }
@@ -230,5 +237,15 @@ export class GeneralMasterService {
     });
   }
 
- 
+  getNewMenuDetail() {
+    this.THCMasterService.getGeneralMasterDetail('NEWMENU').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.menuAccessList = response.data;
+        }
+      }
+    });
+  }
+
+
 }

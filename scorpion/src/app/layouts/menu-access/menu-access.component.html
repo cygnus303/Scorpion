@@ -54,7 +54,7 @@
               <div class="d-flex align-items-center justify-content-center gap-1">
                 <input type="checkbox" class="form-check-label mt-0 me-3" [checked]="isColumnAllSelected(col)"
                   (change)="toggleColumn(col, $event)">
-                <span class="text-uppercase">{{col}}</span>
+                <span class="text-uppercase">{{col.action}}</span>
               </div>
             </th>
           </tr>
