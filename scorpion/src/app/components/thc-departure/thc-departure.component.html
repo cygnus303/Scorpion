@@ -142,11 +142,9 @@
           </thead>
           <tbody formArrayName="thcDepList">
             <tr *ngFor="let row of thcDepList.controls; let i = index" [formGroupName]="i">
-
               <td class="text-center">
                 <input type="checkbox" formControlName="isChecked" class="form-check-input fs-5">
               </td>
-
               <td class="text-center">{{ row.value.tcno }}</td>
               <td class="text-center">-</td>
               <td class="text-center">{{ row.value.tcbr }}</td>

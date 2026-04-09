@@ -4,6 +4,7 @@ import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Va
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DocketService } from 'app/shared/services/docket.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-thc-departure',
@@ -15,6 +16,7 @@ import { THCMasterService } from 'app/shared/services/thc-master.service';
 export class ThcDepartureComponent {
   public departureForm!: FormGroup;
   public departureDetail: any;
+  public   env = environment;
 
   constructor(private thcmasterService: THCMasterService, public docketService: DocketService) { }
 
@@ -128,19 +130,22 @@ export class ThcDepartureComponent {
       "companyCode": this.docketService.loginUserList.Companycode
     }
     this.thcmasterService.submitTHCDeparture(payload).subscribe({
-      next: (res) => {
-        console.log(res);
-      }
+       next: (response: any) => {
+          if (response) {
+             window.parent.location.href = `${this.env.liveUrl}Operation/THCDepartureDone?TCNO=${response.tcno}&THCNO=${response.thcno}&src=angular`;
+          }
+        },
+        error: (error) => {
+          this.docketService.submitErrorMsg = error?.error?.message;
+
+        }
     })
   }
 
   sealNoValidator(control: FormControl) {
     const value = control.value ? control.value.trim().toUpperCase() : '';
-    if (!value) return null; // Let required validator handle empty
+    if (!value) return null;
     if (value === 'OPEN BODY') return null;
-
-    // Note: If you have an API to check valid Seal No, it should be called here or in a separate check.
-    // For now, only 'OPEN BODY' is explicitly checked as always valid.
     return null;
   }
 
