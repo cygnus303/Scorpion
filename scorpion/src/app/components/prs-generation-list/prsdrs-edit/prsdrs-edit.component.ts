@@ -13,13 +13,15 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 })
 export class PRSDRSEditComponent {
   public modalRef!: BsModalRef;
+  public prsDrsList: any = [];
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   constructor(
     private modalService: BsModalService,
   ) { }
 
-  showPopup() {
+  showPopup(data?: any) {
+    this.prsDrsList = data;
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
 }
