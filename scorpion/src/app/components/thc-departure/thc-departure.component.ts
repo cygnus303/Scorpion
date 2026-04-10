@@ -158,11 +158,11 @@ onsubmit() {
   }
   }
 
-  sealNoValidator(control: FormControl) {
-    const value = control.value ? control.value.trim().toUpperCase() : '';
-    if (!value) return null;
-    if (value === 'OPEN BODY') return null;
-    return null;
-  }
+sealNoValidator(control: any) {
+  const value = control.value ? control.value.trim().toUpperCase() : '';
+  if (!value) return null;
+  if (value === 'OPEN BODY') return null;
+  return { invalidSeal: true };
+}
 
 }
