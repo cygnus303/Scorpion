@@ -19,7 +19,6 @@ export class ThcDepartureComponent {
   public env = environment;
   public isSubmit: boolean = false;
   public isRedirect: boolean = false;
-  public isLoading: boolean = false;
 
   constructor(private thcmasterService: THCMasterService, public docketService: DocketService) { }
 
@@ -57,7 +56,7 @@ export class ThcDepartureComponent {
       Vehno: new FormControl(''),
       ATA: new FormControl(''),
       ETD: new FormControl(''),
-      VFS: new FormControl('', [Validators.required,Validators.max(100)]),
+      VFS: new FormControl('', Validators.required),
       sealno_in: new FormControl('', [Validators.required, this.sealNoValidator.bind(this)]),
       ATD: new FormControl(formattedDate),
       deptime_flight: new FormControl(formattedTime),
@@ -87,14 +86,11 @@ export class ThcDepartureComponent {
 
   getDepartureDetail() {
     const payload = {
-      thcNo: 'VH/PAT/2324/000983',
+      thcNo: this.departureForm.value.THCNO,
       baseLocationCode: this.docketService.loginUserList.LocationCode
     }
-    this.isLoading = true;  
-  this.thcDepList.clear();
     this.thcmasterService.getDepartureDetail(payload).subscribe({
       next: (response: any) => {
-        this.isLoading = false;
         this.departureDetail = response.thcDepModel;
         this.departureForm.patchValue({
           THCNO: this.departureDetail.thcno,
@@ -106,14 +102,10 @@ export class ThcDepartureComponent {
         })
 
         this.thcDepList.clear();
-        if (response.thcDepList && response.thcDepList.length > 0) {
         response.thcDepList.forEach((item: any) => {
           this.thcDepList.push(this.createMFGroup(item));
         });
-      } 
-      },error: () => {
-      this.isLoading = false;
-    }
+      }
     })
   }
 
