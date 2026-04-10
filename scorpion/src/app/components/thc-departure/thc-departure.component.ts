@@ -110,6 +110,7 @@ export class ThcDepartureComponent {
   }
 
 onsubmit() {
+  if(this.departureForm.valid){
     const selectedList = this.thcDepList.value
       .filter((item: any) => item.isChecked === true)
       .map((item: any) => ({
@@ -144,6 +145,9 @@ onsubmit() {
           this.isRedirect = false;
         }
     })
+  }else{
+    this.departureForm.markAllAsTouched();
+  }
   }
 
   sealNoValidator(control: FormControl) {
