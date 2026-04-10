@@ -62,11 +62,15 @@
           <div class="row align-items-center">
             <label class="col-sm-5 col-form-label text-end">Out VFS (%)</label>
             <div class="col-sm-7">
-              <input class="form-control required2" placeholder="Out VFS" formControlName="VFS"
+              <input class="form-control required2" placeholder="Out VFS" formControlName="VFS" oninput="this.value = this.value.replace(/[^0-9]/g,'');"
                 [ngClass]="{ 'border-danger': departureForm.get('VFS')?.invalid  && departureForm.get('VFS')?.touched }">
               <div class="text-danger text-start"
-                *ngIf="departureForm.get('VFS')?.invalid && departureForm.get('VFS')?.touched">
+                *ngIf="departureForm.get('VFS')?.errors?.['required'] && departureForm.get('VFS')?.touched">
                 This field is required.
+              </div>
+              <div class="text-danger text-start"
+                *ngIf="departureForm.get('VFS')?.errors?.['max'] && departureForm.get('VFS')?.touched">
+                Please enter a value less than or equal to 100.
               </div>
             </div>
           </div>
@@ -141,6 +145,23 @@
             </tr>
           </thead>
           <tbody formArrayName="thcDepList">
+            <tr *ngIf="isLoading">
+                        <td colspan="12" class="text-center py-5">
+                          <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                          <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
+                        </td>
+              </tr>
+            
+            <!-- No Data -->
+            <tr *ngIf="!isLoading && thcDepList.length === 0">
+              <td colspan="12" class="text-center">
+                No items found
+              </td>
+            </tr>
+
+            <ng-container *ngIf="!isLoading && thcDepList.length > 0">
             <tr *ngFor="let row of thcDepList.controls; let i = index" [formGroupName]="i">
               <td class="text-center">
                 <input type="checkbox" formControlName="isChecked" class="form-check-input fs-5">
@@ -155,6 +176,7 @@
               <td class="text-center">{{ row.value.wts }}</td>
 
             </tr>
+            </ng-container>
           </tbody>
         </table>
       </div>
