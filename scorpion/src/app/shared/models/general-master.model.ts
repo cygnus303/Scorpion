@@ -146,6 +146,7 @@ export interface BasePayload {
   chargeType?:string;
   loadBy?:string;
   id?:string
+  menuId?:number;
 }
 
 export interface StatesFromPartyCodeRepsonse {

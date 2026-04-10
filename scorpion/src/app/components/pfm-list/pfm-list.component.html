@@ -42,12 +42,12 @@
         </div>
         <div class="btn-group gap-3 ms-auto">
             <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="fetchLRsData()">⟳ Fetch LRs</button>
-            <button class="btn btn-success px-4 py-2 rounded" [disabled]="!canAddPFM" (click)="openAddPFM()">＋ Add
+            <button class="btn btn-success px-4 py-2 rounded" *ngIf="menuAccessService.hasPermission('Add')" [disabled]="!canAddPFM" (click)="openAddPFM()">＋ Add
                 PFM</button>
-            <button class="btn btn-primary px-4 py-2 rounded" [disabled]="!canForwardPFM" (click)="openForwardPFM()">↗
+            <button class="btn btn-primary px-4 py-2 rounded" *ngIf="menuAccessService.hasPermission('Forward')" [disabled]="!canForwardPFM" (click)="openForwardPFM()">↗
                 Forward PFM</button>
             <button class="btn rounded px-4 py-2" style="background: var(--btn-ack); color: white;"
-                [disabled]="!canAcknowledgePFM" (click)="openAcknowledgePFM()">✓ Acknowledge
+                *ngIf="menuAccessService.hasPermission('Acknowledge')" [disabled]="!canAcknowledgePFM" (click)="openAcknowledgePFM()">✓ Acknowledge
                 PFM</button>
         </div>
     </div>
@@ -106,7 +106,7 @@
                         (keyup)="onSearchChange()" placeholder="Search LR No, Origin, Destination">
                 </div>
                 <button class="btn btn-light btn-sm download-btn px-4 py-3" (click)="downloadCSV()"
-                    [disabled]="isLoading">
+                    *ngIf="menuAccessService.hasPermission('Download')" [disabled]="isLoading">
                     <span *ngIf="!isCSVLoading">⬇ Download CSV</span>
                     <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
                     <span *ngIf="isCSVLoading">Downloading...</span>
@@ -132,7 +132,7 @@
                         <th>DOCUMENT DATE</th>
                         <th>DAYS SINCE</th>
                         <th>PFM NUMBER</th>
-                        <th>ACTIONS</th>
+                        <th *ngIf="menuAccessService.hasPermission('Edit') || menuAccessService.hasPermission('View')">ACTIONS</th>
                     </tr>
                 </thead>
                 <tbody *ngIf="isLoading">
@@ -199,12 +199,12 @@
                             </span>
                             <span *ngIf="!row.fM_No" class="pfm-none">—</span>
                         </td>
-                        <td>
+                        <td *ngIf="menuAccessService.hasPermission('Edit') || menuAccessService.hasPermission('View')">
                             <div class="d-flex gap-1">
                                 <button type="button" class="btn btn-sm btn-view fw-bolder fs-6"
-                                    (click)="openViewPFM(row)">👁 View</button>
+                                    *ngIf="menuAccessService.hasPermission('View')" (click)="openViewPFM(row)">👁 View</button>
                                 <button type="button" (click)="openEditForwardedPFM(row)"
-                                    *ngIf="row.displayStatus === 'Forwarded' && this.docketService.loginUserList.LocationCode === row.fM_FWD_LocCode"
+                                    *ngIf="menuAccessService.hasPermission('Edit') && row.displayStatus === 'Forwarded' && this.docketService.loginUserList.LocationCode === row.fM_FWD_LocCode"
                                     class="btn btn-sm btn-edit fw-bolder fs-6">✎ Edit</button>
                             </div>
                         </td>
