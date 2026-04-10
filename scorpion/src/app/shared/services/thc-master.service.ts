@@ -179,10 +179,13 @@ export class THCMasterService {
   
   getDepartureDetail(payload:any){
     return this.apiHandlerService.Post(`Operation/departure`,payload);
-
   }
 
   submitTHCDeparture(payload:any){
     return this.apiHandlerService.Post(`THC/THCDepartureSubmit`,payload); 
+  }
+
+  getHCCDetail(payload:any){
+    return this.apiHandlerService.Post(`THC/HHCFinancialEditDetail`,payload);
   }
 }
