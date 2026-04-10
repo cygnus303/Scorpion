@@ -15,7 +15,7 @@
                     <div class="row align-items-center">
                         <label class="col-sm-5 col-form-label text-end">Delivery Agent</label>
                         <div class="col-sm-7">
-                            <ng-select class=" required2 clear-icon" placeholder="Delivery Agent" formControlName="deliveryAgent" appFocusNext required (change)="getDeliveryAgentByCodeList($event)"
+                            <ng-select class=" required2 clear-icon" placeholder="Delivery Agent" formControlName="deliveryAgent" appFocusNext  (change)="getDeliveryAgentByCodeList($event)"
                                 [ngClass]="{ 'border-danger': challanService.challanForm.get('deliveryAgent')?.invalid  && challanService.challanForm.get('deliveryAgent')?.touched }">
                                  <ng-option *ngFor="let item of deliveryAgentsList" [value]="item">
                                     {{ item.id }} :{{ item.text }}</ng-option>
