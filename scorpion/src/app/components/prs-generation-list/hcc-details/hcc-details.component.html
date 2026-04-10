@@ -11,7 +11,7 @@
         <button type="button" class="btn-close pfm-close" (click)="modalRef.hide()"></button>
     </div>
    <!-- Radio button only if both HCC numbers are missing -->
-<div *ngIf="!selectedHccDetails.loadingHCCNo && !selectedHccDetails.unloadingHCCNo" class="mb-3">
+<!-- <div *ngIf="!selectedHccDetails.loadingHCCNo && !selectedHccDetails.unloadingHCCNo" class="mb-3">
   <label class="fw-bold">Select HCC Type:</label>
   <div class="d-flex gap-3">
     <label>
@@ -21,9 +21,35 @@
       <input type="radio" name="hccType" value="U" [(ngModel)]="selectedHccType"> Unloading
     </label>
   </div>
+</div> -->
+
+<div class="p-3" *ngIf="!selectedHccDetails.loadingHCCNo && !selectedHccDetails.unloadingHCCNo">
+    <div class="control-bar d-block gap-2 mb-0">
+        <div class="form-group-input">
+            <div class="radio-group">
+                <label class="form-label fw-bold">Select HCC Type </label>
+                <div class="radio-option">
+                    <input type="radio" name="hccType" value="L" [(ngModel)]="selectedHccType">
+                    <label for="reg">Loading</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" name="hccType" value="U" [(ngModel)]="selectedHccType">
+                    <label for="unreg">Unloading</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-5 text-center text-muted d-flex align-items-center justify-content-center"
+        *ngIf="!selectedHccDetails.loadingHCCNo && !selectedHccDetails.unloadingHCCNo && !selectedHccType"
+        style="min-height: 200px;">
+        <div class="py-5">
+            <i class="fas fa-hand-pointer fa-3x mb-3 opacity-25"></i>
+            <p>Please select <b>Select HCC Type</b> to view HCC details.</p>
+        </div>
+    </div>
 </div>
 
-<form [formGroup]="hccForm">
 <div *ngIf="selectedHccDetails.loadingHCCNo || selectedHccDetails.unloadingHCCNo || selectedHccType">
     <form [formGroup]="hccForm">
         
@@ -280,5 +306,5 @@
         </div>
     </div>
     </div>
-    </form>
+   
 </ng-template>
