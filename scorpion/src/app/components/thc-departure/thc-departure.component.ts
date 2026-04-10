@@ -148,6 +148,9 @@ onsubmit() {
           this.isSubmit = false;
         },
         error: (error) => {
+          if(error.error.text === 'THC Departed Succesfully...'){
+             window.parent.location.href = `${this.env.liveUrl}Operation/THCDepartureDone&src=angular`;
+          }
           this.docketService.submitErrorMsg = error?.error?.message;
           this.isSubmit = false;
           this.isRedirect = false;
