@@ -81,8 +81,12 @@
             <div class="col-sm-7">
               <input class="form-control required2" placeholder="Seal No." formControlName="sealno_in"
                 [ngClass]="{ 'border-danger': departureForm.get('sealno_in')?.invalid  && departureForm.get('sealno_in')?.touched }">
+                <div class="text-danger text-start"
+                *ngIf="departureForm.get('sealno_in')?.errors?.['required'] && departureForm.get('sealno_in')?.touched">
+                This field is required.
+              </div>
               <div class="text-danger text-start"
-                *ngIf="departureForm.get('sealno_in')?.invalid && departureForm.get('sealno_in')?.touched">
+                *ngIf="departureForm.get('sealno_in')?.errors?.['invalidSeal'] && departureForm.get('sealno_in')?.touched">
                 Seal No does not exist {{'@' + docketService.loginUserList.LocationCode}}. Enter "Open Body" or valid
                 Seal
                 No.
