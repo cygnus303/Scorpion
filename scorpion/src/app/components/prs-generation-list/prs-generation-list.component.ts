@@ -82,7 +82,7 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      this.docketService.loginUserList.LocationCode = 'PIM'
+      // this.docketService.loginUserList.LocationCode = 'PIM'
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
@@ -224,8 +224,8 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     this.HCCDetailsComponent.showPopup(data);
   }
 
-  openPRSDRSEdit(data: any) {
-    this.PRSDRSEditComponent.showPopup(data);
+  openPRSDRSEdit(data: any,flag: string) {
+    this.PRSDRSEditComponent.showPopup(data,flag);
   }
 
   onCancel(prsNo: string) {

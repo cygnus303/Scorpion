@@ -178,7 +178,7 @@
                             </div>
                         </td>
                         <td class="text-center fs-6 text-muted">{{ row.vendorBillNo || '—' }}</td>
-                        <td class="text-center">
+                        <td class="text-center cursor-pointer">
                             <span class="px-3 py-2"
                                 [ngClass]="(row.loadingHCC && row.loadingHCC !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
                                 (click)="row.loadingHCC && row.loadingHCC !== 'NO HCC'? openHCCModal(row.loadingHCC) : null"
@@ -186,7 +186,7 @@
                                 {{ row.loadingHCC || 'NO HCC' }}
                             </span>
                         </td>
-                        <td class="text-center">
+                        <td class="text-center cursor-pointer">
                             <span class="px-3 py-2 rounded fw-bold border"
                                 [ngClass]="isHccValid(row.unLoadingHCC || 'NO HCC') ? 'bg-success-subtle text-success border-success-subtle' : 'bg-danger-subtle text-danger border-danger-subtle'"
                                  (click)="row.unLoadingHCC && row.unLoadingHCC !== 'NO HCC'? openHCCModal(row.unLoadingHCC) : null">
@@ -212,7 +212,7 @@
                                 </button>
                                 <button
                                     class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3"
-                                    (click)="openPRSDRSEdit(row)">
+                                    (click)="openPRSDRSEdit(row,'P')">
                                     ✏️ Edit
                                 </button>
                                 <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"

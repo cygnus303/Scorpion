@@ -204,7 +204,7 @@
                         <td class="text-center fs-7"
                             [ngClass]="(data.vendorBillNo) ? 'text-primary fw-bold' : 'text-muted'">
                             {{ data.vendorBillNo || '—' }}</td>
-                        <td class="text-center">
+                        <td class="text-center cursor-pointer">
                             <span class="px-4 py-2 cursor-pointer"
                                 [ngClass]="(data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
                                 (click)="data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC'? openHCCModal(data.loadingHCCNo) : null">
@@ -212,7 +212,7 @@
                                 <span *ngIf="!data.loadingHCCNo">NO HCC</span>
                             </span>
                         </td>
-                        <td class="text-center">
+                        <td class="text-center cursor-pointer">
                             <span class="px-4 py-2"
                                 [ngClass]="(data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
                                 (click)="data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC'? openHCCModal(data.unloadingHCCNo) : null">
@@ -237,7 +237,7 @@
                                     [disabled]="data.status === 'Cancelled'" (click)="openUpdateModal(data)">
                                     🔄 DRS Update
                                 </button>
-                                <button (click)="openPRSDRSEdit()"
+                                <button (click)="openPRSDRSEdit(data,'P')"
                                     class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3">
                                     ✏️ Edit
                                 </button>
@@ -250,7 +250,7 @@
                                     [disabled]="data.status === 'Cancelled'" (click)="openHHCDetails(data)">
                                     🏷 HCC
                                 </button>
-                                <button class="btn btn-sm single-cnote px-3 py-1"
+                                <button class="btn btn-sm bg-success-purple border-success-subtle text-success-emphasis py-1 px-3"
                                     [disabled]="data.status === 'Cancelled'" (click)="openSingleDRSUpdate(data)">
                                     📝 Single C Note Update
                                 </button>

@@ -31,5 +31,17 @@ export class PRSDRSApiService {
    submitSingleCnoteDRSUpdate(payload:any){
     return this.apiHandlerService.Post(`THC/update-single-drs`, payload);
    }
+
+  GetTHCFinancialEditDetail(payload:any){
+    return this.apiHandlerService.Post(`THC/GetTHCFinancialEditDetail`, payload);
+   }
+
+  GetInvokeContractDetailsDktwise(payload: any) {
+    return this.apiHandlerService.Post(`THC/GetInvokeContractDetailsDktwise`, payload);
+  }
+
+  THCEditUpdate(payload: any) {
+    return this.apiHandlerService.Post(`THC/THCEditUpdate`, payload);
+  }
   
 }
