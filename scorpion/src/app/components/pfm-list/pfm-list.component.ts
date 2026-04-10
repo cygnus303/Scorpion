@@ -14,6 +14,7 @@ import { DocketService } from 'app/shared/services/docket.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { EditForwardedPFMComponent } from './edit-forwarded-pfm/edit-forwarded-pfm.component';
 import { ExportService } from 'app/shared/services/export.service';
+import { MenuAccessService } from 'app/shared/services/menu-access.service';
 
 @Component({
   selector: 'app-pfm-list',
@@ -72,7 +73,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
     'Received By': ['s-ack', '✓ Acknowledged']
   };
 
-  constructor(public PFMapiService: PFMapiService, public docketService: DocketService, public exportService: ExportService) { }
+  constructor(public PFMapiService: PFMapiService, public docketService: DocketService, public exportService: ExportService, public menuAccessService: MenuAccessService) { }
 
   ngOnInit() {
     const saved = localStorage.getItem("loginUserList");
@@ -90,6 +91,13 @@ export class PFMListComponent implements OnInit, OnDestroy {
     });
 
     this.fetchData();
+    this.getUserModulePermissions();      
+  }
+
+  getUserModulePermissions() {
+    if (this.docketService.loginUserList.menuId) {
+      this.menuAccessService.loadPermissions(this.docketService.loginUserList.menuId, this.docketService.loginUserList.UserId).subscribe();
+    }
   }
 
   fetchLRsData() {
