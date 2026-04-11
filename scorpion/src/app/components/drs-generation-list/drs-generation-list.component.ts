@@ -251,8 +251,8 @@ export class DrsGenerationListComponent {
     this.singleCnoteDrsUpdateComponent.showPopup(data);
   }
 
-  openPRSDRSEdit(data: any,flag: string) {
-    this.PRSDRSEditComponent.showPopup(data,flag);
+  openPRSDRSEdit(data: any, flag: string) {
+    this.PRSDRSEditComponent.showPopup(data, flag);
   }
 
   openHCCModal(hccNo: string) {
@@ -266,8 +266,8 @@ export class DrsGenerationListComponent {
     }
   }
 
-  openHHCDetails(data:any) {
-    this.HCCDetailsComponent.showPopup(data);
+  openHHCDetails(data: any) {
+    this.HCCDetailsComponent.showPopup(data, 'D');
   }
 
   openView(drsNo: string) {

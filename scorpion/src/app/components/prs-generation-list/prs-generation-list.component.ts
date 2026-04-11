@@ -221,11 +221,11 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
   }
 
   openHHCDetails(data: any) {
-    this.HCCDetailsComponent.showPopup(data);
+    this.HCCDetailsComponent.showPopup(data, 'P');
   }
 
-  openPRSDRSEdit(data: any,flag: string) {
-    this.PRSDRSEditComponent.showPopup(data,flag);
+  openPRSDRSEdit(data: any, flag: string) {
+    this.PRSDRSEditComponent.showPopup(data, flag);
   }
 
   onCancel(prsNo: string) {

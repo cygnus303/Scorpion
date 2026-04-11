@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -8,11 +8,13 @@ import { GeneralMasterService } from 'app/shared/services/general-master.service
 import { PrsArrivalDetailsService } from 'app/shared/services/prs-arrival-details.service';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { DocketService } from 'app/shared/services/docket.service';
 
 @Component({
   selector: 'app-hcc-details',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule,FormsModule,ReactiveFormsModule],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, ReactiveFormsModule],
   templateUrl: './hcc-details.component.html',
   styleUrl: './hcc-details.component.scss'
 })
@@ -20,94 +22,107 @@ export class HCCDetailsComponent {
   public modalRef!: BsModalRef;
   selectedHccType: string = '';
   public selectedHccDetails: any;
-  public hccData:any;
-  public hccForm!:FormGroup;
+  public hccData: any;
+  public hccForm!: FormGroup;
   public isLoading: boolean = false;
-
-
+  @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
 
   constructor(private modalService: BsModalService, private CommonService: CommonService,
-    private thcMasterService:THCMasterService,private fb:FormBuilder,
-    public generalMasterService: GeneralMasterService, public prsArrivalDetailsService: PrsArrivalDetailsService) { }
+    private thcMasterService: THCMasterService, private fb: FormBuilder,
+    public generalMasterService: GeneralMasterService, public prsArrivalDetailsService: PrsArrivalDetailsService,
+    private sweetAlertService: SweetAlertService, private docketService: DocketService) { }
 
-  showPopup(data: any) {
+  get hasExistingHcc(): boolean {
+    if (!this.selectedHccDetails) return false;
+    return !!(
+      this.selectedHccDetails.loadingHCCNo ||
+      this.selectedHccDetails.unloadingHCCNo ||
+      this.selectedHccDetails.loadingHCC ||
+      this.selectedHccDetails.unLoadingHCC
+    );
+  }
+
+  showPopup(data: any, flag: any) {
     console.log("HCC Details Data:", data);
     this.selectedHccDetails = data;
-    this.selectedHccType='';
+    this.selectedHccType = '';
     this.buildForm();
     this.CommonService.getVendorType('P');
     this.generalMasterService.getChargeTypeData();
-    this.getHCCDetail(data.drsNo);
+    this.getHCCDetail(data);
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
 
-  buildForm(){
-  this.hccForm = this.fb.group({
-     hhcLocation:[''],
-      hcNumber:[''],
-      documentNo:[''],
-      Route:[''],
-      LaborType:[''],
-      HCCPayType:[''],
-      chargeAmount:[''],
-      chargedBy:[''],
-      VendorCode:[''],
-      RateType:[''],
-      chargeRate:[''],
-      chargesType:[''],
-      vendorCode:[''],
-      rateType:[''],
+  buildForm() {
+    this.hccForm = this.fb.group({
+      hhcLocation: [''],
+      hcNumber: [''],
+      documentNo: [''],
+      Route: [''],
+      LaborType: [''],
+      HCCPayType: [''],
+      chargeAmount: [''],
+      chargedBy: [''],
+      VendorCode: [''],
+      RateType: [''],
+      chargeRate: [''],
+      chargesType: [''],
+      vendorCode: [''],
+      vendorName: [''],
+      rateType: [''],
       totalWeight: [''],
       totalLRWiseAmount: [0],
-      totalPkg:[''],
-    lrList: this.fb.array([])   // ✅ Correct
-  });
+      totalPkg: [''],
+      documentType: [''],
+      lrList: this.fb.array([])   // ✅ Correct
+    });
   }
 
   get lrList(): FormArray {
-  return this.hccForm.get('lrList') as FormArray;
-}
-createLRGroup(item: any): FormGroup {
-  return this.fb.group({
-    lr: [item.lr],
-    origin: [item.origin],
-    destination: [item.destination],
-    pkgsno: [item.pkgsno],
-    weight: [item.weight],
-    lrWiseHCCAmount: [item.lrWiseHCCAmount ||0.00],
-    isChecked: [item.lrWiseHCCAmount > 0]
-  });
-}
+    return this.hccForm.get('lrList') as FormArray;
+  }
+  createLRGroup(item: any): FormGroup {
+    return this.fb.group({
+      lr: [item.lr],
+      origin: [item.origin],
+      destination: [item.destination],
+      pkgsno: [item.pkgsno],
+      weight: [item.weight],
+      lrWiseHCCAmount: [item.lrWiseHCCAmount || 0.00],
+      isChecked: [item.lrWiseHCCAmount > 0]
+    });
+  }
 
-  getHCCDetail(drsNo:string){
-    const payload={
-      hhcNo:drsNo,
-      chargesType:'Loading'
+  getHCCDetail(data: any) {
+    const payload = {
+      hhcNo: data.drsNo || data.pdcno,
+      chargesType: this.selectedHccType || 'Loading'
     }
     this.isLoading = true;
-     this.lrList.clear();
+    this.lrList.clear();
 
     this.thcMasterService.getHCCDetail(payload).subscribe({
-      next:(response:any)=>{
-        if(response){
+      next: (response: any) => {
+        if (response) {
           this.hccForm.patchValue({
-            hhcLocation:response.hhcLocation,
-            hcNumber:response.hcNumber,
-            documentNo:response.documentNo,
-            chargesType:response.chargesType === 'L'?'Loading':'UnnLoading',
-            chargedBy:response.chargedBy,
-            vendorCode:response.vendorCode,
-            rateType:response.rateType,
-            chargeRate:response.chargeRate,
-
+            hhcLocation: response.hhcLocation,
+            hcNumber: response.hcNumber,
+            documentNo: response.documentNo,
+            chargesType: response.chargesType === 'L' ? 'Loading' : 'UnnLoading',
+            chargedBy: response.chargedBy || null,
+            vendorCode: response.vendorCode || null,
+            rateType: response.rateType || null,
+            chargeRate: response.chargeRate,
+            vendorName: response.vendorName,
           })
+          this.prsArrivalDetailsService.getVendorsList(response.chargedBy);
           this.lrList.clear();
           response.clullrdList.forEach((item: any) => {
             this.lrList.push(this.createLRGroup(item));
           });
-            this.calculateTotals();
-        this.isLoading = false;
+          this.calculateTotals();
+          this.isLoading = false;
         }
       },
       error: (err) => {
@@ -118,25 +133,110 @@ createLRGroup(item: any): FormGroup {
   }
 
   calculateTotals() {
-  let totalWeight = 0;
-  let totalPkg = 0;
-  let totalLRWiseAmount = 0;
+    let totalWeight = 0;
+    let totalPkg = 0;
+    let totalLRWiseAmount = 0;
 
-  this.lrList.controls.forEach((group: any) => {
-    const weight = parseFloat(group.get('weight')?.value) || 0;
-    const pkgs =  parseFloat(group.get('pkgsno')?.value) || 0;
-    const amount = parseFloat(group.get('lrWiseHCCAmount')?.value) || 0;
+    this.lrList.controls.forEach((group: any) => {
+      const weight = parseFloat(group.get('weight')?.value) || 0;
+      const pkgs = parseFloat(group.get('pkgsno')?.value) || 0;
+      const amount = parseFloat(group.get('lrWiseHCCAmount')?.value) || 0;
 
-    totalWeight += weight;
-    totalPkg += pkgs;
-    totalLRWiseAmount += amount;
-  });
+      totalWeight += weight;
+      totalPkg += pkgs;
+      totalLRWiseAmount += amount;
+    });
 
-  this.hccForm.patchValue({
-    totalWeight: totalWeight.toFixed(2),
-    totalPkg : totalPkg.toFixed(2),
-    totalLRWiseAmount: totalLRWiseAmount.toFixed(2)
-  });
-}
+    this.hccForm.patchValue({
+      totalWeight: totalWeight.toFixed(2),
+      totalPkg: totalPkg.toFixed(2),
+      totalLRWiseAmount: totalLRWiseAmount.toFixed(2)
+    });
+  }
+
+  onHccTypeChange() {
+    if (this.selectedHccType) {
+      this.getHCCDetail(this.selectedHccDetails);
+    }
+  }
+
+  onVendorChange(event: any) {
+    if (event) {
+      this.hccForm.patchValue({
+        vendorName: event.text
+      });
+    } else {
+      this.hccForm.patchValue({
+        vendorName: ''
+      });
+    }
+  }
+
+  onSubmit() {
+    if (this.hccForm.invalid) {
+      this.hccForm.markAllAsTouched();
+      return;
+    }
+
+    const formValue = this.hccForm.value;
+
+    // Build the list of LRs according to API specifications
+    const clullrdList = formValue.lrList.map((item: any) => ({
+      lr: item.lr || '',
+      isAllowZero: false,
+      origin: item.origin || '',
+      destination: item.destination || '',
+      pkgsno: parseFloat(item.pkgsno) || 0,
+      weight: parseFloat(item.weight) || 0,
+      chrgwt: parseFloat(item.weight) || 0,
+      lrWiseHCCAmount: parseFloat(item.lrWiseHCCAmount) || 0
+    }));
+
+    const payload = {
+      hcNumber: formValue.hcNumber || '',
+      fromDate: new Date().toISOString(),
+      toDate: new Date().toISOString(),
+      hhcLocation: formValue.hhcLocation || '',
+      documentNo: formValue.documentNo || '',
+      route: formValue.Route, // Using 'ABH' since it was hardcoded in UI
+      laborType: formValue.LaborType || '',
+      hccPayType: formValue.HCCPayType || '',
+      chargeAmount: parseFloat(formValue.chargeAmount) || 0,
+      chargesType: formValue.chargesType || '',
+      totalLRWise: (formValue.totalLRWiseAmount || 0).toString(),
+      totalPkg: parseFloat(formValue.totalPkg) || 0,
+      totalWeight: parseFloat(formValue.totalWeight) || 0,
+      chargeRate: parseFloat(formValue.chargeRate) || 0,
+      chargedBy: formValue.chargedBy || '',
+      documentType: this.selectedHccDetails.drsNo ? 'D' : 'P',
+      rateType: formValue.rateType || '',
+      vendorCode: formValue.vendorCode || '',
+      vendorName: formValue.vendorName || '',
+      clullrdList: clullrdList
+    };
+    const params = {
+      baseLocationCode: this.docketService.loginUserList?.LocationCode || '',
+      basefinyear: this.docketService.loginUserList?.FinYear || '',
+      userid: this.docketService.loginUserList?.UserId || '',
+      companycode: this.docketService.loginUserList?.Companycode || ''
+    }
+
+
+    this.thcMasterService.submitHCC(payload, params).subscribe({
+      next: (res: any) => {
+        if (res.success) {
+          this.sweetAlertService.success(`HCC No. ${res.data.hcNo} has been Edited successfully.`);
+          this.dataEmitter.emit()
+          this.modalRef.hide();
+        } else {
+          this.sweetAlertService.error(res.message || 'Error from server');
+        }
+      },
+      error: (err: any) => {
+        console.error("Error submitting HCC", err);
+        this.sweetAlertService.error('Error submitting HCC');
+      }
+    });
+  }
 
 }

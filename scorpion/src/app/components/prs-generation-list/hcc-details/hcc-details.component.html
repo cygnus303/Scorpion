@@ -10,208 +10,202 @@
         </div>
         <button type="button" class="btn-close pfm-close" (click)="modalRef.hide()"></button>
     </div>
-   <!-- Radio button only if both HCC numbers are missing -->
-<!-- <div *ngIf="!selectedHccDetails.loadingHCCNo && !selectedHccDetails.unloadingHCCNo" class="mb-3">
-  <label class="fw-bold">Select HCC Type:</label>
-  <div class="d-flex gap-3">
-    <label>
-      <input type="radio" name="hccType" value="L" [(ngModel)]="selectedHccType"> Loading
-    </label>
-    <label>
-      <input type="radio" name="hccType" value="U" [(ngModel)]="selectedHccType"> Unloading
-    </label>
-  </div>
-</div> -->
 
-<div class="p-3" *ngIf="!selectedHccDetails.loadingHCCNo && !selectedHccDetails.unloadingHCCNo">
-    <div class="control-bar d-block gap-2 mb-0">
-        <div class="form-group-input">
-            <div class="radio-group">
-                <label class="form-label fw-bold">Select HCC Type </label>
-                <div class="radio-option">
-                    <input type="radio" name="hccType" value="L" [(ngModel)]="selectedHccType">
-                    <label for="reg">Loading</label>
+    <!-- Show selection only if NO HCC is generated yet -->
+    <div class="p-3" *ngIf="!hasExistingHcc">
+        <div class="control-bar d-block gap-2 mb-0">
+            <div class="form-group-input">
+                <div class="radio-group">
+                    <label class="form-label fw-bold">Select HCC Type </label>
+                    <div class="radio-option">
+                        <input type="radio" name="hccType" value="Loading" [(ngModel)]="selectedHccType"
+                            (change)="onHccTypeChange()">
+                        <label for="reg">Loading</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" name="hccType" value="Unloading" [(ngModel)]="selectedHccType"
+                            (change)="onHccTypeChange()">
+                        <label for="unreg">Unloading</label>
+                    </div>
                 </div>
-                <div class="radio-option">
-                    <input type="radio" name="hccType" value="U" [(ngModel)]="selectedHccType">
-                    <label for="unreg">Unloading</label>
-                </div>
+            </div>
+        </div>
+
+        <div class="p-5 text-center text-muted d-flex align-items-center justify-content-center"
+            *ngIf="!hasExistingHcc && !selectedHccType" style="min-height: 200px;">
+            <div class="py-5">
+                <i class="fas fa-hand-pointer fa-3x mb-3 opacity-25"></i>
+                <p>Please select <b>Select HCC Type</b> to view HCC details.</p>
             </div>
         </div>
     </div>
 
-    <div class="p-5 text-center text-muted d-flex align-items-center justify-content-center"
-        *ngIf="!selectedHccDetails.loadingHCCNo && !selectedHccDetails.unloadingHCCNo && !selectedHccType"
-        style="min-height: 200px;">
-        <div class="py-5">
-            <i class="fas fa-hand-pointer fa-3x mb-3 opacity-25"></i>
-            <p>Please select <b>Select HCC Type</b> to view HCC details.</p>
-        </div>
-    </div>
-</div>
+    <!-- Show form if an HCC exists OR the user has selected a type -->
+    <div *ngIf="hasExistingHcc || selectedHccType">
+        <form [formGroup]="hccForm">
 
-<div *ngIf="selectedHccDetails.loadingHCCNo || selectedHccDetails.unloadingHCCNo || selectedHccType">
-    <form [formGroup]="hccForm">
-        
-        <div class="modal-body input-background-color" style="padding:0;gap:0;">
-            <div class="p-3">
-                <div class="control-bar d-block gap-2 mb-0"> 
-                     <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
+            <div class="modal-body input-background-color" style="padding:0;gap:0;">
+                <div class="p-3">
+                    <div class="control-bar d-block gap-2 mb-0">
+                        <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
                             <div class="fw-bold"><i class="fas fa-info-circle me-2"></i>Basic Info</div>
                         </div>
                         <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
-                    <div class="row mb-4">
-                        <div class="col-3">
-                            <div class="form-group-input">
-                                <label class="form-label meta-label d-flex align-items-center gap-2">
-                                    HCC Location :
-                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
-                                        {{hccForm.get('hhcLocation')?.value}}
-                                    </span>
-                                </label>
+                        <div class="row mb-4">
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label meta-label d-flex align-items-center gap-2">
+                                        HCC Location :
+                                        <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                            {{hccForm.get('hhcLocation')?.value}}
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label meta-label d-flex align-items-center gap-2">
+                                        HCC No :
+                                        <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                            {{hccForm.get('hcNumber')?.value}}
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label meta-label d-flex align-items-center gap-2">
+                                        Document No :
+                                        <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                            {{hccForm.get('documentNo')?.value}}
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label meta-label d-flex align-items-center gap-2">
+                                        Route :
+                                        <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                            {{'ABH'}}
+                                        </span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-3">
-                            <div class="form-group-input">
-                                <label class="form-label meta-label d-flex align-items-center gap-2">
-                                    HCC No :
-                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
-                                        {{hccForm.get('hcNumber')?.value}}
-                                    </span>
-                                </label>
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label meta-label d-flex align-items-center gap-2">
+                                        Labor Type :
+                                        <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                            {{hccForm.get('LaborType')?.value}}
+                                        </span>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group-input">
-                                <label class="form-label meta-label d-flex align-items-center gap-2">
-                                    Document No :
-                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
-                                        {{hccForm.get('documentNo')?.value}}
-                                    </span>
-                                </label>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label meta-label d-flex align-items-center gap-2">
+                                        HCC Pay Type :
+                                        <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                            {{hccForm.get('HCCPayType')?.value}}
+                                        </span>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group-input">
-                                <label class="form-label meta-label d-flex align-items-center gap-2">
-                                    Route :
-                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
-                                        {{'ABH'}}
-                                    </span>
-                                </label>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label meta-label d-flex align-items-center gap-2">
+                                        HCC Total Amount :
+                                        <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                            {{hccForm.get('chargeAmount')?.value}}
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label meta-label d-flex align-items-center gap-2">
+                                        HCC Type :
+                                        <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                            {{hccForm.get('chargesType')?.value}}
+                                        </span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-3">
-                            <div class="form-group-input">
-                                <label class="form-label meta-label d-flex align-items-center gap-2">
-                                    Labor Type :
-                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
-                                        {{hccForm.get('LaborType')?.value}}
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group-input">
-                                <label class="form-label meta-label d-flex align-items-center gap-2">
-                                    HCC Pay Type :
-                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
-                                        {{hccForm.get('HCCPayType')?.value}}
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group-input">
-                                <label class="form-label meta-label d-flex align-items-center gap-2">
-                                    HCC Total Amount :
-                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
-                                        {{hccForm.get('chargeAmount')?.value}}
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group-input">
-                                <label class="form-label meta-label d-flex align-items-center gap-2">
-                                    HCC Type :
-                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
-                                        {{hccForm.get('chargesType')?.value}}
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="control-bar d-block gap-2 mb-0 mt-3">
-                     <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
+                    <div class="control-bar d-block gap-2 mb-0 mt-3">
+                        <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
                             <div class="fw-bold"><i class="fas fa-coins me-2"></i>Charges</div>
                         </div>
                         <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
-                    <div class="row mb-4 ">
-                        <div class="col-3">
-                            <div class="form-group-input">
-                                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Charged By
-                                </label>
-                                <ng-select class="clear-icon required2" placeholder="Select Charged By"
-                                    notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
-                                    [items]="generalMasterService.loadingData" formControlName="chargedBy"
-                                    (change)="prsArrivalDetailsService.getVendorsList($event.codeId)"></ng-select>
+                        <div class="row mb-4 ">
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label d-flex align-items-center gap-2 fw-bold"> Charged By
+                                    </label>
+                                    <ng-select class="clear-icon required2" placeholder="Select Charged By"
+                                        notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
+                                        [items]="generalMasterService.loadingData" formControlName="chargedBy"
+                                        c></ng-select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group-input">
-                                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Vendor
-                                </label>
-                                <ng-select class="clear-icon required2" placeholder="Select Vendor"
-                                    notFoundText="No matches found" formControlName="vendorCode"
-                                    [items]="prsArrivalDetailsService.branchWiseLoadingUnloadingList" bindLabel="text"
-                                    bindValue="value"></ng-select>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label d-flex align-items-center gap-2 fw-bold"> Vendor
+                                    </label>
+                                    <ng-select class="clear-icon required2" placeholder="Select Vendor"
+                                        notFoundText="No matches found" formControlName="vendorCode"
+                                        [items]="prsArrivalDetailsService.branchWiseLoadingUnloadingList"
+                                        bindLabel="text" bindValue="value"
+                                        (change)="onVendorChange($event)"></ng-select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group-input">
-                                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Rate Type
-                                </label>
-                                <ng-select class="clear-icon required2" formControlName="rateType"
-                                    [items]="generalMasterService.chargeTypeData" bindLabel="codeDesc"
-                                    bindValue="codeId" placeholder="Rate Type">
-                                </ng-select>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label d-flex align-items-center gap-2 fw-bold"> Rate Type
+                                    </label>
+                                    <ng-select class="clear-icon required2" formControlName="rateType"
+                                        [items]="generalMasterService.chargeTypeData" bindLabel="codeDesc"
+                                        bindValue="codeId" placeholder="Rate Type">
+                                    </ng-select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group-input">
-                                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Charge Rate
-                                </label>
-                                <input class="form-control" type="text"
-                                    placeholder="Charge Rate" formControlName="chargeRate">
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label d-flex align-items-center gap-2 fw-bold"> Charge Rate
+                                    </label>
+                                    <input class="form-control" type="text" placeholder="Charge Rate"
+                                        formControlName="chargeRate">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- ── LR Listing ── -->
-                 <div  class="control-bar d-block gap-2 mb-0 mt-3">
-                     <div >
-                        <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
-                            <div class="fw-bold"><i class="fas fa-list me-2"></i>Docket Details</div>
-                        </div>
-                        <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
-                         <div style="border:2px solid var(--border);border-radius:3px; ">
-                             <div>
-                                 <table style="width:100%;border-collapse:collapse;font-size:13px;"
-                                     class="data-table align-middle">
-                                     <thead style="position: sticky; top: 0; z-index: 1;">
-                                         <tr class="input-background-color" style="border-bottom:1px solid var(--border);">
-                                             <th class="text-center">LR</th>
-                                             <th class="text-center">Origin</th>
-                                             <th class="text-center">Destination</th>
-                                             <th class="text-center">PKG</th>
-                                             <th class="text-center">Weight</th>
-                                             <th class="text-center">LR Wise HCC Amount</th>
-                                         </tr>
-                                     </thead>
+                    <!-- ── LR Listing ── -->
+                    <div class="control-bar d-block gap-2 mb-0 mt-3">
+                        <div>
+                            <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
+                                <div class="fw-bold"><i class="fas fa-list me-2"></i>Docket Details</div>
+                            </div>
+                            <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
+                            <div style="border:2px solid var(--border);border-radius:3px; ">
+                                <div>
+                                    <div style="max-height: 350px; overflow-y: auto;">
+                                        <table style="width:100%;border-collapse:collapse;font-size:13px;"
+                                            class="data-table align-middle">
+                                            <thead style="position: sticky; top: 0; z-index: 1;">
+                                                <tr class="input-background-color"
+                                                    style="border-bottom:1px solid var(--border);">
+                                                    <th class="text-center">LR</th>
+                                                    <th class="text-center">Origin</th>
+                                                    <th class="text-center">Destination</th>
+                                                    <th class="text-center">PKG</th>
+                                                    <th class="text-center">Weight</th>
+                                                    <th class="text-center">LR Wise HCC Amount</th>
+                                                </tr>
+                                            </thead>
                                             <tbody *ngIf="isLoading">
                                                 <tr>
                                                     <td colspan="12" class="text-center py-5">
@@ -229,82 +223,90 @@
                                                     </td>
                                                 </tr>
                                             </tbody>
-                                    <tbody formArrayName="lrList">
-                                        <tr *ngFor="let row of lrList.controls; let i = index" [formGroupName]="i">
-                                    
-                                            <td class="text-center">
-                                                {{ row.value.lr }}
-                                            </td>
-                                    
-                                            <td class="text-center">
-                                                {{ row.value.origin }}
-                                            </td>
-                                    
-                                            <td class="text-center">
-                                                {{ row.value.destination }}
-                                            </td>
-                                    
-                                            <td class="text-center">
-                                                {{ row.value.pkgsno }}
-                                            </td>
-                                    
-                                            <td class="text-center">
-                                                {{ row.value.weight }}
-                                            </td>
-                                    
-                                            <td>
-                                                <div class="d-flex gap-3">
-                                                    <input type="checkbox" formControlName="isChecked">
-                                                    <input type="text" class="form-control form-control-sm" formControlName="lrWiseHCCAmount"
-                                                        [readonly]="!row.value.isChecked">
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                 </table>
-                             </div>
-                         </div>
-                     </div>
-         
-                     <div class="mt-3">
-                         <div class="row mb-4">
-                             <div class="col-4">
-                                 <div class="form-group-input">
-                                     <label class="form-label d-flex align-items-center gap-2 fw-bold"> Total Weight
-                                     </label>
-                                     <input type="text" class="form-control form-control-sm" placeholder="Total Weight" readonly formControlName="totalWeight">
-                                 </div>
-                             </div>
-                             <div class="col-4">
-                                 <div class="form-group-input">
-                                     <label class="form-label d-flex align-items-center gap-2 fw-bold"> Total PKG
-                                     </label>
-                                     <input type="text" class="form-control form-control-sm" placeholder="Total PKG" readonly formControlName="totalPkg">
-                                 </div>
-                             </div>
-                             <div class="col-4">
-                                 <div class="form-group-input">
-                                     <label class="form-label d-flex align-items-center gap-2 fw-bold"> Total LR HCC Amount
-                                     </label>
-                                     <input type="text" class="form-control form-control-sm" placeholder="Total LR HCC Amount" readonly formControlName="totalLRWiseAmount">
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-            </div>
+                                            <tbody formArrayName="lrList">
+                                                <tr *ngFor="let row of lrList.controls; let i = index"
+                                                    [formGroupName]="i">
 
-        </div>
-    </form>
-    <div class="modal-footer d-flex justify-content-between">
-        <div><span class="text-danger"></span></div>
-        <div class="gap-3 d-flex">
-            <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Cancel</button>
-            <button type="button" class="btn btn-primary px-4 py-2 rounded">
-                <span class="me-2 fs-5">↗</span> Submit
-            </button>
+                                                    <td class="text-center">
+                                                        {{ row.value.lr }}
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        {{ row.value.origin }}
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        {{ row.value.destination }}
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        {{ row.value.pkgsno }}
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        {{ row.value.weight }}
+                                                    </td>
+
+                                                    <td>
+                                                        <div class="d-flex gap-3">
+                                                            <input type="checkbox" formControlName="isChecked">
+                                                            <input type="text" class="form-control form-control-sm"
+                                                                formControlName="lrWiseHCCAmount"
+                                                                [readonly]="!row.value.isChecked">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <div class="row mb-4">
+                                <div class="col-4">
+                                    <div class="form-group-input">
+                                        <label class="form-label d-flex align-items-center gap-2 fw-bold"> Total Weight
+                                        </label>
+                                        <input type="text" class="form-control form-control-sm"
+                                            placeholder="Total Weight" readonly formControlName="totalWeight">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group-input">
+                                        <label class="form-label d-flex align-items-center gap-2 fw-bold"> Total PKG
+                                        </label>
+                                        <input type="text" class="form-control form-control-sm" placeholder="Total PKG"
+                                            readonly formControlName="totalPkg">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group-input">
+                                        <label class="form-label d-flex align-items-center gap-2 fw-bold"> Total LR HCC
+                                            Amount
+                                        </label>
+                                        <input type="text" class="form-control form-control-sm"
+                                            placeholder="Total LR HCC Amount" readonly
+                                            formControlName="totalLRWiseAmount">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+        <div class="modal-footer d-flex justify-content-between">
+            <div><span class="text-danger"></span></div>
+            <div class="gap-3 d-flex">
+                <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Cancel</button>
+                <button type="button" class="btn btn-primary px-4 py-2 rounded" (click)="onSubmit()">
+                    <span class="me-2 fs-5">↗</span> Submit
+                </button>
+            </div>
         </div>
     </div>
-    </div>
-   
+
 </ng-template>
