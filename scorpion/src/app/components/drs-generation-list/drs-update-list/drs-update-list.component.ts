@@ -836,7 +836,7 @@ export class DRSUpdateListComponent {
         next: (response: any) => {
           if (response && response.data && !response.data.isError) {
             // if (this.drsData) {
-            this.sweetAlertService.success('DRS update successfully!!');
+            // this.sweetAlertService.success('DRS update successfully!!');
             this.sweetAlertService.success(`<div style="text-align:center;">
                  <div class="fw-bold fs-3 mb-2">DRS Update Success</div>
                  <p class="fs-5 mb-1"><strong>DRSNO:</strong> ${this.DRSInformation?.pdcno}</p>
