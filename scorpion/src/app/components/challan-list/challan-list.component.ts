@@ -62,6 +62,7 @@ isFilterApplied: boolean = false;
 public vendorTypeList:generalMasterResponse[]=[];
 public EwaybillForm!:FormGroup;
 public modalInstance: any;
+public isPatching:boolean=false;
 
 @ViewChild('fileInput') fileInput!: ElementRef;
   constructor(
@@ -542,7 +543,7 @@ validateVehicleNo() {
     filtered = filtered.slice(0, this.selectedDigit);
   }
   control.setValue(filtered, { emitEvent: false });
-  if (filtered.length === this.selectedDigit) {
+  if (filtered.length === this.selectedDigit && filtered !== this.lastFetchedVehicleNo) {
     this.lastFetchedVehicleNo = filtered;
     this.getVehicleDetail(filtered);  
   }
@@ -575,6 +576,15 @@ vendorCodeName(){
       },
       error: (err) => {
         this.isVehicleLoading = false;
+        this.challanService.challanForm.patchValue({
+          mKTVehicleNo:'',
+          eNGINENO:  '',
+          cHASISNO: '',
+          rCBOOKNO:'',
+          registrationDate:  null,
+          insuranceDate:  null,
+          fitnessDate:  null
+          });
         console.error('Error fetching vehicle details:', err.error.message);
         this.sweetAlertService.error(err.error.message)
       }
@@ -582,6 +592,7 @@ vendorCodeName(){
   }
 
   onChangeLicenceNumber(event?: any) {
+    if(this.isPatching){return}
     const dob = this.challanService.challanForm.value.d1_DOB;
     const licenseNo = event ? event.target.value?.trim() : this.challanService.challanForm.value.driver1Licence?.trim();
     const licenseControl = this.challanService.challanForm.get('driver1Licence');
@@ -1284,7 +1295,6 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
     this.challanService.challanForm.patchValue({
     DeliveryAgentName:code.text
    });
-
    this.deliveryAgentService.getDeliveryAgentByCodeList(code.id).subscribe({
      next: (response) => {
        if (response && response.data) {
@@ -1301,6 +1311,7 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
                 { text: response.data.vehicleNo, value: response.data.vehicleNo }
               ];
             }
+            this.isPatching = true;
             // ✅ 1️⃣ PATCH BASIC DATA IMMEDIATELY
             this.challanService.challanForm.patchValue({
               deliveryAgentMoNo: response.data.deliveryAgentMobile,
@@ -1351,6 +1362,7 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
               vehicleType: null,
               vehicleCapacity:0
             });
+            this.isPatching = false;
           }
         }
       }
