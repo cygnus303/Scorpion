@@ -1,0 +1,346 @@
+<ng-template #Templatepod>
+    <div *ngIf="THCData">
+
+        <div class="cnote-entry-container">
+            <div class="modal-header">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="pfm-icon fs-4 fw-bold" style="background:#e8f0fe;border:1px solid #aac4f5;">📋</div>
+                    <div>
+                        <div class="fw-bold fs-5">THC Arrival Details</div>
+                        <div class="pfm-subtitle">Complete THC details below</div>
+                    </div>
+                </div>
+                <button type="button" class="btn-close pfm-close" (click)="modalRef.hide()"></button>
+            </div>
+
+            <div class="control-bar d-block gap-2 mb-3">
+                <form [formGroup]="THCFilterForm">
+                    <div class="row px-1">
+                        <div class="col-md-3 d-print-inline-block align-content-end">
+                            <div class="d-flex gap-2">
+                                <label class=" form-label meta-label d-flex align-items-center gap-2">
+                                    DRS Number :
+                                </label>
+                                <div class="fw-bold text-primary" style="word-break: break-all;">
+                                    {{THCData.thcNo || '---'}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group-input mb-0">
+                                <ng-select [items]="generalMasterService.loadingBy" bindLabel="codeDesc"
+                                    bindValue="codeId" (change)="onLoadingByChange()" placeholder="Select Loading By"
+                                    formControlName="loadBy" [clearable]="false">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group-input mb-0">
+                                <ng-select [items]="generalMasterService.chargeTypeData" bindLabel="codeDesc"
+                                    bindValue="codeId" (change)="refreshData()" formControlName="chargeType"
+                                    placeholder="Select Charge Type" [clearable]="false"
+                                    [readonly]="THCFilterForm.get('loadBy')?.value === 'XX5' || THCFilterForm.get('loadBy')?.value === 'XX9'">
+                                </ng-select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div style="min-height: 500px;">
+                <div
+                    *ngIf="THCFilterForm.get('loadBy')?.value && (THCFilterForm.get('chargeType')?.value || THCFilterForm.get('loadBy')?.value === 'XX5' || THCFilterForm.get('loadBy')?.value === 'XX9')">
+                    <div *ngIf="arrivalDetail" class="p-0">
+                        <form [formGroup]="arrivalForm">
+                            <div class="form-grid p-4">
+                                <div class="control-bar d-block gap-2 mb-0">
+                                    <div style="display:flex;align-items:center;justify-content:space-between;"
+                                        class="mb-2">
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-6">
+                                            <div class="form-group-input">
+                                                <label class="form-label meta-label d-flex align-items-center gap-2">
+                                                    THC No. :
+                                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                                        {{arrivalDetail?.thcno}}
+                                                        ({{generalMasterService.loadingData.length ?
+                                                        generalMasterService.loadingData[0].codeDesc :''}})
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group-input">
+                                                <label class="form-label meta-label d-flex align-items-center gap-2">
+                                                    Vehicle # :
+                                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                                        {{arrivalDetail?.vehicle}}
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group-input">
+                                                <label class="form-label meta-label d-flex align-items-center gap-2">
+                                                    Expected Arrival Date & Time :
+                                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                                        {{arrivalDetail?.eta| date:'M/d/yyyy h:mm:ss a'}}
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group-input">
+                                                <label class="form-label meta-label d-flex align-items-center gap-2">
+                                                    Vehicle Departed From:
+                                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                                        {{ arrivalDetail?.previousBranch + ' @ ' + arrivalDetail?.atd }}
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="control-bar d-block gap-2 mb-0 mt-3">
+                                    <div style="display:flex;align-items:center;justify-content:space-between;"
+                                        class="mb-2">
+                                        <div class="fw-bold"><i class="fas fa-credit-card me-2"></i>Arrival Details
+                                        </div>
+                                    </div>
+                                    <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
+                                    <div class="row mb-4 ">
+                                        <div class="col-4">
+                                            <div class="form-group-input">
+                                                <label class="form-label fw-bold"> Incoming Seal # & Status
+                                                </label>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div>
+                                                        <input type="text" class="form-control required2"
+                                                            placeholder="Incoming Seal" formControlName="ISN"
+                                                            [ngClass]="{'border-danger': arrivalForm.get('ISN')?.invalid && arrivalForm.get('ISN')?.touched}">
+                                                        <div class="text-danger text-start"
+                                                            *ngIf="arrivalForm.get('ISN')?.invalid && arrivalForm.get('ISN')?.touched">
+                                                            This field is required.
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <ng-select class="required2 clear-icon" [items]="Seallist"
+                                                            bindLabel="text" bindValue="value" appFocusNext
+                                                            placeholder="Select Status" formControlName="s2id_Status"
+                                                            style="width: 160px;"
+                                                            [ngClass]="{ 'border-danger': arrivalForm.get('s2id_Status')?.invalid && arrivalForm.get('s2id_Status')?.touched}"></ng-select>
+                                                        <div class="text-danger text-start"
+                                                            *ngIf="arrivalForm.get('s2id_Status')?.invalid && arrivalForm.get('s2id_Status')?.touched">
+                                                            This field is required.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group-input">
+                                                <label class="form-label d-flex align-items-center gap-2 fw-bold">
+                                                    Vehicle Arrival Date & Time
+                                                </label>
+                                                <app-date-time-picker controlName="AD"
+                                                    [placeholder]="'Vehicle Arrival Date & Time'" [minDate]="minDate"
+                                                    [maxDate]="maxDate">
+                                                </app-date-time-picker>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-4">
+                                            <div class="form-group-input">
+                                                <label class="form-label d-flex align-items-center gap-2 fw-bold">
+                                                    Unloader
+
+                                                </label>
+                                                <input class="form-control" type="text" placeholder="Unloader"
+                                                    formControlName="Unloder">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4 ">
+                                        <div class="col-4">
+                                            <div class="form-group-input">
+                                                <label
+                                                    class="form-label d-flex align-items-center gap-2 fw-bold">Closing
+                                                    KM
+                                                </label>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div>
+                                                        <input type="text" class="form-control" placeholder="Closing KM"
+                                                            formControlName="CLOSEKM"
+                                                            oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                                                            (blur)="validateCloseKM()" (focus)="onFocusCloseKM()"
+                                                            [ngClass]="{ 'border-danger': arrivalForm.get('CLOSEKM')?.invalid && arrivalForm.get('CLOSEKM')?.touched }">
+                                                        <div class="text-danger small"
+                                                            *ngIf="arrivalForm.get('CLOSEKM')?.touched && arrivalForm.get('CLOSEKM')?.errors?.['max']">
+                                                            Please enter a value less than or equal to {{
+                                                            maxCloseKMValue }}.
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        [ngClass]="{'text-danger': arrivalForm.get('CLOSEKM')?.touched && arrivalForm.get('CLOSEKM')?.errors?.['max'],
+                                                                                        'text-primary-color': !(arrivalForm.get('CLOSEKM')?.touched && arrivalForm.get('CLOSEKM')?.errors?.['max'])}">
+                                                        (Opening KM : {{ arrivalDetail?.openkm | number:'1.2-2' }})
+                                                        (Last Closing KM : {{ arrivalDetail?.closekm }})
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group-input">
+                                                <label class="form-label d-flex align-items-center gap-2 fw-bold">
+                                                    Unloader :
+                                                </label>
+                                                <input class="form-control" placeholder="Unloader" type="text"
+                                                    formControlName="Unloder">
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group-input">
+                                                <label class="form-label d-flex align-items-center gap-2 fw-bold">
+                                                    Incoming Remarks :
+                                                </label>
+                                                <textarea class="form-control-textarea required2" rows="2"
+                                                    placeholder="Incoming Remarks" formControlName="IR"
+                                                    [ngClass]="{ 'border-danger': arrivalForm.get('IR')?.invalid && arrivalForm.get('IR')?.touched}"></textarea>
+                                                <div class="text-danger text-start"
+                                                    *ngIf="arrivalForm.get('IR')?.invalid && arrivalForm.get('IR')?.touched">
+                                                    This field is required.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4 ">
+                                        <div class="col-4">
+                                            <div class="form-group-input">
+                                                <label class="form-label d-flex align-items-center gap-2 fw-bold">
+                                                    Late Arrival Reason (if any):
+                                                </label>
+                                                <ng-select class="clear-icon" [items]="Reasonlist" bindLabel="text"
+                                                    bindValue="value" appFocusNext placeholder="Late Arrival Reason"
+                                                    formControlName="LAR"></ng-select>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 d-print-inline-block align-content-end">
+                                            <div class="d-flex gap-2">
+                                                <label class=" form-label meta-label d-flex align-items-center gap-2">
+                                                    Actual WT. :
+                                                </label>
+                                                <div class="fw-bold text-primary" style="word-break: break-all;">
+                                                    {{arrivalDetail?.chrgwt | number:'1.2-2'}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="control-bar d-block gap-2 mb-0 mt-3">
+                                    <div style="display:flex;align-items:center;justify-content:space-between;"
+                                        class="mb-2">
+                                        <div class="fw-bold"><i class="fas fa-coins me-2"></i>Unloading Charges</div>
+                                    </div>
+                                    <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
+                                    <div class="row mb-4 ">
+                                        <!-- <div class="col-3" *ngIf="arrivalDetail?.loadingBy !=='XX9'">
+                                            <div class="form-group-input">
+                                                <label class="form-label d-flex align-items-center gap-2 fw-bold">
+                                                    UnLoading By :
+                                                </label>
+                                                {{generalMasterService.loadingData.length ?
+                                                generalMasterService.loadingData[0].codeDesc :''}}
+                                            </div>
+                                        </div> -->
+                                        <div class="col-3 d-print-inline-block align-content-center"
+                                            *ngIf="arrivalDetail?.loadingBy !=='XX9'">
+                                            <div class="d-flex gap-2">
+                                                <label class=" form-label meta-label d-flex align-items-center gap-2">
+                                                    UnLoading By :
+                                                </label>
+                                                <div class="fw-bold text-primary" style="word-break: break-all;">
+                                                    {{generalMasterService.loadingData.length ?
+                                                    generalMasterService.loadingData[0].codeDesc :''}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3" *ngIf="arrivalDetail?.loadingBy !=='XX9'">
+                                            <div class="form-group-input">
+                                                <label class="form-label d-flex align-items-center gap-2 fw-bold">
+                                                    Vendor Code
+                                                </label>
+                                                <ng-select class="noFoundTextColor required2 clear-icon"
+                                                    placeholder="Vendor Code" formControlName="VendorCode"
+                                                    (change)="getLoadingCharge($event)"
+                                                    [items]="branchWiseLoadingUnloadingList" bindLabel="text"
+                                                    bindValue="value" appFocusNext
+                                                    [ngClass]="{ 'border-danger': arrivalForm.get('VendorCode')?.invalid && arrivalForm.get('VendorCode')?.touched}">
+                                                    <ng-template ng-option-tmp let-item="item">
+                                                        <div [title]="item.text">
+                                                            {{ item.text }}
+                                                        </div>
+                                                    </ng-template>
+                                                </ng-select>
+                                                <div class="text-danger text-start"
+                                                    *ngIf="arrivalForm.get('VendorCode')?.invalid && arrivalForm.get('VendorCode')?.touched">
+                                                    This field is required.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3" *ngIf="arrivalDetail?.loadingBy !=='XX9'">
+                                            <div class="form-group-input">
+                                                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Rate
+                                                </label>
+                                                <input class="form-control" placeholder="Rate " type="text"
+                                                    oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                                                    formControlName="Rate" (input)="calculateCharge()" appFocusNext
+                                                    (focus)="onFocusRate()" (blur)="onBlurRate()">
+                                                <div class="text-danger mt-1"> {{rateErrorMsg}}</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3" *ngIf="arrivalDetail?.loadingBy !=='XX9'">
+                                            <div class="form-group-input">
+                                                <label class="form-label d-flex align-items-center gap-2 fw-bold">
+                                                    UnLoading Charge :
+                                                </label>
+                                                <div class="text-start text-primary-color">
+                                                    <input class="form-control" placeholder="Vendor Code" type="text"
+                                                        formControlName="LoadingCharge" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                        <div class="d-flex justify-content-center text-center bg-secondary-subtle p-4 gap-2">
+                            <button class="btn btn-secondary controls" (click)="backtoStockUpdate()"> <i
+                                    class="fas fa-arrow-left"></i>&nbsp;Back to Stock Update</button>
+                            <button class="btn btn-success" (click)="onSubmit()" [disabled]="isSubmit || isRedirect">
+                                <i class="bi bi-check-circle"></i> Update Incoming THC Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-5 text-center text-muted d-flex align-items-center justify-content-center"
+                    *ngIf="!THCFilterForm.get('loadBy')?.value || (!THCFilterForm.get('chargeType')?.value && THCFilterForm.get('loadBy')?.value !== 'XX5' && THCFilterForm.get('loadBy')?.value !== 'XX9')"
+                    style="min-height: 500px;">
+                    <div class="py-5">
+                        <i class="fas fa-hand-pointer fa-3x mb-3 opacity-25"></i>
+                        <p>Please select <b>Loading By</b> and <b>Charge Type</b> to view update details.</p>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="isSubmit" class="loading-overlay">
+                <div class="spinner-container">
+                    <i class="fas fa-spinner fa-spin custom-spinner"></i>
+                    <div class="mt-3 custom-text">Submitting...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>  
