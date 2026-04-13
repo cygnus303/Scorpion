@@ -59,5 +59,9 @@ export const ChallanRoutes: Routes = [
     path: 'LoadingSheetList',
     loadComponent: () => import('../loading-sheet-layout/loading-sheet-layout.component').then(m => m.LoadingSheetLayoutComponent),
   },
+  {
+    path: 'THCArrivalList',
+    loadComponent: () => import('../thc-arrival-list/thc-arrival-list.component').then(m => m.ThcArrivalListComponent),
+  }
 
 ];
