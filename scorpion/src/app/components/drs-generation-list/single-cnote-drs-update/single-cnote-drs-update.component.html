@@ -11,62 +11,70 @@
         <button type="button" class="btn-close pfm-close" (click)="modalRef.hide()"></button>
     </div>
     <form [formGroup]="DRSUpdateForm">
-        <div class="modal-body" style="padding:0;gap:0;">
-            <div style="padding:16px 22px;border-bottom:1px solid var(--border-light);" class="input-background-color">
-                <div class="row mb-4">
-                    <div class="col-3">
-                        <div class="form-group-input">
-                            <label class="form-label meta-label d-flex align-items-center gap-2">
-                                DRS Number :
-                                <span class="fw-bold text-primary" style="word-break: break-all;">
-                                    {{selectedData.drsNo}}
-                                </span>
-                            </label>
+        <div class="modal-body input-background-color" style="padding:0;gap:0;">
+            <div class="p-3">
+                <div class="control-bar d-block gap-2 mb-0">
+                    <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
+                        <div class="fw-bold"><i class="fas fa-info-circle me-2"></i>Basic Info</div>
+                    </div>
+                    <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
+                    <div class="row mb-4">
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label meta-label d-flex align-items-center gap-2">
+                                    DRS Number :
+                                    <span class="fw-bold text-primary" style="word-break: break-all;">
+                                        {{selectedData.drsNo}}
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group-input">
+                                <label class="form-label meta-label d-flex align-items-center gap-2">
+                                    DRS Date :
+                                    <span class="fw-bold text-primary" style="word-break: break-all;">
+                                        {{drsSummary?.drsDate | date:'dd-MM-yyyy hh:mm:ss a'}}
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group-input">
+                                <label class="form-label meta-label d-flex align-items-center gap-2">
+                                    Driver Name :
+                                    <span>
+                                        of Vehicle
+                                        <span class="fw-bold text-primary">{{ drsSummary?.vehno }}</span>
+                                        Carrying
+                                        <span class="fw-bold text-primary">{{ drsSummary?.total_Dockets_In_DRS }}</span>
+                                        Consignment(s)
+                                    </span>
+                                </label>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-3">
-                        <div class="form-group-input">
-                            <label class="form-label meta-label d-flex align-items-center gap-2">
-                                DRS Date :
-                                <span class="fw-bold text-primary" style="word-break: break-all;">
-                                    {{drsSummary?.drsDate | date:'dd-MM-yyyy hh:mm:ss a'}}
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group-input">
-                            <label class="form-label meta-label d-flex align-items-center gap-2">
-                                Driver Name :
-                                <span>
-                                    of Vehicle 
-                                    <span class="fw-bold text-primary">{{ drsSummary?.vehno }}</span>
-                                    Carrying 
-                                    <span class="fw-bold text-primary">{{ drsSummary?.total_Dockets_In_DRS }}</span>
-                                    Consignment(s)
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        <div class="row">
-                            <label class="col-sm-2 col-form-label fw-bold">CNote No</label>
-                            <div class="col-sm-10">
-                                <ng-select class="input-background-color clear-icon" bindLabel="dockNo" bindValue="dockNo" placeholder="CNote No"
-                                    autocomplete="off" [items]="docketData" (change)="getDRSDetail($event)">
-                                </ng-select>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label meta-label">CNote No</label>
+                                <div class="col-sm-10">
+                                    <ng-select class="input-background-color clear-icon" bindLabel="dockNo"
+                                        bindValue="dockNo" placeholder="CNote No" autocomplete="off"
+                                        [items]="docketData" (change)="getDRSDetail($event)">
+                                    </ng-select>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-           
-            <div class="p-3">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-                    <div class="fw-bold">CNote Details</div>
+
+            <div class="control-bar d-block gap-2 mb-0 mt-3">
+                <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
+                    <div class="fw-bold"><i class="fas fa-list me-2"></i>Docket Details</div>
                 </div>
+                <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
                 <div style="border:1px solid var(--border);border-radius:3px; ">
                     <div>
                         <table style="width:100%;border-collapse:collapse;font-size:13px;"
@@ -83,63 +91,70 @@
                                     <th class="text-center">Delivery Control Loc</th>
                                 </tr>
                             </thead>
-                        <tbody formArrayName="cnoteList">
-                            <tr *ngIf="isLoading">
-                                <td colspan="15" class="text-center py-4">
-                                    <div class="spinner-border text-primary" role="status"></div>
-                                    <div class="mt-2">Fetching data...</div>
-                                </td>
-                            </tr>
-                            <ng-container *ngIf="!isLoading">
-                                <ng-container *ngFor="let row of cnoteList.controls; let i = index" [formGroupName]="i">
-                                </ng-container>
-                                <tr *ngIf="cnoteList.length === 0">
-                                    <td colspan="15" class="text-center text-muted py-3">
-                                        No data found
+                            <tbody formArrayName="cnoteList">
+                                <tr *ngIf="isLoading">
+                                    <td colspan="15" class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status"></div>
+                                        <div class="mt-2">Fetching data...</div>
                                     </td>
                                 </tr>
-                            </ng-container>
-                            <ng-container *ngFor="let row of cnoteList.controls; let i = index" [formGroupName]="i">
-                                <tr>
-                                    <td class="text-center">
-                                        <div class="btn-group btn-group-sm" role="group">
-                        
-                                            <input type="radio" class="btn-check"  id="badpodYes{{ i }}" [value]="true"
-                                                formControlName="IsEnabledBadPodoption">
-                                            <label class="btn btn-outline-success" for="badpodYes{{ i }}">Yes</label>
-                        
-                                            <input type="radio" class="btn-check"  id="badpodNo{{ i }}" [value]="false"
-                                                formControlName="IsEnabledBadPodoption">
-                                            <label class="btn btn-outline-danger" for="badpodNo{{ i }}">No</label>
-                        
-                                        </div>
-                                    </td>
-                        
-                                    <!-- SAME DESIGN, ONLY VALUE CHANGE -->
-                                    <td class="text-start">
-                                        <b>{{ row.get('dockno')?.value }}</b><br>
-                                        <small>{{ row.get('booking_Date')?.value | date:'dd/MM/yyyy'}}</small>
-                                    </td>
-                        
-                                    <td class="text-start">
-                                        {{ row.get('orgncd')?.value }} - {{ row.get('destcd')?.value }}<br>
-                                        <small>{{ row.get('payBasis')?.value }}</small>
-                                    </td>
-                        
-                                    <td>
-                                        <b>{{ row.get('csgncd')?.value }} : {{ row.get('csgnnm')?.value }}</b><br>
-                                        <span>
-                                            {{ row.get('csgecd')?.value }} : {{ row.get('csgenm')?.value }}
-                                        </span>
-                                    </td>
-                        
-                                    <td class="text-center" style="width: 100px; max-width: 100px;">
-                                        <div class="d-flex justify-content-center">
-                                            <div class="text-danger" [ngClass]="{ 'font-large': row.value.PKGSDELIVERED > row.value.pkgs_Pending}">
-                                                {{ row.get('pkgs_Pending')?.value }} /
+                                <ng-container *ngIf="!isLoading">
+                                    <ng-container *ngFor="let row of cnoteList.controls; let i = index"
+                                        [formGroupName]="i">
+                                    </ng-container>
+                                    <tr *ngIf="cnoteList.length === 0">
+                                        <td colspan="15" class="text-center text-muted py-3">
+                                            No data found
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                                <ng-container *ngFor="let row of cnoteList.controls; let i = index" [formGroupName]="i">
+                                    <tr>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-sm" role="group">
+
+                                                <input type="radio" class="btn-check" id="badpodYes{{ i }}"
+                                                    [value]="true" formControlName="IsEnabledBadPodoption">
+                                                <label class="btn btn-outline-success"
+                                                    for="badpodYes{{ i }}">Yes</label>
+
+                                                <input type="radio" class="btn-check" id="badpodNo{{ i }}"
+                                                    [value]="false" formControlName="IsEnabledBadPodoption">
+                                                <label class="btn btn-outline-danger" for="badpodNo{{ i }}">No</label>
+
                                             </div>
-                                            <div>
-                                                {{ row.get('pkgs_Arrived')?.value }} /
+                                        </td>
+
+                                        <!-- SAME DESIGN, ONLY VALUE CHANGE -->
+                                        <td class="text-start">
+                                            <b>{{ row.get('dockno')?.value }}</b><br>
+                                            <small>{{ row.get('booking_Date')?.value | date:'dd/MM/yyyy'}}</small>
+                                        </td>
+
+                                        <td class="text-start">
+                                            {{ row.get('orgncd')?.value }} - {{ row.get('destcd')?.value }}<br>
+                                            <small>{{ row.get('payBasis')?.value }}</small>
+                                        </td>
+
+                                        <td>
+                                            <b>{{ row.get('csgncd')?.value }} : {{ row.get('csgnnm')?.value }}</b><br>
+                                            <span>
+                                                {{ row.get('csgecd')?.value }} : {{ row.get('csgenm')?.value }}
+                                            </span>
+                                        </td>
+
+                                        <td class="text-center" style="width: 100px; max-width: 100px;">
+                                            <div class="d-flex justify-content-center">
+                                                <div class="text-danger"
+                                                    [ngClass]="{ 'font-large': row.value.PKGSDELIVERED > row.value.pkgs_Pending}">
+                                                    {{ row.get('pkgs_Pending')?.value }} /
+                                                </div>
+                                                <div>
+                                                    {{ row.get('pkgs_Arrived')?.value }} /
+                                                </div>
+                                                <div>
+                                                    {{ row.get('pkgs_Booked')?.value }}
+                                                </div>
                                             </div>
                                         </td>
 
@@ -189,91 +204,108 @@
                                                         [placeholder]="'Delivery Date & Time'"
                                                         [minDate]="row.value.booking_Date">
                                                     </app-date-time-picker>
-                        
-                                                <span class="fw-semibold text-muted ms-2">Person</span>
-                                                <div>
-                                                    <input class="form-control form-control-sm" style="width: 160px;"
-                                                        formControlName="DELYPERSON" placeholder="Person Name" />
-                                                </div>
-                        
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <span class="fw-semibold text-muted">Reason:</span>
+
+                                                    <span class="fw-semibold text-muted ms-2">Person</span>
                                                     <div>
-                                                        <ng-select class="noFoundTextColor clear-icon" style="width:250px;"
-                                                            formControlName="cboReason" placeholder="Select Reason" [items]="deliveryReason" bindLabel="code" bindValue="codeID">
-                                                        </ng-select>
+                                                        <input class="form-control form-control-sm"
+                                                            style="width: 160px;" formControlName="DELYPERSON"
+                                                            placeholder="Person Name" />
                                                     </div>
+
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <span class="fw-semibold text-muted">Reason:</span>
+                                                        <div>
+                                                            <ng-select class="noFoundTextColor clear-icon"
+                                                                style="width:250px;" formControlName="cboReason"
+                                                                placeholder="Select Reason" [items]="deliveryReason"
+                                                                bindLabel="code" bindValue="codeID">
+                                                            </ng-select>
+                                                        </div>
+                                                    </div>
+
                                                 </div>
-                        
+
+                                                <div class="d-flex align-items-center gap-3">
+
+                                                    <!-- ================= FRONT ================= -->
+                                                    <ng-container
+                                                        *ngIf="cnoteList.at(i).value.frontPreview; else frontUpload">
+                                                        <img [src]="cnoteList.at(i).value.frontPreview"
+                                                            class="img-thumbnail"
+                                                            style="width:55px;height:55px;object-fit:cover" />
+
+                                                        <div class="d-flex flex-column gap-1">
+                                                            <button type="button" class="btn btn-light btn-sm"
+                                                                (click)="frontInput.click()">
+                                                                Change
+                                                            </button>
+
+                                                            <button type="button"
+                                                                class="btn btn-light btn-sm text-danger"
+                                                                (click)="removeFile(i, 'FRONT')">
+                                                                Remove
+                                                            </button>
+                                                        </div>
+                                                    </ng-container>
+
+                                                    <ng-template #frontUpload>
+                                                        <button type="button" class="btn btn-outline-primary btn-sm"
+                                                            (click)="frontInput.click()">
+                                                            ⬆ POD Front Upload
+                                                        </button>
+
+                                                        <!-- VALIDATION -->
+                                                        <div class="text-danger mt-1" *ngIf="isPodFrontRequired(i)">
+                                                            POD Front is required
+                                                        </div>
+                                                    </ng-template>
+
+                                                    <input type="file" #frontInput hidden accept="image/*"
+                                                        (change)="onFileSelected($event, i, 'FRONT')" />
+
+                                                    <!-- ================= BACK ================= -->
+                                                    <ng-container
+                                                        *ngIf="cnoteList.at(i).value.backPreview; else backUpload">
+                                                        <img [src]="cnoteList.at(i).value.backPreview"
+                                                            class="img-thumbnail"
+                                                            style="width:55px;height:55px;object-fit:cover" />
+
+                                                        <div class="d-flex flex-column gap-1">
+                                                            <button type="button" class="btn btn-light btn-sm"
+                                                                (click)="backInput.click()">
+                                                                Change
+                                                            </button>
+
+                                                            <button type="button"
+                                                                class="btn btn-light btn-sm text-danger"
+                                                                (click)="removeFile(i, 'BACK')">
+                                                                Remove
+                                                            </button>
+                                                        </div>
+                                                    </ng-container>
+
+                                                    <ng-template #backUpload>
+                                                        <button type="button" class="btn btn-outline-primary btn-sm"
+                                                            (click)="backInput.click()">
+                                                            ⬆ POD Back Upload
+                                                        </button>
+                                                    </ng-template>
+
+                                                    <input type="file" #backInput hidden accept="image/*"
+                                                        (change)="onFileSelected($event, i, 'BACK')" />
+
+                                                </div>
                                             </div>
-                        
-                                        <div class="d-flex align-items-center gap-3">
-                                        
-                                            <!-- ================= FRONT ================= -->
-                                            <ng-container *ngIf="cnoteList.at(i).value.frontPreview; else frontUpload">
-                                                <img [src]="cnoteList.at(i).value.frontPreview" class="img-thumbnail"
-                                                    style="width:55px;height:55px;object-fit:cover" />
-                                        
-                                                <div class="d-flex flex-column gap-1">
-                                                    <button type="button" class="btn btn-light btn-sm" (click)="frontInput.click()">
-                                                        Change
-                                                    </button>
-                                        
-                                                    <button type="button" class="btn btn-light btn-sm text-danger" (click)="removeFile(i, 'FRONT')">
-                                                        Remove
-                                                    </button>
-                                                </div>
-                                            </ng-container>
-                                        
-                                            <ng-template #frontUpload>
-                                                <button type="button" class="btn btn-outline-primary btn-sm" (click)="frontInput.click()">
-                                                    ⬆ POD Front Upload
-                                                </button>
-                                        
-                                                <!-- VALIDATION -->
-                                                <div class="text-danger mt-1" *ngIf="isPodFrontRequired(i)">
-                                                    POD Front is required
-                                                </div>
-                                            </ng-template>
-                                        
-                                            <input type="file" #frontInput hidden accept="image/*" (change)="onFileSelected($event, i, 'FRONT')" />
-                                        
-                                            <!-- ================= BACK ================= -->
-                                            <ng-container *ngIf="cnoteList.at(i).value.backPreview; else backUpload">
-                                                <img [src]="cnoteList.at(i).value.backPreview" class="img-thumbnail"
-                                                    style="width:55px;height:55px;object-fit:cover" />
-                                        
-                                                <div class="d-flex flex-column gap-1">
-                                                    <button type="button" class="btn btn-light btn-sm" (click)="backInput.click()">
-                                                        Change
-                                                    </button>
-                                        
-                                                    <button type="button" class="btn btn-light btn-sm text-danger" (click)="removeFile(i, 'BACK')">
-                                                        Remove
-                                                    </button>
-                                                </div>
-                                            </ng-container>
-                                        
-                                            <ng-template #backUpload>
-                                                <button type="button" class="btn btn-outline-primary btn-sm" (click)="backInput.click()">
-                                                    ⬆ POD Back Upload
-                                                </button>
-                                            </ng-template>
-                                        
-                                            <input type="file" #backInput hidden accept="image/*" (change)="onFileSelected($event, i, 'BACK')" />
-                                        
-                                        </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                        
-                            </ng-container>
-                        </tbody>
+                                        </td>
+                                    </tr>
+
+                                </ng-container>
+                            </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-           
+
         </div>
     </form>
     <div class="modal-footer d-flex justify-content-between">
