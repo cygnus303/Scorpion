@@ -1,0 +1,10 @@
+::ng-deep.modal-xl {
+    --bs-modal-width: 1400px !important;
+}
+.font-large {
+    font-size: 15px !important;
+    font-weight: bold !important;
+}
+::ng-deep .input-background-color .ng-select-container {
+  background-color: #ffffff !important;
+}

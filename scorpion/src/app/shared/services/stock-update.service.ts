@@ -36,4 +36,8 @@ constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerServ
     onStockupdate(formData: any) {
     return this.apiHandlerService.Post(`THC/stockupdate`, formData);
   }
+
+  getStockUpdateListing(payload: any): Observable<any> {
+    return this.apiHandlerService.Post(`Operation/GetStockUpdateListing`, payload);
+  }
 }

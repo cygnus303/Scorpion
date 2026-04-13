@@ -1,29 +1,32 @@
+import { Component, Input, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { AbstractControl, FormArray, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { EventEmitter } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { SharedModule } from 'app/shared/shared/shared.module';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { environment } from 'environments/environment';
 import { BranchWiseLoadingUnloading } from 'app/shared/models/thc-master.model';
-import { ChallanService } from 'app/shared/services/challan.service';
 import { DeliveryUpdateService } from 'app/shared/services/delivery-update.service';
-import { DocketService } from 'app/shared/services/docket.service';
+import { ChallanService } from 'app/shared/services/challan.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
+import { DocketService } from 'app/shared/services/docket.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
-import { SharedModule } from 'app/shared/shared/shared.module';
-import { environment } from 'environments/environment';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @Component({
-  selector: 'app-delivery-update-list',
+  selector: 'app-drs-update-list',
   standalone: true,
   imports: [CommonModule, RouterModule, NgSelectModule, ReactiveFormsModule, BsDatepickerModule, SharedModule],
-  templateUrl: './delivery-update-list.component.html',
-  styleUrl: './delivery-update-list.component.scss',
-  providers: [DeliveryUpdateService]
+  templateUrl: './drs-update-list.component.html',
+  styleUrl: './drs-update-list.component.scss'
 })
-export class DeliveryUpdateListComponent {
+export class DRSUpdateListComponent {
   env = environment;
+  public modalRef!: BsModalRef;
   public DRSSummaryForm!: FormGroup;
   public DRSInformation!: any;
   public minDate: Date | undefined;
@@ -34,12 +37,18 @@ export class DeliveryUpdateListComponent {
   public isSubmit: boolean = false;
   public isdeliveryRequired: boolean = false;
   maxCloseKMValue: number = 900000;
+  public DRSFilterForm!: FormGroup;
+  @Input() drsData: any;
+  @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
 
-
-  constructor(public challanService: ChallanService, public deliveryUpdateService: DeliveryUpdateService, public docketService: DocketService, private THCService: THCMasterService, public generalMasterService: GeneralMasterService, public sweetAlertService: SweetAlertService) { }
+  constructor(public challanService: ChallanService, public deliveryUpdateService: DeliveryUpdateService,
+    public THCMasterService: THCMasterService,
+    public docketService: DocketService, public generalMasterService: GeneralMasterService,
+    public sweetAlertService: SweetAlertService, private modalService: BsModalService) { }
 
   ngOnInit() {
     const saved = localStorage.getItem("loginUserList");
+    console.log(this.drsData)
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
@@ -50,12 +59,52 @@ export class DeliveryUpdateListComponent {
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
-
-    this.buildForm();
-    this.getDeliveryDetail();
+    this.buildFilterForm()
+    this.getVendorType();
     this.generalMasterService.getChargeTypeData();
     this.generalMasterService.getLoadingBy()
     this.generalMasterService.getDeliveredToData()
+  }
+
+  buildFilterForm() {
+    this.DRSFilterForm = new FormGroup({
+      loadBy: new FormControl(null),
+      chargeType: new FormControl(null)
+    })
+  }
+
+  refreshData() {
+    this.docketService.loginUserList.loadBy = this.DRSFilterForm.value.loadBy;
+    this.docketService.loginUserList.chargeType = this.DRSFilterForm.value.chargeType;
+    this.docketService.loginUserList.drsId = this.drsData.drsNo;
+    this.buildForm();
+    this.getDeliveryDetail();
+  }
+
+  onLoadingByChange() {
+    const loadBy = this.DRSFilterForm.get('loadBy')?.value;
+    if (loadBy === 'XX5' || loadBy === 'XX9') {
+      this.DRSFilterForm.get('chargeType')?.setValue(null);
+    }
+    this.refreshData();
+  }
+
+  triggerRefresh() {
+    this.drsData = { ...this.drsData };
+  }
+
+  getVendorType() {
+    this.THCMasterService.getVendorType(this.docketService.loginUserList.LocationCode).subscribe({
+      next: (response) => {
+        if (response && response.data) {
+          const mTypeRow = response.data.find((x: any) => x.documentType === 'M');
+          if (mTypeRow) {
+            const vendorTypes = mTypeRow.loading_VendorType.split(',');
+            this.generalMasterService.getLoadingByDetail(vendorTypes);
+          }
+        }
+      }
+    });
   }
 
   buildForm() {
@@ -324,7 +373,7 @@ export class DeliveryUpdateListComponent {
       chargeType: this.docketService.loginUserList.chargeType,
       baseLocationCode: this.docketService.loginUserList.LocationCode
     };
-    this.THCService.getDeliveryUpdateData(payload).subscribe({
+    this.THCMasterService.getDeliveryUpdateData(payload).subscribe({
       next: (response: any) => {
         this.DRSInformation = response.data.drsSummary;
         const summaryRateType = response.data.drsSummary?.rateType;
@@ -368,7 +417,7 @@ export class DeliveryUpdateListComponent {
       loadingBy: this.DRSSummaryForm.value.LoadingBy,
     };
     if (['XX5'].includes(this.DRSSummaryForm.get('LoadingBy')?.value)) {
-      this.THCService.getLoadingCharge(data).subscribe({
+      this.THCMasterService.getLoadingCharge(data).subscribe({
         next: (response: any) => {
           this.DRSSummaryForm.patchValue({
             Rate: response.rate
@@ -505,7 +554,7 @@ export class DeliveryUpdateListComponent {
       baseLocationCode: this.docketService.loginUserList.LocationCode,
       type: 'U',
     }
-    this.THCService.getBranchWiseLoadingUnloadingVendorList(data).subscribe({
+    this.THCMasterService.getBranchWiseLoadingUnloadingVendorList(data).subscribe({
       next: (response) => {
         if (response.success) {
           this.branchWiseLoadingUnloadingList = response.data;
@@ -521,7 +570,7 @@ export class DeliveryUpdateListComponent {
       userName: this.docketService.loginUserList.BaseUserName,
       documentType: this.docketService.loginUserList.Type
     }
-    this.THCService.getVendorsList(data).subscribe({
+    this.THCMasterService.getVendorsList(data).subscribe({
       next: (response) => {
         if (response.success) {
           this.branchWiseLoadingUnloadingList = response.data.map((x: any) => ({
@@ -786,9 +835,22 @@ export class DeliveryUpdateListComponent {
       this.deliveryUpdateService.deliveryUpdate(formData).subscribe({
         next: (response: any) => {
           if (response && response.data && !response.data.isError) {
-            this.isRedirect = true;
-            // https://sepluat.cygnux.in/Operation/UpdateDRSResult?DRSNO=DS%2FPIM%2F2526%2F002770
-            window.parent.location.href = `${this.env.liveUrl}Operation/UpdateDRSResult?DRSNO=${this.DRSInformation?.pdcno}&src=angular`;
+            // if (this.drsData) {
+            // this.sweetAlertService.success('DRS update successfully!!');
+            this.sweetAlertService.success(`<div style="text-align:center;">
+                 <div class="fw-bold fs-3 mb-2">DRS Update Success</div>
+                 <p class="fs-5 mb-1"><strong>DRSNO:</strong> ${this.DRSInformation?.pdcno}</p>
+              </div>`);
+            this.dataEmitter.emit();
+
+            // Close modal if it's open
+            if (this.modalRef) {
+              this.modalRef.hide();
+            }
+            // } else {
+            //   this.isRedirect = true;
+            //   window.parent.location.href = `${this.env.liveUrl}Operation/UpdateDRSResult?DRSNO=${this.DRSInformation?.pdcno}&src=angular`;
+            // }
           } else {
             this.sweetAlertService.error('You have some form errors. Please check below.');
           }

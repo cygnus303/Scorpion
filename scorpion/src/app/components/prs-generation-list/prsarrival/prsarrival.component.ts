@@ -1,24 +1,27 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, FormArray, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { DocketService } from 'app/shared/services/docket.service';
+import { Component, EventEmitter, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { THCMasterService } from 'app/shared/services/thc-master.service';
+import { DocketService } from 'app/shared/services/docket.service';
+import { RouterModule } from '@angular/router';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { environment } from 'environments/environment';
 import { PrsArrivalDetailsService } from 'app/shared/services/prs-arrival-details.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
-import { THCMasterService } from 'app/shared/services/thc-master.service';
-import { environment } from 'environments/environment';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @Component({
-  selector: 'app-prs-arrival-details',
+  selector: 'app-prsarrival',
   standalone: true,
-  imports: [CommonModule, RouterModule, NgSelectModule, ReactiveFormsModule, BsDatepickerModule],
-  templateUrl: './prs-arrival-details.component.html',
-  styleUrl: './prs-arrival-details.component.scss'
+  imports: [CommonModule, RouterModule, NgSelectModule, ReactiveFormsModule, BsDatepickerModule, FormsModule],
+  templateUrl: './prsarrival.component.html',
+  styleUrl: './prsarrival.component.scss',
+  providers: [BsModalService]
 })
-export class PRSArrivalDetailsComponent {
+export class PRSArrivalComponent implements OnInit {
+  public modalRef!: BsModalRef;
   public prsArrivalForm!: FormGroup;
   public PRSArrivalDetails: any;
   public dockList: any[] = [];
@@ -27,16 +30,17 @@ export class PRSArrivalDetailsComponent {
   public isSubmitting: boolean = false;
   env = environment;
   public isRedirect: boolean = false;
+  public arrivalData: any = {
+    pdcno: null,
+    loadBy: null,
+    chargeType: null
+  };
 
-
-
-
+  @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
+  @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   constructor(
-    public docketService: DocketService,
-    public generalMasterService: GeneralMasterService,
-    private THCService: THCMasterService,
-    public prsArrivalDetailsService: PrsArrivalDetailsService,
-    private sweetAlertService: SweetAlertService
+    private modalService: BsModalService,
+    public generalMasterService: GeneralMasterService, private THCMasterService: THCMasterService, private sweetAlertService: SweetAlertService, public prsArrivalDetailsService: PrsArrivalDetailsService, public docketService: DocketService
   ) { }
 
   ngOnInit() {
@@ -44,17 +48,57 @@ export class PRSArrivalDetailsComponent {
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      // this.docketService.loginUserList.LocationCode =  'PIM';
-      // this.docketService.loginUserList.loadBy = "B";
-      // this.docketService.loginUserList.chargeType='1';
-      // this.docketService.loginUserList.id='PS/PIM/2526/002515';
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
+    this.generalMasterService.getLoadingBy();
+  }
+
+  showPopup(data: any) {
+    this.arrivalData = {
+      pdcno: data.pdcno,
+      loadBy: null,
+      chargeType: null
+    };
+    this.getVendorType();
+    this.generalMasterService.getChargeTypeData();
+    this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
+  }
+
+  getVendorType() {
+    this.THCMasterService.getVendorType(this.docketService.loginUserList.LocationCode).subscribe({
+      next: (response) => {
+        if (response && response.data) {
+          const mTypeRow = response.data.find((x: any) => x.documentType === 'M');
+          if (mTypeRow) {
+            const vendorTypes = mTypeRow.loading_VendorType.split(',');
+            this.generalMasterService.getLoadingByDetail(vendorTypes);
+          }
+        }
+      }
+    });
+  }
+
+  onLoadingByChange() {
+    if (this.arrivalData.loadBy === 'XX5' || this.arrivalData.loadBy === 'XX9') {
+      this.arrivalData.chargeType = null;
+    }
+    this.refreshData()
+  }
+
+  onDataSubmit(event: any) {
+    this.dataEmitter.emit(event);
+    if (this.modalRef) {
+      this.modalRef.hide();
+    }
+  }
+
+  refreshData() {
+    this.docketService.loginUserList.loadBy = this.arrivalData.loadBy;
+    this.docketService.loginUserList.chargeType = this.arrivalData.chargeType;
+    this.docketService.loginUserList.id = this.arrivalData.pdcno;
     this.buildForm();
     this.getDeliveryDetail();
-    this.generalMasterService.getLoadingBy();
-    this.generalMasterService.getChargeTypeData();
   }
 
   get pdcControls() {
@@ -70,7 +114,7 @@ export class PRSArrivalDetailsComponent {
       unloadBy: this.docketService.loginUserList.loadBy,
       baseLocationCode: this.docketService.loginUserList.LocationCode
     };
-    this.THCService.getPRSArrivalDetails(payload).subscribe({
+    this.THCMasterService.getPRSArrivalDetails(payload).subscribe({
       next: (response: any) => {
         this.PRSArrivalDetails = response.pavm;
         this.prsArrivalForm.patchValue({
@@ -148,7 +192,7 @@ export class PRSArrivalDetailsComponent {
       loadingBy: this.prsArrivalForm.value.LoadingBy,
     };
     if (['XX5'].includes(this.prsArrivalForm.get('LoadingBy')?.value)) {
-      this.THCService.getLoadingCharge(data).subscribe({
+      this.THCMasterService.getLoadingCharge(data).subscribe({
         next: (response: any) => {
           this.prsArrivalForm.patchValue({
             Rate: response.rate,
@@ -175,7 +219,7 @@ export class PRSArrivalDetailsComponent {
       actuwt: new FormControl(null),
       LoadingBy: new FormControl(null, [Validators.required]),
       LoadingCharge: new FormControl(0),
-      rate: new FormControl(null),
+      Rate: new FormControl(null),
       closeKM: new FormControl(0),
       ratetype: new FormControl(null),
       vendorCode: new FormControl(null, this.docketService.loginUserList.loadBy === 'XX9' ? null : Validators.required),
@@ -329,17 +373,20 @@ export class PRSArrivalDetailsComponent {
           };
 
         }),
-
       };
-
-      console.log("FINAL PAYLOAD", payload);
       this.isSubmitting = true;
-      this.THCService.prsArrival(params, payload).subscribe({
+      this.THCMasterService.prsArrival(params, payload).subscribe({
         next: (res: any) => {
           if (res.success) {
-            console.log("Success", res);
             this.isRedirect = true;
-            window.parent.location.href = `${this.env.liveUrl}Operation/PRSArrivalDone?PDCNo=${res.pdcNo}&Tot_Charge=${res.totCharge}&HcNumber=${res.hcNumber}&TranXaction=Done&src=angular`;
+            this.sweetAlertService.success(`<div style="text-align:center;">
+                 <div class="fw-bold fs-3 mb-2">PRS Arrival Success</div>
+                 <p class="fs-5 mb-1"><strong>PDC No:</strong> ${res.pdcNo}</p>
+                 <p class="fs-5 mb-1"><strong>HC Number:</strong> ${res.hcNumber}</p>
+                 <p class="fs-5 mb-1"><strong>Total Charge:</strong> ${res.totCharge}</p>
+              </div>`);
+            this.dataEmitter.emit()
+            this.modalRef.hide();
             this.isSubmitting = false;
           } else {
             this.sweetAlertService.error(res?.message)

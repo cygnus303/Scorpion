@@ -71,27 +71,27 @@ export class THCMasterService {
   getRoutesFromRouteType(payload:any): Observable<IApiBaseResponse<any[]>>{
     return this.apiHandlerService.Get(`THC/GetRoutesFromRouteType?routeType=${payload.routeType}&isEmpty=${payload.isEmpty}&locationCode=${payload.locationCode}`);
   }
-  
+
   challanSubmit(payload:any): Observable<IApiBaseResponse<any[]>>{
     return this.apiHandlerService.Post(`THC/ChallanSubmit`,payload);
   }
 
-  
+
   getVehicleType(vehicleNo:string): Observable<IApiBaseResponse<any[]>>{
     return this.apiHandlerService.Get(`THC/VehicleType?vehicleNo=${vehicleNo}`);
   }
 
   getEWayBillExpiryDateByMF(payload:any): Observable<IApiBaseResponse<any[]>>{
     return this.apiHandlerService.Post(`THC/GetEWayBillExpiryDateByMF`,payload);
-    }
-    
+  }
+
   getAirport(locationCode:string): Observable<IApiBaseResponse<any[]>>{
     return this.apiHandlerService.Get(`THC/GetAirport?locationCode=${locationCode}`);
   }
 
    getFlights(payload:any): Observable<IApiBaseResponse<any[]>>{
     return this.apiHandlerService.Post(`THC/GetFlights`,payload);
-    }
+  }
 
   getCustomerListForTHC(searchTerm:string){
     return this.apiHandlerService.Get(`THC/getCustomerListForTHC?searchTerm=${searchTerm}`);
@@ -136,7 +136,7 @@ export class THCMasterService {
 
    getVendorType(location:any){
     return this.apiHandlerService.Get(`THC/GetVendorType?location=${location}`);
-   }
+  }
 
   getUserList(searchTerm:any){
     return this.apiHandlerService.Post(`THC/SearchUsers`,searchTerm);
@@ -144,15 +144,15 @@ export class THCMasterService {
 
    getBranchWiseLoadingUnloadingVendorList(data:any){
     return this.apiHandlerService.Get(`THC/getBranchWiseLoadingUnloadingVendorListJson?type=${data?.type ? data?.type: 'L'}&vendorType=${data.vendorType}&baseLocationCode=${data.baseLocationCode}`);
-   }
+  }
 
   getLoadingCharge(data:any){
     return this.apiHandlerService.Get(`THC/GetLoadingCharge?brdc=${data.brdc}&loadingBy=${data.loadingBy}&chargeType=${data.chargeType}&typeModule=${data.typeModule}&vendorCode=${data.vendorCode}&loadUnloadType=${data.loadUnloadType}`);
-   }
+  }
 
    getDeliveryUpdateData(data:any){
     return this.apiHandlerService.Get(`THC/UpdateDRS?drsId=${data.drsId}&loadBy=${data.loadBy}&chargeType=${data.chargeType}&baseLocationCode=${data.baseLocationCode}`);
-   }
+  }
 
   getDeliveryAgents(baseLocationCode: string) {
     return this.apiHandlerService.Get(`THC/DeliveryAgents?baseLocationCode=${baseLocationCode}`);
@@ -179,10 +179,17 @@ export class THCMasterService {
   
   getDepartureDetail(payload:any){
     return this.apiHandlerService.Post(`Operation/departure`,payload);
-
   }
 
   submitTHCDeparture(payload:any){
     return this.apiHandlerService.Post(`THC/THCDepartureSubmit`,payload); 
+  }
+
+  getHCCDetail(payload: any) {
+    return this.apiHandlerService.Post(`THC/HHCFinancialEditDetail`, payload);
+  }
+
+  submitHCC(payload: any, params: any) {
+    return this.apiHandlerService.Post(`THC/HCCSubmit?baseLocationCode=${params.baseLocationCode}&basefinyear=${params.basefinyear}&userid=${params.userid}&companycode=${params.companycode}`, payload);
   }
 }

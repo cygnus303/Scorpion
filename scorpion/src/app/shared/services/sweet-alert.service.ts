@@ -52,13 +52,20 @@ export class SweetAlertService {
     Swal.fire({
     title: message,
     icon: 'warning',
+     width: '465px',
     showCancelButton: true,
     confirmButtonText: 'Yes, cancel!',
     cancelButtonText: 'No',
     confirmButtonColor: '#171829',
     cancelButtonColor: '#aaa',
-    customClass: {
-      container: 'notification-popup'
+     customClass: {
+      popup: 'glassy-info-popup',
+      title: 'glassy-info-title',
+      htmlContainer: 'glassy-info-body',
+      confirmButton: 'glassy-info-btn',
+      cancelButton: 'glassy-info-btn',
+      icon: 'glassy-info-icon',
+      actions: 'glassy-info-actions'  // custom class for buttons container
     }
   }).then((result) => {
     if (result.isConfirmed) {

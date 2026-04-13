@@ -12,7 +12,7 @@ import { DateTimePickerComponent } from 'app/layouts/header/date-time-picker/dat
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 
 @NgModule({
-  declarations: [ChallanListComponent,ChallanFilterComponent],
+  declarations: [ChallanListComponent, ChallanFilterComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(ChallanRoutes),
@@ -23,8 +23,8 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
     SharedModule,
     TimepickerModule.forRoot()
   ],
-  exports: [ RouterModule ,DateTimePickerComponent],
-  providers:[DatePipe],
+  exports: [RouterModule, DateTimePickerComponent, ChallanFilterComponent],
+  providers: [DatePipe],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ChallanModule { }

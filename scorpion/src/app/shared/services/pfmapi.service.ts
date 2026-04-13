@@ -31,4 +31,8 @@ export class PFMapiService {
   GetCourierDetails(fmNo: string) {
     return this.apiHandlerService.Get(`Operation/GetCourierDetails?fmNo=${encodeURIComponent(fmNo)}`);
   }
+
+  GetPrsList(payload: any) {
+    return this.apiHandlerService.Post(`Operation/GetPrsList`, payload);
+  }
 }

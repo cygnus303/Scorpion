@@ -38,6 +38,22 @@ export const ChallanRoutes: Routes = [
     path: 'THCDepartureSubmit',
     loadComponent: () => import('../thc-departure/thc-departure.component').then(m => m.ThcDepartureComponent),
     canActivate: [DocketGuard]
+  },
+  {
+    path: 'PRSList',
+    loadComponent: () => import('../prs-generation-list/prs-generation-list.component').then(m => m.PRSGenerationListComponent),
+  },
+  {
+    path: 'DRSList',
+    loadComponent: () => import('../drs-generation-list/drs-generation-list.component').then(m => m.DrsGenerationListComponent),
+  },
+  {
+    path: 'StockUpdate',
+    loadComponent: () => import('../stock-update-layout/stock-update-layout.component').then(m => m.StockUpdateLayoutComponent),
+  },
+   {
+    path: 'THCList',
+    loadComponent: () => import('../thc-list/thc-list.component').then(m => m.ThcListComponent),
   }
 
 ];
