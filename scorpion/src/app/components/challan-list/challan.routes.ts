@@ -48,7 +48,7 @@ export const ChallanRoutes: Routes = [
     loadComponent: () => import('../drs-generation-list/drs-generation-list.component').then(m => m.DrsGenerationListComponent),
   },
   {
-    path: 'StockUpdateLayout',
+    path: 'StockUpdate',
     loadComponent: () => import('../stock-update-layout/stock-update-layout.component').then(m => m.StockUpdateLayoutComponent),
   },
    {
