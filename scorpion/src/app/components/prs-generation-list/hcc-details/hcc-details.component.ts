@@ -96,7 +96,7 @@ export class HCCDetailsComponent {
 
   getHCCDetail(data: any) {
     const payload = {
-      hhcNo: data.drsNo || data.pdcno,
+      hhcNo: data.drsNo || data.pdcno || data.mfNo,
       chargesType: this.selectedHccType || 'Loading'
     }
     this.isLoading = true;

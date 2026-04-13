@@ -180,7 +180,7 @@
                         <td class="text-center fs-6 text-muted">{{ row.vendorBillNo || '—' }}</td>
                         <td class="text-center cursor-pointer">
                             <span class="px-3 py-2"
-                                [ngClass]="(row.loadingHCC && row.loadingHCC !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
+                                [ngClass]="(row.loadingHCC && row.loadingHCC !== 'NO HCC') ? 'fw-bold text-success text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle '"
                                 (click)="row.loadingHCC && row.loadingHCC !== 'NO HCC'? openHCCModal(row.loadingHCC) : null"
                                 style="cursor: pointer;">
                                 {{ row.loadingHCC || 'NO HCC' }}
@@ -188,7 +188,7 @@
                         </td>
                         <td class="text-center cursor-pointer">
                             <span class="px-3 py-2 rounded fw-bold border"
-                                [ngClass]="isHccValid(row.unLoadingHCC || 'NO HCC') ? 'bg-success-subtle text-success border-success-subtle' : 'bg-danger-subtle text-danger border-danger-subtle'"
+                                [ngClass]="isHccValid(row.unLoadingHCC || 'NO HCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'bg-danger-subtle text-danger border-danger-subtle'"
                                  (click)="row.unLoadingHCC && row.unLoadingHCC !== 'NO HCC'? openHCCModal(row.unLoadingHCC) : null">
                                 {{ row.unLoadingHCC || 'NO HCC' }}
                             </span>
