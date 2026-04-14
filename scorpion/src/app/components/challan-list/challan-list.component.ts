@@ -192,6 +192,16 @@ public isPatching:boolean=false;
         if (ChargedBy === 'XX5' || ChargedBy === 'XX8') {
           this.challanService.branchWiseLoadingUnloading(this.challanService?.filterList?.loadingBycodeFor);
         }
+        
+        // vendorChargesCode required
+        if(this.docketService.loginUserList && this.challanService.filterList && this.docketService.loginUserList.Type !== '1' && this.challanService.filterList.loadingBy !== 'XX9'){
+          this.challanService.challanForm.get('vendorChargesCode')?.setValidators([Validators.required]);
+          this.challanService.challanForm.get('vendorChargesCode')?.updateValueAndValidity();
+        }else{
+          this.challanService.challanForm.get('vendorChargesCode')?.clearValidators();
+          this.challanService.challanForm.get('vendorChargesCode')?.setValue(null);
+          this.challanService.challanForm.get('vendorChargesCode')?.updateValueAndValidity();
+        }
       }else{
         this.isFilterApplied = false;
       }
