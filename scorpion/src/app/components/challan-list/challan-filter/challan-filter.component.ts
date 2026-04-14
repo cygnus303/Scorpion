@@ -99,6 +99,7 @@ export class ChallanFilterComponent {
       const filterData = this.challanService.filterForm.value;
       this.filterApplied.emit(filterData);
     } else {
+        this.challanService.filterForm.markAllAsTouched();
     }
   }
 
