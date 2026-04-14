@@ -414,6 +414,8 @@ SearchfilterForm(){
     rate:new FormControl(),
     ISNEWDA:new FormControl(false),
     VendName:new FormControl(),
+    maxLimit:new FormControl(),
+    IsMonthly:new FormControl(false)
   }, { validators: this.advanceNotGreaterThanNet.bind(this) }
 );
 }
@@ -811,9 +813,9 @@ onSubmit(){
       LoadedRateType:this.filterList ? this.filterList?.chrgType : '',
       LoadedBy:this.filterList?.loadingBy ? this.filterList?.loadingBy:'',
       Rate:Number(challanForm?.rate),
-      MaxLimit:0,
+      MaxLimit:Number(challanForm?.maxLimit),
       VendorCode:challanForm?.vendorChargesCode,
-      IsMonthly:true,
+      IsMonthly:challanForm?.IsMonthly || false,
       VendName:challanForm?.VendName,
       IsMathadi:this.generateData?.isMathadi ? this.generateData?.isMathadi:false ,
       MathadiSlipNo:"",

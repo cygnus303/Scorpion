@@ -399,6 +399,9 @@ onDocketSelectionChange(ctrl: AbstractControl) {
     this.challanService.challanForm.patchValue({
       fTLType:event.fleet_Type
     })
+      console.log(event);
+    console.log( this.challanService.challanForm.get('vehicleType')?.value ,'vehicleType')
+    console.log( this.challanService.challanForm.get('fTLType')?.value ,'fTLType')
 }
 
 
@@ -416,9 +419,25 @@ onDocketSelectionChange(ctrl: AbstractControl) {
     };
     this.THCService.getLoadingCharge(data).subscribe({next: (response: any) => {
         if (this.challanService.filterList?.loadingBycodeFor === 'XX5') {
-          if (response && response.rate && response.rate > 0) {
+          if(response.isMonthly){
             this.challanService.challanForm.patchValue({
-              rate: response.rate
+              maxLimit:response.maxLimit,
+              rate: response.rate,
+              Loadingcharge:'0',
+              IsMonthly:true
+            })
+            this.challanService.avalabledocket.controls.forEach((item: any, index) => {
+              this.challanService.avalabledocket.controls[index].patchValue({
+                rateType:response.rateType,
+                NewRate: response.rate
+              });
+              this.israteDisabled = true;
+            });
+            console.log(this.challanService.challanForm.value.maxLimit)
+          }else if (response && response.rate && response.rate > 0) {
+            this.challanService.challanForm.patchValue({
+              rate: response.rate,
+              maxLimit:response.maxLimit,
             });
             this.challanService.avalabledocket.controls.forEach((item: any, index) => {
               this.challanService.avalabledocket.controls[index].patchValue({
