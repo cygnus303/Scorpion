@@ -178,7 +178,7 @@ export class PRSArrivalDetailsComponent {
       actuwt: new FormControl(null),
       LoadingBy: new FormControl(null, [Validators.required]),
       LoadingCharge: new FormControl(0),
-      rate: new FormControl(null),
+      Rate: new FormControl(null),
       closeKM: new FormControl(0),
       ratetype: new FormControl(null),
       vendorCode: new FormControl(null, this.docketService.loginUserList.loadBy === 'XX9' ? null : Validators.required),
