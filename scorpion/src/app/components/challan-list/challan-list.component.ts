@@ -164,6 +164,7 @@ public isPatching:boolean=false;
         // Vendor Type specific filtering for DRS with DRSType 'Y' BA
         const deliveryAgentControl = this.challanService.challanForm.get('deliveryAgent');
         if (this.challanService.filterList.DRSType === 'Y') {
+            this.getVehicleType('O');
            deliveryAgentControl?.setValidators([Validators.required]);
            deliveryAgentControl?.updateValueAndValidity();
           const allowedVendorCodes = ['04'];
