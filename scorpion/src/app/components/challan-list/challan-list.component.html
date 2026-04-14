@@ -583,7 +583,7 @@
                              [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1Licence')?.invalid  && challanService.challanForm.get('driver1Licence')?.touched }">
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('driver1Licence')?.touched">
                                 <div *ngIf="challanService.challanForm.get('driver1Licence')?.hasError('required')"> This field is required.</div>
-                                <!-- <div *ngIf="challanService.challanForm.get('driver1Licence')?.hasError('pattern')">Please enter a valid License Number. </div> -->
+                                <div *ngIf="challanService.challanForm.get('driver1Licence')?.hasError('pattern')">Please enter a valid License Number. </div>
                             </div>
                         </div>
                     </div>
@@ -595,7 +595,7 @@
                             <div class="input-group" (click)="!isFieldReadonly() && dbv.toggle(); $event.stopPropagation()">
                                 <input class="form-control required2" placeholder="Date Of Birth" type="text"  [class.disabled-input]="true" appFocusNext
                                     #dbv="bsDatepicker" bsDatepicker formControlName="d1_DOB" [ngClass]="{ 'border-danger': challanService.challanForm.get('d1_DOB')?.invalid  && challanService.challanForm.get('d1_DOB')?.touched }" 
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY',maxDate : today}" (ngModelChange)="onChangeLicenceNumber()">
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY',maxDate : today}" (bsValueChange)="onChangeLicenceNumber()">
                                 <span class="input-group-text cursor-pointer" (click)="!isFieldReadonly() && dbv.toggle();$event.stopPropagation()">
                                     <i class="fa fa-calendar"></i>
                                 </span>
@@ -950,7 +950,8 @@
                                 [class.disabled-select]="challanService.filterList?.loadingBy === 'XX5' || challanService.filterList?.loadingBy === 'XX9' ? true : false"
                                 >
                             </ng-select>
-                            <input type="text" class="form-control required2" formControlName="NewRate"  [value]="item.value.NewRate" [readOnly]="challanService.filterList && (challanService.filterList.loadingBycodeFor === 'XX5' || challanService.filterList.loadingBy === 'XX9')">
+                            <input type="text" class="form-control required2" formControlName="NewRate" oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                             [value]="item.value.NewRate" [readOnly]="challanService.filterList && (challanService.filterList.loadingBycodeFor === 'XX5' || challanService.filterList.loadingBy === 'XX9')">
                             <div class="text-danger small mt-1" *ngIf="challanService.avalabledocket.at(i).get('rateError')?.value">
                                 {{ challanService.avalabledocket.at(i).get('rateError')?.value }}
                             </div>

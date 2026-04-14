@@ -345,7 +345,7 @@ SearchfilterForm(){
     // permitDate : new FormControl(),
     insuranceDate : new FormControl(),
     fitnessDate : new FormControl(),
-    driver1Licence:new FormControl('',Validators.required),
+    driver1Licence:new FormControl('',[Validators.required,Validators.pattern(/^[A-Za-z]{2}\d{2}\s?\d{11}$/)]),
     d1_DOB:new FormControl(''),
     driver1Name:new FormControl(),
     driver1RTONo:new FormControl(),
@@ -781,6 +781,7 @@ onSubmit(){
     ApprovedBy:challanForm?.approvedBy,
     ERD:new Date(challanForm?.ERD).toISOString(),
     DAVendor:"",
+    Version:'1'
     },
      "CMR":{
       Module_Title_desc:"",
