@@ -162,11 +162,16 @@ public isPatching:boolean=false;
          this.challanService.buildForm();
          this.challanService.getLocationData();
         // Vendor Type specific filtering for DRS with DRSType 'Y' BA
+        const deliveryAgentControl = this.challanService.challanForm.get('deliveryAgent');
         if (this.challanService.filterList.DRSType === 'Y') {
+           deliveryAgentControl?.setValidators([Validators.required]);
+           deliveryAgentControl?.updateValueAndValidity();
           const allowedVendorCodes = ['04'];
           this.challanService.vendorTypeList = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
           this.getDeliveryAgents();
         }else{
+           deliveryAgentControl?.clearValidators();
+           deliveryAgentControl?.updateValueAndValidity();
          const allowedVendorCodes = ['XX1', '19', 'XX'];
          this.challanService.vendorTypeList = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
         } 
