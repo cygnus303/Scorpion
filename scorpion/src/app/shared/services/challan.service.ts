@@ -781,6 +781,7 @@ onSubmit(){
     ApprovedBy:challanForm?.approvedBy,
     ERD:new Date(challanForm?.ERD).toISOString(),
     DAVendor:"",
+    Version:'1'
     },
      "CMR":{
       Module_Title_desc:"",
