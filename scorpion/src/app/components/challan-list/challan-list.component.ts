@@ -1327,6 +1327,8 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
             this.isPatching = true;
             // Use setTimeout to avoid NG0100 error
             var vehicleType = this.vehicleTypeList.find((d=>d.typeCode === response.data.fTlType));
+            console.log(vehicleType ,'fTLType')
+            console.log(response.data.fTlType ,'vehicleType')
             setTimeout(() => {
               // 1 PATCH BASIC DATA IMMEDIATELY
               this.challanService.challanForm.patchValue({
