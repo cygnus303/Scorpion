@@ -42,8 +42,12 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end">FTL Type</label>
             <div class="col-sm-7">
-              <ng-select class="required2" [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId" required placeholder="Select FTL Type"
-              formControlName="fTlType" notFoundText="No matches found" [ngClass]="{ 'border-danger': dAForm.get('fTlType')?.invalid  && dAForm.get('fTlType')?.touched }"></ng-select>
+              <ng-select class="noFoundTextColor clear-icon"  [items]="vendorContractService.vehicleTypeList" bindLabel="type_Name" bindValue="typeCode"
+               required placeholder="Select FTL Type"
+              formControlName="fTlType" notFoundText="No matches found" [ngClass]="{ 'border-danger': dAForm.get('fTlType')?.invalid  && dAForm.get('fTlType')?.touched }">
+              </ng-select>
+              <!-- <ng-select class="required2" [items]="docketService.typeofMovementList" bindLabel="codeDesc" bindValue="codeId" required placeholder="Select FTL Type"
+              formControlName="fTlType" notFoundText="No matches found" [ngClass]="{ 'border-danger': dAForm.get('fTlType')?.invalid  && dAForm.get('fTlType')?.touched }"></ng-select> -->
                <div class="text-danger" *ngIf="dAForm.get('fTlType')?.invalid && dAForm.get('fTlType')?.touched "> This field is required.</div>
             </div>
           </div>

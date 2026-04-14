@@ -827,7 +827,7 @@ onSubmit(){
     "CTVD":{
       THCNO:"N/A",
       VehicleNO:challanForm?.vehicleNO?challanForm?.vehicleNO:'O',
-      VehicleType:challanForm?.fTLType,
+      VehicleType:challanForm?.vehicleType,
       FTLType:challanForm?.fTLType,
       VehicleCapacity:challanForm?.vehicleCapacity?challanForm?.vehicleCapacity:'0',
       Driver1Name:challanForm?.driver1Name,

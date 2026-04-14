@@ -414,29 +414,31 @@
             </div>
         </div>
         <div class="row pb-3">
-            <!-- <div class="col-4">
+            <div class="col-4">
                 <div class="row align-items-center">
-                    <label class="col-sm-5 col-form-label text-end">Vehicle Type</label>
+                    <label class="col-sm-5 col-form-label text-end">FTL Type</label>
                     <div class="col-sm-7">
                                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vehicle Type" formControlName="vehicleType"
                                 [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode" appFocusNext [readonly]="isFieldReadonly()"
                                 [ngClass]="{ 'border-danger': challanService.challanForm.get('vehicleType')?.invalid  && challanService.challanForm.get('vehicleType')?.touched }"
-                            notFoundText="No matches found" (change)="onChangeFTLType($event)"></ng-select>
+                            notFoundText="No matches found" (change)="onChangeVehicleType($event)"></ng-select>
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vehicleType')?.invalid && challanService.challanForm.get('vehicleType')?.touched "> This field is required.</div>
                     </div>
                 </div>
-            </div> -->
+            </div>
+            <!-- {{challanService.challanForm.value.vehicleType }}
             <div class="col-4">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">FTL Type</label>
                     <div class="col-sm-7">
-                          <ng-select class="noFoundTextColor required2 clear-icon" placeholder="FTL Type" formControlName="fTLType" [readonly]="challanService.challanForm.value.vendorType === 'XX1' || isFieldReadonly()" appFocusNext required
-                            notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" [items]="docketService.typeofMovementList" (change)="onChangeFTLType($event)"
-                            [ngClass]="{ 'border-danger': challanService.challanForm.get('fTLType')?.invalid  && challanService.challanForm.get('fTLType')?.touched }"></ng-select>
-                            <div class="text-danger text-start" *ngIf="challanService.challanForm.get('fTLType')?.invalid && challanService.challanForm.get('fTLType')?.touched "> This field is required.</div>
-                        </div>
+                        <ng-select class="noFoundTextColor required2 clear-icon" placeholder="FTL Type" formControlName="fTLType" [readonly]="challanService.challanForm.value.vendorType === 'XX1' || isFieldReadonly()" appFocusNext required
+                        notFoundText="No matches found"  bindLabel="codeDesc" bindValue="codeId" [items]="docketService.typeofMovementList" (change)="onChangeFTLType($event)"
+                        [ngClass]="{ 'border-danger': challanService.challanForm.get('fTLType')?.invalid  && challanService.challanForm.get('fTLType')?.touched }"></ng-select>
+                        <div class="text-danger text-start" *ngIf="challanService.challanForm.get('fTLType')?.invalid && challanService.challanForm.get('fTLType')?.touched "> This field is required.</div>
+                    </div>
                 </div>
             </div>
+            {{challanService.challanForm.value.fTLType}} -->
             <div class="col-4">
                 <div class="row">
                     <label class="col-sm-5 col-form-label text-end">Registration Date</label>

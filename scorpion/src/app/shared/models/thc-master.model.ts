@@ -19,7 +19,8 @@ export type FlightsListResponse = CodeResponse;
 
 export interface VehicleTypeListResponse{
     type_Name:string,
-    typeCode:string
+    typeCode:string,
+    fleet_Type:string
 }
 
 export interface CustomerListResponse{

@@ -7,6 +7,7 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { DeliveryAgentByCodeResponse, LocationListResponse, VendorsListResponse } from 'app/shared/models/delivery-agent.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { generalMasterResponse } from 'app/shared/models/general-master.model';
+import { VendorContractService } from 'app/shared/services/vendor-contract.service';
 
 @Component({
   selector: 'delivery-agent-modal',
@@ -41,7 +42,7 @@ export class DeliveryAgentModalComponent {
     public docketService: DocketService,
     public deliveryAgentService: DeliveryAgentService,
     public sweetAlertService:SweetAlertService,
-    public basicDetailService:BasicDetailService
+    public basicDetailService:BasicDetailService,public vendorContractService:VendorContractService
   ) {}
 
 getVehicleDetail(event?: any) {
@@ -119,6 +120,7 @@ applyGPSProviderValidation(){
       this.dAForm?.get('gpsEnabled')?.valueChanges.subscribe(() => {
       this.applyGPSProviderValidation();
     });
+    this.vendorContractService.getVehicleType('O');
    this.docketService.getTypeofMovementData('');
     if(data){
       this.deliveryAgentCode = data.dA_Code;

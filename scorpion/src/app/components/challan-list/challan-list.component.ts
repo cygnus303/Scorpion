@@ -388,6 +388,14 @@ onDocketSelectionChange(ctrl: AbstractControl) {
     this.updateTotalDockets();
   }
 
+  onChangeVehicleType(event:any){
+    this.getVehicleCapacity(event.typeCode);
+    this.challanService.challanForm.patchValue({
+      fTLType:event.fleet_Type
+    })
+}
+
+
   getLoadingCharge(event: any) {
     this.challanService.challanForm.patchValue({
       VendName : event?.text
@@ -1312,29 +1320,34 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
               ];
             }
             this.isPatching = true;
-            // ✅ 1️⃣ PATCH BASIC DATA IMMEDIATELY
-            this.challanService.challanForm.patchValue({
-              deliveryAgentMoNo: response.data.deliveryAgentMobile,
-              vendorType: '04',
-              vendorCode: response.data.businessAssociateVendor,
-              vehicleNO: response.data.vehicleNo,
-              fTLType: response.data.fTlType,
-              vehicleType:response.data.fTlType,
-              eNGINENO: response.data.engineNo,
-              cHASISNO: response.data.chassisNo,
-              rCBOOKNO: response.data.rcBookNo,
-              // permitDate:this.datePipe.transform(response.data.permitValidityDate, "dd MMMM yyyy"),
-              fitnessDate: this.datePipe.transform(response.data.fitnessValidityDate, "dd MMMM yyyy"),
-              insuranceDate: this.datePipe.transform(response.data.insuranceValidityDate, "dd MMMM yyyy"),
-              driver1Licence: response.data.licenseNo,
-              d1_DOB: this.datePipe.transform(response.data.dateOfBirth, "dd MMMM yyyy"),
-              driver1RTONo: response.data.issueByRTO,
-              driver1LicenceValDate: this.datePipe.transform(response.data.licenseValidityDate, "dd MMMM yyyy"),
-              registrationDate: this.datePipe.transform(response.data.registrationDate, "dd MMMM yyyy"),
-              driver1Name: response.data.driverName
-            });
-            this.onChangeFTLType(response.data.fTlType);
-            this.challanService.challanForm.patchValue({ ISNEWDA: false });
+            // Use setTimeout to avoid NG0100 error
+            var vehicleType = this.vehicleTypeList.find((d=>d.typeCode === response.data.fTlType));
+            setTimeout(() => {
+              // 1 PATCH BASIC DATA IMMEDIATELY
+              this.challanService.challanForm.patchValue({
+                deliveryAgentMoNo: response.data.deliveryAgentMobile,
+                vendorType: '04',
+                vendorCode: response.data.businessAssociateVendor,
+                vehicleNO: response.data.vehicleNo,
+                fTLType: vehicleType?.fleet_Type || '',
+                vehicleType:response.data.fTlType,
+                eNGINENO: response.data.engineNo,
+                cHASISNO: response.data.chassisNo,
+                rCBOOKNO: response.data.rcBookNo,
+                // permitDate:this.datePipe.transform(response.data.permitValidityDate, "dd MMMM yyyy"),
+                fitnessDate: this.datePipe.transform(response.data.fitnessValidityDate, "dd MMMM yyyy"),
+                insuranceDate: this.datePipe.transform(response.data.insuranceValidityDate, "dd MMMM yyyy"),
+                driver1Licence: response.data.licenseNo,
+                d1_DOB: this.datePipe.transform(response.data.dateOfBirth, "dd MMMM yyyy"),
+                driver1RTONo: response.data.issueByRTO,
+                driver1LicenceValDate: this.datePipe.transform(response.data.licenseValidityDate, "dd MMMM yyyy"),
+                registrationDate: this.datePipe.transform(response.data.registrationDate, "dd MMMM yyyy"),
+                driver1Name: response.data.driverName
+              });
+              this.onChangeFTLType(response.data.fTlType);
+              this.challanService.challanForm.patchValue({ ISNEWDA: false });
+              this.isPatching = false;
+            }, 0);
  
             this.challanService.getVendorsList('04');
             this.avalabledocketinPRS();
