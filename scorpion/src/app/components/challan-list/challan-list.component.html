@@ -418,10 +418,13 @@
                 <div class="row align-items-center">
                     <label class="col-sm-5 col-form-label text-end">FTL Type</label>
                     <div class="col-sm-7">
-                               <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vehicle Type" formControlName="vehicleType"
+                               <!-- <ng-select class="noFoundTextColor required2 clear-icon" placeholder="FTL Type" formControlName="vehicleType"
                                 [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode" appFocusNext [readonly]="isFieldReadonly()"
                                 [ngClass]="{ 'border-danger': challanService.challanForm.get('vehicleType')?.invalid  && challanService.challanForm.get('vehicleType')?.touched }"
-                            notFoundText="No matches found" (change)="onChangeVehicleType($event)"></ng-select>
+                            notFoundText="No matches found" (change)="onChangeVehicleType($event)"></ng-select> -->
+                            <ng-select class="noFoundTextColor required2 clear-icon" placeholder="FTL Type" formControlName="vehicleType" [readonly]="challanService.challanForm.value.vendorType === 'XX1' || isFieldReadonly()" appFocusNext required
+                        notFoundText="No matches found"   [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode" (change)="onChangeVehicleType($event)" required
+                        [ngClass]="{ 'border-danger': challanService.challanForm.get('vehicleType')?.invalid  && challanService.challanForm.get('vehicleType')?.touched }"></ng-select>
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vehicleType')?.invalid && challanService.challanForm.get('vehicleType')?.touched "> This field is required.</div>
                     </div>
                 </div>
