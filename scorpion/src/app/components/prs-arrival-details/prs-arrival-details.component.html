@@ -180,27 +180,26 @@
                             No Record Found.
                         </td>
                     </tr>
-                        <tr *ngFor="let ctrl of pdcControls; let i = index" [formGroupName]="i">
-                            <td>{{ctrl.value.dockno}}</td>
-                            <td>{{ctrl.value.orgncd}}</td>
-                            <td>{{ctrl.value.destcd}}</td>
-                            <td>{{ctrl.value.paybas}}</td>
-                            <td style="width:290px; max-width: 290px;">
-                                    <ng-select class="clear-icon required2" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type"
-                                        [items]="generalMasterService.chargeTypeData" [readonly]="this.prsArrivalForm.value.LoadingBy ==='XX9' || this.prsArrivalForm.value.LoadingBy ==='XX5'"></ng-select>
-                                    <input type="text" class="form-control form-control-sm mt-1" formControlName="newRate" appFocusNext
-                                        [readOnly]="this.prsArrivalForm.value.LoadingBy === 'XX5'" (focus)="clearNewRateOnFocus(i)" (blur)="resetNewRateOnBlur(i)"/>
-                                    <div class="text-danger small mt-1" *ngIf="ctrl.get('rateError')?.value">
-                                        {{ ctrl.get('rateError')?.value }}
-                                    </div>
-                            </td>
-                            <td style="width:200px; max-width: 200px;"><input class="form-control form-control-sm" formControlName="actuwt" type="number" readonly /></td>
-                            <td style="width:200px; max-width: 200px;"><input class="form-control form-control-sm" formControlName="pkgsno" type="number" readonly/></td>
-                            <td style="width:200px; max-width: 200px;"><input class="form-control form-control-sm" formControlName="chrgwt" type="number" readonly/></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                    <tr *ngFor="let ctrl of pdcControls; let i = index" [formGroupName]="i">
+                        <td>{{ctrl.value.dockno}}</td>
+                        <td>{{ctrl.value.orgncd}}</td>
+                        <td>{{ctrl.value.destcd}}</td>
+                        <td>{{ctrl.value.paybas}}</td>
+                        <td style="width:290px; max-width: 290px;">
+                            <ng-select class="clear-icon required2" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type"
+                                [items]="generalMasterService.chargeTypeData" [readonly]="this.prsArrivalForm.value.LoadingBy ==='XX9' || this.prsArrivalForm.value.LoadingBy ==='XX5'"></ng-select>
+                            <input type="text" class="form-control form-control-sm mt-1" formControlName="newRate" appFocusNext
+                               [readOnly]="this.prsArrivalForm.value.LoadingBy === 'XX5'" (focus)="clearNewRateOnFocus(i)" (blur)="resetNewRateOnBlur(i)"/>
+                            <div class="text-danger small mt-1" *ngIf="ctrl.get('rateError')?.value">
+                                {{ ctrl.get('rateError')?.value }}
+                            </div>
+                        </td>
+                        <td style="width:200px; max-width: 200px;"><input class="form-control form-control-sm" formControlName="actuwt" type="number" readonly /></td>
+                        <td style="width:200px; max-width: 200px;"><input class="form-control form-control-sm" formControlName="pkgsno" type="number" readonly /></td>
+                        <td style="width:200px; max-width: 200px;"><input class="form-control form-control-sm" formControlName="chrgwt" type="number" readonly /></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </form>
