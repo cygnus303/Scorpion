@@ -1,8 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import { ApiHandlerService } from './api-handler.service';
-import { Observable } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 import { IApiBaseResponse } from '../interface/api-base-action-response';
 import { PRSGeneralMasterResponse } from '../models/thc-master.model';
+import { ApiLoadingService } from './APILoading.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { PRSGeneralMasterResponse } from '../models/thc-master.model';
 export class THCMasterService {
 
 
-  constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService) {}
+  constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService,public apiLoading: ApiLoadingService) {}
 
   getVendorsList(vendors: any) {
     return this.apiHandlerService.Post(`THC/GetVendors`,vendors);
@@ -49,7 +50,10 @@ export class THCMasterService {
   }
 
   avalabledocketinPRS(vendors: any) {
-    return this.apiHandlerService.Post(`THC/AvalabledocketinPRS`,vendors);
+    this.apiLoading.start();
+    return this.apiHandlerService.Post(`THC/AvalabledocketinPRS`,vendors).pipe(
+        finalize(() => this.apiLoading.stop()) 
+      );
   }
 
    generate(data:any,vendors: any) {
