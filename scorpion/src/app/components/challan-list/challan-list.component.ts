@@ -1393,10 +1393,9 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
               this.onChangeFTLType(response.data.fTlType);
               this.challanService.challanForm.patchValue({ ISNEWDA: false });
               this.isPatching = false;
+              this.challanService.getVendorsList('04');
+              this.avalabledocketinPRS();
             }, 0);
- 
-            this.challanService.getVendorsList('04');
-            this.avalabledocketinPRS();
           } else {
             this.challanService.challanForm.patchValue({ ISNEWDA: true });
             this.challanService.isAgentSelected = false;
