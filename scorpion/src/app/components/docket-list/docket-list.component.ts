@@ -424,7 +424,7 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
           "chrgwt": this.docketService.invoiceform.value.finalActualWeight || 0,
           "chargedPkgsNo": this.docketService.invoiceform.value.chargeWeightPerPkg,
           "prodcd": this.docketService.basicDetailForm.value.contents,
-          "spl_svc_req": "",
+          "spl_svc_req":this.docketService.basicDetailForm.value.specialInstruction,
           "stax_paidby": this.docketService.freightForm.value.stax_paidby,
           "stax_regno": "",
           "service_Class": this.docketService.basicDetailForm.value.serviceType,
