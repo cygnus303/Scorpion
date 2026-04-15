@@ -363,7 +363,7 @@ onDocketSelectionChange(ctrl: AbstractControl) {
 
     this.challanService.updateTotalLoadingCharge();
     this.challanService.challanForm.patchValue({
-      contractAmount: totalAmount,
+      contractAmount: totalAmount.toFixed(2),
       totalDockets: selectedCount,
       tDSOnAmount: totalAmount,
       wtLoaded: totalWeight
@@ -635,11 +635,20 @@ vendorCodeName(){
   }
 
   onChangeLicenceNumber(event?: any) {
-    if(this.isPatching){return}
-    const dob = this.challanService.challanForm.value.d1_DOB;
-    const licenseNo = event ? event.target.value?.trim() : this.challanService.challanForm.value.driver1Licence?.trim();
+    if (this.isPatching) { return }
+    let dob = this.challanService.challanForm.value.d1_DOB;
+    let licenseNo = this.challanService.challanForm.value.driver1Licence?.trim();
+    if (event instanceof Date) {
+      dob = event;
+    }
+
+    else if (event?.target) {
+      licenseNo = event.target.value?.trim();
+    }
+
     const licenseControl = this.challanService.challanForm.get('driver1Licence');
-    if (!licenseControl || licenseControl.invalid || !dob) {
+
+    if (!licenseControl || licenseControl.invalid || !dob || !licenseNo) {
       licenseControl?.markAsTouched();
       this.challanService.challanForm.get('d1_DOB')?.markAsTouched();
       return;
