@@ -189,7 +189,7 @@ private createPdcGroup(item: any): FormGroup {
     dockno: new FormControl(item.dockno || item.pdcno || ''),
     orgncd: new FormControl(item.orgncd || ''),
     destcd: new FormControl(item.destcd || ''),
-    paybas: new FormControl(item.paybas || item.paybascd || ''),
+    paybas: new FormControl(item.paybascd || ''),
     ratetype: new FormControl(item.rateType ?? null),
     actuwt: new FormControl(item.actuwt ?? 0),
     pkgsno: new FormControl(item.pkgsno ?? 0),
