@@ -11,8 +11,9 @@ import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service
 import { DocketService } from 'app/shared/services/docket.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
-import { finalize } from 'rxjs';
+import { finalize, Subject, switchMap } from 'rxjs';
 import { Modal } from 'bootstrap';
+import { ApiLoadingService } from 'app/shared/services/APILoading.service';
  
 
 @Component({
@@ -63,6 +64,7 @@ public vendorTypeList:generalMasterResponse[]=[];
 public EwaybillForm!:FormGroup;
 public modalInstance: any;
 public isPatching:boolean=false;
+private avalablePRSSubject = new Subject<any>();
 
 @ViewChild('fileInput') fileInput!: ElementRef;
   constructor(
@@ -74,7 +76,8 @@ public isPatching:boolean=false;
     public THCService: THCMasterService,
     private route: ActivatedRoute,
     public commonDateService: CommonDateService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    public apiLoading: ApiLoadingService,
   ) { }
 
   ngOnInit() {
@@ -152,6 +155,57 @@ public isPatching:boolean=false;
     });
   
     this.updateVehicleRequiredValidator(); // initial call
+    this.avalablePRSSubject
+    .pipe(
+      switchMap((payload) => {
+        this.isLoading = true;
+
+        return this.THCService
+          .avalabledocketinPRS(payload)
+          .pipe(
+            finalize(() => {
+              this.isLoading = false;
+            })
+          );
+      })
+    )
+    .subscribe({
+      next: (response: any) => {
+
+ if (response && response.data && Array.isArray(response.data)) {
+          const updatedData = response.data;
+          const docketArray = this.challanService.avalabledocket;
+          if (docketArray && docketArray.length > 0) {
+            updatedData.forEach((item: any) => {
+              const match = docketArray.controls.find(
+                (ctrl: any) => ctrl.value.DOCKNO === item.dockno
+              );
+              if (match) {
+                match.get('ContractAmount')?.setValue(item.contractAmount);
+                match.get('tDSOnAmount')?.setValue(item.contractAmount);
+                match.get('Message')?.setValue(item.message);
+
+              }
+            });
+          } else {
+            this.challanService.patchAvailableDockets(updatedData);
+          }
+          // filter chrgType
+          const chrgTypeValue = this.challanService.filterList.chrgType;
+          if (chrgTypeValue) {
+            this.challanService.avalabledocket.controls.forEach((ctrl) => {
+              ctrl.patchValue({
+                rateType: chrgTypeValue
+              });
+            });
+          }
+          this.updateTotalDockets();
+        }
+      },
+      error: (err) => {
+        this.sweetAlertService.error(err.error.message);
+      }
+    });
   }
 
   filterListpatchValue(event: any) {
@@ -785,9 +839,9 @@ checkLicenseExpiry(event?:any) {
     } else {
       this.getVehicleType('O')
     }
-    if (this.challanService.challanForm.value.vendorType === '04') {
-      this.avalabledocketinPRS(event);
-    }
+    // if (this.challanService.challanForm.value.vendorType === '04') {
+    //   this.avalabledocketinPRS(event);
+    // }
     this.getContractDetail()
   }
 
@@ -961,67 +1015,35 @@ checkLicenseExpiry(event?:any) {
 }
 
   avalabledocketinPRS(event?: any) {
-    if (this.docketService.loginUserList.Type === '1') {
-      return;
-    }
-    if (this.challanService.challanForm.value?.vendorType !== '04' && event) {
-      return;
-    }
-    const data = this.challanService.filterList;
-    const payload = {
-      fromdt: this.formatDate(data?.dateRange[0]),
-      todt: this.formatDate(data?.dateRange[1]),
-      dttyp: data.dttyp ? data.dttyp : '',
-      paybas: data.paybas ? data.paybas : 'ALL',
-      trn: data.trnMod ? data.trnMod : 'ALL',
-      bustyp: data.bustyp ? data.bustyp : 'ALL',
-      status: this.challanService.challanForm.value?.vendorType === '04' ? 'B' : 'P',
-      doctyp: this.docketService.loginUserList.Type === '2' ? "PRS" : "DRS",
-      baseLocationCode: this.docketService.loginUserList.LocationCode,
-      docketList: data.docketList ? data.docketList : '',
-      alloted_To: this.challanService.challanForm.value?.vendorType === '04' ? this.challanService.challanForm.value.vendorCode : '',
-      loadingBy: data.loadingBy,
-      chrgType: data.chrgType ? data.chrgType : "ALL",
-      odaType: data.odaType ? data.odaType : '',
-      baseCompanyCode: this.docketService.loginUserList.Companycode,
-      flag: data.flag,
-    }
-    this.isLoading = true;
-    this.THCService.avalabledocketinPRS(payload).pipe(finalize(() => { this.isLoading = false; })).subscribe({next: (response: any) => {
-        if (response && response.data && Array.isArray(response.data)) {
-          const updatedData = response.data;
-          const docketArray = this.challanService.avalabledocket;
-          if (docketArray && docketArray.length > 0) {
-            updatedData.forEach((item: any) => {
-              const match = docketArray.controls.find(
-                (ctrl: any) => ctrl.value.DOCKNO === item.dockno
-              );
-              if (match) {
-                match.get('ContractAmount')?.setValue(item.contractAmount);
-                match.get('tDSOnAmount')?.setValue(item.contractAmount);
-                match.get('Message')?.setValue(item.message);
-
-              }
-            });
-          } else {
-            this.challanService.patchAvailableDockets(updatedData);
-          }
-          // filter chrgType
-          const chrgTypeValue = this.challanService.filterList.chrgType;
-          if (chrgTypeValue) {
-            this.challanService.avalabledocket.controls.forEach((ctrl) => {
-              ctrl.patchValue({
-                rateType: chrgTypeValue
-              });
-            });
-          }
-          this.updateTotalDockets();
-        }
-      }, error: (err) => {
-        this.sweetAlertService.error(err.error.message)
-      }
-    });
+  if (this.docketService.loginUserList.Type === '1') {
+    return;
   }
+  if (this.challanService.challanForm.value?.vendorType !== '04' && event) {
+    return;
+  }
+  const data = this.challanService.filterList;
+  const payload = {
+    fromdt: this.formatDate(data?.dateRange[0]),
+    todt: this.formatDate(data?.dateRange[1]),
+    dttyp: data.dttyp ? data.dttyp : '',
+    paybas: data.paybas ? data.paybas : 'ALL',
+    trn: data.trnMod ? data.trnMod : 'ALL',
+    bustyp: data.bustyp ? data.bustyp : 'ALL',
+    status: this.challanService.challanForm.value?.vendorType === '04'? 'B': 'P',
+    doctyp: this.docketService.loginUserList.Type === '2'? "PRS": "DRS",
+    baseLocationCode: this.docketService.loginUserList.LocationCode,
+    docketList: data.docketList ? data.docketList : '',
+    alloted_To: this.challanService.challanForm.value?.vendorType === '04' ? this.challanService.challanForm.value.vendorCode : '',
+    loadingBy: data.loadingBy,
+    chrgType: data.chrgType ? data.chrgType : "ALL",
+    odaType: data.odaType ? data.odaType : '',
+    baseCompanyCode: this.docketService.loginUserList.Companycode,
+    flag: data.flag,
+  };
+
+  this.avalablePRSSubject.next(payload);
+
+}
 
   getMFListFromRoute(event: any) {
     this.challanService.challanForm.patchValue({
@@ -1390,7 +1412,9 @@ triggerFileInput() { if (this.fileInput?.nativeElement) this.fileInput.nativeEle
                 registrationDate: this.datePipe.transform(response.data.registrationDate, "dd MMMM yyyy"),
                 driver1Name: response.data.driverName
               });
+              if(response.data.fTlType){
               this.onChangeFTLType(response.data.fTlType);
+              }
               this.challanService.challanForm.patchValue({ ISNEWDA: false });
               this.isPatching = false;
               this.challanService.getVendorsList('04');

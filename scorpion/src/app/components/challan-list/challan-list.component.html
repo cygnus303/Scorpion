@@ -1159,9 +1159,10 @@
         <button class="btn btn-secondary me-2" (click)="challanService.onReset()">
              <i class="fas fa-sync"></i>&nbsp;Reset
         </button>
-        <button class="btn btn-success" (click)="challanService.onSubmit()" [disabled]="challanService.isRedirect">
+        <button class="btn btn-success" (click)="challanService.onSubmit()" [disabled]="challanService.isRedirect" *ngIf="(!(apiLoading.loading$ | async))">
             <i class="fas fa-check"></i>&nbsp;Submit
         </button>
+    <div *ngIf="(apiLoading.loading$ | async)" class="d-flex align-items-center text-danger fw-semibold">please wait…</div>
     </div>
     <div *ngIf="challanService.isSubmitting" class="loading-overlay">
   <div class="spinner-container">
