@@ -839,9 +839,9 @@ checkLicenseExpiry(event?:any) {
     } else {
       this.getVehicleType('O')
     }
-    // if (this.challanService.challanForm.value.vendorType === '04') {
-    //   this.avalabledocketinPRS(event);
-    // }
+    if (this.challanService.challanForm.value.vendorType === '04') {
+      this.avalabledocketinPRS(event);
+    }
     this.getContractDetail()
   }
 
