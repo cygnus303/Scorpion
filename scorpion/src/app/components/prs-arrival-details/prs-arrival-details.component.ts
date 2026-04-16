@@ -331,9 +331,7 @@ export class PRSArrivalDetailsComponent {
             dockdt: item.dockdt,
             isEnabled: true
           };
-
         }),
-
       };
 
       console.log("FINAL PAYLOAD", payload);
