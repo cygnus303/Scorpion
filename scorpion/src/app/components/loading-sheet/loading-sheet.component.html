@@ -355,6 +355,22 @@
           </div>
         </div>
       </div>
+      <div class="col-4">
+        <div class="row">
+          <label class="col-sm-5 col-form-label text-end">Shift In Charge</label>
+          <div class="col-sm-7">
+             <ng-select class="noFoundTextColor required2" placeholder="Shift In Charge" formControlName="ShiftInCharge"
+                notFoundText="No matches found" appFocusNext
+                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('ShiftInCharge')?.invalid  && loadingSheetService.LSForm.get('ShiftInCharge')?.touched }">
+                 <ng-option *ngFor="let data of loadingSheetService.unLoaderUserList" [value]="data.userId">{{data.userId}} : {{data.name}}</ng-option>
+              </ng-select>
+                <div class="text-danger text-start"
+                *ngIf="loadingSheetService.LSForm.get('ShiftInCharge')?.invalid && loadingSheetService.LSForm.get('ShiftInCharge')?.touched">
+                This field is required.
+              </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   }
