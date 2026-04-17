@@ -359,13 +359,13 @@
         <div class="row">
           <label class="col-sm-5 col-form-label text-end">Shift In Charge</label>
           <div class="col-sm-7">
-             <ng-select class="noFoundTextColor required2" placeholder="Shift In Charge" formControlName="ShiftInCharge"
+             <ng-select class="noFoundTextColor required2" placeholder="Shift In Charge" formControlName="shiftInCharge"
                 notFoundText="No matches found" appFocusNext
-                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('ShiftInCharge')?.invalid  && loadingSheetService.LSForm.get('ShiftInCharge')?.touched }">
+                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('shiftInCharge')?.invalid  && loadingSheetService.LSForm.get('shiftInCharge')?.touched }">
                  <ng-option *ngFor="let data of loadingSheetService.unLoaderUserList" [value]="data.userId">{{data.userId}} : {{data.name}}</ng-option>
               </ng-select>
                 <div class="text-danger text-start"
-                *ngIf="loadingSheetService.LSForm.get('ShiftInCharge')?.invalid && loadingSheetService.LSForm.get('ShiftInCharge')?.touched">
+                *ngIf="loadingSheetService.LSForm.get('shiftInCharge')?.invalid && loadingSheetService.LSForm.get('shiftInCharge')?.touched">
                 This field is required.
               </div>
           </div>
