@@ -70,6 +70,8 @@ ngOnInit(){
       this.getLoadingSheet();
       this.loadingSheetService.LSForm.get('loadingByUser')?.setValidators([Validators.required]);
       this.loadingSheetService.LSForm.get('LoadingSupervisor')?.setValidators([Validators.required]);
+      this.loadingSheetService.LSForm.get('shiftInCharge')?.setValidators([Validators.required]);
+
     }else{
       this.getVendorType();
       this.generalMasterService.getLSModedata();
@@ -79,6 +81,9 @@ ngOnInit(){
       this.loadingSheetService.LSForm.get('loadingByUser')?.setValue('');
       this.loadingSheetService.LSForm.get('LoadingSupervisor')?.clearValidators();
       this.loadingSheetService.LSForm.get('LoadingSupervisor')?.setValue('');
+      this.loadingSheetService.LSForm.get('shiftInCharge')?.clearValidators();
+      this.loadingSheetService.LSForm.get('shiftInCharge')?.setValue('');
+
     }
 
     //       this.loadingSheetService.LSForm.get('rdVehicle')?.valueChanges.subscribe((value) => {
