@@ -20,7 +20,7 @@ import { debounceTime } from 'rxjs';
 export class ThcArrivalListComponent {
   public isLoading: boolean = false;
   public env = environment;
-  public THCFilterForm!: FormGroup;
+  public THCArrivalFilterForm!: FormGroup;
   @ViewChild('ThcArrivalPopupComponent') ThcArrivalPopupComponent!: ThcArrivalPopupComponent;
 
 
@@ -96,14 +96,14 @@ export class ThcArrivalListComponent {
   }
 
   buildFilterForm() {
-    this.THCFilterForm = this.fb.group({
+    this.THCArrivalFilterForm = this.fb.group({
       fromDate: [new Date(new Date().setDate(new Date().getDate() - 7))],
       toDate: [new Date()],
       statusFilter: ['All'],
       searchText: ['']
     });
 
-    this.THCFilterForm.valueChanges.pipe(
+    this.THCArrivalFilterForm.valueChanges.pipe(
       debounceTime(300)
     ).subscribe(() => {
       this.fetchData();
