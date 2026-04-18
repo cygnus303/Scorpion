@@ -1,0 +1,131 @@
+<!-- ══ FORWARD PFM MODAL ══ -->
+<ng-template #Templatepod>
+    <div class="modal-header">
+        <div class="d-flex align-items-center gap-3">
+            <div class="pfm-icon fs-4 fw-bold" style="background:#e8f0fe;border:1px solid #aac4f5;">📋</div>
+            <div>
+                <div class="fw-bold fs-5">THC Financial Details</div>
+                <div class="pfm-subtitle">Complete THC Financial Details below</div>
+            </div>
+        </div>
+        <button type="button" class="btn-close pfm-close" (click)="modalRef.hide()"></button>
+    </div>
+
+    <div>
+        <form >
+
+            <div class="modal-body input-background-color" style="padding:0;gap:0;">
+                <div class="p-3">
+                    <div class="control-bar d-block gap-2 mb-0">
+                        <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
+                            <div class="fw-bold"><i class="fas fa-info-circle me-2"></i>Basic Info</div>
+                        </div>
+                        <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
+                        <div class="row mb-4">
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label meta-label d-flex align-items-center gap-2">
+                                        THC No. :
+                                        <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                            {{'VH/PIM/2627/000001'}}
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group-input">
+                                    <label class="form-label meta-label d-flex align-items-center gap-2">
+                                        Contract Type :
+                                        <span class="fw-bold text-secondary" style="word-break: break-all;">
+                                            {{'--'}}
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-bar d-block gap-2 mb-0 mt-3">
+                        <div>
+                            <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
+                                <div class="fw-bold"><i class="fas fa-list me-2"></i>Payment Details</div>
+                            </div>
+                            <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
+                            <div style="border:2px solid var(--border);border-radius:3px; ">
+                                <div>
+                                    <div style="max-height: 350px; overflow-y: auto;">
+                                        <table style="width:100%;border-collapse:collapse;font-size:13px;"
+                                            class="data-table align-middle">
+                                            <thead style="position: sticky; top: 0; z-index: 1;">
+                                                <tr class="input-background-color"
+                                                    style="border-bottom:1px solid var(--border);">
+                                                    <th class="text-center">Contract Amt.</th>
+                                                    <th class="text-center">Standard Cont. Amt.</th>
+                                                    <th class="text-center">Advance Amount</th>
+                                                    <th class="text-center">Advance Amount Paid At</th>
+                                                    <th class="text-center">Balance Amount Paid At</th>
+                                                </tr>
+                                            </thead>
+                                            <!-- <tbody *ngIf="isLoading">
+                                                <tr>
+                                                    <td colspan="12" class="text-center py-5">
+                                                        <div class="spinner-border text-primary" role="status">
+                                                            <span class="visually-hidden">Loading...</span>
+                                                        </div>
+                                                        <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tbody *ngIf="!isLoading && lrList.length === 0">
+                                                <tr>
+                                                    <td colspan="12" class="text-center py-4 text-muted fs-5">
+                                                        No records found.
+                                                    </td>
+                                                </tr>
+                                            </tbody> -->
+                                            <tbody >
+                                                <tr >
+
+                                                    <td class="text-center">
+                                                      <input type="text" class="form-control form-control-sm">
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                      <input type="text" class="form-control form-control-sm">
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                      <input type="text" class="form-control form-control-sm">
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                      <input type="text" class="form-control form-control-sm">
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                      <input type="text" class="form-control form-control-sm">
+                                                    </td>
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+        <div class="modal-footer d-flex justify-content-between">
+            <div><span class="text-danger"></span></div>
+            <div class="gap-3 d-flex">
+                <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Cancel</button>
+                <button type="button" class="btn btn-primary px-4 py-2 rounded">
+                    <span class="me-2 fs-5">↗</span> Submit
+                </button>
+            </div>
+        </div>
+    </div>
+
+</ng-template>

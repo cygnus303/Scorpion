@@ -5,24 +5,24 @@
             THC Generation
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn btn-outline-primary px-4 py-2 rounded" >✕ Clear</button>
-            <button class="btn btn-success px-4 py-2 rounded">＋ Add THC</button>
-            <button class="btn btn-primary px-4 py-2 rounded" 
-             >
+            <button class="btn btn-outline-primary px-4 py-2 rounded">✕ Clear</button>
+            <button class="btn btn-primary px-4 py-2 rounded" (click)="openTHC()">+ Add THC</button>
+            <button class="btn btn-success px-4 py-2 rounded" >📥 Download XLS
                 <!-- <span *ngIf="!isdownload">📥 Download XLS</span>
-                    <span *ngIf="isdownload" class="spinner-border spinner-border-sm me-2"></span>
-                    <span *ngIf="isdownload">Downloading...</span> -->
+                <span *ngIf="isdownload" class="spinner-border spinner-border-sm me-2"></span>
+                <span *ngIf="isdownload">Downloading...</span> -->
             </button>
         </div>
     </div>
 
-    <div class="summary-strip">
+    <!-- Summary Strip -->
+     <div class="summary-strip">
         <div class="summary-card px-3 py-3 c-blue cursor-pointer"
-            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'All'" >
+            >
             <div class="d-flex justify-content-between align-items-center">
                 <div class="card-content">
                     <div class="s-label">Total THC</div>
-                    <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.total_LRs || 0 }}</div>
+                    <div class="s-val fs-2 fw-bold lh-1">{{ 0 }}</div>
                     <div class="small text-body-tertiary">All records today</div>
                 </div>
                 <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📋</div>
@@ -30,61 +30,47 @@
         </div>
 
         <div class="summary-card px-3 py-3 c-orange cursor-pointer"
-            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Generated'"
             >
             <div class="card-content">
-                <div class="s-label">Pending for Update</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.generated || 0}}</div>
+                <div class="s-label">Departed</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ 0}}</div>
                 <div class="small text-body-tertiary">Awaiting Update</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
         </div>
 
         <div class="summary-card px-3 py-3 c-teal cursor-pointer"
-            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Updated'"
             >
             <div class="card-content">
-                <div class="s-label">THC Updated</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.updated || 0}}</div>
-                <div class="small text-body-tertiary">Delivery Updated</div>
+                <div class="s-label">Completed Journey</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ 0}}</div>
+                <div class="small text-body-tertiary">Completed Journey</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">✅</div>
         </div>
 
         <div class="summary-card px-3 py-3 c-red cursor-pointer"
-            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Cancelled'"
-           >
+            >
             <div class="card-content">
                 <div class="s-label">Cancelled</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.cancelled || 0}}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{  0 }}</div>
                 <div class="small text-body-tertiary">Cancelled today</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🚫</div>
         </div>
 
-        <div class="summary-card c-purple cursor-pointer px-3 py-3"
-            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Billed'"
-            >
+        <!-- PRS BILLED -->
+        <div class="summary-card px-3 py-3 c-purple cursor-pointer"
+           >
             <div class="card-content">
                 <div class="s-label">Billed</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.billed || 0}}</div>
-                <div class="small text-body-tertiary">Billed today</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ 0 }}</div>
+                <div class="small text-body-tertiary">Vendor bill exists</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🧾</div>
         </div>
 
-        <div class="summary-card px-3 py-3 c-green cursor-pointer"
-            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'HCC Generated'"
-            >
-            <div class="card-content">
-                <div class="s-label">HCC Generated</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.hccGenerated || 0}}</div>
-                <div class="small text-body-tertiary">HCC generated today</div>
-            </div>
-            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
-        </div>
-
-    </div>
+    </div> 
 
     <div>
         <form [formGroup]="THCFilterForm">
@@ -92,14 +78,14 @@
                 <div class="control-bar border-0 shadow-none mb-0">
                     <div class="filter-group">
                         <span class="filter-label">🔍 Search</span>
-                        <input type="text" placeholder="search..." class="filter-bar" style="width:200px;"
-                            formControlName="searchText">
+                        <input type="text" placeholder="search..." class="filter-bar" style="width:200px;"  formControlName="searchText"
+                           >
 
                     </div>
                     <div class="date-range-group">
                         <span class="date-label">Date Range</span>
                         <div class="date-input-wrap" style="padding:0;">
-                            <input type="text" id="dateFrom" bsDatepicker formControlName="fromDate"
+                            <input type="text" id="dateFrom" bsDatepicker  formControlName="fromDate"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                                 style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
                             <span
@@ -117,8 +103,8 @@
                     <div class="divider-v"></div>
                     <div class="filter-group">
                         <span class="filter-label">Status</span>
-                        <ng-select type="text" placeholder="Status" class="custom-status-select clear-icon"
-                            formControlName="statusFilter" [items]="statusList" bindLabel="label" bindValue="value">
+                        <ng-select type="text" placeholder="Status" class="custom-status-select clear-icon" formControlName="statusFilter"
+                            [items]="statusList" bindLabel="label" bindValue="value">
                         </ng-select>
                     </div>
                 </div>
@@ -145,105 +131,96 @@
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
-                <tbody *ngIf="isLoading">
-                    <tr>
-                        <td colspan="12" class="text-center py-5">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
-                        </td>
-                    </tr>
-                </tbody>
-                <!-- <tbody *ngIf="!isLoading && THCData.length === 0">
-                    <tr>
-                        <td colspan="12" class="text-center py-4 text-muted fs-5">
-                            No records found.
-                        </td>
-                    </tr>
-                </tbody> -->
-                <!-- <tbody *ngIf="!isLoading && THCData.length > 0">
-                    <tr *ngFor="let data of THCData; let i = index">
+                <tbody *ngIf="!isLoading && thcData.length > 0">
+                    <tr *ngFor="let data of thcData; let i = index">
                         <td class="text-center text-muted fs-7">{{ i + 1 }}</td>
                         <td>
-                            <div class="fw-bold text-primary"><a>{{ data.THCNo }}</a></div>
-                            <div class="text-muted fs-7 mt-1">{{ data.THCDate | date:'dd-MMM-yy' }}</div>
+                            <div class="fw-bold text-primary cursor-pointer" ><a>{{ data.thcNo }}</a></div>
+                            <div class="text-muted fs-7 mt-1">{{ data.thcDate  }}</div>
+                        </td>
+                        
+                        <td class="text-center" style="width: 120px;">
+                            <div class="d-flex gap-2 flex-column">
+                                <span class="d-block rounded p-1 fw-bold mb-1">{{ data.totalDocket}}</span>
+                            </div>
                         </td>
                         <td class="text-center">
-                            <span class="pill-badge" [ngClass]="getODAClass(data.odaType)">{{
-                                data.odaType }}</span>
-                        </td>
-                        <td class="text-center" style="width: 140px;">
-                            <div class="d-flex gap-2 flex-column">
-                                <span class="d-block rounded p-1 fw-bold mb-1">{{ data.totalDockets}}</span>
-                                <span class="fw-bold text-success">Delivered:{{ data.deliveredCount }}</span>
-                            </div>
+                            <span class="fw-bold cursor-pointer" [ngClass]="(data.mFNO) ? 'text-primary fw-bold' : 'text-muted'" >{{ data.mFNO || '—' }}</span>
                         </td>
                         <td class="text-center">
                             <div class="d-flex gap-2 flex-column">
                                 <span class="d-block rounded p-1 fw-bold mb-1 vt-transporter" *ngIf="data.vendorType">
                                     {{ data.vendorType}}</span>
-                                <span class="fw-bold text-truncate d-inline-block" *ngIf="data.vendorName"
+                                <span class="fw-bold text-muted d-inline-block" *ngIf="data.vendorName"
                                     style="max-width: 180px;" [title]="data.vendorName">{{ data.vendorName }}</span>
                             </div>
                         </td>
                         <td class="text-center fs-7"
-                            [ngClass]="(data.vendorBillNo) ? 'text-primary fw-bold' : 'text-muted'">{{ data.vendorBillNo
-                            || '—' }}</td>
-                        <td class="text-center">
+                          >
+                            {{ data.vehicleNo  }}</td>
+                        <td class="text-center cursor-pointer">
+                             <div class="d-flex gap-2 flex-column">
+                                <span class="d-block rounded p-1 fw-bold mb-1" *ngIf="data.serviceType">
+                                    {{ data.serviceType}}</span>
+                                <span class="fw-bold text-muted d-inline-block" *ngIf="data.mode"
+                                    style="max-width: 180px;" [title]="data.mode">{{ data.mode }}</span>
+                            </div>
+                        </td>
+                          <td class="text-center cursor-pointer">
+                            <span class="px-4 py-2 cursor-pointer"
+                               >
+                               {{data.departureTime}}
+                            </span>
+                        </td>
+                        <td class="text-center cursor-pointer">
                             <span class="px-4 py-2"
-                                [ngClass]="(data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'">
-                                {{ data.loadingHCCNo || 'NO HCC' }}
+                                >
+                              {{data.PreviousLocation}}  
                             </span>
                         </td>
                         <td class="text-center">
-                            <span class="px-4 py-2"
-                                [ngClass]="(data.unloadingHccNo && data.unloadingHccNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'">
-                                {{ data.unloadingHccNo || 'NO HCC' }}
+                            <span class="pill-badge px-2 py-1" >
+                                {{ data.THCRoute }}
                             </span>
                         </td>
                         <td class="text-center">
-                            <span class="pill-badge px-2 py-1" [ngClass]="getStatusClass(data.status)">
-                                {{ data.status }}
-                            </span>
+                            <span class="fw-bold text-primary cursor-pointer"
+                            [ngClass]="(data.LoadingHCCNo && data.LoadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
+                                (click)="data.LoadingHCCNo && data.LoadingHCCNo !== 'NO HCC'">{{ data.LoadingHCCNo || '—' }}</span>
+                        </td>
+                       
+                        <td class="text-center">
+                            <span class="fw-bold text-primary cursor-pointer">{{ data.UnloadingSheetNo || '—' }}</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="pill-badge px-2 py-1 cursor-pointer"  [ngClass]="getStatusClass(data.status)">{{ data.status }}</span>
                         </td>
                         <td>
                             <div class="d-flex flex-wrap gap-2 justify-content-center">
                                 <button
-                                    class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3">
+                                    class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3"
+                                    >
                                     <i class="fa fa-eye"></i> View
                                 </button>
-                                <button
-                                    class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
-                                    [disabled]="data.status === 'Cancelled'">
-                                    🔄 THC Update
-                                </button>
-                                <button
-                                    class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3">
+                               <button 
+                                    class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3" (click)="openEditPopup(data)">
                                     ✏️ Edit
                                 </button>
                                 <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
-                                    [disabled]="data.status === 'Cancelled'">
+                                   >
                                     🚫 Cancel
-                                </button>
-                                <button
-                                    class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
-                                    [disabled]="data.status === 'Cancelled'">
-                                    🏷 HCC
-                                </button>
-                                <button class="btn btn-sm single-cnote px-3 py-1"
-                                    [disabled]="data.status === 'Cancelled'">
-                                    📝 Single C Note Update
                                 </button>
                             </div>
                         </td>
                     </tr>
-                </tbody> -->
+                </tbody>
             </table>
         </div>
-        <!-- <app-pagination [page]="pagination.page" [pageSize]="pagination.pageSize"
+        <app-pagination [page]="pagination.page" [pageSize]="pagination.pageSize"
             [totalRecords]="pagination.totalRecords" [totalPages]="pagination.totalPages"
-            (pageChange)="setPage($event)">
-        </app-pagination> -->
+            >
+        </app-pagination>
     </div>
 </div>
+<app-thc-edit #ThcEditComponent ></app-thc-edit>
+
