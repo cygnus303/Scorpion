@@ -54,19 +54,19 @@ export class LSUpdatePopupComponent {
 
 
   openModal(data: any, type: string) {
-
-            // this.docketService.loginUserList.Type = 'LS';
-        // this.docketService.loginUserList.TCNO = 'LS/BWH/2526/007803';
-        //  this.docketService.loginUserList.IsBCProcess = 'N';
-     this.docketService.loginUserList.Type =type;
-     this.isgetLoadingList = type === 'ULS' ? true :false;
-      this.loadingSheetService.buildForm();
+    this.docketService.loginUserList.TCNO = data.lsNo;
+    this.docketService.loginUserList.IsBCProcess = data.isBCProcess;
+    this.docketService.loginUserList.Type = type;
+    this.isgetLoadingList = type === 'ULS' ? true : false;
+    this.loadingSheetService.buildForm();
   
       if(type === 'ULS'){
         this.loadingSheetService.getUnLoaderUserList();
         this.getLoadingSheet(data ,type);
         this.loadingSheetService.LSForm.get('loadingByUser')?.setValidators([Validators.required]);
         this.loadingSheetService.LSForm.get('LoadingSupervisor')?.setValidators([Validators.required]);
+        this.loadingSheetService.LSForm.get('shiftInCharge')?.setValidators([Validators.required]);
+
       }else{
         this.getVendorType();
         this.generalMasterService.getLSModedata();
@@ -76,6 +76,8 @@ export class LSUpdatePopupComponent {
         this.loadingSheetService.LSForm.get('loadingByUser')?.setValue('');
         this.loadingSheetService.LSForm.get('LoadingSupervisor')?.clearValidators();
         this.loadingSheetService.LSForm.get('LoadingSupervisor')?.setValue('');
+        this.loadingSheetService.LSForm.get('shiftInCharge')?.clearValidators();
+        this.loadingSheetService.LSForm.get('shiftInCharge')?.setValue('');
       }
      this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
