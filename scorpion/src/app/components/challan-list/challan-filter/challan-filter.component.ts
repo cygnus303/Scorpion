@@ -16,6 +16,7 @@ import { Validators } from '@angular/forms';
 export class ChallanFilterComponent {
   @Output() filterApplied = new EventEmitter<any>();
   public typeName: string = '';
+  public hideBackButton: boolean = false;
   public odaTypeList = [
     { text: 'ODA', value: 'ODA' },
     { text: 'Non ODA', value: 'NonODA' }
@@ -41,6 +42,14 @@ export class ChallanFilterComponent {
     }
     const type = this.docketService.loginUserList.Type;
     this.typeName = type === '3' ? 'DRS' : type === '1' ? 'THC' : type === '2' ? 'PRS' : '';
+
+    // Check if coming from PRS Generation List
+    this.route.queryParams.subscribe(params => {
+      const fromPRSList = params['fromPRS'] === 'true';
+      if (fromPRSList && (type === '2' || type === '3')) {
+        this.hideBackButton = true;
+      }
+    });
 
     this.challanService.SearchfilterForm()
     this.generalMasterService.getPaybsData();

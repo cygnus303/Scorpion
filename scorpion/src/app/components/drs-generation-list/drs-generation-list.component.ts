@@ -210,7 +210,7 @@ export class DrsGenerationListComponent {
       this.dockerService.loginUserList = user;
       localStorage.setItem("loginUserList", JSON.stringify(user));
     }
-    this.route.navigate(['Operation/ChallanList']);
+    this.route.navigate(['Operation/ChallanList'], { queryParams: { fromPRS: 'true' } });
   }
 
   onCancel(drsNo: string) {
