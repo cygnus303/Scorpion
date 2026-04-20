@@ -66,7 +66,8 @@ export class DrsGenerationListComponent {
     private exportService: ExportService,
     private dockerService: DocketService,
     private route: Router,
-    private sweetAlertService: SweetAlertService
+    private sweetAlertService: SweetAlertService,
+    public docketService:DocketService
   ) { }
 
   ngOnInit() {
@@ -150,7 +151,7 @@ export class DrsGenerationListComponent {
     const payload = {
       fromDate: this.formatDate(this.DRSFilterForm.value.fromDate),
       toDate: this.formatDate(this.DRSFilterForm.value.toDate),
-      locCode: null,
+      locCode: this.docketService.loginUserList.LocationCode,
       statusFilter: this.DRSFilterForm.value.statusFilter,
       pageNumber: this.pagination.page,
       pageSize: this.pagination.pageSize,
@@ -210,7 +211,7 @@ export class DrsGenerationListComponent {
       this.dockerService.loginUserList = user;
       localStorage.setItem("loginUserList", JSON.stringify(user));
     }
-    this.route.navigate(['Operation/ChallanList']);
+    this.route.navigate(['Operation/ChallanList'], { queryParams: { fromPRS: 'true' } });
   }
 
   onCancel(drsNo: string) {

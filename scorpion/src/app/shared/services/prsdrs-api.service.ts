@@ -43,5 +43,13 @@ export class PRSDRSApiService {
   THCEditUpdate(payload: any) {
     return this.apiHandlerService.Post(`THC/THCEditUpdate`, payload);
   }
+
+   getTHCArrivalList(payload:any){
+    return this.apiHandlerService.Post(`THC/GetTHCArrivalList`, payload);
+  }
+
+  getTHCList(payload:any){
+    return this.apiHandlerService.Post(`THC/GetTHCNewlList`, payload);
+  }
   
 }

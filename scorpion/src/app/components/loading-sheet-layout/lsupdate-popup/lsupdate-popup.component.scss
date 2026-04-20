@@ -1,0 +1,9 @@
+::ng-deep.modal-xl {
+    --bs-modal-width: 1500px !important;
+}
+
+::ng-deep .remove-select-color{
+    .ng-select-container{
+       background: #fff !important;
+    }
+}

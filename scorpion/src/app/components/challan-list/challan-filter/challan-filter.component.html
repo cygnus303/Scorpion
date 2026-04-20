@@ -6,7 +6,7 @@
                 <i class="fas fa-filter me-2"></i>
                 CNote Criteria for {{typeName}}
             </div>
-            <!-- <button class="btn btn-light text-dark btn-sm px-3" (click)="onBack()">Back to {{typeName}} List</button> -->
+            <button class="btn btn-light text-dark btn-sm px-3" (click)="onBack()" *ngIf="hideBackButton">Back to {{typeName}} List</button>
         </div>
         <form [formGroup]="challanService.filterForm">
             <!-- <div class="form-grid p-4">

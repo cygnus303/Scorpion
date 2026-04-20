@@ -117,13 +117,16 @@ export class PRSArrivalComponent implements OnInit {
     this.THCMasterService.getPRSArrivalDetails(payload).subscribe({
       next: (response: any) => {
         this.PRSArrivalDetails = response.pavm;
+        this.docketList = response?.listPAVM || [];
+        // Calculate total actuwt from PRSArrivalDetails array
+        const totalActuwt = this.docketList?.reduce((sum: number, item: any) => sum + (item.actuwt || 0), 0) || 0;
+        
         this.prsArrivalForm.patchValue({
-          actuwt: response?.pavm?.actuwt,
+          actuwt: totalActuwt || 0,
           LoadingBy: this.docketService.loginUserList.loadBy
         });
-        this.docketList = response?.listPAVM || [];
         this.docketList.forEach((item: any) => {
-          item.rateType = this.docketService.loginUserList.chargeType;
+          item.rateType = this.docketService.loginUserList.chargeType || null;
         });
         const arr = this.prsArrivalForm.get('pdcDetails') as FormArray;
         if (arr) {

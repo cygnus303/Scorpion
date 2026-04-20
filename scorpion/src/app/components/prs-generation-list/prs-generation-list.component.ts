@@ -213,7 +213,7 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
       this.docketService.loginUserList = user;
       localStorage.setItem("loginUserList", JSON.stringify(user));
     }
-    this.router.navigate(['Operation/ChallanList']);
+    this.router.navigate(['Operation/ChallanList'], { queryParams: { fromPRS: 'true' } });
   }
 
   openPRSArrival(row: any) {

@@ -146,7 +146,8 @@
                                 <div class="form-group-input">
                                     <label class="form-label d-flex align-items-center gap-2 fw-bold"> Charged By
                                     </label>
-                                    <ng-select class="clear-icon required2" placeholder="Select Charged By"
+                                    <ng-select class="clear-icon required2" placeholder="Select Charged By" 
+                                    (change)="this.prsArrivalDetailsService.getVendorsList($event.codeId)"
                                         notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
                                         [items]="generalMasterService.loadingData" formControlName="chargedBy"
                                         c></ng-select>

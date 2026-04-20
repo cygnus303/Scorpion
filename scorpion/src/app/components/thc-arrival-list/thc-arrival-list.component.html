@@ -2,11 +2,10 @@
     <div class="d-flex justify-content-between align-items-center">
         <div class="page-title">
             <span class="icon">📦</span>
-            THC Generation
+            THC Arrival
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn btn-outline-primary px-4 py-2 rounded">✕ Clear</button>
-            <button class="btn btn-primary px-4 py-2 rounded" (click)="openTHC()">+ Add THC</button>
+            <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="refreshFilter()">✕ Clear</button>
             <button class="btn btn-success px-4 py-2 rounded" (click)="downloadExcel()">
                 <span *ngIf="!isdownload">📥 Download XLS</span>
                 <span *ngIf="isdownload" class="spinner-border spinner-border-sm me-2"></span>
@@ -16,12 +15,12 @@
     </div>
 
     <!-- Summary Strip -->
-     <div class="summary-strip">
+    <div class="summary-strip">
         <div class="summary-card px-3 py-3 c-blue cursor-pointer"
-            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'All'" (click)="filterByStatus('All')">
+            [class.active-card]="THCArrivalFilterForm.get('statusFilter')?.value === 'All'" (click)="filterByStatus('All')">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="card-content">
-                    <div class="s-label">Total THC</div>
+                    <div class="s-label">Total THC Arrival</div>
                     <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.totalTHC || 0 }}</div>
                     <div class="small text-body-tertiary">All records today</div>
                 </div>
@@ -29,51 +28,42 @@
             </div>
         </div>
 
+        <!-- PENDING FOR ARRIVAL -->
         <div class="summary-card px-3 py-3 c-orange cursor-pointer"
-           [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Departed'" (click)="filterByStatus('Departed')">
+            [class.active-card]="THCArrivalFilterForm.get('statusFilter')?.value === 'Pending For Arrival'" (click)="filterByStatus('Pending For Arrival')">
             <div class="card-content">
-                <div class="s-label">Departed</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ 0}}</div>
+                <div class="s-label">Pending for Arrival</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.pendingArrival || 0 }}</div>
                 <div class="small text-body-tertiary">Awaiting Update</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
         </div>
 
         <div class="summary-card px-3 py-3 c-teal cursor-pointer"
-            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Completed Journey'" (click)="filterByStatus('Completed Journey')">
+            [class.active-card]="THCArrivalFilterForm.get('statusFilter')?.value === 'Arrival Completed'" (click)="filterByStatus('Arrival Completed')">
             <div class="card-content">
-                <div class="s-label">Completed Journey</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ 0}}</div>
-                <div class="small text-body-tertiary">Completed Journey</div>
+                <div class="s-label">Arrived</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.arrived || 0 }}</div>
+                <div class="small text-body-tertiary">Delivery Updated</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">✅</div>
         </div>
 
-        <div class="summary-card px-3 py-3 c-red cursor-pointer"
-            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Cancelled'" (click)="filterByStatus('Cancelled')">
+        <div class="summary-card px-3 py-3 c-green cursor-pointer"
+            [class.active-card]="THCArrivalFilterForm.get('statusFilter')?.value === 'HCC Generated'" (click)="filterByStatus('HCC Generated')">
             <div class="card-content">
-                <div class="s-label">Cancelled</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{  0 }}</div>
-                <div class="small text-body-tertiary">Cancelled today</div>
+                <div class="s-label">HCC Generated</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.hccGenerated || 0 }}</div>
+                <div class="small text-body-tertiary">HCC generated today</div>
             </div>
-            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🚫</div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
         </div>
 
-        <!-- PRS BILLED -->
-        <div class="summary-card px-3 py-3 c-purple cursor-pointer"
-           [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Billed'" (click)="filterByStatus('Billed')">
-            <div class="card-content">
-                <div class="s-label">Billed</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ 0 }}</div>
-                <div class="small text-body-tertiary">Vendor bill exists</div>
-            </div>
-            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🧾</div>
-        </div>
+    </div>
 
-    </div> 
-
+    <!-- Table Panel -->
     <div>
-        <form [formGroup]="THCFilterForm">
+        <form [formGroup]="THCArrivalFilterForm">
             <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
                 <div class="control-bar border-0 shadow-none mb-0">
                     <div class="filter-group">
@@ -120,18 +110,17 @@
                         <th class="text-center">Total Dockets</th>
                         <th class="text-center" style="width: 140px;">MF No.</th>
                         <th class="text-center">Vendor Type / Name</th>
-                        <th class="text-center">Vehicle No.</th>
-                        <th class="text-center">Service Type / Mode</th>
-                        <th class="text-center">Departure Date & Time</th>
-                        <th class="text-center">Last Location</th>
+                        <th class="text-center">ATD</th>
+                        <th class="text-center">ETA</th>
+                        <th class="text-center">Previous Location</th>
                         <th class="text-center">THC Route</th>
-                        <th class="text-center">HCC No.</th>
-                        <th class="text-center">Vendor Bill No.</th>
+                        <th class="text-center">Loading HCC No.</th>
+                        <th class="text-center">Unloading HCC No.</th>
                         <th class="text-center">Status</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
-                 <tbody *ngIf="isLoading">
+                <tbody *ngIf="isLoading">
                     <tr>
                         <td colspan="13" class="text-center py-5">
                             <div class="spinner-border text-primary" role="status">
@@ -141,22 +130,22 @@
                         </td>
                     </tr>
                 </tbody>
-                <tbody *ngIf="!isLoading && thcData.length === 0">
+                <tbody *ngIf="!isLoading && arrivalData.length === 0">
                     <tr>
                         <td colspan="13" class="text-center py-4 text-muted fs-5">
                             No records found.
                         </td>
                     </tr>
                 </tbody>
-                <tbody *ngIf="!isLoading && thcData.length > 0">
-                    <tr *ngFor="let data of thcData; let i = index">
+                <tbody *ngIf="!isLoading && arrivalData.length > 0">
+                    <tr *ngFor="let data of arrivalData; let i = index">
                         <td class="text-center text-muted fs-7">{{ i + 1 }}</td>
                         <td>
                             <div class="fw-bold text-primary cursor-pointer" (click)="openThcView(data.thcNo)"><a>{{ data.thcNo }}</a></div>
                             <div class="text-muted fs-7 mt-1">{{ data.thcDate | date:'dd-MMM-yy'  }}</div>
                         </td>
                         
-                        <td class="text-center" style="width: 120px;">
+                        <td class="text-center" style="width: 140px;">
                             <div class="d-flex gap-2 flex-column">
                                 <span class="d-block rounded p-1 fw-bold mb-1">{{ data.totalDockets}}</span>
                             </div>
@@ -172,42 +161,41 @@
                                     style="max-width: 180px;" [title]="data.vendorName">{{ data.vendorName }}</span>
                             </div>
                         </td>
-                        <td class="text-center fs-7"
-                          >
-                            {{ data.vehicleNo  }}</td>
-                        <td class="text-center cursor-pointer">
-                             <div class="d-flex gap-2 flex-column">
-                                <span class="d-block rounded p-1 fw-bold mb-1" *ngIf="data.serviceType">
-                                    {{ data.serviceType}}</span>
-                                <span class="fw-bold text-muted d-inline-block" *ngIf="data.routeMode"
-                                    style="max-width: 180px;" [title]="data.routeMode">{{ data.routeMode }}</span>
-                            </div>
+                        <td class="text-center">
+                            <span class="px-4 py-2 cursor-pointer">
+                            {{ (data.atd | date:'dd-MM-yy') || '—' }}
+                            </span>
                         </td>
-                          <td class="text-center cursor-pointer">
+                        <td class="text-center cursor-pointer">
                             <span class="px-4 py-2 cursor-pointer"
                                >
-                               {{data.departureDate | date:'dd-MMM-yy'}} &{{data.departureTime}}
+                               {{data.eta | date:'dd-MM-yy'}}
                             </span>
                         </td>
                         <td class="text-center cursor-pointer">
                             <span class="px-4 py-2"
                                 >
-                              {{data.tobhCode}}  
+                              {{data.previousLocation}}  
                             </span>
                         </td>
                         <td class="text-center">
-                            <span class="pill-badge px-2 py-1" >
-                                {{ data.routeName }}
+                            <span class="px-2 py-1 d-inline-flex align-items-center justify-content-center" >
+                                 {{ data.route?.replace(',', ' → ') }}
                             </span>
                         </td>
                         <td class="text-center">
-                            <span class="fw-bold text-primary cursor-pointer"
-                            [ngClass]="(data.hccNo && data.hccNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
-                                (click)="data.hccNo && data.hccNo !== 'NO HCC'? openHCCModal(data.hccNo) : null">{{ data.hccNo || '—' }}</span>
+                            <span class="px-4 py-2 cursor-pointer"
+                            [ngClass]="(data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
+                                (click)="data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC'? openHCCModal(data.loadingHCCNo) : null">
+                            <a *ngIf="data.loadingHCCNo">{{ data.loadingHCCNo}}</a>
+                            <span *ngIf="!data.loadingHCCNo">NO HCC</span></span>
                         </td>
-                       
                         <td class="text-center">
-                            <span class="fw-bold text-primary cursor-pointer">{{ data.UnloadingSheetNo || '—' }}</span>
+                            <span class="px-4 py-2 cursor-pointer"
+                            [ngClass]="(data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
+                                (click)="data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC'? openHCCModal(data.unloadingHCCNo) : null">
+                             <a *ngIf="data.unloadingHCCNo">{{ data.unloadingHCCNo}}</a>
+                            <span *ngIf="!data.unloadingHCCNo">NO HCC</span></span>
                         </td>
                         <td class="text-center">
                             <span class="pill-badge px-2 py-1 cursor-pointer"  [ngClass]="getStatusClass(data.status)">{{ data.status }}</span>
@@ -216,16 +204,13 @@
                             <div class="d-flex flex-wrap gap-2 justify-content-center">
                                 <button
                                     class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3"
-                                    >
+                                    (click)="openThcView(data.thcNo)">
                                     <i class="fa fa-eye"></i> View
                                 </button>
-                               <button 
-                                    class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3" (click)="openEditPopup(data)">
-                                    ✏️ Edit
-                                </button>
-                                <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
-                                   >
-                                    🚫 Cancel
+                                <button
+                                    class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
+                                     (click)="openThcArrival(data)">
+                                    🏷 THC Arrival
                                 </button>
                             </div>
                         </td>
@@ -235,9 +220,9 @@
         </div>
         <app-pagination [page]="pagination.page" [pageSize]="pagination.pageSize"
             [totalRecords]="pagination.totalRecords" [totalPages]="pagination.totalPages"
-            >
+            (pageChange)="setPage($event)">
         </app-pagination>
     </div>
 </div>
-<app-thc-edit #ThcEditComponent ></app-thc-edit>
 
+<app-thc-arrival-popup #ThcArrivalPopupComponent (dataEmitter)="fetchData()"></app-thc-arrival-popup>
