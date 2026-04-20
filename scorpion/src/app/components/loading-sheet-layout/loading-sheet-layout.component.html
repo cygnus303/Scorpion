@@ -223,7 +223,8 @@
                                     (click)="cancelLoadingSheet(row.lsNo)"  [disabled]="!row.isCancelAllow">
                                    🚫 Cancel
                                 </button>
-                                <button (click)="openHHCDetails(row)" [disabled]="!row.mfNo"
+                                <button (click)="openHHCDetails(row)" 
+                                    [disabled]="row.mfNo && row.loadingHCCNo && row.unloadingHCCNo"
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3">
                                     🏷 HCC
                                 </button>

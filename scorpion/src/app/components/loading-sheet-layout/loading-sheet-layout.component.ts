@@ -75,6 +75,14 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+      const saved = localStorage.getItem("loginUserList");
+      if (saved) {
+        this.docketService.loginUserList = JSON.parse(saved);
+        this.docketService.Location = this.docketService.loginUserList.LocationCode;
+        this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+        this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+      }
+
     this.fetchSubject.pipe(debounceTime(300)).subscribe(() => {
       this.fetchLoadingSheetList();
     });
@@ -126,7 +134,7 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
     const payload = {
       fromDate: new Date(this.config.fromDateStr).toISOString(),
       toDate: new Date(this.config.toDateStr).toISOString(),
-      locCode: null,
+      locCode: this.docketService.loginUserList.LocationCode,
       statusFilter: this.config.statusFilter,
       lsType: this.config.lsType,
       pageNumber: this.config.page,
@@ -168,7 +176,7 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
     const payload = {
       fromDate: new Date(this.config.fromDateStr).toISOString(),
       toDate: new Date(this.config.toDateStr).toISOString(),
-      locCode: null,
+      locCode: this.docketService.loginUserList.LocationCode,
       statusFilter: this.config.statusFilter,
       lsType: this.config.lsType,
       pageNumber: this.config.page,

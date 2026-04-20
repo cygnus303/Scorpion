@@ -426,7 +426,6 @@ onRowDamageChange(index: number) {
   this.toggleDamageValidators(row, checked);
 }
   getStockUpdateDetails(data:any) {
-    debugger
     const payload = {
       id:data.thcNo,
       baseLocationCode: this.docketService.loginUserList.LocationCode

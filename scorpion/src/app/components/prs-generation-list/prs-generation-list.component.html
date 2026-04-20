@@ -216,12 +216,12 @@
                                     ✏️ Edit
                                 </button>
                                 <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
-                                    [disabled]="row.status !== 'Generated'" (click)="onCancel(row.pdcno)">
+                                    [disabled]="!row.isCancelAllow"(click)="onCancel(row.pdcno)">
                                     🚫 Cancel
                                 </button>
                                 <button
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
-                                    (click)="openHHCDetails(row)">
+                                    (click)="openHHCDetails(row)" [disabled]="row.loadingHCC && row.unLoadingHCC">
                                     🏷 HCC
                                 </button>
                             </div>

@@ -16,6 +16,7 @@ import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { SharedModule } from 'app/shared/shared/shared.module';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 
 @Component({
   selector: 'app-lsupdate-popup',
@@ -37,6 +38,7 @@ export class LSUpdatePopupComponent {
     public totalActWt: number = 0;
     public isLoadingSheet:boolean = false;
     public today: Date = new Date();
+    public isSubmitting: boolean = false;
     @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
     @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>(); 
   
@@ -49,6 +51,7 @@ export class LSUpdatePopupComponent {
       public challanService: ChallanService,
       public THCMasterService: THCMasterService,
       public loadingSheetApiService: LoadingSheetApiService,
+      public sweetAlertService: SweetAlertService,
       public basicDetailService: BasicDetailService,private cd: ChangeDetectorRef,private modalService: BsModalService
     ) { }
 
@@ -414,5 +417,80 @@ export class LSUpdatePopupComponent {
       return false;
     }
   
-  
+  prepareLoadingSheet() {
+    if (this.loadingSheetService.LSForm.valid) {
+      this.isSubmitting = true; // Start loading state
+      
+      const { reportrange, docketList, ...formValuesWithoutRange } = this.loadingSheetService.LSForm.value;
+      // const selected = (this.docketFormArray?.controls ?? []).filter(ctrl => ctrl.get('isChecked')?.value).map(ctrl => (ctrl as FormGroup).getRawValue());
+      const selected = (this.loadingSheetService.docketFormArray?.controls ?? [])
+        .filter(ctrl => ctrl.get('isChecked')?.value)
+        .map(ctrl => ({
+          dockno: ctrl.get('dockno')?.value,
+          docksf: ctrl.get('docksf')?.value,
+          pkgsno: Number(ctrl.get('pkgsno')?.value),
+          actuwt: Number(ctrl.get('actuwt')?.value),
+          docketDate: ctrl.get('docketDate')?.value,
+          orgCode: ctrl.get('orgCode')?.value,
+          packagesLB: Number(ctrl.get('PackageLB')?.value),
+          weightLB: Number(ctrl.get('WeightsLB')?.value),
+          reDestCode: ctrl.get('reDestCode')?.value,
+          isChecked: ctrl.get('isChecked')?.value,
+          newRate:Number(ctrl.get('newRate')?.value),
+          ratetype: ctrl.get('ratetype')?.value,
+        }));
+      const payload = {
+        vm: {
+          ...formValuesWithoutRange,
+          lsDate:new Date(this.loadingSheetService.LSForm.value.lsDate).toISOString() === "0000-12-31T18:06:32.000Z" ? new Date().toISOString().split('T')[0]: new Date(this.loadingSheetService.LSForm.value.lsDate).toISOString().split('T')[0],
+          mathadiDate: new Date(this.loadingSheetService.LSForm.value.mathadiDate).toISOString(),
+          vendorCode: this.loadingSheetService.LSForm.value.vendorCode ? this.loadingSheetService.LSForm.value.vendorCode : '',
+          vehno: this.loadingSheetService.LSForm.value.vehno ? this.loadingSheetService.LSForm.value.vehno : '',
+          lsType: this.loadingSheetService.LSForm.value.lsType ? this.loadingSheetService.LSForm.value.lsType : '',
+          loadingBy: this.loadingSheetService.LSForm.value.loadingBy ? this.loadingSheetService.LSForm.value.loadingBy :'',
+          nextStopLocation: this.loadingSheetService.LSForm.value.nextStopLocation ? this.loadingSheetService.LSForm.value.nextStopLocation :'',
+          rateType: this.loadingSheetService.LSForm.value.rateType ? this.loadingSheetService.LSForm.value.rateType :'',
+          fromDate: reportrange[0].toISOString(),
+          toDate: reportrange[1].toISOString(),
+          baseUserName: this.docketService.loginUserList.BaseUserName,
+          baseFinYear: this.docketService.loginUserList.FinYear,
+          baseLocationCode: this.docketService.loginUserList.LocationCode,
+          baseCompanyCode: this.docketService.loginUserList.Companycode,
+          location: this.docketService.loginUserList.LocationCode,
+          Type: this.docketService.loginUserList.Type,
+        },
+        docketList: selected,
+        internalDocumentList: [
+          {
+            "imNo": "",
+            "isChecked": true,
+            "packages": 0,
+            "weight": 0
+          }
+        ],
+      };
+      this.loadingSheetApiService.prepareLoadingSheet(payload).subscribe({
+        next: (response: any) => {
+          this.isSubmitting = false; // Stop loading state
+          
+          if (response.success) {
+            this.sweetAlertService.success(`<div style="text-align:center;">
+                 <p class="fs-5 mb-1">${response.code}</p>
+                 <p class="fs-5 mb-1"><strong>HC Number:</strong> ${response.hcNumber}</p>
+              </div>`);
+            this.dataEmitter.emit()
+            this.modalRef.hide();
+          }else{
+            this.sweetAlertService.error(response.message);
+          }
+        },
+        error: (err: any) => {
+          this.isSubmitting = false; // Stop loading state on error
+          console.error('Error preparing loading sheet', err);
+        }
+      });
+    }else{
+      this.loadingSheetService.LSForm.markAllAsTouched();
+    }
+  }
 }
