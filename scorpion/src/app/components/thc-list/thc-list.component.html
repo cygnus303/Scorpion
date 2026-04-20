@@ -7,10 +7,10 @@
         <div class="btn-group gap-3 ms-auto">
             <button class="btn btn-outline-primary px-4 py-2 rounded">✕ Clear</button>
             <button class="btn btn-primary px-4 py-2 rounded" (click)="openTHC()">+ Add THC</button>
-            <button class="btn btn-success px-4 py-2 rounded" >📥 Download XLS
-                <!-- <span *ngIf="!isdownload">📥 Download XLS</span>
+            <button class="btn btn-success px-4 py-2 rounded" (click)="downloadExcel()">
+                <span *ngIf="!isdownload">📥 Download XLS</span>
                 <span *ngIf="isdownload" class="spinner-border spinner-border-sm me-2"></span>
-                <span *ngIf="isdownload">Downloading...</span> -->
+                <span *ngIf="isdownload">Downloading...</span>
             </button>
         </div>
     </div>
@@ -18,11 +18,11 @@
     <!-- Summary Strip -->
      <div class="summary-strip">
         <div class="summary-card px-3 py-3 c-blue cursor-pointer"
-            >
+            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'All'" (click)="filterByStatus('All')">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="card-content">
                     <div class="s-label">Total THC</div>
-                    <div class="s-val fs-2 fw-bold lh-1">{{ 0 }}</div>
+                    <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.totalTHC || 0 }}</div>
                     <div class="small text-body-tertiary">All records today</div>
                 </div>
                 <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📋</div>
@@ -30,7 +30,7 @@
         </div>
 
         <div class="summary-card px-3 py-3 c-orange cursor-pointer"
-            >
+           [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Departed'" (click)="filterByStatus('Departed')">
             <div class="card-content">
                 <div class="s-label">Departed</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ 0}}</div>
@@ -40,7 +40,7 @@
         </div>
 
         <div class="summary-card px-3 py-3 c-teal cursor-pointer"
-            >
+            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Completed Journey'" (click)="filterByStatus('Completed Journey')">
             <div class="card-content">
                 <div class="s-label">Completed Journey</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ 0}}</div>
@@ -50,7 +50,7 @@
         </div>
 
         <div class="summary-card px-3 py-3 c-red cursor-pointer"
-            >
+            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Cancelled'" (click)="filterByStatus('Cancelled')">
             <div class="card-content">
                 <div class="s-label">Cancelled</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{  0 }}</div>
@@ -61,7 +61,7 @@
 
         <!-- PRS BILLED -->
         <div class="summary-card px-3 py-3 c-purple cursor-pointer"
-           >
+           [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Billed'" (click)="filterByStatus('Billed')">
             <div class="card-content">
                 <div class="s-label">Billed</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ 0 }}</div>
@@ -131,21 +131,38 @@
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
+                 <tbody *ngIf="isLoading">
+                    <tr>
+                        <td colspan="13" class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && thcData.length === 0">
+                    <tr>
+                        <td colspan="13" class="text-center py-4 text-muted fs-5">
+                            No records found.
+                        </td>
+                    </tr>
+                </tbody>
                 <tbody *ngIf="!isLoading && thcData.length > 0">
                     <tr *ngFor="let data of thcData; let i = index">
                         <td class="text-center text-muted fs-7">{{ i + 1 }}</td>
                         <td>
-                            <div class="fw-bold text-primary cursor-pointer" ><a>{{ data.thcNo }}</a></div>
-                            <div class="text-muted fs-7 mt-1">{{ data.thcDate  }}</div>
+                            <div class="fw-bold text-primary cursor-pointer" (click)="openThcView(data.thcNo)"><a>{{ data.thcNo }}</a></div>
+                            <div class="text-muted fs-7 mt-1">{{ data.thcDate | date:'dd-MMM-yy'  }}</div>
                         </td>
                         
                         <td class="text-center" style="width: 120px;">
                             <div class="d-flex gap-2 flex-column">
-                                <span class="d-block rounded p-1 fw-bold mb-1">{{ data.totalDocket}}</span>
+                                <span class="d-block rounded p-1 fw-bold mb-1">{{ data.totalDockets}}</span>
                             </div>
                         </td>
                         <td class="text-center">
-                            <span class="fw-bold cursor-pointer" [ngClass]="(data.mFNO) ? 'text-primary fw-bold' : 'text-muted'" >{{ data.mFNO || '—' }}</span>
+                            <span class="fw-bold cursor-pointer" [ngClass]="(data.mfNo) ? 'text-primary fw-bold' : 'text-muted'" (click)="openMFView(data.mfNo)">{{ data.mfNo || '—' }}</span>
                         </td>
                         <td class="text-center">
                             <div class="d-flex gap-2 flex-column">
@@ -162,31 +179,31 @@
                              <div class="d-flex gap-2 flex-column">
                                 <span class="d-block rounded p-1 fw-bold mb-1" *ngIf="data.serviceType">
                                     {{ data.serviceType}}</span>
-                                <span class="fw-bold text-muted d-inline-block" *ngIf="data.mode"
-                                    style="max-width: 180px;" [title]="data.mode">{{ data.mode }}</span>
+                                <span class="fw-bold text-muted d-inline-block" *ngIf="data.routeMode"
+                                    style="max-width: 180px;" [title]="data.routeMode">{{ data.routeMode }}</span>
                             </div>
                         </td>
                           <td class="text-center cursor-pointer">
                             <span class="px-4 py-2 cursor-pointer"
                                >
-                               {{data.departureTime}}
+                               {{data.departureDate | date:'dd-MMM-yy'}} &{{data.departureTime}}
                             </span>
                         </td>
                         <td class="text-center cursor-pointer">
                             <span class="px-4 py-2"
                                 >
-                              {{data.PreviousLocation}}  
+                              {{data.tobhCode}}  
                             </span>
                         </td>
                         <td class="text-center">
                             <span class="pill-badge px-2 py-1" >
-                                {{ data.THCRoute }}
+                                {{ data.routeName }}
                             </span>
                         </td>
                         <td class="text-center">
                             <span class="fw-bold text-primary cursor-pointer"
-                            [ngClass]="(data.LoadingHCCNo && data.LoadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
-                                (click)="data.LoadingHCCNo && data.LoadingHCCNo !== 'NO HCC'">{{ data.LoadingHCCNo || '—' }}</span>
+                            [ngClass]="(data.hccNo && data.hccNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
+                                (click)="data.hccNo && data.hccNo !== 'NO HCC'? openHCCModal(data.hccNo) : null">{{ data.hccNo || '—' }}</span>
                         </td>
                        
                         <td class="text-center">
