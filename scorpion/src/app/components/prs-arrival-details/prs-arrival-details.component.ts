@@ -10,6 +10,7 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { environment } from 'environments/environment';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-prs-arrival-details',
@@ -192,7 +193,7 @@ export class PRSArrivalDetailsComponent {
       dockno: new FormControl(item.dockno || item.pdcno || ''),
       orgncd: new FormControl(item.orgncd || ''),
       destcd: new FormControl(item.destcd || ''),
-      paybas: new FormControl(item.paybas || item.paybascd || ''),
+      paybas: new FormControl(item.paybascd || ''),
       ratetype: new FormControl(item.rateType ?? null),
       actuwt: new FormControl(item.actuwt ?? 0),
       pkgsno: new FormControl(item.pkgsno ?? 0),
@@ -330,30 +331,25 @@ export class PRSArrivalDetailsComponent {
             dockdt: item.dockdt,
             isEnabled: true
           };
-
         }),
-
       };
 
       console.log("FINAL PAYLOAD", payload);
       this.isSubmitting = true;
-      this.THCService.prsArrival(params, payload).subscribe({
-        next: (res: any) => {
-          if (res.success) {
-            console.log("Success", res);
-            this.isRedirect = true;
-            window.parent.location.href = `${this.env.liveUrl}Operation/PRSArrivalDone?PDCNo=${res.pdcNo}&Tot_Charge=${res.totCharge}&HcNumber=${res.hcNumber}&TranXaction=Done&src=angular`;
-            this.isSubmitting = false;
-          } else {
-            this.sweetAlertService.error(res?.message)
-          }
-        },
-        error: (err) => {
-          console.error("Error", err);
-          this.isSubmitting = false;
-          this.isRedirect = false;
-        }
-      });
+     this.THCService.prsArrival(params, payload).pipe(finalize(() => {this.isSubmitting = false;})).subscribe({
+    next: (res: any) => {
+      if (res.success) {
+        this.isRedirect = true;
+        window.parent.location.href = `${this.env.liveUrl}Operation/PRSArrivalDone?PDCNo=${res.pdcNo}&Tot_Charge=${res.totCharge}&HcNumber=${res.hcNumber}&TranXaction=Done&src=angular`;
+      } else {
+        this.sweetAlertService.error(res?.message);
+      }
+    },
+    error: (err) => {
+      console.error("Error", err);
+      this.isRedirect = false;
+    }
+  });
 
     } else {
       this.prsArrivalForm.markAllAsTouched();
