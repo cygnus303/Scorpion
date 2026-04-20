@@ -6,9 +6,13 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { PaginationComponent } from 'app/shared/components/pagination/pagination.component';
 import { DocketService } from 'app/shared/services/docket.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { debounceTime } from 'rxjs';
+import { debounceTime, Subscription } from 'rxjs';
 import { ThcEditComponent } from '../thc-edit/thc-edit.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
+import { ExportService } from 'app/shared/services/export.service';
+import { environment } from 'environments/environment';
+
 
 @Component({
   selector: 'app-thc-list',
@@ -22,7 +26,10 @@ export class ThcListComponent {
   public isLoading: boolean = false;
   public summaryData:any;
   public THCFilterForm !:FormGroup;
-    @ViewChild('ThcEditComponent') ThcEditComponent!: ThcEditComponent;
+  private listSubscription?: Subscription;
+  public isdownload:boolean=false;
+  public env = environment;
+  @ViewChild('ThcEditComponent') ThcEditComponent!: ThcEditComponent;
   
   public pagination={
     page: 1,
@@ -37,82 +44,15 @@ export class ThcListComponent {
     { value: 'Cancelled', label: 'Cancelled', color: 'cancelled', bg: 'var(--red)', count: 0 },
     { value: 'Billed', label: 'Billed', color: 'billed', bg: 'var(--accent-hover)', count: 0 },
   ];
-    public thcData = [
-    {
-      thcNo: 'VH/LTT/2526/001764',
-      thcDate: '21-03-2026',
-      totalDocket: '21',
-      mFNO: 'MF/2526/00001',
-      vendorType: 'ABC Logistics',
-      vendorName: 'OWn Transport',
-      vehicleNo: 'MH 04 AB 1234',
-      serviceType:'Full Load',
-      mode:'road',
-      departureTime:'21-03-2026 08:00',
-      PreviousLocation: 'Mumbai',
-      THCRoute: 'Mumbai → Pune',
-      LoadingHCCNo: 'HCC/2526/00001',
-      UnloadingSheetNo: 'VH/ABH/2526/002487',
-      status: 'Billed'
-    },
-    {
-      thcNo: 'VH/ABH/2526/002487',
-      thcDate: '22-03-2026',
-      totalDocket: '15',
-      mFNO: 'MF/2526/00002',
-      vendorType: 'XYZ Freight',
-      vendorName: 'XYZ Cargo Services',
-      vehicleNo: 'GJ 01 CD 5678',
-      serviceType:'Part Load',
-      mode:'road',
-      departureTime:'21-03-2026 08:00',
-      PreviousLocation: 'Delhi',
-      THCRoute: 'Delhi → Jaipur',
-      LoadingHCCNo: 'HCC/2526/00002',
-      UnloadingSheetNo: 'VH/LTT/2526/001763',
-      status: 'Cancelled'
-    },
-    {
-      thcNo: 'VH/RPR/2526/000068',
-      thcDate: '23-03-2026',
-      totalDocket: '32',
-      mFNO: 'MF/2526/00003',
-      vendorType: 'Quick Move',
-      vendorName: 'Quick Move Logistics',
-      vehicleNo: 'MH 12 KL 2345',
-      serviceType:'Part Load',
-      mode:'road',
-      departureTime:'21-03-2026 08:00',
-      PreviousLocation: 'Bangalore',
-      THCRoute: 'Bangalore → Chennai',
-      LoadingHCCNo: 'HCC/2526/00003',
-      UnloadingSheetNo: 'VH/LTT/2526/001764',
-      status: 'Completed Journey'
-    },
-     {
-      thcNo: 'VH/RPR/2526/000068',
-      thcDate: '23-03-2026',
-      totalDocket: '32',
-      mFNO: 'MF/2526/00003',
-      vendorType: 'Quick Move',
-      vendorName: 'Quick Move Logistics',
-      vehicleNo: 'MH 12 KL 2345',
-      serviceType:'Part Load',
-      mode:'road',
-      departureTime:'21-03-2026 08:00',
-      PreviousLocation: 'Bangalore',
-      THCRoute: 'Bangalore → Chennai',
-      LoadingHCCNo: 'HCC/2526/00003',
-      UnloadingSheetNo: 'VH/LTT/2526/001764',
-      status: 'Departed'
-    }
-  ];
+  public thcData:any;
 
-    constructor(private fb: FormBuilder,private docketService:DocketService,private router: Router) { }
+    constructor(private fb: FormBuilder,private docketService:DocketService,private router: Router,
+      public PRSDRSApiService:PRSDRSApiService,private exportService:ExportService) { }
   
 
     ngOnInit() {
-      this.buildFilterForm()
+      this.buildFilterForm();
+      this.fetchData()
     }
     
   
@@ -127,8 +67,15 @@ export class ThcListComponent {
       this.THCFilterForm.valueChanges.pipe(
         debounceTime(300)
       ).subscribe(() => {
+        this.fetchData()
       });
     }
+
+  fetchData() {
+    this.pagination.page = 1;
+    this.getTHCDetail();
+  }
+
 getStatusClass(status: string): string {
   switch (status) {
     case 'Billed':
@@ -161,6 +108,110 @@ getStatusClass(status: string): string {
 
     openEditPopup(data: any) {
     this.ThcEditComponent.showPopup(data);
+  }
+
+   formatDate(date: any): string {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+    const day = ('0' + d.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
+
+    getTHCDetail() {
+    if (this.listSubscription) {
+      this.listSubscription.unsubscribe();
+    }
+    const payload={
+      locCode:this.docketService.loginUserList.LocationCode,
+      fromDate: this.formatDate(this.THCFilterForm.value.fromDate),
+      toDate: this.formatDate(this.THCFilterForm.value.toDate),
+      searchText: this.THCFilterForm.value.searchText,
+      statusFilter: this.THCFilterForm.value.statusFilter,
+      pageNumber: this.pagination.page,
+      pageSize:this.pagination.pageSize,
+      isDownload: false
+    }
+     this.isLoading = true;
+    this.listSubscription = this.PRSDRSApiService.getTHCList(payload).subscribe({
+      next : (response:any)=>{
+        if(response){
+          this.thcData= response.data;
+           this.pagination.totalRecords = response.pagination.totalRecords;
+          this.pagination.totalPages = response.pagination.totalPages;
+          this.summaryData = response.summary;
+          this.isLoading = false;
+        }
+      }, error: (err) => {
+        console.error(err);
+        this.isLoading = false;
+      }
+    })
+  }
+    refreshFilter() {
+    this.buildFilterForm();
+    this.fetchData()
+  }
+
+    downloadExcel() {
+    this.isdownload = true;
+    const payload={
+      brcd:'PIM',
+      fromDate: this.formatDate(this.THCFilterForm.value.fromDate),
+      toDate: this.formatDate(this.THCFilterForm.value.toDate),
+      searchText: this.THCFilterForm.value.searchText,
+      statusFilter: this.THCFilterForm.value.statusFilter,
+      pageNumber: this.pagination.page,
+      pageSize:this.pagination.pageSize,
+      isDownload: true
+    }
+    this.listSubscription = this.PRSDRSApiService.getTHCArrivalList(payload).subscribe({
+      next: (response: any) => {
+        this.isdownload = false;
+        if (response) {
+          this.exportService.exportToExcel(response.thcList, `THCArrival_Export`);
+        }
+      },
+      error: (err: any) => {
+        this.isdownload = false;
+        console.error('Error downloading Excel', err);
+      }
+    });
+  }
+
+   filterByStatus(status: string) {
+    this.THCFilterForm.patchValue({ statusFilter: status }, { emitEvent: false });
+    this.fetchData();
+  }
+
+  openMFView(MFNO: string) {
+    const url = `${this.env.liveUrl}ViewPrint/Menifest_ViewPrint?MFNO=${MFNO}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+    if (popup) {
+      popup.location.href = url;
+    }
+  }
+
+  openHCCModal(hccNo: string) {
+    const url = `${this.env.liveUrl}Tracking/TripAllView?LsNO=${hccNo}&VPType=LoadingUnloading&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+    if (popup) {
+      popup.location.href = url;
+    }
+  }
+
+  openThcView(thcNo: string) {
+    const url = `${this.env.liveUrl}ViewPrint/ChallanView?ChallanNo=${thcNo}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+    if (popup) {
+      popup.location.href = url;
+    }
   }
 
 }

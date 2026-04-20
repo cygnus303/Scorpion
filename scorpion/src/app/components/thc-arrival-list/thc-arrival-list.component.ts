@@ -92,7 +92,7 @@ export class ThcArrivalListComponent {
 
   fetchData() {
     this.pagination.page = 1;
-    this.getTHCDetail();
+    this.getTHCArrivalDetail();
   }
 
    formatDate(date: any): string {
@@ -103,7 +103,7 @@ export class ThcArrivalListComponent {
     return `${year}-${month}-${day}`;
   }
 
-  getTHCDetail() {
+  getTHCArrivalDetail() {
     if (this.listSubscription) {
       this.listSubscription.unsubscribe();
     }
@@ -138,7 +138,7 @@ export class ThcArrivalListComponent {
   setPage(p: number) {
     if (this.pagination.page === p) return;
     this.pagination.page = p;
-    this.getTHCDetail();
+    this.getTHCArrivalDetail();
   }
 
   filterByStatus(status: string) {
