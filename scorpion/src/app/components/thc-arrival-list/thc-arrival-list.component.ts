@@ -7,7 +7,10 @@ import { environment } from 'environments/environment';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ThcArrivalPopupComponent } from '../thc-arrival-popup/thc-arrival-popup.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { debounceTime } from 'rxjs';
+import { debounceTime, Subscription } from 'rxjs';
+import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
+import { DocketService } from 'app/shared/services/docket.service';
+import { ExportService } from 'app/shared/services/export.service';
 
 @Component({
   selector: 'app-thc-arrival-list',
@@ -21,9 +24,12 @@ export class ThcArrivalListComponent {
   public isLoading: boolean = false;
   public env = environment;
   public THCArrivalFilterForm!: FormGroup;
+  private listSubscription?: Subscription;
+  public summaryData:any;
+  public isdownload : boolean = false;
   @ViewChild('ThcArrivalPopupComponent') ThcArrivalPopupComponent!: ThcArrivalPopupComponent;
 
-
+  public arrivalData:any;
   statusList = [
     { value: 'All', label: 'All Status', color: 'all', bg: 'var(--muted)', count: 0 },
     { value: 'Pending For Arrival', label: 'Pending For Arrival', color: 'pending-for-arrival', bg: 'var(--teal)', count: 0 },
@@ -37,58 +43,12 @@ export class ThcArrivalListComponent {
     totalPages: 0,
   };
 
-  public arrivalData = [
-    {
-      thcNo: 'VH/LTT/2526/001764',
-      thcDate: '21-03-2026',
-      totalDocket: '21',
-      mFNO: 'MF/2526/00001',
-      vendorType: 'ABC Logistics',
-      vendorName: 'OWn Transport',
-      ATD: '21-03-2026',
-      ETA: '21-03-2026',
-      PreviousLocation: 'Mumbai',
-      THCRoute: 'Mumbai → Pune',
-      LoadingHCCNo: 'HCC/2526/00001',
-      UnLoadingHCCNo: 'HCC/2526/00011',
-      UnloadingSheetNo: 'VH/ABH/2526/002487',
-      status: 'Billed'
-    },
-    {
-      thcNo: 'VH/ABH/2526/002487',
-      thcDate: '22-03-2026',
-      totalDocket: '15',
-      mFNO: 'MF/2526/00002',
-      vendorType: 'XYZ Freight',
-      vendorName: 'XYZ Cargo Services',
-      ATD: '22-03-2026',
-      ETA: '22-03-2026',
-      PreviousLocation: 'Delhi',
-      THCRoute: 'Delhi → Jaipur',
-      LoadingHCCNo: 'HCC/2526/00002',
-      UnLoadingHCCNo: 'HCC/2526/00012',
-      UnloadingSheetNo: 'VH/LTT/2526/001763',
-      status: 'HCC Generated'
-    },
-    {
-      thcNo: 'VH/RPR/2526/000068',
-      thcDate: '23-03-2026',
-      totalDocket: '32',
-      mFNO: 'MF/2526/00003',
-      vendorType: 'Quick Move',
-      vendorName: 'Quick Move Logistics',
-      ATD: '23-03-2026',
-      ETA: '23-03-2026',
-      PreviousLocation: 'Bangalore',
-      THCRoute: 'Bangalore → Chennai',
-      LoadingHCCNo: 'HCC/2526/00003',
-      UnLoadingHCCNo: 'HCC/2526/00013',
-      UnloadingSheetNo: 'VH/LTT/2526/001764',
-      status: 'Arrival Completed'
-    }
-  ];
-
-  constructor(private fb: FormBuilder) { }
+  constructor(
+    private fb: FormBuilder,
+    public PRSDRSApiService:PRSDRSApiService,
+    private docketService:DocketService,
+    private exportService:ExportService
+  ) { }
 
   ngOnInit() {
     this.buildFilterForm()
@@ -112,9 +72,9 @@ export class ThcArrivalListComponent {
 
   getStatusClass(status: string): string {
     switch (status) {
-      case 'Billed': return 's-gen';
-      case 'HCC Generated': return 's-billed';
-      case 'Arrival Completed': return 's-hcc';
+      case 'Pending for Arrival': return 's-gen';
+      case 'Arrival Completed': return 's-billed';
+      case 'HCC Generated': return 's-hcc';
       default: return '';
     }
   }
@@ -130,20 +90,94 @@ export class ThcArrivalListComponent {
     }
   }
 
-  openThcArrival(data: any) {
-    this.ThcArrivalPopupComponent.showPopup(data);
-  }
-
   fetchData() {
     this.pagination.page = 1;
     this.getTHCDetail();
   }
 
-  getTHCDetail() {
-    this.arrivalData;
+   formatDate(date: any): string {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+    const day = ('0' + d.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
   }
 
-  openMFView(MFNO: string) {
+  getTHCDetail() {
+    if (this.listSubscription) {
+      this.listSubscription.unsubscribe();
+    }
+    const payload={
+      brcd:this.docketService.loginUserList.LocationCode,
+      fromDate: this.formatDate(this.THCArrivalFilterForm.value.fromDate),
+      toDate: this.formatDate(this.THCArrivalFilterForm.value.toDate),
+      searchText: this.THCArrivalFilterForm.value.searchText,
+      statusFilter: this.THCArrivalFilterForm.value.statusFilter,
+      pageNumber: this.pagination.page,
+      pageSize:this.pagination.pageSize,
+      isDownload: false
+    }
+     this.isLoading = true;
+    this.listSubscription = this.PRSDRSApiService.getTHCArrivalList(payload).subscribe({
+      next : (response:any)=>{
+        if(response){
+          this.arrivalData= response.thcList;
+           this.pagination.totalRecords = response.pagination.totalRecords;
+          this.pagination.totalPages = response.pagination.totalPages;
+          this.summaryData = response.summary;
+          this.isLoading = false;
+        }
+      }, error: (err) => {
+        console.error(err);
+        this.isLoading = false;
+      }
+    })
+  }
+
+
+  setPage(p: number) {
+    if (this.pagination.page === p) return;
+    this.pagination.page = p;
+    this.getTHCDetail();
+  }
+
+  filterByStatus(status: string) {
+    this.THCArrivalFilterForm.patchValue({ statusFilter: status }, { emitEvent: false });
+    this.fetchData();
+  }
+
+  refreshFilter() {
+    this.buildFilterForm();
+    this.fetchData()
+  }
+
+  downloadExcel() {
+    this.isdownload = true;
+    const payload={
+      brcd:'PIM',
+      fromDate: this.formatDate(this.THCArrivalFilterForm.value.fromDate),
+      toDate: this.formatDate(this.THCArrivalFilterForm.value.toDate),
+      searchText: this.THCArrivalFilterForm.value.searchText,
+      statusFilter: this.THCArrivalFilterForm.value.statusFilter,
+      pageNumber: this.pagination.page,
+      pageSize:this.pagination.pageSize,
+      isDownload: true
+    }
+    this.listSubscription = this.PRSDRSApiService.getTHCArrivalList(payload).subscribe({
+      next: (response: any) => {
+        this.isdownload = false;
+        if (response) {
+          this.exportService.exportToExcel(response.thcList, `THCArrival_Export`);
+        }
+      },
+      error: (err: any) => {
+        this.isdownload = false;
+        console.error('Error downloading Excel', err);
+      }
+    });
+  }
+
+    openMFView(MFNO: string) {
     const url = `${this.env.liveUrl}ViewPrint/Menifest_ViewPrint?MFNO=${MFNO}&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
@@ -171,5 +205,9 @@ export class ThcArrivalListComponent {
     if (popup) {
       popup.location.href = url;
     }
+  }
+
+   openThcArrival(data: any) {
+    this.ThcArrivalPopupComponent.showPopup(data);
   }
 }
