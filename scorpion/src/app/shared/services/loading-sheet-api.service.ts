@@ -31,4 +31,8 @@ export class LoadingSheetApiService {
   getLoadingSheetListing(payload: any) {
     return this.apiHandlerService.Post(`Operation/GetLSListing`, payload);
   }
+
+  loadingSheetCancellationSubmit(payload: any) {
+    return this.apiHandlerService.Post(`Operation/LoadingSheetCancellationSubmit`, payload);
+  }
 }

@@ -6,12 +6,14 @@ import { PaginationComponent } from 'app/shared/components/pagination/pagination
 import { LoadingSheetApiService } from 'app/shared/services/loading-sheet-api.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { ExportService } from 'app/shared/services/export.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { environment } from 'environments/environment';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { debounceTime, Subject, Subscription } from 'rxjs';
 import { HCCDetailsComponent } from '../prs-generation-list/hcc-details/hcc-details.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { LSUpdatePopupComponent } from './lsupdate-popup/lsupdate-popup.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-loading-sheet-layout',
@@ -68,7 +70,8 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
   constructor(
     private loadingSheetApiService: LoadingSheetApiService,
     private docketService: DocketService,
-    private exportService: ExportService
+    private exportService: ExportService,
+    private sweetAlertService: SweetAlertService
   ) { }
 
   ngOnInit() {
@@ -236,6 +239,70 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
     if (popup) {
       popup.location.href = url;
     }
+  }
+
+  cancelLoadingSheet(lsNo: string) {
+    Swal.fire({
+      title: `Cancel Loading Sheet ${lsNo}`,
+      html: `
+        <div class="text-start">
+          <p>Are you sure you want to cancel this Loading Sheet?</p>
+          <label for="remark" class="form-label">Remark:</label>
+          <textarea id="remark" class="form-control-textarea" placeholder="Enter cancellation remark..." rows="3" ></textarea>
+        </div>
+      `,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, cancel!',
+      cancelButtonText: 'No',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      width: '450px',
+      customClass: {
+        popup: 'glassy-info-popup',
+        title: 'glassy-info-title',
+        htmlContainer: 'glassy-info-body',
+        confirmButton: 'glassy-info-btn',
+        cancelButton: 'glassy-info-btn',
+        icon: 'glassy-info-icon'
+      },
+      preConfirm: () => {
+        const remark = (document.getElementById('remark') as HTMLTextAreaElement).value;
+        if (!remark || remark.trim() === '') {
+          Swal.showValidationMessage('Please enter a remark');
+          return false;
+        }
+        return remark.trim();
+      }
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        const payload = {
+          lSclnList: [
+            {
+              lsNo: lsNo,
+              remark: result.value,
+              isChecked: true
+            }
+          ],
+          baseUserName: this.docketService.loginUserList?.BaseUserName
+        };
+
+        this.loadingSheetApiService.loadingSheetCancellationSubmit(payload).subscribe({
+          next: (response: any) => {
+            if (response) {
+              this.sweetAlertService.success(`Loading Sheet ${response.lsNo} ${response.message}`);
+              this.fetchLoadingSheetList(); // Refresh the list
+            } else {
+              this.sweetAlertService.error('Failed to cancel Loading Sheet');
+            }
+          },
+          error: (err: any) => {
+            console.error('Error cancelling Loading Sheet', err);
+            this.sweetAlertService.error('Error occurred while cancelling Loading Sheet');
+          }
+        });
+      }
+    });
   }
 
   ngOnDestroy() {

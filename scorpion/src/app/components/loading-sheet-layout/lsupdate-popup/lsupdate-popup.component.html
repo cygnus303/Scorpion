@@ -1,509 +1,502 @@
 <ng-template #Templatepod>
-<form [formGroup]="loadingSheetService.LSForm">
+  <form [formGroup]="loadingSheetService.LSForm">
+    <div class="modal-header">
+      <div class="d-flex align-items-center gap-3">
+        <div class="pfm-icon shadow-sm">
+          @if(this.docketService.loginUserList.Type === 'ULS') {
+            <i class="fas fa-edit text-primary"></i>
+          } @else {
+            <i class="fas fa-list text-primary"></i>
+          }
+        </div>
+        <div>
+          <div class="fw-bold fs-5">{{this.docketService.loginUserList.Type === 'ULS' ?'Update Loading Sheet' : 'List Loading Sheet'}}</div>
+        </div>
+      </div>
+      <button type="button" class="btn-close pfm-close" (click)="modalRef.hide()"></button>
+    </div>
 
-@if(this.docketService.loginUserList.Type === 'LS'){
-  <div class="cnote-entry-container">
-    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
-      <i class="fas fa-filter me-2"></i>
-      Loading Sheet Generation criteria
-    </div>
-    <div class="form-grid p-4">
-      <div class="row pb-3">
-        <div class="col-4">
-          <div class="row align-items-center">
-            <label class="col-sm-5 col-form-label text-end">Loading Sheet No.</label>
-            <div class="col-sm-7">
-              <input class="form-control" formControlName="lsNO" placeholder="System Generated" readonly>
+    @if(this.docketService.loginUserList.Type === 'LS'){
+      <div class="input-background-color p-3">
+        <div class="control-bar d-block gap-2 mb-0">
+          <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
+            <div class="fw-bold"><i class="fas fa-filter me-2"></i>
+              Loading Sheet Generation criteria</div>
+          </div>
+          <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
+          <div class="row mb-3">
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Loading Sheet No.</label>
+                <input class="form-control" formControlName="lsNO" placeholder="System Generated" readonly>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Loading Sheet Date</label>
+                <input class="form-control required2" formControlName="lsDate" placeholder="Loading Sheet Date" readonly>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Manual LS No.</label>
+                <input class="form-control" formControlName="manualLsNO" readonly>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Next Stop Location</label>
+                <ng-select class="noFoundTextColor required2 clear-icon remove-select-color" placeholder="Select Next Stop Location"
+                  formControlName="nextStopLocation" appFocusNext notFoundText="No matches found"
+                  [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('nextStopLocation')?.invalid  && loadingSheetService.LSForm.get('nextStopLocation')?.touched }"
+                  (search)="getLocationDetail($event)" [notFoundText]="nextLocationValue" (open)="resetNextLocationDropdown()"
+                  [readonly]="isgetLoadingList">
+                  <ng-option *ngFor="let item of locationData" [value]="item.id">
+                    <strong>{{ item.id }}</strong> : {{ item.text }}
+                  </ng-option>
+                </ng-select>
+                <div class="text-danger text-start"
+                  *ngIf="loadingSheetService.LSForm.get('nextStopLocation')?.invalid && loadingSheetService.LSForm.get('nextStopLocation')?.touched">
+                  This field is required.
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-4">
-          <div class="row">
-            <label class="col-sm-5 col-form-label text-end"> Loading Sheet Date</label>
-            <div class="col-sm-7">
-              <input class="form-control required2" formControlName="lsDate" placeholder="Loading Sheet Date"
-                readonly>
+          <div class="row mb-3">
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Loading By</label>
+                <ng-select class="noFoundTextColor required2 remove-select-color" placeholder="Select Loading By"
+                  formControlName="loadingBy" notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
+                  [readonly]="isgetLoadingList" [items]="generalMasterService.loadingData"
+                  (change)="getvendoCodeData($event)" appFocusNext
+                  [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('loadingBy')?.invalid  && loadingSheetService.LSForm.get('loadingBy')?.touched }"></ng-select>
+                <div class="text-danger text-start"
+                  *ngIf="loadingSheetService.LSForm.get('loadingBy')?.invalid && loadingSheetService.LSForm.get('loadingBy')?.touched">
+                  This field is required.
+                </div>
+              </div>
+            </div>
+            <div class="col-3" *ngIf="loadingSheetService.LSForm.value.mF_TransportMode === 'S'">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Charge type</label>
+                <ng-select class="noFoundTextColor required2 remove-select-color" placeholder="Select Charge type"
+                  formControlName="rateType" notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
+                  [readonly]="isgetLoadingList" [items]="generalMasterService.chargeTypeData" appFocusNext
+                  [readonly]="!loadingSheetService.LSForm.value.loadingBy || loadingSheetService.LSForm.value.loadingBy === 'XX9' || loadingSheetService.LSForm.value.loadingBy === 'XX5'"
+                  [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('rateType')?.invalid  && loadingSheetService.LSForm.get('rateType')?.touched }"></ng-select>
+                <div class="text-danger text-start"
+                  *ngIf="loadingSheetService.LSForm.get('rateType')?.invalid && loadingSheetService.LSForm.get('rateType')?.touched">
+                  This field is required.
+                </div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> LS Transport Mode</label>
+                <ng-select class="noFoundTextColor required2 remove-select-color" placeholder="Select LS Transport Mode"
+                  formControlName="mF_TransportMode" notFoundText="No matches found" bindLabel="codeDesc"
+                  (change)="lSTransportMode($event)" bindValue="codeId"
+                  [items]="generalMasterService.LsTransportModeData" appFocusNext
+                  [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('mF_TransportMode')?.invalid  && loadingSheetService.LSForm.get('mF_TransportMode')?.touched }"></ng-select>
+                <div class="text-danger text-start"
+                  *ngIf="loadingSheetService.LSForm.get('mF_TransportMode')?.invalid && loadingSheetService.LSForm.get('mF_TransportMode')?.touched">
+                  This field is required.
+                </div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Seal No</label>
+                <input class="form-control" formControlName="sealNo" placeholder="Seal No" maxlength="6"
+                  [readOnly]="isgetLoadingList" appFocusNext>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-4">
-          <div class="row">
-            <label class="col-sm-5 col-form-label text-end"> Manual LS No.</label>
-            <div class="col-sm-7">
-              <input class="form-control" formControlName="manualLsNO" readonly>
+          <div class="row mb-3">
+            <div class="col-3" *ngIf="loadingSheetService.LSForm.value.mF_TransportMode === 'S'">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Vehicle No</label>
+                <div *ngIf="loadingSheetService.LSForm.value.rdVehicle==='Own'">
+                  <ng-select class="noFoundTextColor clear-icon remove-select-color" placeholder="Select Vehicle No" formControlName="vehno"
+                    (search)="getVehicleNumberDetail($event)" [notFoundText]="noVehicleValue" appFocusNext
+                    [readonly]="!loadingSheetService.LSForm.value.loadingBy || isgetLoadingList " (open)="resetvehicleNoDropdown()">
+                    <ng-option *ngFor="let item of vehicleNumberData" [value]="item.vehno">
+                      <strong>{{ item.vehno }}</strong> : {{ item.vehno }}
+                    </ng-option>
+                  </ng-select>
+                </div>
+                <div *ngIf="loadingSheetService.LSForm.value.rdVehicle==='Market'">
+                  <input class="form-control" formControlName="vehno" placeholder="Vehicle No"
+                    [readonly]="!loadingSheetService.LSForm.value.loadingBy">
+                </div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Prepared By</label>
+                <input class="form-control" formControlName="preparedBy" placeholder="Prepared By" appFocusNext
+                  [readOnly]="isgetLoadingList">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> UserName</label>
+                <input class="form-control" formControlName="UserName" placeholder="UserName" readonly appFocusNext>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> LS Type</label>
+                <ng-select class="noFoundTextColor clear-icon remove-select-color" placeholder="Select LS Type" formControlName="lsType"
+                  notFoundText="No matches found" bindLabel="text" bindValue="value" appFocusNext
+                  [items]="LsTypeList"></ng-select>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="row pb-3">
-        <div class="col-4">
-          <div class="row">
-            <label class="col-sm-5 col-form-label text-end"> Next Stop Location</label>
-            <div class="col-sm-7">
-              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Next Stop Location" formControlName="nextStopLocation" appFocusNext
-                notFoundText="No matches found" [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('nextStopLocation')?.invalid  && loadingSheetService.LSForm.get('nextStopLocation')?.touched }"
-                (search)="getLocationDetail($event)" [notFoundText]="nextLocationValue" (open)="resetNextLocationDropdown()" [readonly]="isgetLoadingList">
-                <ng-option *ngFor="let item of locationData" [value]="item.id">
-                  <strong>{{ item.id }}</strong> : {{ item.text }}
-                </ng-option>
-              </ng-select>
-              <div class="text-danger text-start"
-                *ngIf="loadingSheetService.LSForm.get('nextStopLocation')?.invalid && loadingSheetService.LSForm.get('nextStopLocation')?.touched">
-                This field is required.
-              </div>
-            </div>
-          </div>
-        </div>
-          <div class="col-4">
-          <div class="row align-items-center" *ngIf="loadingSheetService.LSForm.value.mF_TransportMode === 'S'">
-            <label class="col-sm-5 col-form-label text-end">Loading By</label>
-            <div class="col-sm-7">
-              <ng-select class="noFoundTextColor required2" placeholder="Select Loading By" formControlName="loadingBy"
-                notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId" [readonly]="isgetLoadingList"
-                [items]="generalMasterService.loadingData" (change)="getvendoCodeData($event)" appFocusNext
-                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('loadingBy')?.invalid  && loadingSheetService.LSForm.get('loadingBy')?.touched }"></ng-select>
-              <div class="text-danger text-start" 
-                *ngIf="loadingSheetService.LSForm.get('loadingBy')?.invalid && loadingSheetService.LSForm.get('loadingBy')?.touched">
-                This field is required.
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-4" *ngIf="loadingSheetService.LSForm.value.mF_TransportMode === 'S'">
-          <div class="row">
-            <label class="col-sm-5 col-form-label text-end"> Charge type</label>
-            <div class="col-sm-7">
-              <ng-select class="noFoundTextColor required2" placeholder="Select Charge type"  formControlName="rateType"
-                notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId" [readonly]="isgetLoadingList"
-                [items]="generalMasterService.chargeTypeData" appFocusNext
-                [readonly]="!loadingSheetService.LSForm.value.loadingBy || loadingSheetService.LSForm.value.loadingBy === 'XX9' || loadingSheetService.LSForm.value.loadingBy === 'XX5'"
-                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('rateType')?.invalid  && loadingSheetService.LSForm.get('rateType')?.touched }"></ng-select>
-              <div class="text-danger text-start"
-                *ngIf="loadingSheetService.LSForm.get('rateType')?.invalid && loadingSheetService.LSForm.get('rateType')?.touched">
-                This field is required.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row pb-3">
-        <div class="col-4">
-          <div class="row align-items-center">
-            <label class="col-sm-5 col-form-label text-end">LS Transport Mode</label>
-            <div class="col-sm-7">
-              <ng-select class="noFoundTextColor required2" placeholder="Select LS Transport Mode"
-                formControlName="mF_TransportMode" notFoundText="No matches found" bindLabel="codeDesc" (change)="lSTransportMode($event)"
-                bindValue="codeId" [items]="generalMasterService.LsTransportModeData" appFocusNext
-                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('mF_TransportMode')?.invalid  && loadingSheetService.LSForm.get('mF_TransportMode')?.touched }"></ng-select>
-              <div class="text-danger text-start"
-                *ngIf="loadingSheetService.LSForm.get('mF_TransportMode')?.invalid && loadingSheetService.LSForm.get('mF_TransportMode')?.touched">
-                This field is required.
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- <div class="col-4" >
-          <div class="row align-items-center">
-            <label class="col-sm-5 col-form-label text-end"> Select Vehicle</label>
-            <div class="col-sm-7 d-flex align-items-center">
-              <div class="d-flex align-items-center">
-                <input type="radio" class="me-3" name="rdVehicle" value="Own" formControlName="rdVehicle" appFocusNext>
-                <label>Own</label>
-              </div>
-              <div class="ms-5 d-flex align-items-center">
-                <input type="radio" class="me-3" name="rdVehicle" value="Market" formControlName="rdVehicle" appFocusNext>
-                <label>Market</label>
-              </div>
-            </div>
-          </div>
-        </div> -->
-        <div class="col-4">
-          <div class="row">
-            <label class="col-sm-5 col-form-label text-end"> Seal No</label>
-            <div class="col-sm-7">
-              <input class="form-control" formControlName="sealNo" placeholder="Seal No"  maxlength="6" [readOnly]="isgetLoadingList" appFocusNext>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row pb-3">
-        <div class="col-4" *ngIf="loadingSheetService.LSForm.value.mF_TransportMode === 'S'">
-          <div class="row align-items-center">
-            <label class="col-sm-5 col-form-label text-end">Vehicle No</label>
-            <div class="col-sm-7" *ngIf="loadingSheetService.LSForm.value.rdVehicle==='Own'">
-              <ng-select class="noFoundTextColor clear-icon" placeholder="Select Vehicle No" formControlName="vehno"
-                (search)="getVehicleNumberDetail($event)" [notFoundText]="noVehicleValue" appFocusNext
-                [readonly]="!loadingSheetService.LSForm.value.loadingBy || isgetLoadingList "
-                (open)="resetvehicleNoDropdown()">
-                <ng-option *ngFor="let item of vehicleNumberData" [value]="item.vehno">
-                  <strong>{{ item.vehno }}</strong> : {{ item.vehno }}
-                </ng-option>
-              </ng-select>
-            </div>
-            <div class="col-sm-7" *ngIf="loadingSheetService.LSForm.value.rdVehicle==='Market'">
-              <input class="form-control" formControlName="vehno" placeholder="Vehicle No"
-                [readonly]="!loadingSheetService.LSForm.value.loadingBy">
-            </div>
-          </div>
-        </div>
-        <div class="col-4">
-          <div class="row">
-            <label class="col-sm-5 col-form-label text-end"> Prepared By</label>
-            <div class="col-sm-7">
-              <input class="form-control" formControlName="preparedBy" placeholder="Prepared By" appFocusNext
-                [readOnly]="isgetLoadingList">
-            </div>
-          </div>
-        </div>
-        <div class="col-4">
-          <div class="row">
-            <label class="col-sm-5 col-form-label text-end"> UserName</label>
-            <div class="col-sm-7">
-              <input class="form-control" formControlName="UserName" placeholder="UserName" readonly appFocusNext>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row pb-3">
-        <div class="col-4">
-          <div class="row align-items-center">
-            <label class="col-sm-5 col-form-label text-end">LS Type</label>
-            <div class="col-sm-7">
-              <ng-select class="noFoundTextColor clear-icon" placeholder="Select LS Type"
-                formControlName="lsType" notFoundText="No matches found" bindLabel="text" bindValue="value" appFocusNext
-                [items]="LsTypeList"></ng-select>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-}
+    }
 
-@if(this.docketService.loginUserList.Type === 'LS'){
-  <div class="cnote-entry-container mt-5">
-    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
-      <i class="fas fa-filter me-2"></i>
-      Select criteria for preparing Loading Sheet
-    </div>
-    <div class="form-grid p-4">
-      <div class="row pb-3">
-        <div class="col-4">
-          <div class="row align-items-center">
-            <label class="col-sm-5 col-form-label text-end">Select Date</label>
-            <div class="col-sm-7" (click)="!isgetLoadingList && dvr.toggle()">
-              <input type="text" placeholder="Daterangepicker"
-                class="form-control border-start-1 text-center line-height" bsDaterangepicker #dvr="bsDaterangepicker"
-                formControlName="reportrange" [class.disabled-input]="true" appFocusNext
-                [bsConfig]="{ ranges: commonService.ranges, rangeInputFormat: 'MMMM D, YYYY',containerClass: 'theme-dark-blue', dateInputFormat: 'MMMM D, YYYY',maxDate: today}" />
-            </div>
+    @if(this.docketService.loginUserList.Type === 'LS'){
+    <div class="input-background-color p-3">
+      <div class="control-bar d-block gap-2 mb-0">
+        <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
+            <div class="fw-bold"><i class="fas fa-filter me-2"></i>
+              Select criteria for preparing Loading Sheet</div>
           </div>
-        </div>
-      </div>
-      <div class="row pb-3">
-        <div class="col-4">
-          <div class="row align-items-center">
-            <label class="col-sm-5 col-form-label text-end">Transport Mode</label>
-            <div class="col-sm-7">
-              <ng-select class="noFoundTextColor" placeholder="Select Transport Mode" appFocusNext
-                formControlName="transportMode" notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
-                [items]="generalMasterService.modeData"></ng-select>
+          <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
+        <div class="row mb-3">
+            <div class="col-3">
+               <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Select Date</label>
+                 <div class="input-group" (click)="!isgetLoadingList && dvr.toggle()">
+                   <input type="text" placeholder="Daterangepicker" class="form-control border-start-1 text-center line-height"
+                     bsDaterangepicker #dvr="bsDaterangepicker" formControlName="reportrange" [class.disabled-input]="true" appFocusNext
+                     [bsConfig]="{ ranges: commonService.ranges, rangeInputFormat: 'MMMM D, YYYY',containerClass: 'theme-dark-blue', dateInputFormat: 'MMMM D, YYYY',maxDate: today}" />
+                   <span class="input-group-text cursor-pointer" (click)="dvr.toggle()"
+                     [class.disabled-input]="this.docketService.isComplition">
+                     <i class="fa fa-calendar"></i>
+                   </span>
+                 </div>
+               </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="row pb-3">
-        <div class="col-4">
-          <div class="row align-items-center">
-            <label class="col-sm-5 col-form-label text-end">Destination</label>
-            <div class="col-sm-7">
-              <input class="form-control" formControlName="destinationList" placeholder="Destination" appFocusNext>
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Transport Mode</label>
+                <ng-select class="noFoundTextColor remove-select-color" placeholder="Select Transport Mode" appFocusNext
+                  formControlName="transportMode" notFoundText="No matches found" bindLabel="codeDesc"
+                  bindValue="codeId" [items]="generalMasterService.modeData"></ng-select>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="col-2 text-primary d-flex justify-content-start align-content-center align-items-center">
-          [Separated by <b>&nbsp;<i>Comma</i>&nbsp;</b> if multiple]
-        </div>
-      </div>
-      <div class="row pb-3">
-        <div class="col-4">
-          <div class="row align-items-center">
-            <label class="col-sm-5 col-form-label text-end">Docket No.</label>
-            <div class="col-sm-7">
-              <input class="form-control" formControlName="docketNoList" placeholder="Docket No." appFocusNext>
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Destination</label>
+                  <input class="form-control" formControlName="destinationList" placeholder="Destination" appFocusNext>
+                  <span class="text-muted small">[Separated by <b>&nbsp;<i>Comma</i>&nbsp;</b> if multiple]</span>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="col-2 text-primary d-flex justify-content-start align-content-center align-items-center">
-          [Separated by <b>&nbsp;<i>Comma</i>&nbsp;</b> if multiple]
-        </div>
-      </div>
-    </div>
-  </div>
-}
-
-<div *ngIf="this.isgetLoadingList" class="fade-in">
-  @if(this.docketService.loginUserList.Type === 'LS' ){
-  <div class="cnote-entry-container mt-5" *ngIf="loadingSheetService.LSForm.value.mF_TransportMode === 'S'">
-    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
-      <i class="fas fa-list me-2"></i>
-      Loading Charges
-    </div>
-    <div class="form-grid p-4">
-      <div class="row pb-3">
-        <div class="col-4">
-          <div class="row align-items-center">
-            <label class="col-sm-5 col-form-label text-end">Loading By :</label>
-            <div class="col-sm-7 text-start fw-bold">
-              {{this.loadingSheetService.LSForm.value.vendorName }}
-            </div>
-          </div>
-        </div>
-        <div class="col-4">
-          <div class="row">
-            <label class="col-sm-5 col-form-label text-end">Vendor Code </label>
-            <div class="col-sm-7">
-              <ng-select class="noFoundTextColor  clear-icon" placeholder="Select Vendor Name"
-                formControlName="vendorCode" notFoundText="No matches found" appFocusNext (change)="getLoadingCharge($event)"
-                [items]="challanService.branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value" [readonly]="loadingSheetService.LSForm.value.loadingBy === 'XX9'"
-                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('vendorCode')?.invalid  && loadingSheetService.LSForm.get('vendorCode')?.touched }"></ng-select>
-                 <div class="text-danger text-start"
-                *ngIf="loadingSheetService.LSForm.get('vendorCode')?.invalid && loadingSheetService.LSForm.get('vendorCode')?.touched">
-                This field is required.
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Docket No.</label>
+                  <input class="form-control" formControlName="docketNoList" placeholder="Docket No." appFocusNext>
+                  <span class="text-muted small">[Separated by <b>&nbsp;<i>Comma</i>&nbsp;</b> if multiple]</span>
               </div>
             </div>
           </div>
-        </div>
       </div>
-      <div class="row pb-3">
-        <div class="col-4">
-          <div class="row align-items-center">
-            <label class="col-sm-5 col-form-label text-end">Loading Charge </label>
-            <div class="col-sm-7">
-              <input class="form-control required2" placeholder="Loading Charge" type="text"
-                formControlName="loadingCharge" readonly appFocusNext
-                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('loadingCharge')?.invalid  && loadingSheetService.LSForm.get('loadingCharge')?.touched }">
+    </div>
+    }
+
+    <div *ngIf="this.isgetLoadingList" class="fade-in">
+      @if(this.docketService.loginUserList.Type === 'LS' ){
+      <div class="input-background-color p-3">
+        <div class="control-bar d-block gap-2 mb-0">
+          <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
+            <div class="fw-bold"><i class="fas fa-list me-2"></i>
+              Loading Charges</div>
+          </div>
+          <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
+          <div class="row mb-3">
+            <div class="col-4 align-items-center d-flex">
+              <div class="form-group-input">
+                <label class="form-label fw-bold d-flex align-items-center gap-2">
+                  Loading By :
+                  <span class="fw-bold text-secondary" style="word-break: break-all;">
+                    {{this.loadingSheetService.LSForm.value.vendorName }}
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Vendor Code</label>
+                <ng-select class="noFoundTextColor  clear-icon remove-select-color" placeholder="Select Vendor Name" formControlName="vendorCode"
+                  notFoundText="No matches found" appFocusNext (change)="getLoadingCharge($event)"
+                  [items]="challanService.branchWiseLoadingUnloadingList" bindLabel="text" bindValue="value"
+                  [readonly]="loadingSheetService.LSForm.value.loadingBy === 'XX9'"
+                  [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('vendorCode')?.invalid  && loadingSheetService.LSForm.get('vendorCode')?.touched }"></ng-select>
+                <div class="text-danger text-start"
+                  *ngIf="loadingSheetService.LSForm.get('vendorCode')?.invalid && loadingSheetService.LSForm.get('vendorCode')?.touched">
+                  This field is required.
+                </div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Loading Charge</label>
+                <input class="form-control required2" placeholder="Loading Charge" type="text" formControlName="loadingCharge"
+                  readonly appFocusNext
+                  [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('loadingCharge')?.invalid  && loadingSheetService.LSForm.get('loadingCharge')?.touched }">
                 <div class="text-danger text-start"
                   *ngIf="loadingSheetService.LSForm.get('loadingCharge')?.invalid && loadingSheetService.LSForm.get('loadingCharge')?.touched">
                   Please enter a value greater than or equal to 0.01.
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+
+      @if(this.docketService.loginUserList.Type === 'ULS'){
+      <div class="input-background-color p-3">
+        <div class="control-bar d-block gap-2 mb-0">
+          <div class="row mb-3">
+            <div class="col-4 align-items-center d-flex">
+              <div class="form-group-input">
+                <label class="form-label fw-bold d-flex align-items-center gap-2">
+                  LS No. :
+                  <span class="fw-bold text-secondary" style="word-break: break-all;">
+                    {{this.docketService.loginUserList.TCNO}}
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Loading By</label>
+                <ng-select class="noFoundTextColor required2 remove-select-color" placeholder="Select Loading By"
+                  formControlName="loadingByUser" notFoundText="No matches found"
+                  [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('loadingByUser')?.invalid  && loadingSheetService.LSForm.get('loadingByUser')?.touched }">
+                  <ng-option *ngFor="let data of loadingSheetService.unLoaderUserList"
+                    [value]="data.userId">{{data.userId}} :
+                    {{data.name}}</ng-option>
+                </ng-select>
+                <div class="text-danger text-start" appFocusNext
+                  *ngIf="loadingSheetService.LSForm.get('loadingByUser')?.invalid && loadingSheetService.LSForm.get('loadingByUser')?.touched">
+                  This field is required.
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Loading Supervisor</label>
+                <ng-select class="noFoundTextColor required2 remove-select-color" placeholder="Loading Supervisor"
+                  formControlName="LoadingSupervisor" notFoundText="No matches found" appFocusNext
+                  [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('LoadingSupervisor')?.invalid  && loadingSheetService.LSForm.get('LoadingSupervisor')?.touched }">
+                  <ng-option *ngFor="let data of loadingSheetService.unLoaderUserList"
+                    [value]="data.userId">{{data.userId}} :
+                    {{data.name}}</ng-option>
+                </ng-select>
+                <div class="text-danger text-start"
+                  *ngIf="loadingSheetService.LSForm.get('LoadingSupervisor')?.invalid && loadingSheetService.LSForm.get('LoadingSupervisor')?.touched">
+                  This field is required.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> LS Type</label>
+                <input class="form-control" placeholder="LS Type" type="text" formControlName="lsType" readonly
+                  appFocusNext>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Manual MF No</label>
+                <input class="form-control required2" placeholder="Manual MF No" formControlName="manualLsNO" readonly
+                  type="text">
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Shift In Charge</label>
+                <ng-select class="noFoundTextColor required2" placeholder="Shift In Charge" formControlName="shiftInCharge"
+                  notFoundText="No matches found" appFocusNext
+                  [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('shiftInCharge')?.invalid  && loadingSheetService.LSForm.get('shiftInCharge')?.touched }">
+                  <ng-option *ngFor="let data of loadingSheetService.unLoaderUserList" [value]="data.userId">{{data.userId}} :
+                    {{data.name}}</ng-option> </ng-select>
+                <div class="text-danger text-start"
+                  *ngIf="loadingSheetService.LSForm.get('shiftInCharge')?.invalid && loadingSheetService.LSForm.get('shiftInCharge')?.touched">
+                  This field is required. </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+
+      <div class="p-3">
+        <div class="control-bar d-block gap-2 mb-0">
+          <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
+            <div class="fw-bold"><i class="fas fa-list me-2"></i>
+              {{this.docketService.loginUserList.Type === 'ULS' ?'Update Loading Sheet & Prepare Manifest' : 'List Loading Sheet'}}</div>
+          </div>
+          <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
+          <div class="pt-0">
+
+            <div class="row text-success fw-bold mb-3 p-2">
+              <div class="col-4 text-center">
+                <label class="m-0 StyClss text-success"><b>Total No Of LR : {{totalDocketSelected||0}}</b></label>
+              </div>
+
+              <div class="col-4 text-center">
+                <label class="m-0 StyClss text-success"><b>Total Wt. [L/B] :{{totalActWt || 0}}</b></label>
+              </div>
+
+              <div class="col-4 text-center">
+                <label class="m-0 StyClss text-success"><b>Total Pkgs. [L/B] : {{totalPkgs || 0}}</b></label>
+              </div>
+            </div>
+            <div style="border:2px solid var(--border);border-radius:3px; max-height: 400px; overflow-y: auto;">
+              <table style="width:100%;border-collapse:collapse;font-size:13px;" class="data-table align-middle">
+                <thead style="position: sticky; top: 0; z-index: 1;">
+                  <tr>
+                    <th class="p-3 fw-bolder text-center"><input type="checkbox"
+                        class="form-check-input checkbox-lg custom-big-checkbox" (change)="toggleSelectAll($event)"
+                        appFocusNext style="cursor: pointer;"></th>
+                    <th class="p-3 fw-bolder">Cnote No.</th>
+                    <th class="p-3 fw-bolder">Manual Cnote No.</th>
+                    <th class="p-3 fw-bolder">Bkg. Date</th>
+                    <th class="p-3 fw-bolder">Trans. Mode</th>
+                    <th class="p-3 fw-bolder">Bkg. Loc.</th>
+                    <th class="p-3 fw-bolder">Dely. Loc.</th>
+                    <th class="p-3 fw-bolder">City From-To</th>
+                    <th class="p-3 fw-bolder">Comm. Dely Date</th>
+                    <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === 'LS'">
+                      Rate
+                      <!-- <ng-select class="required2 clear-icon" bindLabel="codeDesc" bindValue="codeId"  formControlName="loadedRateType" 
+                  [readonly]="loadingSheetService.LSForm.value.loadingBy === 'XX5'"
+                  [items]="generalMasterService.chargeTypeData" appFocusNext></ng-select> -->
+                    </th>
+                    <th class="p-3 fw-bolder">Pkgs.[L/B]</th>
+                    <th class="p-3 fw-bolder">Wt.[L/B]</th>
+                    <th class="p-3 fw-bolder">E-Way Bill No.</th>
+                  </tr>
+                </thead>
+                <tbody formArrayName="docketList">
+                  <tr *ngIf="isLoadingSheet">
+                    <td colspan="13" class="text-center py-4">
+                      <div class="spinner-border" role="status" style="width:1.8rem; height:1.8rem;">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                      <span class="ms-2">Loading Sheet list...</span>
+                    </td>
+                  </tr>
+                  <ng-container *ngIf="!isLoadingSheet">
+                    <tr *ngFor="let row of loadingSheetService.docketFormArray.controls; let i = index"
+                      [formGroupName]="i">
+                      <td class="text-center">
+                        <ng-container *ngIf="row.value.message?.trim(); else checkError">
+                          <span class="text-danger fw-semibold">{{ row.value.message }}</span>
+                        </ng-container>
+
+                        <ng-template #checkError>
+                          <ng-container *ngIf="row.value.errorMassage?.trim(); else showCheckbox">
+                            <span class="text-danger fw-semibold">{{ row.value.errorMassage }}</span>
+                          </ng-container>
+                        </ng-template>
+
+                        <ng-template #showCheckbox>
+                          <input type="checkbox" formControlName="isChecked"
+                            class="form-check-input checkbox-lg custom-big-checkbox" (change)="updateSelectedCount()"
+                            style="cursor: pointer;" appFocusNext />
+                        </ng-template>
+                      </td>
+                      <td>{{ row.value.docketNo }}</td>
+                      <td>{{ row.value.manual_dockno }}</td>
+                      <td>{{ row.value.docketDate }}</td>
+                      <td>{{ row.value.transMode }}</td>
+                      <td>{{ row.value.orgCode }}</td>
+                      <td>{{ row.value.reDestCode }}</td>
+
+                      <td>{{ row.value.fromTo }}</td>
+                      <td>{{ row.value.commited_DelyDate }}</td>
+
+                      <td *ngIf="docketService.loginUserList.Type === 'LS'">
+                        <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"
+                          placeholder="Enter rateType" [items]="generalMasterService.chargeTypeData"
+                          [readonly]="loadingSheetService.LSForm.value.loadingBy === 'XX5'" appFocusNext></ng-select>
+                        <input type="text" class="form-control" formControlName="newRate"
+                          (blur)="loadingSheetService.loadingRateCalc(row)">
+                        <span class="text-danger small d-flex justify-content-start"
+                          *ngIf="loadingSheetService.docketFormArray.at(i).get('rateError')?.errors?.['rateLimit']">
+                          Rate Amount Is High Please Check
+                        </span>
+                      </td>
+
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <input type="text" class="form-control w-50 text-end me-2" formControlName="PackageLB"
+                            [readOnly]="this.docketService.loginUserList.Type==='LS'" (input)="onPackageBlur(row)"
+                            oninput="this.value=this.value.replace(/[^0-9.]/g,'').replace(/(\..*)\./g,'$1')"
+                            appFocusNext>
+                          <span class="text-primary ms-3">
+                            / {{ row.value.packagesLB }} / {{ row.value.pkgsno | number:'1.2-2' }}
+                          </span>
+                        </div>
+                        <span class="text-danger small d-flex justify-content-start"
+                          *ngIf="row.get('PackageLB')?.errors?.['maxLimit']">
+                          Please enter a value less than or equal to {{ row.value.packagesLB }}.
+                        </span>
+                        <span class="text-danger small d-flex justify-content-start"
+                          *ngIf="row.get('PackageLB')?.errors?.['minLimit']">
+                          Please enter a value graeter than or equal to 1.
+                        </span>
+                        <input type="hidden" formControlName="PackagesLB_old" />
+                      </td>
+
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <input type="text" class="form-control w-50 text-end me-2" formControlName="WeightsLB"
+                            readonly appFocusNext>
+                          <span class="text-primary ms-3">
+                            / {{ row.value.weightLB }} / {{ row.value.actuwt | number:'1.2-2' }}
+                          </span>
+                        </div>
+                      </td>
+                      <td>{{row.value.eWayBillNo}}</td>
+                    </tr>
+                    <tr *ngIf="loadingSheetService.docketFormArray.length === 0">
+                      <td colspan="13" class="text-center">No Record Found.</td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  }
+  </form>
 
-  @if(this.docketService.loginUserList.Type === 'ULS'){
-  <div class="form-grid p-4">
-    <div class="row pb-3">
-      <div class="col-4">
-        <div class="row">
-          <label class="col-sm-5 col-form-label text-end">LS No.</label>
-          <div class="col-sm-7 d-flex justify-content-start align-content-center align-items-center">
-           <b>{{this.docketService.loginUserList.TCNO}}</b> 
-          </div>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="row">
-          <label class="col-sm-5 col-form-label text-end">Loading By</label>
-          <div class="col-sm-7">
-             <ng-select class="noFoundTextColor required2" placeholder="Select Loading By" formControlName="loadingByUser"
-                notFoundText="No matches found"
-                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('loadingByUser')?.invalid  && loadingSheetService.LSForm.get('loadingByUser')?.touched }">
-                 <ng-option *ngFor="let data of loadingSheetService.unLoaderUserList" [value]="data.userId">{{data.userId}} : {{data.name}}</ng-option>
-              </ng-select>
-                <div class="text-danger text-start" appFocusNext
-                *ngIf="loadingSheetService.LSForm.get('loadingByUser')?.invalid && loadingSheetService.LSForm.get('loadingByUser')?.touched">
-                This field is required.
-              </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="row">
-          <label class="col-sm-5 col-form-label text-end">Loading Supervisor</label>
-          <div class="col-sm-7">
-             <ng-select class="noFoundTextColor required2" placeholder="Loading Supervisor" formControlName="LoadingSupervisor"
-                notFoundText="No matches found" appFocusNext
-                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('LoadingSupervisor')?.invalid  && loadingSheetService.LSForm.get('LoadingSupervisor')?.touched }">
-                 <ng-option *ngFor="let data of loadingSheetService.unLoaderUserList" [value]="data.userId">{{data.userId}} : {{data.name}}</ng-option>
-              </ng-select>
-                <div class="text-danger text-start"
-                *ngIf="loadingSheetService.LSForm.get('LoadingSupervisor')?.invalid && loadingSheetService.LSForm.get('LoadingSupervisor')?.touched">
-                This field is required.
-              </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row pb-3">
-      <div class="col-4">
-        <div class="row">
-          <label class="col-sm-5 col-form-label text-end">LS Type</label>
-          <div class="col-sm-7">
-            <input class="form-control" placeholder="LS Type" type="text" formControlName="lsType" readonly appFocusNext>
-          </div>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="row">
-          <label class="col-sm-5 col-form-label text-end">Manual MF No</label>
-          <div class="col-sm-7">
-            <input class="form-control required2" placeholder="Manual MF No" formControlName="manualLsNO" readonly type="text">
-          </div>
-        </div>
-      </div>
+  <div class="d-flex justify-content-center text-center bg-light p-4">
+    <button class="btn btn-success" *ngIf="!isgetLoadingList" (click)="getLoadinglist()">
+      <i class="fas fa-check"></i> Get LoadingSheet List
+    </button>
+    <button class="btn btn-success" *ngIf="isgetLoadingList" (click)="loadingSheetService.prepareLoadingSheet()">
+      <i class="fas fa-check"></i> {{this.docketService.loginUserList.Type === 'ULS' ? 'Prepare Manifest' : 'Prepare
+      Loading Sheet'}}
+    </button>
+  </div>
+
+  <div *ngIf="loadingSheetService.isSubmitting" class="loading-spinner-overlay">
+    <div class="spinner-container">
+      <i class="fas fa-spinner fa-spin custom-spinner"></i>
+      <div class="mt-3 custom-text">Submitting...</div>
     </div>
   </div>
-  }
-
-  <div class="cnote-entry-container">
-    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
-      <i class="fas fa-list me-2"></i>
-      {{this.docketService.loginUserList.Type === 'ULS' ? 'Update Loading Sheet & Prepare Manifest' : 'List Loading Sheet'}}
-    </div>
-    <div class="cnote-entry-container p-3 pt-0">
-
-      <div class="row text-success fw-bold mb-3 p-2">
-        <div class="col-4 text-center">
-          <label class="m-0 StyClss text-success"><b>Total No Of LR : {{totalDocketSelected||0}}</b></label>
-        </div>
-
-        <div class="col-4 text-center">
-          <label class="m-0 StyClss text-success"><b>Total Wt. [L/B] :{{totalActWt || 0}}</b></label>
-        </div>
-
-        <div class="col-4 text-center">
-          <label class="m-0 StyClss text-success"><b>Total Pkgs. [L/B] : {{totalPkgs || 0}}</b></label>
-        </div>
-      </div>
-      <div style="max-height: 500px; overflow-y: auto;">
-        <table class="table table-bordered table-hover table-condensed flip-content mb-0">
-          <thead class="sticky-top bg-light">
-            <tr>
-              <th class="p-3 fw-bolder"><input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox" (change)="toggleSelectAll($event)" appFocusNext
-                  style="cursor: pointer;"></th>
-              <th class="p-3 fw-bolder">Cnote No.</th>
-              <th class="p-3 fw-bolder">Manual Cnote No.</th>
-              <th class="p-3 fw-bolder">Bkg. Date</th>
-              <th class="p-3 fw-bolder">Trans. Mode</th>
-              <th class="p-3 fw-bolder">Bkg. Loc.</th>
-              <th class="p-3 fw-bolder">Dely. Loc.</th>
-              <th class="p-3 fw-bolder">City From-To</th>
-              <th class="p-3 fw-bolder">Comm. Dely Date</th>
-              <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === 'LS'">
-                Rate
-                <!-- <ng-select class="required2 clear-icon" bindLabel="codeDesc" bindValue="codeId"  formControlName="loadedRateType" 
-                [readonly]="loadingSheetService.LSForm.value.loadingBy === 'XX5'"
-                [items]="generalMasterService.chargeTypeData" appFocusNext></ng-select> -->
-              </th>
-              <th class="p-3 fw-bolder">Pkgs.[L/B]</th>
-              <th class="p-3 fw-bolder">Wt.[L/B]</th>
-              <th class="p-3 fw-bolder">E-Way Bill No.</th>
-            </tr>
-          </thead>
-          <tbody formArrayName="docketList">
-            <tr *ngIf="isLoadingSheet">
-              <td colspan="13" class="text-center py-4">
-                <div class="spinner-border" role="status" style="width:1.8rem; height:1.8rem;">
-                  <span class="visually-hidden">Loading...</span>
-                </div>
-                <span class="ms-2">Loading Sheet list...</span>
-              </td>
-            </tr>
-            <ng-container *ngIf="!isLoadingSheet">
-              <tr *ngFor="let row of loadingSheetService.docketFormArray.controls; let i = index" [formGroupName]="i">
-                <td>
-                  <ng-container *ngIf="row.value.message?.trim(); else checkError">
-                    <span class="text-danger fw-semibold">{{ row.value.message }}</span>
-                  </ng-container>
-                  
-                  <ng-template #checkError>
-                    <ng-container *ngIf="row.value.errorMassage?.trim(); else showCheckbox">
-                      <span class="text-danger fw-semibold">{{ row.value.errorMassage }}</span>
-                    </ng-container>
-                  </ng-template>
-                  
-                  <ng-template #showCheckbox>
-                    <input type="checkbox" formControlName="isChecked" class="form-check-input checkbox-lg custom-big-checkbox"
-                    (change)="updateSelectedCount()" style="cursor: pointer;" appFocusNext />
-                  </ng-template>
-                </td>
-                <td>{{ row.value.docketNo }}</td>
-                <td>{{ row.value.manual_dockno }}</td>
-                <td>{{ row.value.docketDate }}</td>
-                <td>{{ row.value.transMode }}</td>
-                <td>{{ row.value.orgCode }}</td>
-                <td>{{ row.value.reDestCode }}</td>
-                
-                <td>{{ row.value.fromTo }}</td>
-                <td>{{ row.value.commited_DelyDate }}</td>
-                
-                <td *ngIf="docketService.loginUserList.Type === 'LS'">
-                  <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId" placeholder="Enter rateType"
-                  [items]="generalMasterService.chargeTypeData" [readonly]="loadingSheetService.LSForm.value.loadingBy === 'XX5'" appFocusNext></ng-select>
-                  <input type="text" class="form-control" formControlName="newRate" (blur)="loadingSheetService.loadingRateCalc(row)">
-                  <span class="text-danger small d-flex justify-content-start" *ngIf="loadingSheetService.docketFormArray.at(i).get('rateError')?.errors?.['rateLimit']">
-                  Rate Amount Is High Please Check
-                  </span> 
-                </td>
-                
-                <td>
-                  <div class="d-flex align-items-center">
-                    <input type="text" class="form-control w-50 text-end me-2" formControlName="PackageLB"
-                      [readOnly]="this.docketService.loginUserList.Type==='LS'" (input)="onPackageBlur(row)"
-                      oninput="this.value=this.value.replace(/[^0-9.]/g,'').replace(/(\..*)\./g,'$1')" appFocusNext>
-                    <span class="text-primary ms-3">
-                      / {{ row.value.packagesLB }} / {{ row.value.pkgsno | number:'1.2-2' }}
-                    </span>
-                  </div>
-                  <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('PackageLB')?.errors?.['maxLimit']">
-                    Please enter a value less than or equal to {{ row.value.packagesLB }}.
-                  </span>
-                  <span class="text-danger small d-flex justify-content-start" *ngIf="row.get('PackageLB')?.errors?.['minLimit']">
-                    Please enter a value graeter than or equal to 1.
-                  </span>
-                  <input type="hidden" formControlName="PackagesLB_old" />
-                </td>
-          
-                <td>
-                  <div class="d-flex align-items-center">
-                    <input type="text" class="form-control w-50 text-end me-2" formControlName="WeightsLB" readonly appFocusNext>
-                    <span class="text-primary ms-3">
-                      / {{ row.value.weightLB }} / {{ row.value.actuwt | number:'1.2-2' }}
-                    </span>
-                  </div>
-                </td>
-                <td>{{row.value.eWayBillNo}}</td>
-              </tr>
-              <tr *ngIf="loadingSheetService.docketFormArray.length === 0">
-                <td colspan="13" class="text-center">No Record Found.</td>
-              </tr>
-            </ng-container>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-</form>
-
-<div class="d-flex justify-content-center text-center bg-light p-4">
-  <button class="btn btn-success" *ngIf="!isgetLoadingList" (click)="getLoadinglist()">
-    <i class="fas fa-check"></i> Get LoadingSheet List
-  </button>
-  <button class="btn btn-success" *ngIf="isgetLoadingList" (click)="loadingSheetService.prepareLoadingSheet()">
-    <i class="fas fa-check"></i> {{this.docketService.loginUserList.Type === 'ULS' ? 'Prepare Manifest' : 'Prepare Loading Sheet'}}  
-  </button>
-</div>
-
- <div *ngIf="loadingSheetService.isSubmitting" class="loading-spinner-overlay">
-  <div class="spinner-container">
-    <i class="fas fa-spinner fa-spin custom-spinner"></i>
-    <div class="mt-3 custom-text">Submitting...</div>
-  </div>
-</div>
 </ng-template>
