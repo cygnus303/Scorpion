@@ -99,7 +99,7 @@ export class DrsGenerationListComponent {
       toDate: [new Date()],
       statusFilter: ['All'],
       odaType: [''],
-      searchText: ['']
+      searchText: [null]
     });
 
     this.DRSFilterForm.valueChanges.pipe(
@@ -149,8 +149,8 @@ export class DrsGenerationListComponent {
     }
 
     const payload = {
-      fromDate: this.formatDate(this.DRSFilterForm.value.fromDate),
-      toDate: this.formatDate(this.DRSFilterForm.value.toDate),
+      fromDate: new Date(this.DRSFilterForm.value.fromDate).toISOString() ,
+      toDate: new Date(this.DRSFilterForm.value.toDate).toISOString(),
       locCode: this.docketService.loginUserList.LocationCode,
       statusFilter: this.DRSFilterForm.value.statusFilter,
       pageNumber: this.pagination.page,
@@ -179,9 +179,9 @@ export class DrsGenerationListComponent {
   downloadList() {
     this.isdownload = true;
     const payload = {
-      fromDate: this.formatDate(this.DRSFilterForm.value.fromDate),
-      toDate: this.formatDate(this.DRSFilterForm.value.toDate),
-      locCode: null,
+      fromDate: new Date(this.DRSFilterForm.value.fromDate).toISOString(),
+      toDate: new Date(this.DRSFilterForm.value.toDate).toISOString(),
+      locCode:  this.docketService.loginUserList.LocationCode,
       statusFilter: this.DRSFilterForm.value.statusFilter,
       pageNumber: this.pagination.page,
       pageSize: this.pagination.pageSize,
