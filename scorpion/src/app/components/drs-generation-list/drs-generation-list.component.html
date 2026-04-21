@@ -234,7 +234,7 @@
                                 </button>
                                 <button
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
-                                    [disabled]="data.status === 'Cancelled'" (click)="openUpdateModal(data)">
+                                    (click)="openUpdateModal(data)">
                                     🔄 DRS Update
                                 </button>
                                 <button (click)="openPRSDRSEdit(data,'P')"
@@ -242,19 +242,19 @@
                                     ✏️ Edit
                                 </button>
                                 <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
-                                    [disabled]="data.status === 'Cancelled'" (click)="onCancel(data.drsNo)">
+                                    (click)="onCancel(data.drsNo)">
                                     🚫 Cancel
                                 </button>
                                 <button
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
-                                    [disabled]="data.status === 'Cancelled'" (click)="openHHCDetails(data)">
+                                    [disabled]="data.loadingHCCNo && data.unloadingHCCNo" (click)="openHHCDetails(data)">
                                     🏷 HCC
                                 </button>
                                 <button class="btn btn-sm bg-success-purple border-success-subtle text-success-emphasis py-1 px-3"
-                                    [disabled]="data.status === 'Cancelled'" (click)="openSingleDRSUpdate(data)">
+                                    (click)="openSingleDRSUpdate(data)">
                                     📝 Single C Note Update
                                 </button>
-                            </div>
+                            </div>  
                         </td>
                     </tr>
                 </tbody>
