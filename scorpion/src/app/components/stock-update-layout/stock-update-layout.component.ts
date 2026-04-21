@@ -27,7 +27,7 @@ export class StockUpdateLayoutComponent {
   @ViewChild('StockupdatePopupComponent') StockupdatePopupComponent!: StockupdatePopupComponent;
 
   public config = {
-    fromDateStr: new Date(new Date().setDate(new Date().getDate() - 7)),
+    fromDateStr: new Date(),
     toDateStr: new Date(),
     page: 1,
     pageSize: 10,
