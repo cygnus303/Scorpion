@@ -40,7 +40,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
   public isCSVLoading: boolean = false;
   public searchKeyword: string = '';
   public config = {
-    fromDateStr: new Date(new Date().setDate(new Date().getDate() - 7)),
+    fromDateStr: new Date(),
     toDateStr: new Date(),
     statusFilter: 'All',
     page: 1,
@@ -101,7 +101,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
 
   fetchLRsData() {
     this.config = {
-      fromDateStr: new Date(new Date().setDate(new Date().getDate() - 7)),
+      fromDateStr: new Date(),
       toDateStr: new Date(),
       statusFilter: 'All',
       page: 1,
