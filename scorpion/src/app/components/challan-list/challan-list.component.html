@@ -194,38 +194,6 @@
                 </div>
             </div>
             <div class="row ">
-                <!-- <div class="col-4 pb-3" *ngIf="this.docketService.loginUserList.Type === '1'">
-                    <div class="row">
-                        <label class="col-sm-5 col-form-label text-end">Vendor Type</label>
-                        <div class="col-sm-7">
-                            <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Type" formControlName="vendorType" required 
-                            [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorType')?.invalid  && challanService.challanForm.get('vendorType')?.touched }"
-                                notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.loadingData"
-                                [readonly]="this.challanService.filterList?.BookedByType === 'B' || isFieldReadonly()" (change)="prsArrivalDetailsService.getVendorsList($event.codeId);vendorCodeName();updateVehicleRequiredValidator()" appFocusNext></ng-select>
-                            <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vendorType')?.invalid && challanService.challanForm.get('vendorType')?.touched "> This field is required.</div>
-                        </div>
-                    </div>
-                </div> -->
-                <!-- <div class="col-4 pb-3" *ngIf="this.docketService.loginUserList.Type === '1'">
-                    <div class="row">
-                        <label class="col-sm-5 col-form-label text-end">Vendor Code/Name</label>
-                        <div class="col-sm-7">
-                            <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name" formControlName="vendorCode"
-                                [items]="prsArrivalDetailsService.branchWiseLoadingUnloadingList"
-                                        bindLabel="text" bindValue="value" [readonly]="this.challanService.filterList?.BookedByType === 'B' || isFieldReadonly()" 
-                                required [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorCode')?.invalid && challanService.challanForm.get('vendorCode')?.touched }"
-                                (change)="getPANnumberData($event?.value)" appFocusNext>
-                                <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
-                                    <div [title]="item.text">
-                                        {{ item.text }}
-                                    </div>
-                                </ng-template>
-                            </ng-select>
-                            <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vendorCode')?.invalid && challanService.challanForm.get('vendorCode')?.touched "> This field is required.</div>
-                        </div>
-                    </div>
-                </div> -->
-
                 <div class="col-4 pb-3" >
                     <div class="row"> <label class="col-sm-5 col-form-label text-end">Vendor Type</label>
                         <div class="col-sm-7"> <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Type"
