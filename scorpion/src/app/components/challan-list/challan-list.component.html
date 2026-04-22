@@ -194,38 +194,72 @@
                 </div>
             </div>
             <div class="row ">
-                <div class="col-4 pb-3">
+                <div class="col-4 pb-3" *ngIf="this.docketService.loginUserList.Type === '1'">
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Vendor Type</label>
                         <div class="col-sm-7">
                             <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Type" formControlName="vendorType" required 
                             [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorType')?.invalid  && challanService.challanForm.get('vendorType')?.touched }"
-                                notFoundText="No matches found" [items]="challanService.vendorTypeList" bindLabel="codeDesc" bindValue="codeId" 
-                                [readonly]="this.challanService.filterList?.BookedByType === 'B' || isFieldReadonly()" (change)="challanService.getVendorsList($event);vendorCodeName();updateVehicleRequiredValidator()" appFocusNext></ng-select>
+                                notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.loadingData"
+                                [readonly]="this.challanService.filterList?.BookedByType === 'B' || isFieldReadonly()" (change)="prsArrivalDetailsService.getVendorsList($event.codeId);vendorCodeName();updateVehicleRequiredValidator()" appFocusNext></ng-select>
                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vendorType')?.invalid && challanService.challanForm.get('vendorType')?.touched "> This field is required.</div>
                         </div>
                     </div>
                 </div>
-                <div class="col-4 pb-3">
+                <div class="col-4 pb-3" *ngIf="this.docketService.loginUserList.Type === '1'">
                     <div class="row">
                         <label class="col-sm-5 col-form-label text-end">Vendor Code/Name</label>
                         <div class="col-sm-7">
                             <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name" formControlName="vendorCode"
-                                [items]="challanService.vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code" [readonly]="this.challanService.filterList?.BookedByType === 'B' || isFieldReadonly()" 
+                                [items]="prsArrivalDetailsService.branchWiseLoadingUnloadingList"
+                                        bindLabel="text" bindValue="value" [readonly]="this.challanService.filterList?.BookedByType === 'B' || isFieldReadonly()" 
                                 required [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorCode')?.invalid && challanService.challanForm.get('vendorCode')?.touched }"
-                                (change)="getPANnumberData($event?.vendor_Code)" appFocusNext>
+                                (change)="getPANnumberData($event?.value)" appFocusNext>
                                 <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
-                                    <div [title]="item.vendor_Name">
-                                        {{ item.vendor_Name }}
+                                    <div [title]="item.text">
+                                        {{ item.text }}
                                     </div>
                                 </ng-template>
-                            
                             </ng-select>
-
-                             <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vendorCode')?.invalid && challanService.challanForm.get('vendorCode')?.touched "> This field is required.</div>
+                            <div class="text-danger text-start" *ngIf="challanService.challanForm.get('vendorCode')?.invalid && challanService.challanForm.get('vendorCode')?.touched "> This field is required.</div>
                         </div>
                     </div>
                 </div>
+
+                <div class="col-4 pb-3" *ngIf="this.docketService.loginUserList.Type !== '1'">
+                    <div class="row"> <label class="col-sm-5 col-form-label text-end">Vendor Type</label>
+                        <div class="col-sm-7"> <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Type"
+                                formControlName="vendorType" required
+                                [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorType')?.invalid  && challanService.challanForm.get('vendorType')?.touched }"
+                                notFoundText="No matches found" [items]="challanService.vendorTypeList" bindLabel="codeDesc"
+                                bindValue="codeId"
+                                [readonly]="this.challanService.filterList?.BookedByType === 'B' || isFieldReadonly()"
+                                (change)="challanService.getVendorsList($event);vendorCodeName();updateVehicleRequiredValidator()"
+                                appFocusNext></ng-select>
+                            <div class="text-danger text-start"
+                                *ngIf="challanService.challanForm.get('vendorType')?.invalid && challanService.challanForm.get('vendorType')?.touched ">
+                                This field is required.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 pb-3" *ngIf="this.docketService.loginUserList.Type !== '1'">
+                    <div class="row"> <label class="col-sm-5 col-form-label text-end">Vendor Code/Name</label>
+                        <div class="col-sm-7"> <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name"
+                                formControlName="vendorCode" [items]="challanService.vendorsList" bindLabel="vendor_Name"
+                                bindValue="vendor_Code"
+                                [readonly]="this.challanService.filterList?.BookedByType === 'B' || isFieldReadonly()" required
+                                [ngClass]="{ 'border-danger': challanService.challanForm.get('vendorCode')?.invalid && challanService.challanForm.get('vendorCode')?.touched }"
+                                (change)="getPANnumberData($event?.vendor_Code)" appFocusNext> <ng-template ng-option-tmp
+                                    let-item="item" let-search="searchTerm">
+                                    <div [title]="item.vendor_Name"> {{ item.vendor_Name }} </div>
+                                </ng-template> </ng-select>
+                            <div class="text-danger text-start"
+                                *ngIf="challanService.challanForm.get('vendorCode')?.invalid && challanService.challanForm.get('vendorCode')?.touched ">
+                                This field is required.</div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-4 pb-3" *ngIf="challanService.challanForm.value.vendorType === 'XX1' || challanService.challanForm.value.vendorType === '04' || challanService.challanForm.value.vendorType === '19'|| challanService.challanForm.value.vendorType === 'XX'">
                     <div class="row" >
                         <label class="col-sm-5 col-form-label text-end">PAN No</label>
@@ -883,7 +917,7 @@
                             <input min="1" max="99999999" type="text" class="form-control text-end" formControlName="contractAmount" appFocusNext
                             [readOnly]="((this.docketService.loginUserList.Type === '2' ||this.docketService.loginUserList.Type === '3') && challanService.challanForm.value.vendorType === '04') ||
                             (challanService.challanForm.value.vendorType === 'XX1' && this.docketService.loginUserList.Type === '1')" 
-                            (blur)="changeAmountApplicable($event);restoreIfEmpty('contractAmount')"  (focus)="clearZero('contractAmount')"
+                            (blur)="changeAmountApplicable($event);restoreIfEmpty('contractAmount')" oninput="this.value = this.value.replace(/[^0-9]/g,'');"  (focus)="clearZero('contractAmount')"
                             required [ngClass]="{ 'border-danger': challanService.challanForm.get('contractAmount')?.invalid && challanService.challanForm.get('contractAmount')?.touched }"/>
                             <div class="text-danger text-start mt-1 small" *ngIf="challanService.challanForm.get('contractAmount')?.touched && challanService.challanForm.get('contractAmount')?.errors">
                                 <span *ngIf="challanService.challanForm.get('contractAmount')?.hasError('required')">
@@ -1070,9 +1104,9 @@
                 <div class="row mb-3 align-items-center">
                     <label class="col-sm-6 col-form-label text-end fw-bold">Contract Amount</label>
                     <div class="col-sm-6">
-                        <input min="1" max="99999999" type="number" class="form-control text-end" formControlName="contractAmount" appFocusNext
+                        <input min="1" max="99999999" type="text" class="form-control text-end" formControlName="contractAmount" appFocusNext
                         [readOnly]="challanService.challanForm.value.vendorType === 'XX1' && this.docketService.loginUserList.Type === '1'" 
-                        (blur)="changeAmountApplicable($event);restoreIfEmpty('contractAmount')"  (focus)="clearZero('contractAmount')"
+                        (blur)="changeAmountApplicable($event);restoreIfEmpty('contractAmount')" oninput="this.value = this.value.replace(/[^0-9]/g,'');"  (focus)="clearZero('contractAmount')"
                         required [ngClass]="{ 'border-danger': challanService.challanForm.get('contractAmount')?.invalid && challanService.challanForm.get('contractAmount')?.touched }"/>
                         <div class="text-danger text-start mt-1 small" *ngIf="challanService.challanForm.get('contractAmount')?.touched && challanService.challanForm.get('contractAmount')?.errors">
                             <span *ngIf="challanService.challanForm.get('contractAmount')?.hasError('required')">

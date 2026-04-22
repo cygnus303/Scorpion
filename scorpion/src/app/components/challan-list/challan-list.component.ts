@@ -14,6 +14,9 @@ import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { finalize, Subject, switchMap } from 'rxjs';
 import { Modal } from 'bootstrap';
 import { ApiLoadingService } from 'app/shared/services/APILoading.service';
+import { CommonService } from 'app/shared/services/common.service';
+import { GeneralMasterService } from 'app/shared/services/general-master.service';
+import { PrsArrivalDetailsService } from 'app/shared/services/prs-arrival-details.service';
  
 
 @Component({
@@ -76,8 +79,8 @@ private avalablePRSSubject = new Subject<any>();
     public THCService: THCMasterService,
     private route: ActivatedRoute,
     public commonDateService: CommonDateService,
-    private datePipe: DatePipe,
-    public apiLoading: ApiLoadingService,
+    private datePipe: DatePipe,public generalMasterService:GeneralMasterService,
+    public apiLoading: ApiLoadingService,private commonService:CommonService,public prsArrivalDetailsService:PrsArrivalDetailsService
   ) { }
 
   ngOnInit() {
@@ -97,12 +100,13 @@ private avalablePRSSubject = new Subject<any>();
     this.docketService.getTypeofMovementData();
     this.challanService.getRateTypeData();
     this.challanService.getVendtyData();
-      this.buildEwayBill();
-
-    
+    this.buildEwayBill();
+      
+      
     // this.challanService.getLocationData();
     if(this.docketService.loginUserList.Type === '1'){
       this.isFilterApplied = true;
+      this.commonService.getVendorType('M');
       this.challanService.getChargesDetails();
       this.challanService.getLocationData();
       this.challanService.getRouteMode();
@@ -810,7 +814,12 @@ checkLicenseExpiry(event?:any) {
 }
 
   getPANnumberData(event: any) {
-    let vendorName = this.challanService.vendorsList.find((x: any) => x.vendor_Code === event)?.vendor_Name;
+    debugger
+    if(this.docketService.loginUserList.Type === '1'){
+      var vendorName = this.prsArrivalDetailsService.branchWiseLoadingUnloadingList.find((x: any) => x.value === event)?.text;
+    }else{
+      var vendorName = this.challanService.vendorsList.find((x: any) => x.vendor_Code === event)?.vendor_Name;  
+    }
     if (vendorName) {
       const idx = vendorName.lastIndexOf(':');
       if (idx !== -1) vendorName = vendorName.substring(0, idx).trim();
@@ -1115,7 +1124,7 @@ checkLicenseExpiry(event?:any) {
     const weightLoaded = this.challanService.challanForm.value.wtLoaded;
     if (vehicleCapacity && weightLoaded) {
       const utilization = (weightLoaded / (vehicleCapacity * 1000)) * 100;
-      const roundedUtilization = Number(utilization.toFixed(2));
+      const roundedUtilization = Math.round(utilization * 100) / 100;
 
       this.challanService.challanForm.patchValue({
         vehicleCapacityUti: roundedUtilization
