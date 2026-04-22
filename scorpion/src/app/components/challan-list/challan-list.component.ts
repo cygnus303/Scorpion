@@ -814,7 +814,12 @@ checkLicenseExpiry(event?:any) {
 }
 
   getPANnumberData(event: any) {
-    let vendorName = this.challanService.vendorsList.find((x: any) => x.vendor_Code === event)?.vendor_Name;
+    debugger
+    if(this.docketService.loginUserList.Type === '1'){
+      var vendorName = this.prsArrivalDetailsService.branchWiseLoadingUnloadingList.find((x: any) => x.value === event)?.text;
+    }else{
+      var vendorName = this.challanService.vendorsList.find((x: any) => x.vendor_Code === event)?.vendor_Name;  
+    }
     if (vendorName) {
       const idx = vendorName.lastIndexOf(':');
       if (idx !== -1) vendorName = vendorName.substring(0, idx).trim();
