@@ -55,9 +55,9 @@
         </div>
           <div class="col-4">
           <div class="row align-items-center" *ngIf="loadingSheetService.LSForm.value.mF_TransportMode === 'S'">
-            <label class="col-sm-5 col-form-label text-end">Loading By</label>
+            <label class="col-sm-5 col-form-label text-end">HCC VendorType</label>
             <div class="col-sm-7">
-              <ng-select class="noFoundTextColor required2" placeholder="Select Loading By" formControlName="loadingBy"
+              <ng-select class="noFoundTextColor required2" placeholder="Select HCC VendorType" formControlName="loadingBy"
                 notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId" [readonly]="isgetLoadingList"
                 [items]="generalMasterService.loadingData" (change)="getvendoCodeData($event)" appFocusNext
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('loadingBy')?.invalid  && loadingSheetService.LSForm.get('loadingBy')?.touched }"></ng-select>
@@ -252,7 +252,7 @@
       <div class="row pb-3">
         <div class="col-4">
           <div class="row align-items-center">
-            <label class="col-sm-5 col-form-label text-end">Loading By :</label>
+            <label class="col-sm-5 col-form-label text-end">HCC VendorType :</label>
             <div class="col-sm-7 text-start fw-bold">
               {{this.loadingSheetService.LSForm.value.vendorName }}
             </div>

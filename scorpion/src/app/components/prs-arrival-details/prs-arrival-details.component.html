@@ -72,9 +72,9 @@
             <div class="row pb-3 pt-2">
                 <div class="col-3">
                     <div class="row align-items-center">
-                        <label class="col-sm-5 col-form-label text-end">Unload By:</label>
+                        <label class="col-sm-5 col-form-label text-end">HCC Vendor Type:</label>
                         <div class="col-sm-7 text-start">
-                            <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select Unloader By"
+                            <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select HCC Vendor Type"
                                 readonly formControlName="LoadingBy" bindLabel="codeDesc" bindValue="codeId"
                                 [items]="generalMasterService.loadingBy"
                                 [ngClass]="{ 'border-danger': prsArrivalForm.get('LoadingBy')?.invalid && prsArrivalForm.get('LoadingBy')?.touched}">
