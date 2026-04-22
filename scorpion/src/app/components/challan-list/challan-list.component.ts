@@ -14,6 +14,9 @@ import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { finalize, Subject, switchMap } from 'rxjs';
 import { Modal } from 'bootstrap';
 import { ApiLoadingService } from 'app/shared/services/APILoading.service';
+import { CommonService } from 'app/shared/services/common.service';
+import { GeneralMasterService } from 'app/shared/services/general-master.service';
+import { PrsArrivalDetailsService } from 'app/shared/services/prs-arrival-details.service';
  
 
 @Component({
@@ -76,8 +79,8 @@ private avalablePRSSubject = new Subject<any>();
     public THCService: THCMasterService,
     private route: ActivatedRoute,
     public commonDateService: CommonDateService,
-    private datePipe: DatePipe,
-    public apiLoading: ApiLoadingService,
+    private datePipe: DatePipe,public generalMasterService:GeneralMasterService,
+    public apiLoading: ApiLoadingService,private commonService:CommonService,public prsArrivalDetailsService:PrsArrivalDetailsService
   ) { }
 
   ngOnInit() {
@@ -97,12 +100,13 @@ private avalablePRSSubject = new Subject<any>();
     this.docketService.getTypeofMovementData();
     this.challanService.getRateTypeData();
     this.challanService.getVendtyData();
-      this.buildEwayBill();
-
-    
+    this.buildEwayBill();
+      
+      
     // this.challanService.getLocationData();
     if(this.docketService.loginUserList.Type === '1'){
       this.isFilterApplied = true;
+      this.commonService.getVendorType('M');
       this.challanService.getChargesDetails();
       this.challanService.getLocationData();
       this.challanService.getRouteMode();
@@ -1115,7 +1119,7 @@ checkLicenseExpiry(event?:any) {
     const weightLoaded = this.challanService.challanForm.value.wtLoaded;
     if (vehicleCapacity && weightLoaded) {
       const utilization = (weightLoaded / (vehicleCapacity * 1000)) * 100;
-      const roundedUtilization = Number(utilization.toFixed(2));
+      const roundedUtilization = Math.round(utilization * 100) / 100;
 
       this.challanService.challanForm.patchValue({
         vehicleCapacityUti: roundedUtilization

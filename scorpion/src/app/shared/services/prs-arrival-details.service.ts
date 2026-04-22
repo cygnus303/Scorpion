@@ -54,7 +54,11 @@ export class PrsArrivalDetailsService {
     this.THCService.getBranchWiseLoadingUnloadingVendorList(data).subscribe({
       next: (response) => {
         if (response.success) {
-          this.branchWiseLoadingUnloadingList = response.data;
+          // Transform data to show name and code together for XX8/XX5
+          this.branchWiseLoadingUnloadingList = response.data.map((x: any) => ({
+            value: x.value,
+            text: `${x.text}: ${x.value}`
+          }));
         }
       },
     });
