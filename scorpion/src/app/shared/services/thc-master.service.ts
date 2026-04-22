@@ -69,7 +69,10 @@ export class THCMasterService {
   }
 
   getMFListFromRoute(payload:any): Observable<IApiBaseResponse<any[]>>{
-    return this.apiHandlerService.Post(`THC/GetMFListFromRoute`,payload);
+    this.apiLoading.start();
+    return this.apiHandlerService.Post(`THC/GetMFListFromRoute`, payload).pipe(
+      finalize(() => this.apiLoading.stop())
+    );
   }
 
   getRoutesFromRouteType(payload:any): Observable<IApiBaseResponse<any[]>>{
