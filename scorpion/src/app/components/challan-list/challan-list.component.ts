@@ -11,7 +11,7 @@ import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service
 import { DocketService } from 'app/shared/services/docket.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
-import { finalize, Subject, switchMap } from 'rxjs';
+import { finalize, Subject, switchMap, tap } from 'rxjs';
 import { Modal } from 'bootstrap';
 import { ApiLoadingService } from 'app/shared/services/APILoading.service';
 import { CommonService } from 'app/shared/services/common.service';
@@ -68,6 +68,7 @@ public EwaybillForm!:FormGroup;
 public modalInstance: any;
 public isPatching:boolean=false;
 private avalablePRSSubject = new Subject<any>();
+private mfRouteSubject = new Subject<any>();  
 
 @ViewChild('fileInput') fileInput!: ElementRef;
   constructor(
@@ -229,6 +230,49 @@ private avalablePRSSubject = new Subject<any>();
         this.sweetAlertService.error(err.error.message);
       }
     });
+
+     this.mfRouteSubject.pipe(
+    tap(() => this.isLoadingMF = true),
+    switchMap((event: any) => {
+      this.challanService.challanForm.patchValue({
+        vendorCode: null,
+        routeName: event.text
+      });
+
+      const payload = {
+        location: event.value,
+        isBCProcess: "N",
+        thcDate: this.datePipe.transform(
+          this.challanService.challanForm.value.tHCDate,
+          'dd MMM yyyy'
+        ),
+        baseCompanyCode: this.docketService.loginUserList.Companycode
+      };
+
+      return this.THCService.getMFListFromRoute(payload).pipe(
+        finalize(() => this.isLoadingMF = false)
+      );
+    })
+  ).subscribe({
+    next: (response: any) => {
+      if(response){
+      const formArray = this.challanService.avalableForTHC;
+      formArray.clear();
+
+      const list = Array.isArray(response) ? response : (response?.data || []);
+      for (let i = 0; i < list.length; i++) {
+        formArray.push(this.challanService.buildMfGroup(list[i]));
+      }
+    }
+
+      this.getContractDetail();
+      this.getERDDate();
+    },
+    error: (err) => {
+      console.error('Error fetching vehicle details:', err?.error?.message);
+      this.sweetAlertService.error(err?.error?.message);
+    }
+  });
   }
 
   filterListpatchValue(event: any) {
@@ -1073,34 +1117,35 @@ checkLicenseExpiry(event?:any) {
 }
 
   getMFListFromRoute(event: any) {
-    this.challanService.challanForm.patchValue({
-      vendorCode: null,
-      routeName: event.text
-    })
-    const paylaod = {
-      location: event.value,
-      isBCProcess: "N",
-      thcDate: this.datePipe.transform(this.challanService.challanForm.value.tHCDate, 'dd MMM yyyy'),
-      baseCompanyCode: this.docketService.loginUserList.Companycode
-    }
-    this.isLoadingMF = true;
-    this.THCService.getMFListFromRoute(paylaod).pipe(finalize(() => { this.isLoadingMF = false; })).subscribe({next: (response: any) => {
-        if (response) {
-          const formArray = this.challanService.avalableForTHC;
-          formArray.clear();
-          const list = Array.isArray(response) ? response : (response?.data || []);
-          for (let i = 0; i < list.length; i++) {
-            formArray.push(this.challanService.buildMfGroup(list[i]));
-          };
-        }
-      },
-      error: (err) => {
-        console.error('Error fetching vehicle details:', err.error.message);
-        this.sweetAlertService.error(err.error.message)
-      }
-    });
-    this.getContractDetail();
-    this.getERDDate()
+    // this.challanService.challanForm.patchValue({
+    //   vendorCode: null,
+    //   routeName: event.text
+    // })
+    // const paylaod = {
+    //   location: event.value,
+    //   isBCProcess: "N",
+    //   thcDate: this.datePipe.transform(this.challanService.challanForm.value.tHCDate, 'dd MMM yyyy'),
+    //   baseCompanyCode: this.docketService.loginUserList.Companycode
+    // }
+    // this.isLoadingMF = true;
+    // this.THCService.getMFListFromRoute(paylaod).pipe(finalize(() => { this.isLoadingMF = false; })).subscribe({next: (response: any) => {
+    //     if (response) {
+    //       const formArray = this.challanService.avalableForTHC;
+    //       formArray.clear();
+    //       const list = Array.isArray(response) ? response : (response?.data || []);
+    //       for (let i = 0; i < list.length; i++) {
+    //         formArray.push(this.challanService.buildMfGroup(list[i]));
+    //       };
+    //     }
+    //   },
+    //   error: (err) => {
+    //     console.error('Error fetching vehicle details:', err.error.message);
+    //     this.sweetAlertService.error(err.error.message)
+    //   }
+    // });
+    // this.getContractDetail();
+    // this.getERDDate()
+     this.mfRouteSubject.next(event);
   }
 
   getERDDate() {
