@@ -99,20 +99,39 @@ private avalablePRSSubject = new Subject<any>();
     this.challanService.buildForm();
     this.docketService.getTypeofMovementData();
     this.challanService.getRateTypeData();
+    
+    // Get vendor data and filter it for type '1'
     this.challanService.getVendtyData();
+    this.basicDetailService.getGeneralMasterList('VENDTY', '', '').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.challanService.vendtyData = response.data;
+          
+          if (this.docketService.loginUserList.Type === '1') {
+            const allowedVendorCodes = ['19','XX1','XX5'];
+            this.challanService.vendorTypeList = response.data.filter((x: any) => allowedVendorCodes.includes(x.codeId));
+          } else {
+            this.challanService.vendorTypeList = response.data;
+          }
+        }
+      }
+    });
+    
     this.buildEwayBill();
       
       
     // this.challanService.getLocationData();
     if(this.docketService.loginUserList.Type === '1'){
       this.isFilterApplied = true;
-      // this.commonService.getVendorType('M');
       this.challanService.getChargesDetails();
       this.challanService.getLocationData();
       this.challanService.getRouteMode();
       this.challanService.getDepartmentReason();
       this.challanService.getTDSLedgerList();
       this.getApprovedByData();
+
+      const allowedVendorCodes = ['04','XX1','XX5'];
+       this.challanService.vendorTypeList = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
 
       this.challanService.challanForm.get('netAmount')?.valueChanges.subscribe(() => {
         this.challanService.challanForm.updateValueAndValidity({ onlySelf: false });
