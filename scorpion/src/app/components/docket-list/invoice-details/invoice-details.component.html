@@ -78,7 +78,7 @@
                           <td> {{ row.get('srNo')?.value }}</td>
                           <td class="center">
                             <input class="form-control" maxlength="12" placeholder="E-Way Bill No."
-                              formControlName="ewayBillNo" type="text" (blur)="getEwayBillData($event,i,true)"
+                              formControlName="ewayBillNo" type="text" (input)="getEwayBillData($event,i,true)"
                               [ngClass]="{ 'border-danger': row.get('ewayBillNo')?.invalid && row.get('ewayBillNo')?.touched ,'required2': isEwayRequired(row)}">
                             <div *ngIf="row.get('ewayBillNo')?.hasError('required') 
                                         && (row.get('ewayBillNo')?.touched || row.get('declaredvalue')?.value > 100000)"
@@ -239,12 +239,12 @@
                         <td> {{ row.get('srNo')?.value }}</td>
                         <td class="center"
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                          <input class="form-control required2 text-end" min="1" type="text" value="0" appDecimalLimit
+                          <input class="form-control required2 text-end" min="1" type="text" appDecimalLimit
                             [unit]="docketService.contractservicecharge && docketService.contractservicecharge.length > 0 ? docketService.contractservicecharge[0]?.cft_Measure : ''"
-                            formControlName="length" (focus)="clearZero(row, 'length')"
+                            formControlName="length" (focus)="clearZero(row, 'length')" placeholder="Enter length"
                             (keypress)="docketService.allowNumericDecimal($event)"
                             (change)="docketService.freightAndOtherChar();docketService.GetDKTGSTForGTA();"
-                            (input)="calculateSummary(i)" (blur)="restoreIfEmpty(row, 'length')"
+                            (input)="calculateSummary(i)" 
                             [ngClass]="{ 'border-danger': row.get('length')?.invalid && row.get('length')?.touched }"
                             >
                             <div class="text-danger mt-1 small"  *ngIf="row.get('length')?.touched && row.get('length')?.errors">
@@ -261,12 +261,12 @@
                         </td>
                         <td class="center"
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                          <input class="form-control required2 text-end" min="1" type="text" value="0" appDecimalLimit
+                          <input class="form-control required2 text-end" min="1" type="text" appDecimalLimit
                             [unit]="docketService.contractservicecharge && docketService.contractservicecharge.length > 0 ? docketService.contractservicecharge[0]?.cft_Measure : ''"
-                            formControlName="breadth" (focus)="clearZero(row, 'breadth')"
+                            formControlName="breadth" (focus)="clearZero(row, 'breadth')" placeholder="Enter breadth"
                             (keypress)="docketService.allowNumericDecimal($event)"
                             (change)="docketService.freightAndOtherChar();docketService.GetDKTGSTForGTA()"
-                            (input)="calculateSummary(i)" (blur)="restoreIfEmpty(row, 'breadth')"
+                            (input)="calculateSummary(i)"
                             [ngClass]="{ 'border-danger': row.get('breadth')?.invalid && row.get('breadth')?.touched }"
                             >        
                             <div class="text-danger mt-1 small" *ngIf="row.get('breadth')?.touched && row.get('breadth')?.errors">
@@ -283,12 +283,12 @@
                         </td>
                         <td class="center"
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                          <input class="form-control required2 text-end" min="1" type="text" value="0" appDecimalLimit
+                          <input class="form-control required2 text-end" min="1" type="text" appDecimalLimit
                             [unit]="docketService.contractservicecharge && docketService.contractservicecharge.length > 0 ? docketService.contractservicecharge[0]?.cft_Measure : ''"
-                            formControlName="height" (focus)="clearZero(row, 'height')"
+                            formControlName="height" (focus)="clearZero(row, 'height')" placeholder="Enter height"
                             (keypress)="docketService.allowNumericDecimal($event)"
                             (change)="docketService.freightAndOtherChar();docketService.GetDKTGSTForGTA()"
-                            (input)="calculateSummary(i)" (blur)="restoreIfEmpty(row, 'height')"
+                            (input)="calculateSummary(i)"
                             [ngClass]="{ 'border-danger': row.get('height')?.invalid && row.get('height')?.touched }"
                             >
                           <div class="text-danger mt-1 small" *ngIf="row.get('height')?.touched && row.get('height')?.errors">
@@ -304,11 +304,16 @@
                         </div>
                         </td>
                         <td class="center ">
-                          <input class="form-control required2 text-end" placeholder="No of Pkgs."
+                          <input class="form-control required2 text-end" placeholder="Enter No of Pkgs."
                             (focus)="clearZero(row, 'noOfPkgs')" (keypress)="docketService.allowNumericDecimal($event)"
-                            (blur)="restoreIfEmpty(row, 'noOfPkgs');"
-                            type="text" formControlName="noOfPkgs" 
+                            type="text" formControlName="noOfPkgs" [ngClass]="{ 'border-danger': row.get('noOfPkgs')?.invalid && row.get('noOfPkgs')?.touched }"
                             (change)="calculateSummary(i);docketService.freightAndOtherChar();docketService.GetDKTGSTForGTA();">
+                            <div *ngIf="row.get('noOfPkgs')?.touched && row.get('noOfPkgs')?.errors"
+                            class="text-danger text-start">
+                            <div *ngIf="row.get('noOfPkgs')?.errors?.['required']">
+                              Please enter a value.
+                            </div>
+                          </div>
                         </td>
                         <td class="center"
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">

@@ -292,7 +292,10 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
   if (search.length.toString() === "12") {
     const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
     const row = invoiceRows.at(index) as FormGroup;
- 
+    row.patchValue({
+      invoiceNo: null,
+      declaredvalue: null
+    });
  const oldValue = (row as any).initialEwayBillNo;
     if (oldValue && oldValue === search) {
       return; // No popup on auto-loaded edit data
@@ -445,6 +448,13 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
       }
     });
   }
+  }else{
+    const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
+    const row = invoiceRows.at(index) as FormGroup;
+     row.patchValue({
+      invoiceNo: null,
+      declaredvalue: null
+    });
   }
 }
 

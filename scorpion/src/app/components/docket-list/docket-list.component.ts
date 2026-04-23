@@ -4,7 +4,7 @@ import { BasicDetailService } from '../../shared/services/basic-detail.service';
 import { Router } from '@angular/router';
 import { SweetAlertService } from '../../shared/services/sweet-alert.service';
 import { environment } from 'environments/environment';
-import { FormArray, Validators } from '@angular/forms';
+import { FormArray, FormGroup, Validators } from '@angular/forms';
 import { BasePayload } from 'app/shared/models/general-master.model';
 import { BasicDetailsComponent } from './basic-details/basic-details.component';
 import { ApiLoadingService } from 'app/shared/services/APILoading.service';
@@ -36,7 +36,7 @@ export class DocketListComponent implements OnInit {
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      // this.docketService.Location = 'TNP';
+      // this.docketService.Location = 'KOL';
       this.docketService.isComplition = false;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
@@ -305,8 +305,64 @@ this.basicDetailService.getODADetail(pincode).subscribe({
     this.docketService.invoicebuild();
   }
 
+  logInvalidControls(form: FormGroup, prefix: string = ''): string[] {
+    const controls = form.controls;
+    const invalidControls: string[] = [];
+    
+    Object.keys(controls).forEach(key => {
+      const control = controls[key];
+      const fullKey = prefix ? `${prefix}.${key}` : key;
+      
+      if (control instanceof FormGroup) {
+        // Recursively check nested form groups
+        const nestedInvalid = this.logInvalidControls(control, fullKey);
+        invalidControls.push(...nestedInvalid);
+      } else if (control instanceof FormArray) {
+        // Check form array controls
+        control.controls.forEach((arrayControl, index) => {
+          if (arrayControl instanceof FormGroup) {
+            const nestedInvalid = this.logInvalidControls(arrayControl, `${fullKey}[${index}]`);
+            invalidControls.push(...nestedInvalid);
+          } else if (arrayControl.invalid) {
+            invalidControls.push(`${fullKey}[${index}]`);
+          }
+        });
+      } else if (control.invalid) {
+        invalidControls.push(fullKey);
+      }
+    });
+    
+    return invalidControls;
+  }
+
   onSubmit() {
     if (this.isSubmitting) return;
+    const allInvalidControls: string[] = [];
+    
+    if (!this.docketService.basicDetailForm.valid) {
+      const invalidControls = this.logInvalidControls(this.docketService.basicDetailForm);
+      allInvalidControls.push(...invalidControls);
+    }
+    
+    if (!this.docketService.consignorForm.valid) {
+      const invalidControls = this.logInvalidControls(this.docketService.consignorForm);
+      allInvalidControls.push(...invalidControls);
+    }
+    
+    if (!this.docketService.invoiceform.valid) {
+      const invalidControls = this.logInvalidControls(this.docketService.invoiceform);
+      allInvalidControls.push(...invalidControls);
+    }
+    
+    if (!this.docketService.freightForm.valid) {
+      const invalidControls = this.logInvalidControls(this.docketService.freightForm);
+      allInvalidControls.push(...invalidControls);
+    }
+    
+    if (allInvalidControls.length > 0) {
+      console.log('Invalid Controls:', allInvalidControls);
+    }
+    
     if (this.docketService.basicDetailForm.valid && this.docketService.consignorForm.valid && this.docketService.invoiceform.valid && this.docketService.freightForm.valid) {
       const listCCH = this.docketService.freightchargingData.map(charge => ({
         ChargeCode: charge.chargeCode,
@@ -697,7 +753,7 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
 
 
         formData.append("DVM.WMD.AppointmentDT",this.docketService.basicDetailForm.value.appointmentDT ? new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString() : new Date().toISOString()),
-        formData.append("DVM.WMD.Version", String(Number('17')));
+        formData.append("DVM.WMD.Version", String(Number('18')));
       formData.append("DVM.docketType", "DKT");
               // RequestLogs............
         const requestLogs = this.formDataToJson(formData); // Use formDataToJson for the RequestLogs
