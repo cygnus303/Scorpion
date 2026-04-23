@@ -171,13 +171,6 @@
                         </div>
                     </div>
                     <div class="mb-3 col-md-3">
-                        <label class="input-group form-label fw-semibold">Select Paybas</label>
-                        <ng-select class="noFoundTextColor clear-icon" placeholder="Select Paybas"
-                            formControlName="paybas" bindLabel="codeDesc" bindValue="codeId" appFocusNext
-                            [items]="generalMasterService.PayBsData" (change)="onSearch()">
-                        </ng-select>
-                    </div>
-                    <div class="mb-3 col-md-3">
                         <label class="input-group form-label fw-semibold">HCC vendor Type</label>
                         <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select HCC vendor Type"
                             appFocusNext (change)="changeLoadingBy($event)" formControlName="loadingBy"
@@ -203,9 +196,7 @@
                             This field is required.
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="mb-3 col-md-2">
+                    <div class="mb-3 col-md-3">
                         <label class="input-group form-label fw-semibold">{{typeName}} type</label>
                         <div class="d-flex gap-4">
                             <div class="form-check">
@@ -230,6 +221,8 @@
                             Please select a {{typeName}} type
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="mb-3 col-md-9">
                         <label class="input-group form-label fw-semibold">CNote No.</label>
                         <div class="input-group d-flex align-items-center">
