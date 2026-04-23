@@ -72,24 +72,28 @@
                           <th class="center">X</th>
                         </tr>
                       </thead>
-                      <tbody formArrayName="invoiceRows">
+                       <tbody formArrayName="invoiceRows">
                         <tr class="editorRow" *ngFor="let row of docketService.invoiceRows.controls; let i = index"
                           [formGroupName]="i">
                           <td> {{ row.get('srNo')?.value }}</td>
                           <td class="center">
                             <input class="form-control" maxlength="12" placeholder="E-Way Bill No."
-                              formControlName="ewayBillNo" type="text" (input)="getEwayBillData($event,i,true)"
+                              formControlName="ewayBillNo" type="text" (input)="getEwayBillData($event,i,true)" oninput="this.value = this.value.replace(/[^0-9]/g,'');"
                               [ngClass]="{ 'border-danger': row.get('ewayBillNo')?.invalid && row.get('ewayBillNo')?.touched ,'required2': isEwayRequired(row)}">
                             <div *ngIf="row.get('ewayBillNo')?.hasError('required') 
                                         && (row.get('ewayBillNo')?.touched || row.get('declaredvalue')?.value > 100000)"
                               class="text-danger text-start">
                               This field is required.
                             </div>
+                            <div *ngIf="row.get('ewayBillNo')?.hasError('maxlength') && row.get('ewayBillNo')?.touched"
+                              class="text-danger text-start">
+                              E-Way Bill must be 12 digits.
+                            </div>
                           </td>
                           <td>
                             <div class="input-group">
                               <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
-                                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }" [attr.tabindex]="-1" [readonly]="row.get('ewayBillNo')?.value?.length === 12"
+                                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }" [attr.tabindex]="-1" [readonly]="row.get('ewayBillNo')?.value?.length > 0"
                                 placeholder="dd/MMM/yyyy" formControlName="ewayBillExpiry" [ngClass]="{ 'border-danger': row.get('ewayBillExpiry')?.invalid && row.get('ewayBillExpiry')?.touched, 
                                                      'required2': isEwayRequired(row)}"[class.disabled-input]="true">
                               <span class="input-group-text cursor-pointer" (click)="dp.toggle()" [class.disabled-input]="true">
@@ -104,11 +108,11 @@
 
                           <td class="center">
                             <div class="input-group">
-                              <input type="text" class="form-control uppercase-none" #dp2="bsDatepicker" bsDatepicker
-                                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }" [attr.tabindex]="-1" [readonly]="row.get('ewayBillNo')?.value?.length === 12"
+                              <input type="text" class="form-control uppercase-none" #dp2="bsDatepicker" bsDatepicker [class.disabled-input]="row.get('ewayBillNo')?.value?.length > 0"
+                                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }" [attr.tabindex]="-1" 
                                 placeholder="dd/MMM/yyyy" formControlName="ewayinvoiceDate" [ngClass]="{'border-danger': row.get('ewayinvoiceDate')?.invalid && row.get('ewayinvoiceDate')?.touched, 
                                               'required2': isEwayRequired(row)}" [class.disabled-input]="true">
-                              <span class="input-group-text cursor-pointer" (click)="dp2.toggle()" >
+                              <span class="input-group-text cursor-pointer" (click)="dp2.toggle()"  [class.disabled-input]="row.get('ewayBillNo')?.value?.length > 0">
                                 <i class="fa fa-calendar"></i>
                               </span>
                             </div>
@@ -118,7 +122,7 @@
                             </div>
                           </td>
                           <td class="center">
-                            <input class="form-control required required2" placeholder="Invoice No." type="text" [readonly]="row.get('ewayBillNo')?.value?.length === 12"
+                            <input class="form-control required required2" placeholder="Invoice No." type="text" [readonly]="row.get('ewayBillNo')?.value?.length > 0"
                               formControlName="invoiceNo" required  (blur)="checkDuplicateInvoices(i,row)" 
                               [ngClass]="{ 'border-danger': row.get('invoiceNo')?.invalid && row.get('invoiceNo')?.touched}">
                             <div *ngIf="row.get('invoiceNo')?.invalid && row.get('invoiceNo')?.touched"
@@ -130,7 +134,7 @@
                             <input class="form-control required2 text-end" min="0"
                               (keypress)="docketService.allowNumericDecimal($event)" placeholder="Invoice value"
                               type="text" value="0" formControlName="declaredvalue" required
-                              (focus)="clearZero(row, 'declaredvalue')" [readonly]="row.get('ewayBillNo')?.value?.length === 12"
+                              (focus)="clearZero(row, 'declaredvalue')" [readonly]="row.get('ewayBillNo')?.value?.length > 0"
                               (input)="calculateSummary(i)" 
                               (change)="docketService.freightAndOtherChar();handleDeclaredValueChange(row)"
                               [ngClass]="{ 'border-danger': row.get('declaredvalue')?.invalid && row.get('declaredvalue')?.touched}"

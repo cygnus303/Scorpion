@@ -451,6 +451,12 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
   }else{
     const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
     const row = invoiceRows.at(index) as FormGroup;
+     if (search.length > 0 && search.length < 12) {
+      row.get('ewayBillNo')?.setErrors({ maxlength: true });
+      row.get('ewayBillNo')?.markAsDirty();
+    } else if (search.length === 12 || search.length === 0) {
+      row.get('ewayBillNo')?.setErrors(null);
+    }
      row.patchValue({
       invoiceNo: null,
       declaredvalue: null
