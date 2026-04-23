@@ -281,15 +281,40 @@ export class DocketService {
     for (let i = 0; i < this.noboxDetailRows; i++) {
       this.boxDetailRows.push(this.createboxDetailRow(this.boxDetailRows.length + 1));
     }
+    
+   this.validateLBHValidators();
+  }
+
+  validateLBHValidators(){
+    if (this.basicDetailForm.value.serviceType === '1' && this.step2DetailsList?.isVolumentric === 'Y') {
+      const startIndex = this.boxDetailRows.length - this.noboxDetailRows;
+      const maxValidator = this.loginUserList.Type ==='2' ? Validators.max(199.99) : null;
+      const validators = [Validators.required, Validators.min(1), maxValidator].filter(v => v !== null);
+      
+      for (let i = startIndex; i < this.boxDetailRows.length; i++) {
+        const ctrl = this.boxDetailRows.controls[i];
+        const lengthControl = ctrl.get('length');
+        const breadthControl = ctrl.get('breadth');
+        const heightControl = ctrl.get('height');
+        
+        lengthControl?.setValidators(validators);
+        breadthControl?.setValidators(validators);
+        heightControl?.setValidators(validators);
+        
+        lengthControl?.updateValueAndValidity();
+        breadthControl?.updateValueAndValidity();
+        heightControl?.updateValueAndValidity();
+      }
+    }
   }
  createboxDetailRow(srNo: number): FormGroup {
     return new FormGroup({
       srNo: new FormControl(srNo),
-      noOfPkgs: new FormControl(0),
-      actualWeight: new FormControl(0, [Validators.required, Validators.min(1)]),
-      length: new FormControl(0,this.loginUserList.Type ==='2' ? Validators.max(199.99):null),
-      breadth: new FormControl(0,this.loginUserList.Type ==='2' ? Validators.max(199.99):null),
-      height: new FormControl(0,this.loginUserList.Type ==='2' ? Validators.max(199.99):null),
+      noOfPkgs: new FormControl(null,[Validators.required]),
+      actualWeight: new FormControl(null, [Validators.required, Validators.min(1)]),
+      length: new FormControl(null,this.loginUserList.Type ==='2' ? Validators.max(199.99):null),
+      breadth: new FormControl(null,this.loginUserList.Type ==='2' ? Validators.max(199.99):null),
+      height: new FormControl(null,this.loginUserList.Type ==='2' ? Validators.max(199.99):null),
       cubicweight: new FormControl(0),
     });
   }
@@ -594,6 +619,7 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
       next: (response) => {
         if (response) {
           this.step2DetailsList = response;
+          this.validateLBHValidators()
          // Contract validation
           if ((this.basicDetailForm.value.billingType === 'P02' && this.step2DetailsList.contractid === 'P028888') || !this.step2DetailsList.contractid) {
             const billingParty = this.basicDetailForm.get('billingParty')?.value || '';
