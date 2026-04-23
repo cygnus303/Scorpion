@@ -78,7 +78,7 @@
                           <td> {{ row.get('srNo')?.value }}</td>
                           <td class="center">
                             <input class="form-control" maxlength="12" placeholder="E-Way Bill No."
-                              formControlName="ewayBillNo" type="text" (blur)="getEwayBillData($event,i,true)"
+                              formControlName="ewayBillNo" type="text" (input)="getEwayBillData($event,i,true)"
                               [ngClass]="{ 'border-danger': row.get('ewayBillNo')?.invalid && row.get('ewayBillNo')?.touched ,'required2': isEwayRequired(row)}">
                             <div *ngIf="row.get('ewayBillNo')?.hasError('required') 
                                         && (row.get('ewayBillNo')?.touched || row.get('declaredvalue')?.value > 100000)"

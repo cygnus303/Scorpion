@@ -145,11 +145,17 @@ loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
   }
 
   eWayBillData(ewaybillNo:string){
-     return this.apiHandlerService.Get(`Operation/GetEwaybillDetail?ewaybillNo=${ewaybillNo}`);
+    this.apiLoading.start();
+     return this.apiHandlerService.Get(`Operation/GetEwaybillDetail?ewaybillNo=${ewaybillNo}`).pipe(
+    finalize(() => this.apiLoading.stop()) // ✅ Stop loader automatically when API completes
+  );
   }
 
   checkEWayBill(ewaybillNo:string){
-     return this.apiHandlerService.Get(`Operation/CheckEWBD?ewbNo=${ewaybillNo}`);
+    this.apiLoading.start();
+     return this.apiHandlerService.Get(`Operation/CheckEWBD?ewbNo=${ewaybillNo}`).pipe(
+    finalize(() => this.apiLoading.stop()) // ✅ Stop loader automatically when API completes
+  );
   }
 
   dateSelectionRule(payload:any){
