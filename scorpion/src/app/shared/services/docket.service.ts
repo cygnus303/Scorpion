@@ -287,12 +287,11 @@ export class DocketService {
 
   validateLBHValidators(){
     if (this.basicDetailForm.value.serviceType === '1' && this.step2DetailsList?.isVolumentric === 'Y') {
-      const startIndex = this.boxDetailRows.length - this.noboxDetailRows;
       const maxValidator = this.loginUserList.Type ==='2' ? Validators.max(199.99) : null;
       const validators = [Validators.required, Validators.min(1), maxValidator].filter(v => v !== null);
       
-      for (let i = startIndex; i < this.boxDetailRows.length; i++) {
-        const ctrl = this.boxDetailRows.controls[i];
+      // Apply validation to ALL box detail rows
+      this.boxDetailRows.controls.forEach(ctrl => {
         const lengthControl = ctrl.get('length');
         const breadthControl = ctrl.get('breadth');
         const heightControl = ctrl.get('height');
@@ -304,7 +303,22 @@ export class DocketService {
         lengthControl?.updateValueAndValidity();
         breadthControl?.updateValueAndValidity();
         heightControl?.updateValueAndValidity();
-      }
+      });
+    } else {
+      // Clear validators for all rows if condition is not met
+      this.boxDetailRows.controls.forEach(ctrl => {
+        const lengthControl = ctrl.get('length');
+        const breadthControl = ctrl.get('breadth');
+        const heightControl = ctrl.get('height');
+        
+        lengthControl?.clearValidators();
+        breadthControl?.clearValidators();
+        heightControl?.clearValidators();
+        
+        lengthControl?.updateValueAndValidity();
+        breadthControl?.updateValueAndValidity();
+        heightControl?.updateValueAndValidity();
+      });
     }
   }
  createboxDetailRow(srNo: number): FormGroup {
