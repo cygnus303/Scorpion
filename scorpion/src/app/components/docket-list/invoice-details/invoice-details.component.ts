@@ -108,6 +108,17 @@ handleDeclaredValueChange(row: AbstractControl) {
 
     let requireValidators = false;
 
+    // Check if any row has an E-Way Bill number
+    const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
+    const hasAnyEwayBill = invoiceRows.controls.some(ctrl => 
+      ctrl.get('ewayBillNo')?.value && ctrl.get('ewayBillNo')?.value.length === 12
+    );
+    
+    // If any row has E-Way Bill, make it required for all rows
+    if (hasAnyEwayBill) {
+      requireValidators = true;
+    }
+
     // Rule 1: Same state + declared > 100000
     if (declared >= 100000 && originState && destState && originState === destState) {
       requireValidators = true;
@@ -133,10 +144,31 @@ handleDeclaredValueChange(row: AbstractControl) {
   });
 }
 
+updateAllEwayBillValidations(): void {
+  const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
+  invoiceRows.controls.forEach((row) => {
+    row.get('ewayBillNo')?.updateValueAndValidity({ emitEvent: false });
+    row.get('ewayBillExpiry')?.updateValueAndValidity({ emitEvent: false });
+    row.get('ewayinvoiceDate')?.updateValueAndValidity({ emitEvent: false });
+  });
+}
+
 isEwayRequired(row: AbstractControl): boolean {
   const declared = row.get('declaredvalue')?.value ?? 0;
   const originState = this.docketService.basicDetailForm.get('originState')?.value;
   const destState = this.docketService.basicDetailForm.get('destinationState')?.value;
+  
+  // Check if any row has an E-Way Bill number
+  const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
+  const hasAnyEwayBill = invoiceRows.controls.some(ctrl => 
+    ctrl.get('ewayBillNo')?.value && ctrl.get('ewayBillNo')?.value.length === 12
+  );
+  
+  // If any row has E-Way Bill, make it required for all rows
+  if (hasAnyEwayBill) {
+    return true;
+  }
+  
   if (!originState || !destState) return false;
   // Rule 1: Same state + declared > 100000
   if (declared >= 100000 && originState === destState) {
@@ -318,6 +350,7 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
       invoiceNo: null,
       declaredvalue: null
     });
+    this.updateAllEwayBillValidations();
     return;
   }else{
     this.basicDetailService.checkEWayBill(search).subscribe({
@@ -351,6 +384,7 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                       invoiceNo: null,
                       declaredvalue: null
                     });
+                    this.updateAllEwayBillValidations();
                     return;
                   }
                 }
@@ -369,6 +403,7 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                     invoiceNo: null,
                     declaredvalue: null
                   });
+                  this.updateAllEwayBillValidations();
                   return;
                 } 
                 this.docketService.invoiceRows.controls[index].patchValue({
@@ -380,6 +415,7 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                   declaredvalue: response.decval
                 })
                 this.calculateSummary(index)
+                this.updateAllEwayBillValidations()
                if(!isInvoice){
            this.docketService.getpincodeData(response.pincode.toString())
               this.docketService.consignorForm.patchValue({
@@ -422,6 +458,7 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                   invoiceNo:null,
                   declaredvalue:null
                 });
+                this.updateAllEwayBillValidations();
               }
             },
             error: () => {
@@ -441,6 +478,7 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
             invoiceNo:null,
             declaredvalue:null
           });
+          this.updateAllEwayBillValidations();
         }
       },
       error: () => {
@@ -462,6 +500,54 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
       declaredvalue: null
     });
   }
+}
+
+validateAllEwayBillFields(): void {
+  const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
+  
+  // Check if any row has an E-Way Bill number
+  const hasAnyEwayBill = invoiceRows.controls.some(ctrl => 
+    ctrl.get('ewayBillNo')?.value && ctrl.get('ewayBillNo')?.value.length === 12
+  );
+  
+  // Update all rows based on E-Way Bill presence
+  invoiceRows.controls.forEach((row) => {
+    if (hasAnyEwayBill) {
+      // If any row has E-Way Bill, ensure all rows have required validators on E-Way Bill field
+      if (!row.get('ewayBillNo')?.value) {
+        row.get('ewayBillNo')?.setValidators([Validators.required]);
+        row.get('ewayBillNo')?.updateValueAndValidity({ emitEvent: false });
+      }
+    } else {
+      // If no row has E-Way Bill, remove cross-row required validators
+      // Only keep validators based on original rules (declared value, states)
+      const declared = row.get('declaredvalue')?.value ?? 0;
+      const originState = this.docketService.basicDetailForm.get('originState')?.value;
+      const destState = this.docketService.basicDetailForm.get('destinationState')?.value;
+      
+      let requireValidators = false;
+      
+      // Rule 1: Same state + declared > 100000
+      if (declared >= 100000 && originState && destState && originState === destState) {
+        requireValidators = true;
+      }
+      
+      // Rule 2: Different states + declared > 50000
+      if (declared >= 50000 && originState && destState && originState !== destState) {
+        requireValidators = true;
+      }
+      
+      if (!requireValidators) {
+        // Remove cross-row required validator if no original rule applies
+        const currentValidators = row.get('ewayBillNo')?.validator;
+        if (currentValidators) {
+          // Check if required validator is present and remove it
+          row.get('ewayBillNo')?.clearValidators();
+          row.get('ewayBillNo')?.updateValueAndValidity({ emitEvent: false });
+        }
+      }
+    }
+  });
 }
 
   ngOnDestroy() {

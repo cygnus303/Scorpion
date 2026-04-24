@@ -7,6 +7,7 @@ import { environment } from 'environments/environment';
 import { FormArray, FormGroup, Validators } from '@angular/forms';
 import { BasePayload } from 'app/shared/models/general-master.model';
 import { BasicDetailsComponent } from './basic-details/basic-details.component';
+import { InvoiceDetailsComponent } from './invoice-details/invoice-details.component';
 import { ApiLoadingService } from 'app/shared/services/APILoading.service';
 import { EmailRegex } from 'app/shared/constants/common';
 @Component({
@@ -23,6 +24,7 @@ export class DocketListComponent implements OnInit {
   
   public isComplitionlist!:BasePayload;
   @ViewChild(BasicDetailsComponent) basicDetailsComp!: BasicDetailsComponent;
+  @ViewChild(InvoiceDetailsComponent) invoiceDetailsComponent!: InvoiceDetailsComponent;
 
 
   constructor(
@@ -337,6 +339,10 @@ this.basicDetailService.getODADetail(pincode).subscribe({
 
   onSubmit() {
     if (this.isSubmitting) return;
+    
+    // Validate E-Way Bill fields before checking form validity
+    this.invoiceDetailsComponent?.validateAllEwayBillFields();
+    
     const allInvalidControls: string[] = [];
     
     if (!this.docketService.basicDetailForm.valid) {
