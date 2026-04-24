@@ -317,6 +317,9 @@
                             <div *ngIf="row.get('noOfPkgs')?.errors?.['required']">
                               Please enter a value.
                             </div>
+                            <div *ngIf="row.get('noOfPkgs')?.hasError('min')">
+                            Please enter a value greater than or equal to 1.
+                            </div>
                           </div>
                         </td>
                         <td class="center"

@@ -326,7 +326,7 @@ export class DocketService {
  createboxDetailRow(srNo: number): FormGroup {
     return new FormGroup({
       srNo: new FormControl(srNo),
-      noOfPkgs: new FormControl(null,[Validators.required]),
+      noOfPkgs: new FormControl(null,[Validators.required,Validators.min(1)]),
       actualWeight: new FormControl(null, [Validators.required, Validators.min(1)]),
       length: new FormControl(null,this.loginUserList.Type ==='2' ? Validators.max(199.99):null),
       breadth: new FormControl(null,this.loginUserList.Type ==='2' ? Validators.max(199.99):null),
