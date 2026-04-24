@@ -28,7 +28,6 @@ export class LoadingSheetService {
       lsNO:new FormControl(''),
       lsDate:new FormControl(this.formatDateLSDate(today)),
       manualLsNO:new FormControl('N/A'),
-      shiftInCharge:new FormControl(),
       loadingBy:new FormControl(null),
       nextStopLocation:new FormControl(null,Type ? Validators.required : null),
       rateType:new FormControl(null),
