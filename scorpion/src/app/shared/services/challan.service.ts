@@ -874,7 +874,7 @@ onSubmit(){
       LoadingBy:this.filterList ? this.filterList?.loadingBy : '',
       ChargeType:this.filterList ? this.filterList?.chrgType : '',
       VendorCode:"",
-      ODAType:"",
+      ODAType:this.filterList ? this.filterList?.odaType : '',
       DRSType:this.filterList ? this.filterList?.DRSType : '',
     },
     "CPML":{

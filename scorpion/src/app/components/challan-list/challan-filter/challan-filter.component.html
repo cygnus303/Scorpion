@@ -157,7 +157,7 @@
 
             <div class="p-3">
                 <div class="row">
-                    <div class="mb-3 col-md-3">
+                    <div class="mb-3 col">
                         <label class="input-group form-label fw-semibold">Date Range</label>
                         <div class="input-group shadow-sm rounded" (click)="dvr.toggle()">
                             <span class="input-group-text bg-white border-end-0 p-2">
@@ -170,7 +170,7 @@
                                 [bsConfig]="{ ranges: commonService.ranges,containerClass: 'theme-dark-blue', rangeInputFormat: 'MMMM D, YYYY', dateInputFormat: 'MMMM D, YYYY'}" />
                         </div>
                     </div>
-                    <div class="mb-3 col-md-3">
+                    <div class="mb-3 col">
                         <label class="input-group form-label fw-semibold">HCC vendor Type</label>
                         <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select HCC vendor Type"
                             appFocusNext (change)="changeLoadingBy($event)" formControlName="loadingBy"
@@ -183,7 +183,7 @@
                             This field is required.
                         </div>
                     </div>
-                    <div class="mb-3 col-md-3">
+                    <div class="mb-3 col">
                         <label class="input-group form-label fw-semibold">Charge type</label>
                         <ng-select class="noFoundTextColor  clear-icon" placeholder="Select Charge type" appFocusNext
                             [readonly]="challanService.filterForm.value.loadingBy === 'XX9'|| challanService.filterForm.value.loadingBy === 'XX5'"
@@ -196,7 +196,7 @@
                             This field is required.
                         </div>
                     </div>
-                    <div class="mb-3 col-md-3">
+                    <div class="mb-3 col">
                         <label class="input-group form-label fw-semibold">{{typeName}} type</label>
                         <div class="d-flex gap-4">
                             <div class="form-check">
@@ -220,6 +220,12 @@
                             *ngIf="challanService.filterForm.get('DRSType')?.invalid && challanService.filterForm.get('DRSType')?.touched">
                             Please select a {{typeName}} type
                         </div>
+                    </div>
+                    <div class="mb-3 col" *ngIf="this.docketService.loginUserList.Type === '3'">
+                        <label class="input-group form-label fw-semibold">ODA type</label>
+                         <ng-select class="noFoundTextColor clear-icon" placeholder="Select an type" formControlName="odaType"
+                                bindLabel="text" bindValue="value" [items]="odaTypeList">
+                            </ng-select>
                     </div>
                 </div>
                 <div class="row">
