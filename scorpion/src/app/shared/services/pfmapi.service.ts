@@ -35,4 +35,12 @@ export class PFMapiService {
   GetPrsList(payload: any) {
     return this.apiHandlerService.Post(`Operation/GetPrsList`, payload);
   }
+
+  PFMListForHQTR(payload: any) {
+    return this.apiHandlerService.Post(`THC/PFMListFor-HQTR`, payload);
+  }
+
+  CancelPFM(payload: any) {
+    return this.apiHandlerService.Post(`THC/CancelPFM`, payload);
+  }
 }
