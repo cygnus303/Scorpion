@@ -58,6 +58,12 @@ export class ChallanFilterComponent {
     this.generalMasterService.getChargeTypeData();
     this.challanService.filterForm.patchValue({ BookedByType: 'P' })
 
+    // Add required validator for ODA type when user Type is '3'
+    if (this.docketService.loginUserList.Type === '3') {
+      this.challanService.filterForm.get('odaType')?.setValidators([Validators.required]);
+      this.challanService.filterForm.get('odaType')?.updateValueAndValidity();
+    }
+
     this.challanService.filterForm.get('loadingBy')?.valueChanges.subscribe((value) => {
       const chargeTypeControl = this.challanService.filterForm.get('chrgType');
       if (value !== 'XX9' && value !== 'XX5') {
