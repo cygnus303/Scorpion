@@ -190,4 +190,8 @@ loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
   getExemptData(customerCode:string){
     return this.apiHandlerService.Get(`Operation/GetExemptData?custcd=${customerCode}`)
   }
+  
+  getEditEwayBillValidation(ewaybillNo:string){
+    return this.apiHandlerService.Get(`Operation/GetEwaybillDetail_newPagload?ewaybillNo=${ewaybillNo}`)
+  }
 }

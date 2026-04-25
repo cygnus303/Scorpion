@@ -189,17 +189,20 @@ getCompletionData() {
                invoiceRows.clear(); // Clear old rows
               this.docketService.completiondata.listInVoice.forEach((item: any, index: number) => {
                  invoiceRows.push(this.docketService.createInvoiceRow(index));
-                this.docketService.invoiceRows.controls[index].patchValue({
-                  srNo: item.srNo,
-                  ewayBillNo: item.eWayBillNo,
-                  ewayBillExpiry: item.eWayBillExpiredDate?new Date(item.eWayBillExpiredDate) : '01 JAN 0001',
-                  ewayinvoiceDate: item.eWayBillInvoiceDate?new Date(item.eWayBillInvoiceDate) : '01 JAN 0001',
-                  invoiceNo: item.invno,
-                  declaredvalue: item.declval,
-                });
-                invoiceRows.controls.forEach((row: any) => {
-                    row.initialEwayBillNo = row.get('ewayBillNo')?.value;
-                  });
+                // this.docketService.invoiceRows.controls[index].patchValue({
+                //   srNo: item.srNo,
+                //   ewayBillNo: item.eWayBillNo,
+                //   ewayBillExpiry: item.eWayBillExpiredDate?new Date(item.eWayBillExpiredDate) : '01 JAN 0001',
+                //   ewayinvoiceDate: item.eWayBillInvoiceDate?new Date(item.eWayBillInvoiceDate) : '01 JAN 0001',
+                //   invoiceNo: item.invno,
+                //   declaredvalue: item.declval,
+                // });
+                // invoiceRows.controls.forEach((row: any) => {
+                //     row.initialEwayBillNo = row.get('ewayBillNo')?.value;
+                //   });
+
+                // Validate and fetch correct E-way bill data if needed
+                this.validateAndFetchEwayBillData(item, index);
               });
             }
 
@@ -296,6 +299,67 @@ this.basicDetailService.getODADetail(pincode).subscribe({
       })
     }
   });
+}
+validateAndFetchEwayBillData(item: any, index: number) {
+  const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
+  const row = invoiceRows.at(index) as FormGroup;
+  
+  // First patch with existing data
+  row.patchValue({
+    srNo: item.srNo,
+    ewayBillNo: item.eWayBillNo,
+    ewayBillExpiry: item.eWayBillExpiredDate ? new Date(item.eWayBillExpiredDate) : '01 JAN 0001',
+    ewayinvoiceDate: item.eWayBillInvoiceDate ? new Date(item.eWayBillInvoiceDate) : '01 JAN 0001',
+    invoiceNo: item.invno,
+    declaredvalue: item.declval,
+  });
+  
+  // Set initial E-way bill number for tracking
+  (row as any).initialEwayBillNo = item.eWayBillNo;
+  
+  // If E-way bill number exists, validate if the data matches
+  if (item.eWayBillNo && item.eWayBillNo.length === 12) {
+          this.basicDetailService.getEditEwayBillValidation(item.eWayBillNo).subscribe({
+            next: (response: any) => {
+              if (response.status === 1) {
+                //Compare API data with existing invoice data
+                const apiInvoiceNo = response.invno;
+                const apiDeclaredValue = response.decval;
+                const apiInvoiceDate = response.invdt ? new Date(response.invdt) : null;
+                const apiExpiryDate = response.eWayBillExpiredDate && response.eWayBillExpiredDate !== '1900-01-01T00:00:00'
+                  ? new Date(response.eWayBillExpiredDate) : null;
+                
+                // Check if there's a mismatch
+                const isInvoiceMismatch = item.invno !== apiInvoiceNo;
+                const isValueMismatch = item.declval !== apiDeclaredValue;
+                const isDateMismatch = item.eWayBillInvoiceDate && apiInvoiceDate && 
+                  new Date(item.eWayBillInvoiceDate).toISOString() !== apiInvoiceDate.toISOString();
+                
+                if (isInvoiceMismatch || isValueMismatch || isDateMismatch) {
+                  // Data mismatch found, patch with correct API data
+                  console.log("Invoice data mismatch detected! Updating with correct E-way bill data.");
+                  
+                  row.patchValue({
+                    ewayinvoiceDate: apiInvoiceDate,
+                    ewayBillExpiry: apiExpiryDate,
+                    invoiceNo: apiInvoiceNo,
+                    declaredvalue: apiDeclaredValue,
+                  });
+                  
+                  // Update summary calculations
+                  this.invoiceDetailsComponent?.calculateSummary(index);
+                  // this.docketService.onFormFieldChange();
+                }
+              }
+            },
+            error: () => {
+              console.warn("Unable to fetch E-way bill data for validation:", item.eWayBillNo);
+            }
+          });
+      error: () => {
+        console.warn("Failed to check E-way bill in ERP:", item.eWayBillNo);
+      }
+  }
 }
 
 
@@ -759,7 +823,7 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
 
 
         formData.append("DVM.WMD.AppointmentDT",this.docketService.basicDetailForm.value.appointmentDT ? new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString() : new Date().toISOString()),
-        formData.append("DVM.WMD.Version", String(Number('18')));
+        formData.append("DVM.WMD.Version", String(Number('19')));
       formData.append("DVM.docketType", "DKT");
               // RequestLogs............
         const requestLogs = this.formDataToJson(formData); // Use formDataToJson for the RequestLogs
