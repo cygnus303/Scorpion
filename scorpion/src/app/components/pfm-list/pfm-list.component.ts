@@ -82,7 +82,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      // this.docketService.loginUserList.LocationCode = 'HQTR'
+      this.docketService.loginUserList.LocationCode = 'HQTR'
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
