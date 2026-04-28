@@ -334,7 +334,7 @@
                                                     This field is required.
                                                 </div>
                                             </div>
-                                            <div class="d-flex align-items-center gap-2" >
+                                            <div class="d-flex align-items-center gap-2"*ngIf="drsList.at(i).get('showReason')?.value && (row.value.deliveredPkgs !== row.value.pkgs_Pending)" >
                                                 <span class="fw-semibold text-muted">Reason:</span>
                                                 <div>
                                                     <ng-select class="noFoundTextColor required2 clear-icon" style="width:250px;"
