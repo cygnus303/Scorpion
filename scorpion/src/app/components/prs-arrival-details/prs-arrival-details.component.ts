@@ -154,10 +154,13 @@ export class PRSArrivalDetailsComponent {
     if (['XX5'].includes(this.prsArrivalForm.get('LoadingBy')?.value)) {
       this.THCService.getLoadingCharge(data).subscribe({
         next: (response: any) => {
-          this.prsArrivalForm.patchValue({
-            Rate: response.rate,
-            ratetype: response.rateType
-          });
+          if(response.isMonthly){
+            this.prsArrivalForm.patchValue({
+              MonthlyRate:response.maxLimit,
+              Rate: response.rate,
+              ratetype: response.rateType,
+              LoadingCharge:'0'
+            })
           const pdcArray = this.prsArrivalForm.get('pdcDetails') as FormArray;
           pdcArray?.controls.forEach((item: any, index) => {
             pdcArray.controls[index].patchValue({
@@ -165,6 +168,19 @@ export class PRSArrivalDetailsComponent {
               ratetype: response.rateType
             });
           });
+          }else{
+            this.prsArrivalForm.patchValue({
+              Rate: response.rate,
+              ratetype: response.rateType
+            });
+            const pdcArray = this.prsArrivalForm.get('pdcDetails') as FormArray;
+            pdcArray?.controls.forEach((item: any, index) => {
+              pdcArray.controls[index].patchValue({
+                newRate: response.rate,
+                ratetype: response.rateType
+              });
+            });
+          }
         },
         error: (err) => {
           console.error('Error fetching loading charge:', err);
@@ -184,7 +200,8 @@ export class PRSArrivalDetailsComponent {
       ratetype: new FormControl(null),
       vendorCode: new FormControl(null, this.docketService.loginUserList.loadBy === 'XX9' ? null : Validators.required),
       vendorName: new FormControl(null),
-      pdcDetails: new FormArray([])
+      pdcDetails: new FormArray([]),
+      MonthlyRate:new FormControl(null)
     })
   }
 
@@ -289,7 +306,39 @@ export class PRSArrivalDetailsComponent {
     this.prsArrivalForm.get('LoadingCharge')?.setValue(total.toFixed(2), { emitEvent: false });
   }
 
+  getInvalidControlNames(
+  form: FormGroup | FormArray,
+  path: string = ''
+): string[] {
+  let invalidControls: string[] = [];
+
+  Object.keys(form.controls).forEach(key => {
+    const control = form.get(key);
+    const controlPath = path ? `${path}.${key}` : key;
+
+    if (control?.invalid) {
+      invalidControls.push(controlPath);
+    }
+
+    if (control instanceof FormGroup || control instanceof FormArray) {
+      invalidControls = [
+        ...invalidControls,
+        ...this.getInvalidControlNames(control, controlPath)
+      ];
+    }
+  });
+
+  return [...new Set(invalidControls)];
+}
+
   onSubmit() {
+    if (this.prsArrivalForm.invalid) {
+  this.prsArrivalForm.markAllAsTouched();
+
+  const invalidFields = this.getInvalidControlNames(this.prsArrivalForm);
+
+  console.log(invalidFields);
+}
     if (this.prsArrivalForm.valid) {
       const params = {
         baseLocationCode: this.docketService.loginUserList.LocationCode,
@@ -305,7 +354,7 @@ export class PRSArrivalDetailsComponent {
           vendorCode_new: this.prsArrivalForm.value.vendorCode,
           vendorName_new: this.prsArrivalForm.value.vendorName,
           ratetype1: this.docketService.loginUserList.chargeType,
-          monthlyRate: "",
+          monthlyRate: this.prsArrivalForm.value.monthlyRate || '',
           arrivalDT: this.prsArrivalForm.value.arrivalDate
             ? new Date(this.prsArrivalForm.value.arrivalDate).toISOString()
             : new Date().toISOString(),
@@ -323,7 +372,7 @@ export class PRSArrivalDetailsComponent {
             vendorCode_new: this.prsArrivalForm.value.vendorCode,
             vendorName_new: this.prsArrivalForm.value.vendorName,
             ratetype1: formItem.ratetype || '',
-            monthlyRate: "",
+            monthlyRate:this.prsArrivalForm.value.monthlyRate || '',
             newRate: formItem.newRate,
             arrivalDT: this.prsArrivalForm.value.arrivalDate
               ? new Date(this.prsArrivalForm.value.arrivalDate).toISOString()
