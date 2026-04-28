@@ -554,6 +554,7 @@ onFileSelected(event: any, index: number, type: 'FRONT' | 'BACK') {
       frontPreview: previewUrl
     });
     row.get('frontFiles')?.markAsTouched();
+    this.validatePOD(index);
   } else {
     const oldUrl = row.get('backPreview')?.value;
     if (oldUrl) URL.revokeObjectURL(oldUrl);
@@ -564,7 +565,6 @@ onFileSelected(event: any, index: number, type: 'FRONT' | 'BACK') {
   }
   // reset input so same file can be selected again
   event.target.value = '';
-  this.validatePOD(index);
 }
 validatePOD(index: number) {
   const row = this.stockUpdateArray.at(index) as FormGroup;
@@ -587,7 +587,9 @@ validatePOD(index: number) {
       if (response?.success) {
         row.patchValue({ podValidated: true });
       } else {
-        this.sweetAlertService.error(`POD validation failed for Dock No ${docketNo}`);
+        this.sweetAlertService.error(`Dock No ${docketNo} Not Matched`);
+         this.removeFile(index, 'FRONT');
+       row.patchValue({ podValidated: false });
       }
     },
     error: (error) => {
