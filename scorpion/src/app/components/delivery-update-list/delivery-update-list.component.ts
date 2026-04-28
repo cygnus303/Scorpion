@@ -571,6 +571,7 @@ onFileSelected(event: any, index: number, type: 'FRONT' | 'BACK') {
       frontPreview: previewUrl
     });
     row.get('frontFiles')?.markAsTouched();
+    this.validatePOD(index);
   } else {
     const old = row.get('backPreview')?.value;
     if (old) URL.revokeObjectURL(old);
@@ -583,7 +584,6 @@ onFileSelected(event: any, index: number, type: 'FRONT' | 'BACK') {
 
   event.target.value = '';
 
-  this.validatePOD(index);
 }
 
 
@@ -661,8 +661,10 @@ validatePOD(index: number) {
         row.patchValue({ podValidated: true });
       } else {
         this.sweetAlertService.error(
-          `POD validation failed for Dock No ${docketNo}`
-        );
+          `Dock No ${docketNo} Not Matched`
+       );
+       this.removeFile(index, 'FRONT');
+       row.patchValue({ podValidated: false });
       }
     },
     error: (error) => {
