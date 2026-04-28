@@ -463,9 +463,9 @@ onDeliveredBlur(index: number): void {
     row.get('DeliveredTo')?.setValue(null, { emitEvent: false });
   }
 
-  if(delivered === pending){
-      row.get('cboReason')?.setValidators([Validators.required]);
-    }
+  // if(delivered === pending){
+  //     row.get('cboReason')?.setValidators([Validators.required]);
+  //   }
 
   let show = false;
   let reasonType = '';

@@ -319,10 +319,10 @@ export class PRSArrivalDetailsComponent {
           return {
             ...item,
             unloadBy: this.docketService.loginUserList.loadBy,
-            rateType: formItem.ratetype,
+            rateType: formItem.ratetype || '',
             vendorCode_new: this.prsArrivalForm.value.vendorCode,
             vendorName_new: this.prsArrivalForm.value.vendorName,
-            ratetype1: formItem.ratetype,
+            ratetype1: formItem.ratetype || '',
             monthlyRate: "",
             newRate: formItem.newRate,
             arrivalDT: this.prsArrivalForm.value.arrivalDate
