@@ -444,7 +444,7 @@
                 <td *ngIf="docketService.loginUserList.Type === 'LS'">
                   <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId" placeholder="Enter rateType"
                   [items]="generalMasterService.chargeTypeData" [readonly]="loadingSheetService.LSForm.value.loadingBy === 'XX5'" appFocusNext></ng-select>
-                  <input type="text" class="form-control" formControlName="newRate" (blur)="loadingSheetService.loadingRateCalc(row)">
+                  <input type="text" class="form-control" formControlName="newRate" (blur)="loadingSheetService.loadingRateCalc(row)" oninput="this.value = this.value.replace(/[^0-9.]/g,'');">
                   <span class="text-danger small d-flex justify-content-start" *ngIf="loadingSheetService.docketFormArray.at(i).get('rateError')?.errors?.['rateLimit']">
                   Rate Amount Is High Please Check
                   </span> 
