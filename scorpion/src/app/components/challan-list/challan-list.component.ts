@@ -709,7 +709,18 @@ validateVehicleNo() {
   control.setValue(filtered, { emitEvent: false });
   if (filtered.length === this.selectedDigit && filtered !== this.lastFetchedVehicleNo) {
     this.lastFetchedVehicleNo = filtered;
-    this.getVehicleDetail(filtered);  
+    if (filtered.startsWith('TS')) {
+      this.challanService.challanForm.patchValue({
+          eNGINENO:  '',
+          cHASISNO: '',
+          rCBOOKNO:'',
+          registrationDate:  null,
+          insuranceDate:  null,
+          fitnessDate:  null
+        });
+    }else{
+      this.getVehicleDetail(filtered);
+    } 
   }
 }
 
