@@ -355,13 +355,23 @@ onChangeLicenceNumber(event?: any) {
       const formData = new FormData();
        Object.keys(this.dAForm.value).forEach((key) => {
       let value = this.dAForm.value[key];
-      if ( ['registrationDate','insuranceValidityDate','fitnessValidityDate','dateOfBirth','licenseValidityDate','entryDate','updatedDate','permitValidityDate'].includes(key) && value) {
+      if ( ['registrationDate','insuranceValidityDate','fitnessValidityDate','dateOfBirth','licenseValidityDate','permitValidityDate'].includes(key) && value) {
        const d = new Date(value);
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
 
     value = `${year}-${month}-${day}T00:00:00.000Z`;
+      } else if ( ['entryDate','updatedDate'].includes(key) && value) {
+       const d = new Date(value);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    const seconds = String(d.getSeconds()).padStart(2, '0');
+
+    value = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.000Z`;
       }
       if (key === 'LicenseAttachment' && value instanceof File) {
         formData.append(key, value, value.name);
