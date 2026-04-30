@@ -47,6 +47,24 @@ export class ForwardPFMComponent {
   showPopup(data: any[]) {
     console.log(data);
     this.createForm();
+    // if (data?.fM_No) {
+    //   this.PFMapiService.GetCourierDetails(data.fM_No).subscribe({
+    //     next: (response: any) => {
+    //       this.pfmData = response.lrList;
+    //       if (this.pfmData && this.pfmData.length > 0) {
+    //         this.pfmData.forEach((lr: any) => {
+    //           lr.checked = true; // Initialize all as unchecked
+    //         });
+    //       }
+    //       this.updateSummary(response.header);
+    //       const firstItem = response.header;
+    //       if (firstItem?.pfM_Date) {
+    //         this.minDate = new Date(firstItem.pfM_Date);
+    //       }
+    //       this.maxDate = new Date();
+    //     }
+    //   }); 
+    // }
     this.pfmData = (data || []).map(r => ({ ...r, checked: true }));
     this.updateSummary();
     const firstItem = data?.[0];

@@ -41,6 +41,6 @@ export class PFMapiService {
   }
 
   CancelPFM(payload: any) {
-    return this.apiHandlerService.Post(`THC/CancelPFM`, payload);
+    return this.apiHandlerService.Post(`THC/PFMCancel`, payload);
   }
 }
