@@ -43,4 +43,8 @@ export class PFMapiService {
   CancelPFM(payload: any) {
     return this.apiHandlerService.Post(`THC/PFMCancel`, payload);
   }
+
+  GetDocketByFMNo(payload: any) {
+    return this.apiHandlerService.Post(`THC/GetDocketByFMNo`, payload);
+  }
 }
