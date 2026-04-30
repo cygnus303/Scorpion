@@ -116,14 +116,14 @@
                         <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
                         <span *ngIf="isCSVLoading">Downloading...</span>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end custom-mini-dropdown">
+                    <ul class="dropdown-menu dropdown-menu-end custom-mini-dropdown"> 
                         <li class="d-flex gap-2 px-2">
-                            <button class="dropdown-item btn-ltl" 
-                               (click)="downloadCSV('pfmWise', $event)">
+                            <button class="dropdown-item btn-ltl"  *ngIf="this.config.statusFilter !== 'Pending'"
+                               (click)="downloadPFMWiseCSV()">
                                 PFM Wise
                             </button>
                             <button class="dropdown-item btn-ftl" 
-                               (click)="downloadCSV('lrWise', $event)">
+                               (click)="downloadLRWiseCSV()">
                                 LR Wise
                             </button>
                         </li>

@@ -47,4 +47,12 @@ export class PFMapiService {
   GetDocketByFMNo(payload: any) {
     return this.apiHandlerService.Post(`THC/GetDocketByFMNo`, payload);
   }
+
+   GetFMForwardReport(payload: any) {
+    return this.apiHandlerService.Post(`THC/GetFMForwardReport`, payload);
+  }
+
+   GetPFMReport(payload: any) {
+    return this.apiHandlerService.Post(`THC/GetPFMReport`, payload);
+  }
 }
