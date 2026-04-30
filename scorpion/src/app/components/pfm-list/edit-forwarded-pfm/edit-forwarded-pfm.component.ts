@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PFMapiService } from 'app/shared/services/pfmapi.service';
@@ -9,7 +10,7 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 @Component({
   selector: 'app-edit-forwarded-pfm',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule],
+  imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule, FormsModule],
   templateUrl: './edit-forwarded-pfm.component.html',
   styleUrl: './edit-forwarded-pfm.component.scss',
   providers: [BsModalService]
@@ -25,7 +26,7 @@ export class EditForwardedPFMComponent {
   constructor(
     private modalService: BsModalService,
     private pfmApiService: PFMapiService,
-    private sweetAlertService:SweetAlertService
+    private sweetAlertService: SweetAlertService
   ) { }
 
   showPopup(data: any) {
@@ -37,14 +38,20 @@ export class EditForwardedPFMComponent {
         next: (response: any) => {
           const courier = response?.header || response;
           this.editForm.patchValue({
-            lR_Number: data?.dockNo || '',
-            route: data?.from_To || '',
+            lR_Number: response?.firstLR?.lR_Number || courier?.dockNo || '',
+            route: response?.firstLR?.route || courier?.from_To || '',
             fM_No: courier?.pfM_Number || '',
             courier_Code: courier?.courier_Company_Name || '',
             courier_Way_Bill_No: courier?.courier_Number || '',
+            fM_Status:courier?.fM_Status,
             courier_Way_Bill_Date: courier?.courier_Way_Bill_Date ? new Date(courier.courier_Way_Bill_Date) : new Date()
           });
           this.pfmData = response.lrList;
+          if (this.pfmData && this.pfmData.length > 0) {
+            this.pfmData.forEach((lr: any) => {
+              lr.checked = false; // Initialize all as unchecked
+            });
+          }
         }
       });
     }
@@ -57,7 +64,8 @@ export class EditForwardedPFMComponent {
       courier_Way_Bill_Date: new FormControl(),
       route: new FormControl(''),
       lR_Number: new FormControl(''),
-      fM_No: new FormControl('')
+      fM_No: new FormControl(''),
+      fM_Status: new FormControl('')
     });
   }
 
@@ -66,12 +74,34 @@ export class EditForwardedPFMComponent {
     return val.replace(':', ' → ');
   }
 
+  // Checkbox functionality
+  toggleAllLRs(event: any) {
+    const isChecked = event.target.checked;
+    if (this.pfmData && this.pfmData.length > 0) {
+      this.pfmData.forEach((lr: any) => {
+        lr.checked = isChecked;
+      });
+    }
+  }
+
+  isAllLRsSelected(): boolean {
+    if (!this.pfmData || this.pfmData.length === 0) {
+      return false;
+    }
+    return this.pfmData.every((lr: any) => lr.checked);
+  }
+
+  onLRSelect(lr: any) {
+    console.log(lr);
+  }
+
+
   saveChanges() {
     if (this.editForm.invalid) {
       this.editForm.markAllAsTouched();
       return;
     }
-    const { lR_Number, route, ...formVal } = this.editForm.value;
+    const { lR_Number, route,fM_Status, ...formVal } = this.editForm.value;
     const payload = {
       ...formVal,
       courier_Way_Bill_Date: new Date(formVal.courier_Way_Bill_Date).toISOString()

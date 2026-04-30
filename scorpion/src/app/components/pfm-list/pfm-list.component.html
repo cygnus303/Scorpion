@@ -42,12 +42,15 @@
         </div>
         <div class="btn-group gap-3 ms-auto">
             <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="fetchLRsData()">⟳ Fetch LRs</button>
-            <button class="btn btn-success px-4 py-2 rounded" *ngIf="menuAccessService.hasPermission('Add')" [disabled]="!canAddPFM" (click)="openAddPFM()">＋ Add
+            <button class="btn btn-success px-4 py-2 rounded" *ngIf="menuAccessService.hasPermission('Add')"
+                [disabled]="!canAddPFM" (click)="openAddPFM()">＋ Add
                 PFM</button>
-            <button class="btn btn-primary px-4 py-2 rounded" *ngIf="menuAccessService.hasPermission('Forward')" [disabled]="!canForwardPFM" (click)="openForwardPFM()">↗
+            <button class="btn btn-primary px-4 py-2 rounded" *ngIf="menuAccessService.hasPermission('Forward')"
+                [disabled]="!canForwardPFM" (click)="openForwardPFM()">↗
                 Forward PFM</button>
             <button class="btn rounded px-4 py-2" style="background: var(--btn-ack); color: white;"
-                *ngIf="menuAccessService.hasPermission('Acknowledge')" [disabled]="!canAcknowledgePFM" (click)="openAcknowledgePFM()">✓ Acknowledge
+                *ngIf="menuAccessService.hasPermission('Acknowledge')" [disabled]="!canAcknowledgePFM"
+                (click)="openAcknowledgePFM()">✓ Acknowledge
                 PFM</button>
         </div>
     </div>
@@ -57,26 +60,27 @@
         <div class="summary-card c-blue cursor-pointer" [class.active-card]="config.statusFilter === 'All'"
             (click)="filterByStatus('All')">
             <div>
-                <div class="s-label">Total LRs</div>
+                <div class="s-label">{{ isHQTR ? 'Total PFM' : 'Total LRs' }}</div>
                 <div class="s-val">{{ summaryData.total_LRs }}</div>
             </div>
         </div>
-        <div class="summary-card c-orange cursor-pointer" [class.active-card]="config.statusFilter === 'Pending'"
-            (click)="filterByStatus('Pending')">
+        <div class="summary-card c-orange cursor-pointer"
+            [class.active-card]="config.statusFilter === (isHQTR ? 'Pending for Acknowledged' : 'Pending')"
+            (click)="filterByStatus(isHQTR ? 'Pending for Acknowledged' : 'Pending')">
             <div>
-                <div class="s-label">Pending</div>
+                <div class="s-label">{{ isHQTR ? 'Pending for Ack.' : 'Pending' }}</div>
                 <div class="s-val">{{ summaryData.pending }}</div>
             </div>
         </div>
-        <div class="summary-card c-teal cursor-pointer" [class.active-card]="config.statusFilter === 'Generated'"
-            (click)="filterByStatus('Generated')">
+        <div class="summary-card c-teal cursor-pointer" *ngIf="!isHQTR"
+            [class.active-card]="config.statusFilter === 'Generated'" (click)="filterByStatus('Generated')">
             <div>
                 <div class="s-label">Generated</div>
                 <div class="s-val">{{ summaryData.generated }}</div>
             </div>
         </div>
-        <div class="summary-card c-purple cursor-pointer" [class.active-card]="config.statusFilter === 'Forwarded'"
-            (click)="filterByStatus('Forwarded')">
+        <div class="summary-card c-purple cursor-pointer" *ngIf="!isHQTR"
+            [class.active-card]="config.statusFilter === 'Forwarded'" (click)="filterByStatus('Forwarded')">
             <div>
                 <div class="s-label">Forwarded</div>
                 <div class="s-val">{{ summaryData.forwarded }}</div>
@@ -96,7 +100,7 @@
         <!-- Toolbar -->
         <div class="table-toolbar d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center gap-2">
-                <span class="table-title">LORRY RECEIPTS</span>
+                <span class="table-title">{{ isHQTR ? 'PFM LISTING' : 'LORRY RECEIPTS' }}</span>
                 <span class="badge">{{ config.totalRecords }} Records</span>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -105,23 +109,35 @@
                     <input type="text" class="form-control border-0 shadow-none" [(ngModel)]="searchKeyword"
                         (keyup)="onSearchChange()" placeholder="Search LR No, Origin, Destination">
                 </div>
-                <button class="btn btn-light btn-sm download-btn px-4 py-3" (click)="downloadCSV()"
-                    *ngIf="menuAccessService.hasPermission('Download')" [disabled]="isLoading">
-                    <span *ngIf="!isCSVLoading">⬇ Download CSV</span>
-                    <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
-                    <span *ngIf="isCSVLoading">Downloading...</span>
-                </button>
+                <div class="dropdown" *ngIf="menuAccessService.hasPermission('Download')">
+                    <button class="btn btn-light btn-sm download-btn px-4 py-3 dropdown-toggle" type="button" 
+                            data-bs-toggle="dropdown" aria-expanded="false" [disabled]="isCSVLoading">
+                        <span *ngIf="!isCSVLoading">⬇ Download CSV</span>
+                        <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
+                        <span *ngIf="isCSVLoading">Downloading...</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end custom-mini-dropdown">
+                        <li class="d-flex gap-2 px-2">
+                            <button class="dropdown-item btn-ltl" 
+                               (click)="downloadCSV('pfmWise', $event)">
+                                PFM Wise
+                            </button>
+                            <button class="dropdown-item btn-ftl" 
+                               (click)="downloadCSV('lrWise', $event)">
+                                LR Wise
+                            </button>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
         <!-- Table -->
         <div class="table-wrap">
             <table class="table align-middle data-table mb-0">
-                <thead>
+                <!-- Headers for LR Listing (Branch Login All/Pending) -->
+                <thead *ngIf="!isPFMListing">
                     <tr>
-                        <th class="text-center">
-                            <!-- <input type="checkbox" (change)="toggleAll($event)"
-                                [checked]="isAllSelected()"> -->
-                        </th>
+                        <th class="text-center"></th>
                         <th>LR DATE</th>
                         <th>LR NO</th>
                         <th>DELIVERY BRANCH</th>
@@ -132,7 +148,23 @@
                         <th>DOCUMENT DATE</th>
                         <th>DAYS SINCE</th>
                         <th>PFM NUMBER</th>
-                        <th *ngIf="menuAccessService.hasPermission('Edit') || menuAccessService.hasPermission('View')">ACTIONS</th>
+                        <th *ngIf="menuAccessService.hasPermission('Edit') || menuAccessService.hasPermission('View')">
+                            ACTIONS</th>
+                    </tr>
+                </thead>
+
+                <!-- Headers for PFM Listing (HQTR or status-specific) -->
+                <thead *ngIf="isPFMListing">
+                    <tr>
+                        <th class="text-center"></th>
+                        <th>PFM DATE</th>
+                        <th>PFM NO</th>
+                        <th class="text-center">TOTAL LR'S</th>
+                        <th *ngIf="isHQTR" class="text-center">DELIVERY BRANCH/LOCATION</th>
+                        <th class="text-center">STATUS</th>
+                        <th *ngIf="!isHQTR" class="text-center">DAYS SINCE</th>
+                        <th *ngIf="menuAccessService.hasPermission('Edit') || menuAccessService.hasPermission('View')">
+                            ACTIONS</th>
                     </tr>
                 </thead>
                 <tbody *ngIf="isLoading">
@@ -152,7 +184,8 @@
                         </td>
                     </tr>
                 </tbody>
-                <tbody *ngIf="!isLoading && filteredRows.length > 0">
+                <!-- LR centric Body -->
+                <tbody *ngIf="!isLoading && filteredRows.length > 0 && !isPFMListing">
                     <tr *ngFor="let row of filteredRows">
                         <td class="text-center">
                             <input type="checkbox" [(ngModel)]="row.checked"
@@ -188,7 +221,7 @@
                         <td class="lr-date fs-6">
                             {{ row.fM_Date ? (row.fM_Date | date:'dd-MM-yyyy') : '—' }}
                         </td>
-                        <td class="days-text fs-6 text-center">
+                        <td class="days-text fs-6 text-center" >
                             {{ row.daysSince }}d
                         </td>
                         <td>
@@ -199,13 +232,66 @@
                             </span>
                             <span *ngIf="!row.fM_No" class="pfm-none">—</span>
                         </td>
-                        <td *ngIf="menuAccessService.hasPermission('Edit') || menuAccessService.hasPermission('View')">
-                            <div class="d-flex gap-1">
+                        <td *ngIf="menuAccessService.hasPermission('Edit') || menuAccessService.hasPermission('View')" >
+                            <div class="d-flex gap-1" >
                                 <button type="button" class="btn btn-sm btn-view fw-bolder fs-6"
-                                    *ngIf="menuAccessService.hasPermission('View')" (click)="openViewPFM(row)">👁 View</button>
+                                    *ngIf="menuAccessService.hasPermission('View')" (click)="openViewPFM(row)">👁
+                                    View</button>
+
                                 <button type="button" (click)="openEditForwardedPFM(row)"
-                                    *ngIf="menuAccessService.hasPermission('Edit') && row.displayStatus === 'Forwarded' && this.docketService.loginUserList.LocationCode === row.fM_FWD_LocCode"
+                                    *ngIf="!isHQTR && menuAccessService.hasPermission('Edit') && (row.displayStatus === 'Generated' || row.displayStatus === 'Forwarded')"
                                     class="btn btn-sm btn-edit fw-bolder fs-6">✎ Edit</button>
+
+                                <button type="button" class="btn btn-sm btn-outline-danger fw-bolder fs-6"
+                                    *ngIf="!isHQTR && menuAccessService.hasPermission('Edit') && (row.displayStatus === 'Generated' || row.displayStatus === 'Forwarded')"
+                                    (click)="cancelPFM(row)">✖ Cancel</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+
+                <!-- PFM centric Body -->
+                <tbody *ngIf="!isLoading && filteredRows.length > 0 && isPFMListing">
+                    <tr *ngFor="let row of filteredRows">
+                        <td class="text-center">
+                            <input type="checkbox" [(ngModel)]="row.checked"
+                                [disabled]="row.displayStatus === 'Acknowledged' || (row.displayStatus === 'Forwarded' && this.docketService.loginUserList.LocationCode === row.fM_FWD_LocCode)"
+                                (change)="onRowSelect(row)">
+                        </td>
+                        <td class="lr-date">{{ row.fM_Date | date:'dd-MM-yyyy' }}</td>
+                        <td class="lr-no fw-bold">{{ row.fM_No }}</td>
+                        <td class="text-center fw-bold text-primary">{{ row.totalLRs }}</td>
+                        <td *ngIf="isHQTR" class="text-center">
+                            <span class="branch-badge" *ngIf="row.orgn_Dest">{{ extractBranch(row.orgn_Dest) }}</span>
+                            <span *ngIf="!row.orgn_Dest">—</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="status-badge" [ngClass]="getStatusBadge(row.displayStatus)[0]">
+                                {{ getStatusBadge(row.displayStatus)[1] }}
+                            </span>
+                        </td>
+                        <td class="days-text fs-6 text-center" *ngIf="!isHQTR">
+                            {{ row.daysSince }}d
+                        </td>
+                        <td *ngIf="menuAccessService.hasPermission('Edit') || menuAccessService.hasPermission('View')" >
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-sm btn-view fw-bolder fs-6"
+                                    *ngIf="menuAccessService.hasPermission('View')" (click)="openViewPFM(row)">👁
+                                    View</button>
+
+                                <!-- Edit for Branch or HQTR -->
+                                <button type="button" class="btn btn-sm btn-edit fw-bolder fs-6"
+                                    *ngIf="menuAccessService.hasPermission('Edit') && (row.displayStatus === 'Pending for Acknowledged' || row.displayStatus === 'Generated')"
+                                    (click)="openEditForwardedPFM(row)">✎ Edit</button>
+
+                                <button type="button" class="btn btn-sm btn-edit fw-bolder fs-6"
+                                    *ngIf="menuAccessService.hasPermission('Edit') && row.displayStatus === 'Forwarded'"
+                                    (click)="openEditForwardedPFM(row)">✎ Edit</button>
+
+                                <!-- Cancel for Branch or HQTR -->
+                                <button type="button" class="btn btn-sm btn-outline-danger fw-bolder fs-6"
+                                    *ngIf="menuAccessService.hasPermission('Edit') && (row.displayStatus === 'Pending for Acknowledged' || row.displayStatus === 'Generated')"
+                                    (click)="cancelPFM(row)">✖ Cancel</button>
                             </div>
                         </td>
                     </tr>

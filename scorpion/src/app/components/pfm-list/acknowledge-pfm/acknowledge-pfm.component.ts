@@ -41,15 +41,15 @@ export class AcknowledgePFMComponent {
 
   showPopup(data: any) {
     console.log('Acknowledge PFM Selected Data:', data);
-    const fmDate = Array.isArray(data) 
-    ? data?.[0]?.fM_Date 
-    : data?.fM_Date;
+    const fmDate = Array.isArray(data)
+      ? data?.[0]?.fM_Date
+      : data?.fM_Date;
 
-  if (fmDate) {
-    this.minDate = new Date(fmDate);
-  }
+    if (fmDate) {
+      this.minDate = new Date(fmDate);
+    }
 
-  this.maxDate = new Date();
+    this.maxDate = new Date();
 
     if (Array.isArray(data)) {
       const pfmSet = new Set<string>();
@@ -61,7 +61,7 @@ export class AcknowledgePFMComponent {
       this.uniquePFMs = [];
     }
     this.createForm();
-    
+
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-lg modal-dialog-centered', backdrop: true });
   }
 

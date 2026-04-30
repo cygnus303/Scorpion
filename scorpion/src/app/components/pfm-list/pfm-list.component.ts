@@ -15,6 +15,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { EditForwardedPFMComponent } from './edit-forwarded-pfm/edit-forwarded-pfm.component';
 import { ExportService } from 'app/shared/services/export.service';
 import { MenuAccessService } from 'app/shared/services/menu-access.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 
 @Component({
   selector: 'app-pfm-list',
@@ -40,7 +41,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
   public isCSVLoading: boolean = false;
   public searchKeyword: string = '';
   public config = {
-    fromDateStr: new Date(new Date().setDate(new Date().getDate() - 7)),
+    fromDateStr: new Date(),
     toDateStr: new Date(),
     statusFilter: 'All',
     page: 1,
@@ -57,9 +58,12 @@ export class PFMListComponent implements OnInit, OnDestroy {
     acknowledged: 0
   };
 
+  private cachedSummary: any = null;
+
   statusList = [
     { value: 'All', label: 'All Status', color: 'all', bg: 'var(--muted)', count: 0 },
     { value: 'Pending', label: 'Pending', color: 'pending', bg: 'var(--orange)', count: 0 },
+    { value: 'Pending for Acknowledged', label: 'Pending for Acknowledged', color: 'pending', bg: 'var(--orange)', count: 0 },
     { value: 'Generated', label: 'Generated', color: 'generated', bg: 'var(--teal)', count: 0 },
     { value: 'Forwarded', label: 'Forwarded', color: 'forwarded', bg: 'var(--accent-hover)', count: 0 },
     { value: 'Acknowledged', label: 'Acknowledged', color: 'acknowledged', bg: 'var(--green)', count: 0 }
@@ -67,41 +71,62 @@ export class PFMListComponent implements OnInit, OnDestroy {
 
   statusMap: any = {
     'Pending': ['s-pending', '● Pending'],
+    'Pending for Acknowledged': ['s-pending', '● Pending for Acknowledged'],
     'Generated At': ['s-generated', '◈ Generated'],
     'Forwarded': ['s-forwarded', '↗ Forwarded'],
     'Acknowledged': ['s-ack', '✓ Acknowledged'],
     'Received By': ['s-ack', '✓ Acknowledged']
   };
 
-  constructor(public PFMapiService: PFMapiService, public docketService: DocketService, public exportService: ExportService, public menuAccessService: MenuAccessService) { }
-
-  ngOnInit() {
+  constructor(public PFMapiService: PFMapiService, public docketService: DocketService, public exportService: ExportService, public menuAccessService: MenuAccessService,
+     public sweetAlertService: SweetAlertService) {
     const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
-      // this.docketService.loginUserList.LocationCode = 'PIM';
+      // this.docketService.loginUserList.LocationCode = 'PIM'
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
+  }
 
+  get isHQTR(): boolean {
+    return this.docketService.loginUserList?.LocationCode === 'HQTR';
+  }
+
+  get isPFMListing(): boolean {
+    return this.isHQTR || (this.config.statusFilter !== 'All' && this.config.statusFilter !== 'Pending');
+  }
+
+  ngOnInit() {
     this.fetchSubject.pipe(debounceTime(300)).subscribe(() => {
       this.PODForwardingList();
     });
 
     this.fetchData();
-    this.getUserModulePermissions();      
+    this.getUserModulePermissions();
+
+    if (this.isHQTR) {
+      this.statusList = [
+        { value: 'All', label: 'All Status', color: 'all', bg: 'var(--muted)', count: 0 },
+        { value: 'Pending for Acknowledged', label: 'Pending for Ack.', color: 'pending', bg: 'var(--orange)', count: 0 },
+        { value: 'Acknowledged', label: 'Acknowledged', color: 'acknowledged', bg: 'var(--green)', count: 0 }
+      ];
+    }
+
+    // Clear cache whenever filters change except status
+    this.cachedSummary = null;
   }
 
   getUserModulePermissions() {
     // if (this.docketService.loginUserList.menuId) {
-      this.menuAccessService.loadPermissions(7637, this.docketService.loginUserList.UserId).subscribe();
+    this.menuAccessService.loadPermissions(7637, this.docketService.loginUserList.UserId).subscribe();
     // }
   }
 
   fetchLRsData() {
     this.config = {
-      fromDateStr: new Date(new Date().setDate(new Date().getDate() - 7)),
+      fromDateStr: new Date(),
       toDateStr: new Date(),
       statusFilter: 'All',
       page: 1,
@@ -149,53 +174,127 @@ export class PFMListComponent implements OnInit, OnDestroy {
   PODForwardingList() {
     if (this.listSubscription) { this.listSubscription.unsubscribe(); }
     this.isLoading = true;
-    const payload = {
-      fromDate: new Date(this.config.fromDateStr).toISOString(),
-      toDate: new Date(this.config.toDateStr).toISOString(),
-      locCode: this.docketService.loginUserList.LocationCode,
-      statusFilter: this.config.statusFilter || 'All',
-      page: this.config.page,
-      pageSize: this.config.pageSize,
-      isDownload: 0,
-      lrFilter: this.searchKeyword
-    };
 
-    this.listSubscription = this.PFMapiService.PODForwardingList(payload).subscribe({
-      next: (response: any) => {
-        this.isLoading = false;
-        let items = [];
-        if (response && response.data) {
-          items = response.data;
-          if (response.pagination) {
-            this.config.totalRecords = response.pagination.totalRecords || items.length;
-            this.config.totalPages = response.pagination.totalPages || 1;
-            this.config.page = response.pagination.currentPage || 1;
-            this.config.pageSize = response.pagination.pageSize || 10;
-          } else {
-            this.config.totalRecords = items.length;
-            this.config.totalPages = Math.ceil(this.config.totalRecords / this.config.pageSize) || 1;
-          }
-        } else {
-          items = [];
-          this.config.totalRecords = 0;
-          this.config.totalPages = 1;
+    if (this.isHQTR) {
+      // HQTR API payload
+      const hqtrPayload = {
+        fromdate: new Date(this.config.fromDateStr).toISOString(),
+        todate: new Date(this.config.toDateStr).toISOString(),
+        pageNumber: this.config.page,
+        pageSize: this.config.pageSize,
+        isDownload: 0,
+        statusFilter: this.config.statusFilter || 'All',
+        lrFilter: this.searchKeyword || null
+      };
+
+      this.listSubscription = this.PFMapiService.PFMListForHQTR(hqtrPayload).subscribe({
+        next: (response: any) => {
+          this.isLoading = false;
+          this.handleHQTRResponse(response);
+        },
+        error: (err: any) => {
+          this.isLoading = false;
+          console.error('Error fetching HQTR PFM List', err);
+          this.rows = [];
+          this.filteredRows = [];
         }
-        items.forEach((item: any) => item.checked = false);
+      });
+    } else {
+      // Branch login API payload
+      const branchPayload = {
+        fromDate: new Date(this.config.fromDateStr).toISOString(),
+        toDate: new Date(this.config.toDateStr).toISOString(),
+        locCode: this.docketService.loginUserList.LocationCode,
+        statusFilter: this.config.statusFilter || 'All',
+        page: this.config.page,
+        pageSize: this.config.pageSize,
+        isDownload: 0,
+        lrFilter: this.searchKeyword
+      };
 
-        this.rows = items;
-        this.filteredRows = [...this.rows];
-
-        if (response && response.totalData) {
-          this.summaryData = response.totalData;
+      this.listSubscription = this.PFMapiService.PODForwardingList(branchPayload).subscribe({
+        next: (response: any) => {
+          this.isLoading = false;
+          this.handleBranchResponse(response);
+        },
+        error: (err: any) => {
+          this.isLoading = false;
+          console.error('Error fetching Branch PFM List', err);
+          this.rows = [];
+          this.filteredRows = [];
         }
-      },
-      error: (err: any) => {
-        this.isLoading = false;
-        console.error('Error fetching PFM List', err);
-        this.rows = [];
-        this.filteredRows = [];
+      });
+    }
+  }
+
+  handleHQTRResponse(response: any) {
+    let items = [];
+    if (response && response.data) {
+      items = response.data;
+      if (response.pagination) {
+        this.config.totalRecords = response.pagination.totalRecords || items.length;
+        this.config.totalPages = response.pagination.totalPages || 1;
+        this.config.page = response.pagination.currentPage || 1;
+        this.config.pageSize = response.pagination.pageSize || 10;
+      } else {
+        this.config.totalRecords = items.length;
+        this.config.totalPages = Math.ceil(this.config.totalRecords / this.config.pageSize) || 1;
       }
-    });
+    } else {
+      items = [];
+      this.config.totalRecords = 0;
+      this.config.totalPages = 1;
+    }
+    items.forEach((item: any) => item.checked = false);
+
+    this.rows = items;
+    this.filteredRows = [...this.rows];
+
+    if (response && response.summary) {
+      const summary = {
+        total_LRs: response.summary.total_LRs || 0,
+        pending: response.summary.pending_for_Acknowledged || 0,
+        generated: 0,
+        forwarded: 0,
+        acknowledged: response.summary.acknowledged || 0
+      };
+
+      if (this.config.statusFilter === 'All') {
+        this.cachedSummary = summary;
+      }
+      this.summaryData = this.cachedSummary || summary;
+    }
+  }
+
+  handleBranchResponse(response: any) {
+    let items = [];
+    if (response && response.data) {
+      items = response.data;
+      if (response.pagination) {
+        this.config.totalRecords = response.pagination.totalRecords || items.length;
+        this.config.totalPages = response.pagination.totalPages || 1;
+        this.config.page = response.pagination.currentPage || 1;
+        this.config.pageSize = response.pagination.pageSize || 10;
+      } else {
+        this.config.totalRecords = items.length;
+        this.config.totalPages = Math.ceil(this.config.totalRecords / this.config.pageSize) || 1;
+      }
+    } else {
+      items = [];
+      this.config.totalRecords = 0;
+      this.config.totalPages = 1;
+    }
+    items.forEach((item: any) => item.checked = false);
+
+    this.rows = items;
+    this.filteredRows = [...this.rows];
+
+    if (response && response.totalData) {
+      if (this.config.statusFilter === 'All') {
+        this.cachedSummary = response.totalData;
+      }
+      this.summaryData = this.cachedSummary || response.totalData;
+    }
   }
 
   filterByStatus(status: string) {
@@ -208,8 +307,13 @@ export class PFMListComponent implements OnInit, OnDestroy {
     this.fetchSubject.next();
   }
 
-  downloadCSV() {
+  downloadCSV(type: string = 'pfmWise', event?: Event) {
+    if (event) {
+      event.preventDefault();
+    }
+    
     this.isCSVLoading = true;
+    
     const payload = {
       fromDate: new Date(this.config.fromDateStr).toISOString(),
       toDate: new Date(this.config.toDateStr).toISOString(),
@@ -217,13 +321,30 @@ export class PFMListComponent implements OnInit, OnDestroy {
       statusFilter: this.config.statusFilter || 'All',
       page: this.config.page,
       pageSize: this.config.pageSize,
-      isDownload: 1
+      isDownload: 1,
     };
-    this.listSubscription = this.PFMapiService.PODForwardingList(payload).subscribe({
+
+    // Use appropriate API based on user type and download type
+    const apiCall = this.isHQTR 
+      ? this.PFMapiService.PFMListForHQTR(payload)
+      : this.PFMapiService.PODForwardingList(payload);
+
+    this.listSubscription = apiCall.subscribe({
       next: (response: any) => {
         this.isCSVLoading = false;
         if (response && response.data) {
-          this.exportService.exportToCSV(response.data, `PFM_List`);
+          let csvData: any[] = [];
+          let fileName = '';
+
+          if (type === 'pfmWise') {
+            csvData = this.formatPFMWiseData(response.data);
+            fileName = `PFM_Wise_Report`;
+          } else if (type === 'lrWise') {
+            csvData = this.formatLRWiseData(response.data);
+            fileName = `LR_Wise_Report`;
+          }
+
+          this.exportService.exportToCSV(csvData, fileName);
         }
       },
       error: (err: any) => {
@@ -231,6 +352,56 @@ export class PFMListComponent implements OnInit, OnDestroy {
         console.error('Error downloading CSV', err);
       }
     });
+  }
+
+  formatPFMWiseData(data: any[]): any[] {
+    return data.map(item => ({
+      'PFM No': item.fM_No,
+      'PFM Date': item.fM_Date ? this.formatDate(item.fM_Date) : '',
+      'Total LR’s': item.totalLRs ,
+      'Delivery Location': this.extractDestination(item.orgn_Dest) || '',
+      'Status': item.displayStatus || item.fM_Status || '',
+      'Since Days': item.daysSince || 0,
+      'Courier Name': item.courier_Company_Name || '',
+      'Courier date': item.courier_Way_Bill_Date ? this.formatDate(item.courier_Way_Bill_Date) : '',
+      'PFM Generated By': item.pfM_Generated_By || '',
+      'PFM Generated Date': item.fM_Date ? this.formatDate(item.fM_Date) : '',
+      'PFM Forwarded BY': item.forward_By || '',
+      'PFM Forward Date': item.forwardDate  ? this.formatDate(item.forwardDate) : '',
+      'PFM Acknowledge By': item.fM_Ack_By || '',
+      'PFM Ack date': item.fM_Ack_Date  ? this.formatDate(item.fM_Ack_Date) : '',
+      'PFM Cancel By': item.pfM_Cancel_By || '',
+      'PFM Cancel Date': item.pfM_Cancel_Date  ? this.formatDate(item.pfM_Cancel_Date) : '',
+    }));
+  }
+
+  formatLRWiseData(data: any[]): any[] {
+    return data.map(item => ({
+      'Docket No': item.dockNo || '',
+      'Docket date': item.dockDt ? this.formatDate(item.dockDt) : '',
+      'Delivery Location': this.extractDestination(item.orgn_Dest) || '',
+      'PFM No': item.fM_No || '',
+      'PFM Date': item.fM_Date ? this.formatDate(item.fM_Date) : '',
+      'Status': item.displayStatus || item.fM_Status || '',
+      'Since Days': item.daysSince || 0,
+      'Courier Name': item.courier_Company_Name || '',
+      'Courier date': item.courier_Way_Bill_Date ? this.formatDate(item.courier_Way_Bill_Date) : '',
+      'PFM Generated By': item.pfM_Generated_By || '',
+      'PFM Generated Date': item.fM_Date ? this.formatDate(item.fM_Date) : '',
+      'PFM Forwarded BY': item.forward_By || '',
+      'PFM Forward Date': item.forwardDate ? this.formatDate(item.forwardDate) : '',
+      'PFM Acknowledge By': item.fM_Ack_By || '',
+      'PFM Ack date': item.fM_Ack_Date ? this.formatDate(item.fM_Ack_Date) : ''
+    }));
+  }
+
+  formatDate(date: any): string {
+    if (!date) return '';
+    const d = new Date(date);
+    const day = d.getDate().toString().padStart(2, '0');
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}-${month}-${year}`;
   }
 
   ngOnDestroy() {
@@ -250,7 +421,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
 
   get canAcknowledgePFM(): boolean {
     const selected = this.filteredRows.filter(r => r.checked);
-    return selected.length > 0 && selected.every(r => r.displayStatus === 'Forwarded');
+    return selected.length > 0 && selected.every(r => r.displayStatus === 'Forwarded' || r.fM_Status === 'Forwarded');
   }
 
   openAddPFM() {
@@ -261,9 +432,13 @@ export class PFMListComponent implements OnInit, OnDestroy {
     const selectedData = this.filteredRows.filter(r => r.checked);
     this.ForwardPFMComponent.showPopup(selectedData);
   }
-  openAcknowledgePFM() {
-    const selectedData = this.filteredRows.filter(r => r.checked);
-    this.AcknowledgePFMComponent.showPopup(selectedData);
+  openAcknowledgePFM(row?: any) {
+    if (this.isHQTR && row) {
+      this.AcknowledgePFMComponent.showPopup([row]);
+    } else {
+      const selectedData = this.filteredRows.filter(r => r.checked);
+      this.AcknowledgePFMComponent.showPopup(selectedData);
+    }
   }
 
   openViewPFM(data: any) {
@@ -272,6 +447,25 @@ export class PFMListComponent implements OnInit, OnDestroy {
 
   openEditForwardedPFM(data: any) {
     this.EditForwardedPFMComponent.showPopup(data);
+  }
+
+  cancelPFM(row: any) {
+    this.sweetAlertService.confirm('Are you sure you want to cancel this PFM and release all its LRs?', 'Cancel PFM').then((res) => {
+      if (res.isConfirmed) {
+        const payload = {
+          fM_No: row.fM_No,
+          cancel_By: this.docketService.loginUserList.UserId,
+          cancel_Date: new Date().toISOString()
+        };
+        this.PFMapiService.CancelPFM(payload).subscribe({
+          next: () => {
+            this.sweetAlertService.success('PFM cancelled successfully!');
+            this.fetchData();
+          },
+          error: (err) => this.sweetAlertService.error(err)
+        });
+      }
+    });
   }
 
   isAllSelected(): boolean {
@@ -288,37 +482,6 @@ export class PFMListComponent implements OnInit, OnDestroy {
       }
     });
   }
-
-  // onRowSelect(row: any) {
-  //   // For Forwarded status, allow group selection for same fM_No
-  //   if (row.displayStatus === 'Forwarded' && row.fM_No) {
-  //     // Check/uncheck all rows with the same fM_No
-  //     this.filteredRows.forEach(r => {
-  //       if (r.fM_No === row.fM_No && r.displayStatus === 'Forwarded') {
-  //         r.checked = row.checked;
-  //       }
-  //     });
-  //     return;
-  //   }
-
-  //   // For Generated status, apply mutual exclusion logic
-  //   if (['Generated At', 'Generated'].includes(row.displayStatus) && row.fM_No) {
-  //     // If this row is being checked, uncheck all other rows with different fM_No
-  //     if (row.checked) {
-  //       this.filteredRows.forEach(r => {
-  //         if (r.fM_No !== row.fM_No && r.displayStatus !== 'Acknowledged') {
-  //           r.checked = false;
-  //         }
-  //       });
-  //     }
-  //     // Check/uncheck all rows with the same fM_No
-  //     this.filteredRows.forEach(r => {
-  //       if (r.fM_No === row.fM_No && r.displayStatus !== 'Acknowledged') {
-  //         r.checked = row.checked;
-  //       }
-  //     });
-  //   }
-  // }
 
   onRowSelect(row: any) {
     if (['Generated At', 'Generated', 'Forwarded'].includes(row.displayStatus) && row.fM_No) {
