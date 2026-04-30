@@ -44,40 +44,38 @@ export class ForwardPFMComponent {
     });
   }
 
-  showPopup(data: any[]) {
+  showPopup(data: any) {
     console.log(data);
+    const uniquePFMs = [...new Set(data.map((r:any) => r.fM_No).filter((f:any) => f))];
+    this.displayPFMs = uniquePFMs.join(', ') || '—';
     this.createForm();
-    // if (data?.fM_No) {
-    //   this.PFMapiService.GetCourierDetails(data.fM_No).subscribe({
-    //     next: (response: any) => {
-    //       this.pfmData = response.lrList;
-    //       if (this.pfmData && this.pfmData.length > 0) {
-    //         this.pfmData.forEach((lr: any) => {
-    //           lr.checked = true; // Initialize all as unchecked
-    //         });
-    //       }
-    //       this.updateSummary(response.header);
-    //       const firstItem = response.header;
-    //       if (firstItem?.pfM_Date) {
-    //         this.minDate = new Date(firstItem.pfM_Date);
-    //       }
-    //       this.maxDate = new Date();
-    //     }
-    //   }); 
-    // }
-    this.pfmData = (data || []).map(r => ({ ...r, checked: true }));
-    this.updateSummary();
-    const firstItem = data?.[0];
-    if (firstItem?.fM_Date) {
-      this.minDate = new Date(firstItem.fM_Date);
+    if (this.displayPFMs) {
+      const fmNoList = {fmNoList: this.displayPFMs};
+      this.PFMapiService.GetDocketByFMNo(fmNoList).subscribe({
+        next: (response: any) => {
+          this.pfmData = response;
+          if (this.pfmData && this.pfmData.length > 0) {
+            this.pfmData.forEach((lr: any) => {
+              lr.checked = true; // Initialize all as unchecked
+            });
+            this.updateSummary();
+          }
+        }
+      }); 
     }
-    this.maxDate = new Date();
+    // this.pfmData = (data || []).map(r => ({ ...r, checked: true }));
+    // this.updateSummary();
+    // const firstItem = data?.[0];
+    // if (firstItem?.fM_Date) {
+    //   this.minDate = new Date(firstItem.fM_Date);
+    // }
+    // this.maxDate = new Date();
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
 
   updateSummary() {
-    const selected = this.pfmData.filter(r => r.checked);
-    const uniquePFMs = [...new Set(selected.map(r => r.fM_No).filter(f => f))];
+    const selected = this.pfmData.filter((r:any) => r.checked);
+    const uniquePFMs = [...new Set(selected.map((r:any) => r.fM_No).filter((f:any) => f))];
     this.displayPFMs = uniquePFMs.join(', ') || '—';
     this.totalLRs = selected.length;
     this.uniquePFMCount = uniquePFMs.length;
@@ -105,7 +103,7 @@ export class ForwardPFMComponent {
     const pfmForwardArray = uniquePFMs.map(fM_No => {
       const groupedLrs = selected
         .filter(r => r.fM_No === fM_No)
-        .map(r => r.dockNo)
+        .map(r => r.dockno)
         .join(',');
 
       return {
