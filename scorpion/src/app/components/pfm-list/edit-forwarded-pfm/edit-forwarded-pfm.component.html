@@ -81,7 +81,7 @@
                         <table style="width:100%;border-collapse:collapse;font-size:12px;">
                             <thead class="input-background-color" style="position: sticky; top: 0; z-index: 10;">
                                 <tr style="background:var(--surface2);border-bottom:1px solid var(--border);">
-                                    <th style="padding:7px 12px;text-align:center;color:var(--text-muted);font-weight:700;width:50px;" *ngIf="editForm.get('fM_Status')?.value === 'Generated'">
+                                    <th style="padding:7px 12px;text-align:center;color:var(--text-muted);font-weight:700;width:50px;" >
                                         <input type="checkbox" (change)="toggleAllLRs($event)" 
                                             [checked]="isAllLRsSelected()" >
                                     </th>
@@ -98,7 +98,7 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let lr of pfmData" style="border-bottom: 1px solid var(--border-light);">
-                                    <td style="padding:7px 12px;text-align:center;" *ngIf="editForm.get('fM_Status')?.value === 'Generated'">
+                                    <td style="padding:7px 12px;text-align:center;" >
                                         <input type="checkbox" [(ngModel)]="lr.checked" [ngModelOptions]="{standalone: true}" (change)="onLRSelect(lr)">
                                     </td>
                                     <td style="padding:7px 12px;font-weight:600;">{{ lr.dockNo }}</td>

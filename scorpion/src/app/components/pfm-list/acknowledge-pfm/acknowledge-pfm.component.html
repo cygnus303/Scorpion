@@ -47,40 +47,67 @@
                 placeholder="Optional acknowledgement remarks…"></textarea>
         </div>
 
-        <!-- <div class="mt-4" *ngIf="pfmData && pfmData.length > 0">
-            <div
-                style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);margin-bottom:8px;">
-                Grouped LRs in this PFM:</div>
-            <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden; max-height: 180px; overflow-y: auto;">
-                <table style="width:100%;border-collapse:collapse;font-size:12px;">
-                    <thead class="input-background-color" style="position: sticky; top: 0; z-index: 10;">
-                        <tr style="background:var(--surface2);border-bottom:1px solid var(--border);">
-                            <th style="padding:7px 12px;text-align:center;color:var(--text-muted);font-weight:700;width:50px;">
-                                <input type="checkbox" (change)="toggleAllLRs($event)" [checked]="isAllLRsSelected()">
+        <div class="mt-4" *ngIf="pfmData && pfmData.length > 0">
+            <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden; max-height: 289px; overflow-y: auto;">
+                <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                    <thead style="position: sticky; top: 0; z-index: 1;">
+                        <tr class="input-background-color" style="border-bottom:1px solid var(--border);">
+                            <th style="padding:9px 12px;text-align:center;width:38px;">
+                                <input type="checkbox" (change)="toggleAllLRs($event)" [checked]="isAllLRsSelected()"
+                                    style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer;">
                             </th>
-                            <th style="padding:7px 12px;text-align:left;color:var(--text-muted);font-weight:700;">
+                            <th
+                                style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
+                                LR Date</th>
+                            <th
+                                style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
                                 LR No</th>
-                            <th style="padding:7px 12px;text-align:left;color:var(--text-muted);font-weight:700;">
-                                Date</th>
-                            <th style="padding:7px 12px;text-align:left;color:var(--text-muted);font-weight:700;">
-                                From → To</th>
+                            <th
+                                style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
+                                Origin</th>
+                            <th
+                                style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
+                                Destination</th>
+                            <th
+                                style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
+                                Billing Party</th>
+                            <th
+                                style="padding:9px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);text-align:left;">
+                                PFM Number</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr *ngFor="let lr of pfmData" style="border-bottom: 1px solid var(--border-light);">
-                            <td style="padding:7px 12px;text-align:center;">
-                                <input type="checkbox" [(ngModel)]="lr.checked" [ngModelOptions]="{standalone: true}"
-                                    (change)="onLRSelect(lr)">
+                    <tbody id="fwdLrBody">
+                        <tr *ngFor="let row of pfmData" style="border-bottom: 1px solid var(--border-light);"
+                            [style.background]="row.checked ? 'var(--accent-glow)' : 'transparent'">
+                            <td style="text-align:center;padding:9px 12px;">
+                                <input type="checkbox" [(ngModel)]="row.checked" [ngModelOptions]="{standalone: true}"
+                                  style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer;">
                             </td>
-                            <td style="padding:7px 12px;font-weight:600;">{{ lr.dockNo }}</td>
-                            <td style="padding:7px 12px;color:var(--text-muted);">
-                                {{ lr.dockDt | date:'dd MMM yyyy' }}</td>
-                            <td style="padding:7px 12px;">{{ lr.from_To}}</td>
+                            <td style="padding:9px 12px;">
+                                <span class="lr-date">{{row.dockdt | date:'dd MMM yyyy'}}</span>
+                            </td>
+                            <td style="padding:9px 12px;">
+                                <span class="lr-no">{{row.dockno}}</span>
+                            </td>
+                            <td style="padding:9px 12px;">
+                                <div class="location-cell">
+                                    <div class="loc-dot origin"></div>{{row.orgncd}}
+                                </div>
+                            </td>
+                            <td style="padding:9px 12px;">
+                                <div class="location-cell">
+                                    <div class="loc-dot dest"></div>{{row.destcd}}
+                                </div>
+                            </td>
+                            <td style="padding:9px 12px;font-size:12px;color:var(--text-secondary); width: 200px;">
+                                {{row.partY_CODE}} : {{row.custnm}}</td>
+                            <td style="padding:9px 12px;font-size:12px;color:var(--text-secondary);">
+                                {{row.fM_No}}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </div> -->
+        </div>
     </div>
     <div class="modal-footer d-flex justify-content-end gap-3">
         <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Cancel</button>

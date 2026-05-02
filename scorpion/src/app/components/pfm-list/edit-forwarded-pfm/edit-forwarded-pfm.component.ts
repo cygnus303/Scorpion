@@ -49,7 +49,7 @@ export class EditForwardedPFMComponent {
           this.pfmData = response.lrList;
           if (this.pfmData && this.pfmData.length > 0) {
             this.pfmData.forEach((lr: any) => {
-              lr.checked = false; // Initialize all as unchecked
+              lr.checked = true; // Initialize all as unchecked
             });
           }
         }
@@ -101,12 +101,30 @@ export class EditForwardedPFMComponent {
       this.editForm.markAllAsTouched();
       return;
     }
+    
+    // Get only checked LRs
+    const checkedLRs = this.pfmData.filter((lr:any) => lr.checked);
+    
+    if (checkedLRs.length === 0) {
+      this.sweetAlertService.info('Please select at least one LR to update');
+      return;
+    }
+    
     const { lR_Number, route,fM_Status, ...formVal } = this.editForm.value;
+    
+    // Create payload with comma-separated dockNo
+    const dockNos = checkedLRs.map((lr: any) => lr.dockNo).join(',');
+    
     const payload = {
-      ...formVal,
-      courier_Way_Bill_Date: new Date(formVal.courier_Way_Bill_Date).toISOString()
+      items: [{
+        fM_No: formVal.fM_No,
+        dockNo: dockNos,
+        courier_Code: formVal.courier_Code,
+        courier_Way_Bill_No: formVal.courier_Way_Bill_No,
+        courier_Way_Bill_Date: new Date(formVal.courier_Way_Bill_Date).toISOString()
+      }]
     };
-
+    console.log(payload);
     this.pfmApiService.PFMCourierUpdate(payload).subscribe({
       next: (res: any) => {
         this.sweetAlertService.success('Courier updated Successfully!!')
