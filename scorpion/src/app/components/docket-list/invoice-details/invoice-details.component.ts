@@ -420,49 +420,70 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                 })
                 this.calculateSummary(index)
                 this.updateAllEwayBillValidations()
-               if(!isInvoice){
-           this.docketService.getpincodeData(response.pincode.toString())
-              this.docketService.consignorForm.patchValue({
-                consignorName: response.csgncd,
-                consigneeName: response.csgecd,
-                consigneeMasterName: response.csgenm,
-                consignorMasterName: response.csgnm,
-                consignorAddress: response.csgnAdd,
-                consigneeAddress: response.csgeAdd,
-                consigneePincode: response.toPincode.toString(),
-                consignorCity: response.fromCity,
-                consigneeCity:response.toCity,
-                consignorGSTNo: response.consignor,
-                consigneeGSTNo: response.consignee,
-                consignorPincode:response.pincode.toString(),
-              });
-               // uat live
-               this.docketService.ewayBillDataDisplayed = true;
-            this.docketService.getpincodeData(response.toPincode.toString())
-            this.docketService.getTransportModeData(response.transMode.toString())
-            this.docketService.basicDetailForm.patchValue({
-                billingName: response.partyName,
-                // mode: response.transMode.toString(),
-                pincode: response.toPincode.toString(),
-                // fromCity: response.fromCity,
-                toCity: null,
-                destination: response.destcd,
-              });
-              this.docketService.GetPincodeOrigin('Origin');
-              this.docketService.GetGSTFromTrnMode();
-            }
-             // uat live
-            else{
-              if(index === 0) {
-                this.docketService.ewayBillDataDisplayed = true;
-                this.docketService.getpincodeData(response.pincode.toString());
-                this.docketService.getpincodeData(response.toPincode.toString());
-                this.docketService.consignorForm.patchValue({
-                  consigneePincode: response.toPincode.toString(),
-                  consignorPincode:response.pincode.toString(),
-                });
-              }
-            }
+                if(!isInvoice){
+                    this.docketService.getpincodeData(response.pincode.toString())
+                    this.docketService.consignorForm.patchValue({
+                      consignorName: response.csgncd,
+                      consigneeName: response.csgecd,
+                      consigneeMasterName: response.csgenm,
+                      consignorMasterName: response.csgnm,
+                      consignorAddress: response.csgnAdd,
+                      consigneeAddress: response.csgeAdd,
+                      consigneePincode: response.toPincode.toString(),
+                      consignorCity: response.fromCity,
+                      consigneeCity:response.toCity,
+                      consignorGSTNo: response.consignor,
+                      consigneeGSTNo: response.consignee,
+                      consignorPincode:response.pincode.toString(),
+                    });
+                    // uat live
+                    this.docketService.ewayBillDataDisplayed = true;
+                    this.docketService.getpincodeData(response.toPincode.toString())
+                    this.docketService.getTransportModeData(response.transMode.toString())
+                    this.docketService.basicDetailForm.patchValue({
+                      billingName: response.partyName,
+                      // mode: response.transMode.toString(),
+                      pincode: response.toPincode.toString(),
+                      // fromCity: response.fromCity,
+                      toCity: null,
+                      destination: response.destcd,
+                    });
+                    this.docketService.GetPincodeOrigin('Origin');
+                    this.docketService.GetGSTFromTrnMode();
+                }
+                else {
+                  if (index === 0) {  // uat live
+                    this.docketService.getpincodeData(response.pincode.toString())
+                    this.docketService.consignorForm.patchValue({
+                      consignorName: response.csgncd,
+                      consigneeName: response.csgecd,
+                      consigneeMasterName: response.csgenm,
+                      consignorMasterName: response.csgnm,
+                      consignorAddress: response.csgnAdd,
+                      consigneeAddress: response.csgeAdd,
+                      consigneePincode: response.toPincode.toString(),
+                      consignorCity: response.fromCity,
+                      consigneeCity: response.toCity,
+                      consignorGSTNo: response.consignor,
+                      consigneeGSTNo: response.consignee,
+                      consignorPincode: response.pincode.toString(),
+                    });
+                    this.docketService.ewayBillDataDisplayed = true;
+                    this.docketService.getpincodeData(response.toPincode.toString())
+                    this.docketService.getTransportModeData(response.transMode.toString())
+                    this.docketService.basicDetailForm.patchValue({
+                      billingName: response.partyName,
+                      // mode: response.transMode.toString(),
+                      pincode: response.toPincode.toString(),
+                      // fromCity: response.fromCity,
+                      toCity: null,
+                      destination: response.destcd,
+                      ewayBillNo: response.ewaybillNo,  // uat live
+                    });
+                    this.docketService.GetPincodeOrigin('Origin');
+                    this.docketService.GetGSTFromTrnMode();
+                  }
+                }
                 row.updateValueAndValidity();
               } else {
                  if(!isInvoice){
