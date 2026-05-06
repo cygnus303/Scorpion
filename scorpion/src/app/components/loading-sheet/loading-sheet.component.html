@@ -167,10 +167,13 @@
         <div class="col-4">
           <div class="row align-items-center">
             <label class="col-sm-5 col-form-label text-end">LS Type</label>
-            <div class="col-sm-7">
-              <ng-select class="noFoundTextColor clear-icon" placeholder="Select LS Type"
+            <div class="col-sm-7"> <ng-select class="noFoundTextColor clear-icon required2" placeholder="Select LS Type"
                 formControlName="lsType" notFoundText="No matches found" bindLabel="text" bindValue="value" appFocusNext
-                [items]="LsTypeList"></ng-select>
+                [items]="LsTypeList"
+                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('lsType')?.invalid  && loadingSheetService.LSForm.get('lsType')?.touched }"></ng-select>
+              <div class="text-danger text-start"
+                *ngIf="loadingSheetService.LSForm.get('lsType')?.invalid && loadingSheetService.LSForm.get('lsType')?.touched"> This
+                field is required. </div>
             </div>
           </div>
         </div>

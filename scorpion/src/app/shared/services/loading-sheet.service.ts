@@ -38,7 +38,7 @@ export class LoadingSheetService {
       vehno:new FormControl(null),
       preparedBy:new FormControl(''),
       UserName:new FormControl(this.docketService.baseUsername),
-      lsType:new FormControl(null),
+      lsType:new FormControl(null,Type ? Validators.required : null),
       reportrange:new FormControl([fromDate, today]),
       transportMode:new FormControl(null),
       destinationList:new FormControl(''),
