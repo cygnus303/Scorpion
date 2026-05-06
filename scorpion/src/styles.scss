@@ -1394,6 +1394,12 @@ input:checked+.toggle-slider:before {
     color: #1a7f37;
   }
 
+  .s-cancelled{
+    background: #ffeef0;
+    border: 1px solid #f87171;
+    color: #ef4444;
+  }
+
   /* Days */
   .days-text {
     color: #cf222e;

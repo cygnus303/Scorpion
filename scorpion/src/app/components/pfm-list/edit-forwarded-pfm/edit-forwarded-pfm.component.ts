@@ -132,7 +132,7 @@ export class EditForwardedPFMComponent {
         this.modalRef.hide();
       },
       error: (err: any) => {
-        this.sweetAlertService.error(err);
+        this.sweetAlertService.error(err.error.message);
       }
     });
   }
