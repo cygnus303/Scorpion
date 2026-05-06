@@ -436,6 +436,8 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                 consigneeGSTNo: response.consignee,
                 consignorPincode:response.pincode.toString(),
               });
+               // uat live
+               this.docketService.ewayBillDataDisplayed = true;
             this.docketService.getpincodeData(response.toPincode.toString())
             this.docketService.getTransportModeData(response.transMode.toString())
             this.docketService.basicDetailForm.patchValue({
@@ -448,8 +450,9 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
               });
               this.docketService.GetPincodeOrigin('Origin');
               this.docketService.GetGSTFromTrnMode();
-              this.docketService.ewayBillDataDisplayed = false;
-            }else{
+            }
+             // uat live
+            else{
               if(index === 0) {
                 this.docketService.ewayBillDataDisplayed = true;
                 this.docketService.getpincodeData(response.pincode.toString());
