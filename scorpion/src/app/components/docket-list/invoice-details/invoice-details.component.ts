@@ -348,7 +348,8 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
       invoicedate: null,
       ewayBillNo: null,
       invoiceNo: null,
-      declaredvalue: null
+      declaredvalue: null,
+      transportation_distance:null
     });
     this.updateAllEwayBillValidations();
     return;
@@ -382,7 +383,8 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                       invoicedate: null,
                       ewayBillNo: null,
                       invoiceNo: null,
-                      declaredvalue: null
+                      declaredvalue: null,
+                      transportation_distance:null
                     });
                     this.updateAllEwayBillValidations();
                     return;
@@ -401,7 +403,8 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                     invoicedate: null,
                     ewayBillNo: null,
                     invoiceNo: null,
-                    declaredvalue: null
+                    declaredvalue: null,
+                    transportation_distance:null
                   });
                   this.updateAllEwayBillValidations();
                   return;
@@ -412,7 +415,8 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                   // invoicedate: invoiceDate,
                   ewayBillNo: search,
                   invoiceNo: response.invno,
-                  declaredvalue: response.decval
+                  declaredvalue: response.decval,
+                  transportation_distance: response.transportation_distance
                 })
                 this.calculateSummary(index)
                 this.updateAllEwayBillValidations()
@@ -444,6 +448,17 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
               });
               this.docketService.GetPincodeOrigin('Origin');
               this.docketService.GetGSTFromTrnMode();
+              this.docketService.ewayBillDataDisplayed = false;
+            }else{
+              if(index === 0) {
+                this.docketService.ewayBillDataDisplayed = true;
+                this.docketService.getpincodeData(response.pincode.toString());
+                this.docketService.getpincodeData(response.toPincode.toString());
+                this.docketService.consignorForm.patchValue({
+                  consigneePincode: response.toPincode.toString(),
+                  consignorPincode:response.pincode.toString(),
+                });
+              }
             }
                 row.updateValueAndValidity();
               } else {
@@ -456,7 +471,8 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                   invoicedate: null,
                   ewayBillNo: null,
                   invoiceNo:null,
-                  declaredvalue:null
+                  declaredvalue:null,
+                  transportation_distance:null
                 });
                 this.updateAllEwayBillValidations();
               }
@@ -476,7 +492,8 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
             invoicedate: null,
             ewayBillNo: null,
             invoiceNo:null,
-            declaredvalue:null
+            declaredvalue:null,
+            transportation_distance:null
           });
           this.updateAllEwayBillValidations();
         }

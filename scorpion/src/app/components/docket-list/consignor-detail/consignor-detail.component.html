@@ -117,7 +117,7 @@
                 <div class="col-md-7">
                   <ng-select class="noFoundTextColor required2" [items]="docketService.pincodeList" bindLabel="pinArea"
                     bindValue="value" placeholder="Pincode" formControlName="consignorPincode" required appFocusNext
-                    (open)="docketService.resetPincodeDropdown()"
+                    (open)="docketService.resetPincodeDropdown()" [class.disabled-input]="this.docketService.ewayBillDataDisplayed ? true : false" 
                     [ngClass]="{ 'border-danger': docketService.consignorForm.get('consignorPincode')?.invalid  && docketService.consignorForm.get('consignorPincode')?.touched}"
                     [notFoundText]="docketService.notPincodeValue" (search)="docketService.getpincodeData($event)"
                     (change)="docketService.GetPincodeOrigin('Origin')"></ng-select>
@@ -317,7 +317,7 @@
                 <label class="control-label col-md-5">Pincode </label>
                 <div class="col-md-7">
                   <ng-select class="noFoundTextColor required2" appFocusNexts [items]="docketService.pincodeList" bindLabel="pinArea" required (open)="docketService.resetPincodeDropdown()"
-                bindValue="value" placeholder="Pincode" formControlName="consigneePincode"  [ngClass]="{ 'border-danger': docketService.consignorForm.get('consigneePincode')?.invalid  && docketService.consignorForm.get('consigneePincode')?.touched}"
+                bindValue="value" placeholder="Pincode" formControlName="consigneePincode" [class.disabled-input]="this.docketService.ewayBillDataDisplayed ? true : false"  [ngClass]="{ 'border-danger': docketService.consignorForm.get('consigneePincode')?.invalid  && docketService.consignorForm.get('consigneePincode')?.touched}"
                 [notFoundText]="docketService.notPincodeValue" (search)="docketService.getpincodeData($event)"></ng-select>
               </div>
             </div>

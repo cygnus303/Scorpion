@@ -496,7 +496,8 @@ validateAndFetchEwayBillData(item: any, index: number) {
           pieceWeight: 0,
           pkgsno: 0,
           qty: 0,
-          transportrate:0
+          transportrate:0,
+          transportation_distance: row.transportation_distance || 0
         };
 
         // ✅ conditionally add eWayBillExpiredDate only if eWayBillNo has value

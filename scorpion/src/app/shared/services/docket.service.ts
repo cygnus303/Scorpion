@@ -77,7 +77,7 @@ export class DocketService {
   public isExemptServiceReadonly:boolean=false;
   public isContarctService:boolean = false;
   public isSezCustomer: boolean = false;
-
+  public ewayBillDataDisplayed: boolean = false;
 
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
@@ -340,6 +340,7 @@ export class DocketService {
       ewayinvoiceDate: new FormControl(''),
       invoiceNo: new FormControl('', Validators.required),
       declaredvalue: new FormControl(0, Validators.required),
+      transportation_distance: new FormControl(0),
     });
   }
 
