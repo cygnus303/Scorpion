@@ -312,6 +312,7 @@ validateAndFetchEwayBillData(item: any, index: number) {
     ewayinvoiceDate: item.eWayBillInvoiceDate ? new Date(item.eWayBillInvoiceDate) : '01 JAN 0001',
     invoiceNo: item.invno,
     declaredvalue: item.declval,
+    transportation_distance: item.transportation_distance
   });
   
   // Set initial E-way bill number for tracking
@@ -344,8 +345,10 @@ validateAndFetchEwayBillData(item: any, index: number) {
                     ewayBillExpiry: apiExpiryDate,
                     invoiceNo: apiInvoiceNo,
                     declaredvalue: apiDeclaredValue,
+                    // transportation_distance: response.transportation_distance
                   });
-                  
+                  // uat live
+                     this.docketService.ewayBillDataDisplayed = true;
                   // Update summary calculations
                   this.invoiceDetailsComponent?.calculateSummary(index);
                   // this.docketService.onFormFieldChange();
