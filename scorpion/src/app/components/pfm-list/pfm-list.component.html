@@ -93,6 +93,14 @@
                 <div class="s-val">{{ summaryData.acknowledged }}</div>
             </div>
         </div>
+        <div class="summary-card c-red cursor-pointer"  *ngIf="!isHQTR"
+         [class.active-card]="config.statusFilter === 'Cancelled'"
+            (click)="filterByStatus('Cancelled')">
+            <div>
+                <div class="s-label">Cancelled</div>
+                <div class="s-val">{{ summaryData.cancelled }}</div>
+            </div>
+        </div>
     </div>
 
     <!-- Table -->
