@@ -8,6 +8,7 @@ import saveAs from 'file-saver';
 import lottie from 'lottie-web';
 import { defineElement } from 'lord-icon-element';
 import { CommonService } from 'app/shared/services/common.service';
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-delivery-agent-list',
@@ -16,25 +17,26 @@ import { CommonService } from 'app/shared/services/common.service';
   styleUrl: './delivery-agent-list.component.scss'
 })
 export class DeliveryAgentListComponent {
-  public totalItems!:number;
-  public pageNumber:number = 1;
-  public pageSize:number = 15;
-  public deliveryAgentsList:DeliveryAgentsListRepsonse[]=[]
-  public deliveryAgentByCodeList!:DeliveryAgentByCodeResponse;
-  public loading:boolean=false;
+  public totalItems!: number;
+  public pageNumber: number = 1;
+  public pageSize: number = 15;
+  public deliveryAgentsList: DeliveryAgentsListRepsonse[] = []
+  public deliveryAgentByCodeList!: DeliveryAgentByCodeResponse;
+  public loading: boolean = false;
+  public selectedDeliveryAgent: string = '';
   public filters: { [key: string]: string } = {}; // Dynamic filter object
   @ViewChild('deliveryAgentPopup') deliveryAgentPopup!: DeliveryAgentModalComponent;
   @ViewChild('deliveryAgentViewPopup') deliveryAgentViewPopup!: DeliveryAgentViewComponent;
 
   constructor(
-    private deliveryAgentService:DeliveryAgentService,
-    private commonService:CommonService
-  ){
+    private deliveryAgentService: DeliveryAgentService,
+    private commonService: CommonService
+  ) {
     defineElement(lottie.loadAnimation);
   }
 
-  ngOnInit(){
-     this.commonService.loading.subscribe((state: boolean) => {
+  ngOnInit() {
+    this.commonService.loading.subscribe((state: boolean) => {
       this.loading = state;
     });
     this.getDeliveryAgentList();
@@ -44,16 +46,16 @@ export class DeliveryAgentListComponent {
     this.filters = Object.fromEntries(
       Object.entries(this.filters).filter(([key, value]) => value !== null)
     );
-    const data ={
+    const data = {
       ...this.filters,
-      PageNumber:pageNumber,
-      PageSize:pageSize
-    } 
+      PageNumber: pageNumber,
+      PageSize: pageSize
+    }
     this.commonService.updateLoader(true);
     this.deliveryAgentService.getDeliveryAgent(data).subscribe({next: (response) => {
         if (response) {
           this.deliveryAgentsList = response.data;
-          this.totalItems=response.totalRecords;
+          this.totalItems = response.totalRecords;
           this.commonService.updateLoader(false);
         }
       },
@@ -75,10 +77,12 @@ export class DeliveryAgentListComponent {
   }
 
   deliveryAgentExport() {
-    this.deliveryAgentService.deliveryAgentExport().subscribe({next: (blob: Blob) => {
-     saveAs(blob, 'DA_Master.xlsx'); 
-    },
-    error: (err) => console.error('Excel export failed', err)});
+    this.deliveryAgentService.deliveryAgentExport().subscribe({
+      next: (blob: Blob) => {
+        saveAs(blob, 'DA_Master.xlsx');
+      },
+      error: (err) => console.error('Excel export failed', err)
+    });
   }
 
   openDeliveryAgentsPopup(code?: any) {
@@ -96,6 +100,24 @@ export class DeliveryAgentListComponent {
       this.getDeliveryAgentByCodeList(code, (item) => {
         this.deliveryAgentViewPopup.showPopup(item)
       });
+    }
+  }
+
+  closePopup() {
+    const modalElement = document.getElementById('showPasswordModal');
+    if (modalElement) {
+      const modal = new Modal(modalElement);
+      modal.hide();
+    }
+  }
+
+  openResetPasswordPopup(event: Event, code?: any) {
+    event.preventDefault(); // Prevent default anchor behavior
+    const modalElement = document.getElementById('showPasswordModal');
+    if (modalElement) {
+      const modal = new Modal(modalElement);
+      this.selectedDeliveryAgent = code;
+      modal.show();
     }
   }
 }
