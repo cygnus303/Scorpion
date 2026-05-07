@@ -259,13 +259,14 @@ export class PFMListComponent implements OnInit, OnDestroy {
         pending: response.summary.pending_for_Acknowledged || 0,
         generated: 0,
         forwarded: 0,
-        acknowledged: response.summary.acknowledged || 0
+        acknowledged: response.summary.acknowledged || 0,
+        cancelled: 0
       };
 
       if (this.config.statusFilter === 'All') {
         this.cachedSummary = summary;
       }
-      this.summaryData = this.cachedSummary || summary;
+      this.summaryData = summary;
     }
   }
 
