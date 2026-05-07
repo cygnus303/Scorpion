@@ -60,7 +60,7 @@
         </div>
         <div class="col-md-4 form-column ">
           <div class="form-group mb-1"><label class="col-md-5">Pincode</label>
-            <div class="col-md-7" ><ng-select appFocusNext
+            <div class="col-md-7" ><ng-select appFocusNext [class.disabled-input]="this.docketService.ewayBillDataDisplayed"
                 class="noFoundTextColor required2" [items]="docketService.pincodeList" 
                 bindLabel="pinArea" bindValue="value" placeholder="Pincode" formControlName="pincode" required
                 [notFoundText]="docketService.notPincodeValue" (search)="docketService.getpincodeData($event)"
@@ -216,7 +216,7 @@
         <div class="col-md-4 form-column ">
           <div class="form-group mb-1"><label class="col-md-5">Destination</label>
             <div class="col-md-7">
-              <ng-select class="noFoundTextColor required2" appFocusNext
+              <ng-select class="noFoundTextColor required2" appFocusNext [class.disabled-input]="true"
                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('destination')?.invalid  && docketService.basicDetailForm.get('destination')?.touched}"
                 required [searchable]="true" (search)="getDestinationsList($event)" [readonly]="this.docketService.loginUserList.Type ? this.docketService.loginUserList.Type === '2' ? true : false:false"
                 (change)="onChangedestinationsList($event);this.docketService.onFormFieldChange();" placeholder="Destination"
