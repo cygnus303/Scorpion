@@ -107,7 +107,10 @@ export class BasicDetailsComponent {
   }
 
     callEwayBillFromParent(event: any) {
-      this.docketService.ewayBill$.next(event);
+      const data =event.target.value;
+        if (data.length.toString() === "12") {
+          this.docketService.ewayBill$.next(event);
+        }
     }
 
     onApplyDeliveryChangeValidators(){

@@ -437,7 +437,7 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                       consignorPincode:response.pincode.toString(),
                     });
                     // uat live
-                    this.docketService.ewayBillDataDisplayed = true;
+                    this.docketService.ewayBillDataDisplayed = false;
                     this.docketService.getpincodeData(response.toPincode.toString())
                     this.docketService.getTransportModeData(response.transMode.toString())
                     this.docketService.basicDetailForm.patchValue({
