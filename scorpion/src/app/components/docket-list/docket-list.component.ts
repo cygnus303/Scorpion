@@ -112,7 +112,7 @@ getCompletionData() {
               remarks: basicDetail.apmtRemark,
               fromTime: basicDetail.fromTime,
               toTime: basicDetail.toTime,
-              ewayBillNo: basicDetail.eWayBillNo,
+              ewayBillNo: basicDetail.eWayBillNo ? basicDetail.eWayBillNo: this.docketService.completiondata.listInVoice[0].eWayBillNo,
               referenceDocket: basicDetail.referenceDocketNo,
               isDocketPayment: basicDetail.isDKTPayment,
               isAppointmentDelivery: basicDetail.isAppointmentDelivery,
