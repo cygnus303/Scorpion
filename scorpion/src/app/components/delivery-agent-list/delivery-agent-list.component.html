@@ -38,9 +38,9 @@
                     <td><input type="text" class="form-control" [(ngModel)]="filters['Location']"
                             (input)="getDeliveryAgentList()"></td>
                     <td><input type="text" class="form-control" [(ngModel)]="filters['VehicleNo']"
-                                    (input)="getDeliveryAgentList()"></td>
+                            (input)="getDeliveryAgentList()"></td>
                     <td><input type="text" class="form-control" [(ngModel)]="filters['LicenseNo']"
-                                    (input)="getDeliveryAgentList()"></td>
+                            (input)="getDeliveryAgentList()"></td>
                     <td><input type="text" class="form-control" [(ngModel)]="filters['BAName']"
                             (input)="getDeliveryAgentList()"></td>
                     <td></td>
@@ -65,7 +65,7 @@
                         </ng-template>
                     </td>
                     <td class="text-center">
-                       <span
+                        <span
                             class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer me-2"
                             (click)="opendeliveryAgentViewPopup(data.dA_Code)">
                             <i class="fas fa-eye me-2 text-Secondary"></i> View
@@ -80,8 +80,11 @@
                             (click)="openResetPasswordPopup($event,data.dA_Code)">
                             <i class="fas fa-lock me-2 text-Secondary"></i> Reset Password
                         </span>
-                        <i class="fas fa-eye fa-sm me-2 cursor-pointer"
-                            (click)="opendeliveryAgentViewPopup(data.dA_Code)"></i>
+                        <span
+                            *ngIf="this.docketService.loginUserList.BaseUserName === 'CYGNUSTEAM'||this.docketService.loginUserList.BaseUserName === '2807'||
+                                this.docketService.loginUserList.BaseUserName === '4151' || this.docketService.loginUserList.BaseUserName === '3673' || this.docketService.loginUserList.BaseUserName === '4373' ">
+                            <i class="fas fa-eye fa-sm me-2 cursor-pointer" (click)="onshowPassword(data.dA_Code)"></i>
+                        </span>
                     </td>
                 </tr>
             </tbody>
@@ -109,40 +112,35 @@
 <delivery-agent-view #deliveryAgentViewPopup></delivery-agent-view>
 
 <!-- Reset Password Modal -->
-<div class="modal fade"
-     id="showPasswordModal"
-     tabindex="-1"
-     aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
+<div class="modal fade" id="showPasswordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 
             <div class="modal-header background-color text-white d-flex justify-content-between">
                 <h5 class="modal-title">
-                    <i class="fas fa-eye fa-sm text-white me-2"></i>
                     Reset Password
                 </h5>
-                <button type="button"
-                        class="btn text-white"
-                        (click)="closePopup()">
+                <button type="button" class="btn text-white" (click)="closePopup()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="modal-body">
                 <div>
-                    <h5> 
-                        <span>Password for Delivery Agent </span><b>{{selectedDeliveryAgent}}</b><span> will be the </span><b>123456</b><b id="type" hidden></b>. <br /> <br /> <span>Are you sure you want
+                    <h5>
+                        <span>Password for Delivery Agent </span><b>{{selectedDeliveryAgent}}</b><span> will be the
+                        </span><b>{{generatedPassword}}</b><b id="type" hidden></b>. <br /> <br /> <span>Are you sure
+                            you want
                             you want to reset the password for the above user?</span> <br /> <br /> <span>If yes then
-                            please press <b>"Confirm"</b> other wise kindly press "Close".</span> 
-                        </h5>
+                            please press <b>"Confirm"</b> other wise kindly press "Close".</span>
+                    </h5>
                 </div>
             </div>
-            <div class="modal-footer"> 
-                <button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true" (click)="closePopup()">
                     <i class="fas fa-times"></i> Close
-                </button> 
-                <button class="btn btn-success" type="submit">
+                </button>
+                <button class="btn btn-success" type="submit" (click)="onSubmitPassword()">
                     <i class="fas fa-check"></i> Confirm
                 </button>
             </div>

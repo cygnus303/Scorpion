@@ -9,6 +9,8 @@ import lottie from 'lottie-web';
 import { defineElement } from 'lord-icon-element';
 import { CommonService } from 'app/shared/services/common.service';
 import { Modal } from 'bootstrap';
+import { DocketService } from 'app/shared/services/docket.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 
 @Component({
   selector: 'app-delivery-agent-list',
@@ -24,18 +26,31 @@ export class DeliveryAgentListComponent {
   public deliveryAgentByCodeList!: DeliveryAgentByCodeResponse;
   public loading: boolean = false;
   public selectedDeliveryAgent: string = '';
+  public generatedPassword: string = '';
+  modalInstance!: Modal;
   public filters: { [key: string]: string } = {}; // Dynamic filter object
   @ViewChild('deliveryAgentPopup') deliveryAgentPopup!: DeliveryAgentModalComponent;
   @ViewChild('deliveryAgentViewPopup') deliveryAgentViewPopup!: DeliveryAgentViewComponent;
 
   constructor(
     private deliveryAgentService: DeliveryAgentService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    public docketService: DocketService,
+    public sweetAlertService: SweetAlertService
   ) {
     defineElement(lottie.loadAnimation);
   }
 
   ngOnInit() {
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      // this.docketService.Location = 'KOL';
+      this.docketService.isComplition = false;
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
     this.commonService.loading.subscribe((state: boolean) => {
       this.loading = state;
     });
@@ -49,10 +64,12 @@ export class DeliveryAgentListComponent {
     const data = {
       ...this.filters,
       PageNumber: pageNumber,
-      PageSize: pageSize
+      PageSize: pageSize,
+      LocCode: this.docketService.loginUserList.LocationCode
     }
     this.commonService.updateLoader(true);
-    this.deliveryAgentService.getDeliveryAgent(data).subscribe({next: (response) => {
+    this.deliveryAgentService.getDeliveryAgent(data).subscribe({
+      next: (response) => {
         if (response) {
           this.deliveryAgentsList = response.data;
           this.totalItems = response.totalRecords;
@@ -64,8 +81,9 @@ export class DeliveryAgentListComponent {
 
   getDeliveryAgentByCodeList(code: string, callback?: (data: any) => void) {
     this.deliveryAgentService.getDeliveryAgentByCodeList(code).pipe(finalize(() => {
-      if (callback) {callback(this.deliveryAgentByCodeList);}
-      })).subscribe({next: (response) => {
+      if (callback) { callback(this.deliveryAgentByCodeList); }
+    })).subscribe({
+      next: (response) => {
         if (response) {
           this.deliveryAgentByCodeList = response.data;
         }
@@ -104,20 +122,61 @@ export class DeliveryAgentListComponent {
   }
 
   closePopup() {
-    const modalElement = document.getElementById('showPasswordModal');
-    if (modalElement) {
-      const modal = new Modal(modalElement);
-      modal.hide();
+    if (this.modalInstance) {
+      this.modalInstance.hide();
     }
+  }
+
+  generateRandomPassword(length: number = 6): string {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let password = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * chars.length);
+      password += chars.charAt(randomIndex);
+    }
+    return password;
   }
 
   openResetPasswordPopup(event: Event, code?: any) {
     event.preventDefault(); // Prevent default anchor behavior
+    this.selectedDeliveryAgent = code || '';
+    this.generatedPassword = this.generateRandomPassword(6);
+
     const modalElement = document.getElementById('showPasswordModal');
     if (modalElement) {
-      const modal = new Modal(modalElement);
-      this.selectedDeliveryAgent = code;
-      modal.show();
+      this.modalInstance = new Modal(modalElement); // 👈 store instance
+      this.modalInstance.show();
     }
+  }
+
+  onSubmitPassword() {
+    const payload = {
+      id: this.selectedDeliveryAgent,
+      newPassword: this.generatedPassword,
+      type: 1
+    }
+    this.deliveryAgentService.onResetPassword(payload).subscribe({
+      next: (response: any) => {
+        if (response === true) {
+          this.sweetAlertService.success('Password reset successfully!!');
+          this.closePopup();
+        }
+      },
+    })
+
+  }
+
+  onshowPassword(code: any) {
+    this.deliveryAgentService.showDAPassword(code).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.sweetAlertService.info(` Password for <b>${code}</b> is:
+  <br><br>
+  <span style="font-size:900px; font-weight:bold; color:green;">
+    ${response}
+  </span>`);
+        }
+      },
+    })
   }
 }

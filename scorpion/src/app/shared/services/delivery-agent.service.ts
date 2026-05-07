@@ -12,38 +12,46 @@ export class DeliveryAgentService {
 
 
   addDeliveryAgent(paylaod: any): Observable<any> {
-    return this.apiHandlerService.Post(`Master/AddOrUpdate`,paylaod);
+    return this.apiHandlerService.Post(`Master/AddOrUpdate`, paylaod);
   }
 
-  getDeliveryAgent(data:any):Observable<any> {
-    return this.apiHandlerService.Get(`Master/GetDAList`,data);
+  getDeliveryAgent(data: any): Observable<any> {
+    return this.apiHandlerService.Get(`Master/GetDAList`, data);
   }
 
-   getDeliveryAgentByCodeList(code:string):Observable<any> {
+  getDeliveryAgentByCodeList(code: string): Observable<any> {
     return this.apiHandlerService.Get(`Master/GetDAByCode?daCode=${code}`);
   }
 
-   deliveryAgentExport():Observable<any> {
+  deliveryAgentExport(): Observable<any> {
     return this.apiHandlerService.DownloadFile(`Master/DA-export-excel`);
   }
 
-  getVendors():Observable<any> {
+  getVendors(): Observable<any> {
     return this.apiHandlerService.Get(`External/GetVendors`);
   }
 
-  getLocation():Observable<any> {
+  getLocation(): Observable<any> {
     return this.apiHandlerService.Get(`External/GetLocations`);
   }
 
-  getLicenceDetail(params:any){
+  getLicenceDetail(params: any) {
     return this.apiHandlerService.Get(`Master/GetDriverDetails?dlnumber=${params.dlnumber}&dob=${params.dob}&baseUserName=${params.baseUserName}`);
   }
 
-  getVehicleDetail(params:any){
+  getVehicleDetail(params: any) {
     return this.apiHandlerService.Get(`Master/GetVehicleDetails?vehNo=${params.vehNo}&baseUserName=${params.baseUserName}`);
   }
 
-  validationData(payload:any){
-    return this.apiHandlerService.Post(`Master/validate`,payload);
+  validationData(payload: any) {
+    return this.apiHandlerService.Post(`Master/validate`, payload);
+  }
+
+  onResetPassword(payload: any) {
+    return this.apiHandlerService.Post(`User/PasswordReset`, payload);
+  }
+
+  showDAPassword(code: string) {
+    return this.apiHandlerService.Get(`User/GetPasswordFromUserID?id=${code}`);
   }
 }
