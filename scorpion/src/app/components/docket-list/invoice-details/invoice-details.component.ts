@@ -452,8 +452,8 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                     this.docketService.GetGSTFromTrnMode();
                 }
                 else {
-                  if (index === 0) {  // uat live
-                    this.docketService.getpincodeData(response.pincode.toString())
+                  if (index === 0) {  
+                    this.docketService.getpincodeData(response.pincode.toString());
                     this.docketService.consignorForm.patchValue({
                       consignorName: response.csgncd,
                       consigneeName: response.csgecd,
@@ -528,6 +528,29 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
     });
   }
   }else{
+    if (index === 0) {
+      this.docketService.basicDetailForm.patchValue({
+        pincode: null,
+        toCity: null,
+        destination: null,
+        ewayBillNo: null
+      })
+      this.docketService.consignorForm.patchValue({
+        consignorName: null,
+        consigneeName: null,
+        consigneeMasterName: null,
+        consignorMasterName: null,
+        consignorAddress: null,
+        consigneeAddress: null,
+        consigneePincode: null,
+        consignorCity: null,
+        consigneeCity: null,
+        consignorGSTNo: null,
+        consigneeGSTNo: null,
+        consignorPincode: null
+      });
+      this.docketService.ewayBillDataDisplayed = false;
+    }
     const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
     const row = invoiceRows.at(index) as FormGroup;
      if (search.length > 0 && search.length < 12) {
