@@ -23,7 +23,7 @@
             <div class="col-md-7">
               <input type="text" class="form-control " placeholder="EwayBill Number"  
               [class.disabled-input]="this.docketService.ewayBillDataDisplayed || this.docketService.isComplition"  formControlName="ewayBillNo" 
-                maxlength="12" (blur)="callEwayBillFromParent($event)" appFocusNext/>
+                maxlength="12" (input)="callEwayBillFromParent($event)" appFocusNext/>
             </div>
           </div>
         </div>
