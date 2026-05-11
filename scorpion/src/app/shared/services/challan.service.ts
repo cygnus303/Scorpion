@@ -474,6 +474,7 @@ patchAvailableDockets(data: any[]) {
       ORGNCD: new FormControl(item.orgncd || ''),
       DEST_CD: new FormControl(item.desT_CD || ''),
       Curr_Loc: new FormControl(item.curr_Loc || ''),
+      entryBy:new FormControl(item.entryBy ||''),
       PendPkgQty: new FormControl(item.pendPkgQty ?? 0),
       ArrPkgQty: new FormControl(item.arrPkgQty ?? 0),
       PKGSNO: new FormControl(item.pkgsno ?? 0),
