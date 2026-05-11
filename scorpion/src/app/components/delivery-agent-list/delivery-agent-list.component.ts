@@ -173,7 +173,7 @@ export class DeliveryAgentListComponent {
           this.sweetAlertService.info(` Password for <b>${code}</b> is:
   <br><br>
   <span style="font-size:900px; font-weight:bold; color:green;">
-    ${response}
+    ${response.password}
   </span>`);
         }
       },
