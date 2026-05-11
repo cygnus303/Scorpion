@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+
+  <system.webServer>
+
+    <rewrite>
+      <rules>
+        <rule name="Angular Routes" stopProcessing="true">
+          <match url=".*" />
+          <conditions logicalGrouping="MatchAll">
+            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+            <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+          </conditions>
+          <action type="Rewrite" url="/" />
+        </rule>
+      </rules>
+    </rewrite>
+
+    <!-- HTML should NEVER cache -->
+    <staticContent>
+
+      <!-- JS/CSS cache -->
+      <clientCache cacheControlMode="UseMaxAge"
+                   cacheControlMaxAge="7.00:00:00" />
+
+    </staticContent>
+
+    <httpProtocol>
+      <customHeaders>
+
+        <!-- Disable HTML cache -->
+        <add name="Cache-Control" value="no-cache, no-store, must-revalidate" />
+        <add name="Pragma" value="no-cache" />
+        <add name="Expires" value="0" />
+
+      </customHeaders>
+    </httpProtocol>
+
+  </system.webServer>
+
+</configuration>
