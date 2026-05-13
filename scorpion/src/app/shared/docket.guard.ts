@@ -24,7 +24,6 @@ export class DocketGuard implements CanActivate {
       this.router.navigate(['/error']);
       return false;
     }
-
     try {
       const decrypted = this.decryptService.decrypt(encrypted, key);
       const parsedData = JSON.parse(decrypted);
@@ -45,7 +44,7 @@ export class DocketGuard implements CanActivate {
       else if (currentRoute.includes("PRSArrivalDetails")) {
         return this.handlePRSArrivalDetails(parsedData);
       }
-      else if (currentRoute.includes("LoadingSheet")) {
+      else if (currentRoute === 'LoadingSheet') {
         return this.handleLoadingSheet(parsedData);
       }
       else if (currentRoute.includes("VendorContractTypeWise")) {
