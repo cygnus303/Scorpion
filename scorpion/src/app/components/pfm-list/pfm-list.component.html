@@ -41,7 +41,7 @@
             </ng-select>
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="fetchLRsData()">⟳ Fetch LRs</button>
+            <!-- <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="fetchLRsData()">⟳ Fetch LRs</button> -->
             <button class="btn btn-success px-4 py-2 rounded" *ngIf="menuAccessService.hasPermission('Add')"
                 [disabled]="!canAddPFM" (click)="openAddPFM()">＋ Add
                 PFM</button>
