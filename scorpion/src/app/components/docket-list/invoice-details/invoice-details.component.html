@@ -99,9 +99,11 @@
                                 <i class="fa fa-calendar"></i>
                               </span>
                             </div>
-                            <div *ngIf="row.get('ewayBillExpiry')?.errors && row.get('ewayBillExpiry')?.touched"
+                             <div *ngIf="row.get('ewayBillExpiry')?.errors && row.get('ewayBillExpiry')?.touched"
                               class="text-danger text-start">
-                              This field is required.
+                              <span *ngIf="row.get('ewayBillExpiry')?.hasError('required')">This field is
+                                required.</span>
+                              <span *ngIf="row.get('ewayBillExpiry')?.hasError('pastDate')">E-Way Bill expired or Part B not prepared.</span>
                             </div>
                           </td>
 
