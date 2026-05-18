@@ -147,7 +147,7 @@
                                     <label class="form-label d-flex align-items-center gap-2 fw-bold"> Charged By
                                     </label>
                                     <ng-select class="clear-icon required2" placeholder="Select Charged By" 
-                                    (change)="this.prsArrivalDetailsService.getVendorsList($event.codeId)"
+                                    (change)="onChangeChargeBy($event);this.prsArrivalDetailsService.getVendorsList($event.codeId)"
                                         notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
                                         [items]="generalMasterService.loadingData" formControlName="chargedBy"
                                         c></ng-select>
@@ -179,7 +179,7 @@
                                     <label class="form-label d-flex align-items-center gap-2 fw-bold"> Charge Rate
                                     </label>
                                     <input class="form-control" type="text" placeholder="Charge Rate"
-                                        formControlName="chargeRate">
+                                        formControlName="chargeRate" (input)="calculateLRWiseHCCAmount()">
                                 </div>
                             </div>
                         </div>
