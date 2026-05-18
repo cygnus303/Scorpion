@@ -189,7 +189,7 @@ export class DeliveryAgentListComponent {
       this.sweetAlertService.confirm('Do you want to deactivate this user?').then((result) => {
         if (result.isConfirmed) {
           const payload = {
-            daCode: data.dA_Code,
+            DA_Code: data.dA_Code,
             status: false,
             licenseNo: data.licenseNo,
             vehicleNo: data.vehicleNo,
@@ -200,11 +200,13 @@ export class DeliveryAgentListComponent {
               if (response.status === 1) {
                 this.sweetAlertService.success('User deactivated successfully!!');
                 this.closePopup();
+                data.isActive = false;
+                (event.target as HTMLInputElement).checked = false;
+              } else {
+                this.sweetAlertService.error(response.errors);
               }
             },
           })
-          data.isActive = false;
-          (event.target as HTMLInputElement).checked = false;
         }
       });
     } else {
@@ -213,7 +215,7 @@ export class DeliveryAgentListComponent {
       this.sweetAlertService.confirm('Do you want to activate this user?').then((result) => {
         if (result.isConfirmed) {
           const payload = {
-            daCode: data.dA_Code,
+            DA_Code: data.dA_Code,
             status: true,
             licenseNo: data.licenseNo,
             vehicleNo: data.vehicleNo,
@@ -224,11 +226,13 @@ export class DeliveryAgentListComponent {
               if (response.status === 1) {
                 this.sweetAlertService.success('User activated successfully!!');
                 this.closePopup();
+                data.isActive = true;
+                (event.target as HTMLInputElement).checked = true;
+              } else {
+                this.sweetAlertService.error(response.errors);
               }
             },
           })
-          data.isActive = true;
-          (event.target as HTMLInputElement).checked = true;
         }
       });
     }
