@@ -55,14 +55,16 @@
                     <td>{{data.licenseNo}}</td>
                     <td>{{data.baName}}</td>
                     <td class="text-center">
-                        <ng-container *ngIf="data.isActive; else inactive">
-                            <!-- <i class="fas fa-check-square text-success me-1 fs-4"></i> -->
+                        <!-- <ng-container *ngIf="data.isActive; else inactive">
                             <span class="badge bg-success">Yes</span>
                         </ng-container>
                         <ng-template #inactive>
-                            <!-- <i class="fas fa-window-close text-danger fs-4"></i> -->
                             <span class="badge bg-danger">No</span>
-                        </ng-template>
+                        </ng-template> -->
+                        <label class="yes-no">
+                            <input type="checkbox" [checked]="data.isActive" (change)="onStatusChange($event, data)" />
+                            <span class="slider"></span>
+                        </label>
                     </td>
                     <td class="text-center">
                         <span
