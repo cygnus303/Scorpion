@@ -190,7 +190,7 @@ export class DeliveryAgentListComponent {
         if (result.isConfirmed) {
           const payload = {
             DA_Code: data.dA_Code,
-            status: false,
+            isActive: false,
             licenseNo: data.licenseNo,
             vehicleNo: data.vehicleNo,
             baseUserName: this.docketService.loginUserList.BaseUserName
@@ -203,7 +203,7 @@ export class DeliveryAgentListComponent {
                 data.isActive = false;
                 (event.target as HTMLInputElement).checked = false;
               } else {
-                this.sweetAlertService.error(response.errors);
+                this.sweetAlertService.error(response.message);
               }
             },
           })
@@ -216,7 +216,7 @@ export class DeliveryAgentListComponent {
         if (result.isConfirmed) {
           const payload = {
             DA_Code: data.dA_Code,
-            status: true,
+            isActive: true,
             licenseNo: data.licenseNo,
             vehicleNo: data.vehicleNo,
             baseUserName: this.docketService.loginUserList.BaseUserName
@@ -229,7 +229,7 @@ export class DeliveryAgentListComponent {
                 data.isActive = true;
                 (event.target as HTMLInputElement).checked = true;
               } else {
-                this.sweetAlertService.error(response.errors);
+                this.sweetAlertService.error(response.message);
               }
             },
           })
