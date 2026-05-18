@@ -54,4 +54,8 @@ export class DeliveryAgentService {
   showDAPassword(code: string) {
     return this.apiHandlerService.Get(`User/GetPasswordFromUserID?id=${code}`);
   }
+
+  daStatusChange(payload: any) {
+    return this.apiHandlerService.Post(`Master/UpdateDAStatus`, payload);
+  }
 }
