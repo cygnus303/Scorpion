@@ -7,6 +7,26 @@ import { MobileNumberValidator } from '../directives/validators/mobile-number-va
 import { SweetAlertService } from './sweet-alert.service';
 import {  Subject } from 'rxjs';
 
+export function pastDateValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    if (!value) {
+      return null;
+    }
+    const expiryDate = new Date(value);
+    if (isNaN(expiryDate.getTime())) {
+      return null;
+    }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    expiryDate.setHours(0, 0, 0, 0);
+    if (expiryDate < today) {
+      return { pastDate: true };
+    }
+    return null;
+  };
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -335,10 +355,11 @@ export class DocketService {
     });
   }
   createInvoiceRow(srNo: number): FormGroup {
+    const expiryValidators = this.loginUserList?.Type === '2' ? [] : [pastDateValidator()];
     return new FormGroup({
       srNo: new FormControl(srNo),
       ewayBillNo: new FormControl(null),
-      ewayBillExpiry: new FormControl(''),
+      ewayBillExpiry: new FormControl('', expiryValidators),
       ewayinvoiceDate: new FormControl(''),
       invoiceNo: new FormControl('', Validators.required),
       declaredvalue: new FormControl(0, Validators.required),
