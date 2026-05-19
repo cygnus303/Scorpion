@@ -22,16 +22,16 @@ export class InvoiceDetailsComponent {
   constructor(
     public docketService: DocketService,
     public basicDetailService: BasicDetailService,
-    private sweetAlertService:SweetAlertService
+    private sweetAlertService: SweetAlertService
   ) { }
 
   ngOnInit() {
     this.docketService.invoicebuild();
     this.subscription = this.docketService.ewayBill$.subscribe(ewayBillNo => {
-      this.getEwayBillData(ewayBillNo,0,false);
+      this.getEwayBillData(ewayBillNo, 0, false);
     });
     this.calculateSummarySubscription = this.docketService.calculateSummary.subscribe(response => {
-      if(response){
+      if (response) {
         for (let i = 0; i < this.docketService.boxDetailRows.length; i++) {
           this.calculateSummary(i);
         }
@@ -62,7 +62,7 @@ export class InvoiceDetailsComponent {
     });
   }
 
-checkDuplicateInvoices(i: number,row: AbstractControl) {
+  checkDuplicateInvoices(i: number, row: AbstractControl) {
     const rows = this.docketService.invoiceRows.controls;
     const currentInv = rows[i].get('invoiceNo')?.value?.trim();
 
@@ -132,7 +132,7 @@ checkDuplicateInvoices(i: number,row: AbstractControl) {
       if (requireValidators) {
         row.get('ewayBillNo')?.setValidators([Validators.required]);
         row.get('ewayBillExpiry')?.setValidators(isType2 ? [Validators.required] : [Validators.required, pastDateValidator()]);
-      //  row.get('ewayBillExpiry')?.setValidators([Validators.required]);
+        //  row.get('ewayBillExpiry')?.setValidators([Validators.required]);
         row.get('ewayinvoiceDate')?.setValidators([Validators.required]);
       } else {
         row.get('ewayBillNo')?.clearValidators();
@@ -310,7 +310,7 @@ checkDuplicateInvoices(i: number,row: AbstractControl) {
       totalCFT += cftTotal;
 
       // Update row CFT without rounding
-      ctrl.patchValue( { cftTotal: parseFloat(cftTotal.toFixed(2)) }, { emitEvent: false });
+      ctrl.patchValue({ cftTotal: parseFloat(cftTotal.toFixed(2)) }, { emitEvent: false });
     });
 
     // Update grand total without rounding
@@ -322,7 +322,7 @@ checkDuplicateInvoices(i: number,row: AbstractControl) {
 
   }
 
-getEwayBillData(event: any, index: number,isInvoice?:boolean) {
+  getEwayBillData(event: any, index: number, isInvoice?: boolean) {
     const search = event.target.value;
     if (search.length.toString() === "12") {
       const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
@@ -342,8 +342,8 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
 
       if (isDuplicate) {
         this.sweetAlertService.warning("Message !! cannot select Duplicate EWayBillNo.");
-      if(!isInvoice){
-        this.docketService.basicDetailForm.patchValue({ewayBillNo:null});
+        if (!isInvoice) {
+          this.docketService.basicDetailForm.patchValue({ ewayBillNo: null });
         }
         row.patchValue({
           ewayinvoiceDate: null,
@@ -352,11 +352,11 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
           ewayBillNo: null,
           invoiceNo: null,
           declaredvalue: null,
-      transportation_distance:null
+          transportation_distance: null
         });
         this.updateAllEwayBillValidations();
         return;
-  }else{
+      } else {
         this.basicDetailService.checkEWayBill(search).subscribe({
           next: (checkRes: any) => {
             if (checkRes.status === "N" && search.length.toString() === "12") {
@@ -387,7 +387,7 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                           ewayBillNo: null,
                           invoiceNo: null,
                           declaredvalue: null,
-                      transportation_distance:null
+                          transportation_distance: null
                         });
                         this.updateAllEwayBillValidations();
                         return;
@@ -407,7 +407,7 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                         ewayBillNo: null,
                         invoiceNo: null,
                         declaredvalue: null,
-                    transportation_distance:null
+                        transportation_distance: null
                       });
                       this.updateAllEwayBillValidations();
                       return;
@@ -423,7 +423,7 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                     })
                     this.calculateSummary(index)
                     this.updateAllEwayBillValidations()
-                if(!isInvoice){
+                    if (!isInvoice) {
                       this.docketService.getpincodeData(response.pincode.toString())
                       this.docketService.consignorForm.patchValue({
                         consignorName: response.csgncd,
@@ -434,10 +434,10 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                         consigneeAddress: response.csgeAdd,
                         consigneePincode: response.toPincode.toString(),
                         consignorCity: response.fromCity,
-                      consigneeCity:response.toCity,
+                        consigneeCity: response.toCity,
                         consignorGSTNo: response.consignor,
                         consigneeGSTNo: response.consignee,
-                      consignorPincode:response.pincode.toString(),
+                        consignorPincode: response.pincode.toString(),
                       });
                       // uat live
                       this.docketService.ewayBillDataDisplayed = false;
@@ -489,17 +489,17 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
                     }
                     row.updateValueAndValidity();
                   } else {
-                 if(!isInvoice){
-                    this.docketService.basicDetailForm.patchValue({ewayBillNo:null});
+                    if (!isInvoice) {
+                      this.docketService.basicDetailForm.patchValue({ ewayBillNo: null });
                     }
                     row.patchValue({
                       ewayinvoiceDate: null,
                       ewayBillExpiry: null,
                       invoicedate: null,
                       ewayBillNo: null,
-                  invoiceNo:null,
-                  declaredvalue:null,
-                  transportation_distance:null
+                      invoiceNo: null,
+                      declaredvalue: null,
+                      transportation_distance: null
                     });
                     this.updateAllEwayBillValidations();
                   }
@@ -510,17 +510,17 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
               });
             } else {
               this.sweetAlertService.warning("This EWay Bill Already Exist in ERP !!!");
-          if(!isInvoice){
-            this.docketService.basicDetailForm.patchValue({ewayBillNo:null});
+              if (!isInvoice) {
+                this.docketService.basicDetailForm.patchValue({ ewayBillNo: null });
               }
               row.patchValue({
                 ewayinvoiceDate: null,
                 ewayBillExpiry: null,
                 invoicedate: null,
                 ewayBillNo: null,
-            invoiceNo:null,
-            declaredvalue:null,
-            transportation_distance:null
+                invoiceNo: null,
+                declaredvalue: null,
+                transportation_distance: null
               });
               this.updateAllEwayBillValidations();
             }
@@ -530,7 +530,7 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
           }
         });
       }
-  }else{
+    } else {
       if (index === 0) {
         this.docketService.basicDetailForm.patchValue({
           pincode: null,
@@ -579,10 +579,13 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
 
     // Update all rows based on E-Way Bill presence
     invoiceRows.controls.forEach((row) => {
+      const isType2 = this.docketService.loginUserList?.Type === '2';
+
       if (hasAnyEwayBill) {
         // If any row has E-Way Bill, ensure all rows have required validators on E-Way Bill field
         if (!row.get('ewayBillNo')?.value) {
           row.get('ewayBillNo')?.setValidators([Validators.required]);
+          row.get('ewayBillExpiry')?.setValidators(isType2 ? [Validators.required] : [Validators.required, pastDateValidator()]);
           row.get('ewayBillNo')?.updateValueAndValidity({ emitEvent: false });
         }
       } else {
@@ -610,6 +613,8 @@ getEwayBillData(event: any, index: number,isInvoice?:boolean) {
           if (currentValidators) {
             // Check if required validator is present and remove it
             row.get('ewayBillNo')?.clearValidators();
+            row.get('ewayBillExpiry')?.clearValidators();
+            row.get('ewayBillExpiry')?.updateValueAndValidity({ emitEvent: false });
             row.get('ewayBillNo')?.updateValueAndValidity({ emitEvent: false });
           }
         }
