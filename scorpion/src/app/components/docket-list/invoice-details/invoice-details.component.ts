@@ -128,15 +128,12 @@ export class InvoiceDetailsComponent {
       if (declared >= 50000 && originState && destState && originState !== destState) {
         requireValidators = true;
       }
-      const isType2 = this.docketService.loginUserList?.Type === '2';
       if (requireValidators) {
         row.get('ewayBillNo')?.setValidators([Validators.required]);
-        row.get('ewayBillExpiry')?.setValidators(isType2 ? [Validators.required] : [Validators.required, pastDateValidator()]);
-        //  row.get('ewayBillExpiry')?.setValidators([Validators.required]);
+         row.get('ewayBillExpiry')?.setValidators([Validators.required]);
         row.get('ewayinvoiceDate')?.setValidators([Validators.required]);
       } else {
         row.get('ewayBillNo')?.clearValidators();
-        // row.get('ewayBillExpiry')?.setValidators(isType2 ? [] : [pastDateValidator()]);
         row.get('ewayBillExpiry')?.clearValidators();
         row.get('ewayinvoiceDate')?.clearValidators();
       }
@@ -579,13 +576,11 @@ export class InvoiceDetailsComponent {
 
     // Update all rows based on E-Way Bill presence
     invoiceRows.controls.forEach((row) => {
-      const isType2 = this.docketService.loginUserList?.Type === '2';
 
       if (hasAnyEwayBill) {
         // If any row has E-Way Bill, ensure all rows have required validators on E-Way Bill field
         if (!row.get('ewayBillNo')?.value) {
           row.get('ewayBillNo')?.setValidators([Validators.required]);
-          row.get('ewayBillExpiry')?.setValidators(isType2 ? [Validators.required] : [Validators.required, pastDateValidator()]);
           row.get('ewayBillNo')?.updateValueAndValidity({ emitEvent: false });
         }
       } else {
@@ -612,12 +607,10 @@ export class InvoiceDetailsComponent {
           const currentValidators = row.get('ewayBillNo')?.validator;
           if (currentValidators) {
             // Check if required validator is present and remove it
-            row.get('ewayBillNo')?.clearValidators();
-            row.get('ewayBillExpiry')?.clearValidators();
-            row.get('ewayBillExpiry')?.updateValueAndValidity({ emitEvent: false });
-            row.get('ewayBillNo')?.updateValueAndValidity({ emitEvent: false });
-          }
+          row.get('ewayBillNo')?.clearValidators();
+          row.get('ewayBillNo')?.updateValueAndValidity({ emitEvent: false });
         }
+      }
       }
     });
   }

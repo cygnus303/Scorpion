@@ -20,15 +20,15 @@ export class DocketListComponent implements OnInit {
   public isSubmitting: boolean = false;
   decrypted: string = '';
   env = environment;
-  public isRedirect:boolean = false;
-  
-  public isComplitionlist!:BasePayload;
+  public isRedirect: boolean = false;
+
+  public isComplitionlist!: BasePayload;
   @ViewChild(BasicDetailsComponent) basicDetailsComp!: BasicDetailsComponent;
   @ViewChild(InvoiceDetailsComponent) invoiceDetailsComponent!: InvoiceDetailsComponent;
 
 
   constructor(
-    public docketService: DocketService, private basicDetailService: BasicDetailService, private router: Router,public apiLoading: ApiLoadingService,
+    public docketService: DocketService, private basicDetailService: BasicDetailService, private router: Router, public apiLoading: ApiLoadingService,
     private sweetAlertService: SweetAlertService,
   ) { }
 
@@ -43,204 +43,204 @@ export class DocketListComponent implements OnInit {
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
-  // }
+    // }
     const currentRoute = this.router.url.split("?")[0];
     if (currentRoute.includes("docketFinancialEdit") || currentRoute.includes("docketEditCretria")) {
       this.docketService.isComplition = true;
       this.getCompletionData();
-    } 
+    }
   }
 
-getCompletionData() {
-  const payload = {
-    docketNo: this.docketService.loginUserList.DocketNo,
-    // docketNo: '62839635',
-    isFromBillGeneration: this.docketService.loginUserList.IsFromBillGeneration || '',
-    type: this.docketService.loginUserList.Type,
-    baseLocationCode: this.docketService.loginUserList.LocationCode,
-    baseCompanyCode: this.docketService.loginUserList.Companycode,
-    baseUserName: this.docketService.loginUserList.BaseUserName
-  };
+  getCompletionData() {
+    const payload = {
+      docketNo: this.docketService.loginUserList.DocketNo,
+      // docketNo: '62839635',
+      isFromBillGeneration: this.docketService.loginUserList.IsFromBillGeneration || '',
+      type: this.docketService.loginUserList.Type,
+      baseLocationCode: this.docketService.loginUserList.LocationCode,
+      baseCompanyCode: this.docketService.loginUserList.Companycode,
+      baseUserName: this.docketService.loginUserList.BaseUserName
+    };
 
-  this.basicDetailService.getCompletion(payload).subscribe({
-    next: (response) => {
-      if (response) {
-        this.docketService.completiondata = response.data;
-        const basicDetail = this.docketService.completiondata.wmd;
+    this.basicDetailService.getCompletion(payload).subscribe({
+      next: (response) => {
+        if (response) {
+          this.docketService.completiondata = response.data;
+          const basicDetail = this.docketService.completiondata.wmd;
 
-        if (basicDetail) {
-          this.docketService.getpincodeData(basicDetail.csgePinCode);
-          // first patch
-          this.docketService.basicDetailForm.patchValue({
-            cNoteNo: basicDetail.dockno,
-            cNoteDate: this.docketService.loginUserList.Type==='1'?new Date():new Date(basicDetail.dockdt.split('T')[0]),
-            // cNoteDate: new Date(),
-            pincode: basicDetail.csgePinCode ? basicDetail.csgePinCode : null,
-            billingType: basicDetail.paybas,
-            billingName: basicDetail.party_name,
-            billingParty: basicDetail.partY_CODE,
-            origin: basicDetail.orgncd,
-            destination: basicDetail.destcd,
-          }); 
-           this.docketService.Location =  basicDetail.orgncd
-          this.docketService.getRuleDetailForDepth();
-            this.docketService.getBlockedCustomerListAPI();
-          this.docketService.getRuleDetailForProceed()
-          setTimeout(() => {
-            // second patch
+          if (basicDetail) {
+            this.docketService.getpincodeData(basicDetail.csgePinCode);
+            // first patch
             this.docketService.basicDetailForm.patchValue({
-              originState: basicDetail.originStateName,
-              csgngstState: basicDetail.originStateCode,
-              fromCity: basicDetail.from_loc || null,
-              toCity: basicDetail.to_loc || null,
-              mode: basicDetail.trN_MOD || null,
-              serviceType: basicDetail.service_Class || null,
-              pickup: basicDetail.pickup_Dely || null,
-              exemptServices: basicDetail.exemptServices || null,
-              isreferenceDKT: basicDetail.isReferenceDKT,
-              iscsdDelivery: basicDetail.isCSDDelivery,
-              isCODDOD: basicDetail.isCODDOD,
-              IsMAllDeliveryN: basicDetail.isMAllDelivery,
-              IsODA: basicDetail.isODA,
-              contents: basicDetail.prodcd || null ,
-              packingType: basicDetail.pkgsty || null,
-              sacCode: basicDetail.sacCode,
-              sacDescription: basicDetail.sacCodeDesc,
-              appointmentDT: basicDetail.appointmentDT !== '0001-01-01T00:00:00'?new Date(basicDetail.appointmentDT):new Date(),
-              personName: basicDetail.person,
-              contactNo: basicDetail.apmtMobile,
-              remarks: basicDetail.apmtRemark,
-              fromTime: basicDetail.fromTime,
-              toTime: basicDetail.toTime,
-              ewayBillNo: basicDetail.eWayBillNo ? basicDetail.eWayBillNo: this.docketService.completiondata.listInVoice[0].eWayBillNo,
-              referenceDocket: basicDetail.referenceDocketNo,
-              isDocketPayment: basicDetail.isDKTPayment,
-              isAppointmentDelivery: basicDetail.isAppointmentDelivery,
-              specialInstruction: basicDetail.spl_svc_req,
-              ISCounterPickUpPRS: basicDetail.isCounterPickUpPRS,
-              ISCounterDelivery: basicDetail.isCounterDelivery,
-              typeMovement: basicDetail.ftl_types || null,
-              vehicleno: basicDetail.vehicleNo,
-              // isDACC: basicDetail.isDACC
+              cNoteNo: basicDetail.dockno,
+              cNoteDate: this.docketService.loginUserList.Type === '1' ? new Date() : new Date(basicDetail.dockdt.split('T')[0]),
+              // cNoteDate: new Date(),
+              pincode: basicDetail.csgePinCode ? basicDetail.csgePinCode : null,
+              billingType: basicDetail.paybas,
+              billingName: basicDetail.party_name,
+              billingParty: basicDetail.partY_CODE,
+              origin: basicDetail.orgncd,
+              destination: basicDetail.destcd,
             });
-          // const baseUrl = 'https://sepl.cygnux.in/UploadedDocumentsBAK/GSTDeclaration/Upload/';
-          const baseUrl = `${this.env.liveUrl}UploadedDocumentsBAK/GSTDeclaration/Upload/`;
-            // If editing and file exists
-            if (basicDetail?.gstDeclarationDoc) {
-              this.docketService.basicDetailForm.get('GSTDeclaration')?.setValue(baseUrl + basicDetail.gstDeclarationDoc);
-              this.docketService.isChangingFile = false; // initially not changing
-               this.docketService.isExistingFile = true; //
-               console.log(this.docketService.basicDetailForm.get('GSTDeclaration')?.value);
-            }
-          this.getODAData(basicDetail.csgePinCode);
-
-           const type = this.docketService.loginUserList.Type;
-          const billingType = this.docketService.basicDetailForm.value.billingType;
-
-          if (type === '2') {
-            this.docketService.isOtherCharge = true;
-            this.docketService.isBillingTBB = true;
-            } else {
-              if (billingType === 'P01' || billingType === 'P03') {
-                this.docketService.isOtherCharge = true;   // SCHG03
-                this.docketService.isBillingTBB = false;
-              } else {
-                this.docketService.isOtherCharge = false;
-                this.docketService.isBillingTBB = false;
+            this.docketService.Location = basicDetail.orgncd
+            this.docketService.getRuleDetailForDepth();
+            this.docketService.getBlockedCustomerListAPI();
+            this.docketService.getRuleDetailForProceed()
+            setTimeout(() => {
+              // second patch
+              this.docketService.basicDetailForm.patchValue({
+                originState: basicDetail.originStateName,
+                csgngstState: basicDetail.originStateCode,
+                fromCity: basicDetail.from_loc || null,
+                toCity: basicDetail.to_loc || null,
+                mode: basicDetail.trN_MOD || null,
+                serviceType: basicDetail.service_Class || null,
+                pickup: basicDetail.pickup_Dely || null,
+                exemptServices: basicDetail.exemptServices || null,
+                isreferenceDKT: basicDetail.isReferenceDKT,
+                iscsdDelivery: basicDetail.isCSDDelivery,
+                isCODDOD: basicDetail.isCODDOD,
+                IsMAllDeliveryN: basicDetail.isMAllDelivery,
+                IsODA: basicDetail.isODA,
+                contents: basicDetail.prodcd || null,
+                packingType: basicDetail.pkgsty || null,
+                sacCode: basicDetail.sacCode,
+                sacDescription: basicDetail.sacCodeDesc,
+                appointmentDT: basicDetail.appointmentDT !== '0001-01-01T00:00:00' ? new Date(basicDetail.appointmentDT) : new Date(),
+                personName: basicDetail.person,
+                contactNo: basicDetail.apmtMobile,
+                remarks: basicDetail.apmtRemark,
+                fromTime: basicDetail.fromTime,
+                toTime: basicDetail.toTime,
+                ewayBillNo: basicDetail.eWayBillNo ? basicDetail.eWayBillNo : this.docketService.completiondata.listInVoice[0].eWayBillNo,
+                referenceDocket: basicDetail.referenceDocketNo,
+                isDocketPayment: basicDetail.isDKTPayment,
+                isAppointmentDelivery: basicDetail.isAppointmentDelivery,
+                specialInstruction: basicDetail.spl_svc_req,
+                ISCounterPickUpPRS: basicDetail.isCounterPickUpPRS,
+                ISCounterDelivery: basicDetail.isCounterDelivery,
+                typeMovement: basicDetail.ftl_types || null,
+                vehicleno: basicDetail.vehicleNo,
+                // isDACC: basicDetail.isDACC
+              });
+              // const baseUrl = 'https://sepl.cygnux.in/UploadedDocumentsBAK/GSTDeclaration/Upload/';
+              const baseUrl = `${this.env.liveUrl}UploadedDocumentsBAK/GSTDeclaration/Upload/`;
+              // If editing and file exists
+              if (basicDetail?.gstDeclarationDoc) {
+                this.docketService.basicDetailForm.get('GSTDeclaration')?.setValue(baseUrl + basicDetail.gstDeclarationDoc);
+                this.docketService.isChangingFile = false; // initially not changing
+                this.docketService.isExistingFile = true; //
+                console.log(this.docketService.basicDetailForm.get('GSTDeclaration')?.value);
               }
-            }
+              this.getODAData(basicDetail.csgePinCode);
 
-            this.basicDetailsComp.onChangeCityListList(this.docketService.basicDetailForm.get('fromCity')?.value,'from');
-            if(!basicDetail.exemptServices){
-              this.docketService.GetGSTFromTrnMode()
-            }
-            this.docketService.GetDKTGSTForGTA();
+              const type = this.docketService.loginUserList.Type;
+              const billingType = this.docketService.basicDetailForm.value.billingType;
+
+              if (type === '2') {
+                this.docketService.isOtherCharge = true;
+                this.docketService.isBillingTBB = true;
+              } else {
+                if (billingType === 'P01' || billingType === 'P03') {
+                  this.docketService.isOtherCharge = true;   // SCHG03
+                  this.docketService.isBillingTBB = false;
+                } else {
+                  this.docketService.isOtherCharge = false;
+                  this.docketService.isBillingTBB = false;
+                }
+              }
+
+              this.basicDetailsComp.onChangeCityListList(this.docketService.basicDetailForm.get('fromCity')?.value, 'from');
+              if (!basicDetail.exemptServices) {
+                this.docketService.GetGSTFromTrnMode()
+              }
+              this.docketService.GetDKTGSTForGTA();
               // if (this.docketService.completiondata?.wmdc?.isGSTApplied) {
-          //   this.docketService.freightForm.patchValue({
-          //     stax_exmpt_yn:'N',
-          //     isStaxExemp:false
-          //   })
-          // } else {
-          //   this.docketService.freightForm.patchValue({
-          //     stax_exmpt_yn:'Y',
-          //     isStaxExemp:true
-          //   })
-          // }
-            this.docketService.getpincodeData(basicDetail.csgnPinCode);
-            this.docketService.consignorForm.patchValue({
-              consignorName: basicDetail.csgncd,
-              consignorMasterName: basicDetail.csgnnm,
-              consignorAddress: basicDetail.csgnaddr,
-              consignorCity: basicDetail.csgnCity,
-              consignorPincode: basicDetail.csgnPinCode,
-              consigneeName: basicDetail.csgecd,
-              consigneeMasterName: basicDetail.csgenm,
-              consigneeAddress: basicDetail.csgeaddr,
-              consigneeCity: basicDetail.csgeCity,
-              consigneePincode: basicDetail.csgePinCode,
-              consignorMobile: basicDetail.csgnmobile,
-              consigneeMobile: basicDetail.csgemobile,
-              consigneeGSTNo: basicDetail.csgeCustGSTNo,
-              consignorGSTNo: basicDetail.custGSTNo,
-              policyNo:basicDetail.insupl
-            });
-            if (this.docketService.completiondata.listInVoice?.length) {
-               const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
-               invoiceRows.clear(); // Clear old rows
-              this.docketService.completiondata.listInVoice.forEach((item: any, index: number) => {
-                 invoiceRows.push(this.docketService.createInvoiceRow(index));
-                // this.docketService.invoiceRows.controls[index].patchValue({
-                //   srNo: item.srNo,
-                //   ewayBillNo: item.eWayBillNo,
-                //   ewayBillExpiry: item.eWayBillExpiredDate?new Date(item.eWayBillExpiredDate) : '01 JAN 0001',
-                //   ewayinvoiceDate: item.eWayBillInvoiceDate?new Date(item.eWayBillInvoiceDate) : '01 JAN 0001',
-                //   invoiceNo: item.invno,
-                //   declaredvalue: item.declval,
-                // });
-                // invoiceRows.controls.forEach((row: any) => {
-                //     row.initialEwayBillNo = row.get('ewayBillNo')?.value;
-                //   });
-
-                // Validate and fetch correct E-way bill data if needed
-                this.validateAndFetchEwayBillData(item, index);
+              //   this.docketService.freightForm.patchValue({
+              //     stax_exmpt_yn:'N',
+              //     isStaxExemp:false
+              //   })
+              // } else {
+              //   this.docketService.freightForm.patchValue({
+              //     stax_exmpt_yn:'Y',
+              //     isStaxExemp:true
+              //   })
+              // }
+              this.docketService.getpincodeData(basicDetail.csgnPinCode);
+              this.docketService.consignorForm.patchValue({
+                consignorName: basicDetail.csgncd,
+                consignorMasterName: basicDetail.csgnnm,
+                consignorAddress: basicDetail.csgnaddr,
+                consignorCity: basicDetail.csgnCity,
+                consignorPincode: basicDetail.csgnPinCode,
+                consigneeName: basicDetail.csgecd,
+                consigneeMasterName: basicDetail.csgenm,
+                consigneeAddress: basicDetail.csgeaddr,
+                consigneeCity: basicDetail.csgeCity,
+                consigneePincode: basicDetail.csgePinCode,
+                consignorMobile: basicDetail.csgnmobile,
+                consigneeMobile: basicDetail.csgemobile,
+                consigneeGSTNo: basicDetail.csgeCustGSTNo,
+                consignorGSTNo: basicDetail.custGSTNo,
+                policyNo: basicDetail.insupl
               });
-            }
+              if (this.docketService.completiondata.listInVoice?.length) {
+                const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
+                invoiceRows.clear(); // Clear old rows
+                this.docketService.completiondata.listInVoice.forEach((item: any, index: number) => {
+                  invoiceRows.push(this.docketService.createInvoiceRow(index));
+                  // this.docketService.invoiceRows.controls[index].patchValue({
+                  //   srNo: item.srNo,
+                  //   ewayBillNo: item.eWayBillNo,
+                  //   ewayBillExpiry: item.eWayBillExpiredDate?new Date(item.eWayBillExpiredDate) : '01 JAN 0001',
+                  //   ewayinvoiceDate: item.eWayBillInvoiceDate?new Date(item.eWayBillInvoiceDate) : '01 JAN 0001',
+                  //   invoiceNo: item.invno,
+                  //   declaredvalue: item.declval,
+                  // });
+                  // invoiceRows.controls.forEach((row: any) => {
+                  //     row.initialEwayBillNo = row.get('ewayBillNo')?.value;
+                  //   });
 
-            if (this.docketService.completiondata.listBoxLBH?.length) {
-              const boxRows = this.docketService.invoiceform.get('boxDetailRows') as FormArray;
-              boxRows.clear(); // Clear old rows
-              this.docketService.completiondata.listBoxLBH.forEach((item: any, index: number) => {
-                   boxRows.push(this.docketService.createboxDetailRow(index));
-                this.docketService.boxDetailRows.controls[index].patchValue({
-                  srNo: item.srNo || index + 1,
-                  noOfPkgs: item.pkgsno || 0,
-                  actualWeight: item.actuwt || 0,
-                  length: item.voL_L || 0,
-                  breadth: item.voL_B || 0,
-                  height: item.voL_H || 0,
-                  cubicweight: item.vol_cft || 0,
-                  totalCFT: item.toT_CFT || 0
+                  // Validate and fetch correct E-way bill data if needed
+                  this.validateAndFetchEwayBillData(item, index);
                 });
-              });
-            }
-            this.docketService.onFormFieldChange();
+              }
+
+              if (this.docketService.completiondata.listBoxLBH?.length) {
+                const boxRows = this.docketService.invoiceform.get('boxDetailRows') as FormArray;
+                boxRows.clear(); // Clear old rows
+                this.docketService.completiondata.listBoxLBH.forEach((item: any, index: number) => {
+                  boxRows.push(this.docketService.createboxDetailRow(index));
+                  this.docketService.boxDetailRows.controls[index].patchValue({
+                    srNo: item.srNo || index + 1,
+                    noOfPkgs: item.pkgsno || 0,
+                    actualWeight: item.actuwt || 0,
+                    length: item.voL_L || 0,
+                    breadth: item.voL_B || 0,
+                    height: item.voL_H || 0,
+                    cubicweight: item.vol_cft || 0,
+                    totalCFT: item.toT_CFT || 0
+                  });
+                });
+              }
+              this.docketService.onFormFieldChange();
               this.docketService.invoiceform.patchValue({
                 totalNoOfPkgs: basicDetail.pkgsno,
                 totalActualWeight: basicDetail.actuwt,
                 finalActualWeight: basicDetail.chrgwt,
                 chargeWeightPerPkg: basicDetail.chargedPkgsNo,
               });
-            this.docketService.freightForm.patchValue({
-            EDD: basicDetail.cdeldt === '0001-01-01T00:00:00' ? '01 JAN 0001' : basicDetail.cdeldt ,
-            gstRate: basicDetail.gstRateType,
-            discountType:this.docketService.completiondata?.wmdc?.discountType || null,
-            discount:this.docketService.completiondata?.wmdc?.discount,
-            discountAmount:this.docketService.completiondata?.wmdc?.discountValue
-          });
-          // added Validators
-             const freightCharges = this.docketService.freightForm.get('freightCharges');
+              this.docketService.freightForm.patchValue({
+                EDD: basicDetail.cdeldt === '0001-01-01T00:00:00' ? '01 JAN 0001' : basicDetail.cdeldt,
+                gstRate: basicDetail.gstRateType,
+                discountType: this.docketService.completiondata?.wmdc?.discountType || null,
+                discount: this.docketService.completiondata?.wmdc?.discount,
+                discountAmount: this.docketService.completiondata?.wmdc?.discountValue
+              });
+              // added Validators
+              const freightCharges = this.docketService.freightForm.get('freightCharges');
               const freightRate = this.docketService.freightForm.get('freightRate');
-              if (this.docketService.basicDetailForm.value.isreferenceDKT === true ||basicDetail.paybas === 'P04') {
+              if (this.docketService.basicDetailForm.value.isreferenceDKT === true || basicDetail.paybas === 'P04') {
                 freightCharges?.clearValidators();
                 freightRate?.clearValidators();
               } else {
@@ -250,120 +250,120 @@ getCompletionData() {
               }
               freightCharges?.updateValueAndValidity();
               freightRate?.updateValueAndValidity();
-              
-             // consignorEmail Validators
-               const emailControl = this.docketService.consignorForm.get('consignorEmail');
-                  if (basicDetail.paybas === 'P01') {
-                    emailControl?.setValidators([
-                      Validators.required,
-                      Validators.pattern(EmailRegex),
-                      Validators.pattern(/^(?!.*@scorpiongroup\.in$).*/i)
-                    ]);
-                  } else {
-                    emailControl?.setValidators([
-                      Validators.pattern(EmailRegex),
-                      Validators.pattern(/^(?!.*@scorpiongroup\.in$).*/i)
-                    ]);
-                  }
-                  emailControl?.updateValueAndValidity();
 
-          if(this.docketService.loginUserList?.Type === '2'){
-            if (this.docketService.completiondata?.listCharges) {
-              this.docketService.completiondata.listCharges.forEach((item: any) => {
-                if (this.docketService.freightForm.contains(item.chargeCode)) {
-                  this.docketService.freightForm.patchValue({
-                    [item.chargeCode]: item.chargeAmount
+              // consignorEmail Validators
+              const emailControl = this.docketService.consignorForm.get('consignorEmail');
+              if (basicDetail.paybas === 'P01') {
+                emailControl?.setValidators([
+                  Validators.required,
+                  Validators.pattern(EmailRegex),
+                  Validators.pattern(/^(?!.*@scorpiongroup\.in$).*/i)
+                ]);
+              } else {
+                emailControl?.setValidators([
+                  Validators.pattern(EmailRegex),
+                  Validators.pattern(/^(?!.*@scorpiongroup\.in$).*/i)
+                ]);
+              }
+              emailControl?.updateValueAndValidity();
+
+              if (this.docketService.loginUserList?.Type === '2') {
+                if (this.docketService.completiondata?.listCharges) {
+                  this.docketService.completiondata.listCharges.forEach((item: any) => {
+                    if (this.docketService.freightForm.contains(item.chargeCode)) {
+                      this.docketService.freightForm.patchValue({
+                        [item.chargeCode]: item.chargeAmount
+                      });
+                    }
                   });
+                  this.docketService.mergeAndPatchCharges([], // API khali
+                    this.docketService.completiondata?.listCharges || [],
+                    this.docketService.freightForm,
+                    this.docketService.basicDetailForm
+                  );
                 }
-              });
-              this.docketService.mergeAndPatchCharges( [], // API khali
-                this.docketService.completiondata?.listCharges || [],
-                this.docketService.freightForm,
-                this.docketService.basicDetailForm
-              );
-            }
-            this.docketService.mergeAndPatchGST({},this.docketService.completiondata?.wmdc || {}, this.docketService.freightForm)
+                this.docketService.mergeAndPatchGST({}, this.docketService.completiondata?.wmdc || {}, this.docketService.freightForm)
+              }
+            }, 300);
           }
-          }, 300);
         }
       }
-    }
-  });
-}
+    });
+  }
 
-getODAData(pincode:string){
-this.basicDetailService.getODADetail(pincode).subscribe({
-    next: (response) => {
-      this.docketService.basicDetailForm.patchValue({
-        isODAApplicable:response.data.is_ODA_Apply=== "Y" ? true : false      
-      })
-    }
-  });
-}
-validateAndFetchEwayBillData(item: any, index: number) {
-  const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
-  const row = invoiceRows.at(index) as FormGroup;
-  
-  // First patch with existing data
-  row.patchValue({
-    srNo: item.srNo,
-    ewayBillNo: item.eWayBillNo,
-    ewayBillExpiry: item.eWayBillExpiredDate ? new Date(item.eWayBillExpiredDate) : '01 JAN 0001',
-    ewayinvoiceDate: item.eWayBillInvoiceDate ? new Date(item.eWayBillInvoiceDate) : '01 JAN 0001',
-    invoiceNo: item.invno,
-    declaredvalue: item.declval,
-    transportation_distance: item.transportation_distance
-  });
-  
-  // Set initial E-way bill number for tracking
-  (row as any).initialEwayBillNo = item.eWayBillNo;
-  
-  // If E-way bill number exists, validate if the data matches
-  if (item.eWayBillNo && item.eWayBillNo.length === 12) {
-          this.basicDetailService.getEditEwayBillValidation(item.eWayBillNo).subscribe({
-            next: (response: any) => {
-              if (response.status === 1) {
-                //Compare API data with existing invoice data
-                const apiInvoiceNo = response.invno;
-                const apiDeclaredValue = response.decval;
-                const apiInvoiceDate = response.invdt ? new Date(response.invdt) : null;
-                const apiExpiryDate = response.eWayBillExpiredDate && response.eWayBillExpiredDate !== '1900-01-01T00:00:00'
-                  ? new Date(response.eWayBillExpiredDate) : null;
-                
-                // Check if there's a mismatch
-                const isInvoiceMismatch = item.invno !== apiInvoiceNo;
-                const isValueMismatch = item.declval !== apiDeclaredValue;
-                const isDateMismatch = item.eWayBillInvoiceDate && apiInvoiceDate && 
-                  new Date(item.eWayBillInvoiceDate).toISOString() !== apiInvoiceDate.toISOString();
-                
-                if (isInvoiceMismatch || isValueMismatch || isDateMismatch) {
-                  // Data mismatch found, patch with correct API data
-                  console.log("Invoice data mismatch detected! Updating with correct E-way bill data.");
-                  
-                  row.patchValue({
-                    ewayinvoiceDate: apiInvoiceDate,
-                    ewayBillExpiry: apiExpiryDate,
-                    invoiceNo: apiInvoiceNo,
-                    declaredvalue: apiDeclaredValue,
-                    // transportation_distance: response.transportation_distance
-                  });
-                  // uat live
-                     this.docketService.ewayBillDataDisplayed = true;
-                  // Update summary calculations
-                  this.invoiceDetailsComponent?.calculateSummary(index);
-                  // this.docketService.onFormFieldChange();
-                }
-              }
-            },
-            error: () => {
-              console.warn("Unable to fetch E-way bill data for validation:", item.eWayBillNo);
+  getODAData(pincode: string) {
+    this.basicDetailService.getODADetail(pincode).subscribe({
+      next: (response) => {
+        this.docketService.basicDetailForm.patchValue({
+          isODAApplicable: response.data.is_ODA_Apply === "Y" ? true : false
+        })
+      }
+    });
+  }
+  validateAndFetchEwayBillData(item: any, index: number) {
+    const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
+    const row = invoiceRows.at(index) as FormGroup;
+
+    // First patch with existing data
+    row.patchValue({
+      srNo: item.srNo,
+      ewayBillNo: item.eWayBillNo,
+      ewayBillExpiry: item.eWayBillExpiredDate ? new Date(item.eWayBillExpiredDate) : '01 JAN 0001',
+      ewayinvoiceDate: item.eWayBillInvoiceDate ? new Date(item.eWayBillInvoiceDate) : '01 JAN 0001',
+      invoiceNo: item.invno,
+      declaredvalue: item.declval,
+      transportation_distance: item.transportation_distance
+    });
+
+    // Set initial E-way bill number for tracking
+    (row as any).initialEwayBillNo = item.eWayBillNo;
+
+    // If E-way bill number exists, validate if the data matches
+    if (item.eWayBillNo && item.eWayBillNo.length === 12) {
+      this.basicDetailService.getEditEwayBillValidation(item.eWayBillNo).subscribe({
+        next: (response: any) => {
+          if (response.status === 1) {
+            //Compare API data with existing invoice data
+            const apiInvoiceNo = response.invno;
+            const apiDeclaredValue = response.decval;
+            const apiInvoiceDate = response.invdt ? new Date(response.invdt) : null;
+            const apiExpiryDate = response.eWayBillExpiredDate && response.eWayBillExpiredDate !== '1900-01-01T00:00:00'
+              ? new Date(response.eWayBillExpiredDate) : null;
+
+            // Check if there's a mismatch
+            const isInvoiceMismatch = item.invno !== apiInvoiceNo;
+            const isValueMismatch = item.declval !== apiDeclaredValue;
+            const isDateMismatch = item.eWayBillInvoiceDate && apiInvoiceDate &&
+              new Date(item.eWayBillInvoiceDate).toISOString() !== apiInvoiceDate.toISOString();
+
+            if (isInvoiceMismatch || isValueMismatch || isDateMismatch) {
+              // Data mismatch found, patch with correct API data
+              console.log("Invoice data mismatch detected! Updating with correct E-way bill data.");
+
+              row.patchValue({
+                ewayinvoiceDate: apiInvoiceDate,
+                ewayBillExpiry: apiExpiryDate,
+                invoiceNo: apiInvoiceNo,
+                declaredvalue: apiDeclaredValue,
+                // transportation_distance: response.transportation_distance
+              });
+              // uat live
+              this.docketService.ewayBillDataDisplayed = true;
+              // Update summary calculations
+              this.invoiceDetailsComponent?.calculateSummary(index);
+              // this.docketService.onFormFieldChange();
             }
-          });
+          }
+        },
+        error: () => {
+          console.warn("Unable to fetch E-way bill data for validation:", item.eWayBillNo);
+        }
+      });
       error: () => {
         console.warn("Failed to check E-way bill in ERP:", item.eWayBillNo);
       }
+    }
   }
-}
 
 
   resetAllForms() {
@@ -377,11 +377,11 @@ validateAndFetchEwayBillData(item: any, index: number) {
   logInvalidControls(form: FormGroup, prefix: string = ''): string[] {
     const controls = form.controls;
     const invalidControls: string[] = [];
-    
+
     Object.keys(controls).forEach(key => {
       const control = controls[key];
       const fullKey = prefix ? `${prefix}.${key}` : key;
-      
+
       if (control instanceof FormGroup) {
         // Recursively check nested form groups
         const nestedInvalid = this.logInvalidControls(control, fullKey);
@@ -400,42 +400,42 @@ validateAndFetchEwayBillData(item: any, index: number) {
         invalidControls.push(fullKey);
       }
     });
-    
+
     return invalidControls;
   }
 
   onSubmit() {
     if (this.isSubmitting) return;
-    
+
     // Validate E-Way Bill fields before checking form validity
     this.invoiceDetailsComponent?.validateAllEwayBillFields();
-    
+
     const allInvalidControls: string[] = [];
-    
+
     if (!this.docketService.basicDetailForm.valid) {
       const invalidControls = this.logInvalidControls(this.docketService.basicDetailForm);
       allInvalidControls.push(...invalidControls);
     }
-    
+
     if (!this.docketService.consignorForm.valid) {
       const invalidControls = this.logInvalidControls(this.docketService.consignorForm);
       allInvalidControls.push(...invalidControls);
     }
-    
+
     if (!this.docketService.invoiceform.valid) {
       const invalidControls = this.logInvalidControls(this.docketService.invoiceform);
       allInvalidControls.push(...invalidControls);
     }
-    
+
     if (!this.docketService.freightForm.valid) {
       const invalidControls = this.logInvalidControls(this.docketService.freightForm);
       allInvalidControls.push(...invalidControls);
     }
-    
+
     if (allInvalidControls.length > 0) {
       console.log('Invalid Controls:', allInvalidControls);
     }
-    
+
     if (this.docketService.basicDetailForm.valid && this.docketService.consignorForm.valid && this.docketService.invoiceform.valid && this.docketService.freightForm.valid) {
       const listCCH = this.docketService.freightchargingData.map(charge => ({
         ChargeCode: charge.chargeCode,
@@ -474,10 +474,10 @@ validateAndFetchEwayBillData(item: any, index: number) {
       });
       const invoiceList = this.docketService.invoiceRows.value.map((row: any, index: number) => {
         const obj: any = {
-          SrNo:  Number(row.srNo),
+          SrNo: Number(row.srNo),
           DOCKNO: this.docketService.basicDetailForm.value.cNoteNo,
           INVNO: row.invoiceNo || '',
-          INVDT: row.ewayinvoiceDate?new Date(row.ewayinvoiceDate).toISOString():new Date().toISOString(),
+          INVDT: row.ewayinvoiceDate ? new Date(row.ewayinvoiceDate).toISOString() : new Date().toISOString(),
           DECLVAL: Number(row.declaredvalue) || 0,
           PKGSNO: Number(row.noOfPkgs) || 0,
           ACTUWT: Number(row.actualWeight) || 0,
@@ -485,21 +485,21 @@ validateAndFetchEwayBillData(item: any, index: number) {
           VOL_B: Number(row.breadth) || 0,
           VOL_H: Number(row.height) || 0,
           toT_CFT: Number(row.cubicweight) || 0,
-          vol_cft:  Number(row.cubicweight) || 0,
+          vol_cft: Number(row.cubicweight) || 0,
           Part_No: '',
           EWayBillNo: row.ewayBillNo || '',
           EWayInvoicevalue: 0,
           EWayBillInvoiceDate: row.ewayinvoiceDate ? new Date(row.ewayinvoiceDate).toISOString() : null,
           CHRGWT: 0,
-          eWayBillExpiredDate:"",
-          hsnCode:"",
-          itemCode:"",
-          piece:0,
+          eWayBillExpiredDate: "",
+          hsnCode: "",
+          itemCode: "",
+          piece: 0,
           pieceAmount: 0,
           pieceWeight: 0,
           pkgsno: 0,
           qty: 0,
-          transportrate:0,
+          transportrate: 0,
           transportation_distance: row.transportation_distance || 0
         };
 
@@ -513,7 +513,7 @@ validateAndFetchEwayBillData(item: any, index: number) {
       const DocketBoxLBHList = this.docketService.boxDetailRows.value.map((row: any, index: number) => {
         const obj: any = {
           ACTUWT: Number(row.actualWeight) || 0,
-          SrNo:  Number(row.srNo),
+          SrNo: Number(row.srNo),
           VOL_L: Number(row.length) || 0,
           vol_cft: Number(row.cubicweight) || 0,
           PKGSNO: Number(row.noOfPkgs) || 0,
@@ -525,17 +525,17 @@ validateAndFetchEwayBillData(item: any, index: number) {
         };
         return obj;
       });
-      if(this.docketService.basicDetailForm.value.billingType ==='P04'){
-  this.docketService.freightForm.patchValue({
-          freightRate:0,
-          freightCharges:0,
-          dktTotal:0
-        })
-}
-if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
+      if (this.docketService.basicDetailForm.value.billingType === 'P04') {
         this.docketService.freightForm.patchValue({
-          freightRate:0,
-          freightCharges:0,
+          freightRate: 0,
+          freightCharges: 0,
+          dktTotal: 0
+        })
+      }
+      if (this.docketService.basicDetailForm.value.isreferenceDKT === true) {
+        this.docketService.freightForm.patchValue({
+          freightRate: 0,
+          freightCharges: 0,
         })
       }
       const payload = {
@@ -554,7 +554,7 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
           "chrgwt": this.docketService.invoiceform.value.finalActualWeight || 0,
           "chargedPkgsNo": this.docketService.invoiceform.value.chargeWeightPerPkg,
           "prodcd": this.docketService.basicDetailForm.value.contents,
-          "spl_svc_req":this.docketService.basicDetailForm.value.specialInstruction,   
+          "spl_svc_req": this.docketService.basicDetailForm.value.specialInstruction,
           "stax_paidby": this.docketService.freightForm.value.stax_paidby,
           "stax_regno": "",
           "service_Class": this.docketService.basicDetailForm.value.serviceType,
@@ -581,7 +581,7 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
           "coD_DOD": this.docketService.basicDetailForm.value.IsCODDOD === 'Y' ? true : false,
           "cfT_YN": this.docketService.step2DetailsList?.isVolumentric === 'Y' ? true : false,
           "dacC_YN": this.docketService.basicDetailForm.value.isDACC,
-          "localCN_YN": this.docketService.basicDetailForm.value.isLocalNote ?'Y':'N',
+          "localCN_YN": this.docketService.basicDetailForm.value.isLocalNote ? 'Y' : 'N',
           "pickup_Dely": this.docketService.basicDetailForm.value.pickup,
           "permit_yn": "",// api baki chhe
           "permit_recvd_at": "",
@@ -638,13 +638,13 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
           "docketMode": "F",
           "gcType": "",
           "cft": this.docketService.invoiceform.value.cftTotal,
-          "isVolumetric":  this.docketService.basicDetailForm.value.isVolumetric,
+          "isVolumetric": this.docketService.basicDetailForm.value.isVolumetric,
           "isCODDOD": this.docketService.basicDetailForm.value.isCODDOD === 'Y' ? true : false,
           "isODA": this.docketService.basicDetailForm.value.isODAApplicable,
           "isDACC": this.docketService.basicDetailForm.value.isDACC,
           "isLocalDocket": this.docketService.basicDetailForm.value.IsLocalDocket ? true : false,
-          "isStaxExemp": this.docketService.freightForm.value.isStaxExemp?true:false,
-          "IsGSTApplied":this.docketService.freightForm.value.isStaxExemp?true:false, 
+          "isStaxExemp": this.docketService.freightForm.value.isStaxExemp ? true : false,
+          "IsGSTApplied": this.docketService.freightForm.value.isStaxExemp ? true : false,
           "person": this.docketService.basicDetailForm.value.personName,
           "apmtMobile": this.docketService.basicDetailForm.value.contactNo,
           "apmtRemark": this.docketService.basicDetailForm.value.remarks,
@@ -679,15 +679,15 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
           "isUnionTeritory": this.docketService.gstCalculationList.isunionterritory === "1",
           "origin_Area": this.docketService.basicDetailForm.value.origin_Area,///consinee mathi avshe adress
           "destination_Area": this.docketService.basicDetailForm.value.destination_Area,///consinor mathi avshe adress
-          "custGSTNo":  this.docketService.consignorForm.value.consignorGSTNo,
+          "custGSTNo": this.docketService.consignorForm.value.consignorGSTNo,
           "custGSTState": this.docketService.basicDetailForm.value.custGSTState,
           "csgeCustGSTNo": this.docketService.consignorForm.value.consigneeGSTNo,
           "csgeCustGSTState": this.docketService.basicDetailForm.value.csgeCustGSTState,
           "isCompletion": true,
           "billingState": this.docketService.freightForm.value.billingState,
           "eWayBillNo": this.docketService.basicDetailForm.value.ewayBillNo,
-          "isCounterPickUpPRS": this.docketService.basicDetailForm.value.ISCounterPickUpPRS?true:false,
-          "isCounterDelivery": this.docketService.basicDetailForm.value.ISCounterDelivery?true:false,
+          "isCounterPickUpPRS": this.docketService.basicDetailForm.value.ISCounterPickUpPRS ? true : false,
+          "isCounterDelivery": this.docketService.basicDetailForm.value.ISCounterDelivery ? true : false,
           "retailsd": false,
           "isDockType": "DKT",
           "txtVehicleNo": this.docketService.basicDetailForm.value.vehicleno,
@@ -722,20 +722,20 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
           "isCSDDelivery": this.docketService.basicDetailForm.value.iscsdDelivery,
           "isMAllDelivery": this.docketService.basicDetailForm.value.IsMAllDeliveryN,
           "DiscountType": this.docketService.freightForm.value.discountType,
-          "AppointmentNo":"",
-          "CSDNo":"",
-          "MSDNo":"",
-          "editinfo":"",
-          "TrnServiceType":"",
-          "QTY":"",
-          "IsFromBillGeneration":"",
-          "cutoff_applied_yn":"",
-          "SerialNo":"",
-          "CSGEFloor":0,
-          "ISOnSubtotalorTotal":"",
+          "AppointmentNo": "",
+          "CSDNo": "",
+          "MSDNo": "",
+          "editinfo": "",
+          "TrnServiceType": "",
+          "QTY": "",
+          "IsFromBillGeneration": "",
+          "cutoff_applied_yn": "",
+          "SerialNo": "",
+          "CSGEFloor": 0,
+          "ISOnSubtotalorTotal": "",
           "Discount": Number(this.docketService.freightForm.value.discount) || 0,
-          "TRDays":0,
-          
+          "TRDays": 0,
+
         },
         wmdc: {
           "dockno": this.docketService.basicDetailForm.value.cNoteNo,
@@ -776,7 +776,7 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
           "chequeNo": "",
         },
       };
-      
+
       const DKTsubTotal = Number(this.docketService.freightForm.value.subTotal) || 0;
       const DKTTotal = Number(this.docketService.freightForm.value.dktTotal) || 0;
 
@@ -796,7 +796,7 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
       this.appendObjectToFormData(formData, payload.wmd, "DVM.WMD");
       this.appendObjectToFormData(formData, payload.wmdc, "DVM.WMDC");
       formData.append("DVM.isCompletion", "false");
-      formData.append("DVM.IsFromCompletion", this.docketService?.loginUserList?.Type?.toString() === '1'  ? "1" :"0");
+      formData.append("DVM.IsFromCompletion", this.docketService?.loginUserList?.Type?.toString() === '1' ? "1" : "0");
       formData.append("docketInvoiceList", JSON.stringify(invoiceList));
       formData.append("DocketBoxLBHList", JSON.stringify(DocketBoxLBHList));
       formData.append("docketChargesList", JSON.stringify(listCCH));
@@ -823,65 +823,65 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
         formData.append("DVM.WMD.sdD_Date", new Date().toISOString()),
         formData.append("DVM.WMD.dockdt", this.docketService.basicDetailForm.value.cNoteDate ? new Date(this.docketService.basicDetailForm.value.cNoteDate).toISOString() : '');
       // formData.append("DVM.WMD.cdeldt", new Date(this.docketService.freightData.edd).toISOString()),
-        formData.append("DVM.WMD.cdeldt", this.docketService.freightData.edd );
+      formData.append("DVM.WMD.cdeldt", this.docketService.freightData.edd);
 
 
-        formData.append("DVM.WMD.AppointmentDT",this.docketService.basicDetailForm.value.appointmentDT ? new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString() : new Date().toISOString()),
+      formData.append("DVM.WMD.AppointmentDT", this.docketService.basicDetailForm.value.appointmentDT ? new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString() : new Date().toISOString()),
         formData.append("DVM.WMD.Version", String(Number('19')));
       formData.append("DVM.docketType", "DKT");
-              // RequestLogs............
-        const requestLogs = this.formDataToJson(formData); // Use formDataToJson for the RequestLogs
-        formData.append("RequestLogs", JSON.stringify(requestLogs));
- 
+      // RequestLogs............
+      const requestLogs = this.formDataToJson(formData); // Use formDataToJson for the RequestLogs
+      formData.append("RequestLogs", JSON.stringify(requestLogs));
+
       this.isSubmitting = true;
-      if(!this.docketService.isComplition){
-      this.basicDetailService.onSubmit(formData).subscribe({
-        next: (response: any) => {
-          if (response) {
+      if (!this.docketService.isComplition) {
+        this.basicDetailService.onSubmit(formData).subscribe({
+          next: (response: any) => {
+            if (response) {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              this.docketService.successMsg = 'Docket submitted successfully.'
+              // window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N&src=angular`;
+              // {btoa('angular')}
+              window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&BILLNO=${response.res.billNo}&MRSNo=${response.res.mrsNo}&APMTNO=${response.res.apmtNo}&id=${response.res.id}&IsFromBillGeneration=N&src=angular`;
+              this.docketService.basicDetailForm.reset();
+              this.docketService.freightForm.reset();
+              this.docketService.invoiceform.reset();
+              this.docketService.consignorForm.reset();
+            }
+            // this.isSubmitting = false;
+          },
+          error: (error) => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            this.docketService.successMsg = 'Docket submitted successfully.'
-            // window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N&src=angular`;
-            // {btoa('angular')}
-            window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&BILLNO=${response.res.billNo}&MRSNo=${response.res.mrsNo}&APMTNO=${response.res.apmtNo}&id=${response.res.id}&IsFromBillGeneration=N&src=angular`;
-            this.docketService.basicDetailForm.reset();
-            this.docketService.freightForm.reset();
-            this.docketService.invoiceform.reset();
-            this.docketService.consignorForm.reset();
-          }
-          // this.isSubmitting = false;
-        },
-        error: (error) => {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          this.docketService.submitErrorMsg = error?.error?.message;
-          this.isSubmitting = false; // ✅ loader stop on error
+            this.docketService.submitErrorMsg = error?.error?.message;
+            this.isSubmitting = false; // ✅ loader stop on error
 
-        }
-      });
-    }
-      if(this.docketService.isComplition){
+          }
+        });
+      }
+      if (this.docketService.isComplition) {
         this.basicDetailService.completionSubmit(formData).subscribe({
-        next: (response: any) => {
-          if (response) {
+          next: (response: any) => {
+            if (response) {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              this.docketService.successMsg = 'Docket submitted successfully.'
+              this.isRedirect = true;
+              // window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'2'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N&src=angular`;
+              window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'2'}?DOCKNO=${response.res.dockNo}&BILLNO=${response.res.billNo}&MRSNo=${response.res.mrsNo}&APMTNO=${response.res.apmtNo}&id=${response.res.id}&IsFromBillGeneration=N&src=angular`;
+              this.docketService.basicDetailForm.reset();
+              this.docketService.freightForm.reset();
+              this.docketService.invoiceform.reset();
+              this.docketService.consignorForm.reset();
+            }
+            // this.isSubmitting = false;
+          },
+          error: (error) => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            this.docketService.successMsg = 'Docket submitted successfully.'
-             this.isRedirect = true;
-            // window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'2'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N&src=angular`;
-            window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'2'}?DOCKNO=${response.res.dockNo}&BILLNO=${response.res.billNo}&MRSNo=${response.res.mrsNo}&APMTNO=${response.res.apmtNo}&id=${response.res.id}&IsFromBillGeneration=N&src=angular`;
-            this.docketService.basicDetailForm.reset();
-            this.docketService.freightForm.reset();
-            this.docketService.invoiceform.reset();
-            this.docketService.consignorForm.reset();
-          }
-          // this.isSubmitting = false;
-        },
-        error: (error) => {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          this.docketService.submitErrorMsg = error?.error?.message;
-          this.isSubmitting = false; // ✅ loader stop on error
-           this.isRedirect = false;
+            this.docketService.submitErrorMsg = error?.error?.message;
+            this.isSubmitting = false; // ✅ loader stop on error
+            this.isRedirect = false;
 
-        }
-      });
+          }
+        });
       }
     } else {
       this.docketService.basicDetailForm.markAllAsTouched();
@@ -909,26 +909,26 @@ if(this.docketService.basicDetailForm.value.isreferenceDKT === true){
   }
 
   formDataToJson(formData: FormData): object {
-  const obj: any = {};
- 
-  formData.forEach((value, key) => {
-    // Check if the key already exists in the object
-    if (obj[key]) {
-      // If it exists and is an array, push the new value into the array
-      if (Array.isArray(obj[key])) {
-        obj[key].push(value);
+    const obj: any = {};
+
+    formData.forEach((value, key) => {
+      // Check if the key already exists in the object
+      if (obj[key]) {
+        // If it exists and is an array, push the new value into the array
+        if (Array.isArray(obj[key])) {
+          obj[key].push(value);
+        } else {
+          // If it exists but is not an array, convert it into an array
+          obj[key] = [obj[key], value];
+        }
       } else {
-        // If it exists but is not an array, convert it into an array
-        obj[key] = [obj[key], value];
+        // Otherwise, just add the key-value pair
+        obj[key] = value;
       }
-    } else {
-      // Otherwise, just add the key-value pair
-      obj[key] = value;
-    }
-  });
- 
-  return obj;
-}
+    });
+
+    return obj;
+  }
 
   validateDocket(DVM: any, DKTsubTotal: number, docketcharges: any, DKTTotal: number): string | null {
     let CalculatedFREIGHT = 0;

@@ -353,11 +353,10 @@ export class DocketService {
     });
   }
   createInvoiceRow(srNo: number): FormGroup {
-    const expiryValidators = this.loginUserList?.Type === '2' ? [] : [pastDateValidator()];
     return new FormGroup({
       srNo: new FormControl(srNo),
       ewayBillNo: new FormControl(null),
-      ewayBillExpiry: new FormControl('', expiryValidators),
+      ewayBillExpiry: new FormControl(''),
       ewayinvoiceDate: new FormControl(''),
       invoiceNo: new FormControl('', Validators.required),
       declaredvalue: new FormControl(0, Validators.required),
