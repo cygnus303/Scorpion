@@ -70,7 +70,12 @@
                                 <label class="form-label d-flex align-items-center gap-2 fw-bold"> Advance Amount Paid
                                     At
                                 </label>
-                                <input type="text" class="form-control" placeholder="Advance Amount Paid At" formControlName="fincmplbr">
+                                <ng-select class="required2 clear-icon" placeholder="Advance Amount Paid At" formControlName="fincmplbr">
+                                    <ng-option *ngFor="let location of locationData" [value]="location.locCode">
+                                        {{ location.locCode }} : {{ location.locName }}
+                                    </ng-option>
+                                </ng-select>
+                                <!-- <input type="text" class="form-control" placeholder="Advance Amount Paid At" formControlName="fincmplbr"> -->
                             </div>
                         </div>
                         <div class="col-3">
@@ -78,7 +83,12 @@
                                 <label class="form-label d-flex align-items-center gap-2 fw-bold"> Balance Amount Paid
                                     At
                                 </label>
-                                <input class="form-control" type="text" placeholder="Balance Amount Paid At" formControlName="balamtbrcd">
+                                <ng-select class="required2 clear-icon" placeholder="Balance Amount Paid At" formControlName="balamtbrcd">
+                                    <ng-option *ngFor="let location of locationData" [value]="location.locCode">
+                                        {{ location.locCode }} : {{ location.locName }}
+                                    </ng-option>
+                                </ng-select>
+                                <!-- <input class="form-control" type="text" placeholder="Balance Amount Paid At" formControlName="balamtbrcd"> -->
                             </div>
                         </div>
                     </div>
