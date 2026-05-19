@@ -42,14 +42,14 @@
         </div>
         <div class="btn-group gap-3 ms-auto">
             <!-- <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="fetchLRsData()">⟳ Fetch LRs</button> -->
-            <button class="btn btn-success px-4 py-2 rounded" *ngIf="menuAccessService.hasPermission('Add')"
+            <button class="btn btn-success px-4 py-2 rounded"
                 [disabled]="!canAddPFM" (click)="openAddPFM()">＋ Add
                 PFM</button>
-            <button class="btn btn-primary px-4 py-2 rounded" *ngIf="menuAccessService.hasPermission('Forward')"
+            <button class="btn btn-primary px-4 py-2 rounded"
                 [disabled]="!canForwardPFM" (click)="openForwardPFM()">↗
                 Forward PFM</button>
             <button class="btn rounded px-4 py-2" style="background: var(--btn-ack); color: white;"
-                *ngIf="menuAccessService.hasPermission('Acknowledge')" [disabled]="!canAcknowledgePFM"
+               [disabled]="!canAcknowledgePFM"
                 (click)="openAcknowledgePFM()">✓ Acknowledge
                 PFM</button>
         </div>
@@ -117,7 +117,7 @@
                     <input type="text" class="form-control border-0 shadow-none" [(ngModel)]="searchKeyword"
                         (keyup)="onSearchChange()" placeholder="Search LR No, Origin, Destination">
                 </div>
-                <div class="dropdown" *ngIf="menuAccessService.hasPermission('Download')">
+                <div class="dropdown">
                     <button class="btn btn-light btn-sm download-btn px-4 py-3 dropdown-toggle" type="button" 
                             data-bs-toggle="dropdown" aria-expanded="false" [disabled]="isCSVLoading">
                         <span *ngIf="!isCSVLoading">⬇ Download CSV</span>
@@ -156,7 +156,7 @@
                         <th>DOCUMENT DATE</th>
                         <th>DAYS SINCE</th>
                         <th>PFM NUMBER</th>
-                        <th *ngIf="menuAccessService.hasPermission('Edit') || menuAccessService.hasPermission('View')">
+                        <th>
                             ACTIONS</th>
                     </tr>
                 </thead>
@@ -171,7 +171,7 @@
                         <th *ngIf="isHQTR" class="text-center">DELIVERY BRANCH/LOCATION</th>
                         <th class="text-center">STATUS</th>
                         <th *ngIf="!isHQTR" class="text-center">DAYS SINCE</th>
-                        <th *ngIf="menuAccessService.hasPermission('Edit') || menuAccessService.hasPermission('View')">
+                        <th>
                             ACTIONS</th>
                     </tr>
                 </thead>
@@ -240,18 +240,18 @@
                             </span>
                             <span *ngIf="!row.fM_No" class="pfm-none">—</span>
                         </td>
-                        <td *ngIf="menuAccessService.hasPermission('Edit') || menuAccessService.hasPermission('View')" >
+                        <td>
                             <div class="d-flex gap-1" >
                                 <button type="button" class="btn btn-sm btn-view fw-bolder fs-6"
-                                    *ngIf="menuAccessService.hasPermission('View')" (click)="openViewPFM(row)">👁
+                                 (click)="openViewPFM(row)">👁
                                     View</button>
 
                                 <button type="button" (click)="openEditForwardedPFM(row)"
-                                    *ngIf="!isHQTR && menuAccessService.hasPermission('Edit') && row.displayStatus === 'Forwarded'"
+                                    *ngIf="!isHQTR && row.displayStatus === 'Forwarded'"
                                     class="btn btn-sm btn-edit fw-bolder fs-6">✎ Edit</button>
 
                                 <button type="button" class="btn btn-sm btn-outline-danger fw-bolder fs-6"
-                                    *ngIf="!isHQTR && menuAccessService.hasPermission('Edit') && (row.displayStatus === 'Generated' || row.displayStatus === 'Forwarded')"
+                                    *ngIf="!isHQTR && (row.displayStatus === 'Generated' || row.displayStatus === 'Forwarded')"
                                     (click)="cancelPFM(row)">✖ Cancel</button>
                             </div>
                         </td>
@@ -280,32 +280,32 @@
                         <td class="days-text fs-6 text-center" *ngIf="!isHQTR">
                             {{ row.daysSince }}d
                         </td>
-                        <td *ngIf="menuAccessService.hasPermission('Edit') || menuAccessService.hasPermission('View')" >
+                        <td >
                             <div class="d-flex gap-2">
                                 <button type="button" class="btn btn-sm btn-view fw-bolder fs-6"
-                                    *ngIf="menuAccessService.hasPermission('View')" (click)="openViewPFM(row)">👁
+                                    (click)="openViewPFM(row)">👁
                                     View</button>
 
                                 <!-- Edit for Branch or HQTR -->
                                 <button type="button" class="btn btn-sm btn-edit fw-bolder fs-6"
-                                    *ngIf="menuAccessService.hasPermission('Edit') && (row.displayStatus === 'Pending for Acknowledged') "
+                                    *ngIf="(row.displayStatus === 'Pending for Acknowledged') "
                                     (click)="openEditForwardedPFM(row)">✎ Edit</button>
 
                                 <button type="button" class="btn btn-sm btn-edit fw-bolder fs-6"
-                                    *ngIf="menuAccessService.hasPermission('Edit') && row.displayStatus === 'Forwarded'"
+                                    *ngIf="row.displayStatus === 'Forwarded'"
                                     (click)="openEditForwardedPFM(row)">✎ Edit</button>
 
                                     <!-- <button type="button" class="btn btn-sm btn-edit fw-bolder fs-6"
-                                    *ngIf="menuAccessService.hasPermission('Edit') && (row.displayStatus === 'Pending for Acknowledged' || row.displayStatus === 'Generated')"
+                                    *ngIf="(row.displayStatus === 'Pending for Acknowledged' || row.displayStatus === 'Generated')"
                                     (click)="openEditForwardedPFM(row)">✎ Edit</button>
 
                                 <button type="button" class="btn btn-sm btn-edit fw-bolder fs-6"
-                                    *ngIf="menuAccessService.hasPermission('Edit') && row.displayStatus === 'Forwarded'"
+                                    *ngIf="row.displayStatus === 'Forwarded'"
                                     (click)="openEditForwardedPFM(row)">✎ Edit</button> -->
 
                                 <!-- Cancel for Branch or HQTR -->
                                 <button type="button" class="btn btn-sm btn-outline-danger fw-bolder fs-6"
-                                    *ngIf="menuAccessService.hasPermission('Edit') && (row.displayStatus === 'Pending for Acknowledged' || row.displayStatus === 'Generated')"
+                                    *ngIf="row.displayStatus === 'Pending for Acknowledged' || row.displayStatus === 'Generated'"
                                     (click)="cancelPFM(row)">✖ Cancel</button>
                             </div>
                         </td>

@@ -31,7 +31,7 @@ export class HCCDetailsComponent {
   constructor(private modalService: BsModalService, private CommonService: CommonService,
     private thcMasterService: THCMasterService, private fb: FormBuilder,
     public generalMasterService: GeneralMasterService, public prsArrivalDetailsService: PrsArrivalDetailsService,
-    private sweetAlertService: SweetAlertService, private docketService: DocketService) { }
+    private sweetAlertService: SweetAlertService, private docketService: DocketService,private THCService:THCMasterService) { }
 
   get hasExistingHcc(): boolean {
     if (!this.selectedHccDetails) return false;
@@ -164,9 +164,39 @@ export class HCCDetailsComponent {
     });
   }
 
+   calculateLRWiseHCCAmount() {
+  var totalAmount = this.hccForm.value.chargeRate ||0;
+  var rowCount = this.lrList.length;
+
+  if (rowCount > 0) {
+
+    var amountPerRow = totalAmount / rowCount;
+
+    this.lrList.controls.forEach((group: any) => {
+      group.patchValue({
+        lrWiseHCCAmount: amountPerRow.toFixed(2)
+      });
+    });
+
+    this.calculateTotals();
+  }
+}
+
+
+
   onHccTypeChange() {
     if (this.selectedHccType) {
       this.getHCCDetail(this.selectedHccDetails);
+    }
+  }
+
+  onChangeChargeBy(event: any){
+    if (event) {
+      this.hccForm.patchValue({
+        vendorName: '',
+        vendorCode:'',
+        chargeRate:0
+      });
     }
   }
 
@@ -178,6 +208,28 @@ export class HCCDetailsComponent {
     } else {
       this.hccForm.patchValue({
         vendorName: ''
+      });
+    }
+     const data = {
+      loadUnloadType: 'U',
+      vendorCode: event.value,
+      typeModule: 'D',
+      chargeType: this.docketService.loginUserList.chargeType,
+      brdc: this.docketService.loginUserList.LocationCode,
+      loadingBy: this.hccForm.value.chargedBy,
+    };
+  if(['XX5'].includes(this.hccForm.get('chargedBy')?.value)){
+      this.THCService.getLoadingCharge(data).subscribe({
+        next: (response: any) => {
+          this.hccForm.patchValue({
+          chargeRate:response.rate,
+          rateType:response.rateType
+          });
+          
+        },
+        error: (err) => {
+          console.error('Error fetching loading charge:', err);
+        }
       });
     }
   }
