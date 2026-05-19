@@ -27,6 +27,20 @@ export class InvoiceDetailsComponent {
 
   ngOnInit() {
     this.docketService.invoicebuild();
+
+    // Subscribe to value changes of the entire invoiceForm array to keep validators perfectly updated reactively
+    this.docketService.invoiceform.valueChanges.subscribe(() => {
+      this.validateAllEwayBillFields();
+    });
+
+    // Also subscribe to originState and destinationState valueChanges to reactively update when states change
+    this.docketService.basicDetailForm.get('originState')?.valueChanges.subscribe(() => {
+      this.validateAllEwayBillFields();
+    });
+    this.docketService.basicDetailForm.get('destinationState')?.valueChanges.subscribe(() => {
+      this.validateAllEwayBillFields();
+    });
+
     this.subscription = this.docketService.ewayBill$.subscribe(ewayBillNo => {
       this.getEwayBillData(ewayBillNo, 0, false);
     });
@@ -60,6 +74,9 @@ export class InvoiceDetailsComponent {
         heightControl?.updateValueAndValidity();
       });
     });
+
+    // Initialize the validation on load
+    this.validateAllEwayBillFields();
   }
 
   checkDuplicateInvoices(i: number, row: AbstractControl) {
@@ -101,47 +118,32 @@ export class InvoiceDetailsComponent {
   }
 
   handleDeclaredValueChange(row: AbstractControl) {
-    row.get('declaredvalue')?.valueChanges.subscribe((value) => {
-      const declared = value ?? 0;
-      const originState = this.docketService.basicDetailForm.get('originState')?.value;
-      const destState = this.docketService.basicDetailForm.get('destinationState')?.value;
+    this.validateAllEwayBillFields();
+  }
 
-      let requireValidators = false;
+  setEwayRowValidators(row: AbstractControl, requireValidators: boolean) {
+    const ewayNo = row.get('ewayBillNo')?.value;
+    const hasEwayNo = ewayNo && ewayNo.toString().trim().length > 0;
+    const userType = this.docketService.loginUserList?.Type;
 
-      // Check if any row has an E-Way Bill number
-      const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
-      const hasAnyEwayBill = invoiceRows.controls.some(ctrl =>
-        ctrl.get('ewayBillNo')?.value && ctrl.get('ewayBillNo')?.value.length === 12
-      );
+    if (requireValidators || hasEwayNo) {
+      row.get('ewayBillNo')?.setValidators([Validators.required]);
 
-      // If any row has E-Way Bill, make it required for all rows
-      if (hasAnyEwayBill) {
-        requireValidators = true;
+      const expiryVals = [Validators.required];
+      if (hasEwayNo && userType !== '2') {
+        expiryVals.push(pastDateValidator());
       }
+      row.get('ewayBillExpiry')?.setValidators(expiryVals);
+      row.get('ewayinvoiceDate')?.setValidators([Validators.required]);
+    } else {
+      row.get('ewayBillNo')?.clearValidators();
+      row.get('ewayBillExpiry')?.clearValidators();
+      row.get('ewayinvoiceDate')?.clearValidators();
+    }
 
-      // Rule 1: Same state + declared > 100000
-      if (declared >= 100000 && originState && destState && originState === destState) {
-        requireValidators = true;
-      }
-
-      // Rule 2: Different states + declared > 50000
-      if (declared >= 50000 && originState && destState && originState !== destState) {
-        requireValidators = true;
-      }
-      if (requireValidators) {
-        row.get('ewayBillNo')?.setValidators([Validators.required]);
-         row.get('ewayBillExpiry')?.setValidators([Validators.required]);
-        row.get('ewayinvoiceDate')?.setValidators([Validators.required]);
-      } else {
-        row.get('ewayBillNo')?.clearValidators();
-        row.get('ewayBillExpiry')?.clearValidators();
-        row.get('ewayinvoiceDate')?.clearValidators();
-      }
-
-      row.get('ewayBillNo')?.updateValueAndValidity({ emitEvent: false });
-      row.get('ewayBillExpiry')?.updateValueAndValidity({ emitEvent: false });
-      row.get('ewayinvoiceDate')?.updateValueAndValidity({ emitEvent: false });
-    });
+    row.get('ewayBillNo')?.updateValueAndValidity({ emitEvent: false });
+    row.get('ewayBillExpiry')?.updateValueAndValidity({ emitEvent: false });
+    row.get('ewayinvoiceDate')?.updateValueAndValidity({ emitEvent: false });
   }
 
   updateAllEwayBillValidations(): void {
@@ -158,14 +160,10 @@ export class InvoiceDetailsComponent {
     const originState = this.docketService.basicDetailForm.get('originState')?.value;
     const destState = this.docketService.basicDetailForm.get('destinationState')?.value;
 
-    // Check if any row has an E-Way Bill number
-    const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
-    const hasAnyEwayBill = invoiceRows.controls.some(ctrl =>
-      ctrl.get('ewayBillNo')?.value && ctrl.get('ewayBillNo')?.value.length === 12
-    );
+    const ewayNo = row.get('ewayBillNo')?.value;
+    const hasEwayNo = ewayNo && ewayNo.toString().trim().length > 0;
 
-    // If any row has E-Way Bill, make it required for all rows
-    if (hasAnyEwayBill) {
+    if (hasEwayNo) {
       return true;
     }
 
@@ -569,49 +567,22 @@ export class InvoiceDetailsComponent {
   validateAllEwayBillFields(): void {
     const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
 
-    // Check if any row has an E-Way Bill number
-    const hasAnyEwayBill = invoiceRows.controls.some(ctrl =>
-      ctrl.get('ewayBillNo')?.value && ctrl.get('ewayBillNo')?.value.length === 12
-    );
-
-    // Update all rows based on E-Way Bill presence
     invoiceRows.controls.forEach((row) => {
+      const declared = row.get('declaredvalue')?.value ?? 0;
+      const originState = this.docketService.basicDetailForm.get('originState')?.value;
+      const destState = this.docketService.basicDetailForm.get('destinationState')?.value;
 
-      if (hasAnyEwayBill) {
-        // If any row has E-Way Bill, ensure all rows have required validators on E-Way Bill field
-        if (!row.get('ewayBillNo')?.value) {
-          row.get('ewayBillNo')?.setValidators([Validators.required]);
-          row.get('ewayBillNo')?.updateValueAndValidity({ emitEvent: false });
-        }
-      } else {
-        // If no row has E-Way Bill, remove cross-row required validators
-        // Only keep validators based on original rules (declared value, states)
-        const declared = row.get('declaredvalue')?.value ?? 0;
-        const originState = this.docketService.basicDetailForm.get('originState')?.value;
-        const destState = this.docketService.basicDetailForm.get('destinationState')?.value;
+      let requireValidators = false;
 
-        let requireValidators = false;
-
-        // Rule 1: Same state + declared > 100000
-        if (declared >= 100000 && originState && destState && originState === destState) {
-          requireValidators = true;
-        }
-
-        // Rule 2: Different states + declared > 50000
-        if (declared >= 50000 && originState && destState && originState !== destState) {
-          requireValidators = true;
-        }
-
-        if (!requireValidators) {
-          // Remove cross-row required validator if no original rule applies
-          const currentValidators = row.get('ewayBillNo')?.validator;
-          if (currentValidators) {
-            // Check if required validator is present and remove it
-          row.get('ewayBillNo')?.clearValidators();
-          row.get('ewayBillNo')?.updateValueAndValidity({ emitEvent: false });
-        }
+      if (declared >= 100000 && originState && destState && originState === destState) {
+        requireValidators = true;
       }
+
+      if (declared >= 50000 && originState && destState && originState !== destState) {
+        requireValidators = true;
       }
+
+      this.setEwayRowValidators(row, requireValidators);
     });
   }
 
