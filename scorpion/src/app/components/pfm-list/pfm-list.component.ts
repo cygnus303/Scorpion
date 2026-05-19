@@ -107,7 +107,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
     });
 
     this.fetchData();
-    this.getUserModulePermissions();
+    // this.getUserModulePermissions();
 
     if (this.isHQTR) {
       this.statusList = [
