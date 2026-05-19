@@ -10,7 +10,7 @@
           <div class="portlet-body m-3">
             <div>
               <div class="row">
-                 <div class="col-md-3">
+                <div class="col-md-3">
                   <div class="form-group">
                     <label class="control-label col-md-5">No Of Rows </label>
                     <div class="col-md-7">
@@ -72,15 +72,17 @@
                           <th class="center">X</th>
                         </tr>
                       </thead>
-                       <tbody formArrayName="invoiceRows">
+                      <tbody formArrayName="invoiceRows">
                         <tr class="editorRow" *ngFor="let row of docketService.invoiceRows.controls; let i = index"
                           [formGroupName]="i">
                           <td> {{ row.get('srNo')?.value }}</td>
                           <td class="center">
                             <input class="form-control" maxlength="12" placeholder="E-Way Bill No."
-                              formControlName="ewayBillNo" type="text" (input)="getEwayBillData($event,i,true)" oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                              formControlName="ewayBillNo" type="text" (input)="getEwayBillData($event,i,true)"
+                              oninput="this.value = this.value.replace(/[^0-9]/g,'');"
                               [ngClass]="{ 'border-danger': (row.get('ewayBillNo')?.invalid && row.get('ewayBillNo')?.touched) || (isEwayRequired(row) && row.get('ewayBillNo')?.touched && !row.get('ewayBillNo')?.value),'required2': isEwayRequired(row)}">
-                            <div *ngIf="isEwayRequired(row) && row.get('ewayBillNo')?.touched && !row.get('ewayBillNo')?.value"
+                            <div
+                              *ngIf="isEwayRequired(row) && row.get('ewayBillNo')?.touched && !row.get('ewayBillNo')?.value"
                               class="text-danger text-start">
                               This field is required.
                             </div>
@@ -92,28 +94,34 @@
                           <td>
                             <div class="input-group">
                               <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
-                                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }" [attr.tabindex]="-1" [readonly]="row.get('ewayBillNo')?.value?.length > 0"
+                                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }"
+                                [attr.tabindex]="-1" [readonly]="row.get('ewayBillNo')?.value?.length > 0"
                                 placeholder="dd/MMM/yyyy" formControlName="ewayBillExpiry" [ngClass]="{ 'border-danger': row.get('ewayBillExpiry')?.invalid && row.get('ewayBillExpiry')?.touched, 
-                                                     'required2': isEwayRequired(row)}"[class.disabled-input]="true">
-                              <span class="input-group-text cursor-pointer" (click)="dp.toggle()" [class.disabled-input]="true">
+                                                     'required2': isEwayRequired(row)}" [class.disabled-input]="true">
+                              <span class="input-group-text cursor-pointer" (click)="dp.toggle()"
+                                [class.disabled-input]="true">
                                 <i class="fa fa-calendar"></i>
                               </span>
                             </div>
-                             <div *ngIf="row.get('ewayBillExpiry')?.errors && row.get('ewayBillExpiry')?.touched"
+                            <div *ngIf="row.get('ewayBillExpiry')?.errors && row.get('ewayBillExpiry')?.touched"
                               class="text-danger text-start">
                               <span *ngIf="row.get('ewayBillExpiry')?.hasError('required')">This field is
                                 required.</span>
-                              <span *ngIf="row.get('ewayBillExpiry')?.hasError('pastDate')">E-Way Bill expired or Part B not prepared.</span>
+                              <span *ngIf="row.get('ewayBillExpiry')?.hasError('pastDate')">E-Way Bill expired or Part B
+                                not prepared.</span>
                             </div>
                           </td>
 
                           <td class="center">
                             <div class="input-group">
-                              <input type="text" class="form-control uppercase-none" #dp2="bsDatepicker" bsDatepicker [class.disabled-input]="row.get('ewayBillNo')?.value?.length > 0"
-                                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }" [attr.tabindex]="-1" 
-                                placeholder="dd/MMM/yyyy" formControlName="ewayinvoiceDate" [ngClass]="{'border-danger': row.get('ewayinvoiceDate')?.invalid && row.get('ewayinvoiceDate')?.touched, 
+                              <input type="text" class="form-control uppercase-none" #dp2="bsDatepicker" bsDatepicker
+                                [class.disabled-input]="row.get('ewayBillNo')?.value?.length > 0"
+                                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }"
+                                [attr.tabindex]="-1" placeholder="dd/MMM/yyyy" formControlName="ewayinvoiceDate"
+                                [ngClass]="{'border-danger': row.get('ewayinvoiceDate')?.invalid && row.get('ewayinvoiceDate')?.touched, 
                                               'required2': isEwayRequired(row)}" [class.disabled-input]="true">
-                              <span class="input-group-text cursor-pointer" (click)="dp2.toggle()"  [class.disabled-input]="row.get('ewayBillNo')?.value?.length > 0">
+                              <span class="input-group-text cursor-pointer" (click)="dp2.toggle()"
+                                [class.disabled-input]="row.get('ewayBillNo')?.value?.length > 0">
                                 <i class="fa fa-calendar"></i>
                               </span>
                             </div>
@@ -123,8 +131,9 @@
                             </div>
                           </td>
                           <td class="center">
-                            <input class="form-control required required2" placeholder="Invoice No." type="text" [readonly]="row.get('ewayBillNo')?.value?.length > 0"
-                              formControlName="invoiceNo" required  (blur)="checkDuplicateInvoices(i,row)" 
+                            <input class="form-control required required2" placeholder="Invoice No." type="text"
+                              [readonly]="row.get('ewayBillNo')?.value?.length > 0" formControlName="invoiceNo" required
+                              (blur)="checkDuplicateInvoices(i,row)"
                               [ngClass]="{ 'border-danger': row.get('invoiceNo')?.invalid && row.get('invoiceNo')?.touched}">
                             <div *ngIf="row.get('invoiceNo')?.invalid && row.get('invoiceNo')?.touched"
                               class="text-danger text-start">
@@ -135,15 +144,15 @@
                             <input class="form-control required2 text-end" min="0"
                               (keypress)="docketService.allowNumericDecimal($event)" placeholder="Invoice value"
                               type="text" value="0" formControlName="declaredvalue" required
-                              (focus)="clearZero(row, 'declaredvalue')" [readonly]="row.get('ewayBillNo')?.value?.length > 0"
-                              (input)="calculateSummary(i)" 
+                              (focus)="clearZero(row, 'declaredvalue')"
+                              [readonly]="row.get('ewayBillNo')?.value?.length > 0" (input)="calculateSummary(i)"
                               (change)="docketService.freightAndOtherChar();handleDeclaredValueChange(row)"
                               [ngClass]="{ 'border-danger': row.get('declaredvalue')?.invalid && row.get('declaredvalue')?.touched}"
-                              (blur)="restoreIfEmpty(row, 'declaredvalue')" >
+                              (blur)="restoreIfEmpty(row, 'declaredvalue')">
                             <div *ngIf="row.get('declaredvalue')?.invalid && row.get('declaredvalue')?.touched"
                               class="text-danger text-start">
                               This field is required.
-                            </div>  
+                            </div>
                           </td>
                           <td class="center">
                             <div *ngIf="i !== 0" (click)="removeRow(i)"
@@ -168,23 +177,25 @@
           </div>
           <div class="portlet-body m-3">
             <div class="row">
-              <div class="col-md-4"  *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                  <div class="form-group">
-                    <label class="control-label col-md-5">CFT Ratio </label>
-                    <div class="col-md-7">
-                      <input class="form-control" placeholder="CNote No" type="text" formControlName="cft_Ratio" readonly>
-                    </div>
+              <div class="col-md-4"
+                *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
+                <div class="form-group">
+                  <label class="control-label col-md-5">CFT Ratio </label>
+                  <div class="col-md-7">
+                    <input class="form-control" placeholder="CNote No" type="text" formControlName="cft_Ratio" readonly>
                   </div>
                 </div>
-                <div class="col-md-4"  *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'"> 
-                  <div class="form-group">
-                    <label class="control-label col-md-5">CFT Total </label>
-                    <div class="col-md-7">
-                      <input class="required2 form-control required" placeholder="CFT Total" type="text"
-                        formControlName="cftTotal" readonly>
-                    </div>
+              </div>
+              <div class="col-md-4"
+                *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
+                <div class="form-group">
+                  <label class="control-label col-md-5">CFT Total </label>
+                  <div class="col-md-7">
+                    <input class="required2 form-control required" placeholder="CFT Total" type="text"
+                      formControlName="cftTotal" readonly>
                   </div>
                 </div>
+              </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label class="control-label col-md-5">No Of Rows </label>
@@ -213,18 +224,21 @@
                         </th>
                         <th class="center "
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                          L ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ? 'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm' 
-                                  ? 'CM' : docketService.contractservicecharge?.[0]?.cft_Measure }})
+                          L ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ?
+                          'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm'
+                          ? 'CM' : docketService.contractservicecharge?.[0]?.cft_Measure }})
                         </th>
                         <th class="center "
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                          B ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ? 'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm' 
-                                  ? 'CM' : docketService.contractservicecharge?.[0]?.cft_Measure }})
+                          B ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ?
+                          'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm'
+                          ? 'CM' : docketService.contractservicecharge?.[0]?.cft_Measure }})
                         </th>
                         <th class="center"
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
-                          H ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ? 'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm' 
-                                  ? 'CM' : docketService.contractservicecharge?.[0]?.cft_Measure }})
+                          H ({{ docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'inches' ?
+                          'IN': docketService.contractservicecharge?.[0]?.cft_Measure?.toLowerCase() === 'cm'
+                          ? 'CM' : docketService.contractservicecharge?.[0]?.cft_Measure }})
                         </th>
                         <th class="center">
                           No of Pkgs.
@@ -249,20 +263,20 @@
                             formControlName="length" (focus)="clearZero(row, 'length')" placeholder="Enter length"
                             (keypress)="docketService.allowNumericDecimal($event)"
                             (change)="docketService.freightAndOtherChar();docketService.GetDKTGSTForGTA();"
-                            (input)="calculateSummary(i)" 
-                            [ngClass]="{ 'border-danger': row.get('length')?.invalid && row.get('length')?.touched }"
-                            >
-                            <div class="text-danger mt-1 small"  *ngIf="row.get('length')?.touched && row.get('length')?.errors">
-                                <span *ngIf="row.get('length')?.hasError('required')">
-                                  Please enter a value.
-                                </span>
-                                <span *ngIf="row.get('length')?.hasError('min')">
-                                  Please enter a value greater than or equal to 1.
-                                </span>
-                                <span *ngIf="row.get('length')?.hasError('max')">
-                                  Please enter a value less than <br> or equal to 199.
-                                </span>
-                             </div>
+                            (input)="calculateSummary(i)"
+                            [ngClass]="{ 'border-danger': row.get('length')?.invalid && row.get('length')?.touched }">
+                          <div class="text-danger mt-1 small"
+                            *ngIf="row.get('length')?.touched && row.get('length')?.errors">
+                            <span *ngIf="row.get('length')?.hasError('required')">
+                              Please enter a value.
+                            </span>
+                            <span *ngIf="row.get('length')?.hasError('min')">
+                              Please enter a value greater than or equal to 1.
+                            </span>
+                            <span *ngIf="row.get('length')?.hasError('max')">
+                              Please enter a value less than <br> or equal to 199.
+                            </span>
+                          </div>
                         </td>
                         <td class="center"
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
@@ -272,19 +286,19 @@
                             (keypress)="docketService.allowNumericDecimal($event)"
                             (change)="docketService.freightAndOtherChar();docketService.GetDKTGSTForGTA()"
                             (input)="calculateSummary(i)"
-                            [ngClass]="{ 'border-danger': row.get('breadth')?.invalid && row.get('breadth')?.touched }"
-                            >        
-                            <div class="text-danger mt-1 small" *ngIf="row.get('breadth')?.touched && row.get('breadth')?.errors">
-                              <span *ngIf="row.get('breadth')?.hasError('required')">
-                                Please enter a value.
-                              </span>
-                              <span *ngIf="row.get('breadth')?.hasError('min')">
-                                Please enter a value greater than or equal to 1.
-                              </span>
-                              <span *ngIf="row.get('breadth')?.hasError('max')">
-                                Please enter a value less than <br> or equal to 199.
-                              </span>
-                            </div>
+                            [ngClass]="{ 'border-danger': row.get('breadth')?.invalid && row.get('breadth')?.touched }">
+                          <div class="text-danger mt-1 small"
+                            *ngIf="row.get('breadth')?.touched && row.get('breadth')?.errors">
+                            <span *ngIf="row.get('breadth')?.hasError('required')">
+                              Please enter a value.
+                            </span>
+                            <span *ngIf="row.get('breadth')?.hasError('min')">
+                              Please enter a value greater than or equal to 1.
+                            </span>
+                            <span *ngIf="row.get('breadth')?.hasError('max')">
+                              Please enter a value less than <br> or equal to 199.
+                            </span>
+                          </div>
                         </td>
                         <td class="center"
                           *ngIf="this.docketService?.step2DetailsList?.isVolumentric === 'Y' && docketService.basicDetailForm.get('serviceType')?.value ==='1'">
@@ -294,26 +308,27 @@
                             (keypress)="docketService.allowNumericDecimal($event)"
                             (change)="docketService.freightAndOtherChar();docketService.GetDKTGSTForGTA()"
                             (input)="calculateSummary(i)"
-                            [ngClass]="{ 'border-danger': row.get('height')?.invalid && row.get('height')?.touched }"
-                            >
-                          <div class="text-danger mt-1 small" *ngIf="row.get('height')?.touched && row.get('height')?.errors">
-                          <span *ngIf="row.get('height')?.hasError('required')">
-                            Please enter a value.
-                          </span>
-                          <span *ngIf="row.get('height')?.hasError('max')">
-                            Please enter a value less than <br> or equal to 199.
-                          </span>
-                          <span *ngIf="row.get('height')?.hasError('min')">
-                            Please enter a value greater than or equal to 1.
-                          </span>
-                        </div>
+                            [ngClass]="{ 'border-danger': row.get('height')?.invalid && row.get('height')?.touched }">
+                          <div class="text-danger mt-1 small"
+                            *ngIf="row.get('height')?.touched && row.get('height')?.errors">
+                            <span *ngIf="row.get('height')?.hasError('required')">
+                              Please enter a value.
+                            </span>
+                            <span *ngIf="row.get('height')?.hasError('max')">
+                              Please enter a value less than <br> or equal to 199.
+                            </span>
+                            <span *ngIf="row.get('height')?.hasError('min')">
+                              Please enter a value greater than or equal to 1.
+                            </span>
+                          </div>
                         </td>
                         <td class="center ">
                           <input class="form-control required2 text-end" placeholder="Enter No of Pkgs."
                             (focus)="clearZero(row, 'noOfPkgs')" (keypress)="docketService.allowNumericDecimal($event)"
-                            type="text" formControlName="noOfPkgs" [ngClass]="{ 'border-danger': row.get('noOfPkgs')?.invalid && row.get('noOfPkgs')?.touched }"
+                            type="text" formControlName="noOfPkgs"
+                            [ngClass]="{ 'border-danger': row.get('noOfPkgs')?.invalid && row.get('noOfPkgs')?.touched }"
                             (change)="calculateSummary(i);docketService.freightAndOtherChar();docketService.GetDKTGSTForGTA();">
-                            <div *ngIf="row.get('noOfPkgs')?.touched && row.get('noOfPkgs')?.errors"
+                          <div *ngIf="row.get('noOfPkgs')?.touched && row.get('noOfPkgs')?.errors"
                             class="text-danger text-start">
                             <div *ngIf="row.get('noOfPkgs')?.errors?.['required']">
                               Please enter a value.
@@ -330,12 +345,12 @@
                         </td>
                         <td class="center">
                           <input class="form-control required2 text-end" placeholder="Actual Weight" type="text"
-                            formControlName="actualWeight" 
-                            (keypress)="docketService.allowNumericDecimal($event)" 
+                            formControlName="actualWeight" (keypress)="docketService.allowNumericDecimal($event)"
                             (blur)="restoreIfEmpty(row, 'actualWeight');"
-                            (change)="calculateSummary(i);docketService.freightAndOtherChar();docketService.GetDKTGSTForGTA();" (focus)="clearZero(row, 'actualWeight')"
+                            (change)="calculateSummary(i);docketService.freightAndOtherChar();docketService.GetDKTGSTForGTA();"
+                            (focus)="clearZero(row, 'actualWeight')"
                             [ngClass]="{ 'border-danger': row.get('actualWeight')?.invalid && row.get('actualWeight')?.touched }">
-  
+
                           <div *ngIf="row.get('actualWeight')?.touched && row.get('actualWeight')?.errors"
                             class="text-danger text-start">
                             <div *ngIf="row.get('actualWeight')?.errors?.['required']">
@@ -363,56 +378,60 @@
     </div>
 
     <div class="row pb-3">
-     <div class="col-3">
+      <div class="col-3">
         <div class="row align-items-center">
           <label class="control-label col-5"><b>Total Declared Amt.</b></label>
           <div class="col-7">
-            <input formControlName="totalDeclaredValue" required class="form-control required2 required text-end" placeholder="Total Declared Value"
-              type="number" readonly
+            <input formControlName="totalDeclaredValue" required class="form-control required2 required text-end"
+              placeholder="Total Declared Value" type="number" readonly
               [ngClass]="{ 'border-danger': docketService.invoiceform.get('totalDeclaredValue')?.invalid && docketService.invoiceform.get('totalDeclaredValue')?.touched}">
-              <div *ngIf="docketService.invoiceform.get('totalDeclaredValue')?.invalid && docketService.invoiceform.get('totalDeclaredValue')?.touched"
-                class="text-danger text-start ">
-                    This field is required.
-                  </div>
+            <div
+              *ngIf="docketService.invoiceform.get('totalDeclaredValue')?.invalid && docketService.invoiceform.get('totalDeclaredValue')?.touched"
+              class="text-danger text-start ">
+              This field is required.
+            </div>
           </div>
         </div>
-     </div>
-     <div class="col-3">
+      </div>
+      <div class="col-3">
         <div class="row align-items-center">
           <label class="control-label col-5"><b>Total Pkgs.</b></label>
           <div class="col-7">
-             <input formControlName="totalNoOfPkgs" class="form-control required2 required text-end" type="number" readonly  placeholder="Total Pkgs."
-              required
+            <input formControlName="totalNoOfPkgs" class="form-control required2 required text-end" type="number"
+              readonly placeholder="Total Pkgs." required
               [ngClass]="{ 'border-danger': docketService.invoiceform.get('totalNoOfPkgs')?.invalid && docketService.invoiceform.get('totalNoOfPkgs')?.touched}">
-               <div *ngIf="docketService.invoiceform.get('totalNoOfPkgs')?.invalid && docketService.invoiceform.get('totalNoOfPkgs')?.touched"
-            class="text-danger text-start">
-            This field is required.
-          </div>
+            <div
+              *ngIf="docketService.invoiceform.get('totalNoOfPkgs')?.invalid && docketService.invoiceform.get('totalNoOfPkgs')?.touched"
+              class="text-danger text-start">
+              This field is required.
+            </div>
           </div>
         </div>
-     </div>
-     <div class="col-3">
+      </div>
+      <div class="col-3">
         <div class="row align-items-center">
           <label class="control-label col-5"><b>CFT Total</b></label>
           <div class="col-7">
-            <input formControlName="totalCubicWeight"
-                      class="form-control required2 required text-end" type="number" readonly>
+            <input formControlName="totalCubicWeight" class="form-control required2 required text-end" type="number"
+              readonly>
           </div>
         </div>
-     </div>
-     <div class="col-3">
+      </div>
+      <div class="col-3">
         <div class="row align-items-center">
           <label class="control-label col-5"><b>Total Actual Wt.</b></label>
           <div class="col-7">
-           <input formControlName="totalActualWeight" class="form-control required2 required text-end" type="number" readonly required
+            <input formControlName="totalActualWeight" class="form-control required2 required text-end" type="number"
+              readonly required
               [ngClass]="{ 'border-danger': docketService.invoiceform.get('totalActualWeight')?.invalid && docketService.invoiceform.get('totalActualWeight')?.touched}">
-               <div *ngIf="docketService.invoiceform.get('totalActualWeight')?.invalid && docketService.invoiceform.get('totalActualWeight')?.touched"
-               class="text-danger text-start">
-            Please enter a value greater than or equal to 1.
-          </div>
+            <div
+              *ngIf="docketService.invoiceform.get('totalActualWeight')?.invalid && docketService.invoiceform.get('totalActualWeight')?.touched"
+              class="text-danger text-start">
+              Please enter a value greater than or equal to 1.
+            </div>
           </div>
         </div>
-     </div>
+      </div>
     </div>
     <div class="row pb-3">
       <div class="col-3"></div>
@@ -420,12 +439,14 @@
         <div class="row align-items-center">
           <label class="control-label col-5"><b>Total Charge Pkg.</b></label>
           <div class="col-7">
-            <input formControlName="chargeWeightPerPkg" class="form-control required2 required text-end" type="number" readonly required
+            <input formControlName="chargeWeightPerPkg" class="form-control required2 required text-end" type="number"
+              readonly required
               [ngClass]="{ 'border-danger': docketService.invoiceform.get('chargeWeightPerPkg')?.invalid && docketService.invoiceform.get('chargeWeightPerPkg')?.touched}">
-              <div *ngIf="docketService.invoiceform.get('chargeWeightPerPkg')?.invalid && docketService.invoiceform.get('chargeWeightPerPkg')?.touched"
-                class="text-danger text-start col-md-7">
-                This field is required.
-              </div>
+            <div
+              *ngIf="docketService.invoiceform.get('chargeWeightPerPkg')?.invalid && docketService.invoiceform.get('chargeWeightPerPkg')?.touched"
+              class="text-danger text-start col-md-7">
+              This field is required.
+            </div>
           </div>
         </div>
       </div>
@@ -436,9 +457,9 @@
             <input formControlName="finalActualWeight" class="form-control required2 required text-end" type="number"
               (change)="docketService.actualWeightvalidation()" readOnly
               (blur)="restoreIfEmpty(docketService.invoiceform, 'finalActualWeight');docketService.freightAndOtherChar();docketService.getProRataCharge()">
-              <div *ngIf="docketService.weightErrorMsg" class="text-danger mt-1 col-md-7">
-                {{ docketService.weightErrorMsg }}
-              </div>
+            <div *ngIf="docketService.weightErrorMsg" class="text-danger mt-1 col-md-7">
+              {{ docketService.weightErrorMsg }}
+            </div>
           </div>
         </div>
       </div>
