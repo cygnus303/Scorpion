@@ -29,7 +29,7 @@ import { PRSDRSEditComponent } from './prsdrs-edit/prsdrs-edit.component';
 export class PRSGenerationListComponent implements OnInit, OnDestroy {
   @ViewChild('PRSArrivalComponent') PRSArrivalComponent!: PRSArrivalComponent;
   @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
-  public  env = environment;
+  public env = environment;
   @ViewChild('PRSDRSEditComponent') PRSDRSEditComponent!: PRSDRSEditComponent;
 
   public listSubscription?: Subscription;
@@ -56,7 +56,7 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
   ];
 
   public config = {
-    fromDateStr: new Date(new Date().setDate(new Date().getDate() - 7)),
+    fromDateStr: new Date(),
     toDateStr: new Date(),
     statusFilter: 'All',
     page: 1,
@@ -92,6 +92,10 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     });
 
     this.fetchData();
+  }
+
+  get isHQTR(): boolean {
+    return this.docketService.loginUserList?.LocationCode === 'HQTR';
   }
 
   fetchData() {
@@ -241,19 +245,19 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
       pdcno: prsNo
     }
     this.prsdrsApiService.onCancelDRS(payload).subscribe({
-        next: (response: any) => {
-         if(response) {
+      next: (response: any) => {
+        if (response) {
           this.sweetAlertService.success(`PRS ${prsNo} has been cancelled successfully.`);
           this.fetchData();
-         }
-        },
-        error: (err) => {
-          console.error(err);
         }
-      });
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
   }
 
-   openHCCModal(hccNo: string) {
+  openHCCModal(hccNo: string) {
     const url = `${this.env.liveUrl}ViewPrint/LoadingUnloadingViewPrint?LsNO=${hccNo}&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
@@ -264,7 +268,7 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     }
   }
 
-    openView(pdcNo: string) {
+  openView(pdcNo: string) {
     const url = `${this.env.liveUrl}ViewPrint/ViewPrint?DocumentNo=${pdcNo}&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
