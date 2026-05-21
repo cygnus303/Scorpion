@@ -135,7 +135,7 @@
                         <th class="text-center">PRS No. / Date</th>
                         <th class="text-center">Total Dockets</th>
                         <th class="text-center">Vendor Type / Name</th>
-                        <th class="text-center">Vendor Bill No.</th>
+                        <th class="text-center">Vendor BE No.</th>
                         <th class="text-center">Loading HCC No.</th>
                         <th class="text-center">Unloading HCC No.</th>
                         <th class="text-center">Status</th>
@@ -212,7 +212,7 @@
                                 </button>
                                 <button *ngIf="!isHQTR"
                                     class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3"
-                                    (click)="openPRSDRSEdit(row,'P')">
+                                    (click)="openPRSDRSEdit(row,'P')" [disabled]="!row.isCancelAllow">
                                     ✏️ Edit
                                 </button>
                                 <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"

@@ -6,7 +6,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CommonService } from 'app/shared/services/common.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { PrsArrivalDetailsService } from 'app/shared/services/prs-arrival-details.service';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { DocketService } from 'app/shared/services/docket.service';
@@ -31,7 +31,7 @@ export class HCCDetailsComponent {
   constructor(private modalService: BsModalService, private CommonService: CommonService,
     private thcMasterService: THCMasterService, private fb: FormBuilder,
     public generalMasterService: GeneralMasterService, public prsArrivalDetailsService: PrsArrivalDetailsService,
-    private sweetAlertService: SweetAlertService, private docketService: DocketService,private THCService:THCMasterService) { }
+    private sweetAlertService: SweetAlertService, private docketService: DocketService, private THCService: THCMasterService) { }
 
   get hasExistingHcc(): boolean {
     if (!this.selectedHccDetails) return false;
@@ -46,7 +46,14 @@ export class HCCDetailsComponent {
   showPopup(data: any, flag: any) {
     console.log("HCC Details Data:", data);
     this.selectedHccDetails = data;
-    this.selectedHccType = '';
+    // Auto-detect existing HCC type so radio shows pre-selected (disabled) state
+    if (data.loadingHCCNo || data.loadingHCC) {
+      this.selectedHccType = 'Unloading';
+    } else if (data.unloadingHCCNo || data.unLoadingHCC) {
+      this.selectedHccType = 'Loading';
+    } else {
+      this.selectedHccType = '';
+    }
     this.buildForm();
     this.CommonService.getVendorType('P');
     this.generalMasterService.getChargeTypeData();
@@ -73,14 +80,14 @@ export class HCCDetailsComponent {
       LaborType: [''],
       HCCPayType: [''],
       chargeAmount: [''],
-      chargedBy: [''],
+      chargedBy: ['',[Validators.required]],
       VendorCode: [''],
       RateType: [''],
       chargeRate: [''],
       chargesType: [''],
-      vendorCode: [''],
+      vendorCode: ['',[Validators.required]],
       vendorName: [''],
-      rateType: [''],
+      rateType: ['',[Validators.required]],
       totalWeight: [''],
       totalLRWiseAmount: [0],
       totalPkg: [''],
@@ -160,27 +167,10 @@ export class HCCDetailsComponent {
     this.hccForm.patchValue({
       totalWeight: totalWeight.toFixed(2),
       totalPkg: totalPkg.toFixed(2),
-      totalLRWiseAmount: totalLRWiseAmount.toFixed(2)
+      totalLRWiseAmount: totalLRWiseAmount.toFixed(2),
+      chargeAmount:totalLRWiseAmount.toFixed(2),
     });
   }
-
-   calculateLRWiseHCCAmount() {
-  var totalAmount = this.hccForm.value.chargeRate ||0;
-  var rowCount = this.lrList.length;
-
-  if (rowCount > 0) {
-
-    var amountPerRow = totalAmount / rowCount;
-
-    this.lrList.controls.forEach((group: any) => {
-      group.patchValue({
-        lrWiseHCCAmount: amountPerRow.toFixed(2)
-      });
-    });
-
-    this.calculateTotals();
-  }
-}
 
 
 
@@ -190,12 +180,13 @@ export class HCCDetailsComponent {
     }
   }
 
-  onChangeChargeBy(event: any){
+  onChangeChargeBy(event: any) {
     if (event) {
       this.hccForm.patchValue({
-        vendorName: '',
-        vendorCode:'',
-        chargeRate:0
+        vendorName: null,
+        vendorCode: null,
+        chargeRate: 0,
+        rateType: null
       });
     }
   }
@@ -210,22 +201,22 @@ export class HCCDetailsComponent {
         vendorName: ''
       });
     }
-     const data = {
-      loadUnloadType: 'U',
+    const data = {
+      loadUnloadType: this.selectedHccType === 'Unloading' ? 'U' : 'L',
       vendorCode: event.value,
       typeModule: 'D',
-      chargeType: this.docketService.loginUserList.chargeType,
+      chargeType: null,
       brdc: this.docketService.loginUserList.LocationCode,
       loadingBy: this.hccForm.value.chargedBy,
     };
-  if(['XX5'].includes(this.hccForm.get('chargedBy')?.value)){
+    if (['XX5'].includes(this.hccForm.get('chargedBy')?.value)) {
       this.THCService.getLoadingCharge(data).subscribe({
         next: (response: any) => {
           this.hccForm.patchValue({
-          chargeRate:response.rate,
-          rateType:response.rateType
+            chargeRate: response.rate,
+            rateType: response.rateType
           });
-          
+          this.calculateLRWiseHCCAmount()
         },
         error: (err) => {
           console.error('Error fetching loading charge:', err);
@@ -233,6 +224,7 @@ export class HCCDetailsComponent {
       });
     }
   }
+
 
   onSubmit() {
     if (this.hccForm.invalid) {
@@ -296,9 +288,45 @@ export class HCCDetailsComponent {
       },
       error: (err: any) => {
         console.error("Error submitting HCC", err);
+        this.hccForm.markAllAsTouched();
         this.sweetAlertService.error('Error submitting HCC');
       }
     });
   }
+
+calculateLRWiseHCCAmount() {
+  const rate = parseFloat(this.hccForm.get('chargeRate')?.value) || 0;
+  const rateType = this.hccForm.get('rateType')?.value;
+  const chargedBy = this.hccForm.get('chargedBy')?.value;
+
+
+  this.lrList.controls.forEach((group: any) => {
+    const weight = parseFloat(group.get('weight')?.value) || 0;
+    const pkgsno = parseFloat(group.get('pkgsno')?.value) || 0;
+    const lrWiseAmount = parseFloat(group.get('lrWiseHCCAmount')?.value) || 0;
+    const isAllowZero = group.get('isChecked')?.value === true; // isChecked = false means IsAllowZero
+
+    let charge = 0;
+
+    if (rateType == '3') {
+      charge = pkgsno * rate;
+    } else if (rateType == '4') {
+      charge = lrWiseAmount; // as-is
+    } else if (rateType == '1') {
+      charge = weight * rate;
+    }
+
+    // IsAllowZero (isChecked false) hoy to 0 set karo
+    if (rateType === '4' ) {
+      group.patchValue({ lrWiseHCCAmount: charge.toFixed(2) });
+    } else if(isAllowZero){
+      group.patchValue({ lrWiseHCCAmount: '0.00' });
+    }else{
+      group.patchValue({ lrWiseHCCAmount: charge.toFixed(2) });
+    }
+  });
+
+  this.calculateTotals();
+}
 
 }
