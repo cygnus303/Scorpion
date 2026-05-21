@@ -170,7 +170,7 @@
                                     </label>
                                     <ng-select class="clear-icon required2" formControlName="rateType"
                                         [items]="generalMasterService.chargeTypeData" bindLabel="codeDesc"
-                                        bindValue="codeId" placeholder="Rate Type">
+                                        bindValue="codeId" placeholder="Rate Type" (change)="calculateLRWiseHCCAmount()">
                                     </ng-select>
                                 </div>
                             </div>
@@ -178,7 +178,7 @@
                                 <div class="form-group-input">
                                     <label class="form-label d-flex align-items-center gap-2 fw-bold"> Charge Rate
                                     </label>
-                                    <input class="form-control" type="text" placeholder="Charge Rate"
+                                    <input class="form-control" type="text" placeholder="Charge Rate" [readonly]="hccForm.get('chargedBy')?.value === 'XX5'"
                                         formControlName="chargeRate" (input)="calculateLRWiseHCCAmount()">
                                 </div>
                             </div>
@@ -250,10 +250,10 @@
 
                                                     <td>
                                                         <div class="d-flex gap-3">
-                                                            <input type="checkbox" formControlName="isChecked">
+                                                            <input type="checkbox" formControlName="isChecked" (change)="calculateLRWiseHCCAmount()">
                                                             <input type="text" class="form-control form-control-sm"
                                                                 formControlName="lrWiseHCCAmount"
-                                                                [readonly]="!row.value.isChecked">
+                                                                [readonly]="true">
                                                         </div>
                                                     </td>
                                                 </tr>

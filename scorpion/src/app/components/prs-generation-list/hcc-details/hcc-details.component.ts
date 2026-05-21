@@ -160,27 +160,10 @@ export class HCCDetailsComponent {
     this.hccForm.patchValue({
       totalWeight: totalWeight.toFixed(2),
       totalPkg: totalPkg.toFixed(2),
-      totalLRWiseAmount: totalLRWiseAmount.toFixed(2)
+      totalLRWiseAmount: totalLRWiseAmount.toFixed(2),
+      chargeAmount:totalLRWiseAmount.toFixed(2),
     });
   }
-
-   calculateLRWiseHCCAmount() {
-  var totalAmount = this.hccForm.value.chargeRate ||0;
-  var rowCount = this.lrList.length;
-
-  if (rowCount > 0) {
-
-    var amountPerRow = totalAmount / rowCount;
-
-    this.lrList.controls.forEach((group: any) => {
-      group.patchValue({
-        lrWiseHCCAmount: amountPerRow.toFixed(2)
-      });
-    });
-
-    this.calculateTotals();
-  }
-}
 
 
 
@@ -225,7 +208,7 @@ export class HCCDetailsComponent {
           chargeRate:response.rate,
           rateType:response.rateType
           });
-          
+          this.calculateLRWiseHCCAmount()
         },
         error: (err) => {
           console.error('Error fetching loading charge:', err);
@@ -300,5 +283,40 @@ export class HCCDetailsComponent {
       }
     });
   }
+
+calculateLRWiseHCCAmount() {
+  const rate = parseFloat(this.hccForm.get('chargeRate')?.value) || 0;
+  const rateType = this.hccForm.get('rateType')?.value;
+  const chargedBy = this.hccForm.get('chargedBy')?.value;
+
+
+  this.lrList.controls.forEach((group: any) => {
+    const weight = parseFloat(group.get('weight')?.value) || 0;
+    const pkgsno = parseFloat(group.get('pkgsno')?.value) || 0;
+    const lrWiseAmount = parseFloat(group.get('lrWiseHCCAmount')?.value) || 0;
+    const isAllowZero = group.get('isChecked')?.value === true; // isChecked = false means IsAllowZero
+
+    let charge = 0;
+
+    if (rateType == '3') {
+      charge = pkgsno * rate;
+    } else if (rateType == '4') {
+      charge = lrWiseAmount; // as-is
+    } else if (rateType == '1') {
+      charge = weight * rate;
+    }
+
+    // IsAllowZero (isChecked false) hoy to 0 set karo
+    if (rateType === '4' ) {
+      group.patchValue({ lrWiseHCCAmount: charge.toFixed(2) });
+    } else if(isAllowZero){
+      group.patchValue({ lrWiseHCCAmount: '0.00' });
+    }else{
+      group.patchValue({ lrWiseHCCAmount: charge.toFixed(2) });
+    }
+  });
+
+  this.calculateTotals();
+}
 
 }
