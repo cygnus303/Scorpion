@@ -12,19 +12,19 @@
     </div>
 
     <!-- Show selection only if NO HCC is generated yet -->
-    <div class="p-3" *ngIf="!hasExistingHcc">
+    <div class="p-3">
         <div class="control-bar d-block gap-2 mb-0">
             <div class="form-group-input">
                 <div class="radio-group">
                     <label class="form-label fw-bold">Select HCC Type </label>
                     <div class="radio-option">
                         <input type="radio" name="hccType" value="Loading" [(ngModel)]="selectedHccType"
-                            (change)="onHccTypeChange()">
+                            [disabled]="hasExistingHcc" (change)="onHccTypeChange()">
                         <label for="reg">Loading</label>
                     </div>
                     <div class="radio-option">
                         <input type="radio" name="hccType" value="Unloading" [(ngModel)]="selectedHccType"
-                            (change)="onHccTypeChange()">
+                            [disabled]="hasExistingHcc" (change)="onHccTypeChange()">
                         <label for="unreg">Unloading</label>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
         </div>
 
         <div class="p-5 text-center text-muted d-flex align-items-center justify-content-center"
-            *ngIf="!hasExistingHcc && !selectedHccType" style="min-height: 200px;">
+            *ngIf="!selectedHccType" style="min-height: 200px;">
             <div class="py-5">
                 <i class="fas fa-hand-pointer fa-3x mb-3 opacity-25"></i>
                 <p>Please select <b>Select HCC Type</b> to view HCC details.</p>
@@ -146,8 +146,8 @@
                                 <div class="form-group-input">
                                     <label class="form-label d-flex align-items-center gap-2 fw-bold"> Charged By
                                     </label>
-                                    <ng-select class="clear-icon required2" placeholder="Select Charged By" 
-                                    (change)="onChangeChargeBy($event);this.prsArrivalDetailsService.getVendorsList($event.codeId)"
+                                    <ng-select class="clear-icon required2" placeholder="Select Charged By"
+                                        (change)="onChangeChargeBy($event);this.prsArrivalDetailsService.getVendorsList($event.codeId)"
                                         notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
                                         [items]="generalMasterService.loadingData" formControlName="chargedBy"
                                         c></ng-select>

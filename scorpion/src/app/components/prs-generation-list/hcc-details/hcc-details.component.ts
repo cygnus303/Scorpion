@@ -31,7 +31,7 @@ export class HCCDetailsComponent {
   constructor(private modalService: BsModalService, private CommonService: CommonService,
     private thcMasterService: THCMasterService, private fb: FormBuilder,
     public generalMasterService: GeneralMasterService, public prsArrivalDetailsService: PrsArrivalDetailsService,
-    private sweetAlertService: SweetAlertService, private docketService: DocketService,private THCService:THCMasterService) { }
+    private sweetAlertService: SweetAlertService, private docketService: DocketService, private THCService: THCMasterService) { }
 
   get hasExistingHcc(): boolean {
     if (!this.selectedHccDetails) return false;
@@ -46,7 +46,14 @@ export class HCCDetailsComponent {
   showPopup(data: any, flag: any) {
     console.log("HCC Details Data:", data);
     this.selectedHccDetails = data;
-    this.selectedHccType = '';
+    // Auto-detect existing HCC type so radio shows pre-selected (disabled) state
+    if (data.loadingHCCNo || data.loadingHCC) {
+      this.selectedHccType = 'Unloading';
+    } else if (data.unloadingHCCNo || data.unLoadingHCC) {
+      this.selectedHccType = 'Loading';
+    } else {
+      this.selectedHccType = '';
+    }
     this.buildForm();
     this.CommonService.getVendorType('P');
     this.generalMasterService.getChargeTypeData();
@@ -164,23 +171,19 @@ export class HCCDetailsComponent {
     });
   }
 
-   calculateLRWiseHCCAmount() {
-  var totalAmount = this.hccForm.value.chargeRate ||0;
-  var rowCount = this.lrList.length;
-
-  if (rowCount > 0) {
-
-    var amountPerRow = totalAmount / rowCount;
-
-    this.lrList.controls.forEach((group: any) => {
-      group.patchValue({
-        lrWiseHCCAmount: amountPerRow.toFixed(2)
+  calculateLRWiseHCCAmount() {
+    var totalAmount = this.hccForm.value.chargeRate || 0;
+    var rowCount = this.lrList.length;
+    if (rowCount > 0) {
+      var amountPerRow = totalAmount / rowCount;
+      this.lrList.controls.forEach((group: any) => {
+        group.patchValue({
+          lrWiseHCCAmount: amountPerRow.toFixed(2)
+        });
       });
-    });
-
-    this.calculateTotals();
+      this.calculateTotals();
+    }
   }
-}
 
 
 
@@ -190,12 +193,13 @@ export class HCCDetailsComponent {
     }
   }
 
-  onChangeChargeBy(event: any){
+  onChangeChargeBy(event: any) {
     if (event) {
       this.hccForm.patchValue({
-        vendorName: '',
-        vendorCode:'',
-        chargeRate:0
+        vendorName: null,
+        vendorCode: null,
+        chargeRate: 0,
+        rateType: null
       });
     }
   }
@@ -210,22 +214,22 @@ export class HCCDetailsComponent {
         vendorName: ''
       });
     }
-     const data = {
-      loadUnloadType: 'U',
+    const data = {
+      loadUnloadType: this.selectedHccType === 'Unloading' ? 'U' : 'L',
       vendorCode: event.value,
       typeModule: 'D',
-      chargeType: this.docketService.loginUserList.chargeType,
+      chargeType: null,
       brdc: this.docketService.loginUserList.LocationCode,
       loadingBy: this.hccForm.value.chargedBy,
     };
-  if(['XX5'].includes(this.hccForm.get('chargedBy')?.value)){
+    if (['XX5'].includes(this.hccForm.get('chargedBy')?.value)) {
       this.THCService.getLoadingCharge(data).subscribe({
         next: (response: any) => {
           this.hccForm.patchValue({
-          chargeRate:response.rate,
-          rateType:response.rateType
+            chargeRate: response.rate,
+            rateType: response.rateType
           });
-          
+
         },
         error: (err) => {
           console.error('Error fetching loading charge:', err);
@@ -233,6 +237,7 @@ export class HCCDetailsComponent {
       });
     }
   }
+
 
   onSubmit() {
     if (this.hccForm.invalid) {
