@@ -6,7 +6,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CommonService } from 'app/shared/services/common.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { PrsArrivalDetailsService } from 'app/shared/services/prs-arrival-details.service';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { DocketService } from 'app/shared/services/docket.service';
@@ -80,14 +80,14 @@ export class HCCDetailsComponent {
       LaborType: [''],
       HCCPayType: [''],
       chargeAmount: [''],
-      chargedBy: [''],
+      chargedBy: ['',[Validators.required]],
       VendorCode: [''],
       RateType: [''],
       chargeRate: [''],
       chargesType: [''],
-      vendorCode: [''],
+      vendorCode: ['',[Validators.required]],
       vendorName: [''],
-      rateType: [''],
+      rateType: ['',[Validators.required]],
       totalWeight: [''],
       totalLRWiseAmount: [0],
       totalPkg: [''],
@@ -288,6 +288,7 @@ export class HCCDetailsComponent {
       },
       error: (err: any) => {
         console.error("Error submitting HCC", err);
+        this.hccForm.markAllAsTouched();
         this.sweetAlertService.error('Error submitting HCC');
       }
     });

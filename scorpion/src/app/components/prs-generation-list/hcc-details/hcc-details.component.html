@@ -150,7 +150,11 @@
                                         (change)="onChangeChargeBy($event);this.prsArrivalDetailsService.getVendorsList($event.codeId)"
                                         notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
                                         [items]="generalMasterService.loadingData" formControlName="chargedBy"
-                                        c></ng-select>
+                                        [ngClass]="{ 'border-danger': hccForm.get('chargedBy')?.invalid && hccForm.get('chargedBy')?.touched}"
+                                        ></ng-select>
+                                        <div *ngIf="hccForm.get('chargedBy')?.invalid && hccForm.get('chargedBy')?.touched" class="text-danger">
+                                           This feild is required.
+                                        </div>
                                 </div>
                             </div>
                             <div class="col-3">
@@ -161,7 +165,11 @@
                                         notFoundText="No matches found" formControlName="vendorCode"
                                         [items]="prsArrivalDetailsService.branchWiseLoadingUnloadingList"
                                         bindLabel="text" bindValue="value"
-                                        (change)="onVendorChange($event)"></ng-select>
+                                        (change)="onVendorChange($event)"
+                                        [ngClass]="{ 'border-danger': hccForm.get('vendorCode')?.invalid && hccForm.get('vendorCode')?.touched}"></ng-select>
+                                        <div *ngIf="hccForm.get('vendorCode')?.invalid && hccForm.get('vendorCode')?.touched" class="text-danger">
+                                            This feild is required.
+                                        </div>
                                 </div>
                             </div>
                             <div class="col-3">
@@ -170,8 +178,12 @@
                                     </label>
                                     <ng-select class="clear-icon required2" formControlName="rateType"
                                         [items]="generalMasterService.chargeTypeData" bindLabel="codeDesc"
-                                        bindValue="codeId" placeholder="Rate Type" (change)="calculateLRWiseHCCAmount()">
+                                        bindValue="codeId" placeholder="Rate Type" (change)="calculateLRWiseHCCAmount()"
+                                        [ngClass]="{ 'border-danger': hccForm.get('rateType')?.invalid && hccForm.get('rateType')?.touched}">
                                     </ng-select>
+                                    <div *ngIf="hccForm.get('rateType')?.invalid && hccForm.get('rateType')?.touched" class="text-danger">
+                                           This feild is required.
+                                        </div>
                                 </div>
                             </div>
                             <div class="col-3">
@@ -245,7 +257,7 @@
                                                     </td>
 
                                                     <td class="text-center">
-                                                        {{ row.value.weight }}
+                                                        {{ row.value.weight ? row.value.weight :0.00}}
                                                     </td>
 
                                                     <td>
