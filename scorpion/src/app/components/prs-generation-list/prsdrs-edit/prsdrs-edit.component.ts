@@ -7,6 +7,8 @@ import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { DocketService } from 'app/shared/services/docket.service';
+import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service';
+import { LocationListResponse } from 'app/shared/models/delivery-agent.model';
 
 @Component({
   selector: 'app-prsdrs-edit',
@@ -20,15 +22,17 @@ export class PRSDRSEditComponent {
   public prsDrsList: any = [];
   public PDCFinancialForm!: FormGroup;
   public financialEditDetail: any = [];
+  public locationData:LocationListResponse[]=[];
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   constructor(
-    private modalService: BsModalService,private prsdrsApiService:PRSDRSApiService,public docketService: DocketService,private sweetAlertService: SweetAlertService) { }
+    private modalService: BsModalService,private prsdrsApiService:PRSDRSApiService, public deliveryAgentService: DeliveryAgentService,public docketService: DocketService,private sweetAlertService: SweetAlertService) { }
 
   showPopup(data: any,flag: string) {
     this.prsDrsList = data;
     this.GetTHCFinancialEditDetail(flag);
     this.createForm();
+    this.getLocationData();
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
 
@@ -68,6 +72,15 @@ export class PRSDRSEditComponent {
         }
       }
     });
+  }
+
+    getLocationData() {
+    this.deliveryAgentService.getLocation().subscribe({next: (response) => {
+        if (response) {
+          this.locationData = response
+        }
+      },
+    })
   }
 
    GetInvokeContractDetailsDktwise(){

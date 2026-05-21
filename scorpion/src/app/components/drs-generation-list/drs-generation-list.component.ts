@@ -71,6 +71,14 @@ export class DrsGenerationListComponent {
   ) { }
 
   ngOnInit() {
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      // this.docketService.loginUserList.LocationCode = 'PIM'
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
     this.buildFilterForm();
     this.fetchData();
   }
@@ -95,7 +103,7 @@ export class DrsGenerationListComponent {
 
   buildFilterForm() {
     this.DRSFilterForm = this.fb.group({
-      fromDate: [new Date(new Date().setDate(new Date().getDate() - 7))],
+      fromDate: [new Date()],
       toDate: [new Date()],
       statusFilter: ['All'],
       odaType: [''],

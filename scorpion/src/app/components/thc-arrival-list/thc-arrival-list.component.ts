@@ -57,7 +57,7 @@ export class ThcArrivalListComponent {
 
   buildFilterForm() {
     this.THCArrivalFilterForm = this.fb.group({
-      fromDate: [new Date(new Date().setDate(new Date().getDate() - 7))],
+      fromDate: [new Date()],
       toDate: [new Date()],
       statusFilter: ['All'],
       searchText: ['']
