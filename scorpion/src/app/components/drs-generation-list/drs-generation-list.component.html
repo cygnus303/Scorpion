@@ -6,7 +6,7 @@
         </div>
         <div class="btn-group gap-3 ms-auto">
             <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="refreshFilter()">✕ Clear</button>
-            <button class="btn btn-success px-4 py-2 rounded" (click)="onAddDRS()">＋ Add DRS</button>
+            <button class="btn btn-success px-4 py-2 rounded" (click)="onAddDRS()" *ngIf="!isHQTR">＋ Add DRS</button>
             <button class="btn btn-primary px-4 py-2 rounded" (click)="downloadList()" [disabled]="isdownload">
                 <span *ngIf="!isdownload">📥 Download XLS</span>
                 <span *ngIf="isdownload" class="spinner-border spinner-border-sm me-2"></span>
@@ -152,7 +152,7 @@
                         <th class="text-center">ODA Type</th>
                         <th class="text-center" style="width: 140px;">Total / Delivered Dockets</th>
                         <th class="text-center">Vendor Type / Name</th>
-                        <th class="text-center">Vendor Bill No.</th>
+                        <th class="text-center">Vendor BE No.</th>
                         <th class="text-center">Loading HCC No.</th>
                         <th class="text-center">Unloading HCC No.</th>
                         <th class="text-center">Status</th>
@@ -234,24 +234,26 @@
                                 </button>
                                 <button
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
-                                    (click)="openUpdateModal(data)">
+                                    (click)="openUpdateModal(data)" [disabled]="data.deliveredCount === 0 || data.totalDockets===data.deliveredCount||!data.isCancelAllow||data.status==='Billed' ">
                                     🔄 DRS Update
                                 </button>
-                                <button (click)="openPRSDRSEdit(data,'P')"
+                                <button (click)="openPRSDRSEdit(data,'P')" [disabled]="data.deliveredCount === 0||!data.isCancelAllow||data.status==='Billed'"
                                     class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3">
                                     ✏️ Edit
                                 </button>
-                                <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
+                                <button [disabled]="data.deliveredCount === 0||!data.isCancelAllow"
+                                class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
                                     (click)="onCancel(data.drsNo)">
                                     🚫 Cancel
                                 </button>
                                 <button
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
-                                    [disabled]="data.loadingHCCNo && data.unloadingHCCNo" (click)="openHHCDetails(data)">
+                                    [disabled]="data.loadingHCCNo && data.unloadingHCCNo || data.deliveredCount === 0||!data.isCancelAllow||data.status==='Billed'" (click)="openHHCDetails(data)">
                                     🏷 HCC
                                 </button>
-                                <button class="btn btn-sm bg-success-purple border-success-subtle text-success-emphasis py-1 px-3"
-                                    (click)="openSingleDRSUpdate(data)">
+                                <button
+                                class="btn btn-sm bg-success-purple border-success-subtle text-success-emphasis py-1 px-3"
+                                    (click)="openSingleDRSUpdate(data)" [disabled]="data.totalDockets===data.deliveredCount|| data.deliveredCount === 0||!data.isCancelAllow||data.status==='Billed'">
                                     📝 Single C Note Update
                                 </button>
                             </div>  
@@ -279,7 +281,7 @@
             </div>
             <!-- BODY -->
             <div class="modal-body">
-                <app-drs-update-list [drsData]="selectedDRS" (dataEmitter)="fetchData()"></app-drs-update-list>
+                <app-drs-update-list [drsData]="selectedDRS" (dataEmitter)="fetchData();closeModal()"></app-drs-update-list>
             </div>
         </div>
     </div>

@@ -14,7 +14,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group-input mb-0">
-                        <ng-select [items]="generalMasterService.loadingBy" bindLabel="codeDesc" bindValue="codeId"
+                        <ng-select [items]="generalMasterService.loadingData" bindLabel="codeDesc" bindValue="codeId"
                             (change)="onLoadingByChange()" placeholder="Select Loading By" formControlName="loadBy"
                             [clearable]="false">
                         </ng-select>

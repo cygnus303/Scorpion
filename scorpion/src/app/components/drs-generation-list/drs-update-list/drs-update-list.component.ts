@@ -97,7 +97,7 @@ export class DRSUpdateListComponent {
     this.THCMasterService.getVendorType(this.docketService.loginUserList.LocationCode).subscribe({
       next: (response) => {
         if (response && response.data) {
-          const mTypeRow = response.data.find((x: any) => x.documentType === 'M');
+          const mTypeRow = response.data.find((x: any) => x.documentType === 'D');
           if (mTypeRow) {
             const vendorTypes = mTypeRow.loading_VendorType.split(',');
             this.generalMasterService.getLoadingByDetail(vendorTypes);

@@ -83,6 +83,10 @@ export class DrsGenerationListComponent {
     this.fetchData();
   }
 
+  get isHQTR(): boolean {
+    return this.docketService.loginUserList?.LocationCode === 'HQTR';
+  }
+
   getStatusClass(status: string): string {
     switch (status) {
       case 'Generated': return 's-gen';
