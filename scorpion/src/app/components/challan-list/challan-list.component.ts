@@ -490,7 +490,7 @@ onDocketSelectionChange(ctrl: AbstractControl) {
       wtLoaded: totalWeight
     });
     const vehicleCapacity = this.challanService.challanForm.value.vehicleCapacity;
-    const weightLoaded = this.challanService.challanForm.value.wtLoaded;
+    const weightLoaded = totalWeight;
     if (vehicleCapacity && weightLoaded) {
       const utilization = (weightLoaded / (vehicleCapacity * 1000)) * 100;
       const roundedUtilization = Number(utilization.toFixed(2));
@@ -505,6 +505,10 @@ onDocketSelectionChange(ctrl: AbstractControl) {
     if (this.challanService.challanForm.value.wtLoaded > vehicleCapacity) {
       this.challanService.challanForm.patchValue({
         isOverLoad: true
+      })
+    }else{
+       this.challanService.challanForm.patchValue({
+        isOverLoad: false
       })
     }
     this.challanService.calculateNetAmount();

@@ -695,7 +695,7 @@
                         </div>
                 </div>
             </div>
-            <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '3' ? '' : 'd-none'">
+            <!-- <div class="col-4 pb-3" [ngClass]="this.docketService.loginUserList.Type === '3' ? '' : 'd-none'">
                 <div class="row align-items-center ">
                     <label class="col-sm-5 col-form-label text-end">Delivery Zone</label>
                     <div class="col-sm-7">
@@ -704,7 +704,7 @@
                             notFoundText="No matches found"></ng-select>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
         <div class="row pb-3">
             <div class="col-4">
@@ -972,8 +972,10 @@
                             </div>
                         </td>
 
-                        <td (click)="openPopup(item)" class="cursor-pointer" *ngIf="this.docketService.loginUserList.Type === '3'"
-                        [ngClass]="{'text-danger fw-bold': item.value.Message === 'E-Way Bill Date Expired'}">{{ item.value.EWayBillNo }}</td>
+                        <!-- <td (click)="openPopup(item)" class="cursor-pointer" *ngIf="this.docketService.loginUserList.Type === '3'"
+                        [ngClass]="{'text-danger fw-bold': item.value.Message === 'E-Way Bill Date Expired'}">{{ item.value.EWayBillNo }}</td> -->
+                        <td class="cursor-pointer" *ngIf="this.docketService.loginUserList.Type === '3'"
+                        >{{ item.value.EWayBillNo }}</td>
                         <td *ngIf="this.docketService.loginUserList.Type === '3'">{{ item.value.subreasoncode }} <br> {{ item.value.Commited_Dely_Date  | date :'dd MMM yyyy'}}</td>
                         <td *ngIf="this.docketService.loginUserList.Type === '3'">{{ item.value.tatInHrs }}</td>
                         <td>{{ item.value.party_name }}</td>
