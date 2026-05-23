@@ -234,7 +234,7 @@
                                 </button>
                                 <button
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
-                                    (click)="openUpdateModal(data)" [disabled]="data.deliveredCount === 0 ||!data.isCancelAllow||data.status==='Billed' ">
+                                    (click)="openUpdateModal(data)" [disabled]="data.deliveredCount === 0 ||!data.isCancelAllow||data.status==='Billed' || data.IsThroughDA ===true">
                                     🔄 DRS Update
                                 </button>
                                 <button (click)="openPRSDRSEdit(data,'P')" [disabled]="data.deliveredCount === 0||!data.isCancelAllow||data.status==='Billed'"
