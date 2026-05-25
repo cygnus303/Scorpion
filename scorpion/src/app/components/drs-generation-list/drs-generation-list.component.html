@@ -248,7 +248,7 @@
                                 </button>
                                 <button
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
-                                    [disabled]="data.deliveredCount === 0||row.loadingHCCNo && row.unloadingHCCNo||data.status==='Billed'" (click)="openHHCDetails(data)">
+                                    [disabled]="data.deliveredCount === 0||data.loadingHCCNo && data.unloadingHCCNo||data.status==='Billed'" (click)="openHHCDetails(data)">
                                     🏷 HCC
                                 </button>
                                 <button
