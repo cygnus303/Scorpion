@@ -70,6 +70,7 @@ export const ChallanRoutes: Routes = [
   },{
     path: 'docketList',
     loadComponent: () => import('../lr-list/lr-list.component').then(m => m.LrListComponent),
+    canActivate: [DocketGuard]
   }
 
 ];
