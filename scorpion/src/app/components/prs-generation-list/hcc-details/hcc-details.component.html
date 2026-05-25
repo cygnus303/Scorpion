@@ -164,7 +164,7 @@
                                     <ng-select class="clear-icon required2" placeholder="Select Vendor"
                                         notFoundText="No matches found" formControlName="vendorCode"
                                         [items]="prsArrivalDetailsService.branchWiseLoadingUnloadingList"
-                                        bindLabel="text" bindValue="value"
+                                        bindLabel="text" bindValue="value" [readonly]="hccForm.get('chargedBy')?.value === 'XX9'"
                                         (change)="onVendorChange($event)"
                                         [ngClass]="{ 'border-danger': hccForm.get('vendorCode')?.invalid && hccForm.get('vendorCode')?.touched}"></ng-select>
                                         <div *ngIf="hccForm.get('vendorCode')?.invalid && hccForm.get('vendorCode')?.touched" class="text-danger">
