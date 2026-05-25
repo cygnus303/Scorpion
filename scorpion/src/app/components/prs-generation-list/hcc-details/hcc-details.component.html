@@ -176,7 +176,7 @@
                                 <div class="form-group-input">
                                     <label class="form-label d-flex align-items-center gap-2 fw-bold"> Rate Type
                                     </label>
-                                    <ng-select class="clear-icon required2" formControlName="rateType"
+                                    <ng-select class="clear-icon required2" formControlName="rateType" [readonly]="hccForm.get('chargedBy')?.value === 'XX5'||hccForm.get('chargedBy')?.value === 'XX9'"
                                         [items]="generalMasterService.chargeTypeData" bindLabel="codeDesc"
                                         bindValue="codeId" placeholder="Rate Type" (change)="calculateLRWiseHCCAmount()"
                                         [ngClass]="{ 'border-danger': hccForm.get('rateType')?.invalid && hccForm.get('rateType')?.touched}">
@@ -190,7 +190,7 @@
                                 <div class="form-group-input">
                                     <label class="form-label d-flex align-items-center gap-2 fw-bold"> Charge Rate
                                     </label>
-                                    <input class="form-control" type="text" placeholder="Charge Rate" [readonly]="hccForm.get('chargedBy')?.value === 'XX5'"
+                                    <input class="form-control" type="text" placeholder="Charge Rate" [readonly]="hccForm.get('chargedBy')?.value === 'XX5'||hccForm.get('chargedBy')?.value === 'XX9'"
                                         formControlName="chargeRate" (input)="calculateLRWiseHCCAmount()">
                                 </div>
                             </div>
