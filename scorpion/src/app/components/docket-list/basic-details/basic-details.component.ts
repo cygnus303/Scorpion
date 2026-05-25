@@ -7,6 +7,7 @@ import { GeneralMasterService } from '../../../shared/services/general-master.se
 import { Validators } from '@angular/forms';
 import { EmailRegex, mobileNo } from '../../../shared/constants/common';
 import { CommonDateService } from '../../../shared/services/common-date.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'basic-details',
@@ -21,6 +22,7 @@ export class BasicDetailsComponent {
   public cityList: cityResponse[] = [];
   public fromCityList: cityResponse[] = [];
   public toCityList: cityResponse[] = [];
+  public hideBackButton: boolean = false;
   public destinationsList: DestinationsList[] = [];
   public vehicleNumbersList: VehicleNumbersResponse[] = [];
   public getStatesFromPartyCodeList: StatesFromPartyCodeRepsonse[] = [];
@@ -37,12 +39,19 @@ export class BasicDetailsComponent {
   constructor(
     public docketService: DocketService,
     private basicDetailService: BasicDetailService, public generalMasterService: GeneralMasterService,
-    public commonDateService:CommonDateService) { }
+    public commonDateService:CommonDateService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     this.appoinmentDate = new Date();
     this.appoinmentDate.setMonth(this.appoinmentDate.getMonth() + 1);
-   
+
+    this.route.queryParams.subscribe(params => {
+      const fromPRSList = params['fromLR'] === 'true';
+      if (fromPRSList) {
+        this.hideBackButton = true;
+      }
+    });
+
     this.docketService.detailForm();
     this.getBillingTypeData();
     this.docketService.getRuleDetailForChargeRule();
@@ -665,5 +674,9 @@ viewFile() {
         }
       }
     });
+  }
+
+   onBack() {
+      this.router.navigate(['Operation/docketList']);
   }
 }

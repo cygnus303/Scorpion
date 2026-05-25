@@ -56,7 +56,7 @@ export class DocketGuard implements CanActivate {
       else if (currentRoute.includes("Challan") || currentRoute.includes("ChallanList")) {
         return this.handleChallanfilter(parsedData);
       }
-      else if (currentRoute.includes("docketEditCretria") || currentRoute.includes("docket") || currentRoute.includes("delivery-agent") || currentRoute.includes("ScanFMDocuments") || currentRoute.includes("PFM") || currentRoute.includes("MenuAccess") || currentRoute.includes("PRSList") || currentRoute.includes("DRSList") || currentRoute.includes("StockUpdate") || currentRoute.includes("LoadingSheetList") || currentRoute.includes("THCArrivalList")) {
+      else if (currentRoute.includes("docketEditCretria") || currentRoute === 'docketList'|| currentRoute.includes("docket") || currentRoute.includes("delivery-agent") || currentRoute.includes("ScanFMDocuments") || currentRoute.includes("PFM") || currentRoute.includes("MenuAccess") || currentRoute.includes("PRSList") || currentRoute.includes("DRSList") || currentRoute.includes("StockUpdate") || currentRoute.includes("LoadingSheetList") || currentRoute.includes("THCArrivalList")) {
         return this.handleNormalDocket(parsedData);
       }
       else {
