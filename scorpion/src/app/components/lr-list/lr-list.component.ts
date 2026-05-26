@@ -136,6 +136,10 @@ openTrackIndex: number | null = null;
     });
   }
 
+    get isHQTR(): boolean {
+    return this.docketService.loginUserList?.LocationCode === 'HQTR';
+  }
+
   setPage(p: number) {
     if (this.config.page === p) return;
     this.config.page = p;
