@@ -85,9 +85,9 @@ export class HCCDetailsComponent {
       RateType: [''],
       chargeRate: [''],
       chargesType: [''],
-      vendorCode: ['',[Validators.required]],
+      vendorCode: [''],
       vendorName: [''],
-      rateType: ['',[Validators.required]],
+      rateType: [''],
       totalWeight: [''],
       totalLRWiseAmount: [0],
       totalPkg: [''],
@@ -188,6 +188,30 @@ export class HCCDetailsComponent {
         chargeRate: 0,
         rateType: null
       });
+
+       const isXX9 = event.codeId === 'XX9';
+
+    const vendorControl   = this.hccForm.get('vendorCode');
+    const rateTypeControl = this.hccForm.get('rateType');
+    const chargeRateCtrl  = this.hccForm.get('chargeRate');
+
+    if (isXX9) {
+      vendorControl?.clearValidators();
+      rateTypeControl?.clearValidators();
+      chargeRateCtrl?.clearValidators();
+
+      this.lrList.controls.forEach((group: any) => {
+        group.patchValue({ lrWiseHCCAmount: '0.00' });
+      });
+      this.calculateTotals();
+    } else {
+      vendorControl?.setValidators([Validators.required]);
+      rateTypeControl?.setValidators([Validators.required]);
+    }
+
+    vendorControl?.updateValueAndValidity();
+    rateTypeControl?.updateValueAndValidity();
+    chargeRateCtrl?.updateValueAndValidity();
     }
   }
 
