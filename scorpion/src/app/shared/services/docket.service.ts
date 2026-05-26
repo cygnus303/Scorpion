@@ -385,9 +385,9 @@ freightAndOtherChar(){
     this.getOtherChargesDetail();
     this.getFovContractDetails();
 
-    setTimeout(() => {
-      this.getDieselRate();
-    }, 500);
+    // setTimeout(() => {
+    //   this.getDieselRate();
+    // }, 500);
   }
 
   getpincodeData(event: any) {
@@ -1597,6 +1597,9 @@ calculateChargeWeight(){
         }
       },
     });
+    setTimeout(() => {
+      this.getDieselRate();
+    }, 600);
     // this.isSubmiting=false;
   }
 
