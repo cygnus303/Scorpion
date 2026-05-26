@@ -5,7 +5,7 @@
             PRS Generation
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn background-color fw-bold text-light px-4 py-2 rounded" (click)="openAddPRSDRS()">
+            <button class="btn background-color fw-bold text-light px-4 py-2 rounded" (click)="openAddPRSDRS()" *ngIf="!isHQTR">
                 <span class="fs-5 me-1">➕</span> Add PRS
             </button>
             <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="downloadCSV()">
@@ -47,7 +47,7 @@
             [class.active-card]="config.statusFilter === 'Arrived'" (click)="filterByStatus('Arrived')">
             <div class="card-content">
                 <div class="s-label">Total PRS Arrived</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.total_PRS_Arrived || 0 }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.prS_Arrived || 0 }}</div>
                 <div class="small text-body-tertiary">Arrived at hub</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">✅</div>
@@ -81,7 +81,7 @@
             <div class="card-content">
                 <div class="s-label">HCC Generated</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.hcc_Generated || 0 }}</div>
-                <div class="small text-body-tertiary">HCC generated</div>
+                <div class="small text-body-tertiary">Loading HCC :{{summaryData.loading_HCC||0}} & UnLoading HCC : {{summaryData.unloading_HCC||0}}</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
         </div>
@@ -207,7 +207,7 @@
                                 </button>
                                 <button *ngIf="!isHQTR"
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
-                                    [disabled]="row.loadingHCC " (click)="openPRSArrival(row)">
+                                    [disabled]="row.isArrived ||row.loadingHCC || row.unLoadingHCC" (click)="openPRSArrival(row)">
                                     📦 PRS Arrival
                                 </button>
                                 <button *ngIf="!isHQTR"
@@ -216,7 +216,7 @@
                                     ✏️ Edit
                                 </button>
                                 <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
-                                    [disabled]="!row.isCancelAllow" (click)="onCancel(row.pdcno)">
+                                    [disabled]="!row.isCancelAllow || row.loadingHCC || row.unLoadingHCC || row.status ==='Billed'" (click)="onCancel(row.pdcno)">
                                     🚫 Cancel
                                 </button>
                                 <button *ngIf="!isHQTR"

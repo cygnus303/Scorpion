@@ -191,7 +191,7 @@
                         <td>
                             <div class="action-btns text-center">
                                 <button class="ab ab-view" (click)="openView(lr.dockno)">👁 View</button>
-                                <button class="ab ab-edit" (click)="openQuick(lr.dockno)"
+                                <button class="ab ab-edit" (click)="openQuick(lr.dockno)" *ngIf="!isHQTR"
                                     [disabled]="lr.status !== 'PendingforQuickCompletion'">✏️ Quick LR
                                     Edit
                                     and Save</button>

@@ -93,6 +93,9 @@ export class DrsGenerationListComponent {
       case 'Billed': return 's-billed';
       case 'HCC Generated': return 's-hcc';
       case 'Cancelled': return 's-canc';
+      case 'Loading HCC': return 's-loading-hcc';
+      case 'Unloading HCC': return 's-Unloading-hcc';
+      case 'Updated': return 's-updated';
       default: return '';
     }
   }

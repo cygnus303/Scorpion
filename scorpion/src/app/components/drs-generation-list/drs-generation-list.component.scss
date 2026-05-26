@@ -17,6 +17,12 @@
         border: 1px dotted #c4b5fd;
     }
 
+    &.s-updated {
+        background: #ffecfe;
+        color: #991e89;
+        border: 1px dotted #e76ec2;
+    }
+
     &.s-hcc {
         background: #ecfdf5;
         color: #047857;
@@ -27,6 +33,18 @@
         background: #fef2f2;
         color: #b91c1c;
         border: 1px dotted #fecaca;
+    }
+
+     &.s-loading-hcc {
+        background: #f7f5e3;
+        color: #8f7c22;
+        border: 1px dotted #a9b30fb8;
+    }
+
+    &.s-Unloading-hcc {
+        background: #ffdbc9;
+        color: #99451e;
+        border: 1px dotted #e79a6e;
     }
 }
 
