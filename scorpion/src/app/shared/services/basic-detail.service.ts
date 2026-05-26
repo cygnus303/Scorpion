@@ -194,4 +194,8 @@ loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
   getEditEwayBillValidation(ewaybillNo:string){
     return this.apiHandlerService.Get(`Operation/GetEwaybillDetail_newPagload?ewaybillNo=${ewaybillNo}`)
   }
+
+  GetDieselRate(data: any) {
+    return this.apiHandlerService.Get(`Operation/GetDieselRate?ContractID=${data.contractId}&DockDt=${data.dockDt}`);
+  }
 }
