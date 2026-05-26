@@ -107,7 +107,7 @@ export class DocketService {
     const now = new Date();
     this.today = now.toISOString().split('T')[0];
     this.basicDetailForm = new FormGroup({
-      isODAApplicable: new FormControl(false), 
+      isODAApplicable: new FormControl(false),
       isLocalNote: new FormControl(false),
       ewayBillNo: new FormControl(null),
       cNoteNo: new FormControl(null, [Validators.required]),
@@ -166,7 +166,7 @@ export class DocketService {
       BaseCode2: new FormControl(''),
       BaseCode1: new FormControl(''),
     });
-}
+  }
 
   consignorbuild() {
     this.consignorForm = new FormGroup({
@@ -274,54 +274,54 @@ export class DocketService {
   }
 
   reIndexSrNo() {
-  const invoiceRows = this.invoiceRows;
-  invoiceRows.controls.forEach((ctrl, index) => {
-    ctrl.patchValue({ srNo: index + 1 }, { emitEvent: false });
-  });
-}
+    const invoiceRows = this.invoiceRows;
+    invoiceRows.controls.forEach((ctrl, index) => {
+      ctrl.patchValue({ srNo: index + 1 }, { emitEvent: false });
+    });
+  }
 
   addRows(): void {
     for (let i = 0; i < this.noOfRows; i++) {
       this.invoiceRows.push(this.createInvoiceRow(this.invoiceRows.length + 1));
     }
   }
-  
+
   //  box Detail
-  
+
   get boxDetailRows(): FormArray {
     return this.invoiceform.get('boxDetailRows') as FormArray;
   }
 
   boxDetailIndexSrNo() {
-  const boxDetailRows = this.boxDetailRows;
-  boxDetailRows.controls.forEach((ctrl, index) => {
-    ctrl.patchValue({ srNo: index + 1 }, { emitEvent: false });
-  });
-}
+    const boxDetailRows = this.boxDetailRows;
+    boxDetailRows.controls.forEach((ctrl, index) => {
+      ctrl.patchValue({ srNo: index + 1 }, { emitEvent: false });
+    });
+  }
 
   addBoxDetailRows(): void {
     for (let i = 0; i < this.noboxDetailRows; i++) {
       this.boxDetailRows.push(this.createboxDetailRow(this.boxDetailRows.length + 1));
     }
-    
-   this.validateLBHValidators();
+
+    this.validateLBHValidators();
   }
 
   validateLBHValidators(){
     if (this.basicDetailForm.value.serviceType === '1' && this.step2DetailsList?.isVolumentric === 'Y') {
       const maxValidator = this.loginUserList.Type ==='2' ? Validators.max(199.99) : null;
       const validators = [Validators.required, Validators.min(1), maxValidator].filter(v => v !== null);
-      
+
       // Apply validation to ALL box detail rows
       this.boxDetailRows.controls.forEach(ctrl => {
         const lengthControl = ctrl.get('length');
         const breadthControl = ctrl.get('breadth');
         const heightControl = ctrl.get('height');
-        
+
         lengthControl?.setValidators(validators);
         breadthControl?.setValidators(validators);
         heightControl?.setValidators(validators);
-        
+
         lengthControl?.updateValueAndValidity();
         breadthControl?.updateValueAndValidity();
         heightControl?.updateValueAndValidity();
@@ -332,18 +332,18 @@ export class DocketService {
         const lengthControl = ctrl.get('length');
         const breadthControl = ctrl.get('breadth');
         const heightControl = ctrl.get('height');
-        
+
         lengthControl?.clearValidators();
         breadthControl?.clearValidators();
         heightControl?.clearValidators();
-        
+
         lengthControl?.updateValueAndValidity();
         breadthControl?.updateValueAndValidity();
         heightControl?.updateValueAndValidity();
       });
     }
   }
- createboxDetailRow(srNo: number): FormGroup {
+  createboxDetailRow(srNo: number): FormGroup {
     return new FormGroup({
       srNo: new FormControl(srNo),
       noOfPkgs: new FormControl(null,[Validators.required,Validators.min(1)]),
@@ -366,25 +366,29 @@ export class DocketService {
     });
   }
 
-//   debounce(fn: (...args: any[]) => void, delay: number) {
-//   let timer: any;
-//   return (...args: any[]) => {
-//     clearTimeout(timer);
-//     timer = setTimeout(() => fn(...args), delay);
-//   };
-// }
+  //   debounce(fn: (...args: any[]) => void, delay: number) {
+  //   let timer: any;
+  //   return (...args: any[]) => {
+  //     clearTimeout(timer);
+  //     timer = setTimeout(() => fn(...args), delay);
+  //   };
+  // }
 
-// debouncedFreightAndOtherChar = this.debounce(() => {
-//   this.freightAndOtherChar();
-// }, 500);
+  // debouncedFreightAndOtherChar = this.debounce(() => {
+  //   this.freightAndOtherChar();
+  // }, 500);
 
 freightAndOtherChar(){
-  this.getBaseCode2();
-  this.getBaseCode1();
-  this.GetFreightContractDetails();
-  this.getOtherChargesDetail();
-  this.getFovContractDetails();
-}
+    this.getBaseCode2();
+    this.getBaseCode1();
+    this.GetFreightContractDetails();
+    this.getOtherChargesDetail();
+    this.getFovContractDetails();
+
+    setTimeout(() => {
+      this.getDieselRate();
+    }, 500);
+  }
 
   getpincodeData(event: any) {
     const searchText = typeof event === 'string' ? event : event?.term;
@@ -450,48 +454,48 @@ freightAndOtherChar(){
     });
   }
 
-getMaxDiscountLimit() {
-const date = new Date(this.basicDetailForm.value.cNoteDate);
+  getMaxDiscountLimit() {
+    const date = new Date(this.basicDetailForm.value.cNoteDate);
 
-  const day = date.getDate().toString().padStart(2, '0');
-  const month = date.toLocaleString('en-GB', { month: 'long' });
-  const year = date.getFullYear();
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = date.toLocaleString('en-GB', { month: 'long' });
+    const year = date.getFullYear();
 
-  const formattedDate = `${day} ${month} ${year}`; // 26 December 2025
+    const formattedDate = `${day} ${month} ${year}`; // 26 December 2025
 
-  const payload = {
-    contractId: this.step2DetailsList?.contractid,
-    docketDate: formattedDate
-  };
+    const payload = {
+      contractId: this.step2DetailsList?.contractid,
+      docketDate: formattedDate
+    };
 
-  this.basicDetailService.getMaxDiscount(payload).subscribe({
-    next: (response: any) => {
+    this.basicDetailService.getMaxDiscount(payload).subscribe({
+      next: (response: any) => {
 
-      const result = response.data;
-       this.maxDiscountLimit = result.maxDiscount;
+        const result = response.data;
+        this.maxDiscountLimit = result.maxDiscount;
 
-      const discountControl = this.freightForm.get('discount');
-      const discountAmountControl = this.freightForm.get('discountAmount');
+        const discountControl = this.freightForm.get('discount');
+        const discountAmountControl = this.freightForm.get('discountAmount');
 
-      if (result.maxDiscountY_N === 'Y' && this.freightForm.value.discountType === 'P') {
-        discountControl?.setValidators([
-          Validators.min(0),
-          Validators.max(result.maxDiscount)
-        ]);
-      } else {
-         discountControl?.clearValidators();
-        discountControl?.setValidators([Validators.min(0)]);
-        discountControl?.setValue(0);
-        discountAmountControl?.setValue(0);
+        if (result.maxDiscountY_N === 'Y' && this.freightForm.value.discountType === 'P') {
+          discountControl?.setValidators([
+            Validators.min(0),
+            Validators.max(result.maxDiscount)
+          ]);
+        } else {
+          discountControl?.clearValidators();
+          discountControl?.setValidators([Validators.min(0)]);
+          discountControl?.setValue(0);
+          discountAmountControl?.setValue(0);
+        }
+
+        discountControl?.updateValueAndValidity();
+      },
+      error: () => {
+        console.error('Error while fetching max discount');
       }
-
-      discountControl?.updateValueAndValidity();
-    },
-    error: () => {
-      console.error('Error while fetching max discount');
-    }
-  });
-}
+    });
+  }
 
 
 
@@ -579,19 +583,19 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
       }
 
        if(this.loginUserList.Type !== '2'){
-      const PONumber = this.consignorForm.get('policyNo');
-      if (response.data.poNumber_Active) {
-        PONumber?.setValidators([Validators.required]);
-        PONumber?.setValidators([Validators.required]);
-        this.isPORequired = true;
-      } else {
-        PONumber?.clearValidators();
-        PONumber?.clearValidators();
-        this.isPORequired = false;
+        const PONumber = this.consignorForm.get('policyNo');
+        if (response.data.poNumber_Active) {
+          PONumber?.setValidators([Validators.required]);
+          PONumber?.setValidators([Validators.required]);
+          this.isPORequired = true;
+        } else {
+          PONumber?.clearValidators();
+          PONumber?.clearValidators();
+          this.isPORequired = false;
+        }
+        PONumber?.updateValueAndValidity();
+        PONumber?.updateValueAndValidity();
       }
-      PONumber?.updateValueAndValidity();
-      PONumber?.updateValueAndValidity();
-    }
     });
   }
 
@@ -613,19 +617,19 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
       // } 
 
     if(this.loginUserList.Type !== '2'){
-      const PONumber = this.consignorForm.get('policyNo');
-      if (response.data.poNumber_Active) {
-        PONumber?.setValidators([Validators.required]);
-        PONumber?.setValidators([Validators.required]);
-        this.isPORequired = true;
-      } else {
-        PONumber?.clearValidators();
-        PONumber?.clearValidators();
-        this.isPORequired = false;
+        const PONumber = this.consignorForm.get('policyNo');
+        if (response.data.poNumber_Active) {
+          PONumber?.setValidators([Validators.required]);
+          PONumber?.setValidators([Validators.required]);
+          this.isPORequired = true;
+        } else {
+          PONumber?.clearValidators();
+          PONumber?.clearValidators();
+          this.isPORequired = false;
+        }
+        PONumber?.updateValueAndValidity();
+        PONumber?.updateValueAndValidity();
       }
-      PONumber?.updateValueAndValidity();
-      PONumber?.updateValueAndValidity();
-    }
     });
   }
 
@@ -657,7 +661,7 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
         if (response) {
           this.step2DetailsList = response;
           this.validateLBHValidators()
-         // Contract validation
+          // Contract validation
           if ((this.basicDetailForm.value.billingType === 'P02' && this.step2DetailsList.contractid === 'P028888') || !this.step2DetailsList.contractid) {
             const billingParty = this.basicDetailForm.get('billingParty')?.value || '';
             const billingName = this.basicDetailForm.get('billingName')?.value || '';
@@ -771,7 +775,7 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
             })
           }
           if(this.basicDetailForm.value.billingType==='P04'){
-             this.freightForm.patchValue({
+            this.freightForm.patchValue({
               gstRate: 0,
             })
           }
@@ -782,8 +786,8 @@ const date = new Date(this.basicDetailForm.value.cNoteDate);
     //  this.isSubmiting=false
   }
 
-GetGSTFromTrnMode() {
-  this.basicDetailService.GetGSTFromTrnMode(this.basicDetailForm.value.mode || '').subscribe({
+  GetGSTFromTrnMode() {
+    this.basicDetailService.GetGSTFromTrnMode(this.basicDetailForm.value.mode || '').subscribe({
       next: (response: any) => {
         if (response) {
           this.basicDetailForm.patchValue({
@@ -804,42 +808,42 @@ GetGSTFromTrnMode() {
         this.getcontractservicecharge();
       }
     });
-}
-
-getcontractservicecharge() {
-  if (this.basicDetailForm.value.mode  && this.step2DetailsList?.contractid) {
-    this.basicDetailService
-      .contractservicecharge(this.step2DetailsList?.contractid, this.basicDetailForm.value.mode)
-      .subscribe({
-        next: (response: any) => {
-          if (response && response.length > 0) {
-            this.isContarctService = false;
-            this.contractservicecharge = response;
-            this.calculateSummary.next(true);
-            this.invoiceform.patchValue({
-              cft_Ratio: this.contractservicecharge[0].cft_Ratio
-            });
-            this.getStaxPaidBy();
-          }else{
-            this.isContarctService = true;
-            this.sweetAlertService.info('Contract not Complete for this Billing party or Transit mode!!');
-            this.contractservicecharge = [];
-            this.invoiceform.patchValue({
-              cft_Ratio: 0
-            });
-          }
-        },
-        error: (err) => {
-          console.error("Error in contractservicecharge:", err);
-        },
-        complete: () => {
-          setTimeout(() => {
-            this.freightAndOtherChar();
-          }, 200);
-        }
-      });
   }
-}
+
+  getcontractservicecharge() {
+  if (this.basicDetailForm.value.mode  && this.step2DetailsList?.contractid) {
+      this.basicDetailService
+        .contractservicecharge(this.step2DetailsList?.contractid, this.basicDetailForm.value.mode)
+        .subscribe({
+          next: (response: any) => {
+            if (response && response.length > 0) {
+              this.isContarctService = false;
+              this.contractservicecharge = response;
+              this.calculateSummary.next(true);
+              this.invoiceform.patchValue({
+                cft_Ratio: this.contractservicecharge[0].cft_Ratio
+              });
+              this.getStaxPaidBy();
+          }else{
+              this.isContarctService = true;
+              this.sweetAlertService.info('Contract not Complete for this Billing party or Transit mode!!');
+              this.contractservicecharge = [];
+              this.invoiceform.patchValue({
+                cft_Ratio: 0
+              });
+            }
+          },
+          error: (err) => {
+            console.error("Error in contractservicecharge:", err);
+          },
+          complete: () => {
+            setTimeout(() => {
+              this.freightAndOtherChar();
+            }, 200);
+                  }
+      });
+    }
+  }
 
   getGSTNODetails(event: any) {
     const searchText = event.target.value;
@@ -867,6 +871,36 @@ getcontractservicecharge() {
         }
       }
     });
+  }
+
+  getDieselRate() {
+    const contractId = this.step2DetailsList?.contractid;
+    const dockDt = this.basicDetailForm.value.cNoteDate;
+    const freightCharges = parseFloat(this.freightForm.value.freightCharges || 0);
+
+    if (contractId && dockDt && freightCharges > 0) {
+      const data = {
+        contractId: contractId,
+        dockDt: new Date(dockDt).toISOString()
+      };
+
+      this.basicDetailService.GetDieselRate(data).subscribe({
+        next: (response: any) => {
+          if (response && response.data.length > 0) {
+            const currentDieselPercentage = parseFloat(response.data[0].currentDieselPercentage || 0);
+            const chargeAmount = parseFloat(((freightCharges * currentDieselPercentage) / 100).toFixed(2));
+
+            // Map SCHG24 from MVC to the equivalent form control (lowercased based on getIGSTchargesDetail)
+            if (this.freightForm.contains('SCHG24')) {
+              this.freightForm.patchValue({
+                SCHG24: chargeAmount
+              });
+              this.subTotalCalculation();
+            }
+          }
+        }
+      });
+    }
   }
 
   getTransportModeData(codeId?: any) {
@@ -983,35 +1017,35 @@ getcontractservicecharge() {
   getExemptData(customerCode:string){
     // if(this.loginUserList.Type !== '2'){
     if(this.basicDetailForm.value.exemptServices){
-      this.basicDetailForm.patchValue({
-            exemptServices: null,
-          });
-          this.GetGSTFromTrnMode()
-    }
-    this.basicDetailService.getExemptData(customerCode).subscribe({
-      next: (response: any) => {
-        if (response && response.data) {
+        this.basicDetailForm.patchValue({
+          exemptServices: null,
+        });
+        this.GetGSTFromTrnMode()
+      }
+      this.basicDetailService.getExemptData(customerCode).subscribe({
+        next: (response: any) => {
+          if (response && response.data) {
           this.isExemptServiceReadonly=true;
-          this.basicDetailForm.patchValue({
-            exemptServices: response.data.exmptServices,
-          });
+            this.basicDetailForm.patchValue({
+              exemptServices: response.data.exmptServices,
+            });
 
-           const gstDeclarationControl = this.basicDetailForm.get('GSTDeclaration');
+            const gstDeclarationControl = this.basicDetailForm.get('GSTDeclaration');
           if(response.data.sez === true){
-            this.isSezCustomer = true;
-            gstDeclarationControl?.clearValidators();
-            gstDeclarationControl?.setValue(null);
+              this.isSezCustomer = true;
+              gstDeclarationControl?.clearValidators();
+              gstDeclarationControl?.setValue(null);
           }else{
-            this.isSezCustomer = false;
-            gstDeclarationControl?.setValidators([Validators.required]);
-          }
+              this.isSezCustomer = false;
+              gstDeclarationControl?.setValidators([Validators.required]);
+            }
 
-          gstDeclarationControl?.updateValueAndValidity();
+            gstDeclarationControl?.updateValueAndValidity();
 
         }else{
             this.isSezCustomer = false;
           this.isExemptServiceReadonly=false;
-        }
+          }
 
            this.GetDKTGSTForGTA();
             setTimeout(() => {
@@ -1092,16 +1126,16 @@ getcontractservicecharge() {
       },
     });
   }
-getGSTCalculation() {
-  const originalDate = this.basicDetailForm.value.cNoteDate;
-  if (!originalDate) return;
+  getGSTCalculation() {
+    const originalDate = this.basicDetailForm.value.cNoteDate;
+    if (!originalDate) return;
 
-  const dateObj = new Date(originalDate);
-  const formattedDate = dateObj.toLocaleDateString('en-GB', {
-    day: '2-digit', month: 'long', year: 'numeric'
-  });
-  const payload = {
-     "custcode": this.basicDetailForm.value.billingParty || '',
+    const dateObj = new Date(originalDate);
+    const formattedDate = dateObj.toLocaleDateString('en-GB', {
+      day: '2-digit', month: 'long', year: 'numeric'
+    });
+    const payload = {
+      "custcode": this.basicDetailForm.value.billingParty || '',
       "payBas": this.basicDetailForm.value.billingType || '',
       "baseLocation": this.basicDetailForm.value.origin || '',
       "destCd": this.basicDetailForm.value.destination || '',
@@ -1116,90 +1150,90 @@ getGSTCalculation() {
       "gstRateType": this.freightForm.value.gstRate || '',
       "isGstApplied": "1",
       "billingState": this.freightForm.value.billingState || 'MH'
-  };
-     const currentId = ++this.lastRequestId;
+    };
+    const currentId = ++this.lastRequestId;
 
-  this.basicDetailService.getGSTCalculation(payload).subscribe({
-    next: (response: any) => {
-      // 👇 Only update if this is the latest request
-      if (currentId === this.lastRequestId) {
-        this.gstCalculationList = Object.keys(response).reduce((acc: any, key) => {
+    this.basicDetailService.getGSTCalculation(payload).subscribe({
+      next: (response: any) => {
+        // 👇 Only update if this is the latest request
+        if (currentId === this.lastRequestId) {
+          this.gstCalculationList = Object.keys(response).reduce((acc: any, key) => {
           this.isSubmiting=true;
-          acc[key.toLowerCase()] = response[key];
-          return acc;
-        }, {});
-        // this.freightForm.patchValue({
-        //   ...this.gstCalculationList,
-        //   dktTotal: this.gstCalculationList.dkttotal ?? null,
-        //         billedAt: this.gstCalculationList.rcplbillgenloc,
-        //     billingState: this.gstCalculationList.customerbillgenstate,
- 
-        //     // 👇 Collected fields same as amount
-        //     igstcollected: this.gstCalculationList.igstamount,
-        //     cgstcollected: this.gstCalculationList.cgstamount,
-        //     sgstcollected: this.gstCalculationList.sgstamount,
-        //     utgstcollected: this.gstCalculationList.utgstamount,
- 
-        // });
-      }
-    
-      if (currentId === this.lastRequestId) {
+            acc[key.toLowerCase()] = response[key];
+            return acc;
+          }, {});
+          // this.freightForm.patchValue({
+          //   ...this.gstCalculationList,
+          //   dktTotal: this.gstCalculationList.dkttotal ?? null,
+          //         billedAt: this.gstCalculationList.rcplbillgenloc,
+          //     billingState: this.gstCalculationList.customerbillgenstate,
+
+          //     // 👇 Collected fields same as amount
+          //     igstcollected: this.gstCalculationList.igstamount,
+          //     cgstcollected: this.gstCalculationList.cgstamount,
+          //     sgstcollected: this.gstCalculationList.sgstamount,
+          //     utgstcollected: this.gstCalculationList.utgstamount,
+
+          // });
+        }
+
+        if (currentId === this.lastRequestId) {
        this.mergeAndPatchGST(this.gstCalculationList,this.completiondata?.wmdc || {},this.freightForm);
        this.isSubmiting=true;
+        }
+      },
+      error: (err) => {
+        // ❌ Error but only for latest call
+        if (currentId === this.lastRequestId) {
+          console.error('GST Calculation API Error', err);
+          this.isSubmiting = false;
+        }
       }
-    },
-    error: (err) => {
-    // ❌ Error but only for latest call
-    if (currentId === this.lastRequestId) {
-      console.error('GST Calculation API Error', err);
-      this.isSubmiting = false;
-    }
-  }
-  });
-}
-
-mergeAndPatchGST(apiGST: any, editGST: any, freightForm: FormGroup) {
-  // Convert both objects to lowercase keys
-  const apiData = Object.keys(apiGST || {}).reduce((acc: any, key) => {
-    acc[key.toLowerCase()] = apiGST[key];
-    return acc;
-  }, {});
-  
-  const editData = Object.keys(editGST || {}).reduce((acc: any, key) => {
-    acc[key.toLowerCase()] = editGST[key];
-    return acc;
-  }, {});
-  
-  // Merge values using Math.max
-  const mergedGST = {
-    ...apiData,
-    igstamount: Math.max(apiData.igstamount || 0),
-    cgstamount: Math.max(apiData.cgstamount || 0),
-    sgstamount: Math.max(apiData.sgstamount || 0),
-    utgstamount: Math.max(apiData.utgstamount || 0),
-    igstrate: Math.max(apiData.igstrate || 0),
-    cgstrate: Math.max(apiData.cgstrate || 0),
-    sgstrate: Math.max(apiData.sgstrate || 0),
-    utgstrate: Math.max(apiData.utgstrate || 0),
-    dktTotal: Math.max(apiData.dkttotal || 0),
-    igstcollected: Math.max(apiData.igstamount || 0),
-    cgstcollected: Math.max(apiData.cgstamount || 0),
-    sgstcollected: Math.max(apiData.sgstamount || 0),
-    utgstcollected: Math.max(apiData.utgstamount || 0),
-    billedAt: apiData.rcplbillgenloc ?? editData.rcplbillgenloc ?? null,
-    billingState: apiData.customerbillgenstate ?? editData.customerbillgenstate ?? null
-  };
-
-  // Patch form
-  freightForm.patchValue(mergedGST, { emitEvent: false });
-  if(this.basicDetailForm.value.billingType === 'P04'){
-   this.freightForm.patchValue({
-          billedAt: this.basicDetailForm.value.origin,
-          billingState: this.basicDetailForm.value.csgngstState
- 
     });
   }
-}
+
+  mergeAndPatchGST(apiGST: any, editGST: any, freightForm: FormGroup) {
+    // Convert both objects to lowercase keys
+    const apiData = Object.keys(apiGST || {}).reduce((acc: any, key) => {
+      acc[key.toLowerCase()] = apiGST[key];
+      return acc;
+    }, {});
+
+    const editData = Object.keys(editGST || {}).reduce((acc: any, key) => {
+      acc[key.toLowerCase()] = editGST[key];
+      return acc;
+    }, {});
+
+    // Merge values using Math.max
+    const mergedGST = {
+      ...apiData,
+      igstamount: Math.max(apiData.igstamount || 0),
+      cgstamount: Math.max(apiData.cgstamount || 0),
+      sgstamount: Math.max(apiData.sgstamount || 0),
+      utgstamount: Math.max(apiData.utgstamount || 0),
+      igstrate: Math.max(apiData.igstrate || 0),
+      cgstrate: Math.max(apiData.cgstrate || 0),
+      sgstrate: Math.max(apiData.sgstrate || 0),
+      utgstrate: Math.max(apiData.utgstrate || 0),
+      dktTotal: Math.max(apiData.dkttotal || 0),
+      igstcollected: Math.max(apiData.igstamount || 0),
+      cgstcollected: Math.max(apiData.cgstamount || 0),
+      sgstcollected: Math.max(apiData.sgstamount || 0),
+      utgstcollected: Math.max(apiData.utgstamount || 0),
+      billedAt: apiData.rcplbillgenloc ?? editData.rcplbillgenloc ?? null,
+      billingState: apiData.customerbillgenstate ?? editData.customerbillgenstate ?? null
+    };
+
+    // Patch form
+    freightForm.patchValue(mergedGST, { emitEvent: false });
+  if(this.basicDetailForm.value.billingType === 'P04'){
+      this.freightForm.patchValue({
+        billedAt: this.basicDetailForm.value.origin,
+        billingState: this.basicDetailForm.value.csgngstState
+
+      });
+    }
+  }
 
   getIGSTchargesDetail(complitiondata?:any) {
     this.basicDetailService.getIGSTchargesDetail().subscribe({
@@ -1230,25 +1264,25 @@ mergeAndPatchGST(apiGST: any, editGST: any, freightForm: FormGroup) {
         });
       },
     });
-  // if (complitiondata) {
-  //   // Extra values patch કરવી
-  //   this.freightForm.patchValue({
-  //           // ...complitiondata?.wmdc,
-  //     dktTotal:complitiondata?.wmdc?.dkttot ?? 0,
-  //     igstrate:complitiondata?.wmdc?.igstRate ?? 0,
-  //     cgstrate:complitiondata?.wmdc?.cgstRate ?? 0,
-  //     sgstrate:complitiondata?.wmdc?.sgstRate ?? 0,
-  //     utgstrate:complitiondata?.wmdc?.utgstRate ?? 0,
-  //     igstcollected: complitiondata?.wmdc?.igstAmount ?? 0,
-  //     cgstcollected: complitiondata?.wmdc?.cgstAmount ?? 0,
-  //     sgstcollected: complitiondata?.wmdc?.sgstAmount ?? 0,
-  //     utgstcollected: complitiondata?.wmdc?.utgstAmount ?? 0,
-  //   });
-  //   console.log(this.freightForm.value)
-  // }
+    // if (complitiondata) {
+    //   // Extra values patch કરવી
+    //   this.freightForm.patchValue({
+    //           // ...complitiondata?.wmdc,
+    //     dktTotal:complitiondata?.wmdc?.dkttot ?? 0,
+    //     igstrate:complitiondata?.wmdc?.igstRate ?? 0,
+    //     cgstrate:complitiondata?.wmdc?.cgstRate ?? 0,
+    //     sgstrate:complitiondata?.wmdc?.sgstRate ?? 0,
+    //     utgstrate:complitiondata?.wmdc?.utgstRate ?? 0,
+    //     igstcollected: complitiondata?.wmdc?.igstAmount ?? 0,
+    //     cgstcollected: complitiondata?.wmdc?.cgstAmount ?? 0,
+    //     sgstcollected: complitiondata?.wmdc?.sgstAmount ?? 0,
+    //     utgstcollected: complitiondata?.wmdc?.utgstAmount ?? 0,
+    //   });
+    //   console.log(this.freightForm.value)
+    // }
   }
 
-getChargesData() {
+  getChargesData() {
     this.basicDetailService.getChargeDetail().subscribe({
       next: (response) => {
         if (response) {
@@ -1273,179 +1307,179 @@ getChargesData() {
     });
   }
 
-getBaseCode2() {
-  const chargeRule = this.step2DetailsList?.chargeBas;
-  const prodCd = this.basicDetailForm.value?.contents;
-  const pkgSty = this.basicDetailForm.value?.packingType;;
+  getBaseCode2() {
+    const chargeRule = this.step2DetailsList?.chargeBas;
+    const prodCd = this.basicDetailForm.value?.contents;
+    const pkgSty = this.basicDetailForm.value?.packingType;;
 
-  if (chargeRule === 'NONE') {
-    this.basicDetailForm.get('BaseCode2')?.setValue(chargeRule);
-  } 
-  else if (chargeRule === 'PROD') {
-    this.basicDetailForm.get('BaseCode2')?.setValue(chargeRule);
-    // If you want to assign product code instead, uncomment:
-    // this.basicDetailForm.get('BaseCode2')?.setValue(prodCd);
-  } 
-  else if (chargeRule === 'PKGS') {
-    this.basicDetailForm.get('BaseCode2')?.setValue(pkgSty);
+    if (chargeRule === 'NONE') {
+      this.basicDetailForm.get('BaseCode2')?.setValue(chargeRule);
+    }
+    else if (chargeRule === 'PROD') {
+      this.basicDetailForm.get('BaseCode2')?.setValue(chargeRule);
+      // If you want to assign product code instead, uncomment:
+      // this.basicDetailForm.get('BaseCode2')?.setValue(prodCd);
+    }
+    else if (chargeRule === 'PKGS') {
+      this.basicDetailForm.get('BaseCode2')?.setValue(pkgSty);
+    }
   }
-}
 
-getBaseCode1() {
+  getBaseCode1() {
   const chargeRule = this.ruleDetailForChargeRule?.defaultvalue ;
-  const serviceType = this.basicDetailForm.get('serviceType')?.value;
-  const businessType = this.basicDetailForm.get('businessType')?.value;
+    const serviceType = this.basicDetailForm.get('serviceType')?.value;
+    const businessType = this.basicDetailForm.get('businessType')?.value;
 
-  if (chargeRule === 'NONE') {
-    this.basicDetailForm.get('BaseCode1')?.setValue(chargeRule);
-  } 
-  else if (chargeRule === 'SVCTYP') {
-    this.basicDetailForm.get('BaseCode1')?.setValue(serviceType);
-  } 
-  else if (chargeRule === 'BUT') {
-    this.basicDetailForm.get('BaseCode1')?.setValue(businessType);
+    if (chargeRule === 'NONE') {
+      this.basicDetailForm.get('BaseCode1')?.setValue(chargeRule);
+    }
+    else if (chargeRule === 'SVCTYP') {
+      this.basicDetailForm.get('BaseCode1')?.setValue(serviceType);
+    }
+    else if (chargeRule === 'BUT') {
+      this.basicDetailForm.get('BaseCode1')?.setValue(businessType);
+    }
   }
-}
 
 calculateChargeWeight(){
-      var ACTUWT = this.invoiceform.value.totalActualWeight;
-      var CFTTOT = this.invoiceform.value.totalCubicWeight;
-      if (this.step2DetailsList?.isVolumentric == 'N') {
-          this.invoiceform.patchValue({
+    var ACTUWT = this.invoiceform.value.totalActualWeight;
+    var CFTTOT = this.invoiceform.value.totalCubicWeight;
+    if (this.step2DetailsList?.isVolumentric == 'N') {
+      this.invoiceform.patchValue({
             finalActualWeight:ACTUWT
-          })
-      }
-      else {
+      })
+    }
+    else {
           if (this.step2DetailsList?.cftWeightType == "A"){
-             this.invoiceform.patchValue({
+        this.invoiceform.patchValue({
             finalActualWeight:ACTUWT
-          })
-          }
-          else if (this.step2DetailsList?.cftWeightType == "V")
-            this.invoiceform.patchValue({
-            finalActualWeight:CFTTOT
-          })
-          else {
-            if (parseFloat(ACTUWT) > parseFloat(CFTTOT))
-              this.invoiceform.patchValue({
-                finalActualWeight: ACTUWT
-              })
-          else
-            this.invoiceform.patchValue({
-            finalActualWeight:CFTTOT
-          })
-          }
+        })
       }
-}
-
-GetFreightContractDetails() {
-let cNoteDate = new Date(this.basicDetailForm.value.cNoteDate);
-let dockdt = new Date(Date.UTC(cNoteDate.getFullYear(), cNoteDate.getMonth(), cNoteDate.getDate())).toISOString();
-
-  const originalFinalWeight = this.invoiceform.value.finalActualWeight;
-  const data = {
-    chargeRule: this.ruleDetailForChargeRule?.defaultvalue || 'NONE',
-    baseCode1: this.basicDetailForm.value?.BaseCode1 || 'NONE',
-    chargeSubRule: this.step2DetailsList?.chargeBas || 'NONE',
-    baseCode2: this.basicDetailForm.value?.BaseCode2 || 'NONE',
-
-    chargedWeight: originalFinalWeight?.toString(),
-    chargedWeright: originalFinalWeight?.toString(),
-
-    contractID: this.step2DetailsList?.contractid,
-    destination: this.basicDetailForm.value.destination,
-    depth: this.depth,
-    flagProceed: this.flagprocedd,
-    fromCity: this.basicDetailForm.value.fromCity,
-    fromstate: this.basicDetailForm.value.originState,
-    tostate: this.basicDetailForm.value.destinationState,
-    itemCode: '',
-    ftlType: this.basicDetailForm.value.typeMovement || '',
-    noOfPkgs: this.invoiceform.value.totalNoOfPkgs?.toString(),
-    origin: this.basicDetailForm.value.origin,
-    payBase: this.basicDetailForm.value.billingType,
-    serviceType: this.basicDetailForm.value.serviceType,
-    toCity: this.basicDetailForm.value.toCity,
-    transMode: this.basicDetailForm.value.mode,
-    orderID: this.step2DetailsList?.contractid,
-    invAmt: this.invoiceform.value.totalDeclaredValue?.toString(),
-    dockdt: dockdt,
-    prodcd: this.basicDetailForm.value.contents,
-    isPerPieceRate: this.step2DetailsList?.isPerPieceRate,
-    fromPincode: this.consignorForm.value.consignorPincode,
-    toPincode: this.basicDetailForm.value.pincode,
-    totalPiece: 0
-  };
-
-  // Validation
-  if (!data.invAmt || !data.prodcd || !data.tostate ||data.noOfPkgs === "0" ||!data.transMode ||!data.serviceType ||this.invoiceform.value.totalActualWeight == 0) {
-    return;
-  }
-  const currentRequestId = ++this.requestId;
-
-  this.basicDetailService.GetFreightContractDetails(data).subscribe({
-    next: (response: any) => {
-      if (response) {
-        if (currentRequestId !== this.requestId) {
-          return;
-        }
-        this.isSubmiting = true;
-
-        this.freightData = response.result[0];
-        this.contractMessage = this.freightData.contractMessage;
-
-        this.freightForm.patchValue({
-          freightCharges: this.freightData?.freightCharge,
-          rateType: this.freightData.rateType,
-          freightRate: this.freightData.freightRate,
-          EDD: new Date(this.freightData.edd)
-            .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
-            .toUpperCase()
-            .replace(/ /g, '-'),
-          billingState: this.freightData.billingState
-        });
-
-        // ⭐ Update form weight ONLY if API gives higher value
-      if(this.freightData.chargedWeight > originalFinalWeight ){
-          const newFinalWeight = Math.max(this.freightData.chargedWeight || 0, originalFinalWeight || 0);
-         
+      else if (this.step2DetailsList?.cftWeightType == "V")
+        this.invoiceform.patchValue({
+            finalActualWeight:CFTTOT
+        })
+      else {
+        if (parseFloat(ACTUWT) > parseFloat(CFTTOT))
           this.invoiceform.patchValue({
-            finalActualWeight: newFinalWeight,
+            finalActualWeight: ACTUWT
+          })
+        else
+          this.invoiceform.patchValue({
+            finalActualWeight:CFTTOT
+          })
+      }
+    }
+  }
+
+  GetFreightContractDetails() {
+    let cNoteDate = new Date(this.basicDetailForm.value.cNoteDate);
+    let dockdt = new Date(Date.UTC(cNoteDate.getFullYear(), cNoteDate.getMonth(), cNoteDate.getDate())).toISOString();
+
+    const originalFinalWeight = this.invoiceform.value.finalActualWeight;
+    const data = {
+      chargeRule: this.ruleDetailForChargeRule?.defaultvalue || 'NONE',
+      baseCode1: this.basicDetailForm.value?.BaseCode1 || 'NONE',
+      chargeSubRule: this.step2DetailsList?.chargeBas || 'NONE',
+      baseCode2: this.basicDetailForm.value?.BaseCode2 || 'NONE',
+
+      chargedWeight: originalFinalWeight?.toString(),
+      chargedWeright: originalFinalWeight?.toString(),
+
+      contractID: this.step2DetailsList?.contractid,
+      destination: this.basicDetailForm.value.destination,
+      depth: this.depth,
+      flagProceed: this.flagprocedd,
+      fromCity: this.basicDetailForm.value.fromCity,
+      fromstate: this.basicDetailForm.value.originState,
+      tostate: this.basicDetailForm.value.destinationState,
+      itemCode: '',
+      ftlType: this.basicDetailForm.value.typeMovement || '',
+      noOfPkgs: this.invoiceform.value.totalNoOfPkgs?.toString(),
+      origin: this.basicDetailForm.value.origin,
+      payBase: this.basicDetailForm.value.billingType,
+      serviceType: this.basicDetailForm.value.serviceType,
+      toCity: this.basicDetailForm.value.toCity,
+      transMode: this.basicDetailForm.value.mode,
+      orderID: this.step2DetailsList?.contractid,
+      invAmt: this.invoiceform.value.totalDeclaredValue?.toString(),
+      dockdt: dockdt,
+      prodcd: this.basicDetailForm.value.contents,
+      isPerPieceRate: this.step2DetailsList?.isPerPieceRate,
+      fromPincode: this.consignorForm.value.consignorPincode,
+      toPincode: this.basicDetailForm.value.pincode,
+      totalPiece: 0
+    };
+
+    // Validation
+  if (!data.invAmt || !data.prodcd || !data.tostate ||data.noOfPkgs === "0" ||!data.transMode ||!data.serviceType ||this.invoiceform.value.totalActualWeight == 0) {
+      return;
+    }
+    const currentRequestId = ++this.requestId;
+
+    this.basicDetailService.GetFreightContractDetails(data).subscribe({
+      next: (response: any) => {
+        if (response) {
+          if (currentRequestId !== this.requestId) {
+            return;
+          }
+          this.isSubmiting = true;
+
+          this.freightData = response.result[0];
+          this.contractMessage = this.freightData.contractMessage;
+
+          this.freightForm.patchValue({
+            freightCharges: this.freightData?.freightCharge,
+            rateType: this.freightData.rateType,
+            freightRate: this.freightData.freightRate,
+            EDD: new Date(this.freightData.edd)
+              .toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+              .toUpperCase()
+              .replace(/ /g, '-'),
+            billingState: this.freightData.billingState
           });
-        }
+
+          // ⭐ Update form weight ONLY if API gives higher value
+      if(this.freightData.chargedWeight > originalFinalWeight ){
+            const newFinalWeight = Math.max(this.freightData.chargedWeight || 0, originalFinalWeight || 0);
+
+            this.invoiceform.patchValue({
+              finalActualWeight: newFinalWeight,
+            });
+          }
 
           if(this.freightData.chargedPKGS > this.invoiceform.value.chargeWeightPerPkg){
-          const newPkgWeight = Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0);
-          this.invoiceform.patchValue({
-            chargeWeightPerPkg: newPkgWeight
-          });
+            const newPkgWeight = Math.max(this.freightData.chargedPKGS || 0, this.invoiceform.value.chargeWeightPerPkg || 0);
+            this.invoiceform.patchValue({
+              chargeWeightPerPkg: newPkgWeight
+            });
+          }
+          this.validateAppointmentDate();
+          this.getFuelSurcharge(this.freightData?.freightCharge);
         }
-        this.validateAppointmentDate();
-        this.getFuelSurcharge(this.freightData?.freightCharge);
+      }
+    });
+
+    // this.isSubmiting = false;
+  }
+
+  validateAppointmentDate() {
+    const appointmentControl = this.basicDetailForm.get('appointmentDT');
+    const eddControl = this.freightForm.get('EDD');
+    if (!appointmentControl || !eddControl) return;
+    const appointmentDate = appointmentControl.value ? new Date(appointmentControl.value) : null;
+    const eddDate = eddControl.value ? new Date(eddControl.value) : null;
+    if (appointmentDate && eddDate && appointmentDate < eddDate && this.basicDetailForm.get('isAppointmentDelivery')?.value) {
+      appointmentControl.setErrors({ appointmentBeforeEdd: true });
+      appointmentControl.markAsTouched();  // 👈 force touched
+    } else {
+      if (appointmentControl.hasError('appointmentBeforeEdd')) {
+        const errors = { ...appointmentControl.errors };
+        delete errors['appointmentBeforeEdd'];
+        appointmentControl.setErrors(Object.keys(errors).length ? errors : null);
       }
     }
-  });
-
-  // this.isSubmiting = false;
-}
-
-validateAppointmentDate() {
-  const appointmentControl = this.basicDetailForm.get('appointmentDT');
-  const eddControl = this.freightForm.get('EDD');
-  if (!appointmentControl || !eddControl) return;
-  const appointmentDate = appointmentControl.value ? new Date(appointmentControl.value) : null;
-  const eddDate = eddControl.value ? new Date(eddControl.value) : null;
-  if (appointmentDate && eddDate && appointmentDate < eddDate && this.basicDetailForm.get('isAppointmentDelivery')?.value) {
-    appointmentControl.setErrors({ appointmentBeforeEdd: true });
-    appointmentControl.markAsTouched();  // 👈 force touched
-  } else {
-    if (appointmentControl.hasError('appointmentBeforeEdd')) {
-      const errors = { ...appointmentControl.errors };
-      delete errors['appointmentBeforeEdd'];
-      appointmentControl.setErrors(Object.keys(errors).length ? errors : null);
-    }
   }
-}
 
   getFovContractDetails() {
     const payload = {
@@ -1457,8 +1491,8 @@ validateAppointmentDate() {
       serviceType: this.basicDetailForm.value.serviceType ?this.basicDetailForm.value.serviceType :''
     }
     if (!payload.contractID || !payload.riskType || !payload.invAmt) {
-    console.warn("Skipping FOV API call — missing values", {
-    });
+      console.warn("Skipping FOV API call — missing values", {
+      });
       return;
     }
     this.basicDetailService.getFovContractDetails(payload).subscribe({
@@ -1505,7 +1539,7 @@ validateAppointmentDate() {
       "destPincode": this.basicDetailForm.value.pincode || 0,
       "floorNo": 0
     };
-     if (!payload.invAmt || !payload.fromCity || !payload.packType || !payload.noOfPkgs || !payload.transMode || !payload.serviceType || !payload.prodType || !payload.toCity) {
+    if (!payload.invAmt || !payload.fromCity || !payload.packType || !payload.noOfPkgs || !payload.transMode || !payload.serviceType || !payload.prodType || !payload.toCity) {
       console.warn("Required fields missing, API not called:", payload);
       return;
     }
@@ -1517,45 +1551,45 @@ validateAppointmentDate() {
           this.isSubmiting=true;
           this.chargingData = response;
           // this.chargingData.forEach((item: any) => {
-            // if(this.loginUserList.Type !== '2'){
-              // if (this.freightForm.contains(item.chargecode)) {
-              //     this.freightForm.patchValue({
-              //       [item.chargecode]: item.charge
-              //     });
-              //     if (item.chargecode === 'SCHG12') {
-              //       this.freightForm.patchValue({
-              //         coddodCharged: item.charge
-              //       });
-              //     }
-              //     if (!this.basicDetailForm.get('IsMAllDeliveryN')?.value) {
-              //       this.freightForm.patchValue({ SCHG17: 0 })
-              //     }
-              //     if (!this.basicDetailForm.get('isAppointmentDelivery')?.value) {
-              //       this.freightForm.patchValue({ UCHG08: 0 })
-              //     }
-              //     if (!this.basicDetailForm.get('iscsdDelivery')?.value) {
-              //       this.freightForm.patchValue({ SCHG10: 0 })
-              //     }
-              //     if (!this.basicDetailForm.get('isDACC')?.value) {
-              //       this.freightForm.patchValue({ SCHG13: 0 })
-              //     }
-              //     if (!this.basicDetailForm.get('IsCODDOD')?.value) {
-              //       this.freightForm.patchValue({ SCHG12: 0 });
-              //       this.freightForm.patchValue({coddodCharged:0})
-              //     }
-              //     if (this.freightForm.get('fovRate')?.value) {
-              //       this.freightForm.patchValue({ SCHG11: 0 })
-              //     }
-              //   }
-            // }
-            // else{
-              this.mergeAndPatchCharges(
-                this.chargingData,
-                this.completiondata?.listCharges || [], // agar edit data available hoy to
-                this.freightForm,
-                this.basicDetailForm,
-              );
-            // }
+          // if(this.loginUserList.Type !== '2'){
+          // if (this.freightForm.contains(item.chargecode)) {
+          //     this.freightForm.patchValue({
+          //       [item.chargecode]: item.charge
+          //     });
+          //     if (item.chargecode === 'SCHG12') {
+          //       this.freightForm.patchValue({
+          //         coddodCharged: item.charge
+          //       });
+          //     }
+          //     if (!this.basicDetailForm.get('IsMAllDeliveryN')?.value) {
+          //       this.freightForm.patchValue({ SCHG17: 0 })
+          //     }
+          //     if (!this.basicDetailForm.get('isAppointmentDelivery')?.value) {
+          //       this.freightForm.patchValue({ UCHG08: 0 })
+          //     }
+          //     if (!this.basicDetailForm.get('iscsdDelivery')?.value) {
+          //       this.freightForm.patchValue({ SCHG10: 0 })
+          //     }
+          //     if (!this.basicDetailForm.get('isDACC')?.value) {
+          //       this.freightForm.patchValue({ SCHG13: 0 })
+          //     }
+          //     if (!this.basicDetailForm.get('IsCODDOD')?.value) {
+          //       this.freightForm.patchValue({ SCHG12: 0 });
+          //       this.freightForm.patchValue({coddodCharged:0})
+          //     }
+          //     if (this.freightForm.get('fovRate')?.value) {
+          //       this.freightForm.patchValue({ SCHG11: 0 })
+          //     }
+          //   }
+          // }
+          // else{
+          this.mergeAndPatchCharges(
+            this.chargingData,
+            this.completiondata?.listCharges || [], // agar edit data available hoy to
+            this.freightForm,
+            this.basicDetailForm,
+          );
+          // }
           // });
           // this.subTotalCalculation();
           this.isSubmiting=false
@@ -1566,120 +1600,120 @@ validateAppointmentDate() {
     // this.isSubmiting=false;
   }
 
-mergeAndPatchCharges( 
-  apiCharges: any[],
-  editCharges: any[],
-  freightForm: FormGroup,
-  basicDetailForm: FormGroup,
-) {
+  mergeAndPatchCharges(
+    apiCharges: any[],
+    editCharges: any[],
+    freightForm: FormGroup,
+    basicDetailForm: FormGroup,
+  ) {
   if(this.loginUserList.Type !== '2'){
-    this?.freightchargingData?.forEach((item: any) => {
-       const code = item.chargeCode;
-       if (this.freightForm.contains(code)) {
-         this.freightForm.get(code)?.patchValue(0, { emitEvent: false });
-       }
-     });
-  }
-  const mergedMap = new Map<string, number>();
-  // 1️⃣ Collect API charges
-  apiCharges?.forEach((item: any) => {
-    const code = (item.chargecode || "").toUpperCase();
-    const amount = Number(item.charge) || 0;
-    mergedMap.set(code, amount);
-  });
+      this?.freightchargingData?.forEach((item: any) => {
+        const code = item.chargeCode;
+        if (this.freightForm.contains(code)) {
+          this.freightForm.get(code)?.patchValue(0, { emitEvent: false });
+        }
+      });
+    }
+    const mergedMap = new Map<string, number>();
+    // 1️⃣ Collect API charges
+    apiCharges?.forEach((item: any) => {
+      const code = (item.chargecode || "").toUpperCase();
+      const amount = Number(item.charge) || 0;
+      mergedMap.set(code, amount);
+    });
 
-  // 2️⃣ Add/Edit charges
-  editCharges?.forEach((item: any) => {
-    const code = (item.chargeCode || item.chargecode || "").toUpperCase();
-    const amount = Number(item.chargeAmount || item.charge) || 0;
-    mergedMap.set(code, Math.max(mergedMap.get(code) || 0, amount));
-  });
+    // 2️⃣ Add/Edit charges
+    editCharges?.forEach((item: any) => {
+      const code = (item.chargeCode || item.chargecode || "").toUpperCase();
+      const amount = Number(item.chargeAmount || item.charge) || 0;
+      mergedMap.set(code, Math.max(mergedMap.get(code) || 0, amount));
+    });
 
-  // 3️⃣ Convert map to array
-  this.chargingData = Array.from(mergedMap.entries()).map(([code, amount]) => ({
-    chargecode: code,
-    charge: amount,
-  }));
+    // 3️⃣ Convert map to array
+    this.chargingData = Array.from(mergedMap.entries()).map(([code, amount]) => ({
+      chargecode: code,
+      charge: amount,
+    }));
 
-  // 4️⃣ Patch values into freightForm (respecting manual edits)
-  this.chargingData.forEach((chargeItem: any) => {
-    const controlName = chargeItem.chargecode;
-    const control = freightForm.get(controlName);
-    const apiChargeObj = apiCharges?.find((api) => (api.chargecode || "").toUpperCase() === controlName);
-    const apiValue = Number(apiChargeObj?.charge) || 0;
+    // 4️⃣ Patch values into freightForm (respecting manual edits)
+    this.chargingData.forEach((chargeItem: any) => {
+      const controlName = chargeItem.chargecode;
+      const control = freightForm.get(controlName);
+      const apiChargeObj = apiCharges?.find((api) => (api.chargecode || "").toUpperCase() === controlName);
+      const apiValue = Number(apiChargeObj?.charge) || 0;
 
-    if (control) {
-      const currentValue = Number(control.value) || 0;
-      const newValue = Number(chargeItem.charge) || 0;
+      if (control) {
+        const currentValue = Number(control.value) || 0;
+        const newValue = Number(chargeItem.charge) || 0;
 
-      if (apiChargeObj) {
-        
-        if (apiValue > 0) {
-          // API wins (non-zero)
-          control.patchValue(apiValue, { emitEvent: false });
+        if (apiChargeObj) {
+
+          if (apiValue > 0) {
+            // API wins (non-zero)
+            control.patchValue(apiValue, { emitEvent: false });
+          } else {
+            // API sent 0 → keep manual if any
+            if (currentValue === 0) {
+              control.patchValue(newValue, { emitEvent: false });
+            }
+          }
         } else {
-          // API sent 0 → keep manual if any
-          if (currentValue === 0) {
+          // No API charge for this code → keep manual if already filled
+          if (currentValue === 0 || currentValue === null || currentValue === undefined) {
             control.patchValue(newValue, { emitEvent: false });
           }
         }
       } else {
-        // No API charge for this code → keep manual if already filled
-        if (currentValue === 0 || currentValue === null || currentValue === undefined) {
-          control.patchValue(newValue, { emitEvent: false });
-        }
+        console.warn("Form control not found:", controlName);
       }
-    } else {
-      console.warn("Form control not found:", controlName);
+    });
+
+    // 5️⃣ Business rules (same)
+    if (!basicDetailForm.get('IsMAllDeliveryN')?.value) {
+      freightForm.patchValue({ SCHG17: 0 });
     }
-  });
+    if (!basicDetailForm.get('isAppointmentDelivery')?.value) {
+      freightForm.patchValue({ UCHG08: 0 });
+    }
+    if (!basicDetailForm.get('iscsdDelivery')?.value) {
+      freightForm.patchValue({ SCHG10: 0 });
+    }
+    if (!basicDetailForm.get('isDACC')?.value) {
+      freightForm.patchValue({ SCHG13: 0 });
+    }
+    if (!basicDetailForm.get('IsCODDOD')?.value) {
+      freightForm.patchValue({ SCHG12: 0, coddodCharged: 0 });
+    }
+    if (freightForm.get('fovRate')?.value) {
+      freightForm.patchValue({ SCHG11: 0 });
+    }
 
-  // 5️⃣ Business rules (same)
-  if (!basicDetailForm.get('IsMAllDeliveryN')?.value) {
-    freightForm.patchValue({ SCHG17: 0 });
-  }
-  if (!basicDetailForm.get('isAppointmentDelivery')?.value) {
-    freightForm.patchValue({ UCHG08: 0 });
-  }
-  if (!basicDetailForm.get('iscsdDelivery')?.value) {
-    freightForm.patchValue({ SCHG10: 0 });
-  }
-  if (!basicDetailForm.get('isDACC')?.value) {
-    freightForm.patchValue({ SCHG13: 0 });
-  }
-  if (!basicDetailForm.get('IsCODDOD')?.value) {
-    freightForm.patchValue({ SCHG12: 0, coddodCharged: 0 });
-  }
-  if (freightForm.get('fovRate')?.value) {
-    freightForm.patchValue({ SCHG11: 0 });
-  }
-
-freightForm.valueChanges.subscribe((values) => {
-    if (basicDetailForm.value.isreferenceDKT === true) {
-      Object.keys(freightForm.controls).forEach((controlName) => {
-        // Only charge fields & exclude SCHG04
-        if (
-          (controlName.startsWith('SCHG') || controlName.startsWith('UCHG')) &&
-          controlName !== 'SCHG04'
-        ) {
-          if (values[controlName] !== 0) {
-            freightForm.get(controlName)?.patchValue(0, { emitEvent: false });
+    freightForm.valueChanges.subscribe((values) => {
+      if (basicDetailForm.value.isreferenceDKT === true) {
+        Object.keys(freightForm.controls).forEach((controlName) => {
+          // Only charge fields & exclude SCHG04
+          if (
+            (controlName.startsWith('SCHG') || controlName.startsWith('UCHG')) &&
+            controlName !== 'SCHG04'
+          ) {
+            if (values[controlName] !== 0) {
+              freightForm.get(controlName)?.patchValue(0, { emitEvent: false });
+            }
           }
-        }
-      });
-    }
-  });
-}
+        });
+      }
+    });
+  }
 
 
 
   getFuelSurcharge(data: any) {
-  const freight = Number(data);
-  const chargedWeight = this.invoiceform.value?.finalActualWeight;
-  let fuelRateType;
-  let fuelRate;
-  let minFuelCharge;
-  let maxFuelCharge;
+    const freight = Number(data);
+    const chargedWeight = this.invoiceform.value?.finalActualWeight;
+    let fuelRateType;
+    let fuelRate;
+    let minFuelCharge;
+    let maxFuelCharge;
 
     fuelRateType = this.contractservicecharge[0]?.fuelSurchrgBas;
     fuelRate = this.contractservicecharge[0]?.fuelSurchrg;
@@ -1726,26 +1760,26 @@ freightForm.valueChanges.subscribe((values) => {
     if (surcharge > maxFuelCharge) {
       surcharge = maxFuelCharge;
     }
-    
+
     fuelSurcharge = parseFloat(surcharge.toFixed(2));
     this.freightForm.patchValue({
       SCHG20: fuelSurcharge
     })
     if(this.basicDetailForm.value.isreferenceDKT === true|| this.basicDetailForm.value.billingType ==='P04'){
-        this.freightForm.patchValue({
+      this.freightForm.patchValue({
           freightRate:0,
           freightCharges:0,
           dktTotal:0,
           SCHG20:0
-        })
-      }
+      })
+    }
       if(this.basicDetailForm.value.isreferenceDKT === true){
-        this.freightForm.patchValue({
+      this.freightForm.patchValue({
           SCHG20:0
-        })
+      })
     }
     this.subTotalCalculation()
-  
+
   }
 
   subTotalCalculation() {
@@ -1771,7 +1805,7 @@ freightForm.valueChanges.subscribe((values) => {
       { subTotal: totalSubTotal.toFixed(2) },
       { emitEvent: false }
     );
-      this.originalSubtotal = this.freightForm.value.subTotal;
+    this.originalSubtotal = this.freightForm.value.subTotal;
     this.totalSubTotal = totalSubTotal;
     this.getGSTCalculation();
     if(this.freightForm.value.discountType || this.freightForm.value.discount){
@@ -1842,48 +1876,48 @@ freightForm.valueChanges.subscribe((values) => {
     return true;
   }
 
-calculateDiscount(event?: any) {
-  const discountType = event?.value || this.freightForm.value.discountType;
+  calculateDiscount(event?: any) {
+    const discountType = event?.value || this.freightForm.value.discountType;
     if (event?.value) {
-    this.freightForm.patchValue({
-      discount: null,
-      discountAmount: null,
+      this.freightForm.patchValue({
+        discount: null,
+        discountAmount: null,
       subTotal:this.originalSubtotal
-    });
-  }
-  
-  let Subtotal = this.originalSubtotal;
-   const discountControl = this.freightForm.get('discount');
+      });
+    }
+
+    let Subtotal = this.originalSubtotal;
+    const discountControl = this.freightForm.get('discount');
 if(this.freightForm.value.discount !== null && this.freightForm.value.discount !== '' && this.freightForm.value.discount !== undefined){
-  let discounts = this.freightForm.value.discount;
-  if (discountType == "P") {
-    discounts = parseFloat(this.originalSubtotal.toString()) * parseFloat(discounts) / 100;
-    this.getMaxDiscountLimit()
+      let discounts = this.freightForm.value.discount;
+      if (discountType == "P") {
+        discounts = parseFloat(this.originalSubtotal.toString()) * parseFloat(discounts) / 100;
+        this.getMaxDiscountLimit()
+      }
+
+      if (discountType === 'F') {
+        // ✅ SET VALIDATORS
+        discountControl?.setValidators([
+          Validators.min(0),
+          Validators.max(Subtotal)
+        ]);
+
+        // ✅ VERY IMPORTANT
+        discountControl?.markAsTouched();
+        discountControl?.updateValueAndValidity({ emitEvent: false });
+
+      }
+
+      const finalSubtotal = Number(Subtotal) - parseFloat(discounts);
+
+      this.freightForm.patchValue({
+        subTotal: finalSubtotal?.toFixed(2),
+        discountAmount: parseFloat(discounts)?.toFixed(2)
+      });
+
+      this.getGSTCalculation();
+    }
   }
-
-  if (discountType === 'F') {
-    // ✅ SET VALIDATORS
-    discountControl?.setValidators([
-      Validators.min(0),
-      Validators.max(Subtotal)
-    ]);
-
-    // ✅ VERY IMPORTANT
-    discountControl?.markAsTouched();
-    discountControl?.updateValueAndValidity({ emitEvent: false });
-
-  }
-
-  const finalSubtotal = Number(Subtotal) - parseFloat(discounts);
-
-  this.freightForm.patchValue({
-    subTotal: finalSubtotal?.toFixed(2),
-    discountAmount: parseFloat(discounts)?.toFixed(2)
-  });
-
-  this.getGSTCalculation();
-}
-}
 
 }
 
