@@ -234,14 +234,14 @@
                                 </button>
                                 <button *ngIf="!isHQTR"
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
-                                    (click)="openUpdateModal(data)" [disabled]="data.deliveredCount === 0 ||!data.isCancelAllow||data.status==='Billed' || data.IsThroughDA ===true ">
+                                    (click)="openUpdateModal(data)" [disabled]="data.ispdcUpdate ||data.status==='Cancelled'||data.status==='Billed' || data.IsThroughDA ===true ">
                                     🔄 DRS Update
                                 </button>
-                                <button *ngIf="!isHQTR" (click)="openPRSDRSEdit(data,'P')" [disabled]="data.deliveredCount === 0||data.status==='Billed'"
+                                <button *ngIf="!isHQTR" (click)="openPRSDRSEdit(data,'P')" [disabled]="data.status==='Billed'"
                                     class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3">
                                     ✏️ Edit
                                 </button>
-                                <button [disabled]="data.deliveredCount === 0||data.status==='Billed'||data.loadingHCCNo || data.unloadingHCCNo || data.ispdcUpdate"
+                                <button [disabled]="data.ispdcUpdate||data.status==='Billed'||data.loadingHCCNo || data.unloadingHCCNo || !data.isCancelAllow"
                                 class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
                                     (click)="onCancel(data.drsNo)">
                                     🚫 Cancel
@@ -253,7 +253,7 @@
                                 </button>
                                 <button *ngIf="!isHQTR"
                                 class="btn btn-sm bg-success-purple border-success-subtle text-success-emphasis py-1 px-3"
-                                    (click)="openSingleDRSUpdate(data)" [disabled]="data.totalDockets===data.deliveredCount|| data.deliveredCount === 0||!data.isCancelAllow||data.status==='Billed'">
+                                    (click)="openSingleDRSUpdate(data)" [disabled]="data.totalDockets===data.deliveredCount|| data.ispdcUpdate||data.status==='Billed'||data.status==='Cancelled' ">
                                     📝 Single C Note Update
                                 </button>
                             </div>  
