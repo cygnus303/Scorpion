@@ -519,7 +519,7 @@ onDocketSelectionChange(ctrl: AbstractControl) {
     const docketArray = this.challanService.challanForm.get('avalabledocketinPRS') as FormArray;
     docketArray.controls.forEach(control => {
       const message = control.get('Message')?.value;
-      if (message && message.trim() === "Docket Not Scan") {
+      if (message) {
         control.get('isSelected')?.setValue(false, { emitEvent: false });
       }
       else {
