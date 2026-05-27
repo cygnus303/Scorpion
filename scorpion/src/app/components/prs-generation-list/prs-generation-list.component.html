@@ -81,7 +81,7 @@
             <div class="card-content">
                 <div class="s-label">HCC Generated</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.hcc_Generated || 0 }}</div>
-                <div class="small text-body-tertiary">Loading HCC :{{summaryData.loading_HCC||0}} & UnLoading HCC : {{summaryData.unloading_HCC||0}}</div>
+                <div class="small text-body-tertiary">HCC generated today</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
         </div>
@@ -207,7 +207,7 @@
                                 </button>
                                 <button *ngIf="!isHQTR"
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
-                                    [disabled]="row.isArrived ||row.loadingHCC || row.unLoadingHCC" (click)="openPRSArrival(row)">
+                                    [disabled]="row.isArrived" (click)="openPRSArrival(row)">
                                     📦 PRS Arrival
                                 </button>
                                 <button *ngIf="!isHQTR"
