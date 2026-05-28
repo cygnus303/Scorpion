@@ -3,6 +3,7 @@ import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angula
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PFMapiService } from 'app/shared/services/pfmapi.service';
 import { DocketService } from 'app/shared/services/docket.service';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-view-pfm',
@@ -14,6 +15,7 @@ import { DocketService } from 'app/shared/services/docket.service';
 })
 export class ViewPfmComponent {
   public modalRef!: BsModalRef;
+  public env = environment;
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
 
@@ -52,6 +54,18 @@ export class ViewPfmComponent {
     if (!fromTo) return '—';
     const parts = fromTo.split(':');
     return parts.length > 1 ? parts[1].trim() : '—';
+  }
+
+  downloadPFM(DocumentNo: string) {
+    const url = `${this.env.liveUrl}ViewPrint/ViewPFM?DocumentNo=${DocumentNo}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
+    }
+
   }
 
 }
