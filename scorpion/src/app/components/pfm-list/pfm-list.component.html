@@ -320,9 +320,9 @@
     </div>
 </div>
 
-<app-add-pfm-popup #AddPfmPopupComponent (dataEmitter)="fetchData()"></app-add-pfm-popup>
-<app-pfm-number-generated #PFMNumberGeneratedComponent (dataEmitter)="fetchData()"></app-pfm-number-generated>
-<app-forward-pfm #ForwardPFMComponent (dataEmitter)="fetchData()"></app-forward-pfm>
-<app-acknowledge-pfm #AcknowledgePFMComponent (dataEmitter)="fetchData()"></app-acknowledge-pfm>
+<app-add-pfm-popup #AddPfmPopupComponent (dataEmitter)="refreshData()"></app-add-pfm-popup>
+<app-pfm-number-generated #PFMNumberGeneratedComponent (dataEmitter)="refreshData()"></app-pfm-number-generated>
+<app-forward-pfm #ForwardPFMComponent (dataEmitter)="refreshData()"></app-forward-pfm>
+<app-acknowledge-pfm #AcknowledgePFMComponent (dataEmitter)="refreshData()"></app-acknowledge-pfm>
 <app-view-pfm #ViewPfmComponent></app-view-pfm>
-<app-edit-forwarded-pfm #EditForwardedPFMComponent (dataEmitter)="fetchData()"></app-edit-forwarded-pfm>
+<app-edit-forwarded-pfm #EditForwardedPFMComponent (dataEmitter)="refreshData()"></app-edit-forwarded-pfm>
