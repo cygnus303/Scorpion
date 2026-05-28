@@ -60,6 +60,12 @@ export class PFMListComponent implements OnInit, OnDestroy {
   };
 
   private cachedSummary: any = null;
+  public requestCache = new Map<string, any>();
+
+  refreshData() {
+    this.requestCache.clear();
+    this.fetchData();
+  }
 
   statusList = [
     { value: 'All', label: 'All Status', color: 'all', bg: 'var(--muted)', count: 0 },
@@ -137,7 +143,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
       totalRecords: 0,
       totalPages: 1
     };
-    this.fetchData();
+    this.refreshData();
   }
 
   fetchData() {
@@ -190,9 +196,17 @@ export class PFMListComponent implements OnInit, OnDestroy {
         lrFilter: this.searchKeyword || null
       };
 
+      const cacheKey = JSON.stringify(hqtrPayload);
+      if (this.requestCache.has(cacheKey)) {
+        this.isLoading = false;
+        this.handleHQTRResponse(this.requestCache.get(cacheKey));
+        return;
+      }
+
       this.listSubscription = this.PFMapiService.PFMListForHQTR(hqtrPayload).subscribe({
         next: (response: any) => {
           this.isLoading = false;
+          this.requestCache.set(cacheKey, response);
           this.handleHQTRResponse(response);
         },
         error: (err: any) => {
@@ -215,9 +229,17 @@ export class PFMListComponent implements OnInit, OnDestroy {
         lrFilter: this.searchKeyword
       };
 
+      const cacheKey = JSON.stringify(branchPayload);
+      if (this.requestCache.has(cacheKey)) {
+        this.isLoading = false;
+        this.handleBranchResponse(this.requestCache.get(cacheKey));
+        return;
+      }
+
       this.listSubscription = this.PFMapiService.PODForwardingList(branchPayload).subscribe({
         next: (response: any) => {
           this.isLoading = false;
+          this.requestCache.set(cacheKey, response);
           this.handleBranchResponse(response);
         },
         error: (err: any) => {
@@ -493,7 +515,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
         this.PFMapiService.CancelPFM(payload).subscribe({
           next: () => {
             this.sweetAlertService.success('PFM cancelled successfully!');
-            this.fetchData();
+            this.refreshData();
           },
           error: (err) => this.sweetAlertService.error(err)
         });
