@@ -46,6 +46,13 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     total_PRS_Arrived: 0
   };
 
+  public requestCache = new Map<string, any>();
+
+  refreshData() {
+    this.requestCache.clear();
+    this.fetchData();
+  }
+
   statusList = [
     { label: 'All Status', value: 'All' },
     { label: 'Generated', value: 'Generated' },
@@ -128,27 +135,18 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
       searchText: this.config.searchText || null
     };
 
+    const cacheKey = JSON.stringify(payload);
+    if (this.requestCache.has(cacheKey)) {
+      this.isLoading = false;
+      this.handleResponse(this.requestCache.get(cacheKey));
+      return;
+    }
+
     this.listSubscription = this.PFMapiService.GetPrsList(payload).subscribe({
       next: (response: any) => {
         this.isLoading = false;
-        if (response && response.data) {
-          this.prsData = response.data;
-
-          if (response.pagination) {
-            this.config.totalRecords = response.pagination.totalRecords || this.prsData.length;
-            this.config.totalPages = response.pagination.totalPages || 1;
-            this.config.page = response.pagination.currentPage || 1;
-            this.config.pageSize = response.pagination.pageSize || 50;
-          }
-
-          if (response.summary) {
-            this.summaryData = response.summary;
-          }
-        } else {
-          this.prsData = [];
-          this.config.totalRecords = 0;
-          this.config.totalPages = 1;
-        }
+        this.requestCache.set(cacheKey, response);
+        this.handleResponse(response);
       },
       error: (err: any) => {
         this.isLoading = false;
@@ -156,6 +154,25 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
         this.prsData = [];
       }
     });
+  }
+
+  handleResponse(response: any) {
+    if (response && response.data) {
+      this.prsData = response.data;
+      if (response.pagination) {
+        this.config.totalRecords = response.pagination.totalRecords || this.prsData.length;
+        this.config.totalPages = response.pagination.totalPages || 1;
+        this.config.page = response.pagination.currentPage || 1;
+        this.config.pageSize = response.pagination.pageSize || 50;
+      }
+      if (response.summary) {
+        this.summaryData = response.summary;
+      }
+    } else {
+      this.prsData = [];
+      this.config.totalRecords = 0;
+      this.config.totalPages = 1;
+    }
   }
 
   filterByStatus(status: string) {
@@ -251,7 +268,7 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
       next: (response: any) => {
         if (response) {
           this.sweetAlertService.success(`PRS ${prsNo} has been cancelled successfully.`);
-          this.fetchData();
+          this.refreshData();
         }
       },
       error: (err) => {

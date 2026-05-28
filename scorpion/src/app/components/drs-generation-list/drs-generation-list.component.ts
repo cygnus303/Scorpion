@@ -32,6 +32,12 @@ export class DrsGenerationListComponent {
   private listSubscription?: Subscription;
   public summaryData: any;
   public isdownload: boolean = false;
+  public requestCache = new Map<string, any>();
+
+  refreshData() {
+    this.requestCache.clear();
+    this.fetchData();
+  }
   public showUpdateModal: boolean = false;
   public selectedDRS: any;
   public  env = environment;
@@ -135,6 +141,7 @@ export class DrsGenerationListComponent {
   }
 
   refreshFilter() {
+    this.requestCache.clear();
     this.buildFilterForm();
     this.fetchData()
   }
@@ -174,15 +181,28 @@ export class DrsGenerationListComponent {
       odaType: this.DRSFilterForm.value.odaType,
       searchText: this.DRSFilterForm.value.searchText
     }
+
+    const cacheKey = JSON.stringify(payload);
+    if (this.requestCache.has(cacheKey)) {
+      this.isLoading = false;
+      const response = this.requestCache.get(cacheKey);
+      this.DRSData = response.data;
+      this.pagination.totalRecords = response.pagination.totalRecords;
+      this.pagination.totalPages = response.pagination.totalPages;
+      this.summaryData = response.summary;
+      return;
+    }
+
     this.isLoading = true;
 
     this.listSubscription = this.prsdrsApiService.getDRSList(payload).subscribe({
       next: (response: any) => {
+        this.isLoading = false;
+        this.requestCache.set(cacheKey, response);
         this.DRSData = response.data;
         this.pagination.totalRecords = response.pagination.totalRecords;
         this.pagination.totalPages = response.pagination.totalPages;
         this.summaryData = response.summary;
-        this.isLoading = false;
       },
       error: (err) => {
         console.error(err);
@@ -245,7 +265,7 @@ export class DrsGenerationListComponent {
       next: (response: any) => {
         if (response) {
           this.sweetAlertService.success(`DRS ${drsNo} has been cancelled successfully.`);
-          this.fetchData();
+          this.refreshData();
         }
       },
       error: (err) => {
