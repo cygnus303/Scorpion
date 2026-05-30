@@ -1,0 +1,73 @@
+   /* ── Filter Bar ── */
+    .filter-bar { background: #fff; border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; display: flex; align-items: flex-end; gap: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); flex-wrap: wrap; }
+    .filter-field { display: flex; flex-direction: column; gap: 4px; }
+    .filter-field label { font-size: 11px; color: #616161; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .filter-bar input, .filter-bar select {
+      padding: 8px 12px; border: 1.5px solid #ef9a9a; border-radius: 6px;
+      font-size: 13px; color: #222; outline: none; background: #fffafa; min-width: 140px;
+      font-family: inherit;
+    }
+    .filter-bar input:focus, .filter-bar select:focus { border-color: #c8102e; box-shadow: 0 0 0 2px rgba(200,16,46,0.12); }
+    .filter-field.search input { min-width: 260px; padding-left: 32px; background-position: 10px center; background-repeat: no-repeat; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23c8102e' stroke-width='2.5'><circle cx='11' cy='11' r='7'/><line x1='21' y1='21' x2='16.65' y2='16.65'/></svg>"); }
+    .filter-divider { width: 1px; height: 38px; background: #e0e0e0; align-self: flex-end; margin: 0 4px; }
+    .filter-mode-toggle {
+      display: flex; gap: 4px; background: #fce4e6; padding: 3px; border-radius: 6px; align-self: flex-end;
+    }
+    .filter-mode-toggle button {
+      padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 700; border: none;
+      background: transparent; color: #c8102e; cursor: pointer; transition: all 0.15s;
+    }
+    .filter-mode-toggle button.active { background: #c8102e; color: #fff; }
+    .filter-mode-toggle button { position: relative; }
+    .pending-pill {
+      display: inline-block; background: #f57f17; color: #fff;
+      font-size: 9px; font-weight: 800; padding: 1px 6px; border-radius: 9px;
+      margin-left: 4px; min-width: 16px; text-align: center; letter-spacing: 0.3px;
+    }
+    .filter-mode-toggle button.active .pending-pill { background: #fff; color: #c8102e; }
+      .helper-text { font-size: 11px; color: #757575; margin-top: 8px; padding: 0 4px; width: 100%; }
+
+
+      
+    /* ── Table Card ── */
+    .table-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden; }
+    .table-card-header { padding: 14px 20px; border-bottom: 1px solid #fce4e6; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .table-card-header h3 { font-size: 15px; font-weight: 700; color: #c8102e; display: flex; align-items: center; gap: 8px; }
+    .tbl-meta { font-size: 12px; color: #9e9e9e; }
+    .selection-count {
+      background: #fce4e6; color: #c8102e; font-size: 11px; font-weight: 700;
+      border-radius: 12px; padding: 3px 10px; margin-left: 8px;
+    }
+
+    .tbl-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead th { background: #fff5f5; color: #c8102e; font-weight: 700; padding: 11px 12px; text-align: left; border-bottom: 2px solid #fce4e6; white-space: nowrap; font-size: 12px; }
+    tbody td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; vertical-align: middle; }
+    tbody tr:hover { background: #fffafa; }
+    tbody tr.row-selected { background: #fff5f7 !important; }
+    tbody tr.row-split { background: #fafafa; }
+    tbody tr.row-split:hover { background: #f5f5f5; }
+    tbody tr.row-split td.frozen { color: #9e9e9e; font-style: italic; }
+    tbody tr.row-allocated td.amount-cell .amt { color: #2e7d32; }
+    tbody tr.row-zero td.amount-cell .amt { color: #bdbdbd; text-decoration: line-through; }
+
+    .sno { color: #9e9e9e; font-size: 12px; font-weight: 600; width: 36px; text-align: center; }
+    .cb-cell { width: 44px; text-align: center; }
+    .row-cb { width: 16px; height: 16px; accent-color: #c8102e; cursor: pointer; margin: 0; }
+    .row-cb:disabled { cursor: not-allowed; }
+
+    .page-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #c8102e;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.page-title .icon {
+    background: #fce4e6;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 20px;
+}
