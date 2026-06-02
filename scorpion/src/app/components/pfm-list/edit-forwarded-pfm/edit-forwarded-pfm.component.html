@@ -31,10 +31,13 @@
                     <div class="col-4" *ngIf="editForm.get('fM_Status')?.value === 'Forwarded'">
                         <label class="meta-label mb-2">Courier Number</label>
                         <input type="text" class="form-control required2 input-background-color"
-                            placeholder="Courier Number" formControlName="courier_Way_Bill_No"
+                            placeholder="Courier Number" formControlName="courier_Way_Bill_No" 
                             [ngClass]="{ 'border-danger': editForm.get('courier_Way_Bill_No')?.invalid && editForm.get('courier_Way_Bill_No')?.touched }">
                         <div *ngIf="editForm.get('courier_Way_Bill_No')?.invalid && editForm.get('courier_Way_Bill_No')?.touched"
                             class="text-danger small mt-1">This field is required.</div>
+                            <div *ngIf="editForm.get('courier_Way_Bill_No')?.errors?.['pattern']" class="text-danger small mt-1">
+                                Courier Number must contain at least 4 digits.
+                            </div>
                     </div>
                 </div>
             </div>
