@@ -60,6 +60,9 @@
                                 formControlName="courierNo">
                             <div *ngIf="forwardForm.get('courierNo')?.invalid && forwardForm.get('courierNo')?.touched"
                                 class="text-danger fs-xs">This field is required.</div>
+                                  <div *ngIf="forwardForm.get('courierNo')?.errors?.['pattern']" class="text-danger small mt-1">
+                                Courier Number must contain at least 4 digits.
+                            </div>
                         </div>
                     </div>
                 </div>

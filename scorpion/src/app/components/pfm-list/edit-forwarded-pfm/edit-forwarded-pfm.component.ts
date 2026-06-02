@@ -60,7 +60,7 @@ export class EditForwardedPFMComponent {
   createForm() {
     this.editForm = new FormGroup({
       courier_Code: new FormControl('', Validators.required),
-      courier_Way_Bill_No: new FormControl('', Validators.required),
+      courier_Way_Bill_No: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{4,}$')]),
       courier_Way_Bill_Date: new FormControl(),
       route: new FormControl(''),
       lR_Number: new FormControl(''),

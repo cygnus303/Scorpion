@@ -56,11 +56,33 @@ export class PFMListComponent implements OnInit, OnDestroy {
     generated: 0,
     forwarded: 0,
     acknowledged: 0,
-    cancelled:0
+    cancelled: 0
   };
 
   private cachedSummary: any = null;
   public requestCache = new Map<string, any>();
+  public selectedRowsMap = new Map<string, any>();
+
+  getRowKey(row: any): string {
+    return this.isPFMListing ? row.fM_No : row.dockNo;
+  }
+
+  isRowDisabled(row: any): boolean {
+    if (this.isPFMListing) {
+      return row.displayStatus === 'Acknowledged' || (row.displayStatus === 'Forwarded' && this.docketService.loginUserList?.LocationCode === row.fM_FWD_LocCode);
+    } else {
+      return row.displayStatus === 'Acknowledged' || (row.displayStatus === 'Forwarded' && this.docketService.loginUserList?.LocationCode === row.fM_FWD_LocCode) || row.displayStatus === 'Cancelled';
+    }
+  }
+
+  clearSelection() {
+    this.selectedRowsMap.clear();
+    this.filteredRows.forEach(r => r.checked = false);
+  }
+
+  get selectedRows(): any[] {
+    return Array.from(this.selectedRowsMap.values());
+  }
 
   refreshData() {
     this.requestCache.clear();
@@ -88,7 +110,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
   };
 
   constructor(public PFMapiService: PFMapiService, public docketService: DocketService, public exportService: ExportService, public menuAccessService: MenuAccessService,
-     public sweetAlertService: SweetAlertService) {
+    public sweetAlertService: SweetAlertService) {
     const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
@@ -148,6 +170,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
 
   fetchData() {
     this.config.page = 1;
+    this.selectedRowsMap.clear();
     this.fetchSubject.next();
   }
 
@@ -270,7 +293,10 @@ export class PFMListComponent implements OnInit, OnDestroy {
       this.config.totalRecords = 0;
       this.config.totalPages = 1;
     }
-    items.forEach((item: any) => item.checked = false);
+    items.forEach((item: any) => {
+      const key = this.getRowKey(item);
+      item.checked = this.selectedRowsMap.has(key);
+    });
 
     this.rows = items;
     this.filteredRows = [...this.rows];
@@ -310,7 +336,10 @@ export class PFMListComponent implements OnInit, OnDestroy {
       this.config.totalRecords = 0;
       this.config.totalPages = 1;
     }
-    items.forEach((item: any) => item.checked = false);
+    items.forEach((item: any) => {
+      const key = this.getRowKey(item);
+      item.checked = this.selectedRowsMap.has(key);
+    });
 
     this.rows = items;
     this.filteredRows = [...this.rows];
@@ -340,7 +369,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
       location: this.docketService.loginUserList.LocationCode,
       status: this.config.statusFilter || 'All',
     };
-    if(this.config.statusFilter === 'Pending'){
+    if (this.config.statusFilter === 'Pending') {
       const branchPayload = {
         fromDate: new Date(this.config.fromDateStr).toISOString(),
         toDate: new Date(this.config.toDateStr).toISOString(),
@@ -359,11 +388,11 @@ export class PFMListComponent implements OnInit, OnDestroy {
           this.exportService.exportToCSV(csvData, fileName);
         }
       });
-    }else{
+    } else {
       this.PFMapiService.GetFMForwardReport(payload).subscribe({
         next: (response: any) => {
           this.isCSVLoading = false;
-           const csvData = this.GetLRData(response);
+          const csvData = this.GetLRData(response);
           const fileName = `LR_Wise_List`;
           this.exportService.exportToCSV(csvData, fileName);
           // this.exportService.exportToCSV(response, 'LR_Wise_List');
@@ -372,7 +401,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
     }
   }
 
-   formatLRWiseData(data: any[]): any[] {
+  formatLRWiseData(data: any[]): any[] {
     return data.map(item => ({
       'Docket No': item.dockNo || '',
       'Docket date': item.dockDt ? this.formatDate(item.dockDt) : '',
@@ -392,9 +421,9 @@ export class PFMListComponent implements OnInit, OnDestroy {
     }));
   }
 
-    GetLRData(data: any[]): any[] {
+  GetLRData(data: any[]): any[] {
     return data.map(item => ({
-     'Docket No': item.dockno || '',
+      'Docket No': item.dockno || '',
       'Docket date': item.dockdt ? this.formatDate(item.dockdt) : '',
       'Delivery Location': item.delivery_Location || '',
       'PFM No': item.fM_No || '',
@@ -412,11 +441,11 @@ export class PFMListComponent implements OnInit, OnDestroy {
     }));
   }
 
-    formatPFMReportData(data: any[]): any[] {
+  formatPFMReportData(data: any[]): any[] {
     return data.map(item => ({
       'PFM No': item.pfmNo || '',
       'PFM Date': item.pfmDate ? this.formatDate(item.pfmDate) : '',
-      'Total LR’s': item.totdockets ,
+      'Total LR’s': item.totdockets,
       'Destination': item.dest || '',
       'Origin': item.origin || '',
       'Status': item.fM_Status || '',
@@ -467,32 +496,32 @@ export class PFMListComponent implements OnInit, OnDestroy {
   }
 
   get canAddPFM(): boolean {
-    const selected = this.filteredRows.filter(r => r.checked);
+    const selected = this.selectedRows;
     return selected.length > 0 && selected.every(r => r.displayStatus === 'Pending');
   }
 
   get canForwardPFM(): boolean {
-    const selected = this.filteredRows.filter(r => r.checked);
+    const selected = this.selectedRows;
     return selected.length > 0 && selected.every(r => ['Generated At', 'Generated'].includes(r.displayStatus));
   }
 
   get canAcknowledgePFM(): boolean {
-    const selected = this.filteredRows.filter(r => r.checked);
+    const selected = this.selectedRows;
     return selected.length > 0 && selected.every(r => r.displayStatus === 'Forwarded' || r.fM_Status === 'Forwarded');
   }
 
   openAddPFM() {
-    const selectedData = this.filteredRows.filter(r => r.checked);
+    const selectedData = this.selectedRows;
     this.PFMNumberGeneratedComponent.showPopup(selectedData);
   }
 
   openForwardPFM() {
-    const selectedData = this.filteredRows.filter(r => r.checked);
+    const selectedData = this.selectedRows;
     this.ForwardPFMComponent.showPopup(selectedData);
   }
 
   openAcknowledgePFM() {
-    const selectedData = this.filteredRows.filter(r => r.checked);
+    const selectedData = this.selectedRows;
     this.AcknowledgePFMComponent.showPopup(selectedData);
   }
 
@@ -524,7 +553,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
   }
 
   isAllSelected(): boolean {
-    const selectableRows = this.filteredRows.filter(r => r.displayStatus !== 'Acknowledged');
+    const selectableRows = this.filteredRows.filter(r => !this.isRowDisabled(r));
     if (selectableRows.length === 0) return false;
     return selectableRows.every(r => r.checked);
   }
@@ -532,20 +561,48 @@ export class PFMListComponent implements OnInit, OnDestroy {
   toggleAll(event: any) {
     const isChecked = event.target.checked;
     this.filteredRows.forEach(r => {
-      if (r.displayStatus !== 'Acknowledged') {
+      if (!this.isRowDisabled(r)) {
         r.checked = isChecked;
+        const key = this.getRowKey(r);
+        if (isChecked) {
+          this.selectedRowsMap.set(key, r);
+        } else {
+          this.selectedRowsMap.delete(key);
+        }
       }
     });
   }
 
   onRowSelect(row: any) {
+    const targetKey = this.getRowKey(row);
+
+    // 1. Sync checked state for all rows with the same key on the current page
+    this.filteredRows.forEach(r => {
+      if (this.getRowKey(r) === targetKey && !this.isRowDisabled(r)) {
+        r.checked = row.checked;
+      }
+    });
+
+    // 2. Original grouping logic for fM_No
     if (['Generated At', 'Generated', 'Forwarded'].includes(row.displayStatus) && row.fM_No) {
       this.filteredRows.forEach(r => {
-        if (r.fM_No === row.fM_No && r.displayStatus !== 'Acknowledged') {
+        if (r.fM_No === row.fM_No && !this.isRowDisabled(r)) {
           r.checked = row.checked;
         }
       });
     }
+
+    // 3. Sync all page selections to selectedRowsMap
+    this.filteredRows.forEach(r => {
+      if (!this.isRowDisabled(r)) {
+        const key = this.getRowKey(r);
+        if (r.checked) {
+          this.selectedRowsMap.set(key, r);
+        } else {
+          this.selectedRowsMap.delete(key);
+        }
+      }
+    });
   }
 
 }

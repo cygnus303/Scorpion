@@ -42,15 +42,12 @@
         </div>
         <div class="btn-group gap-3 ms-auto">
             <!-- <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="fetchLRsData()">⟳ Fetch LRs</button> -->
-            <button class="btn btn-success px-4 py-2 rounded"
-                [disabled]="!canAddPFM" (click)="openAddPFM()">＋ Add
+            <button class="btn btn-success px-4 py-2 rounded" [disabled]="!canAddPFM" (click)="openAddPFM()">＋ Add
                 PFM</button>
-            <button class="btn btn-primary px-4 py-2 rounded"
-                [disabled]="!canForwardPFM" (click)="openForwardPFM()">↗
+            <button class="btn btn-primary px-4 py-2 rounded" [disabled]="!canForwardPFM" (click)="openForwardPFM()">↗
                 Forward PFM</button>
             <button class="btn rounded px-4 py-2" style="background: var(--btn-ack); color: white;"
-               [disabled]="!canAcknowledgePFM"
-                (click)="openAcknowledgePFM()">✓ Acknowledge
+                [disabled]="!canAcknowledgePFM" (click)="openAcknowledgePFM()">✓ Acknowledge
                 PFM</button>
         </div>
     </div>
@@ -93,9 +90,8 @@
                 <div class="s-val">{{ summaryData.acknowledged }}</div>
             </div>
         </div>
-        <div class="summary-card c-red cursor-pointer"  *ngIf="!isHQTR"
-         [class.active-card]="config.statusFilter === 'Cancelled'"
-            (click)="filterByStatus('Cancelled')">
+        <div class="summary-card c-red cursor-pointer" *ngIf="!isHQTR"
+            [class.active-card]="config.statusFilter === 'Cancelled'" (click)="filterByStatus('Cancelled')">
             <div>
                 <div class="s-label">Cancelled</div>
                 <div class="s-val">{{ summaryData.cancelled }}</div>
@@ -107,9 +103,18 @@
     <div class="table-panel">
         <!-- Toolbar -->
         <div class="table-toolbar d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center gap-2">
-                <span class="table-title">{{ isHQTR ? 'PFM LISTING' : 'LORRY RECEIPTS' }}</span>
-                <span class="badge">{{ config.totalRecords }} Records</span>
+            <div class="d-flex flex-column align-items-start gap-1">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="table-title">{{ isHQTR ? 'PFM LISTING' : 'LORRY RECEIPTS' }}</span>
+                    <span class="badge">{{ config.totalRecords }} Records</span>
+                </div>
+                <div *ngIf="selectedRows.length > 0" class="selected-count-badge d-flex align-items-center gap-2"
+                    style="font-size: 12px; margin-top: 2px;">
+                    <span class="text-primary fw-semibold"><span style="font-size: 14px;">☑</span> Selected: {{
+                        selectedRows.length }} {{ isPFMListing ? 'PFM(s)' : 'LR(s)' }}</span>
+                    <button class="btn btn-link p-0 text-danger text-decoration-none"
+                        style="font-size: 11px; line-height: 1;" (click)="clearSelection()">Clear Selection</button>
+                </div>
             </div>
             <div class="d-flex align-items-center gap-2">
                 <div class="search-box d-flex align-items-center">
@@ -118,20 +123,19 @@
                         (keyup)="onSearchChange()" placeholder="Search...">
                 </div>
                 <div class="dropdown">
-                    <button class="btn btn-light btn-sm download-btn px-4 py-3 dropdown-toggle" type="button" 
-                            data-bs-toggle="dropdown" aria-expanded="false" [disabled]="isCSVLoading">
+                    <button class="btn btn-light btn-sm download-btn px-4 py-3 dropdown-toggle" type="button"
+                        data-bs-toggle="dropdown" aria-expanded="false" [disabled]="isCSVLoading">
                         <span *ngIf="!isCSVLoading">⬇ Download CSV</span>
                         <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
                         <span *ngIf="isCSVLoading">Downloading...</span>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end custom-mini-dropdown"> 
+                    <ul class="dropdown-menu dropdown-menu-end custom-mini-dropdown">
                         <li class="d-flex gap-2 px-2">
-                            <button class="dropdown-item btn-ltl"  *ngIf="this.config.statusFilter !== 'Pending'"
-                               (click)="downloadPFMWiseCSV()">
+                            <button class="dropdown-item btn-ltl" *ngIf="this.config.statusFilter !== 'Pending'"
+                                (click)="downloadPFMWiseCSV()">
                                 PFM Wise
                             </button>
-                            <button class="dropdown-item btn-ftl" 
-                               (click)="downloadLRWiseCSV()">
+                            <button class="dropdown-item btn-ftl" (click)="downloadLRWiseCSV()">
                                 LR Wise
                             </button>
                         </li>
@@ -145,10 +149,13 @@
                 <!-- Headers for LR Listing (Branch Login All/Pending) -->
                 <thead *ngIf="!isPFMListing">
                     <tr>
-                        <th class="text-center"></th>
+                        <th class="text-center">
+                            <input type="checkbox" [checked]="isAllSelected()" (change)="toggleAll($event)">
+                        </th>
                         <th>LR DATE</th>
                         <th>LR NO</th>
                         <th>DELIVERY BRANCH</th>
+                        <th>PAY BASE </th>
                         <th>ORIGIN</th>
                         <th>DESTINATION</th>
                         <th>BILLING PARTY</th>
@@ -164,7 +171,9 @@
                 <!-- Headers for PFM Listing (HQTR or status-specific) -->
                 <thead *ngIf="isPFMListing">
                     <tr>
-                        <th class="text-center"></th>
+                        <th class="text-center">
+                            <input type="checkbox" [checked]="isAllSelected()" (change)="toggleAll($event)">
+                        </th>
                         <th>PFM DATE</th>
                         <th>PFM NO</th>
                         <th class="text-center">TOTAL LR'S</th>
@@ -206,6 +215,10 @@
                             <span class="branch-badge" *ngIf="row.fM_FWD_LocCode">{{ row.fM_FWD_LocCode }}</span>
                             <span *ngIf="!row.fM_FWD_LocCode">—</span>
                         </td>
+                        <td class="text-center">
+                            <span class="branch-badge" *ngIf="row.paybas">{{ row.paybas }}</span>
+                            <span *ngIf="!row.paybas">—</span>
+                        </td>
                         <td>
                             <div class="location-cell fs-6">
                                 <span class="loc-dot origin"></span>
@@ -229,7 +242,7 @@
                         <td class="lr-date fs-6">
                             {{ row.fM_Date ? (row.fM_Date | date:'dd-MM-yyyy') : '—' }}
                         </td>
-                        <td class="days-text fs-6 text-center" >
+                        <td class="days-text fs-6 text-center">
                             {{ row.daysSince }}d
                         </td>
                         <td>
@@ -241,9 +254,9 @@
                             <span *ngIf="!row.fM_No" class="pfm-none">—</span>
                         </td>
                         <td>
-                            <div class="d-flex gap-1" >
+                            <div class="d-flex gap-1">
                                 <button type="button" class="btn btn-sm btn-view fw-bolder fs-6"
-                                 (click)="openViewPFM(row)">👁
+                                    (click)="openViewPFM(row)">👁
                                     View</button>
 
                                 <button type="button" (click)="openEditForwardedPFM(row)"
@@ -280,7 +293,7 @@
                         <td class="days-text fs-6 text-center" *ngIf="!isHQTR">
                             {{ row.daysSince }}d
                         </td>
-                        <td >
+                        <td>
                             <div class="d-flex gap-2">
                                 <button type="button" class="btn btn-sm btn-view fw-bolder fs-6"
                                     (click)="openViewPFM(row)">👁
@@ -292,10 +305,10 @@
                                     (click)="openEditForwardedPFM(row)">✎ Edit</button>
 
                                 <button type="button" class="btn btn-sm btn-edit fw-bolder fs-6"
-                                    *ngIf="row.displayStatus === 'Forwarded'"
-                                    (click)="openEditForwardedPFM(row)">✎ Edit</button>
+                                    *ngIf="row.displayStatus === 'Forwarded'" (click)="openEditForwardedPFM(row)">✎
+                                    Edit</button>
 
-                                    <!-- <button type="button" class="btn btn-sm btn-edit fw-bolder fs-6"
+                                <!-- <button type="button" class="btn btn-sm btn-edit fw-bolder fs-6"
                                     *ngIf="(row.displayStatus === 'Pending for Acknowledged' || row.displayStatus === 'Generated')"
                                     (click)="openEditForwardedPFM(row)">✎ Edit</button>
 
