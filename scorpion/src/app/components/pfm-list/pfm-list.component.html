@@ -14,6 +14,7 @@
             <div class="date-input-wrap" style="padding:0;">
                 <input type="text" id="dateTo" [(ngModel)]="config.toDateStr" bsDatepicker
                     [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                    [minDate]="config.fromDateStr"
                     style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;"
                     (bsValueChange)="fetchData()">
                 <span
