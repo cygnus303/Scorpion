@@ -43,7 +43,7 @@ export class EditForwardedPFMComponent {
             fM_No: courier?.pfM_Number || '',
             courier_Code: courier?.courier_Company_Name || '',
             courier_Way_Bill_No: courier?.courier_Number || '',
-            fM_Status:courier?.fM_Status,
+            fM_Status: courier?.fM_Status,
             courier_Way_Bill_Date: courier?.courier_Way_Bill_Date ? new Date(courier.courier_Way_Bill_Date) : new Date()
           });
           this.pfmData = response.lrList;
@@ -60,7 +60,7 @@ export class EditForwardedPFMComponent {
   createForm() {
     this.editForm = new FormGroup({
       courier_Code: new FormControl('', Validators.required),
-      courier_Way_Bill_No: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{4,}$')]),
+      courier_Way_Bill_No: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{4,}$')]),
       courier_Way_Bill_Date: new FormControl(),
       route: new FormControl(''),
       lR_Number: new FormControl(''),
@@ -101,20 +101,20 @@ export class EditForwardedPFMComponent {
       this.editForm.markAllAsTouched();
       return;
     }
-    
+
     // Get only checked LRs
-    const checkedLRs = this.pfmData.filter((lr:any) => lr.checked);
-    
+    const checkedLRs = this.pfmData.filter((lr: any) => lr.checked);
+
     if (checkedLRs.length === 0) {
       this.sweetAlertService.info('Please select at least one LR to update');
       return;
     }
-    
-    const { lR_Number, route,fM_Status, ...formVal } = this.editForm.value;
-    
+
+    const { lR_Number, route, fM_Status, ...formVal } = this.editForm.value;
+
     // Create payload with comma-separated dockNo
     const dockNos = checkedLRs.map((lr: any) => lr.dockNo).join(',');
-    
+
     const payload = {
       items: [{
         fM_No: formVal.fM_No,

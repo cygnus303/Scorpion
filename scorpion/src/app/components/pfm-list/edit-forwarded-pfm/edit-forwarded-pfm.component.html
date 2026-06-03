@@ -31,13 +31,14 @@
                     <div class="col-4" *ngIf="editForm.get('fM_Status')?.value === 'Forwarded'">
                         <label class="meta-label mb-2">Courier Number</label>
                         <input type="text" class="form-control required2 input-background-color"
-                            placeholder="Courier Number" formControlName="courier_Way_Bill_No" 
+                            placeholder="Courier Number" formControlName="courier_Way_Bill_No"
                             [ngClass]="{ 'border-danger': editForm.get('courier_Way_Bill_No')?.invalid && editForm.get('courier_Way_Bill_No')?.touched }">
                         <div *ngIf="editForm.get('courier_Way_Bill_No')?.invalid && editForm.get('courier_Way_Bill_No')?.touched"
                             class="text-danger small mt-1">This field is required.</div>
-                            <div *ngIf="editForm.get('courier_Way_Bill_No')?.errors?.['pattern']" class="text-danger small mt-1">
-                                Courier Number must contain at least 4 digits.
-                            </div>
+                        <div *ngIf="editForm.get('courier_Way_Bill_No')?.errors?.['pattern']"
+                            class="text-danger small mt-1">
+                            Courier Number must be at least 4 characters and contain only letters and numbers.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -84,9 +85,10 @@
                         <table style="width:100%;border-collapse:collapse;font-size:12px;">
                             <thead class="input-background-color" style="position: sticky; top: 0; z-index: 10;">
                                 <tr style="background:var(--surface2);border-bottom:1px solid var(--border);">
-                                    <th style="padding:7px 12px;text-align:center;color:var(--text-muted);font-weight:700;width:50px;" >
-                                        <input type="checkbox" (change)="toggleAllLRs($event)" 
-                                            [checked]="isAllLRsSelected()" >
+                                    <th
+                                        style="padding:7px 12px;text-align:center;color:var(--text-muted);font-weight:700;width:50px;">
+                                        <input type="checkbox" (change)="toggleAllLRs($event)"
+                                            [checked]="isAllLRsSelected()">
                                     </th>
                                     <th
                                         style="padding:7px 12px;text-align:left;color:var(--text-muted);font-weight:700;">
@@ -101,8 +103,9 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let lr of pfmData" style="border-bottom: 1px solid var(--border-light);">
-                                    <td style="padding:7px 12px;text-align:center;" >
-                                        <input type="checkbox" [(ngModel)]="lr.checked" [ngModelOptions]="{standalone: true}" (change)="onLRSelect(lr)">
+                                    <td style="padding:7px 12px;text-align:center;">
+                                        <input type="checkbox" [(ngModel)]="lr.checked"
+                                            [ngModelOptions]="{standalone: true}" (change)="onLRSelect(lr)">
                                     </td>
                                     <td style="padding:7px 12px;font-weight:600;">{{ lr.dockNo }}</td>
                                     <td style="padding:7px 12px;color:var(--text-muted);">
