@@ -37,7 +37,7 @@ export class ForwardPFMComponent {
   createForm() {
     this.forwardForm = new FormGroup({
       fwdDate: new FormControl(new Date(), Validators.required),
-      courierNo: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{4,}$')]),
+      courierNo: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{4,}$')]),
       courierName: new FormControl('', Validators.required),
       forwardedTo: new FormControl('HQTR', Validators.required),
       remarks: new FormControl('')
