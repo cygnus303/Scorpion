@@ -50,6 +50,14 @@ export class PFMListComponent implements OnInit, OnDestroy {
     totalPages: 1
   };
 
+  public recordOptions = [
+    { label: '5', value: 5 },
+    { label: '10', value: 10 },
+    { label: '15', value: 15 },
+    { label: '20', value: 20 },
+    { label: 'All', value: 100000 }
+  ];
+
   public summaryData = {
     total_LRs: 0,
     pending: 0,
@@ -174,6 +182,11 @@ export class PFMListComponent implements OnInit, OnDestroy {
     this.fetchSubject.next();
   }
 
+  onPageSizeChange() {
+    this.config.page = 1;
+    this.refreshData();
+  }
+
   setPage(p: number) {
     if (this.config.page === p) return;
     this.config.page = p;
@@ -283,7 +296,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
         this.config.totalRecords = response.pagination.totalRecords || items.length;
         this.config.totalPages = response.pagination.totalPages || 1;
         this.config.page = response.pagination.currentPage || 1;
-        this.config.pageSize = response.pagination.pageSize || 10;
+          this.config.pageSize = response.pagination.pageSize || 10;
       } else {
         this.config.totalRecords = items.length;
         this.config.totalPages = Math.ceil(this.config.totalRecords / this.config.pageSize) || 1;
@@ -326,7 +339,7 @@ export class PFMListComponent implements OnInit, OnDestroy {
         this.config.totalRecords = response.pagination.totalRecords || items.length;
         this.config.totalPages = response.pagination.totalPages || 1;
         this.config.page = response.pagination.currentPage || 1;
-        this.config.pageSize = response.pagination.pageSize || 10;
+          this.config.pageSize = response.pagination.pageSize || 10;
       } else {
         this.config.totalRecords = items.length;
         this.config.totalPages = Math.ceil(this.config.totalRecords / this.config.pageSize) || 1;
