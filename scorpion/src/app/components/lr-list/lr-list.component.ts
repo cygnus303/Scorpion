@@ -22,9 +22,9 @@ export class LrListComponent {
   public listSubscription?: Subscription;
   public LRData: any[] = [];
   private fetchSubject = new Subject<void>();
-  public summaryData:any;
+  public summaryData: any;
   public env = environment;
-  public  statusList = [
+  public statusList = [
     { label: 'All Status', value: 'All' },
     { label: 'Pending for Quick Completion', value: 'pendingforQuickCompletion' },
     { label: 'At Booking Stock', value: 'booking' },
@@ -32,21 +32,21 @@ export class LrListComponent {
     { label: 'At Delivery Stock', value: 'delivered' }
   ];
   trackMenuItems = [
-  { icon: '📊', label: 'Profit / Loss',          type: 7  },
-  { icon: '🔄', label: 'Operational Life Cycle', type: 3  },
-  { icon: '💳', label: 'Financial Life Cycle',   type: 4  },
-  { icon: '📄', label: 'POD / PFM',              type: 5  },
-  { icon: '🕒', label: 'Time Tracking',           type: 2  },
-  { icon: '📝', label: 'View Summary',            type: 1  },
-  { icon: '📦', label: 'Loading/UnLoading',       type: 11 },
-  { icon: '🧭', label: 'On Map',                  type: null },
-  { icon: '📅', label: 'Expected Delivery Date',  type: null },
-  { icon: '🚚', label: 'Movement',                type: 6  },
-  { icon: '👁',  label: 'DEPS View',              type: 17 },
-  { icon: '📡', label: 'UBI Tracking',            type: 18 },
-];
+    { icon: '📊', label: 'Profit / Loss', type: 7 },
+    { icon: '🔄', label: 'Operational Life Cycle', type: 3 },
+    { icon: '💳', label: 'Financial Life Cycle', type: 4 },
+    { icon: '📄', label: 'POD / PFM', type: 5 },
+    { icon: '🕒', label: 'Time Tracking', type: 2 },
+    { icon: '📝', label: 'View Summary', type: 1 },
+    { icon: '📦', label: 'Loading/UnLoading', type: 11 },
+    { icon: '🧭', label: 'On Map', type: null },
+    { icon: '📅', label: 'Expected Delivery Date', type: null },
+    { icon: '🚚', label: 'Movement', type: 6 },
+    { icon: '👁', label: 'DEPS View', type: 17 },
+    { icon: '📡', label: 'UBI Tracking', type: 18 },
+  ];
 
-openTrackIndex: number | null = null;
+  openTrackIndex: number | null = null;
 
 
 
@@ -57,10 +57,18 @@ openTrackIndex: number | null = null;
   ) { }
 
   ngOnInit() {
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      // this.docketService.loginUserList.LocationCode = 'PIM'
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
     this.fetchSubject.pipe(debounceTime(300)).subscribe(() => {
       this.fetchLRList();
     });
-      this.fetchData();
+    this.fetchData();
   }
   public config = {
     fromDateStr: new Date(),
@@ -151,7 +159,7 @@ openTrackIndex: number | null = null;
     }
   }
 
-    get isHQTR(): boolean {
+  get isHQTR(): boolean {
     return this.docketService.loginUserList?.LocationCode === 'HQTR';
   }
 
@@ -177,12 +185,12 @@ openTrackIndex: number | null = null;
     this.fetchSubject.next();
   }
 
-    filterByStatus(status: string) {
+  filterByStatus(status: string) {
     this.config.statusFilter = status;
     this.fetchData();
   }
 
-    openAddLR() {
+  openAddLR() {
     const saved = localStorage.getItem("loginUserList");
     if (saved) {
       let user = JSON.parse(saved);
@@ -193,44 +201,44 @@ openTrackIndex: number | null = null;
     this.router.navigate(['/docket'], { queryParams: { fromLR: 'true' } });
   }
 
-  openEdit(dockno:string){
-     const saved = localStorage.getItem("loginUserList");
+  openEdit(dockno: string) {
+    const saved = localStorage.getItem("loginUserList");
     if (saved) {
       let user = JSON.parse(saved);
       user.Type = '2';
       user.DocketNo = dockno;
-       user.IsFromBillGeneration = "true";
+      user.IsFromBillGeneration = "true";
       this.docketService.loginUserList = user;
       localStorage.setItem("loginUserList", JSON.stringify(user));
     }
     this.router.navigate(['/docketFinancialEdit'], { queryParams: { fromLR: 'true' } });
   }
 
-   openQuick(dockno:string){
-     const saved = localStorage.getItem("loginUserList");
+  openQuick(dockno: string) {
+    const saved = localStorage.getItem("loginUserList");
     if (saved) {
       let user = JSON.parse(saved);
       user.Type = '1';
       user.DocketNo = dockno;
-       user.IsFromBillGeneration = "true";
+      user.IsFromBillGeneration = "true";
       this.docketService.loginUserList = user;
       localStorage.setItem("loginUserList", JSON.stringify(user));
     }
     this.router.navigate(['/docketFinancialEdit'], { queryParams: { fromLR: 'true' } });
   }
 
-toggleTrack(index: number, event: MouseEvent) {
-  event.stopPropagation();
-  this.openTrackIndex = this.openTrackIndex === index ? null : index;
-}
+  toggleTrack(index: number, event: MouseEvent) {
+    event.stopPropagation();
+    this.openTrackIndex = this.openTrackIndex === index ? null : index;
+  }
 
-@HostListener('document:click')
-onDocumentClick() {
-  this.openTrackIndex = null;
-}
+  @HostListener('document:click')
+  onDocumentClick() {
+    this.openTrackIndex = null;
+  }
 
-openView(dockno:string){
-   const url = `${this.env.liveUrl}ViewPrint/GC_XLSGeneration?Dockno=${dockno}&Docksf=.&src=angular`;
+  openView(dockno: string) {
+    const url = `${this.env.liveUrl}ViewPrint/GC_XLSGeneration?Dockno=${dockno}&Docksf=.&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );
@@ -238,32 +246,32 @@ openView(dockno:string){
     if (popup) {
       popup.location.href = url;
     }
-}
-
- openPopup(url: string) {
-  const popup = window.open('', 'popupWindow',
-    'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
-  );
-  if (popup) popup.location.href = url;
-}
-
-onTrackMenuClick(item: any, dockno: string) {
-  this.openTrackIndex = null;
-
-  if (item.label === 'On Map') {
-    this.openPopup(`${this.env.liveUrl}Tracking/VehicleTrackingShowOnMap?Vehno=&src=angular`);
-    return;
-  }
-  if (item.label === 'Expected Delivery Date') {
-    this.openPopup(`${this.env.liveUrl}ViewPrint/Expected_Delivery_Date_Tracking_ViewPrint?Dockno=${dockno} expe deliv date&src=angular`);
-    return;
   }
 
-  this.openPopup(`${this.env.liveUrl}ViewPrint/Tracking?Type=${item.type}&DocketNo=${dockno}&DockSf=.&src=angular`);
-}
+  openPopup(url: string) {
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+    if (popup) popup.location.href = url;
+  }
 
-openPrint(dockno: string){
-  const url = `${this.env.liveUrl}Operation/MultiDocketViewPrint?dockno=${dockno}&PrintType=5&src=angular`;
+  onTrackMenuClick(item: any, dockno: string) {
+    this.openTrackIndex = null;
+
+    if (item.label === 'On Map') {
+      this.openPopup(`${this.env.liveUrl}Tracking/VehicleTrackingShowOnMap?Vehno=&src=angular`);
+      return;
+    }
+    if (item.label === 'Expected Delivery Date') {
+      this.openPopup(`${this.env.liveUrl}ViewPrint/Expected_Delivery_Date_Tracking_ViewPrint?Dockno=${dockno} expe deliv date&src=angular`);
+      return;
+    }
+
+    this.openPopup(`${this.env.liveUrl}ViewPrint/Tracking?Type=${item.type}&DocketNo=${dockno}&DockSf=.&src=angular`);
+  }
+
+  openPrint(dockno: string) {
+    const url = `${this.env.liveUrl}Operation/MultiDocketViewPrint?dockno=${dockno}&PrintType=5&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );
@@ -271,6 +279,6 @@ openPrint(dockno: string){
     if (popup) {
       popup.location.href = url;
     }
-}
+  }
 
 }
