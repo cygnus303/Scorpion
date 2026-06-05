@@ -234,7 +234,8 @@
                                             <th style="min-width: 200px;">Vendor
                                                 <ng-select class="mt-1 clear-icon remove-white-space"
                                                     [items]="headerVendorList" bindLabel="text" bindValue="value"
-                                                    placeholder="Vendor" [(ngModel)]="headerVendor" [ngModelOptions]="{standalone: true}"
+                                                    placeholder="Vendor" [(ngModel)]="headerVendor"
+                                                    [ngModelOptions]="{standalone: true}"
                                                     (change)="onHeaderVendorChange($event)"
                                                     [dropdownPosition]="'bottom'">
                                                 </ng-select>
@@ -367,8 +368,9 @@
                                                         *ngIf="row.get('ratetype')?.hasError('required') && row.get('ratetype')?.touched">
                                                         This field is required
                                                     </div>
-                                                    <input type="number" class="form-control form-control-sm mt-1"
+                                                    <input type="text" class="form-control form-control-sm mt-1"
                                                         formControlName="newRate" appFocusNext
+                                                        oninput="this.value = this.value.replace(/[^0-9]/g,'');"
                                                         [readOnly]="row.value.luVendorTyp === 'XX5' || row.value.luVendorTyp === 'XX9'"
                                                         (focus)="clearNewRateOnFocus(i)"
                                                         (blur)="resetNewRateOnBlur(i)" />
