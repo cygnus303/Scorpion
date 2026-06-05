@@ -240,3 +240,29 @@
         }
     }
 }
+
+::ng-deep .page-size-select {
+    .ng-select-container {
+        min-height: 28px !important;
+        height: 28px !important;
+        border-radius: 6px !important;
+        border: 1px solid #d0d7de !important;
+        background-color: #f6f8fa !important;
+        padding: 0 4px !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        color: #57606a !important;
+
+        &:hover {
+            border-color: #0969da !important;
+        }
+    }
+
+    .ng-value-container {
+        padding: 0 6px !important;
+    }
+
+    .ng-arrow-wrapper {
+        bottom: 1px !important;
+    }
+}

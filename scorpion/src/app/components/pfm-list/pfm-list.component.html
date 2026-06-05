@@ -108,6 +108,13 @@
                 <div class="d-flex align-items-center gap-2">
                     <span class="table-title">{{ isHQTR ? 'PFM LISTING' : 'LORRY RECEIPTS' }}</span>
                     <span class="badge">{{ config.totalRecords }} Records</span>
+                    <div class="d-flex align-items-center gap-1 ms-2">
+                        <ng-select class="clear-icon page-size-select" style="width: 80px;" [items]="recordOptions"
+                            bindLabel="label" bindValue="value" [(ngModel)]="config.pageSize"
+                            (change)="onPageSizeChange()" [searchable]="false" [clearable]="false">
+                        </ng-select>
+                        <span class="text-muted small fw-semibold">records</span>
+                    </div>
                 </div>
                 <div *ngIf="selectedRows.length > 0" class="selected-count-badge d-flex align-items-center gap-2"
                     style="font-size: 12px; margin-top: 2px;">
