@@ -186,23 +186,21 @@
                             </span>
                             <span class="text-muted" *ngIf="!row.mfNo">—</span>
                         </td>
-                        <td class="text-center">
-                            <span class="badge bg-secondary-subtle text-secondary" *ngIf="row.loadingHCCNo">
-                                <a href="javascript:void(0)" (click)="openLoadingUnloadingView(row.loadingHCCNo)"
-                                    style="text-decoration: underline;">
-                                    {{ row.loadingHCCNo }}
-                                </a>
+                        <td class="text-center cursor-pointer">
+                            <span class="px-3 py-2 rounded fw-bold border"
+                                [ngClass]="(row.loadingHCCNo && row.loadingHCCNo !== 'NO HCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle '"
+                                (click)="row.loadingHCCNo && row.loadingHCCNo !== 'NO HCC'? openLoadingUnloadingView(row.loadingHCCNo) : null"
+                                style="cursor: pointer;">
+                                {{ row.loadingHCCNo || 'NO HCC' }}
                             </span>
-                            <span class="badge bg-danger-subtle text-danger" *ngIf="!row.loadingHCCNo">NO HCC</span>
                         </td>
-                        <td class="text-center">
-                            <span class="badge bg-secondary-subtle text-secondary" *ngIf="row.unloadingHCCNo">
-                                <a href="javascript:void(0)" (click)="openLoadingUnloadingView(row.unloadingHCCNo)"
-                                    style="text-decoration: underline;">
-                                    {{ row.unloadingHCCNo }}
-                                </a>
+                        <td class="text-center cursor-pointer">
+                            <span class="px-3 py-2 rounded fw-bold border"
+                                [ngClass]="(row.unloadingHCCNo && row.unloadingHCCNo !== 'NO HCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle '"
+                                (click)="row.unloadingHCCNo && row.unloadingHCCNo !== 'NO HCC'? openLoadingUnloadingView(row.unloadingHCCNo) : null"
+                                style="cursor: pointer;">
+                                {{ row.unloadingHCCNo || 'NO HCC' }}
                             </span>
-                            <span class="badge bg-danger-subtle text-danger" *ngIf="!row.unloadingHCCNo">NO HCC</span>
                         </td>
                         <td class="text-center">
                             <span class="pill-badge" [ngClass]="getStatusClass(row.status)">

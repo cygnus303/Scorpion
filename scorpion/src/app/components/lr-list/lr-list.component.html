@@ -5,7 +5,8 @@
             LR Generation
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn background-color fw-bold text-light px-4 py-2 rounded" (click)="openAddLR()">
+            <button class="btn background-color fw-bold text-light px-4 py-2 rounded" (click)="openAddLR()"
+                *ngIf="!isHQTR">
                 <span class="fs-5 me-1">➕</span> Add LR
             </button>
             <button class="btn btn-success px-4 py-2 rounded fw-bold">

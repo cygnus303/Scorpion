@@ -100,6 +100,7 @@ export class ChallanListComponent {
     this.typeName = type === '3' ? 'DRS' : type === '1' ? 'THC' : type === '2' ? 'PRS' : '';
 
     this.challanService.buildForm();
+    this.headerVendor = null
     this.docketService.getTypeofMovementData();
     this.challanService.getRateTypeData();
 

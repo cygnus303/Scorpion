@@ -206,19 +206,17 @@
                             [ngClass]="(data.vendorBillNo) ? 'text-primary fw-bold' : 'text-muted'">
                             {{ data.vendorBillNo || '—' }}</td>
                         <td class="text-center cursor-pointer">
-                            <span class="px-4 py-2 cursor-pointer"
-                                [ngClass]="(data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
+                            <span class="px-4 py-2 rounded fw-bold border"
+                                [ngClass]="(data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
                                 (click)="data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC'? openHCCModal(data.loadingHCCNo) : null">
-                                <a *ngIf="data.loadingHCCNo">{{ data.loadingHCCNo}}</a>
-                                <span *ngIf="!data.loadingHCCNo">NO HCC</span>
+                                {{ data.loadingHCCNo || 'NO HCC'}}
                             </span>
                         </td>
                         <td class="text-center cursor-pointer">
-                            <span class="px-4 py-2"
-                                [ngClass]="(data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
+                            <span class="px-4 py-2 rounded fw-bold border"
+                                [ngClass]="(data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
                                 (click)="data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC'? openHCCModal(data.unloadingHCCNo) : null">
-                                <a *ngIf="data.unloadingHCCNo">{{ data.unloadingHCCNo}}</a>
-                                <span *ngIf="!data.unloadingHCCNo">NO HCC</span>
+                                {{ data.unloadingHCCNo || 'NO HCC'}}
                             </span>
                         </td>
                         <td class="text-center">

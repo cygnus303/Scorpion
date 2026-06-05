@@ -51,6 +51,7 @@ export class SingleCnoteDrsUpdateComponent {
 
   ngOnInit() {
     this.buildForm();
+    this.headerVendor = null;
     this.generalMasterService.getChargeTypeData();
     this.generalMasterService.getLoadingBy();
     this.getVendorType();

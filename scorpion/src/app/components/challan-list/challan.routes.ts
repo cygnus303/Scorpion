@@ -42,19 +42,19 @@ export const ChallanRoutes: Routes = [
   {
     path: 'PRSList',
     loadComponent: () => import('../prs-generation-list/prs-generation-list.component').then(m => m.PRSGenerationListComponent),
-     canActivate: [DocketGuard]
+    canActivate: [DocketGuard]
   },
   {
     path: 'DRSList',
     loadComponent: () => import('../drs-generation-list/drs-generation-list.component').then(m => m.DrsGenerationListComponent),
-     canActivate: [DocketGuard]
+    canActivate: [DocketGuard]
   },
   {
     path: 'StockUpdate',
     loadComponent: () => import('../stock-update-layout/stock-update-layout.component').then(m => m.StockUpdateLayoutComponent),
-     canActivate: [DocketGuard]
+    canActivate: [DocketGuard]
   },
-   {
+  {
     path: 'THCList',
     loadComponent: () => import('../thc-list/thc-list.component').then(m => m.ThcListComponent),
   },
