@@ -370,7 +370,7 @@
                                                     </div>
                                                     <input type="text" class="form-control form-control-sm mt-1"
                                                         formControlName="newRate" appFocusNext
-                                                        oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                                                        oninput="this.value = this.value.replace(/[^0-9.]/g,'');"
                                                         [readOnly]="row.value.luVendorTyp === 'XX5' || row.value.luVendorTyp === 'XX9'"
                                                         (focus)="clearNewRateOnFocus(i)"
                                                         (blur)="resetNewRateOnBlur(i)" />
