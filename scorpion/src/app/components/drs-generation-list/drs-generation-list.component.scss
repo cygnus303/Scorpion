@@ -35,7 +35,7 @@
         border: 1px dotted #fecaca;
     }
 
-     &.s-loading-hcc {
+    &.s-loading-hcc {
         background: #f7f5e3;
         color: #8f7c22;
         border: 1px dotted #a9b30fb8;
@@ -69,16 +69,17 @@
 }
 
 .modal-xl {
-  max-width: 95% !important;  /* tame 100% pan kari sako */
+    max-width: 85% !important;
+    /* tame 100% pan kari sako */
 }
 
 .bg-success-purple {
-    background: #f5f3ff !important;  // Bootstrap purple-700
+    background: #f5f3ff !important; // Bootstrap purple-700
     border-color: #c4b5fd !important;
     color: #5b21b6 !important;
 }
- 
+
 .bg-success-purple:hover {
-    background: #ede7f6 !important;  // Darker purple variant
+    background: #ede7f6 !important; // Darker purple variant
     border-color: #c4b5fd !important;
 }

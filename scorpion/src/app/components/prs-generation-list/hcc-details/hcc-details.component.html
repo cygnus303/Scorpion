@@ -136,7 +136,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="control-bar d-block gap-2 mb-0 mt-3">
+                    <!-- <div class="control-bar d-block gap-2 mb-0 mt-3">
                         <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
                             <div class="fw-bold"><i class="fas fa-coins me-2"></i>Charges</div>
                         </div>
@@ -150,11 +150,11 @@
                                         (change)="onChangeChargeBy($event);this.prsArrivalDetailsService.getVendorsList($event.codeId)"
                                         notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
                                         [items]="generalMasterService.loadingData" formControlName="chargedBy"
-                                        [ngClass]="{ 'border-danger': hccForm.get('chargedBy')?.invalid && hccForm.get('chargedBy')?.touched}"
-                                        ></ng-select>
-                                        <div *ngIf="hccForm.get('chargedBy')?.invalid && hccForm.get('chargedBy')?.touched" class="text-danger">
-                                           This feild is required.
-                                        </div>
+                                        [ngClass]="{ 'border-danger': hccForm.get('chargedBy')?.invalid && hccForm.get('chargedBy')?.touched}"></ng-select>
+                                    <div *ngIf="hccForm.get('chargedBy')?.invalid && hccForm.get('chargedBy')?.touched"
+                                        class="text-danger">
+                                        This feild is required.
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-3">
@@ -164,38 +164,43 @@
                                     <ng-select class="clear-icon " placeholder="Select Vendor"
                                         notFoundText="No matches found" formControlName="vendorCode"
                                         [items]="prsArrivalDetailsService.branchWiseLoadingUnloadingList"
-                                        bindLabel="text" bindValue="value" [readonly]="hccForm.get('chargedBy')?.value === 'XX9'"
+                                        bindLabel="text" bindValue="value"
+                                        [readonly]="hccForm.get('chargedBy')?.value === 'XX9'"
                                         (change)="onVendorChange($event)"
                                         [ngClass]="{ 'border-danger': hccForm.get('vendorCode')?.invalid && hccForm.get('vendorCode')?.touched,'required2': hccForm.get('chargedBy')?.value !== 'XX9'}"></ng-select>
-                                        <div *ngIf="hccForm.get('vendorCode')?.invalid && hccForm.get('vendorCode')?.touched" class="text-danger">
-                                            This feild is required.
-                                        </div>
+                                    <div *ngIf="hccForm.get('vendorCode')?.invalid && hccForm.get('vendorCode')?.touched"
+                                        class="text-danger">
+                                        This feild is required.
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="form-group-input">
                                     <label class="form-label d-flex align-items-center gap-2 fw-bold"> Rate Type
                                     </label>
-                                    <ng-select class="clear-icon" formControlName="rateType" [readonly]="hccForm.get('chargedBy')?.value === 'XX5'||hccForm.get('chargedBy')?.value === 'XX9'"
+                                    <ng-select class="clear-icon" formControlName="rateType"
+                                        [readonly]="hccForm.get('chargedBy')?.value === 'XX5'||hccForm.get('chargedBy')?.value === 'XX9'"
                                         [items]="generalMasterService.chargeTypeData" bindLabel="codeDesc"
                                         bindValue="codeId" placeholder="Rate Type" (change)="calculateLRWiseHCCAmount()"
                                         [ngClass]="{ 'border-danger': hccForm.get('rateType')?.invalid && hccForm.get('rateType')?.touched,'required2': hccForm.get('chargedBy')?.value !== 'XX9'}">
                                     </ng-select>
-                                    <div *ngIf="hccForm.get('rateType')?.invalid && hccForm.get('rateType')?.touched" class="text-danger">
-                                           This feild is required.
-                                        </div>
+                                    <div *ngIf="hccForm.get('rateType')?.invalid && hccForm.get('rateType')?.touched"
+                                        class="text-danger">
+                                        This feild is required.
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="form-group-input">
                                     <label class="form-label d-flex align-items-center gap-2 fw-bold"> Charge Rate
                                     </label>
-                                    <input class="form-control" type="text" placeholder="Charge Rate" [readonly]="hccForm.get('chargedBy')?.value === 'XX5'||hccForm.get('chargedBy')?.value === 'XX9'"
+                                    <input class="form-control" type="text" placeholder="Charge Rate"
+                                        [readonly]="hccForm.get('chargedBy')?.value === 'XX5'||hccForm.get('chargedBy')?.value === 'XX9'"
                                         formControlName="chargeRate" (input)="calculateLRWiseHCCAmount()">
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- ── LR Listing ── -->
                     <div class="control-bar d-block gap-2 mb-0 mt-3">
                         <div>
@@ -205,7 +210,7 @@
                             <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
                             <div style="border:2px solid var(--border);border-radius:3px; ">
                                 <div>
-                                    <div style="max-height: 350px; overflow-y: auto;">
+                                    <div style="">
                                         <table style="width:100%;border-collapse:collapse;font-size:13px;"
                                             class="data-table align-middle">
                                             <thead style="position: sticky; top: 0; z-index: 1;">
@@ -216,6 +221,29 @@
                                                     <th class="text-center">Destination</th>
                                                     <th class="text-center">PKG</th>
                                                     <th class="text-center">Weight</th>
+                                                    <th class="text-center" style="min-width: 150px;">Charged By
+                                                        <ng-select class="mt-1 clear-icon text-start"
+                                                            [items]="generalMasterService.loadingData"
+                                                            bindLabel="codeDesc" bindValue="codeId" placeholder="Type"
+                                                            (change)="onHeaderHccVendorTypeChange($event)"
+                                                            [dropdownPosition]="'bottom'"></ng-select>
+                                                    </th>
+                                                    <th class="text-center" style="min-width: 200px;">Vendor
+                                                        <ng-select class="mt-1 clear-icon remove-white-space text-start"
+                                                            [items]="headerVendorList" bindLabel="text"
+                                                            bindValue="value" placeholder="Vendor"
+                                                            [(ngModel)]="headerVendor"
+                                                            [ngModelOptions]="{standalone: true}"
+                                                            (change)="onHeaderVendorChange($event)"
+                                                            [dropdownPosition]="'bottom'"></ng-select>
+                                                    </th>
+                                                    <th class="text-center" style="min-width: 150px;">Rate Type
+                                                        <ng-select class="mt-1 clear-icon text-start"
+                                                            bindLabel="codeDesc" bindValue="codeId"
+                                                            placeholder="Rate Type"
+                                                            [items]="generalMasterService.chargeTypeData"
+                                                            (change)="onHeaderRateTypeChange($event)"></ng-select>
+                                                    </th>
                                                     <th class="text-center">LR Wise HCC Amount</th>
                                                 </tr>
                                             </thead>
@@ -260,12 +288,64 @@
                                                         {{ row.value.weight ? row.value.weight :0.00}}
                                                     </td>
 
+                                                    <td style="width:150px; max-width: 150px;">
+                                                        <ng-select class="clear-icon"
+                                                            [items]="generalMasterService.loadingData"
+                                                            formControlName="luVendorTyp" bindLabel="codeDesc"
+                                                            bindValue="codeId" placeholder="Type"
+                                                            [dropdownPosition]="'bottom'"
+                                                            (change)="onRowVendorTypeChange($event, i)">
+                                                        </ng-select>
+                                                    </td>
+
+                                                    <td style="width:200px; max-width: 200px;">
+                                                        <ng-select
+                                                            class="noFoundTextColor clear-icon remove-white-space"
+                                                            [ngClass]="{
+                                                                'required2': row.value.luVendorTyp && row.value.luVendorTyp !== 'XX9',
+                                                                'border-danger': row.get('luVendorCode')?.hasError('required') && row.get('luVendorCode')?.touched
+                                                            }" formControlName="luVendorCode"
+                                                            [items]="rowVendorList[i] || []" bindLabel="text"
+                                                            [dropdownPosition]="'bottom'" bindValue="value"
+                                                            placeholder="Vendor"
+                                                            (change)="onRowVendorCodeChange($event, i)">
+                                                        </ng-select>
+                                                        <div class="text-danger small mt-1 text-start"
+                                                            *ngIf="row.get('luVendorCode')?.hasError('required') && row.get('luVendorCode')?.touched">
+                                                            This field is required
+                                                        </div>
+                                                    </td>
+
+                                                    <td style="width:150px; max-width: 150px;">
+                                                        <ng-select class="clear-icon" [ngClass]="{
+                                                                'required2': row.value.luVendorTyp && row.value.luVendorTyp !== 'XX9',
+                                                                'border-danger': row.get('rateType')?.hasError('required') && row.get('rateType')?.touched
+                                                            }" formControlName="rateType" bindLabel="codeDesc"
+                                                            bindValue="codeId" placeholder="Rate Type"
+                                                            [items]="generalMasterService.chargeTypeData"
+                                                            [readonly]="row.value.luVendorTyp === 'XX9' || row.value.luVendorTyp === 'XX5'"></ng-select>
+                                                        <div class="text-danger small mt-1 text-start"
+                                                            *ngIf="row.get('rateType')?.hasError('required') && row.get('rateType')?.touched">
+                                                            This field is required
+                                                        </div>
+                                                        <input type="text" class="form-control form-control-sm mt-1"
+                                                            placeholder="Charge Rate" formControlName="chargeRate"
+                                                            [readOnly]="row.value.luVendorTyp === 'XX5' || row.value.luVendorTyp === 'XX9'"
+                                                            (focus)="clearNewRateOnFocus(i)"
+                                                            oninput="this.value = this.value.replace(/[^0-9.]/g,'');"
+                                                            (blur)="resetNewRateOnBlur(i)" />
+                                                        <div class="text-danger small mt-1 text-start"
+                                                            *ngIf="lrList.at(i).get('rateError')?.value">
+                                                            {{ lrList.at(i).get('rateError')?.value }}
+                                                        </div>
+                                                    </td>
+
                                                     <td>
                                                         <div class="d-flex gap-3">
-                                                            <input type="checkbox" formControlName="isChecked" (change)="calculateLRWiseHCCAmount()">
+                                                            <input type="checkbox" formControlName="isChecked"
+                                                                (change)="calculateLRWiseHCCAmount()">
                                                             <input type="text" class="form-control form-control-sm"
-                                                                formControlName="lrWiseHCCAmount"
-                                                                [readonly]="true">
+                                                                formControlName="lrWiseHCCAmount" [readonly]="true">
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -280,7 +360,8 @@
                             <div class="row mb-4">
                                 <div class="col-4">
                                     <div class="form-group-input">
-                                        <label class="form-label d-flex align-items-center gap-2 fw-bold"> Total Weight
+                                        <label class="form-label d-flex align-items-center gap-2 fw-bold"> Total
+                                            Weight
                                         </label>
                                         <input type="text" class="form-control form-control-sm"
                                             placeholder="Total Weight" readonly formControlName="totalWeight">
@@ -296,7 +377,8 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="form-group-input">
-                                        <label class="form-label d-flex align-items-center gap-2 fw-bold"> Total LR HCC
+                                        <label class="form-label d-flex align-items-center gap-2 fw-bold"> Total LR
+                                            HCC
                                             Amount
                                         </label>
                                         <input type="text" class="form-control form-control-sm"

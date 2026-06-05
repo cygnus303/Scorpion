@@ -1,5 +1,5 @@
-<div *ngIf="drsData">
-    <div class="control-bar d-block gap-2 mb-3">
+<div>
+    <!-- <div class="control-bar d-block gap-2 mb-3">
         <form [formGroup]="DRSFilterForm">
             <div class="row px-1">
                 <div class="col-md-3 d-print-inline-block align-content-end">
@@ -28,16 +28,15 @@
                             [readonly]="DRSFilterForm.get('loadBy')?.value === 'XX5' || DRSFilterForm.get('loadBy')?.value === 'XX9'">
                         </ng-select>
                     </div>
-                </div>
+                </div> 
             </div>
         </form>
-    </div>
+    </div> -->
 
     <div style="min-height: 500px;">
         <!-- Content Area -->
-        <div
-            *ngIf="DRSFilterForm.get('loadBy')?.value && (DRSFilterForm.get('chargeType')?.value || DRSFilterForm.get('loadBy')?.value === 'XX5' || DRSFilterForm.get('loadBy')?.value === 'XX9')">
-            <div *ngIf="DRSInformation" class="p-0">
+        <div>
+            <div class="p-0">
                 <form [formGroup]="DRSSummaryForm">
                     <div class="cnote-entry-container">
                         <!-- <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
@@ -104,7 +103,7 @@
                             </div>
                             <h3 class="pb-4 text-start appointment mt-2">Unloading Charge</h3>
                             <div class="row pb-3 pt-2">
-                                <div class="col-3">
+                                <!-- <div class="col-3">
                                     <div class="row align-items-center">
                                         <label class="col-sm-5 col-form-label text-end">Unloader By:</label>
                                         <div class="col-sm-7 text-start">
@@ -121,27 +120,23 @@
                                     <div class="row">
                                         <label class="col-sm-5 col-form-label text-end">Vendor Code :</label>
                                         <div class="col-sm-7 text-start">
-                                            <ng-select class="noFoundTextColor required2 clear-icon"
+                                            <ng-select class="noFoundTextColor clear-icon"
                                                 placeholder="Vendor Code" formControlName="vendorCode"
                                                 (change)="getLoadingCharge($event)"
                                                 [items]="branchWiseLoadingUnloadingList" bindLabel="text"
-                                                bindValue="value" appFocusNext required
-                                                [ngClass]="{ 'border-danger': DRSSummaryForm.get('vendorCode')?.invalid && DRSSummaryForm.get('vendorCode')?.touched}">
+                                                bindValue="value" appFocusNext>
                                                 <ng-template ng-option-tmp let-item="item">
                                                     <div [title]="item.text">
                                                         {{ item.text }}
                                                     </div>
                                                 </ng-template>
                                             </ng-select>
-                                            <div class="text-danger text-start"
-                                                *ngIf="DRSSummaryForm.get('vendorCode')?.invalid && DRSSummaryForm.get('vendorCode')?.touched">
-                                                This field is required.
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
-                                }
-                                <div class="col-3">
+                                } -->
+                                <!-- <div class="col-3">
                                     @if(['XX5'].includes(DRSSummaryForm.get('LoadingBy')?.value)){
                                     <div class="row align-items-center">
                                         <label class="col-sm-5 col-form-label text-end">Rate :</label>
@@ -151,9 +146,9 @@
                                         </div>
                                     </div>
                                     }
-                                </div>
-                                @if (['M', 'A', 'XX5','XX8', 'B',
-                                'XX1'].includes(DRSSummaryForm.get('LoadingBy')?.value)){
+                                </div> -->
+                                <!-- @if (['M', 'A', 'XX5','XX8', 'B',
+                                'XX1'].includes(DRSSummaryForm.get('LoadingBy')?.value)){ -->
                                 <div class="col-3">
                                     <div class="row">
                                         <label class="col-sm-5 col-form-label text-end">UnLoading Charge:</label>
@@ -169,7 +164,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                }
+                                <!-- } -->
                             </div>
                         </div>
                     </div>
@@ -215,25 +210,46 @@
                                     class="fw-semibold me-2 border-start border-2 border-primary m-0 ps-2 py-2 ">Note:</span>
                                 <span>ADD as per POD Copy.</span>
                             </div>
-                            <div>
-                                <table class="table table-bordered align-middle w-100 vertical-align">
-                                    <thead class="table-secondary">
+                            <div class="table-responsive" style="max-height: 500px; overflow: auto;">
+                                <table class="table table-bordered align-middle text-nowrap vertical-align">
+                                    <thead class="table-secondary" style="position: sticky; top: 0; z-index: 2;">
                                         <tr>
                                             <th>Sr.No</th>
-                                            <th>Is Bad<br>POD</th>
+                                            <th style="min-width: 110px;">Is Bad<br>POD</th>
                                             <th>CNote<br>Bkg. Dt</th>
                                             <th>Bkg-Dely<br>Pay Basis</th>
                                             <th>Cnor / Cnee</th>
                                             <th>PkgsPending /<br>Arrived /<br> Booked</th>
                                             <th>Committed<br>Dely. Dt</th>
-                                            <th>Pkgs.Delivered</th>
-                                            <th>Remarks</th>
-                                            <th>Rate Type</th>
+                                            <th style="min-width: 120px;">Pkgs.Delivered</th>
+                                            <th style="min-width: 150px;">Remarks</th>
+                                            <th style="min-width: 160px;">HCC Vendor Type
+                                                <ng-select class="mt-1 clear-icon"
+                                                    [items]="generalMasterService.loadingData" bindLabel="codeDesc"
+                                                    bindValue="codeId" placeholder="Vendor Type"
+                                                    (change)="onHeaderHccVendorTypeChange($event)"
+                                                    [dropdownPosition]="'bottom'">
+                                                </ng-select>
+                                            </th>
+                                            <th style="min-width: 200px;">Vendor
+                                                <ng-select class="mt-1 clear-icon remove-white-space"
+                                                    [items]="headerVendorList" bindLabel="text" bindValue="value"
+                                                    placeholder="Vendor" [(ngModel)]="headerVendor" [ngModelOptions]="{standalone: true}"
+                                                    (change)="onHeaderVendorChange($event)"
+                                                    [dropdownPosition]="'bottom'">
+                                                </ng-select>
+                                            </th>
+                                            <th style="min-width: 150px;">Rate Type
+                                                <ng-select class="clear-icon mt-1" formControlName="ratetype"
+                                                    bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type"
+                                                    appFocusNext [items]="generalMasterService.chargeTypeData"
+                                                    (change)="onHeaderRateTypeChange($event)"></ng-select>
+                                            </th>
                                             <th>Pkg / Act</th>
-                                            <th>OTP</th>
-                                            <th>Delivered To</th>
-                                            <th>Person Name</th>
-                                            <th>Contact No.</th>
+                                            <th style="min-width: 120px;">OTP</th>
+                                            <th style="min-width: 180px;">Delivered To</th>
+                                            <th style="min-width: 150px;">Person Name</th>
+                                            <th style="min-width: 140px;">Contact No.</th>
                                         </tr>
                                     </thead>
 
@@ -315,15 +331,45 @@
                                                         formControlName="remarks" placeholder="Enter Remarks"
                                                         appFocusNext></textarea>
                                                 </td>
+                                                <td>
+                                                    <ng-select class="clear-icon"
+                                                        [items]="generalMasterService.loadingData"
+                                                        formControlName="luVendorTyp" bindLabel="codeDesc"
+                                                        bindValue="codeId" placeholder="Type"
+                                                        [dropdownPosition]="'bottom'"
+                                                        (change)="onRowVendorTypeChange($event, i)">
+                                                    </ng-select>
+                                                </td>
+                                                <td>
+                                                    <ng-select class="noFoundTextColor clear-icon remove-white-space"
+                                                        [ngClass]="{
+                                                            'required2': row.get('luVendorTyp')?.value !== 'XX9',
+                                                            'border-danger': row.get('luVendorCode')?.hasError('required') && row.get('luVendorCode')?.touched
+                                                        }" formControlName="luVendorCode"
+                                                        [items]="rowVendorList[i] || []" bindLabel="text"
+                                                        bindValue="value" placeholder="Vendor"
+                                                        [dropdownPosition]="'bottom'"
+                                                        (change)="onRowVendorCodeChange($event, i)">
+                                                    </ng-select>
+                                                    <div class="text-danger small mt-1 text-start"
+                                                        *ngIf="row.get('luVendorCode')?.hasError('required') && row.get('luVendorCode')?.touched">
+                                                        This field is required
+                                                    </div>
+                                                </td>
 
                                                 <td>
                                                     <ng-select class="clear-icon" formControlName="ratetype"
                                                         bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type"
                                                         appFocusNext [items]="generalMasterService.chargeTypeData"
-                                                        [readonly]="this.DRSSummaryForm.value.LoadingBy !=='XX9' ? true : false"></ng-select>
+                                                        [ngClass]="{'border-danger': row.get('ratetype')?.hasError('required') && row.get('ratetype')?.touched}"
+                                                        [readonly]="row.value.luVendorTyp ==='XX9' || row.value.luVendorTyp ==='XX5'"></ng-select>
+                                                    <div class="text-danger small mt-1 text-start"
+                                                        *ngIf="row.get('ratetype')?.hasError('required') && row.get('ratetype')?.touched">
+                                                        This field is required
+                                                    </div>
                                                     <input type="number" class="form-control form-control-sm mt-1"
                                                         formControlName="newRate" appFocusNext
-                                                        [readOnly]="this.DRSSummaryForm.value.LoadingBy === 'XX5'"
+                                                        [readOnly]="row.value.luVendorTyp === 'XX5' || row.value.luVendorTyp === 'XX9'"
                                                         (focus)="clearNewRateOnFocus(i)"
                                                         (blur)="resetNewRateOnBlur(i)" />
                                                     <div class="text-danger small mt-1"
@@ -560,15 +606,7 @@
             </div>
         </div>
 
-        <!-- Empty State Prompt -->
-        <div class="p-5 text-center text-muted d-flex align-items-center justify-content-center"
-            *ngIf="!DRSFilterForm.get('loadBy')?.value || (!DRSFilterForm.get('chargeType')?.value && DRSFilterForm.get('loadBy')?.value !== 'XX5' && DRSFilterForm.get('loadBy')?.value !== 'XX9')"
-            style="min-height: 500px;">
-            <div class="py-5">
-                <i class="fas fa-hand-pointer fa-3x mb-3 opacity-25"></i>
-                <p>Please select <b>Loading By</b> and <b>Charge Type</b> to view update details.</p>
-            </div>
-        </div>
+
     </div>
 </div>
 <div *ngIf="isSubmit" class="loading-overlay">

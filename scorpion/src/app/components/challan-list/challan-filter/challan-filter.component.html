@@ -170,32 +170,7 @@
                                 [bsConfig]="{ ranges: commonService.ranges,containerClass: 'theme-dark-blue', rangeInputFormat: 'MMMM D, YYYY', dateInputFormat: 'MMMM D, YYYY'}" />
                         </div>
                     </div>
-                    <div class="mb-3 col">
-                        <label class="input-group form-label fw-semibold">HCC vendor Type</label>
-                        <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select HCC vendor Type"
-                            appFocusNext (change)="changeLoadingBy($event)" formControlName="loadingBy"
-                            bindLabel="codeDesc" bindValue="codeId" [items]="generalMasterService.loadingData"
-                            (change)="onSearch()"
-                            [ngClass]="{ 'border-danger': challanService.filterForm.get('loadingBy')?.invalid  && challanService.filterForm.get('loadingBy')?.touched }">
-                        </ng-select>
-                        <div class="text-danger text-start"
-                            *ngIf="challanService.filterForm.get('loadingBy')?.hasError('required') && challanService.filterForm.get('loadingBy')?.touched">
-                            This field is required.
-                        </div>
-                    </div>
-                    <div class="mb-3 col">
-                        <label class="input-group form-label fw-semibold">Charge type</label>
-                        <ng-select class="noFoundTextColor  clear-icon" placeholder="Select Charge type" appFocusNext
-                            [readonly]="challanService.filterForm.value.loadingBy === 'XX9'|| challanService.filterForm.value.loadingBy === 'XX5'"
-                            formControlName="chrgType" bindLabel="codeDesc" bindValue="codeId"
-                            [items]="generalMasterService.chargeTypeData" (change)="onSearch()"
-                            [ngClass]="{ 'border-danger': challanService.filterForm.get('chrgType')?.invalid  && challanService.filterForm.get('chrgType')?.touched }">
-                        </ng-select>
-                        <div class="text-danger text-start"
-                            *ngIf="challanService.filterForm.get('chrgType')?.hasError('required') && challanService.filterForm.get('chrgType')?.touched">
-                            This field is required.
-                        </div>
-                    </div>
+
                     <div class="mb-3 col">
                         <label class="input-group form-label fw-semibold">{{typeName}} type</label>
                         <div class="d-flex gap-4">
@@ -232,9 +207,7 @@
                                 Please select a ODA type
                             </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="mb-3 col-md-9">
+                    <div class="mb-3 col-md-5">
                         <label class="input-group form-label fw-semibold">CNote No.</label>
                         <div class="input-group d-flex align-items-center">
                             <input type="text" class="form-control" placeholder="CNote No." formControlName="docketList"

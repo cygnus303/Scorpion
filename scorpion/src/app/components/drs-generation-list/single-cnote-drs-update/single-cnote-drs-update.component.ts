@@ -9,6 +9,9 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { SharedModule } from 'app/shared/shared/shared.module';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.service';
+import { GeneralMasterService } from 'app/shared/services/general-master.service';
+import { THCMasterService } from 'app/shared/services/thc-master.service';
 
 @Component({
   selector: 'single-cnote-drs-update',
@@ -27,6 +30,9 @@ export class SingleCnoteDrsUpdateComponent {
   public isSubmit: boolean = false;
   today: Date = new Date();
   public isLoading = false;
+  public headerVendorList: any[] = [];
+  public headerVendor: any = null;
+  public rowVendorList: any[][] = [];
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
 
@@ -37,11 +43,31 @@ export class SingleCnoteDrsUpdateComponent {
     private prsDrsApiService: PRSDRSApiService,
     private deliveryUpdateService: DeliveryUpdateService,
     private sweetAlertService: SweetAlertService,
-    private docketService: DocketService
+    private docketService: DocketService,
+    public vendorChargeHelper: VendorChargeHelperService,
+    public generalMasterService: GeneralMasterService,
+    public THCMasterService: THCMasterService
   ) { }
 
   ngOnInit() {
     this.buildForm();
+    this.generalMasterService.getChargeTypeData();
+    this.generalMasterService.getLoadingBy();
+    this.getVendorType();
+  }
+
+  getVendorType() {
+    this.THCMasterService.getVendorType(this.docketService.loginUserList.LocationCode).subscribe({
+      next: (response) => {
+        if (response && response.data) {
+          const mTypeRow = response.data.find((x: any) => x.documentType === 'D');
+          if (mTypeRow) {
+            const vendorTypes = mTypeRow.unLoading_VendorType.split(',');
+            this.generalMasterService.getLoadingByDetail(vendorTypes);
+          }
+        }
+      }
+    });
   }
 
   buildForm() {
@@ -119,10 +145,24 @@ export class SingleCnoteDrsUpdateComponent {
       newRate: [item.newRate],
 
       isEnabled: [item.isEnabled],
-
+      luVendorTyp: [item.luVendorTyp || null],
+      luVendorCode: [item.luVendorCode || null],
+      ratetype: [item.ratetype || null],
+      rateError: ['']
       //     remark:[''],
       // otp:['']
     });
+
+    const initialVendorType = form.get('luVendorTyp')?.value;
+    if (initialVendorType && initialVendorType !== 'XX9') {
+      form.get('luVendorCode')?.setValidators([Validators.required]);
+      form.get('ratetype')?.setValidators([Validators.required]);
+    } else {
+      form.get('luVendorCode')?.clearValidators();
+      form.get('ratetype')?.clearValidators();
+    }
+    form.get('luVendorCode')?.updateValueAndValidity({ emitEvent: false });
+    form.get('ratetype')?.updateValueAndValidity({ emitEvent: false });
     return form;
   }
 
@@ -193,6 +233,7 @@ export class SingleCnoteDrsUpdateComponent {
           this.cnoteList.push(this.createCnoteForm(item));
         });
         this.getDeliveryReason();
+        this.prefetchVendorLists();
         this.isLoading = false;
       },
       error: (err: any) => {
@@ -361,6 +402,17 @@ export class SingleCnoteDrsUpdateComponent {
   }
 
   onSubmit() {
+    let rateValidationFailed = false;
+    this.cnoteList.controls.forEach((group: any) => {
+      if (!this.validateRate(group)) {
+        rateValidationFailed = true;
+      }
+    });
+
+    if (rateValidationFailed) {
+      return;
+    }
+
     const DRSDocketsUpdateList = this.cnoteList.getRawValue().map((row: any) => ({
       pkgs_Booked: Number(row.pkgs_Booked) || 0,
       rate: Number(row.rate) || 0,
@@ -413,7 +465,9 @@ export class SingleCnoteDrsUpdateComponent {
       pkgsdelivered: Number(row.PKGSDELIVERED) || 0,
       isChecked: row.IsChecked || false,
       dlypdcno: row.dlypdcno,
-      pkgs_Pending: Number(row.pkgs_Pending) || 0
+      pkgs_Pending: Number(row.pkgs_Pending) || 0,
+      luVendorTyp: row.luVendorTyp || null,
+      luVendorCode: row.luVendorCode || null
     }));
 
     const formData = new FormData();
@@ -452,5 +506,152 @@ export class SingleCnoteDrsUpdateComponent {
     } else {
       this.DRSUpdateForm.markAllAsTouched();
     }
+  }
+
+  onHeaderHccVendorTypeChange(event: any) {
+    this.headerVendor = null;
+    this.vendorChargeHelper.handleHeaderHccVendorTypeChange(
+      event?.codeId || event,
+      this.cnoteList,
+      this.rowVendorList,
+      (list: any[]) => this.headerVendorList = list,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      'U'
+    );
+
+    const type = event?.codeId || event;
+    this.cnoteList.controls.forEach((group: any) => {
+      group.get('newRate')?.patchValue(0);
+      const vendorCodeCtrl = group.get('luVendorCode');
+      const rateTypeCtrl = group.get('ratetype');
+      if (type && type !== 'XX9') {
+        vendorCodeCtrl?.setValidators([Validators.required]);
+        rateTypeCtrl?.setValidators([Validators.required]);
+      } else {
+        vendorCodeCtrl?.clearValidators();
+        rateTypeCtrl?.clearValidators();
+      }
+      vendorCodeCtrl?.updateValueAndValidity({ emitEvent: false });
+      rateTypeCtrl?.updateValueAndValidity({ emitEvent: false });
+    });
+  }
+
+  onHeaderRateTypeChange(event: any) {
+    this.vendorChargeHelper.handleHeaderRateTypeChange(
+      event?.codeId || event,
+      this.cnoteList,
+      'ratetype'
+    );
+  }
+
+  onHeaderVendorChange(event: any) {
+    this.vendorChargeHelper.handleHeaderVendorChange(
+      event?.value || event,
+      this.cnoteList,
+      'luVendorCode',
+      'U',
+      undefined,
+      'ratetype',
+      'newRate',
+      'luVendorTyp'
+    );
+  }
+
+  onRowVendorTypeChange(event: any, index: number) {
+    this.vendorChargeHelper.handleRowVendorTypeChange(
+      event?.codeId || event,
+      index,
+      this.cnoteList,
+      this.rowVendorList,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      'U'
+    );
+
+    const group = this.cnoteList.at(index);
+    group.get('newRate')?.patchValue(0);
+    const vendorCodeCtrl = group.get('luVendorCode');
+    const rateTypeCtrl = group.get('ratetype');
+    const type = event?.codeId || event;
+    if (type && type !== 'XX9') {
+      vendorCodeCtrl?.setValidators([Validators.required]);
+      rateTypeCtrl?.setValidators([Validators.required]);
+    } else {
+      vendorCodeCtrl?.clearValidators();
+      rateTypeCtrl?.clearValidators();
+    }
+    vendorCodeCtrl?.updateValueAndValidity({ emitEvent: false });
+    rateTypeCtrl?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  onRowVendorCodeChange(event: any, index: number) {
+    this.vendorChargeHelper.handleRowVendorCodeChange(
+      event?.value || event,
+      index,
+      this.cnoteList,
+      'U', // delivery/unload scenario for DRS
+      undefined, // rate type mapped via standard lookup if required
+      'ratetype',
+      'newRate'
+    );
+  }
+
+  onRateChange(row: AbstractControl) {
+    this.validateRate(row as FormGroup);
+  }
+
+  validateRate(group: FormGroup): boolean {
+    const loadingBy = group.get('luVendorTyp')?.value;
+
+    if (loadingBy === 'XX9') {
+      group.get('rateError')?.setValue('');
+      return true;
+    }
+
+    const rateType = group.get('ratetype')?.value;
+    const rate = parseFloat(group.get('newRate')?.value || '0') || 0;
+    const chrgwt = parseFloat(group.get('actQty')?.value || '0') || 0;
+    const noofpkg = parseFloat(group.get('pkgQty')?.value || '0') || 0;
+
+    if (chrgwt === 0) {
+      group.get('rateError')?.setValue('Charge weight is zero, cannot validate rate.');
+      group.get('newRate')?.setValue('0.00', { emitEvent: false });
+      return false;
+    }
+
+    let maxlimitcalculation = 0;
+
+    if (rateType === '4') {
+      maxlimitcalculation = rate / chrgwt;
+    } else if (rateType === '3') {
+      maxlimitcalculation = (rate * noofpkg) / chrgwt;
+    } else {
+      maxlimitcalculation = rate;
+    }
+
+    if (maxlimitcalculation > 5.0) {
+      group.get('rateError')?.setValue('Rate Amount Is High Please Check');
+      group.get('newRate')?.setValue('0.00', { emitEvent: false });
+      return false;
+    } else {
+      group.get('rateError')?.setValue('');
+      return true;
+    }
+  }
+
+  prefetchVendorLists() {
+    this.cnoteList.controls.forEach((ctrl: any, index: number) => {
+      const vendorTyp = ctrl.value.luVendorTyp;
+      if (vendorTyp) {
+        this.vendorChargeHelper.fetchVendorListFor(vendorTyp, (list: any[]) => {
+          this.rowVendorList[index] = list;
+        });
+      }
+    });
   }
 }

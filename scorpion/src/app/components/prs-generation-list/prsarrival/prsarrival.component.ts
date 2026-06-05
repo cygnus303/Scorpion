@@ -3,7 +3,7 @@ import { Component, EventEmitter, OnInit, Output, SimpleChanges, TemplateRef, Vi
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { RouterModule } from '@angular/router';
@@ -11,6 +11,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { environment } from 'environments/environment';
 import { PrsArrivalDetailsService } from 'app/shared/services/prs-arrival-details.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.service';
 
 @Component({
   selector: 'app-prsarrival',
@@ -35,12 +36,19 @@ export class PRSArrivalComponent implements OnInit {
     loadBy: null,
     chargeType: null
   };
+  public rowVendorList: any[][] = [];
 
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   constructor(
     private modalService: BsModalService,
-    public generalMasterService: GeneralMasterService, private THCMasterService: THCMasterService, private sweetAlertService: SweetAlertService, public prsArrivalDetailsService: PrsArrivalDetailsService, public docketService: DocketService
+    public generalMasterService: GeneralMasterService,
+    private THCMasterService: THCMasterService,
+    private vendorChargeHelper: VendorChargeHelperService,
+    private fb: FormBuilder,
+    private sweetAlertService: SweetAlertService,
+    public prsArrivalDetailsService: PrsArrivalDetailsService,
+    public docketService: DocketService
   ) { }
 
   ngOnInit() {
@@ -62,6 +70,7 @@ export class PRSArrivalComponent implements OnInit {
     };
     this.getVendorType();
     this.generalMasterService.getChargeTypeData();
+    this.refreshData()
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
 
@@ -69,9 +78,9 @@ export class PRSArrivalComponent implements OnInit {
     this.THCMasterService.getVendorType(this.docketService.loginUserList.LocationCode).subscribe({
       next: (response) => {
         if (response && response.data) {
-          const mTypeRow = response.data.find((x: any) => x.documentType === 'M');
+          const mTypeRow = response.data.find((x: any) => x.documentType === 'P');
           if (mTypeRow) {
-            const vendorTypes = mTypeRow.loading_VendorType.split(',');
+            const vendorTypes = mTypeRow.unLoading_VendorType.split(',');
             this.generalMasterService.getLoadingByDetail(vendorTypes);
           }
         }
@@ -120,7 +129,7 @@ export class PRSArrivalComponent implements OnInit {
         this.docketList = response?.listPAVM || [];
         // Calculate total actuwt from PRSArrivalDetails array
         const totalActuwt = this.docketList?.reduce((sum: number, item: any) => sum + (item.actuwt || 0), 0) || 0;
-        
+
         this.prsArrivalForm.patchValue({
           actuwt: totalActuwt || 0,
           LoadingBy: this.docketService.loginUserList.loadBy
@@ -131,11 +140,19 @@ export class PRSArrivalComponent implements OnInit {
         const arr = this.prsArrivalForm.get('pdcDetails') as FormArray;
         if (arr) {
           arr.clear();
-          this.docketList.forEach((item: any) => arr.push(this.createPdcGroup(item)));
+          this.docketList.forEach((item: any, index: number) => {
+            const group = this.createPdcGroup(item);
+            arr.push(group);
+
+            const vendorTyp = group.value.luVendorTyp;
+            if (vendorTyp) {
+              this.vendorChargeHelper.fetchVendorListFor(vendorTyp, (list: any[]) => {
+                this.rowVendorList[index] = list;
+              });
+            }
+          });
         }
         this.prsArrivalDetailsService.getVendorsList(this.docketService.loginUserList.loadBy);
-      },
-      complete: () => {
         this.isLoading = false;
       },
       error: (err) => {
@@ -220,15 +237,25 @@ export class PRSArrivalComponent implements OnInit {
     this.prsArrivalForm = new FormGroup({
       arrivalDate: new FormControl(new Date()),
       actuwt: new FormControl(null),
-      LoadingBy: new FormControl(null, [Validators.required]),
+      LoadingBy: new FormControl(null),
       LoadingCharge: new FormControl(0),
       Rate: new FormControl(null),
       closeKM: new FormControl(0),
       ratetype: new FormControl(null),
-      vendorCode: new FormControl(null, this.docketService.loginUserList.loadBy === 'XX9' ? null : Validators.required),
+      vendorCode: new FormControl(null),
       vendorName: new FormControl(null),
       pdcDetails: new FormArray([])
-    })
+    });
+
+    this.prsArrivalForm.get('ratetype')?.valueChanges.subscribe(val => {
+      const pdcArray = this.prsArrivalForm.get('pdcDetails') as FormArray;
+      pdcArray?.controls.forEach((group: any) => {
+        const rowVendorTyp = group.get('luVendorTyp')?.value;
+        if (rowVendorTyp !== 'XX5' && rowVendorTyp !== 'XX9') {
+          group.patchValue({ ratetype: val });
+        }
+      });
+    });
   }
 
   private createPdcGroup(item: any): FormGroup {
@@ -245,11 +272,109 @@ export class PRSArrivalComponent implements OnInit {
       vendorname: new FormControl(item.vendorname || ''),
       newRate: new FormControl(0),
       rateError: new FormControl(''),
+      luVendorTyp: new FormControl(null),
+      luVendorCode: new FormControl(null),
       totalLoadingCharge: new FormControl(''),
     });
+    const initialVendorType = group.get('luVendorTyp')?.value;
+    if (initialVendorType && initialVendorType !== 'XX9') {
+      group.get('luVendorCode')?.setValidators([Validators.required]);
+    } else if (!initialVendorType) {
+      group.get('luVendorCode')?.setValidators([Validators.required]);
+    }
     group.get('ratetype')?.valueChanges.subscribe(() => this.calculateCharge(group));
     group.get('newRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
     return group;
+  }
+
+  onRowVendorTypeChange(event: any, index: number) {
+    this.vendorChargeHelper.handleRowVendorTypeChange(
+      event?.codeId || event,
+      index,
+      this.prsArrivalForm.get('pdcDetails') as FormArray,
+      this.rowVendorList,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      'U'
+    );
+
+    const formArray = this.prsArrivalForm.get('pdcDetails') as FormArray;
+    const group = formArray.at(index);
+    group.get('newRate')?.patchValue(0);
+    const vendorCodeCtrl = group.get('luVendorCode');
+    const rateTypeCtrl = group.get('ratetype');
+    const type = event?.codeId || event;
+    if (type && type !== 'XX9') {
+      vendorCodeCtrl?.setValidators([Validators.required]);
+      rateTypeCtrl?.setValidators([Validators.required]);
+    } else {
+      vendorCodeCtrl?.clearValidators();
+      rateTypeCtrl?.clearValidators();
+    }
+    vendorCodeCtrl?.updateValueAndValidity({ emitEvent: false });
+    rateTypeCtrl?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  headerVendorList: any[] = [];
+  onHeaderHccVendorTypeChange(event: any) {
+    this.vendorChargeHelper.handleHeaderHccVendorTypeChange(
+      event?.codeId || event,
+      this.prsArrivalForm.get('pdcDetails') as FormArray,
+      this.rowVendorList,
+      (list: any[]) => this.headerVendorList = list,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      'U'
+    );
+
+    const type = event?.codeId || event;
+    const formArray = this.prsArrivalForm.get('pdcDetails') as FormArray;
+    formArray.controls.forEach((group: any) => {
+      group.get('newRate')?.patchValue(0);
+      const vendorCodeCtrl = group.get('luVendorCode');
+      const rateTypeCtrl = group.get('ratetype');
+      const type = event?.codeId || event;
+      if (type && type !== 'XX9') {
+        vendorCodeCtrl?.setValidators([Validators.required]);
+        rateTypeCtrl?.setValidators([Validators.required]);
+      } else {
+        vendorCodeCtrl?.clearValidators();
+        rateTypeCtrl?.clearValidators();
+      }
+      vendorCodeCtrl?.updateValueAndValidity({ emitEvent: false });
+      rateTypeCtrl?.updateValueAndValidity({ emitEvent: false });
+    });
+  }
+
+  onHeaderVendorChange(event: any) {
+    this.vendorChargeHelper.handleHeaderVendorChange(
+      event?.value || event,
+      this.prsArrivalForm.get('pdcDetails') as FormArray,
+      'luVendorCode',
+      'U',
+      this.docketService.loginUserList.chargeType,
+      'ratetype',
+      'newRate',
+      'luVendorTyp',
+      this.prsArrivalForm,
+      'ratetype'
+    );
+  }
+
+  onRowVendorCodeChange(event: any, index: number) {
+    this.vendorChargeHelper.handleRowVendorCodeChange(
+      event?.value || event?.vendor_Code || event,
+      index,
+      this.prsArrivalForm.get('pdcDetails') as FormArray,
+      'U',
+      this.docketService.loginUserList.chargeType,
+      'ratetype',
+      'newRate'
+    );
   }
 
   calculateCharge(group: FormGroup): void {
@@ -343,7 +468,7 @@ export class PRSArrivalComponent implements OnInit {
       const payload = {
         pavm: {
           ...this.PRSArrivalDetails,
-          unloadBy: this.docketService.loginUserList.loadBy,
+          unloadBy: this.docketService.loginUserList.loadBy || '',
           rateType: this.docketService.loginUserList.chargeType,
           vendorCode_new: this.prsArrivalForm.value.vendorCode,
           vendorName_new: this.prsArrivalForm.value.vendorName,
@@ -361,7 +486,7 @@ export class PRSArrivalComponent implements OnInit {
           const formItem = this.prsArrivalForm.value.pdcDetails[index];
           return {
             ...item,
-            unloadBy: this.docketService.loginUserList.loadBy,
+            unloadBy: this.docketService.loginUserList.loadBy || '',
             rateType: formItem.ratetype,
             vendorCode_new: this.prsArrivalForm.value.vendorCode,
             vendorName_new: this.prsArrivalForm.value.vendorName,
@@ -372,7 +497,10 @@ export class PRSArrivalComponent implements OnInit {
               ? new Date(this.prsArrivalForm.value.arrivalDate).toISOString()
               : new Date().toISOString(),
             dockdt: item.dockdt,
-            isEnabled: true
+            isEnabled: true,
+            hccAmt: 0,
+            luVendorCode: formItem.luVendorCode,
+            luVendorTyp: formItem.luVendorTyp,
           };
 
         }),
@@ -392,7 +520,8 @@ export class PRSArrivalComponent implements OnInit {
             this.modalRef.hide();
             this.isSubmitting = false;
           } else {
-            this.sweetAlertService.error(res?.message)
+            this.sweetAlertService.error(res?.message);
+            this.isSubmitting = false;
           }
         },
         error: (err) => {
@@ -404,6 +533,27 @@ export class PRSArrivalComponent implements OnInit {
 
     } else {
       this.prsArrivalForm.markAllAsTouched();
+      const invalidControls: string[] = [];
+      const controls = this.prsArrivalForm.controls;
+      for (const name in controls) {
+        if (controls[name].invalid) {
+          invalidControls.push(name);
+        }
+      }
+
+      const pdcDetails = this.prsArrivalForm.get('pdcDetails') as FormArray;
+      if (pdcDetails) {
+        pdcDetails.controls.forEach((group: any, index: number) => {
+          if (group.invalid && group.controls) {
+            for (const key in group.controls) {
+              if (group.controls[key].invalid) {
+                invalidControls.push(`pdcDetails[${index}].${key}`);
+              }
+            }
+          }
+        });
+      }
+      console.log('Invalid Controls on Submit:', invalidControls);
     }
   }
 }

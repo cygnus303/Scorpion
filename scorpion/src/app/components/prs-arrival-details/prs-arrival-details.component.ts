@@ -74,10 +74,10 @@ export class PRSArrivalDetailsComponent {
     this.THCService.getPRSArrivalDetails(payload).subscribe({
       next: (response: any) => {
         this.PRSArrivalDetails = response.pavm;
-          this.docketList = response?.listPAVM || [];
+        this.docketList = response?.listPAVM || [];
         // Calculate total actuwt from PRSArrivalDetails array
         const totalActuwt = this.docketList?.reduce((sum: number, item: any) => sum + (item.actuwt || 0), 0) || 0;
-        
+
         this.prsArrivalForm.patchValue({
           actuwt: totalActuwt || 0,
           LoadingBy: this.docketService.loginUserList.loadBy
@@ -154,21 +154,21 @@ export class PRSArrivalDetailsComponent {
     if (['XX5'].includes(this.prsArrivalForm.get('LoadingBy')?.value)) {
       this.THCService.getLoadingCharge(data).subscribe({
         next: (response: any) => {
-          if(response.isMonthly){
+          if (response.isMonthly) {
             this.prsArrivalForm.patchValue({
-              MonthlyRate:response.maxLimit,
+              MonthlyRate: response.maxLimit,
               Rate: response.rate,
               ratetype: response.rateType,
-              LoadingCharge:'0'
+              LoadingCharge: '0'
             })
-          const pdcArray = this.prsArrivalForm.get('pdcDetails') as FormArray;
-          pdcArray?.controls.forEach((item: any, index) => {
-            pdcArray.controls[index].patchValue({
-              newRate: response.rate,
-              ratetype: response.rateType
+            const pdcArray = this.prsArrivalForm.get('pdcDetails') as FormArray;
+            pdcArray?.controls.forEach((item: any, index) => {
+              pdcArray.controls[index].patchValue({
+                newRate: response.rate,
+                ratetype: response.rateType
+              });
             });
-          });
-          }else{
+          } else {
             this.prsArrivalForm.patchValue({
               Rate: response.rate,
               ratetype: response.rateType
@@ -201,7 +201,7 @@ export class PRSArrivalDetailsComponent {
       vendorCode: new FormControl(null, this.docketService.loginUserList.loadBy === 'XX9' ? null : Validators.required),
       vendorName: new FormControl(null),
       pdcDetails: new FormArray([]),
-      MonthlyRate:new FormControl(null)
+      MonthlyRate: new FormControl(null)
     })
   }
 
@@ -307,38 +307,38 @@ export class PRSArrivalDetailsComponent {
   }
 
   getInvalidControlNames(
-  form: FormGroup | FormArray,
-  path: string = ''
-): string[] {
-  let invalidControls: string[] = [];
+    form: FormGroup | FormArray,
+    path: string = ''
+  ): string[] {
+    let invalidControls: string[] = [];
 
-  Object.keys(form.controls).forEach(key => {
-    const control = form.get(key);
-    const controlPath = path ? `${path}.${key}` : key;
+    Object.keys(form.controls).forEach(key => {
+      const control = form.get(key);
+      const controlPath = path ? `${path}.${key}` : key;
 
-    if (control?.invalid) {
-      invalidControls.push(controlPath);
-    }
+      if (control?.invalid) {
+        invalidControls.push(controlPath);
+      }
 
-    if (control instanceof FormGroup || control instanceof FormArray) {
-      invalidControls = [
-        ...invalidControls,
-        ...this.getInvalidControlNames(control, controlPath)
-      ];
-    }
-  });
+      if (control instanceof FormGroup || control instanceof FormArray) {
+        invalidControls = [
+          ...invalidControls,
+          ...this.getInvalidControlNames(control, controlPath)
+        ];
+      }
+    });
 
-  return [...new Set(invalidControls)];
-}
+    return [...new Set(invalidControls)];
+  }
 
   onSubmit() {
     if (this.prsArrivalForm.invalid) {
-  this.prsArrivalForm.markAllAsTouched();
+      this.prsArrivalForm.markAllAsTouched();
 
-  const invalidFields = this.getInvalidControlNames(this.prsArrivalForm);
+      const invalidFields = this.getInvalidControlNames(this.prsArrivalForm);
 
-  console.log(invalidFields);
-}
+      console.log(invalidFields);
+    }
     if (this.prsArrivalForm.valid) {
       const params = {
         baseLocationCode: this.docketService.loginUserList.LocationCode,
@@ -372,7 +372,7 @@ export class PRSArrivalDetailsComponent {
             vendorCode_new: this.prsArrivalForm.value.vendorCode,
             vendorName_new: this.prsArrivalForm.value.vendorName,
             ratetype1: formItem.ratetype || '',
-            monthlyRate:this.prsArrivalForm.value.monthlyRate || '',
+            monthlyRate: this.prsArrivalForm.value.monthlyRate || '',
             newRate: formItem.newRate,
             arrivalDT: this.prsArrivalForm.value.arrivalDate
               ? new Date(this.prsArrivalForm.value.arrivalDate).toISOString()
@@ -385,20 +385,20 @@ export class PRSArrivalDetailsComponent {
 
       console.log("FINAL PAYLOAD", payload);
       this.isSubmitting = true;
-     this.THCService.prsArrival(params, payload).pipe(finalize(() => {this.isSubmitting = false;})).subscribe({
-    next: (res: any) => {
-      if (res.success) {
-        this.isRedirect = true;
-        window.parent.location.href = `${this.env.liveUrl}Operation/PRSArrivalDone?PDCNo=${res.pdcNo}&Tot_Charge=${res.totCharge}&HcNumber=${res.hcNumber}&TranXaction=Done&src=angular`;
-      } else {
-        this.sweetAlertService.error(res?.message);
-      }
-    },
-    error: (err) => {
-      console.error("Error", err);
-      this.isRedirect = false;
-    }
-  });
+      this.THCService.prsArrival(params, payload).pipe(finalize(() => { this.isSubmitting = false; })).subscribe({
+        next: (res: any) => {
+          if (res.success) {
+            this.isRedirect = true;
+            window.parent.location.href = `${this.env.liveUrl}Operation/PRSArrivalDone?PDCNo=${res.pdcNo}&Tot_Charge=${res.totCharge}&HcNumber=${res.hcNumber}&TranXaction=Done&src=angular`;
+          } else {
+            this.sweetAlertService.error(res?.message);
+          }
+        },
+        error: (err) => {
+          console.error("Error", err);
+          this.isRedirect = false;
+        }
+      });
 
     } else {
       this.prsArrivalForm.markAllAsTouched();

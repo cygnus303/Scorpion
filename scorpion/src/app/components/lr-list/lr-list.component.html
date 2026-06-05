@@ -89,7 +89,7 @@
                     <span class="date-sep">→</span>
                     <div class="date-input-wrap" style="padding:0;">
                         <input type="text" id="dateTo" bsDatepicker [(ngModel)]="config.toDateStr"
-                            (ngModelChange)="fetchData()"
+                            (ngModelChange)="fetchData()" [minDate]="config.fromDateStr"
                             [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                             style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
                         <span

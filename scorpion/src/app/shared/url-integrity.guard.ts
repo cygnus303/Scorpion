@@ -19,7 +19,7 @@ export class UrlIntegrityGuard implements CanActivate {
       sessionStorage.setItem('lastValidUrl', currentUrl);
       return true;
     }
- 
+  
     // If user manually edited URL
     if (currentUrl !== lastValidUrl) {
       this.router.navigateByUrl(lastValidUrl);

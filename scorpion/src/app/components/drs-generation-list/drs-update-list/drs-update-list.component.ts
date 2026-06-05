@@ -2,7 +2,7 @@ import { Component, Input, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { AbstractControl, FormArray, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -16,11 +16,12 @@ import { GeneralMasterService } from 'app/shared/services/general-master.service
 import { DocketService } from 'app/shared/services/docket.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
+import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.service';
 
 @Component({
   selector: 'app-drs-update-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, NgSelectModule, ReactiveFormsModule, BsDatepickerModule, SharedModule],
+  imports: [CommonModule, RouterModule, NgSelectModule, ReactiveFormsModule, BsDatepickerModule, SharedModule, FormsModule],
   templateUrl: './drs-update-list.component.html',
   styleUrl: './drs-update-list.component.scss'
 })
@@ -43,6 +44,7 @@ export class DRSUpdateListComponent {
 
   constructor(public challanService: ChallanService, public deliveryUpdateService: DeliveryUpdateService,
     public THCMasterService: THCMasterService,
+    private vendorChargeHelper: VendorChargeHelperService,
     public docketService: DocketService, public generalMasterService: GeneralMasterService,
     public sweetAlertService: SweetAlertService, private modalService: BsModalService) { }
 
@@ -59,6 +61,7 @@ export class DRSUpdateListComponent {
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
+    this.refreshData()
     this.buildFilterForm()
     this.getVendorType();
     this.generalMasterService.getChargeTypeData();
@@ -74,8 +77,8 @@ export class DRSUpdateListComponent {
   }
 
   refreshData() {
-    this.docketService.loginUserList.loadBy = this.DRSFilterForm.value.loadBy;
-    this.docketService.loginUserList.chargeType = this.DRSFilterForm.value.chargeType;
+    // this.docketService.loginUserList.loadBy = this.DRSFilterForm.value.loadBy;
+    // this.docketService.loginUserList.chargeType = this.DRSFilterForm.value.chargeType;
     this.docketService.loginUserList.drsId = this.drsData.drsNo;
     this.buildForm();
     this.getDeliveryDetail();
@@ -99,7 +102,7 @@ export class DRSUpdateListComponent {
         if (response && response.data) {
           const mTypeRow = response.data.find((x: any) => x.documentType === 'D');
           if (mTypeRow) {
-            const vendorTypes = mTypeRow.loading_VendorType.split(',');
+            const vendorTypes = mTypeRow.unLoading_VendorType.split(',');
             this.generalMasterService.getLoadingByDetail(vendorTypes);
           }
         }
@@ -124,25 +127,25 @@ export class DRSUpdateListComponent {
 
   updateValidatorsByLoadingBy(loadingBy: string) {
     const vendorCtrl = this.DRSSummaryForm.get('vendorCode');
-    const loadingChargeCtrl = this.DRSSummaryForm.get('LoadingCharge');
+    // const loadingChargeCtrl = this.DRSSummaryForm.get('LoadingCharge');
 
-    // 🔴 XX9 → NO validation
-    if (loadingBy === 'XX9') {
-      vendorCtrl?.clearValidators();
-      loadingChargeCtrl?.clearValidators();
-    }
-    // 🟢 Other cases → validation required
-    else {
-      vendorCtrl?.setValidators([Validators.required]);
-      loadingChargeCtrl?.setValidators([
-        Validators.required,
-        Validators.min(0.01)
-      ]);
-    }
+    // // 🔴 XX9 → NO validation
+    // if (loadingBy === 'XX9') {
+    //   vendorCtrl?.clearValidators();
+    //   loadingChargeCtrl?.clearValidators();
+    // }
+    // // 🟢 Other cases → validation required
+    // else {
+    //   // vendorCtrl?.setValidators([Validators.required]);
+    //   // loadingChargeCtrl?.setValidators([
+    //   //   Validators.required,
+    //   //   Validators.min(0.01)
+    //   // ]);
+    // }
 
-    // 🔄 refresh validity
-    vendorCtrl?.updateValueAndValidity();
-    loadingChargeCtrl?.updateValueAndValidity();
+    // // 🔄 refresh validity
+    // vendorCtrl?.updateValueAndValidity();
+    // loadingChargeCtrl?.updateValueAndValidity();
   }
 
 
@@ -196,7 +199,7 @@ export class DRSUpdateListComponent {
   }
 
   createDrsRow(data: any[]) {
-    data.forEach((item) => {
+    data.forEach((item: any, index: number) => {
       const [day, month, year] = item.booking_Date.split('/');
       const formattedDate = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
       const group = new FormGroup({
@@ -227,6 +230,9 @@ export class DRSUpdateListComponent {
         cboReason: new FormControl(),
         cboEmail: new FormControl(''),
         cboMobileNo: new FormControl(''),
+        luVendorTyp: new FormControl(null),
+        luVendorCode: new FormControl(null),
+        hccAmt: new FormControl(0),
         DELYPERSON: new FormControl(''),
         totalLoadingCharge: new FormControl(''),
         showReason: new FormControl(false),
@@ -245,14 +251,132 @@ export class DRSUpdateListComponent {
         DlyPerson: new FormControl(item.dlyPerson),
         DlyContactNo: new FormControl(item.dlyContactNo)
       });
+
+      const initialVendorType = group.get('luVendorTyp')?.value;
+      if (initialVendorType && initialVendorType !== 'XX9') {
+        group.get('luVendorCode')?.setValidators([Validators.required]);
+        group.get('ratetype')?.setValidators([Validators.required]);
+      } else {
+        group.get('luVendorCode')?.clearValidators();
+        group.get('ratetype')?.clearValidators();
+      }
+      group.get('luVendorCode')?.updateValueAndValidity({ emitEvent: false });
+      group.get('ratetype')?.updateValueAndValidity({ emitEvent: false });
       group.get('ratetype')?.valueChanges.subscribe(() => this.calculateCharge(group));
       group.get('newRate')?.valueChanges.subscribe(() => this.calculateCharge(group));
       group.get('deliveredPkgs')?.valueChanges.subscribe(() => {
         this.updateDeliveryValidators(group);
       });
       this.drsList.push(group);
+      group.get('deliveredPkgs')?.updateValueAndValidity({ emitEvent: false });
       this.updateDeliveryValidators(group);
+
+      const vendorTyp = group.value.luVendorTyp;
+      if (vendorTyp) {
+        this.vendorChargeHelper.fetchVendorListFor(vendorTyp, (list: any[]) => {
+          this.rowVendorList[index] = list;
+        });
+      }
     });
+  }
+
+  rowVendorList: any[][] = [];
+  headerVendorList: any[] = [];
+  public headerVendor: any = null;
+
+  onHeaderHccVendorTypeChange(event: any) {
+    this.headerVendor = null;
+    this.vendorChargeHelper.handleHeaderHccVendorTypeChange(
+      event?.codeId || event,
+      this.DRSSummaryForm.get('drsList') as FormArray,
+      this.rowVendorList,
+      (list: any[]) => this.headerVendorList = list,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      'U'
+    );
+
+    const type = event?.codeId || event;
+    const formArray = this.DRSSummaryForm.get('drsList') as FormArray;
+    formArray.controls.forEach((group: any) => {
+      group.get('newRate')?.patchValue(0);
+      const vendorCodeCtrl = group.get('luVendorCode');
+      const rateTypeCtrl = group.get('ratetype');
+      if (type && type !== 'XX9') {
+        vendorCodeCtrl?.setValidators([Validators.required]);
+        rateTypeCtrl?.setValidators([Validators.required]);
+      } else {
+        vendorCodeCtrl?.clearValidators();
+        rateTypeCtrl?.clearValidators();
+      }
+      vendorCodeCtrl?.updateValueAndValidity({ emitEvent: false });
+      rateTypeCtrl?.updateValueAndValidity({ emitEvent: false });
+    });
+  }
+
+  onHeaderRateTypeChange(event: any) {
+    this.vendorChargeHelper.handleHeaderRateTypeChange(
+      event?.codeId || event,
+      this.DRSSummaryForm.get('drsList') as FormArray,
+      'ratetype'
+    );
+  }
+
+  onHeaderVendorChange(event: any) {
+    this.vendorChargeHelper.handleHeaderVendorChange(
+      event?.value || event,
+      this.DRSSummaryForm.get('drsList') as FormArray,
+      'luVendorCode',
+      'U',
+      this.docketService.loginUserList.chargeType,
+      'ratetype',
+      'newRate',
+      'luVendorTyp'
+    );
+  }
+
+  onRowVendorTypeChange(event: any, index: number) {
+    this.vendorChargeHelper.handleRowVendorTypeChange(
+      event?.codeId || event,
+      index,
+      this.DRSSummaryForm.get('drsList') as FormArray,
+      this.rowVendorList,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      'U'
+    );
+
+    const formArray = this.DRSSummaryForm.get('drsList') as FormArray;
+    const group = formArray.at(index);
+    group.get('newRate')?.patchValue(0);
+    const vendorCodeCtrl = group.get('luVendorCode');
+    const rateTypeCtrl = group.get('ratetype');
+    const type = event?.codeId || event;
+    if (type && type !== 'XX9') {
+      vendorCodeCtrl?.setValidators([Validators.required]);
+      rateTypeCtrl?.setValidators([Validators.required]);
+    } else {
+      vendorCodeCtrl?.clearValidators();
+      rateTypeCtrl?.clearValidators();
+    }
+    vendorCodeCtrl?.updateValueAndValidity({ emitEvent: false });
+    rateTypeCtrl?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  onRowVendorCodeChange(event: any, index: number) {
+    this.vendorChargeHelper.handleRowVendorCodeChange(
+      event?.value || event?.vendor_Code || event,
+      index,
+      this.DRSSummaryForm.get('drsList') as FormArray,
+      'U', // Assuming Unload/delivery for DRS
+      this.docketService.loginUserList.chargeType,
+      'ratetype',
+      'newRate'
+    );
   }
 
   isRequired(controlName: string, index: number): boolean {
@@ -369,8 +493,8 @@ export class DRSUpdateListComponent {
   getDeliveryDetail() {
     const payload = {
       drsId: this.docketService.loginUserList.drsId,
-      loadBy: this.docketService.loginUserList.loadBy,
-      chargeType: this.docketService.loginUserList.chargeType,
+      loadBy: this.docketService.loginUserList.loadBy || null,
+      chargeType: this.docketService.loginUserList.chargeType || null,
       baseLocationCode: this.docketService.loginUserList.LocationCode
     };
     this.THCMasterService.getDeliveryUpdateData(payload).subscribe({
@@ -797,7 +921,9 @@ export class DRSUpdateListComponent {
       DeliveredTo: row.DeliveredTo,
       DlyContactNo: row.DlyContactNo,
       DlyPerson: row.DlyPerson || '',
-
+      hccAmt: row.hccAmt || 0,
+      luVendorTyp: row.luVendorTyp || '',
+      luVendorCode: row.luVendorCode || ''
     }));
 
     const formData = new FormData();

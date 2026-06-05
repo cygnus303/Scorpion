@@ -16,9 +16,9 @@
     <!-- Summary Strip -->
     <div class="summary-strip">
         <!-- Total Stock Update -->
-        <div class="summary-card c-blue cursor-pointer px-3 py-3" 
-             [class.active-card]="config.statusFilter === 'TotalStockUpdate'" 
-             (click)="filterByStatus('TotalStockUpdate')">
+        <div class="summary-card c-blue cursor-pointer px-3 py-3"
+            [class.active-card]="config.statusFilter === 'TotalStockUpdate'"
+            (click)="filterByStatus('TotalStockUpdate')">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="card-content">
                     <div class="s-label">Total Stock Update</div>
@@ -31,8 +31,7 @@
 
         <!-- LTL Manifest-->
         <div class="summary-card px-3 py-3 c-orange cursor-pointer"
-             [class.active-card]="config.statusFilter === 'LTLManifest'" 
-             (click)="filterByStatus('LTLManifest')">
+            [class.active-card]="config.statusFilter === 'LTLManifest'" (click)="filterByStatus('LTLManifest')">
             <div class="card-content">
                 <div class="s-label">LTL Manifest</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.ltlManifest | number }}</div>
@@ -43,8 +42,7 @@
 
         <!-- FTL Manifest -->
         <div class="summary-card px-3 py-3 c-teal cursor-pointer"
-             [class.active-card]="config.statusFilter === 'FTLManifest'" 
-             (click)="filterByStatus('FTLManifest')">
+            [class.active-card]="config.statusFilter === 'FTLManifest'" (click)="filterByStatus('FTLManifest')">
             <div class="card-content">
                 <div class="s-label">FTL Manifest</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.ftlManifest | number }}</div>
@@ -70,7 +68,7 @@
                     </div>
                     <span class="date-sep">→</span>
                     <div class="date-input-wrap" style="padding:0;">
-                        <input type="text" id="dateTo" bsDatepicker
+                        <input type="text" id="dateTo" bsDatepicker [minDate]="config.fromDateStr"
                             [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                             [(ngModel)]="config.toDateStr" (bsValueChange)="fetchData()"
                             style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
@@ -177,7 +175,7 @@
                                     (click)="openView(row.thcNo)">
                                     <i class="fa fa-eye"></i> View
                                 </button>
-                                <button  (click)="openStockUpdate(row)" 
+                                <button (click)="openStockUpdate(row)"
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
                                     [disabled]="row.pendingCNote === 0">
                                     📦 Stock Update
@@ -197,4 +195,4 @@
 </div>
 
 
-<app-stockupdate-popup #StockupdatePopupComponent (dataEmitter)="fetchData()"></app-stockupdate-popup>
+<app-stockupdate-popup #StockupdatePopupComponent (dataEmitter)="onDataUpdate()"></app-stockupdate-popup>

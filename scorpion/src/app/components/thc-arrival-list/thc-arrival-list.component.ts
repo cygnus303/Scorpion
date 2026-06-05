@@ -95,6 +95,13 @@ export class ThcArrivalListComponent {
     this.getTHCArrivalDetail();
   }
 
+  onDataUpdate() {
+    this.apiCache.clear();
+    this.fetchData();
+  }
+
+  private apiCache = new Map<string, any>();
+
    formatDate(date: any): string {
     const d = new Date(date);
     const year = d.getFullYear();
@@ -107,31 +114,44 @@ export class ThcArrivalListComponent {
     if (this.listSubscription) {
       this.listSubscription.unsubscribe();
     }
-    const payload={
-      brcd:this.docketService.loginUserList.LocationCode,
+    const payload = {
+      brcd: this.docketService.loginUserList.LocationCode,
       fromDate: this.formatDate(this.THCArrivalFilterForm.value.fromDate),
       toDate: this.formatDate(this.THCArrivalFilterForm.value.toDate),
       searchText: this.THCArrivalFilterForm.value.searchText,
       statusFilter: this.THCArrivalFilterForm.value.statusFilter,
       pageNumber: this.pagination.page,
-      pageSize:this.pagination.pageSize,
+      pageSize: this.pagination.pageSize,
       isDownload: false
+    };
+
+    const cacheKey = JSON.stringify(payload);
+    if (this.apiCache.has(cacheKey)) {
+      this.handleApiResponse(this.apiCache.get(cacheKey));
+      return;
     }
-     this.isLoading = true;
+
+    this.isLoading = true;
     this.listSubscription = this.PRSDRSApiService.getTHCArrivalList(payload).subscribe({
-      next : (response:any)=>{
-        if(response){
-          this.arrivalData= response.thcList;
-           this.pagination.totalRecords = response.pagination.totalRecords;
-          this.pagination.totalPages = response.pagination.totalPages;
-          this.summaryData = response.summary;
-          this.isLoading = false;
-        }
-      }, error: (err) => {
+      next: (response: any) => {
+        this.isLoading = false;
+        this.apiCache.set(cacheKey, response);
+        this.handleApiResponse(response);
+      },
+      error: (err) => {
         console.error(err);
         this.isLoading = false;
       }
-    })
+    });
+  }
+
+  private handleApiResponse(response: any) {
+    if (response) {
+      this.arrivalData = response.thcList;
+      this.pagination.totalRecords = response.pagination.totalRecords;
+      this.pagination.totalPages = response.pagination.totalPages;
+      this.summaryData = response.summary;
+    }
   }
 
 

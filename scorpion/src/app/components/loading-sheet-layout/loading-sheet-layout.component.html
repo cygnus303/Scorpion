@@ -5,7 +5,8 @@
             Loading Sheet
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn background-color fw-bold text-light px-4 py-2 rounded" (click)="openLSUpdatePopup('','LS')">＋ Add Loading Sheet</button>
+            <button class="btn background-color fw-bold text-light px-4 py-2 rounded"
+                (click)="openLSUpdatePopup('','LS')">＋ Add Loading Sheet</button>
             <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="downloadXLS()" [disabled]="isCSVLoading">
                 <span *ngIf="!isCSVLoading"> <span class="fs-5 me-1">📥</span> Download XLS</span>
                 <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
@@ -90,7 +91,7 @@
                     </div>
                     <span class="date-sep">→</span>
                     <div class="date-input-wrap" style="padding:0;">
-                        <input type="text" bsDatepicker
+                        <input type="text" bsDatepicker [minDate]="config.fromDateStr"
                             [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                             [(ngModel)]="config.toDateStr" (bsValueChange)="fetchData()"
                             style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
@@ -220,10 +221,10 @@
                                     🔄 LS Update
                                 </button>
                                 <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
-                                    (click)="cancelLoadingSheet(row.lsNo)"  [disabled]="!row.isCancelAllow">
-                                   🚫 Cancel
+                                    (click)="cancelLoadingSheet(row.lsNo)" [disabled]="!row.isCancelAllow">
+                                    🚫 Cancel
                                 </button>
-                                <button (click)="openHHCDetails(row)" 
+                                <button (click)="openHHCDetails(row)"
                                     [disabled]="row.mfNo && row.loadingHCCNo && row.unloadingHCCNo"
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3">
                                     🏷 HCC
@@ -242,5 +243,5 @@
     </div>
 </div>
 
-<app-hcc-details #HCCDetailsComponent (dataEmitter)="fetchData()"></app-hcc-details>
-<app-lsupdate-popup #LSUpdatePopupComponent (dataEmitter)="fetchData()"></app-lsupdate-popup>
+<app-hcc-details #HCCDetailsComponent (dataEmitter)="onDataUpdate()"></app-hcc-details>
+<app-lsupdate-popup #LSUpdatePopupComponent (dataEmitter)="onDataUpdate()"></app-lsupdate-popup>

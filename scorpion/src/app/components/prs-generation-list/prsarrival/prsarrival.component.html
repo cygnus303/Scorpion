@@ -5,7 +5,7 @@
     </div>
 
     <div class="modal-body p-3 bg-white">
-        <div class="control-bar d-block gap-2">
+        <!-- <div class="control-bar d-block gap-2">
             <div class="row">
                 <div class="col-md-3 d-print-inline-block align-content-end">
                     <div class="d-flex gap-2">
@@ -35,11 +35,10 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div style="min-height: 500px;">
             <!-- Content Area -->
-            <div class="p-0"
-                *ngIf="arrivalData.loadBy && (arrivalData.chargeType || arrivalData.loadBy === 'XX5' || arrivalData.loadBy === 'XX9')">
+            <div class="p-0">
                 <form [formGroup]="prsArrivalForm">
                     <!-- <div class="cnote-entry-container"> -->
                     <!-- <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
@@ -110,7 +109,7 @@
                         </div>
                         <h3 class="pb-4 text-start appointment mt-2">Unloading Charge</h3>
                         <div class="row pb-3 pt-2">
-                            <div class="col-3">
+                            <!-- <div class="col-3">
                                 <div class="row align-items-center">
                                     <label class="col-sm-3 col-form-label text-end">Unload By:</label>
                                     <div class="col-sm-8 text-start">
@@ -126,8 +125,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            @if (['M', 'B', 'A','XX1','XX5'].includes(prsArrivalForm.get('LoadingBy')?.value)){
+                            </div> -->
+                            <!-- @if (['M', 'B', 'A','XX1','XX5'].includes(prsArrivalForm.get('LoadingBy')?.value)){
                             <div class="col-3">
                                 <div class="row">
                                     <label class="col-sm-4 col-form-label text-end">Vendor Code :</label>
@@ -151,8 +150,8 @@
                                     </div>
                                 </div>
                             </div>
-                            }
-                            <div class="col-3">
+                            } -->
+                            <!-- <div class="col-3">
                                 @if(['XX5'].includes(prsArrivalForm.get('LoadingBy')?.value)){
                                 <div class="row align-items-center">
                                     <label class="col-sm-3 col-form-label text-end">Rate :</label>
@@ -162,8 +161,8 @@
                                     </div>
                                 </div>
                                 }
-                            </div>
-                            @if (['M', 'A', 'XX5','XX8', 'B', 'XX1'].includes(prsArrivalForm.get('LoadingBy')?.value)){
+                            </div> -->
+                            <!-- @if (['M', 'A', 'XX5','XX8', 'B', 'XX1'].includes(prsArrivalForm.get('LoadingBy')?.value)){ -->
                             <div class="col-3">
                                 <div class="row">
                                     <label class="col-sm-5 col-form-label text-end">UnLoading Charge:</label>
@@ -178,7 +177,7 @@
                                     </div>
                                 </div>
                             </div>
-                            }
+                            <!-- } -->
                         </div>
                     </div>
                     <!-- </div> -->
@@ -188,16 +187,31 @@
                             <i class="fas fa-list me-2"></i>
                             PDC Detail
                         </div>
-                        <div class="table-wrapper position-relative pt-2" style="max-height: 400px; overflow-y: auto;">
-                            <table style="width:100%;border-collapse:collapse;font-size:13px;" 
-                            class="table table-bordered align-middle w-100 vertical-align">
-                                <thead class="table-secondary align-middle" style="position: sticky; top: 0; z-index: 1;">
+                        <!-- style="max-height: 400px; overflow-y: auto;" -->
+                        <div class="table-wrapper position-relative pt-2">
+                            <table style="width:100%;border-collapse:collapse;font-size:13px;"
+                                class="table table-bordered align-middle w-100 vertical-align">
+                                <thead class="table-secondary align-middle"
+                                    style="position: sticky; top: 0; z-index: 1;">
                                     <tr>
                                         <th>DocNO</th>
                                         <th>ORGNCD</th>
                                         <th>DESTCD</th>
                                         <th>PAYBAS</th>
-                                        <th> <ng-select class="clear-icon" formControlName="ratetype"
+                                        <th>HCC Vendor Type
+                                            <ng-select class="mt-1 clear-icon"
+                                                [items]="generalMasterService.loadingData" bindLabel="codeDesc"
+                                                bindValue="codeId" placeholder="Vendor Type"
+                                                (change)="onHeaderHccVendorTypeChange($event)"
+                                                [dropdownPosition]="'bottom'"></ng-select>
+                                        </th>
+                                        <th>Vendor
+                                            <ng-select class="mt-1 clear-icon remove-white-space"
+                                                [items]="headerVendorList" bindLabel="text" bindValue="value"
+                                                placeholder="Vendor" (change)="onHeaderVendorChange($event)"
+                                                [dropdownPosition]="'bottom'"></ng-select>
+                                        </th>
+                                        <th>Rate type <ng-select class="clear-icon" formControlName="ratetype"
                                                 bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type"
                                                 [items]="generalMasterService.chargeTypeData"
                                                 [readonly]="this.prsArrivalForm.value.LoadingBy ==='XX9' || this.prsArrivalForm.value.LoadingBy ==='XX5'"></ng-select>
@@ -228,14 +242,39 @@
                                         <td>{{ctrl.value.orgncd}}</td>
                                         <td>{{ctrl.value.destcd}}</td>
                                         <td>{{ctrl.value.paybas}}</td>
+                                        <td style="width:150px; max-width: 150px;">
+                                            <ng-select class="clear-icon" [items]="generalMasterService.loadingData"
+                                                formControlName="luVendorTyp" bindLabel="codeDesc" bindValue="codeId"
+                                                placeholder="Type" [dropdownPosition]="'bottom'"
+                                                (change)="onRowVendorTypeChange($event, i)">
+                                            </ng-select>
+                                        </td>
+                                        <td style="width:200px; max-width: 200px;">
+                                            <ng-select class="noFoundTextColor clear-icon remove-white-space" [ngClass]="{
+                                                    'required2': ctrl.get('luVendorTyp')?.value !== 'XX9',
+                                                    'border-danger': ctrl.get('luVendorCode')?.hasError('required') && ctrl.get('luVendorCode')?.touched
+                                                }" formControlName="luVendorCode" [items]="rowVendorList[i] || []"
+                                                bindLabel="text" [dropdownPosition]="'bottom'" bindValue="value"
+                                                placeholder="Vendor" (change)="onRowVendorCodeChange($event, i)">
+                                            </ng-select>
+                                            <div class="text-danger small mt-1 text-start"
+                                                *ngIf="ctrl.get('luVendorCode')?.hasError('required') && ctrl.get('luVendorCode')?.touched">
+                                                This field is required
+                                            </div>
+                                        </td>
                                         <td style="width:290px; max-width: 290px;">
                                             <ng-select class="clear-icon required2" formControlName="ratetype"
                                                 bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type"
                                                 [items]="generalMasterService.chargeTypeData"
-                                                [readonly]="this.prsArrivalForm.value.LoadingBy ==='XX9' || this.prsArrivalForm.value.LoadingBy ==='XX5'"></ng-select>
+                                                [ngClass]="{'border-danger': ctrl.get('ratetype')?.hasError('required') && ctrl.get('ratetype')?.touched}"
+                                                [readonly]="ctrl.value.luVendorTyp ==='XX9' || ctrl.value.luVendorTyp ==='XX5'"></ng-select>
+                                            <div class="text-danger small mt-1 text-start"
+                                                *ngIf="ctrl.get('ratetype')?.hasError('required') && ctrl.get('ratetype')?.touched">
+                                                This field is required
+                                            </div>
                                             <input type="text" class="form-control form-control-sm mt-1"
                                                 formControlName="newRate" appFocusNext
-                                                [readOnly]="this.prsArrivalForm.value.LoadingBy === 'XX5'"
+                                                [readOnly]="ctrl.value.luVendorTyp === 'XX5' || ctrl.value.luVendorTyp === 'XX9'"
                                                 (focus)="clearNewRateOnFocus(i)" (blur)="resetNewRateOnBlur(i)" />
                                             <div class="text-danger small mt-1" *ngIf="ctrl.get('rateError')?.value">
                                                 {{ ctrl.get('rateError')?.value }}
@@ -260,7 +299,7 @@
                 <div class="d-flex justify-content-end text-end bg-secondary-subtle p-4 gap-2">
                     <!-- <button class="btn btn-secondary controls"> <i class="fas fa-arrow-left"></i>&nbsp; Back to PRS Arrival </button> -->
                     <button type="button" id="btnSubmit" class="btn btn-success controls" (click)="onSubmit()"
-                        [disabled]="isSubmitting || isRedirect"><i class="fas fa-check"></i>&nbsp; Update PRS Arrival
+                        [disabled]="isSubmitting"><i class="fas fa-check"></i>&nbsp; Update PRS Arrival
                         Data</button>
                 </div>
                 <div *ngIf="isSubmitting" class="loading-overlay">
@@ -272,14 +311,14 @@
             </div>
 
             <!-- Empty State Prompt -->
-            <div class="p-5 text-center text-muted d-flex align-items-center justify-content-center"
+            <!-- <div class="p-5 text-center text-muted d-flex align-items-center justify-content-center"
                 *ngIf="!arrivalData.loadBy || (!arrivalData.chargeType && arrivalData.loadBy !== 'XX5' && arrivalData.loadBy !== 'XX9')"
                 style="min-height: 500px;">
                 <div class="py-5">
                     <i class="fas fa-hand-pointer fa-3x mb-3 opacity-25"></i>
                     <p>Please select <b>Loading By</b> and <b>Charge Type</b> to view arrival details.</p>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </ng-template>

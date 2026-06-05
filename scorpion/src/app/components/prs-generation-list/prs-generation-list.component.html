@@ -5,7 +5,8 @@
             PRS Generation
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn background-color fw-bold text-light px-4 py-2 rounded" (click)="openAddPRSDRS()" *ngIf="!isHQTR">
+            <button class="btn background-color fw-bold text-light px-4 py-2 rounded" (click)="openAddPRSDRS()"
+                *ngIf="!isHQTR">
                 <span class="fs-5 me-1">➕</span> Add PRS
             </button>
             <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="downloadCSV()">
@@ -103,7 +104,7 @@
                     </div>
                     <span class="date-sep">→</span>
                     <div class="date-input-wrap" style="padding:0;">
-                        <input type="text" id="dateTo" bsDatepicker
+                        <input type="text" id="dateTo" bsDatepicker [minDate]="config.fromDateStr"
                             [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                             [(ngModel)]="config.toDateStr" (ngModelChange)="fetchData()"
                             style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
@@ -216,7 +217,8 @@
                                     ✏️ Edit
                                 </button>
                                 <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
-                                    [disabled]="!row.isCancelAllow || row.loadingHCC || row.unLoadingHCC || row.status ==='Billed'" (click)="onCancel(row.pdcno)">
+                                    [disabled]="!row.isCancelAllow || row.loadingHCC || row.unLoadingHCC || row.status ==='Billed'"
+                                    (click)="onCancel(row.pdcno)">
                                     🚫 Cancel
                                 </button>
                                 <button *ngIf="!isHQTR"

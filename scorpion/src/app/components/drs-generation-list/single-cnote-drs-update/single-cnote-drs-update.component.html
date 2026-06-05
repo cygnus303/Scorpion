@@ -76,24 +76,45 @@
                 </div>
                 <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
                 <div style="border:1px solid var(--border);border-radius:3px; ">
-                    <div>
+                    <div class="table-responsive" style="max-height: 500px; overflow: auto;">
                         <table style="width:100%;border-collapse:collapse;font-size:13px;"
-                            class="data-table align-middle">
-                            <thead style="position: sticky; top: 0; z-index: 1;">
+                            class="data-table align-middle text-nowrap">
+                            <thead style="position: sticky; top: 0; z-index: 2;">
                                 <tr class="input-background-color" style="border-bottom:1px solid var(--border);">
-                                    <th class="text-center">IS Bad Pod</th>
+                                    <th class="text-center" style="min-width: 110px;">IS Bad Pod</th>
                                     <th class="text-center">AXB Bkg. Dt.</th>
                                     <th class="text-center">Bkg-Dely Dest.Loc Pay Basis</th>
                                     <th class="text-center">Cnor/Cnee</th>
                                     <th class="text-center">Pkgs Pending/Arrived/Booked</th>
                                     <th class="text-center">Committed Dely. Dt</th>
-                                    <th class="text-center">Pkgs.Dely</th>
+                                    <th class="text-center" style="min-width: 160px;">HCC Vendor Type
+                                        <ng-select class="mt-1 clear-icon" [items]="generalMasterService.loadingData"
+                                            bindLabel="codeDesc" bindValue="codeId" placeholder="Vendor Type"
+                                            (change)="onHeaderHccVendorTypeChange($event)"
+                                            [dropdownPosition]="'bottom'">
+                                        </ng-select>
+                                    </th>
+                                    <th class="text-center" style="min-width: 200px;">HCC VendorCode
+                                        <ng-select class="mt-1 clear-icon  remove-white-space"
+                                            [items]="headerVendorList" bindLabel="text" bindValue="value"
+                                            placeholder="Vendor" [(ngModel)]="headerVendor" [ngModelOptions]="{standalone: true}"
+                                            (change)="onHeaderVendorChange($event)"
+                                            [dropdownPosition]="'bottom'">
+                                        </ng-select>
+                                    </th>
+                                    <th class="text-center" style="min-width: 150px;">Rate Type
+                                        <ng-select class="clear-icon mt-1" bindLabel="codeDesc" bindValue="codeId"
+                                            placeholder="Enter Type" appFocusNext
+                                            [items]="generalMasterService.chargeTypeData"
+                                            (change)="onHeaderRateTypeChange($event)"></ng-select>
+                                    </th>
+                                    <th class="text-center" style="min-width: 120px;">Pkgs.Dely</th>
                                     <!-- <th class="text-center">Delivery Control Loc</th> -->
                                 </tr>
                             </thead>
                             <tbody formArrayName="cnoteList">
                                 <tr *ngIf="isLoading">
-                                    <td colspan="15" class="text-center py-4">
+                                    <td colspan="18" class="text-center py-4">
                                         <div class="spinner-border text-primary" role="status"></div>
                                         <div class="mt-2">Fetching data...</div>
                                     </td>
@@ -103,7 +124,7 @@
                                         [formGroupName]="i">
                                     </ng-container>
                                     <tr *ngIf="cnoteList.length === 0">
-                                        <td colspan="15" class="text-center text-muted py-3">
+                                        <td colspan="18" class="text-center text-muted py-3">
                                             No data found
                                         </td>
                                     </tr>
@@ -162,11 +183,54 @@
                                             {{ row.get('comm_Dely_Dt')?.value }}
                                         </td>
 
+                                        <td>
+                                            <ng-select class="clear-icon" [items]="generalMasterService.loadingData"
+                                                formControlName="luVendorTyp" bindLabel="codeDesc" bindValue="codeId"
+                                                placeholder="Type" [dropdownPosition]="'bottom'"
+                                                (change)="onRowVendorTypeChange($event, i)">
+                                            </ng-select>
+                                        </td>
+                                        <td>
+                                            <ng-select class="noFoundTextColor clear-icon remove-white-space" [ngClass]="{
+                                                    'required2': row.get('luVendorTyp')?.value !== 'XX9',
+                                                    'border-danger': row.get('luVendorCode')?.hasError('required') && row.get('luVendorCode')?.touched
+                                                }" formControlName="luVendorCode" [items]="rowVendorList[i] || []"
+                                                bindLabel="text" bindValue="value" placeholder="Vendor"
+                                                [dropdownPosition]="'bottom'"
+                                                (change)="onRowVendorCodeChange($event, i)">
+                                            </ng-select>
+                                            <div class="text-danger small mt-1 text-start"
+                                                *ngIf="row.get('luVendorCode')?.hasError('required') && row.get('luVendorCode')?.touched">
+                                                This field is required
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <ng-select class="clear-icon mb-1" formControlName="ratetype"
+                                                bindLabel="codeDesc" bindValue="codeId" placeholder="Enter rateType"
+                                                [items]="generalMasterService.chargeTypeData"
+                                                [ngClass]="{'border-danger': row.get('ratetype')?.hasError('required') && row.get('ratetype')?.touched}"
+                                                [readonly]="row.value.luVendorTyp ==='XX9' || row.value.luVendorTyp ==='XX5'"
+                                                appFocusNext></ng-select>
+                                            <div class="text-danger small mt-1 text-start"
+                                                *ngIf="row.get('ratetype')?.hasError('required') && row.get('ratetype')?.touched">
+                                                This field is required
+                                            </div>
+                                            <input type="text" class="form-control" formControlName="newRate"
+                                                (blur)="onRateChange(row)"
+                                                [readOnly]="row.value.luVendorTyp === 'XX5' || row.value.luVendorTyp === 'XX9'"
+                                                oninput="this.value = this.value.replace(/[^0-9.]/g,'');">
+                                            <span class="text-danger small d-flex justify-content-start"
+                                                *ngIf="row.get('rateError')?.value">
+                                                {{ row.get('rateError')?.value }}
+                                            </span>
+                                        </td>
+
                                         <!-- INPUT BIND -->
                                         <td>
                                             <div class="d-flex flex-column">
                                                 <input class="form-control form-control-sm required2"
-                                                    formControlName="PKGSDELIVERED" placeholder="Pkgs.Dely"  oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                                                    formControlName="PKGSDELIVERED" placeholder="Pkgs.Dely"
+                                                    oninput="this.value = this.value.replace(/[^0-9]/g,'');"
                                                     (input)="onDeliveredInput($event, row)">
                                             </div>
                                             <div class="text-danger mt-1" *ngIf="row.get('PKGSDELIVERED')?.hasError('required') 
@@ -192,7 +256,7 @@
 
                                     <!-- 🔹 SUB ROW (DESIGN SAME) -->
                                     <tr style="border-bottom: 1px solid rgb(190, 190, 190);">
-                                        <td colspan="15">
+                                        <td colspan="18">
                                             <div
                                                 class="d-flex justify-content-between align-items-center flex-wrap gap-3 ">
 
