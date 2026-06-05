@@ -124,12 +124,18 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
     }
   }
 
+  onDataUpdate() {
+    this.apiCache.clear();
+    this.fetchData();
+  }
+
+  private apiCache = new Map<string, any>();
+
 
   fetchLoadingSheetList() {
     if (this.listSubscription) {
       this.listSubscription.unsubscribe();
     }
-    this.isLoading = true;
 
     const payload = {
       fromDate: new Date(this.config.fromDateStr).toISOString(),
@@ -143,23 +149,19 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
       isDownload: false
     };
 
+    const cacheKey = JSON.stringify(payload);
+    if (this.apiCache.has(cacheKey)) {
+      this.handleApiResponse(this.apiCache.get(cacheKey));
+      return;
+    }
+
+    this.isLoading = true;
+
     this.listSubscription = this.loadingSheetApiService.getLoadingSheetListing(payload).subscribe({
       next: (response: any) => {
         this.isLoading = false;
-        if (response && response.data) {
-          this.loadingSheetData = response.data;
-          if (response.pagination) {
-            this.config.totalRecords = response.pagination.totalRecords;
-            this.config.totalPages = response.pagination.totalPages;
-          }
-          if (response.summary) {
-            this.summaryData = response.summary;
-          }
-        } else {
-          this.loadingSheetData = [];
-          this.config.totalRecords = 0;
-          this.config.totalPages = 1;
-        }
+        this.apiCache.set(cacheKey, response);
+        this.handleApiResponse(response);
       },
       error: (err: any) => {
         this.isLoading = false;
@@ -167,6 +169,23 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
         this.loadingSheetData = [];
       }
     });
+  }
+
+  private handleApiResponse(response: any) {
+    if (response && response.data) {
+      this.loadingSheetData = response.data;
+      if (response.pagination) {
+        this.config.totalRecords = response.pagination.totalRecords;
+        this.config.totalPages = response.pagination.totalPages;
+      }
+      if (response.summary) {
+        this.summaryData = response.summary;
+      }
+    } else {
+      this.loadingSheetData = [];
+      this.config.totalRecords = 0;
+      this.config.totalPages = 1;
+    }
   }
 
   downloadXLS() {
@@ -299,7 +318,7 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
           next: (response: any) => {
             if (response) {
               this.sweetAlertService.success(`Loading Sheet ${response.lsNo} ${response.message}`);
-              this.fetchLoadingSheetList(); // Refresh the list
+              this.onDataUpdate(); // Refresh the list
             } else {
               this.sweetAlertService.error('Failed to cancel Loading Sheet');
             }

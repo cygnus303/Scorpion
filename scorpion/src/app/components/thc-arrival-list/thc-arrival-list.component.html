@@ -17,7 +17,8 @@
     <!-- Summary Strip -->
     <div class="summary-strip">
         <div class="summary-card px-3 py-3 c-blue cursor-pointer"
-            [class.active-card]="THCArrivalFilterForm.get('statusFilter')?.value === 'All'" (click)="filterByStatus('All')">
+            [class.active-card]="THCArrivalFilterForm.get('statusFilter')?.value === 'All'"
+            (click)="filterByStatus('All')">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="card-content">
                     <div class="s-label">Total THC Arrival</div>
@@ -30,7 +31,8 @@
 
         <!-- PENDING FOR ARRIVAL -->
         <div class="summary-card px-3 py-3 c-orange cursor-pointer"
-            [class.active-card]="THCArrivalFilterForm.get('statusFilter')?.value === 'Pending For Arrival'" (click)="filterByStatus('Pending For Arrival')">
+            [class.active-card]="THCArrivalFilterForm.get('statusFilter')?.value === 'Pending For Arrival'"
+            (click)="filterByStatus('Pending For Arrival')">
             <div class="card-content">
                 <div class="s-label">Pending for Arrival</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.pendingArrival || 0 }}</div>
@@ -40,7 +42,8 @@
         </div>
 
         <div class="summary-card px-3 py-3 c-teal cursor-pointer"
-            [class.active-card]="THCArrivalFilterForm.get('statusFilter')?.value === 'Arrival Completed'" (click)="filterByStatus('Arrival Completed')">
+            [class.active-card]="THCArrivalFilterForm.get('statusFilter')?.value === 'Arrival Completed'"
+            (click)="filterByStatus('Arrival Completed')">
             <div class="card-content">
                 <div class="s-label">Arrived</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.arrived || 0 }}</div>
@@ -50,7 +53,8 @@
         </div>
 
         <div class="summary-card px-3 py-3 c-green cursor-pointer"
-            [class.active-card]="THCArrivalFilterForm.get('statusFilter')?.value === 'HCC Generated'" (click)="filterByStatus('HCC Generated')">
+            [class.active-card]="THCArrivalFilterForm.get('statusFilter')?.value === 'HCC Generated'"
+            (click)="filterByStatus('HCC Generated')">
             <div class="card-content">
                 <div class="s-label">HCC Generated</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.hccGenerated || 0 }}</div>
@@ -68,14 +72,14 @@
                 <div class="control-bar border-0 shadow-none mb-0">
                     <div class="filter-group">
                         <span class="filter-label">🔍 Search</span>
-                        <input type="text" placeholder="search..." class="filter-bar" style="width:200px;"  formControlName="searchText"
-                           >
+                        <input type="text" placeholder="search..." class="filter-bar" style="width:200px;"
+                            formControlName="searchText">
 
                     </div>
                     <div class="date-range-group">
                         <span class="date-label">Date Range</span>
                         <div class="date-input-wrap" style="padding:0;">
-                            <input type="text" id="dateFrom" bsDatepicker  formControlName="fromDate"
+                            <input type="text" id="dateFrom" bsDatepicker formControlName="fromDate"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                                 style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
                             <span
@@ -84,6 +88,7 @@
                         <span class="date-sep">→</span>
                         <div class="date-input-wrap" style="padding:0;">
                             <input type="text" id="dateTo" bsDatepicker formControlName="toDate"
+                                [minDate]="THCArrivalFilterForm.get('fromDate')?.value"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                                 style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
                             <span
@@ -93,8 +98,8 @@
                     <div class="divider-v"></div>
                     <div class="filter-group">
                         <span class="filter-label">Status</span>
-                        <ng-select type="text" placeholder="Status" class="custom-status-select clear-icon" formControlName="statusFilter"
-                            [items]="statusList" bindLabel="label" bindValue="value">
+                        <ng-select type="text" placeholder="Status" class="custom-status-select clear-icon"
+                            formControlName="statusFilter" [items]="statusList" bindLabel="label" bindValue="value">
                         </ng-select>
                     </div>
                 </div>
@@ -141,17 +146,20 @@
                     <tr *ngFor="let data of arrivalData; let i = index">
                         <td class="text-center text-muted fs-7">{{ i + 1 }}</td>
                         <td>
-                            <div class="fw-bold text-primary cursor-pointer" (click)="openThcView(data.thcNo)"><a>{{ data.thcNo }}</a></div>
-                            <div class="text-muted fs-7 mt-1">{{ data.thcDate | date:'dd-MMM-yy'  }}</div>
+                            <div class="fw-bold text-primary cursor-pointer" (click)="openThcView(data.thcNo)"><a>{{
+                                    data.thcNo }}</a></div>
+                            <div class="text-muted fs-7 mt-1">{{ data.thcDate | date:'dd-MMM-yy' }}</div>
                         </td>
-                        
+
                         <td class="text-center" style="width: 140px;">
                             <div class="d-flex gap-2 flex-column">
                                 <span class="d-block rounded p-1 fw-bold mb-1">{{ data.totalDockets}}</span>
                             </div>
                         </td>
                         <td class="text-center">
-                            <span class="fw-bold cursor-pointer" [ngClass]="(data.mfNo) ? 'text-primary fw-bold' : 'text-muted'" (click)="openMFView(data.mfNo)">{{ data.mfNo || '—' }}</span>
+                            <span class="fw-bold cursor-pointer"
+                                [ngClass]="(data.mfNo) ? 'text-primary fw-bold' : 'text-muted'"
+                                (click)="openMFView(data.mfNo)">{{ data.mfNo || '—' }}</span>
                         </td>
                         <td class="text-center">
                             <div class="d-flex gap-2 flex-column">
@@ -163,42 +171,41 @@
                         </td>
                         <td class="text-center" style="width: 110px !important;">
                             <span class="px-4 py-2 cursor-pointer">
-                            {{ (data.atd | date:'dd-MM-yy') || '—' }}
+                                {{ (data.atd | date:'dd-MM-yy') || '—' }}
                             </span>
                         </td>
                         <td class="text-center cursor-pointer" style="width: 110px !important;">
-                            <span class="px-4 py-2 cursor-pointer"
-                               >
-                               {{data.eta | date:'dd-MM-yy'}}
+                            <span class="px-4 py-2 cursor-pointer">
+                                {{data.eta | date:'dd-MM-yy'}}
                             </span>
                         </td>
                         <td class="text-center cursor-pointer">
-                            <span class="px-4 py-2"
-                                >
-                              {{data.previousLocation}}  
+                            <span class="px-4 py-2">
+                                {{data.previousLocation}}
                             </span>
                         </td>
-                        <td class="text-center"  style="width: 110px !important;">
-                            <span class="px-2 py-1 d-inline-flex align-items-center justify-content-center" >
-                                 {{ data.route?.replace(',', ' → ') }}
+                        <td class="text-center" style="width: 110px !important;">
+                            <span class="px-2 py-1 d-inline-flex align-items-center justify-content-center">
+                                {{ data.route?.replace(',', ' → ') }}
                             </span>
                         </td>
                         <td class="text-center">
                             <span class="px-4 py-2 cursor-pointer"
-                            [ngClass]="(data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
+                                [ngClass]="(data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
                                 (click)="data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC'? openHCCModal(data.loadingHCCNo) : null">
-                            <a *ngIf="data.loadingHCCNo">{{ data.loadingHCCNo}}</a>
-                            <span *ngIf="!data.loadingHCCNo">NO HCC</span></span>
+                                <a *ngIf="data.loadingHCCNo">{{ data.loadingHCCNo}}</a>
+                                <span *ngIf="!data.loadingHCCNo">NO HCC</span></span>
                         </td>
                         <td class="text-center">
                             <span class="px-4 py-2 cursor-pointer"
-                            [ngClass]="(data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
+                                [ngClass]="(data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
                                 (click)="data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC'? openHCCModal(data.unloadingHCCNo) : null">
-                             <a *ngIf="data.unloadingHCCNo">{{ data.unloadingHCCNo}}</a>
-                            <span *ngIf="!data.unloadingHCCNo">NO HCC</span></span>
+                                <a *ngIf="data.unloadingHCCNo">{{ data.unloadingHCCNo}}</a>
+                                <span *ngIf="!data.unloadingHCCNo">NO HCC</span></span>
                         </td>
                         <td class="text-center">
-                            <span class="pill-badge px-2 py-1 cursor-pointer"  [ngClass]="getStatusClass(data.status)">{{ data.status }}</span>
+                            <span class="pill-badge px-2 py-1 cursor-pointer" [ngClass]="getStatusClass(data.status)">{{
+                                data.status }}</span>
                         </td>
                         <td style="width: 200px !important;">
                             <div class="d-flex flex-wrap gap-2 justify-content-center">
@@ -209,7 +216,7 @@
                                 </button>
                                 <button
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
-                                     (click)="openThcArrival(data)">
+                                    (click)="openThcArrival(data)">
                                     🏷 THC Arrival
                                 </button>
                             </div>
@@ -225,4 +232,4 @@
     </div>
 </div>
 
-<app-thc-arrival-popup #ThcArrivalPopupComponent (dataEmitter)="fetchData()"></app-thc-arrival-popup>
+<app-thc-arrival-popup #ThcArrivalPopupComponent (dataEmitter)="onDataUpdate()"></app-thc-arrival-popup>

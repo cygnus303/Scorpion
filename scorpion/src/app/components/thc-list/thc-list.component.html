@@ -16,7 +16,7 @@
     </div>
 
     <!-- Summary Strip -->
-     <div class="summary-strip">
+    <div class="summary-strip">
         <div class="summary-card px-3 py-3 c-blue cursor-pointer"
             [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'All'" (click)="filterByStatus('All')">
             <div class="d-flex justify-content-between align-items-center">
@@ -30,7 +30,8 @@
         </div>
 
         <div class="summary-card px-3 py-3 c-orange cursor-pointer"
-           [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Departed'" (click)="filterByStatus('Departed')">
+            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Departed'"
+            (click)="filterByStatus('Departed')">
             <div class="card-content">
                 <div class="s-label">Departed</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ 0}}</div>
@@ -40,7 +41,8 @@
         </div>
 
         <div class="summary-card px-3 py-3 c-teal cursor-pointer"
-            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Completed Journey'" (click)="filterByStatus('Completed Journey')">
+            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Completed Journey'"
+            (click)="filterByStatus('Completed Journey')">
             <div class="card-content">
                 <div class="s-label">Completed Journey</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ 0}}</div>
@@ -50,10 +52,11 @@
         </div>
 
         <div class="summary-card px-3 py-3 c-red cursor-pointer"
-            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Cancelled'" (click)="filterByStatus('Cancelled')">
+            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Cancelled'"
+            (click)="filterByStatus('Cancelled')">
             <div class="card-content">
                 <div class="s-label">Cancelled</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{  0 }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ 0 }}</div>
                 <div class="small text-body-tertiary">Cancelled today</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🚫</div>
@@ -61,7 +64,8 @@
 
         <!-- PRS BILLED -->
         <div class="summary-card px-3 py-3 c-purple cursor-pointer"
-           [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Billed'" (click)="filterByStatus('Billed')">
+            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Billed'"
+            (click)="filterByStatus('Billed')">
             <div class="card-content">
                 <div class="s-label">Billed</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ 0 }}</div>
@@ -70,7 +74,7 @@
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🧾</div>
         </div>
 
-    </div> 
+    </div>
 
     <div>
         <form [formGroup]="THCFilterForm">
@@ -78,14 +82,14 @@
                 <div class="control-bar border-0 shadow-none mb-0">
                     <div class="filter-group">
                         <span class="filter-label">🔍 Search</span>
-                        <input type="text" placeholder="search..." class="filter-bar" style="width:200px;"  formControlName="searchText"
-                           >
+                        <input type="text" placeholder="search..." class="filter-bar" style="width:200px;"
+                            formControlName="searchText">
 
                     </div>
                     <div class="date-range-group">
                         <span class="date-label">Date Range</span>
                         <div class="date-input-wrap" style="padding:0;">
-                            <input type="text" id="dateFrom" bsDatepicker  formControlName="fromDate"
+                            <input type="text" id="dateFrom" bsDatepicker formControlName="fromDate"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                                 style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
                             <span
@@ -94,6 +98,7 @@
                         <span class="date-sep">→</span>
                         <div class="date-input-wrap" style="padding:0;">
                             <input type="text" id="dateTo" bsDatepicker formControlName="toDate"
+                                [minDate]="THCFilterForm.get('fromDate')?.value"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
                                 style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
                             <span
@@ -103,8 +108,8 @@
                     <div class="divider-v"></div>
                     <div class="filter-group">
                         <span class="filter-label">Status</span>
-                        <ng-select type="text" placeholder="Status" class="custom-status-select clear-icon" formControlName="statusFilter"
-                            [items]="statusList" bindLabel="label" bindValue="value">
+                        <ng-select type="text" placeholder="Status" class="custom-status-select clear-icon"
+                            formControlName="statusFilter" [items]="statusList" bindLabel="label" bindValue="value">
                         </ng-select>
                     </div>
                 </div>
@@ -131,7 +136,7 @@
                         <th class="text-center" style="width: 250px !important;">Actions</th>
                     </tr>
                 </thead>
-                 <tbody *ngIf="isLoading">
+                <tbody *ngIf="isLoading">
                     <tr>
                         <td colspan="14" class="text-center py-5">
                             <div class="spinner-border text-primary" role="status">
@@ -152,17 +157,20 @@
                     <tr *ngFor="let data of thcData; let i = index">
                         <td class="text-center text-muted fs-7">{{ i + 1 }}</td>
                         <td>
-                            <div class="fw-bold text-primary cursor-pointer" (click)="openThcView(data.thcNo)"><a>{{ data.thcNo }}</a></div>
-                            <div class="text-muted fs-7 mt-1">{{ data.thcDate | date:'dd-MMM-yy'  }}</div>
+                            <div class="fw-bold text-primary cursor-pointer" (click)="openThcView(data.thcNo)"><a>{{
+                                    data.thcNo }}</a></div>
+                            <div class="text-muted fs-7 mt-1">{{ data.thcDate | date:'dd-MMM-yy' }}</div>
                         </td>
-                        
+
                         <td class="text-center" style="width: 120px;">
                             <div class="d-flex gap-2 flex-column">
                                 <span class="d-block rounded p-1 fw-bold mb-1">{{ data.totalDockets}}</span>
                             </div>
                         </td>
                         <td class="text-center">
-                            <span class="fw-bold cursor-pointer" [ngClass]="(data.mfNo) ? 'text-primary fw-bold' : 'text-muted'" (click)="openMFView(data.mfNo)">{{ data.mfNo || '—' }}</span>
+                            <span class="fw-bold cursor-pointer"
+                                [ngClass]="(data.mfNo) ? 'text-primary fw-bold' : 'text-muted'"
+                                (click)="openMFView(data.mfNo)">{{ data.mfNo || '—' }}</span>
                         </td>
                         <td class="text-center">
                             <div class="d-flex gap-2 flex-column">
@@ -172,59 +180,57 @@
                                     style="max-width: 180px;" [title]="data.vendorName">{{ data.vendorName }}</span>
                             </div>
                         </td>
-                        <td class="text-center fs-7"
-                          >
-                            {{ data.vehicleNo  }}</td>
+                        <td class="text-center fs-7">
+                            {{ data.vehicleNo }}</td>
                         <td class="text-center cursor-pointer">
-                             <div class="d-flex gap-2 flex-column">
+                            <div class="d-flex gap-2 flex-column">
                                 <span class="d-block rounded p-1 fw-bold mb-1" *ngIf="data.serviceType">
                                     {{ data.serviceType}}</span>
                                 <span class="fw-bold text-muted d-inline-block" *ngIf="data.routeMode"
                                     style="max-width: 180px;" [title]="data.routeMode">{{ data.routeMode }}</span>
                             </div>
                         </td>
-                          <td class="text-center cursor-pointer">
-                            <span class="px-4 py-2 cursor-pointer"
-                               >
-                               {{data.departureDate | date:'dd-MMM-yy'}} &{{data.departureTime}}
+                        <td class="text-center cursor-pointer">
+                            <span class="px-4 py-2 cursor-pointer">
+                                {{data.departureDate | date:'dd-MMM-yy'}} &{{data.departureTime}}
                             </span>
                         </td>
                         <td class="text-center cursor-pointer">
-                            <span class="px-4 py-2"
-                                >
-                              {{data.tobhCode}}  
+                            <span class="px-4 py-2">
+                                {{data.tobhCode}}
                             </span>
                         </td>
                         <td class="text-center">
-                            <span class="pill-badge px-2 py-1" >
+                            <span class="pill-badge px-2 py-1">
                                 {{ data.routeName }}
                             </span>
                         </td>
                         <td class="text-center">
                             <span class="fw-bold text-primary cursor-pointer"
-                            [ngClass]="(data.hccNo && data.hccNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
-                                (click)="data.hccNo && data.hccNo !== 'NO HCC'? openHCCModal(data.hccNo) : null">{{ data.hccNo || '—' }}</span>
+                                [ngClass]="(data.hccNo && data.hccNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
+                                (click)="data.hccNo && data.hccNo !== 'NO HCC'? openHCCModal(data.hccNo) : null">{{
+                                data.hccNo || '—' }}</span>
                         </td>
-                       
+
                         <td class="text-center">
                             <span class="fw-bold text-primary cursor-pointer">{{ data.UnloadingSheetNo || '—' }}</span>
                         </td>
                         <td class="text-center">
-                            <span class="pill-badge px-2 py-1 cursor-pointer"  [ngClass]="getStatusClass(data.status)">{{ data.status }}</span>
+                            <span class="pill-badge px-2 py-1 cursor-pointer" [ngClass]="getStatusClass(data.status)">{{
+                                data.status }}</span>
                         </td>
                         <td style="width: 250px !important;">
                             <div class="d-flex flex-wrap gap-2 justify-content-center">
                                 <button
-                                    class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3"
-                                    >
+                                    class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3">
                                     <i class="fa fa-eye"></i> View
                                 </button>
-                               <button 
-                                    class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3" (click)="openEditPopup(data)">
+                                <button
+                                    class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3"
+                                    (click)="openEditPopup(data)">
                                     ✏️ Edit
                                 </button>
-                                <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
-                                   >
+                                <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3">
                                     🚫 Cancel
                                 </button>
                             </div>
@@ -234,10 +240,8 @@
             </table>
         </div>
         <app-pagination [page]="pagination.page" [pageSize]="pagination.pageSize"
-            [totalRecords]="pagination.totalRecords" [totalPages]="pagination.totalPages"
-            >
+            [totalRecords]="pagination.totalRecords" [totalPages]="pagination.totalPages">
         </app-pagination>
     </div>
 </div>
-<app-thc-edit #ThcEditComponent ></app-thc-edit>
-
+<app-thc-edit #ThcEditComponent></app-thc-edit>

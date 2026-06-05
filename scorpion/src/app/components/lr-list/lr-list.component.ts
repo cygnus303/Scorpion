@@ -93,9 +93,11 @@ openTrackIndex: number | null = null;
     return icons[status] ?? '⏳';
   }
 
+  private apiCache = new Map<string, any>();
+
   fetchLRList() {
     if (this.listSubscription) { this.listSubscription.unsubscribe(); }
-    this.isLoading = true;
+
     const payload = {
       fromDate: new Date(this.config.fromDateStr).toISOString(),
       toDate: new Date(this.config.toDateStr).toISOString(),
@@ -106,27 +108,19 @@ openTrackIndex: number | null = null;
       isDownload: false,
       searchText: this.config.searchText || ''
     };
+
+    const cacheKey = JSON.stringify(payload);
+    if (this.apiCache.has(cacheKey)) {
+      this.handleApiResponse(this.apiCache.get(cacheKey));
+      return;
+    }
+
+    this.isLoading = true;
     this.listSubscription = this.lrService.getLRList(payload).subscribe({
       next: (response: any) => {
         this.isLoading = false;
-        if (response && response.data) {
-          this.LRData = response.data;
-
-          if (response.pagination) {
-            this.config.totalRecords = response.pagination.totalRecords || this.LRData.length;
-            this.config.totalPages = response.pagination.totalPages || 1;
-            this.config.page = response.pagination.currentPage || 1;
-            this.config.pageSize = response.pagination.pageSize || 50;
-          }
-
-          if (response.summary) {
-            this.summaryData = response.summary;
-          }
-        } else {
-          this.LRData = [];
-          this.config.totalRecords = 0;
-          this.config.totalPages = 1;
-        }
+        this.apiCache.set(cacheKey, response);
+        this.handleApiResponse(response);
       },
       error: (err: any) => {
         this.isLoading = false;
@@ -134,6 +128,27 @@ openTrackIndex: number | null = null;
         this.LRData = [];
       }
     });
+  }
+
+  private handleApiResponse(response: any) {
+    if (response && response.data) {
+      this.LRData = response.data;
+
+      if (response.pagination) {
+        this.config.totalRecords = response.pagination.totalRecords || this.LRData.length;
+        this.config.totalPages = response.pagination.totalPages || 1;
+        this.config.page = response.pagination.currentPage || 1;
+        this.config.pageSize = response.pagination.pageSize || 50;
+      }
+
+      if (response.summary) {
+        this.summaryData = response.summary;
+      }
+    } else {
+      this.LRData = [];
+      this.config.totalRecords = 0;
+      this.config.totalPages = 1;
+    }
   }
 
     get isHQTR(): boolean {
@@ -151,6 +166,11 @@ openTrackIndex: number | null = null;
     this.fetchSubject.next();
   }
 
+
+  onDataUpdate() {
+    this.apiCache.clear();
+    this.fetchData();
+  }
 
   fetchData() {
     this.config.page = 1;

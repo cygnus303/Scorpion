@@ -88,9 +88,10 @@ export class StockUpdateLayoutComponent {
     this.fetchData();
   }
 
+  private apiCache = new Map<string, any>();
+
   fetchStockUpdateList() {
     if (this.listSubscription) { this.listSubscription.unsubscribe(); }
-    this.isLoading = true;
 
     const payload = {
       fromDate: new Date(this.config.fromDateStr).toISOString(),
@@ -102,24 +103,18 @@ export class StockUpdateLayoutComponent {
       isDownload: 0,
     };
 
+    const cacheKey = JSON.stringify(payload);
+    if (this.apiCache.has(cacheKey)) {
+      this.handleApiResponse(this.apiCache.get(cacheKey));
+      return;
+    }
+
+    this.isLoading = true;
     this.listSubscription = this.stockUpdateService.getStockUpdateListing(payload).subscribe({
       next: (response: any) => {
         this.isLoading = false;
-        if (response && response.data) {
-          this.stockUpdateData = response.data;
-          if (response.pagination) {
-            this.config.totalRecords = response.pagination.totalRecords || this.stockUpdateData.length;
-            this.config.totalPages = response.pagination.totalPages || 1;
-            this.config.page = response.pagination.currentPage || 1;
-          }
-          if (response.summary) {
-            this.summaryData = response.summary;
-          }
-        } else {
-          this.stockUpdateData = [];
-          this.config.totalRecords = 0;
-          this.config.totalPages = 1;
-        }
+        this.apiCache.set(cacheKey, response);
+        this.handleApiResponse(response);
       },
       error: (err: any) => {
         this.isLoading = false;
@@ -129,9 +124,32 @@ export class StockUpdateLayoutComponent {
     });
   }
 
+  private handleApiResponse(response: any) {
+    if (response && response.data) {
+      this.stockUpdateData = response.data;
+      if (response.pagination) {
+        this.config.totalRecords = response.pagination.totalRecords || this.stockUpdateData.length;
+        this.config.totalPages = response.pagination.totalPages || 1;
+        this.config.page = response.pagination.currentPage || 1;
+      }
+      if (response.summary) {
+        this.summaryData = response.summary;
+      }
+    } else {
+      this.stockUpdateData = [];
+      this.config.totalRecords = 0;
+      this.config.totalPages = 1;
+    }
+  }
+
   ngOnDestroy() {
     if (this.listSubscription) { this.listSubscription.unsubscribe(); }
     this.fetchSubject.complete();
+  }
+
+  onDataUpdate() {
+    this.apiCache.clear();
+    this.fetchData();
   }
 
   openView(thcNo: string) {

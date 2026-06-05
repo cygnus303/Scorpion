@@ -10,6 +10,7 @@ import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Va
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { DocketService } from 'app/shared/services/docket.service';
+import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.service';
 
 @Component({
   selector: 'app-hcc-details',
@@ -27,11 +28,15 @@ export class HCCDetailsComponent {
   public isLoading: boolean = false;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
+  public headerVendorList: any[] = [];
+  public headerVendor: any = null;
+  public rowVendorList: any[][] = [];
 
   constructor(private modalService: BsModalService, private CommonService: CommonService,
-    private thcMasterService: THCMasterService, private fb: FormBuilder,
+    private thcMasterService: THCMasterService, private fb: FormBuilder, private THCMasterService: THCMasterService,
     public generalMasterService: GeneralMasterService, public prsArrivalDetailsService: PrsArrivalDetailsService,
-    private sweetAlertService: SweetAlertService, private docketService: DocketService, private THCService: THCMasterService) { }
+    private sweetAlertService: SweetAlertService, private docketService: DocketService, private THCService: THCMasterService,
+    public vendorChargeHelper: VendorChargeHelperService) { }
 
   get hasExistingHcc(): boolean {
     if (!this.selectedHccDetails) return false;
@@ -55,7 +60,7 @@ export class HCCDetailsComponent {
       this.selectedHccType = '';
     }
     this.buildForm();
-    this.CommonService.getVendorType('P');
+    this.getVendorType(flag);
     this.generalMasterService.getChargeTypeData();
     this.getHCCDetail(data);
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
@@ -71,6 +76,23 @@ export class HCCDetailsComponent {
     }
   }
 
+  getVendorType(docType: string) {
+    this.THCMasterService.getVendorType(this.docketService.loginUserList.LocationCode).subscribe({
+      next: (response) => {
+        if (response && response.data) {
+          const mTypeRow = response.data.find((x: any) => x.documentType === docType);
+          if (mTypeRow) {
+            const vendorStr = this.selectedHccType === 'Unloading' ? (mTypeRow.unLoading_VendorType || mTypeRow.UnLoading_VendorType) : (mTypeRow.loading_VendorType || mTypeRow.Loading_VendorType);
+            if (vendorStr) {
+              const vendorTypes = vendorStr.split(',');
+              this.generalMasterService.getLoadingByDetail(vendorTypes);
+            }
+          }
+        }
+      }
+    });
+  }
+
   buildForm() {
     this.hccForm = this.fb.group({
       hhcLocation: [''],
@@ -80,7 +102,7 @@ export class HCCDetailsComponent {
       LaborType: [''],
       HCCPayType: [''],
       chargeAmount: [''],
-      chargedBy: ['',[Validators.required]],
+      chargedBy: [''],
       VendorCode: [''],
       RateType: [''],
       chargeRate: [''],
@@ -100,15 +122,31 @@ export class HCCDetailsComponent {
     return this.hccForm.get('lrList') as FormArray;
   }
   createLRGroup(item: any): FormGroup {
-    return this.fb.group({
+    const group = this.fb.group({
       lr: [item.lr],
       origin: [item.origin],
       destination: [item.destination],
       pkgsno: [item.pkgsno],
       weight: [item.weight],
       lrWiseHCCAmount: [item.lrWiseHCCAmount || 0.00],
-      isChecked: [item.lrWiseHCCAmount > 0]
+      isChecked: [item.lrWiseHCCAmount > 0],
+      luVendorTyp: [item.chargedBy],
+      luVendorCode: [item.vendorCode],
+      rateType: [item.rateType],
+      chargeRate: [item.chargeRate || 0],
+      rateError: ['']
     });
+
+    const vendorType = group.get('luVendorTyp')?.value;
+    if (vendorType && vendorType !== 'XX9') {
+      group.get('luVendorCode')?.setValidators([Validators.required]);
+      group.get('rateType')?.setValidators([Validators.required]);
+    }
+
+    group.get('chargeRate')?.valueChanges.subscribe(() => this.calculateLRWiseHCCAmount());
+    group.get('rateType')?.valueChanges.subscribe(() => this.calculateLRWiseHCCAmount());
+
+    return group;
   }
 
   getHCCDetail(data: any) {
@@ -126,7 +164,7 @@ export class HCCDetailsComponent {
             hhcLocation: response.hhcLocation,
             hcNumber: response.hcNumber,
             documentNo: response.documentNo,
-            chargesType: response.chargesType === 'L' ? 'Loading' : 'UnnLoading',
+            chargesType: response.chargesType === 'L' ? 'Loading' : 'UnLoading',
             chargedBy: response.chargedBy || null,
             vendorCode: response.vendorCode || null,
             rateType: response.rateType || null,
@@ -138,6 +176,7 @@ export class HCCDetailsComponent {
           response.clullrdList.forEach((item: any) => {
             this.lrList.push(this.createLRGroup(item));
           });
+          this.prefetchVendorLists();
           this.calculateTotals();
           this.isLoading = false;
         }
@@ -168,7 +207,7 @@ export class HCCDetailsComponent {
       totalWeight: totalWeight.toFixed(2),
       totalPkg: totalPkg.toFixed(2),
       totalLRWiseAmount: totalLRWiseAmount.toFixed(2),
-      chargeAmount:totalLRWiseAmount.toFixed(2),
+      chargeAmount: totalLRWiseAmount.toFixed(2),
     });
   }
 
@@ -189,29 +228,29 @@ export class HCCDetailsComponent {
         rateType: null
       });
 
-       const isXX9 = event.codeId === 'XX9';
+      const isXX9 = event.codeId === 'XX9';
 
-    const vendorControl   = this.hccForm.get('vendorCode');
-    const rateTypeControl = this.hccForm.get('rateType');
-    const chargeRateCtrl  = this.hccForm.get('chargeRate');
+      const vendorControl = this.hccForm.get('vendorCode');
+      const rateTypeControl = this.hccForm.get('rateType');
+      const chargeRateCtrl = this.hccForm.get('chargeRate');
 
-    if (isXX9) {
-      vendorControl?.clearValidators();
-      rateTypeControl?.clearValidators();
-      chargeRateCtrl?.clearValidators();
+      if (isXX9) {
+        vendorControl?.clearValidators();
+        rateTypeControl?.clearValidators();
+        chargeRateCtrl?.clearValidators();
 
-      this.lrList.controls.forEach((group: any) => {
-        group.patchValue({ lrWiseHCCAmount: '0.00' });
-      });
-      this.calculateTotals();
-    } else {
-      vendorControl?.setValidators([Validators.required]);
-      rateTypeControl?.setValidators([Validators.required]);
-    }
+        this.lrList.controls.forEach((group: any) => {
+          group.patchValue({ lrWiseHCCAmount: '0.00' });
+        });
+        this.calculateTotals();
+      } else {
+        vendorControl?.setValidators([Validators.required]);
+        rateTypeControl?.setValidators([Validators.required]);
+      }
 
-    vendorControl?.updateValueAndValidity();
-    rateTypeControl?.updateValueAndValidity();
-    chargeRateCtrl?.updateValueAndValidity();
+      vendorControl?.updateValueAndValidity();
+      rateTypeControl?.updateValueAndValidity();
+      chargeRateCtrl?.updateValueAndValidity();
     }
   }
 
@@ -267,7 +306,13 @@ export class HCCDetailsComponent {
       pkgsno: parseFloat(item.pkgsno) || 0,
       weight: parseFloat(item.weight) || 0,
       chrgwt: parseFloat(item.weight) || 0,
-      lrWiseHCCAmount: parseFloat(item.lrWiseHCCAmount) || 0
+      lrWiseHCCAmount: parseFloat(item.lrWiseHCCAmount) || 0,
+      chargedBy: item.luVendorTyp || '',
+      luVendorTyp: item.luVendorTyp || '',
+      luVendorCode: item.luVendorCode || '',
+      vendorCode: item.luVendorCode || '',
+      rateType: item.rateType || '',
+      chargeRate: parseFloat(item.chargeRate) || 0
     }));
 
     const payload = {
@@ -318,39 +363,200 @@ export class HCCDetailsComponent {
     });
   }
 
-calculateLRWiseHCCAmount() {
-  const rate = parseFloat(this.hccForm.get('chargeRate')?.value) || 0;
-  const rateType = this.hccForm.get('rateType')?.value;
-  const chargedBy = this.hccForm.get('chargedBy')?.value;
+  calculateLRWiseHCCAmount() {
+    this.lrList.controls.forEach((group: any) => {
+      const isValid = this.validateRate(group);
+      if (!isValid) {
+        group.patchValue({ lrWiseHCCAmount: '0.00' }, { emitEvent: false });
+        return;
+      }
 
+      const rate = parseFloat(group.get('chargeRate')?.value) || 0;
+      const rateType = group.get('rateType')?.value;
+      const weight = parseFloat(group.get('weight')?.value) || 0;
+      const pkgsno = parseFloat(group.get('pkgsno')?.value) || 0;
+      const lrWiseAmount = parseFloat(group.get('lrWiseHCCAmount')?.value) || 0;
+      const isAllowZero = group.get('isChecked')?.value === true; // isChecked = false means IsAllowZero
 
-  this.lrList.controls.forEach((group: any) => {
-    const weight = parseFloat(group.get('weight')?.value) || 0;
-    const pkgsno = parseFloat(group.get('pkgsno')?.value) || 0;
-    const lrWiseAmount = parseFloat(group.get('lrWiseHCCAmount')?.value) || 0;
-    const isAllowZero = group.get('isChecked')?.value === true; // isChecked = false means IsAllowZero
+      let charge = 0;
 
-    let charge = 0;
+      if (rateType == '3') {
+        charge = pkgsno * rate;
+      } else if (rateType == '4') {
+        charge = lrWiseAmount; // as-is
+      } else if (rateType == '1') {
+        charge = weight * rate;
+      }
 
-    if (rateType == '3') {
-      charge = pkgsno * rate;
-    } else if (rateType == '4') {
-      charge = lrWiseAmount; // as-is
-    } else if (rateType == '1') {
-      charge = weight * rate;
+      if (rateType === '4') {
+        // no change to lrWiseHCCAmount logic if it's type 4 (manual), unless needed
+      } else if (isAllowZero) {
+        group.patchValue({ lrWiseHCCAmount: '0.00' }, { emitEvent: false });
+      } else {
+        group.patchValue({ lrWiseHCCAmount: charge.toFixed(2) }, { emitEvent: false });
+      }
+    });
+
+    this.calculateTotals();
+  }
+
+  validateRate(group: FormGroup): boolean {
+    const vendorType = group.get('luVendorTyp')?.value;
+    if (vendorType === 'XX9') {
+      group.get('rateError')?.setValue('');
+      return true;
+    }
+    const rateType = group.get('rateType')?.value;
+    const rate = parseFloat(group.get('chargeRate')?.value || '0') || 0;
+    const chrgwt = parseFloat(group.get('weight')?.value || '0') || 0;
+    const noofpkg = parseFloat(group.get('pkgsno')?.value || '0') || 0;
+
+    if (chrgwt === 0) {
+      group.get('rateError')?.setValue('Charge weight is zero, cannot validate rate.');
+      group.get('chargeRate')?.setValue('0.00', { emitEvent: false });
+      return false;
     }
 
-    // IsAllowZero (isChecked false) hoy to 0 set karo
-    if (rateType === '4' ) {
-      group.patchValue({ lrWiseHCCAmount: charge.toFixed(2) });
-    } else if(isAllowZero){
-      group.patchValue({ lrWiseHCCAmount: '0.00' });
-    }else{
-      group.patchValue({ lrWiseHCCAmount: charge.toFixed(2) });
+    let maxlimitcalculation = 0;
+    if (rateType === '4') {
+      maxlimitcalculation = rate / chrgwt;
+    } else if (rateType === '3') {
+      maxlimitcalculation = (rate * noofpkg) / chrgwt;
+    } else {
+      maxlimitcalculation = rate;
     }
-  });
 
-  this.calculateTotals();
-}
+    if (maxlimitcalculation > 5.0) {
+      group.get('rateError')?.setValue('Rate Amount Is High, Please Check');
+      group.get('chargeRate')?.setValue('0.00', { emitEvent: false });
+      return false;
+    } else {
+      group.get('rateError')?.setValue('');
+      return true;
+    }
+  }
+
+  clearNewRateOnFocus(index: number) {
+    const group = this.lrList.at(index) as FormGroup;
+    if (parseFloat(group.get('chargeRate')?.value || 0) === 0) {
+      group.get('chargeRate')?.setValue('', { emitEvent: false });
+    }
+  }
+
+  resetNewRateOnBlur(index: number) {
+    const group = this.lrList.at(index) as FormGroup;
+    if (!group.get('chargeRate')?.value || group.get('chargeRate')?.value === '') {
+      group.get('chargeRate')?.setValue('0.00', { emitEvent: false });
+    }
+    this.calculateLRWiseHCCAmount();
+  }
+  onHeaderHccVendorTypeChange(event: any) {
+    this.headerVendor = null;
+    this.vendorChargeHelper.handleHeaderHccVendorTypeChange(
+      event?.codeId || event,
+      this.hccForm.get('lrList') as FormArray,
+      this.rowVendorList,
+      (list: any[]) => this.headerVendorList = list,
+      'luVendorTyp',
+      'luVendorCode',
+      'rateType',
+      'chargeRate',
+      this.selectedHccType === 'Unloading' ? 'U' : 'L'
+    );
+
+    const type = event?.codeId || event;
+    const formArray = this.hccForm.get('lrList') as FormArray;
+    formArray.controls.forEach((group: any) => {
+      group.get('chargeRate')?.patchValue(0);
+      const vendorCodeCtrl = group.get('luVendorCode');
+      const rateTypeCtrl = group.get('rateType');
+      if (type && type !== 'XX9') {
+        vendorCodeCtrl?.setValidators([Validators.required]);
+        rateTypeCtrl?.setValidators([Validators.required]);
+      } else {
+        vendorCodeCtrl?.clearValidators();
+        rateTypeCtrl?.clearValidators();
+      }
+      vendorCodeCtrl?.updateValueAndValidity({ emitEvent: false });
+      rateTypeCtrl?.updateValueAndValidity({ emitEvent: false });
+    });
+  }
+
+  onHeaderVendorChange(event: any) {
+    this.vendorChargeHelper.handleHeaderVendorChange(
+      event?.value || event,
+      this.hccForm.get('lrList') as FormArray,
+      'luVendorCode',
+      this.selectedHccType === 'Unloading' ? 'U' : 'L',
+      null,
+      'rateType',
+      'chargeRate',
+      'luVendorTyp'
+    );
+  }
+
+  onHeaderRateTypeChange(event: any) {
+    this.vendorChargeHelper.handleHeaderRateTypeChange(
+      event?.codeId || event,
+      this.hccForm.get('lrList') as FormArray,
+      'rateType',
+      'luVendorTyp'
+    );
+  }
+
+  onRowVendorTypeChange(event: any, index: number) {
+    this.vendorChargeHelper.handleRowVendorTypeChange(
+      event?.codeId || event,
+      index,
+      this.hccForm.get('lrList') as FormArray,
+      this.rowVendorList,
+      'luVendorTyp',
+      'luVendorCode',
+      'rateType',
+      'chargeRate',
+      this.selectedHccType === 'Unloading' ? 'U' : 'L'
+    );
+
+    const formArray = this.hccForm.get('lrList') as FormArray;
+    const group = formArray.at(index);
+    group.get('chargeRate')?.patchValue(0);
+    const vendorCodeCtrl = group.get('luVendorCode');
+    const rateTypeCtrl = group.get('rateType');
+    const type = event?.codeId || event;
+    if (type && type !== 'XX9') {
+      vendorCodeCtrl?.setValidators([Validators.required]);
+      rateTypeCtrl?.setValidators([Validators.required]);
+    } else {
+      vendorCodeCtrl?.clearValidators();
+      rateTypeCtrl?.clearValidators();
+    }
+    vendorCodeCtrl?.updateValueAndValidity({ emitEvent: false });
+    rateTypeCtrl?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  onRowVendorCodeChange(event: any, index: number) {
+    this.vendorChargeHelper.handleRowVendorCodeChange(
+      event?.value || event,
+      index,
+      this.hccForm.get('lrList') as FormArray,
+      this.selectedHccType === 'Unloading' ? 'U' : 'L',
+      null,
+      'rateType',
+      'chargeRate',
+      'luVendorTyp',
+      'luVendorCode'
+    );
+  }
+
+  prefetchVendorLists() {
+    this.lrList.controls.forEach((ctrl: any, index: number) => {
+      const vendorTyp = ctrl.value.luVendorTyp;
+      if (vendorTyp) {
+        this.vendorChargeHelper.fetchVendorListFor(vendorTyp, (list: any[]) => {
+          this.rowVendorList[index] = list;
+        });
+      }
+    });
+  }
 
 }

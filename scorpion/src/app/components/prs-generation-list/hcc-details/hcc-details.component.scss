@@ -1,3 +1,7 @@
 ::ng-deep.modal-xl {
     --bs-modal-width: 1300px !important;
 }
+
+.ng-dropdown-panel {
+    z-index: 99999 !important;
+}
