@@ -17,16 +17,16 @@
             <div class="form-group-input">
                 <div class="radio-group">
                     <label class="form-label fw-bold">Select HCC Type </label>
-                    <div class="radio-option">
+                    <label class="radio-option" style="cursor:pointer;">
                         <input type="radio" name="hccType" value="Loading" [(ngModel)]="selectedHccType"
                             [disabled]="hasExistingHcc" (change)="onHccTypeChange()">
-                        <label for="reg">Loading</label>
-                    </div>
-                    <div class="radio-option">
+                        Loading
+                    </label>
+                    <label class="radio-option" style="cursor:pointer;">
                         <input type="radio" name="hccType" value="Unloading" [(ngModel)]="selectedHccType"
                             [disabled]="hasExistingHcc" (change)="onHccTypeChange()">
-                        <label for="unreg">Unloading</label>
-                    </div>
+                        Unloading
+                    </label>
                 </div>
             </div>
         </div>

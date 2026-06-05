@@ -60,6 +60,7 @@ export class HCCDetailsComponent {
       this.selectedHccType = '';
     }
     this.buildForm();
+    this.headerVendor = null;
     this.getVendorType(flag);
     this.generalMasterService.getChargeTypeData();
     this.getHCCDetail(data);
@@ -379,18 +380,15 @@ export class HCCDetailsComponent {
       const isAllowZero = group.get('isChecked')?.value === true; // isChecked = false means IsAllowZero
 
       let charge = 0;
-
       if (rateType == '3') {
         charge = pkgsno * rate;
       } else if (rateType == '4') {
-        charge = lrWiseAmount; // as-is
+        charge = rate;
       } else if (rateType == '1') {
         charge = weight * rate;
       }
 
-      if (rateType === '4') {
-        // no change to lrWiseHCCAmount logic if it's type 4 (manual), unless needed
-      } else if (isAllowZero) {
+      if (isAllowZero) {
         group.patchValue({ lrWiseHCCAmount: '0.00' }, { emitEvent: false });
       } else {
         group.patchValue({ lrWiseHCCAmount: charge.toFixed(2) }, { emitEvent: false });

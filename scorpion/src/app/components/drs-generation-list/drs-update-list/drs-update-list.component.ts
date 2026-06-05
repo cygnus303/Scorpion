@@ -62,7 +62,8 @@ export class DRSUpdateListComponent {
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
     this.refreshData()
-    this.buildFilterForm()
+    this.buildFilterForm();
+     this.headerVendor = null;
     this.getVendorType();
     this.generalMasterService.getChargeTypeData();
     this.generalMasterService.getLoadingBy()
