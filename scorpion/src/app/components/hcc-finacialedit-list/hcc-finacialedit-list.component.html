@@ -200,7 +200,7 @@
                                 <button class="ab ab-view" (click)="openHCCview()">👁 View</button>
                                 <button class="ab ab-print" onclick="printHccRow()" title="Print HCC">🖨 Print</button>
                                 <button class="ab ab-cancel" onclick="alert('Cancel HCC')">🚫 Cancel</button>
-                                <button class="ab ab-edit" onclick="openEditModal()">✏️ Edit</button>
+                                <button class="ab ab-edit" (click)="openEditModal()">✏️ Edit</button>
                             </div>
                         </td>
                     </tr>
@@ -543,3 +543,4 @@
 
 
 <app-hccview #HCCviewComponent></app-hccview>
+<app-hcc-details #HCCDetailsComponent></app-hcc-details>
