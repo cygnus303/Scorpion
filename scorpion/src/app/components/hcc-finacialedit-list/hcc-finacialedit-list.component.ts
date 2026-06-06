@@ -5,13 +5,13 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { PaginationComponent } from 'app/shared/components/pagination/pagination.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { HCCviewComponent } from './hccview/hccview.component';
-import { HCCDetailsComponent } from '../prs-generation-list/hcc-details/hcc-details.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { HccDetailsEditPopupComponent } from './hcc-details-edit-popup/hcc-details-edit-popup.component';
 
 @Component({
   selector: 'app-hcc-finacialedit-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, HCCDetailsComponent,HCCviewComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, HccDetailsEditPopupComponent, HCCviewComponent],
   providers: [BsModalService],
   templateUrl: './hcc-finacialedit-list.component.html',
   styleUrl: './hcc-finacialedit-list.component.scss',
@@ -19,7 +19,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 export class HccFinacialeditListComponent {
   @ViewChild('HCCviewComponent') HCCviewComponent!: HCCviewComponent;
 
-  @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
+  @ViewChild('HccDetailsEditPopupComponent') HccDetailsEditPopupComponent!: HccDetailsEditPopupComponent;
   public config = {
     fromDateStr: new Date(),
     toDateStr: new Date(),
@@ -40,7 +40,7 @@ export class HccFinacialeditListComponent {
     this.HCCviewComponent.showPopup();
   }
   openEditModal() {
-    this.HCCDetailsComponent.showPopup('', 'H');
+    this.HccDetailsEditPopupComponent.showPopup();
   }
 
 }
