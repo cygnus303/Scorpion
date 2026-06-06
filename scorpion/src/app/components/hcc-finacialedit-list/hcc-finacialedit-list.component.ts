@@ -28,13 +28,10 @@ export class HccFinacialeditListComponent {
     totalPages: 1,
     searchText: ''
   };
-  statusList = [
+  HCCTypeList = [
     { label: 'All Status', value: 'All' },
-    { label: 'Generated', value: 'Generated' },
-    { label: 'Arrived', value: 'Arrived' },
-    { label: 'Billed', value: 'Billed' },
-    { label: 'Cancelled', value: 'Cancelled' },
-    { label: 'HCC Generated', value: 'HCC Generated' }
+    { label: 'Loading HCC', value: 'Loading' },
+    { label: 'Unloading HCC', value: 'Unloading' },
   ];
 
   openHCCview() {

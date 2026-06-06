@@ -1640,15 +1640,15 @@ input:checked+.toggle-slider:before {
 
   /* Status Colors */
   &.c-blue {
-    border-left-color: #3b82f6;
+    border-left-color: #1565c0;
 
     .s-val {
-      color: #2563eb;
+      color: #1565c0;
     }
 
     &.active-card {
-      border-left-color: #2563eb;
-      color: #2563eb;
+      border-left-color: #1565c0;
+      color: #1565c0;
     }
   }
 
@@ -1678,7 +1678,7 @@ input:checked+.toggle-slider:before {
     }
   }
 
-    &.c-red {
+  &.c-red {
     border-left-color: #c62828;
 
     .s-val {
@@ -1692,28 +1692,28 @@ input:checked+.toggle-slider:before {
   }
 
   &.c-purple {
-    border-left-color: #8b5cf6;
+    border-left-color: #6a1b9a;
 
     .s-val {
-      color: #7c3aed;
+      color: #6a1b9a;
     }
 
     &.active-card {
-      border-left-color: #7c3aed;
-      color: #7c3aed;
+      border-left-color: #6a1b9a;
+      color: #6a1b9a;
     }
   }
 
   &.c-green {
-    border-left-color: #10b981;
+    border-left-color: #2e7d32;
 
     .s-val {
-      color: #059669;
+      color: #2e7d32;
     }
 
     &.active-card {
-      border-left-color: #059669;
-      color: #059669;
+      border-left-color: #2e7d32;
+      color: #2e7d32;
     }
   }
 }
