@@ -1760,18 +1760,17 @@ input:checked+.toggle-slider:before {
     border: 1px solid #b71c1c !important;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25) !important;
   }
-}
 
-/* ── Modal Header Bar ── */
-.modal-header {
-  background: linear-gradient(90deg, #c8102e 0%, #9b0a22 100%) !important;
-  padding: 0 22px !important;
-  height: 58px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 14px !important;
-  border-bottom: none !important;
+  .modal-header {
+    background: linear-gradient(90deg, #c8102e 0%, #9b0a22 100%) !important;
+    padding: 0 22px !important;
+    height: 58px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 14px !important;
+    border-bottom: none !important;
+  }
 }
 
 .modal-header-left {
