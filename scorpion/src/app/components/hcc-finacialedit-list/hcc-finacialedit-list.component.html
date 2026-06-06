@@ -196,7 +196,7 @@
                         <td><span class="bill-none">—</span></td>
                         <td>
                             <div class="action-btns">
-                                <button class="ab ab-view" onclick="openHccModal()">👁 View</button>
+                                <button class="ab ab-view" (click)="openHCCview()">👁 View</button>
                                 <button class="ab ab-print" onclick="printHccRow()" title="Print HCC">🖨 Print</button>
                                 <button class="ab ab-cancel" onclick="alert('Cancel HCC')">🚫 Cancel</button>
                                 <button class="ab ab-edit" onclick="openEditModal()">✏️ Edit</button>
@@ -245,7 +245,7 @@
                         <td><span class="bill-badge bill-finalized">Finalized</span></td>
                         <td>
                             <div class="action-btns">
-                                <button class="ab ab-view" onclick="openHccModal()">👁 View</button>
+                                <button class="ab ab-view" (click)="openHCCview()">👁 View</button>
                                 <button class="ab ab-print" onclick="printHccRow()" title="Print HCC">🖨 Print</button>
                                 <button class="ab ab-cancel" disabled title="HCC Bill generated — cannot cancel">🚫
                                     Cancel</button>
@@ -290,7 +290,7 @@
                         <td><span class="bill-none">—</span></td>
                         <td>
                             <div class="action-btns">
-                                <button class="ab ab-view" onclick="openHccModal()">👁 View</button>
+                                <button class="ab ab-view" (click)="openHCCview()">👁 View</button>
                                 <button class="ab ab-print" onclick="printHccRow()" title="Print HCC">🖨 Print</button>
                                 <button class="ab ab-cancel" onclick="alert('Cancel HCC')">🚫 Cancel</button>
                                 <button class="ab ab-edit" onclick="openEditModal()">✏️ Edit</button>
@@ -333,7 +333,7 @@
                         <td><span class="bill-none">—</span></td>
                         <td>
                             <div class="action-btns">
-                                <button class="ab ab-view" onclick="openHccModal()">👁 View</button>
+                                <button class="ab ab-view" (click)="openHCCview()">👁 View</button>
                                 <button class="ab ab-print" onclick="printHccRow()" title="Print HCC">🖨 Print</button>
                                 <button class="ab ab-cancel" disabled title="HCC already cancelled">🚫 Cancel</button>
                                 <button class="ab ab-edit" disabled title="Cannot edit cancelled HCC">✏️ Edit</button>
@@ -382,7 +382,7 @@
                         <td><span class="bill-badge bill-reqgen">Request Generated</span></td>
                         <td>
                             <div class="action-btns">
-                                <button class="ab ab-view" onclick="openHccModal()">👁 View</button>
+                                <button class="ab ab-view" (click)="openHCCview()">👁 View</button>
                                 <button class="ab ab-print" onclick="printHccRow()" title="Print HCC">🖨 Print</button>
                                 <button class="ab ab-cancel" disabled title="HCC Bill generated — cannot cancel">🚫
                                     Cancel</button>
@@ -427,7 +427,7 @@
                         <td><span class="bill-none">—</span></td>
                         <td>
                             <div class="action-btns">
-                                <button class="ab ab-view" onclick="openHccModal()">👁 View</button>
+                                <button class="ab ab-view" (click)="openHCCview()">👁 View</button>
                                 <button class="ab ab-print" onclick="printHccRow()" title="Print HCC">🖨 Print</button>
                                 <button class="ab ab-cancel" onclick="alert('Cancel HCC')">🚫 Cancel</button>
                                 <button class="ab ab-edit" onclick="openEditModal()">✏️ Edit</button>
@@ -470,7 +470,7 @@
                         <td><span class="bill-none">—</span></td>
                         <td>
                             <div class="action-btns">
-                                <button class="ab ab-view" onclick="openHccModal()">👁 View</button>
+                                <button class="ab ab-view" (click)="openHCCview()">👁 View</button>
                                 <button class="ab ab-print" onclick="printHccRow()" title="Print HCC">🖨 Print</button>
                                 <button class="ab ab-cancel" onclick="alert('Cancel HCC')">🚫 Cancel</button>
                                 <button class="ab ab-edit" onclick="openEditModal()">✏️ Edit</button>
@@ -519,11 +519,11 @@
                         <td><span class="bill-badge bill-paid">Paid</span></td>
                         <td>
                             <div class="action-btns">
-                                <button class="ab ab-view" onclick="openHccModal()">👁 View</button>
-                                <button class="ab ab-print" onclick="printHccRow()" title="Print HCC">🖨 Print</button>
-                                <button class="ab ab-cancel" disabled title="HCC Bill generated — cannot cancel">🚫
+                                <button class="ab ab-view" (click)="openHCCview()">👁 View</button>
+                                <button class="ab ab-print" title="Print HCC">🖨 Print</button>
+                                <button class="ab ab-cancel" title="HCC Bill generated — cannot cancel">🚫
                                     Cancel</button>
-                                <button class="ab ab-edit" disabled title="HCC Bill generated — cannot edit">✏️
+                                <button class="ab ab-edit" title="HCC Bill generated — cannot edit">✏️
                                     Edit</button>
                             </div>
                         </td>
@@ -539,3 +539,6 @@
         </app-pagination> -->
     </div>
 </div>
+
+
+<app-hccview #HCCviewComponent></app-hccview>
