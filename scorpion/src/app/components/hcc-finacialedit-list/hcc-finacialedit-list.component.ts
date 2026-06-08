@@ -12,6 +12,7 @@ import { DocketService } from 'app/shared/services/docket.service';
 import { ExportService } from 'app/shared/services/export.service';
 import { environment } from 'environments/environment';
 import { Subject, Subscription, debounceTime } from 'rxjs';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 
 @Component({
   selector: 'app-hcc-finacialedit-list',
@@ -48,6 +49,7 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
     statusFilter: 'All',
     page: 1,
     pageSize: 10,
+    hccType:'All',
     totalRecords: 0,
     totalPages: 1,
     searchText: ''
@@ -55,14 +57,15 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
 
   HCCTypeList = [
     { label: 'All Status', value: 'All' },
-    { label: 'Loading HCC', value: 'Loading' },
-    { label: 'Unloading HCC', value: 'Unloading' },
+    { label: 'Loading HCC', value: 'L' },
+    { label: 'Unloading HCC', value: 'U' },
   ];
 
   constructor(
     private thcMasterService: THCMasterService,
     public docketService: DocketService,
-    public exportService: ExportService
+    public exportService: ExportService,
+    private sweetAlertService: SweetAlertService
   ) { }
 
   ngOnInit() {
@@ -87,6 +90,12 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
   }
 
   refreshData() {
+    this.fetchData();
+  }
+
+  
+  filterByStatus(status: string) {
+    this.config.statusFilter = status;
     this.fetchData();
   }
 
@@ -116,9 +125,9 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
     const hccLocations = (locationCode && locationCode !== 'HQTR') ? [locationCode] : [];
 
     let hccTypes: string[] = [];
-    if (this.config.statusFilter === 'Loading') {
+    if (this.config.hccType === 'L') {
       hccTypes = ['L'];
-    } else if (this.config.statusFilter === 'Unloading') {
+    } else if (this.config.hccType === 'U') {
       hccTypes = ['U'];
     }
 
@@ -127,10 +136,10 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
         FromDate: formatDate(new Date(this.config.fromDateStr)),
         ToDate: formatDate(new Date(this.config.toDateStr)),
         HCCLocation: hccLocations,
-        HCCType: hccTypes,
+        HCCType: [this.config.hccType],
         VendorType: [],
         VendorCode: [],
-        HCCStatus: [],
+        HCCStatus: [this.config.statusFilter],
         SearchText: this.config.searchText || ''
       },
       PageNo: this.config.page,
@@ -142,7 +151,7 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         if (response && response.data) {
           this.hccData = response.data;
-          
+
           if (response.summary && response.summary.length > 0) {
             this.summaryData = response.summary[0];
           } else {
@@ -190,9 +199,9 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
     const hccLocations = (locationCode && locationCode !== 'HQTR') ? [locationCode] : [];
 
     let hccTypes: string[] = [];
-    if (this.config.statusFilter === 'Loading') {
+    if (this.config.hccType === 'Loading') {
       hccTypes = ['L'];
-    } else if (this.config.statusFilter === 'Unloading') {
+    } else if (this.config.hccType === 'Unloading') {
       hccTypes = ['U'];
     }
 
@@ -225,8 +234,8 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
     });
   }
 
-  openHCCview(row?: any) {
-    this.HCCviewComponent.showPopup();
+  openHCCview(row: any) {
+    this.HCCviewComponent.showPopup(row);
   }
 
   openPrint(hccNo: string) {
@@ -251,13 +260,6 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
     }
   }
 
-  onCancel(hccNo: string) {
-    if (!hccNo) return;
-    if (confirm(`Are you sure you want to cancel HCC ${hccNo}?`)) {
-      alert(`HCC ${hccNo} cancellation feature is coming soon!`);
-    }
-  }
-
   openEditModal(row?: any) {
     if (row) {
       this.HCCDetailsComponent.showPopup(row, 'H');
@@ -269,5 +271,34 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.listSubscription) { this.listSubscription.unsubscribe(); }
     this.fetchSubject.complete();
+  }
+
+   onCancel(row: any) {
+    this.sweetAlertService.cancel(`Are you sure you want to cancel HCC ${row.HCNumber}?`, () => {
+      this.hCCCancellation(row);
+    });
+  }
+
+  hCCCancellation(row: any) {
+    const payload = {
+      "baseUserName": this.docketService.loginUserList.BaseUserName,
+      "documentNo": row.DocumentNo,
+      "hcNumber": row.HCNumber
+    }
+    this.thcMasterService.getHCCCancel(payload).subscribe({
+      next: (response: any) => {
+        if (response.Status === 1) {
+          this.sweetAlertService.success(response.Msg);
+          this.fetchHCCList();
+        }
+        else {
+          this.sweetAlertService.error(response.Msg);
+        }
+      },
+      error: (err: any) => {
+        this.isLoading = false;
+        console.error('Error fetching HCC List', err);
+      }
+    });
   }
 }

@@ -3,7 +3,7 @@
     <div class="modal-header">
         <div class="modal-header-left">
             <div class="modal-title">HCC View Details</div>
-            <span class="modal-hcc-tag" id="modalHccTag">HC/HYH/2627/001364</span>
+            <span class="modal-hcc-tag" id="modalHccTag">{{ summary?.HCNumber || '—' }}</span>
         </div>
         <div class="modal-header-actions">
             <button class="modal-header-print" (click)="printHccModal()" title="Print this HCC">🖨
@@ -23,7 +23,7 @@
             </div>
             <div class="ph-right">
                 <div class="ph-doc-title">HCC Voucher</div>
-                <div class="ph-doc-no">HC/HYH/2627/001364</div>
+                <div class="ph-doc-no">{{ summary?.HCNumber || '—' }}</div>
                 <div class="ph-print-date" id="phPrintDate">Printed: —</div>
             </div>
         </div>
@@ -34,67 +34,67 @@
             <div class="detail-grid">
                 <div class="detail-item">
                     <div class="detail-label">HCC Location</div>
-                    <div class="detail-value">AMH</div>
+                    <div class="detail-value">{{ summary?.HCCLocation || '—' }}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">HCC No.</div>
-                    <div class="detail-value highlight">HC/HYH/2627/001364</div>
+                    <div class="detail-value highlight">{{ summary?.HCNumber || '—' }}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">HCC Date</div>
-                    <div class="detail-value">14 May 2026</div>
+                    <div class="detail-value">{{ summary?.HCDate || '—' }}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Doc No.</div>
-                    <div class="detail-value">MF/AMH/2627/000673</div>
+                    <div class="detail-value">{{ summary?.DocumentNo || '—' }}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Vehicle No.</div>
-                    <div class="detail-value">MP09DN6138</div>
+                    <div class="detail-value">{{ summary?.VEHNO || '—' }}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Route</div>
-                    <div class="detail-value grey">AMH–IDH–HYH–CNH</div>
+                    <div class="detail-value grey">{{ summary?.Route || '—' }}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Loading / Unloading Type</div>
-                    <div class="detail-value"><span class="type-unloading">UnLoading</span></div>
+                    <div class="detail-value"><span [ngClass]="summary?.ChargesType === 'UnLoading' ? 'type-unloading' : 'type-loading'">{{ summary?.ChargesType || '—' }}</span></div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">PAN No.</div>
-                    <div class="detail-value grey">CWIPS4017D</div>
+                    <div class="detail-value grey">{{ summary?.PanNo || '—' }}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">HCC Amount Total</div>
-                    <div class="detail-value highlight">₹ 880.65</div>
+                    <div class="detail-value highlight">₹ {{ summary?.ChargeAmount !== null ? (summary?.ChargeAmount | number:'1.2-2') : '0.00' }}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Vendor Type</div>
-                    <div class="detail-value">Handling Vendor</div>
+                    <div class="detail-value">{{ summary?.ChargedByDesc || '—' }}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Vendor Name</div>
-                    <div class="detail-value">V08806 : Manmohan Singh</div>
+                    <div class="detail-value">{{ summary?.VendorName || '—' }}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">HCC Status</div>
-                    <div class="detail-value"><span class="status-badge status-generated">Generated</span></div>
+                    <div class="detail-value"><span class="status-badge" [ngClass]="{'status-generated': summary?.HCCStatus === 'Generated'}">{{ summary?.HCCStatus || '—' }}</span></div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Prepared By</div>
-                    <div class="detail-value grey">4266 : Devnandan Kumar</div>
+                    <div class="detail-value grey">{{ summary?.PreparedBy || '—' }}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Edited By</div>
-                    <div class="detail-value grey">—</div>
+                    <div class="detail-value grey">{{ summary?.EditedBy || '—' }}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Cancelled By</div>
-                    <div class="detail-value grey">—</div>
+                    <div class="detail-value grey">{{ summary?.CancelledBy || '—' }}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">HCC Bill No.</div>
-                    <div class="detail-value grey">—</div>
+                    <div class="detail-value grey">{{ summary?.HCCBillNo || '—' }}</div>
                 </div>
             </div>
         </div>
@@ -103,7 +103,7 @@
         <div class="docket-card">
             <div class="docket-card-head">
                 <div class="docket-card-head-left"><span class="dch-dot"></span> HCC Docket Details</div>
-                <span class="docket-count-badge">27 Dockets</span>
+                <span class="docket-count-badge">{{ dataList.length }} Dockets</span>
             </div>
             <div class="docket-tbl-wrap">
                 <table class="docket-tbl">
@@ -122,337 +122,28 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">12038740</a></td>
-                            <td>JAI</td>
-                            <td>HYH</td>
-                            <td>ANUBHUTEE</td>
-                            <td>M/S Avenue Supermarts Ltd</td>
-                            <td>C0001013608 : Sampark India Logistics Ltd</td>
-                            <td>147</td>
-                            <td>1,470</td>
-                            <td>132.30</td>
+                        <tr *ngFor="let item of dataList; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td><a href="#" class="cnote-link" onclick="return false;">{{ item.DOCKNO || '—' }}</a></td>
+                            <td>{{ item.ORGNCD || '—' }}</td>
+                            <td>{{ item.DESTCD || '—' }}</td>
+                            <td>{{ item.CSGNCD || '—' }}</td>
+                            <td>{{ item.CSGECD || '—' }}</td>
+                            <td>{{ item.Party || '—' }}</td>
+                            <td>{{ item.PKG_Load || 0 }}</td>
+                            <td>{{ item.CHRGWT_Load || 0 }}</td>
+                            <td>{{ item.HCAmt ? (item.HCAmt | number:'1.2-2') : '0.00' }}</td>
                         </tr>
-                        <tr>
-                            <td>2</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63261734</a></td>
-                            <td>JAI</td>
-                            <td>VGA</td>
-                            <td>Themis Medicare Limited</td>
-                            <td>Sree Vamsee Pharmaceuticals</td>
-                            <td>C12162427 : Themis Medicare Ltd</td>
-                            <td>2</td>
-                            <td>20</td>
-                            <td>1.80</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63261744</a></td>
-                            <td>JAI</td>
-                            <td>HYD</td>
-                            <td>Themis Medicare Limited</td>
-                            <td>Vasavi Pharma</td>
-                            <td>C12162427 : Themis Medicare Ltd</td>
-                            <td>8</td>
-                            <td>50</td>
-                            <td>4.50</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63320346</a></td>
-                            <td>RJK</td>
-                            <td>HYN</td>
-                            <td>Shri Krishna Plastics</td>
-                            <td>Kores India Limited, Hyderabad</td>
-                            <td>C010929745 : Shri Krishna Plastic</td>
-                            <td>6</td>
-                            <td>114</td>
-                            <td>10.26</td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63365298</a></td>
-                            <td>CHN</td>
-                            <td>HYD</td>
-                            <td>Hector Beverages Pvt. Ltd.</td>
-                            <td>Hector Beverages Pvt. Ltd.</td>
-                            <td>C12162372 : Hector Beverages Pvt Ltd (AMD)</td>
-                            <td>225</td>
-                            <td>2,025</td>
-                            <td>182.25</td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63365819</a></td>
-                            <td>STJ</td>
-                            <td>HYD</td>
-                            <td>Pharmalab India Pvt. Ltd.</td>
-                            <td>Asian Institute of Gastroenterology Pvt Ltd</td>
-                            <td>C12162815 : Pharmalab India Pvt Ltd</td>
-                            <td>2</td>
-                            <td>26</td>
-                            <td>2.34</td>
-                        </tr>
-                        <tr>
-                            <td>7</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63365875</a></td>
-                            <td>CHN</td>
-                            <td>HYD</td>
-                            <td>Canpac Trends Ltd</td>
-                            <td>Wow Momo Foods Pvt Ltd – HYD</td>
-                            <td>C12162983 : Canpac Trends Pvt Ltd</td>
-                            <td>19</td>
-                            <td>140</td>
-                            <td>12.60</td>
-                        </tr>
-                        <tr>
-                            <td>8</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63365883</a></td>
-                            <td>CHN</td>
-                            <td>HYD</td>
-                            <td>Canpac Trends Pvt Limited</td>
-                            <td>Sapphire Foods India Ltd – Hyderabad</td>
-                            <td>C12162983 : Canpac Trends Pvt Ltd</td>
-                            <td>84</td>
-                            <td>656</td>
-                            <td>59.04</td>
-                        </tr>
-                        <tr>
-                            <td>9</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63366322</a></td>
-                            <td>CHN</td>
-                            <td>HYN</td>
-                            <td>Troikaa Pharma Ltd</td>
-                            <td>Troikaa Pharma Ltd HYD NOV</td>
-                            <td>C12160630 : Troikaa Pharmaceuticals Ltd</td>
-                            <td>34</td>
-                            <td>445</td>
-                            <td>40.05</td>
-                        </tr>
-                        <tr>
-                            <td>10</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63366327</a></td>
-                            <td>CHN</td>
-                            <td>HYD</td>
-                            <td>Troikaa Pharma Ltd</td>
-                            <td>Troikaa Pharma Ltd Telangana</td>
-                            <td>C12160630 : Troikaa Pharmaceuticals Ltd</td>
-                            <td>1</td>
-                            <td>18</td>
-                            <td>1.62</td>
-                        </tr>
-                        <tr>
-                            <td>11</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63366329</a></td>
-                            <td>CHN</td>
-                            <td>VGA</td>
-                            <td>Troikaa Pharma Ltd</td>
-                            <td>Troikaa Pharma Ltd Vijaywada</td>
-                            <td>C12160630 : Troikaa Pharmaceuticals Ltd</td>
-                            <td>1</td>
-                            <td>18</td>
-                            <td>1.62</td>
-                        </tr>
-                        <tr>
-                            <td>12</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63366404</a></td>
-                            <td>AMD</td>
-                            <td>VGA</td>
-                            <td>Cadila Pharmaceuticals Ltd</td>
-                            <td>Cadila Pharmaceuticals Ltd – VJY</td>
-                            <td>C12161056 : Cadila Pharmaceuticals Ltd</td>
-                            <td>1</td>
-                            <td>4</td>
-                            <td>0.36</td>
-                        </tr>
-                        <tr>
-                            <td>13</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63366427</a></td>
-                            <td>AMD</td>
-                            <td>HYD</td>
-                            <td>Swami Ortho Aids</td>
-                            <td>SD Surgicals and Medicals</td>
-                            <td>C12162400 : Swami Ortho Aids</td>
-                            <td>6</td>
-                            <td>140</td>
-                            <td>12.60</td>
-                        </tr>
-                        <tr>
-                            <td>14</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63366447</a></td>
-                            <td>AMD</td>
-                            <td>HYN</td>
-                            <td>Swami Ortho Aids</td>
-                            <td>Indian Pharma Distributors</td>
-                            <td>C12162400 : Swami Ortho Aids</td>
-                            <td>1</td>
-                            <td>30</td>
-                            <td>2.70</td>
-                        </tr>
-                        <tr>
-                            <td>15</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63366472</a></td>
-                            <td>AMD</td>
-                            <td>HYD</td>
-                            <td>Neptune Orthopaedics Pvt Ltd</td>
-                            <td>Beiersdorf India Private Limited</td>
-                            <td>C12160688 : Beiersdorf India Pvt Ltd</td>
-                            <td>60</td>
-                            <td>360</td>
-                            <td>32.40</td>
-                        </tr>
-                        <tr>
-                            <td>16</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63366489</a></td>
-                            <td>AMD</td>
-                            <td>HYD</td>
-                            <td>Rotomech Pumps</td>
-                            <td>V Guard Industries Ltd Hyderabad</td>
-                            <td>C12160959 : V-Guard Industries Ltd</td>
-                            <td>29</td>
-                            <td>459</td>
-                            <td>41.31</td>
-                        </tr>
-                        <tr>
-                            <td>17</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63366493</a></td>
-                            <td>AMD</td>
-                            <td>HYD</td>
-                            <td>Briya Industries</td>
-                            <td>V-Guard Industries Ltd</td>
-                            <td>C12160959 : V-Guard Industries Ltd</td>
-                            <td>1</td>
-                            <td>10</td>
-                            <td>0.90</td>
-                        </tr>
-                        <tr>
-                            <td>18</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63366580</a></td>
-                            <td>CHN</td>
-                            <td>HYD</td>
-                            <td>Hector Beverages Pvt. Ltd.</td>
-                            <td>Hector Beverages Pvt. Ltd.</td>
-                            <td>C12162372 : Hector Beverages Pvt Ltd (AMD)</td>
-                            <td>84</td>
-                            <td>1,008</td>
-                            <td>90.72</td>
-                        </tr>
-                        <tr>
-                            <td>19</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63374087</a></td>
-                            <td>CHN</td>
-                            <td>HYD</td>
-                            <td>Karcher Cleaning Ltd</td>
-                            <td>ISS Facility Services</td>
-                            <td>C0001007963 : Karcher Cleaning Systems Pvt Ltd</td>
-                            <td>1</td>
-                            <td>2</td>
-                            <td>0.18</td>
-                        </tr>
-                        <tr>
-                            <td>20</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63374089</a></td>
-                            <td>CHN</td>
-                            <td>HYN</td>
-                            <td>Karcher Cleaning Ltd</td>
-                            <td>M/S Sriven Industrial Solutions</td>
-                            <td>C0001007963 : Karcher Cleaning Systems Pvt Ltd</td>
-                            <td>6</td>
-                            <td>66</td>
-                            <td>5.94</td>
-                        </tr>
-                        <tr>
-                            <td>21</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63374140</a></td>
-                            <td>CHN</td>
-                            <td>PTCH</td>
-                            <td>Kevin Process Technologies Pvt Ltd</td>
-                            <td>Apitoria Pharma Private Limited</td>
-                            <td>C07770035 : Apitoria Pharma Pvt Ltd</td>
-                            <td>3</td>
-                            <td>75</td>
-                            <td>6.75</td>
-                        </tr>
-                        <tr>
-                            <td>22</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63355143</a></td>
-                            <td>IDR</td>
-                            <td>HYN</td>
-                            <td>Criticare Division LLP</td>
-                            <td>Criticare Division LLP</td>
-                            <td>C12880227 : Criticare Division LLP</td>
-                            <td>1</td>
-                            <td>10</td>
-                            <td>0.90</td>
-                        </tr>
-                        <tr>
-                            <td>23</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63355305</a></td>
-                            <td>IDR</td>
-                            <td>HYN</td>
-                            <td>CavinKare Pvt. Ltd, IND Depot</td>
-                            <td>CavinKare Pvt. Ltd, SEC Depot</td>
-                            <td>C12880067 : Cavinkare Private Limited</td>
-                            <td>15</td>
-                            <td>62</td>
-                            <td>5.58</td>
-                        </tr>
-                        <tr>
-                            <td>24</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63355409</a></td>
-                            <td>PTP</td>
-                            <td>HYD</td>
-                            <td>Hindustan Phosphates Pvt Ltd</td>
-                            <td>APL Healthcare Limited</td>
-                            <td>C04770002 : Aurobindo Pharma Limited</td>
-                            <td>90</td>
-                            <td>2,250</td>
-                            <td>202.50</td>
-                        </tr>
-                        <tr>
-                            <td>25</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63355560</a></td>
-                            <td>PTP</td>
-                            <td>HYN</td>
-                            <td>Gufic Biosciences Limited</td>
-                            <td>Gufic Biosciences Limited</td>
-                            <td>C04330004 : Gufic Bio Science Ltd (Pan India)</td>
-                            <td>25</td>
-                            <td>247</td>
-                            <td>22.23</td>
-                        </tr>
-                        <tr>
-                            <td>26</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63355564</a></td>
-                            <td>PTP</td>
-                            <td>COK</td>
-                            <td>Gufic Biosciences Limited</td>
-                            <td>Gufic Biosciences Limited</td>
-                            <td>C04330004 : Gufic Bio Science Ltd (Pan India)</td>
-                            <td>3</td>
-                            <td>20</td>
-                            <td>1.80</td>
-                        </tr>
-                        <tr>
-                            <td>27</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">63355703</a></td>
-                            <td>IDR</td>
-                            <td>BLR</td>
-                            <td>FSIPL Ser. Indore</td>
-                            <td>FSIPL Ser. Bangalore</td>
-                            <td>C12163050 : Food Service (India) Pvt Ltd</td>
-                            <td>5</td>
-                            <td>60</td>
-                            <td>5.40</td>
+                        <tr *ngIf="dataList.length === 0">
+                            <td colspan="10" class="text-center text-muted py-4">No records found.</td>
                         </tr>
                     </tbody>
-                    <tfoot>
+                    <tfoot *ngIf="dataList.length > 0">
                         <tr>
-                            <td colspan="7" style="text-align:right;">Grand Total</td>
-                            <td>860</td>
-                            <td>9,785</td>
-                            <td>880.65</td>
+                            <td colspan="7" style="text-align:right; font-weight: bold;">Grand Total</td>
+                            <td>{{ getTotalPkgs() }}</td>
+                            <td>{{ getTotalWeight() | number:'1.0-2' }}</td>
+                            <td>{{ getHccAmount() | number:'1.2-2' }}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -478,10 +169,10 @@
     <!-- Footer -->
     <div class="modal-footer">
         <div class="modal-footer-info">
-            HCC No: <strong>HC/HYH/2627/001364</strong> &nbsp;|&nbsp;
-            Total Dockets: <strong>27</strong> &nbsp;|&nbsp;
-            Total Weight: <strong>9,785 Kg</strong> &nbsp;|&nbsp;
-            Total Amount: <strong>₹ 880.65</strong>
+            HCC No: <strong>{{ summary?.HCNumber || '—' }}</strong> &nbsp;|&nbsp;
+            Total Dockets: <strong>{{ dataList.length }}</strong> &nbsp;|&nbsp;
+            Total Weight: <strong>{{ getTotalWeight() | number:'1.0-2' }} Kg</strong> &nbsp;|&nbsp;
+            Total Amount: <strong>₹ {{ getHccAmount() | number:'1.2-2'}}</strong>
         </div>
         <div class="modal-footer-btns">
             <button class="mfbtn mfbtn-print" (click)="printHccModal()">🖨 Print</button>

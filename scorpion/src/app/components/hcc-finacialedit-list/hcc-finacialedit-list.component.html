@@ -16,11 +16,12 @@
     <!-- Summary Strip -->
     <div class="summary-strip">
         <!-- TOTAL HCC -->
-        <div class="summary-card c-blue cursor-pointer px-3 py-3">
+        <div class="summary-card c-blue cursor-pointer px-3 py-3"
+       [class.active-card]="config.statusFilter === 'All'" (click)="filterByStatus('All')">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="card-content">
                     <div class="s-label">Total HCC</div>
-                    <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.TotalHCC }}</div>
+                    <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.TotalHCC ||0 }}</div>
                     <div class="small text-body-tertiary">All matching records</div>
                 </div>
                 <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📋</div>
@@ -28,60 +29,66 @@
         </div>
 
         <!-- GENERATED -->
-        <div class="summary-card px-3 py-3 c-orange cursor-pointer">
+        <div class="summary-card px-3 py-3 c-orange cursor-pointer"
+         [class.active-card]="config.statusFilter === 'Generated'" (click)="filterByStatus('Generated')">
             <div class="card-content">
                 <div class="s-label">Generated</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Generated }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Generated ||0}}</div>
                 <div class="small text-body-tertiary">Pending billing</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
         </div>
 
         <!-- BILLED -->
-        <div class="summary-card px-3 py-3 c-green cursor-pointer">
+        <div class="summary-card px-3 py-3 c-green cursor-pointer"
+         [class.active-card]="config.statusFilter === 'Billed'" (click)="filterByStatus('Billed')">
             <div class="card-content">
                 <div class="s-label">Billed</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Billed }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Billed ||0}}</div>
                 <div class="small text-body-tertiary">Bill raised</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">✅</div>
         </div>
 
         <!-- CANCELLED -->
-        <div class="summary-card px-3 py-3 c-red cursor-pointer">
+        <div class="summary-card px-3 py-3 c-red cursor-pointer"
+         [class.active-card]="config.statusFilter === 'Cancelled'" (click)="filterByStatus('Cancelled')">
             <div class="card-content">
                 <div class="s-label">Cancelled</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Cancelled }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Cancelled ||0}}</div>
                 <div class="small text-body-tertiary">HCC cancelled</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🚫</div>
         </div>
 
         <!-- FINALISED -->
-        <div class="summary-card px-3 py-3 c-teal cursor-pointer">
+        <div class="summary-card px-3 py-3 c-teal cursor-pointer"
+        [class.active-card]="config.statusFilter === 'Finalised'" (click)="filterByStatus('Finalised')">
             <div class="card-content">
                 <div class="s-label">Finalised</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Finalised }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Finalised ||0}}</div>
                 <div class="small text-body-tertiary">Bill finalised</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🧾</div>
         </div>
 
         <!-- REQUEST GENERATED -->
-        <div class="summary-card px-3 py-3 c-purple cursor-pointer">
+        <div class="summary-card px-3 py-3 c-purple cursor-pointer"
+        [class.active-card]="config.statusFilter === 'Request Generated'" (click)="filterByStatus('Request Generated')">
             <div class="card-content">
                 <div class="s-label">Request Generated</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.RequestGenerated }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.RequestGenerated ||0}}</div>
                 <div class="small text-body-tertiary">Payment requested</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
         </div>
 
         <!-- HCC PAID -->
-        <div class="summary-card px-3 py-3 c-blue cursor-pointer">
+        <div class="summary-card px-3 py-3 c-blue cursor-pointer"
+        [class.active-card]="config.statusFilter === 'HCC Paid'" (click)="filterByStatus('HCC Paid')">
             <div class="card-content">
                 <div class="s-label">HCC Paid</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Paid }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Paid ||0}}</div>
                 <div class="small text-body-tertiary">Payment received</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
@@ -116,7 +123,7 @@
                 <div class="filter-group d-flex align-items-center gap-2 px-2">
                     <span class="filter-label">HCC Type</span>
                     <ng-select type="text" placeholder="HCC Type" [items]="HCCTypeList" bindLabel="label"
-                        bindValue="value" [(ngModel)]="config.statusFilter" (change)="fetchData()"
+                        bindValue="value" [(ngModel)]="config.hccType" (change)="fetchData()"
                         class="custom-status-select clear-icon"></ng-select>
                 </div>
             </div>
@@ -169,14 +176,14 @@
                         <td><span class="loc-badge" [title]="row.HCCLocation || ''">{{ row.HCCLocation || '—' }}</span></td>
                         <td>
                             <div class="hcc-cell">
-                                <a href="#" class="hcc-link" *ngIf="row.HCNumber" (click)="$event.preventDefault(); openHCCview(row)">{{ row.HCNumber }}</a>
+                                <a  class="hcc-link" *ngIf="row.HCNumber" >{{ row.HCNumber }}</a>
                                 <span class="hcc-link text-muted" *ngIf="!row.HCNumber">—</span>
                                 <span class="hcc-date">{{ row.HcDt || '—' }}</span>
                             </div>
                         </td>
                         <td>
                             <div class="doc-cell">
-                                <a href="#" class="doc-link" *ngIf="row.DocumentNo" (click)="$event.preventDefault(); openView(row.DocumentNo)">{{ row.DocumentNo }}</a>
+                                <a  class="doc-link" *ngIf="row.DocumentNo">{{ row.DocumentNo }}</a>
                                 <span class="doc-link text-muted" *ngIf="!row.DocumentNo">—</span>
                                 <span class="doc-date">{{ row.DocumentDt || '—' }}</span>
                             </div>
@@ -233,8 +240,8 @@
                             <div class="action-btns">
                                 <button class="ab ab-view" (click)="openHCCview(row)">👁 View</button>
                                 <button class="ab ab-print" (click)="openPrint(row.HCNumber)" [disabled]="!row.HCNumber" title="Print HCC">🖨 Print</button>
-                                <button class="ab ab-cancel" (click)="onCancel(row.HCNumber)" [disabled]="!row.HCNumber || row.HCCBillNo" title="Cancel HCC">🚫 Cancel</button>
-                                <button class="ab ab-edit" (click)="openEditModal(row)" [disabled]="row.HCCBillNo" title="Edit HCC">✏️ Edit</button>
+                                <button class="ab ab-cancel" (click)="onCancel(row)" [disabled]="!row.HCNumber || row.HCCBillNo" title="Cancel HCC">🚫 Cancel</button>
+                                <button class="ab ab-edit" (click)="openEditModal(row)" [disabled]="row.HCCBillNo || row.HCCStatus ==='Cancelled'" title="Edit HCC">✏️ Edit</button>
                             </div>
                         </td>
                     </tr>

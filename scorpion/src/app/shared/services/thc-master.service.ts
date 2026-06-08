@@ -206,4 +206,12 @@ export class THCMasterService {
       finalize(() => this.apiLoading.stop())
     );
   }
+
+  getHCCViewDetail(payload:any){
+    return this.apiHandlerService.Post(`Operation/GetHCCData`, payload);
+  }
+
+   getHCCCancel(payload:any){
+    return this.apiHandlerService.Post(`Operation/HCCCancellation`, payload);
+  }
 }
