@@ -80,6 +80,7 @@ export const ChallanRoutes: Routes = [
   {
     path: 'HccFinEditList',
     loadComponent: () => import('../hcc-finacialedit-list/hcc-finacialedit-list.component').then(m => m.HccFinacialeditListComponent),
+    canActivate: [DocketGuard]
   }
 
 ];
