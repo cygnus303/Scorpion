@@ -1,0 +1,140 @@
+<ng-template #TemplateRef>
+    <!-- Header -->
+    <div class="modal-header">
+        <div class="modal-header-left">
+            <div class="modal-title">HCC Edit</div>
+            <span class="modal-hcc-tag">{{ hccDetails.hccNo }}</span>
+        </div>
+        <div class="modal-header-actions">
+            <button class="modal-close" (click)="close()" title="Close">✕</button>
+        </div>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+        <!-- HCC Reference Card (Read Only) -->
+        <div class="detail-card">
+            <div class="detail-card-head">
+                <span class="dch-dot"></span> HCC REFERENCE
+                <span class="read-only-badge">READ-ONLY</span>
+            </div>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">HCC NO.</div>
+                    <input type="text" class="form-control hcc-readonly-input" readonly [value]="hccDetails.hccNo" />
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">HCC DATE</div>
+                    <input type="text" class="form-control hcc-readonly-input" readonly [value]="hccDetails.hccDate" />
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">DOCUMENT NO.</div>
+                    <input type="text" class="form-control hcc-readonly-input" readonly [value]="hccDetails.docNo" />
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">HCC AMOUNT (GENERATED)</div>
+                    <input type="text" class="form-control hcc-readonly-input highlight-red-text" readonly [value]="hccDetails.hccAmount" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Docket Details Card (Editable) -->
+        <div class="docket-card">
+            <div class="docket-card-head">
+                <div class="docket-card-head-left"><span class="dch-dot"></span> DOCKET DETAILS</div>
+                <span class="docket-count-badge">{{ hccDetails.totalPkgs ? '27 Dockets' : '' }}</span>
+            </div>
+            <div class="docket-tbl-wrap">
+                <table class="docket-tbl">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>LR No.</th>
+                            <th>LR Date</th>
+                            <th>Origin</th>
+                            <th>Destination</th>
+                            <th>Pkgs</th>
+                            <th>Actual Wt (Kg)</th>
+                            <th>Charge Wt (Kg)</th>
+                            <th>Vendor Type</th>
+                            <th>Vendor</th>
+                            <th>Rate Type</th>
+                            <th>Rate (₹)</th>
+                            <th class="text-center">LR-wise HCC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let docket of dockets">
+                            <td>{{ docket.sNo }}</td>
+                            <td><a href="#" class="cnote-link" (click)="$event.preventDefault()">{{ docket.lrNo }}</a></td>
+                            <td class="grey-text">{{ docket.lrDate }}</td>
+                            <td>{{ docket.origin }}</td>
+                            <td>{{ docket.destination }}</td>
+                            <td>{{ docket.pkgs }}</td>
+                            <td>{{ docket.actualWt | number }}</td>
+                            <td>{{ docket.chargeWt | number }}</td>
+                            <td>
+                                <select class="table-select">
+                                    <option value="">-- Select --</option>
+                                    <option *ngFor="let vt of vendorTypes" [value]="vt">{{ vt }}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="table-select">
+                                    <option value="">-- Select --</option>
+                                    <option *ngFor="let v of vendors" [value]="v">{{ v }}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="table-select">
+                                    <option value="">-- Select --</option>
+                                    <option *ngFor="let rt of rateTypes" [value]="rt">{{ rt }}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="table-input" value="0.00" />
+                            </td>
+                            <td class="text-center">
+                                <input type="checkbox" class="table-checkbox" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Frozen Summary Card -->
+        <div class="frozen-summary-card">
+            <span class="frozen-badge">🔒 FROZEN</span>
+            <div class="frozen-grid">
+                <div class="frozen-col">
+                    <div class="frozen-label">TOTAL PACKAGES</div>
+                    <div class="frozen-value">{{ hccDetails.totalPkgs }}</div>
+                </div>
+                <div class="frozen-col">
+                    <div class="frozen-label">TOTAL WEIGHT</div>
+                    <div class="frozen-value">{{ hccDetails.totalWeight | number }} Kg</div>
+                </div>
+                <div class="frozen-col">
+                    <div class="frozen-label">TOTAL LR AMOUNT</div>
+                    <div class="frozen-value highlight-green">₹ {{ hccDetails.totalLrAmt | number:'1.2-2' }}</div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /modal-body -->
+
+    <!-- Footer -->
+    <div class="modal-footer">
+        <div class="modal-footer-info font-11">
+            HCC No: <strong>{{ hccDetails.hccNo }}</strong> &nbsp;|&nbsp;
+            All 27 LRs included &nbsp;|&nbsp;
+            <span class="text-danger">⚠️ Changes will be logged with user & timestamp</span>
+        </div>
+        <div class="modal-footer-btns">
+            <button class="mfbtn mfbtn-download"><span class="icon">📥</span> Download XLS</button>
+            <button class="mfbtn mfbtn-cancel" (click)="close()">✕ Cancel</button>
+            <button class="mfbtn mfbtn-submit" (click)="submit()">✓ Submit</button>
+        </div>
+    </div>
+</ng-template>

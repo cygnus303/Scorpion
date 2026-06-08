@@ -199,4 +199,19 @@ export class THCMasterService {
   submitHCC(payload: any, params: any) {
     return this.apiHandlerService.Post(`THC/HCCSubmit?baseLocationCode=${params.baseLocationCode}&basefinyear=${params.basefinyear}&userid=${params.userid}&companycode=${params.companycode}`, payload);
   }
+
+  getHCCList(payload: any): Observable<any> {
+    this.apiLoading.start();
+    return this.apiHandlerService.Post(`Operation/GetHCCList`, payload).pipe(
+      finalize(() => this.apiLoading.stop())
+    );
+  }
+
+  getHCCViewDetail(payload:any){
+    return this.apiHandlerService.Post(`Operation/GetHCCData`, payload);
+  }
+
+   getHCCCancel(payload:any){
+    return this.apiHandlerService.Post(`Operation/HCCCancellation`, payload);
+  }
 }

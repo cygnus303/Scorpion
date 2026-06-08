@@ -1,0 +1,80 @@
+/* ── Table Wrapper ── */
+.table-wrap { overflow-x: auto; background: #fff; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 0; }
+.data-table thead th { background: #f5f6ff; color: #3949ab; font-weight: 700; padding: 10px 12px; text-align: center; border-bottom: 2px solid #e8eaf6; white-space: nowrap; }
+.data-table tbody td { padding: 9px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tbody tr:hover { background: #f8f9ff; }
+.sno { color: #9e9e9e; font-size: 12px; font-weight: 600; text-align: center; }
+
+/* ── Stacked Cells ── */
+.hcc-cell  { display: flex; flex-direction: column; gap: 2px; align-items: center; }
+.hcc-date  { font-size: 10px; color: #9e9e9e; }
+
+.doc-cell  { display: flex; flex-direction: column; gap: 2px; align-items: center; }
+.doc-date  { font-size: 10px; color: #9e9e9e; }
+
+.vendor-cell { display: flex; flex-direction: column; gap: 3px; align-items: center; }
+.vendor-name { font-size: 11px; font-weight: 600; color: #333; }
+.vendor-type-badge { display: inline-block; font-size: 10px; font-weight: 700; border-radius: 4px; padding: 1px 6px; }
+.vt-transporter { background: #e3f2fd; color: #0277bd; }
+.vt-agent       { background: #f3e5f5; color: #6a1b9a; }
+.vt-own         { background: #e8f5e9; color: #2e7d32; }
+
+.bill-cell { display: flex; flex-direction: column; gap: 2px; align-items: center; }
+.bill-date { font-size: 10px; color: #9e9e9e; }
+
+/* ── Hyperlinks ── */
+.hcc-link  { color: #1a237e; text-decoration: none; font-weight: 700; font-size: 12px; border-bottom: 1px dashed #1a237e; }
+.hcc-link:hover  { color: #283593; border-bottom-style: solid; }
+.doc-link  { color: #1565c0; text-decoration: none; font-weight: 600; font-size: 12px; border-bottom: 1px dashed #1565c0; }
+.doc-link:hover  { color: #0d47a1; border-bottom-style: solid; }
+.bill-link { color: #6a1b9a; text-decoration: none; font-weight: 600; font-size: 12px; border-bottom: 1px dashed #6a1b9a; }
+.bill-link:hover { color: #4a148c; border-bottom-style: solid; }
+.empty-val { font-size: 12px; color: #bdbdbd; }
+
+/* ── HCC Type Badge ── */
+.hcctype-badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+.hcctype-loading   { background: #e3f2fd; color: #0277bd; border: 1px solid #90caf9; }
+.hcctype-unloading { background: #fce4ec; color: #c62828; border: 1px solid #f48fb1; }
+
+/* ── Amount Badge ── */
+.amount-val { font-size: 12px; font-weight: 700; color: #1a237e; }
+.cnote-badge { display: inline-block; background: #f3e5f5; color: #6a1b9a; font-size: 11px; font-weight: 700; border-radius: 10px; padding: 2px 10px; }
+
+/* ── HCC Status Badges ── */
+.status-badge { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.status-generated { background: #fff8e1; color: #f57f17; border: 1px solid #ffe082; }
+.status-billed    { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+.status-cancelled { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+
+/* ── Bill Status Badges ── */
+.bill-badge { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.bill-finalized  { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+.bill-unfinalized{ background: #fff8e1; color: #f57f17; border: 1px solid #ffe082; }
+.bill-reqgen     { background: #e3f2fd; color: #0277bd; border: 1px solid #90caf9; }
+.bill-paid       { background: #e8eaf6; color: #1a237e; border: 1px solid #9fa8da; }
+.bill-none       { font-size: 11px; color: #bdbdbd; }
+
+/* ── Action Buttons ── */
+.action-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; min-width: 170px; }
+.ab { padding: 4px 9px; border-radius: 5px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1.5px solid; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s; white-space: nowrap; }
+.ab:disabled { opacity: 0.38; cursor: not-allowed; }
+.ab:disabled:hover { transform: none; box-shadow: none; }
+.ab-view   { background: #e8eaf6; color: #1a237e; border-color: #9fa8da; }
+.ab-view:hover:not(:disabled) { background: #c5cae9; }
+.ab-cancel { background: #ffebee; color: #c62828; border-color: #ef9a9a; }
+.ab-cancel:hover:not(:disabled) { background: #ffcdd2; }
+.ab-edit   { background: #fff8e1; color: #f57f17; border-color: #ffe082; }
+.ab-edit:hover:not(:disabled)   { background: #fff3cd; }
+.ab-print  { background: #eceff1; color: #424242; border-color: #b0bec5; }
+.ab-print:hover:not(:disabled)  { background: #cfd8dc; }
+
+/* ── HCC Location Badge ── */
+.loc-badge {
+  display: inline-block; background: #ede7f6; color: #4527a0; border: 1px solid #b39ddb;
+  font-size: 11px; font-weight: 800; letter-spacing: 0.4px;
+  border-radius: 6px; padding: 3px 9px; min-width: 48px; text-align: center;
+}
+
+td { text-align: center; }

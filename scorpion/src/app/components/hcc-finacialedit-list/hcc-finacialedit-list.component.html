@@ -1,1 +1,260 @@
-<p>hcc-finacialedit-list works!</p>
+<div style="background: var(--bg);" class="p-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="page-title">
+            <span class="icon">📋</span>
+            HCC Financial Edit
+        </div>
+        <div class="btn-group gap-3 ms-auto">
+            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="downloadXLS()" [disabled]="isCSVLoading">
+                <span *ngIf="!isCSVLoading"> <span class="fs-5 me-1">📥</span> Download XLS</span>
+                <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
+                <span *ngIf="isCSVLoading">Downloading...</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Summary Strip -->
+    <div class="summary-strip">
+        <!-- TOTAL HCC -->
+        <div class="summary-card c-blue cursor-pointer px-3 py-3"
+       [class.active-card]="config.statusFilter === 'All'" (click)="filterByStatus('All')">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="card-content">
+                    <div class="s-label">Total HCC</div>
+                    <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.TotalHCC ||0 }}</div>
+                    <div class="small text-body-tertiary">All matching records</div>
+                </div>
+                <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📋</div>
+            </div>
+        </div>
+
+        <!-- GENERATED -->
+        <div class="summary-card px-3 py-3 c-orange cursor-pointer"
+         [class.active-card]="config.statusFilter === 'Generated'" (click)="filterByStatus('Generated')">
+            <div class="card-content">
+                <div class="s-label">Generated</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Generated ||0}}</div>
+                <div class="small text-body-tertiary">Pending billing</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
+        </div>
+
+        <!-- BILLED -->
+        <div class="summary-card px-3 py-3 c-green cursor-pointer"
+         [class.active-card]="config.statusFilter === 'Billed'" (click)="filterByStatus('Billed')">
+            <div class="card-content">
+                <div class="s-label">Billed</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Billed ||0}}</div>
+                <div class="small text-body-tertiary">Bill raised</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">✅</div>
+        </div>
+
+        <!-- CANCELLED -->
+        <div class="summary-card px-3 py-3 c-red cursor-pointer"
+         [class.active-card]="config.statusFilter === 'Cancelled'" (click)="filterByStatus('Cancelled')">
+            <div class="card-content">
+                <div class="s-label">Cancelled</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Cancelled ||0}}</div>
+                <div class="small text-body-tertiary">HCC cancelled</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🚫</div>
+        </div>
+
+        <!-- FINALISED -->
+        <div class="summary-card px-3 py-3 c-teal cursor-pointer"
+        [class.active-card]="config.statusFilter === 'Finalised'" (click)="filterByStatus('Finalised')">
+            <div class="card-content">
+                <div class="s-label">Finalised</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Finalised ||0}}</div>
+                <div class="small text-body-tertiary">Bill finalised</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🧾</div>
+        </div>
+
+        <!-- REQUEST GENERATED -->
+        <div class="summary-card px-3 py-3 c-purple cursor-pointer"
+        [class.active-card]="config.statusFilter === 'Request Generated'" (click)="filterByStatus('Request Generated')">
+            <div class="card-content">
+                <div class="s-label">Request Generated</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.RequestGenerated ||0}}</div>
+                <div class="small text-body-tertiary">Payment requested</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
+        </div>
+
+        <!-- HCC PAID -->
+        <div class="summary-card px-3 py-3 c-blue cursor-pointer"
+        [class.active-card]="config.statusFilter === 'HCC Paid'" (click)="filterByStatus('HCC Paid')">
+            <div class="card-content">
+                <div class="s-label">HCC Paid</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Paid ||0}}</div>
+                <div class="small text-body-tertiary">Payment received</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
+        </div>
+    </div>
+
+    <!-- Table Panel -->
+    <div>
+        <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
+            <div class="control-bar border-0 shadow-none mb-0">
+                <div class="date-range-group">
+                    <span class="date-label">Date Range</span>
+                    <div class="date-input-wrap" style="padding:0;">
+                        <input type="text" id="dateFrom" bsDatepicker
+                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                            [(ngModel)]="config.fromDateStr" (ngModelChange)="fetchData()"
+                            style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
+                        <span
+                            style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+                    </div>
+                    <span class="date-sep">→</span>
+                    <div class="date-input-wrap" style="padding:0;">
+                        <input type="text" id="dateTo" bsDatepicker
+                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                            [(ngModel)]="config.toDateStr" (ngModelChange)="fetchData()"
+                            style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
+                        <span
+                            style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+                    </div>
+                </div>
+                <div class="divider-v"></div>
+                <div class="filter-group d-flex align-items-center gap-2 px-2">
+                    <span class="filter-label">HCC Type</span>
+                    <ng-select type="text" placeholder="HCC Type" [items]="HCCTypeList" bindLabel="label"
+                        bindValue="value" [(ngModel)]="config.hccType" (change)="fetchData()"
+                        class="custom-status-select clear-icon"></ng-select>
+                </div>
+            </div>
+            <div class="table-toolbar">
+                <div class="search-box d-flex align-items-center"><span class="text-muted">🔍</span>
+                    <input type="text" placeholder="Search…" class="form-control border-0 shadow-none"
+                        [(ngModel)]="config.searchText" (ngModelChange)="onSearchChange()">
+                </div>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table class="table align-middle data-table mb-0">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">HCC Location</th>
+                        <th class="text-center">HCC No. / Date</th>
+                        <th class="text-center">Document No. / Date </th>
+                        <th class="text-center">HCC Type</th>
+                        <th class="text-center">HCC Amount</th>
+                        <th class="text-center">C-Note Count</th>
+                        <th class="text-center">Vendor Type / Name</th>
+                        <th class="text-center">HCC Status</th>
+                        <th class="text-center">HCC Bill No. / Date</th>
+                        <th class="text-center">Bill Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="isLoading">
+                    <tr>
+                        <td colspan="12" class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && hccData.length === 0">
+                    <tr>
+                        <td colspan="12" class="text-center py-4 text-muted fs-5">
+                            No records found.
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && hccData.length > 0">
+                    <tr *ngFor="let row of hccData; let i = index">
+                        <td class="sno">{{ (config.page - 1) * config.pageSize + i + 1 }}</td>
+                        <td><span class="loc-badge" [title]="row.HCCLocation || ''">{{ row.HCCLocation || '—' }}</span></td>
+                        <td>
+                            <div class="hcc-cell">
+                                <a  class="hcc-link" *ngIf="row.HCNumber" >{{ row.HCNumber }}</a>
+                                <span class="hcc-link text-muted" *ngIf="!row.HCNumber">—</span>
+                                <span class="hcc-date">{{ row.HcDt || '—' }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="doc-cell">
+                                <a  class="doc-link" *ngIf="row.DocumentNo">{{ row.DocumentNo }}</a>
+                                <span class="doc-link text-muted" *ngIf="!row.DocumentNo">—</span>
+                                <span class="doc-date">{{ row.DocumentDt || '—' }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="hcctype-badge" 
+                                [ngClass]="row.ChargesType === 'L' ? 'hcctype-loading' : 'hcctype-unloading'">
+                                {{ row.HCCTypeDesc || '—' }}
+                            </span>
+                        </td>
+                        <td><span class="amount-val">{{ row.HCCAmt !== null ? '₹' + (row.HCCAmt | number:'1.2-2') : '—' }}</span></td>
+                        <td><span class="cnote-badge">{{ row.CNoteCount || 0 }}</span></td>
+                        <td>
+                            <div class="vendor-cell">
+                                <span class="vendor-type-badge" 
+                                    [ngClass]="{
+                                        'vt-transporter': row.ChargedBy === 'B',
+                                        'vt-agent': row.ChargedBy === 'A',
+                                        'vt-own': row.ChargedBy === 'XX9' || row.ChargedBy === 'XX5'
+                                    }">
+                                    {{ row.ChargedByDesc || '—' }}
+                                </span>
+                                <span class="vendor-name">{{ row.VendorCode || '—' }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-badge" 
+                                [ngClass]="{
+                                    'status-generated': row.HCCStatus === 'Generated',
+                                    'status-billed': row.HCCStatus === 'Billed',
+                                    'status-cancelled': row.HCCStatus === 'Cancelled'
+                                }">
+                                {{ row.HCCStatus || '—' }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="bill-cell" *ngIf="row.HCCBillNo">
+                                <a href="#" class="bill-link" (click)="$event.preventDefault(); openView(row.HCCBillNo)">{{ row.HCCBillNo }}</a>
+                                <span class="bill-date">{{ row.HCCBillDt || '—' }}</span>
+                            </div>
+                            <span class="empty-val" *ngIf="!row.HCCBillNo">—</span>
+                        </td>
+                        <td>
+                            <span class="bill-badge" 
+                                [ngClass]="{
+                                    'bill-finalized': row.BillStatus === 'Finalized',
+                                    'bill-paid': row.BillStatus === 'Paid',
+                                    'bill-none': !row.BillStatus
+                                }">
+                                {{ row.BillStatus || '—' }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="ab ab-view" (click)="openHCCview(row)">👁 View</button>
+                                <button class="ab ab-print" (click)="openPrint(row.HCNumber)" [disabled]="!row.HCNumber" title="Print HCC">🖨 Print</button>
+                                <button class="ab ab-cancel" (click)="onCancel(row)" [disabled]="!row.HCNumber || row.HCCBillNo" title="Cancel HCC">🚫 Cancel</button>
+                                <button class="ab ab-edit" (click)="openEditModal(row)" [disabled]="row.HCCBillNo || row.HCCStatus ==='Cancelled'" title="Edit HCC">✏️ Edit</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <app-pagination [page]="config.page" [pageSize]="config.pageSize" [totalRecords]="config.totalRecords"
+            [totalPages]="config.totalPages" (pageChange)="setPage($event)">
+        </app-pagination>
+    </div>
+</div>
+
+<app-hccview #HCCviewComponent></app-hccview>
+<app-hcc-details #HCCDetailsComponent (dataEmitter)="refreshData()"></app-hcc-details>

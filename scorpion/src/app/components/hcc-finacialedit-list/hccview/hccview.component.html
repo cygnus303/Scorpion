@@ -1,0 +1,184 @@
+<ng-template #TemplateRef>
+    <!-- Header -->
+    <div class="modal-header">
+        <div class="modal-header-left">
+            <div class="modal-title">HCC View Details</div>
+            <span class="modal-hcc-tag" id="modalHccTag">{{ summary?.HCNumber || '—' }}</span>
+        </div>
+        <div class="modal-header-actions">
+            <button class="modal-header-print" (click)="printHccModal()" title="Print this HCC">🖨
+                Print</button>
+            <button class="modal-close" (click)="closeHccModal()" title="Close">✕</button>
+        </div>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+
+        <!-- Print-only header (visible only on paper) -->
+        <div class="print-header print-only">
+            <div class="ph-left">
+                <div class="ph-company">SCORPION EXPRESS PVT LTD</div>
+                <div class="ph-tagline">Transport Management System &nbsp;|&nbsp; Finance Module</div>
+            </div>
+            <div class="ph-right">
+                <div class="ph-doc-title">HCC Voucher</div>
+                <div class="ph-doc-no">{{ summary?.HCNumber || '—' }}</div>
+                <div class="ph-print-date" id="phPrintDate">Printed: —</div>
+            </div>
+        </div>
+
+        <!-- HCC Details Card -->
+        <div class="detail-card">
+            <div class="detail-card-head"><span class="dch-dot"></span> HCC Details</div>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">HCC Location</div>
+                    <div class="detail-value">{{ summary?.HCCLocation || '—' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">HCC No.</div>
+                    <div class="detail-value highlight">{{ summary?.HCNumber || '—' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">HCC Date</div>
+                    <div class="detail-value">{{ summary?.HCDate || '—' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Doc No.</div>
+                    <div class="detail-value">{{ summary?.DocumentNo || '—' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Vehicle No.</div>
+                    <div class="detail-value">{{ summary?.VEHNO || '—' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Route</div>
+                    <div class="detail-value grey">{{ summary?.Route || '—' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Loading / Unloading Type</div>
+                    <div class="detail-value"><span [ngClass]="summary?.ChargesType === 'UnLoading' ? 'type-unloading' : 'type-loading'">{{ summary?.ChargesType || '—' }}</span></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">PAN No.</div>
+                    <div class="detail-value grey">{{ summary?.PanNo || '—' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">HCC Amount Total</div>
+                    <div class="detail-value highlight">₹ {{ summary?.ChargeAmount !== null ? (summary?.ChargeAmount | number:'1.2-2') : '0.00' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Vendor Type</div>
+                    <div class="detail-value">{{ summary?.ChargedByDesc || '—' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Vendor Name</div>
+                    <div class="detail-value">{{ summary?.VendorName || '—' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">HCC Status</div>
+                    <div class="detail-value"><span class="status-badge" [ngClass]="{'status-generated': summary?.HCCStatus === 'Generated'}">{{ summary?.HCCStatus || '—' }}</span></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Prepared By</div>
+                    <div class="detail-value grey">{{ summary?.PreparedBy || '—' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Edited By</div>
+                    <div class="detail-value grey">{{ summary?.EditedBy || '—' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Cancelled By</div>
+                    <div class="detail-value grey">{{ summary?.CancelledBy || '—' }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">HCC Bill No.</div>
+                    <div class="detail-value grey">{{ summary?.HCCBillNo || '—' }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Docket Details Card -->
+        <div class="docket-card">
+            <div class="docket-card-head">
+                <div class="docket-card-head-left"><span class="dch-dot"></span> HCC Docket Details</div>
+                <span class="docket-count-badge">{{ dataList.length }} Dockets</span>
+            </div>
+            <div class="docket-tbl-wrap">
+                <table class="docket-tbl">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>C-Note No.</th>
+                            <th>Origin</th>
+                            <th>Destination</th>
+                            <th>Consignor</th>
+                            <th>Consignee</th>
+                            <th>Customer</th>
+                            <th>Pkgs</th>
+                            <th>Weight (Kg)</th>
+                            <th>LR HCC Amt (₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of dataList; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td><a href="#" class="cnote-link" onclick="return false;">{{ item.DOCKNO || '—' }}</a></td>
+                            <td>{{ item.ORGNCD || '—' }}</td>
+                            <td>{{ item.DESTCD || '—' }}</td>
+                            <td>{{ item.CSGNCD || '—' }}</td>
+                            <td>{{ item.CSGECD || '—' }}</td>
+                            <td>{{ item.Party || '—' }}</td>
+                            <td>{{ item.PKG_Load || 0 }}</td>
+                            <td>{{ item.CHRGWT_Load || 0 }}</td>
+                            <td>{{ item.HCAmt ? (item.HCAmt | number:'1.2-2') : '0.00' }}</td>
+                        </tr>
+                        <tr *ngIf="dataList.length === 0">
+                            <td colspan="10" class="text-center text-muted py-4">No records found.</td>
+                        </tr>
+                    </tbody>
+                    <tfoot *ngIf="dataList.length > 0">
+                        <tr>
+                            <td colspan="7" style="text-align:right; font-weight: bold;">Grand Total</td>
+                            <td>{{ getTotalPkgs() }}</td>
+                            <td>{{ getTotalWeight() | number:'1.0-2' }}</td>
+                            <td>{{ getHccAmount() | number:'1.2-2' }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <!-- Print-only signature block (visible only on paper) -->
+        <div class="print-signatures print-only">
+            <div class="print-sign-box">Prepared By</div>
+            <div class="print-sign-box">Checked By</div>
+            <div class="print-sign-box">Authorised Signatory</div>
+        </div>
+
+        <!-- Print-only footer (visible only on paper) -->
+        <div class="print-footer print-only">
+            <div>Scorpion Express Pvt Ltd &nbsp;·&nbsp; HCC Voucher &nbsp;·&nbsp; System-generated document
+            </div>
+            <div>HC/HYH/2627/001364</div>
+        </div>
+
+    </div><!-- /modal-body -->
+
+    <!-- Footer -->
+    <div class="modal-footer">
+        <div class="modal-footer-info">
+            HCC No: <strong>{{ summary?.HCNumber || '—' }}</strong> &nbsp;|&nbsp;
+            Total Dockets: <strong>{{ dataList.length }}</strong> &nbsp;|&nbsp;
+            Total Weight: <strong>{{ getTotalWeight() | number:'1.0-2' }} Kg</strong> &nbsp;|&nbsp;
+            Total Amount: <strong>₹ {{ getHccAmount() | number:'1.2-2'}}</strong>
+        </div>
+        <div class="modal-footer-btns">
+            <button class="mfbtn mfbtn-print" (click)="printHccModal()">🖨 Print</button>
+            <button class="mfbtn mfbtn-pdf" (click)="printHccModal()" title="Use 'Save as PDF' in the print dialog">📄
+                Save as PDF</button>
+            <button class="mfbtn mfbtn-close" (click)="closeHccModal()">✕ Close</button>
+        </div>
+    </div>
+</ng-template>

@@ -64,7 +64,7 @@ export class HCCDetailsComponent {
     this.getVendorType(flag);
     this.generalMasterService.getChargeTypeData();
     this.getHCCDetail(data);
-    this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
+    this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered hcc-view-modal-custom', backdrop: true });
   }
 
   ngOnInit() {

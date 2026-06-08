@@ -67,7 +67,8 @@ export const ChallanRoutes: Routes = [
     path: 'THCArrivalList',
     loadComponent: () => import('../thc-arrival-list/thc-arrival-list.component').then(m => m.ThcArrivalListComponent),
     canActivate: [DocketGuard]
-  },{
+  },
+  {
     path: 'docketList',
     loadComponent: () => import('../lr-list/lr-list.component').then(m => m.LrListComponent),
     canActivate: [DocketGuard]
@@ -75,6 +76,10 @@ export const ChallanRoutes: Routes = [
   {
     path: 'UNRList',
     loadComponent: () => import('../unr-list/unr-list.component').then(m => m.UNRListComponent),
+  },
+  {
+    path: 'HccFinEditList',
+    loadComponent: () => import('../hcc-finacialedit-list/hcc-finacialedit-list.component').then(m => m.HccFinacialeditListComponent),
   }
 
 ];
