@@ -254,7 +254,15 @@
                                         </tr>
                                     </thead>
 
-                                    <tbody formArrayName="drsList">
+                                    <tbody *ngIf="drsList.controls.length === 0">
+                                        <tr>
+                                            <td colspan="17" class="text-center py-4 text-muted fs-5">
+                                                No data found
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                    <tbody formArrayName="drsList" *ngIf="drsList.controls.length > 0">
                                         <ng-container *ngFor="let row of drsList.controls; let i = index"
                                             [formGroupName]="i" class="m-2">
                                             <tr>
