@@ -5,43 +5,43 @@
             HCC Financial Edit
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn btn-success px-4 py-2 rounded fw-bold">
-                <span> <span class="fs-5 me-1">📥</span> Download XLS</span>
-                <!-- <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
-                <span *ngIf="isCSVLoading">Downloading...</span> -->
+            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="downloadXLS()" [disabled]="isCSVLoading">
+                <span *ngIf="!isCSVLoading"> <span class="fs-5 me-1">📥</span> Download XLS</span>
+                <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
+                <span *ngIf="isCSVLoading">Downloading...</span>
             </button>
         </div>
     </div>
 
     <!-- Summary Strip -->
     <div class="summary-strip">
-        <!-- TOTAL PRS -->
+        <!-- TOTAL HCC -->
         <div class="summary-card c-blue cursor-pointer px-3 py-3">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="card-content">
                     <div class="s-label">Total HCC</div>
-                    <div class="s-val fs-2 fw-bold lh-1">{{ 8 }}</div>
-                    <div class="small text-body-tertiary">All records today</div>
+                    <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.TotalHCC }}</div>
+                    <div class="small text-body-tertiary">All matching records</div>
                 </div>
                 <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📋</div>
             </div>
         </div>
 
-        <!-- PENDING FOR ARRIVAL -->
+        <!-- GENERATED -->
         <div class="summary-card px-3 py-3 c-orange cursor-pointer">
             <div class="card-content">
                 <div class="s-label">Generated</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ 8}}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Generated }}</div>
                 <div class="small text-body-tertiary">Pending billing</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
         </div>
 
-        <!-- TOTAL PRS ARRIVED -->
+        <!-- BILLED -->
         <div class="summary-card px-3 py-3 c-green cursor-pointer">
             <div class="card-content">
                 <div class="s-label">Billed</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ 3}}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Billed }}</div>
                 <div class="small text-body-tertiary">Bill raised</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">✅</div>
@@ -51,36 +51,37 @@
         <div class="summary-card px-3 py-3 c-red cursor-pointer">
             <div class="card-content">
                 <div class="s-label">Cancelled</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ 1 }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Cancelled }}</div>
                 <div class="small text-body-tertiary">HCC cancelled</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🚫</div>
         </div>
 
-        <!-- PRS BILLED -->
+        <!-- FINALISED -->
         <div class="summary-card px-3 py-3 c-teal cursor-pointer">
             <div class="card-content">
                 <div class="s-label">Finalised</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ 9 }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Finalised }}</div>
                 <div class="small text-body-tertiary">Bill finalised</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🧾</div>
         </div>
 
-        <!-- HCC GENERATED -->
+        <!-- REQUEST GENERATED -->
         <div class="summary-card px-3 py-3 c-purple cursor-pointer">
             <div class="card-content">
                 <div class="s-label">Request Generated</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ 1 }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.RequestGenerated }}</div>
                 <div class="small text-body-tertiary">Payment requested</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
         </div>
 
+        <!-- HCC PAID -->
         <div class="summary-card px-3 py-3 c-blue cursor-pointer">
             <div class="card-content">
                 <div class="s-label">HCC Paid</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ 1 }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.Paid }}</div>
                 <div class="small text-body-tertiary">Payment received</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
@@ -96,7 +97,7 @@
                     <div class="date-input-wrap" style="padding:0;">
                         <input type="text" id="dateFrom" bsDatepicker
                             [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
-                            [(ngModel)]="config.fromDateStr"
+                            [(ngModel)]="config.fromDateStr" (ngModelChange)="fetchData()"
                             style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
                         <span
                             style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
@@ -105,7 +106,7 @@
                     <div class="date-input-wrap" style="padding:0;">
                         <input type="text" id="dateTo" bsDatepicker
                             [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
-                            [(ngModel)]="config.toDateStr"
+                            [(ngModel)]="config.toDateStr" (ngModelChange)="fetchData()"
                             style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
                         <span
                             style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
@@ -115,20 +116,20 @@
                 <div class="filter-group d-flex align-items-center gap-2 px-2">
                     <span class="filter-label">HCC Type</span>
                     <ng-select type="text" placeholder="HCC Type" [items]="HCCTypeList" bindLabel="label"
-                        bindValue="value" [(ngModel)]="config.statusFilter"
+                        bindValue="value" [(ngModel)]="config.statusFilter" (change)="fetchData()"
                         class="custom-status-select clear-icon"></ng-select>
                 </div>
             </div>
             <div class="table-toolbar">
                 <div class="search-box d-flex align-items-center"><span class="text-muted">🔍</span>
                     <input type="text" placeholder="Search…" class="form-control border-0 shadow-none"
-                        [(ngModel)]="config.searchText">
+                        [(ngModel)]="config.searchText" (ngModelChange)="onSearchChange()">
                 </div>
             </div>
         </div>
 
         <div class="table-wrap">
-            <table class="table align-middle  data-table mb-0">
+            <table class="table align-middle data-table mb-0">
                 <thead>
                     <tr>
                         <th class="text-center">#</th>
@@ -145,9 +146,9 @@
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
-                <!-- <tbody *ngIf="isLoading">
+                <tbody *ngIf="isLoading">
                     <tr>
-                        <td colspan="9" class="text-center py-5">
+                        <td colspan="12" class="text-center py-5">
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">Loading...</span>
                             </div>
@@ -155,392 +156,98 @@
                         </td>
                     </tr>
                 </tbody>
-                <tbody *ngIf="!isLoading && prsData.length === 0">
+                <tbody *ngIf="!isLoading && hccData.length === 0">
                     <tr>
-                        <td colspan="9" class="text-center py-4 text-muted fs-5">
+                        <td colspan="12" class="text-center py-4 text-muted fs-5">
                             No records found.
                         </td>
                     </tr>
-                </tbody> -->
-                <tbody>
-                    <tr data-hccstatus="generated" data-hcctype="loading" data-vendor="fast freight carriers"
-                        data-vendortype="attached" data-location="amh" data-date="2026-03-21" data-hasbill="no"
-                        data-billstatus="none" data-hcc="hcc/2526/00001 fast freight carriers amh"
-                        data-docno="PRS/2526/00101" data-billno="none">
-                        <td class="sno">1</td>
-                        <td><span class="loc-badge" title="Ahmedabad">AMH</span></td>
+                </tbody>
+                <tbody *ngIf="!isLoading && hccData.length > 0">
+                    <tr *ngFor="let row of hccData; let i = index">
+                        <td class="sno">{{ (config.page - 1) * config.pageSize + i + 1 }}</td>
+                        <td><span class="loc-badge" [title]="row.HCCLocation || ''">{{ row.HCCLocation || '—' }}</span></td>
                         <td>
                             <div class="hcc-cell">
-                                <a href="#" class="hcc-link"
-                                    onclick="alert('View HCC HCC/2526/00001');return false;">HCC/2526/00001</a>
-                                <span class="hcc-date">21-Mar-26</span>
+                                <a href="#" class="hcc-link" *ngIf="row.HCNumber" (click)="$event.preventDefault(); openHCCview(row)">{{ row.HCNumber }}</a>
+                                <span class="hcc-link text-muted" *ngIf="!row.HCNumber">—</span>
+                                <span class="hcc-date">{{ row.HcDt || '—' }}</span>
                             </div>
                         </td>
                         <td>
                             <div class="doc-cell">
-                                <a href="#" class="doc-link"
-                                    onclick="alert('View PRS PRS/2526/00101');return false;">PRS/2526/00101</a>
-                                <span class="doc-date">21-Mar-26</span>
+                                <a href="#" class="doc-link" *ngIf="row.DocumentNo" (click)="$event.preventDefault(); openView(row.DocumentNo)">{{ row.DocumentNo }}</a>
+                                <span class="doc-link text-muted" *ngIf="!row.DocumentNo">—</span>
+                                <span class="doc-date">{{ row.DocumentDt || '—' }}</span>
                             </div>
                         </td>
-                        <td><span class="hcctype-badge hcctype-loading">Loading HCC</span></td>
-                        <td><span class="amount-val">₹12,500</span></td>
-                        <td><span class="cnote-badge">5</span></td>
+                        <td>
+                            <span class="hcctype-badge" 
+                                [ngClass]="row.ChargesType === 'L' ? 'hcctype-loading' : 'hcctype-unloading'">
+                                {{ row.HCCTypeDesc || '—' }}
+                            </span>
+                        </td>
+                        <td><span class="amount-val">{{ row.HCCAmt !== null ? '₹' + (row.HCCAmt | number:'1.2-2') : '—' }}</span></td>
+                        <td><span class="cnote-badge">{{ row.CNoteCount || 0 }}</span></td>
                         <td>
                             <div class="vendor-cell">
-                                <span class="vendor-type-badge vt-transporter">Transporter</span>
-                                <span class="vendor-name">Fast Freight Carriers</span>
+                                <span class="vendor-type-badge" 
+                                    [ngClass]="{
+                                        'vt-transporter': row.ChargedBy === 'B',
+                                        'vt-agent': row.ChargedBy === 'A',
+                                        'vt-own': row.ChargedBy === 'XX9' || row.ChargedBy === 'XX5'
+                                    }">
+                                    {{ row.ChargedByDesc || '—' }}
+                                </span>
+                                <span class="vendor-name">{{ row.VendorCode || '—' }}</span>
                             </div>
                         </td>
-                        <td><span class="status-badge status-generated">Generated</span></td>
-                        <td><span class="empty-val">—</span></td>
-                        <td><span class="bill-none">—</span></td>
+                        <td>
+                            <span class="status-badge" 
+                                [ngClass]="{
+                                    'status-generated': row.HCCStatus === 'Generated',
+                                    'status-billed': row.HCCStatus === 'Billed',
+                                    'status-cancelled': row.HCCStatus === 'Cancelled'
+                                }">
+                                {{ row.HCCStatus || '—' }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="bill-cell" *ngIf="row.HCCBillNo">
+                                <a href="#" class="bill-link" (click)="$event.preventDefault(); openView(row.HCCBillNo)">{{ row.HCCBillNo }}</a>
+                                <span class="bill-date">{{ row.HCCBillDt || '—' }}</span>
+                            </div>
+                            <span class="empty-val" *ngIf="!row.HCCBillNo">—</span>
+                        </td>
+                        <td>
+                            <span class="bill-badge" 
+                                [ngClass]="{
+                                    'bill-finalized': row.BillStatus === 'Finalized',
+                                    'bill-paid': row.BillStatus === 'Paid',
+                                    'bill-none': !row.BillStatus
+                                }">
+                                {{ row.BillStatus || '—' }}
+                            </span>
+                        </td>
                         <td>
                             <div class="action-btns">
-                                <button class="ab ab-view" (click)="openHCCview()">👁 View</button>
-                                <button class="ab ab-print" onclick="printHccRow()" title="Print HCC">🖨 Print</button>
-                                <button class="ab ab-cancel" onclick="alert('Cancel HCC')">🚫 Cancel</button>
-                                <button class="ab ab-edit" (click)="openEditModal()">✏️ Edit</button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 2 — Billed | Unloading | Bill exists → Cancel + Edit disabled -->
-                    <tr data-hccstatus="billed" data-hcctype="unloading" data-vendor="blue dart express"
-                        data-vendortype="market" data-location="hyh" data-date="2026-03-21" data-hasbill="yes"
-                        data-billstatus="finalized" data-hcc="hcc/2526/00002 blue dart express hyh"
-                        data-docno="DRS/2526/00202" data-billno="HCCB/2526/00101">
-                        <td class="sno">2</td>
-                        <td><span class="loc-badge" title="Hyderabad">HYH</span></td>
-                        <td>
-                            <div class="hcc-cell">
-                                <a href="#" class="hcc-link"
-                                    onclick="alert('View HCC HCC/2526/00002');return false;">HCC/2526/00002</a>
-                                <span class="hcc-date">21-Mar-26</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="doc-cell">
-                                <a href="#" class="doc-link"
-                                    onclick="alert('View DRS DRS/2526/00202');return false;">DRS/2526/00202</a>
-                                <span class="doc-date">21-Mar-26</span>
-                            </div>
-                        </td>
-                        <td><span class="hcctype-badge hcctype-unloading">Unloading HCC</span></td>
-                        <td><span class="amount-val">₹8,750</span></td>
-                        <td><span class="cnote-badge">3</span></td>
-                        <td>
-                            <div class="vendor-cell">
-                                <span class="vendor-type-badge vt-agent">Agent</span>
-                                <span class="vendor-name">Blue Dart Express</span>
-                            </div>
-                        </td>
-                        <td><span class="status-badge status-billed">Billed</span></td>
-                        <td>
-                            <div class="bill-cell">
-                                <a href="#" class="bill-link"
-                                    onclick="alert('View Bill HCCB/2526/00101');return false;">HCCB/2526/00101</a>
-                                <span class="bill-date">20-Mar-26</span>
-                            </div>
-                        </td>
-                        <td><span class="bill-badge bill-finalized">Finalized</span></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="ab ab-view" (click)="openHCCview()">👁 View</button>
-                                <button class="ab ab-print" onclick="printHccRow()" title="Print HCC">🖨 Print</button>
-                                <button class="ab ab-cancel" disabled title="HCC Bill generated — cannot cancel">🚫
-                                    Cancel</button>
-                                <button class="ab ab-edit" disabled title="HCC Bill generated — cannot edit">✏️
-                                    Edit</button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 3 — Generated | Loading | No Bill → All buttons active -->
-                    <tr data-hccstatus="generated" data-hcctype="loading" data-vendor="mahindra logistics"
-                        data-vendortype="attached" data-location="blr" data-date="2026-03-21" data-hasbill="no"
-                        data-billstatus="none" data-hcc="hcc/2526/00003 mahindra logistics blr"
-                        data-docno="MF/2526/00301" data-billno="none">
-                        <td class="sno">3</td>
-                        <td><span class="loc-badge" title="Bangalore">BLR</span></td>
-                        <td>
-                            <div class="hcc-cell">
-                                <a href="#" class="hcc-link"
-                                    onclick="alert('View HCC HCC/2526/00003');return false;">HCC/2526/00003</a>
-                                <span class="hcc-date">21-Mar-26</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="doc-cell">
-                                <a href="#" class="doc-link"
-                                    onclick="alert('View MF MF/2526/00301');return false;">MF/2526/00301</a>
-                                <span class="doc-date">21-Mar-26</span>
-                            </div>
-                        </td>
-                        <td><span class="hcctype-badge hcctype-loading">Loading HCC</span></td>
-                        <td><span class="amount-val">₹15,200</span></td>
-                        <td><span class="cnote-badge">8</span></td>
-                        <td>
-                            <div class="vendor-cell">
-                                <span class="vendor-type-badge vt-own">Own Vehicle</span>
-                                <span class="vendor-name">Mahindra Logistics</span>
-                            </div>
-                        </td>
-                        <td><span class="status-badge status-generated">Generated</span></td>
-                        <td><span class="empty-val">—</span></td>
-                        <td><span class="bill-none">—</span></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="ab ab-view" (click)="openHCCview()">👁 View</button>
-                                <button class="ab ab-print" onclick="printHccRow()" title="Print HCC">🖨 Print</button>
-                                <button class="ab ab-cancel" onclick="alert('Cancel HCC')">🚫 Cancel</button>
-                                <button class="ab ab-edit" onclick="openEditModal()">✏️ Edit</button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 4 — Cancelled | Unloading | No Bill → View only -->
-                    <tr data-hccstatus="cancelled" data-hcctype="unloading" data-vendor="gati kintetsu express"
-                        data-vendortype="business associate" data-location="chn" data-date="2026-03-21"
-                        data-hasbill="no" data-billstatus="none" data-hcc="hcc/2526/00004 gati kintetsu express chn"
-                        data-docno="CN/2526/00401" data-billno="none">
-                        <td class="sno">4</td>
-                        <td><span class="loc-badge" title="Chennai">CHN</span></td>
-                        <td>
-                            <div class="hcc-cell">
-                                <a href="#" class="hcc-link"
-                                    onclick="alert('View HCC HCC/2526/00004');return false;">HCC/2526/00004</a>
-                                <span class="hcc-date">21-Mar-26</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="doc-cell">
-                                <a href="#" class="doc-link"
-                                    onclick="alert('View PRS PRS/2526/00104');return false;">PRS/2526/00104</a>
-                                <span class="doc-date">20-Mar-26</span>
-                            </div>
-                        </td>
-                        <td><span class="hcctype-badge hcctype-unloading">Unloading HCC</span></td>
-                        <td><span class="amount-val">₹6,400</span></td>
-                        <td><span class="cnote-badge">2</span></td>
-                        <td>
-                            <div class="vendor-cell">
-                                <span class="vendor-type-badge vt-transporter">Transporter</span>
-                                <span class="vendor-name">Gati Kintetsu Express</span>
-                            </div>
-                        </td>
-                        <td><span class="status-badge status-cancelled">Cancelled</span></td>
-                        <td><span class="empty-val">—</span></td>
-                        <td><span class="bill-none">—</span></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="ab ab-view" (click)="openHCCview()">👁 View</button>
-                                <button class="ab ab-print" onclick="printHccRow()" title="Print HCC">🖨 Print</button>
-                                <button class="ab ab-cancel" disabled title="HCC already cancelled">🚫 Cancel</button>
-                                <button class="ab ab-edit" disabled title="Cannot edit cancelled HCC">✏️ Edit</button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 5 — Billed | Loading | Bill exists → Cancel + Edit disabled -->
-                    <tr data-hccstatus="billed" data-hcctype="loading" data-vendor="dtdc courier"
-                        data-vendortype="market" data-location="del" data-date="2026-03-20" data-hasbill="yes"
-                        data-billstatus="reqgen" data-hcc="hcc/2526/00005 dtdc courier del" data-docno="SO/2526/00501"
-                        data-billno="HCCB/2526/00201">
-                        <td class="sno">5</td>
-                        <td><span class="loc-badge" title="Delhi">DEL</span></td>
-                        <td>
-                            <div class="hcc-cell">
-                                <a href="#" class="hcc-link"
-                                    onclick="alert('View HCC HCC/2526/00005');return false;">HCC/2526/00005</a>
-                                <span class="hcc-date">20-Mar-26</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="doc-cell">
-                                <a href="#" class="doc-link"
-                                    onclick="alert('View DRS DRS/2526/00305');return false;">DRS/2526/00305</a>
-                                <span class="doc-date">20-Mar-26</span>
-                            </div>
-                        </td>
-                        <td><span class="hcctype-badge hcctype-loading">Loading HCC</span></td>
-                        <td><span class="amount-val">₹22,800</span></td>
-                        <td><span class="cnote-badge">12</span></td>
-                        <td>
-                            <div class="vendor-cell">
-                                <span class="vendor-type-badge vt-agent">Agent</span>
-                                <span class="vendor-name">DTDC Courier</span>
-                            </div>
-                        </td>
-                        <td><span class="status-badge status-billed">Billed</span></td>
-                        <td>
-                            <div class="bill-cell">
-                                <a href="#" class="bill-link"
-                                    onclick="alert('View Bill HCCB/2526/00102');return false;">HCCB/2526/00102</a>
-                                <span class="bill-date">20-Mar-26</span>
-                            </div>
-                        </td>
-                        <td><span class="bill-badge bill-reqgen">Request Generated</span></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="ab ab-view" (click)="openHCCview()">👁 View</button>
-                                <button class="ab ab-print" onclick="printHccRow()" title="Print HCC">🖨 Print</button>
-                                <button class="ab ab-cancel" disabled title="HCC Bill generated — cannot cancel">🚫
-                                    Cancel</button>
-                                <button class="ab ab-edit" disabled title="HCC Bill generated — cannot edit">✏️
-                                    Edit</button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 6 — Generated | Unloading | No Bill → All buttons active -->
-                    <tr data-hccstatus="generated" data-hcctype="unloading" data-vendor="tci express ltd."
-                        data-vendortype="handling vendor" data-location="mum" data-date="2026-03-21" data-hasbill="no"
-                        data-billstatus="none" data-hcc="hcc/2526/00006 tci express ltd. mum"
-                        data-docno="INV/2526/00601" data-billno="HCCB/2526/00301">
-                        <td class="sno">6</td>
-                        <td><span class="loc-badge" title="Mumbai">MUM</span></td>
-                        <td>
-                            <div class="hcc-cell">
-                                <a href="#" class="hcc-link"
-                                    onclick="alert('View HCC HCC/2526/00006');return false;">HCC/2526/00006</a>
-                                <span class="hcc-date">21-Mar-26</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="doc-cell">
-                                <a href="#" class="doc-link"
-                                    onclick="alert('View MF MF/2526/00406');return false;">MF/2526/00406</a>
-                                <span class="doc-date">21-Mar-26</span>
-                            </div>
-                        </td>
-                        <td><span class="hcctype-badge hcctype-unloading">Unloading HCC</span></td>
-                        <td><span class="amount-val">₹9,600</span></td>
-                        <td><span class="cnote-badge">4</span></td>
-                        <td>
-                            <div class="vendor-cell">
-                                <span class="vendor-type-badge vt-transporter">Transporter</span>
-                                <span class="vendor-name">TCI Express Ltd.</span>
-                            </div>
-                        </td>
-                        <td><span class="status-badge status-generated">Generated</span></td>
-                        <td><span class="empty-val">—</span></td>
-                        <td><span class="bill-none">—</span></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="ab ab-view" (click)="openHCCview()">👁 View</button>
-                                <button class="ab ab-print" onclick="printHccRow()" title="Print HCC">🖨 Print</button>
-                                <button class="ab ab-cancel" onclick="alert('Cancel HCC')">🚫 Cancel</button>
-                                <button class="ab ab-edit" onclick="openEditModal()">✏️ Edit</button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 7 — Generated | Loading | No Bill → All buttons active -->
-                    <tr data-hccstatus="generated" data-hcctype="loading" data-vendor="xpressbees logistics"
-                        data-vendortype="business associate" data-location="idh" data-date="2026-03-20"
-                        data-hasbill="no" data-billstatus="none" data-hcc="hcc/2526/00007 xpressbees logistics idh"
-                        data-docno="PO/2526/00701" data-billno="none">
-                        <td class="sno">7</td>
-                        <td><span class="loc-badge" title="Indore">IDH</span></td>
-                        <td>
-                            <div class="hcc-cell">
-                                <a href="#" class="hcc-link"
-                                    onclick="alert('View HCC HCC/2526/00007');return false;">HCC/2526/00007</a>
-                                <span class="hcc-date">20-Mar-26</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="doc-cell">
-                                <a href="#" class="doc-link"
-                                    onclick="alert('View PRS PRS/2526/00207');return false;">PRS/2526/00207</a>
-                                <span class="doc-date">20-Mar-26</span>
-                            </div>
-                        </td>
-                        <td><span class="hcctype-badge hcctype-loading">Loading HCC</span></td>
-                        <td><span class="amount-val">₹18,300</span></td>
-                        <td><span class="cnote-badge">7</span></td>
-                        <td>
-                            <div class="vendor-cell">
-                                <span class="vendor-type-badge vt-agent">Agent</span>
-                                <span class="vendor-name">Xpressbees Logistics</span>
-                            </div>
-                        </td>
-                        <td><span class="status-badge status-generated">Generated</span></td>
-                        <td><span class="empty-val">—</span></td>
-                        <td><span class="bill-none">—</span></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="ab ab-view" (click)="openHCCview()">👁 View</button>
-                                <button class="ab ab-print" onclick="printHccRow()" title="Print HCC">🖨 Print</button>
-                                <button class="ab ab-cancel" onclick="alert('Cancel HCC')">🚫 Cancel</button>
-                                <button class="ab ab-edit" onclick="openEditModal()">✏️ Edit</button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Row 8 — Billed | Unloading | Bill exists → Cancel + Edit disabled -->
-                    <tr data-hccstatus="billed" data-hcctype="unloading" data-vendor="spoton logistics"
-                        data-vendortype="attached" data-location="pun" data-date="2026-03-20" data-hasbill="yes"
-                        data-billstatus="paid" data-hcc="hcc/2526/00008 spoton logistics pun" data-docno="DO/2526/00801"
-                        data-billno="HCCB/2526/00401">
-                        <td class="sno">8</td>
-                        <td><span class="loc-badge" title="Pune">PUN</span></td>
-                        <td>
-                            <div class="hcc-cell">
-                                <a href="#" class="hcc-link"
-                                    onclick="alert('View HCC HCC/2526/00008');return false;">HCC/2526/00008</a>
-                                <span class="hcc-date">20-Mar-26</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="doc-cell">
-                                <a href="#" class="doc-link"
-                                    onclick="alert('View DRS DRS/2526/00408');return false;">DRS/2526/00408</a>
-                                <span class="doc-date">20-Mar-26</span>
-                            </div>
-                        </td>
-                        <td><span class="hcctype-badge hcctype-unloading">Unloading HCC</span></td>
-                        <td><span class="amount-val">₹11,100</span></td>
-                        <td><span class="cnote-badge">5</span></td>
-                        <td>
-                            <div class="vendor-cell">
-                                <span class="vendor-type-badge vt-own">Own Vehicle</span>
-                                <span class="vendor-name">Spoton Logistics</span>
-                            </div>
-                        </td>
-                        <td><span class="status-badge status-billed">Billed</span></td>
-                        <td>
-                            <div class="bill-cell">
-                                <a href="#" class="bill-link"
-                                    onclick="alert('View Bill HCCB/2526/00103');return false;">HCCB/2526/00103</a>
-                                <span class="bill-date">20-Mar-26</span>
-                            </div>
-                        </td>
-                        <td><span class="bill-badge bill-paid">Paid</span></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="ab ab-view" (click)="openHCCview()">👁 View</button>
-                                <button class="ab ab-print" title="Print HCC">🖨 Print</button>
-                                <button class="ab ab-cancel" title="HCC Bill generated — cannot cancel">🚫
-                                    Cancel</button>
-                                <button class="ab ab-edit" title="HCC Bill generated — cannot edit">✏️
-                                    Edit</button>
+                                <button class="ab ab-view" (click)="openHCCview(row)">👁 View</button>
+                                <button class="ab ab-print" (click)="openPrint(row.HCNumber)" [disabled]="!row.HCNumber" title="Print HCC">🖨 Print</button>
+                                <button class="ab ab-cancel" (click)="onCancel(row.HCNumber)" [disabled]="!row.HCNumber || row.HCCBillNo" title="Cancel HCC">🚫 Cancel</button>
+                                <button class="ab ab-edit" (click)="openEditModal(row)" [disabled]="row.HCCBillNo" title="Edit HCC">✏️ Edit</button>
                             </div>
                         </td>
                     </tr>
                 </tbody>
-
             </table>
         </div>
 
         <!-- Pagination -->
-        <!-- <app-pagination [page]="config.page" [pageSize]="config.pageSize" [totalRecords]="config.totalRecords"
+        <app-pagination [page]="config.page" [pageSize]="config.pageSize" [totalRecords]="config.totalRecords"
             [totalPages]="config.totalPages" (pageChange)="setPage($event)">
-        </app-pagination> -->
+        </app-pagination>
     </div>
 </div>
 
-
 <app-hccview #HCCviewComponent></app-hccview>
-<app-hcc-details #HCCDetailsComponent></app-hcc-details>
+<app-hcc-details #HCCDetailsComponent (dataEmitter)="refreshData()"></app-hcc-details>
