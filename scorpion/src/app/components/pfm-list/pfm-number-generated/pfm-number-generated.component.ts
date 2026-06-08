@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Output, EventEmitter, ViewChild, TemplateRef } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PFMapiService } from 'app/shared/services/pfmapi.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-pfm-number-generated',
@@ -13,10 +14,11 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
   styleUrl: './pfm-number-generated.component.scss',
   providers: [BsModalService]
 })
-export class PFMNumberGeneratedComponent {
+export class PFMNumberGeneratedComponent implements OnDestroy {
   public modalRef!: BsModalRef;
   public selectedRecords: any[] = [];
   public fM_No: string = '';
+  public PfmGeneratedSubscription?: Subscription;
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   constructor(private modalService: BsModalService, public PFMapiService: PFMapiService, public docketService: DocketService, private sweetAlertService: SweetAlertService) { }
@@ -33,6 +35,10 @@ export class PFMNumberGeneratedComponent {
   }
 
   savePFM() {
+    if (this.PfmGeneratedSubscription && !this.PfmGeneratedSubscription.closed) {
+      return;
+    }
+
     const payload = {
       header: {
         fM_No: "",
@@ -55,7 +61,7 @@ export class PFMNumberGeneratedComponent {
       BaseFinYear: this.docketService.loginUserList.FinYear
     };
 
-    this.PFMapiService.PFMgenerate(payload).subscribe({
+    this.PfmGeneratedSubscription = this.PFMapiService.PFMgenerate(payload).subscribe({
       next: (response: any) => {
         if (response) {
           this.fM_No = response.fM_No;
@@ -68,5 +74,11 @@ export class PFMNumberGeneratedComponent {
         this.sweetAlertService.error(err);
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.PfmGeneratedSubscription) {
+      this.PfmGeneratedSubscription.unsubscribe();
+    }
   }
 }

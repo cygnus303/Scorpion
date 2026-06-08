@@ -511,16 +511,25 @@ export class PFMListComponent implements OnInit, OnDestroy {
   }
 
   get canAddPFM(): boolean {
+    if (this.PFMNumberGeneratedComponent?.PfmGeneratedSubscription && !this.PFMNumberGeneratedComponent.PfmGeneratedSubscription.closed) {
+      return false;
+    }
     const selected = this.selectedRows;
     return selected.length > 0 && selected.every(r => r.displayStatus === 'Pending');
   }
 
   get canForwardPFM(): boolean {
+    if (this.ForwardPFMComponent?.PfmForwardSubscription && !this.ForwardPFMComponent.PfmForwardSubscription.closed) {
+      return false;
+    }
     const selected = this.selectedRows;
     return selected.length > 0 && selected.every(r => ['Generated At', 'Generated'].includes(r.displayStatus));
   }
 
   get canAcknowledgePFM(): boolean {
+    if (this.AcknowledgePFMComponent?.PfmAcknowledgeSubscription && !this.AcknowledgePFMComponent.PfmAcknowledgeSubscription.closed) {
+      return false;
+    }
     const selected = this.selectedRows;
     return selected.length > 0 && selected.every(r => r.displayStatus === 'Forwarded' || r.fM_Status === 'Forwarded');
   }

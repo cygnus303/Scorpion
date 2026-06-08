@@ -111,8 +111,6 @@
     </div>
     <div class="modal-footer d-flex justify-content-end gap-3">
         <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Cancel</button>
-        <button type="button" class="btn btn-primary px-4 py-2 rounded" (click)="submitAcknowledge()"><span
-                class="me-2 fs-5">✓</span> Confirm
-            Acknowledge</button>
+        <button type="button" class="btn btn-primary px-4 py-2 rounded" [disabled]="PfmAcknowledgeSubscription && !PfmAcknowledgeSubscription.closed" (click)="submitAcknowledge()"><span class="me-2 fs-5">✓</span> Confirm Acknowledge</button>
     </div>
 </ng-template>
