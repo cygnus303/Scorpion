@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, TemplateRef, ViewChild, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PFMapiService } from 'app/shared/services/pfmapi.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-acknowledge-pfm',
@@ -15,7 +16,7 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
   styleUrl: './acknowledge-pfm.component.scss',
   providers: [BsModalService]
 })
-export class AcknowledgePFMComponent {
+export class AcknowledgePFMComponent implements OnDestroy {
   public modalRef!: BsModalRef;
   public uniquePFMs: string[] = [];
   public displayPFMs: string = '';
@@ -23,6 +24,7 @@ export class AcknowledgePFMComponent {
   public ackForm!: FormGroup;
   public minDate: any;
   public maxDate: any;
+  public PfmAcknowledgeSubscription?: Subscription;
 
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
@@ -88,6 +90,9 @@ export class AcknowledgePFMComponent {
       this.ackForm.markAllAsTouched();
       return;
     }
+    if (this.PfmAcknowledgeSubscription && !this.PfmAcknowledgeSubscription.closed) {
+      return;
+    }
     if (!this.pfmData || this.pfmData.length === 0) {
       return;
     }
@@ -109,7 +114,7 @@ export class AcknowledgePFMComponent {
       entryBy: this.docketService.loginUserList.UserId,
       brcd: this.docketService.loginUserList.LocationCode
     };
-    this.pfmApiService.NewForwardFMAckDocumentsDone(payload).subscribe({
+    this.PfmAcknowledgeSubscription = this.pfmApiService.NewForwardFMAckDocumentsDone(payload).subscribe({
       next: (res: any) => {
         this.sweetAlertService.success('PFM Acknowledged Successfully!!');
         this.dataEmitter.emit('PFM Acknowledged Successfully');
@@ -119,5 +124,11 @@ export class AcknowledgePFMComponent {
         this.sweetAlertService.error(err);
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.PfmAcknowledgeSubscription) {
+      this.PfmAcknowledgeSubscription.unsubscribe();
+    }
   }
 }

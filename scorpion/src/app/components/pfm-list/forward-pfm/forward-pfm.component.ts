@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, TemplateRef, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup, ReactiveFormsModule, Validators, FormsModule, FormControl } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PFMapiService } from 'app/shared/services/pfmapi.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-forward-pfm',
@@ -15,7 +16,7 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
   styleUrl: './forward-pfm.component.scss',
   providers: [BsModalService]
 })
-export class ForwardPFMComponent {
+export class ForwardPFMComponent implements OnDestroy {
   public modalRef!: BsModalRef;
   public forwardForm!: FormGroup;
   public pfmData: any[] = [];
@@ -24,6 +25,7 @@ export class ForwardPFMComponent {
   public uniquePFMCount: number = 0;
   public minDate: any;
   public maxDate: any;
+  public PfmForwardSubscription?: Subscription;
 
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
@@ -96,6 +98,9 @@ export class ForwardPFMComponent {
       this.forwardForm.markAllAsTouched();
       return;
     }
+    if (this.PfmForwardSubscription && !this.PfmForwardSubscription.closed) {
+      return;
+    }
     const selected = this.pfmData.filter(r => r.checked);
     const uniquePFMs = [...new Set(selected.map(r => r.fM_No).filter(f => f))];
     const formVals = this.forwardForm.value;
@@ -124,7 +129,7 @@ export class ForwardPFMComponent {
     };
     console.log('Forward Payload:', payload);
 
-    this.PFMapiService.PFMForward(payload).subscribe({
+    this.PfmForwardSubscription = this.PFMapiService.PFMForward(payload).subscribe({
       next: (response: any) => {
         this.sweetAlertService.success('PFM Forwarded Successfully!!');
         this.dataEmitter.emit('PFM forwarded successfully');
@@ -134,5 +139,11 @@ export class ForwardPFMComponent {
          this.sweetAlertService.error(err);
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.PfmForwardSubscription) {
+      this.PfmForwardSubscription.unsubscribe();
+    }
   }
 }
