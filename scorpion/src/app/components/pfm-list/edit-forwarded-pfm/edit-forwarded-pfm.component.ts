@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, TemplateRef, ViewChild, OnDestroy } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PFMapiService } from 'app/shared/services/pfmapi.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-forwarded-pfm',
@@ -15,11 +16,11 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
   styleUrl: './edit-forwarded-pfm.component.scss',
   providers: [BsModalService]
 })
-export class EditForwardedPFMComponent {
+export class EditForwardedPFMComponent implements OnDestroy {
   public modalRef!: BsModalRef;
   public editForm!: FormGroup;
   public pfmData: any;
-
+  public PfmCourierUpdateSubscription?: Subscription;
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
 
@@ -101,6 +102,9 @@ export class EditForwardedPFMComponent {
       this.editForm.markAllAsTouched();
       return;
     }
+    if (this.PfmCourierUpdateSubscription && !this.PfmCourierUpdateSubscription.closed) {
+      return;
+    }
 
     // Get only checked LRs
     const checkedLRs = this.pfmData.filter((lr: any) => lr.checked);
@@ -125,7 +129,7 @@ export class EditForwardedPFMComponent {
       }]
     };
     console.log(payload);
-    this.pfmApiService.PFMCourierUpdate(payload).subscribe({
+    this.PfmCourierUpdateSubscription = this.pfmApiService.PFMCourierUpdate(payload).subscribe({
       next: (res: any) => {
         this.sweetAlertService.success('Courier updated Successfully!!')
         this.dataEmitter.emit('Courier updated successfully');
@@ -135,5 +139,11 @@ export class EditForwardedPFMComponent {
         this.sweetAlertService.error(err.error.message);
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.PfmCourierUpdateSubscription) {
+      this.PfmCourierUpdateSubscription.unsubscribe();
+    }
   }
 }
