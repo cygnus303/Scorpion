@@ -101,6 +101,19 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     this.fetchData();
   }
 
+  public recordOptions = [
+    { label: '5', value: 5 },
+    { label: '10', value: 10 },
+    { label: '15', value: 15 },
+    { label: '20', value: 20 },
+    { label: 'All', value: 100000 }
+  ];
+
+  onPageSizeChange() {
+    this.config.page = 1;
+    this.refreshData();
+  }
+
   get isHQTR(): boolean {
     return this.docketService.loginUserList?.LocationCode === 'HQTR';
   }

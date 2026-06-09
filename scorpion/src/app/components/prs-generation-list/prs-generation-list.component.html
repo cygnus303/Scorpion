@@ -119,6 +119,13 @@
                         [(ngModel)]="config.statusFilter" (change)="fetchData()"
                         class="custom-status-select clear-icon"></ng-select>
                 </div>
+                      <div class="d-flex align-items-center gap-1 ms-2">
+                        <ng-select class="clear-icon page-size-select" style="width: 80px;" [items]="recordOptions"
+                            bindLabel="label" bindValue="value" [(ngModel)]="config.pageSize"
+                            (change)="onPageSizeChange()" [searchable]="false" [clearable]="false">
+                        </ng-select>
+                        <span class="text-muted small fw-semibold">records</span>
+                    </div>
             </div>
             <div class="table-toolbar">
                 <div class="search-box d-flex align-items-center"><span class="text-muted">🔍</span>

@@ -445,6 +445,8 @@ export class LSUpdatePopupComponent {
           isChecked: ctrl.get('isChecked')?.value,
           newRate: this.docketService.loginUserList.Type === 'ULS' ? Number(ctrl.get('newRate')?.value) : 0,
           ratetype: this.docketService.loginUserList.Type === 'ULS' ? ctrl.get('ratetype')?.value : '',
+          luVendorTyp: ctrl.get('luVendorTyp')?.value || '',
+          luVendorCode: ctrl.get('luVendorCode')?.value || ''
         }));
       const payload = {
         vm: {
