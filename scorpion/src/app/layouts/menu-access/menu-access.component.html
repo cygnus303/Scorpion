@@ -17,23 +17,34 @@
           </div>
           <div class="col-3">
             <div class="row">
+              <label class="col-sm-3 col-form-label fw-bold">Select : </label>
+              <div class="col-sm-9">
+                <ng-select placeholder="Select Type" [(ngModel)]="searchType" (change)="onSearchTypeChange()" class="noFoundTextColor remove-select-color" [clearable]="false">
+                  <ng-option value="User">User</ng-option>
+                  <ng-option value="Role">Role</ng-option>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <div class="col-3" *ngIf="searchType === 'Role'">
+            <div class="row">
               <label class="col-sm-2 col-form-label fw-bold">Role : </label>
               <div class="col-sm-10">
                 <!-- <input type="text" class="form-control" placeholder="Role"> -->
                 <ng-select placeholder="Select Role" [(ngModel)]="roleType" class="noFoundTextColor remove-select-color"
                   [items]="generalMasterService.roleTypeList" bindLabel="codeDesc" bindValue="codeId"
-                  [disabled]="!!selectedUserId" [clearable]="true"></ng-select>
+                  [clearable]="true" (change)="fetchUserMenus()"></ng-select>
               </div>
             </div>
           </div>
-          <div class="col-3">
+          <div class="col-3" *ngIf="searchType === 'User'">
             <div class="row">
               <label class="col-sm-2 col-form-label fw-bold">User : </label>
               <div class="col-sm-10">
                 <!-- <input type="text" class="form-control" placeholder="User"> -->
                 <ng-select class="noFoundTextColor remove-select-color" placeholder="Select User"
                   notFoundText="No matches found" [(ngModel)]="selectedUserId" (change)="fetchUserMenus()"
-                  [disabled]="!!roleType" [clearable]="true">
+                  [clearable]="true">
                   <ng-option *ngFor="let data of LoadingSheetService.unLoaderUserList" [value]="data.userId">
                     {{data.userId}} : {{data.name}}</ng-option>
                 </ng-select>

@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MenuAccessService } from '../../shared/services/menu-access.service';
-import { forkJoin } from 'rxjs';
 import { DocketService } from 'app/shared/services/docket.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
@@ -22,6 +21,18 @@ export class MenuAccessComponent implements OnInit {
   searchText: string = '';
   selectedUserId: string = '';
   roleType: string | null = null;
+  searchType: string = 'User';
+  selectedModule: any = null;
+
+  onSearchTypeChange() {
+    this.roleType = null;
+    this.selectedUserId = '';
+    this.permissionsList = [];
+    if (this.searchType === 'User') {
+      this.selectedUserId = this.docketService.loginUserList.UserId;
+      this.fetchUserMenus();
+    }
+  }
 
   get filteredPermissionsList() {
     if (!this.searchText) {
@@ -72,7 +83,7 @@ export class MenuAccessComponent implements OnInit {
 
   fetchUserMenus() {
     const userId = this.selectedUserId || this.docketService.loginUserList.UserId;
-    this.menuAccessService.getMenus(userId).subscribe({
+    this.menuAccessService.getMenus(userId, this.roleType).subscribe({
       next: (response: any) => {
         const { menus, userPermissions } = response;
         this.permissionsList = menus.map((menu: any) => {
