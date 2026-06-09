@@ -44,6 +44,10 @@ export class MenuAccessComponent implements OnInit {
     );
   }
 
+  selectModule(module: any) {
+    this.selectedModule = module;
+  }
+
   constructor(
     @Inject(MenuAccessService) private menuAccessService: MenuAccessService,
     private docketService: DocketService,
@@ -102,6 +106,12 @@ export class MenuAccessComponent implements OnInit {
             permissions: mappedPermissions
           };
         });
+        
+        if (this.permissionsList.length > 0) {
+          this.selectedModule = this.permissionsList[0];
+        } else {
+          this.selectedModule = null;
+        }
       },
       error: (err) => console.error('Error fetching menus:', err)
     });
@@ -114,12 +124,14 @@ export class MenuAccessComponent implements OnInit {
   toggleAll(event: any) {
     const checked = event.target.checked;
     this.filteredPermissionsList.forEach(module => {
+      module.isSelected = checked;
       module.permissions?.forEach((p: any) => p.isUSERACCESS = checked);
     });
   }
 
   toggleRow(module: any, event: any) {
     const checked = event.target.checked;
+    module.isSelected = checked;
     module.permissions?.forEach((p: any) => p.isUSERACCESS = checked);
   }
 
@@ -132,7 +144,10 @@ export class MenuAccessComponent implements OnInit {
   }
 
   isRowSelected(module: any): boolean {
-    return module.permissions?.length > 0 && module.permissions.every((p: any) => p.isUSERACCESS);
+    if (module.permissions && module.permissions.length > 0) {
+      return module.permissions.every((p: any) => p.isUSERACCESS);
+    }
+    return !!module.isSelected;
   }
 
   isColumnAllSelected(col: any): boolean {
