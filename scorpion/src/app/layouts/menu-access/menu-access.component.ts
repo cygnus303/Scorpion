@@ -21,6 +21,7 @@ export class MenuAccessComponent implements OnInit {
   permissionColumns: any[] = [];
   searchText: string = '';
   selectedUserId: string = '';
+  roleType: string | null = null;
 
   get filteredPermissionsList() {
     if (!this.searchText) {
@@ -35,7 +36,7 @@ export class MenuAccessComponent implements OnInit {
   constructor(
     @Inject(MenuAccessService) private menuAccessService: MenuAccessService,
     private docketService: DocketService,
-    private generalMasterService: GeneralMasterService, private sweetAlertService: SweetAlertService, public LoadingSheetService: LoadingSheetService,
+    public generalMasterService: GeneralMasterService, private sweetAlertService: SweetAlertService, public LoadingSheetService: LoadingSheetService,
   ) { }
 
   ngOnInit() {
@@ -49,6 +50,7 @@ export class MenuAccessComponent implements OnInit {
     }
     this.selectedUserId = this.docketService.loginUserList.UserId;
     this.LoadingSheetService.getUnLoaderUserList();
+    this.generalMasterService.getRoleTypeDetail();
     this.fetchData();
   }
 
