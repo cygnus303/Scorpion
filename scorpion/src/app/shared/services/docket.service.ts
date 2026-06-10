@@ -1898,13 +1898,12 @@ if(this.freightForm.value.discount !== null && this.freightForm.value.discount !
         discounts = parseFloat(this.originalSubtotal.toString()) * parseFloat(discounts) / 100;
         this.getMaxDiscountLimit()
       }
-      this.maxfreightChargesDiscount = Number((this.freightForm.value.freightCharges * 20 / 100).toFixed(2));
+      this.maxfreightChargesDiscount = Number((Subtotal * 20 / 100).toFixed(2));
       if (discountType === 'F') {
         // ✅ SET VALIDATORS
         discountControl?.setValidators([
           Validators.min(0),
           Validators.max(this.maxfreightChargesDiscount)
-          // Validators.max(Subtotal)
         ]);
 
         // ✅ VERY IMPORTANT
