@@ -28,6 +28,7 @@ export class MenuAccessComponent implements OnInit {
     this.roleType = null;
     this.selectedUserId = '';
     this.permissionsList = [];
+    this.selectedModule = null;
     if (this.searchType === 'User') {
       this.selectedUserId = this.docketService.loginUserList.UserId;
       this.fetchUserMenus();
@@ -86,19 +87,21 @@ export class MenuAccessComponent implements OnInit {
   }
 
   fetchUserMenus() {
-    let idToPass: string | null = '';
-    if (this.searchType === 'User') {
-      idToPass = this.selectedUserId || this.docketService.loginUserList.UserId;
-    } else {
-      idToPass = this.roleType;
-      if (!idToPass) {
+    let apiCall;
+    if (this.searchType === 'Role') {
+      const roleId = this.roleType;
+      if (!roleId) {
         this.permissionsList = [];
         this.selectedModule = null;
         return;
       }
+      apiCall = this.menuAccessService.getRoleMenus(roleId);
+    } else {
+      const userId = this.selectedUserId || this.docketService.loginUserList.UserId;
+      apiCall = this.menuAccessService.getUserMenus(userId);
     }
 
-    this.menuAccessService.getMenus(idToPass).subscribe({
+    apiCall.subscribe({
       next: (response: any) => {
         const { menus, userPermissions } = response;
         this.permissionsList = menus.map((menu: any) => {
@@ -144,6 +147,7 @@ export class MenuAccessComponent implements OnInit {
     const checked = event.target.checked;
     module.isSelected = checked;
     module.permissions?.forEach((p: any) => p.isUSERACCESS = checked);
+    this.selectedModule = module;
   }
 
   toggleColumn(col: any, event: any) {
@@ -190,21 +194,24 @@ export class MenuAccessComponent implements OnInit {
       });
     });
 
-    let idToPass: string | null = '';
-    if (this.searchType === 'User') {
-      idToPass = this.selectedUserId || this.docketService.loginUserList.UserId;
+    let apiCall;
+    if (this.searchType === 'Role') {
+      const payload = {
+        roleId: this.roleType ? String(this.roleType) : '',
+        rolePermissions: userPermissionArray
+      };
+      console.log('Submit Role Payload:', payload);
+      apiCall = this.menuAccessService.saveRolePermissions(payload);
     } else {
-      idToPass = this.roleType;
+      const payload = {
+        userId: String(this.selectedUserId || this.docketService.loginUserList.UserId),
+        userPermission: userPermissionArray
+      };
+      console.log('Submit User Payload:', payload);
+      apiCall = this.menuAccessService.saveUserPermissions(payload);
     }
 
-    const payload = {
-      roleId: idToPass ? String(idToPass) : '',
-      rolePermissions: userPermissionArray
-    };
-
-    console.log('Submit Payload:', payload);
-
-    this.menuAccessService.savePermissions(payload).subscribe({
+    apiCall.subscribe({
       next: (results) => {
         this.sweetAlertService.success('Menu Access Updated Successfully!!')
         this.fetchData();

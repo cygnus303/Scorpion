@@ -10,21 +10,21 @@ export class MenuAccessService {
 
   constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService) { }
 
-  getMenus(roleOrUserId: string): Observable<any> {
-    return this.apiHandlerService.Get(`ActionModulePermission/GetRoleWiseMenu?RoleId=${roleOrUserId}`);
+  getRoleMenus(roleId: string): Observable<any> {
+    return this.apiHandlerService.Get(`ActionModulePermission/GetRoleWiseMenu?RoleId=${roleId}`);
   }
 
-  savePermissions(payload: any): Observable<any> {
+  saveRolePermissions(payload: any): Observable<any> {
     return this.apiHandlerService.Post(`ActionModulePermission/RoleWisePermissionSave`, payload);
   }
 
-  //  getMenus(userId: string, role: string | null): Observable<any> {
-  //   return this.apiHandlerService.Get(`ActionModulePermission/GetMenus?userId=${userId}&Role=${role || ''}`);
-  // }
+  getUserMenus(userId: string): Observable<any> {
+    return this.apiHandlerService.Get(`ActionModulePermission/GetMenus?userId=${userId}`);
+  }
 
-  // savePermissions(payload: any): Observable<any> {
-  //   return this.apiHandlerService.Post(`ActionModulePermission/UserPermissionsave`, payload);
-  // }
+  saveUserPermissions(payload: any): Observable<any> {
+    return this.apiHandlerService.Post(`ActionModulePermission/UserPermissionsave`, payload);
+  }
 
   getUserModulePermissions(payload: any): Observable<any> {
     return this.apiHandlerService.Post(`Operation/GetUserModulePermissions`, payload);
