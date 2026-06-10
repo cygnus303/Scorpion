@@ -59,7 +59,7 @@ export class LoadingSheetService {
       isMonthly: new FormControl(this.docketService.loginUserList.Type === 'LS' ? true : false)
     })
     if (this.LSForm.value.mF_TransportMode === 'S' && this.docketService.loginUserList.Type === 'ULS') {
-      this.LSForm.get('loadingCharge')?.setValidators([Validators.required, Validators.min(0.01)]);
+      // this.LSForm.get('loadingCharge')?.setValidators([Validators.required, Validators.min(0.01)]);
       // this.LSForm.get('loadingBy')?.setValidators([Validators.required]);
       // this.LSForm.get('vendorCode')?.setValidators([Validators.required]);
     }

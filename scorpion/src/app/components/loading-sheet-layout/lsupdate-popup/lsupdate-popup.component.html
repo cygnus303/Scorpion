@@ -352,10 +352,10 @@
                 <input class="form-control required2" placeholder="Loading Charge" type="text"
                   formControlName="loadingCharge" readonly appFocusNext
                   [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('loadingCharge')?.invalid  && loadingSheetService.LSForm.get('loadingCharge')?.touched }">
-                <div class="text-danger text-start"
+                <!-- <div class="text-danger text-start"
                   *ngIf="loadingSheetService.LSForm.get('loadingCharge')?.invalid && loadingSheetService.LSForm.get('loadingCharge')?.touched">
                   Please enter a value greater than or equal to 0.01.
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
