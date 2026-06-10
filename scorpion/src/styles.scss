@@ -237,14 +237,20 @@ ng-select .ng-input input[type='text'] {
 // Dropdown panel styling
 .ng-dropdown-panel {
   text-align: left;
-  width: 100% !important;
-  margin-left: 0 !important;
   box-sizing: border-box;
+  z-index: 99999 !important;
 }
 
-// Prevent transform/shift
-.ng-dropdown-panel.ng-select-bottom {
-  transform: none !important;
+// Scoped dropdown panel overrides for inline (non-appended) panels
+ng-select {
+  .ng-dropdown-panel {
+    width: 100% !important;
+    margin-left: 0 !important;
+
+    &.ng-select-bottom {
+      transform: none !important;
+    }
+  }
 }
 
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {

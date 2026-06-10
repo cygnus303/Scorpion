@@ -224,7 +224,7 @@
                                             <th style="min-width: 120px;">Pkgs.Delivered</th>
                                             <th style="min-width: 150px;">Remarks</th>
                                             <th style="min-width: 160px;">HCC Vendor Type
-                                                <ng-select class="mt-1 clear-icon"
+                                                <ng-select class="mt-1 clear-icon" appendTo="body"
                                                     [items]="generalMasterService.loadingData" bindLabel="codeDesc"
                                                     bindValue="codeId" placeholder="Vendor Type"
                                                     (change)="onHeaderHccVendorTypeChange($event)"
@@ -232,7 +232,7 @@
                                                 </ng-select>
                                             </th>
                                             <th style="min-width: 200px;">Vendor
-                                                <ng-select class="mt-1 clear-icon remove-white-space"
+                                                <ng-select class="mt-1 clear-icon remove-white-space" appendTo="body"
                                                     [items]="headerVendorList" bindLabel="text" bindValue="value"
                                                     placeholder="Vendor" [(ngModel)]="headerVendor"
                                                     [ngModelOptions]="{standalone: true}"
@@ -241,7 +241,7 @@
                                                 </ng-select>
                                             </th>
                                             <th style="min-width: 150px;">Rate Type
-                                                <ng-select class="clear-icon mt-1" formControlName="ratetype"
+                                                <ng-select class="clear-icon mt-1" appendTo="body" formControlName="ratetype"
                                                     bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type"
                                                     appFocusNext [items]="generalMasterService.chargeTypeData"
                                                     (change)="onHeaderRateTypeChange($event)"></ng-select>
@@ -254,7 +254,18 @@
                                         </tr>
                                     </thead>
 
-                                    <tbody *ngIf="drsList.controls.length === 0">
+                                    <tbody *ngIf="isLoading">
+                                        <tr>
+                                            <td colspan="17" class="text-center py-5">
+                                                <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                                <div class="mt-2 text-muted fw-bold">Loading Data...</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                    <tbody *ngIf="!isLoading && drsList.controls.length === 0">
                                         <tr>
                                             <td colspan="17" class="text-center py-4 text-muted fs-5">
                                                 No data found
@@ -262,7 +273,7 @@
                                         </tr>
                                     </tbody>
 
-                                    <tbody formArrayName="drsList" *ngIf="drsList.controls.length > 0">
+                                    <tbody formArrayName="drsList" *ngIf="!isLoading && drsList.controls.length > 0">
                                         <ng-container *ngFor="let row of drsList.controls; let i = index"
                                             [formGroupName]="i" class="m-2">
                                             <tr>
@@ -341,7 +352,7 @@
                                                         appFocusNext></textarea>
                                                 </td>
                                                 <td>
-                                                    <ng-select class="clear-icon"
+                                                    <ng-select class="clear-icon" appendTo="body"
                                                         [items]="generalMasterService.loadingData"
                                                         formControlName="luVendorTyp" bindLabel="codeDesc"
                                                         bindValue="codeId" placeholder="Type"
@@ -350,7 +361,7 @@
                                                     </ng-select>
                                                 </td>
                                                 <td>
-                                                    <ng-select class="noFoundTextColor clear-icon remove-white-space"
+                                                    <ng-select class="noFoundTextColor clear-icon remove-white-space" appendTo="body"
                                                         [ngClass]="{
                                                             'required2': row.get('luVendorTyp')?.value !== 'XX9',
                                                             'border-danger': row.get('luVendorCode')?.hasError('required') && row.get('luVendorCode')?.touched
@@ -367,7 +378,7 @@
                                                 </td>
 
                                                 <td>
-                                                    <ng-select class="clear-icon" formControlName="ratetype"
+                                                    <ng-select class="clear-icon" appendTo="body" formControlName="ratetype"
                                                         bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type"
                                                         appFocusNext [items]="generalMasterService.chargeTypeData"
                                                         [ngClass]="{'border-danger': row.get('ratetype')?.hasError('required') && row.get('ratetype')?.touched}"
@@ -396,7 +407,7 @@
                                                 </td>
                                                 <td style="width:200px; max-width: 200px;">
                                                     <ng-select
-                                                        class="noFoundTextColor required2 clear-icon remove-white-space"
+                                                        class="noFoundTextColor required2 clear-icon remove-white-space" appendTo="body"
                                                         formControlName="DeliveredTo" bindLabel="codeDesc"
                                                         bindValue="codeId"
                                                         [items]="generalMasterService.deliveredToData"
@@ -467,7 +478,7 @@
                                                                 <span class="fw-semibold text-muted">Reason:</span>
                                                                 <div>
                                                                     <ng-select
-                                                                        class="noFoundTextColor required2 clear-icon"
+                                                                        class="noFoundTextColor required2 clear-icon" appendTo="body"
                                                                         style="width:250px;" formControlName="cboReason"
                                                                         bindLabel="codeDesc" bindValue="codeId"
                                                                         [items]="generalMasterService.reasonData"

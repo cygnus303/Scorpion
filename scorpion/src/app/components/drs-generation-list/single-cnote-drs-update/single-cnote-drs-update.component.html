@@ -90,23 +90,23 @@
                                     <th class="text-center" style="min-width: 160px;">HCC Vendor Type
                                         <ng-select class="mt-1 clear-icon" [items]="generalMasterService.loadingData"
                                             bindLabel="codeDesc" bindValue="codeId" placeholder="Vendor Type"
-                                            (change)="onHeaderHccVendorTypeChange($event)"
+                                            (change)="onHeaderHccVendorTypeChange($event)" appendTo="body"
                                             [dropdownPosition]="'bottom'">
                                         </ng-select>
                                     </th>
                                     <th class="text-center" style="min-width: 200px;">HCC VendorCode
                                         <ng-select class="mt-1 clear-icon  remove-white-space"
-                                            [items]="headerVendorList" bindLabel="text" bindValue="value"
+                                            [items]="headerVendorList" bindLabel="text" bindValue="value" appendTo="body"
                                             placeholder="Vendor" [(ngModel)]="headerVendor" [ngModelOptions]="{standalone: true}"
                                             (change)="onHeaderVendorChange($event)"
                                             [dropdownPosition]="'bottom'">
                                         </ng-select>
                                     </th>
                                     <th class="text-center" style="min-width: 150px;">Rate Type
-                                        <ng-select class="clear-icon mt-1" bindLabel="codeDesc" bindValue="codeId"
-                                            placeholder="Enter Type" appFocusNext
+                                        <ng-select class="clear-icon mt-1" bindLabel="codeDesc" bindValue="codeId" appendTo="body"
+                                            placeholder="Enter Type" appFocusNext 
                                             [items]="generalMasterService.chargeTypeData"
-                                            (change)="onHeaderRateTypeChange($event)"></ng-select>
+                                            (change)="onHeaderRateTypeChange($event)" [dropdownPosition]="'bottom'"></ng-select>
                                     </th>
                                     <th class="text-center" style="min-width: 120px;">Pkgs.Dely</th>
                                     <!-- <th class="text-center">Delivery Control Loc</th> -->
@@ -186,7 +186,7 @@
                                         <td>
                                             <ng-select class="clear-icon" [items]="generalMasterService.loadingData"
                                                 formControlName="luVendorTyp" bindLabel="codeDesc" bindValue="codeId"
-                                                placeholder="Type" [dropdownPosition]="'bottom'"
+                                                placeholder="Type" [dropdownPosition]="'bottom'" appendTo="body"
                                                 (change)="onRowVendorTypeChange($event, i)">
                                             </ng-select>
                                         </td>
@@ -195,7 +195,7 @@
                                                     'required2': row.get('luVendorTyp')?.value !== 'XX9',
                                                     'border-danger': row.get('luVendorCode')?.hasError('required') && row.get('luVendorCode')?.touched
                                                 }" formControlName="luVendorCode" [items]="rowVendorList[i] || []"
-                                                bindLabel="text" bindValue="value" placeholder="Vendor"
+                                                bindLabel="text" bindValue="value" placeholder="Vendor" appendTo="body"
                                                 [dropdownPosition]="'bottom'"
                                                 (change)="onRowVendorCodeChange($event, i)">
                                             </ng-select>
@@ -205,7 +205,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <ng-select class="clear-icon mb-1" formControlName="ratetype"
+                                            <ng-select class="clear-icon mb-1" formControlName="ratetype" appendTo="body" [dropdownPosition]="'bottom'"
                                                 bindLabel="codeDesc" bindValue="codeId" placeholder="Enter rateType"
                                                 [items]="generalMasterService.chargeTypeData"
                                                 [ngClass]="{'border-danger': row.get('ratetype')?.hasError('required') && row.get('ratetype')?.touched}"
@@ -279,8 +279,8 @@
                                                     <div class="d-flex align-items-center gap-2">
                                                         <span class="fw-semibold text-muted">Reason:</span>
                                                         <div>
-                                                            <ng-select class="noFoundTextColor clear-icon"
-                                                                style="width:250px;" formControlName="cboReason"
+                                                            <ng-select class="noFoundTextColor clear-icon" appendTo="body"
+                                                                style="width:250px;" formControlName="cboReason" [dropdownPosition]="'bottom'"
                                                                 placeholder="Select Reason" [items]="deliveryReason"
                                                                 bindLabel="code" bindValue="codeID">
                                                             </ng-select>
