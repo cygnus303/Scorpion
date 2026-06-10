@@ -203,17 +203,17 @@
                                                 [items]="generalMasterService.loadingData" bindLabel="codeDesc"
                                                 bindValue="codeId" placeholder="Vendor Type"
                                                 (change)="onHeaderHccVendorTypeChange($event)"
-                                                [dropdownPosition]="'bottom'"></ng-select>
+                                                [dropdownPosition]="'bottom'" appendTo="body"></ng-select>
                                         </th>
                                         <th>Vendor
                                             <ng-select class="mt-1 clear-icon remove-white-space"
                                                 [items]="headerVendorList" bindLabel="text" bindValue="value"
                                                 placeholder="Vendor" (change)="onHeaderVendorChange($event)"
-                                                [dropdownPosition]="'bottom'"></ng-select>
+                                                [dropdownPosition]="'bottom'" appendTo="body"></ng-select>
                                         </th>
                                         <th>Rate type <ng-select class="clear-icon" formControlName="ratetype"
                                                 bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type"
-                                                [items]="generalMasterService.chargeTypeData"
+                                                [items]="generalMasterService.chargeTypeData" [dropdownPosition]="'bottom'" appendTo="body"
                                                 [readonly]="this.prsArrivalForm.value.LoadingBy ==='XX9' || this.prsArrivalForm.value.LoadingBy ==='XX5'"></ng-select>
                                         </th>
                                         <th>ACTUWT</th>
@@ -245,7 +245,7 @@
                                         <td style="width:150px; max-width: 150px;">
                                             <ng-select class="clear-icon" [items]="generalMasterService.loadingData"
                                                 formControlName="luVendorTyp" bindLabel="codeDesc" bindValue="codeId"
-                                                placeholder="Type" [dropdownPosition]="'bottom'"
+                                                placeholder="Type" [dropdownPosition]="'bottom'" appendTo="body"
                                                 (change)="onRowVendorTypeChange($event, i)">
                                             </ng-select>
                                         </td>
@@ -254,7 +254,7 @@
                                                     'required2': ctrl.get('luVendorTyp')?.value !== 'XX9',
                                                     'border-danger': ctrl.get('luVendorCode')?.hasError('required') && ctrl.get('luVendorCode')?.touched
                                                 }" formControlName="luVendorCode" [items]="rowVendorList[i] || []"
-                                                bindLabel="text" [dropdownPosition]="'bottom'" bindValue="value"
+                                                bindLabel="text" [dropdownPosition]="'bottom'" appendTo="body" bindValue="value"
                                                 placeholder="Vendor" (change)="onRowVendorCodeChange($event, i)">
                                             </ng-select>
                                             <div class="text-danger small mt-1 text-start"
@@ -265,7 +265,7 @@
                                         <td style="width:290px; max-width: 290px;">
                                             <ng-select class="clear-icon required2" formControlName="ratetype"
                                                 bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type"
-                                                [items]="generalMasterService.chargeTypeData"
+                                                [items]="generalMasterService.chargeTypeData" [dropdownPosition]="'bottom'" appendTo="body"
                                                 [ngClass]="{'border-danger': ctrl.get('ratetype')?.hasError('required') && ctrl.get('ratetype')?.touched}"
                                                 [readonly]="ctrl.value.luVendorTyp ==='XX9' || ctrl.value.luVendorTyp ==='XX5'"></ng-select>
                                             <div class="text-danger small mt-1 text-start"

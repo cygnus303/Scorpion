@@ -162,18 +162,18 @@
                                 <th class="text-center p-1" style="width: 200px;">
                                     <div class="small mb-1">Arrival Condition</div>
                                     <ng-select class="fw-normal" [items]="conditionList" bindLabel="text"
-                                        bindValue="value" placeholder="Select Condition"
+                                        bindValue="value" placeholder="Select Condition" [dropdownPosition]="'bottom'" appendTo="body"
                                         (change)="onArrivalCondition($event)" formControlName="hCondition"></ng-select>
                                 </th>
                                 <th class="text-center p-1" style="width: 200px;">
                                     <div class="small mb-1">Warehouse</div>
                                     <ng-select class="fw-normal" bindLabel="godown_name" bindValue="godown_srno"
-                                        [items]="warehouseList" placeholder="Select Warehouse"
+                                        [items]="warehouseList" placeholder="Select Warehouse"  [dropdownPosition]="'bottom'" appendTo="body"
                                         formControlName="hWarehouse" (change)="onWarehouse($event)"></ng-select>
                                 </th>
                                 <th class="text-center p-1" style="width: 200px;">
                                     <div class="small mb-1">Delivery Process</div>
-                                    <ng-select class="fw-normal" bindLabel="codeDesc" bindValue="codeId"
+                                    <ng-select class="fw-normal" bindLabel="codeDesc" bindValue="codeId"  [dropdownPosition]="'bottom'" appendTo="body"
                                         formControlName="hDeliveryProcess" (change)="onDeliveryProcessChange($event)"
                                         [items]="generalMasterService.deliveryProcessData"
                                         placeholder="Select Process"></ng-select>
@@ -240,17 +240,17 @@
                                         <td style="width: 150px;"><input class="form-control "
                                                 formControlName="arrivedWt" readonly></td>
                                         <td style="width: 200px;"><ng-select [items]="conditionList" bindLabel="text"
-                                                class="clear-icon required2" bindValue="value"
+                                                class="clear-icon required2" bindValue="value" [dropdownPosition]="'bottom'" appendTo="body"
                                                 formControlName="condition" placeholder="Select Condition"></ng-select>
                                         </td>
                                         <td style="width: 200px;"><ng-select class="clear-icon" bindLabel="godown_name"
-                                                bindValue="godown_srno" [items]="warehouseList"
+                                                bindValue="godown_srno" [items]="warehouseList"  [dropdownPosition]="'bottom'" appendTo="body"
                                                 placeholder="Select Warehouse" formControlName="warehouse"></ng-select>
                                         </td>
                                         <td style="width: 200px;"
                                             *ngIf="docketService.loginUserList.LocationCode === row.get('desT_CD')?.value ||
                                                 (row.get('isFTLDelivery')?.value === true && docketService.loginUserList.LocationCode === row.get('thcbr')?.value && row.get('desT_CD')?.value === docketService.loginUserList.LocationCode)">
-                                            <ng-select class="clear-icon required2" bindLabel="codeDesc"
+                                            <ng-select class="clear-icon required2" bindLabel="codeDesc"  [dropdownPosition]="'bottom'" appendTo="body"
                                                 bindValue="codeId" formControlName="deliveryProcess"
                                                 [items]="generalMasterService.deliveryProcessData"
                                                 placeholder="Select Process"
@@ -665,7 +665,7 @@
                                                     <ng-select class="clear-icon remove-white-space"
                                                         placeholder="Damage Type" formControlName="damageType"
                                                         bindValue="codeId" bindLabel="codeDesc"
-                                                        [items]="generalMasterService.damageData"
+                                                        [items]="generalMasterService.damageData"  [dropdownPosition]="'bottom'" appendTo="body"
                                                         (change)="onChangeDamage($event, i)"
                                                         [ngClass]="{ 'border-danger': row.get('damageType')?.invalid  && row.get('damageType')?.touched }"></ng-select>
                                                     <div

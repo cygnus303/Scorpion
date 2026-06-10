@@ -39,6 +39,7 @@ export class DRSUpdateListComponent {
   public isdeliveryRequired: boolean = false;
   maxCloseKMValue: number = 900000;
   public DRSFilterForm!: FormGroup;
+  public isLoading: boolean = false;
   @Input() drsData: any;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
 
@@ -492,6 +493,7 @@ export class DRSUpdateListComponent {
   }
 
   getDeliveryDetail() {
+    this.isLoading = true;
     const payload = {
       drsId: this.docketService.loginUserList.drsId,
       loadBy: this.docketService.loginUserList.loadBy || null,
@@ -500,6 +502,7 @@ export class DRSUpdateListComponent {
     };
     this.THCMasterService.getDeliveryUpdateData(payload).subscribe({
       next: (response: any) => {
+        this.isLoading = false;
         this.DRSInformation = response.data.drsSummary;
         const summaryRateType = response.data.drsSummary?.rateType;
         this.drsDeliveryList = response.data.drsDeliveryList;
@@ -517,6 +520,7 @@ export class DRSUpdateListComponent {
         this.getPANnumberData(response.data.drsSummary.loadingBy);
       },
       error: (err) => {
+        this.isLoading = false;
         console.error('Delivery Detail API Error', err);
       }
     });

@@ -218,7 +218,7 @@
     }
 
     <div *ngIf="this.isgetLoadingList" class="fade-in">
-      @if(this.docketService.loginUserList.Type === 'ULS' ){
+      <!-- @if(this.docketService.loginUserList.Type === 'ULS' ){
       <div class="input-background-color p-3">
         <div class="control-bar d-block gap-2 mb-0">
           <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
@@ -227,7 +227,7 @@
           </div>
           <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
           <div class="row mb-3">
-            <!-- <div class="col-4 align-items-center d-flex">
+           <div class="col-4 align-items-center d-flex">
               <div class="form-group-input">
                 <label class="form-label fw-bold d-flex align-items-center gap-2">
                   Loading By :
@@ -250,8 +250,8 @@
                   This field is required.
                 </div>
               </div>
-            </div> -->
-            <!-- <div class="col-3">
+            </div> 
+            <div class="col-3">
               <div class="form-group-input">
                 <label class="form-label d-flex align-items-center gap-2 fw-bold"> Loading Charge</label>
                 <input class="form-control required2" placeholder="Loading Charge" type="text"
@@ -262,11 +262,11 @@
                   Please enter a value greater than or equal to 0.01.
                 </div>
               </div>
-            </div> -->
+            </div>
           </div>
         </div>
       </div>
-      }
+      } -->
 
       @if(this.docketService.loginUserList.Type === 'ULS'){
       <div class="input-background-color p-3">
@@ -405,22 +405,22 @@
                     <th class="p-3 fw-bolder">Comm. Dely Date</th>
                     <th class="p-3 fw-bolder" style="min-width: 160px;"
                       *ngIf="this.docketService.loginUserList.Type === 'ULS'">HCC Vendor Type
-                      <ng-select class="mt-1 clear-icon" [items]="generalMasterService.loadingData" bindLabel="codeDesc"
+                      <ng-select class="mt-1 clear-icon"  [items]="generalMasterService.loadingData" bindLabel="codeDesc"
                         bindValue="codeId" placeholder="Vendor Type" (change)="onHeaderHccVendorTypeChange($event)"
-                        [dropdownPosition]="'bottom'">
+                        [dropdownPosition]="'bottom'" appendTo="body">
                       </ng-select>
                     </th>
                     <th class="p-3 fw-bolder" style="min-width: 200px;"
                       *ngIf="this.docketService.loginUserList.Type === 'ULS'">HCC VendorCode
                       <ng-select class="mt-1 clear-icon remove-white-space" [items]="headerVendorList" bindLabel="text"
                         bindValue="value" placeholder="Vendor" [(ngModel)]="headerVendor" [ngModelOptions]="{standalone: true}"
-                        (change)="onHeaderVendorChange($event)" [dropdownPosition]="'bottom'">
+                        (change)="onHeaderVendorChange($event)" [dropdownPosition]="'bottom'" appendTo="body">
                       </ng-select>
                     </th>
                     <th class="p-3 fw-bolder" style="min-width: 150px;"
                       *ngIf="this.docketService.loginUserList.Type === 'ULS'">
                       Rate Type
-                      <ng-select class="clear-icon mt-1" bindLabel="codeDesc" bindValue="codeId"
+                      <ng-select class="clear-icon mt-1" bindLabel="codeDesc" bindValue="codeId" [dropdownPosition]="'bottom'" appendTo="body"
                         placeholder="Enter Type" appFocusNext [items]="generalMasterService.chargeTypeData"
                         (change)="onHeaderRateTypeChange($event)"></ng-select>
                     </th>
@@ -473,7 +473,7 @@
                       <td *ngIf="docketService.loginUserList.Type === 'ULS'">
                         <ng-select class="clear-icon" [items]="generalMasterService.loadingData"
                           formControlName="luVendorTyp" bindLabel="codeDesc" bindValue="codeId" placeholder="Type"
-                          [dropdownPosition]="'bottom'" (change)="onRowVendorTypeChange($event, i)">
+                          [dropdownPosition]="'bottom'" appendTo="body" (change)="onRowVendorTypeChange($event, i)">
                         </ng-select>
                       </td>
                       <td *ngIf="docketService.loginUserList.Type === 'ULS'">
@@ -481,7 +481,7 @@
                               'required2': row.value.luVendorTyp && row.value.luVendorTyp !== 'XX9',
                               'border-danger': loadingSheetService.docketFormArray.at(i).get('luVendorCode')?.hasError('required') && loadingSheetService.docketFormArray.at(i).get('luVendorCode')?.touched
                           }" formControlName="luVendorCode" [items]="rowVendorList[i] || []" bindLabel="text"
-                          bindValue="value" placeholder="Vendor" [dropdownPosition]="'bottom'"
+                          bindValue="value" placeholder="Vendor" [dropdownPosition]="'bottom'" appendTo="body"
                           (change)="onRowVendorCodeChange($event, i)">
                         </ng-select>
                         <div class="text-danger small mt-1 text-start"
@@ -491,7 +491,7 @@
                       </td>
                       <td *ngIf="docketService.loginUserList.Type === 'ULS'">
                         <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"
-                          placeholder="Enter rateType" [items]="generalMasterService.chargeTypeData"
+                          placeholder="Enter rateType" [items]="generalMasterService.chargeTypeData" [dropdownPosition]="'bottom'" appendTo="body"
                           [ngClass]="{'border-danger': row.get('ratetype')?.hasError('required') && row.get('ratetype')?.touched}"
                           [readonly]="row.value.luVendorTyp ==='XX9' || row.value.luVendorTyp ==='XX5'"
                           appFocusNext></ng-select>

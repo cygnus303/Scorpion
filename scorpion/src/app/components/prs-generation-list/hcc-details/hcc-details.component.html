@@ -102,7 +102,7 @@
                                     <th class="text-center">Weight</th>
                                     <th class="text-center" style="min-width: 150px;">
                                         Charged By
-                                        <ng-select class="mt-1 clear-icon text-start" [dropdownPosition]="'bottom'"
+                                        <ng-select class="mt-1 clear-icon text-start" [dropdownPosition]="'bottom'" appendTo="body"
                                             [items]="generalMasterService.loadingData" bindLabel="codeDesc"
                                             bindValue="codeId" placeholder="Type"
                                             (change)="onHeaderHccVendorTypeChange($event)"></ng-select>
@@ -110,14 +110,14 @@
                                     <th class="text-center" style="min-width: 180px;">
                                         Vendor
                                         <ng-select class="mt-1 clear-icon remove-white-space text-start"
-                                            [dropdownPosition]="'bottom'" [items]="headerVendorList" bindLabel="text"
+                                            [dropdownPosition]="'bottom'" appendTo="body" [items]="headerVendorList" bindLabel="text"
                                             bindValue="value" placeholder="Vendor" [(ngModel)]="headerVendor"
                                             [ngModelOptions]="{standalone: true}"
                                             (change)="onHeaderVendorChange($event)"></ng-select>
                                     </th>
                                     <th class="text-center" style="min-width: 150px;">
                                         Rate Type
-                                        <ng-select class="mt-1 clear-icon text-start" [dropdownPosition]="'bottom'"
+                                        <ng-select class="mt-1 clear-icon text-start" [dropdownPosition]="'bottom'" appendTo="body"
                                             bindLabel="codeDesc" bindValue="codeId" placeholder="Rate Type"
                                             [items]="generalMasterService.chargeTypeData"
                                             (change)="onHeaderRateTypeChange($event)"></ng-select>
@@ -156,7 +156,7 @@
                                     <td class="text-center">{{ row.value.weight ? (row.value.weight | number:'1.0-2') :
                                         0.00 }}</td>
                                     <td style="width:150px; max-width: 150px;">
-                                        <ng-select class="clear-icon text-start" [dropdownPosition]="'bottom'"
+                                        <ng-select class="clear-icon text-start" [dropdownPosition]="'bottom'" appendTo="body"
                                             [items]="generalMasterService.loadingData" formControlName="luVendorTyp"
                                             bindLabel="codeDesc" bindValue="codeId" placeholder="Type"
                                             (change)="onRowVendorTypeChange($event, i)">
@@ -164,7 +164,7 @@
                                     </td>
                                     <td style="width:180px; max-width: 180px;">
                                         <ng-select class="noFoundTextColor clear-icon remove-white-space text-start"
-                                            [dropdownPosition]="'bottom'" [ngClass]="{
+                                            [dropdownPosition]="'bottom'" appendTo="body" [ngClass]="{
                                                 'required2': row.value.luVendorTyp && row.value.luVendorTyp !== 'XX9',
                                                 'border-danger': row.get('luVendorCode')?.hasError('required') && row.get('luVendorCode')?.touched
                                             }" formControlName="luVendorCode" [items]="rowVendorList[i] || []"
@@ -177,7 +177,7 @@
                                         </div>
                                     </td>
                                     <td style="width:150px; max-width: 150px;">
-                                        <ng-select class="clear-icon text-start" [dropdownPosition]="'top'" [ngClass]="{
+                                        <ng-select class="clear-icon text-start" [dropdownPosition]="'bottom'" appendTo="body" [ngClass]="{
                                                 'required2': row.value.luVendorTyp && row.value.luVendorTyp !== 'XX9',
                                                 'border-danger': row.get('rateType')?.hasError('required') && row.get('rateType')?.touched
                                             }" formControlName="rateType" bindLabel="codeDesc" bindValue="codeId"

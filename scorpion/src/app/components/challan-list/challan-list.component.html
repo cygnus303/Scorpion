@@ -1114,7 +1114,7 @@
                                     <th class="p-3 fw-bolder" style="min-width: 150px;">
                                         HCC Vendor Type
                                         <ng-select class="mt-1 clear-icon" [items]="generalMasterService.loadingData"
-                                            bindLabel="codeDesc" bindValue="codeId" placeholder="Vendor Type"
+                                            bindLabel="codeDesc" bindValue="codeId"  appendTo="body" placeholder="Vendor Type"
                                             [dropdownPosition]="'bottom'"
                                             (change)="onHeaderHccVendorTypeChange($event)"></ng-select>
                                     </th>
@@ -1123,14 +1123,14 @@
                                         <ng-select class="mt-1 clear-icon remove-white-space" [items]="headerVendorList"
                                             bindLabel="text" bindValue="value" placeholder="Vendor"
                                             [(ngModel)]="headerVendor" [ngModelOptions]="{standalone: true}"
-                                            [dropdownPosition]="'bottom'"
+                                            [dropdownPosition]="'bottom'"  appendTo="body"
                                             (change)="onHeaderVendorChange($event)"></ng-select>
                                     </th>
                                     <th class="p-3 fw-bolder" style="min-width: 150px;">
                                         Rate Type
                                         <ng-select class="mt-1 clear-icon" [items]="challanService.rateTypeData"
                                             bindLabel="codeDesc" bindValue="codeId" placeholder="Rate Type"
-                                            (change)="onHeaderRateTypeChange($event)"></ng-select>
+                                            (change)="onHeaderRateTypeChange($event)"  appendTo="body"></ng-select>
                                     </th>
                                     <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '3'">
                                         E-Way Bill No.</th>
@@ -1184,13 +1184,13 @@
                                         <td>{{ item.value.ACTUWT }}/{{ item.value.CHRGWT }}</td>
                                         <td>
                                             <ng-select class="clear-icon" [items]="generalMasterService.loadingData"
-                                                formControlName="luVendorTyp" bindLabel="codeDesc" bindValue="codeId"
+                                                formControlName="luVendorTyp" bindLabel="codeDesc" bindValue="codeId"  appendTo="body"
                                                 [dropdownPosition]="'bottom'" placeholder="Type"
                                                 (change)="onHccVendorTypeChange($event, i)">
                                             </ng-select>
                                         </td>
                                         <td>
-                                            <ng-select class="clear-icon remove-white-space"
+                                            <ng-select class="clear-icon remove-white-space"  appendTo="body"
                                                 [dropdownPosition]="'bottom'" [ngClass]="{
                                                     'required2': item.get('luVendorTyp')?.value !== 'XX9',
                                                     'border-danger': item.get('luVendorCode')?.hasError('required') && item.get('luVendorCode')?.touched
@@ -1205,7 +1205,7 @@
                                         </td>
 
                                         <td>
-                                            <ng-select class="required2 clear-icon"
+                                            <ng-select class="required2 clear-icon"  appendTo="body"
                                                 [items]="challanService.rateTypeData" formControlName="rateType"
                                                 bindLabel="codeDesc" bindValue="codeId" placeholder="Type"
                                                 [ngClass]="{'border-danger': item.get('rateType')?.hasError('required') && item.get('rateType')?.touched}"
