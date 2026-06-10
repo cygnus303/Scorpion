@@ -71,7 +71,16 @@ export class HCCviewComponent {
   }
 
   printHccModal() {
-    window.print();
+    document.body.classList.add('printing-mode');
+    const afterPrint = () => {
+      document.body.classList.remove('printing-mode');
+      this.closeHccModal();
+      window.removeEventListener('afterprint', afterPrint);
+    };
+    window.addEventListener('afterprint', afterPrint);
+    setTimeout(() => {
+      window.print();
+    }, 10);
   }
 
   closeHccModal() {
