@@ -86,8 +86,19 @@ export class MenuAccessComponent implements OnInit {
   }
 
   fetchUserMenus() {
-    const userId = this.selectedUserId || this.docketService.loginUserList.UserId;
-    this.menuAccessService.getMenus(userId, this.roleType).subscribe({
+    let idToPass: string | null = '';
+    if (this.searchType === 'User') {
+      idToPass = this.selectedUserId || this.docketService.loginUserList.UserId;
+    } else {
+      idToPass = this.roleType;
+      if (!idToPass) {
+        this.permissionsList = [];
+        this.selectedModule = null;
+        return;
+      }
+    }
+
+    this.menuAccessService.getMenus(idToPass).subscribe({
       next: (response: any) => {
         const { menus, userPermissions } = response;
         this.permissionsList = menus.map((menu: any) => {
@@ -106,7 +117,7 @@ export class MenuAccessComponent implements OnInit {
             permissions: mappedPermissions
           };
         });
-        
+
         if (this.permissionsList.length > 0) {
           this.selectedModule = this.permissionsList[0];
         } else {
@@ -179,9 +190,16 @@ export class MenuAccessComponent implements OnInit {
       });
     });
 
+    let idToPass: string | null = '';
+    if (this.searchType === 'User') {
+      idToPass = this.selectedUserId || this.docketService.loginUserList.UserId;
+    } else {
+      idToPass = this.roleType;
+    }
+
     const payload = {
-      userId: this.selectedUserId || this.docketService.loginUserList.UserId,
-      userPermission: userPermissionArray
+      roleId: idToPass ? String(idToPass) : '',
+      rolePermissions: userPermissionArray
     };
 
     console.log('Submit Payload:', payload);
