@@ -121,11 +121,11 @@ export class LSUpdatePopupComponent {
     }
     const rateType = this.loadingSheetService.LSForm.get('rateType');
     const vendorCode = this.loadingSheetService.LSForm.get('vendorCode');
-    const loadingCharge = this.loadingSheetService.LSForm.get('loadingCharge');
+    // const loadingCharge = this.loadingSheetService.LSForm.get('loadingCharge');
     if (this.loadingSheetService.LSForm.value.loadingBy && this.loadingSheetService.LSForm.value.loadingBy !== 'XX9') {
       rateType?.setValidators([Validators.required]);
       // vendorCode?.setValidators([Validators.required]);
-      loadingCharge?.setValidators([Validators.required]);
+      // loadingCharge?.setValidators([Validators.required]);
     } else {
       rateType?.setValidators(null);
       rateType?.setValue(null);
@@ -133,14 +133,14 @@ export class LSUpdatePopupComponent {
       // vendorCode?.setValidators(null);
       // vendorCode?.setValue(null);
 
-      loadingCharge?.setValidators(null);
-      loadingCharge?.setValue(null);
+      // loadingCharge?.setValidators(null);
+      // loadingCharge?.setValue(null);
     }
     rateType?.updateValueAndValidity();
 
     // vendorCode?.updateValueAndValidity();
 
-    loadingCharge?.updateValueAndValidity();
+    // loadingCharge?.updateValueAndValidity();
   }
 
 
@@ -310,14 +310,14 @@ export class LSUpdatePopupComponent {
     if (event?.codeId === 'S' && this.docketService.loginUserList.Type === 'ULS') {
       // this.loadingSheetService.LSForm.get('loadingBy')?.setValidators([Validators.required]);
       // this.loadingSheetService.LSForm.get('vendorCode')?.setValidators([Validators.required]);
-      this.loadingSheetService.LSForm.get('loadingCharge')?.setValidators([Validators.required, Validators.min(0.01)]);
+      // this.loadingSheetService.LSForm.get('loadingCharge')?.setValidators([Validators.required, Validators.min(0.01)]);
     } else {
       // this.loadingSheetService.LSForm.get('loadingBy')?.clearValidators();
       // this.loadingSheetService.LSForm.get('loadingBy')?.setValue(null);
       // this.loadingSheetService.LSForm.get('vendorCode')?.clearValidators();
       // this.loadingSheetService.LSForm.get('vendorCode')?.setValue(null);
-      this.loadingSheetService.LSForm.get('loadingCharge')?.clearValidators();
-      this.loadingSheetService.LSForm.get('loadingCharge')?.setValue(0);
+      // this.loadingSheetService.LSForm.get('loadingCharge')?.clearValidators();
+      // this.loadingSheetService.LSForm.get('loadingCharge')?.setValue(0);
       this.loadingSheetService.LSForm.get('rateType')?.clearValidators();
       this.loadingSheetService.LSForm.get('rateType')?.setValue(null);
     }
@@ -444,7 +444,7 @@ export class LSUpdatePopupComponent {
           reDestCode: ctrl.get('reDestCode')?.value,
           isChecked: ctrl.get('isChecked')?.value,
           newRate: this.docketService.loginUserList.Type === 'ULS' ? Number(ctrl.get('newRate')?.value) : 0,
-          ratetype: this.docketService.loginUserList.Type === 'ULS' ? ctrl.get('ratetype')?.value : '',
+          ratetype: this.docketService.loginUserList.Type === 'ULS' ? ctrl.get('ratetype')?.value ? ctrl.get('ratetype')?.value : '' : '',
           luVendorTyp: ctrl.get('luVendorTyp')?.value || '',
           luVendorCode: ctrl.get('luVendorCode')?.value || ''
         }));
