@@ -52,7 +52,16 @@ export class HccDetailsEditPopupComponent {
   }
 
   printEditModal() {
-    window.print();
+    document.body.classList.add('printing-mode');
+    const afterPrint = () => {
+      document.body.classList.remove('printing-mode');
+      this.close();
+      window.removeEventListener('afterprint', afterPrint);
+    };
+    window.addEventListener('afterprint', afterPrint);
+    setTimeout(() => {
+      window.print();
+    }, 10);
   }
 
   submit() {

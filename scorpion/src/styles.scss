@@ -6,6 +6,14 @@
   box-sizing: border-box;
 }
 
+@media screen {
+  body.printing-mode .modal-content, 
+  body.printing-mode .modal-backdrop { 
+    opacity: 0 !important; 
+    pointer-events: none !important; 
+  }
+}
+
 :root {
   --bg: #f3f6fb;
   --page-bg: #f8fafc;
