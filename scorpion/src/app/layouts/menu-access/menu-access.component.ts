@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MenuAccessService } from '../../shared/services/menu-access.service';
-import { forkJoin } from 'rxjs';
 import { DocketService } from 'app/shared/services/docket.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
@@ -21,6 +20,19 @@ export class MenuAccessComponent implements OnInit {
   permissionColumns: any[] = [];
   searchText: string = '';
   selectedUserId: string = '';
+  roleType: string | null = null;
+  searchType: string = 'User';
+  selectedModule: any = null;
+
+  onSearchTypeChange() {
+    this.roleType = null;
+    this.selectedUserId = '';
+    this.permissionsList = [];
+    if (this.searchType === 'User') {
+      this.selectedUserId = this.docketService.loginUserList.UserId;
+      this.fetchUserMenus();
+    }
+  }
 
   get filteredPermissionsList() {
     if (!this.searchText) {
@@ -32,10 +44,14 @@ export class MenuAccessComponent implements OnInit {
     );
   }
 
+  selectModule(module: any) {
+    this.selectedModule = module;
+  }
+
   constructor(
     @Inject(MenuAccessService) private menuAccessService: MenuAccessService,
     private docketService: DocketService,
-    private generalMasterService: GeneralMasterService, private sweetAlertService: SweetAlertService, public LoadingSheetService: LoadingSheetService,
+    public generalMasterService: GeneralMasterService, private sweetAlertService: SweetAlertService, public LoadingSheetService: LoadingSheetService,
   ) { }
 
   ngOnInit() {
@@ -49,6 +65,7 @@ export class MenuAccessComponent implements OnInit {
     }
     this.selectedUserId = this.docketService.loginUserList.UserId;
     this.LoadingSheetService.getUnLoaderUserList();
+    this.generalMasterService.getRoleTypeDetail();
     this.fetchData();
   }
 
@@ -69,8 +86,19 @@ export class MenuAccessComponent implements OnInit {
   }
 
   fetchUserMenus() {
-    const userId = this.selectedUserId || this.docketService.loginUserList.UserId;
-    this.menuAccessService.getMenus(userId).subscribe({
+    let idToPass: string | null = '';
+    if (this.searchType === 'User') {
+      idToPass = this.selectedUserId || this.docketService.loginUserList.UserId;
+    } else {
+      idToPass = this.roleType;
+      if (!idToPass) {
+        this.permissionsList = [];
+        this.selectedModule = null;
+        return;
+      }
+    }
+
+    this.menuAccessService.getMenus(idToPass).subscribe({
       next: (response: any) => {
         const { menus, userPermissions } = response;
         this.permissionsList = menus.map((menu: any) => {
@@ -89,6 +117,12 @@ export class MenuAccessComponent implements OnInit {
             permissions: mappedPermissions
           };
         });
+
+        if (this.permissionsList.length > 0) {
+          this.selectedModule = this.permissionsList[0];
+        } else {
+          this.selectedModule = null;
+        }
       },
       error: (err) => console.error('Error fetching menus:', err)
     });
@@ -101,12 +135,14 @@ export class MenuAccessComponent implements OnInit {
   toggleAll(event: any) {
     const checked = event.target.checked;
     this.filteredPermissionsList.forEach(module => {
+      module.isSelected = checked;
       module.permissions?.forEach((p: any) => p.isUSERACCESS = checked);
     });
   }
 
   toggleRow(module: any, event: any) {
     const checked = event.target.checked;
+    module.isSelected = checked;
     module.permissions?.forEach((p: any) => p.isUSERACCESS = checked);
   }
 
@@ -119,7 +155,10 @@ export class MenuAccessComponent implements OnInit {
   }
 
   isRowSelected(module: any): boolean {
-    return module.permissions?.length > 0 && module.permissions.every((p: any) => p.isUSERACCESS);
+    if (module.permissions && module.permissions.length > 0) {
+      return module.permissions.every((p: any) => p.isUSERACCESS);
+    }
+    return !!module.isSelected;
   }
 
   isColumnAllSelected(col: any): boolean {
@@ -151,9 +190,16 @@ export class MenuAccessComponent implements OnInit {
       });
     });
 
+    let idToPass: string | null = '';
+    if (this.searchType === 'User') {
+      idToPass = this.selectedUserId || this.docketService.loginUserList.UserId;
+    } else {
+      idToPass = this.roleType;
+    }
+
     const payload = {
-      userId: this.selectedUserId || this.docketService.loginUserList.UserId,
-      userPermission: userPermissionArray
+      roleId: idToPass ? String(idToPass) : '',
+      rolePermissions: userPermissionArray
     };
 
     console.log('Submit Payload:', payload);

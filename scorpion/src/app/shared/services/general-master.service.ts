@@ -30,6 +30,7 @@ export class GeneralMasterService {
   public IndustryList: PRSGeneralMasterResponse[] = [];
   public ownerList: PRSGeneralMasterResponse[] = [];
   public menuAccessList: PRSGeneralMasterResponse[] = [];
+  public roleTypeList: PRSGeneralMasterResponse[] = [];
 
 
 
@@ -242,6 +243,16 @@ export class GeneralMasterService {
       next: (response) => {
         if (response.success) {
           this.menuAccessList = response.data;
+        }
+      }
+    });
+  }
+
+  getRoleTypeDetail() {
+    this.THCMasterService.getGeneralMasterDetail('HIERARCHY').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.roleTypeList = response.data;
         }
       }
     });
