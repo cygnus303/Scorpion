@@ -93,6 +93,7 @@ export class DocketService {
   public isWeightRecalculated = false;
   public hasConfirmedNoEwayBill = false;
   public maxDiscountLimit: number = 0;
+  public maxfreightChargesDiscount: number = 0;
   public isPORequired:boolean=false;
   public isChangingFile = false;
   public isExistingFile = false;
@@ -471,22 +472,35 @@ freightAndOtherChar(){
     this.basicDetailService.getMaxDiscount(payload).subscribe({
       next: (response: any) => {
 
-        const result = response.data;
-        this.maxDiscountLimit = result.maxDiscount;
+        const result = response?.data;
+        this.maxDiscountLimit = result?.maxDiscount;
 
         const discountControl = this.freightForm.get('discount');
         const discountAmountControl = this.freightForm.get('discountAmount');
 
-        if (result.maxDiscountY_N === 'Y' && this.freightForm.value.discountType === 'P') {
-          discountControl?.setValidators([
-            Validators.min(0),
-            Validators.max(result.maxDiscount)
-          ]);
-        } else {
-          discountControl?.clearValidators();
-          discountControl?.setValidators([Validators.min(0)]);
-          discountControl?.setValue(0);
-          discountAmountControl?.setValue(0);
+        if (this.freightForm.value.discountType === 'P') {
+          if (result.maxDiscountY_N === 'Y') {
+            discountControl?.setValidators([
+              Validators.min(0),
+              Validators.max(result.maxDiscount)
+            ]);
+          } else {
+            discountControl?.setValidators([
+              Validators.min(0)
+            ]);
+            discountControl?.setValue(0);
+            discountAmountControl?.setValue(0);
+          }
+        } 
+        
+        if (this.freightForm.value.discountType === 'F') {
+          if (this.basicDetailForm.value.billingType === "P01" || this.basicDetailForm.value.billingType === "P03") {
+              this.maxfreightChargesDiscount = Number((this.originalSubtotal * this.maxDiscountLimit / 100).toFixed(2));
+            discountControl?.setValidators([
+              Validators.min(0),
+              Validators.max(this.maxfreightChargesDiscount)
+            ]);
+          } 
         }
 
         discountControl?.updateValueAndValidity();
@@ -1885,7 +1899,7 @@ calculateChargeWeight(){
       this.freightForm.patchValue({
         discount: null,
         discountAmount: null,
-      subTotal:this.originalSubtotal
+        subTotal:this.originalSubtotal
       });
     }
 
@@ -1897,17 +1911,21 @@ if(this.freightForm.value.discount !== null && this.freightForm.value.discount !
         discounts = parseFloat(this.originalSubtotal.toString()) * parseFloat(discounts) / 100;
         this.getMaxDiscountLimit()
       }
-
+      // this.maxfreightChargesDiscount = Number((Subtotal * 20 / 100).toFixed(2));
       if (discountType === 'F') {
-        // ✅ SET VALIDATORS
-        discountControl?.setValidators([
-          Validators.min(0),
-          Validators.max(Subtotal)
-        ]);
-
-        // ✅ VERY IMPORTANT
-        discountControl?.markAsTouched();
-        discountControl?.updateValueAndValidity({ emitEvent: false });
+        if(this.basicDetailForm.value.billingType === "P01" || this.basicDetailForm.value.billingType === "P03"){
+           this.getMaxDiscountLimit()
+         }else{
+           // ✅ SET VALIDATORS
+           discountControl?.setValidators([
+             Validators.min(0),
+             Validators.max(Subtotal)
+           ]);
+   
+           // ✅ VERY IMPORTANT
+           discountControl?.markAsTouched();
+           discountControl?.updateValueAndValidity({ emitEvent: false });
+         }
 
       }
 
