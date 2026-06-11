@@ -302,7 +302,7 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
   }
 
   openView(pdcNo: string) {
-    const url = `${this.env.liveUrl}ViewPrint/ViewPrint?DocumentNo=${pdcNo}&src=angular`;
+    const url = `${this.env.liveUrl}ViewPrint/ViewPRS?DocumentNo=${pdcNo}&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );

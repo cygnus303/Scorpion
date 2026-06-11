@@ -198,7 +198,7 @@ export class ThcArrivalListComponent {
   }
 
     openMFView(MFNO: string) {
-    const url = `${this.env.liveUrl}ViewPrint/Menifest_ViewPrint?MFNO=${MFNO}&src=angular`;
+    const url = `${this.env.liveUrl}ViewPrint/ViewMF?MFNO=${MFNO}&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );

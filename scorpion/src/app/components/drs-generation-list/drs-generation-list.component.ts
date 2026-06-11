@@ -307,7 +307,7 @@ export class DrsGenerationListComponent {
   }
 
   openView(drsNo: string) {
-    const url = `${this.env.liveUrl}ViewPrint/DRSViewPrint?DocumentNo=${drsNo}&src=angular`;
+    const url = `${this.env.liveUrl}ViewPrint/ViewDRS?DocumentNo=${drsNo}&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );
