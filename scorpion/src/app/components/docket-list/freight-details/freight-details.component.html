@@ -342,13 +342,23 @@
                   docketService.freightForm.get('discount')?.errors &&
                   docketService.step2DetailsList?.maxDiscountY_N === 'Y'
                 ">
-
-               <span *ngIf="docketService.freightForm.value.discountType === 'F'">
-                Flat amount should not be greater than {{this.docketService.maxDiscountLimit}}% of Sub Total.
-                <!-- {{ docketService.maxfreightChargesDiscount }}. -->
-                <!-- {{ docketService.originalSubtotal }}. -->
-              </span>
-
+                @if(docketService.freightForm.value.discountType === 'F'){
+                @if(docketService.basicDetailForm.value.billingType === 'P01' || docketService.basicDetailForm.value.billingType ===
+                'P03'){
+                <span>
+                  Flat amount should not be greater than {{this.docketService.maxDiscountLimit}}% of Sub Total.
+                  <!-- {{ docketService.maxfreightChargesDiscount }}. -->
+                  <!-- {{ docketService.originalSubtotal }}. -->
+                </span>
+                }
+                @else{
+                <span>
+                  Flat amount should not be greater than {{docketService.originalSubtotal}}.
+                  <!-- {{ docketService.maxfreightChargesDiscount }}. -->
+                  <!-- {{ docketService.originalSubtotal }}. -->
+                </span>
+                }
+              }
               <span *ngIf="docketService.freightForm.value.discountType === 'P'">
                 Please enter a value less than or equal to
                 {{ docketService.maxDiscountLimit }}%.
