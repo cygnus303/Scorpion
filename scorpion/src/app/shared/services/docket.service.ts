@@ -472,8 +472,8 @@ freightAndOtherChar(){
     this.basicDetailService.getMaxDiscount(payload).subscribe({
       next: (response: any) => {
 
-        const result = response.data;
-        this.maxDiscountLimit = result.maxDiscount;
+        const result = response?.data;
+        this.maxDiscountLimit = result?.maxDiscount;
 
         const discountControl = this.freightForm.get('discount');
         const discountAmountControl = this.freightForm.get('discountAmount');
@@ -491,12 +491,16 @@ freightAndOtherChar(){
             discountControl?.setValue(0);
             discountAmountControl?.setValue(0);
           }
-        } else if (this.freightForm.value.discountType === 'F') {
-          this.maxfreightChargesDiscount = Number( (this.originalSubtotal * this.maxDiscountLimit / 100).toFixed(2));
-          discountControl?.setValidators([
-            Validators.min(0),
-            Validators.max(this.maxfreightChargesDiscount)
-          ]);
+        } 
+        
+        if (this.freightForm.value.discountType === 'F') {
+          if (this.basicDetailForm.value.billingType === "P01" || this.basicDetailForm.value.billingType === "P03") {
+              this.maxfreightChargesDiscount = Number((this.originalSubtotal * this.maxDiscountLimit / 100).toFixed(2));
+            discountControl?.setValidators([
+              Validators.min(0),
+              Validators.max(this.maxfreightChargesDiscount)
+            ]);
+          } 
         }
 
         discountControl?.updateValueAndValidity();
@@ -1900,7 +1904,7 @@ calculateChargeWeight(){
     }
 
     let Subtotal = this.originalSubtotal;
-    // const discountControl = this.freightForm.get('discount');
+    const discountControl = this.freightForm.get('discount');
 if(this.freightForm.value.discount !== null && this.freightForm.value.discount !== '' && this.freightForm.value.discount !== undefined){
       let discounts = this.freightForm.value.discount;
       if (discountType == "P") {
@@ -1909,16 +1913,19 @@ if(this.freightForm.value.discount !== null && this.freightForm.value.discount !
       }
       // this.maxfreightChargesDiscount = Number((Subtotal * 20 / 100).toFixed(2));
       if (discountType === 'F') {
-         this.getMaxDiscountLimit()
-        // ✅ SET VALIDATORS
-        // discountControl?.setValidators([
-        //   Validators.min(0),
-        //   Validators.max(this.maxfreightChargesDiscount)
-        // ]);
-
-        // // ✅ VERY IMPORTANT
-        // discountControl?.markAsTouched();
-        // discountControl?.updateValueAndValidity({ emitEvent: false });
+        if(this.basicDetailForm.value.billingType === "P01" || this.basicDetailForm.value.billingType === "P03"){
+           this.getMaxDiscountLimit()
+         }else{
+           // ✅ SET VALIDATORS
+           discountControl?.setValidators([
+             Validators.min(0),
+             Validators.max(Subtotal)
+           ]);
+   
+           // ✅ VERY IMPORTANT
+           discountControl?.markAsTouched();
+           discountControl?.updateValueAndValidity({ emitEvent: false });
+         }
 
       }
 
