@@ -478,16 +478,25 @@ freightAndOtherChar(){
         const discountControl = this.freightForm.get('discount');
         const discountAmountControl = this.freightForm.get('discountAmount');
 
-        if (result.maxDiscountY_N === 'Y' && this.freightForm.value.discountType === 'P') {
+        if (this.freightForm.value.discountType === 'P') {
+          if (result.maxDiscountY_N === 'Y') {
+            discountControl?.setValidators([
+              Validators.min(0),
+              Validators.max(result.maxDiscount)
+            ]);
+          } else {
+            discountControl?.setValidators([
+              Validators.min(0)
+            ]);
+            discountControl?.setValue(0);
+            discountAmountControl?.setValue(0);
+          }
+        } else if (this.freightForm.value.discountType === 'F') {
+          this.maxfreightChargesDiscount = Number( (this.originalSubtotal * this.maxDiscountLimit / 100).toFixed(2));
           discountControl?.setValidators([
             Validators.min(0),
-            Validators.max(result.maxDiscount)
+            Validators.max(this.maxfreightChargesDiscount)
           ]);
-        } else {
-          discountControl?.clearValidators();
-          discountControl?.setValidators([Validators.min(0)]);
-          discountControl?.setValue(0);
-          discountAmountControl?.setValue(0);
         }
 
         discountControl?.updateValueAndValidity();
@@ -1891,24 +1900,25 @@ calculateChargeWeight(){
     }
 
     let Subtotal = this.originalSubtotal;
-    const discountControl = this.freightForm.get('discount');
+    // const discountControl = this.freightForm.get('discount');
 if(this.freightForm.value.discount !== null && this.freightForm.value.discount !== '' && this.freightForm.value.discount !== undefined){
       let discounts = this.freightForm.value.discount;
       if (discountType == "P") {
         discounts = parseFloat(this.originalSubtotal.toString()) * parseFloat(discounts) / 100;
         this.getMaxDiscountLimit()
       }
-      this.maxfreightChargesDiscount = Number((Subtotal * 20 / 100).toFixed(2));
+      // this.maxfreightChargesDiscount = Number((Subtotal * 20 / 100).toFixed(2));
       if (discountType === 'F') {
+         this.getMaxDiscountLimit()
         // ✅ SET VALIDATORS
-        discountControl?.setValidators([
-          Validators.min(0),
-          Validators.max(this.maxfreightChargesDiscount)
-        ]);
+        // discountControl?.setValidators([
+        //   Validators.min(0),
+        //   Validators.max(this.maxfreightChargesDiscount)
+        // ]);
 
-        // ✅ VERY IMPORTANT
-        discountControl?.markAsTouched();
-        discountControl?.updateValueAndValidity({ emitEvent: false });
+        // // ✅ VERY IMPORTANT
+        // discountControl?.markAsTouched();
+        // discountControl?.updateValueAndValidity({ emitEvent: false });
 
       }
 
