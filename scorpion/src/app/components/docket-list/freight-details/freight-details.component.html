@@ -344,7 +344,7 @@
                 ">
 
                <span *ngIf="docketService.freightForm.value.discountType === 'F'">
-                Flat amount should not be greater than 20% of Sub Total.
+                Flat amount should not be greater than {{this.docketService.maxDiscountLimit}}% of Sub Total.
                 <!-- {{ docketService.maxfreightChargesDiscount }}. -->
                 <!-- {{ docketService.originalSubtotal }}. -->
               </span>
