@@ -236,7 +236,7 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
   }
 
   openView(lsNo: string) {
-    const url = `${this.env.liveUrl}ViewPrint/LSViewPrint?ChallanNo=${lsNo}&src=angular`;
+    const url = `${this.env.liveUrl}ViewPrint/ViewLS?ChallanNo=${lsNo}&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );
@@ -247,7 +247,7 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
   }
 
   openMfNoView(mfNo: string) {
-    const url = `${this.env.liveUrl}ViewPrint/Menifest_ViewPrint?MFNO=${mfNo}&src=angular`;
+    const url = `${this.env.liveUrl}ViewPrint/ViewMF?MFNO=${mfNo}&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );
