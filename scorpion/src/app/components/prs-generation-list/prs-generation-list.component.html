@@ -230,7 +230,7 @@
                                 </button>
                                 <button *ngIf="!isHQTR"
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
-                                    (click)="openHHCDetails(row)" [disabled]="(row.loadingHCC && row.loadingHCC !== 'NOHCC') && (row.unLoadingHCC && row.unLoadingHCC !== 'NOHCC')|| row.status ==='Billed'">
+                                    (click)="openHHCDetails(row)" [disabled]="(row.loadingHCC && row.loadingHCC !== 'NOHCC') && (row.unLoadingHCC && row.unLoadingHCC !== 'NOHCC')">
                                     🏷 HCC
                                 </button>
                             </div>
