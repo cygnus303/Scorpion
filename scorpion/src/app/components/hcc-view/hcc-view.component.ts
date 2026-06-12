@@ -48,8 +48,8 @@ export class HccViewComponent {
     });
   }
 
-    openHCCModal(hccNo: string) {
-    const url = `${this.env.liveUrl}ViewPrint/LoadingUnloadingViewPrint?LsNO=${hccNo}&src=angular`;
+    openHCCModal(hccNo: string,documentNo:string) {
+    const url = `${this.env.liveUrl}ViewPrint/ViewHCC?DocumentNo=${documentNo}&HCNo=${hccNo}&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );
