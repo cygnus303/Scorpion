@@ -14,4 +14,8 @@ export class LrService {
       return this.apiHandlerService.Post(`Operation/GetLRListing`,payload);
     }
 
+    cancelDocket(payload:any): Observable<IApiBaseResponse<any[]>>{
+      return this.apiHandlerService.Post(`Operation/CancelDocket`,payload);
+    }
+
 }
