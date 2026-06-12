@@ -40,8 +40,8 @@ export class DrsGenerationListComponent {
   }
   public showUpdateModal: boolean = false;
   public selectedDRS: any;
-  public  env = environment;
-  
+  public env = environment;
+
   public pagination = {
     page: 1,
     pageSize: 10,
@@ -54,7 +54,8 @@ export class DrsGenerationListComponent {
     { value: 'Updated', label: 'Updated', color: 'updated', bg: 'var(--orange)', count: 0 },
     { value: 'Billed', label: 'Billed', color: 'billed', bg: 'var(--accent-hover)', count: 0 },
     { value: 'Cancelled', label: 'Cancelled', color: 'cancelled', bg: 'var(--red)', count: 0 },
-    { value: 'HCC Generated', label: 'HCC Generated', color: 'hcc-generated', bg: 'var(--green)', count: 0 },
+    { value: 'Delivered', label: 'Delivered', color: 'hcc-generated', bg: 'var(--green)', count: 0 },
+    { value: 'Undelivered', label: 'UnDelivered', color: 'hcc-generated', bg: 'var(--green)', count: 0 },
   ];
   odaTypeList = [
     { value: '', label: 'All' },
@@ -73,7 +74,7 @@ export class DrsGenerationListComponent {
     private dockerService: DocketService,
     private route: Router,
     private sweetAlertService: SweetAlertService,
-    public docketService:DocketService
+    public docketService: DocketService
   ) { }
 
   ngOnInit() {
@@ -97,7 +98,8 @@ export class DrsGenerationListComponent {
     switch (status) {
       case 'Generated': return 's-gen';
       case 'Billed': return 's-billed';
-      case 'HCC Generated': return 's-hcc';
+      case 'Delivered': return 's-hcc';
+      case 'Undelivered': return 's-loading-hcc';
       case 'Cancelled': return 's-canc';
       case 'Loading HCC': return 's-loading-hcc';
       case 'Unloading HCC': return 's-Unloading-hcc';
@@ -171,7 +173,7 @@ export class DrsGenerationListComponent {
     }
 
     const payload = {
-      fromDate: new Date(this.DRSFilterForm.value.fromDate).toISOString() ,
+      fromDate: new Date(this.DRSFilterForm.value.fromDate).toISOString(),
       toDate: new Date(this.DRSFilterForm.value.toDate).toISOString(),
       locCode: this.docketService.loginUserList.LocationCode,
       statusFilter: this.DRSFilterForm.value.statusFilter,
@@ -216,7 +218,7 @@ export class DrsGenerationListComponent {
     const payload = {
       fromDate: new Date(this.DRSFilterForm.value.fromDate).toISOString(),
       toDate: new Date(this.DRSFilterForm.value.toDate).toISOString(),
-      locCode:  this.docketService.loginUserList.LocationCode,
+      locCode: this.docketService.loginUserList.LocationCode,
       statusFilter: this.DRSFilterForm.value.statusFilter,
       pageNumber: this.pagination.page,
       pageSize: this.pagination.pageSize,
@@ -274,7 +276,7 @@ export class DrsGenerationListComponent {
     });
   }
 
-  openUpdateModal(data:any){
+  openUpdateModal(data: any) {
     this.selectedDRS = data;
     this.showUpdateModal = true;
   }

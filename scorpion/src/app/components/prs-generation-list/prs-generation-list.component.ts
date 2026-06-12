@@ -17,11 +17,12 @@ import { HCCDetailsComponent } from './hcc-details/hcc-details.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { environment } from 'environments/environment';
 import { PRSDRSEditComponent } from './prsdrs-edit/prsdrs-edit.component';
+import { HccViewComponent } from '../hcc-view/hcc-view.component';
 
 @Component({
   selector: 'app-prs-generation-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, PRSArrivalComponent, HCCDetailsComponent, PRSDRSEditComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, PRSArrivalComponent, HCCDetailsComponent, PRSDRSEditComponent,HccViewComponent],
   templateUrl: './prs-generation-list.component.html',
   styleUrl: './prs-generation-list.component.scss',
   providers: [PFMapiService, BsModalService]
@@ -29,6 +30,8 @@ import { PRSDRSEditComponent } from './prsdrs-edit/prsdrs-edit.component';
 export class PRSGenerationListComponent implements OnInit, OnDestroy {
   @ViewChild('PRSArrivalComponent') PRSArrivalComponent!: PRSArrivalComponent;
   @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
+  @ViewChild('HccViewComponent') HccViewComponent!: HccViewComponent;
+
   public env = environment;
   @ViewChild('PRSDRSEditComponent') PRSDRSEditComponent!: PRSDRSEditComponent;
 
@@ -43,6 +46,8 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     prs_Billed: 0,
     hcc_Generated: 0,
     cancelled: 0,
+    prS_Undelivered:0,
+    prS_Delivered:0,
     total_PRS_Arrived: 0
   };
 
@@ -59,7 +64,9 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     { label: 'Arrived', value: 'Arrived' },
     { label: 'Billed', value: 'Billed' },
     { label: 'Cancelled', value: 'Cancelled' },
-    { label: 'HCC Generated', value: 'HCC Generated' }
+    { label: 'Delivered', value: 'Delivered' },
+    { label: 'UnDelivered', value: 'Undelivered' }
+
   ];
 
   public config = {
@@ -234,12 +241,14 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
       case 'Loading HCC': return 's-loading-hcc';
       case 'Unloading HCC': return 's-Unloading-hcc';
       case 'Arrived': return 's-arrived';
+      case 'Delivered': return 's-hcc';
+      case 'Undelivered': return 's-loading-hcc';
       default: return '';
     }
   }
 
   isHccValid(hcc: string): boolean {
-    return hcc !== 'NO HCC';
+    return hcc !== 'NO HCC' && hcc !== 'NOHCC';
   }
 
   openAddPRSDRS() {
@@ -259,6 +268,10 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
 
   openHHCDetails(data: any) {
     this.HCCDetailsComponent.showPopup(data, 'P');
+  }
+
+  openHccView(data: any,chargeType:string){
+    this.HccViewComponent.showPopup(data,chargeType,'P');
   }
 
   openPRSDRSEdit(data: any, flag: string) {

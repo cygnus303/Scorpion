@@ -1666,6 +1666,19 @@ input:checked+.toggle-slider:before {
     }
   }
 
+  &.c-yellow {
+    border-left-color: #8f7c22;
+
+    .s-val {
+      color: #8f7c22;
+    }
+
+    &.active-card {
+      border-left-color: #8f7c22;
+      color: #8f7c22;
+    }
+  }
+
   &.c-orange {
     border-left-color: #f59e0b;
 

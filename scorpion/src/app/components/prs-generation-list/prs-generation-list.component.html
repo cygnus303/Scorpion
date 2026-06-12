@@ -76,13 +76,24 @@
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🧾</div>
         </div>
 
+         <!-- HCC GENERATED -->
+        <div class="summary-card px-3 py-3 c-yellow cursor-pointer"
+            [class.active-card]="config.statusFilter === 'Undelivered'" (click)="filterByStatus('Undelivered')">
+            <div class="card-content">
+                <div class="s-label">UnDelivered</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.prS_Undelivered || 0 }}</div>
+                <div class="small text-body-tertiary">UnDelivered today</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
+        </div>
+
         <!-- HCC GENERATED -->
         <div class="summary-card px-3 py-3 c-green cursor-pointer"
-            [class.active-card]="config.statusFilter === 'HCC Generated'" (click)="filterByStatus('HCC Generated')">
+            [class.active-card]="config.statusFilter === 'Delivered'" (click)="filterByStatus('Delivered')">
             <div class="card-content">
-                <div class="s-label">HCC Generated</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.hcc_Generated || 0 }}</div>
-                <div class="small text-body-tertiary">HCC generated today</div>
+                <div class="s-label">Delivered</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.prS_Delivered || 0 }}</div>
+                <div class="small text-body-tertiary">Delivered today</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
         </div>
@@ -188,17 +199,17 @@
                         <td class="text-center fs-6 text-muted">{{ row.vendorBillNo || '—' }}</td>
                         <td class="text-center cursor-pointer">
                             <span class="px-3 py-2 rounded fw-bold border"
-                                [ngClass]="(row.loadingHCC && row.loadingHCC !== 'NO HCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle '"
-                                (click)="row.loadingHCC && row.loadingHCC !== 'NO HCC'? openHCCModal(row.loadingHCC) : null"
+                                [ngClass]="(row.loadingHCC && row.loadingHCC !== 'NO HCC' && row.loadingHCC !== 'NOHCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle '"
+                                (click)="row.loadingHCC && row.loadingHCC !== 'NO HCC' && row.loadingHCC !== 'NOHCC' ? openHccView(row,'L') : null"
                                 style="cursor: pointer;">
-                                {{ row.loadingHCC || 'NO HCC' }}
+                                {{ (row.loadingHCC && row.loadingHCC !== 'NOHCC') ? 'HCC' : 'NO HCC' }}
                             </span>
                         </td>
                         <td class="text-center cursor-pointer">
                             <span class="px-3 py-2 rounded fw-bold border"
-                                [ngClass]="isHccValid(row.unLoadingHCC || 'NO HCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'bg-danger-subtle text-danger border-danger-subtle'"
-                                (click)="row.unLoadingHCC && row.unLoadingHCC !== 'NO HCC'? openHCCModal(row.unLoadingHCC) : null">
-                                {{ row.unLoadingHCC || 'NO HCC' }}
+                                [ngClass]="(row.unLoadingHCC && row.unLoadingHCC !== 'NO HCC' && row.unLoadingHCC !== 'NOHCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'bg-danger-subtle text-danger border-danger-subtle'"
+                                (click)="row.unLoadingHCC && row.unLoadingHCC !== 'NO HCC' && row.unLoadingHCC !== 'NOHCC'? openHccView(row,'U') : null">
+                                {{ (row.unLoadingHCC && row.unLoadingHCC !== 'NOHCC') ? 'HCC' : 'NO HCC' }}
                             </span>
                         </td>
                         <td class="text-center">
@@ -251,3 +262,4 @@
 <app-prsarrival #PRSArrivalComponent (dataEmitter)="refreshData()"></app-prsarrival>
 <app-hcc-details #HCCDetailsComponent (dataEmitter)="refreshData()"></app-hcc-details>
 <app-prsdrs-edit #PRSDRSEditComponent (dataEmitter)="refreshData()"></app-prsdrs-edit>
+<app-hcc-view #HccViewComponent (dataEmitter)="refreshData()"></app-hcc-view>
