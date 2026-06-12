@@ -29,6 +29,7 @@
     .status-chip   { display: inline-flex; align-items: center; gap: 4px; border-radius: 10px; padding: 3px 10px; font-size: 11px; font-weight: 700; white-space: nowrap; }
     .chip-transit  { background: #e1f5fe; color: #0277bd; }
     .chip-booking  { background: #f3e5f5; color: #6a1b9a; }
+    .chip-danger  { background: #fddcdc; color: #c62828; }
     .chip-pending  { background: #fff8e1; color: #f57f17; }
     .chip-delivery { background: #e8f5e9; color: #2e7d32; }
 
