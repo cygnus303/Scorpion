@@ -36,7 +36,7 @@ export class HCCviewComponent {
       }
     };
 
-    this.thcMasterService.getHCCDynamicData(payload).subscribe({
+    this.thcMasterService.getHCCViewDetail(payload).subscribe({
       next: (res: any) => {
         this.isLoading = false;
         if (res) {
