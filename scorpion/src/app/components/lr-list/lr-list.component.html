@@ -62,6 +62,16 @@
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🧾</div>
         </div>
 
+         <div class="summary-card px-3 py-3 c-red cursor-pointer"
+            [class.active-card]="config.statusFilter === 'cancelled'" (click)="filterByStatus('cancelled')">
+            <div class="card-content">
+                <div class="s-label">Cancelled</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.cancelled || 0 }}</div>
+                <div class="small text-body-tertiary">Cancelled</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🚫</div>
+        </div>
+
         <div class="summary-card px-3 py-3 c-green cursor-pointer"
             [class.active-card]="config.statusFilter === 'delivered'" (click)="filterByStatus('delivered')">
             <div class="card-content">
@@ -193,11 +203,13 @@
                             <div class="action-btns text-center">
                                 <button class="ab ab-view" (click)="openView(lr.dockno)">👁 View</button>
                                 <button class="ab ab-edit" (click)="openQuick(lr.dockno)" *ngIf="!isHQTR"
-                                    [disabled]="lr.status !== 'PendingforQuickCompletion'">✏️ Quick LR
+                                    [disabled]="lr.status !== 'PendingforQuickCompletion'&& lr.status !== 'Booking'">✏️ Quick LR
                                     Edit
                                     and Save</button>
                                 <button class="ab ab-finedit" (click)="openEdit(lr.dockno)"
                                     [disabled]="lr.status === 'PendingforQuickCompletion'">💰 Fin Edit</button>
+                                    <button class="ab ab-cancel" (click)="openEdit(lr.dockno)"
+                                    [disabled]="lr.status === 'PendingforQuickCompletion'">🚫 Cancel</button>
                                 <div class="track-wrap">
                                     <button class="ab ab-track" (click)="toggleTrack(i, $event)">📍 Track ▾</button>
                                     <div class="track-dropdown" [class.open]="openTrackIndex === i">

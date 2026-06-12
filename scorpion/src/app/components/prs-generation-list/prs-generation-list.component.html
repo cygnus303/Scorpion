@@ -76,27 +76,16 @@
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🧾</div>
         </div>
 
-         <!-- HCC GENERATED -->
-        <div class="summary-card px-3 py-3 c-yellow cursor-pointer"
-            [class.active-card]="config.statusFilter === 'Undelivered'" (click)="filterByStatus('Undelivered')">
-            <div class="card-content">
-                <div class="s-label">UnDelivered</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.prS_Undelivered || 0 }}</div>
-                <div class="small text-body-tertiary">UnDelivered today</div>
-            </div>
-            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
-        </div>
-
         <!-- HCC GENERATED -->
-        <div class="summary-card px-3 py-3 c-green cursor-pointer"
-            [class.active-card]="config.statusFilter === 'Delivered'" (click)="filterByStatus('Delivered')">
+        <!-- <div class="summary-card px-3 py-3 c-green cursor-pointer"
+            [class.active-card]="config.statusFilter === 'HCC Generated'" (click)="filterByStatus('HCC Generated')">
             <div class="card-content">
-                <div class="s-label">Delivered</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.prS_Delivered || 0 }}</div>
-                <div class="small text-body-tertiary">Delivered today</div>
+                <div class="s-label">HCC Generated</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData.hcc_Generated || 0 }}</div>
+                <div class="small text-body-tertiary">HCC Generated today</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
-        </div>
+        </div> -->
     </div>
 
     <!-- Table Panel -->

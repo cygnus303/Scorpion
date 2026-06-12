@@ -46,8 +46,6 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     prs_Billed: 0,
     hcc_Generated: 0,
     cancelled: 0,
-    prS_Undelivered:0,
-    prS_Delivered:0,
     total_PRS_Arrived: 0
   };
 
@@ -64,8 +62,7 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     { label: 'Arrived', value: 'Arrived' },
     { label: 'Billed', value: 'Billed' },
     { label: 'Cancelled', value: 'Cancelled' },
-    { label: 'Delivered', value: 'Delivered' },
-    { label: 'UnDelivered', value: 'Undelivered' }
+    { label: 'HCC Generated', value: 'HCC Generated' },
 
   ];
 
@@ -241,8 +238,6 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
       case 'Loading HCC': return 's-loading-hcc';
       case 'Unloading HCC': return 's-Unloading-hcc';
       case 'Arrived': return 's-arrived';
-      case 'Delivered': return 's-hcc';
-      case 'Undelivered': return 's-loading-hcc';
       default: return '';
     }
   }

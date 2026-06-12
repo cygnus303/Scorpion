@@ -47,6 +47,10 @@
     .ab-finedit:disabled:hover  { background: #f0f0f0; }
     .ab-print                   { background: #fce4ec; color: #c62828; }
     .ab-print:hover             { background: #f8bbd0; }
+    .ab-cancel                  { background: #ffebee; color: #b71c1c; }
+    .ab-cancel:hover            { background: #ffcdd2; }
+    .ab-cancel:disabled         { background: #f0f0f0; color: #bdbdbd; cursor: not-allowed; opacity: 0.55; }
+    .ab-cancel:disabled:hover   { background: #f0f0f0; }
 
     /* ── Track Dropdown ── */
     .track-wrap                  { position: relative; display: inline-flex; }
