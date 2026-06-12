@@ -16,11 +16,12 @@ import { HCCDetailsComponent } from '../prs-generation-list/hcc-details/hcc-deta
 import { environment } from 'environments/environment';
 import { PRSDRSEditComponent } from '../prs-generation-list/prsdrs-edit/prsdrs-edit.component';
 import { DRSUpdateListComponent } from './drs-update-list/drs-update-list.component';
+import { HccViewComponent } from '../hcc-view/hcc-view.component';
 
 @Component({
   selector: 'app-drs-generation-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, ReactiveFormsModule, DRSUpdateListComponent, PRSDRSEditComponent, SingleCnoteDrsUpdateComponent, HCCDetailsComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, ReactiveFormsModule, DRSUpdateListComponent, PRSDRSEditComponent, SingleCnoteDrsUpdateComponent, HCCDetailsComponent,HccViewComponent],
   providers: [BsModalService],
   templateUrl: './drs-generation-list.component.html',
   styleUrl: './drs-generation-list.component.scss'
@@ -65,6 +66,7 @@ export class DrsGenerationListComponent {
   @ViewChild('singleCnoteDrsUpdateComponent') singleCnoteDrsUpdateComponent!: SingleCnoteDrsUpdateComponent;
   @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
   @ViewChild('PRSDRSEditComponent') PRSDRSEditComponent!: PRSDRSEditComponent;
+  @ViewChild('HccViewComponent') HccViewComponent!: HccViewComponent;
 
 
   constructor(
@@ -152,6 +154,10 @@ export class DrsGenerationListComponent {
     if (this.pagination.page === p) return;
     this.pagination.page = p;
     this.getDRSdetail();
+  }
+
+    openHccView(data: any,chargeType:string){
+    this.HccViewComponent.showPopup(data,chargeType,'D');
   }
 
   onFilterChange() {

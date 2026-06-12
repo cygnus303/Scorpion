@@ -219,14 +219,14 @@
                         <td class="text-center cursor-pointer">
                             <span class="px-4 py-2 rounded fw-bold border"
                                 [ngClass]="(data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
-                                (click)="data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC'? openHCCModal(data.loadingHCCNo) : null">
+                                (click)="data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC'?  openHccView(data,'L') : null">
                                 {{ (data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC') ? 'HCC' : 'NO HCC' }}
                             </span>
                         </td>
                         <td class="text-center cursor-pointer">
                             <span class="px-4 py-2 rounded fw-bold border"
                                 [ngClass]="(data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
-                                (click)="data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC'? openHCCModal(data.unloadingHCCNo) : null">
+                                (click)="data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC'?  openHccView(data,'U') : null">
                                 {{ (data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC') ? 'HCC' : 'NO HCC' }}
                             </span>
                         </td>
@@ -306,3 +306,4 @@
 <single-cnote-drs-update #singleCnoteDrsUpdateComponent (dataEmitter)="refreshData()"></single-cnote-drs-update>
 <app-hcc-details #HCCDetailsComponent (dataEmitter)="refreshData()"></app-hcc-details>
 <app-prsdrs-edit #PRSDRSEditComponent (dataEmitter)="refreshData()"></app-prsdrs-edit>
+<app-hcc-view #HccViewComponent (dataEmitter)="refreshData()"></app-hcc-view>

@@ -31,7 +31,7 @@ export class HccViewComponent {
     const payload = {
       "FilterJson": {
         "ReportId": "364",
-        "Docno": data.pdcno,
+        "Docno": data.pdcno ||data.drsNo,
         "DocType": flag,
         "ChargeType": chargeType
       }
