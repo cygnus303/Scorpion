@@ -18,6 +18,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { environment } from 'environments/environment';
 import { PRSDRSEditComponent } from './prsdrs-edit/prsdrs-edit.component';
 import { HccViewComponent } from '../hcc-view/hcc-view.component';
+import { MenuAccessService } from 'app/shared/services/menu-access.service';
 
 @Component({
   selector: 'app-prs-generation-list',
@@ -85,7 +86,8 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     public exportService: ExportService,
     private sweetAlertService: SweetAlertService,
     private prsdrsApiService: PRSDRSApiService,
-    private router: Router
+    private router: Router,
+    public menuAccessService: MenuAccessService
   ) { }
 
   ngOnInit() {
@@ -103,6 +105,7 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     });
 
     this.fetchData();
+    this.menuAccessService.loadMenuPermissions(7603);
   }
 
   public recordOptions = [

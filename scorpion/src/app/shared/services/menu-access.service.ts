@@ -46,10 +46,54 @@ export class MenuAccessService {
     );
   }
 
+  public permissions: { [key: string]: boolean } = {};
+
   hasPermission(access: string): boolean {
-    if (!this.currentModulePermissions || this.currentModulePermissions.length === 0) return false;
-    const permission = this.currentModulePermissions.find(p => p.menuaccess.toLowerCase() === access.toLowerCase());
-    return permission ? permission.isUSERACCESS : false;
+    if (!access) return false;
+    const key = access.trim().toLowerCase();
+    
+    // Check our new permissions object
+    if (this.permissions[key]) {
+      return true;
+    }
+    
+    // Fallback to currentModulePermissions if populated
+    if (this.currentModulePermissions && this.currentModulePermissions.length > 0) {
+      const perm = this.currentModulePermissions.find(p => p.menuaccess.toLowerCase() === key);
+      return perm ? perm.isUSERACCESS : false;
+    }
+    
+    return false;
+  }
+
+  loadMenuPermissions(moduleId: number, userId?: string): void {
+    this.permissions = {}; // reset
+    this.getUserRolePermission(moduleId, userId).subscribe({
+      next: (response: any) => {
+        if (response && response.success && response.data && response.data.permissionNames) {
+          response.data.permissionNames.split(',').forEach((p: string) => {
+            this.permissions[p.trim().toLowerCase()] = true;
+          });
+        }
+      },
+      error: (err: any) => {
+        console.error('Error fetching menu permissions:', err);
+      }
+    });
+  }
+
+  getUserRolePermission(moduleId: number, userId?: string): Observable<any> {
+    if (!userId) {
+      const saved = localStorage.getItem("loginUserList");
+      if (saved) {
+        try {
+          userId = JSON.parse(saved).UserId;
+        } catch (e) {
+          console.error('Error parsing loginUserList from localStorage', e);
+        }
+      }
+    }
+    return this.apiHandlerService.Get(`Operation/get-user-role-permission?userId=${userId || ''}&moduleId=${moduleId}`);
   }
 
 }

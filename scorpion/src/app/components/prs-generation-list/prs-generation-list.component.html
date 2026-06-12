@@ -6,10 +6,11 @@
         </div>
         <div class="btn-group gap-3 ms-auto">
             <button class="btn background-color fw-bold text-light px-4 py-2 rounded" (click)="openAddPRSDRS()"
-                *ngIf="!isHQTR">
+                *ngIf="!isHQTR && menuAccessService.hasPermission('Add')">
                 <span class="fs-5 me-1">➕</span> Add PRS
             </button>
-            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="downloadCSV()">
+            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="downloadCSV()"
+                *ngIf="menuAccessService.hasPermission('Download')">
                 <span *ngIf="!isCSVLoading"> <span class="fs-5 me-1">📥</span> Download XLS</span>
                 <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isCSVLoading">Downloading...</span>
@@ -208,7 +209,7 @@
                         </td>
                         <td>
                             <div class="d-flex flex-wrap gap-2 justify-content-center">
-                                <button
+                                <button *ngIf="menuAccessService.hasPermission('View')"
                                     class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3"
                                     (click)="openView(row.pdcno)">
                                     <i class="fa fa-eye"></i> View
@@ -218,12 +219,13 @@
                                     [disabled]="row.isArrived" (click)="openPRSArrival(row)">
                                     📦 PRS Arrival
                                 </button>
-                                <button *ngIf="!isHQTR"
+                                <button *ngIf="!isHQTR && menuAccessService.hasPermission('Edit')"
                                     class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3"
                                     (click)="openPRSDRSEdit(row,'P')" [disabled]="!row.isCancelAllow">
                                     ✏️ Edit
                                 </button>
-                                <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
+                                <button *ngIf="menuAccessService.hasPermission('Cancel')"
+                                    class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
                                     [disabled]="!row.isCancelAllow || row.loadingHCC || row.unLoadingHCC || row.status ==='Billed'"
                                     (click)="onCancel(row.pdcno)">
                                     🚫 Cancel
