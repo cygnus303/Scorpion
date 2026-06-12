@@ -2,26 +2,26 @@
     <!-- Header -->
     <div class="modal-header">
         <div class="modal-header-left">
-            <div class="modal-logo"
+            <!-- <div class="modal-logo"
                 style="background:#fff; border-radius:6px; padding:4px 8px; display:flex; align-items:center; justify-content:center; height:38px; flex-shrink:0;">
                 <span class="fw-bold fs-6 text-danger" style="font-family: 'Verdana';">Scorpion Logo</span>
-            </div>
-            <div class="modal-title ms-2">HCC Edit</div>
+            </div> -->
+            <div class="modal-title ms-2">HCC</div>
             <span class="modal-hcc-tag" *ngIf="hccForm && hccForm.get('hcNumber')?.value">{{
                 hccForm.get('hcNumber')?.value }}</span>
-            <span class="modal-edit-mode-tag">⚡ EDIT MODE</span>
+            <!-- <span class="modal-edit-mode-tag">⚡ EDIT MODE</span> -->
         </div>
         <div class="modal-header-actions">
             <button class="modal-close" (click)="modalRef.hide()" title="Close">✕</button>
         </div>
     </div>
 
-    <!-- Show selection only if NO HCC is generated yet -->
-    <div class="p-3" style="background: var(--bg);" *ngIf="hccForm && !hasExistingHcc">
+    <!-- Show selection if NO HCC is generated yet, else just show the text -->
+    <div class="p-3" style="background: var(--bg);" *ngIf="hccForm">
         <div class="detail-card mb-0">
-            <div class="detail-card-head"><span class="dch-dot"></span> SELECT HCC TYPE</div>
+            <div class="detail-card-head"><span class="dch-dot"></span> HCC TYPE</div>
             <div class="p-3">
-                <div class="radio-group d-flex align-items-center gap-4">
+                <div class="radio-group d-flex align-items-center gap-4" *ngIf="!hasExistingHcc">
                     <label class="form-label fw-bold mb-0">Select HCC Type: </label>
                     <label class="radio-option d-flex align-items-center gap-2"
                         style="cursor:pointer; font-size: 13px;">
@@ -35,6 +35,10 @@
                             [disabled]="hasExistingHcc" (change)="onHccTypeChange()" style="width: 16px; height: 16px;">
                         Unloading
                     </label>
+                </div>
+                <div class="d-flex align-items-center gap-2" *ngIf="hasExistingHcc">
+                    <label class="form-label fw-bold mb-0">HCC Type: </label>
+                    <span class="text-light bg-primary px-3 py-2 fs-6" style="border-radius: 4px;">{{ selectedHccType }}</span>
                 </div>
             </div>
         </div>

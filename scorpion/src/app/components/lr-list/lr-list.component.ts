@@ -9,6 +9,7 @@ import { LrService } from 'app/shared/services/lr.service';
 import { environment } from 'environments/environment';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { debounceTime, Subject, Subscription } from 'rxjs';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 
 @Component({
   selector: 'app-lr-list',
@@ -53,7 +54,8 @@ export class LrListComponent {
   constructor(
     public docketService: DocketService,
     public lrService: LrService,
-    private router: Router
+    private router: Router,
+    private sweetAlertService: SweetAlertService
   ) { }
 
   ngOnInit() {
@@ -161,6 +163,39 @@ export class LrListComponent {
 
   get isHQTR(): boolean {
     return this.docketService.loginUserList?.LocationCode === 'HQTR';
+  }
+
+  onCancel(dockNo: string) {
+    this.sweetAlertService.cancelWithReason(
+      'Cancel LR',
+      `LR ${dockNo}`,
+      (reason: string) => {
+        this.executeCancel(dockNo, reason);
+      }
+    );
+  }
+
+  executeCancel(dockNo: string, reason: string) {
+    const payload = {
+      dockNo: dockNo,
+      reason: reason,
+      userId: this.docketService.loginUserList.BaseUserName,
+      baseLocationCode: this.docketService.loginUserList.LocationCode
+    };
+
+    this.lrService.cancelDocket(payload).subscribe({
+      next: (res: any) => {
+        if (res.success === true) {
+          this.sweetAlertService.success(` ${dockNo} has been cancelled successfully.`);
+        } else {
+          this.sweetAlertService.error(res?.message || 'Failed to cancel LR');
+        }
+        this.fetchData();
+      },
+      error: (err: any) => {
+        this.sweetAlertService.error(err?.error?.message || 'Failed to cancel LR');
+      }
+    });
   }
 
   setPage(p: number) {
