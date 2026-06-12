@@ -65,91 +65,54 @@
         </div>
       </div>
 
-      <!-- Master-Detail Layout -->
-      <div class="row layout-container mt-2 border rounded bg-white shadow-sm overflow-hidden">
-        
-        <!-- Master Sidebar -->
-        <div class="col-md-4 module-sidebar border-end p-0 bg-white d-flex flex-column">
-          <!-- Dark Grey Sub-Header -->
-          <div class="p-2 d-flex justify-content-between align-items-center"
-            style="background-color: #4b5563; color: white;">
-            <span class="fw-bold text-uppercase small" style="letter-spacing: 0.5px;">
-              <i class="fas fa-circle text-danger me-2" style="font-size: 10px;"></i> ALL MODULES
-            </span>
-            <div class="form-check d-flex align-items-center m-0 me-2">
-              <input class="form-check-input m-0" type="checkbox" id="selectAllGlobal"
-                style="cursor: pointer; transform: scale(1.1);" [checked]="isAllSelected()"
-                (change)="toggleAll($event)">
-              <label class="form-check-label fw-bold ms-2 small" for="selectAllGlobal"
-                style="cursor: pointer;">Select All</label>
-            </div>
-          </div>
-
-          <div class="list-group list-group-flush module-list flex-grow-1" style="max-height: 540px; overflow-y: auto;">
-            <button *ngFor="let module of filteredPermissionsList" type="button"
-              class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3 border-bottom"
-              [class.active-module]="selectedModule === module" (click)="selectModule(module)">
-              <div class="d-flex align-items-center">
-                <input type="checkbox" class="form-check-input me-3 mt-0" style="transform: scale(1.1);"
-                  [checked]="isRowSelected(module)" (change)="toggleRow(module, $event)"
-                  (click)="$event.stopPropagation()">
-                <!-- Red highlight for active module text -->
-                <span class="fw-bold" [style.color]="selectedModule === module ? '#b91c1c' : '#374151'">{{module.displayName}}</span>
-              </div>
-              <i class="fas fa-chevron-right small" [style.color]="selectedModule === module ? '#b91c1c' : '#9ca3af'"></i>
-            </button>
-            <div class="text-center p-4 text-muted" *ngIf="filteredPermissionsList.length === 0">
-              <i class="fas fa-search fs-3 mb-2"></i>
-              <p>No modules found.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Detail Panel -->
-        <div class="col-md-8 p-0 bg-white d-flex flex-column">
-          <div class="permissions-detail-card h-100" *ngIf="selectedModule">
-            
-            <!-- Dark Grey Sub-Header for Details -->
-            <div class="p-2 d-flex justify-content-between align-items-center"
-              style="background-color: #4b5563; color: white;">
-              <span class="fw-bold text-uppercase small" style="letter-spacing: 0.5px;">
-                <i class="fas fa-circle text-danger me-2" style="font-size: 10px;"></i> {{selectedModule.displayName}} PERMISSIONS
-              </span>
-              <div class="form-check d-flex align-items-center m-0 me-2">
-                <input class="form-check-input m-0" type="checkbox" id="selectAllModule"
-                  style="cursor: pointer; transform: scale(1.1);" [checked]="isRowSelected(selectedModule)"
-                  (change)="toggleRow(selectedModule, $event)">
-                <label class="form-check-label fw-bold ms-2 small" for="selectAllModule"
-                  style="cursor: pointer;">Grant All</label>
-              </div>
-            </div>
-
-            <div class="p-4">
-              <div class="row g-4">
-                <ng-container *ngFor="let col of permissionColumns">
-                  <div class="col-sm-6 col-md-4" *ngIf="getPermission(selectedModule, col) as perm">
-                    <div
-                      class="permission-item p-3 border rounded-2 hover-shadow transition-all bg-white d-flex justify-content-between align-items-center"
-                      style="border-color: #e5e7eb;">
-                      <span class="fw-bold text-muted small text-uppercase">{{col.action}}</span>
-                      <div class="form-check m-0 p-0 d-flex align-items-center">
-                        <input class="form-check-input m-0 fs-5" type="checkbox" style="cursor: pointer; border-color: #9ca3af;"
-                          [(ngModel)]="perm.isUSERACCESS">
-                      </div>
-                    </div>
-                  </div>
-                </ng-container>
-              </div>
-            </div>
-          </div>
-
-          <div class="d-flex flex-column justify-content-center align-items-center h-100 text-muted"
-            *ngIf="!selectedModule && filteredPermissionsList.length > 0">
-            <i class="fas fa-hand-pointer fs-1 mb-3 text-secondary" style="opacity: 0.5;"></i>
-            <h5 class="fw-light">Select a module to configure its permissions</h5>
-          </div>
-        </div>
-
+      <!-- Table Layout -->
+      <div class="table-wrap mt-2">
+        <table class="table align-middle data-table mb-0">
+          <thead>
+            <tr>
+              <th class="text-start align-middle" style="width: 300px;">
+                <span class="text-uppercase">Module Name</span>
+              </th>
+              <th class="text-center" style="width: 100px;">
+                <div class="d-flex flex-column align-items-center">
+                  <span class="text-uppercase mb-1 fw-bold small">ALL</span>
+                  <input class="form-check-input m-0" type="checkbox" style="cursor: pointer;"
+                    [checked]="isAllSelected()" (change)="toggleAll($event)">
+                </div>
+              </th>
+              <th class="text-center" *ngFor="let col of permissionColumns">
+                <div class="d-flex flex-column align-items-center">
+                  <span class="text-uppercase mb-1">{{col.action}}</span>
+                  <input class="form-check-input m-0" type="checkbox" style="cursor: pointer;"
+                    [checked]="isColumnAllSelected(col)" (change)="toggleColumn(col, $event)">
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngIf="filteredPermissionsList.length === 0">
+            <tr>
+              <td [attr.colspan]="permissionColumns.length + 2" class="text-center py-4 text-muted fs-5">
+                No modules found.
+              </td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="filteredPermissionsList.length > 0">
+            <tr *ngFor="let module of filteredPermissionsList">
+              <td class="text-start">
+                <span class="fw-bold text-dark">{{module.displayName}}</span>
+              </td>
+              <td class="text-center">
+                <input class="form-check-input m-0" type="checkbox" style="cursor: pointer; transform: scale(1.2);"
+                  [checked]="isRowSelected(module)" (change)="toggleRow(module, $event)">
+              </td>
+              <td class="text-center" *ngFor="let col of permissionColumns">
+                <input class="form-check-input m-0" type="checkbox" style="cursor: pointer; transform: scale(1.2);"
+                  *ngIf="getPermission(module, col) as perm" [(ngModel)]="perm.isUSERACCESS">
+                <span *ngIf="!getPermission(module, col)" class="text-muted">-</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

@@ -17,6 +17,7 @@ import { environment } from 'environments/environment';
 import { PRSDRSEditComponent } from '../prs-generation-list/prsdrs-edit/prsdrs-edit.component';
 import { DRSUpdateListComponent } from './drs-update-list/drs-update-list.component';
 import { HccViewComponent } from '../hcc-view/hcc-view.component';
+import { MenuAccessService } from 'app/shared/services/menu-access.service';
 
 @Component({
   selector: 'app-drs-generation-list',
@@ -76,7 +77,8 @@ export class DrsGenerationListComponent {
     private dockerService: DocketService,
     private route: Router,
     private sweetAlertService: SweetAlertService,
-    public docketService: DocketService
+    public docketService:DocketService,
+    public menuAccessService: MenuAccessService
   ) { }
 
   ngOnInit() {
@@ -90,6 +92,7 @@ export class DrsGenerationListComponent {
     }
     this.buildFilterForm();
     this.fetchData();
+    this.menuAccessService.loadMenuPermissions(7604);
   }
 
   get isHQTR(): boolean {

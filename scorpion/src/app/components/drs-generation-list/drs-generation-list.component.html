@@ -6,8 +6,8 @@
         </div>
         <div class="btn-group gap-3 ms-auto">
             <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="refreshFilter()">✕ Clear</button>
-            <button class="btn btn-success px-4 py-2 rounded" (click)="onAddDRS()" *ngIf="!isHQTR">＋ Add DRS</button>
-            <button class="btn btn-primary px-4 py-2 rounded" (click)="downloadList()" [disabled]="isdownload">
+            <button class="btn btn-success px-4 py-2 rounded" (click)="onAddDRS()" *ngIf="!isHQTR && menuAccessService.hasPermission('Add')">＋ Add DRS</button>
+            <button class="btn btn-primary px-4 py-2 rounded" (click)="downloadList()" [disabled]="isdownload" *ngIf="menuAccessService.hasPermission('Download')">
                 <span *ngIf="!isdownload">📥 Download XLS</span>
                 <span *ngIf="isdownload" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isdownload">Downloading...</span>
@@ -237,7 +237,7 @@
                         </td>
                         <td style="width: 600px !important;">
                             <div class="d-flex flex-wrap gap-2 justify-content-center">
-                                <button
+                                <button *ngIf="menuAccessService.hasPermission('View')"
                                     class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3"
                                     (click)="openView(data.drsNo)">
                                     <i class="fa fa-eye"></i> View
@@ -248,12 +248,12 @@
                                     [disabled]="data.ispdcUpdate ||data.status==='Cancelled'||data.status==='Billed' || data.IsThroughDA ===true || data.vendorType === 'BUSINESS ASSOCIATE' ">
                                     🔄 DRS Update
                                 </button>
-                                <button *ngIf="!isHQTR" (click)="openPRSDRSEdit(data,'P')"
+                                <button *ngIf="!isHQTR && menuAccessService.hasPermission('Edit')" (click)="openPRSDRSEdit(data,'P')"
                                     [disabled]="data.status==='Billed'"
                                     class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3">
                                     ✏️ Edit
                                 </button>
-                                <button
+                                <button *ngIf="menuAccessService.hasPermission('Cancel')"
                                     [disabled]="data.ispdcUpdate||data.status==='Billed'||data.loadingHCCNo || data.unloadingHCCNo || !data.isCancelAllow"
                                     class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
                                     (click)="onCancel(data.drsNo)">
