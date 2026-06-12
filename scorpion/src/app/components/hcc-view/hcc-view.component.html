@@ -1,0 +1,109 @@
+<!-- ══ HCC VIEW MODAL ══ -->
+<ng-template #Templatepod>
+
+    <!-- ── Modal Header ── -->
+    <div class="modal-header py-2 px-3" style="background:#b22222; color:#fff; border-radius:4px 4px 0 0;">
+        <div class="d-flex align-items-center gap-3">
+            <span class="fw-bold fs-6">HCC View Details</span>
+            <span *ngIf="viewDetail && viewDetail.length > 0"
+                class="badge" style="background:rgba(255,255,255,0.22); font-size:12px; font-weight:600; letter-spacing:0.5px;">
+                {{ viewDetail[0]?.HCNumber }}
+            </span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn-close btn-close-white" (click)="modalRef.hide()"></button>
+        </div>
+    </div>
+
+    <div class="modal-body p-0" style="background:#f5f5f5;">
+
+        <!-- Loading Spinner -->
+        <div *ngIf="isLoading" class="text-center py-5">
+            <div class="spinner-border text-danger" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
+        </div>
+
+        <div *ngIf="!isLoading">
+
+            <!-- ── Company Header ── -->
+            <div class="px-4 pt-3 pb-2" style="background:#fff; border-bottom:2px solid #b22222;">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="fw-bold text-danger" style="font-size:15px; letter-spacing:0.3px;">
+                            SCORPION EXPRESS PVT LTD
+                        </div>
+                        <div class="text-muted" style="font-size:11.5px;">Transport Management System | Finance Module</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── HCC DETAILS Table ── -->
+            <div class="px-3 pt-3 pb-2">
+                <div style="border:1px solid #ccc; border-radius:4px; overflow:hidden;">
+
+                    <!-- Section Header -->
+                    <div class="px-3 py-2 fw-bold d-flex align-items-center justify-content-between"
+                        style="background:#444; color:#fff; font-size:12.5px; letter-spacing:0.5px;">
+                        <span><i class="fas fa-list me-2"></i>HCC DOCKET DETAILS</span>
+                        <span class="badge" style="background:#b22222; font-size:11px;">
+                            {{ viewDetail?.length || 0 }} DOCKETS
+                        </span>
+                    </div>
+
+                    <!-- Table -->
+                    <div style="max-height:260px; overflow:auto; background:#fff;">
+                        <table style="width:100%; border-collapse:collapse; font-size:12.5px;" class="data-table align-middle">
+                            <thead style="position:sticky; top:0; z-index:1;">
+                                <tr style="background:#f3f4f6; border-bottom:2px solid #ddd;">
+                                    <th class="text-center px-2 py-2">#</th>
+                                    <th class="text-center px-2 py-2">HC Number</th>
+                                    <th class="text-center px-2 py-2">Document No</th>
+                                    <th class="text-center px-2 py-2">Vendor Code</th>
+                                    <th class="text-center px-2 py-2">Charge Amount (₹)</th>
+                                </tr>
+                            </thead>
+
+                            <!-- No records -->
+                            <tbody *ngIf="!viewDetail || viewDetail.length === 0">
+                                <tr>
+                                    <td colspan="5" class="text-center py-4 text-muted">No records found.</td>
+                                </tr>
+                            </tbody>
+
+                            <!-- Data rows -->
+                            <tbody *ngIf="viewDetail && viewDetail.length > 0">
+                                <tr *ngFor="let row of viewDetail; let i = index"
+                                    style="border-bottom:1px solid #eee;">
+                                    <td class="text-center px-2 py-2">{{ i + 1 }}</td>
+                                    <td class="text-center px-2 py-2 fw-bold text-danger">{{ row.HCNumber || '—' }}</td>
+                                    <td class="text-center px-2 py-2">{{ row.DocumentNo || '—' }}</td>
+                                    <td class="text-center px-2 py-2">{{ row.VendorCode || '—' }}</td>
+                                    <td class="text-center px-2 py-2 fw-bold">₹ {{ row.ChargeAmount | number:'1.2-2' }}</td>
+                                </tr>
+
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+           
+
+        </div>
+    </div>
+
+    <!-- ── Bottom Bar ── -->
+    <div class="modal-footer px-4 py-2 d-flex justify-content-between align-items-center"
+        style="background:#f9f9f9; border-top:2px solid #eee; font-size:12.5px;">
+     
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-sm btn-danger px-3" (click)="modalRef.hide()">
+                <i class="fas fa-times me-1"></i> Close
+            </button>
+        </div>
+    </div>
+
+</ng-template>

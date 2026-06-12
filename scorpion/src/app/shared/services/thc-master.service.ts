@@ -11,153 +11,153 @@ import { ApiLoadingService } from './APILoading.service';
 export class THCMasterService {
 
 
-  constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService,public apiLoading: ApiLoadingService) {}
+  constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService, public apiLoading: ApiLoadingService) { }
 
   getVendorsList(vendors: any) {
-    return this.apiHandlerService.Post(`THC/GetVendors`,vendors);
+    return this.apiHandlerService.Post(`THC/GetVendors`, vendors);
   }
 
   getCityList(): Observable<any> {
     return this.apiHandlerService.Get(`Operation/GetCity`);
   }
 
-  getTripSheet(vehicleNo:string): Observable<IApiBaseResponse<any[]>>{
+  getTripSheet(vehicleNo: string): Observable<IApiBaseResponse<any[]>> {
     return this.apiHandlerService.Get(`THC/TripSheetFromVehicle?vehicleNo=${vehicleNo}`);
   }
 
-  getVahicleCapacity(id:string): Observable<IApiBaseResponse<any[]>>{
+  getVahicleCapacity(id: string): Observable<IApiBaseResponse<any[]>> {
     return this.apiHandlerService.Get(`THC/VehicleCapacity?id=${id}`);
   }
 
-  getPANnumber(vendor:any): Observable<IApiBaseResponse<any[]>>{
+  getPANnumber(vendor: any): Observable<IApiBaseResponse<any[]>> {
     return this.apiHandlerService.Get(`THC/GetPanNoFromVendor?vendor=${vendor}`);
   }
 
-  getvehicleDetailFromVendor(vendorType:string,vendor:string): Observable<IApiBaseResponse<any[]>>{
+  getvehicleDetailFromVendor(vendorType: string, vendor: string): Observable<IApiBaseResponse<any[]>> {
     return this.apiHandlerService.Get(`THC/VehicleFromVendor?vendorType=${vendorType}&vendor=${vendor}`);
   }
 
-  getTDSLedger(): Observable<IApiBaseResponse<any[]>>{
+  getTDSLedger(): Observable<IApiBaseResponse<any[]>> {
     return this.apiHandlerService.Get(`THC/GetTDSLedger`);
   }
 
-  getNewVehicleDetail(vehicleNo:string): Observable<IApiBaseResponse<any[]>>{
+  getNewVehicleDetail(vehicleNo: string): Observable<IApiBaseResponse<any[]>> {
     return this.apiHandlerService.Get(`THC/NewGetVehicleDetails?vehicleNo=${vehicleNo}`);
   }
 
-  getDAList(type:string): Observable<IApiBaseResponse<any[]>>{
+  getDAList(type: string): Observable<IApiBaseResponse<any[]>> {
     return this.apiHandlerService.Get(`THC/GetDeliveryAgentList?type=${type}`);
   }
 
   avalabledocketinPRS(vendors: any) {
     this.apiLoading.start();
-    return this.apiHandlerService.Post(`THC/AvalabledocketinPRS`,vendors).pipe(
-        finalize(() => this.apiLoading.stop()) 
-      );
+    return this.apiHandlerService.Post(`THC/AvalabledocketinPRS`, vendors).pipe(
+      finalize(() => this.apiLoading.stop())
+    );
   }
 
-   generate(data:any,vendors: any) {
-    return this.apiHandlerService.Post(`THC/generate?TYP=${data.TYP}&BaseLocationCode=${data.baseLocationCode}&BaseCompanyCode=${data.baseCompanyCode}`,vendors);
+  generate(data: any, vendors: any) {
+    return this.apiHandlerService.Post(`THC/generate?TYP=${data.TYP}&BaseLocationCode=${data.baseLocationCode}&BaseCompanyCode=${data.baseCompanyCode}`, vendors);
   }
 
-  getTDSDetailsFromVendor(vendorCode:any): Observable<IApiBaseResponse<any[]>>{
-    return this.apiHandlerService.Post(`THC/GetTDSDetailsFromVendor`,vendorCode);
+  getTDSDetailsFromVendor(vendorCode: any): Observable<IApiBaseResponse<any[]>> {
+    return this.apiHandlerService.Post(`THC/GetTDSDetailsFromVendor`, vendorCode);
   }
 
-  getDeliveryAgentMobileNo(agentCode:any): Observable<IApiBaseResponse<any[]>>{
-    return this.apiHandlerService.Post(`THC/CheckAgentMRCollection`,agentCode);
+  getDeliveryAgentMobileNo(agentCode: any): Observable<IApiBaseResponse<any[]>> {
+    return this.apiHandlerService.Post(`THC/CheckAgentMRCollection`, agentCode);
   }
 
-  getMFListFromRoute(payload:any): Observable<IApiBaseResponse<any[]>>{
+  getMFListFromRoute(payload: any): Observable<IApiBaseResponse<any[]>> {
     this.apiLoading.start();
     return this.apiHandlerService.Post(`THC/GetMFListFromRoute`, payload).pipe(
       finalize(() => this.apiLoading.stop())
     );
   }
 
-  getRoutesFromRouteType(payload:any): Observable<IApiBaseResponse<any[]>>{
+  getRoutesFromRouteType(payload: any): Observable<IApiBaseResponse<any[]>> {
     return this.apiHandlerService.Get(`THC/GetRoutesFromRouteType?routeType=${payload.routeType}&isEmpty=${payload.isEmpty}&locationCode=${payload.locationCode}`);
   }
 
-  challanSubmit(payload:any): Observable<IApiBaseResponse<any[]>>{
-    return this.apiHandlerService.Post(`THC/ChallanSubmit`,payload);
+  challanSubmit(payload: any): Observable<IApiBaseResponse<any[]>> {
+    return this.apiHandlerService.Post(`THC/ChallanSubmit`, payload);
   }
 
 
-  getVehicleType(vehicleNo:string): Observable<IApiBaseResponse<any[]>>{
+  getVehicleType(vehicleNo: string): Observable<IApiBaseResponse<any[]>> {
     return this.apiHandlerService.Get(`THC/VehicleType?vehicleNo=${vehicleNo}`);
   }
 
-  getEWayBillExpiryDateByMF(payload:any): Observable<IApiBaseResponse<any[]>>{
-    return this.apiHandlerService.Post(`THC/GetEWayBillExpiryDateByMF`,payload);
+  getEWayBillExpiryDateByMF(payload: any): Observable<IApiBaseResponse<any[]>> {
+    return this.apiHandlerService.Post(`THC/GetEWayBillExpiryDateByMF`, payload);
   }
 
-  getAirport(locationCode:string): Observable<IApiBaseResponse<any[]>>{
+  getAirport(locationCode: string): Observable<IApiBaseResponse<any[]>> {
     return this.apiHandlerService.Get(`THC/GetAirport?locationCode=${locationCode}`);
   }
 
-   getFlights(payload:any): Observable<IApiBaseResponse<any[]>>{
-    return this.apiHandlerService.Post(`THC/GetFlights`,payload);
+  getFlights(payload: any): Observable<IApiBaseResponse<any[]>> {
+    return this.apiHandlerService.Post(`THC/GetFlights`, payload);
   }
 
-  getCustomerListForTHC(searchTerm:string){
+  getCustomerListForTHC(searchTerm: string) {
     return this.apiHandlerService.Get(`THC/getCustomerListForTHC?searchTerm=${searchTerm}`);
   }
 
-  getAllCityByLocation(locCode:string,searchTerm:string){
+  getAllCityByLocation(locCode: string, searchTerm: string) {
     return this.apiHandlerService.Get(`THC/GetAllCityByLocation?locCode=${locCode}&searchTerm=${searchTerm}`);
   }
 
-  getFlightSchTime(payload:any){
+  getFlightSchTime(payload: any) {
     return this.apiHandlerService.Get(`THC/GetFlightSchTime?flight=${payload.flightCode}&airport=${payload.airport}`);
   }
 
-   getChargesDetails(){
+  getChargesDetails() {
     return this.apiHandlerService.Get(`THC/GetChargesDetails?chargeType=${'GE'}`);
   }
 
-  getContractData(payload:any){
-    return this.apiHandlerService.Post(`THC/GetContractAmount`,payload);
+  getContractData(payload: any) {
+    return this.apiHandlerService.Post(`THC/GetContractAmount`, payload);
   }
 
-  getDeliveryDetail(locationCode:string){
+  getDeliveryDetail(locationCode: string) {
     return this.apiHandlerService.Get(`THC/GetDeliveryZone?baseLocationCode=${locationCode}`);
   }
 
-  getVehicleTypesForChallanFromRouteVendType(payload:any){
+  getVehicleTypesForChallanFromRouteVendType(payload: any) {
     return this.apiHandlerService.Get(`THC/GetVehicleTypesForChallanFromRouteVendType?vehicleNo=${payload.vehicleNo}&routeMode=${payload.routeMode}&routeName=${payload.routeName}&vendorType=${payload.vendorType}&vendorCode=${payload.vendorCode}&thcType=${payload.thcType}&baseLocationCode=${payload.baseLocationCode}`);
   }
 
-  getGeneralMasterDetail(codeType:string): Observable<IApiBaseResponse<PRSGeneralMasterResponse[]>>{
+  getGeneralMasterDetail(codeType: string): Observable<IApiBaseResponse<PRSGeneralMasterResponse[]>> {
     return this.apiHandlerService.Get(`THC/GetGeneralMasterDetails?codeType=${codeType}`);
   }
 
-  getGetBookedBy(id:string,locationCode:string,username:string){
+  getGetBookedBy(id: string, locationCode: string, username: string) {
     return this.apiHandlerService.Get(`THC/GetBookedBy?id=${id}&location=${locationCode}&username=${username}`);
   }
 
-  getERDDate(payload:any){
+  getERDDate(payload: any) {
     return this.apiHandlerService.Get(`THC/GetERD?routeCode=${payload.routeCode}&thcDate=${payload.thcDate}`);
 
   }
 
-   getVendorType(location:any){
+  getVendorType(location: any) {
     return this.apiHandlerService.Get(`THC/GetVendorType?location=${location}`);
   }
 
-  getUserList(searchTerm:any){
-    return this.apiHandlerService.Post(`THC/SearchUsers`,searchTerm);
+  getUserList(searchTerm: any) {
+    return this.apiHandlerService.Post(`THC/SearchUsers`, searchTerm);
   }
 
-   getBranchWiseLoadingUnloadingVendorList(data:any){
-    return this.apiHandlerService.Get(`THC/getBranchWiseLoadingUnloadingVendorListJson?type=${data?.type ? data?.type: 'L'}&vendorType=${data.vendorType}&baseLocationCode=${data.baseLocationCode}`);
+  getBranchWiseLoadingUnloadingVendorList(data: any) {
+    return this.apiHandlerService.Get(`THC/getBranchWiseLoadingUnloadingVendorListJson?type=${data?.type ? data?.type : 'L'}&vendorType=${data.vendorType}&baseLocationCode=${data.baseLocationCode}`);
   }
 
-  getLoadingCharge(data:any){
+  getLoadingCharge(data: any) {
     return this.apiHandlerService.Get(`THC/GetLoadingCharge?brdc=${data.brdc}&loadingBy=${data.loadingBy}&chargeType=${data.chargeType}&typeModule=${data.typeModule}&vendorCode=${data.vendorCode}&loadUnloadType=${data.loadUnloadType}`);
   }
 
-   getDeliveryUpdateData(data:any){
+  getDeliveryUpdateData(data: any) {
     return this.apiHandlerService.Get(`THC/UpdateDRS?drsId=${data.drsId}&loadBy=${data.loadBy}&chargeType=${data.chargeType}&baseLocationCode=${data.baseLocationCode}`);
   }
 
@@ -169,27 +169,27 @@ export class THCMasterService {
     return this.apiHandlerService.Get(`THC/PRSArrivalDetails?id=${data.id}&rateType=${data.rateType}&unloadBy=${data.unloadBy}&baseLocationCode=${data.baseLocationCode}`);
   }
 
-  prsArrival(params:any,paylaod:any){
-    return this.apiHandlerService.Post(`THC/PRSArrivalDetailsSubmit?baseLocationCode=${params.baseLocationCode}&BaseCompanyCode=${params.BaseCompanyCode}&userid=${params.userid}`,paylaod);
+  prsArrival(params: any, paylaod: any) {
+    return this.apiHandlerService.Post(`THC/PRSArrivalDetailsSubmit?baseLocationCode=${params.baseLocationCode}&BaseCompanyCode=${params.BaseCompanyCode}&userid=${params.userid}`, paylaod);
   }
 
-  getDocketInvoiceDetails(dockNo:string){
+  getDocketInvoiceDetails(dockNo: string) {
     return this.apiHandlerService.Get(`THC/GetDocketInvoiceDetails?dockNo=${dockNo}`);
   }
 
-  onSubmitEwaybill(payload:any){
-    return this.apiHandlerService.Post(`THC/SubmitEwayBillExpiryDateChange`,payload);
+  onSubmitEwaybill(payload: any) {
+    return this.apiHandlerService.Post(`THC/SubmitEwayBillExpiryDateChange`, payload);
   }
-  getPRSArrivalList(payload:any){
-    return this.apiHandlerService.Post(`THC/arrival-listPage`,payload);
-  }
-  
-  getDepartureDetail(payload:any){
-    return this.apiHandlerService.Post(`Operation/departure`,payload);
+  getPRSArrivalList(payload: any) {
+    return this.apiHandlerService.Post(`THC/arrival-listPage`, payload);
   }
 
-  submitTHCDeparture(payload:any){
-    return this.apiHandlerService.Post(`THC/THCDepartureSubmit`,payload); 
+  getDepartureDetail(payload: any) {
+    return this.apiHandlerService.Post(`Operation/departure`, payload);
+  }
+
+  submitTHCDeparture(payload: any) {
+    return this.apiHandlerService.Post(`THC/THCDepartureSubmit`, payload);
   }
 
   getHCCDetail(payload: any) {
@@ -213,5 +213,10 @@ export class THCMasterService {
 
    getHCCCancel(payload:any){
     return this.apiHandlerService.Post(`Operation/HCCCancellation`, payload);
+   }
+
+  getHCCDynamicData(payload: any) {
+    return this.apiHandlerService.Post(`Operation/GetDynamicData`, payload);
+
   }
 }

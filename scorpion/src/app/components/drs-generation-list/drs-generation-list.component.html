@@ -77,14 +77,25 @@
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🧾</div>
         </div>
 
+         <div class="summary-card px-3 py-3 c-yellow cursor-pointer"
+            [class.active-card]="DRSFilterForm.get('statusFilter')?.value === 'Undelivered'"
+            (click)="filterByStatus('Undelivered')">
+            <div class="card-content">
+                <div class="s-label">Undelivered</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.Undelivered || 0}}</div>
+                <div class="small text-body-tertiary">UnDelivered today</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
+        </div>
+
         <!-- DRS BILLED -->
         <div class="summary-card px-3 py-3 c-green cursor-pointer"
-            [class.active-card]="DRSFilterForm.get('statusFilter')?.value === 'HCC Generated'"
-            (click)="filterByStatus('HCC Generated')">
+            [class.active-card]="DRSFilterForm.get('statusFilter')?.value === 'Delivered'"
+            (click)="filterByStatus('Delivered')">
             <div class="card-content">
-                <div class="s-label">HCC Generated</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.hccGenerated || 0}}</div>
-                <div class="small text-body-tertiary">HCC generated today</div>
+                <div class="s-label">Delivered</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.delivered || 0}}</div>
+                <div class="small text-body-tertiary">Delivered today</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
         </div>
@@ -209,14 +220,14 @@
                             <span class="px-4 py-2 rounded fw-bold border"
                                 [ngClass]="(data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
                                 (click)="data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC'? openHCCModal(data.loadingHCCNo) : null">
-                                {{ data.loadingHCCNo || 'NO HCC'}}
+                                {{ (data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC') ? 'HCC' : 'NO HCC' }}
                             </span>
                         </td>
                         <td class="text-center cursor-pointer">
                             <span class="px-4 py-2 rounded fw-bold border"
                                 [ngClass]="(data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
                                 (click)="data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC'? openHCCModal(data.unloadingHCCNo) : null">
-                                {{ data.unloadingHCCNo || 'NO HCC'}}
+                                {{ (data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC') ? 'HCC' : 'NO HCC' }}
                             </span>
                         </td>
                         <td class="text-center">
@@ -234,7 +245,7 @@
                                 <button *ngIf="!isHQTR"
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
                                     (click)="openUpdateModal(data)"
-                                    [disabled]="data.ispdcUpdate ||data.status==='Cancelled'||data.status==='Billed' || data.IsThroughDA ===true ">
+                                    [disabled]="data.ispdcUpdate ||data.status==='Cancelled'||data.status==='Billed' || data.IsThroughDA ===true || data.vendorType === 'BUSINESS ASSOCIATE' ">
                                     🔄 DRS Update
                                 </button>
                                 <button *ngIf="!isHQTR" (click)="openPRSDRSEdit(data,'P')"
@@ -257,7 +268,7 @@
                                 <button *ngIf="!isHQTR"
                                     class="btn btn-sm bg-success-purple border-success-subtle text-success-emphasis py-1 px-3"
                                     (click)="openSingleDRSUpdate(data)"
-                                    [disabled]="data.totalDockets===data.deliveredCount|| data.ispdcUpdate||data.status==='Billed'||data.status==='Cancelled' ">
+                                    [disabled]="data.totalDockets===data.deliveredCount|| data.ispdcUpdate||data.status==='Billed'||data.status==='Cancelled'||data.vendorType === 'BUSINESS ASSOCIATE' ">
                                     📝 Single C Note Update
                                 </button>
                             </div>
