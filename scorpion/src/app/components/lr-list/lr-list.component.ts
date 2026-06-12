@@ -89,6 +89,7 @@ export class LrListComponent {
       'InTransit': 'chip-transit',
       'Booking': 'chip-booking',
       'Delivered': 'chip-delivery',
+      'Cancelled':'chip-danger'
     };
     return map[status] ?? 'chip-pending';
   }
@@ -99,6 +100,7 @@ export class LrListComponent {
       'InTransit': '🚛',
       'Booking': '🏭',
       'Delivered': '🏬',
+      'Cancelled':'🚫'
     };
     return icons[status] ?? '⏳';
   }

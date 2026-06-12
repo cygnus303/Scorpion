@@ -255,7 +255,7 @@
                                     🔄 DRS Update
                                 </button>
                                 <button *ngIf="!isHQTR && menuAccessService.hasPermission('Edit')" (click)="openPRSDRSEdit(data,'P')"
-                                    [disabled]="data.status==='Billed'"
+                                    [disabled]="!data.isCancelAllow ||data.status==='Billed'"
                                     class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3">
                                     ✏️ Edit
                                 </button>
