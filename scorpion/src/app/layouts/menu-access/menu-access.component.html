@@ -102,7 +102,7 @@
                 <span class="fw-bold text-dark">{{module.displayName}}</span>
               </td>
               <td class="text-center">
-                <input class="form-check-input m-0" type="checkbox" style="cursor: pointer; transform: scale(1.2);"
+                <input *ngIf="module.permissions && module.permissions.length > 0" class="form-check-input m-0" type="checkbox" style="cursor: pointer; transform: scale(1.2);"
                   [checked]="isRowSelected(module)" (change)="toggleRow(module, $event)">
               </td>
               <td class="text-center" *ngFor="let col of permissionColumns">
