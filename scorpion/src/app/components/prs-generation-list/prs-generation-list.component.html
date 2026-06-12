@@ -216,12 +216,12 @@
                                 </button>
                                 <button *ngIf="!isHQTR"
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
-                                    [disabled]="row.isArrived || row.status ==='Billed'" (click)="openPRSArrival(row)">
+                                    [disabled]="row.isArrived || row.status ==='Billed'||row.status === 'Cancelled'" (click)="openPRSArrival(row)">
                                     📦 PRS Arrival
                                 </button>
                                 <button *ngIf="!isHQTR && menuAccessService.hasPermission('Edit')"
                                     class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3"
-                                    (click)="openPRSDRSEdit(row,'P')" [disabled]="!row.isCancelAllow|| row.status ==='Billed'">
+                                    (click)="openPRSDRSEdit(row,'P')" [disabled]="!row.isCancelAllow|| row.status ==='Billed'||row.status === 'Cancelled'">
                                     ✏️ Edit
                                 </button>
                                 <button *ngIf="menuAccessService.hasPermission('Cancel')" class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
@@ -231,7 +231,7 @@
                                 </button>
                                 <button *ngIf="!isHQTR"
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
-                                    (click)="openHHCDetails(row)" [disabled]="(row.loadingHCC && row.loadingHCC !== 'NOHCC') && (row.unLoadingHCC && row.unLoadingHCC !== 'NOHCC')">
+                                    (click)="openHHCDetails(row)" [disabled]="(row.loadingHCC && row.loadingHCC !== 'NOHCC') && (row.unLoadingHCC && row.unLoadingHCC !== 'NOHCC') || row.status === 'Cancelled'">
                                     🏷 HCC
                                 </button>
                             </div>
