@@ -35,7 +35,7 @@ export class HccViewComponent {
       }
     }
     this.isLoading = true;
-    this.thcMasterService.getHCCViewDetail(payload).subscribe((res: any) => {
+    this.thcMasterService.getHCCDynamicData(payload).subscribe((res: any) => {
       this.isLoading = false;
       if (res) {
         console.log("HCC View Data:", res);
