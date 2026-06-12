@@ -5,8 +5,8 @@
             THC Arrival
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="refreshFilter()">✕ Clear</button>
-            <button class="btn btn-success px-4 py-2 rounded" (click)="downloadExcel()">
+            <!-- <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="refreshFilter()">✕ Clear</button> -->
+            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="downloadExcel()">
                 <span *ngIf="!isdownload">📥 Download XLS</span>
                 <span *ngIf="isdownload" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isdownload">Downloading...</span>
@@ -70,12 +70,12 @@
         <form [formGroup]="THCArrivalFilterForm">
             <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
                 <div class="control-bar border-0 shadow-none mb-0">
-                    <div class="filter-group">
+                    <!-- <div class="filter-group">
                         <span class="filter-label">🔍 Search</span>
                         <input type="text" placeholder="search..." class="filter-bar" style="width:200px;"
                             formControlName="searchText">
 
-                    </div>
+                    </div> -->
                     <div class="date-range-group">
                         <span class="date-label">Date Range</span>
                         <div class="date-input-wrap" style="padding:0;">
@@ -101,6 +101,12 @@
                         <ng-select type="text" placeholder="Status" class="custom-status-select clear-icon"
                             formControlName="statusFilter" [items]="statusList" bindLabel="label" bindValue="value">
                         </ng-select>
+                    </div>
+                </div>
+                <div class="table-toolbar">
+                    <div class="search-box d-flex align-items-center"><span class="text-muted">🔍</span>
+                             <input type="text" placeholder="Search..." class="form-control border-0 shadow-none" style="width:200px;"
+                          formControlName="searchText">
                     </div>
                 </div>
             </div>

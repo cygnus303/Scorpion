@@ -5,9 +5,9 @@
             DRS Generation
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="refreshFilter()">✕ Clear</button>
-            <button class="btn btn-success px-4 py-2 rounded" (click)="onAddDRS()" *ngIf="!isHQTR && menuAccessService.hasPermission('Add')">＋ Add DRS</button>
-            <button class="btn btn-primary px-4 py-2 rounded" (click)="downloadList()" [disabled]="isdownload" *ngIf="menuAccessService.hasPermission('Download')">
+            <!-- <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="refreshFilter()">✕ Clear</button> -->
+            <button class="btn background-color fw-bold text-light px-4 py-2 rounded" (click)="onAddDRS()" *ngIf="!isHQTR && menuAccessService.hasPermission('Add')">＋ Add DRS</button>
+            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="downloadList()" [disabled]="isdownload" *ngIf="menuAccessService.hasPermission('Download')">
                 <span *ngIf="!isdownload">📥 Download XLS</span>
                 <span *ngIf="isdownload" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isdownload">Downloading...</span>
@@ -107,12 +107,12 @@
         <form [formGroup]="DRSFilterForm">
             <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
                 <div class="control-bar border-0 shadow-none mb-0">
-                    <div class="filter-group">
+                    <!-- <div class="filter-group">
                         <span class="filter-label">🔍 Search</span>
                         <input type="text" placeholder="search..." class="filter-bar" style="width:200px;"
                             formControlName="searchText">
 
-                    </div>
+                    </div> -->
                     <div class="date-range-group">
                         <span class="date-label">Date Range</span>
                         <div class="date-input-wrap" style="padding:0;">
@@ -151,6 +151,12 @@
                 <button class="btn btn-success px-4 py-2 rounded">＋ Add DRS</button>
                 <button class="btn btn-primary px-4 py-2 rounded">📥 Download XLS</button>
             </div> -->
+                </div>
+                <div class="table-toolbar">
+                    <div class="search-box d-flex align-items-center"><span class="text-muted">🔍</span>
+                             <input type="text" placeholder="Search..." class="form-control border-0 shadow-none" style="width:200px;"
+                          formControlName="searchText">
+                    </div>
                 </div>
             </div>
         </form>

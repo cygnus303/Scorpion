@@ -80,7 +80,7 @@
                                     <td
                                         class="text-center px-2 py-2 fw-bold text-primary text-decoration-underline"
                                         style="cursor: pointer;"
-                                        (click)="openHCCModal(row.HCNumber)">
+                                        (click)="openHCCModal(row.HCNumber,row.DocumentNo)">
                                         {{ row.HCNumber || '—' }}
                                     </td>                                    <td class="text-center px-2 py-2">{{ row.DocumentNo || '—' }}</td>
                                     <td class="text-center px-2 py-2">{{ row.VendorCode || '—' }}</td>

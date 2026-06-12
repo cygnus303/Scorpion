@@ -249,7 +249,7 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
   }
 
   openHccView(data: any, chargeType: string) {
-    this.HccViewComponent.showPopup(data, chargeType, 'L');
+    this.HccViewComponent.showPopup(data, chargeType, 'M');
   }
 
   openMfNoView(mfNo: string) {
