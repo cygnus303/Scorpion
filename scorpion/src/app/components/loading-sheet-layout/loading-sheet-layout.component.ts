@@ -14,11 +14,12 @@ import { HCCDetailsComponent } from '../prs-generation-list/hcc-details/hcc-deta
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { LSUpdatePopupComponent } from './lsupdate-popup/lsupdate-popup.component';
 import Swal from 'sweetalert2';
+import { HccViewComponent } from '../hcc-view/hcc-view.component';
 
 @Component({
   selector: 'app-loading-sheet-layout',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent,HCCDetailsComponent,LSUpdatePopupComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, HCCDetailsComponent, LSUpdatePopupComponent, HccViewComponent],
   templateUrl: './loading-sheet-layout.component.html',
   styleUrl: './loading-sheet-layout.component.scss',
   providers: [BsModalService]
@@ -29,6 +30,7 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
   public isCSVLoading: boolean = false;
   public listSubscription?: Subscription;
   private fetchSubject = new Subject<void>();
+  @ViewChild('HccViewComponent') HccViewComponent!: HccViewComponent;
   @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
   @ViewChild('LSUpdatePopupComponent') LSUpdatePopupComponent!: LSUpdatePopupComponent;
 
@@ -75,13 +77,13 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-      const saved = localStorage.getItem("loginUserList");
-      if (saved) {
-        this.docketService.loginUserList = JSON.parse(saved);
-        this.docketService.Location = this.docketService.loginUserList.LocationCode;
-        this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
-        this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
-      }
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
 
     this.fetchSubject.pipe(debounceTime(300)).subscribe(() => {
       this.fetchLoadingSheetList();
@@ -227,11 +229,11 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
     });
   }
 
-   openHHCDetails(data: any) {
+  openHHCDetails(data: any) {
     this.HCCDetailsComponent.showPopup(data, 'M');
   }
 
-     openLSUpdatePopup(data: any, type: string) {
+  openLSUpdatePopup(data: any, type: string) {
     this.LSUpdatePopupComponent.openModal(data, type);
   }
 
@@ -244,6 +246,10 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
     if (popup) {
       popup.location.href = url;
     }
+  }
+
+  openHccView(data: any, chargeType: string) {
+    this.HccViewComponent.showPopup(data, chargeType, 'L');
   }
 
   openMfNoView(mfNo: string) {
