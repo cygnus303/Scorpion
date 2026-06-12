@@ -2,6 +2,7 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-hcc-view',
@@ -14,6 +15,7 @@ export class HccViewComponent {
   public modalRef!: BsModalRef;
   public viewDetail: any;
   public isLoading: boolean = false;
+  public env = environment;
 
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
 
@@ -45,4 +47,16 @@ export class HccViewComponent {
       this.isLoading = false;
     });
   }
+
+    openHCCModal(hccNo: string) {
+    const url = `${this.env.liveUrl}ViewPrint/LoadingUnloadingViewPrint?LsNO=${hccNo}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
+    }
+  }
+
 }
