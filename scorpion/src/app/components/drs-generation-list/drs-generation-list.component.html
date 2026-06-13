@@ -224,16 +224,16 @@
                             {{ data.vendorBillNo || '—' }}</td>
                         <td class="text-center cursor-pointer">
                             <span class="px-4 py-2 rounded fw-bold border"
-                                [ngClass]="(data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
-                                (click)="data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC'?  openHccView(data,'L') : null">
-                                {{ (data.loadingHCCNo && data.loadingHCCNo !== 'NO HCC') ? 'HCC' : 'NO HCC' }}
+                                [ngClass]="isHccValid(data.loadingHCCNo) ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
+                                (click)="isHccValid(data.loadingHCCNo) ? openHccView(data,'L') : null">
+                                {{ isHccValid(data.loadingHCCNo) ? 'HCC' : 'NO HCC' }}
                             </span>
                         </td>
                         <td class="text-center cursor-pointer">
                             <span class="px-4 py-2 rounded fw-bold border"
-                                [ngClass]="(data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
-                                (click)="data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC'?  openHccView(data,'U') : null">
-                                {{ (data.unloadingHCCNo && data.unloadingHCCNo !== 'NO HCC') ? 'HCC' : 'NO HCC' }}
+                                [ngClass]="isHccValid(data.unloadingHCCNo) ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
+                                (click)="isHccValid(data.unloadingHCCNo) ? openHccView(data,'U') : null">
+                                {{ isHccValid(data.unloadingHCCNo) ? 'HCC' : 'NO HCC' }}
                             </span>
                         </td>
                         <td class="text-center">
@@ -260,14 +260,14 @@
                                     ✏️ Edit
                                 </button>
                                 <button *ngIf="menuAccessService.hasPermission('Cancel')"
-                                    [disabled]="data.ispdcUpdate||data.status==='Billed'||data.loadingHCCNo || data.unloadingHCCNo || !data.isCancelAllow"
+                                    [disabled]="data.ispdcUpdate||data.status==='Billed'||isHccValid(data.loadingHCCNo) && isHccValid(data.unloadingHCCNo) || !data.isCancelAllow"
                                     class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
                                     (click)="onCancel(data.drsNo)">
                                     🚫 Cancel
                                 </button>
                                 <button *ngIf="!isHQTR"
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
-                                    [disabled]="data.deliveredCount === 0||data.loadingHCCNo && data.unloadingHCCNo"
+                                    [disabled]="data.deliveredCount === 0||isHccValid(data.loadingHCCNo) && isHccValid(data.unloadingHCCNo)"
                                     (click)="openHHCDetails(data)">
                                     🏷 HCC
                                 </button>
