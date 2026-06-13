@@ -27,7 +27,7 @@
                                     <label class="form-label meta-label d-flex align-items-center gap-2">
                                         THC No. :
                                         <span class="fw-bold text-secondary" style="word-break: break-all;">
-                                            {{'VH/PIM/2627/000001'}}
+                                            {{selectedTHC}}
                                         </span>
                                     </label>
                                 </div>
@@ -37,7 +37,7 @@
                                     <label class="form-label meta-label d-flex align-items-center gap-2">
                                         Contract Type :
                                         <span class="fw-bold text-secondary" style="word-break: break-all;">
-                                            {{'--'}}
+                                            {{thcData?.conttyP_Name || '--'}}
                                         </span>
                                     </label>
                                 </div>
@@ -82,27 +82,27 @@
                                                     </td>
                                                 </tr>
                                             </tbody> -->
-                                            <tbody >
-                                                <tr >
+                                            <tbody *ngIf="thcData">
+                                                <tr>
 
                                                     <td class="text-center">
-                                                      <input type="text" class="form-control form-control-sm">
+                                                      <input type="text" class="form-control form-control-sm" name="contractAmt" [(ngModel)]="thcData.contractAmt">
                                                     </td>
 
                                                     <td class="text-center">
-                                                      <input type="text" class="form-control form-control-sm">
+                                                      <input type="text" class="form-control form-control-sm" name="stdAmt" [(ngModel)]="thcData.stdAmt">
                                                     </td>
 
                                                     <td class="text-center">
-                                                      <input type="text" class="form-control form-control-sm">
+                                                      <input type="text" class="form-control form-control-sm" name="advamt" [(ngModel)]="thcData.advamt">
                                                     </td>
 
                                                     <td class="text-center">
-                                                      <input type="text" class="form-control form-control-sm">
+                                                      <input type="text" class="form-control form-control-sm" name="fincmplbr" [(ngModel)]="thcData.fincmplbr">
                                                     </td>
 
                                                     <td class="text-center">
-                                                      <input type="text" class="form-control form-control-sm">
+                                                      <input type="text" class="form-control form-control-sm" name="balamtbrcd" [(ngModel)]="thcData.balamtbrcd">
                                                     </td>
 
                                                 </tr>
