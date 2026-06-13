@@ -38,13 +38,20 @@ export class HCCDetailsComponent {
     private sweetAlertService: SweetAlertService, private docketService: DocketService, private THCService: THCMasterService,
     public vendorChargeHelper: VendorChargeHelperService) { }
 
+  isHccValid(hcc: any): boolean {
+    if (!hcc) return false;
+    if (hcc === 'NO HCC' || hcc === 'NOHCC' || hcc === '0' || hcc === 0) return false;
+    if (!isNaN(hcc) && Number(hcc) <= 0) return false;
+    return true;
+  }
+
   get hasExistingHcc(): boolean {
     if (!this.selectedHccDetails) return false;
     return !!(
-      this.selectedHccDetails.loadingHCCNo ||
-      this.selectedHccDetails.unloadingHCCNo ||
-      this.selectedHccDetails.loadingHCC ||
-      this.selectedHccDetails.unLoadingHCC
+      this.isHccValid(this.selectedHccDetails.loadingHCCNo) ||
+      this.isHccValid(this.selectedHccDetails.unloadingHCCNo) ||
+      this.isHccValid(this.selectedHccDetails.loadingHCC) ||
+      this.isHccValid(this.selectedHccDetails.unLoadingHCC)
     );
   }
 
@@ -52,9 +59,9 @@ export class HCCDetailsComponent {
     console.log("HCC Details Data:", data);
     this.selectedHccDetails = data;
     // Auto-detect existing HCC type so radio shows pre-selected (disabled) state
-    if (data.loadingHCCNo || data.loadingHCC) {
+    if (this.isHccValid(data.loadingHCCNo) || this.isHccValid(data.loadingHCC)) {
       this.selectedHccType = 'Unloading';
-    } else if (data.unloadingHCCNo || data.unLoadingHCC) {
+    } else if (this.isHccValid(data.unloadingHCCNo) || this.isHccValid(data.unLoadingHCC)) {
       this.selectedHccType = 'Loading';
     } else {
       this.selectedHccType = '';

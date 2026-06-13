@@ -245,8 +245,11 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     }
   }
 
-  isHccValid(hcc: string): boolean {
-    return hcc !== 'NO HCC' && hcc !== 'NOHCC';
+  isHccValid(hcc: any): boolean {
+    if (!hcc) return false;
+    if (hcc === 'NO HCC' || hcc === 'NOHCC' || hcc === '0' || hcc === 0) return false;
+    if (!isNaN(hcc) && Number(hcc) <= 0) return false;
+    return true;
   }
 
   openAddPRSDRS() {

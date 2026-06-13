@@ -82,7 +82,7 @@
             (click)="filterByStatus('Undelivered')">
             <div class="card-content">
                 <div class="s-label">Undelivered</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.Undelivered || 0}}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.undelivered || 0}}</div>
                 <div class="small text-body-tertiary">UnDelivered today</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>
@@ -255,7 +255,7 @@
                                     🔄 DRS Update
                                 </button>
                                 <button *ngIf="!isHQTR && menuAccessService.hasPermission('Edit')" (click)="openPRSDRSEdit(data,'P')"
-                                    [disabled]="!data.isCancelAllow ||data.status==='Billed'"
+                                    [disabled]="!data.isCancelAllow ||data.status==='Billed'||data.status==='Cancelled'"
                                     class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3">
                                     ✏️ Edit
                                 </button>
