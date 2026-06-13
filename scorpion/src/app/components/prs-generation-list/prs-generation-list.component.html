@@ -189,17 +189,17 @@
                         <td class="text-center fs-6 text-muted">{{ row.vendorBillNo || '—' }}</td>
                         <td class="text-center cursor-pointer">
                             <span class="px-3 py-2 rounded fw-bold border"
-                                [ngClass]="(row.loadingHCC && row.loadingHCC !== 'NO HCC' && row.loadingHCC !== 'NOHCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle '"
-                                (click)="row.loadingHCC && row.loadingHCC !== 'NO HCC' && row.loadingHCC !== 'NOHCC' ? openHccView(row,'L') : null"
+                                [ngClass]="isHccValid(row.loadingHCC) ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle '"
+                                (click)="isHccValid(row.loadingHCC) ? openHccView(row,'L') : null"
                                 style="cursor: pointer;">
-                                {{ (row.loadingHCC && row.loadingHCC !== 'NOHCC') ? 'HCC' : 'NO HCC' }}
+                                {{ isHccValid(row.loadingHCC) ? 'HCC' : 'NO HCC' }}
                             </span>
                         </td>
                         <td class="text-center cursor-pointer">
                             <span class="px-3 py-2 rounded fw-bold border"
-                                [ngClass]="(row.unLoadingHCC && row.unLoadingHCC !== 'NO HCC' && row.unLoadingHCC !== 'NOHCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'bg-danger-subtle text-danger border-danger-subtle'"
-                                (click)="row.unLoadingHCC && row.unLoadingHCC !== 'NO HCC' && row.unLoadingHCC !== 'NOHCC'? openHccView(row,'U') : null">
-                                {{ (row.unLoadingHCC && row.unLoadingHCC !== 'NOHCC') ? 'HCC' : 'NO HCC' }}
+                                [ngClass]="isHccValid(row.unLoadingHCC) ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'bg-danger-subtle text-danger border-danger-subtle'"
+                                (click)="isHccValid(row.unLoadingHCC) ? openHccView(row,'U') : null">
+                                {{ isHccValid(row.unLoadingHCC) ? 'HCC' : 'NO HCC' }}
                             </span>
                         </td>
                         <td class="text-center">
@@ -225,13 +225,13 @@
                                     ✏️ Edit
                                 </button>
                                 <button *ngIf="menuAccessService.hasPermission('Cancel')" class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
-                                    [disabled]="!row.isCancelAllow || (row.loadingHCC && row.loadingHCC !== 'NOHCC') || (row.unLoadingHCC && row.unLoadingHCC !== 'NOHCC') || row.status ==='Billed'"
+                                    [disabled]="!row.isCancelAllow || isHccValid(row.loadingHCC) || isHccValid(row.unLoadingHCC) || row.status ==='Billed'"
                                     (click)="onCancel(row.pdcno)">
                                     🚫 Cancel
                                 </button>
                                 <button *ngIf="!isHQTR"
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
-                                    (click)="openHHCDetails(row)" [disabled]="(row.loadingHCC && row.loadingHCC !== 'NOHCC') && (row.unLoadingHCC && row.unLoadingHCC !== 'NOHCC') || row.status === 'Cancelled'">
+                                    (click)="openHHCDetails(row)" [disabled]="isHccValid(row.loadingHCC) && isHccValid(row.unLoadingHCC)">
                                     🏷 HCC
                                 </button>
                             </div>
