@@ -159,8 +159,15 @@ export class DrsGenerationListComponent {
     this.getDRSdetail();
   }
 
-    openHccView(data: any,chargeType:string){
+  openHccView(data: any,chargeType:string){
     this.HccViewComponent.showPopup(data,chargeType,'D');
+  }
+
+  isHccValid(hcc: any): boolean {
+    if (!hcc) return false;
+    if (hcc === 'NO HCC' || hcc === 'NOHCC' || hcc === '0' || hcc === 0) return false;
+    if (!isNaN(hcc) && Number(hcc) <= 0) return false;
+    return true;
   }
 
   onFilterChange() {
