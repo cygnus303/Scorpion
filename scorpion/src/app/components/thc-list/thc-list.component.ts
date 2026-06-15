@@ -112,7 +112,7 @@ getStatusClass(status: string): string {
       this.docketService.loginUserList = user;
       localStorage.setItem("loginUserList", JSON.stringify(user));
     }
-    this.router.navigate(['Operation/ChallanList']);
+    this.router.navigate(['Operation/ChallanList'], { queryParams: { fromPRS: 'true' } });
   }
 
     openEditPopup(data: any) {

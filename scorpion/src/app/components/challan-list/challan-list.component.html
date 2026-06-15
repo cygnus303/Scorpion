@@ -2,10 +2,14 @@
         (filterApplied)="filterListpatchValue($event)"></challan-filter></div>
 
 <div class="cnote-entry-container fade-in m-1" *ngIf="isFilterApplied">
-    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
-        <i class="fa fa-edit me-2"></i>
-        Prepare New {{typeName}}
-    </div>
+   <div
+            class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color justify-content-between">
+            <div>
+                <i class="fa fa-edit me-2"></i>
+                Prepare New {{typeName}}
+            </div>
+            <button class="btn btn-light text-dark btn-sm px-3" (click)="onBack()" *ngIf="hideBackButton">Back to {{typeName}} List</button>
+        </div>
 
     <div class="form-grid p-4">
         <form [formGroup]="challanService.challanForm">
