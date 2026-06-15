@@ -55,5 +55,9 @@ export class PRSDRSApiService {
   getTHCEditDetail(params:any){
     return this.apiHandlerService.Get(`THC/THCFinancialEditDetail?thcNo=${params.thcNo}&vendorType=${params.vendorType}`);
   }
+
+  THCSubmit(payload:any){
+    return this.apiHandlerService.Post(`THC/THCCriteriaSubmit`,payload);
+  }
   
 }

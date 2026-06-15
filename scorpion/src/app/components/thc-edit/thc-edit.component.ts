@@ -41,9 +41,21 @@ export class ThcEditComponent {
         console.error(err);
       }
     })
+  }
 
+  submitTHC(){
+    const payload={
+    }
 
-
+    this.PRSDRSApiService.THCSubmit(payload).subscribe({
+      next : (response:any)=>{
+        if(response){
+          this.thcData= response.thcsumry;
+        }
+      }, error: (err) => {
+        console.error(err);
+      }
+    })
   }
 
 }
