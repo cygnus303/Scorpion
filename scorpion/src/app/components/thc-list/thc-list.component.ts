@@ -52,6 +52,14 @@ export class ThcListComponent {
   
 
     ngOnInit() {
+      const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      // this.docketService.loginUserList.LocationCode = 'PIM'
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
       this.buildFilterForm();
       this.fetchData()
     }
@@ -124,7 +132,7 @@ getStatusClass(status: string): string {
       this.listSubscription.unsubscribe();
     }
     const payload={
-      locCode:this.docketService.loginUserList.LocationCode,
+      locCode:this.docketService.loginUserList.LocationCode || null,
       fromDate: this.formatDate(this.THCFilterForm.value.fromDate),
       toDate: this.formatDate(this.THCFilterForm.value.toDate),
       searchText: this.THCFilterForm.value.searchText,
