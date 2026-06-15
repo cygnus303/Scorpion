@@ -1,119 +1,203 @@
-<div class="input-background-color" style="padding:0;gap:0; background-color: #f3f4f6;">
-  <div class="p-3">
+<!-- HEADER -->
+<div class="d-flex align-items-center justify-content-between px-4 text-white shadow-sm" style="background-color: #CC0000; height: 62px;">
+  <div class="d-flex align-items-center gap-3">
+    <h1 class="m-0 fs-5 fw-bold" style="letter-spacing: 0.4px;">Menu Access Management</h1>
+  </div>
+  <div class="text-white-50 small fw-semibold">Access Control System</div>
+</div>
 
-    <!-- Red Theme Header -->
-    <div class="d-flex justify-content-between align-items-center p-3 rounded-top" style="background-color: #b91c1c; color: white;">
-      <div class="d-flex align-items-center gap-3">
-        <span class="fw-bold fs-6 text-uppercase" style="border-bottom: 2px solid white; padding-bottom: 2px;">
-          Menu Access
-        </span>
+<div class="container-fluid p-4 bg-light" style="min-height: calc(100vh - 62px);">
+  
+  <!-- Filter Card -->
+  <div class="card shadow-sm mb-4 border-0 border-top border-danger border-3 rounded-3">
+    <div class="card-body p-4">
+      <h6 class="card-title fw-bold text-danger text-uppercase mb-3 pb-3 border-bottom d-flex align-items-center gap-2" style="letter-spacing: 0.5px;">
+        <span>🔧</span> Access Configuration
+      </h6>
+      
+      <div class="row g-3 align-items-end">
+        <div class="col-md-3 col-lg-2">
+          <label class="form-label small fw-bold text-muted text-uppercase mb-1" style="letter-spacing: 0.5px;">Access Type</label>
+          <select class="form-select border-secondary-subtle" [(ngModel)]="searchType" (change)="onSearchTypeChange()">
+            <option value="User">User</option>
+            <option value="Role">Role</option>
+          </select>
+        </div>
+
+        <div class="col-md-5 col-lg-4">
+          <label class="form-label small fw-bold text-muted text-uppercase mb-1" *ngIf="searchType === 'Role'" style="letter-spacing: 0.5px;">Select Role</label>
+          <label class="form-label small fw-bold text-muted text-uppercase mb-1" *ngIf="searchType === 'User'" style="letter-spacing: 0.5px;">Select User</label>
+          
+          <ng-select *ngIf="searchType === 'Role'" 
+                     [(ngModel)]="roleType" 
+                     [items]="generalMasterService.roleTypeList" 
+                     bindLabel="codeDesc" 
+                     bindValue="codeId"
+                     (change)="fetchUserMenus()"
+                     placeholder="Search roles..."
+                     class="remove-select-color border-secondary-subtle rounded">
+          </ng-select>
+
+          <ng-select *ngIf="searchType === 'User'" 
+                     [(ngModel)]="selectedUserId" 
+                     [items]="LoadingSheetService.unLoaderUserList"
+                     bindLabel="name"
+                     bindValue="userId"
+                     (change)="fetchUserMenus()"
+                     placeholder="Search users..."
+                     class="remove-select-color border-secondary-subtle rounded">
+            <ng-template ng-label-tmp let-item="item">
+              {{item.userId}} - {{item.name}}
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+              {{item.userId}} - {{item.name}}
+            </ng-template>
+          </ng-select>
+        </div>
+
+        <div class="col-auto ms-auto">
+          <button class="btn btn-danger fw-bold px-4" (click)="openModal()" style="letter-spacing: 0.2px;">
+            ⚙️ Apply Access
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Card -->
+  <div class="card shadow-sm border-0 border-top border-danger border-3 rounded-3 overflow-hidden">
+    <div class="card-header bg-light d-flex flex-wrap justify-content-between align-items-center p-3 border-bottom">
+      <div class="btn-group border border-danger rounded overflow-hidden" role="group">
+        <button type="button" class="btn fw-bold px-4" [ngClass]="searchType === 'User' ? 'btn-danger' : 'btn-outline-danger border-0'" (click)="searchType = 'User'; onSearchTypeChange()">👤 User Wise</button>
+        <button type="button" class="btn fw-bold px-4 border-start border-danger" [ngClass]="searchType === 'Role' ? 'btn-danger' : 'btn-outline-danger border-0'" (click)="searchType = 'Role'; onSearchTypeChange()">🎭 Role Wise</button>
+      </div>
+      <div class="d-flex align-items-center gap-3 mt-2 mt-sm-0">
+        <span class="text-muted small fw-bold">{{ assignedPermissions.length }} record(s)</span>
+        <!-- <button class="btn btn-outline-danger btn-sm fw-bold px-3">⬇️ Download XLS</button> -->
       </div>
     </div>
 
-    <!-- Main Content Panel -->
-    <div class="table-panel p-4 bg-white border border-top-0 rounded-bottom shadow-sm">
+    <!-- Data Table -->
+    <div class="table-responsive mb-0">
+      <table class="table table-hover table-striped mb-0 align-middle">
+        <thead>
+          <tr>
+            <th class="text-uppercase small fw-bold py-3 px-3 border-0" style="background-color: #a30000 !important; box-shadow: none !important; color: #ffffff !important; width: 50px; letter-spacing: 0.5px;">#</th>
+            <th class="text-uppercase small fw-bold py-3 px-3 border-0" style="background-color: #a30000 !important; box-shadow: none !important; color: #ffffff !important; letter-spacing: 0.5px;">{{ searchType === 'Role' ? 'Role' : 'User Name' }}</th>
+            <th class="text-uppercase small fw-bold py-3 px-3 border-0" style="background-color: #a30000 !important; box-shadow: none !important; color: #ffffff !important; letter-spacing: 0.5px;">Module Name</th>
+            <th class="text-uppercase small fw-bold py-3 px-3 border-0" style="background-color: #a30000 !important; box-shadow: none !important; color: #ffffff !important; letter-spacing: 0.5px;">Actions Assigned</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="!selectedId || assignedPermissions.length === 0">
+          <tr>
+            <td colspan="4" class="text-center py-5">
+              <div class="text-muted py-4">
+                <div class="display-6 mb-3">🔐</div>
+                <p class="mb-0 small">No access records yet.<br>Select a {{ searchType | lowercase }} and click <strong class="text-dark">Apply Access</strong> to begin.</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="selectedId && assignedPermissions.length > 0">
+          <tr *ngFor="let d of assignedPermissions; let i = index">
+            <td class="text-muted small px-3 py-3">{{ i + 1 }}</td>
+            <td class="px-3 py-3">
+              <strong class="text-dark">{{ selectedName }}</strong><br>
+              <span class="text-muted small">{{ selectedId }}</span>
+            </td>
+            <td class="px-3 py-3">
+              <span class="fw-bold text-danger">{{ d.moduleName }}</span>
+            </td>
+            <td class="px-3 py-3">
+              <div class="d-flex flex-wrap gap-1">
+                <span *ngFor="let act of d.actions" class="badge rounded-pill px-2 py-1" [ngClass]="getActionBadgeClass(act)">{{ act }}</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- MODAL -->
+<div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.5);" *ngIf="isModalOpen" (click)="closeModal()">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" (click)="$event.stopPropagation()">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 12px;">
       
-      <!-- Control Bar -->
-      <div class="control-bar d-block gap-2 mb-4 pb-4 border-bottom">
-        <div class="row g-3 align-items-end">
-          <!-- Search -->
-          <div class="col-lg-3">
-            <label class="form-label fw-bold text-muted small text-uppercase" style="letter-spacing: 0.5px;">
-              Search Module
-            </label>
-            <input type="text" class="form-control" placeholder="Search module..." [(ngModel)]="searchText">
+      <div class="modal-header text-white px-4 py-3" style="background-color: #CC0000;">
+        <h5 class="modal-title fw-bold fs-6" style="letter-spacing: 0.3px;">⚙️ Assign Menu Access</h5>
+        <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="closeModal()"></button>
+      </div>
+      
+      <div class="modal-body p-4 bg-white">
+        <div class="alert fw-bold d-flex align-items-center gap-2 mb-4 py-2 px-3 border border-danger-subtle rounded-3 small" style="background-color: #fff5f5; color: #CC0000;">
+          ℹ️ Assigning access for: <strong class="ms-1">{{ searchType === 'Role' ? '🎭 Role' : '👤 User' }} — {{ selectedName }}</strong>
+        </div>
+        
+        <!-- Header row -->
+        <div class="row g-2 p-2 text-white fw-bold rounded mb-2 small text-uppercase mx-0 align-items-center" style="background: linear-gradient(135deg, #7a0000, #CC0000); letter-spacing: 0.4px;">
+          <div class="col-4 px-2">Module Name</div>
+          <div class="col-7 px-2 d-flex justify-content-between align-items-center">
+            <span>Actions</span>
+            <div class="d-flex align-items-center gap-2 bg-white px-2 py-1 rounded shadow-sm me-2" style="color: #CC0000; transition: all 0.2s;">
+              <input class="form-check-input m-0 cursor-pointer shadow-none border-danger-subtle" type="checkbox" id="selectAllGlobal" [checked]="isAllRowsSelected()" (change)="toggleAllRows($event)" style="transform: scale(1.1);">
+              <label class="form-check-label cursor-pointer fw-bold" for="selectAllGlobal" style="font-size: 10px; margin-top: 1px;">
+                SELECT ALL
+              </label>
+            </div>
           </div>
-    
-          <!-- Search Type -->
-          <div class="col-lg-3">
-            <label class="form-label fw-bold text-muted small text-uppercase" style="letter-spacing: 0.5px;">
-              Search Type
-            </label>
-            <ng-select [(ngModel)]="searchType" class="noFoundTextColor remove-select-color" [clearable]="false" (change)="onSearchTypeChange()">
-              <ng-option value="User">User</ng-option>
-              <ng-option value="Role">Role</ng-option>
+          <div class="col-1 text-center"></div>
+        </div>
+        
+        <!-- Access rows -->
+        <div class="row g-2 p-2 border rounded mb-2 align-items-center mx-0" style="background-color: #fffafa; border-color: #f5c0c0 !important;" *ngFor="let row of modalRows; let i = index">
+          <div class="col-4 px-2">
+            <ng-select [(ngModel)]="row.moduleId" 
+                       [items]="permissionsList" 
+                       bindLabel="displayName" 
+                       bindValue="menuID"
+                       (change)="onModuleChange(row, i)"
+                       placeholder="-- Module --"
+                       [clearable]="false" 
+                       class="remove-select-color border-secondary-subtle rounded small">
             </ng-select>
           </div>
-    
-          <!-- Role -->
-          <div class="col-lg-3" *ngIf="searchType === 'Role'">
-            <label class="form-label fw-bold text-muted small text-uppercase" style="letter-spacing: 0.5px;">
-              Select Role
-            </label>
-            <ng-select [(ngModel)]="roleType" class="noFoundTextColor remove-select-color" [items]="generalMasterService.roleTypeList" bindLabel="codeDesc" bindValue="codeId" (change)="fetchUserMenus()">
-            </ng-select>
+          
+          <div class="col-7 px-2">
+            <div class="d-flex flex-wrap gap-3 align-items-center">
+              <ng-container *ngIf="getModuleDetails(row.moduleId) as mod">
+                <div class="form-check mb-0 border-end pe-3 border-danger-subtle" *ngIf="mod.permissions && mod.permissions.length > 0">
+                  <input class="form-check-input cursor-pointer shadow-none" type="checkbox" [id]="'chkAll_'+i" [checked]="isRowSelected(row)" (change)="toggleRow(row, $event)" style="transform: scale(1.1);">
+                  <label class="form-check-label fw-bold text-danger cursor-pointer small mt-1" [for]="'chkAll_'+i">
+                    All
+                  </label>
+                </div>
+                <div class="form-check mb-0" *ngFor="let p of mod.permissions">
+                  <input class="form-check-input cursor-pointer shadow-none" type="checkbox" [id]="'chk_'+i+'_'+p.id" [(ngModel)]="row.permissions[p.id]">
+                  <label class="form-check-label fw-semibold text-dark cursor-pointer small mt-1" [for]="'chk_'+i+'_'+p.id">
+                    {{ p.menuaccess }}
+                  </label>
+                </div>
+              </ng-container>
+              <span *ngIf="!row.moduleId" class="text-muted small fst-italic">Select a module...</span>
+            </div>
           </div>
-    
-          <!-- User -->
-          <div class="col-lg-3" *ngIf="searchType === 'User'">
-            <label class="form-label fw-bold text-muted small text-uppercase" style="letter-spacing: 0.5px;">
-              Select User
-            </label>
-            <ng-select [(ngModel)]="selectedUserId" class="noFoundTextColor remove-select-color" (change)="fetchUserMenus()">
-              <ng-option *ngFor="let data of LoadingSheetService.unLoaderUserList" [value]="data.userId">
-                {{data.userId}} - {{data.name}}
-              </ng-option>
-            </ng-select>
-          </div>
-    
-          <!-- Button -->
-          <div class="col-lg-3 text-end ms-auto">
-            <button class="btn btn-primary px-4 py-2 fw-bold" style="background-color: #0d6efd; border: none;" (click)="onSubmit()">
-              <i class="ri-check-line me-1"></i> Apply Access
-            </button>
+          
+          <div class="col-1 text-center px-0">
+            <button class="btn btn-link text-danger p-0 text-decoration-none fs-5 lh-1" (click)="removeRow(i)" title="Remove row">✕</button>
           </div>
         </div>
+        
+        <button class="btn btn-outline-danger btn-sm mt-3 fw-bold" (click)="addAccessRow()">＋ Add Row</button>
       </div>
-
-      <!-- Table Layout -->
-      <div class="table-wrap mt-2">
-        <table class="table align-middle data-table mb-0">
-          <thead>
-            <tr>
-              <th class="text-start align-middle" style="width: 300px;">
-                <span class="text-uppercase">Module Name</span>
-              </th>
-              <th class="text-center" style="width: 100px;">
-                <div class="d-flex flex-column align-items-center">
-                  <span class="text-uppercase mb-1 fw-bold small">ALL</span>
-                  <input class="form-check-input m-0" type="checkbox" style="cursor: pointer;"
-                    [checked]="isAllSelected()" (change)="toggleAll($event)">
-                </div>
-              </th>
-              <th class="text-center" *ngFor="let col of permissionColumns">
-                <div class="d-flex flex-column align-items-center">
-                  <span class="text-uppercase mb-1">{{col.action}}</span>
-                  <input class="form-check-input m-0" type="checkbox" style="cursor: pointer;"
-                    [checked]="isColumnAllSelected(col)" (change)="toggleColumn(col, $event)">
-                </div>
-              </th>
-            </tr>
-          </thead>
-          <tbody *ngIf="filteredPermissionsList.length === 0">
-            <tr>
-              <td [attr.colspan]="permissionColumns.length + 2" class="text-center py-4 text-muted fs-5">
-                No modules found.
-              </td>
-            </tr>
-          </tbody>
-          <tbody *ngIf="filteredPermissionsList.length > 0">
-            <tr *ngFor="let module of filteredPermissionsList">
-              <td class="text-start">
-                <span class="fw-bold text-dark">{{module.displayName}}</span>
-              </td>
-              <td class="text-center">
-                <input *ngIf="module.permissions && module.permissions.length > 0" class="form-check-input m-0" type="checkbox" style="cursor: pointer; transform: scale(1.2);"
-                  [checked]="isRowSelected(module)" (change)="toggleRow(module, $event)">
-              </td>
-              <td class="text-center" *ngFor="let col of permissionColumns">
-                <input class="form-check-input m-0" type="checkbox" style="cursor: pointer; transform: scale(1.2);"
-                  *ngIf="getPermission(module, col) as perm" [(ngModel)]="perm.isUSERACCESS">
-                <span *ngIf="!getPermission(module, col)" class="text-muted">-</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      
+      <div class="modal-footer px-4 py-3 border-top border-secondary-subtle" style="background-color: #f9fafb;">
+        <button class="btn btn-secondary fw-bold px-3" (click)="closeModal()">✖ Cancel</button>
+        <button class="btn btn-success fw-bold px-4" (click)="saveAccess()">💾 Save</button>
       </div>
+      
     </div>
   </div>
 </div>
