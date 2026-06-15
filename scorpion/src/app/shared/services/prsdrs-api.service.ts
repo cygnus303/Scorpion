@@ -59,5 +59,9 @@ export class PRSDRSApiService {
   THCSubmit(payload:any){
     return this.apiHandlerService.Post(`THC/THCCriteriaSubmit`,payload);
   }
+
+  CancelTHC(payload:any){
+    return this.apiHandlerService.Post(`THC/CancelTHC`,payload);
+  }
   
 }

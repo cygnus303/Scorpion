@@ -12,6 +12,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 import { ExportService } from 'app/shared/services/export.service';
 import { environment } from 'environments/environment';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 
 
 @Component({
@@ -47,7 +48,7 @@ export class ThcListComponent {
   public thcData:any;
 
     constructor(private fb: FormBuilder,private docketService:DocketService,private router: Router,
-      public PRSDRSApiService:PRSDRSApiService,private exportService:ExportService) { }
+      public PRSDRSApiService:PRSDRSApiService,private exportService:ExportService,private sweetAlertService: SweetAlertService) { }
   
 
     ngOnInit() {
@@ -214,4 +215,33 @@ getStatusClass(status: string): string {
     }
   }
 
+    onCancel(thcNo: string) {
+    this.sweetAlertService.cancel(`Are You Sure You Want to Cancel ${thcNo}?`, () => {
+      this.onCancelTHC(thcNo);
+    });
+  }
+
+  onCancelTHC(thcNo:any){
+    const payload={
+      thcno:thcNo,
+      userName:this.docketService.baseUsername
+    }
+    this.PRSDRSApiService.CancelTHC(payload).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.sweetAlertService.success(`THC ${thcNo} has been cancelled successfully.`);
+          this.fetchData();
+        }
+      },
+      error: (err: any) => {
+        console.error('Error cancelling THC', err);
+      }
+    });
+  }
+
+  setPage(p: number) {
+    if (this.pagination.page === p) return;
+    this.pagination.page = p;
+    this.getTHCDetail();
+  }
 }

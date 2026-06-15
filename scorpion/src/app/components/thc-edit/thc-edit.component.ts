@@ -3,6 +3,8 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 import { FormsModule } from '@angular/forms';
+import { DocketService } from 'app/shared/services/docket.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 
 @Component({
   selector: 'app-thc-edit',
@@ -17,7 +19,18 @@ export class ThcEditComponent {
     public thcData:any; 
     @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   
-  constructor(private modalService: BsModalService,public PRSDRSApiService:PRSDRSApiService) { }
+  constructor(private modalService: BsModalService,public PRSDRSApiService:PRSDRSApiService,private docketService:DocketService,private swwtAlerSrvice:SweetAlertService) { }
+
+  ngOnInit(){
+      const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      // this.docketService.loginUserList.LocationCode = 'PIM'
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
+  }
 
   showPopup(data: any) {
     console.log("HCC Details Data:", data);
@@ -45,12 +58,24 @@ export class ThcEditComponent {
 
   submitTHC(){
     const payload={
+      thcNo: this.selectedTHC || "",
+      type: "T",
+      contractAmount: Number(this.thcData?.contractAmt) || 0,
+      standardContractAmount: Number(this.thcData?.stdAmt) || 0,
+      advanceAmount: Number(this.thcData?.advamt) || 0,
+      advanceAmountPaidAt: this.thcData?.fincmplbr || "",
+      balanceAmountPaidAt: this.thcData?.balamtbrcd || "",
+      oldContractAmount: 0,
+      oldAdvanceAmount: 0,
+      oldAdvanceAmountPaidAt: "",
+      oldBalanceAmountPaidAt: "",
+      userName: this.docketService.baseUsername
     }
 
     this.PRSDRSApiService.THCSubmit(payload).subscribe({
       next : (response:any)=>{
-        if(response){
-          this.thcData= response.thcsumry;
+        if(response.success){
+          this.swwtAlerSrvice.success(`${response.thcno}response.message`);
         }
       }, error: (err) => {
         console.error(err);
