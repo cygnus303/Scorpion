@@ -159,6 +159,28 @@
                                 <th>Biz. Type<br>Service Type</th>
                                 <th>Arrived Pkgs.</th>
                                 <th>Arrived Wt.</th>
+                                <th class="text-center" style="min-width: 150px;">
+                                        Charged By
+                                        <ng-select class="mt-1 clear-icon text-start" [dropdownPosition]="'bottom'" appendTo="body"
+                                            [items]="generalMasterService.loadingData" bindLabel="codeDesc"
+                                            bindValue="codeId" placeholder="Type"
+                                            (change)="onHeaderHccVendorTypeChange($event)"></ng-select>
+                                    </th>
+                                    <th class="text-center" style="min-width: 180px;">
+                                        Vendor
+                                        <ng-select class="mt-1 clear-icon remove-white-space text-start"
+                                            [dropdownPosition]="'bottom'" appendTo="body" [items]="headerVendorList" bindLabel="text"
+                                            bindValue="value" placeholder="Vendor" [(ngModel)]="headerVendor"
+                                            [ngModelOptions]="{standalone: true}"
+                                            (change)="onHeaderVendorChange($event)"></ng-select>
+                                    </th>
+                                    <th class="text-center" style="min-width: 150px;">
+                                        Rate Type
+                                        <ng-select class="mt-1 clear-icon text-start" [dropdownPosition]="'bottom'" appendTo="body"
+                                            bindLabel="codeDesc" bindValue="codeId" placeholder="Rate Type"
+                                            [items]="generalMasterService.chargeTypeData"
+                                            (change)="onHeaderRateTypeChange($event)"></ng-select>
+                                    </th>
                                 <th class="text-center p-1" style="width: 200px;">
                                     <div class="small mb-1">Arrival Condition</div>
                                     <ng-select class="fw-normal" [items]="conditionList" bindLabel="text"
@@ -239,6 +261,49 @@
                                         </td>
                                         <td style="width: 150px;"><input class="form-control "
                                                 formControlName="arrivedWt" readonly></td>
+                                                <td style="width:150px; max-width: 150px;">
+                                        <ng-select class="clear-icon text-start" [dropdownPosition]="'bottom'" appendTo="body"
+                                            [items]="generalMasterService.loadingData" formControlName="luVendorTyp"
+                                            bindLabel="codeDesc" bindValue="codeId" placeholder="Type"
+                                            (change)="onRowVendorTypeChange($event, i)">
+                                        </ng-select>
+                                    </td>
+                                    <td style="width:180px; max-width: 180px;">
+                                        <ng-select class="noFoundTextColor clear-icon remove-white-space text-start"
+                                            [dropdownPosition]="'bottom'" appendTo="body" [ngClass]="{
+                                                'required2': row.value.luVendorTyp && row.value.luVendorTyp !== 'XX9',
+                                                'border-danger': row.get('luVendorCode')?.hasError('required') && row.get('luVendorCode')?.touched
+                                            }" formControlName="luVendorCode" [items]="rowVendorList[i] || []"
+                                            bindLabel="text" bindValue="value" placeholder="Vendor"
+                                            (change)="onRowVendorCodeChange($event, i)">
+                                        </ng-select>
+                                        <div class="text-danger small mt-1 text-start"
+                                            *ngIf="row.get('luVendorCode')?.hasError('required') && row.get('luVendorCode')?.touched">
+                                            This field is required
+                                        </div>
+                                    </td>
+                                    <td style="width:150px; max-width: 150px;">
+                                        <ng-select class="clear-icon text-start" [dropdownPosition]="'bottom'" appendTo="body" [ngClass]="{
+                                                'required2': row.value.luVendorTyp && row.value.luVendorTyp !== 'XX9',
+                                                'border-danger': row.get('rateType')?.hasError('required') && row.get('rateType')?.touched
+                                            }" formControlName="rateType" bindLabel="codeDesc" bindValue="codeId"
+                                            placeholder="Rate Type" [items]="generalMasterService.chargeTypeData"
+                                            [readonly]="row.value.luVendorTyp === 'XX9' || row.value.luVendorTyp === 'XX5'"></ng-select>
+                                        <div class="text-danger small mt-1 text-start"
+                                            *ngIf="row.get('rateType')?.hasError('required') && row.get('rateType')?.touched">
+                                            This field is required
+                                        </div>
+                                        <input type="text" class="form-control form-control-sm mt-1"
+                                            placeholder="Charge Rate" formControlName="newRate"
+                                            [readOnly]="row.value.luVendorTyp === 'XX5' || row.value.luVendorTyp === 'XX9'"
+                                            (focus)="clearNewRateOnFocus(i)"
+                                            oninput="this.value = this.value.replace(/[^0-9.]/g,'');"
+                                            (blur)="resetNewRateOnBlur(i)" />
+                                        <div class="text-danger small mt-1 text-start"
+                                            *ngIf="stockUpdateArray.at(i).get('rateError')?.value">
+                                            {{ stockUpdateArray.at(i).get('rateError')?.value }}
+                                        </div>
+                                    </td>
                                         <td style="width: 200px;"><ng-select [items]="conditionList" bindLabel="text"
                                                 class="clear-icon required2" bindValue="value" [dropdownPosition]="'bottom'" appendTo="body"
                                                 formControlName="condition" placeholder="Select Condition"></ng-select>

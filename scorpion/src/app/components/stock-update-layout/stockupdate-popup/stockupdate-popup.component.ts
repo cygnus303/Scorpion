@@ -15,6 +15,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'app/shared/shared/shared.module';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.service';
+import { THCMasterService } from 'app/shared/services/thc-master.service';
 
 @Component({
   selector: 'app-stockupdate-popup',
@@ -43,6 +45,10 @@ public isRedirect: boolean = false;
 public minDate: Date | undefined;
 public maxDate: Date | undefined;
 public status: 'loading' | 'nodata' | 'data' = 'loading';
+
+public headerVendorList: any[] = [];
+public headerVendor: any = null;
+public rowVendorList: any[][] = [];
 conditionList = [
   { text: 'GOOD', value: 1 },
   { text: 'SHORT', value: 2 },
@@ -57,7 +63,9 @@ conditionList = [
   public generalMasterService:GeneralMasterService,
   public deliveryUpdateService:DeliveryUpdateService,
   public sweetAlertService:SweetAlertService,
-  public commonDateService:CommonDateService,private modalService: BsModalService) { }
+  public commonDateService:CommonDateService,private modalService: BsModalService,
+  public vendorChargeHelper: VendorChargeHelperService,
+  private thcMasterService: THCMasterService) { }
 
   ngOnInit(){
      const saved = localStorage.getItem("loginUserList");
@@ -73,6 +81,8 @@ conditionList = [
   showPopup(data: any) {
     this.buildForm()
     this.generalMasterService.getDeliveryProcessData();
+    this.generalMasterService.getChargeTypeData();
+    this.getVendorType();
     this.getStockUpdateDetails(data);
     this.getWarehouseData(this.docketService.loginUserList.LocationCode);
     this.generalMasterService.getDamageData();
@@ -441,6 +451,7 @@ onRowDamageChange(index: number) {
               this.stockUpdateArray.push(this.createForm(item));
             });
             this.status = 'data';
+            this.prefetchVendorLists();
           } else {
             this.status = 'nodata';
           }
@@ -530,7 +541,21 @@ onRowDamageChange(index: number) {
     delPkgQty:new FormControl(item.delPkgQty),
     isAllgood:new FormControl(item.isAllgood),
     dockSF:new FormControl(item.dockSF),
+    luVendorTyp: new FormControl(item.chargedBy || item.luVendorTyp || ''),
+    luVendorCode: new FormControl(item.vendorCode || item.luVendorCode || ''),
+    rateType: new FormControl(item.rateType || ''),
+    newRate: new FormControl(item.newRate || 0),
+    rateError: new FormControl('')
   });
+
+      const vendorType = form.get('luVendorTyp')?.value;
+      if (vendorType && vendorType !== 'XX9') {
+        form.get('luVendorCode')?.setValidators([Validators.required]);
+        form.get('rateType')?.setValidators([Validators.required]);
+      }
+
+      form.get('newRate')?.valueChanges.subscribe(() => this.validateRate(form));
+      form.get('rateType')?.valueChanges.subscribe(() => this.validateRate(form));
 
       setTimeout(() => {
       this.toggleDeliveryProcessValidator(form);
@@ -690,6 +715,13 @@ stockUpdate() {
       wi: v.warehouse ||'',
       dp: v.deliveryProcess ||'',
       dockSF:  v.dockSF,
+      chargedBy: v.luVendorTyp || '',
+      luVendorTyp: v.luVendorTyp || '',
+      luVendorCode: v.luVendorCode || '',
+      vendorCode: v.luVendorCode || '',
+      rateType: v.rateType || '',
+      newRate: parseFloat(v.newRate) || 0,
+      hccAmt:0
     };
   });
   /* ================= FORM DATA ================= */
@@ -803,16 +835,189 @@ stockUpdate() {
         }
         this.isSubmitting = false;
       },
-      error: (error) => {
-        this.docketService.submitErrorMsg = error?.error?.message;
+      error: () => {
+        this.sweetAlertService.error("Error occurred while processing request.");
         this.isSubmitting = false;
-         this.isRedirect = false;
       }
     });
-  } else {
-    this.stockUpdateForm.markAllAsTouched();
   }
 }
+
+  getVendorType() {
+    this.thcMasterService.getVendorType(this.docketService.loginUserList.LocationCode).subscribe({
+      next: (response: any) => {
+        if (response && response.data) {
+          const mTypeRow = response.data.find((x: any) => x.documentType === 'D');
+          if (mTypeRow) {
+            const vendorStr = mTypeRow.unLoading_VendorType || mTypeRow.UnLoading_VendorType;
+            if (vendorStr) {
+              const vendorTypes = vendorStr.split(',');
+              this.generalMasterService.getLoadingByDetail(vendorTypes);
+            }
+          }
+        }
+      }
+    });
+  }
+
+  onHeaderHccVendorTypeChange(event: any) {
+    this.headerVendor = null;
+    this.vendorChargeHelper.handleHeaderHccVendorTypeChange(
+      event?.codeId || event,
+      this.stockUpdateForm.get('stockUpdateList') as FormArray,
+      this.rowVendorList,
+      (list: any[]) => this.headerVendorList = list,
+      'luVendorTyp',
+      'luVendorCode',
+      'rateType',
+      'newRate',
+      'U'
+    );
+
+    const type = event?.codeId || event;
+    const formArray = this.stockUpdateForm.get('stockUpdateList') as FormArray;
+    formArray.controls.forEach((group: any) => {
+      group.get('newRate')?.patchValue(0);
+      const vendorCodeCtrl = group.get('luVendorCode');
+      const rateTypeCtrl = group.get('rateType');
+      if (type && type !== 'XX9') {
+        vendorCodeCtrl?.setValidators([Validators.required]);
+        rateTypeCtrl?.setValidators([Validators.required]);
+      } else {
+        vendorCodeCtrl?.clearValidators();
+        rateTypeCtrl?.clearValidators();
+      }
+      vendorCodeCtrl?.updateValueAndValidity({ emitEvent: false });
+      rateTypeCtrl?.updateValueAndValidity({ emitEvent: false });
+    });
+  }
+
+  onHeaderVendorChange(event: any) {
+    this.vendorChargeHelper.handleHeaderVendorChange(
+      event?.value || event,
+      this.stockUpdateForm.get('stockUpdateList') as FormArray,
+      'luVendorCode',
+      'U',
+      null,
+      'rateType',
+      'newRate',
+      'luVendorTyp'
+    );
+  }
+
+  onHeaderRateTypeChange(event: any) {
+    this.vendorChargeHelper.handleHeaderRateTypeChange(
+      event?.codeId || event,
+      this.stockUpdateForm.get('stockUpdateList') as FormArray,
+      'rateType',
+      'luVendorTyp'
+    );
+  }
+
+  onRowVendorTypeChange(event: any, index: number) {
+    this.vendorChargeHelper.handleRowVendorTypeChange(
+      event?.codeId || event,
+      index,
+      this.stockUpdateForm.get('stockUpdateList') as FormArray,
+      this.rowVendorList,
+      'luVendorTyp',
+      'luVendorCode',
+      'rateType',
+      'newRate',
+      'U'
+    );
+
+    const formArray = this.stockUpdateForm.get('stockUpdateList') as FormArray;
+    const group = formArray.at(index);
+    group.get('newRate')?.patchValue(0);
+    const vendorCodeCtrl = group.get('luVendorCode');
+    const rateTypeCtrl = group.get('rateType');
+    const type = event?.codeId || event;
+    if (type && type !== 'XX9') {
+      vendorCodeCtrl?.setValidators([Validators.required]);
+      rateTypeCtrl?.setValidators([Validators.required]);
+    } else {
+      vendorCodeCtrl?.clearValidators();
+      rateTypeCtrl?.clearValidators();
+    }
+    vendorCodeCtrl?.updateValueAndValidity({ emitEvent: false });
+    rateTypeCtrl?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  onRowVendorCodeChange(event: any, index: number) {
+    this.vendorChargeHelper.handleRowVendorCodeChange(
+      event?.value || event,
+      index,
+      this.stockUpdateForm.get('stockUpdateList') as FormArray,
+      'U',
+      null,
+      'rateType',
+      'newRate',
+      'luVendorTyp',
+      'luVendorCode'
+    );
+  }
+
+  prefetchVendorLists() {
+    this.stockUpdateArray.controls.forEach((ctrl: any, index: number) => {
+      const vendorTyp = ctrl.value.luVendorTyp;
+      if (vendorTyp) {
+        this.vendorChargeHelper.fetchVendorListFor(vendorTyp, (list: any[]) => {
+          this.rowVendorList[index] = list;
+        });
+      }
+    });
+  }
+
+  clearNewRateOnFocus(index: number) {
+    const group = this.stockUpdateArray.at(index) as FormGroup;
+    if (parseFloat(group.get('newRate')?.value || 0) === 0) {
+      group.get('newRate')?.setValue('', { emitEvent: false });
+    }
+  }
+
+  resetNewRateOnBlur(index: number) {
+    const group = this.stockUpdateArray.at(index) as FormGroup;
+    if (!group.get('newRate')?.value || group.get('newRate')?.value === '') {
+      group.get('newRate')?.setValue('0.00', { emitEvent: false });
+    }
+  }
+
+  validateRate(group: FormGroup): boolean {
+    const vendorType = group.get('luVendorTyp')?.value;
+    if (vendorType === 'XX9') {
+      group.get('rateError')?.setValue('');
+      return true;
+    }
+    const rateType = group.get('rateType')?.value;
+    const rate = parseFloat(group.get('newRate')?.value || '0') || 0;
+    const chrgwt = parseFloat(group.get('weight')?.value || '0') || 0;
+    const noofpkg = parseFloat(group.get('pkgs')?.value || '0') || 0;
+
+    if (chrgwt === 0) {
+      group.get('rateError')?.setValue('Charge weight is zero, cannot validate rate.');
+      group.get('newRate')?.setValue('0.00', { emitEvent: false });
+      return false;
+    }
+
+    let maxlimitcalculation = 0;
+    if (rateType === '4') {
+      maxlimitcalculation = rate / chrgwt;
+    } else if (rateType === '3') {
+      maxlimitcalculation = (rate * noofpkg) / chrgwt;
+    } else {
+      maxlimitcalculation = rate;
+    }
+
+    if (maxlimitcalculation > 5.0) {
+      group.get('rateError')?.setValue('Rate Amount Is High, Please Check');
+      group.get('newRate')?.setValue('0.00', { emitEvent: false });
+      return false;
+    } else {
+      group.get('rateError')?.setValue('');
+      return true;
+    }
+  }
 
   onArrPkgQtyBlur(index: number) {
   const row = this.stockUpdateArray.at(index) as FormGroup;

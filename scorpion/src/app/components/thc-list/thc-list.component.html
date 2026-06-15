@@ -5,7 +5,6 @@
             THC Generation
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn btn-outline-primary px-4 py-2 rounded">✕ Clear</button>
             <button class="btn btn-primary px-4 py-2 rounded" (click)="openTHC()">+ Add THC</button>
             <button class="btn btn-success px-4 py-2 rounded" (click)="downloadExcel()">
                 <span *ngIf="!isdownload">📥 Download XLS</span>
@@ -34,7 +33,7 @@
             (click)="filterByStatus('Departed')">
             <div class="card-content">
                 <div class="s-label">Departed</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ 0}}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.departed || 0 }}</div>
                 <div class="small text-body-tertiary">Awaiting Update</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
@@ -45,7 +44,7 @@
             (click)="filterByStatus('Completed Journey')">
             <div class="card-content">
                 <div class="s-label">Completed Journey</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ 0}}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.completedJourney || 0 }}</div>
                 <div class="small text-body-tertiary">Completed Journey</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">✅</div>
@@ -56,7 +55,7 @@
             (click)="filterByStatus('Cancelled')">
             <div class="card-content">
                 <div class="s-label">Cancelled</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ 0 }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.cancelled || 0  }}</div>
                 <div class="small text-body-tertiary">Cancelled today</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🚫</div>
@@ -68,7 +67,7 @@
             (click)="filterByStatus('Billed')">
             <div class="card-content">
                 <div class="s-label">Billed</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ 0 }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.billed || 0  }}</div>
                 <div class="small text-body-tertiary">Vendor bill exists</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🧾</div>
@@ -206,10 +205,10 @@
                             </span>
                         </td>
                         <td class="text-center">
-                            <span class="fw-bold text-primary cursor-pointer"
-                                [ngClass]="(data.hccNo && data.hccNo !== 'NO HCC') ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
-                                (click)="data.hccNo && data.hccNo !== 'NO HCC'? openHCCModal(data.hccNo) : null">{{
-                                data.hccNo || '—' }}</span>
+                            <span class="px-3 py-2 cursor-pointer"
+                                [ngClass]="(data.hccNo && data.hccNo) ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
+                                (click)="data.hccNo && data.hccNo ? openHCCModal(data.hccNo) : null">{{
+                                data.hccNo || 'No HCC' }}</span>
                         </td>
 
                         <td class="text-center">
@@ -227,10 +226,11 @@
                                 </button>
                                 <button
                                     class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3"
-                                    (click)="openEditPopup(data)">
+                                    (click)="openEditPopup(data)" [disabled]="data.status === 'Cancelled'|| data.status === 'Billed'">
                                     ✏️ Edit
                                 </button>
-                                <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3">
+                                <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3" (click)="onCancel(data.thcNo)"
+                                [disabled]="data.status === 'Cancelled'|| data.status === 'Billed'|| data.status ==='Completed Journey'">
                                     🚫 Cancel
                                 </button>
                             </div>
@@ -240,7 +240,7 @@
             </table>
         </div>
         <app-pagination [page]="pagination.page" [pageSize]="pagination.pageSize"
-            [totalRecords]="pagination.totalRecords" [totalPages]="pagination.totalPages">
+            [totalRecords]="pagination.totalRecords" [totalPages]="pagination.totalPages" (pageChange)="setPage($event)">
         </app-pagination>
     </div>
 </div>
