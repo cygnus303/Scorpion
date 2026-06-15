@@ -57,6 +57,7 @@ export const ChallanRoutes: Routes = [
   {
     path: 'THCList',
     loadComponent: () => import('../thc-list/thc-list.component').then(m => m.ThcListComponent),
+    canActivate: [DocketGuard]
   },
   {
     path: 'LoadingSheetList',
