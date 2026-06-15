@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { generalMasterResponse, StatesFromPartyCodeRepsonse } from 'app/shared/models/general-master.model';
 import { AirportListResponse, AllCityByLocationResponse, CustomerListResponse, DeliveryAgentsListResponse, DeliveryZoneResponse, FlightsListResponse, VehicleTypeListResponse } from 'app/shared/models/thc-master.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
@@ -67,6 +67,7 @@ export class ChallanListComponent {
   public vendorTypeList: generalMasterResponse[] = [];
   public EwaybillForm!: FormGroup;
   public modalInstance: any;
+  public hideBackButton: boolean = false;
   public isPatching: boolean = false;
   private avalablePRSSubject = new Subject<any>();
   private mfRouteSubject = new Subject<any>();
@@ -82,6 +83,7 @@ export class ChallanListComponent {
     private vendorChargeHelper: VendorChargeHelperService,
     private route: ActivatedRoute,
     public commonDateService: CommonDateService,
+    private router: Router,
     private datePipe: DatePipe, public generalMasterService: GeneralMasterService,
     public apiLoading: ApiLoadingService, private commonService: CommonService, public prsArrivalDetailsService: PrsArrivalDetailsService
   ) { }
@@ -98,6 +100,13 @@ export class ChallanListComponent {
 
     const type = this.docketService.loginUserList.Type;
     this.typeName = type === '3' ? 'DRS' : type === '1' ? 'THC' : type === '2' ? 'PRS' : '';
+
+    this.route.queryParams.subscribe(params => {
+      const fromPRSList = params['fromPRS'] === 'true';
+      if (fromPRSList && (type === '1')) {
+        this.hideBackButton = true;
+      }
+    });
 
     this.challanService.buildForm();
     this.headerVendor = null
@@ -1733,5 +1742,9 @@ export class ChallanListComponent {
       'rateType',
       'NewRate'
     );
+  }
+
+   onBack() {
+      this.router.navigate(['Operation/THCList']);
   }
 }
