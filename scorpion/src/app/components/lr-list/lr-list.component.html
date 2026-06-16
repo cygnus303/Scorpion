@@ -201,7 +201,7 @@
                         </td>
                         <td>
                             <div class="action-btns text-center">
-                                <button class="ab ab-view" (click)="openView(lr.dockno)">👁 View</button>
+                                <button class="ab ab-view" (click)="onView(lr.dockno)">👁 View</button>
                                 <button class="ab ab-edit" (click)="openQuick(lr.dockno)" *ngIf="!isHQTR"
                                     [disabled]="lr.isQuickMode!=='Q'">✏️ Quick LR
                                     Edit
@@ -242,3 +242,5 @@
         </app-pagination>
     </div>
 </div>
+
+<app-lr-view #LrViewComponent></app-lr-view>
