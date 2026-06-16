@@ -1,0 +1,66 @@
+<div class="datetime-picker-wrapper"
+     [ngbPopover]="appendTo === 'body' ? pickerTemplate : ''"
+     #popover="ngbPopover"
+     [placement]="['bottom-start', 'top-start']"
+     [container]="appendTo === 'body' ? 'body' : ''"
+     triggers="manual"
+     [popoverClass]="'datetime-popover'">
+  <div class="input-group" (click)="togglePicker($event)">
+    <input
+      class="form-control required2"
+      [placeholder]="placeholder"
+      type="text"
+      readonly
+      [value]="displayDateTime"
+      [class.disabled-input]="disabled"
+      appFocusNext
+    />
+    <span class="input-group-text cursor-pointer" (click)="onIconClick($event)">
+      <i class="fa fa-calendar"></i>
+    </span>
+  </div>
+
+  <input type="hidden" [formControl]="control" />
+
+  <!-- POPUP (INLINE MODE) -->
+  <div *ngIf="showPicker && appendTo !== 'body'" class="picker-popup" (click)="$event.stopPropagation()">
+    <bs-datepicker-inline
+      class="datepicker"
+      [(bsValue)]="selectedDate"
+      (bsValueChange)="updateFinal()"
+      [bsConfig]="{ containerClass: 'theme-dark-blue' }"
+      [maxDate]="maxDate" [minDate]="minDate">
+    </bs-datepicker-inline>
+
+    <timepicker
+      [(ngModel)]="selectedTime"
+      [ngModelOptions]="{standalone: true}"
+      (ngModelChange)="updateFinal()"
+      [showMeridian]="true">
+    </timepicker>
+
+    <button class="btn btn-primary btn-sm w-100 mt-2" (click)="applyDateTime()">OK</button>
+  </div>
+</div>
+
+<!-- TEMPLATE FOR APPEND-TO-BODY MODE -->
+<ng-template #pickerTemplate>
+  <div class="picker-popup-body" (click)="$event.stopPropagation()">
+    <bs-datepicker-inline
+      class="datepicker"
+      [(bsValue)]="selectedDate"
+      (bsValueChange)="updateFinal()"
+      [bsConfig]="{ containerClass: 'theme-dark-blue' }"
+      [maxDate]="maxDate" [minDate]="minDate">
+    </bs-datepicker-inline>
+
+    <timepicker
+      [(ngModel)]="selectedTime"
+      [ngModelOptions]="{standalone: true}"
+      (ngModelChange)="updateFinal()"
+      [showMeridian]="true">
+    </timepicker>
+
+    <button class="btn btn-primary btn-sm w-100 mt-2" (click)="applyDateTime()">OK</button>
+  </div>
+</ng-template>
