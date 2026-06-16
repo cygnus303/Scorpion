@@ -10,6 +10,7 @@ import { environment } from 'environments/environment';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { debounceTime, Subject, Subscription } from 'rxjs';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { ExportService } from 'app/shared/services/export.service';
 
 @Component({
   selector: 'app-lr-list',
@@ -25,6 +26,7 @@ export class LrListComponent {
   private fetchSubject = new Subject<void>();
   public summaryData: any;
   public env = environment;
+  public isCSVLoading:boolean=false;
   public statusList = [
     { label: 'All Status', value: 'All' },
     { label: 'Pending for Quick Completion', value: 'pendingforQuickCompletion' },
@@ -55,6 +57,7 @@ export class LrListComponent {
     public docketService: DocketService,
     public lrService: LrService,
     private router: Router,
+    private exportService:ExportService,
     private sweetAlertService: SweetAlertService
   ) { }
 
@@ -138,6 +141,33 @@ export class LrListComponent {
         this.isLoading = false;
         console.error('Error fetching PRS List', err);
         this.LRData = [];
+      }
+    });
+  }
+
+  onExcelDownload(){
+    this.isCSVLoading = true;
+    const payload = {
+      fromDate: new Date(this.config.fromDateStr).toISOString(),
+      toDate: new Date(this.config.toDateStr).toISOString(),
+      locCode: this.docketService.loginUserList.LocationCode || null,
+      statusFilter: this.config.statusFilter || 'All',
+      pageNumber: this.config.page,
+      pageSize: this.config.pageSize,
+      isDownload: true,
+      searchText: this.config.searchText || ''
+    };
+
+   this.listSubscription = this.lrService.getLRList(payload).subscribe({
+      next: (response: any) => {
+        this.isCSVLoading = false;
+        if (response && response.data) {
+          this.exportService.exportToCSV(response.data, `LR_List`);
+        }
+      },
+      error: (err: any) => {
+        this.isCSVLoading = false;
+        console.error('Error downloading CSV', err);
       }
     });
   }

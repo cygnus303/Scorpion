@@ -9,10 +9,10 @@
                 *ngIf="!isHQTR">
                 <span class="fs-5 me-1">➕</span> Add LR
             </button>
-            <button class="btn btn-success px-4 py-2 rounded fw-bold">
-                <span> <span class="fs-5 me-1">📥</span> Download XLS</span>
-                <!-- <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
-                <span *ngIf="isCSVLoading">Downloading...</span> -->
+            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="onExcelDownload()">
+              <span *ngIf="!isCSVLoading"> <span class="fs-5 me-1">📥</span> Download XLS</span>
+                <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
+                <span *ngIf="isCSVLoading">Downloading...</span>
             </button>
         </div>
     </div>
@@ -211,14 +211,14 @@
                                     <button class="ab ab-cancel" (click)="onCancel(lr.dockno)"
                                     [disabled]="lr.isDocketCancel==='Y'">🚫 Cancel</button>
                                 <div class="track-wrap">
-                                    <button class="ab ab-track" (click)="toggleTrack(i, $event)">📍 Track ▾</button>
-                                    <div class="track-dropdown" [class.open]="openTrackIndex === i">
+                                    <button class="ab ab-track" (click)="toggleTrack(i, $event)">📍 Track</button>
+                                    <!-- <div class="track-dropdown" [class.open]="openTrackIndex === i">
                                         <a *ngFor="let item of trackMenuItems"
                                             (click)="onTrackMenuClick(item, lr.dockno)">
                                             <span class="ti">{{ item.icon }}</span> {{ item.label }}
                                         </a>
 
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="print-wrap">
                                     <button class="ab ab-print" (click)="openPrint(lr.dockno)">🖨 Print</button>
