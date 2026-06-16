@@ -17,11 +17,12 @@ import { DocketService } from 'app/shared/services/docket.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.service';
+import { DRSDateTimePickerComponent } from './drs-date-time-picker/drs-date-time-picker.component';
 
 @Component({
   selector: 'app-drs-update-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, NgSelectModule, ReactiveFormsModule, BsDatepickerModule, SharedModule, FormsModule],
+  imports: [CommonModule, RouterModule, NgSelectModule, ReactiveFormsModule, BsDatepickerModule, SharedModule, FormsModule, DRSDateTimePickerComponent],
   templateUrl: './drs-update-list.component.html',
   styleUrl: './drs-update-list.component.scss'
 })
@@ -96,6 +97,25 @@ export class DRSUpdateListComponent {
 
   triggerRefresh() {
     this.drsData = { ...this.drsData };
+  }
+
+  closeModal() {
+    this.dataEmitter.emit();
+  }
+
+  toggleAll(event: any) {
+    const isChecked = event.target.checked;
+    this.drsList.controls.forEach(control => {
+      control.get('isChecked')?.setValue(isChecked);
+    });
+  }
+
+  get selectedCount(): number {
+    return this.drsList.controls.filter(c => c.get('isChecked')?.value === true).length;
+  }
+
+  get unselectedCount(): number {
+    return this.drsList.controls.filter(c => !c.get('isChecked')?.value).length;
   }
 
   getVendorType() {
@@ -666,7 +686,14 @@ export class DRSUpdateListComponent {
         Validators.pattern('^[0-9]{10}$')
       ]);
     } else {
-      row.patchValue({ showReason: false });
+      row.patchValue({
+        showReason: false,
+        DELYPERSON: null,
+        cboReason: null,
+        cboEmail: null,
+        cboMobileNo: null,
+        remarks: null
+      });
     }
 
     // 🔹 Refresh validation state

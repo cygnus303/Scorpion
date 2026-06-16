@@ -33,138 +33,83 @@
         </form>
     </div> -->
 
-    <div style="min-height: 500px;">
+    <div>
         <!-- Content Area -->
         <div>
             <div class="p-0">
                 <form [formGroup]="DRSSummaryForm">
-                    <div class="cnote-entry-container">
-                        <!-- <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
-                            <i class="fas fa-list me-2"></i>
-                            Update DRS Header Information
-                        </div> -->
-                        <div class="form-grid p-2 input-background-color rounded">
-                            <div class="row pb-3">
-                                <div class="col-4">
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-3 col-form-label text-end">DRS No :</label>
-                                        <div class="col-sm-7 text-start fw-bold text-primary-color">
-                                            {{DRSInformation?.pdcno}}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-3 col-form-label text-end">Delivered By :</label>
-                                        <div class="col-sm-7 text-start fw-bold text-primary-color">
-                                            {{DRSInformation?.deliveryBy}} - {{DRSInformation?.bA_Vendor_Code}}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-3 col-form-label text-end">DRS Date :</label>
-                                        <div class="col-sm-7 text-start fw-bold text-primary-color">
-                                            {{DRSInformation?.drsDate| date:'dd-MM-yyyy hh:mm:ss a'}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row pb-3">
-                                <div class="col-4">
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-3 col-form-label text-end">Start/Close KM :</label>
-                                        <div class="col-sm-1 text-center fw-bold">
-                                            {{DRSInformation?.start_KM}} /
-                                        </div>
-                                        <div class="col-sm-6 text-start fw-bold">
-                                            <input class="form-control" type="text" formControlName="closeKM"
-                                                oninput="this.value = this.value.replace(/[^0-9]/g,'');"
-                                                [attr.max]="maxCloseKMValue" (blur)="validateCloseKM()" appFocusNext
-                                                (focus)="onCloseKMFocus()"
-                                                [ngClass]="{ 'border-danger': DRSSummaryForm.get('closeKM')?.invalid && DRSSummaryForm.get('closeKM')?.touched }">
-                                            <div class="text-danger small"
-                                                *ngIf="DRSSummaryForm.get('closeKM')?.touched && DRSSummaryForm.get('closeKM')?.errors?.['max']">
-                                                Please enter a value less than or equal to {{ maxCloseKMValue }}.
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-3 col-form-label text-end">Driver Name :</label>
-                                        <div class="col-sm-7 text-start">
-                                            <b>of Vehicle</b> {{DRSInformation?.vehno}} <b>Carrying
-                                                {{DRSInformation?.total_Dockets_In_DRS}}
-                                                Consignment(s)</b>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <h3 class="pb-4 text-start appointment mt-2">Unloading Charge</h3>
-                            <div class="row pb-3 pt-2">
-                                <!-- <div class="col-3">
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-5 col-form-label text-end">Unloader By:</label>
-                                        <div class="col-sm-7 text-start">
-                                            <ng-select class="noFoundTextColor required2 clear-icon"
-                                                placeholder="Select Unloader By" readonly formControlName="LoadingBy"
-                                                bindLabel="codeDesc" bindValue="codeId"
-                                                [items]="generalMasterService.loadingBy">
-                                            </ng-select>
-                                        </div>
-                                    </div>
-                                </div>
-                                @if (['M', 'B', 'A','XX1','XX5'].includes(DRSSummaryForm.get('LoadingBy')?.value)){
-                                <div class="col-3">
-                                    <div class="row">
-                                        <label class="col-sm-5 col-form-label text-end">Vendor Code :</label>
-                                        <div class="col-sm-7 text-start">
-                                            <ng-select class="noFoundTextColor clear-icon"
-                                                placeholder="Vendor Code" formControlName="vendorCode"
-                                                (change)="getLoadingCharge($event)"
-                                                [items]="branchWiseLoadingUnloadingList" bindLabel="text"
-                                                bindValue="value" appFocusNext>
-                                                <ng-template ng-option-tmp let-item="item">
-                                                    <div [title]="item.text">
-                                                        {{ item.text }}
-                                                    </div>
-                                                </ng-template>
-                                            </ng-select>
+                    <!-- Header -->
+                    <div class="modal-header">
+                        <div class="modal-title">
+                            <i class="fas fa-sync-alt"></i> DRS Update
+                            <span class="mtag">{{ DRSInformation?.pdcno || drsData?.drsNo }}</span>
+                            <span class="mtag" style="font-size:11px; opacity:.85;">{{ (DRSInformation?.drsDate ||
+                                drsData?.drsDate) | date:'dd-MMM-yy' }}</span>
+                        </div>
+                        <button type="button" class="modal-close" (click)="closeModal()">✕</button>
+                    </div>
 
-                                        </div>
+                    <!-- Info Bar -->
+                    <div class="modal-info-bar">
+                        <div class="info-chip">
+                            <span class="lbl">Delivered By:</span>
+                            <span class="val orange">{{DRSInformation?.deliveryBy}} -
+                                {{DRSInformation?.bA_Vendor_Code}}</span>
+                        </div>
+                        <div class="info-divider"></div>
+                        <div class="info-chip">
+                            <span class="lbl">Type:</span>
+                            <span class="val">{{ drsData?.vendorType || 'Attached' }}</span>
+                        </div>
+                        <div class="info-divider"></div>
+                        <div class="info-chip">
+                            <span class="lbl">ODA:</span>
+                            <span class="val orange">{{ drsData?.odaType || 'Non ODA' }}</span>
+                        </div>
+                        <div class="info-divider"></div>
+                        <div class="info-chip">
+                            <span class="lbl">Total Dockets:</span>
+                            <span class="val">{{ DRSInformation?.total_Dockets_In_DRS || drsData?.totalDockets }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Operational Info Bar (KM & Vehicle) -->
+                    <div class="bg-light p-2 border-bottom mb-3">
+                        <div class="row align-items-center m-0">
+                            <!-- Start/Close KM Input -->
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-2 flex-wrap">
+                                    <span class="text-muted fw-semibold" style="font-size: 12px;">Start/Close KM:</span>
+                                    <span class="fw-bold text-dark" style="font-size: 12px;">{{ DRSInformation?.start_KM
+                                        }}</span>
+                                    <span class="text-muted">/</span>
+                                    <div style="width: 140px;">
+                                        <input class="form-control form-control-sm" type="text"
+                                            formControlName="closeKM"
+                                            oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                                            [attr.max]="maxCloseKMValue" (blur)="validateCloseKM()" appFocusNext
+                                            (focus)="onCloseKMFocus()"
+                                            [ngClass]="{ 'border-danger': DRSSummaryForm.get('closeKM')?.invalid && DRSSummaryForm.get('closeKM')?.touched }">
+                                    </div>
+                                    <div class="text-danger small ms-1"
+                                        *ngIf="DRSSummaryForm.get('closeKM')?.touched && DRSSummaryForm.get('closeKM')?.errors?.['max']"
+                                        style="font-size: 10px;">
+                                        Max: {{ maxCloseKMValue }}
                                     </div>
                                 </div>
-                                } -->
-                                <!-- <div class="col-3">
-                                    @if(['XX5'].includes(DRSSummaryForm.get('LoadingBy')?.value)){
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-5 col-form-label text-end">Rate :</label>
-                                        <div class="col-sm-7 text-start">
-                                            <input class="form-control required2" placeholder="Rate" type="text"
-                                                formControlName="Rate" readonly appFocusNext>
-                                        </div>
-                                    </div>
-                                    }
-                                </div> -->
-                                <!-- @if (['M', 'A', 'XX5','XX8', 'B',
-                                'XX1'].includes(DRSSummaryForm.get('LoadingBy')?.value)){ -->
-                                <div class="col-3">
-                                    <div class="row">
-                                        <label class="col-sm-5 col-form-label text-end">UnLoading Charge:</label>
-                                        <div class="col-sm-7 text-start">
-                                            <input class="form-control required2" placeholder="UnLoading Charge"
-                                                type="text" formControlName="LoadingCharge" readonly min="0.01"
-                                                appFocusNext
-                                                [ngClass]="{ 'border-danger': DRSSummaryForm.get('LoadingCharge')?.hasError('min') && DRSSummaryForm.get('LoadingCharge')?.touched}">
-                                            <div *ngIf="DRSSummaryForm.get('LoadingCharge')?.hasError('min') && DRSSummaryForm.get('LoadingCharge')?.touched"
-                                                class="text-danger text-start">
-                                                Please enter a value greater than or equal to 0.01.
-                                            </div>
-                                        </div>
-                                    </div>
+                            </div>
+
+                            <!-- Vehicle & Consignment Info -->
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center justify-content-md-end gap-2 text-muted"
+                                    style="font-size: 12px;">
+                                    <span class="fw-semibold">Vehicle:</span>
+                                    <span class="fw-bold text-dark">{{ DRSInformation?.vehno }}</span>
+                                    <span class="mx-2 text-secondary">|</span>
+                                    <span class="fw-semibold">Carrying:</span>
+                                    <span class="fw-bold text-dark">{{ DRSInformation?.total_Dockets_In_DRS }}
+                                        Consignment(s)</span>
                                 </div>
-                                <!-- } -->
                             </div>
                         </div>
                     </div>
@@ -199,396 +144,415 @@
 
                     </div>
 
-                    <div class="cnote-entry-container">
-                        <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
-                            <i class="fas fa-list me-2"></i>
-                            DRS List
-                        </div>
-                        <div class="p-3 pt-4">
-                            <div class="alert alert-warning d-flex align-items-center ps-0 py-0" role="alert">
-                                <span
-                                    class="fw-semibold me-2 border-start border-2 border-primary m-0 ps-2 py-2 ">Note:</span>
+                    <div class="cnote-entry-container mt-3">
+                        <div class="p-3 pt-4 bg-white border rounded">
+                            <!-- <div class="alert alert-warning d-flex align-items-center ps-0 py-0" role="alert">
+                                <span class="fw-semibold me-2 border-start border-2 border-primary m-0 ps-2 py-2 ">Note:</span>
                                 <span>ADD as per POD Copy.</span>
-                            </div>
-                            <div class="table-responsive" style="max-height: 500px; overflow: auto;">
-                                <table class="table table-bordered align-middle text-nowrap vertical-align">
-                                    <thead class="table-secondary" style="position: sticky; top: 0; z-index: 2;">
+                            </div> -->
+                            <div class="table-responsive">
+                                <table class="table table-bordered align-middle text-nowrap bg-white mb-0"
+                                    style="font-size: 12px;">
+                                    <thead style="position: sticky; top: 0; z-index: 2;">
                                         <tr>
-                                            <th>Sr.No</th>
-                                            <th style="min-width: 110px;">Is Bad<br>POD</th>
-                                            <th>CNote<br>Bkg. Dt</th>
-                                            <th>Bkg-Dely<br>Pay Basis</th>
-                                            <th>Cnor / Cnee</th>
-                                            <th>PkgsPending /<br>Arrived /<br> Booked</th>
-                                            <th>Committed<br>Dely. Dt</th>
-                                            <th style="min-width: 120px;">Pkgs.Delivered</th>
-                                            <th style="min-width: 150px;">Remarks</th>
-                                            <th style="min-width: 160px;">HCC Vendor Type
-                                                <ng-select class="mt-1 clear-icon"
-                                                    [items]="generalMasterService.loadingData" bindLabel="codeDesc"
-                                                    bindValue="codeId" placeholder="Vendor Type"
-                                                    (change)="onHeaderHccVendorTypeChange($event)"
-                                                    [dropdownPosition]="'bottom'">
-                                                </ng-select>
+                                            <!-- Group 1: Blue -->
+                                            <th class="text-center align-middle"
+                                                style="background-color: #e3f2fd; color: #0d47a1; min-width: 60px;">
+                                                <div class="d-flex align-items-center justify-content-center gap-2">
+                                                    <input class="form-check-input m-0" type="checkbox"
+                                                        style="transform: scale(1.2); border-color: #0d47a1;"
+                                                        (change)="toggleAll($event)" />
+                                                    #
+                                                </div>
                                             </th>
-                                            <th style="min-width: 200px;">Vendor
-                                                <ng-select class="mt-1 clear-icon remove-white-space"
+                                            <th class="align-middle" style="background-color: #e3f2fd; color: #0d47a1;">
+                                                Docket No / Date</th>
+                                            <th class="align-middle" style="background-color: #e3f2fd; color: #0d47a1;">
+                                                Org / Dest / Paybase</th>
+                                            <th class="align-middle" style="background-color: #e3f2fd; color: #0d47a1;">
+                                                Billing Party / Consignee</th>
+                                            <th class="align-middle" style="background-color: #e3f2fd; color: #0d47a1;">
+                                                Pkg Booked/Arrived/Pending</th>
+
+                                            <!-- Group 2: Green -->
+                                            <th class="align-middle"
+                                                style="background-color: #e8f5e9; color: #1b5e20; min-width: 120px;">
+                                                Delivered Pkgs</th>
+                                            <th class="align-middle"
+                                                style="background-color: #e8f5e9; color: #1b5e20; min-width: 250px;">
+                                                Part Del / Undel Reason</th>
+                                            <th class="align-middle"
+                                                style="background-color: #e8f5e9; color: #1b5e20; min-width: 150px;">
+                                                PKg / Act Qty</th>
+                                            <th class="align-middle" style="background-color: #e8f5e9; color: #1b5e20;">
+                                                Committed Dely. Dt</th>
+
+                                            <!-- Group 3: Purple -->
+                                            <th class="align-middle"
+                                                style="background-color: #f3e5f5; color: #6a1b9a; min-width: 160px;">
+                                                <div class="mb-1">HCC Vendor Type</div>
+                                                <ng-select class="mt-1 clear-icon bg-white rounded"
+                                                    [items]="generalMasterService.loadingData" bindLabel="codeDesc"
+                                                    bindValue="codeId" placeholder="Vendor Type" appendTo="body"
+                                                    (change)="onHeaderHccVendorTypeChange($event)"
+                                                    [dropdownPosition]="'bottom'"></ng-select>
+                                            </th>
+                                            <th class="align-middle"
+                                                style="background-color: #f3e5f5; color: #6a1b9a; min-width: 200px;">
+                                                <div class="mb-1">Vendor Name</div>
+                                                <ng-select class="mt-1 clear-icon remove-white-space bg-white rounded"
                                                     [items]="headerVendorList" bindLabel="text" bindValue="value"
                                                     placeholder="Vendor" (change)="onHeaderVendorChange($event)"
-                                                    [dropdownPosition]="'bottom'">
-                                                </ng-select>
+                                                    [dropdownPosition]="'bottom'" appendTo="body"></ng-select>
                                             </th>
-                                            <th style="min-width: 150px;">Rate Type
-                                                <ng-select class="clear-icon mt-1" formControlName="ratetype"
-                                                    bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type"
-                                                    appFocusNext [items]="generalMasterService.chargeTypeData"
+                                            <th class="align-middle"
+                                                style="background-color: #f3e5f5; color: #6a1b9a; min-width: 150px;">
+                                                <div class="mb-1">Rate Type</div>
+                                                <ng-select class="clear-icon mt-1 bg-white rounded"
+                                                    formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"
+                                                    placeholder="Enter Type" appFocusNext appendTo="body"
+                                                    [items]="generalMasterService.chargeTypeData"
                                                     (change)="onHeaderRateTypeChange($event)"></ng-select>
                                             </th>
-                                            <th>Pkg / Act</th>
-                                            <th style="min-width: 120px;">OTP</th>
-                                            <th style="min-width: 180px;">Delivered To</th>
-                                            <th style="min-width: 150px;">Person Name</th>
-                                            <th style="min-width: 140px;">Contact No.</th>
+                                            <th class="align-middle"
+                                                style="background-color: #f3e5f5; color: #6a1b9a; min-width: 100px;">
+                                                Rate (₹)</th>
+                                            <!-- <th class="align-middle"
+                                                style="background-color: #f3e5f5; color: #6a1b9a; min-width: 120px;">HCC
+                                                Amt (₹)</th> -->
+                                            <th class="align-middle"
+                                                style="background-color: #f3e5f5; color: #6a1b9a; min-width: 120px;">OTP
+                                            </th>
+
+                                            <!-- Group 4: Light Green (delivery info) -->
+                                            <th class="align-middle"
+                                                style="background-color: #f1f8e9; color: #33691e; min-width: 180px;">
+                                                Delivered To</th>
+                                            <th class="align-middle"
+                                                style="background-color: #f1f8e9; color: #33691e; min-width: 150px;">
+                                                Person</th>
+                                            <th class="align-middle"
+                                                style="background-color: #f1f8e9; color: #33691e; min-width: 140px;">
+                                                Contact No</th>
+                                            <th class="align-middle"
+                                                style="background-color: #f1f8e9; color: #33691e; min-width: 160px;">
+                                                Delivery Date</th>
+
+                                            <!-- Group 5: Orange -->
+                                            <th class="align-middle"
+                                                style="background-color: #fff3e0; color: #e65100; min-width: 100px;">POD
+                                                1</th>
+                                            <th class="align-middle"
+                                                style="background-color: #fff3e0; color: #e65100; min-width: 100px;">POD
+                                                2</th>
+
+                                            <!-- Group 6: Red -->
+                                            <th class="align-middle text-center"
+                                                style="background-color: #ffebee; color: #b71c1c; min-width: 120px;">POD
+                                                Quality ^</th>
                                         </tr>
                                     </thead>
 
                                     <tbody formArrayName="drsList">
                                         <ng-container *ngFor="let row of drsList.controls; let i = index"
-                                            [formGroupName]="i" class="m-2">
-                                            <tr>
+                                            [formGroupName]="i">
+                                            <tr
+                                                [ngClass]="{'row-selected': row.value.isChecked, 'row-unchecked': !row.value.isChecked}">
+                                                <!-- 1. Sr.No -->
                                                 <td class="text-center align-middle">
                                                     <div class="d-flex align-items-center justify-content-center gap-2">
-                                                        <div class="form-check m-0">
-                                                            <input class="form-check-input me-4 checkbox-lg"
-                                                                type="checkbox" style="transform: scale(1.3);"
-                                                                formControlName="isChecked"
-                                                                [class.disabled-input]="true" />
-                                                        </div>
-                                                        <span class="fw-semibold">{{ i + 1 }}</span>
+                                                        <input class="form-check-input m-0 border-primary shadow-none"
+                                                            type="checkbox" style="transform: scale(1.3);"
+                                                            formControlName="isChecked" />
+                                                        <span class="fw-bold text-primary">{{ i + 1 }}</span>
                                                     </div>
                                                 </td>
 
-                                                <td class="text-center">
-                                                    <div class="btn-group btn-group-sm" role="group">
-                                                        <input type="radio" class="btn-check" [name]="'badpod'+i"
-                                                            id="badpodYes{{ i }}" [value]="true"
-                                                            [formControl]="getRadioControl(i)">
-                                                        <label class="btn btn-outline-success"
-                                                            for="badpodYes{{ i }}">Yes</label>
+                                                <!-- 2. Docket No / Date -->
+                                                <td class="align-middle">
+                                                    <div class="text-primary text-decoration-underline fw-bold mb-1">{{
+                                                        row.value.dockno }}</div>
+                                                    <div class="text-muted">{{ row.value.booking_Date |
+                                                        date:'dd-MMM-yy'}}</div>
+                                                </td>
 
-                                                        <input type="radio" class="btn-check" [name]="'badpod'+i"
-                                                            id="badpodNo{{ i }}" [value]="false"
-                                                            [formControl]="getRadioControl(i)">
-                                                        <label class="btn btn-outline-danger"
-                                                            for="badpodNo{{ i }}">No</label>
+                                                <!-- 3. Org / Dest / Paybase -->
+                                                <td class="align-middle">
+                                                    <div class="text-primary fw-bold mb-1">{{ row.value.orgncd }} &rarr;
+                                                        {{ row.value.destcd }}</div>
+                                                    <div class="text-muted">Pay Basis: <span
+                                                            class="text-success fw-bold">{{row.value.payBasis }}</span>
                                                     </div>
                                                 </td>
 
-
-                                                <td class="text-start">
-                                                    <b>{{ row.value.dockno }}</b><br>
-                                                    <small>{{ row.value.booking_Date | date:'dd/MM/yyyy'}}</small>
-                                                </td>
-                                                <td class="text-start">{{ row.value.orgncd }} - {{ row.value.destcd
-                                                    }}<br><small>
-                                                        {{row.value.payBasis }}</small></td>
-
-                                                <td>
-                                                    <b>{{ row.value.csgncd }}</b><br>
-                                                    <span>{{row.value.csgecd }}</span>
+                                                <!-- 4. Billing Party / Consignee -->
+                                                <td class="align-middle">
+                                                    <div class="text-primary fw-bold mb-1">{{ row.value.csgncd }}</div>
+                                                    <div class="text-muted">{{row.value.csgecd }}</div>
                                                 </td>
 
+                                                <!-- 5. Pkg Booked / Pending -->
+                                                <!-- <td class="align-middle fw-semibold">
+                                                    <div class="text-primary mb-1">{{ row.value.pkgs_Booked }}/{{row.value.pkgs_Arrived }}/{{
+                                                            row.value.pkgs_Pending }}
+                                                    </div>
+                                                </td> -->
                                                 <td class=" text-center">
                                                     <div class="d-flex justify-content-center">
                                                         <div *ngIf="row.value.pkgs_Pending" class="text-danger"
                                                             [ngClass]="{ 'font-large': row.value.deliveredPkgs > row.value.pkgs_Pending, '': row.value.deliveredPkgs <= row.value.pkgs_Pending }">
-                                                            {{ row.value.pkgs_Pending }} /
-                                                        </div>
+                                                            {{ row.value.pkgs_Pending }} / </div>
                                                         <div> {{ row.value.pkgs_Arrived }} / </div>
                                                         <div>{{ row.value.pkgs_Booked }}</div>
                                                     </div>
                                                 </td>
 
-                                                <td>{{row.value.comm_Dely_Dt }}</td>
-
+                                                <!-- 6. Delivered Pkgs -->
                                                 <td class="align-top">
-                                                    <div class="d-flex flex-column">
-                                                        <input class="form-control form-control-sm"
-                                                            formControlName="deliveredPkgs" (input)="onDeliveredBlur(i)"
-                                                            oninput="this.value = this.value.replace(/[^0-9]/g,'');"
-                                                            [ngClass]="{'border-danger': row.get('deliveredPkgs')?.hasError('maxPending')}"
-                                                            appFocusNext>
-                                                        <div *ngIf="row.get('deliveredPkgs')?.hasError('maxPending')"
-                                                            class="text-danger mt-1">
-                                                            <small>Please enter a value less than <br> or equal to {{
-                                                                row.value.pkgs_Pending }}.</small>
-                                                        </div>
+                                                    <input class="form-control form-control-sm text-center"
+                                                        formControlName="deliveredPkgs" (input)="onDeliveredBlur(i)"
+                                                        oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                                                        [ngClass]="{'border-danger': row.get('deliveredPkgs')?.hasError('maxPending')}"
+                                                        appFocusNext>
+                                                    <div *ngIf="row.get('deliveredPkgs')?.hasError('maxPending')"
+                                                        class="text-danger mt-1"
+                                                        style="font-size: 11px; line-height: 1;">
+                                                        Must be &le; {{ row.value.pkgs_Pending }}
                                                     </div>
                                                 </td>
-                                                <td>
-                                                    <textarea rows="2" class="form-control-textarea"
+
+                                                <!-- 7. Part Del / Undel Reason (Combined Reason + Remarks) -->
+                                                <td class="align-top">
+                                                    <div *ngIf="drsList.at(i).get('showReason')?.value" class="mb-1">
+                                                        <ng-select class="noFoundTextColor required2 clear-icon mselect"
+                                                            formControlName="cboReason" bindLabel="codeDesc"
+                                                            bindValue="codeId" [items]="generalMasterService.reasonData"
+                                                            placeholder="Select Reason" appFocusNext appendTo="body"
+                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('cboReason')?.invalid && drsList.at(i).get('cboReason')?.touched}"></ng-select>
+                                                        <div class="text-danger mt-1" style="font-size: 11px;"
+                                                            *ngIf="drsList.at(i).get('cboReason')?.invalid && drsList.at(i).get('cboReason')?.touched">
+                                                            Required</div>
+                                                    </div>
+                                                    <div *ngIf="!drsList.at(i).get('showReason')?.value"
+                                                        class="text-muted text-start mb-1" style="font-size: 12px;">—
+                                                    </div>
+                                                    <textarea rows="1" class="form-control form-control-sm"
                                                         formControlName="remarks" placeholder="Enter Remarks"
                                                         appFocusNext></textarea>
                                                 </td>
-                                                <td>
-                                                    <ng-select class="clear-icon"
+
+                                                <!-- 8. Total Wt / Delivered Wt -->
+                                                <td class="align-middle text-center">
+                                                    <div class="text-muted mb-1">
+                                                        {{row.value.pkgQty}}/{{row.value.actQty}}</div>
+                                                </td>
+
+                                                <!-- 9. Committed Dely Dt -->
+                                                <td class="align-middle text-muted">{{row.value.comm_Dely_Dt }}</td>
+
+                                                <!-- 10. HCC Vendor Type -->
+                                                <td class="align-top">
+                                                    <ng-select class="clear-icon mselect"
                                                         [items]="generalMasterService.loadingData"
                                                         formControlName="luVendorTyp" bindLabel="codeDesc"
                                                         bindValue="codeId" placeholder="Type"
-                                                        [dropdownPosition]="'bottom'"
-                                                        (change)="onRowVendorTypeChange($event, i)">
-                                                    </ng-select>
+                                                        [dropdownPosition]="'bottom'" appendTo="body"
+                                                        (change)="onRowVendorTypeChange($event, i)"></ng-select>
                                                 </td>
-                                                <td>
-                                                    <ng-select class="noFoundTextColor clear-icon remove-white-space"
-                                                        [ngClass]="{
-                                                            'required2': row.get('luVendorTyp')?.value !== 'XX9',
-                                                            'border-danger': row.get('luVendorCode')?.hasError('required') && row.get('luVendorCode')?.touched
-                                                        }" formControlName="luVendorCode"
-                                                        [items]="rowVendorList[i] || []" bindLabel="text"
-                                                        bindValue="value" placeholder="Vendor"
-                                                        [dropdownPosition]="'bottom'"
-                                                        (change)="onRowVendorCodeChange($event, i)">
-                                                    </ng-select>
-                                                    <div class="text-danger small mt-1 text-start"
+
+                                                <!-- 11. Vendor Name -->
+                                                <td class="align-top">
+                                                    <ng-select
+                                                        class="noFoundTextColor clear-icon remove-white-space mselect"
+                                                        [ngClass]="{'required2': row.get('luVendorTyp')?.value !== 'XX9', 'border-danger': row.get('luVendorCode')?.hasError('required') && row.get('luVendorCode')?.touched}"
+                                                        formControlName="luVendorCode" [items]="rowVendorList[i] || []"
+                                                        bindLabel="text" bindValue="value" placeholder="Vendor"
+                                                        [dropdownPosition]="'bottom'" appendTo="body"
+                                                        (change)="onRowVendorCodeChange($event, i)"></ng-select>
+                                                    <div class="text-danger mt-1" style="font-size: 11px;"
                                                         *ngIf="row.get('luVendorCode')?.hasError('required') && row.get('luVendorCode')?.touched">
-                                                        This field is required
+                                                        Required
                                                     </div>
                                                 </td>
 
-                                                <td>
-                                                    <ng-select class="clear-icon" formControlName="ratetype"
-                                                        bindLabel="codeDesc" bindValue="codeId" placeholder="Enter Type"
+                                                <!-- 12. Rate Type -->
+                                                <td class="align-top">
+                                                    <ng-select class="clear-icon mselect" formControlName="ratetype"
+                                                        bindLabel="codeDesc" bindValue="codeId" placeholder="Type"
                                                         appFocusNext [items]="generalMasterService.chargeTypeData"
+                                                        appendTo="body"
                                                         [ngClass]="{'border-danger': row.get('ratetype')?.hasError('required') && row.get('ratetype')?.touched}"
                                                         [readonly]="row.value.luVendorTyp ==='XX9' || row.value.luVendorTyp ==='XX5'"></ng-select>
-                                                    <div class="text-danger small mt-1 text-start"
+                                                    <div class="text-danger mt-1" style="font-size: 11px;"
                                                         *ngIf="row.get('ratetype')?.hasError('required') && row.get('ratetype')?.touched">
-                                                        This field is required
-                                                    </div>
-                                                    <input type="number" class="form-control form-control-sm mt-1"
+                                                        Required</div>
+                                                </td>
+
+                                                <!-- 13. Rate (₹) -->
+                                                <td class="align-top">
+                                                    <input type="text"
+                                                        oninput="this.value = this.value.replace(/[^0-9.]/g,'');"
+                                                        class="form-control form-control-sm text-center"
                                                         formControlName="newRate" appFocusNext
                                                         [readOnly]="row.value.luVendorTyp === 'XX5' || row.value.luVendorTyp === 'XX9'"
-                                                        (focus)="clearNewRateOnFocus(i)"
-                                                        (blur)="resetNewRateOnBlur(i)" />
-                                                    <div class="text-danger small mt-1"
-                                                        *ngIf="drsList.at(i).get('rateError')?.value">
-                                                        {{ drsList.at(i).get('rateError')?.value }}
-                                                    </div>
+                                                        (focus)="clearNewRateOnFocus(i)" (blur)="resetNewRateOnBlur(i)"
+                                                        placeholder="0.00" />
+                                                    <div class="text-danger mt-1" style="font-size: 11px;"
+                                                        *ngIf="drsList.at(i).get('rateError')?.value">{{
+                                                        drsList.at(i).get('rateError')?.value }}</div>
                                                 </td>
 
-                                                <td>{{row.value.pkgQty}}/{{row.value.actQty}}</td>
+                                                <!-- 14. HCC Amt (₹)
+                                                <td class="align-top">
+                                                    <div class="px-2 py-1 bg-warning bg-opacity-10 border border-warning text-warning rounded fw-bold text-center"
+                                                        style="font-size: 11px;">Auto-calc</div>
+                                                </td> -->
 
-                                                <td>
-                                                    <textarea rows="2" class="form-control-textarea"
-                                                        formControlName="otp" placeholder="Enter OTP"></textarea>
+                                                <!-- 15. OTP -->
+                                                <td class="align-top">
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        formControlName="otp" placeholder="Enter OTP">
                                                 </td>
-                                                <td style="width:200px; max-width: 200px;">
+
+                                                <!-- 16. Delivered To -->
+                                                <td class="align-top">
                                                     <ng-select
-                                                        class="noFoundTextColor required2 clear-icon remove-white-space"
+                                                        class="noFoundTextColor required2 clear-icon remove-white-space mselect"
                                                         formControlName="DeliveredTo" bindLabel="codeDesc"
                                                         bindValue="codeId"
                                                         [items]="generalMasterService.deliveredToData"
-                                                        placeholder="Select Reason" appFocusNext
-                                                        [ngClass]="{ 'border-danger': drsList.at(i).get('DeliveredTo')?.invalid && drsList.at(i).get('DeliveredTo')?.touched , 'required2': isRequired('DeliveredTo', i)}">
-                                                        <ng-template ng-option-tmp let-item="item">
-                                                            <div [title]="item.codeDesc">{{ item.codeDesc }}</div>
-                                                        </ng-template>
-                                                    </ng-select>
-                                                    <div class="text-danger text-start"
-                                                        *ngIf="drsList.at(i).get('DeliveredTo')?.invalid && drsList.at(i).get('DeliveredTo')?.touched">
-                                                        This field is required.
-                                                    </div>
+                                                        placeholder="Select" appFocusNext appendTo="body"
+                                                        [ngClass]="{ 'border-danger': drsList.at(i).get('DeliveredTo')?.invalid && drsList.at(i).get('DeliveredTo')?.touched , 'required2': isRequired('DeliveredTo', i)}"></ng-select>
                                                 </td>
-                                                <td style="width:50;">
-                                                    <input class="form-control" formControlName="DlyPerson"
-                                                        placeholder="Delivered Person" appFocusNext
-                                                        [readonly]="isRequired('DlyPerson', i) ? false : true"
-                                                        [ngClass]="{ 'border-danger': drsList.at(i).get('DlyPerson')?.invalid && drsList.at(i).get('DlyPerson')?.touched ,'required2': isRequired('DlyPerson', i)}">
-                                                    <div class="text-danger text-start"
-                                                        *ngIf="drsList.at(i).get('DlyPerson')?.invalid && drsList.at(i).get('DlyPerson')?.touched">
-                                                        This field is required.
-                                                    </div>
-                                                </td>
-                                                <td style="width:50;">
-                                                    <input class="form-control" formControlName="DlyContactNo"
-                                                        placeholder="Contact No" minlength="10" maxlength="10"
-                                                        oninput="this.value = this.value.replace(/[^0-9]/g,'');"
-                                                        appFocusNext
-                                                        [readonly]="isRequired('DlyContactNo', i) ? false : true"
-                                                        [ngClass]="{ 'border-danger': drsList.at(i).get('DlyContactNo')?.invalid && drsList.at(i).get('DlyContactNo')?.touched,'required2': isRequired('DlyContactNo', i) }">
-                                                    <div class="text-danger text-start"
-                                                        *ngIf="drsList.at(i).get('DlyContactNo')?.invalid && drsList.at(i).get('DlyContactNo')?.touched">
-                                                        This field is required.
-                                                    </div>
-                                                </td>
-                                            </tr>
 
-                                            <!-- 🔹 SUB ROW -->
-                                            <tr style="border-bottom: 1px solid rgb(190, 190, 190);">
-                                                <td colspan="15">
-                                                    <div
-                                                        class="d-flex justify-content-between align-items-center flex-wrap gap-3 ">
+                                                <!-- 17. Person Name -->
+                                                <td class="align-top">
+                                                    <div *ngIf="!drsList.at(i).get('showReason')?.value">
+                                                        <input class="form-control form-control-sm"
+                                                            formControlName="DlyPerson" placeholder="Person Name"
+                                                            appFocusNext
+                                                            [readonly]="isRequired('DlyPerson', i) ? false : true"
+                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('DlyPerson')?.invalid && drsList.at(i).get('DlyPerson')?.touched ,'required2': isRequired('DlyPerson', i)}">
+                                                    </div>
+                                                    <div *ngIf="drsList.at(i).get('showReason')?.value">
+                                                        <input class="form-control form-control-sm required2"
+                                                            placeholder="Person Name" appFocusNext
+                                                            formControlName="DELYPERSON"
+                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('DELYPERSON')?.invalid && drsList.at(i).get('DELYPERSON')?.touched}" />
+                                                    </div>
+                                                </td>
 
-                                                        <!-- LEFT SIDE -->
-                                                        <div class="d-flex align-items-center flex-wrap gap-3">
-                                                            <span class="fw-semibold text-muted">Delivery Date &
-                                                                Time</span>
-                                                            <app-date-time-picker controlName="DELYDATE"
-                                                                [maxDate]="maxDate"
-                                                                [placeholder]="'Delivery Date & Time'"
-                                                                [minDate]="row.value.booking_Date" appFocusNext>
-                                                            </app-date-time-picker>
-                                                            <span class="fw-semibold text-muted ms-2"
-                                                                *ngIf="drsList.at(i).get('showReason')?.value">Person</span>
-                                                            <div *ngIf="drsList.at(i).get('showReason')?.value">
-                                                                <input class="form-control form-control-sm required2"
-                                                                    style="width: 160px;" placeholder="Person Name"
-                                                                    appFocusNext formControlName="DELYPERSON"
-                                                                    [ngClass]="{ 'border-danger': drsList.at(i).get('DELYPERSON')?.invalid && drsList.at(i).get('DELYPERSON')?.touched}" />
-                                                                <div class="text-danger text-start"
-                                                                    *ngIf="drsList.at(i).get('DELYPERSON')?.invalid && drsList.at(i).get('DELYPERSON')?.touched">
-                                                                    This field is required.
-                                                                </div>
-                                                            </div>
-                                                            <div class="d-flex align-items-center gap-2"
-                                                                *ngIf="drsList.at(i).get('showReason')?.value">
-                                                                <span class="fw-semibold text-muted">Reason:</span>
-                                                                <div>
-                                                                    <ng-select
-                                                                        class="noFoundTextColor required2 clear-icon"
-                                                                        style="width:250px;" formControlName="cboReason"
-                                                                        bindLabel="codeDesc" bindValue="codeId"
-                                                                        [items]="generalMasterService.reasonData"
-                                                                        placeholder="Select Reason" appFocusNext
-                                                                        [ngClass]="{ 'border-danger': drsList.at(i).get('cboReason')?.invalid && drsList.at(i).get('cboReason')?.touched}">
-                                                                        <ng-template ng-option-tmp let-item="item">
-                                                                            <div [title]="item.codeDesc">{{
-                                                                                item.codeDesc }}</div>
-                                                                        </ng-template>
-                                                                    </ng-select>
-                                                                    <div class="text-danger small text-start"
-                                                                        *ngIf="drsList.at(i).get('cboReason')?.invalid && drsList.at(i).get('cboReason')?.touched">
-                                                                        Reason is required
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="d-flex align-items-center gap-2"
-                                                                *ngIf="drsList.at(i).get('showReason')?.value">
-                                                                <span class="fw-semibold text-muted">Mobile No:</span>
-                                                                <div>
-                                                                    <input
-                                                                        class="form-control form-control-sm required2"
-                                                                        style="width:200px;" maxlength="10"
-                                                                        formControlName="cboMobileNo"
-                                                                        placeholder="Enter Mobile No"
-                                                                        oninput="this.value = this.value.replace(/[^0-9]/g,'');"
-                                                                        appFocusNext
-                                                                        [ngClass]="{ 'border-danger': drsList.at(i).get('cboMobileNo')?.invalid && drsList.at(i).get('cboMobileNo')?.touched}">
-                                                                    <div class="text-danger small text-start"
-                                                                        *ngIf="drsList.at(i).get('cboMobileNo')?.touched && drsList.at(i).get('cboMobileNo')?.invalid">
-                                                                        <span
-                                                                            *ngIf="drsList.at(i).get('cboMobileNo')?.errors?.['required']">
-                                                                            Mobile No is required
-                                                                        </span>
-                                                                        <span
-                                                                            *ngIf="drsList.at(i).get('cboMobileNo')?.errors?.['pattern']">
-                                                                            Enter valid 10 digit mobile no
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="d-flex align-items-center gap-2"
-                                                                *ngIf="drsList.at(i).get('showReason')?.value">
-                                                                <span class="fw-semibold text-muted">Email:</span>
-                                                                <div class="text-start">
-                                                                    <input
-                                                                        class="form-control form-control-sm required2"
-                                                                        placeholder="Enter Email" style="width:200px;"
-                                                                        appFocusNext formControlName="cboEmail"
-                                                                        [ngClass]="{ 'border-danger': drsList.at(i).get('cboEmail')?.invalid && drsList.at(i).get('cboEmail')?.touched}">
-                                                                    <div class="text-danger small text-start"
-                                                                        *ngIf="drsList.at(i).get('cboEmail')?.touched && drsList.at(i).get('cboEmail')?.invalid">
-                                                                        <span
-                                                                            *ngIf="drsList.at(i).get('cboEmail')?.errors?.['required']">
-                                                                            Email is required
-                                                                        </span>
-                                                                        <span
-                                                                            *ngIf="drsList.at(i).get('cboEmail')?.errors?.['email']">
-                                                                            Enter valid email address
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                <!-- 18. Contact No -->
+                                                <td class="align-top">
+                                                    <div *ngIf="!drsList.at(i).get('showReason')?.value">
+                                                        <input class="form-control form-control-sm"
+                                                            formControlName="DlyContactNo" placeholder="Contact No"
+                                                            minlength="10" maxlength="10"
+                                                            oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                                                            appFocusNext
+                                                            [readonly]="isRequired('DlyContactNo', i) ? false : true"
+                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('DlyContactNo')?.invalid && drsList.at(i).get('DlyContactNo')?.touched,'required2': isRequired('DlyContactNo', i) }">
+                                                    </div>
+                                                    <div *ngIf="drsList.at(i).get('showReason')?.value"
+                                                        class="d-flex flex-column gap-1">
+                                                        <input class="form-control form-control-sm required2"
+                                                            maxlength="10" formControlName="cboMobileNo"
+                                                            placeholder="Mobile No"
+                                                            oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                                                            appFocusNext
+                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('cboMobileNo')?.invalid && drsList.at(i).get('cboMobileNo')?.touched}">
+                                                        <input class="form-control form-control-sm required2"
+                                                            placeholder="Email" appFocusNext formControlName="cboEmail"
+                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('cboEmail')?.invalid && drsList.at(i).get('cboEmail')?.touched}">
+                                                    </div>
+                                                </td>
+
+                                                <!-- 19. Delivery Date -->
+                                                <td class="align-top">
+                                                    <app-drs-date-time-picker controlName="DELYDATE" [maxDate]="maxDate"
+                                                        appendTo="body" [placeholder]="'dd-mm-yyyy'"
+                                                        [minDate]="row.value.booking_Date"
+                                                        appFocusNext></app-drs-date-time-picker>
+                                                </td>
+
+                                                <!-- 20. POD 1 -->
+                                                <td class="align-top">
+                                                    <ng-container
+                                                        *ngIf="drsList.at(i).value.frontPreview; else frontUpload">
+                                                        <div class="d-flex flex-column gap-1">
+                                                            <img [src]="drsList.at(i).value.frontPreview"
+                                                                style="width:30px;height:30px;object-fit:cover;border-radius:4px;cursor:pointer"
+                                                                (click)="frontInput.click()" />
+                                                            <button type="button"
+                                                                class="btn btn-sm text-danger p-0 border-0 bg-transparent"
+                                                                style="font-size: 10px;"
+                                                                (click)="removeFile(i, 'FRONT')">Remove</button>
                                                         </div>
-                                                        <!-- RIGHT SIDE -->
-                                                        <div class="d-flex align-items-center gap-3"
-                                                            *ngIf="row.value.deliveredPkgs > 0">
+                                                    </ng-container>
+                                                    <ng-template #frontUpload>
+                                                        <button type="button"
+                                                            class="btn btn-light btn-sm text-primary border-primary border-dashed p-1"
+                                                            style="font-size:11px;" (click)="frontInput.click()">
+                                                            📎 Upload POD 1
+                                                        </button>
+                                                        <div class="text-danger mt-1" style="font-size:10px;"
+                                                            *ngIf="isPodFrontRequired(i)">Required</div>
+                                                    </ng-template>
+                                                    <input type="file" #frontInput hidden accept="image/*"
+                                                        (change)="onFileSelected($event, i, 'FRONT')" />
+                                                </td>
 
-                                                            <!-- ======================= POD FRONT ======================= -->
-                                                            <ng-container
-                                                                *ngIf="drsList.at(i).value.frontPreview; else frontUpload">
-                                                                <img [src]="drsList.at(i).value.frontPreview"
-                                                                    class="img-thumbnail"
-                                                                    style="width:55px;height:55px;object-fit:cover" />
-                                                                <div class="d-flex flex-column gap-1">
-                                                                    <button type="button" class="btn btn-light btn-sm"
-                                                                        (click)="frontInput.click()">
-                                                                        Change
-                                                                    </button>
-                                                                    <button type="button"
-                                                                        class="btn btn-light btn-sm text-danger"
-                                                                        (click)="removeFile(i, 'FRONT')">
-                                                                        Remove
-                                                                    </button>
-                                                                </div>
-                                                            </ng-container>
-                                                            <ng-template #frontUpload>
-                                                                <button type="button"
-                                                                    class="btn btn-outline-primary btn-sm"
-                                                                    (click)="frontInput.click()">
-                                                                    ⬆ POD Front UPLOAD
-                                                                </button>
-                                                                <span class="text-danger mt-1"
-                                                                    *ngIf="isPodFrontRequired(i)">
-                                                                    POD Front is required
-                                                                </span>
-                                                            </ng-template>
-                                                            <input type="file" #frontInput hidden accept="image/*"
-                                                                (change)="onFileSelected($event, i, 'FRONT')" />
-                                                            <!-- ======================= POD BACK ======================= -->
-                                                            <ng-container
-                                                                *ngIf="drsList.at(i).value.backPreview; else backUpload">
-                                                                <img [src]="drsList.at(i).value.backPreview"
-                                                                    class="img-thumbnail"
-                                                                    style="width:55px;height:55px;object-fit:cover" />
+                                                <!-- 21. POD 2 -->
+                                                <td class="align-top">
+                                                    <ng-container
+                                                        *ngIf="drsList.at(i).value.backPreview; else backUpload">
+                                                        <div class="d-flex flex-column gap-1">
+                                                            <img [src]="drsList.at(i).value.backPreview"
+                                                                style="width:30px;height:30px;object-fit:cover;border-radius:4px;cursor:pointer"
+                                                                (click)="backInput.click()" />
+                                                            <button type="button"
+                                                                class="btn btn-sm text-danger p-0 border-0 bg-transparent"
+                                                                style="font-size: 10px;"
+                                                                (click)="removeFile(i, 'BACK')">Remove</button>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-template #backUpload>
+                                                        <button type="button"
+                                                            class="btn btn-light btn-sm text-primary border-primary border-dashed p-1"
+                                                            style="font-size:11px;" (click)="backInput.click()">
+                                                            📎 Upload POD 2
+                                                        </button>
+                                                    </ng-template>
+                                                    <input type="file" #backInput hidden accept="image/*"
+                                                        (change)="onFileSelected($event, i, 'BACK')" />
+                                                </td>
 
-                                                                <div class="d-flex flex-column gap-1">
-                                                                    <button type="button" class="btn btn-light btn-sm"
-                                                                        (click)="backInput.click()">
-                                                                        Change
-                                                                    </button>
-
-                                                                    <button type="button"
-                                                                        class="btn btn-light btn-sm text-danger"
-                                                                        (click)="removeFile(i, 'BACK')">
-                                                                        Remove
-                                                                    </button>
-                                                                </div>
-                                                            </ng-container>
-
-                                                            <ng-template #backUpload>
-                                                                <button type="button"
-                                                                    class="btn btn-outline-primary btn-sm"
-                                                                    (click)="backInput.click()">
-                                                                    ⬆ POD Back UPLOAD
-                                                                </button>
-                                                            </ng-template>
-                                                            <input type="file" #backInput hidden accept="image/*"
-                                                                (change)="onFileSelected($event, i, 'BACK')" />
+                                                <!-- 22. POD Quality -->
+                                                <td class="align-middle">
+                                                    <div class="d-flex flex-column gap-2">
+                                                        <div
+                                                            class="form-check m-0 d-flex align-items-center gap-1 ps-0">
+                                                            <input
+                                                                class="form-check-input text-success m-0 ms-1 me-1 border-success"
+                                                                type="radio" [name]="'badpod'+i" id="badpodNo{{ i }}"
+                                                                [value]="false" [formControl]="getRadioControl(i)">
+                                                            <label class="text-success small fw-bold m-0"
+                                                                for="badpodNo{{ i }}"><i class="bi bi-check-circle"></i>
+                                                                Good POD</label>
+                                                        </div>
+                                                        <div
+                                                            class="form-check m-0 d-flex align-items-center gap-1 ps-0">
+                                                            <input
+                                                                class="form-check-input text-danger m-0 ms-1 me-1 border-danger"
+                                                                type="radio" [name]="'badpod'+i" id="badpodYes{{ i }}"
+                                                                [value]="true" [formControl]="getRadioControl(i)">
+                                                            <label class="text-danger small fw-bold m-0"
+                                                                for="badpodYes{{ i }}"><i class="bi bi-x-circle"></i>
+                                                                Bad POD</label>
                                                         </div>
                                                     </div>
                                                 </td>
+
                                             </tr>
                                         </ng-container>
                                     </tbody>
@@ -597,10 +561,29 @@
                         </div>
                     </div>
                 </form>
-                <div class="d-flex justify-content-center text-center p-4">
-                    <button class="btn btn-success" (click)="deliveryUpdate()" [disabled]="isSubmit || isRedirect">
-                        <i class="bi bi-check-circle"></i> Update DRS
-                    </button>
+
+                <!-- Footer -->
+                <div class="d-flex justify-content-between align-items-center bg-white px-4 py-3 border-top mt-auto shadow-sm"
+                    style="border-radius: 0 0 8px 8px;">
+                    <div class="d-flex align-items-center flex-wrap gap-4 text-muted small fw-bold">
+                        <div>Total Dockets: <span class="text-dark fw-bolder">{{ drsList.controls.length }}</span></div>
+                        <div class="d-flex align-items-center gap-1"><span class="text-success fs-6"><i
+                                    class="bi bi-check-square-fill"></i></span> Selected: {{ selectedCount }}</div>
+                        <div class="d-flex align-items-center gap-1"><span class="text-warning fs-6"><i
+                                    class="bi bi-hourglass-split"></i></span> Unselected: {{ unselectedCount }}
+                        </div>
+                        <div class="ms-3 px-3 py-1 bg-primary bg-opacity-10 border border-primary rounded-pill text-primary"
+                            style="font-size: 13px;">
+                            <i class="fas fa-wallet me-1"></i> Unloading Charge Amt: ₹ {{
+                            DRSSummaryForm.get('LoadingCharge')?.value || '0.00' }}
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-secondary px-4 py-1 fw-bold bg-white"
+                            (click)="closeModal()">✕ Cancel</button>
+                        <button type="button" class="btn btn-success px-4 py-1 fw-bold" (click)="deliveryUpdate()"
+                            [disabled]="isSubmit || isRedirect">Update DRS</button>
+                    </div>
                 </div>
             </div>
         </div>
