@@ -17,5 +17,8 @@ export class LrService {
     cancelDocket(payload:any): Observable<IApiBaseResponse<any[]>>{
       return this.apiHandlerService.Post(`Operation/CancelDocket`,payload);
     }
-
+    exportLRListing(params: any): Observable<any> {
+      let query = `locCode=${params.locCode}&statusFilter=${params.statusFilter}&searchText=${params.searchText}&startDate=${params.startDate}&endDate=${params.endDate}`;
+      return this.apiHandlerService.Get(`Operation/ExportLRListing?${query}`);
+    }
 }

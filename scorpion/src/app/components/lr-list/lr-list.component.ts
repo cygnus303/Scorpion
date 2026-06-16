@@ -147,18 +147,15 @@ export class LrListComponent {
 
   onExcelDownload(){
     this.isCSVLoading = true;
-    const payload = {
-      fromDate: new Date(this.config.fromDateStr).toISOString(),
-      toDate: new Date(this.config.toDateStr).toISOString(),
-      locCode: this.docketService.loginUserList.LocationCode || null,
+    const params = {
+      startDate: new Date(this.config.fromDateStr).toISOString(),
+      endDate: new Date(this.config.toDateStr).toISOString(),
+      locCode: this.docketService.loginUserList.LocationCode || '',
       statusFilter: this.config.statusFilter || 'All',
-      pageNumber: this.config.page,
-      pageSize: this.config.pageSize,
-      isDownload: true,
       searchText: this.config.searchText || ''
     };
 
-   this.listSubscription = this.lrService.getLRList(payload).subscribe({
+   this.listSubscription = this.lrService.exportLRListing(params).subscribe({
       next: (response: any) => {
         this.isCSVLoading = false;
         if (response && response.data) {

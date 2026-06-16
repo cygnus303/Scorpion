@@ -10,7 +10,7 @@
                 <span class="fs-5 me-1">➕</span> Add LR
             </button>
             <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="onExcelDownload()">
-              <span *ngIf="!isCSVLoading"> <span class="fs-5 me-1">📥</span> Download XLS</span>
+                <span *ngIf="!isCSVLoading"> <span class="fs-5 me-1">📥</span> Download XLS</span>
                 <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isCSVLoading">Downloading...</span>
             </button>
@@ -62,7 +62,7 @@
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🧾</div>
         </div>
 
-         <div class="summary-card px-3 py-3 c-red cursor-pointer"
+        <div class="summary-card px-3 py-3 c-red cursor-pointer" *ngIf="isHQTR"
             [class.active-card]="config.statusFilter === 'cancelled'" (click)="filterByStatus('cancelled')">
             <div class="card-content">
                 <div class="s-label">Cancelled</div>
@@ -208,7 +208,7 @@
                                     and Save</button>
                                 <button class="ab ab-finedit" (click)="openEdit(lr.dockno)"
                                     [disabled]="lr.isQuickMode==='Q'">💰 Fin Edit</button>
-                                    <button class="ab ab-cancel" (click)="onCancel(lr.dockno)"
+                                <button *ngIf="isHQTR" class="ab ab-cancel" (click)="onCancel(lr.dockno)"
                                     [disabled]="lr.isDocketCancel==='Y'">🚫 Cancel</button>
                                 <div class="track-wrap">
                                     <button class="ab ab-track" (click)="toggleTrack(i, $event)">📍 Track</button>
