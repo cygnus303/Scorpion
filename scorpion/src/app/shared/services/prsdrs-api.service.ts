@@ -63,5 +63,13 @@ export class PRSDRSApiService {
   CancelTHC(payload:any){
     return this.apiHandlerService.Post(`THC/CancelTHC`,payload);
   }
-  
+
+  GetDetForDepsDeclarationByTCNo(pdcNo: string) {
+    return this.apiHandlerService.Get(`THC/GetDetForDepsDeclarationByTCNo?pdcNo=${pdcNo}`);
+  }
+
+  GetDESPSData(codeId: string) {
+    return this.apiHandlerService.Get(`THC/GetDESPSData?codeId=${codeId}`);
+  }
 }
+
