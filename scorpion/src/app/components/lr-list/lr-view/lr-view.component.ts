@@ -45,6 +45,22 @@ export class LrViewComponent {
 
 
 
+  parseDate(val: any): any {
+    if (!val) return val;
+    // Handle specific string format "dd/MM/yyyy HH:mm"
+    if (typeof val === 'string') {
+      const parts = val.trim().split(' ');
+      const datePart = parts[0];
+      const timePart = parts[1] || '00:00:00';
+      const dateParts = datePart.split('/');
+      if (dateParts.length === 3) {
+        // Assume dd/MM/yyyy => return yyyy-MM-ddTHH:mm:ss for standard Date parsing
+        return `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}T${timePart}`;
+      }
+    }
+    return val;
+  }
+
   printDocket() {
     const printContent = document.querySelector('.docket-container');
     if (!printContent) return;
