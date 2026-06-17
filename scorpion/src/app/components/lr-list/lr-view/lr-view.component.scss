@@ -304,13 +304,38 @@ tbody td {
 
 /* ── Print Styles ── */
 @media print {
+    @page {
+        size: portrait;
+        margin: 10mm;
+    }
+    
     body { background: white; padding: 0; }
     .docket-container { box-shadow: none; height: auto; max-height: none; overflow: visible; display: block; }
     .docket-content { overflow: visible; }
     .no-print { display: none; }
+    
+    /* Prevents sections from cutting in half across pages */
+    .party-section,
+    .gcn-section,
+    .movement-section,
+    .route-section,
+    .shipment-section,
+    .charges-section,
+    .summary-section,
+    .payment-section,
+    .declaration-section,
+    table,
+    tr,
+    .summary-box,
+    .party-box,
+    .route-box,
+    .movement-box {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
     .party-section, .movement-section, .route-section { grid-template-columns: 1fr; }
     .charges-grid { grid-template-columns: repeat(2, 1fr); }
     .payment-row { grid-template-columns: repeat(3, 1fr); }
