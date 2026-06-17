@@ -18,11 +18,12 @@ import { PRSDRSEditComponent } from '../prs-generation-list/prsdrs-edit/prsdrs-e
 import { DRSUpdateListComponent } from './drs-update-list/drs-update-list.component';
 import { HccViewComponent } from '../hcc-view/hcc-view.component';
 import { MenuAccessService } from 'app/shared/services/menu-access.service';
+import { DepsEntryComponent } from './deps-entry/deps-entry.component';
 
 @Component({
   selector: 'app-drs-generation-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, ReactiveFormsModule, DRSUpdateListComponent, PRSDRSEditComponent, SingleCnoteDrsUpdateComponent, HCCDetailsComponent,HccViewComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, ReactiveFormsModule, DRSUpdateListComponent, PRSDRSEditComponent, SingleCnoteDrsUpdateComponent, HCCDetailsComponent, HccViewComponent, DepsEntryComponent],
   providers: [BsModalService],
   templateUrl: './drs-generation-list.component.html',
   styleUrl: './drs-generation-list.component.scss'
@@ -68,6 +69,7 @@ export class DrsGenerationListComponent {
   @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
   @ViewChild('PRSDRSEditComponent') PRSDRSEditComponent!: PRSDRSEditComponent;
   @ViewChild('HccViewComponent') HccViewComponent!: HccViewComponent;
+  @ViewChild('DepsEntryComponent') depsEntryComponent!: DepsEntryComponent;
 
 
   constructor(
@@ -303,6 +305,10 @@ export class DrsGenerationListComponent {
 
   openSingleDRSUpdate(data: any) {
     this.singleCnoteDrsUpdateComponent.showPopup(data);
+  }
+
+  openDeps(data: any, isEditMode: boolean = false) {
+    this.depsEntryComponent.showPopup(data, isEditMode);
   }
 
   openPRSDRSEdit(data: any, flag: string) {

@@ -110,6 +110,11 @@ export class DRSUpdateListComponent {
     });
   }
 
+  isAllSelected(): boolean {
+    if (this.drsList.controls.length === 0) return false;
+    return this.drsList.controls.every(control => control.get('isChecked')?.value === true);
+  }
+
   get selectedCount(): number {
     return this.drsList.controls.filter(c => c.get('isChecked')?.value === true).length;
   }

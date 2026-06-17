@@ -241,7 +241,7 @@
                                 {{ data.status }}
                             </span>
                         </td>
-                        <td style="width: 600px !important;">
+                        <td style="width: 700px !important;">
                             <div class="d-flex flex-wrap gap-2 justify-content-center">
                                 <button *ngIf="menuAccessService.hasPermission('View')"
                                     class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3"
@@ -254,6 +254,8 @@
                                     [disabled]="data.ispdcUpdate ||data.status==='Cancelled'||data.status==='Billed' || data.IsThroughDA ===true || data.vendorType === 'BUSINESS ASSOCIATE' ">
                                     🔄 DRS Update
                                 </button>
+                                <button class="btn btn-sm bg-warning-secondary border-warning-secondary text-warning-emphasis py-1 px-3" (click)="openDeps(data, false)">📋 DEPS</button>
+                                <button class="btn btn-sm bg-warning-dark border-warning-dark text-warning-emphasis py-1 px-3" (click)="openDeps(data, true)">✏️ Edit DEPS</button>
                                 <button *ngIf="!isHQTR && menuAccessService.hasPermission('Edit')" (click)="openPRSDRSEdit(data,'P')"
                                     [disabled]="!data.isCancelAllow ||data.status==='Billed'||data.status==='Cancelled'"
                                     class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3">
@@ -271,12 +273,12 @@
                                     (click)="openHHCDetails(data)">
                                     🏷 HCC
                                 </button>
-                                <button *ngIf="!isHQTR"
+                                <!-- <button *ngIf="!isHQTR"
                                     class="btn btn-sm bg-success-purple border-success-subtle text-success-emphasis py-1 px-3"
                                     (click)="openSingleDRSUpdate(data)"
                                     [disabled]="data.totalDockets===data.deliveredCount|| data.ispdcUpdate||data.status==='Billed'||data.status==='Cancelled'||data.vendorType === 'BUSINESS ASSOCIATE' ">
                                     📝 Single C Note Update
-                                </button>
+                                </button> -->
                             </div>
                         </td>
                     </tr>
@@ -313,3 +315,4 @@
 <app-hcc-details #HCCDetailsComponent (dataEmitter)="refreshData()"></app-hcc-details>
 <app-prsdrs-edit #PRSDRSEditComponent (dataEmitter)="refreshData()"></app-prsdrs-edit>
 <app-hcc-view #HccViewComponent (dataEmitter)="refreshData()"></app-hcc-view>
+<app-deps-entry #DepsEntryComponent (dataEmitter)="refreshData()"></app-deps-entry>

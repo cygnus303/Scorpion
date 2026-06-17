@@ -1,4 +1,4 @@
-<div>
+<div class="position-relative">
     <!-- <div class="control-bar d-block gap-2 mb-3">
         <form [formGroup]="DRSFilterForm">
             <div class="row px-1">
@@ -161,7 +161,7 @@
                                                 <div class="d-flex align-items-center justify-content-center gap-2">
                                                     <input class="form-check-input m-0" type="checkbox"
                                                         style="transform: scale(1.2); border-color: #0d47a1;"
-                                                        (change)="toggleAll($event)" />
+                                                        [checked]="isAllSelected()" (change)="toggleAll($event)" />
                                                     #
                                                 </div>
                                             </th>
@@ -203,14 +203,18 @@
                                                 <ng-select class="mt-1 clear-icon remove-white-space bg-white rounded"
                                                     [items]="headerVendorList" bindLabel="text" bindValue="value"
                                                     placeholder="Vendor" (change)="onHeaderVendorChange($event)"
-                                                    [dropdownPosition]="'bottom'" appendTo="body"></ng-select>
+                                                    [dropdownPosition]="'bottom'" appendTo="body">
+                                                    <ng-template ng-option-tmp let-item="item">
+                                                        <div class="remove-white-space-option">{{ item.text }}</div>
+                                                    </ng-template>
+                                                </ng-select>
                                             </th>
                                             <th class="align-middle"
                                                 style="background-color: #f3e5f5; color: #6a1b9a; min-width: 150px;">
                                                 <div class="mb-1">Rate Type</div>
                                                 <ng-select class="clear-icon mt-1 bg-white rounded"
                                                     formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"
-                                                    placeholder="Enter Type" appFocusNext appendTo="body"
+                                                    placeholder="Enter Type" appendTo="body"
                                                     [items]="generalMasterService.chargeTypeData"
                                                     (change)="onHeaderRateTypeChange($event)"></ng-select>
                                             </th>
@@ -254,6 +258,16 @@
                                     </thead>
 
                                     <tbody formArrayName="drsList">
+                                        <tr *ngIf="isLoading">
+                                            <td colspan="25" class="text-center py-4 text-primary fw-bold">
+                                                <i class="fas fa-spinner fa-spin me-2"></i> Loading Details...
+                                            </td>
+                                        </tr>
+                                        <tr *ngIf="drsList.controls.length === 0 && !isLoading">
+                                            <td colspan="25" class="text-center py-4 text-muted fw-bold">
+                                                <i class="fas fa-exclamation-circle me-1"></i> No Data Found
+                                            </td>
+                                        </tr>
                                         <ng-container *ngFor="let row of drsList.controls; let i = index"
                                             [formGroupName]="i">
                                             <tr
@@ -368,7 +382,11 @@
                                                         formControlName="luVendorCode" [items]="rowVendorList[i] || []"
                                                         bindLabel="text" bindValue="value" placeholder="Vendor"
                                                         [dropdownPosition]="'bottom'" appendTo="body"
-                                                        (change)="onRowVendorCodeChange($event, i)"></ng-select>
+                                                        (change)="onRowVendorCodeChange($event, i)">
+                                                        <ng-template ng-option-tmp let-item="item">
+                                                            <div class="remove-white-space-option">{{ item.text }}</div>
+                                                        </ng-template>
+                                                    </ng-select>
                                                     <div class="text-danger mt-1" style="font-size: 11px;"
                                                         *ngIf="row.get('luVendorCode')?.hasError('required') && row.get('luVendorCode')?.touched">
                                                         Required
@@ -422,7 +440,12 @@
                                                         bindValue="codeId"
                                                         [items]="generalMasterService.deliveredToData"
                                                         placeholder="Select" appFocusNext appendTo="body"
-                                                        [ngClass]="{ 'border-danger': drsList.at(i).get('DeliveredTo')?.invalid && drsList.at(i).get('DeliveredTo')?.touched , 'required2': isRequired('DeliveredTo', i)}"></ng-select>
+                                                        [ngClass]="{ 'border-danger': drsList.at(i).get('DeliveredTo')?.invalid && drsList.at(i).get('DeliveredTo')?.touched , 'required2': isRequired('DeliveredTo', i)}">
+                                                        <ng-template ng-option-tmp let-item="item">
+                                                            <div class="remove-white-space-option">{{ item.codeDesc }}
+                                                            </div>
+                                                        </ng-template>
+                                                    </ng-select>
                                                 </td>
 
                                                 <!-- 17. Person Name -->
