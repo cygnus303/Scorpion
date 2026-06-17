@@ -112,17 +112,17 @@ export class LrListComponent {
       searchText: this.config.searchText || ''
     };
 
-    const cacheKey = JSON.stringify(payload);
-    if (this.apiCache.has(cacheKey)) {
-      this.handleApiResponse(this.apiCache.get(cacheKey));
-      return;
-    }
+    // const cacheKey = JSON.stringify(payload);
+    // if (this.apiCache.has(cacheKey)) {
+    //   this.handleApiResponse(this.apiCache.get(cacheKey));
+    //   return;
+    // }
 
     this.isLoading = true;
     this.listSubscription = this.lrService.getLRList(payload).subscribe({
       next: (response: any) => {
         this.isLoading = false;
-        this.apiCache.set(cacheKey, response);
+        // this.apiCache.set(cacheKey, response);
         this.handleApiResponse(response);
       },
       error: (err: any) => {
@@ -204,10 +204,10 @@ export class LrListComponent {
       next: (res: any) => {
         if (res.success === true) {
           this.sweetAlertService.success(` ${dockNo} has been cancelled successfully.`);
+          this.fetchData();
         } else {
           this.sweetAlertService.error(res?.message || 'Failed to cancel LR');
         }
-        this.fetchData();
       },
       error: (err: any) => {
         this.sweetAlertService.error(err?.error?.message || 'Failed to cancel LR');
