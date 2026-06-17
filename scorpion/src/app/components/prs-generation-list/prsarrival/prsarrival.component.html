@@ -1,17 +1,16 @@
 <ng-template #Templatepod>
     <!-- Header -->
     <div class="modal-header">
-        <div class="modal-header-left">
-            <div class="modal-logo"
-                style="background:#fff; border-radius:6px; padding:4px 8px; display:flex; align-items:center; justify-content:center; height:38px; flex-shrink:0;">
-                <span class="fw-bold fs-6 text-danger" style="font-family: 'Verdana';">Scorpion Logo</span>
+         <div class="d-flex align-items-center gap-3">
+            <div class="pfm-icon shadow-sm">
+                <i class="fas fa-list text-primary"></i>
             </div>
-            <div class="modal-title ms-2">PRS Arrival Details</div>
-            <span class="modal-hcc-tag">{{ PRSArrivalDetails?.pdcno || '—' }}</span>
+            <div>
+                <div class="fw-bold fs-5">PRS Arrival Details</div>
+                <div class="pfm-subtitle">Complete PRS Arrival Details below</div>
+            </div>
         </div>
-        <div class="modal-header-actions">
-            <button class="modal-close" (click)="modalRef.hide()" title="Close">✕</button>
-        </div>
+        <button type="button" class="btn-close pfm-close" (click)="modalRef.hide()"></button>
     </div>
 
     <div style="background: #f8fafc;">

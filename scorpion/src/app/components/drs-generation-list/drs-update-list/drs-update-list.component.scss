@@ -212,7 +212,7 @@ ng-select.mselect .ng-value {
 
 ::ng-deep .mselect .ng-select-container {
   min-height: 26px !important;
-  height: 26px !important;
+  height: auto !important;
   border-radius: 4px !important;
   font-size: 12px !important;
 }
@@ -221,8 +221,38 @@ ng-select.mselect .ng-value {
   padding: 0 4px !important;
 }
 
-.remove-white-space .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
-  white-space: normal !important;
+::ng-deep .ng-dropdown-panel {
+  .ng-dropdown-panel-items {
+    .ng-option {
+      white-space: normal !important;
+      word-break: break-word !important;
+      overflow: visible !important;
+      text-overflow: unset !important;
+
+      .ng-option-label, span, div {
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+      }
+    }
+  }
+}
+
+::ng-deep ng-select.remove-white-space {
+  .ng-value-container {
+    .ng-value {
+      white-space: normal !important;
+      word-break: break-word !important;
+      
+      .ng-value-label, span, div {
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+      }
+    }
+  }
 }
 
 ::ng-deep .hdr-sel {
@@ -310,4 +340,8 @@ ng-select.mselect .ng-value {
   pointer-events: none !important;
   opacity: 0.5;
   background-color: #f0f0f0 !important;
+}
+
+.loading-overlay {
+  position: absolute !important;
 }

@@ -83,3 +83,32 @@
     background: #ede7f6 !important; // Darker purple variant
     border-color: #c4b5fd !important;
 }
+
+/* Custom button themes for DEPS & Edit DEPS to match HTML classes */
+.bg-warning-secondary, .border-warning-secondary {
+    background-color: #f9e0ff !important;
+    border-color: #f0abfc !important;
+    color: #701a75 !important;
+}
+.bg-warning-secondary.text-warning-emphasis {
+    color: #701a75 !important;
+}
+.bg-warning-secondary:hover {
+    background-color: #fae8ff !important;
+    border-color: #d946ef !important;
+    color: #701a75 !important;
+}
+
+.bg-warning-dark, .border-warning-dark {
+    background-color: #e5e0ff !important;
+    border-color: #c4b5fd !important;
+    color: #5b21b6 !important;
+}
+.bg-warning-dark.text-warning-emphasis {
+    color: #5b21b6 !important;
+}
+.bg-warning-dark:hover {
+    background-color: #ede7f6 !important;
+    border-color: #a78bfa !important;
+    color: #5b21b6 !important;
+}
