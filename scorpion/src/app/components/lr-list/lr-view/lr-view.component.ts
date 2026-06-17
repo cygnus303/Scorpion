@@ -1,11 +1,14 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { LrService } from 'app/shared/services/lr.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-lr-view',
   standalone: true,
   providers: [BsModalService],
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './lr-view.component.html',
   styleUrl: './lr-view.component.scss'
 })
@@ -14,11 +17,33 @@ export class LrViewComponent {
   public modalRef!: BsModalRef;
   @ViewChild('TemplateRef', { static: true }) TemplateRef!: TemplateRef<any>;
 
-  constructor(private modalService: BsModalService) { }
+  constructor(private modalService: BsModalService,private lrService: LrService) { }
+
+  public lrDetails: any = null;
+  public boxDetails: any[] = [];
 
   showPopup(row: any) {
-    this.modalRef = this.modalService.show(this.TemplateRef, { class: 'modal-xl modal-dialog-centered hcc-view-modal-custom', backdrop: true });
+    if (!row) return;
+    this.isLoading = true;
+
+    this.lrService.lrViewDetail(row).subscribe({
+      next: (res: any) => {
+        this.isLoading = false;
+        if (res) {
+          const data =  res;
+          this.lrDetails = data.Header || null;
+          this.boxDetails = data.BoxDetails || [];
+          this.modalRef = this.modalService.show(this.TemplateRef, { class: 'modal-xl modal-dialog-centered hcc-view-modal-custom', backdrop: true });
+        }
+      },
+      error: (err: any) => {
+        this.isLoading = false;
+        console.error('Error fetching LR details', err);
+      }
+    });
   }
+
+
 
   printDocket() {
     const printContent = document.querySelector('.docket-container');
