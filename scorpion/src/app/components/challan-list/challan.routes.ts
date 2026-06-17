@@ -82,6 +82,10 @@ export const ChallanRoutes: Routes = [
     path: 'HccFinEditList',
     loadComponent: () => import('../hcc-finacialedit-list/hcc-finacialedit-list.component').then(m => m.HccFinacialeditListComponent),
     canActivate: [DocketGuard]
+  },
+  {
+    path: 'LRTrackList',
+    loadComponent: () => import('../lr-track-trace-list/lr-track-trace-list.component').then(m => m.LrTrackTraceListComponent),
   }
 
 ];

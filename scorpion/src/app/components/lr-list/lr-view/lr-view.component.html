@@ -26,22 +26,23 @@
                 <div class="party-section">
                     <div class="party-box">
                         <div class="party-title">📌 Consignor (Shipper)</div>
-                        <div class="party-name">PATANJALI FOODS LIMITED</div>
+                        <div class="party-name">{{ lrDetails?.ConsignorName || '—' }}</div>
                         <div class="party-info">
-                            <strong>GSTIN:</strong> 05AAACR2892L124<br>
-                            <strong>Location:</strong> FG Warehouse 2(PMS) - HARIDWAR PATANJALI<br>
-                            <strong>Phone:</strong> 63230042<br>
-                            <strong>Date:</strong> 29/05/2026
+                            <strong>GSTIN:</strong> {{lrDetails?.ConsignorGSTIN || '—' }}<br>
+                            <strong>Location:</strong> {{ lrDetails?.OriginCity || '—' }}<br>
+                            <strong>Phone:</strong> {{ lrDetails?.ConsignorMobile || '—' }}<br>
+                            <strong>Date:</strong> {{ lrDetails?.bookingdate ? (parseDate(lrDetails?.bookingdate) |
+                            date:'dd MMM yyyy') : '—' }}
                         </div>
                     </div>
                     <div class="party-box">
                         <div class="party-title">📍 Consignee (Receiver)</div>
-                        <div class="party-name">MASTER CANTEEN 8 BN PAC BAREILLY</div>
+                        <div class="party-name">{{ lrDetails?.ConsigneeName || '—' }}</div>
                         <div class="party-info">
-                            <strong>GSTIN:</strong> 09AAAGM1098R1ZL<br>
-                            <strong>Address:</strong> Bareilly<br>
-                            <strong>PIN Code:</strong> 243123<br>
-                            <strong>Phone:</strong> 8859638663
+                            <strong>GSTIN:</strong> {{ lrDetails?.ConsigneeGSTIN ||'—' }}<br>
+                            <strong>Address:</strong> {{ lrDetails?.ConsigneeAddress || '—' }}<br>
+                            <strong>PIN Code:</strong> {{ lrDetails?.DestinationPincode || '—' }}<br>
+                            <strong>Phone:</strong> {{ lrDetails?.ConsigneeMobile || '—' }}
                         </div>
                     </div>
                 </div>
@@ -51,35 +52,35 @@
                     <div class="gcn-grid">
                         <div class="gcn-item">
                             <div class="gcn-label">GCN No.</div>
-                            <div class="gcn-value">63230042</div>
+                            <div class="gcn-value">{{ lrDetails?.LR_Number || '—' }}</div>
                         </div>
                         <div class="gcn-item">
                             <div class="gcn-label">E-Way No.</div>
-                            <div class="gcn-value">302260016952</div>
+                            <div class="gcn-value">{{ lrDetails?.EWayBillNo || '—' }}</div>
                         </div>
                         <div class="gcn-item">
                             <div class="gcn-label">Billing Party</div>
-                            <div class="gcn-value">PATANJALI PARIVAHAN PVT. LTD.</div>
+                            <div class="gcn-value">{{ lrDetails?.BillingParty || '—' }}</div>
                         </div>
                         <div class="gcn-item">
                             <div class="gcn-label">Billing Code</div>
-                            <div class="gcn-value">C12161619</div>
+                            <div class="gcn-value">{{ lrDetails?.BillingCode || '—' }}</div>
                         </div>
                         <div class="gcn-item">
                             <div class="gcn-label">PAN</div>
-                            <div class="gcn-value">AAJCS7860C</div>
+                            <div class="gcn-value">{{ lrDetails?.PAN || '—' }}</div>
                         </div>
                         <div class="gcn-item">
                             <div class="gcn-label">Service Zone</div>
-                            <div class="gcn-value">NORTH 2 to NORTH 1</div>
+                            <div class="gcn-value">{{ lrDetails?.FromCityZone}} - {{lrDetails?.ToCityZone }}</div>
                         </div>
                         <div class="gcn-item">
                             <div class="gcn-label">Service Type</div>
-                            <div class="gcn-value">LTL</div>
+                            <div class="gcn-value">{{ lrDetails?.Service_Type || '—' }}</div>
                         </div>
                         <div class="gcn-item">
                             <div class="gcn-label">Movement Type</div>
-                            <div class="gcn-value">ROAD CARGO</div>
+                            <div class="gcn-value">{{ lrDetails?.MoveMentType || '—' }}</div>
                         </div>
                     </div>
                 </div>
@@ -88,43 +89,48 @@
                 <div class="movement-section">
                     <div class="movement-box">
                         <div class="movement-label">Mode of Movement</div>
-                        <div class="movement-value">ROAD CARGO</div>
+                        <div class="movement-value">{{ lrDetails?.MoveMentType ||'—' }}</div>
                     </div>
                     <div class="movement-box">
                         <div class="movement-label">Date of Booking</div>
-                        <div class="movement-value">29 May 2026</div>
+                        <div class="movement-value">{{ lrDetails?.bookingdate ? (parseDate(lrDetails?.bookingdate) |
+                            date:'dd MMM yyyy') : '—' }}</div>
                     </div>
                     <div class="movement-box">
                         <div class="movement-label">Date of Shipping</div>
-                        <div class="movement-value">29 May 2026</div>
+                        <div class="movement-value">{{ lrDetails?.shippingDate ? (parseDate(lrDetails?.shippingDate) |
+                            date:'dd MMM yyyy') : '—' }}</div>
                     </div>
                     <div class="movement-box">
                         <div class="movement-label">Expected Delivery Date</div>
-                        <div class="movement-value">08 Jun 2026</div>
+                        <div class="movement-value">{{ lrDetails?.EDDDate ? (parseDate(lrDetails?.EDDDate) | date:'dd
+                            MMM yyyy') : '—' }}</div>
                     </div>
                     <div class="movement-box">
                         <div class="movement-label">Carrier Risk</div>
-                        <div class="movement-value">✓ Owner's Risk</div>
+                        <div class="movement-value">{{ lrDetails?.RiskType || '—' }}</div>
                     </div>
                     <div class="movement-box">
                         <div class="movement-label">Is Audited</div>
-                        <div class="movement-value">Yes</div>
+                        <div class="movement-value">{{ lrDetails?.IsAoudited ? 'Yes' : 'No' }}</div>
                     </div>
                     <div class="movement-box">
                         <div class="movement-label">Audited By</div>
-                        <div class="movement-value">V12254 : SHAILENDRA KUMAR SHUKLA</div>
+                        <div class="movement-value">{{ lrDetails?.AouditedBy || '—' }}</div>
                     </div>
                     <div class="movement-box">
                         <div class="movement-label">Audited Date</div>
-                        <div class="movement-value">29 May 2026</div>
+                        <div class="movement-value">{{ lrDetails?.AouditedDate ? (parseDate(lrDetails?.AouditedDate) |
+                            date:'dd MMM yyyy') : '—' }}</div>
                     </div>
                     <div class="movement-box">
                         <div class="movement-label">Cancelled By</div>
-                        <div class="movement-value">—</div>
+                        <div class="movement-value">{{ lrDetails?.CancelledBy || '—' }}</div>
                     </div>
                     <div class="movement-box">
                         <div class="movement-label">Cancelled Date</div>
-                        <div class="movement-value">—</div>
+                        <div class="movement-value">{{ lrDetails?.cancceldate ? (parseDate(lrDetails?.cancceldate) |
+                            date:'dd MMM yyyy') : '—' }}</div>
                     </div>
                 </div>
 
@@ -135,15 +141,15 @@
                         <div class="route-details">
                             <div class="route-detail">
                                 <div class="route-detail-label">Code</div>
-                                <div class="route-detail-value">PDT</div>
+                                <div class="route-detail-value">{{ lrDetails?.ORGNCD || '—' }}</div>
                             </div>
                             <div class="route-detail">
                                 <div class="route-detail-label">From City</div>
-                                <div class="route-detail-value">PADARTHA</div>
+                                <div class="route-detail-value">{{ lrDetails?.OriginCity || '—' }}</div>
                             </div>
                             <div class="route-detail">
                                 <div class="route-detail-label">From City Zone</div>
-                                <div class="route-detail-value">WEST 2</div>
+                                <div class="route-detail-value">{{ lrDetails?.OriginStateName || '—' }}</div>
                             </div>
                         </div>
                     </div>
@@ -152,23 +158,23 @@
                         <div class="route-details">
                             <div class="route-detail">
                                 <div class="route-detail-label">Code</div>
-                                <div class="route-detail-value">GZB</div>
+                                <div class="route-detail-value">{{ lrDetails?.DESTCD || '—' }}</div>
                             </div>
                             <div class="route-detail">
                                 <div class="route-detail-label">To City</div>
-                                <div class="route-detail-value">GHAZIABAD</div>
+                                <div class="route-detail-value">{{ lrDetails?.DestinationCity || '—' }}</div>
                             </div>
                             <div class="route-detail">
                                 <div class="route-detail-label">To City Zone</div>
-                                <div class="route-detail-value">NORTH 2</div>
+                                <div class="route-detail-value">{{ lrDetails?.DestStateName || '—' }}</div>
                             </div>
                             <div class="route-detail">
                                 <div class="route-detail-label">Rate Type</div>
-                                <div class="route-detail-value">—</div>
+                                <div class="route-detail-value">{{ lrDetails?.RateType ||'—' }}</div>
                             </div>
                             <div class="route-detail">
                                 <div class="route-detail-label">Rate</div>
-                                <div class="route-detail-value">—</div>
+                                <div class="route-detail-value">{{ lrDetails?.Rate ||'—' }}</div>
                             </div>
                         </div>
                     </div>
@@ -190,12 +196,12 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>109</strong></td>
-                                <td>CARTON BOX</td>
-                                <td><strong>985.00</strong></td>
-                                <td>985.00</td>
-                                <td>FMCG GOODS</td>
-                                <td>DOOR PICKUP TO DOOR DELIVERY</td>
+                                <td><strong>{{ lrDetails?.Packages || '—' }}</strong></td>
+                                <td>{{ lrDetails?.PackingMethod || '—' }}</td>
+                                <td><strong>{{ lrDetails?.ActualWeight || '—' }}</strong></td>
+                                <td>{{ lrDetails?.ChargedWeight || '—' }}</td>
+                                <td>{{ lrDetails?.GoodsType||'—' }}</td>
+                                <td>{{ lrDetails?.deliveryterm || '—' }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -218,13 +224,15 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>V12254 : SHAILENDRA KUMAR SHUKLA</td>
-                                <td>29 May 2026</td>
-                                <td>/ 4502 : BITTU KUMAR PAL</td>
-                                <td>29 May 2026</td>
-                                <td><strong>243123</strong></td>
-                                <td><strong>985</strong></td>
-                                <td>—</td>
+                                <td>{{ lrDetails?.AddedBy || '—' }}</td>
+                                <td>{{ lrDetails?.AddedDate ? (parseDate(lrDetails?.AddedDate) | date:'dd MMM yyyy') :
+                                    '—' }}</td>
+                                <td>{{ lrDetails?.EditedBy || '—'}}</td>
+                                <td>{{ lrDetails?.EditedDate ? (parseDate(lrDetails?.EditedDate) | date:'dd MMM yyyy') :
+                                    '—' }}</td>
+                                <td><strong>{{ lrDetails?.DestinationPincode || '—' }}</strong></td>
+                                <td><strong>{{ lrDetails?.ActualWeight || '—' }}</strong></td>
+                                <td>{{ lrDetails?.SourceCNote ||'—' }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -244,14 +252,15 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>N</td>
-                                <td>Y</td>
-                                <td>Y</td>
-                                <td>N</td>
-                                <td>N</td>
-                                <td>—</td>
-                                <td>—</td>
-                                <td>New Zone</td>
+                                <td>{{ lrDetails?.LocalCN_YN || '—' }}</td>
+                                <td>{{ lrDetails?.Is_ODA_Apply || '—' }}</td>
+                                <td>{{ lrDetails?.vol_yn || '—' }}</td>
+                                <td>{{ lrDetails?.BulkInvokeYN || '—' }}</td>
+                                <td>{{ lrDetails?.ExmptServices || '—' }}</td>
+                                <td>{{ lrDetails?.BulkInvokBy || '—' }}</td>
+                                <td>{{ lrDetails?.BulkInvokeDate ? (parseDate(lrDetails?.BulkInvokeDate) | date:'dd MMM
+                                    yyyy') : '—' }}</td>
+                                <td>{{ lrDetails?.ChargeZoneMatrix ||'—' }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -273,12 +282,15 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>—</td>
-                                <td>—</td>
-                                <td>—</td>
-                                <td>—</td>
-                                <td>—</td>
-                                <td>—</td>
+                                <td>{{ lrDetails?.AppointmentNo || '—' }}</td>
+                                <td>{{ lrDetails?.AppointmentDT ? (parseDate(lrDetails?.AppointmentDT) | date:'dd MMM
+                                    yyyy') : '—' }}</td>
+                                <td>{{lrDetails?.ApmtEntryBy || '—' }}</td>
+                                <td>{{lrDetails?.ApmtEntryDate ? (parseDate(lrDetails?.ApmtEntryDate) | date:'dd MMM
+                                    yyyy') : '—'}}</td>
+                                <td>{{ lrDetails?.ApmtUpdateBy ||'—' }}</td>
+                                <td>{{ lrDetails?.ApmtUdateDate ? (parseDate(lrDetails?.ApmtUdateDate) | date:'dd MMM
+                                    yyyy') : '—' }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -300,12 +312,14 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>—</td>
-                                <td>—</td>
-                                <td>—</td>
-                                <td>—</td>
-                                <td>—</td>
-                                <td>—</td>
+                                <td>{{ lrDetails?.CSDNo ||'—' }}</td>
+                                <td>{{ lrDetails?.CSDDate ? (parseDate(lrDetails?.CSDDate) | date:'dd MMM yyyy') : '—'
+                                    }}</td>
+                                <td>{{lrDetails?.CSDEntryBy || '—' }}</td>
+                                <td>{{lrDetails?.MSDNo || '—' }}</td>
+                                <td>{{ lrDetails?.MSDDate ? (parseDate(lrDetails?.MSDDate) | date:'dd MMM yyyy') : '—'
+                                    }}</td>
+                                <td>{{ lrDetails?.MSDEntryBy ||'—' }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -327,12 +341,14 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>8607806676</td>
-                                <td>27 May 2026</td>
-                                <td>302260016952</td>
-                                <td>05 Jun 2026</td>
-                                <td><strong>₹ 176,966.96</strong></td>
-                                <td>DLO1MA2131</td>
+                                <td>{{ lrDetails?.INVNO || '—' }}</td>
+                                <td>{{ lrDetails?.INVDT ? (parseDate(lrDetails?.INVDT) | date:'dd MMM yyyy') : '—' }}
+                                </td>
+                                <td>{{ lrDetails?.EWayBillNo || '—' }}</td>
+                                <td>{{ lrDetails?.EWayBillExpiredDate ? (parseDate(lrDetails?.EWayBillExpiredDate) |
+                                    date:'dd MMM yyyy') : '—' }}</td>
+                                <td><strong>₹ {{ lrDetails?.DECLVAL | number:'1.2-2' || '0.00' }}</strong></td>
+                                <td>{{lrDetails?.Comments || '—' }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -354,26 +370,21 @@
                                 <th>CFT Ratio</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>16</td>
-                                <td>13</td>
-                                <td>11</td>
-                                <td>59</td>
-                                <td>585.9</td>
-                                <td>682</td>
-                                <td>7.5</td>
+                        <tbody *ngIf="boxDetails?.length">
+                            <tr *ngFor="let box of boxDetails;let i=index">
+                                <td>{{ i+1 }}</td>
+                                <td>{{ box?.VOL_L || '—' }}</td>
+                                <td>{{ box?.VOL_B || '—' }}</td>
+                                <td>{{ box?.VOL_H || '—' }}</td>
+                                <td>{{ box?.PKGSNO || '—' }}</td>
+                                <td>{{ box?.CubicWeight || '—' }}</td>
+                                <td>{{ box?.ACTUWT || '—' }}</td>
+                                <td>{{ box?.TOT_CFT ||'—' }}</td>
                             </tr>
+                        </tbody>
+                        <tbody *ngIf="!boxDetails || !boxDetails?.length">
                             <tr>
-                                <td>2</td>
-                                <td>13</td>
-                                <td>10</td>
-                                <td>10</td>
-                                <td>50</td>
-                                <td>282.12</td>
-                                <td>323</td>
-                                <td>7.5</td>
+                                <td colspan="8" class="text-center text-muted py-3">No Box Details Available</td>
                             </tr>
                         </tbody>
                     </table>
@@ -386,123 +397,123 @@
                     <div class="charges-grid">
                         <div class="charge-item">
                             <div class="charge-label">Basic Freight</div>
-                            <div class="charge-value">4,925.00</div>
+                            <div class="charge-value">{{ lrDetails?.BasicFreight | number:'1.2-2' || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Other Charges</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.OtherCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Document Charges</div>
-                            <div class="charge-value">100.00</div>
+                            <div class="charge-value">{{ lrDetails?.DocumentCharges ||'0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Extra Handling</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.ExtraHandlingCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Special Charges</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.SpecialCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">ODA Charges</div>
-                            <div class="charge-value">4,925.00</div>
+                            <div class="charge-value">{{ lrDetails?.ODACharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">FOV Charges</div>
-                            <div class="charge-value">176.97</div>
+                            <div class="charge-value">{{ lrDetails?.FOVCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">CSD Delivery</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.CSDDeliveryCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">J & K Delivery</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.JKDeliveryCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Pickup Charges</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.PickupCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Cartage Charges</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.CartageCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Mall Delivery</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.MallDeliveryCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Extra Delivery</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.ExtraDeliveryCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">North East Charges</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.NorthEastCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">GreenTax Delivery</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.GreenTaxDeliveryCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Sikkim Tax (SNT)</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.SikkimTaxCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Varai Charges</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.VaraiCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">West Bengal Delivery</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.WestBengalDeliveryCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Diesel Hike (FSC)</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.DieselHikeFSCCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Kerala Charges</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.KeralaCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Unloading Charges</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.UnloadingCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">2nd Attempt Delivery</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.SecondAttemptDeliveryCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Loading Charges</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.LoadingCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">To Pay Charges</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.ToPayCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Appointment Charges</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.AppointmentCharges || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Fuel Surcharge</div>
-                            <div class="charge-value">738.75</div>
+                            <div class="charge-value">{{ lrDetails?.FuelSurcharge || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Discount Rate Type</div>
-                            <div class="charge-value">—</div>
+                            <div class="charge-value">{{ lrDetails?.Discount_RateType || '—' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Discount Rate (%)</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.DiscountRate || '0.00' }}</div>
                         </div>
                         <div class="charge-item">
                             <div class="charge-label">Discount (-)</div>
-                            <div class="charge-value">0.00</div>
+                            <div class="charge-value">{{ lrDetails?.DiscountAmount || '0.00' }}</div>
                         </div>
                         <div class="charge-item total">
                             <div class="charge-label">Total Freight</div>
-                            <div class="charge-value">10,865.72</div>
+                            <div class="charge-value">{{ lrDetails?.TotalFreight || '0.00' }}</div>
                         </div>
                     </div>
                 </div>
@@ -512,19 +523,27 @@
                     <div class="summary-box">
                         <div class="section-title">📊 Tax Summary</div>
                         <div class="summary-row">
-                            <span class="summary-label">SGST/UTGST (9%)</span>
-                            <span class="summary-value amount">₹ 977.91</span>
+                            <span class="summary-label">SGST(9%)</span>
+                            <span class="summary-value amount">₹ {{ lrDetails?.SGSTAmount }}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">TGST (9%)</span>
+                            <span class="summary-value amount">₹ {{ lrDetails?.UGSTAmount }}</span>
                         </div>
                         <div class="summary-row">
                             <span class="summary-label">CGST (9%)</span>
-                            <span class="summary-value amount">₹ 977.91</span>
+                            <span class="summary-value amount">₹ {{ lrDetails?.CGSTAmount || '0.00' }}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">IGST (18%)</span>
+                            <span class="summary-value amount">₹ {{ lrDetails?.IGSTAmount || '0.00' }}</span>
                         </div>
                     </div>
                     <div class="summary-box">
                         <div class="section-title">💵 Total Amount Payable</div>
                         <div
                             style="padding: 20px; text-align: center; background: #E63946; color: white; border-radius: 4px; font-size: 24px; font-weight: bold;">
-                            ₹ 12,821.55
+                            ₹ {{ lrDetails?.TotalAmountPayable || '0.00' }}
                         </div>
                     </div>
                 </div>
@@ -535,27 +554,27 @@
                     <div class="payment-row">
                         <div class="payment-item">
                             <div class="payment-label">Payment Terms</div>
-                            <div class="payment-value">TBB</div>
+                            <div class="payment-value">{{ lrDetails?.PaymentTerms || '—' }}</div>
                         </div>
                         <div class="payment-item">
                             <div class="payment-label">Bank Name</div>
-                            <div class="payment-value">HDFC BANK</div>
+                            <div class="payment-value">{{ lrDetails?.BankName || '—' }}</div>
                         </div>
                         <div class="payment-item">
                             <div class="payment-label">Branch</div>
-                            <div class="payment-value">PRABHADEVI</div>
+                            <div class="payment-value">{{ lrDetails?.BranchName || '—' }}</div>
                         </div>
                         <div class="payment-item">
                             <div class="payment-label">Account No.</div>
-                            <div class="payment-value">50200033944301</div>
+                            <div class="payment-value">{{ lrDetails?.AccountNo || '—' }}</div>
                         </div>
                         <div class="payment-item">
                             <div class="payment-label">IFSC Code</div>
-                            <div class="payment-value">HDFC0000012</div>
+                            <div class="payment-value">{{ lrDetails?.IFSCCode || '—' }}</div>
                         </div>
                         <div class="payment-item">
                             <div class="payment-label">GST Payable By</div>
-                            <div class="payment-value">Consignor</div>
+                            <div class="payment-value">{{ lrDetails?.GSTPayableBy || '—' }}</div>
                         </div>
                     </div>
                     <div style="padding-top: 15px; border-top: 1px solid #ccc; font-size: 11px; color: #666;">
@@ -628,9 +647,9 @@
                 <!-- ──────── FOOTER ──────── -->
                 <div class="footer">
                     <p>
-                        🌐 Website: <a href="#" class="footer-link">scorpiongroup.in</a> |
-                        📧 Email: <a href="#" class="footer-link">info&#64;scorpiongroup.in</a> |
-                        📞 Phone: 6264506385
+                        🌐 Website: <a href="#" class="footer-link">{{ lrDetails?.Website || '—'}}</a> |
+                        📧 Email: <a href="#" class="footer-link">{{ lrDetails?.Email || '—'}}</a> |
+                        📞 Phone: {{ lrDetails?.ContactNo || '—'}}
                     </p>
                     <p style="margin-top: 10px; font-size: 10px; opacity: 0.8;">
                         © 2026 Scorpion Express Pvt Ltd. | Terms & Conditions Apply

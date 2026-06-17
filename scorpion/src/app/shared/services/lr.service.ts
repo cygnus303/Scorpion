@@ -21,4 +21,8 @@ export class LrService {
       let query = `locCode=${params.locCode}&statusFilter=${params.statusFilter}&searchText=${params.searchText}&startDate=${params.startDate}&endDate=${params.endDate}`;
       return this.apiHandlerService.Get(`Operation/ExportLRListing?${query}`);
     }
+
+    lrViewDetail(lrNumber:string): Observable<IApiBaseResponse<any[]>> {
+      return this.apiHandlerService.Get(`Operation/View_LR_Details?lrNumber=${lrNumber}`);
+    }
 }
