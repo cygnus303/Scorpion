@@ -7,6 +7,7 @@ import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { DocketService } from 'app/shared/services/docket.service';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-deps-entry',
@@ -22,10 +23,12 @@ export class DepsEntryComponent {
   public dateStr: string = '';
   public vendorName: string = '';
   public totalDeliveredDockets: number = 0;
+  env = environment;
 
   @Output() dataEmitter = new EventEmitter<void>();
   @ViewChild('TemplateDeps', { static: true }) TemplateDeps!: TemplateRef<any>;
 
+  public isEditMode: boolean = false;
   public depsForm!: FormGroup;
   public isLoading: boolean = false;
   public damageTypes: any[] = [];
@@ -63,7 +66,7 @@ export class DepsEntryComponent {
 
     return new FormGroup({
       dockno: new FormControl(item.dockno),
-      docketsf: new FormControl(item.docketsf),
+      docketsf: new FormControl(item.docksf || item.docketsf),
       dockdt: new FormControl(item.dockdt),
       orgncd: new FormControl(item.orgncd),
       destcd: new FormControl(item.destcd),
@@ -81,11 +84,13 @@ export class DepsEntryComponent {
       fileBase64: new FormControl(''),
       boxIds: new FormControl(boxIds),
       selectedBoxIds: new FormControl(item.selectedBoxIds || []),
-      raw: new FormControl(item)
+      depsNo: new FormControl(item.depsNo || ''),
+      depsDate: new FormControl(item.depsDate || '')
     });
   }
 
   showPopup(data: any, isEditMode: boolean = false) {
+    this.isEditMode = isEditMode;
     this.drsNo = data.drsNo || '';
     this.depsNo = data.depsNo || '';
     this.vendorName = data.vendorName || '';
@@ -99,34 +104,123 @@ export class DepsEntryComponent {
 
     this.modalRef = this.modalService.show(this.TemplateDeps, { class: 'modal-xxl modal-dialog-centered deps-entry-modal-wrapper', backdrop: 'static' });
 
+    this.loadDepsData();
+  }
+
+  loadDepsData() {
     if (this.drsNo) {
       this.fetchDamageTypes(() => {
-        this.prsdrsApiService.GetDetForDepsDeclarationByTCNo(this.drsNo).subscribe({
-          next: (response: any) => {
-            this.isLoading = false;
-            if (response && response.success && response.data) {
-              const formArray = this.docketsArray;
-              formArray.clear();
-              this.severityLists = [];
-              response.data.forEach((item: any, i: number) => {
-                formArray.push(this.createDocketFormGroup(item));
-                if (item.damageType) {
-                  this.fetchSeverityDataForRow(i, item.damageType);
-                } else {
-                  this.severityLists[i] = [];
-                }
-              });
+        if (this.isEditMode) {
+          // EDIT MODE: Call only getHCCDynamicData to fetch existing exceptions
+          this.thcMasterService.getHCCDynamicData({
+            FilterJson: {
+              ReportId: '365',
+              Thcno: this.drsNo
             }
-          },
-          error: (err: any) => {
-            this.isLoading = false;
-            console.error('Error fetching DEPS details:', err);
-          }
-        });
+          }).subscribe({
+            next: (editRes: any) => {
+              this.isLoading = false;
+              const editList = (editRes && editRes.success && editRes.data && editRes.data.Table1) || (editRes && editRes.Table1) || [];
+              this.populateFormForEdit(editList);
+            },
+            error: (err: any) => {
+              this.isLoading = false;
+              console.error('Error loading edit DEPS data:', err);
+              this.populateFormForEdit([]);
+            }
+          });
+        } else {
+          // ADD MODE: Call only GetDetForDepsDeclarationByTCNo to load all TC dockets
+          this.prsdrsApiService.GetDetForDepsDeclarationByTCNo(this.drsNo).subscribe({
+            next: (response: any) => {
+              this.isLoading = false;
+              if (response && response.success && response.data) {
+                this.populateFormForAdd(response.data);
+              } else {
+                this.populateFormForAdd([]);
+              }
+            },
+            error: (err: any) => {
+              this.isLoading = false;
+              console.error('Error loading DEPS details:', err);
+              this.populateFormForAdd([]);
+            }
+          });
+        }
       });
     } else {
       this.isLoading = false;
     }
+  }
+
+  populateFormForAdd(docketsData: any[]) {
+    const formArray = this.docketsArray;
+    formArray.clear();
+    this.severityLists = [];
+
+    docketsData.forEach((docketItem: any, index: number) => {
+      formArray.push(this.createDocketFormGroup(docketItem));
+      this.severityLists[index] = [];
+    });
+  }
+
+  populateFormForEdit(editList: any[]) {
+    const formArray = this.docketsArray;
+    formArray.clear();
+    this.severityLists = [];
+    debugger
+    editList.forEach((editItem: any, index: number) => {
+      let prefilledItem = {
+        dockno: editItem.dockno,
+        docksf: editItem.docketsf,
+        dockdt: editItem.dockdt || '',
+        orgncd: editItem.orgncd || '',
+        destcd: editItem.destcd || '',
+        pkgsno: editItem.pkgsno,
+        invval: editItem.Invval,
+        depstype: editItem.depstype,
+        damageType: editItem.DamageType,
+        severity: editItem.Severity,
+        remarks: editItem.Remark,
+        depsNo: editItem.DEPSNo,
+        depsDate: editItem.DepsDate,
+        fileName: editItem.DepsImage,
+        fileAttached: !!(editItem.DepsImage),
+        fileUrl: '',
+        affectedPkgs: editItem.affectedQty,
+        selectedBoxIds: [] as string[],
+        affectedInvVal: editItem.affectedInvVal
+      };
+
+      if (prefilledItem.fileName) {
+        prefilledItem.fileUrl = `${this.env.liveUrl}Uploads/${prefilledItem.fileName}`;
+      }
+
+      const affectedQty = Number(editItem.Lossvalue || editItem.affectedQty || 0);
+      prefilledItem.affectedPkgs = affectedQty;
+
+      const boxIds = [];
+      const totalPackagesCount = prefilledItem.pkgsno || 0;
+      for (let k = 1; k <= totalPackagesCount; k++) {
+        const suffix = k.toString().padStart(3, '0');
+        boxIds.push(`${editItem.dockno}_${suffix}`);
+      }
+      prefilledItem.selectedBoxIds = boxIds.slice(0, affectedQty);
+
+      if (affectedQty > 0) {
+        prefilledItem.affectedInvVal = Number((prefilledItem.invval / affectedQty).toFixed(2));
+      } else {
+        prefilledItem.affectedInvVal = 0.00;
+      }
+
+      formArray.push(this.createDocketFormGroup(prefilledItem));
+
+      if (prefilledItem.damageType) {
+        this.fetchSeverityDataForRow(index, prefilledItem.damageType);
+      } else {
+        this.severityLists[index] = [];
+      }
+    });
   }
 
   fetchDamageTypes(callback?: () => void) {
@@ -259,7 +353,7 @@ export class DepsEntryComponent {
       const row = this.docketsArray.at(index) as FormGroup;
       row.get('fileName')?.setValue(file.name);
       row.get('fileAttached')?.setValue(true);
-      
+
       const objectUrl = URL.createObjectURL(file);
       row.get('fileUrl')?.setValue(objectUrl);
 
@@ -298,9 +392,12 @@ export class DepsEntryComponent {
       return;
     }
 
-    const activeRows = this.docketsArray.controls.filter((c: any) => c.value.depstype);
+    const activeRows = this.docketsArray.controls.filter((c: any) => {
+      const v = c.value;
+      return (v.depsNo && v.depsNo.trim() !== '') || (v.affectedPkgs && v.affectedPkgs > 0);
+    });
     if (activeRows.length === 0) {
-      this.sweetAlertService.warning('Please declare at least one DEPS record (Damage/Shortage).');
+      this.sweetAlertService.warning('Please declare at least one DEPS record (Damage/Shortage) with affected packages.');
       return;
     }
 
@@ -318,27 +415,30 @@ export class DepsEntryComponent {
         affectedWeight: 0,
         affectedInvVal: v.affectedInvVal || 0,
         fileName: v.fileName || '',
-        depsfile: v.fileBase64 ? v.fileBase64 :'',
+        depsfile: v.fileBase64 ? v.fileBase64 : '',
         reason: '',
         remarks: v.remarks || '',
         depsTyp: v.depstype || '',
         damageType: v.damageType || '',
         severity: v.severity || '',
-        invval: v.invval || 0
+        invval: v.invval || 0,
+        depsNo: v.depsNo || ""
       };
     });
 
     const payload = {
       baseUserName: this.docketService.loginUserList?.BaseUserName,
       baseLoctaionCode: this.docketService.loginUserList?.LocationCode,
-      depsData
+      depsData,
+      type: this.isEditMode ? 'U' : 'A'
     };
 
     this.prsdrsApiService.submitDepsGeneration(payload).subscribe({
       next: (res: any) => {
         this.isLoading = false;
         if (res.data && (res.data.Status === 1)) {
-          this.sweetAlertService.success(res.data.Message || 'DEPS saved successfully!').then(() => {
+          const successMsg = `${res.data.Message || 'DEPS saved successfully!'} (ID: ${res.data.DepsId || ''})`;
+          this.sweetAlertService.success(successMsg).then(() => {
             this.closePopup();
             this.dataEmitter.emit();
           });

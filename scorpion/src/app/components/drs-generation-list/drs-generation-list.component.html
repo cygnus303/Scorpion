@@ -237,14 +237,14 @@
                                 {{ isHccValid(data.unloadingHCCNo) ? 'HCC' : 'NO HCC' }}
                             </span>
                         </td>
-                        <!-- *ngIf="getDepsCount(data) > 0" -->
-                        <td class="text-center">
-                            <div  class="d-inline-flex align-items-center justify-content-center gap-2">
-                                <span class="d-inline-flex align-items-center justify-content-center text-white bg-success rounded-1" style="width: 15px; height: 15px; font-size: 9px; font-weight: bold; line-height: 1;">✔</span>
-                                <span class="fw-bold" style="color: #1a237e; font-size: 12px; font-family: 'IBM Plex Sans', sans-serif;">{{ getDepsCount(data) }} DEPS IDs</span>
-                                <button type="button" class="btn btn-danger btn-sm py-1 px-2 fw-bold text-white shadow-sm" style="font-size: 10px; background-color: #c00d0d; border-color: #c00d0d; border-radius: 4px; line-height: 1.2; font-family: 'IBM Plex Sans', sans-serif;" (click)="openDepsDetails(data)">View</button>
+                        
+                        <td class="text-center" >
+                            <div *ngIf="+data.depsNo > 0" class="d-inline-flex align-items-center justify-content-center gap-2">
+                                <span class="d-inline-flex align-items-center justify-content-center text-white bg-success rounded-1" style="width: 13px; height: 13px; font-size: 9px; font-weight: bold; line-height: 1;">✔</span>
+                                <span style="color: #1a237e; font-size: 10px !important;">{{ data.depsNo }} DEPS IDs</span>
+                                <button type="button" class="btn btn-danger btn-sm py-1 px-2 fw-bold text-white shadow-sm" style="font-size: 8px; background-color: #c00d0d; border-color: #c00d0d; border-radius: 4px; line-height: 1.2; font-family: 'IBM Plex Sans', sans-serif;" (click)="openDepsDetails(data)">View</button>
                             </div>
-                            <div *ngIf="getDepsCount(data) === 0">
+                            <div *ngIf="+data.depsNo === 0">   
                                 <span class="text-muted">—</span>
                             </div>
                         </td>
@@ -253,7 +253,7 @@
                                 {{ data.status }}
                             </span>
                         </td>
-                        <td style="width: 700px !important;">
+                        <td style="width: 650px !important;">
                             <div class="d-flex flex-wrap gap-2 justify-content-center">
                                 <button *ngIf="menuAccessService.hasPermission('View')"
                                     class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3"
@@ -263,11 +263,17 @@
                                 <button *ngIf="!isHQTR"
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
                                     (click)="openUpdateModal(data)"
-                                    [disabled]="data.ispdcUpdate ||data.status==='Cancelled'||data.status==='Billed' || data.IsThroughDA ===true || data.vendorType === 'BUSINESS ASSOCIATE' ">
+                                    [disabled]="data.ispdcUpdate || data.status==='Cancelled'||data.status==='Billed' || data.IsThroughDA ===true || data.vendorType === 'BUSINESS ASSOCIATE' ">
                                     🔄 DRS Update
                                 </button>
-                                <button class="btn btn-sm bg-warning-secondary border-warning-secondary text-warning-emphasis py-1 px-3" (click)="openDeps(data, false)">📋 DEPS</button>
-                                <button class="btn btn-sm bg-warning-dark border-warning-dark text-warning-emphasis py-1 px-3" (click)="openDeps(data, true)">✏️ Edit DEPS</button>
+                                <button class="btn btn-sm bg-warning-secondary border-warning-secondary text-warning-emphasis py-1 px-3" (click)="openDeps(data, false)"
+                                [disabled]="!data.ispdcUpdate || +data.depsNo > 0">     
+                                    📋 DEPS
+                                </button>
+                                <button class="btn btn-sm bg-warning-dark border-warning-dark text-warning-emphasis py-1 px-3" (click)="openDeps(data, true)"
+                                [disabled]="!data.ispdcUpdate">
+                                    ✏️ Edit DEPS
+                                </button>
                                 <button *ngIf="!isHQTR && menuAccessService.hasPermission('Edit')" (click)="openPRSDRSEdit(data,'P')"
                                     [disabled]="!data.isCancelAllow ||data.status==='Billed'||data.status==='Cancelled'"
                                     class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3">

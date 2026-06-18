@@ -317,18 +317,7 @@ export class DrsGenerationListComponent {
     this.depsDetailsComponent.showPopup(data);
   }
 
-  getDepsCount(data: any): number {
-    if (data.depsCount !== undefined && data.depsCount !== null) {
-      return Number(data.depsCount);
-    }
-    if (!data.depsNo) return 0;
-    if (Array.isArray(data.depsNo)) return data.depsNo.length;
-    if (typeof data.depsNo === 'string') {
-      return data.depsNo.split(',').filter((id: string) => id.trim().length > 0).length;
-    }
-    return 0;
-  }
-
+ 
   openPRSDRSEdit(data: any, flag: string) {
     this.PRSDRSEditComponent.showPopup(data, flag);
   }
