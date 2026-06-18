@@ -19,11 +19,12 @@ import { DRSUpdateListComponent } from './drs-update-list/drs-update-list.compon
 import { HccViewComponent } from '../hcc-view/hcc-view.component';
 import { MenuAccessService } from 'app/shared/services/menu-access.service';
 import { DepsEntryComponent } from './deps-entry/deps-entry.component';
+import { DepsDetailsComponent } from './deps-details/deps-details.component';
 
 @Component({
   selector: 'app-drs-generation-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, ReactiveFormsModule, DRSUpdateListComponent, PRSDRSEditComponent, SingleCnoteDrsUpdateComponent, HCCDetailsComponent, HccViewComponent, DepsEntryComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, ReactiveFormsModule, DRSUpdateListComponent, PRSDRSEditComponent, SingleCnoteDrsUpdateComponent, HCCDetailsComponent, HccViewComponent, DepsEntryComponent, DepsDetailsComponent],
   providers: [BsModalService],
   templateUrl: './drs-generation-list.component.html',
   styleUrl: './drs-generation-list.component.scss'
@@ -70,6 +71,7 @@ export class DrsGenerationListComponent {
   @ViewChild('PRSDRSEditComponent') PRSDRSEditComponent!: PRSDRSEditComponent;
   @ViewChild('HccViewComponent') HccViewComponent!: HccViewComponent;
   @ViewChild('DepsEntryComponent') depsEntryComponent!: DepsEntryComponent;
+  @ViewChild('DepsDetailsComponent') depsDetailsComponent!: DepsDetailsComponent;
 
 
   constructor(
@@ -309,6 +311,22 @@ export class DrsGenerationListComponent {
 
   openDeps(data: any, isEditMode: boolean = false) {
     this.depsEntryComponent.showPopup(data, isEditMode);
+  }
+
+  openDepsDetails(data: any) {
+    this.depsDetailsComponent.showPopup(data);
+  }
+
+  getDepsCount(data: any): number {
+    if (data.depsCount !== undefined && data.depsCount !== null) {
+      return Number(data.depsCount);
+    }
+    if (!data.depsNo) return 0;
+    if (Array.isArray(data.depsNo)) return data.depsNo.length;
+    if (typeof data.depsNo === 'string') {
+      return data.depsNo.split(',').filter((id: string) => id.trim().length > 0).length;
+    }
+    return 0;
   }
 
   openPRSDRSEdit(data: any, flag: string) {

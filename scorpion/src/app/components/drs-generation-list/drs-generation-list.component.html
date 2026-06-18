@@ -173,6 +173,7 @@
                         <th class="text-center">Vendor BE No.</th>
                         <th class="text-center">Loading HCC No.</th>
                         <th class="text-center">Unloading HCC No.</th>
+                        <th class="text-center">DEPS No.</th>
                         <th class="text-center">Status</th>
                         <th class="text-center">Actions</th>
                     </tr>
@@ -235,6 +236,17 @@
                                 (click)="isHccValid(data.unloadingHCCNo) ? openHccView(data,'U') : null">
                                 {{ isHccValid(data.unloadingHCCNo) ? 'HCC' : 'NO HCC' }}
                             </span>
+                        </td>
+                        <!-- *ngIf="getDepsCount(data) > 0" -->
+                        <td class="text-center">
+                            <div  class="d-inline-flex align-items-center justify-content-center gap-2">
+                                <span class="d-inline-flex align-items-center justify-content-center text-white bg-success rounded-1" style="width: 15px; height: 15px; font-size: 9px; font-weight: bold; line-height: 1;">✔</span>
+                                <span class="fw-bold" style="color: #1a237e; font-size: 12px; font-family: 'IBM Plex Sans', sans-serif;">{{ getDepsCount(data) }} DEPS IDs</span>
+                                <button type="button" class="btn btn-danger btn-sm py-1 px-2 fw-bold text-white shadow-sm" style="font-size: 10px; background-color: #c00d0d; border-color: #c00d0d; border-radius: 4px; line-height: 1.2; font-family: 'IBM Plex Sans', sans-serif;" (click)="openDepsDetails(data)">View</button>
+                            </div>
+                            <div *ngIf="getDepsCount(data) === 0">
+                                <span class="text-muted">—</span>
+                            </div>
                         </td>
                         <td class="text-center">
                             <span class="pill-badge px-2 py-1" [ngClass]="getStatusClass(data.status)">
@@ -316,3 +328,4 @@
 <app-prsdrs-edit #PRSDRSEditComponent (dataEmitter)="refreshData()"></app-prsdrs-edit>
 <app-hcc-view #HccViewComponent (dataEmitter)="refreshData()"></app-hcc-view>
 <app-deps-entry #DepsEntryComponent (dataEmitter)="refreshData()"></app-deps-entry>
+<app-deps-details #DepsDetailsComponent (dataEmitter)="refreshData()"></app-deps-details>

@@ -71,5 +71,9 @@ export class PRSDRSApiService {
   GetDESPSData(codeId: string) {
     return this.apiHandlerService.Get(`THC/GetDESPSData?codeId=${codeId}`);
   }
+
+  submitDepsGeneration(payload: any) {
+    return this.apiHandlerService.Post(`Operation/DepsGeneration`, payload);
+  }
 }
 
