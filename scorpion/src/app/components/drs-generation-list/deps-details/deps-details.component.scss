@@ -1,0 +1,166 @@
+// DEPS Details Component SCSS
+
+.depsd-body {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 60vh;
+  min-height: 250px;
+}
+
+thead th {
+  background-color: #b71c1c !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  padding: 12px 8px !important;
+  white-space: nowrap;
+}
+
+tbody tr:hover td {
+  background-color: #fff1f1 !important; // Light rose highlight on hover
+}
+
+// Bootstrap modal wrapper overrides
+::ng-deep .deps-details-modal-wrapper {
+  max-width: 80% !important;
+  width: 80% !important;
+
+  @media (max-width: 992px) {
+    max-width: 95% !important;
+    width: 95% !important;
+  }
+
+  .modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    overflow: hidden;
+    animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+// Printing mode styles: Make print layout look EXACTLY like the UI
+::ng-deep {
+  @media print {
+    .deps-printing-mode {
+      background: #ffffff !important;
+      height: auto !important;
+      min-height: 100% !important;
+      overflow: visible !important;
+    }
+
+    body.deps-printing-mode {
+      padding: 5mm 5mm !important; // Narrow margins to give maximum horizontal space
+      zoom: 65% !important; // Scale down print layout to fit portrait paper width perfectly
+
+      // Hide everything inside body except modal-container
+      & > :not(modal-container) {
+        display: none !important;
+      }
+
+      // Explicitly hide the backdrop which is outside modal-container
+      .modal-backdrop {
+        display: none !important;
+      }
+
+      modal-container {
+        display: block !important;
+        position: relative !important; // Relative position so body padding works
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+      }
+
+      .modal-dialog,
+      .deps-details-modal-wrapper {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      .modal-content {
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        background: #ffffff !important;
+        overflow: visible !important;
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+
+      // Restore natural table layout and font sizing
+      table {
+        width: 100% !important;
+        table-layout: auto !important; // Let table size columns naturally
+      }
+
+      th, td {
+        padding: 4px 6px !important; // Tighter padding for cells
+        font-size: 10px !important; // Smaller font size
+        word-break: normal !important;
+        white-space: nowrap !important; // Prevent numbers and IDs from wrapping onto new lines
+      }
+
+      // Only allow Remarks and File Attachment columns to wrap if necessary
+      th:nth-child(11), td:nth-child(11) {
+        white-space: normal !important;
+        word-break: break-word !important;
+        min-width: 140px !important;
+      }
+
+      th:nth-child(12), td:nth-child(12) {
+        white-space: normal !important;
+        min-width: 100px !important;
+      }
+
+      // Expand table wrapper and body to show all rows (no scrollbars in print)
+      .depsd-body {
+        max-height: none !important;
+        overflow: visible !important;
+        background: #ffffff !important;
+      }
+
+      .table-responsive {
+        overflow: visible !important;
+      }
+
+      // Preserve colors, backgrounds, borders and fonts
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+
+      // Force backgrounds to print
+      .modal-header,
+      thead th,
+      .badge,
+      .bg-white,
+      .bg-light {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      // Hide elements not needed in printout (footers, print/close buttons)
+      .modal-footer, 
+      .btn-close, 
+      .modal-header button,
+      button {
+        display: none !important;
+      }
+    }
+  }
+}

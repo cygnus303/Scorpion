@@ -5,6 +5,8 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { DocketService } from 'app/shared/services/docket.service';
 
 @Component({
   selector: 'app-deps-entry',
@@ -20,7 +22,7 @@ export class DepsEntryComponent {
   public dateStr: string = '';
   public vendorName: string = '';
   public totalDeliveredDockets: number = 0;
-  
+
   @Output() dataEmitter = new EventEmitter<void>();
   @ViewChild('TemplateDeps', { static: true }) TemplateDeps!: TemplateRef<any>;
 
@@ -38,8 +40,10 @@ export class DepsEntryComponent {
   constructor(
     private modalService: BsModalService,
     private prsdrsApiService: PRSDRSApiService,
-    private thcMasterService: THCMasterService
-  ) {}
+    private thcMasterService: THCMasterService,
+    private sweetAlertService: SweetAlertService,
+    private docketService: DocketService
+  ) { }
 
   get docketsArray(): FormArray {
     return this.depsForm?.get('dockets') as FormArray;
@@ -48,7 +52,7 @@ export class DepsEntryComponent {
   createDocketFormGroup(item: any): FormGroup {
     const boxIds = [];
     const pkgsCount = item.pkgsno || 0;
-    
+
     for (let k = 1; k <= pkgsCount; k++) {
       boxIds.push(`${item.dockno}_${k.toString().padStart(3, '0')}`);
     }
@@ -59,6 +63,7 @@ export class DepsEntryComponent {
 
     return new FormGroup({
       dockno: new FormControl(item.dockno),
+      docketsf: new FormControl(item.docketsf),
       dockdt: new FormControl(item.dockdt),
       orgncd: new FormControl(item.orgncd),
       destcd: new FormControl(item.destcd),
@@ -70,9 +75,10 @@ export class DepsEntryComponent {
       affectedPkgs: new FormControl(item.affectedPkgs || 0),
       affectedInvVal: new FormControl(item.affectedInvVal || 0.00),
       remarks: new FormControl(item.remarks || ''),
-      fileAttached: new FormControl(!!item.fileAttached),  
+      fileAttached: new FormControl(!!item.fileAttached),
       fileName: new FormControl(item.fileName || ''),
       fileUrl: new FormControl(item.fileUrl || null),
+      fileBase64: new FormControl(''),
       boxIds: new FormControl(boxIds),
       selectedBoxIds: new FormControl(item.selectedBoxIds || []),
       raw: new FormControl(item)
@@ -91,7 +97,7 @@ export class DepsEntryComponent {
       dockets: new FormArray([])
     });
 
-    this.modalRef = this.modalService.show(this.TemplateDeps, {class: 'modal-xxl modal-dialog-centered deps-entry-modal-wrapper',backdrop: 'static'});
+    this.modalRef = this.modalService.show(this.TemplateDeps, { class: 'modal-xxl modal-dialog-centered deps-entry-modal-wrapper', backdrop: 'static' });
 
     if (this.drsNo) {
       this.fetchDamageTypes(() => {
@@ -256,6 +262,14 @@ export class DepsEntryComponent {
       
       const objectUrl = URL.createObjectURL(file);
       row.get('fileUrl')?.setValue(objectUrl);
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const result = reader.result as string;
+        const base64String = result.includes(',') ? result.split(',')[1] : result;
+        row.get('fileBase64')?.setValue(base64String);
+      };
     }
     input.value = '';
   }
@@ -269,6 +283,7 @@ export class DepsEntryComponent {
     row.get('fileName')?.setValue('');
     row.get('fileAttached')?.setValue(false);
     row.get('fileUrl')?.setValue(null);
+    row.get('fileBase64')?.setValue('');
   }
 
   closePopup() {
@@ -282,10 +297,62 @@ export class DepsEntryComponent {
       this.depsForm.markAllAsTouched();
       return;
     }
-    console.log('Submitted DEPS Form Value:', this.depsForm.value);
-    this.closePopup();
-    this.dataEmitter.emit();
+
+    const activeRows = this.docketsArray.controls.filter((c: any) => c.value.depstype);
+    if (activeRows.length === 0) {
+      this.sweetAlertService.warning('Please declare at least one DEPS record (Damage/Shortage).');
+      return;
+    }
+
+    this.isLoading = true;
+
+    const depsData = activeRows.map((c: any) => {
+      const v = c.value;
+      return {
+        documentNo: this.drsNo,
+        docket: v.dockno || '',
+        docketsf: v.docketsf || '',
+        pkgsDelivered: v.pkgsno || 0,
+        totWeight: 0,
+        affectedQty: v.affectedPkgs || 0,
+        affectedWeight: 0,
+        affectedInvVal: v.affectedInvVal || 0,
+        fileName: v.fileName || '',
+        depsfile: v.fileBase64 ? v.fileBase64 :'',
+        reason: '',
+        remarks: v.remarks || '',
+        depsTyp: v.depstype || '',
+        damageType: v.damageType || '',
+        severity: v.severity || '',
+        invval: v.invval || 0
+      };
+    });
+
+    const payload = {
+      baseUserName: this.docketService.loginUserList?.BaseUserName,
+      baseLoctaionCode: this.docketService.loginUserList?.LocationCode,
+      depsData
+    };
+
+    this.prsdrsApiService.submitDepsGeneration(payload).subscribe({
+      next: (res: any) => {
+        this.isLoading = false;
+        if (res.data && (res.data.Status === 1)) {
+          this.sweetAlertService.success(res.data.Message || 'DEPS saved successfully!').then(() => {
+            this.closePopup();
+            this.dataEmitter.emit();
+          });
+        } else {
+          this.sweetAlertService.error(res.data?.Message);
+        }
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.sweetAlertService.error(err?.error?.Message);
+      }
+    });
   }
+
 
   closeBoxDropdowns() {
     this.activeBoxDropdownIndex = null;
