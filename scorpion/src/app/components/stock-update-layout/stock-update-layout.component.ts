@@ -34,7 +34,7 @@ export class StockUpdateLayoutComponent {
     totalRecords: 0,
     totalPages: 1,
     searchText: '',
-    statusFilter: 'TotalStockUpdate'
+    statusFilter: 'All'
   };
 
   public stockUpdateData: any[] = [];
@@ -99,21 +99,22 @@ export class StockUpdateLayoutComponent {
       locCode: this.docketService.loginUserList.LocationCode || null,
       pageNumber: this.config.page,
       pageSize: this.config.pageSize,
-      searchText: this.config.searchText || this.config.statusFilter,
+      searchText: this.config.searchText||'',
       isDownload: 0,
+      statusFilter:this.config.statusFilter
     };
 
-    const cacheKey = JSON.stringify(payload);
-    if (this.apiCache.has(cacheKey)) {
-      this.handleApiResponse(this.apiCache.get(cacheKey));
-      return;
-    }
+    // const cacheKey = JSON.stringify(payload);
+    // if (this.apiCache.has(cacheKey)) {
+    //   this.handleApiResponse(this.apiCache.get(cacheKey));
+    //   return;
+    // }
 
     this.isLoading = true;
     this.listSubscription = this.stockUpdateService.getStockUpdateListing(payload).subscribe({
       next: (response: any) => {
         this.isLoading = false;
-        this.apiCache.set(cacheKey, response);
+        // this.apiCache.set(cacheKey, response);
         this.handleApiResponse(response);
       },
       error: (err: any) => {
