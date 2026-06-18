@@ -29,7 +29,7 @@
       <div class="col-md-3 col-6 border-end">
         <div class="d-flex flex-column px-2">
           <small class="text-uppercase text-secondary fw-bold" style="font-size: 10px; letter-spacing: 0.8px;">DEPS DATE</small>
-          <span class="fw-bold text-success fs-6">{{ (dateStr | date:'dd/MM/yyyy, hh:mm a') || '—' }}</span>
+          <span class="fw-bold text-success fs-6">{{ (dateStr | date:'dd-MMM-yyyy') || '—' }}</span>
         </div>
       </div>
       <div class="col-md-3 col-6 border-end">
@@ -57,6 +57,7 @@
             <th>DEPS ID</th>
             <th>Docket No / Date</th>
             <th>Org → Dest</th>
+            <th>DEPS Date</th>
             <th>ADD</th>
             <th>Del Pkgs</th>
             <th>DEPS Type</th>
@@ -91,7 +92,7 @@
 
               <!-- DEPS ID -->
               <td class="text-danger fw-bold text-nowrap bg-white">
-                {{ item.depsNo || item.depsId || '—' }}
+                {{ item.DEPSNo || '—' }}
               </td>
 
               <!-- Docket No / Date -->
@@ -102,6 +103,11 @@
                 <div class="text-muted" style="font-size: 10px;">
                   {{ item.dockdt }}
                 </div>
+              </td>
+
+              <!-- DEPS Date -->
+              <td class="bg-white">
+                {{ item.DepsDate || '—' }}
               </td>
 
               <!-- Org -> Dest -->
@@ -137,37 +143,36 @@
               <!-- Affected Pkgs (Bootstrap warning subtle circular badge) -->
               <td class="bg-white">
                 <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-circle p-2 d-inline-flex align-items-center justify-content-center" style="width: 28px; height: 28px; font-size: 11px;">
-                  {{ item.affectedPkgs || 0 }}
+                  {{ item.affectedQty || 0 }}
                 </span>
               </td>
 
               <!-- Damage Type -->
-              <td class="text-muted bg-white fw-medium">
-                {{ item.damageType || '—' }}
+              <td class="text-muted bg-white fw-medium" style="width: 280px; max-width: 280px;min-width: 280px;">
+                {{ item.DamTypDesc || '—' }}
               </td>
 
               <!-- Severity -->
               <td class="text-muted bg-white fw-medium">
-                {{ item.severity || '—' }}
+                {{ item.SeverityDesc || '—' }}
               </td>
 
               <!-- Remarks -->
               <td class="text-muted bg-white">
-                {{ item.remarks || '—' }}
+                {{ item.Remark || '—' }}
               </td>
 
               <!-- File Attachment (Bootstrap styled link & labels) -->
               <td class="bg-white">
-                <div *ngIf="item.fileUrl || item.fileName || item.fileAttached" class="d-flex flex-column align-items-center gap-1 py-1">
+                <div *ngIf="item.DepsImage" class="d-flex flex-column align-items-center gap-1 py-1">
                   <div class="d-flex align-items-center gap-1">
                     <span class="text-secondary fs-6">📷</span>
-                    <a [href]="item.fileUrl" target="_blank" class="text-primary text-decoration-underline fw-semibold text-truncate d-inline-block" style="max-width: 120px;" [title]="item.fileName || 'View Image'">
-                      {{ item.fileName || 'Image' }}
+                    <a [href]="item.fileUrl || '#'" target="_blank" class="text-primary text-decoration-underline fw-semibold text-truncate d-inline-block" style="max-width: 120px;" [title]="item.DepsImage || 'View Image'">
+                      {{ item.DepsImage || 'View Image' }}
                     </a>
                   </div>
-                  <span class="badge bg-light border text-muted px-2 py-0.5 rounded-pill" style="font-size: 9px;">Image</span>
                 </div>
-                <div *ngIf="!(item.fileUrl || item.fileName || item.fileAttached)" class="text-muted">—</div>
+                <div *ngIf="!item.DepsImage" class="text-muted">—</div>
               </td>
             </tr>
           </ng-container>

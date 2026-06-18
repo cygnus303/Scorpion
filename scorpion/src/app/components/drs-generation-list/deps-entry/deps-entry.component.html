@@ -4,7 +4,7 @@
     (click)="closeBoxDropdowns()">
     <div class="depsf-hdr-left">
       <h2 class="text-white mb-1 d-flex align-items-center gap-2 fs-5 m-0">
-        📋 DEPS Entry — <span id="depsFormDepsNo">{{ depsNo }}</span>
+        {{ isEditMode ? '✏️ Edit DEPS' : '📋 DEPS Entry' }} — <span id="depsFormDepsNo">{{ depsNo }}</span>
       </h2>
       <div class="depsf-sub text-white-50 fs-7 mt-1">
         Delivery Exception Processing Sheet &nbsp;|&nbsp; DRS: <span id="depsFormDrsNo">{{ drsNo }}</span>
@@ -18,7 +18,7 @@
     (click)="closeBoxDropdowns()">
     <div class="depsf-meta-item">
       <span class="depsf-meta-label fw-bold text-secondary">Date:</span>
-      <span class="depsf-meta-val text-dark ms-1 fw-bold">{{ dateStr | date:'dd-MMM-yy' }}</span>
+      <span class="depsf-meta-val text-dark ms-1 fw-bold">{{ dateStr | date:'dd-MMM-yyyy' }}</span>
     </div>
     <div class="depsf-meta-item">
       <span class="depsf-meta-label fw-bold text-secondary">Vendor:</span>
@@ -36,6 +36,7 @@
       <thead>
         <tr>
           <th class="th-info text-center" style="min-width:36px;">#</th>
+          <th *ngIf="isEditMode" class="th-info" style="min-width:170px;">DEPS ID / Date</th>
           <th class="th-info" style="min-width:170px;">Docket No / Date</th>
           <th class="th-info" style="min-width:120px;">ADD</th>
           <th class="th-info" style="min-width:120px;">Org / Dest</th>
@@ -55,7 +56,7 @@
       <tbody formArrayName="dockets">
         <!-- Loading Spinner Row -->
         <tr *ngIf="isLoading">
-          <td colspan="14" class="text-center py-5">
+          <td [attr.colspan]="isEditMode ? 15 : 14" class="text-center py-5">
             <div class="spinner-border text-primary" role="status">
               <span class="visually-hidden">Loading...</span>
             </div>
@@ -64,7 +65,7 @@
         </tr>
         <!-- Empty Records Row -->
         <tr *ngIf="!isLoading && (!docketsArray || docketsArray.length === 0)">
-          <td colspan="14" class="text-center py-4 text-muted fw-semibold">
+          <td [attr.colspan]="isEditMode ? 15 : 14" class="text-center py-4 text-muted fw-semibold">
             No docket records found for this DRS.
           </td>
         </tr>
@@ -74,15 +75,27 @@
             <!-- Row # -->
             <td class="text-center text-secondary fw-semibold">{{ i + 1 }}</td>
 
+            <!-- DEPS ID / Date (only shown in edit mode) -->
+            <td *ngIf="isEditMode">
+              <div class="fw-bold" style="font-size:12px; color:#c62828;">
+                {{ row.get('depsNo')?.value || '—' }}
+              </div>
+              <div class="text-muted" style="font-size:10px;">
+                {{ row.get('depsDate')?.value || '' }}
+              </div>
+            </td>
+
             <!-- Docket No / Date -->
             <td>
               <div class="fw-bold" style="font-size:12px; color:#1a237e;">
-                {{ row.value.dockno }}
+                {{ row.value.dockno }}{{ row.value.docketsf }}
               </div>
               <div class="text-muted" style="font-size:10px;">
                 {{ row.value.dockdt }}
               </div>
             </td>
+
+
 
             <!-- ADD -->
             <td style="white-space:nowrap;">
@@ -111,8 +124,7 @@
                 </button>
                 <div class="ms-panel card p-2 shadow border">
                   <label class="form-check d-flex align-items-center gap-2 mb-1" *ngFor="let boxId of row.value.boxIds">
-                    <input type="checkbox" class="form-check-input" 
-                      [checked]="isBoxSelected(i, boxId)"
+                    <input type="checkbox" class="form-check-input" [checked]="isBoxSelected(i, boxId)"
                       (change)="toggleBoxSelection(i, boxId)" />
                     <span class="form-check-label">{{ boxId }}</span>
                   </label>
@@ -129,58 +141,64 @@
             <!-- DEPS Type -->
             <td style="width: 140px; max-width: 140px;min-width: 140px;">
               <ng-select [items]="depsTypeList" bindLabel="label" bindValue="value" formControlName="depstype"
-                (change)="onDepsTypeChange(i)" placeholder="Select Type" [clearable]="true" appendTo="body" [dropdownPosition]="'bottom'">
+                (change)="onDepsTypeChange(i)" placeholder="Select Type" [clearable]="true" appendTo="body"
+                [dropdownPosition]="'bottom'">
               </ng-select>
             </td>
 
             <!-- Damage Type -->
             <td style="width: 230px; max-width: 230px;min-width: 230px;">
               <ng-select [items]="damageTypes" bindLabel="codeDesc" bindValue="codeId" formControlName="damageType"
-                [readonly]="row.get('depstype')?.value !== 'D'" (change)="onDamageTypeChange(i)" placeholder="Select Damage" [clearable]="true" appendTo="body" [dropdownPosition]="'bottom'">
+                [readonly]="row.get('depstype')?.value !== 'D'" (change)="onDamageTypeChange(i)"
+                placeholder="Select Damage" [clearable]="true" appendTo="body" [dropdownPosition]="'bottom'">
               </ng-select>
             </td>
 
             <!-- Severity -->
             <td style="width: 140px; max-width: 140px;min-width: 140px;">
-              <ng-select [items]="severityLists[i] || []" bindLabel="codeDesc" bindValue="codeId" formControlName="severity"
-                [readonly]="!row.get('damageType')?.value" placeholder="Select Severity" [clearable]="true" appendTo="body" [dropdownPosition]="'bottom'">
+              <ng-select [items]="severityLists[i] || []" bindLabel="codeDesc" bindValue="codeId"
+                formControlName="severity" [readonly]="!row.get('damageType')?.value" placeholder="Select Severity"
+                [clearable]="true" appendTo="body" [dropdownPosition]="'bottom'">
               </ng-select>
             </td>
 
             <!-- Affected Pkgs -->
             <td>
-              <input class="form-control form-control-sm text-center text-primary fw-bold" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g,'');"
-                formControlName="affectedPkgs" style="width: 80px;" readonly/>
+              <input class="form-control form-control-sm text-center text-primary fw-bold" type="text"
+                oninput="this.value = this.value.replace(/[^0-9.]/g,'');" formControlName="affectedPkgs"
+                style="width: 80px;" readonly />
             </td>
 
             <!-- Affected Inv. Value -->
             <td>
-              <input class="form-control form-control-sm text-end" type="text" formControlName="affectedInvVal"
-                readonly style="width:115px; background-color: #f1f5f9; color: #1a237e; font-weight: 600;" />
+              <input class="form-control form-control-sm text-end" type="text" formControlName="affectedInvVal" readonly
+                style="width:115px; background-color: #f1f5f9; color: #1a237e; font-weight: 600;" />
             </td>
 
             <!-- Remarks -->
             <td>
               <input class="form-control form-control-sm" type="text" formControlName="remarks"
-                [readonly]="!row.value.depstype" style="width:185px;" placeholder="Remarks"/>
+                [readonly]="!row.value.depstype" style="width:185px;" placeholder="Remarks" />
             </td>
 
             <!-- File Upload -->
             <td>
               <div class="deps-file-cell d-flex flex-column gap-1">
-                <div class="input-group input-group-sm" style="max-width: 220px;">
+                <!-- Show file upload buttons only if we are not in edit mode OR if this row does not have a DEPS ID -->
+                <div *ngIf="!isEditMode || !row.value.depsNo" class="input-group input-group-sm"
+                  style="max-width: 220px;">
                   <button class="btn btn-outline-primary" type="button" [disabled]="row.value.depstype !== 'D'"
                     (click)="fileInput.click()"
                     style="font-size: 11px !important; padding: 2px 8px; border-radius: 4px 0 0 4px;">
                     {{ row.value.fileAttached ? 'Change' : 'Choose File' }}
                   </button>
-                  
+
                   <span *ngIf="!row.value.fileAttached" class="form-control bg-light text-muted text-truncate"
                     style="font-size: 10px; line-height: 1.8; border-radius: 0 4px 4px 0;"
                     [title]="row.value.fileName || 'No file chosen'">
                     {{ row.value.fileName || 'No file chosen' }}
                   </span>
-                  
+
                   <a *ngIf="row.value.fileAttached" [href]="row.value.fileUrl" target="_blank"
                     class="form-control bg-light text-primary text-truncate text-decoration-underline fw-semibold"
                     style="font-size: 10px; line-height: 1.8; cursor: pointer; border-radius: 0;"
@@ -197,9 +215,25 @@
                   <input type="file" #fileInput style="display: none;" (change)="onFileSelected(i, $event)"
                     accept="image/*,.pdf,.doc,.docx" />
                 </div>
+
+                <!-- If there is a DEPS ID in edit mode, show a read-only link to view the file -->
+                <div *ngIf="isEditMode && row.value.depsNo" class="d-flex align-items-center gap-1">
+                  <span *ngIf="!row.value.fileAttached" class="text-muted small"
+                    style="font-size: 11px; font-style: italic;">
+                    No file attached
+                  </span>
+                  <a *ngIf="row.value.fileAttached" [href]="row.value.fileUrl" target="_blank"
+                    class="btn btn-sm btn-link text-primary text-truncate text-decoration-underline fw-semibold p-0"
+                    style="font-size: 11px; max-width: 200px;" [title]="'Click to view: ' + row.value.fileName">
+                    📄 View: {{ row.value.fileName }}
+                  </a>
+                </div>
+
                 <span class="text-danger" style="font-size: 9px; font-weight: 500;"
-                  *ngIf="row.value.depstype === 'D' && !row.value.fileAttached">* Required for Damage</span>
-                <span class="text-success" style="font-size: 9px; font-weight: 600;" *ngIf="row.value.fileAttached">✔
+                  *ngIf="(!isEditMode || !row.value.depsNo) && row.value.depstype === 'D' && !row.value.fileAttached">*
+                  Required for Damage</span>
+                <span class="text-success" style="font-size: 9px; font-weight: 600;"
+                  *ngIf="(!isEditMode || !row.value.depsNo) && row.value.fileAttached">✔
                   File attached</span>
               </div>
             </td>
@@ -215,7 +249,9 @@
       damage or shortage exceptions.</span>
     <div class="d-flex gap-2">
       <button type="button" class="btn btn-sm btn-outline-secondary px-3 py-2" (click)="closePopup()">✕ Cancel</button>
-      <button type="button" class="btn btn-sm btn-primary px-3 py-2" (click)="saveDepsForm()">💾 Save DEPS</button>
+      <button type="button" class="btn btn-sm btn-primary px-3 py-2" (click)="saveDepsForm()">
+        {{ isEditMode ? '✏️ Update DEPS' : '💾 Save DEPS' }}
+      </button>
     </div>
   </div>
 </ng-template>
