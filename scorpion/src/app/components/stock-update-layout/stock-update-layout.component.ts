@@ -182,8 +182,9 @@ export class StockUpdateLayoutComponent {
       locCode: this.docketService.loginUserList.LocationCode || null,
       pageNumber: this.config.page,
       pageSize: this.config.pageSize,
-      searchText: this.config.searchText || this.config.statusFilter,
+      searchText: this.config.searchText || '',
       isDownload: 1,
+      statusFilter:this.config.statusFilter
     };
 
     this.stockUpdateService.getStockUpdateListing(payload).subscribe({
