@@ -1,0 +1,190 @@
+// DEPS Entry Popup SCSS (Bootstrap Integrated)
+
+// Header Custom gradient
+.depsf-hdr {
+  background: linear-gradient(135deg, #6d1b7b, #4a148c);
+  color: #ffffff;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+
+  .depsf-hdr-left {
+    h2 {
+      font-size: 15px !important;
+      font-weight: 700 !important;
+    }
+    .depsf-sub {
+      font-size: 11px !important;
+    }
+  }
+
+  .btn-close {
+    filter: invert(1) grayscale(1) brightness(2); // White close button in Bootstrap
+  }
+}
+
+// Meta Section Info Strip
+.depsf-meta {
+  background: #fae8ff !important; // Soft pinkish-purple theme
+  border-bottom: 1px solid #f3d8f9;
+
+  .depsf-meta-item {
+    font-size: 11px !important;
+
+    .depsf-meta-label {
+      color: #701a75;
+    }
+
+    .depsf-meta-val {
+      color: #4a044e;
+    }
+  }
+}
+
+// Table Scroll Area
+.depsf-body {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 60vh;
+  min-height: 250px;
+  background: #fdfbfd;
+}
+
+// Table Structure overrides
+.depsf-tbl {
+  font-size: 11px !important;
+
+  thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  th {
+    padding: 10px 8px;
+    font-weight: 700 !important;
+    font-size: 11px !important;
+    white-space: nowrap;
+
+    &.th-info {
+      background: #e8eaf6; // Blue-gray
+      color: #1a237e;
+    }
+
+    &.th-misc {
+      background: #37474f; // Slate gray
+      color: #ffffff;
+    }
+
+    &.th-deps {
+      background: #5e007e; // Royal purple
+      color: #ffffff;
+    }
+
+    &.th-dmg {
+      background: #880e4f; // Red-purple
+      color: #ffffff;
+    }
+  }
+
+  tbody {
+    td {
+      font-size: 11px !important;
+      
+      .form-control, .form-select {
+        font-size: 11px !important;
+      }
+    }
+  }
+}
+
+// Custom Multi-select Dropdown (Box ID Checkbox list panel)
+.ms-dropdown {
+  position: relative;
+  width: 100%;
+
+  .form-select {
+    font-size: 11px !important;
+    text-align: left;
+    height: 28px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .ms-panel {
+    display: none;
+    position: absolute;
+    top: 30px;
+    left: 0;
+    right: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 100;
+    background: #ffffff;
+
+    label {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      padding: 6px 10px !important;
+      margin: 0 !important;
+      cursor: pointer;
+      font-size: 11px !important;
+      border-radius: 4px;
+      color: #334155;
+      font-weight: 500;
+      padding-left: 8px !important;
+
+      &:hover {
+        background: #f3e8ff;
+        color: #6b21a8;
+      }
+
+      input[type="checkbox"] {
+        accent-color: #7b1fa2;
+        cursor: pointer;
+        margin-left: 0 !important;
+        margin-top: 0 !important;
+        margin-right: 0 !important;
+        width: 13px;
+        height: 13px;
+      }
+    }
+  }
+
+  &.open {
+    .ms-panel {
+      display: block;
+    }
+  }
+}
+
+// File Upload helper labels
+.deps-file-cell {
+  .form-control {
+    font-size: 10px !important;
+    height: auto !important;
+    padding: 3px 6px;
+  }
+}
+
+// Modal footer override
+.depsf-ftr {
+  background: #fdf8fe;
+  border-top: 1px solid #f3e8ff;
+}
+
+// Bootstrap dialog integration overrides
+::ng-deep .deps-entry-modal-wrapper {
+  max-width: 70% !important;
+  width: 70% !important;
+
+  .modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    overflow: hidden;
+  }
+}

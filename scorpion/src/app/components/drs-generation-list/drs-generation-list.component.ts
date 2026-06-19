@@ -305,6 +305,13 @@ export class DrsGenerationListComponent {
     this.showUpdateModal = false;
   }
 
+  handleDataEmitter(event?: string) {
+    if (event !== 'close') {
+      this.refreshData();
+    }
+    this.closeModal();
+  }
+
   openSingleDRSUpdate(data: any) {
     this.singleCnoteDrsUpdateComponent.showPopup(data);
   }

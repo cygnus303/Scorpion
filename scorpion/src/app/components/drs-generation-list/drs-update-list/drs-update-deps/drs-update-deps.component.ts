@@ -1,22 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, TemplateRef, ViewChild, Input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormArray, FormControl } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
-import { DocketService } from 'app/shared/services/docket.service';
 import { environment } from 'environments/environment';
 
 @Component({
-  selector: 'app-deps-entry',
+  selector: 'app-drs-update-deps',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, NgSelectModule],
-  templateUrl: './deps-entry.component.html',
-  styleUrl: './deps-entry.component.scss'
+  templateUrl: './drs-update-deps.component.html',
+  styleUrls: ['./drs-update-deps.component.scss']
 })
-export class DepsEntryComponent {
+export class DrsUpdateDepsComponent {
   public modalRef!: BsModalRef;
   public drsNo: string = '';
   public depsNo: string = '';
@@ -25,12 +24,10 @@ export class DepsEntryComponent {
   public totalDeliveredDockets: number = 0;
   env = environment;
 
-  @Output() dataEmitter = new EventEmitter<void>();
+  @Output() dataEmitter = new EventEmitter<any>();
   @ViewChild('TemplateDeps', { static: true }) TemplateDeps!: TemplateRef<any>;
 
-  public isEditMode: boolean = false;
   public depsForm!: FormGroup;
-  public isLoading: boolean = false;
   public damageTypes: any[] = [];
   public activeBoxDropdownIndex: number | null = null;
   public severityLists: any[][] = [];
@@ -40,12 +37,13 @@ export class DepsEntryComponent {
     { value: 'S', label: '🟠 Shortage' }
   ];
 
+  public rowDataIndex: number = -1;
+
   constructor(
     private modalService: BsModalService,
     private prsdrsApiService: PRSDRSApiService,
     private thcMasterService: THCMasterService,
-    private sweetAlertService: SweetAlertService,
-    private docketService: DocketService
+    private sweetAlertService: SweetAlertService
   ) { }
 
   get docketsArray(): FormArray {
@@ -54,34 +52,36 @@ export class DepsEntryComponent {
 
   createDocketFormGroup(item: any): FormGroup {
     const boxIds = [];
-    const pkgsCount = item.pkgsno || 0;
+    const pkgsCount = item.deliveredPkgs || item.pkgsDelivered || item.pkgsno || 0;
 
+    const dockno = item.dockno || item.docket;
     for (let k = 1; k <= pkgsCount; k++) {
-      boxIds.push(`${item.dockno}_${k.toString().padStart(3, '0')}`);
+      boxIds.push(`${dockno}_${k.toString().padStart(3, '0')}`);
     }
 
-    if (item.depstype === 'D') {
+    const depstype = item.depstype || item.depsTyp;
+    if (depstype === 'D') {
       this.fetchDamageTypes();
     }
-
+    debugger
     return new FormGroup({
-      dockno: new FormControl(item.dockno),
-      docketsf: new FormControl(item.docksf || item.docketsf),
-      dockdt: new FormControl(item.dockdt),
+      dockno: new FormControl(dockno),
+      docketsf: new FormControl(item.docksf || item.docketsf || ''),
+      dockdt: new FormControl(item.booking_Date),
       orgncd: new FormControl(item.orgncd),
       destcd: new FormControl(item.destcd),
-      pkgsno: new FormControl(item.pkgsno),
+      pkgsno: new FormControl(pkgsCount),
       invval: new FormControl(item.invval),
-      depstype: new FormControl(item.depstype || null),
+      depstype: new FormControl(depstype || null),
       damageType: new FormControl(item.damageType || null),
       severity: new FormControl(item.severity || null),
-      affectedPkgs: new FormControl(item.affectedPkgs || 0),
+      affectedPkgs: new FormControl(item.affectedPkgs || item.affectedQty || 0),
       affectedInvVal: new FormControl(item.affectedInvVal || 0.00),
       remarks: new FormControl(item.remarks || ''),
       fileAttached: new FormControl(!!item.fileAttached),
       fileName: new FormControl(item.fileName || ''),
       fileUrl: new FormControl(item.fileUrl || null),
-      fileBase64: new FormControl(''),
+      fileBase64: new FormControl(item.fileBase64 || item.depsfile || ''),
       boxIds: new FormControl(boxIds),
       selectedBoxIds: new FormControl(item.selectedBoxIds || []),
       depsNo: new FormControl(item.depsNo || ''),
@@ -89,68 +89,22 @@ export class DepsEntryComponent {
     });
   }
 
-  showPopup(data: any, isEditMode: boolean = false) {
-    this.isEditMode = isEditMode;
-    this.drsNo = data.drsNo || '';
-    this.depsNo = data.depsNo || '';
-    this.vendorName = data.vendorName || '';
-    this.totalDeliveredDockets = data.deliveredCount || data.totalDockets || 0;
-    this.dateStr = data.drsDate
+  showPopup(data: any, drsNo: string, dateStr: string, vendorName: string, totalDeliveredDockets: number, index: number) {
+    this.drsNo = drsNo;
+    this.dateStr = dateStr;
+    this.vendorName = vendorName;
+    this.totalDeliveredDockets = totalDeliveredDockets;
+    this.rowDataIndex = index;
 
-    this.isLoading = true;
     this.depsForm = new FormGroup({
       dockets: new FormArray([])
     });
 
     this.modalRef = this.modalService.show(this.TemplateDeps, { class: 'modal-xxl modal-dialog-centered deps-entry-modal-wrapper', backdrop: 'static' });
 
-    this.loadDepsData();
-  }
-
-  loadDepsData() {
-    if (this.drsNo) {
-      this.fetchDamageTypes(() => {
-        if (this.isEditMode) {
-          // EDIT MODE: Call only getHCCDynamicData to fetch existing exceptions
-          this.thcMasterService.getHCCDynamicData({
-            FilterJson: {
-              ReportId: '365',
-              Thcno: this.drsNo
-            }
-          }).subscribe({
-            next: (editRes: any) => {
-              this.isLoading = false;
-              const editList = (editRes && editRes.success && editRes.data && editRes.data.Table1) || (editRes && editRes.Table1) || [];
-              this.populateFormForEdit(editList);
-            },
-            error: (err: any) => {
-              this.isLoading = false;
-              console.error('Error loading edit DEPS data:', err);
-              this.populateFormForEdit([]);
-            }
-          });
-        } else {
-          // ADD MODE: Call only GetDetForDepsDeclarationByTCNo to load all TC dockets
-          this.prsdrsApiService.GetDetForDepsDeclarationByTCNo(this.drsNo).subscribe({
-            next: (response: any) => {
-              this.isLoading = false;
-              if (response && response.success && response.data) {
-                this.populateFormForAdd(response.data);
-              } else {
-                this.populateFormForAdd([]);
-              }
-            },
-            error: (err: any) => {
-              this.isLoading = false;
-              console.error('Error loading DEPS details:', err);
-              this.populateFormForAdd([]);
-            }
-          });
-        }
-      });
-    } else {
-      this.isLoading = false;
-    }
+    // Ensure we populate any existing depsData if it was previously saved but not submitted yet
+    const formData = data.depsData ? data.depsData : data;
+    this.populateFormForAdd([formData]);
   }
 
   populateFormForAdd(docketsData: any[]) {
@@ -161,64 +115,8 @@ export class DepsEntryComponent {
     docketsData.forEach((docketItem: any, index: number) => {
       formArray.push(this.createDocketFormGroup(docketItem));
       this.severityLists[index] = [];
-    });
-  }
-
-  populateFormForEdit(editList: any[]) {
-    const formArray = this.docketsArray;
-    formArray.clear();
-    this.severityLists = [];
-    debugger
-    editList.forEach((editItem: any, index: number) => {
-      let prefilledItem = {
-        dockno: editItem.dockno,
-        docksf: editItem.docketsf,
-        dockdt: editItem.dockdt || '',
-        orgncd: editItem.orgncd || '',
-        destcd: editItem.destcd || '',
-        pkgsno: editItem.pkgsno,
-        invval: editItem.Invval,
-        depstype: editItem.depstype,
-        damageType: editItem.DamageType,
-        severity: editItem.Severity,
-        remarks: editItem.Remark,
-        depsNo: editItem.DEPSNo,
-        depsDate: editItem.DepsDate,
-        fileName: editItem.DepsImage,
-        fileAttached: !!(editItem.DepsImage),
-        fileUrl: '',
-        affectedPkgs: editItem.affectedQty,
-        selectedBoxIds: [] as string[],
-        affectedInvVal: editItem.affectedInvVal
-      };
-
-      if (prefilledItem.fileName) {
-        prefilledItem.fileUrl = `${this.env.liveUrl}Uploads/${prefilledItem.fileName}`;
-      }
-
-      const affectedQty = Number(editItem.Lossvalue || editItem.affectedQty || 0);
-      prefilledItem.affectedPkgs = affectedQty;
-
-      const boxIds = [];
-      const totalPackagesCount = prefilledItem.pkgsno || 0;
-      for (let k = 1; k <= totalPackagesCount; k++) {
-        const suffix = k.toString().padStart(3, '0');
-        boxIds.push(`${editItem.dockno}_${suffix}`);
-      }
-      prefilledItem.selectedBoxIds = boxIds.slice(0, affectedQty);
-
-      if (affectedQty > 0) {
-        prefilledItem.affectedInvVal = Number((prefilledItem.invval / affectedQty).toFixed(2));
-      } else {
-        prefilledItem.affectedInvVal = 0.00;
-      }
-
-      formArray.push(this.createDocketFormGroup(prefilledItem));
-
-      if (prefilledItem.damageType) {
-        this.fetchSeverityDataForRow(index, prefilledItem.damageType);
-      } else {
-        this.severityLists[index] = [];
+      if (docketItem.damageType) {
+        this.fetchSeverityDataForRow(index, docketItem.damageType);
       }
     });
   }
@@ -396,18 +294,17 @@ export class DepsEntryComponent {
       const v = c.value;
       return (v.depsNo && v.depsNo.trim() !== '') || (v.affectedPkgs && v.affectedPkgs > 0);
     });
+
     if (activeRows.length === 0) {
       this.sweetAlertService.warning('Please declare at least one DEPS record (Damage/Shortage) with affected packages.');
       return;
     }
-
-    this.isLoading = true;
-
+    debugger
     const depsData = activeRows.map((c: any) => {
       const v = c.value;
       return {
         documentNo: this.drsNo,
-        docket: v.dockno || '', 
+        docket: v.dockno || '',
         docketsf: v.docketsf || '',
         pkgsDelivered: v.pkgsno || 0,
         totWeight: 0,
@@ -422,39 +319,25 @@ export class DepsEntryComponent {
         damageType: v.damageType || '',
         severity: v.severity || '',
         invval: v.invval || 0,
-        depsNo: v.depsNo || ""
+        depsNo: v.depsNo || "",
+        // For local display state (only keeping fields not present in API payload)
+        fileUrl: v.fileUrl,
+        selectedBoxIds: v.selectedBoxIds,
+        fileAttached: v.fileAttached,
+        booking_Date: v.dockdt,
+        orgncd: v.orgncd,
+        destcd: v.destcd
       };
     });
 
-    const payload = {
-      baseUserName: this.docketService.loginUserList?.BaseUserName,
-      baseLoctaionCode: this.docketService.loginUserList?.LocationCode,
-      depsData,
-      type: this.isEditMode ? 'U' : 'A'
-    };
-
-    this.prsdrsApiService.submitDepsGeneration(payload).subscribe({
-      next: (res: any) => {
-        this.isLoading = false;
-        if (res.data && (res.data.Status === 1)) {
-          const successMsg = res.data.DepsId 
-            ? `${res.data.Message || 'DEPS saved successfully!'} (ID: ${res.data.DepsId})`
-            : (res.data.Message || 'DEPS saved successfully!');
-          this.sweetAlertService.success(successMsg).then(() => {
-            this.closePopup();
-            this.dataEmitter.emit();
-          });
-        } else {
-          this.sweetAlertService.error(res.data?.Message);
-        }
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.sweetAlertService.error(err?.error?.Message);
-      }
+    // Instead of calling API here, we emit it to the parent to save in its form state.
+    this.dataEmitter.emit({
+      rowIndex: this.rowDataIndex,
+      depsData: depsData[0]
     });
-  }
 
+    this.closePopup();
+  }
 
   closeBoxDropdowns() {
     this.activeBoxDropdownIndex = null;
