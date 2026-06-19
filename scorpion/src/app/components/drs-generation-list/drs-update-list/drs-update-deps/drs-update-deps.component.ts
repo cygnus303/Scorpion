@@ -216,9 +216,10 @@ export class DrsUpdateDepsComponent {
       row.get('affectedPkgs')?.setValue(affectedPkgsCount);
 
       const invval = row.get('invval')?.value || 0;
+      const pkgsno = row.get('pkgsno')?.value || 0;
       let rawVal = 0.00;
-      if (affectedPkgsCount > 0) {
-        rawVal = invval / affectedPkgsCount;
+      if (pkgsno > 0 && affectedPkgsCount > 0) {
+        rawVal = (invval / pkgsno) * affectedPkgsCount;
         rawVal = Number(rawVal.toFixed(2));
       }
       row.get('affectedInvVal')?.setValue(rawVal);
@@ -318,7 +319,7 @@ export class DrsUpdateDepsComponent {
         depsTyp: v.depstype || '',
         damageType: v.damageType || '',
         severity: v.severity || '',
-        invval: v.invval || 0,
+        invval: Number(v.invval) || 0,
         depsNo: v.depsNo || "",
         // For local display state (only keeping fields not present in API payload)
         fileUrl: v.fileUrl,

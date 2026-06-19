@@ -963,10 +963,10 @@ export class DRSUpdateListComponent {
 
 
   deliveryUpdate() {
-    const allDepsData: any[] = [];
+    const DepsList: any[] = [];
     this.drsList.controls.forEach(ctrl => {
       if (ctrl.value.depsData) {
-        allDepsData.push(ctrl.value.depsData);
+        DepsList.push(ctrl.value.depsData);
       }
     });
     const DRSDocketsUpdateList = this.drsList.getRawValue().map((row: any) => ({
@@ -1001,7 +1001,7 @@ export class DRSUpdateListComponent {
 
     const formData = new FormData();
     formData.append("DRSDocketsUpdateList", JSON.stringify(DRSDocketsUpdateList));
-    formData.append("allDepsData", JSON.stringify(allDepsData));
+    formData.append("DepsList", JSON.stringify(DepsList));
     formData.append("pdcno", this.DRSInformation.pdcno);
     formData.append("VendorName", this.DRSSummaryForm.value.vendorName);
     formData.append("MaxLimit", this.DRSInformation.maxLimit);
