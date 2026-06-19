@@ -1,4 +1,4 @@
-import { Component, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -18,11 +18,12 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.service';
 import { DRSDateTimePickerComponent } from './drs-date-time-picker/drs-date-time-picker.component';
+import { DrsUpdateDepsComponent } from './drs-update-deps/drs-update-deps.component';
 
 @Component({
   selector: 'app-drs-update-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, NgSelectModule, ReactiveFormsModule, BsDatepickerModule, SharedModule, FormsModule, DRSDateTimePickerComponent],
+  imports: [CommonModule, RouterModule, NgSelectModule, ReactiveFormsModule, DrsUpdateDepsComponent, BsDatepickerModule, SharedModule, FormsModule, DRSDateTimePickerComponent],
   templateUrl: './drs-update-list.component.html',
   styleUrl: './drs-update-list.component.scss'
 })
@@ -43,7 +44,7 @@ export class DRSUpdateListComponent {
   public isLoading: boolean = false;
   @Input() drsData: any;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
-
+  @ViewChild('DrsUpdateDepsComponent') depsEntryComponent!: DrsUpdateDepsComponent;
   constructor(public challanService: ChallanService, public deliveryUpdateService: DeliveryUpdateService,
     public THCMasterService: THCMasterService,
     private vendorChargeHelper: VendorChargeHelperService,
@@ -65,7 +66,7 @@ export class DRSUpdateListComponent {
     }
     this.refreshData()
     this.buildFilterForm();
-     this.headerVendor = null;
+    this.headerVendor = null;
     this.getVendorType();
     this.generalMasterService.getChargeTypeData();
     this.generalMasterService.getLoadingBy()
@@ -100,7 +101,10 @@ export class DRSUpdateListComponent {
   }
 
   closeModal() {
-    this.dataEmitter.emit();
+    this.dataEmitter.emit('close');
+    if (this.modalRef) {
+      this.modalRef.hide();
+    }
   }
 
   toggleAll(event: any) {
@@ -276,7 +280,10 @@ export class DRSUpdateListComponent {
         coddodAmount: new FormControl(item.coddodAmount),
         DeliveredTo: new FormControl(item.deliveredTo),
         DlyPerson: new FormControl(item.dlyPerson),
-        DlyContactNo: new FormControl(item.dlyContactNo)
+        DlyContactNo: new FormControl(item.dlyContactNo),
+        invval: new FormControl(item.invval),
+        dlypdcno: new FormControl(item.dlypdcno),
+        depsData: new FormControl(null)
       });
 
       const initialVendorType = group.get('luVendorTyp')?.value;
@@ -816,7 +823,30 @@ export class DRSUpdateListComponent {
     );
   }
 
+  openDeps(data: any, index: number) {
+    this.depsEntryComponent.showPopup(
+      data,
+      this.DRSInformation?.pdcno || this.drsData?.drsNo,
+      this.DRSInformation?.drsDate || this.drsData?.drsDate,
+      this.DRSSummaryForm.value.vendorName || this.DRSInformation?.vendorName,
+      this.drsDeliveryList?.length || 0,
+      index
+    );
+  }
 
+  onDepsDataReceived(event: any) {
+    if (event && event.depsData) {
+      const row = this.drsList.at(event.rowIndex) as FormGroup;
+      row.get('depsData')?.setValue(event.depsData);
+    }
+  }
+
+  clearDepsData(index: number) {
+    const row = this.drsList.at(index) as FormGroup;
+    if (row) {
+      row.get('depsData')?.setValue(null);
+    }
+  }
 
   validatePOD(index: number) {
 
@@ -933,6 +963,12 @@ export class DRSUpdateListComponent {
 
 
   deliveryUpdate() {
+    const DepsList: any[] = [];
+    this.drsList.controls.forEach(ctrl => {
+      if (ctrl.value.depsData) {
+        DepsList.push(ctrl.value.depsData);
+      }
+    });
     const DRSDocketsUpdateList = this.drsList.getRawValue().map((row: any) => ({
       remark: row.remarks || '',
       isEnabledBadPodoption: row.isBadPod === true,
@@ -965,6 +1001,7 @@ export class DRSUpdateListComponent {
 
     const formData = new FormData();
     formData.append("DRSDocketsUpdateList", JSON.stringify(DRSDocketsUpdateList));
+    formData.append("DepsList", JSON.stringify(DepsList));
     formData.append("pdcno", this.DRSInformation.pdcno);
     formData.append("VendorName", this.DRSSummaryForm.value.vendorName);
     formData.append("MaxLimit", this.DRSInformation.maxLimit);
@@ -1001,10 +1038,10 @@ export class DRSUpdateListComponent {
             // if (this.drsData) {
             // this.sweetAlertService.success('DRS update successfully!!');
             this.sweetAlertService.success(`<div style="text-align:center;">
-                 <div class="fw-bold fs-3 mb-2">DRS Update Success</div>
-                 <p class="fs-5 mb-1"><strong>DRSNO:</strong> ${this.DRSInformation?.pdcno}</p>
-              </div>`);
-            this.dataEmitter.emit();
+                      <div class="fw-bold fs-3 mb-2">DRS Update Success</div>
+                      <p class="fs-5 mb-1"><strong>DRSNO:</strong> ${this.DRSInformation?.pdcno}</p>
+                   </div>`);
+            this.dataEmitter.emit('submit');
 
             // Close modal if it's open
             if (this.modalRef) {

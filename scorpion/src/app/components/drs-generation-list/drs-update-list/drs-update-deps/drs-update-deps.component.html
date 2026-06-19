@@ -1,0 +1,216 @@
+<ng-template #TemplateDeps>
+  <!-- Header -->
+  <div class="modal-header depsf-hdr py-3 px-4 d-flex justify-content-between align-items-center"
+    (click)="closeBoxDropdowns()">
+    <div class="depsf-hdr-left">
+      <h2 class="text-white mb-1 d-flex align-items-center gap-2 fs-5 m-0">
+        📋 DEPS Entry — <span id="depsFormDepsNo">{{ depsNo }}</span>
+      </h2>
+      <div class="depsf-sub text-white-50 fs-7 mt-1">
+        Delivery Exception Processing Sheet &nbsp;|&nbsp; DRS: <span id="depsFormDrsNo">{{ drsNo }}</span>
+      </div>
+    </div>
+    <button type="button" class="btn-close btn-close-white ms-auto" aria-label="Close" (click)="closePopup()"></button>
+  </div>
+
+  <!-- Meta Section Info Strip -->
+  <div class="depsf-meta py-2 px-4 d-flex gap-4 align-items-center bg-light border-bottom"
+    (click)="closeBoxDropdowns()">
+    <div class="depsf-meta-item">
+      <span class="depsf-meta-label fw-bold text-secondary">Date:</span>
+      <span class="depsf-meta-val text-dark ms-1 fw-bold">{{ dateStr | date:'dd-MMM-yyyy' }}</span>
+    </div>
+    <!-- <div class="depsf-meta-item">
+      <span class="depsf-meta-label fw-bold text-secondary">Vendor:</span>
+      <span class="depsf-meta-val text-dark ms-1 fw-bold">{{ vendorName }}</span>
+    </div>
+    <div class="depsf-meta-item">
+      <span class="depsf-meta-label fw-bold text-secondary">Delivered Dockets:</span>
+      <span class="depsf-meta-val text-dark ms-1 fw-bold">{{ totalDeliveredDockets }}</span>
+    </div> -->
+  </div>
+
+  <!-- Form Body with Table -->
+  <div class="depsf-body p-0" (click)="closeBoxDropdowns()" [formGroup]="depsForm">
+    <table class="depsf-tbl table table-hover align-middle mb-0 border">
+      <thead>
+        <tr>
+          <th class="th-info text-center" style="min-width:36px;">#</th>
+          <th class="th-info" style="min-width:170px;">Docket No / Date</th>
+          <th class="th-info" style="min-width:120px;">ADD</th>
+          <th class="th-info" style="min-width:120px;">Org / Dest</th>
+          <th class="th-info text-center" style="min-width:90px;">Del Pkgs</th>
+          <th class="th-info" style="min-width:165px;">Box ID</th>
+          <th class="th-misc text-end" style="min-width:120px;">Invoice Value (₹)</th>
+          <th class="th-deps" style="width:130px; max-width:130px;">DEPS Type <span class="text-danger">*</span></th>
+          <th class="th-dmg" style="width:220px; max-width:220px;">Damage Type</th>
+          <th class="th-dmg" style="width:140px; max-width:140px;">Severity</th>
+          <th class="th-misc text-center" style="min-width:100px;">Affected Pkgs</th>
+          <th class="th-misc text-end" style="min-width:130px;">Affected Inv. Value</th>
+          <th class="th-misc" style="min-width:170px;">Remarks</th>
+          <th class="th-misc" style="min-width:175px;">File Upload <span class="text-warning" style="font-size:10px;">(*
+              Mandatory for Damage)</span></th>
+        </tr>
+      </thead>
+      <tbody formArrayName="dockets">
+        <!-- Data Rows -->
+        <ng-container *ngIf="docketsArray">
+          <tr *ngFor="let row of docketsArray.controls; let i = index" [formGroupName]="i" id="depsfrow-{{ i + 1 }}">
+            <!-- Row # -->
+            <td class="text-center text-secondary fw-semibold">{{ i + 1 }}</td>
+
+            <!-- Docket No / Date -->
+            <td>
+              <div class="fw-bold" style="font-size:12px; color:#1a237e;">
+                {{ row.value.dockno }}{{ row.value.docketsf }}
+              </div>
+              <div class="text-muted" style="font-size:10px;">
+                {{ row.value.dockdt | date:'dd-MMM-yy'}}
+              </div>
+            </td>
+
+            <!-- ADD -->
+            <td style="white-space:nowrap;">
+              <span *ngIf="row.value.dockdt" class="badge bg-light text-dark border px-2 py-1 fs-7 fw-semibold">{{
+                row.value.dockdt | date:'dd-MMM-yy'}}</span>
+            </td>
+
+            <!-- Org / Dest -->
+            <td style="white-space:nowrap; font-weight:600; color:#37474f;">
+              {{ row.value.orgncd }} → {{ row.value.destcd }}
+            </td>
+
+            <!-- Del Pkgs -->
+            <td class="text-center">
+              <span *ngIf="row.value.pkgsno > 0"
+                class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 fs-7 fw-bold">{{
+                row.value.pkgsno }}</span>
+            </td>
+
+            <!-- Box ID Checkbox Dropdown -->
+            <td style="min-width:165px; position: relative;">
+              <div class="ms-dropdown" [class.open]="activeBoxDropdownIndex === i" (click)="$event.stopPropagation()">
+                <button type="button" class="form-select form-select-sm text-start"
+                  (click)="toggleBoxDropdown(i, $event)">
+                  {{ getSelectedBoxesLabel(i) }}
+                </button>
+                <div class="ms-panel card p-2 shadow border">
+                  <label class="form-check d-flex align-items-center gap-2 mb-1" *ngFor="let boxId of row.value.boxIds">
+                    <input type="checkbox" class="form-check-input" [checked]="isBoxSelected(i, boxId)"
+                      (change)="toggleBoxSelection(i, boxId)" />
+                    <span class="form-check-label">{{ boxId }}</span>
+                  </label>
+                </div>
+              </div>
+            </td>
+
+            <!-- Invoice Value -->
+            <td>
+              <input class="form-control form-control-sm text-end" type="number" [value]="row.value.invval" readonly
+                style="width:110px; background-color: #f1f5f9; color: #1a237e; font-weight: 600;" />
+            </td>
+
+            <!-- DEPS Type -->
+            <td style="width: 140px; max-width: 140px;min-width: 140px;">
+              <ng-select [items]="depsTypeList" bindLabel="label" bindValue="value" formControlName="depstype"
+                (change)="onDepsTypeChange(i)" placeholder="Select Type" [clearable]="true" appendTo="body"
+                [dropdownPosition]="'bottom'">
+              </ng-select>
+            </td>
+
+            <!-- Damage Type -->
+            <td style="width: 230px; max-width: 230px;min-width: 230px;">
+              <ng-select [items]="damageTypes" bindLabel="codeDesc" bindValue="codeId" formControlName="damageType"
+                [readonly]="row.get('depstype')?.value !== 'D'" (change)="onDamageTypeChange(i)"
+                placeholder="Select Damage" [clearable]="true" appendTo="body" [dropdownPosition]="'bottom'">
+              </ng-select>
+            </td>
+
+            <!-- Severity -->
+            <td style="width: 140px; max-width: 140px;min-width: 140px;">
+              <ng-select [items]="severityLists[i] || []" bindLabel="codeDesc" bindValue="codeId"
+                formControlName="severity" [readonly]="!row.get('damageType')?.value" placeholder="Select Severity"
+                [clearable]="true" appendTo="body" [dropdownPosition]="'bottom'">
+              </ng-select>
+            </td>
+
+            <!-- Affected Pkgs -->
+            <td>
+              <input class="form-control form-control-sm text-center text-primary fw-bold" type="text"
+                oninput="this.value = this.value.replace(/[^0-9.]/g,'');" formControlName="affectedPkgs"
+                style="width: 80px;" readonly />
+            </td>
+
+            <!-- Affected Inv. Value -->
+            <td>
+              <input class="form-control form-control-sm text-end" type="text" formControlName="affectedInvVal" readonly
+                style="width:115px; background-color: #f1f5f9; color: #1a237e; font-weight: 600;" />
+            </td>
+
+            <!-- Remarks -->
+            <td>
+              <input class="form-control form-control-sm" type="text" formControlName="remarks"
+                [readonly]="!row.value.depstype" style="width:185px;" placeholder="Remarks" />
+            </td>
+
+            <!-- File Upload -->
+            <td>
+              <div class="deps-file-cell d-flex flex-column gap-1">
+                <!-- Show file upload buttons only if we are not in edit mode OR if this row does not have a DEPS ID -->
+                <div class="input-group input-group-sm"
+                  style="max-width: 220px;">
+                  <button class="btn btn-outline-primary" type="button" [disabled]="row.value.depstype !== 'D'"
+                    (click)="fileInput.click()"
+                    style="font-size: 11px !important; padding: 2px 8px; border-radius: 4px 0 0 4px;">
+                    {{ row.value.fileAttached ? 'Change' : 'Choose File' }}
+                  </button>
+
+                  <span *ngIf="!row.value.fileAttached" class="form-control bg-light text-muted text-truncate"
+                    style="font-size: 10px; line-height: 1.8; border-radius: 0 4px 4px 0;"
+                    [title]="row.value.fileName || 'No file chosen'">
+                    {{ row.value.fileName || 'No file chosen' }}
+                  </span>
+
+                  <a *ngIf="row.value.fileAttached" [href]="row.value.fileUrl" target="_blank"
+                    class="form-control bg-light text-primary text-truncate text-decoration-underline fw-semibold"
+                    style="font-size: 10px; line-height: 1.8; cursor: pointer; border-radius: 0;"
+                    [title]="'Click to view: ' + row.value.fileName">
+                    {{ row.value.fileName }}
+                  </a>
+
+                  <button *ngIf="row.value.fileAttached" class="btn btn-outline-danger" type="button"
+                    (click)="removeFile(i)"
+                    style="font-size: 11px !important; padding: 2px 8px; border-radius: 0 4px 4px 0;">
+                    ✕
+                  </button>
+
+                  <input type="file" #fileInput style="display: none;" (change)="onFileSelected(i, $event)"
+                    accept="image/*,.pdf,.doc,.docx" />
+                </div>
+
+                <span class="text-danger" style="font-size: 9px; font-weight: 500;"
+                  *ngIf="row.value.depstype === 'D' && !row.value.fileAttached">*
+                  Required for Damage</span>
+                <span class="text-success" style="font-size: 9px; font-weight: 600;"
+                  *ngIf="row.value.fileAttached">✔
+                  File attached</span>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Footer -->
+  <div class="modal-footer depsf-ftr d-flex justify-content-between align-items-center" (click)="closeBoxDropdowns()">
+    <span class="text-muted" style="font-size: 11px; font-style: italic;">* DEPS Type is required for all rows with
+      damage or shortage exceptions.</span>
+    <div class="d-flex gap-2">
+      <button type="button" class="btn btn-sm btn-outline-secondary px-3 py-2" (click)="closePopup()">✕ Cancel</button>
+      <button type="button" class="btn btn-sm btn-primary px-3 py-2" (click)="saveDepsForm()">
+        💾 Save DEPS
+      </button>
+    </div>
+  </div>
+</ng-template>
