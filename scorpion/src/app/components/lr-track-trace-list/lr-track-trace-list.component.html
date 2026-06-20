@@ -16,7 +16,6 @@
         </div> -->
     </div>
 
-    <!-- Summary Strip -->
     <div class="summary-strip">
         <!-- TOTAL LRS -->
         <div class="summary-card c-blue cursor-pointer px-3 py-3" [class.active-card]="config.statusFilter === 'All'"
@@ -32,7 +31,7 @@
 
         <!-- BOOKED -->
         <div class="summary-card px-3 py-3 c-orange cursor-pointer"
-            [class.active-card]="config.statusFilter === 'Booked'" (click)="filterByStatus('Booked')">
+            [class.active-card]="config.statusFilter === 'Booking'" (click)="filterByStatus('Booking')">
             <div class="card-content">
                 <div class="s-label">Booked</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ bookedCount }}</div>
@@ -42,7 +41,7 @@
 
         <!-- IN TRANSIT -->
         <div class="summary-card px-3 py-3 c-teal cursor-pointer"
-            [class.active-card]="config.statusFilter === 'In Transit'" (click)="filterByStatus('In Transit')">
+            [class.active-card]="config.statusFilter === 'InTransit'" (click)="filterByStatus('InTransit')">
             <div class="card-content">
                 <div class="s-label">In Transit</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ transitCount }}</div>
@@ -62,7 +61,7 @@
 
         <!-- EXCEPTIONS -->
         <div class="summary-card px-3 py-3 c-red cursor-pointer"
-            [class.active-card]="config.statusFilter === 'Exceptions'" (click)="filterByStatus('Exceptions')">
+            [class.active-card]="config.statusFilter === 'Exception'" (click)="filterByStatus('Exception')">
             <div class="card-content">
                 <div class="s-label">Exceptions</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ exceptionsCount }}</div>
@@ -84,11 +83,10 @@
             </div>
 
             <div class="row g-2 align-items-end">
-                <!-- LR Number -->
                 <div class="col-12 col-md-2">
                     <label class="form-label text-muted fw-semibold mb-1" style="font-size: 11px;">LR Number</label>
                     <input type="text" class="form-control form-control-sm" placeholder="Search..."
-                        [(ngModel)]="config.searchText" (keyup)="searchLRs()" />
+                        [(ngModel)]="config.searchText" (ngModelChange)="onSearchTextChange($event)" />
                 </div>
 
                 <!-- Date Range -->
@@ -121,15 +119,13 @@
                 <div class="col-12 col-md-2">
                     <label class="form-label text-muted fw-semibold mb-1" style="font-size: 11px;">Status</label>
                     <ng-select [items]="statusList" bindLabel="label" bindValue="value"
-                        [(ngModel)]="config.statusFilter" (change)="searchLRs()"
-                        [clearable]="false" [searchable]="false"
-                        class="custom-status-select clear-icon"></ng-select>
+                        [(ngModel)]="config.statusFilter" (change)="searchLRs()" [clearable]="false"
+                        [searchable]="false" class="custom-status-select clear-icon"></ng-select>
                 </div>
 
                 <!-- Buttons -->
                 <div class="col-12 col-md-auto d-flex gap-2">
-                    <button
-                        class="btn btn-primary d-flex align-items-center gap-1.5 justify-content-center fw-bold"
+                    <button class="btn btn-primary d-flex align-items-center gap-1.5 justify-content-center fw-bold"
                         (click)="searchLRs()" style="background-color: #1e2b5c; border-color: #1e2b5c; color: white;">
                         <svg width="11" height="11" fill="none" stroke="currentColor" class="me-2" stroke-width="2.5"
                             viewBox="0 0 24 24">
@@ -161,13 +157,16 @@
                 <span class="badge rounded-pill ms-2">{{ config.totalRecords }}</span>
             </div>
             <div>
-                <button class="btn btn-outline-primary d-flex align-items-center gap-1 fw-bold"
+                <button class="btn btn-outline-primary d-flex align-items-center gap-1 fw-bold" (click)="exportData()"
+                    [disabled]="isExporting"
                     style="color: #1e2b5c; border-color: #1e2b5c; background-color: transparent;">
-                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5"
+                    <span *ngIf="isExporting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <svg *ngIf="!isExporting" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5"
                         viewBox="0 0 24 24">
                         <path d="M12 5v14M19 12l-7 7-7-7"></path>
                     </svg>
-                    Export
+                    <span *ngIf="!isExporting">Export</span>
+                    <span *ngIf="isExporting">Exporting...</span>
                 </button>
             </div>
         </div>
@@ -209,36 +208,42 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let lr of pagedLRs">
-                        <!-- LR NUMBER -->
+                    <!-- Loading State -->
+                    <tr *ngIf="isLoading">
+                        <td colspan="13" class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div class="mt-2 text-muted fw-semibold" style="font-size: 13px;">Loading data, please wait...</div>
+                        </td>
+                    </tr>
+
+                    <ng-container *ngIf="!isLoading">
+                        <tr *ngFor="let lr of pagedLRs">
                         <td class="ps-3">
                             <a href="javascript:void(0)" class="fw-bold text-decoration-none"
                                 style="color: #0969da; font-size: 13.5px;">
-                                {{ lr.lrNumber }}
+                                {{ lr.LrNumber }}
                             </a>
                         </td>
-                        <!-- LR DATE -->
                         <td>
                             <div class="fw-semibold text-dark" style="font-size: 13px; white-space: nowrap;">{{
-                                lr.lrDate }}</div>
+                                lr.LrDate }}</div>
                             <div class="text-muted" style="font-size: 11px;">{{ lr.lrTime }}</div>
                         </td>
-                        <!-- EDD / ADD -->
                         <td>
-                            <!-- EDD Block -->
                             <div>
                                 <span class="text-uppercase text-muted fw-bold d-block"
                                     style="font-size: 9px; letter-spacing: 0.5px; line-height: 1;">EDD</span>
                                 <span class="fw-semibold text-warning" style="font-size: 12.5px; white-space: nowrap;">
-                                    📅 {{ lr.edd }}
+                                    📅 {{ lr.EddDate }}
                                 </span>
                             </div>
-                            <!-- ADD Block -->
-                            <div *ngIf="lr.add" class="mt-1">
+                            <div *ngIf="lr.AddDate" class="mt-1">
                                 <span class="text-uppercase text-success fw-bold d-block"
                                     style="font-size: 9px; letter-spacing: 0.5px; line-height: 1;">ADD</span>
                                 <span class="fw-semibold text-success" style="font-size: 12.5px; white-space: nowrap;">
-                                    ✅ {{ lr.add }}
+                                    ✅ {{ lr.AddDate }}
                                 </span>
                                 <span *ngIf="lr.addStatus"
                                     class="badge bg-success-subtle text-success border border-success-subtle ms-1"
@@ -247,118 +252,56 @@
                                 </span>
                             </div>
                         </td>
-                        <!-- STATUS -->
                         <td class="text-center">
-                            <!-- In Transit -->
-                            <span *ngIf="lr.status === 'In Transit'"
-                                class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-1 fw-bold d-inline-flex align-items-center gap-1"
+                            <span class="badge rounded-pill px-2 py-1 fw-bold d-inline-flex align-items-center gap-1 border"
+                                [ngClass]="getStatusClass(lr.Status)"
                                 style="font-size: 11px;">
-                                <span class="bg-warning rounded-circle" style="width: 6px; height: 6px;"></span>
-                                In Transit
-                            </span>
-                            <!-- Delivered -->
-                            <span *ngIf="lr.status === 'Delivered'"
-                                class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 fw-bold d-inline-flex align-items-center gap-1"
-                                style="font-size: 11px;">
-                                <span class="bg-success rounded-circle" style="width: 6px; height: 6px;"></span>
-                                Delivered
-                            </span>
-                            <!-- Booked -->
-                            <span *ngIf="lr.status === 'Booked'"
-                                class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1 fw-bold d-inline-flex align-items-center gap-1"
-                                style="font-size: 11px;">
-                                <span class="bg-primary rounded-circle" style="width: 6px; height: 6px;"></span>
-                                Booked
-                            </span>
-                            <!-- Exceptions -->
-                            <span *ngIf="lr.status === 'Exceptions'"
-                                class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2 py-1 fw-bold d-inline-flex align-items-center gap-1"
-                                style="font-size: 11px;">
-                                <span class="bg-danger rounded-circle" style="width: 6px; height: 6px;"></span>
-                                Exception
+                                <span class="rounded-circle" [ngClass]="getStatusIconClass(lr.Status)" style="width: 6px; height: 6px;"></span>
+                                {{ getStatusText(lr.Status) }}
                             </span>
                         </td>
                         <!-- ORIGIN - DEST -->
                         <td class="text-center">
                             <span class="fw-bold text-secondary" style="font-size: 13px; white-space: nowrap;">
-                                {{ lr.origin }} — {{ lr.dest }}
+                                {{ lr.ORGNCD }} — {{ lr.DESTCD }}
                             </span>
                         </td>
-                        <!-- FROM CITY -->
                         <td><span class="fw-semibold text-dark" style="font-size: 13px; white-space: nowrap;">{{
-                                lr.fromCity }}</span></td>
-                        <!-- TO CITY -->
+                                lr.from_loc }}</span></td>
                         <td><span class="fw-semibold text-dark" style="font-size: 13px; white-space: nowrap;">{{
-                                lr.toCity }}</span></td>
-                        <!-- PAY BASIS -->
+                                lr.to_loc }}</span></td>
                         <td class="text-center">
-                            <span *ngIf="lr.payBasis === 'PAID'"
-                                class="badge bg-success-subtle text-success border border-success-subtle fw-bold px-2 py-1"
-                                style="font-size: 11px;">PAID</span>
-                            <span *ngIf="lr.payBasis === 'TOPAY'"
-                                class="badge bg-warning-subtle text-warning border border-warning-subtle fw-bold px-2 py-1"
-                                style="font-size: 11px;">TOPAY</span>
-                            <span *ngIf="lr.payBasis === 'TBB'"
-                                class="badge bg-danger-subtle text-danger border border-danger-subtle fw-bold px-2 py-1"
-                                style="font-size: 11px;">TBB</span>
+                            <span class="badge fw-bold px-2 py-1 border"
+                                [ngClass]="getPayBasisClass(lr.PAYBAS)"
+                                style="font-size: 11px;">{{ lr.PAYBAS }}</span>
                         </td>
-                        <!-- MODE -->
                         <td class="text-center">
-                            <span *ngIf="lr.mode === 'Road'"
-                                class="badge bg-primary-subtle text-primary border border-primary-subtle fw-bold px-2.5 py-1.5 d-inline-flex align-items-center gap-1"
+                            <span class="badge fw-bold px-2.5 py-1.5 d-inline-flex align-items-center gap-1 border"
+                                [ngClass]="getModeClass(lr.TRN_MOD)"
                                 style="font-size: 11px; white-space: nowrap;">
-                                🚛 Road
-                            </span>
-                            <span *ngIf="lr.mode === 'Air'"
-                                class="badge bg-info-subtle text-info border border-info-subtle fw-bold px-2.5 py-1.5 d-inline-flex align-items-center gap-1"
-                                style="font-size: 11px; white-space: nowrap;">
-                                ✈ Air
-                            </span>
-                            <span *ngIf="lr.mode === 'Cold Chain'"
-                                class="badge bg-info-subtle text-info border border-info-subtle fw-bold px-2.5 py-1.5 d-inline-flex align-items-center gap-1"
-                                style="font-size: 11px; white-space: nowrap;">
-                                ❄ Cold Chain
-                            </span>
-                            <span *ngIf="lr.mode === 'Sample'"
-                                class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle fw-bold px-2.5 py-1.5 d-inline-flex align-items-center gap-1"
-                                style="font-size: 11px; white-space: nowrap;">
-                                🧪 Sample
+                                {{ getModeIcon(lr.TRN_MOD) }} {{ lr.TRN_MOD }}
                             </span>
                         </td>
                         <!-- SERVICE -->
                         <td class="text-center">
-                            <span *ngIf="lr.service === 'LTL'"
-                                class="badge bg-warning-subtle text-warning border border-warning-subtle fw-bold px-2"
-                                style="font-size: 11px;">LTL</span>
-                            <span *ngIf="lr.service === 'FTL'"
-                                class="badge bg-primary-subtle text-primary border border-primary-subtle fw-bold px-2"
-                                style="font-size: 11px;">FTL</span>
+                            <span class="badge fw-bold px-2 border"
+                                [ngClass]="getServiceClass(lr.ServiceType)"
+                                style="font-size: 11px;">{{ lr.ServiceType }}</span>
                         </td>
                         <!-- CUST TYPE -->
                         <td class="text-center">
-                            <span *ngIf="lr.custType === 'Corporate'"
-                                class="badge bg-success-subtle text-success border border-success-subtle fw-bold px-2"
-                                style="font-size: 11px;">Corporate</span>
-                            <span *ngIf="lr.custType === 'Group'"
-                                class="badge bg-primary-subtle text-primary border border-primary-subtle fw-bold px-2"
-                                style="font-size: 11px;">Group</span>
-                            <span *ngIf="lr.custType === 'ILS'"
-                                class="badge bg-danger-subtle text-danger border border-danger-subtle fw-bold px-2"
-                                style="font-size: 11px;">ILS</span>
-                            <span *ngIf="lr.custType === 'Non-Corp'"
-                                class="badge bg-light text-dark border border-secondary-subtle fw-bold px-2"
-                                style="font-size: 11px;">Non-Corp</span>
-                            <span *ngIf="lr.custType === 'Aggregators'"
-                                class="badge bg-warning-subtle text-warning border border-warning-subtle fw-bold px-2"
-                                style="font-size: 11px;">Aggregators</span>
+                            <span class="badge fw-bold px-2 border"
+                                [ngClass]="getCustTypeClass(lr.CustType)"
+                                style="font-size: 11px;">{{ lr.CustType }}</span>
                         </td>
                         <!-- CUSTOMER NAME -->
                         <td><span class="fw-semibold text-dark" style="font-size: 13px; white-space: nowrap;">{{
-                                lr.customerName }}</span></td>
+                                lr.party_name }}</span></td>
                         <!-- ACTIONS -->
                         <td class="pe-3">
                             <div class="d-flex justify-content-start align-items-center gap-2">
                                 <button class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1"
+                                    (click)="openPrintView(lr)"
                                     style="font-size: 11px; background: #e8f0fd; color: #1a3a6b; border: 1px solid #c5d5f5;">
                                     🖨 Print
                                 </button>
@@ -366,7 +309,8 @@
                                     style="font-size: 11px; background: #e6f7ef; color: #1a9e5c; border: 1px solid #aaddc7;">
                                     📍 Track
                                 </button>
-                                <button *ngIf="lr.hasMap" class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1"
+                                <button
+                                    class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1"
                                     style="font-size: 11px; background: #fff4e0; color: #e07b00; border: 1px solid #f5d38a;">
                                     🗺 Map
                                 </button>
@@ -378,6 +322,7 @@
                             No matching records found.
                         </td>
                     </tr>
+                    </ng-container>
                 </tbody>
             </table>
         </div>
@@ -387,6 +332,7 @@
             [totalPages]="config.totalPages" (pageChange)="setPage($event)">
         </app-pagination>
     </div>
-
-
 </div>
+
+<!-- Print View Modal Component -->
+<app-lr-print-view #lrPrintView></app-lr-print-view>

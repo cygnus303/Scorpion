@@ -25,4 +25,8 @@ export class LrService {
     lrViewDetail(lrNumber:string): Observable<IApiBaseResponse<any[]>> {
       return this.apiHandlerService.Get(`Operation/View_LR_Details?lrNumber=${lrNumber}`);
     }
+
+    printView(lrNumber:string): Observable<any> {
+      return this.apiHandlerService.Get(`Operation/print-view/${lrNumber}`);
+    }
 }
