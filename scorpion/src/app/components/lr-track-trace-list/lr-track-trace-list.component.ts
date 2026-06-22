@@ -88,14 +88,11 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
 
     const payload = {
       FilterJson: {
-        ReportId: "370",
+        ReportId: "666",
         FromDate: fromDate,
         ToDate: toDate,
-        pageNumber: this.config.page,
-        pageSize: this.config.pageSize,
         Status: this.config.statusFilter === 'All Status' || this.config.statusFilter === 'All' ? "ALL" : this.config.statusFilter,
-        Lr_Number: this.config.searchText || "",
-        IsExportDownload: 0
+        Lr_Number: this.config.searchText || ""
       }
     };
 
@@ -103,10 +100,10 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         this.isExporting = false;
         const data = res?.data || res || {};
-        const table3 = data.Table3 || [];
+        const Table1 = data.Table1 || [];
         
-        if (table3 && table3.length > 0) {
-          this.exportService.exportToCSV(table3, 'LR_Track_Trace_Export');
+        if (Table1 && Table1.length > 0) {
+          this.exportService.exportToCSV(Table1, 'LR_Track_Trace_Export');
         } else {
           console.warn("No data available to export");
         }

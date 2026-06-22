@@ -107,6 +107,7 @@ export class MrViewComponent {
             @media print {
               @page { margin: 10mm; }
               .voucher-paper { border: none !important; }
+              div { max-height: none !important; overflow: visible !important; }
             }
           </style>
         </head>

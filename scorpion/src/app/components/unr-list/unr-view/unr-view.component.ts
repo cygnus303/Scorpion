@@ -54,6 +54,70 @@ export class UnrViewComponent {
   }
 
   printVoucher() {
-    window.print();
+    const printContent = document.getElementById('unrViewPaper');
+    if (!printContent) return;
+
+    let printIframe = document.getElementById('print-iframe') as HTMLIFrameElement;
+    if (!printIframe) {
+      printIframe = document.createElement('iframe');
+      printIframe.id = 'print-iframe';
+      printIframe.style.position = 'absolute';
+      printIframe.style.width = '0px';
+      printIframe.style.height = '0px';
+      printIframe.style.border = 'none';
+      document.body.appendChild(printIframe);
+    }
+
+    // Get all style elements from the current document to maintain the exact UI
+    const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
+      .map((el: any) => {
+        if (el.tagName.toLowerCase() === 'link') {
+          return `<link rel="stylesheet" href="${el.href}">`;
+        }
+        return el.outerHTML;
+      })
+      .join('\n');
+
+    const iframeDoc = printIframe.contentWindow?.document;
+    if (!iframeDoc) return;
+
+    iframeDoc.open();
+    iframeDoc.write(`
+      <html>
+        <head>
+          <title>Print UNR</title>
+          ${styles}
+          <style>
+            body { 
+              background: #fff; 
+              padding: 20px; 
+              -webkit-print-color-adjust: exact; 
+              print-color-adjust: exact; 
+            }
+            .voucher-paper { 
+              box-shadow: none !important; 
+              border: 1px solid #ccc !important; 
+              max-width: 100% !important; 
+              margin: 0 !important; 
+            }
+            @media print {
+              @page { margin: 10mm; }
+              .voucher-paper { border: none !important; }
+              div { max-height: none !important; overflow: visible !important; }
+            }
+          </style>
+        </head>
+        <body>
+          ${printContent.outerHTML}
+        </body>
+      </html>
+    `);
+    iframeDoc.close();
+
+    // Wait a brief moment for styles to apply in the iframe, then print
+    setTimeout(() => {
+      printIframe.contentWindow?.focus();
+      printIframe.contentWindow?.print();
+    }, 400);
   }
 }

@@ -7,13 +7,13 @@
             </svg>
             LR Track & Trace
         </div>
-        <!-- <div class="btn-group gap-3 ms-auto">
-            <button class="btn btn-success px-4 py-2 rounded fw-bold">
-                <span > <span class="fs-5 me-1">📥</span> Download XLS</span>
-                <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
-                <span *ngIf="isCSVLoading">Downloading...</span>
+        <div class="btn-group gap-3 ms-auto">
+            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="exportData()" >
+                <span *ngIf="!isExporting"><span class="fs-5 me-1">📥</span> Download XLS</span>
+                <span *ngIf="isExporting" class="spinner-border spinner-border-sm me-2"></span>
+                <span *ngIf="isExporting">Downloading...</span>
             </button>
-        </div> -->
+        </div>
     </div>
 
     <div class="summary-strip">
@@ -156,7 +156,7 @@
                 </span>
                 <span class="badge rounded-pill ms-2">{{ config.totalRecords }}</span>
             </div>
-            <div>
+            <!-- <div>
                 <button class="btn btn-outline-primary d-flex align-items-center gap-1 fw-bold" (click)="exportData()"
                     [disabled]="isExporting"
                     style="color: #1e2b5c; border-color: #1e2b5c; background-color: transparent;">
@@ -168,7 +168,7 @@
                     <span *ngIf="!isExporting">Export</span>
                     <span *ngIf="isExporting">Exporting...</span>
                 </button>
-            </div>
+            </div> -->
         </div>
 
         <!-- Table Wrap -->

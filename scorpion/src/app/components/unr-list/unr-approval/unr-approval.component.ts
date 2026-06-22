@@ -108,7 +108,7 @@ export class UnrApprovalComponent {
       }
     }
     this.isLoading = true;
-    this.dynamicDataService.getDynamicData(payload).subscribe((response: any) => {
+    this.listSubscription = this.dynamicDataService.getDynamicData(payload).subscribe((response: any) => {
       this.isLoading = false;
       if (response?.Table1) {
         this.approvalList = response.Table1;
