@@ -1,0 +1,107 @@
+/* ── Table Card ── */
+.table-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden; }
+.table-card-header { padding: 14px 20px; border-bottom: 1px solid #fce4e6; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.table-card-header h3 { font-size: 15px; font-weight: 700; color: #c8102e; display: flex; align-items: center; gap: 8px; }
+.tbl-meta { font-size: 12px; color: #9e9e9e; }
+.selection-count {
+  background: #fce4e6; color: #c8102e; font-size: 11px; font-weight: 700;
+  border-radius: 12px; padding: 3px 10px; margin-left: 8px;
+}
+
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th { background: #fff5f5; color: #c8102e; font-weight: 700; padding: 11px 12px; text-align: left; border-bottom: 2px solid #fce4e6; white-space: nowrap; font-size: 12px; }
+tbody td { padding: 10px 12px; border-bottom: 1px solid #f5f5f5; vertical-align: middle; }
+tbody tr:hover { background: #fffafa; }
+
+.sno { color: #9e9e9e; font-size: 12px; font-weight: 600; width: 36px; text-align: center; }
+
+/* Pagination */
+.pagination { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-top: 1px solid #fce4e6; font-size: 13px; color: #757575; flex-wrap: wrap; gap: 10px; }
+.page-btns { display: flex; gap: 6px; }
+.page-btn { padding: 5px 11px; border: 1.5px solid #ef9a9a; background: #fff; color: #c8102e; border-radius: 5px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.page-btn.active { background: #c8102e; color: #fff; border-color: #c8102e; }
+.page-btn:hover:not(.active) { background: #fce4e6; }
+
+/* Approval Specific Styles */
+.unr-link { color: #c8102e; text-decoration: none; font-weight: 800; font-family: 'Consolas', monospace; font-size: 12px; border-bottom: 1px dashed #c8102e; cursor: pointer; }
+.unr-link:hover { color: #9b0a22; border-bottom-style: solid; }
+.alloc-badge { display: inline-flex; align-items: center; gap: 5px; background: #ede7f6; color: #4527a0; border: 1px solid #b39ddb; border-radius: 10px; padding: 2px 9px; font-size: 11px; font-weight: 700; cursor: pointer; user-select: none; transition: all 0.15s; }
+.alloc-badge:hover { background: #4527a0; color: #fff; box-shadow: 0 2px 6px rgba(69,39,160,0.25); }
+.gen-by { font-size: 11px; color: #616161; font-weight: 600; }
+.gen-at { font-size: 10px; color: #9e9e9e; }
+.stat-pending-approval  { background: #fff8e1; color: #f57f17; border: 1px solid #ffe082; }
+.stat-approved          { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+.stat-rejected          { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+.ab-approve { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
+.ab-approve:hover:not(:disabled) { background: #c8e6c9; }
+.ab-reject  { background: #ffebee; color: #c62828; border-color: #ef9a9a; }
+.ab-reject:hover:not(:disabled)  { background: #ffcdd2; }
+.audit-text { font-size: 9px; color: #757575; font-style: italic; display: block; margin-top: 2px; }
+
+/* Stacked customer cell */
+.cust-cell { display: flex; flex-direction: column; gap: 2px; min-width: 200px; }
+.cust-code { font-size: 11px; font-weight: 700; color: #c8102e; letter-spacing: 0.3px; }
+.cust-name { font-size: 12px; font-weight: 600; color: #424242; }
+
+/* Chq/MR fields */
+.chq-no  { font-weight: 700; color: #424242; font-family: 'Consolas', monospace; }
+.mr-link { color: #fff; background-color: #c8102e; text-decoration: none; font-weight: 700; font-size: 12px; padding: 5px 10px; border-radius: 3px; display: inline-block; cursor: pointer; transition: all 0.2s; border: 1px solid #c8102e; }
+.mr-link:hover { background-color: #a00824; border-color: #a00824; box-shadow: 0 2px 6px rgba(200, 16, 46, 0.4); }
+
+.amount-cell { text-align: right; min-width: 120px; }
+.amount-cell .amt { font-weight: 800; font-size: 13px; color: #c8102e; }
+.amount-cell .currency { font-size: 11px; color: #9e9e9e; margin-right: 2px; }
+
+.status-badge { display: inline-block; padding: 3px 9px; border-radius: 10px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+
+.row-action-btns { display: flex; gap: 5px; min-width: 130px; }
+.ab { padding: 5px 10px; border-radius: 5px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1.5px solid; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s; white-space: nowrap; }
+.ab:disabled { opacity: 0.4; cursor: not-allowed; }
+/* -- Success Modal Overrides -- */
+.unr-success-box {
+  background: #fff; border-radius: 12px; overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+.unr-success-header {
+  background: #2e7d32; /* Green for success */
+  color: #fff; padding: 24px; text-align: center;
+}
+.unr-success-icon {
+  font-size: 32px; width: 60px; height: 60px; line-height: 60px;
+  background: rgba(255,255,255,0.2); border-radius: 50%;
+  margin: 0 auto 12px;
+}
+.unr-success-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.unr-success-subtitle { font-size: 13px; opacity: 0.9; }
+
+.unr-success-body { padding: 24px; background: #f4f5f7; text-align: center; }
+.unr-number-label { font-size: 12px; color: #757575; font-weight: 600; text-transform: uppercase; margin-bottom: 6px; }
+.unr-number-value { font-size: 20px; font-weight: 800; color: #212121; margin-bottom: 20px; font-family: 'Consolas', monospace; }
+
+.unr-success-stats {
+  display: flex; gap: 12px; background: #fff; border-radius: 8px; padding: 16px;
+  border: 1px solid #e0e0e0; margin-bottom: 16px; justify-content: center;
+}
+.stat-item { flex: 1; border-right: 1px solid #eeeeee; }
+.stat-item:last-child { border-right: none; }
+.stat-label { font-size: 11px; color: #757575; margin-bottom: 4px; }
+.stat-value { font-size: 14px; font-weight: 700; color: #212121; }
+
+.audit-line { font-size: 11.5px; color: #616161; }
+
+.unr-success-footer {
+  padding: 16px 24px; background: #fff; border-top: 1px solid #e0e0e0;
+  display: flex; gap: 12px; justify-content: center;
+}
+.btn {
+  padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600;
+  cursor: pointer; border: none; transition: 0.15s;
+}
+.btn-outline { border: 1.5px solid #bdbdbd; background: transparent; color: #424242; }
+.btn-outline:hover { background: #f5f5f5; }
+.btn-primary { background: #1976d2; color: #fff; }
+.btn-primary:hover { background: #1565c0; }
+.btn-success { background: #2e7d32; color: #fff; }
+.btn-success:hover { background: #1b5e20; }
+

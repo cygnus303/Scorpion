@@ -1,0 +1,106 @@
+<ng-template #TemplateRef>
+<div class="modal-overlay" style="padding:0px !important">
+  <div class="modal-box" style="max-width:1150px;">
+
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-title">📄 Journal Voucher — UNR Transfer</div>
+        <span class="modal-mr-tag">{{ summary?.VoucherNo || summary?.UNRNO || '—' }}</span>
+      </div>
+      <button class="modal-close" (click)="modalRef?.hide()" title="Close">✕</button>
+    </div>
+
+    <div class="modal-body" style="padding: 14px; background:#e9ecef;">
+      <div class="voucher-paper" id="journalVoucherPaper">
+
+        <!-- Company strip -->
+        <div class="voucher-co-header">
+          <div class="voucher-co-logo">Scorpion</div>
+          <div class="voucher-co-info">
+            <div class="name">SCORPION EXPRESS PVT LTD</div>
+            <div class="addr">
+              <b>Address:</b> 405, Shah and Nahar Industrial Estate, Dr. E Moses Road, Worli, Mumbai, INDIA - 400 018.<br>
+              <b>WhatsApp:</b> 1800221945 &nbsp;&middot;&nbsp; <b>E-Mail:</b> info&#64;scorpiongroup.in &nbsp;&middot;&nbsp; <b>Web:</b> www.scorpiongroup.in
+            </div>
+          </div>
+        </div>
+
+        <div class="voucher-title">JOURNAL VOUCHER</div>
+
+        <!-- Voucher meta -->
+        <table class="voucher-meta-table">
+          <tr>
+            <td class="lbl">Voucher No.</td>           <td class="val">{{ summary?.VoucherNo || '—' }}</td>
+            <td class="lbl">Voucher Date</td>          <td class="val">{{ summary?.Voucher_DT || '—' }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Manual Voucher No.</td>    <td class="val">{{ summary?.Manual_VoucherNo || '--' }}</td>
+            <td class="lbl">Reference No.</td>         <td class="val">{{ summary?.ReferenceNo || '—' }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Prepared At Location</td>  <td class="val">{{ summary?.PreparedAt_Loc || '—' }}</td>
+            <td class="lbl">UNR Prepared By / Date</td><td class="val">{{ summary?.UNR_Prepared_By_DT || '—' }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Prepared For</td>          <td class="val">{{ summary?.Prepared_For || '—' }}</td>
+            <td class="lbl">UNR Approved By / Date</td><td class="val">{{ summary?.UNR_Approved_By_DT || '—' }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Narration</td>             <td class="val" colspan="3">{{ summary?.Narration || 'UNR Transfer' }}</td>
+          </tr>
+        </table>
+
+        <!-- Journal entry table -->
+        <table class="voucher-journal-table">
+          <thead>
+            <tr>
+              <th style="width:6%;">Sr No</th>
+              <th style="width:22%;">Ledger Code</th>
+              <th style="width:30%;">Party Name</th>
+              <th style="width:13%;" class="num">Debit</th>
+              <th style="width:13%;" class="num">Credit</th>
+              <th>Remarks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of dataList; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ item?.Ledger_Code || '—' }}</td>
+              <td>{{ item?.Party_Name || '—' }}</td>
+              <td class="num">{{ (item?.Debit || 0) | number:'1.2-2' }}</td>
+              <td class="num">{{ (item?.Credit || 0) | number:'1.2-2' }}</td>
+              <td>{{ item?.Remarks || '—' }}</td>
+            </tr>
+            <tr *ngIf="!dataList || dataList.length === 0">
+              <td colspan="6" class="voucher-empty" style="text-align: center; padding: 20px;">No journal entries found</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Signatures -->
+        <div class="voucher-signatures">
+          <div>Passing Authority</div>
+          <div>Cashier / Acc</div>
+          <div>Manager / Director</div>
+        </div>
+        <div class="voucher-encl">
+          <div>ENCLOSE ALL SUPPORTING DOCUMENT</div>
+          <div>SIGNATURE</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="modal-footer-info">
+        Voucher No: <strong>{{ summary?.VoucherNo || summary?.UNRNO || '—' }}</strong> &nbsp;|&nbsp; Journal Voucher (UNR Transfer)
+      </div>
+      <div class="modal-footer-btns">
+        <button class="mfbtn mfbtn-print" (click)="printVoucher()">🖨 Print</button>
+        <button class="mfbtn mfbtn-close" (click)="modalRef?.hide()">✕ Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+</ng-template>

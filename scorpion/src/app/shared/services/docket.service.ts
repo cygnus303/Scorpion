@@ -49,6 +49,8 @@ export class DocketService {
   public Location: string = '';
   public BaseUserCode: string = '';
   public baseUsername :string ='';
+  public Companycode:string='';
+  public FinYear:string='';
   public loadBy :string ='';
   public chargeType:string='';
   public step2DetailsList: any;

@@ -1,0 +1,94 @@
+<ng-template #TemplateRef>
+<div class="modal-overlay" style="padding:0px !important">
+  <div class="modal-box" style="max-width:1150px;">
+
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-title">📄 UNR View</div>
+        <span class="modal-mr-tag">{{ summary?.UNRNO || '—' }}</span>
+      </div>
+      <button class="modal-close" (click)="modalRef?.hide()" title="Close">✕</button>
+    </div>
+
+    <div class="modal-body" style="padding: 14px; background:#e9ecef;">
+      <div class="voucher-paper" id="unrViewPaper">
+
+        <!-- Company strip -->
+        <div class="voucher-co-header">
+          <div class="voucher-co-logo">Scorpion</div>
+          <div class="voucher-co-info">
+            <div class="name">SCORPION EXPRESS PVT LTD</div>
+            <div class="addr">
+              <b>Address:</b> 405, Shah and Nahar Industrial Estate, Dr. E Moses Road, Worli, Mumbai, INDIA - 400 018.<br>
+              <b>WhatsApp:</b> 1800221945 &nbsp;&middot;&nbsp; <b>E-Mail:</b> info&#64;scorpiongroup.in &nbsp;&middot;&nbsp; <b>Web:</b> www.scorpiongroup.in
+            </div>
+          </div>
+        </div>
+
+        <div class="voucher-title">UNR VIEW</div>
+
+        <!-- Meta info — 4-col, 4-row grid matching UAT -->
+        <table class="voucher-meta-table">
+          <tr>
+            <td class="lbl">UNR No.</td>                <td class="val">{{ summary?.UNRNO || '—' }}</td>
+            <td class="lbl">UNR Date</td>               <td class="val">{{ summary?.UNRDate | date:'dd-MMM-yyyy' || '—' }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Voucher No.</td>            <td class="val">{{ summary?.VoucherNo || summary?.MRNo || '—' }}</td>
+            <td class="lbl">Voucher Date</td>           <td class="val">{{ summary?.VoucherDate || '—' }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Prepared At Location</td>   <td class="val">{{ summary?.Location || '—' }}</td>
+            <td class="lbl">UNR Prepared By / Date</td> <td class="val">{{ summary?.EntryBy || '—' }} / {{ summary?.UNRDate | date:'dd-MMM-yyyy' || '—' }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">UNR Rejected By / Date</td> <td class="val">{{ summary?.RejectBy || '—' }} / {{ summary?.RejectDt | date:'dd-MMM-yyyy' || '—' }}</td>
+            <td class="lbl">UNR Approved By / Date</td> <td class="val">{{ summary?.ApprovedBy || '—' }} / {{ summary?.ApprovedDt | date:'dd-MMM-yyyy' || '—' }}</td>
+          </tr>
+        </table>
+
+        <!-- Allocations table -->
+        <div style="max-height: 400px; overflow-y: auto;border: 1px solid #e0e0e0; margin-top: 10px;">
+          <table class="voucher-journal-table" style="margin: 0; border: none;">
+            <thead style="position: sticky; top: 0; z-index: 1;">
+              <tr>
+                <th style="width:18%;">Old Cust Name</th>
+                <th style="width:18%;">Chq. No</th>
+                <th style="width:11%;">Chq. Date</th>
+                <th style="width:13%;" class="num">Chq. Amount</th>
+                <th style="width:23%;">New Customer</th>
+                <th class="num">Transferred Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of dataList">
+              <td>{{ item?.CustName || '—' }}</td>
+              <td>{{ item?.ChequeNo || '—' }}</td>
+              <td>{{ item?.ChequeDT | date:'dd-MMM-yyyy' || '—' }}</td>
+              <td class="num">{{ (item?.Amount || 0) | number:'1.2-2' }}</td>
+              <td>{{ item?.NewCustName || '—' }}</td>
+              <td class="num">{{ (item?.TransAmount || 0) | number:'1.2-2' }}</td>
+            </tr>
+            <tr *ngIf="!dataList || dataList.length === 0">
+              <td colspan="6" class="voucher-empty" style="text-align: center; padding: 20px;">No allocations found</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="modal-footer-info">
+        UNR No: <strong>{{ summary?.UNRNO || '—' }}</strong>
+      </div>
+      <div class="modal-footer-btns">
+        <button class="mfbtn mfbtn-print" (click)="printVoucher()">🖨 Print</button>
+        <button class="mfbtn mfbtn-close" (click)="modalRef?.hide()">✕ Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+</ng-template>
