@@ -9,6 +9,7 @@ import { UnrViewComponent } from '../unr-view/unr-view.component';
 import { DocketService } from 'app/shared/services/docket.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { debounceTime, Subject, Subscription } from 'rxjs';
+import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 
 @Component({
   selector: 'app-unr-approval',
@@ -43,7 +44,7 @@ export class UnrApprovalComponent {
   public lastFilters: any = { fromDt: '', toDt: '', status: 'ALL' };
 
   constructor(
-    private thcMasterService: THCMasterService,
+    private dynamicDataService: DynamicDataService,
     private docketService: DocketService,
     private sweetAlertService: SweetAlertService,
     private modalService: BsModalService
@@ -108,7 +109,7 @@ export class UnrApprovalComponent {
       }
     }
     this.isLoading = true;
-   this.listSubscription = this.thcMasterService.getHCCDynamicData(payload).subscribe((response: any) => {
+    this.listSubscription = this.dynamicDataService.getDynamicData(payload).subscribe((response: any) => {
       this.isLoading = false;
       if (response?.Table1) {
         this.approvalList = response.Table1;
@@ -176,7 +177,7 @@ export class UnrApprovalComponent {
       }
     }
     this.isLoading = true;
-    this.thcMasterService.getHCCDynamicData(payload).subscribe((response: any) => {
+    this.dynamicDataService.getDynamicData(payload).subscribe((response: any) => {
       this.isLoading = false;
 
       if (type === 'R') {
