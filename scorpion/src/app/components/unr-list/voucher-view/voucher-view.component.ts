@@ -2,6 +2,7 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 
 @Component({
   selector: 'app-voucher-view',
@@ -18,7 +19,7 @@ export class VoucherViewComponent {
   public dataList: any[] = [];
   @ViewChild('TemplateRef', { static: true }) TemplateRef!: TemplateRef<any>;
 
-  constructor(private thcMasterService:THCMasterService,
+  constructor(private dynamicDataService: DynamicDataService,
     private modalService:BsModalService
   ){}
 
@@ -36,7 +37,7 @@ export class VoucherViewComponent {
       }
     };
 
-    this.thcMasterService.getHCCDynamicData(payload).subscribe({
+    this.dynamicDataService.getDynamicData(payload).subscribe({
       next: (res: any) => {
         this.isLoading = false;
         if (res) {
