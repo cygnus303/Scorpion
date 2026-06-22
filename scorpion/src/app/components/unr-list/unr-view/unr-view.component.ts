@@ -25,6 +25,10 @@ export class UnrViewComponent {
    showPopup(row: any) {
     if (!row) return;
     this.isLoading = true;
+    
+    // Open the modal immediately so the loader is visible
+    this.modalRef = this.modalService.show(this.TemplateRef, { class: 'modal-xl modal-dialog-centered hcc-view-modal-custom', backdrop: true });
+    
     const payload = {
       FilterJson: {
         ReportId: "366",
@@ -40,7 +44,6 @@ export class UnrViewComponent {
             this.summary = res.Table1[0];
             this.dataList = res.Table1;
           }
-          this.modalRef = this.modalService.show(this.TemplateRef, { class: 'modal-xl modal-dialog-centered hcc-view-modal-custom', backdrop: true });
         }
       },
       error: (err: any) => {

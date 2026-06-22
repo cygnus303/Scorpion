@@ -26,6 +26,10 @@ export class MrViewComponent {
   showPopup(row: any) {
     if (!row) return;
     this.isLoading = true;
+    
+    // Open the modal immediately so the loader is visible
+    this.modalRef = this.modalService.show(this.TemplateRef, { class: 'modal-xl modal-dialog-centered hcc-view-modal-custom', backdrop: true });
+    
     const payload = {
       FilterJson: {
         ReportId: "368",
@@ -43,7 +47,6 @@ export class MrViewComponent {
           if (res.Table2) {
             this.dataList = res.Table2;
           }
-          this.modalRef = this.modalService.show(this.TemplateRef, { class: 'modal-xl modal-dialog-centered hcc-view-modal-custom', backdrop: true });
         }
       },
       error: (err: any) => {
