@@ -1,0 +1,53 @@
+<div class="documents-tab-container">
+  <div *ngFor="let section of sections" class="mb-4">
+    <!-- Section Header -->
+    <div class="phase-header text-muted mt-3 mb-2"
+      style="font-size: 11px; font-weight: 700; color: #64748b; letter-spacing: 0.5px;">
+      {{ section.icon }} {{ section.title }}
+    </div>
+
+    <!-- Document Cards -->
+    <div class="d-flex flex-column gap-2">
+      <div *ngFor="let item of section.items"
+        class="card p-3 border border-light-subtle rounded-3 shadow-xs d-flex flex-row align-items-center justify-content-between"
+        style="background-color: #f8fafc !important; border-color: #cbd5e1 !important; margin-bottom: 2px; transition: all 0.2s;">
+        <!-- Left Side: Icon and Details -->
+        <div class="d-flex align-items-center gap-3">
+          <div class="d-flex align-items-center justify-content-center bg-white border border-light-subtle rounded-2"
+            style="width: 42px; height: 42px; font-size: 22px; border-color: #cbd5e1 !important;">
+            {{ item.icon }}
+          </div>
+          <div class="d-flex flex-column">
+            <div class="d-flex align-items-baseline gap-2 flex-wrap">
+              <span class="fw-bold text-dark" style="font-size: 13.5px; color: #1e293b !important;">{{ item.name
+                }}</span>
+              <span class="text-muted font-monospace" style="font-size: 11px; font-weight: 500;">{{ item.docNo }}</span>
+            </div>
+            <div class="text-muted mt-1" style="font-size: 11.5px; font-weight: 400; color: #64748b !important;">
+              {{ item.info }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Status Badge or Action Button -->
+        <div>
+          <ng-container *ngIf="item.status === 'Done'">
+            <span class="badge rounded-pill fw-medium d-inline-flex align-items-center gap-1"
+              style="background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; padding: 6px 12px; font-size: 11.5px;">
+              <span class="d-flex align-items-center justify-content-center text-white rounded-circle"
+                style="background-color: #166534; width: 14px; height: 14px; font-size: 8px;">✔</span>
+              Done
+            </span>
+          </ng-container>
+          <ng-container *ngIf="item.status === 'View'">
+            <button class="btn btn-sm fw-bold d-inline-flex align-items-center gap-1"
+              style="background-color: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; font-size: 11.5px; padding: 5px 14px; border-radius: 6px; transition: all 0.2s;"
+              onmouseover="this.style.backgroundColor='#dbeafe'" onmouseout="this.style.backgroundColor='#eff6ff'">
+              <span>↓</span> <span>View</span>
+            </button>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

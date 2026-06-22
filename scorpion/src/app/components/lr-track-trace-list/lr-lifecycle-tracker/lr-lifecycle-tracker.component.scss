@@ -1,0 +1,211 @@
+::ng-deep .custom-tracker-modal {
+  .modal-content {
+    border-radius: 12px;
+    border: none;
+    overflow: hidden;
+  }
+
+  .modal-body {
+    background-color: #ffffff !important;
+    padding: 20px 22px !important;
+  }
+
+  /* Base structural colors based on the image */
+  $dark-blue: #1a3a6b;
+  $light-bg: #f8fbff;
+  $border-color: #e2e8f0;
+  $text-muted: #64748b;
+  $green-line: #10b981;
+
+  .bg-dark-blue {
+    background-color: $dark-blue;
+  }
+
+  .text-dark-blue {
+    color: $dark-blue;
+  }
+
+  .border-dashed {
+    border-bottom: 1px dashed $border-color;
+  }
+
+  /* Custom Tabs leveraging Bootstrap's nav-tabs */
+  .custom-tabs {
+    border-bottom: 1px solid #eef2f6;
+
+    .nav-item {
+      margin-bottom: -1px;
+
+      .nav-link {
+        color: $text-muted;
+        font-weight: 600;
+        font-size: 13px;
+        border: none;
+        border-bottom: 3px solid transparent;
+        padding: 12px 20px;
+        cursor: pointer;
+        background: transparent;
+
+        &:hover {
+          color: $dark-blue;
+        }
+
+        &.active {
+          color: $dark-blue !important;
+          border-bottom: 3px solid $dark-blue !important;
+        }
+      }
+    }
+  }
+
+  /* Phase Header */
+  .phase-header {
+    font-size: 11px;
+    font-weight: 700;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1.5rem 0;
+
+    &::before,
+    &::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    &::before {
+      margin-right: 12px;
+    }
+
+    &::after {
+      margin-left: 12px;
+    }
+  }
+
+  /* Timeline Custom CSS (The things Bootstrap can't do natively) */
+  .timeline-wrapper {
+    padding-left: 10px;
+
+    .timeline-item {
+      position: relative;
+      padding-left: 30px;
+      padding-bottom: 24px;
+      border-left: 2px solid $green-line;
+
+      &.border-primary {
+        border-left-color: #3b82f6 !important;
+      }
+
+      &.border-pending {
+        border-left-color: #cbd5e1 !important;
+      }
+
+      &.border-transparent {
+        border-left-color: transparent !important;
+      }
+
+      /* The green dot */
+      .timeline-dot {
+        position: absolute;
+        left: -8px;
+        /* Center dot over the 2px left border (14px width -> 7px center -> 7-1(border) = 6px -> -7px left offset for exact center) Let's use -6px */
+        top: 0;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background-color: $green-line;
+        box-shadow: 0 0 0 3px white, 0 0 0 5px $green-line;
+        z-index: 2;
+
+        &.dot-primary {
+          background-color: #3b82f6;
+          box-shadow: 0 0 0 3px white, 0 0 0 5px #3b82f6;
+        }
+
+        &.dot-pending {
+          background-color: white;
+          border: 2px solid #cbd5e1;
+          box-shadow: 0 0 0 3px white, 0 0 0 4px #e2e8f0;
+        }
+
+        &.pulse {
+          animation: pulse 1.5s infinite;
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+        }
+
+        70% {
+          box-shadow: 0 0 0 6px rgba(59, 130, 246, 0);
+        }
+
+        100% {
+          box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+        }
+      }
+
+      .timeline-card {
+        border: 1px solid #e0e7f1 !important;
+        border-radius: 8px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+        margin-top: -6px;
+        /* Align card slightly up with the dot */
+        background: #f5f5f5;
+
+        .card-header {
+          background-color: #ffffff;
+          border-bottom: 1px dashed #e2e8f0;
+          border-top-left-radius: 8px;
+          border-top-right-radius: 8px;
+        }
+      }
+    }
+  }
+
+  /* Custom tiny text utility */
+  .fs-tiny {
+    font-size: 10px;
+  }
+
+  .fs-small {
+    font-size: 12px;
+  }
+
+  /* Force table cell backgrounds to override Bootstrap's --bs-table-bg */
+  .table-freight-header th {
+    background-color: #f1f5f9 !important;
+  }
+
+  .table-freight-subtotal td {
+    background-color: #f1f5f9 !important;
+  }
+
+  .table-freight-total td {
+    background-color: #f1f5f9 !important;
+  }
+
+  .table-ops-header th {
+    background-color: #f8fafc !important;
+  }
+
+  .btn-close-white-custom {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    padding: 10px;
+    filter: invert(1) grayscale(100%) brightness(200%);
+    opacity: 0.8;
+    margin: -0.5rem -0.5rem -0.5rem auto;
+
+    &:hover {
+      opacity: 1;
+      background-color: rgba(255, 255, 255, 0.25);
+    }
+  }
+}

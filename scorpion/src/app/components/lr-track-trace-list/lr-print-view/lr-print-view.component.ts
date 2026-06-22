@@ -26,15 +26,19 @@ export class LrPrintViewComponent {
     if (!row || !row.LrNumber) return;
     
     this.isLoading = true;
+    this.lrDetails = null; // Clear old data
+
+    // Open the modal immediately so the user sees the loading state
+    this.modalRef = this.modalService.show(this.TemplateRef, { 
+      class: 'modal-xl modal-dialog-centered custom-print-modal', 
+      backdrop: true 
+    });
+
     this.lrService.printView(row.LrNumber).subscribe({
       next: (res: any) => {
         this.isLoading = false;
         if (res && res.success) {
           this.lrDetails = res.data;
-          this.modalRef = this.modalService.show(this.TemplateRef, { 
-            class: 'modal-xl modal-dialog-centered custom-print-modal', 
-            backdrop: true 
-          });
         }
       },
       error: (err: any) => {

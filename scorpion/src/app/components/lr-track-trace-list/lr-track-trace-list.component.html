@@ -306,6 +306,7 @@
                                     🖨 Print
                                 </button>
                                 <button class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1"
+                                    (click)="openTrackerView(lr)"
                                     style="font-size: 11px; background: #e6f7ef; color: #1a9e5c; border: 1px solid #aaddc7;">
                                     📍 Track
                                 </button>
@@ -334,5 +335,6 @@
     </div>
 </div>
 
-<!-- Print View Modal Component -->
+<!-- MODALS -->
 <app-lr-print-view #lrPrintView></app-lr-print-view>
+<app-lr-lifecycle-tracker #lrLifecycleTracker></app-lr-lifecycle-tracker>

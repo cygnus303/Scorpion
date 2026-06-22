@@ -6,21 +6,24 @@ import { PaginationComponent } from '../../shared/components/pagination/paginati
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DynamicDataService } from '../../shared/services/dynamic-data.service';
 import { ExportService } from '../../shared/services/export.service';
-import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
+import { debounceTime, switchMap, tap, catchError } from 'rxjs/operators';
 import { LrPrintViewComponent } from './lr-print-view/lr-print-view.component';
+import { LrLifecycleTrackerComponent } from './lr-lifecycle-tracker/lr-lifecycle-tracker.component';
 
 @Component({
   selector: 'app-lr-track-trace-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, BsDatepickerModule, PaginationComponent, NgSelectModule, LrPrintViewComponent],
+  imports: [CommonModule, FormsModule, BsDatepickerModule, PaginationComponent, NgSelectModule, LrPrintViewComponent, LrLifecycleTrackerComponent],
   templateUrl: './lr-track-trace-list.component.html',
   styleUrl: './lr-track-trace-list.component.scss'
 })
 export class LrTrackTraceListComponent implements OnInit, OnDestroy {
   @ViewChild('lrPrintView') lrPrintView!: LrPrintViewComponent;
+  @ViewChild('lrLifecycleTracker') lrLifecycleTracker!: LrLifecycleTrackerComponent;
 
   private searchSubject = new Subject<string>();
+  private fetchDataSubject = new Subject<any>();
 
   constructor(private dynamicDataService: DynamicDataService, private exportService: ExportService) { }
   public config = {
@@ -139,36 +142,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
     };
 
     console.log("TrackTrace Payload:", payload);
-
-    this.isLoading = true;
-
-    this.dynamicDataService.getDynamicData(payload).subscribe({
-      next: (res: any) => {
-        this.isLoading = false;
-        const data = res?.data || res || {};
-        const table1 = data.Table1 || [];
-        const table2 = data.Table2 || [];
-        const table3 = data.Table3 || [];
-        
-        if (table2.length > 0) {
-          this.statusCounts = table2[0];
-        } else {
-          this.statusCounts = { Total: 0, Booking: 0, InTransit: 0, Delivered: 0, Exception: 0 };
-        }
-        
-        if (table1.length > 0) {
-          this.config.totalRecords = table1[0].TotalRecords || 0;
-          this.config.totalPages = table1[0].TotalPages || 1;
-        }
-
-        this.allLRs = table3;
-        this.applyLocalFilters();
-      },
-      error: (err: any) => {
-        this.isLoading = false;
-        console.error('Error fetching LR track and trace data:', err);
-      }
-    });
+    this.fetchDataSubject.next(payload);
   }
 
   ngOnInit() {
@@ -176,11 +150,45 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
       this.config.page = 1;
       this.searchLRs();
     });
+
+    this.fetchDataSubject.pipe(
+      tap(() => this.isLoading = true),
+      switchMap(payload => this.dynamicDataService.getDynamicData(payload).pipe(
+        catchError(err => {
+          console.error('Error fetching LR track and trace data:', err);
+          return of({ error: true }); // Keep the stream alive after an error
+        })
+      ))
+    ).subscribe((res: any) => {
+      this.isLoading = false;
+      if (res && res.error) return; // Ignore processing if an error occurred
+
+      const data = res?.data || res || {};
+      const table1 = data.Table1 || [];
+      const table2 = data.Table2 || [];
+      const table3 = data.Table3 || [];
+      
+      if (table2.length > 0) {
+        this.statusCounts = table2[0];
+      } else {
+        this.statusCounts = { Total: 0, Booking: 0, InTransit: 0, Delivered: 0, Exception: 0 };
+      }
+      
+      if (table1.length > 0) {
+        this.config.totalRecords = table1[0].TotalRecords || 0;
+        this.config.totalPages = table1[0].TotalPages || 1;
+      }
+
+      this.allLRs = table3;
+      this.applyLocalFilters();
+    });
+
     this.searchLRs(); 
   }
 
   ngOnDestroy() {
     this.searchSubject.complete();
+    this.fetchDataSubject.complete();
   }
 
   onSearchTextChange(value: string) {
@@ -190,6 +198,12 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
   openPrintView(lr: any) {
     if (this.lrPrintView) {
       this.lrPrintView.showPopup({ LrNumber: lr.LrNumber });
+    }
+  }
+
+  openTrackerView(lr: any) {
+    if (this.lrLifecycleTracker) {
+      this.lrLifecycleTracker.showPopup(lr);
     }
   }
 
