@@ -7,22 +7,22 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
   selector: 'app-unr-view',
   standalone: true,
   imports: [CommonModule],
-  providers:[BsModalService],
+  providers: [BsModalService],
   templateUrl: './unr-view.component.html',
   styleUrl: './unr-view.component.scss'
 })
 export class UnrViewComponent {
-    public modalRef!: BsModalRef;
-    public isLoading: boolean = false;
-    public summary: any = {};
-    public dataList: any[] = [];
-    @ViewChild('TemplateRef', { static: true }) TemplateRef!: TemplateRef<any>;
-  
-    constructor(private thcMasterService:THCMasterService,
-      private modalService:BsModalService
-    ){}
+  public modalRef!: BsModalRef;
+  public isLoading: boolean = false;
+  public summary: any = {};
+  public dataList: any[] = [];
+  @ViewChild('TemplateRef', { static: true }) TemplateRef!: TemplateRef<any>;
 
-   showPopup(row: any) {
+  constructor(private thcMasterService: THCMasterService,
+    private modalService: BsModalService
+  ) { }
+
+  showPopup(row: any) {
     if (!row) return;
     this.isLoading = true;
     const payload = {
