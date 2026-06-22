@@ -1,6 +1,5 @@
 import { Component, ViewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { PaginationComponent } from 'app/shared/components/pagination/pagination.component';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { MrViewComponent } from '../mr-view/mr-view.component';

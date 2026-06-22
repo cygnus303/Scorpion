@@ -1,6 +1,5 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 
