@@ -13,7 +13,7 @@
                 <button type="button" class="btn-close pfm-close" (click)="modalRef.hide()"></button>
             </div>
 
-            <div class="control-bar d-block gap-2 mb-3">
+            <!-- <div class="control-bar d-block gap-2 mb-3">
                 <form [formGroup]="THCFilterForm">
                     <div class="row px-1">
                         <div class="col-md-3 d-print-inline-block align-content-end">
@@ -45,10 +45,9 @@
                         </div>
                     </div>
                 </form>
-            </div>
+            </div> -->
             <div style="min-height: 500px;">
-                <div
-                    *ngIf="THCFilterForm.get('loadBy')?.value && (THCFilterForm.get('chargeType')?.value || THCFilterForm.get('loadBy')?.value === 'XX5' || THCFilterForm.get('loadBy')?.value === 'XX9')">
+                <div>
                     <div *ngIf="arrivalDetail" class="p-0">
                         <form [formGroup]="arrivalForm">
                             <div class="form-grid p-4">
@@ -60,12 +59,7 @@
                                         <div class="col-6">
                                             <div class="form-group-input">
                                                 <label class="form-label meta-label d-flex align-items-center gap-2">
-                                                    THC No. :
-                                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
-                                                        {{arrivalDetail?.thcno}}
-                                                        ({{generalMasterService.loadingData.length ?
-                                                        generalMasterService.loadingData[0].codeDesc :''}})
-                                                    </span>
+                                                    THC No. :  {{THCData.thcNo || '---'}}
                                                 </label>
                                             </div>
                                         </div>
@@ -87,7 +81,7 @@
                                                 <label class="form-label meta-label d-flex align-items-center gap-2">
                                                     Expected Arrival Date & Time :
                                                     <span class="fw-bold text-secondary" style="word-break: break-all;">
-                                                        {{arrivalDetail?.eta| date:'M/d/yyyy h:mm:ss a'}}
+                                                        {{arrivalDetail?.eta| date:'dd MMM yyyy h:mm:ss a'}}
                                                     </span>
                                                 </label>
                                             </div>
@@ -239,22 +233,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="control-bar d-block gap-2 mb-0 mt-3">
+                                <!-- <div class="control-bar d-block gap-2 mb-0 mt-3">
                                     <div style="display:flex;align-items:center;justify-content:space-between;"
                                         class="mb-2">
                                         <div class="fw-bold"><i class="fas fa-coins me-2"></i>Unloading Charges</div>
                                     </div>
                                     <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
                                     <div class="row mb-4 ">
-                                        <!-- <div class="col-3" *ngIf="arrivalDetail?.loadingBy !=='XX9'">
-                                            <div class="form-group-input">
-                                                <label class="form-label d-flex align-items-center gap-2 fw-bold">
-                                                    UnLoading By :
-                                                </label>
-                                                {{generalMasterService.loadingData.length ?
-                                                generalMasterService.loadingData[0].codeDesc :''}}
-                                            </div>
-                                        </div> -->
                                         <div class="col-3 d-print-inline-block align-content-center"
                                             *ngIf="arrivalDetail?.loadingBy !=='XX9'">
                                             <div class="d-flex gap-2">
@@ -313,7 +298,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
 
                         </form>
@@ -326,14 +311,6 @@
                                 </button>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="p-5 text-center text-muted d-flex align-items-center justify-content-center"
-                    *ngIf="!THCFilterForm.get('loadBy')?.value || (!THCFilterForm.get('chargeType')?.value && THCFilterForm.get('loadBy')?.value !== 'XX5' && THCFilterForm.get('loadBy')?.value !== 'XX9')"
-                    style="min-height: 500px;">
-                    <div class="py-5">
-                        <i class="fas fa-hand-pointer fa-3x mb-3 opacity-25"></i>
-                        <p>Please select <b>Loading By</b> and <b>Charge Type</b> to view update details.</p>
                     </div>
                 </div>
             </div>
