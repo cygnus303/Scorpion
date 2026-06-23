@@ -252,6 +252,17 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     return true;
   }
 
+  isHccOpen(hcc: any): boolean {
+    if (hcc === null || hcc === undefined || hcc === '') return false;
+    if (hcc === 'NO HCC' || hcc === 'NOHCC') return false;
+    
+    if (!isNaN(hcc)) {
+      return Number(hcc) === 0;
+    }
+    
+    return true;
+  }
+
   openAddPRSDRS() {
     const saved = localStorage.getItem("loginUserList");
     if (saved) {

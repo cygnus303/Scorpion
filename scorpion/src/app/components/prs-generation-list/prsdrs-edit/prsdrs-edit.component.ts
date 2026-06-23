@@ -68,6 +68,9 @@ export class PRSDRSEditComponent {
       next: (response: any) => {
         if (response) {
           this.financialEditDetail = response;
+          if (response.thcsumry && response.thcsumry.pcamt != null) {
+            response.thcsumry.pcamt = Number(response.thcsumry.pcamt).toFixed(2);
+          }
           this.PDCFinancialForm.patchValue(response.thcsumry);
         }
       }
@@ -101,7 +104,7 @@ export class PRSDRSEditComponent {
           const totalContractAmount = response.reduce((sum: number, item: any) => {
             return sum + (item.contractAmount || 0);
           }, 0);
-          this.PDCFinancialForm.patchValue({pcamt: totalContractAmount.tofixed(2)});
+          this.PDCFinancialForm.patchValue({pcamt: totalContractAmount.toFixed(2)});
         }
       }
     });

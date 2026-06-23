@@ -39,19 +39,23 @@ export class HCCDetailsComponent {
     public vendorChargeHelper: VendorChargeHelperService) { }
 
   isHccValid(hcc: any): boolean {
-    if (!hcc) return false;
-    if (hcc === 'NO HCC' || hcc === 'NOHCC' || hcc === '0' || hcc === 0) return false;
-    if (!isNaN(hcc) && Number(hcc) <= 0) return false;
+    if (hcc === null || hcc === undefined || hcc === '') return false;
+    if (hcc === 'NO HCC' || hcc === 'NOHCC') return false;
+    
+    if (!isNaN(hcc)) {
+      return Number(hcc) === 0;
+    }
+    
     return true;
   }
 
   get hasExistingHcc(): boolean {
     if (!this.selectedHccDetails) return false;
     return !!(
-      this.isHccValid(this.selectedHccDetails.loadingHCCNo) ||
-      this.isHccValid(this.selectedHccDetails.unloadingHCCNo) ||
-      this.isHccValid(this.selectedHccDetails.loadingHCC) ||
-      this.isHccValid(this.selectedHccDetails.unLoadingHCC)
+      this.isHccValid(this.selectedHccDetails.loadingNoHCCCnt) ||
+      this.isHccValid(this.selectedHccDetails.unloadingNoHCCCnt) ||
+      this.isHccValid(this.selectedHccDetails.loadingNoHCCCnt) ||
+      this.isHccValid(this.selectedHccDetails.unloadingNoHCCCnt)
     );
   }
 
@@ -59,9 +63,9 @@ export class HCCDetailsComponent {
     console.log("HCC Details Data:", data);
     this.selectedHccDetails = data;
     // Auto-detect existing HCC type so radio shows pre-selected (disabled) state
-    if (this.isHccValid(data.loadingHCCNo) || this.isHccValid(data.loadingHCC)) {
+    if (this.isHccValid(data.loadingNoHCCCnt) || this.isHccValid(data.loadingNoHCCCnt)) {
       this.selectedHccType = 'Unloading';
-    } else if (this.isHccValid(data.unloadingHCCNo) || this.isHccValid(data.unLoadingHCC)) {
+    } else if (this.isHccValid(data.unloadingNoHCCCnt) || this.isHccValid(data.unloadingNoHCCCnt)) {
       this.selectedHccType = 'Loading';
     } else {
       this.selectedHccType = '';
