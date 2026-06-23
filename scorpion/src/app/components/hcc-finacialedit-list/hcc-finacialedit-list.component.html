@@ -243,7 +243,7 @@
                                 <button class="ab ab-print" (click)="openPrint(row.HCNumber)" [disabled]="!row.HCNumber"
                                     title="Print HCC">🖨 Print</button>
                                 <button class="ab ab-cancel" (click)="onCancel(row)"
-                                    [disabled]="!row.HCNumber || row.HCCBillNo" title="Cancel HCC">🚫 Cancel</button>
+                                    [disabled]="!row.HCNumber || row.HCCBillNo || row.HCCStatus === 'Cancelled'" title="Cancel HCC">🚫 Cancel</button>
                                 <button class="ab ab-edit" title="Edit HCC" [disabled]="true">✏️ Edit</button>
                             </div>
                         </td>
