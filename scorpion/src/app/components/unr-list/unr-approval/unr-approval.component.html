@@ -23,13 +23,24 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Empty State -->
-                <tr *ngIf="!approvalList || approvalList.length === 0">
-                    <td colspan="10" style="text-align: center; padding: 30px; color: #9e9e9e;">
-                        No UNR approval records found.
-                    </td>
-                </tr>
+            <tbody *ngIf="isLoading">
+                    <tr>
+                        <td colspan="9" class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && approvalList.length === 0">
+                    <tr>
+                        <td colspan="9" class="text-center py-4 text-muted fs-5">
+                            No records found.
+                        </td>
+                    </tr>
+                </tbody>
+            <tbody *ngIf="!isLoading && approvalList.length > 0">
 
                 <!-- Dynamic Rows -->
                 <tr class="approval-row" *ngFor="let item of approvalList; let i = index">

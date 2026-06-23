@@ -91,9 +91,33 @@
         <div class="voucher-section-title">
           Voucher No (Adjustment No): <span class="adj-no">{{ summary?.AdjNo || summary?.VoucherNo || '—' }}</span>
         </div>
-        <div id="vfAdjSection">
-           <!-- Populated logic can go here -->
-        </div>
+        <table class="voucher-journal-table" *ngIf="voucherList.length>0">
+          <thead>
+            <tr>
+              <th style="width:14%;">Bill No</th>
+              <th style="width:10%;">Total Amount</th>
+              <th style="width:11%;">TDS Amount</th>
+              <th style="width:11%;">Pending Amount</th>
+              <th style="width:11%;">Frieght Deduction Amount</th>
+              <th style="width:11%;">Other Amount</th>
+              <th style="width:11%;">Adjust Amount</th>
+              <th style="width:20%;">Remarks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of voucherList">
+              <td>{{ item?.DocNo }}</td>
+              <td>{{ item?.ToatalAmt }}</td>
+              <td >{{ item?.TDSDED  }}</td>
+              <td >{{ item?.PendAmt }}</td>
+              <td>{{ item?.FrieghtDeduction }}</td>
+              <td>{{ item?.OtherAmt }}</td>
+              <td>{{ item?.AdjusAmt }}</td>
+              <td>{{ item?.Remarks ||'-'}}</td>
+
+            </tr>
+          </tbody>
+        </table>
 
         <!-- Signatures -->
         <div class="voucher-signatures">
