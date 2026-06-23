@@ -178,7 +178,7 @@ confirm(message: string, options?: any) {
   });
 }
 
-cancelWithReason(title: string, entityLabel: string, onConfirm: (reason: string) => void) {
+cancelWithReason(title: string, entityLabel: string, onConfirm: (reason: string) => void, actionText: string = 'cancel', confirmBtnHtml: string = '<i class="fas fa-trash-alt me-1"></i> Yes, Cancel') {
   Swal.fire({
     html: `
       <div style="font-family: 'Inter', sans-serif; text-align: center; padding: 10px 0 0;">
@@ -196,7 +196,7 @@ cancelWithReason(title: string, entityLabel: string, onConfirm: (reason: string)
           ${title}
         </h3>
         <p style="color: #4b5563; font-size: 14.5px; margin-bottom: 20px; line-height: 1.5;">
-          You are about to cancel <b><span style="color: #dc2626;">${entityLabel}</span></b>.<br/>
+          You are about to ${actionText} <b><span style="color: #dc2626;">${entityLabel}</span></b>.<br/>
           This action cannot be undone. Please provide a reason:
         </p>
         <div style="text-align: left;">
@@ -223,7 +223,7 @@ cancelWithReason(title: string, entityLabel: string, onConfirm: (reason: string)
       </div>
     `,
     showCancelButton: true,
-    confirmButtonText: '<i class="fas fa-trash-alt me-1"></i> Yes, Cancel',
+    confirmButtonText: confirmBtnHtml,
     cancelButtonText: 'Keep it',
     buttonsStyling: false,
     customClass: {
@@ -239,7 +239,7 @@ cancelWithReason(title: string, entityLabel: string, onConfirm: (reason: string)
       const textarea = document.getElementById('swal-cancel-reason') as HTMLTextAreaElement;
       const reason = textarea ? textarea.value.trim() : '';
       if (!reason) {
-        Swal.showValidationMessage('Please enter a cancellation reason');
+        Swal.showValidationMessage(`Please enter a reason to ${actionText}`);
         if (textarea) {
           textarea.style.borderColor = '#ef4444';
           textarea.style.background = '#fef2f2';

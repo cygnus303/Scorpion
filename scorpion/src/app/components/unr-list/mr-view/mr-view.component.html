@@ -1,0 +1,124 @@
+<ng-template #TemplateRef>
+   <div class="modal-overlay" style="padding: 0px !important;">
+  <div class="modal-box" style="max-width:1150px;">
+
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-title">📄 On-Account MR — Voucher View</div>
+        <span class="modal-mr-tag">{{ summary?.VoucherNo || summary?.MRNo || '—' }}</span>
+      </div>
+      <button class="modal-close" (click)="modalRef?.hide()" title="Close">✕</button>
+    </div>
+
+    <div class="modal-body" style="padding: 0px !important;">
+      <div *ngIf="isLoading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="mt-2 text-muted fw-semibold">Fetching MR details, please wait...</div>
+      </div>
+
+      <div *ngIf="!isLoading" class="voucher-paper" id="voucherPaper">
+
+        <!-- Company strip -->
+        <div class="voucher-co-header">
+          <div class="voucher-co-logo">Scorpion</div>
+          <div class="voucher-co-info">
+            <div class="name">SCORPION EXPRESS PVT LTD</div>
+            <div class="addr">
+              <b>Address:</b> 405, Shah and Nahar Industrial Estate, Dr. E Moses Road, Worli, Mumbai, INDIA - 400 018.<br>
+              <b>WhatsApp:</b> 1800221945 &nbsp;&middot;&nbsp; <b>E-Mail:</b> info&#64;scorpiongroup.in &nbsp;&middot;&nbsp; <b>Web:</b> www.scorpiongroup.in
+            </div>
+          </div>
+        </div>
+
+        <div class="voucher-title">ACCOUNT VOUCHER</div>
+
+        <!-- Voucher meta -->
+        <table class="voucher-meta-table">
+          <tr>
+            <td class="lbl">Voucher No</td>      <td class="val">{{ summary?.VoucherNo || summary?.UNRNO || '—' }}</td>
+            <td class="lbl">Voucher Date</td>    <td class="val">{{ summary?.VoucherDate || '—' }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Manual Voucher No</td><td class="val">{{ summary?.Manual_Voucherno || '--' }}</td>
+            <td class="lbl">Reference No</td>    <td class="val">{{ summary?.Refno || '—' }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Prepared Location</td><td class="val">{{ summary?.PreparedAt || '—' }}</td>
+            <td class="lbl">Prepared By</td>     <td class="val">{{ summary?.PreparedBy || '—' }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Prepared For</td>    <td class="val" colspan="3">{{ summary?.preparefor || '—' }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Narration</td>       <td class="val" colspan="3">{{ summary?.narration || '—' }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Transtype</td>       <td class="val" colspan="3">{{ summary?.transtype || 'BANK RECEIPT' }}</td>
+          </tr>
+          <tr>
+            <td class="lbl">Bank Details</td>    <td class="val" colspan="3">{{ summary?.chqno ? summary.chqno + ' (' + summary.chqdt + ')' : '—' }}</td>
+          </tr>
+        </table>
+
+        <!-- Journal entry -->
+        <table class="voucher-journal-table">
+          <thead>
+            <tr>
+              <th style="width:24%;">Description</th>
+              <th style="width:22%;">Party</th>
+              <th style="width:11%;" class="num">Debit Amount</th>
+              <th style="width:11%;" class="num">Credit Amount</th>
+              <th>Narration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of dataList">
+              <td>{{ item?.AccountDescription || item?.Description }}</td>
+              <td>{{ item?.Party || item?.CustName }}</td>
+              <td class="num">{{ (item?.DebitAmount || item?.DrAmt || 0) | number:'1.2-2' }}</td>
+              <td class="num">{{ (item?.CreditAmount || item?.CrAmt || 0) | number:'1.2-2' }}</td>
+              <td>{{ item?.Narration || item?.LineNarration }}</td>
+            </tr>
+            <tr *ngIf="!dataList || dataList.length === 0">
+              <td colspan="5" class="voucher-empty" style="text-align: center; padding: 20px;">No journal entries found</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Adjustment section -->
+        <div class="voucher-section-title">
+          Voucher No (Adjustment No): <span class="adj-no">{{ summary?.AdjNo || summary?.VoucherNo || '—' }}</span>
+        </div>
+        <div id="vfAdjSection">
+           <!-- Populated logic can go here -->
+        </div>
+
+        <!-- Signatures -->
+        <div class="voucher-signatures">
+          <div>Passing Authority</div>
+          <div>Cashier / Acc</div>
+          <div>Manager / Director</div>
+        </div>
+        <div class="voucher-encl">
+          <div>ENCLOSE ALL SUPPORTING DOCUMENT</div>
+          <div>SIGNATURE</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="modal-footer-info">
+        Voucher No: <strong>{{ summary?.VoucherNo || summary?.MRNo || '—' }}</strong> &nbsp;|&nbsp; On-Account Receipt Voucher
+      </div>
+      <div class="modal-footer-btns">
+        <button class="mfbtn mfbtn-print" (click)="printVoucher()">🖨 Print</button>
+        <button class="mfbtn mfbtn-close" (click)="modalRef?.hide()">✕ Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+    </ng-template>

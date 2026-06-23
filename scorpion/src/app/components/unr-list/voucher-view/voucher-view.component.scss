@@ -1,0 +1,161 @@
+/* ── MR View Modal (Scorpion red header + grey detail body) ── */
+.modal-overlay {
+  align-items: flex-start; justify-content: center; padding: 24px 16px; overflow-y: auto;
+}
+.modal-box {
+  background: #fff; border-radius: 12px; width: 100%; max-width: 880px; margin: 0 auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35); overflow: hidden; animation: slideIn 0.22s ease;
+}
+@keyframes slideIn { from { transform: translateY(-28px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal-header {
+  background: linear-gradient(90deg, #c8102e 0%, #9b0a22 100%);
+  padding: 0 22px; height: 58px; display: flex; align-items: center;
+  justify-content: space-between; gap: 14px;
+}
+.modal-header-left { display: flex; align-items: center; gap: 14px; }
+.modal-title { color: #fff; font-size: 16px; font-weight: 700; letter-spacing: 0.3px; }
+.modal-mr-tag {
+  background: rgba(255,255,255,0.18); color: #fff; border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 20px; padding: 3px 14px; font-size: 12px; font-weight: 700; letter-spacing: 0.4px;
+  font-family: 'Consolas', monospace;
+}
+.modal-close {
+  background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.4);
+  color: #fff; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: background 0.15s;
+}
+.modal-close:hover { background: rgba(255,255,255,0.3); }
+
+.modal-body { padding: 20px 22px; background: #f4f5f7; }
+
+.modal-footer {
+  padding: 12px 22px; background: #fff; border-top: 2px solid #f0f0f0;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+}
+.modal-footer-info { font-size: 12px; color: #757575; }
+.modal-footer-info strong { color: #424242; font-family: 'Consolas', monospace; }
+.modal-footer-btns { display: flex; gap: 10px; }
+.mfbtn {
+  padding: 7px 20px; border-radius: 6px; font-size: 13px; font-weight: 600;
+  cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 7px; transition: all 0.18s;
+}
+.mfbtn-print  { background: #424242; color: #fff; }
+.mfbtn-print:hover  { background: #212121; }
+.mfbtn-close  { background: #c8102e; color: #fff; }
+.mfbtn-close:hover  { background: #9b0a22; }
+
+/* ── On-Account MR Voucher (modal body content) ── */
+.voucher-paper {
+  background: #fff; padding: 18px 22px; color: #212121;
+  font-family: 'Calibri', 'Segoe UI', Arial, sans-serif; font-size: 11.5px;
+}
+.voucher-co-header {
+  display: flex; align-items: center; gap: 16px;
+  border-bottom: 3px solid #c8102e; padding-bottom: 10px; margin-bottom: 8px;
+}
+.voucher-co-logo {
+  background: #c8102e; color: #fff; width: 86px; height: 70px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Brush Script MT', cursive; font-size: 28px; font-weight: 800;
+  border-radius: 4px; flex-shrink: 0; letter-spacing: -1px; line-height: 1;
+}
+.voucher-co-info { flex: 1; line-height: 1.45; }
+.voucher-co-info .name {
+  font-size: 17px; font-weight: 800; color: #c8102e;
+  letter-spacing: 0.6px; margin-bottom: 4px;
+}
+.voucher-co-info .addr { font-size: 10.5px; color: #424242; }
+.voucher-title {
+  text-align: center; font-size: 16px; font-weight: 800; letter-spacing: 3px;
+  color: #212121; padding: 7px 0; margin: 6px 0 8px;
+  background: #f5f5f5; border: 1px solid #9e9e9e;
+}
+
+.voucher-meta-table {
+  width: 100%; border-collapse: collapse; margin-bottom: 8px;
+  border: 1.5px solid #424242;
+}
+.voucher-meta-table td {
+  border: 1px solid #bdbdbd; padding: 5px 8px; vertical-align: middle;
+  font-size: 11px;
+}
+.voucher-meta-table td.lbl {
+  background: #f5f5f5; font-weight: 700; color: #424242;
+  text-transform: uppercase; font-size: 10px; letter-spacing: 0.3px;
+  width: 16%; white-space: nowrap;
+}
+.voucher-meta-table td.val { font-weight: 600; color: #212121; }
+
+.voucher-journal-table, .voucher-adj-table {
+  width: 100%; border-collapse: collapse; margin-bottom: 8px;
+  border: 1.5px solid #424242;
+}
+.voucher-journal-table th, .voucher-adj-table th {
+  background: #424242; color: #fff; padding: 6px 8px; text-align: left;
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;
+  border-right: 1px solid #616161;
+}
+.voucher-journal-table td, .voucher-adj-table td {
+  border: 1px solid #bdbdbd; padding: 5px 8px; font-size: 11px;
+}
+.voucher-journal-table .num, .voucher-adj-table .num {
+  text-align: right; font-family: 'Consolas', monospace; white-space: nowrap;
+}
+.voucher-journal-table tr.total-row td {
+  background: #fff5f5; font-weight: 800; color: #c8102e;
+  border-top: 2px solid #c8102e;
+}
+
+.voucher-section-title {
+  background: #fff5f5; color: #c8102e; padding: 6px 12px; font-weight: 800;
+  border: 1.5px solid #c8102e; border-bottom: none;
+  text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;
+  display: flex; align-items: center; gap: 8px;
+}
+.voucher-section-title .adj-no {
+  background: #c8102e; color: #fff; padding: 2px 10px; border-radius: 10px;
+  font-family: 'Consolas', monospace; font-size: 11px; letter-spacing: 0.4px;
+}
+.voucher-empty {
+  background: #fafafa; color: #9e9e9e; text-align: center;
+  padding: 22px; font-style: italic;
+  border: 1.5px dashed #e0e0e0; border-top: 1.5px solid #c8102e;
+  font-size: 12px;
+}
+
+.voucher-signatures {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+  margin-top: 22px; border: 1.5px solid #424242; background: #fafafa;
+}
+.voucher-signatures > div {
+  padding: 28px 8px 6px; text-align: center; font-weight: 700; color: #424242;
+  font-size: 10.5px; border-right: 1px solid #bdbdbd;
+  text-transform: uppercase; letter-spacing: 0.4px;
+}
+.voucher-signatures > div:last-child { border-right: none; }
+.voucher-encl {
+  display: grid; grid-template-columns: 70% 30%;
+  border: 1.5px solid #424242; border-top: none;
+}
+.voucher-encl > div {
+  padding: 6px 10px; font-size: 10px; font-weight: 700; color: #424242;
+  text-align: center; border-right: 1px solid #bdbdbd;
+  text-transform: uppercase; letter-spacing: 0.4px;
+}
+.voucher-encl > div:last-child { border-right: none; }
+
+@media print {
+  @page { size: A4 landscape; margin: 10mm; }
+  .modal-overlay, .modal-box { box-shadow: none !important; border-radius: 0 !important; max-width: 100% !important; }
+  .modal-header, .modal-footer, .modal-close { display: none !important; }
+  .modal-body { padding: 0 !important; background: #fff !important; }
+  .voucher-paper { padding: 0 !important; }
+  .voucher-journal-table th, .voucher-adj-table th {
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .voucher-section-title, .voucher-journal-table tr.total-row td {
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .voucher-co-logo { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

@@ -1,0 +1,51 @@
+/* Custom overrides that don't have direct Bootstrap utility equivalents */
+
+.lr-print-wrapper {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Custom Table Borders */
+.custom-table {
+    border-color: #c5d5f5 !important;
+}
+
+.custom-table th {
+    letter-spacing: 0.5px;
+}
+
+.custom-table td {
+    vertical-align: middle;
+}
+
+/* Print Specific Styles */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .modal-body, .modal-body * {
+        visibility: visible;
+    }
+
+    .modal-body {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0 !important;
+        background: white !important;
+    }
+
+    .lr-print-wrapper {
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 10mm !important;
+        width: 100% !important;
+        border: none !important;
+    }
+
+    .modal-header, .modal-footer, .no-print {
+        display: none !important;
+    }
+}

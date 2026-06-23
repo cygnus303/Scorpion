@@ -1,0 +1,466 @@
+<!-- PHASE 1 -->
+<div class="phase-header text-muted">
+  📦 PHASE 1 — ORIGIN BRANCH (MUMBAI (BOM-001))
+</div>
+
+<div class="timeline-wrapper">
+  <!-- Item 1: Pickup Request -->
+  <div class="timeline-item border-success">
+    <div class="timeline-dot border-success"></div>
+    <div class="card timeline-card border-0">
+      <div class="card-header border-dashed py-2 px-3 bg-light bg-opacity-50">
+        <div class="d-flex align-items-center gap-3 mb-1">
+          <h6 class="m-0 fw-bold text-dark" style="font-size: 13.5px;">📲 Pickup Request Raised</h6>
+          <span class="text-muted" style="font-size: 11px; font-weight: 600;">PRQ/BOM001/2526/000412</span>
+          <span class="badge bg-success-subtle text-success rounded-pill fw-bold ms-auto">Completed</span>
+        </div>
+        <div class="d-flex align-items-center gap-4 text-dark" style="font-size: 11.5px; font-weight: 500;">
+          <span><span class="text-muted">🕐</span> 13 Apr 2026, ~30 min earlier</span>
+          <span><span class="text-danger">📍</span> Mumbai (BOM-001)</span>
+          <span><span class="text-muted">👤</span> Rajesh Kumar (Field Agent)</span>
+        </div>
+      </div>
+      <div class="card-body p-3">
+        <div class="row g-3">
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Consignor</label><div class="text-dark fs-small fw-medium">Reliance Industries Ltd</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Pickup Address</label><div class="text-dark fs-small fw-medium">Nariman Point, Mumbai — 400021</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Agent Phone</label><div class="text-dark fs-small fw-medium">98201 11234</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Assignment</label><div class="text-dark fs-small fw-medium"><span class="badge bg-success py-1 px-2 me-1">✔</span> Assigned via Mobile App</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Item 2: LR Booked -->
+  <div class="timeline-item border-success">
+    <div class="timeline-dot border-success"></div>
+    <div class="card timeline-card border-0">
+      <div class="card-header border-dashed py-2 px-3 bg-light bg-opacity-50">
+        <div class="d-flex align-items-center gap-3 mb-1">
+          <h6 class="m-0 fw-bold text-dark" style="font-size: 13.5px;">📋 LR Booked</h6>
+          <span class="text-muted" style="font-size: 11px; font-weight: 600;">{{ lrDetails?.lrNumber }}</span>
+          <span class="badge bg-success-subtle text-success rounded-pill fw-bold ms-auto">Completed</span>
+        </div>
+        <div class="d-flex align-items-center gap-4 text-dark" style="font-size: 11.5px; font-weight: 500;">
+          <span><span class="text-muted">🕐</span> {{ lrDetails?.bookedOn }}</span>
+          <span><span class="text-danger">📍</span> Mumbai (BOM-001)</span>
+          <span><span class="text-muted">👤</span> Rajesh Kumar (Booking Agent)</span>
+        </div>
+      </div>
+      <div class="card-body p-3">
+        <div class="row g-3">
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Consignor</label><div class="text-dark fs-small fw-medium">Reliance Industries Ltd</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Consignee</label><div class="text-dark fs-small fw-medium">Reliance Retail Ltd</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Description</label><div class="text-dark fs-small fw-medium">Electronic Components</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Declared Value</label><div class="text-dark fs-small fw-medium">₹ 2,45,000</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Pkgs / Weight</label><div class="text-dark fs-small fw-medium">12 Pkgs / 487 kg</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">E-Way Bill</label><div class="text-dark fs-small fw-medium">23134000019901</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Pay Basis / Mode</label><div class="text-dark fs-small fw-medium">PAID / 🚛 Road LTL</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Item 3: Pickup Run Sheet -->
+  <div class="timeline-item border-success">
+    <div class="timeline-dot border-success"></div>
+    <div class="card timeline-card border-0">
+      <div class="card-header border-dashed py-2 px-3 bg-light bg-opacity-50">
+        <div class="d-flex align-items-center gap-3 mb-1">
+          <h6 class="m-0 fw-bold text-dark" style="font-size: 13.5px;">📝 Pickup Run Sheet + Branch Arrival</h6>
+          <span class="text-muted" style="font-size: 11px; font-weight: 600;">PRS/BOM001/2526/000198</span>
+          <span class="badge bg-success-subtle text-success rounded-pill fw-bold ms-auto">Completed</span>
+        </div>
+        <div class="d-flex align-items-center gap-4 text-dark" style="font-size: 11.5px; font-weight: 500;">
+          <span><span class="text-muted">🕐</span> 13 Apr 2026, ~2h later</span>
+          <span><span class="text-danger">📍</span> Mumbai (BOM-001)</span>
+          <span><span class="text-muted">👤</span> Suresh Naik (Branch Incharge)</span>
+        </div>
+      </div>
+      <div class="card-body p-3">
+        <div class="row g-3 mb-3">
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">PRS LRs</label><div class="text-dark fs-small fw-medium">Includes LR-2604-00841</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Agent Commission</label><div class="text-dark fs-small fw-medium">₹ 420 (Per Kg)</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Packages Received</label><div class="text-dark fs-small fw-medium">12 / 12 <span class="badge bg-success py-1 px-1 ms-1">✔</span></div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Condition</label><div class="text-dark fs-small fw-medium">Good — No Damage</div></div>
+        </div>
+        <!-- HCC Blocks -->
+        <div class="row g-2">
+          <div class="col-md-6">
+            <div class="border rounded-2 p-2 d-flex justify-content-between align-items-center" style="background:#e8f0fd !important; border-color:#c5d5f5!important;">
+              <div>
+                <div class="fw-bold text-primary" style="font-size:10.5px;">🧾 HCC-1 — Loading &#64; Pickup</div>
+                <div class="text-muted" style="font-size:10px;">HCC/BOM001/2526/Auto</div>
+                <div class="text-dark fw-semibold mt-1" style="font-size:11px;">Payable: Rajesh Kumar (Reimbursement) &nbsp;|&nbsp; <span class="text-primary">₹ 180</span></div>
+              </div>
+              <span class="badge bg-success-subtle text-success py-1 px-2 rounded-pill">✅ Paid</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="border rounded-2 p-2 d-flex justify-content-between align-items-center" style="background:#fdecea !important; border-color:#f5c6c2!important;">
+              <div>
+                <div class="fw-bold text-danger" style="font-size:10.5px;">🧾 HCC-2 — Unloading &#64; Branch</div>
+                <div class="text-muted" style="font-size:10px;">HCC/BOM001/2526/Auto</div>
+                <div class="text-dark fw-semibold mt-1" style="font-size:11px;">Payable: Suresh Naik — Labour Vendor &nbsp;|&nbsp; <span class="text-danger">₹ 240</span></div>
+              </div>
+              <span class="badge bg-success-subtle text-success py-1 px-2 rounded-pill">✅ Paid</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Item 4: Loading Sheet -->
+  <div class="timeline-item border-success">
+    <div class="timeline-dot border-success"></div>
+    <div class="card timeline-card border-0">
+      <div class="card-header border-dashed py-2 px-3 bg-light bg-opacity-50">
+        <div class="d-flex align-items-center gap-3 mb-1">
+          <h6 class="m-0 fw-bold text-dark" style="font-size: 13.5px;">📋 Loading Sheet — Connection to Origin Hub</h6>
+          <span class="text-muted" style="font-size: 11px; font-weight: 600;">LS/BOM001/2526/000314</span>
+          <span class="badge bg-success-subtle text-success rounded-pill fw-bold ms-auto">Completed</span>
+        </div>
+        <div class="d-flex align-items-center gap-4 text-dark" style="font-size: 11.5px; font-weight: 500;">
+          <span><span class="text-muted">🕐</span> Cut-off time</span>
+          <span><span class="text-danger">📍</span> Mumbai (BOM-001) → Mumbai Hub (BOM-HUB)</span>
+          <span><span class="text-muted">👤</span> Prakash More (Branch Manager)</span>
+        </div>
+      </div>
+      <div class="card-body p-3">
+        <div class="row g-3 mb-3">
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Loading Vendor</label><div class="text-dark fs-small fw-medium">As per LS</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Vehicle</label><div class="text-dark fs-small fw-medium">MH-01-XY-5678</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Driver</label><div class="text-dark fs-small fw-medium">Ramesh Gupta (📞 98765 43210)</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Connecting To</label><div class="text-dark fs-small fw-medium">Mumbai Hub (BOM-HUB)</div></div>
+        </div>
+        <!-- HCC Block -->
+        <div class="row g-2">
+          <div class="col-md-6">
+            <div class="border rounded-2 p-2 d-flex justify-content-between align-items-center" style="background:#e8f0fd !important; border-color:#c5d5f5!important;">
+              <div>
+                <div class="fw-bold text-primary" style="font-size:10.5px;">🧾 HCC-3 — Loading → Origin Hub</div>
+                <div class="text-muted" style="font-size:10px;">HCC/BOM001/2526/Auto</div>
+                <div class="text-dark fw-semibold mt-1" style="font-size:11px;">Payable: Loader Vendor &nbsp;|&nbsp; <span class="text-primary">₹ 560</span></div>
+              </div>
+              <span class="badge bg-success-subtle text-success py-1 px-2 rounded-pill">✅ Paid</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Item 5: Manifest -->
+  <div class="timeline-item border-success">
+    <div class="timeline-dot border-success"></div>
+    <div class="card timeline-card border-0">
+      <div class="card-header border-dashed py-2 px-3 bg-light bg-opacity-50">
+        <div class="d-flex align-items-center gap-3 mb-1">
+          <h6 class="m-0 fw-bold text-dark" style="font-size: 13.5px;">🚚 Manifest Dispatched — Branch → Origin Hub</h6>
+          <span class="text-muted" style="font-size: 11px; font-weight: 600;">MF/BOM001/2526/000089 + THC/BOM001/2526/000067</span>
+          <span class="badge bg-success-subtle text-success rounded-pill fw-bold ms-auto">Completed</span>
+        </div>
+        <div class="d-flex align-items-center gap-4 text-dark" style="font-size: 11.5px; font-weight: 500;">
+          <span><span class="text-muted">🕐</span> Post LS</span>
+          <span><span class="text-danger">📍</span> Mumbai (BOM-001) → Mumbai Hub (BOM-HUB)</span>
+          <span><span class="text-muted">👤</span> MH-01-XY-5678 — Ramesh Gupta</span>
+        </div>
+      </div>
+      <div class="card-body p-3">
+        <div class="row g-3">
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">MF No</label><div class="text-dark fs-small fw-medium">MF/BOM001/2526/000089</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">THC No</label><div class="text-dark fs-small fw-medium">THC/BOM001/2526/000067</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Vehicle</label><div class="text-dark fs-small fw-medium">MH-01-XY-5678</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Driver</label><div class="text-dark fs-small fw-medium">Ramesh Gupta (📞 98765 43210)</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PHASE 2 -->
+<div class="phase-header text-muted mt-3">
+  🏭 PHASE 2 — ORIGIN HUB (MUMBAI HUB (BOM-HUB))
+</div>
+
+<div class="timeline-wrapper">
+  <!-- Item 1: Vehicle Arrived -->
+  <div class="timeline-item border-success">
+    <div class="timeline-dot border-success"></div>
+    <div class="card timeline-card border-0">
+      <div class="card-header border-dashed py-2 px-3 bg-light bg-opacity-50">
+        <div class="d-flex align-items-center gap-3 mb-1">
+          <h6 class="m-0 fw-bold text-dark" style="font-size: 13.5px;">🏭 Vehicle Arrived — Stock Updated at Origin Hub</h6>
+          <span class="badge bg-success-subtle text-success rounded-pill fw-bold ms-auto">Completed</span>
+        </div>
+        <div class="d-flex align-items-center gap-4 text-dark" style="font-size: 11.5px; font-weight: 500;">
+          <span><span class="text-muted">🕐</span> After transit</span>
+          <span><span class="text-danger">📍</span> Mumbai Hub (BOM-HUB)</span>
+          <span><span class="text-muted">👤</span> Vijay Patil (Hub Ops Incharge)</span>
+        </div>
+      </div>
+      <div class="card-body p-3">
+        <div class="row g-3 mb-3">
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">MF Received</label><div class="text-dark fs-small fw-medium">MF/BOM001/2526/000089</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Packages Verified</label><div class="text-dark fs-small fw-medium">12 / 12 <span class="badge bg-success py-1 px-1 ms-1">✔</span></div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Stock Updated</label><div class="text-dark fs-small fw-medium"><span class="badge bg-success py-1 px-1 me-1">✔</span> LR in Mumbai Hub (BOM-HUB) Stock</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Unloading Vendor</label><div class="text-dark fs-small fw-medium">Hub Labour Vendor</div></div>
+        </div>
+        <!-- HCC Block -->
+        <div class="row g-2">
+          <div class="col-md-6">
+            <div class="border rounded-2 p-2 d-flex justify-content-between align-items-center" style="background:#fdecea !important; border-color:#f5c6c2!important;">
+              <div>
+                <div class="fw-bold text-danger" style="font-size:10.5px;">🧾 HCC-4 — Unloading &#64; Origin Hub (Auto)</div>
+                <div class="text-muted" style="font-size:10px;">HCC/BOMHUB/2526/Auto</div>
+                <div class="text-dark fw-semibold mt-1" style="font-size:11px;">Payable: Hub Labour Vendor &nbsp;|&nbsp; <span class="text-danger">₹ 320</span></div>
+              </div>
+              <span class="badge bg-success-subtle text-success py-1 px-2 rounded-pill">✅ Paid</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Item 2: Dispatched -->
+  <div class="timeline-item border-success">
+    <div class="timeline-dot border-success"></div>
+    <div class="card timeline-card border-0">
+      <div class="card-header border-dashed py-2 px-3 bg-light bg-opacity-50">
+        <div class="d-flex align-items-center gap-3 mb-1">
+          <h6 class="m-0 fw-bold text-dark" style="font-size: 13.5px;">🚛 Dispatched from Origin Hub → Delhi Hub (DEL-HUB)</h6>
+          <span class="text-muted" style="font-size: 11px; font-weight: 600;">MF/BOMHUB/2526/000156 + THC/BOMHUB/2526/000099</span>
+          <span class="badge bg-success-subtle text-success rounded-pill fw-bold ms-auto">Completed</span>
+        </div>
+        <div class="d-flex align-items-center gap-4 text-dark" style="font-size: 11.5px; font-weight: 500;">
+          <span><span class="text-muted">🕐</span> After stock update</span>
+          <span><span class="text-danger">📍</span> Mumbai Hub (BOM-HUB) → Delhi Hub (DEL-HUB)</span>
+          <span><span class="text-muted">👤</span> MH-14-GH-9900 — Sunil Yadav</span>
+        </div>
+      </div>
+      <div class="card-body p-3">
+        <div class="row g-3 mb-3">
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">LS No</label><div class="text-dark fs-small fw-medium">LS/BOMHUB/2526/000201</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">MF No</label><div class="text-dark fs-small fw-medium">MF/BOMHUB/2526/000156</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">THC No</label><div class="text-dark fs-small fw-medium">THC/BOMHUB/2526/000099</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Vehicle</label><div class="text-dark fs-small fw-medium">MH-14-GH-9900</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Driver</label><div class="text-dark fs-small fw-medium">Sunil Yadav (📞 99001 88765)</div></div>
+        </div>
+        <!-- HCC Block -->
+        <div class="row g-2">
+          <div class="col-md-6">
+            <div class="border rounded-2 p-2 d-flex justify-content-between align-items-center" style="background:#e8f0fd !important; border-color:#c5d5f5!important;">
+              <div>
+                <div class="fw-bold text-primary" style="font-size:10.5px;">🧾 HCC-5 — Loading → Onward Vehicle</div>
+                <div class="text-muted" style="font-size:10px;">HCC/BOMHUB/2526/Auto</div>
+                <div class="text-dark fw-semibold mt-1" style="font-size:11px;">Payable: Hub Loader Vendor &nbsp;|&nbsp; <span class="text-primary">₹ 750</span></div>
+              </div>
+              <span class="badge bg-success-subtle text-success py-1 px-2 rounded-pill">✅ Paid</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 3 -->
+<div class="phase-header text-muted mt-3">
+  🔄 PHASE 3 — TRANSSHIPMENT HUB (NAGPUR HUB (NGP-HUB))
+</div>
+
+<div class="timeline-wrapper">
+  <!-- Item 1: Vehicle Arrived -->
+  <div class="timeline-item border-primary">
+    <div class="timeline-dot dot-primary pulse"></div>
+    <div class="card timeline-card border-primary" style="background-color: #f0f6ff !important;">
+      <div class="card-header border-dashed py-2 px-3 border-primary bg-transparent">
+        <div class="d-flex align-items-center gap-3 mb-1">
+          <h6 class="m-0 fw-bold text-dark" style="font-size: 13.5px;">🔄 Vehicle Arrived — Stock Updated at Transshipment Hub</h6>
+          <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill fw-bold ms-auto">In Progress</span>
+        </div>
+        <div class="d-flex align-items-center gap-4 text-dark" style="font-size: 11.5px; font-weight: 500;">
+          <span><span class="text-muted">🕐</span> Arrived this morning</span>
+          <span><span class="text-danger">📍</span> {{ lrDetails?.currentLocation }} — <span class="text-danger fw-bold">📌 Current Location</span></span>
+          <span><span class="text-muted">👤</span> Anil Meshram</span>
+        </div>
+      </div>
+      <div class="card-body p-3">
+        <div class="row g-3 mb-3">
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">MF Received</label><div class="text-dark fs-small fw-medium">MF/BOMHUB/2526/000156</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Packages Verified</label><div class="text-dark fs-small fw-medium">12 / 12 <span class="badge bg-success py-1 px-1 ms-1">✔</span></div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Stock Updated</label><div class="text-dark fs-small fw-medium"><span class="badge bg-success py-1 px-1 me-1">✔</span> In Transshipment Hub Stock</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Onward Dispatch</label><div class="text-dark fs-small fw-medium">Awaiting Vehicle Assignment</div></div>
+        </div>
+        <!-- HCC Block -->
+        <div class="row g-2">
+          <div class="col-md-6">
+            <div class="border rounded-2 p-2 d-flex justify-content-between align-items-center bg-white" style="border-color:#f5c6c2!important;">
+              <div>
+                <div class="fw-bold text-danger" style="font-size:10.5px;">🧾 HCC-6 — Unloading &#64; Transshipment Hub (Auto)</div>
+                <div class="text-muted" style="font-size:10px;">HCC/NGPHUB/2526/Auto</div>
+                <div class="text-dark fw-semibold mt-1" style="font-size:11px;">Payable: Hub Labour Vendor &nbsp;|&nbsp; <span class="text-danger">₹ 290</span></div>
+              </div>
+              <span class="badge bg-primary-subtle text-primary py-1 px-2 rounded-pill">⚡ Active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Item 2: Dispatch Pending -->
+  <div class="timeline-item border-pending">
+    <div class="timeline-dot dot-pending"></div>
+    <div class="card timeline-card border-0 bg-transparent opacity-75">
+      <div class="card-header border-0 py-3 px-3 bg-transparent">
+        <div class="d-flex align-items-center gap-3 mb-1">
+          <h6 class="m-0 fw-bold text-muted" style="font-size: 13.5px;">🚛 Dispatch from Transshipment Hub → Destination Hub</h6>
+          <span class="badge bg-secondary-subtle text-secondary rounded-pill fw-bold ms-auto">Pending</span>
+        </div>
+        <div class="text-muted mt-2" style="font-size: 11.5px; font-weight: 500;">
+          EDD: {{ lrDetails?.edd }} — Onward MF and THC to be generated
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 4 -->
+<div class="phase-header text-muted mt-3">
+  🏭 PHASE 4 — DESTINATION HUB (DELHI HUB (DEL-HUB))
+</div>
+
+<div class="timeline-wrapper">
+  <div class="timeline-item border-pending">
+    <div class="timeline-dot dot-pending"></div>
+    <div class="card timeline-card border-0 bg-transparent opacity-75">
+      <div class="card-header border-0 py-3 px-3 bg-transparent">
+        <div class="d-flex align-items-center gap-3 mb-1">
+          <h6 class="m-0 fw-bold text-muted" style="font-size: 13.5px;">🏭 Vehicle Arrival — Delhi Hub (DEL-HUB)</h6>
+          <span class="badge bg-secondary-subtle text-secondary rounded-pill fw-bold ms-auto">Pending</span>
+        </div>
+        <div class="text-muted mt-2" style="font-size: 11.5px; font-weight: 500;">
+          ETA: {{ lrDetails?.edd }} (approx)
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="timeline-item border-pending">
+    <div class="timeline-dot dot-pending"></div>
+    <div class="card timeline-card border-0 bg-transparent opacity-75">
+      <div class="card-header border-0 py-3 px-3 bg-transparent">
+        <div class="d-flex align-items-center gap-3 mb-1">
+          <h6 class="m-0 fw-bold text-muted" style="font-size: 13.5px;">🚐 Dispatch — Delhi Hub (DEL-HUB) → Delhi (DEL-001)</h6>
+          <span class="badge bg-secondary-subtle text-secondary rounded-pill fw-bold ms-auto">Pending</span>
+        </div>
+        <div class="text-muted mt-2" style="font-size: 11.5px; font-weight: 500;">
+          To follow after hub arrival
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 5 -->
+<div class="phase-header text-muted mt-3">
+  🏠 PHASE 5 — DESTINATION BRANCH (DELHI (DEL-001))
+</div>
+
+<div class="timeline-wrapper">
+  <div class="timeline-item border-pending">
+    <div class="timeline-dot dot-pending"></div>
+    <div class="card timeline-card border-0 bg-transparent opacity-75">
+      <div class="card-header border-0 py-3 px-3 bg-transparent">
+        <div class="d-flex align-items-center gap-3 mb-1">
+          <h6 class="m-0 fw-bold text-muted" style="font-size: 13.5px;">📦 Vehicle Arrival — Delhi (DEL-001)</h6>
+          <span class="badge bg-secondary-subtle text-secondary rounded-pill fw-bold ms-auto">Pending</span>
+        </div>
+        <div class="text-muted mt-2" style="font-size: 11.5px; font-weight: 500;">
+          ETA: {{ lrDetails?.edd }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="timeline-item border-pending">
+    <div class="timeline-dot dot-pending"></div>
+    <div class="card timeline-card border-0 bg-transparent opacity-75">
+      <div class="card-header border-0 py-3 px-3 bg-transparent">
+        <div class="d-flex align-items-center gap-3 mb-1">
+          <h6 class="m-0 fw-bold text-muted" style="font-size: 13.5px;">🛵 Delivery Run Sheet (DRS) — Out for Delivery</h6>
+          <span class="badge bg-secondary-subtle text-secondary rounded-pill fw-bold ms-auto">Pending</span>
+        </div>
+        <div class="text-muted mt-2" style="font-size: 11.5px; font-weight: 500;">
+          EDD: {{ lrDetails?.edd }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="timeline-item border-transparent">
+    <div class="timeline-dot dot-pending"></div>
+    <div class="card timeline-card border-0 bg-transparent opacity-75">
+      <div class="card-header border-0 py-3 px-3 bg-transparent">
+        <div class="d-flex align-items-center gap-3 mb-1">
+          <h6 class="m-0 fw-bold text-muted" style="font-size: 13.5px;">✅ Delivery — POD Capture &amp; PFM Forwarding</h6>
+          <span class="badge bg-secondary-subtle text-secondary rounded-pill fw-bold ms-auto">Pending</span>
+        </div>
+        <div class="text-muted mt-2" style="font-size: 11.5px; font-weight: 500;">
+          EDD: {{ lrDetails?.edd }} — Will close ops lifecycle
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HCC Trail Footer Block -->
+<div class="card rounded-3 mt-4" style="background-color: #f8fafd !important; border: 1px solid #e0e7f1 !important; box-shadow: none;">
+  <div class="card-body p-3">
+    <h6 class="mb-3 d-flex align-items-center gap-2" style="font-size: 13px; font-weight: 700; color: #1e293b; letter-spacing: 0.5px;">
+      <span style="font-size: 16px;">📜</span> HCC TRAIL — {{ lrDetails?.lrNumber }}
+    </h6>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+      <!-- Paid -->
+      <div style="background: #eaf6ee; border: 1px solid #cbe9d8; border-radius: 6px; padding: 10px;">
+        <div style="font-size: 11.5px; color: #334155; margin-bottom: 6px;"><span style="font-weight: 700;">HCC-1</span> Loading &#64; Pickup</div>
+        <div style="font-size: 12px; color: #10b981;">₹ 180 <span class="badge bg-success ms-1" style="padding: 3px 4px; border-radius: 3px;">✔</span></div>
+      </div>
+      <div style="background: #eaf6ee; border: 1px solid #cbe9d8; border-radius: 6px; padding: 10px;">
+        <div style="font-size: 11.5px; color: #334155; margin-bottom: 6px;"><span style="font-weight: 700;">HCC-2</span> Unloading &#64; Branch</div>
+        <div style="font-size: 12px; color: #10b981;">₹ 240 <span class="badge bg-success ms-1" style="padding: 3px 4px; border-radius: 3px;">✔</span></div>
+      </div>
+      <div style="background: #eaf6ee; border: 1px solid #cbe9d8; border-radius: 6px; padding: 10px;">
+        <div style="font-size: 11.5px; color: #334155; margin-bottom: 6px;"><span style="font-weight: 700;">HCC-3</span> Loading → Hub</div>
+        <div style="font-size: 12px; color: #10b981;">₹ 560 <span class="badge bg-success ms-1" style="padding: 3px 4px; border-radius: 3px;">✔</span></div>
+      </div>
+      <div style="background: #eaf6ee; border: 1px solid #cbe9d8; border-radius: 6px; padding: 10px;">
+        <div style="font-size: 11.5px; color: #334155; margin-bottom: 6px;"><span style="font-weight: 700;">HCC-4</span> Unloading &#64; Origin Hub</div>
+        <div style="font-size: 12px; color: #10b981;">₹ 320 <span class="badge bg-success ms-1" style="padding: 3px 4px; border-radius: 3px;">✔</span></div>
+      </div>
+      <div style="background: #eaf6ee; border: 1px solid #cbe9d8; border-radius: 6px; padding: 10px;">
+        <div style="font-size: 11.5px; color: #334155; margin-bottom: 6px;"><span style="font-weight: 700;">HCC-5</span> Loading → Onward</div>
+        <div style="font-size: 12px; color: #10b981;">₹ 750 <span class="badge bg-success ms-1" style="padding: 3px 4px; border-radius: 3px;">✔</span></div>
+      </div>
+      <!-- Active -->
+      <div style="background: #eef4ff; border: 1px solid #d1e0ff; border-radius: 6px; padding: 10px;">
+        <div style="font-size: 11.5px; color: #334155; margin-bottom: 6px;"><span style="font-weight: 700;">HCC-6</span> Unloading &#64; Trans Hub</div>
+        <div style="font-size: 12px; color: #3b82f6;">₹ 290 <span style="font-size: 13px; margin-left: 2px;">⚡</span></div>
+      </div>
+      <!-- Pending -->
+      <div style="background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px;">
+        <div style="font-size: 11.5px; color: #334155; margin-bottom: 6px;"><span style="font-weight: 700;">HCC-7</span> Unloading &#64; Dest Hub</div>
+        <div style="font-size: 12px; color: #94a3b8;">— <span style="font-size: 13px; margin-left: 2px;">⏳</span></div>
+      </div>
+      <div style="background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px;">
+        <div style="font-size: 11.5px; color: #334155; margin-bottom: 6px;"><span style="font-weight: 700;">HCC-8</span> Loading → Dest Branch</div>
+        <div style="font-size: 12px; color: #94a3b8;">— <span style="font-size: 13px; margin-left: 2px;">⏳</span></div>
+      </div>
+      <div style="background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px;">
+        <div style="font-size: 11.5px; color: #334155; margin-bottom: 6px;"><span style="font-weight: 700;">HCC-9</span> Unloading &#64; Dest Branch</div>
+        <div style="font-size: 12px; color: #94a3b8;">— <span style="font-size: 13px; margin-left: 2px;">⏳</span></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,267 +1,196 @@
-
-
-  <div style="background: var(--bg);" class="p-3">
-    <div class="d-flex justify-content-between align-items-center">
-        <div class="page-title">
-            <span class="icon">💸</span>
-            UNR Module
+<div class="page">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <div class="page-title"><span class="icon">💸</span> UNR Module</div>
+            <!-- <div class="page-subtitle">Unidentified Receipts — Customer Allocation &amp; Transfer</div> -->
         </div>
-        <div class="btn-group gap-3 ms-auto">
-            <button class="btn btn-primary px-4 py-2 rounded" >
-                <span >📥 Download XLS</span>
-            </button>
+        <div class="header-actions">
+            <button class="btn btn-primary" title="Download UNR Register as CSV">📥 Download XLS</button>
         </div>
     </div>
 
-      <!-- Summary Strip -->
-    <div class="summary-strip">
-        <!-- TOTAL DRS -->
-        <div class="summary-card px-3 py-3 c-blue cursor-pointer">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="card-content">
-                    <div class="s-label">Total UNR Records</div>
-                    <div class="s-val fs-2 fw-bold lh-1">3</div>
-                    <div class="small text-body-tertiary">All records today</div>
-                </div>
-                <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📄</div>
+    <!-- Summary Cards -->
+    <div class="cards-grid">
+        <div class="card total">
+            <div class="card-icon">📄</div>
+            <div class="card-label">Total UNR Records</div>
+            <div class="card-count" id="cardTotal">6</div>
+            <div class="card-sub">Within selected period</div>
+        </div>
+        <div class="card pending">
+            <div class="card-icon">⏳</div>
+            <div class="card-label">Pending Allocation</div>
+            <div class="card-count" id="cardPending">6</div>
+            <div class="card-sub">Awaiting customer mapping</div>
+        </div>
+        <div class="card partial">
+            <div class="card-icon">🔄</div>
+            <div class="card-label">Partially Adjusted</div>
+            <div class="card-count" id="cardPartial">0</div>
+            <div class="card-sub">Some balance remaining</div>
+        </div>
+        <div class="card complete">
+            <div class="card-icon">✅</div>
+            <div class="card-label">Adjusted</div>
+            <div class="card-count" id="cardComplete">0</div>
+            <div class="card-sub">Ready for accounting</div>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+        <div class="filter-mode-toggle" role="tablist" aria-label="Search mode">
+            <!-- <button [class.active]="activeTab === 'dateRange'" (click)="setActiveTab('dateRange')">📅 Date
+                Range</button> -->
+            <button [class.active]="activeTab === 'Customer'" (click)="setActiveTab('Customer')">👤 Customer</button>
+            <button [class.active]="activeTab === 'approval'" (click)="setActiveTab('approval')">✅ UNR Approval</button>
+            <!-- <button [class.active]="activeTab === 'onAccount'" (click)="setActiveTab('onAccount')">💳 On Account MR 
+                NO.</button>-->
+        </div>
+
+        <div class="filter-divider"></div>
+
+        <div class="filter-field" id="fromField" *ngIf="activeTab === 'Customer'||activeTab === 'approval'">
+            <label for="dateFrom">From Date</label>
+            <div style="position: relative; display: flex; align-items: center;">
+                <span style="position: absolute; left: 10px; cursor: pointer; pointer-events: none; z-index: 1;">📅</span>
+                <input type="text" id="dateFrom" bsDatepicker
+                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                    [(ngModel)]="config.FromDt" (ngModelChange)="getList()"
+                    style="padding-left: 32px; width: 100%; position: relative;">
+            </div>
+        </div>
+        <div class="filter-field" id="toField" *ngIf="activeTab === 'Customer'||activeTab === 'approval'">
+            <label for="dateTo">To Date</label>
+            <div style="position: relative; display: flex; align-items: center;">
+                <span style="position: absolute; left: 10px; cursor: pointer; pointer-events: none; z-index: 1;">📅</span>
+                <input type="text" id="dateTo" bsDatepicker [minDate]="config.FromDt"
+                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                    [(ngModel)]="config.ToDt" (ngModelChange)="getList()"
+                    style="padding-left: 32px; width: 100%; position: relative;">
             </div>
         </div>
 
-        <!-- PENDING FOR ARRIVAL -->
-        <div class="summary-card px-3 py-3 c-orange cursor-pointer">
-            <div class="card-content">
-                <div class="s-label">Pending Allocation</div>
-                <div class="s-val fs-2 fw-bold lh-1">0</div>
-                <div class="small text-body-tertiary">Awaiting customer mapping</div>
-            </div>
-            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
+        <div class="filter-field" id="approvalField" *ngIf="activeTab === 'approval'">
+            <label>Approval Status</label>
+             <ng-select type="text" placeholder="Status" [items]="statusList" bindLabel="label" bindValue="value"
+                        [(ngModel)]="config.Status" (change)="getList()"
+                        class="custom-status-select clear-icon"></ng-select>
         </div>
 
-        <!-- TOTAL DRS ARRIVED -->
-        <div class="summary-card px-3 py-3 c-teal cursor-pointer">
-            <div class="card-content">
-                <div class="s-label">Partially Adjusted</div>
-                <div class="s-val fs-2 fw-bold lh-1">0</div>
-                <div class="small text-body-tertiary">Some balance remaining</div>
-            </div>
-            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🔄</div>
+        <div class="filter-field search" id="custField" *ngIf="activeTab === 'customer'">
+            <label for="custSearch">Customer Smart Search</label>
+            <input type="text" id="custSearch" list="customerList" placeholder="Type code or name…"
+                autocomplete="off" [(ngModel)]="config.searchText"/>
+            <datalist id="customerList"></datalist>
         </div>
 
-        <!-- CANCELLED -->
-        <div class="summary-card px-3 py-3 c-red cursor-pointer">
-            <div class="card-content">
-                <div class="s-label">Adjusted</div>
-                <div class="s-val fs-2 fw-bold lh-1">33</div>
-                <div class="small text-body-tertiary">Ready for accounting</div>
-            </div>
-            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">✅</div>
+        <div class="filter-field search" id="onAccountField" *ngIf="activeTab === 'onAccount'||activeTab === 'approval'">
+            <label for="onAccountSearch">On Account MR NO.</label>
+            <input type="text" placeholder="Enter MR number…" autocomplete="off" [(ngModel)]="config.UNRNO" (keyup)="onSearchChange()"/>
         </div>
 
+        <!-- <div class="filter-divider"></div> -->
+
+        <!-- <div class="filter-field" id="getListBtn">
+            <label style="visibility:hidden;">action</label>
+            <button class="btn btn-primary" (click)="getList()">🔍 Get List</button>
+        </div> -->
+
+        <div class="helper-text" id="helperText" *ngIf="activeTab === 'Customer'">
+            Showing UNR records with cheque dates between <b>01-May-2026</b> and <b>14-May-2026</b>.
+        </div>
     </div>
 
-  <!-- Filter Bar -->
-  <div class="filter-bar">
-    <div class="filter-mode-toggle" role="tablist" aria-label="Search mode">
-      <button class="active">📅 Date Range</button>
-      <button>👤 Customer</button>
-      <button>✅ UNR Approval <span class="pending-pill" id="pendingPill">0</span></button>
-      <button>💳 On Account MR NO.</button>
+    <!-- Table Card — Regular UNR Listing -->
+    <div class="table-card" *ngIf="activeTab === 'customer' || activeTab === 'Customer' || activeTab === 'onAccount'">
+        <div class="table-card-header">
+            <h3>
+                📋 UNR Listing
+                <span class="selection-count" id="selectionCount" style="display:none;">0 selected</span>
+            </h3>
+            <span class="tbl-meta" id="tblMeta">Showing 6 records</span>
+        </div>
+
+        <div class="tbl-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="cb-cell"><input type="checkbox" id="selectAllCb" class="row-cb" title="Select all" [checked]="isAllSelected" (change)="toggleSelectAll($event)" />
+                        </th>
+                        <th class="sno">#</th>
+                        <th>Customer Code / Name</th>
+                        <th>Chq. No</th>
+                        <th>Chq. Date</th>
+                        <th>Chq. Amount</th>
+                        <th>On Account MR No.</th>
+                        <th>New Cust Code / Name</th>
+                        <th>Transfer Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamic Row -->
+                    <tr class="row-base" *ngFor="let item of unrList; let i = index">
+                        <td class="cb-cell"><input type="checkbox" class="row-cb" [(ngModel)]="item.isChecked" (change)="checkIfAllSelected()"></td>
+                        <td class="sno">{{ i + 1 }}</td>
+                        <td>
+                            <div class="cust-cell">
+                                <span class="cust-code">{{ item.CUSTCODE }}</span>
+                                <span class="cust-name">{{ item.CUSTNAME }}</span>
+                            </div>
+                        </td>
+                        <td><span class="chq-no">{{ item.CHECKNO }}</span></td>
+                        <td><span class="chq-date">{{ item.CHECKDATE }}</span></td>
+                        <td class="amount-cell"><span class="currency">₹</span><span class="amt">{{ item.CHECKAMOUNT }}</span></td>
+                        <td><a href="#" class="mr-link" title="View On-Account MR details">{{ item.MRNO }}</a></td>
+                        <td>
+                            <select class="row-select" [disabled]="!item.isChecked">
+                                <option value="">— Select Customer —</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="row-input row-transfer" placeholder="0.00" oninput="this.value = this.value.replace(/[^0-9.]/g,'');" [disabled]="!item.isChecked">
+                        </td>
+                        <td><span class="status-badge stat-pending">Pending</span></td>
+                        <td>
+                            <div class="row-action-btns">
+                                <button class="ab ab-add" [disabled]="!item.isChecked">+ Add Row</button>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr *ngIf="!unrList || unrList.length === 0">
+                        <td colspan="11" style="text-align: center; padding: 20px;">No records found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <span>Showing <b id="visibleCount">6</b> of <b>6</b> UNR records</span>
+            <div class="page-btns">
+                <button class="page-btn">‹ Prev</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">Next ›</button>
+            </div>
+        </div>
     </div>
 
-    <div class="filter-divider"></div>
+    <div *ngIf="activeTab === 'approval'">
+        <app-unr-approval></app-unr-approval>
+    </div>
+</div>
 
-    <div class="filter-field" id="fromField">
-      <label for="fromDate">From Date</label>
-      <input type="date" id="fromDate" value="2026-05-01"/>
+<!-- ── Sticky Save / Cancel Action Footer ── -->
+<div class="action-footer" *ngIf="activeTab === 'customer' || activeTab === 'Customer' || activeTab === 'onAccount'">
+    <div class="footer-info">
+        <span id="footerInfo">No customers selected — tick the checkbox on any UNR row to begin allocation.</span>
     </div>
-    <div class="filter-field" id="toField">
-      <label for="toDate">To Date</label>
-      <input type="date" id="toDate"   value="2026-05-14"/>
+    <div class="footer-btns">
+        <button class="btn btn-secondary" id="cancelBtn" disabled>✕ Cancel</button>
+        <button class="btn btn-success" id="saveBtn" disabled>✓ Save</button>
     </div>
-
-    <div class="filter-field" id="approvalField" style="display:none;">
-      <label>Approval Status</label>
-      <select>
-        <option value="pending" selected>Pending Approval</option>
-        <option value="approved">Approved</option>
-        <option value="rejected">Rejected</option>
-        <option value="all">All</option>
-      </select>
-    </div>
-
-    <div class="filter-field search" id="custField" style="display:none;">
-      <label for="custSearch">Customer Smart Search</label>
-      <input type="text" id="custSearch" list="customerList"
-             placeholder="Type code or name…" autocomplete="off" />
-      <datalist id="customerList"></datalist>
-    </div>
-    <div class="filter-field search" id="onAccountField" style="display:none;">
-      <label for="onAccountSearch">On Account MR NO.</label>
-      <input type="text" id="onAccountSearch" 
-             placeholder="Enter MR number…" autocomplete="off"/>
-    </div>
-
-    <div class="filter-divider"></div>
-
-    <div class="filter-field" id="getListBtn">
-      <label style="visibility:hidden;">action</label>
-      <button class="btn btn-danger py-2 px-4" >🔍 Get List</button>
-    </div>
-
-    <div class="helper-text" id="helperText">
-      Showing UNR records with cheque dates between <b>01-May-2026</b> and <b>14-May-2026</b>.
-    </div>
-  </div>
-
-  <!-- Table Card — Regular UNR Listing -->
-  <div class="table-card">
-    <div class="table-card-header">
-      <h3>
-        📋 UNR Listing
-        <span class="selection-count" id="selectionCount" style="display:none;">0 selected</span>
-      </h3>
-      <span class="tbl-meta" id="tblMeta">Showing 6 records</span>
-    </div>
-
-    <div class="tbl-wrap">
-    <table>
-        <thead>
-            <tr>
-                <th class="cb-cell"><input type="checkbox" class="row-cb" title="Select all"/></th>
-                <th class="sno">#</th>
-                <th>Customer Code / Name</th>
-                <th>Chq. No</th>
-                <th>Chq. Date</th>
-                <th>Chq. Amount</th>
-                <th>On Account MR No.</th>
-                <th>New Cust Code / Name</th>
-                <th>Transfer Amount</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="row-base">
-                <td class="cb-cell"><input type="checkbox" class="row-cb" ></td>
-                <td class="sno">1</td>
-                <td>
-                    <div class="cust-cell"><span class="cust-code">C12162427</span><span class="cust-name">Themis Medicare Ltd</span></div>
-                </td>
-                <td><span class="chq-no">S0000000552143789</span></td>
-                <td><span class="chq-date">14-May-26</span></td>
-                <td class="amount-cell"><span class="currency">₹</span><span class="amt">50,000.00</span></td>
-                <td><a href="#" class="mr-link" title="View On-Account MR details">MUM/ONMR/2627/000789</a></td>
-                <td>
-                    <ng-select>
-                        <ng-option value="1">Option 1</ng-option>
-                        <ng-option value="2">Option 2</ng-option>
-                    </ng-select>
-                </td>
-                <td><input type="number" class="form-control" placeholder="0.00" step="0.01" min="0"></td>
-                <td><span class="pill-badge">Pending</span></td>
-                <td>
-                    <div class="row-action-btns"><button class="btn btn-danger py-2 px-4" >+ Add
-                            Row</button>
-                    </div>
-                </td>
-            </tr>
-            <tr class="row-base">
-                <td class="cb-cell"><input type="checkbox" class="row-cb" ></td>
-                <td class="sno">1</td>
-                <td>
-                    <div class="cust-cell"><span class="cust-code">C12162427</span><span class="cust-name">Themis Medicare Ltd</span></div>
-                </td>
-                <td><span class="chq-no">S0000000552143789</span></td>
-                <td><span class="chq-date">14-May-26</span></td>
-                <td class="amount-cell"><span class="currency">₹</span><span class="amt">50,000.00</span></td>
-                <td><a href="#" class="mr-link" title="View On-Account MR details">MUM/ONMR/2627/000789</a></td>
-                <td>
-                    <ng-select>
-                        <ng-option value="1">Option 1</ng-option>
-                        <ng-option value="2">Option 2</ng-option>
-                    </ng-select>
-                </td>
-                <td><input type="number" class="form-control" placeholder="0.00" step="0.01" min="0"></td>
-                <td><span class="pill-badge">Pending</span></td>
-                <td>
-                    <div class="row-action-btns"><button class="btn btn-danger py-2 px-4" >+ Add
-                            Row</button>
-                    </div>
-                </td>
-            </tr>
-            <tr class="row-base">
-                <td class="cb-cell"><input type="checkbox" class="row-cb" ></td>
-                <td class="sno">1</td>
-                <td>
-                    <div class="cust-cell"><span class="cust-code">C12162427</span><span class="cust-name">Themis Medicare Ltd</span></div>
-                </td>
-                <td><span class="chq-no">S0000000552143789</span></td>
-                <td><span class="chq-date">14-May-26</span></td>
-                <td class="amount-cell"><span class="currency">₹</span><span class="amt">50,000.00</span></td>
-                <td><a href="#" class="mr-link" title="View On-Account MR details">MUM/ONMR/2627/000789</a></td>
-                <td>
-                    <ng-select>
-                        <ng-option value="1">Option 1</ng-option>
-                        <ng-option value="2">Option 2</ng-option>
-                    </ng-select>
-                </td>
-                <td><input type="number" class="form-control" placeholder="0.00" step="0.01" min="0"></td>
-                <td><span class="pill-badge">Pending</span></td>
-                <td>
-                    <div class="row-action-btns"><button class="btn btn-danger py-2 px-4" >+ Add
-                            Row</button>
-                    </div>
-                </td>
-            </tr>
-            <tr class="row-base">
-                <td class="cb-cell"><input type="checkbox" class="row-cb" ></td>
-                <td class="sno">1</td>
-                <td>
-                    <div class="cust-cell"><span class="cust-code">C12162427</span><span class="cust-name">Themis Medicare Ltd</span></div>
-                </td>
-                <td><span class="chq-no">S0000000552143789</span></td>
-                <td><span class="chq-date">14-May-26</span></td>
-                <td class="amount-cell"><span class="currency">₹</span><span class="amt">50,000.00</span></td>
-                <td><a href="#" class="mr-link" title="View On-Account MR details">MUM/ONMR/2627/000789</a></td>
-                <td>
-                    <ng-select>
-                        <ng-option value="1">Option 1</ng-option>
-                        <ng-option value="2">Option 2</ng-option>
-                    </ng-select>
-                </td>
-                <td><input type="number" class="form-control" placeholder="0.00" step="0.01" min="0"></td>
-                <td><span class="pill-badge">Pending</span></td>
-                <td>
-                    <div class="row-action-btns"><button class="btn btn-danger py-2 px-4" >+ Add
-                            Row</button>
-                    </div>
-                </td>
-            </tr>
-            <tr class="row-base">
-                <td class="cb-cell"><input type="checkbox" class="row-cb" ></td>
-                <td class="sno">1</td>
-                <td>
-                    <div class="cust-cell"><span class="cust-code">C12162427</span><span class="cust-name">Themis Medicare Ltd</span></div>
-                </td>
-                <td><span class="chq-no">S0000000552143789</span></td>
-                <td><span class="chq-date">14-May-26</span></td>
-                <td class="amount-cell"><span class="currency">₹</span><span class="amt">50,000.00</span></td>
-                <td><a href="#" class="mr-link" title="View On-Account MR details">MUM/ONMR/2627/000789</a></td>
-                <td>
-                    <ng-select>
-                        <ng-option value="1">Option 1</ng-option>
-                        <ng-option value="2">Option 2</ng-option>
-                    </ng-select>
-                </td>
-                <td><input type="number" class="form-control" placeholder="0.00" step="0.01" min="0"></td>
-                <td><span class="pill-badge">Pending</span></td>
-                <td>
-                    <div class="row-action-btns"><button class="btn btn-danger py-2 px-4" >+ Add
-                            Row</button>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    </div>
-  </div>
+</div>
