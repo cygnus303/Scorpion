@@ -206,8 +206,8 @@
                                     [disabled]="lr.isQuickMode!=='Q'">✏️ Quick LR
                                     Edit
                                     and Save</button>
-                                <button class="ab ab-finedit" (click)="openEdit(lr.dockno)"
-                                    [disabled]="lr.isQuickMode==='Q'||lr.status ==='Cancelled'">💰 Fin Edit</button>
+                                <!-- <button class="ab ab-finedit" (click)="openEdit(lr.dockno)"
+                                    [disabled]="lr.isQuickMode==='Q'||lr.status ==='Cancelled'">💰 Fin Edit</button> -->
                                 <button *ngIf="isHQTR" class="ab ab-cancel" (click)="onCancel(lr.dockno)"
                                     [disabled]="lr.isDocketCancel==='Y'">🚫 Cancel</button>
                                 <div class="track-wrap">

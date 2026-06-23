@@ -7,7 +7,7 @@
         <div class="modal-title">📄 On-Account MR — Voucher View</div>
         <span class="modal-mr-tag">{{ summary?.VoucherNo || summary?.MRNo || '—' }}</span>
       </div>
-      <button class="modal-close" (click)="modalRef?.hide()" title="Close">✕</button>
+      <button class="modal-close" (click)="modalRef.hide()" title="Close">✕</button>
     </div>
 
     <div class="modal-body" style="padding: 0px !important;">
@@ -139,7 +139,7 @@
       </div>
       <div class="modal-footer-btns">
         <button class="mfbtn mfbtn-print" (click)="printVoucher()">🖨 Print</button>
-        <button class="mfbtn mfbtn-close" (click)="modalRef?.hide()">✕ Close</button>
+        <button class="mfbtn mfbtn-close" (click)="modalRef.hide()">✕ Close</button>
       </div>
     </div>
 

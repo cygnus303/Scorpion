@@ -7,7 +7,7 @@
         <div class="modal-title">📄 UNR View</div>
         <span class="modal-mr-tag">{{ summary?.UNRNO || '—' }}</span>
       </div>
-      <button class="modal-close" (click)="modalRef?.hide()" title="Close">✕</button>
+      <button class="modal-close" (click)="modalRef.hide()" title="Close">✕</button>
     </div>
 
     <div class="modal-body" style="padding: 14px; background:#e9ecef;">
@@ -92,7 +92,7 @@
       </div>
       <div class="modal-footer-btns">
         <button class="mfbtn mfbtn-print" (click)="printVoucher()">🖨 Print</button>
-        <button class="mfbtn mfbtn-close" (click)="modalRef?.hide()">✕ Close</button>
+        <button class="mfbtn mfbtn-close" (click)="modalRef.hide()">✕ Close</button>
       </div>
     </div>
 
