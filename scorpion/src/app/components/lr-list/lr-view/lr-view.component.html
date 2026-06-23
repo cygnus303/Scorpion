@@ -234,9 +234,19 @@
                                 <td>{{ lrDetails?.AddedBy || '—' }}</td>
                                 <td>{{ lrDetails?.AddedDate ? (parseDate(lrDetails?.AddedDate) | date:'dd MMM yyyy') :
                                     '—' }}</td>
-                                <td>{{ lrDetails?.EditedBy || '—'}}</td>
-                                <td>{{ lrDetails?.EditedDate ? (parseDate(lrDetails?.EditedDate) | date:'dd MMM yyyy') :
-                                    '—' }}</td>
+                                <td>
+                                    <ng-container *ngIf="!lrDetails?.CompleteBy && !lrDetails?.EditedBy">—</ng-container>
+                                    <ng-container *ngIf="lrDetails?.CompleteBy || lrDetails?.EditedBy">
+                                        {{ lrDetails?.CompleteBy || '—' }} / {{ lrDetails?.EditedBy || '—' }}
+                                    </ng-container>
+                                </td>
+                                <td>
+                                    <ng-container *ngIf="!lrDetails?.Completed_DT && !lrDetails?.EditedDate">—</ng-container>
+                                    <ng-container *ngIf="lrDetails?.Completed_DT || lrDetails?.EditedDate">
+                                        {{ lrDetails?.Completed_DT ? (parseDate(lrDetails?.Completed_DT) | date:'dd MMM yyyy') : '—' }} / 
+                                        {{ lrDetails?.EditedDate ? (parseDate(lrDetails?.EditedDate) | date:'dd MMM yyyy') : '—' }}
+                                    </ng-container>
+                                </td>
                                 <td><strong>{{ lrDetails?.DestinationPincode || '—' }}</strong></td>
                                 <td><strong>{{ lrDetails?.ActualWeight || '—' }}</strong></td>
                                 <td>{{ lrDetails?.SourceCNote ||'—' }}</td>
