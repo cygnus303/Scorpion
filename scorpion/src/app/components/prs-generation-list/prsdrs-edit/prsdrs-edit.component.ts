@@ -101,7 +101,7 @@ export class PRSDRSEditComponent {
           const totalContractAmount = response.reduce((sum: number, item: any) => {
             return sum + (item.contractAmount || 0);
           }, 0);
-          this.PDCFinancialForm.patchValue({pcamt: totalContractAmount});
+          this.PDCFinancialForm.patchValue({pcamt: totalContractAmount.tofixed(2)});
         }
       }
     });

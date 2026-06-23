@@ -31,7 +31,7 @@ export class ThcArrivalPopupComponent {
   minDate: Date | undefined;
   maxDate: Date | undefined;
   public THCData: any;
-  public THCFilterForm!: FormGroup;
+  // public THCFilterForm!: FormGroup;
   public branchWiseLoadingUnloadingList: BranchWiseLoadingUnloading[] = [];
   maxCloseKMValue: number = 900000;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
@@ -76,19 +76,20 @@ export class ThcArrivalPopupComponent {
     this.buildForm();
     this.generalMasterService.getDeliveryProcessData();
     this.dateAccess();
-    this.buildFilterForm();
+    // this.buildFilterForm();
     this.THCData = data;
-    this.generalMasterService.getLoadingBy()
-    this.generalMasterService.getChargeTypeData();
+    // this.generalMasterService.getLoadingBy()
+    // this.generalMasterService.getChargeTypeData();
     console.log(this.THCData);
+    this.refreshData();
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
-  buildFilterForm() {
-    this.THCFilterForm = new FormGroup({
-      loadBy: new FormControl(null),
-      chargeType: new FormControl(null)
-    })
-  }
+  // buildFilterForm() {
+  //   this.THCFilterForm = new FormGroup({
+  //     loadBy: new FormControl(null),
+  //     chargeType: new FormControl(null)
+  //   })
+  // }
 
 
   buildForm() {
@@ -100,49 +101,49 @@ export class ThcArrivalPopupComponent {
       IR: new FormControl('', [Validators.required]),
       Unloder: new FormControl(''),
       LAR: new FormControl(null),
-      VendorCode: new FormControl(null, [Validators.required]),
+      VendorCode: new FormControl(null),
       vendorName: new FormControl(''),
       Rate: new FormControl(0),
       LoadingCharge: new FormControl(0)
     });
-    this.arrivalForm.get('LoadingBy')?.valueChanges.subscribe(value => this.updateValidatorsByLoadingBy(value));
+    // this.arrivalForm.get('LoadingBy')?.valueChanges.subscribe(value => this.updateValidatorsByLoadingBy(value));
   }
 
-  onLoadingByChange() {
-    const loadBy = this.THCFilterForm.get('loadBy')?.value;
-    if (loadBy === 'XX5' || loadBy === 'XX9') {
-      this.THCFilterForm.get('chargeType')?.setValue(null);
-    }
-    this.refreshData();
-  }
+  // onLoadingByChange() {
+  //   const loadBy = this.THCFilterForm.get('loadBy')?.value;
+  //   if (loadBy === 'XX5' || loadBy === 'XX9') {
+  //     this.THCFilterForm.get('chargeType')?.setValue(null);
+  //   }
+  //   this.refreshData();
+  // }
 
   refreshData() {
-    this.docketService.loginUserList.loadBy = this.THCFilterForm.value.loadBy;
-    this.docketService.loginUserList.chargeType = this.THCFilterForm.value.chargeType;
+    // this.docketService.loginUserList.loadBy = this.THCFilterForm.value.loadBy;
+    // this.docketService.loginUserList.chargeType = this.THCFilterForm.value.chargeType;
     this.docketService.loginUserList.id = this.THCData.thcNo;
     this.buildForm();
     this.getArrival();
   }
 
-  updateValidatorsByLoadingBy(loadingBy: string) {
-    const vendorCtrl = this.arrivalForm.get('VendorCode');
-    const loadingChargeCtrl = this.arrivalForm.get('LoadingCharge');
+  // updateValidatorsByLoadingBy(loadingBy: string) {
+  //   const vendorCtrl = this.arrivalForm.get('VendorCode');
+  //   const loadingChargeCtrl = this.arrivalForm.get('LoadingCharge');
 
-    if (loadingBy === 'XX9') {
-      vendorCtrl?.clearValidators();
-      loadingChargeCtrl?.clearValidators();
-    }
+  //   if (loadingBy === 'XX9') {
+  //     vendorCtrl?.clearValidators();
+  //     loadingChargeCtrl?.clearValidators();
+  //   }
 
-    else {
-      vendorCtrl?.setValidators([Validators.required]);
-      loadingChargeCtrl?.setValidators([
-        Validators.required,
-      ]);
-    }
+  //   else {
+  //     vendorCtrl?.setValidators([Validators.required]);
+  //     loadingChargeCtrl?.setValidators([
+  //       Validators.required,
+  //     ]);
+  //   }
 
-    vendorCtrl?.updateValueAndValidity();
-    loadingChargeCtrl?.updateValueAndValidity();
-  }
+  //   vendorCtrl?.updateValueAndValidity();
+  //   loadingChargeCtrl?.updateValueAndValidity();
+  // }
 
   getCurrentDateTime(): string {
     const now = new Date();
@@ -163,8 +164,8 @@ export class ThcArrivalPopupComponent {
   getArrival() {
     const params = {
       id: this.docketService.loginUserList.id,
-      loadBy: this.docketService.loginUserList.loadBy,
-      chargeType: this.docketService.loginUserList.chargeType,
+      loadBy:'',
+      chargeType:'',
       BaseLocationCode: this.docketService.loginUserList.LocationCode,
       BaseUserName: this.docketService.loginUserList.BaseUserName
     }
@@ -172,7 +173,7 @@ export class ThcArrivalPopupComponent {
       next: (response) => {
         this.arrivalDetail = response;
         this.generalMasterService.getLoadingByDetail(this.arrivalDetail.loadingBy);
-        this.updateValidatorsByLoadingBy(this.arrivalDetail.loadingBy);
+        // this.updateValidatorsByLoadingBy(this.arrivalDetail.loadingBy);
         this.arrivalForm.patchValue({
           Unloder: this.arrivalDetail.unloder
         });
@@ -207,7 +208,7 @@ export class ThcArrivalPopupComponent {
       loadUnloadType: 'U',
       vendorCode: event.value,
       typeModule: 'M',
-      chargeType: this.docketService.loginUserList.chargeType,
+      chargeType:'',
       brdc: this.docketService.loginUserList.LocationCode,
       loadingBy: this.arrivalDetail.loadingBy,
     };
@@ -426,7 +427,7 @@ export class ThcArrivalPopupComponent {
     if (this.arrivalForm.valid) {
       const payload = {
         status: this.arrivalForm.value.s2id_Status,
-        thcno: this.arrivalDetail?.thcno,
+        thcno:this.THCData?.thcNo,
         openkm: this.arrivalDetail?.openkm,
         closekm: this.arrivalForm.value.CLOSEKM?.toString(),
         ad: new Date(this.arrivalForm.value.AD)?.toISOString(),
@@ -454,14 +455,23 @@ export class ThcArrivalPopupComponent {
       this.stockUpdateService.THCArrival(payload).subscribe({
         next: (response) => {
           if (response.success) {
-            this.sweetAlertService.success(`THC arrived ${this.arrivalDetail?.thcno} successfully.`);
+            this.sweetAlertService.success(`THC arrived ${this.THCData?.thcNo} successfully.`);
             this.dataEmitter.emit()
             this.modalRef.hide();
           } else {
             // this.sweetAlertService.error(response.message || 'Error from server');
           }
         }, error: (error) => {
-          this.sweetAlertService.error(error?.error?.message);
+          let errorMessage = error?.error?.message || error?.error?.title || 'An error occurred';
+          
+          if (error?.error?.errors) {
+            const validationErrors = Object.values(error.error.errors).flat().join('\n');
+            if (validationErrors) {
+              errorMessage = validationErrors;
+            }
+          }
+          
+          this.sweetAlertService.error(errorMessage);
         }
       })
     }
