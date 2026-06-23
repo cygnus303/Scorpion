@@ -153,6 +153,11 @@
 
         </div>
     </form>
+    <div *ngIf="prsDrsList?.vendorType === 'BUSINESS ASSOCIATE'" class="alert alert-warning py-2 px-3 mt-3 mb-0" style="font-size: 13px;">
+        <strong>Note*:</strong><br>
+        1. BA Freight = Basic Freight + Document Charges + FOV + FSC + To pay Charges. (Only For TBB)<br>
+        2. BA Freight = Basic Freight + Document Charges + FOV + FSC + To pay Charges - Discounting Amount. (Only For PAID/To Pay)
+    </div>
     <div class="modal-footer d-flex justify-content-end">
         <div class="gap-3 d-flex">
             <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Cancel</button>
