@@ -6,7 +6,10 @@
             <!-- <div class="page-subtitle">Unidentified Receipts — Customer Allocation &amp; Transfer</div> -->
         </div>
         <div class="header-actions">
-            <button class="btn btn-primary" title="Download UNR Register as CSV">📥 Download XLS</button>
+            <button class="btn btn-primary" (click)="onDownload()">
+                 <span *ngIf="!isCSVLoading"> <span class="fs-5 me-1">📥</span> Download XLS</span>
+                <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
+                <span *ngIf="isCSVLoading">Downloading...</span></button>
         </div>
     </div>
 
@@ -82,13 +85,13 @@
         <div class="filter-field search" id="custField" *ngIf="activeTab === 'customer'">
             <label for="custSearch">Customer Smart Search</label>
             <input type="text" id="custSearch" list="customerList" placeholder="Type code or name…"
-                autocomplete="off" [(ngModel)]="config.searchText"/>
+                autocomplete="off" [(ngModel)]="config.SearchText"/>
             <datalist id="customerList"></datalist>
         </div>
 
         <div class="filter-field search" id="onAccountField" *ngIf="activeTab === 'onAccount'||activeTab === 'approval'">
             <label for="onAccountSearch">On Account MR NO.</label>
-            <input type="text" placeholder="Enter MR number…" autocomplete="off" [(ngModel)]="config.UNRNO" (keyup)="onSearchChange()"/>
+            <input type="text" placeholder="Enter MR number…" autocomplete="off" [(ngModel)]="config.SearchText" (keyup)="onSearchChange()"/>
         </div>
 
         <!-- <div class="filter-divider"></div> -->
@@ -97,10 +100,6 @@
             <label style="visibility:hidden;">action</label>
             <button class="btn btn-primary" (click)="getList()">🔍 Get List</button>
         </div> -->
-
-        <div class="helper-text" id="helperText" *ngIf="activeTab === 'Customer'">
-            Showing UNR records with cheque dates between <b>01-May-2026</b> and <b>14-May-2026</b>.
-        </div>
     </div>
 
     <!-- Table Card — Regular UNR Listing -->
@@ -131,32 +130,78 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody *ngIf="isLoading">
+                    <tr>
+                        <td colspan="9" class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && unrList.length === 0">
+                    <tr>
+                        <td colspan="9" class="text-center py-4 text-muted fs-5">
+                            No records found.
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && unrList.length > 0">
                     <!-- Dynamic Row -->
                     <tr class="row-base" *ngFor="let item of unrList; let i = index">
-                        <td class="cb-cell"><input type="checkbox" class="row-cb" [(ngModel)]="item.isChecked" (change)="checkIfAllSelected()"></td>
-                        <td class="sno">{{ i + 1 }}</td>
+                        <td class="cb-cell">
+                            <input *ngIf="!item.isSubRow" type="checkbox" class="row-cb" [(ngModel)]="item.isChecked" (change)="checkIfAllSelected()">
+                        </td>
+                        <td class="sno" style="font-weight: 500; text-align: center;">
+                            <ng-container *ngIf="!item.isSubRow">{{ item.sno }}</ng-container>
+                            <ng-container *ngIf="item.isSubRow"><span style="font-size: 16px;">↳</span></ng-container>
+                        </td>
                         <td>
                             <div class="cust-cell">
                                 <span class="cust-code">{{ item.CUSTCODE }}</span>
                                 <span class="cust-name">{{ item.CUSTNAME }}</span>
                             </div>
                         </td>
-                        <td><span class="chq-no">{{ item.CHECKNO }}</span></td>
+                        <td>
+                            <span class="chq-no">{{ item.CHECKNO }}</span>
+                            <span *ngIf="item.isSplit" class="badge text-danger border border-danger ms-1" style="background: #ffeaea; padding: 2px 4px; font-size: 10px;">{{ item.CHECKNO.split('/')[1] || '' }}</span>
+                        </td>
                         <td><span class="chq-date">{{ item.CHECKDATE }}</span></td>
                         <td class="amount-cell"><span class="currency">₹</span><span class="amt">{{ item.CHECKAMOUNT }}</span></td>
-                        <td><a href="#" class="mr-link" title="View On-Account MR details">{{ item.MRNO }}</a></td>
-                        <td>
-                            <select class="row-select" [disabled]="!item.isChecked">
-                                <option value="">— Select Customer —</option>
-                            </select>
+                        <td><a class="mr-link" title="View On-Account MR details"  (click)="openMRView(item.MRNO)">{{ item.MRNO }}</a></td>
+                        <td style="min-width: 250px;">
+                            <ng-select class="row-select"
+                                [searchable]="true"
+                                [clearable]="true"
+                                placeholder="— Select Customer —"
+                                (search)="getCustomerList($event)"
+                                (open)="resetCustomerDropdown()"
+                                (change)="onCustomerSelect($event, item)"
+                                [disabled]="!item.isChecked || item.isLocked || (item.CHECKAMOUNT * 1) === 0"
+                                [notFoundText]="notFoundTextValue"
+                                [(ngModel)]="item.selectedCustomer"
+                                appendTo="body">
+                                <ng-option *ngFor="let opt of customerData" [value]="opt">
+                                    <strong>{{ opt.CUSTCD }}</strong> : {{ opt.CUSTNM}}
+                                </ng-option>
+                            </ng-select>
                         </td>
-                        <td><input type="text" class="row-input row-transfer" placeholder="0.00" oninput="this.value = this.value.replace(/[^0-9.]/g,'');" [disabled]="!item.isChecked">
-                        </td>
-                        <td><span class="status-badge stat-pending">Pending</span></td>
                         <td>
-                            <div class="row-action-btns">
-                                <button class="ab ab-add" [disabled]="!item.isChecked">+ Add Row</button>
+                            <input type="text" class="row-input row-transfer" placeholder="0.00" oninput="this.value = this.value.replace(/[^0-9.]/g,'');" [disabled]="!item.isChecked || item.isLocked || (item.CHECKAMOUNT * 1) === 0" [(ngModel)]="item.transferAmount">
+                            <div *ngIf="item.transferAmount && (item.transferAmount * 1) > (item.CHECKAMOUNT * 1)" class="text-danger" style="font-size: 10px; margin-top: 2px;">
+                                ⚠ Cannot exceed ₹ {{ item.CHECKAMOUNT | number:'1.2-2' }}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-badge" [ngStyle]="getStatusStyles(item)" [ngClass]="{'stat-pending': getStatus(item) === 'Pending'}">
+                                {{ getStatus(item) }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="row-action-btns d-flex align-items-center gap-1">
+                                <button class="ab ab-add" [disabled]="!item.isChecked || getStatus(item) === '✓ Adjusted' || (item.CHECKAMOUNT * 1) === 0 || item.isLocked" (click)="addRow(item, i)">+ Add Row</button>
+                                <button *ngIf="item.isSubRow && !item.isLocked" class="btn btn-sm btn-outline-danger" style="padding: 2px 6px; font-size: 12px; height: 26px;" (click)="removeRow(i)">✕</button>
                             </div>
                         </td>
                     </tr>
@@ -168,15 +213,9 @@
             </table>
         </div>
 
-        <!-- Pagination -->
-        <div class="pagination">
-            <span>Showing <b id="visibleCount">6</b> of <b>6</b> UNR records</span>
-            <div class="page-btns">
-                <button class="page-btn">‹ Prev</button>
-                <button class="page-btn active">1</button>
-                <button class="page-btn">Next ›</button>
-            </div>
-        </div>
+         <app-pagination [page]="config.PageNo" [pageSize]="config.PageSize" [totalRecords]="config.totalRecords"
+        [totalPages]="config.totalPages" (pageChange)="setPage($event)">
+    </app-pagination>
     </div>
 
     <div *ngIf="activeTab === 'approval'">
@@ -190,7 +229,9 @@
         <span id="footerInfo">No customers selected — tick the checkbox on any UNR row to begin allocation.</span>
     </div>
     <div class="footer-btns">
-        <button class="btn btn-secondary" id="cancelBtn" disabled>✕ Cancel</button>
-        <button class="btn btn-success" id="saveBtn" disabled>✓ Save</button>
+        <button class="btn btn-secondary" id="cancelBtn">✕ Cancel</button>
+        <button class="btn btn-success" id="saveBtn" [disabled]="!hasSelectedRows">✓ Save</button>
     </div>
 </div>
+
+<app-mr-view #MrViewComponent></app-mr-view>

@@ -15,9 +15,16 @@
                         PH: 6264506385 | Website: scorpiongroup.in
                     </p>
                 </div>
-                <div class="header-right">
-                    <p class="no-print" style="cursor: pointer;" (click)="printDocket()">🖨️ Print</p>
-                    <!-- <div class="print-info">Printed On: 04/06/2026 09:47</div> -->
+                <div class="header-right d-flex flex-column align-items-end justify-content-center">
+                    <button class="btn btn-light btn-sm fw-bold no-print shadow-sm d-flex align-items-center gap-2 px-3 py-2"
+                        (click)="printDocket()" style="color: #A4161A; border-radius: 6px;">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2H5zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z"/>
+                            <path d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2V7zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                        </svg>
+                        Print Docket
+                    </button>
+                    <!-- <div class="print-info mt-2">Printed On: 04/06/2026 09:47</div> -->
                 </div>
             </div>
             <div class="docket-content">
@@ -174,7 +181,7 @@
                             </div>
                             <div class="route-detail">
                                 <div class="route-detail-label">Rate</div>
-                                <div class="route-detail-value">{{ lrDetails?.Rate ||'—' }}</div>
+                                <div class="route-detail-value">{{ lrDetails?.Rate}}</div>
                             </div>
                         </div>
                     </div>
@@ -227,9 +234,19 @@
                                 <td>{{ lrDetails?.AddedBy || '—' }}</td>
                                 <td>{{ lrDetails?.AddedDate ? (parseDate(lrDetails?.AddedDate) | date:'dd MMM yyyy') :
                                     '—' }}</td>
-                                <td>{{ lrDetails?.EditedBy || '—'}}</td>
-                                <td>{{ lrDetails?.EditedDate ? (parseDate(lrDetails?.EditedDate) | date:'dd MMM yyyy') :
-                                    '—' }}</td>
+                                <td>
+                                    <ng-container *ngIf="!lrDetails?.CompleteBy && !lrDetails?.EditedBy">—</ng-container>
+                                    <ng-container *ngIf="lrDetails?.CompleteBy || lrDetails?.EditedBy">
+                                        {{ lrDetails?.CompleteBy || '—' }} / {{ lrDetails?.EditedBy || '—' }}
+                                    </ng-container>
+                                </td>
+                                <td>
+                                    <ng-container *ngIf="!lrDetails?.Completed_DT && !lrDetails?.EditedDate">—</ng-container>
+                                    <ng-container *ngIf="lrDetails?.Completed_DT || lrDetails?.EditedDate">
+                                        {{ lrDetails?.Completed_DT ? (parseDate(lrDetails?.Completed_DT) | date:'dd MMM yyyy') : '—' }} / 
+                                        {{ lrDetails?.EditedDate ? (parseDate(lrDetails?.EditedDate) | date:'dd MMM yyyy') : '—' }}
+                                    </ng-container>
+                                </td>
                                 <td><strong>{{ lrDetails?.DestinationPincode || '—' }}</strong></td>
                                 <td><strong>{{ lrDetails?.ActualWeight || '—' }}</strong></td>
                                 <td>{{ lrDetails?.SourceCNote ||'—' }}</td>

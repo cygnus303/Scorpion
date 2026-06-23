@@ -88,7 +88,13 @@ export class LrViewComponent {
           <style>
              @page { margin: 0; }
              @media print {
-                body { padding: 10mm; margin: 0; background: white; }
+                body { 
+                  padding: 10mm; 
+                  margin: 0; 
+                  background: white; 
+                  -webkit-print-color-adjust: exact; 
+                  print-color-adjust: exact; 
+                }
                 .docket-container { box-shadow: none !important; height: auto !important; max-height: none !important; overflow: visible !important; display: block !important; }
                 .docket-content { overflow: visible !important; }
                 .docket-header { position: static !important; }

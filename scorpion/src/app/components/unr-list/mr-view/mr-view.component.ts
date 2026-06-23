@@ -17,6 +17,8 @@ export class MrViewComponent {
   public isLoading: boolean = false;
   public summary: any = {};
   public dataList: any[] = [];
+  public voucherList: any[] = [];
+
   @ViewChild('TemplateRef', { static: true }) TemplateRef!: TemplateRef<any>;
 
   constructor(private dynamicDataService: DynamicDataService,
@@ -47,6 +49,9 @@ export class MrViewComponent {
           }
           if (res.Table2) {
             this.dataList = res.Table2;
+          }
+          if(res.Table3){
+            this.voucherList = res.Table3;
           }
         }
       },

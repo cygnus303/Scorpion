@@ -9,11 +9,14 @@ import { MrViewComponent } from './mr-view/mr-view.component';
 import { debounceTime, Subject, Subscription } from 'rxjs';
 import { DocketService } from 'app/shared/services/docket.service';
 import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
+import { BasicDetailService } from 'app/shared/services/basic-detail.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { ExportService } from 'app/shared/services/export.service';
 
 @Component({
   selector: 'app-unr-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, UnrApprovalComponent,FormsModule,BsDatepickerModule,MrViewComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, UnrApprovalComponent, FormsModule, BsDatepickerModule, MrViewComponent],
   templateUrl: './unr-list.component.html',
   styleUrl: './unr-list.component.scss'
 })
@@ -21,10 +24,15 @@ export class UNRListComponent {
   public listSubscription?: Subscription;
   public fetchSubject = new Subject<void>();
   public activeTab: string = 'Customer';
-  public isLoading:boolean=false;
+  public isLoading: boolean = false;
   public unrList: any[] = [];
   public isAllSelected: boolean = false;
+  public isCSVLoading: boolean = false;
+  public customerData: any[] = [];
+  public notFoundTextValue = 'Enter at least 3 characters';
   @ViewChild(UnrApprovalComponent) unrApprovalComp!: UnrApprovalComponent;
+  @ViewChild('MrViewComponent') MrViewComponent!: MrViewComponent;
+
   public config = {
     FromDt: new Date(),
     ToDt: new Date(),
@@ -32,8 +40,9 @@ export class UNRListComponent {
     PageNo: 1,
     PageSize: 10,
     totalRecords: 0,
+    totalPages: 1,
     UNRNO: '',
-    searchText: ''
+    SearchText: '',
   };
 
   statusList = [
@@ -44,7 +53,13 @@ export class UNRListComponent {
 
   ];
 
-  constructor(private docketService:DocketService,private dynamicDataService:DynamicDataService){}
+  constructor(
+    private docketService: DocketService,
+    private exportService: ExportService,
+    private dynamicDataService: DynamicDataService,
+    private basicDetailService: BasicDetailService,
+    public sweetAlertService: SweetAlertService
+  ) { }
 
   setActiveTab(tab: string) {
     this.activeTab = tab;
@@ -54,37 +69,42 @@ export class UNRListComponent {
     if (this.activeTab === 'approval' && this.unrApprovalComp) {
       this.unrApprovalComp.getUNRApprovalList(this.config);
     }
-    else if(this.activeTab === 'Customer' ){
+    else if (this.activeTab === 'Customer') {
       this.getUNRList();
     }
   }
 
   onSearchChange() {
     this.config.PageNo = 1;
-    this.unrApprovalComp.fetchSubject.next();
+    if (this.activeTab === 'approval' && this.unrApprovalComp) {
+      this.unrApprovalComp.lastConfig = { ...this.unrApprovalComp.lastConfig, ...this.config };
+      this.unrApprovalComp.fetchSubject.next();
+    } else {
+      this.fetchSubject.next();
+    }
   }
 
   ngOnInit() {
-      const saved = localStorage.getItem("loginUserList");
-      if (saved) {
-        this.docketService.loginUserList = JSON.parse(saved);
-        this.docketService.Location = this.docketService.loginUserList.LocationCode;
-        // this.docketService.loginUserList.LocationCode = 'PIM'
-        this.docketService.FinYear = this.docketService.loginUserList.FinYear,
-          this.docketService.Companycode = this.docketService.loginUserList.Companycode
-        this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
-        this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
-      }
-  
-      this.fetchSubject.pipe(debounceTime(300)).subscribe(() => {
-        this.getUNRList();
-      });
-      
-      // Trigger initial fetch when component mounts
-      this.fetchSubject.next();
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      // this.docketService.loginUserList.LocationCode = 'PIM'
+      this.docketService.FinYear = this.docketService.loginUserList.FinYear,
+        this.docketService.Companycode = this.docketService.loginUserList.Companycode
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
 
-    formatDate(date: any): string {
+    this.fetchSubject.pipe(debounceTime(300)).subscribe(() => {
+      this.getUNRList();
+    });
+
+    // Trigger initial fetch when component mounts
+    this.fetchSubject.next();
+  }
+
+  formatDate(date: any): string {
     if (!date) return '';
     const d = new Date(date);
     const month = ('0' + (d.getMonth() + 1)).slice(-2);
@@ -92,15 +112,8 @@ export class UNRListComponent {
     return `${d.getFullYear()}-${month}-${day}`;
   }
 
-  getUNRList(){
-  if (this.listSubscription) { this.listSubscription.unsubscribe(); }
-    // if (config) {
-    //   this.lastConfig = { ...config };
-    //   // If parent passes PageNo, you can optionally sync it, but usually pagination is handled locally or synced
-    //   if (config.PageNo) {
-    //     this.pagination.page = config.PageNo;
-    //   }
-    // }
+  getUNRList() {
+    if (this.listSubscription) { this.listSubscription.unsubscribe(); }
 
     const payload = {
       "FilterJson": {
@@ -110,14 +123,18 @@ export class UNRListComponent {
         "Status": '',
         "UNRNO": '',
         "PageNo": this.config.PageNo,
-        "PageSize": this.config.PageSize
+        "PageSize": this.config.PageSize,
+        "SearchText": this.config.SearchText
       }
     }
     this.isLoading = true;
-    this.listSubscription=this.dynamicDataService.getDynamicData(payload).subscribe((response: any) => {
+    this.listSubscription = this.dynamicDataService.getDynamicData(payload).subscribe((response: any) => {
       this.isLoading = false;
       if (response?.Table1) {
-        this.unrList = response.Table1;
+        this.unrList = response.Table1.map((x: any, index: number) => ({ ...x, sno: index + 1 }));
+        const totalRecords = this.unrList.length > 0 ? (this.unrList[0].TotalRows || this.unrList[0].TotalCount || this.unrList.length) : 0;
+        this.config.totalRecords = totalRecords;
+        this.config.totalPages = Math.ceil(totalRecords / this.config.PageSize) || 1;
         this.checkIfAllSelected();
       }
     }, () => {
@@ -131,6 +148,20 @@ export class UNRListComponent {
     this.unrList.forEach(item => item.isChecked = checked);
   }
 
+  checkUncheckAll() {
+    this.unrList.forEach(item => {
+      item.isChecked = this.isAllSelected;
+    });
+  }
+
+  isAllSelectedChange() {
+    this.isAllSelected = this.unrList.every(item => item.isChecked);
+  }
+
+  get hasSelectedRows(): boolean {
+    return this.unrList && this.unrList.some(item => item.isChecked);
+  }
+
   checkIfAllSelected() {
     if (this.unrList.length === 0) {
       this.isAllSelected = false;
@@ -139,4 +170,172 @@ export class UNRListComponent {
     this.isAllSelected = this.unrList.every(item => item.isChecked);
   }
 
+  setPage(p: number) {
+    if (this.config.PageNo === p) return;
+    this.config.PageNo = p;
+    this.getUNRList();
+  }
+
+  openMRView(mrNo: string) {
+    this.MrViewComponent.showPopup(mrNo);
+  }
+
+  getCustomerList(event: any) {
+    const searchText = event?.term || '';
+    if (!searchText || searchText.length < 3) {
+      this.customerData = [];
+      this.notFoundTextValue = 'Enter at least 3 characters';
+      return;
+    }
+
+    const payload = {
+      "FilterJson": {
+        "ReportId": "667",
+        "SearchText": searchText
+      }
+    };
+
+    this.notFoundTextValue = 'Searching...';
+    this.dynamicDataService.getDynamicData(payload).subscribe((response: any) => {
+      if (response && response.Table1) {
+        this.customerData = response.Table1;
+        this.notFoundTextValue = 'No matches found';
+      } else {
+        this.customerData = [];
+        this.notFoundTextValue = '';
+      }
+    }, () => {
+      this.customerData = [];
+      this.notFoundTextValue = '';
+    });
+  }
+
+  resetCustomerDropdown() {
+    this.customerData = [];
+    this.notFoundTextValue = 'Enter at least 3 characters';
+  }
+
+  onCustomerSelect(selectedItem: any, rowItem: any) {
+    if (selectedItem) {
+      rowItem.newCustCode = selectedItem.CUSTCODE || selectedItem.custcd || selectedItem.CODE;
+      rowItem.newCustName = selectedItem.CUSTNAME || selectedItem.custnm || selectedItem.NAME;
+    } else {
+      rowItem.newCustCode = null;
+      rowItem.newCustName = null;
+    }
+  }
+
+  addRow(item: any, index: number) {
+    if (!item.selectedCustomer) {
+      this.sweetAlertService.info("Please Select Customer Name First");
+      return;
+    }
+    const amount = parseFloat(item.transferAmount);
+    if (!amount || amount <= 0) {
+      this.sweetAlertService.info("Please Enter Transfer Amount First");
+      return;
+    }
+
+    const available = parseFloat(item.CHECKAMOUNT);
+    if (amount > available) {
+      this.sweetAlertService.info("Transfer Amount cannot exceed check amount ₹ " + available.toFixed(2));
+      return;
+    }
+
+    if (!item.isSplit) {
+      item.originalCheckNo = item.CHECKNO;
+      item.CHECKNO = item.originalCheckNo + ' /A';
+      item.isSplit = true;
+      item.splitIndex = 1;
+    }
+
+    const nextIndex = item.splitIndex + 1;
+    const nextSuffix = ' /' + String.fromCharCode(64 + nextIndex);
+
+    const newRow = {
+      ...item,
+      CHECKNO: item.originalCheckNo + nextSuffix,
+      CHECKAMOUNT: (available - amount).toFixed(2),
+      transferAmount: '',
+      selectedCustomer: null,
+      newCustCode: null,
+      newCustName: null,
+      isSubRow: true,
+      splitIndex: nextIndex,
+      isChecked: true,
+      isLocked: false
+    };
+
+    item.isLocked = true;
+
+    this.unrList.splice(index + 1, 0, newRow);
+  }
+
+  removeRow(index: number) {
+    if (index > 0 && this.unrList[index - 1]) {
+      this.unrList[index - 1].isLocked = false;
+    }
+    this.unrList.splice(index, 1);
+  }
+
+  getStatus(item: any): string {
+    const tAmt = parseFloat(item.transferAmount) || 0;
+    if (tAmt <= 0) return 'Pending';
+
+    let originalCheck = item.originalCheckNo || item.CHECKNO;
+    let totalTransferred = 0;
+    let totalCheckAmount = parseFloat(item.CHECKAMOUNT) || 0;
+
+    const relatedRows = this.unrList.filter(x => (x.originalCheckNo || x.CHECKNO) === originalCheck);
+    
+    if (relatedRows.length > 0) {
+      const parentRow = relatedRows.find(r => !r.isSubRow) || relatedRows[0];
+      totalCheckAmount = parseFloat(parentRow.CHECKAMOUNT) || 0;
+      totalTransferred = relatedRows.reduce((sum, r) => sum + (parseFloat(r.transferAmount) || 0), 0);
+    }
+
+    if (!item.isSubRow && totalTransferred > 0 && totalTransferred >= totalCheckAmount) {
+      return '✓ Adjusted';
+    }
+
+    return 'Partially Adjusted';
+  }
+
+  getStatusStyles(item: any): any {
+    const status = this.getStatus(item);
+    if (status === '✓ Adjusted') {
+      return { 'background-color': '#ecfdf5', 'color': '#047857', 'border': '1px solid #6ee7b7' }; // Green
+    } else if (status === 'Partially Adjusted') {
+      return { 'background-color': '#e0f2fe', 'color': '#0369a1', 'border': '1px solid #7dd3fc' }; // Blue
+    }
+    return {};
+  }
+
+  onDownload() {
+    this.isCSVLoading = true;
+
+    const payload = {
+      "FilterJson": {
+        "ReportId": "665",
+        "FromDate": this.formatDate(this.config.FromDt),
+        "ToDate": this.formatDate(this.config.ToDt),
+        "IsDownload": 1
+      }
+    }
+    this.dynamicDataService.getDynamicData(payload).subscribe({
+      next: (response: any) => {
+        this.isCSVLoading = false;
+        if (response && response.Table1) {
+          this.exportService.exportToCSV(response.Table1, `UNR_List`);
+        }
+      },
+      error: (err: any) => {
+        this.isCSVLoading = false;
+        console.error('Error downloading CSV', err);
+      }
+    });
+
+  }
 }
+
+

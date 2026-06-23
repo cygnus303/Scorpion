@@ -84,6 +84,7 @@ export class UnrApprovalComponent {
     ToDt: new Date(),
     Status: 'ALL',
     UNRNO: '',
+    SearchText:''
   };
 
   getUNRApprovalList(config?: any) {
@@ -104,7 +105,8 @@ export class UnrApprovalComponent {
         "Status": this.lastConfig.Status,
         "UNRNO": this.lastConfig.UNRNO,
         "PageNo": this.pagination.page,
-        "PageSize": this.pagination.pageSize
+        "PageSize": this.pagination.pageSize,
+        "SearchText": this.lastConfig.SearchText
       }
     }
     this.isLoading = true;

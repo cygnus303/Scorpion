@@ -161,7 +161,7 @@ tbody td {
 
 .charges-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 8px;
     margin-bottom: 10px;
 }
@@ -185,7 +185,7 @@ tbody td {
     font-size: 11px;
     font-weight: bold;
     color: #E63946;
-    text-align: right;
+    text-align: left;
 }
 
 .charge-item.total {
