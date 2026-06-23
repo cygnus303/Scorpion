@@ -18,7 +18,7 @@
           <tr *ngFor="let row of customerMasterService.KAMArray.controls; let i = index" [formGroupName]="i">
             <td>{{ i + 1 }}</td>
             <td style="text-align: left;">
-              {{ KMAList[i]?.codeDesc }}
+              {{ KMAList[i].codeDesc }}
             </td>
             <td>
               <ng-select placeholder="Enter employee name" [notFoundText]="notFoundEmployeeValue"
