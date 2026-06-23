@@ -112,6 +112,9 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
         ToDate: toDate,
         Status: this.config.statusFilter === 'All Status' || this.config.statusFilter === 'All' ? "ALL" : this.config.statusFilter,
         Lr_Number: this.config.searchText || "",
+        Origin: this.originBranch === 'All' || !this.originBranch ? "" : this.originBranch,
+        Destination: this.destinationBranch === 'All' || !this.destinationBranch ? "" : this.destinationBranch,
+        CustType: this.customerType === 'All' || !this.customerType ? "" : this.customerType,
       }
     };
 
