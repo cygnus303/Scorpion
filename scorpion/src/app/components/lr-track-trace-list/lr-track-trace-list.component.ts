@@ -5,9 +5,10 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DynamicDataService } from '../../shared/services/dynamic-data.service';
+import { BasicDetailService } from '../../shared/services/basic-detail.service';
 import { ExportService } from '../../shared/services/export.service';
 import { Subject, of } from 'rxjs';
-import { debounceTime, switchMap, tap, catchError } from 'rxjs/operators';
+import { debounceTime, switchMap, tap, catchError, filter, distinctUntilChanged } from 'rxjs/operators';
 import { LrPrintViewComponent } from './lr-print-view/lr-print-view.component';
 import { LrLifecycleTrackerComponent } from './lr-lifecycle-tracker/lr-lifecycle-tracker.component';
 
@@ -24,8 +25,14 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
 
   private searchSubject = new Subject<string>();
   private fetchDataSubject = new Subject<any>();
+  public originSearchInput$ = new Subject<string>();
+  public destinationSearchInput$ = new Subject<string>();
 
-  constructor(private dynamicDataService: DynamicDataService, private exportService: ExportService) { }
+  constructor(
+    private dynamicDataService: DynamicDataService,
+    private basicDetailService: BasicDetailService,
+    private exportService: ExportService
+  ) { }
   public config = {
     fromDateStr: new Date(),
     toDateStr: new Date(),
@@ -59,9 +66,15 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
   get deliveredCount() { return this.statusCounts.Delivered || 0; }
   get exceptionsCount() { return this.statusCounts.Exception || 0; }
 
-  public originBranch: string = 'All';
-  public destinationBranch: string = 'All';
-  public customerType: string = 'All';
+  public originBranch: string | null = null;
+  public destinationBranch: string | null = null;
+  public originLocations: any[] = [];
+  public destinationLocations: any[] = [];
+  public isOriginLoading: boolean = false;
+  public isDestinationLoading: boolean = false;
+
+  public customerType: string | null = null;
+  public customerTypeList: any[] = [{ custType: 'All' }];
 
   public allLRs: any[] = [];
 
@@ -80,8 +93,14 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
     let fromDate = "";
     let toDate = "";
     try {
-      if (this.config.fromDateStr) fromDate = new Date(this.config.fromDateStr).toISOString();
-      if (this.config.toDateStr) toDate = new Date(this.config.toDateStr).toISOString();
+      if (this.config.fromDateStr) {
+        const d = new Date(this.config.fromDateStr);
+        fromDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}T00:00:00`;
+      }
+      if (this.config.toDateStr) {
+        const d = new Date(this.config.toDateStr);
+        toDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}T00:00:00`;
+      }
     } catch (e) {
       console.warn("Date formatting error", e);
     }
@@ -92,7 +111,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
         FromDate: fromDate,
         ToDate: toDate,
         Status: this.config.statusFilter === 'All Status' || this.config.statusFilter === 'All' ? "ALL" : this.config.statusFilter,
-        Lr_Number: this.config.searchText || ""
+        Lr_Number: this.config.searchText || "",
       }
     };
 
@@ -101,7 +120,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
         this.isExporting = false;
         const data = res?.data || res || {};
         const Table1 = data.Table1 || [];
-        
+
         if (Table1 && Table1.length > 0) {
           this.exportService.exportToCSV(Table1, 'LR_Track_Trace_Export');
         } else {
@@ -119,8 +138,14 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
     let fromDate = "";
     let toDate = "";
     try {
-      if (this.config.fromDateStr) fromDate = new Date(this.config.fromDateStr).toISOString();
-      if (this.config.toDateStr) toDate = new Date(this.config.toDateStr).toISOString();
+      if (this.config.fromDateStr) {
+        const d = new Date(this.config.fromDateStr);
+        fromDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}T00:00:00`;
+      }
+      if (this.config.toDateStr) {
+        const d = new Date(this.config.toDateStr);
+        toDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}T00:00:00`;
+      }
     } catch (e) {
       console.warn("Date formatting error", e);
     }
@@ -134,7 +159,9 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
         pageSize: this.config.pageSize,
         Status: this.config.statusFilter === 'All Status' || this.config.statusFilter === 'All' ? "ALL" : this.config.statusFilter,
         Lr_Number: this.config.searchText || "",
-        IsExportDownload:1
+        Origin: this.originBranch === 'All' || !this.originBranch ? "" : this.originBranch,
+        Destination: this.destinationBranch === 'All' || !this.destinationBranch ? "" : this.destinationBranch,
+        CustType: this.customerType === 'All' || !this.customerType ? "" : this.customerType,
       }
     };
 
@@ -142,7 +169,20 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
     this.fetchDataSubject.next(payload);
   }
 
+  loadCustomerTypes() {
+    this.dynamicDataService.getCustomerTypes().subscribe({
+      next: (res: any) => {
+        const data = Array.isArray(res) ? res : (res?.data || []);
+        this.customerTypeList = [{ custType: 'All' }, ...data];
+      },
+      error: (err) => console.error('Failed to load customer types', err)
+    });
+  }
+
   ngOnInit() {
+    this.loadCustomerTypes();
+    this.setupTypeaheads();
+
     this.searchSubject.pipe(debounceTime(600)).subscribe(() => {
       this.config.page = 1;
       this.searchLRs();
@@ -164,13 +204,13 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
       const table1 = data.Table1 || [];
       const table2 = data.Table2 || [];
       const table3 = data.Table3 || [];
-      
+
       if (table2.length > 0) {
         this.statusCounts = table2[0];
       } else {
         this.statusCounts = { Total: 0, Booking: 0, InTransit: 0, Delivered: 0, Exception: 0 };
       }
-      
+
       if (table1.length > 0) {
         this.config.totalRecords = table1[0].TotalRecords || 0;
         this.config.totalPages = table1[0].TotalPages || 1;
@@ -180,12 +220,72 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
       this.applyLocalFilters();
     });
 
-    this.searchLRs(); 
+    this.searchLRs();
   }
 
   ngOnDestroy() {
     this.searchSubject.complete();
     this.fetchDataSubject.complete();
+    this.originSearchInput$.complete();
+    this.destinationSearchInput$.complete();
+  }
+
+  setupTypeahead(
+    input$: Subject<string>,
+    setLoading: (isLoading: boolean) => void,
+    setLocations: (locations: any[]) => void
+  ) {
+    input$.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      filter(res => {
+        if (res !== null && res.length >= 3) {
+          return true;
+        }
+        return false;
+      }),
+      tap(() => setLoading(true)),
+      switchMap(term => this.basicDetailService.getGCDestinations(term).pipe(
+        catchError(() => of([])),
+        tap(() => setLoading(false))
+      ))
+    ).subscribe((res: any) => {
+      setLocations(Array.isArray(res) ? res : (res?.data || []));
+      setLoading(false);
+    });
+  }
+
+  setupTypeaheads() {
+    this.setupTypeahead(
+      this.originSearchInput$,
+      (loading) => this.isOriginLoading = loading,
+      (data) => this.originLocations = data
+    );
+    this.setupTypeahead(
+      this.destinationSearchInput$,
+      (loading) => this.isDestinationLoading = loading,
+      (data) => this.destinationLocations = data
+    );
+  }
+
+  onOriginSelect(selected: any) {
+    if (selected) {
+      this.originLocations = [selected];
+    } else {
+      this.originLocations = [];
+      this.originBranch = null;
+    }
+    this.searchLRs();
+  }
+
+  onDestinationSelect(selected: any) {
+    if (selected) {
+      this.destinationLocations = [selected];
+    } else {
+      this.destinationLocations = [];
+      this.destinationBranch = null;
+    }
+    this.searchLRs();
   }
 
   onSearchTextChange(value: string) {
@@ -209,24 +309,9 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
   }
 
   applyLocalFilters() {
-    this.filteredLRs = this.allLRs.filter(lr => {
-      if (this.originBranch && this.originBranch !== 'All') {
-        if (lr.ORGNCD !== this.originBranch) {
-          return false;
-        }
-      }
-      if (this.destinationBranch && this.destinationBranch !== 'All') {
-        if (lr.DESTCD !== this.destinationBranch) {
-          return false;
-        }
-      }
-      if (this.customerType && this.customerType !== 'All') {
-        if (lr.CustType !== this.customerType) {
-          return false;
-        }
-      }
-      return true;
-    });
+    // The backend API already filters the data based on Origin, Destination, etc.
+    // Local filtering is redundant and causes bugs if property names differ (e.g. Orgncd vs ORGNCD).
+    this.filteredLRs = [...this.allLRs];
   }
 
   searchLRs() {
@@ -244,9 +329,9 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
     this.config.fromDateStr = new Date();
     this.config.toDateStr = new Date();
     this.config.statusFilter = 'All';
-    this.originBranch = 'All';
-    this.destinationBranch = 'All';
-    this.customerType = 'All';
+    this.originBranch = null;
+    this.destinationBranch = null;
+    this.customerType = null;
     this.config.page = 1;
     this.searchLRs();
   }
@@ -294,6 +379,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
     if (c === 'GROUP') return 'bg-primary-subtle text-primary border-primary-subtle';
     if (c === 'ILS') return 'bg-danger-subtle text-danger border-danger-subtle';
     if (c === 'AGGREGATORS') return 'bg-warning-subtle text-warning border-warning-subtle';
+    if (c === 'NON-CORP') return 'badge-non-corp border-secondary-subtle';
     return 'bg-light text-dark border-secondary-subtle';
   }
 

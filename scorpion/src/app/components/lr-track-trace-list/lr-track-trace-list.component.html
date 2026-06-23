@@ -8,7 +8,7 @@
             LR Track & Trace
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="exportData()" >
+            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="exportData()">
                 <span *ngIf="!isExporting"><span class="fs-5 me-1">📥</span> Download XLS</span>
                 <span *ngIf="isExporting" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isExporting">Downloading...</span>
@@ -82,63 +82,128 @@
                 Search / Filter LRs
             </div>
 
-            <div class="row g-2 align-items-end">
-                <div class="col-12 col-md-2">
+            <div class="row g-3 align-items-end mb-3">
+                <!-- LR Number -->
+                <div class="col-auto">
                     <label class="form-label text-muted fw-semibold mb-1" style="font-size: 11px;">LR Number</label>
                     <input type="text" class="form-control form-control-sm" placeholder="Search..."
-                        [(ngModel)]="config.searchText" (ngModelChange)="onSearchTextChange($event)" />
+                        [(ngModel)]="config.searchText" (ngModelChange)="onSearchTextChange($event)"
+                        style="width: 220px;" />
                 </div>
 
                 <!-- Date Range -->
-                <div class="col-12 col-md-3">
+                <div class="col-auto">
                     <label class="form-label text-muted fw-semibold mb-1" style="font-size: 11px;">Date Range</label>
-                    <div class="d-flex align-items-center gap-1">
-                        <div class="date-input-wrap flex-grow-1" style="padding:0; position: relative;">
+                    <div class="d-flex align-items-center gap-2" style="width: 380px;">
+                        <div class="position-relative flex-grow-1">
                             <input type="text" id="dateFrom" bsDatepicker
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD-MM-YYYY'}"
                                 [(ngModel)]="config.fromDateStr" (ngModelChange)="searchLRs()"
-                                style="border:none;background:transparent;font-size:13px;padding:7px 10px 7px 32px;outline:none;cursor:pointer;"
-                                class="w-100">
+                                class="form-control form-control-sm" style="padding-right: 26px;"
+                                placeholder="DD-MM-YYYY">
                             <span
-                                style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+                                style="position:absolute;right:8px;top:50%;transform:translateY(-50%);pointer-events:none;display:flex;">
+                                <svg width="13" height="13" fill="none" stroke="#6c757d" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            </span>
                         </div>
-                        <span class="text-muted">→</span>
-                        <div class="date-input-wrap flex-grow-1" style="padding:0; position: relative;">
+                        <span class="text-muted fw-semibold" style="font-size: 11px;">to</span>
+                        <div class="position-relative flex-grow-1">
                             <input type="text" id="dateTo" bsDatepicker [minDate]="config.fromDateStr"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD-MM-YYYY'}"
                                 [(ngModel)]="config.toDateStr" (ngModelChange)="searchLRs()"
-                                style="border:none;background:transparent;font-size:13px;padding:7px 10px 7px 32px;outline:none;cursor:pointer;"
-                                class="w-100">
+                                class="form-control form-control-sm" style="padding-right: 26px;"
+                                placeholder="DD-MM-YYYY">
                             <span
-                                style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+                                style="position:absolute;right:8px;top:50%;transform:translateY(-50%);pointer-events:none;display:flex;">
+                                <svg width="13" height="13" fill="none" stroke="#6c757d" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            </span>
                         </div>
                     </div>
                 </div>
 
+                <!-- Origin -->
+                <div class="col-auto">
+                    <label class="form-label text-muted fw-semibold mb-1" style="font-size: 11px;">Origin Branch</label>
+                    <ng-select [items]="originLocations" bindLabel="locName" bindValue="locName"
+                        [typeahead]="originSearchInput$" [loading]="isOriginLoading" [(ngModel)]="originBranch"
+                        (change)="onOriginSelect($event)" placeholder="Origin Branch" [searchable]="true"
+                        class="custom-status-select" style="width: 250px;">
+                        <ng-template ng-label-tmp let-item="item">
+                            {{ item.locCode ? item.locCode + ' - ' : '' }}{{ item.locName }}
+                        </ng-template>
+                        <ng-template ng-option-tmp let-item="item">
+                            {{ item.locCode ? item.locCode + ' - ' : '' }}{{ item.locName }}
+                        </ng-template>
+                    </ng-select>
+                </div>
+
+                <!-- Destination -->
+                <div class="col-auto">
+                    <label class="form-label text-muted fw-semibold mb-1" style="font-size: 11px;">Destination
+                        Branch</label>
+                    <ng-select [items]="destinationLocations" bindLabel="locName" bindValue="locName"
+                        [typeahead]="destinationSearchInput$" [loading]="isDestinationLoading"
+                        placeholder="Destination Branch" [(ngModel)]="destinationBranch"
+                        (change)="onDestinationSelect($event)" [searchable]="true" class="custom-status-select"
+                        style="width: 250px;">
+                        <ng-template ng-label-tmp let-item="item">
+                            {{ item.locCode ? item.locCode + ' - ' : '' }}{{ item.locName }}
+                        </ng-template>
+                        <ng-template ng-option-tmp let-item="item">
+                            {{ item.locCode ? item.locCode + ' - ' : '' }}{{ item.locName }}
+                        </ng-template>
+                    </ng-select>
+                </div>
+
                 <!-- Status -->
-                <div class="col-12 col-md-2">
+                <div class="col-auto">
                     <label class="form-label text-muted fw-semibold mb-1" style="font-size: 11px;">Status</label>
                     <ng-select [items]="statusList" bindLabel="label" bindValue="value"
                         [(ngModel)]="config.statusFilter" (change)="searchLRs()" [clearable]="false"
                         [searchable]="false" class="custom-status-select clear-icon"></ng-select>
                 </div>
 
+                <!-- Customer Type -->
+                <div class="col-auto">
+                    <label class="form-label text-muted fw-semibold mb-1" style="font-size: 11px;">Customer Type</label>
+                    <ng-select [items]="customerTypeList" bindLabel="custType" bindValue="custType"
+                        [(ngModel)]="customerType" (change)="searchLRs()" [searchable]="false"
+                        placeholder="Customer Type" class="custom-status-select" style="width: 220px;"></ng-select>
+                </div>
+
                 <!-- Buttons -->
-                <div class="col-12 col-md-auto d-flex gap-2">
-                    <button class="btn btn-primary d-flex align-items-center gap-1.5 justify-content-center fw-bold"
-                        (click)="searchLRs()" style="background-color: #1e2b5c; border-color: #1e2b5c; color: white;">
-                        <svg width="11" height="11" fill="none" stroke="currentColor" class="me-2" stroke-width="2.5"
-                            viewBox="0 0 24 24">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <path d="M21 21l-4.35-4.35"></path>
-                        </svg>
-                        Search
-                    </button>
-                    <button class="btn btn-outline-secondary d-flex align-items-center justify-content-center fw-bold"
-                        (click)="resetFilters()"
-                        style="border-color: #1e2b5c; color: #1e2b5c; background-color: transparent;">
-                        Reset
-                    </button>
+                <div class="col-auto ms-auto">
+                    <div class="d-flex gap-2">
+                        <button
+                            class="btn btn-primary btn-sm d-flex align-items-center justify-content-center fw-bold px-3"
+                            (click)="searchLRs()"
+                            style="background-color: #1e2b5c; border-color: #1e2b5c; color: white; height: 31px;">
+                            <svg width="11" height="11" fill="none" stroke="currentColor" class="me-1"
+                                stroke-width="2.5" viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="M21 21l-4.35-4.35"></path>
+                            </svg>
+                            Search
+                        </button>
+                        <button
+                            class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center fw-bold px-3"
+                            (click)="resetFilters()"
+                            style="border-color: #1e2b5c; color: #1e2b5c; background-color: transparent; height: 31px;">
+                            Reset
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -214,115 +279,114 @@
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">Loading...</span>
                             </div>
-                            <div class="mt-2 text-muted fw-semibold" style="font-size: 13px;">Loading data, please wait...</div>
+                            <div class="mt-2 text-muted fw-semibold" style="font-size: 13px;">Loading data, please
+                                wait...</div>
                         </td>
                     </tr>
 
                     <ng-container *ngIf="!isLoading">
                         <tr *ngFor="let lr of pagedLRs">
-                        <td class="ps-3">
-                            <a href="javascript:void(0)" class="fw-bold text-decoration-none"
-                                style="color: #0969da; font-size: 13.5px;">
-                                {{ lr.LrNumber }}
-                            </a>
-                        </td>
-                        <td>
-                            <div class="fw-semibold text-dark" style="font-size: 13px; white-space: nowrap;">{{
-                                lr.LrDate }}</div>
-                            <div class="text-muted" style="font-size: 11px;">{{ lr.lrTime }}</div>
-                        </td>
-                        <td>
-                            <div>
-                                <span class="text-uppercase text-muted fw-bold d-block"
-                                    style="font-size: 9px; letter-spacing: 0.5px; line-height: 1;">EDD</span>
-                                <span class="fw-semibold text-warning" style="font-size: 12.5px; white-space: nowrap;">
-                                    📅 {{ lr.EddDate }}
+                            <td class="ps-3">
+                                <a href="javascript:void(0)" class="fw-bold text-decoration-none"
+                                    style="color: #0969da; font-size: 13.5px;">
+                                    {{ lr.LrNumber }}
+                                </a>
+                            </td>
+                            <td>
+                                <div class="fw-semibold text-dark" style="font-size: 13px; white-space: nowrap;">{{
+                                    lr.LrDate }}</div>
+                                <div class="text-muted" style="font-size: 11px;">{{ lr.lrTime }}</div>
+                            </td>
+                            <td>
+                                <div>
+                                    <span class="text-uppercase text-muted fw-bold d-block"
+                                        style="font-size: 9px; letter-spacing: 0.5px; line-height: 1;">EDD</span>
+                                    <span class="fw-semibold text-warning"
+                                        style="font-size: 12.5px; white-space: nowrap;">
+                                        📅 {{ lr.EddDate }}
+                                    </span>
+                                </div>
+                                <div *ngIf="lr.AddDate" class="mt-1">
+                                    <span class="text-uppercase text-success fw-bold d-block"
+                                        style="font-size: 9px; letter-spacing: 0.5px; line-height: 1;">ADD</span>
+                                    <span class="fw-semibold text-success"
+                                        style="font-size: 12.5px; white-space: nowrap;">
+                                        ✅ {{ lr.AddDate }}
+                                    </span>
+                                    <span *ngIf="lr.addStatus"
+                                        class="badge bg-success-subtle text-success border border-success-subtle ms-1"
+                                        style="font-size: 9px; padding: 2px 4px;">
+                                        {{ lr.addStatus }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <span
+                                    class="badge rounded-pill px-2 py-1 fw-bold d-inline-flex align-items-center gap-1 border"
+                                    [ngClass]="getStatusClass(lr.Status)" style="font-size: 11px;">
+                                    <span class="rounded-circle" [ngClass]="getStatusIconClass(lr.Status)"
+                                        style="width: 6px; height: 6px;"></span>
+                                    {{ getStatusText(lr.Status) }}
                                 </span>
-                            </div>
-                            <div *ngIf="lr.AddDate" class="mt-1">
-                                <span class="text-uppercase text-success fw-bold d-block"
-                                    style="font-size: 9px; letter-spacing: 0.5px; line-height: 1;">ADD</span>
-                                <span class="fw-semibold text-success" style="font-size: 12.5px; white-space: nowrap;">
-                                    ✅ {{ lr.AddDate }}
+                            </td>
+                            <!-- ORIGIN - DEST -->
+                            <td class="text-center">
+                                <span class="fw-bold text-secondary" style="font-size: 13px; white-space: nowrap;">
+                                    {{ lr.ORGNCD }} — {{ lr.DESTCD }}
                                 </span>
-                                <span *ngIf="lr.addStatus"
-                                    class="badge bg-success-subtle text-success border border-success-subtle ms-1"
-                                    style="font-size: 9px; padding: 2px 4px;">
-                                    {{ lr.addStatus }}
+                            </td>
+                            <td><span class="fw-semibold text-dark" style="font-size: 13px; white-space: nowrap;">{{
+                                    lr.from_loc }}</span></td>
+                            <td><span class="fw-semibold text-dark" style="font-size: 13px; white-space: nowrap;">{{
+                                    lr.to_loc }}</span></td>
+                            <td class="text-center">
+                                <span class="badge fw-bold px-2 py-1 border" [ngClass]="getPayBasisClass(lr.PAYBAS)"
+                                    style="font-size: 11px;">{{ lr.PAYBAS }}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge fw-bold px-2.5 py-1.5 d-inline-flex align-items-center gap-1 border"
+                                    [ngClass]="getModeClass(lr.TRN_MOD)" style="font-size: 11px; white-space: nowrap;">
+                                    {{ getModeIcon(lr.TRN_MOD) }} {{ lr.TRN_MOD }}
                                 </span>
-                            </div>
-                        </td>
-                        <td class="text-center">
-                            <span class="badge rounded-pill px-2 py-1 fw-bold d-inline-flex align-items-center gap-1 border"
-                                [ngClass]="getStatusClass(lr.Status)"
-                                style="font-size: 11px;">
-                                <span class="rounded-circle" [ngClass]="getStatusIconClass(lr.Status)" style="width: 6px; height: 6px;"></span>
-                                {{ getStatusText(lr.Status) }}
-                            </span>
-                        </td>
-                        <!-- ORIGIN - DEST -->
-                        <td class="text-center">
-                            <span class="fw-bold text-secondary" style="font-size: 13px; white-space: nowrap;">
-                                {{ lr.ORGNCD }} — {{ lr.DESTCD }}
-                            </span>
-                        </td>
-                        <td><span class="fw-semibold text-dark" style="font-size: 13px; white-space: nowrap;">{{
-                                lr.from_loc }}</span></td>
-                        <td><span class="fw-semibold text-dark" style="font-size: 13px; white-space: nowrap;">{{
-                                lr.to_loc }}</span></td>
-                        <td class="text-center">
-                            <span class="badge fw-bold px-2 py-1 border"
-                                [ngClass]="getPayBasisClass(lr.PAYBAS)"
-                                style="font-size: 11px;">{{ lr.PAYBAS }}</span>
-                        </td>
-                        <td class="text-center">
-                            <span class="badge fw-bold px-2.5 py-1.5 d-inline-flex align-items-center gap-1 border"
-                                [ngClass]="getModeClass(lr.TRN_MOD)"
-                                style="font-size: 11px; white-space: nowrap;">
-                                {{ getModeIcon(lr.TRN_MOD) }} {{ lr.TRN_MOD }}
-                            </span>
-                        </td>
-                        <!-- SERVICE -->
-                        <td class="text-center">
-                            <span class="badge fw-bold px-2 border"
-                                [ngClass]="getServiceClass(lr.ServiceType)"
-                                style="font-size: 11px;">{{ lr.ServiceType }}</span>
-                        </td>
-                        <!-- CUST TYPE -->
-                        <td class="text-center">
-                            <span class="badge fw-bold px-2 border"
-                                [ngClass]="getCustTypeClass(lr.CustType)"
-                                style="font-size: 11px;">{{ lr.CustType }}</span>
-                        </td>
-                        <!-- CUSTOMER NAME -->
-                        <td><span class="fw-semibold text-dark" style="font-size: 13px; white-space: nowrap;">{{
-                                lr.party_name }}</span></td>
-                        <!-- ACTIONS -->
-                        <td class="pe-3">
-                            <div class="d-flex justify-content-start align-items-center gap-2">
-                                <button class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1"
-                                    (click)="openPrintView(lr)"
-                                    style="font-size: 11px; background: #e8f0fd; color: #1a3a6b; border: 1px solid #c5d5f5;">
-                                    🖨 Print
-                                </button>
-                                <button class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1"
-                                    (click)="openTrackerView(lr)"
-                                    style="font-size: 11px; background: #e6f7ef; color: #1a9e5c; border: 1px solid #aaddc7;">
-                                    📍 Track
-                                </button>
-                                <button
-                                    class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1"
-                                    style="font-size: 11px; background: #fff4e0; color: #e07b00; border: 1px solid #f5d38a;">
-                                    🗺 Map
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr *ngIf="filteredLRs.length === 0">
-                        <td colspan="13" class="text-center py-5 text-muted fs-6">
-                            No matching records found.
-                        </td>
-                    </tr>
+                            </td>
+                            <!-- SERVICE -->
+                            <td class="text-center">
+                                <span class="badge fw-bold px-2 border" [ngClass]="getServiceClass(lr.ServiceType)"
+                                    style="font-size: 11px;">{{ lr.ServiceType }}</span>
+                            </td>
+                            <!-- CUST TYPE -->
+                            <td class="text-center">
+                                <span class="badge fw-bold px-2 border" [ngClass]="getCustTypeClass(lr.CustType)"
+                                    style="font-size: 11px;">{{ lr.CustType }}</span>
+                            </td>
+                            <!-- CUSTOMER NAME -->
+                            <td><span class="fw-semibold text-dark" style="font-size: 13px; white-space: nowrap;">{{
+                                    lr.party_name }}</span></td>
+                            <!-- ACTIONS -->
+                            <td class="pe-3">
+                                <div class="d-flex justify-content-start align-items-center gap-2">
+                                    <button class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1"
+                                        (click)="openPrintView(lr)"
+                                        style="font-size: 11px; background: #e8f0fd; color: #1a3a6b; border: 1px solid #c5d5f5;">
+                                        🖨 Print
+                                    </button>
+                                    <button class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1"
+                                        (click)="openTrackerView(lr)"
+                                        style="font-size: 11px; background: #e6f7ef; color: #1a9e5c; border: 1px solid #aaddc7;">
+                                        📍 Track
+                                    </button>
+                                    <button class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1"
+                                        style="font-size: 11px; background: #fff4e0; color: #e07b00; border: 1px solid #f5d38a;">
+                                        🗺 Map
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr *ngIf="filteredLRs.length === 0">
+                            <td colspan="13" class="text-center py-5 text-muted fs-6">
+                                No matching records found.
+                            </td>
+                        </tr>
                     </ng-container>
                 </tbody>
             </table>

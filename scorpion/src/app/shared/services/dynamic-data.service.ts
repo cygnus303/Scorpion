@@ -21,4 +21,8 @@ export class DynamicDataService {
     );
   }
 
+  getCustomerTypes(): Observable<any> {
+    return this.apiHandlerService.Get(`Operation/customer-types`);
+  }
+
 }
