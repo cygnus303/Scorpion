@@ -62,6 +62,8 @@
                                     <th class="text-center px-2 py-2">Document No</th>
                                     <th class="text-center px-2 py-2">Vendor Code</th>
                                     <th class="text-center px-2 py-2">Charge Amount (₹)</th>
+                                    <th class="text-center px-2 py-2">Is Cancel</th>
+                                    <th class="text-center px-2 py-2">Bill Number</th>
                                 </tr>
                             </thead>
 
@@ -82,9 +84,12 @@
                                         style="cursor: pointer;"
                                         (click)="openHCCModal(row.HCNumber,row.DocumentNo)">
                                         {{ row.HCNumber || '—' }}
-                                    </td>                                    <td class="text-center px-2 py-2">{{ row.DocumentNo || '—' }}</td>
+                                    </td>                                    
+                                    <td class="text-center px-2 py-2">{{ row.DocumentNo || '—' }}</td>
                                     <td class="text-center px-2 py-2">{{ row.VendorCode || '—' }}</td>
                                     <td class="text-center px-2 py-2 fw-bold">₹ {{ row.ChargeAmount | number:'1.2-2' }}</td>
+                                    <td class="text-center px-2 py-2 fw-bold">{{ row.IsCancel ?  'Cancelled' :'-'}}</td>
+                                    <td class="text-center px-2 py-2 fw-bold">{{ row.BillNo ||'-' }}</td>
                                 </tr>
 
                                 
