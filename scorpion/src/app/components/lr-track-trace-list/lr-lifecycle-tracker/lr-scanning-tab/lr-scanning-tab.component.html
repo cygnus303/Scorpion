@@ -3,7 +3,7 @@
   <div class="row g-3 mb-4">
     <div class="col" *ngFor="let sum of summaries">
       <div class="card h-100 p-3 text-center d-flex flex-column justify-content-center align-items-center" [ngStyle]="getSummaryStyle(sum.colorType)" style="box-shadow: none; border-radius: 8px !important;">
-        <div style="font-size: 16px; line-height: 1; margin-bottom: 6px;">{{sum.icon}}</div>
+        <div style="font-size: 16px; line-height: 1; margin-bottom: 6px;">{{getIcon(sum.colorType)}}</div>
         <div class="fw-bolder" [ngStyle]="{'color': getSummaryCountColor(sum.colorType), 'font-size': '22px', 'line-height': '1'}">{{sum.count}}</div>
         <div class="fw-bold text-uppercase mt-1" [ngStyle]="{'color': getSummaryLabelColor(sum.colorType), 'font-size': '10px', 'letter-spacing': '0.5px'}">{{sum.label}}</div>
       </div>
@@ -39,7 +39,7 @@
         <!-- Header -->
         <div class="d-flex align-items-start justify-content-between mb-2">
           <div class="d-flex align-items-center gap-2 flex-wrap">
-            <span style="font-size: 16px;">{{ev.icon}}</span>
+            <span style="font-size: 16px;">{{getIcon(ev.theme)}}</span>
             <span class="badge rounded-pill" [ngStyle]="getBadgeStyle(ev.theme, ev.badge)">{{ev.badge}}</span>
             <span class="fw-bolder" [ngStyle]="{'color': getTitleColor(ev.theme), 'font-size': '15px', 'letter-spacing': '0.5px'}">{{ev.title}}</span>
             <span *ngIf="ev.docNo" class="badge rounded-pill px-2 py-1 font-monospace" [ngStyle]="getDocBadgeStyle(ev.theme)" style="font-size: 10.5px; font-weight: 600;">{{ev.docNo}}</span>
@@ -133,7 +133,7 @@
 
         <!-- Footer Block -->
         <div class="d-flex align-items-center gap-1 mt-2" style="font-size: 11px; font-weight: 500; color: #64748b;">
-          <span style="font-size: 12px; filter: grayscale(1); opacity: 0.6;">{{ev.footerIcon}}</span>
+          <span style="font-size: 12px; filter: grayscale(1); opacity: 0.6;">{{getFooterIcon(ev.resultType)}}</span>
           <span>{{ev.footerText}}</span>
         </div>
 
