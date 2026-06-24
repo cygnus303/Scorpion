@@ -11,6 +11,7 @@ import { Subject, of } from 'rxjs';
 import { debounceTime, switchMap, tap, catchError, filter, distinctUntilChanged } from 'rxjs/operators';
 import { LrPrintViewComponent } from './lr-print-view/lr-print-view.component';
 import { LrLifecycleTrackerComponent } from './lr-lifecycle-tracker/lr-lifecycle-tracker.component';
+import { DocketService } from 'app/shared/services/docket.service';
 
 @Component({
   selector: 'app-lr-track-trace-list',
@@ -31,7 +32,8 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
   constructor(
     private dynamicDataService: DynamicDataService,
     private basicDetailService: BasicDetailService,
-    private exportService: ExportService
+    private exportService: ExportService,
+    public docketService: DocketService,
   ) { }
   public config = {
     fromDateStr: new Date(),
@@ -115,6 +117,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
         Origin: this.originBranch === 'All' || !this.originBranch ? "" : this.originBranch,
         Destination: this.destinationBranch === 'All' || !this.destinationBranch ? "" : this.destinationBranch,
         CustType: this.customerType === 'All' || !this.customerType ? "" : this.customerType,
+        LocCode :this.docketService.loginUserList.LocationCode || ''
       }
     };
 
@@ -165,6 +168,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
         Origin: this.originBranch === 'All' || !this.originBranch ? "" : this.originBranch,
         Destination: this.destinationBranch === 'All' || !this.destinationBranch ? "" : this.destinationBranch,
         CustType: this.customerType === 'All' || !this.customerType ? "" : this.customerType,
+        LocCode :this.docketService.loginUserList.LocationCode || ''
       }
     };
 
@@ -183,6 +187,14 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+      const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      // this.docketService.loginUserList.LocationCode = 'PIM'
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
     this.loadCustomerTypes();
     this.setupTypeaheads();
 
