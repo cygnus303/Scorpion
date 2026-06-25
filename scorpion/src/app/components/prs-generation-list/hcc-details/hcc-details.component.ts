@@ -62,6 +62,7 @@ export class HCCDetailsComponent {
   showPopup(data: any, flag: any) {
     console.log("HCC Details Data:", data);
     this.selectedHccDetails = data;
+    console.log(this.selectedHccDetails)
     // Auto-detect existing HCC type so radio shows pre-selected (disabled) state
     if (this.isHccValid(data.loadingNoHCCCnt) || this.isHccValid(data.loadingNoHCCCnt)) {
       this.selectedHccType = 'Unloading';
@@ -175,8 +176,8 @@ export class HCCDetailsComponent {
           this.hccForm.patchValue({
             hhcLocation: response.hhcLocation,
             hcNumber: response.hcNumber,
-            documentNo: response.documentNo,
-            chargesType: response.chargesType === 'L' ? 'Loading' : 'UnLoading',
+            documentNo: this.selectedHccDetails?.pdcno||this.selectedHccDetails?.drsNo||this.selectedHccDetails?.mfNo,
+            chargesType:this.selectedHccType ,
             chargedBy: response.chargedBy || null,
             vendorCode: response.vendorCode || null,
             rateType: response.rateType || null,
