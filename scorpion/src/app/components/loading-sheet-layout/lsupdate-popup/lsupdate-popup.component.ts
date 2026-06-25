@@ -18,6 +18,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { SharedModule } from 'app/shared/shared/shared.module';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.service';
+import { CustomerService } from 'app/shared/services/customer.service';
 
 @Component({
   selector: 'app-lsupdate-popup',
@@ -57,7 +58,8 @@ export class LSUpdatePopupComponent {
     public loadingSheetApiService: LoadingSheetApiService,
     public sweetAlertService: SweetAlertService,
     public vendorChargeHelper: VendorChargeHelperService,
-    public basicDetailService: BasicDetailService, private cd: ChangeDetectorRef, private modalService: BsModalService
+    public basicDetailService: BasicDetailService, private cd: ChangeDetectorRef, private modalService: BsModalService,
+    private customerService: CustomerService
   ) { }
 
 
@@ -67,6 +69,7 @@ export class LSUpdatePopupComponent {
     this.docketService.loginUserList.Type = type;
     this.isgetLoadingList = type === 'ULS' ? true : false;
     this.loadingSheetService.buildForm();
+    this.fetchPreparedByEmployee();
 
     if (type === 'ULS') {
       this.getVendorType();
@@ -88,6 +91,22 @@ export class LSUpdatePopupComponent {
       this.loadingSheetService.LSForm.get('shiftInCharge')?.setValue('');
     }
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
+  }
+
+  fetchPreparedByEmployee() {
+    const searchText = this.docketService.loginUserList?.UserId;
+    const baseUserName = this.docketService.loginUserList?.BaseUserName;
+    if (!searchText || !baseUserName) return;
+
+    this.customerService.getEmployeeDropdown(searchText, baseUserName).subscribe({
+      next: (response: any) => {
+        if (Array.isArray(response) && response.length > 0) {
+          const emp = response[0];
+          const val = emp.id ? `${emp.id} : ${emp.text}` : emp.text;
+          this.loadingSheetService.LSForm?.get('preparedBy')?.setValue(val);
+        }
+      }
+    });
   }
 
   ngOnInit() {

@@ -8,7 +8,7 @@
         <h5 class="modal-title fw-bold m-0 fs-6">LR Lifecycle Tracker</h5>
       </div>
       <div class="text-white-50" style="font-size: 12px;">
-        {{ lrDetails?.lrNumber }} &nbsp;|&nbsp; {{ lrDetails?.route }} &nbsp;|&nbsp; {{ lrDetails?.status }}
+        {{ lrDetails?.lR_Number || lrDetails?.lrNumber }} &nbsp;|&nbsp; {{ lrDetails?.lR_Route }} &nbsp;|&nbsp; {{ lrDetails?.status }}
       </div>
     </div>
     <button type="button" class="btn-close btn-close-white-custom" aria-label="Close"
@@ -22,36 +22,36 @@
         <div class="row g-3">
           <div class="col-md-3">
             <label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">LR Number</label>
-            <div class="text-primary fw-bold fs-small">{{ lrDetails?.lrNumber }}</div>
+            <div class="text-primary fw-bold fs-small">{{ lrDetails?.lR_Number || lrDetails?.lrNumber }}</div>
           </div>
           <div class="col-md-3">
             <label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Booked On</label>
-            <div class="text-dark fw-bold fs-small">{{ lrDetails?.bookedOn }}</div>
+            <div class="text-dark fw-bold fs-small">{{ lrDetails?.booked_On }}</div>
           </div>
           <div class="col-md-3">
             <label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Route</label>
-            <div class="text-dark fw-bold fs-small">{{ lrDetails?.route }}</div>
+            <div class="text-dark fw-bold fs-small">{{ lrDetails?.lR_Route }}</div>
           </div>
           <div class="col-md-3">
             <label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">EDD</label>
-            <div class="fw-bold fs-small" style="color: #d97706;">{{ lrDetails?.edd }}</div>
+            <div class="fw-bold fs-small" style="color: #d97706;">{{ lrDetails?.edD_Date }}</div>
           </div>
 
           <div class="col-md-3">
             <label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Weight / Pkgs</label>
-            <div class="text-dark fw-bold fs-small">{{ lrDetails?.weightPkgs }}</div>
+            <div class="text-dark fw-bold fs-small">{{ lrDetails?.lr_Weight }} kg / {{ lrDetails?.pkgs }} Pkgs</div>
           </div>
           <div class="col-md-3">
             <label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Pay Basis</label>
-            <div><span class="badge bg-success-subtle text-success fw-bold">{{ lrDetails?.payBasis }}</span></div>
+            <div><span class="badge bg-success-subtle text-success fw-bold">{{ lrDetails?.pay_Basis }}</span></div>
           </div>
           <div class="col-md-3">
             <label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Mode</label>
-            <div class="text-dark fw-bold fs-small">🚛 {{ lrDetails?.mode }}</div>
+            <div class="text-dark fw-bold fs-small">🚛 {{ lrDetails?.cargo_Mode }}</div>
           </div>
           <div class="col-md-3">
             <label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Current Location</label>
-            <div class="text-dark-blue fw-bold fs-small">📍 {{ lrDetails?.currentLocation }}</div>
+            <div class="text-dark-blue fw-bold fs-small">📍 {{ lrDetails?.current_Location }}</div>
           </div>
         </div>
       </div>

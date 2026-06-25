@@ -5,105 +5,105 @@
 
 <div class="timeline-wrapper">
   <!-- Item 1: Pickup Request -->
-  <div class="timeline-item border-success">
+  <div class="timeline-item border-success" *ngFor="let prq of operationData?.pickupRequest">
     <div class="timeline-dot border-success"></div>
     <div class="card timeline-card border-0">
       <div class="card-header border-dashed py-2 px-3 bg-light bg-opacity-50">
         <div class="d-flex align-items-center gap-3 mb-1">
           <h6 class="m-0 fw-bold text-dark" style="font-size: 13.5px;">📲 Pickup Request Raised</h6>
-          <span class="text-muted" style="font-size: 11px; font-weight: 600;">PRQ/BOM001/2526/000412</span>
-          <span class="badge bg-success-subtle text-success rounded-pill fw-bold ms-auto">Completed</span>
+          <span class="text-muted" style="font-size: 11px; font-weight: 600;">{{ prq.prqNumber }}</span>
+          <span class="badge bg-success-subtle text-success rounded-pill fw-bold ms-auto">{{ prq.prqStatus }}</span>
         </div>
         <div class="d-flex align-items-center gap-4 text-dark" style="font-size: 11.5px; font-weight: 500;">
-          <span><span class="text-muted">🕐</span> 13 Apr 2026, ~30 min earlier</span>
-          <span><span class="text-danger">📍</span> Mumbai (BOM-001)</span>
-          <span><span class="text-muted">👤</span> Rajesh Kumar (Field Agent)</span>
+          <span><span class="text-muted">🕐</span> {{ prq.prqFixDateTime || prq.prqDate }}</span>
+          <span><span class="text-danger">📍</span> {{ prq.fromLocation }}</span>
+          <span><span class="text-muted">👤</span> {{ prq.fieldAgent }}</span>
         </div>
       </div>
       <div class="card-body p-3">
         <div class="row g-3">
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Consignor</label><div class="text-dark fs-small fw-medium">Reliance Industries Ltd</div></div>
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Pickup Address</label><div class="text-dark fs-small fw-medium">Nariman Point, Mumbai — 400021</div></div>
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Agent Phone</label><div class="text-dark fs-small fw-medium">98201 11234</div></div>
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Assignment</label><div class="text-dark fs-small fw-medium"><span class="badge bg-success py-1 px-2 me-1">✔</span> Assigned via Mobile App</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Consignor</label><div class="text-dark fs-small fw-medium">{{ prq.consignorName }}</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Pickup Address</label><div class="text-dark fs-small fw-medium">{{ prq.consignorNameAdd }} — {{ prq.pincode }}</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Agent Phone</label><div class="text-dark fs-small fw-medium">{{ prq.mobileNo }}</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Assignment</label><div class="text-dark fs-small fw-medium"><span class="badge bg-success py-1 px-2 me-1" *ngIf="prq.assigmentViaMobile">✔</span> {{ prq.assigmentViaMobile || 'Assigned via Mobile App' }}</div></div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Item 2: LR Booked -->
-  <div class="timeline-item border-success">
+  <div class="timeline-item border-success" *ngFor="let booked of operationData?.lrBooked">
     <div class="timeline-dot border-success"></div>
     <div class="card timeline-card border-0">
       <div class="card-header border-dashed py-2 px-3 bg-light bg-opacity-50">
         <div class="d-flex align-items-center gap-3 mb-1">
           <h6 class="m-0 fw-bold text-dark" style="font-size: 13.5px;">📋 LR Booked</h6>
-          <span class="text-muted" style="font-size: 11px; font-weight: 600;">{{ lrDetails?.lrNumber }}</span>
-          <span class="badge bg-success-subtle text-success rounded-pill fw-bold ms-auto">Completed</span>
+          <span class="text-muted" style="font-size: 11px; font-weight: 600;">{{ booked.lrNumber }}</span>
+          <span class="badge bg-success-subtle text-success rounded-pill fw-bold ms-auto">{{ booked.payBase }}</span>
         </div>
         <div class="d-flex align-items-center gap-4 text-dark" style="font-size: 11.5px; font-weight: 500;">
-          <span><span class="text-muted">🕐</span> {{ lrDetails?.bookedOn }}</span>
-          <span><span class="text-danger">📍</span> Mumbai (BOM-001)</span>
-          <span><span class="text-muted">👤</span> Rajesh Kumar (Booking Agent)</span>
+          <span><span class="text-muted">🕐</span> {{ booked.lrDateTime }}</span>
+          <span><span class="text-danger">📍</span> {{ booked.lrLocation }}</span>
+          <span><span class="text-muted">👤</span> {{ booked.bookingAgent }}</span>
         </div>
       </div>
       <div class="card-body p-3">
         <div class="row g-3">
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Consignor</label><div class="text-dark fs-small fw-medium">Reliance Industries Ltd</div></div>
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Consignee</label><div class="text-dark fs-small fw-medium">Reliance Retail Ltd</div></div>
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Description</label><div class="text-dark fs-small fw-medium">Electronic Components</div></div>
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Declared Value</label><div class="text-dark fs-small fw-medium">₹ 2,45,000</div></div>
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Pkgs / Weight</label><div class="text-dark fs-small fw-medium">12 Pkgs / 487 kg</div></div>
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">E-Way Bill</label><div class="text-dark fs-small fw-medium">23134000019901</div></div>
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Pay Basis / Mode</label><div class="text-dark fs-small fw-medium">PAID / 🚛 Road LTL</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Consignor</label><div class="text-dark fs-small fw-medium">{{ booked.consignorName }}</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Consignee</label><div class="text-dark fs-small fw-medium">{{ booked.consigneeName }}</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Description</label><div class="text-dark fs-small fw-medium">{{ booked.descrption || '—' }}</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Declared Value</label><div class="text-dark fs-small fw-medium">₹ {{ booked.declaredValue }}</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Pkgs / Weight</label><div class="text-dark fs-small fw-medium">{{ booked.pkgs }} Pkgs / {{ booked.pkgsWeight }} kg</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">E-Way Bill</label><div class="text-dark fs-small fw-medium">{{ booked.eWayBillNo || '—' }}</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Pay Basis / Mode</label><div class="text-dark fs-small fw-medium">{{ booked.payBase }} / {{ booked.trnMode || '—' }}</div></div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Item 3: Pickup Run Sheet -->
-  <div class="timeline-item border-success">
+  <div class="timeline-item border-success" *ngFor="let prs of operationData?.pickupRunSheet">
     <div class="timeline-dot border-success"></div>
     <div class="card timeline-card border-0">
       <div class="card-header border-dashed py-2 px-3 bg-light bg-opacity-50">
         <div class="d-flex align-items-center gap-3 mb-1">
           <h6 class="m-0 fw-bold text-dark" style="font-size: 13.5px;">📝 Pickup Run Sheet + Branch Arrival</h6>
-          <span class="text-muted" style="font-size: 11px; font-weight: 600;">PRS/BOM001/2526/000198</span>
-          <span class="badge bg-success-subtle text-success rounded-pill fw-bold ms-auto">Completed</span>
+          <span class="text-muted" style="font-size: 11px; font-weight: 600;">{{ prs.prsNumber }}</span>
+          <span class="badge bg-success-subtle text-success rounded-pill fw-bold ms-auto">{{ prs.prsStatus }}</span>
         </div>
         <div class="d-flex align-items-center gap-4 text-dark" style="font-size: 11.5px; font-weight: 500;">
-          <span><span class="text-muted">🕐</span> 13 Apr 2026, ~2h later</span>
-          <span><span class="text-danger">📍</span> Mumbai (BOM-001)</span>
-          <span><span class="text-muted">👤</span> Suresh Naik (Branch Incharge)</span>
+          <span><span class="text-muted">🕐</span> {{ prs.prsFixDateTime || '—' }}</span>
+          <span><span class="text-danger">📍</span> {{ prs.locations || '—' }}</span>
+          <span><span class="text-muted">👤</span> {{ prs.bookingAgent }}</span>
         </div>
       </div>
       <div class="card-body p-3">
         <div class="row g-3 mb-3">
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">PRS LRs</label><div class="text-dark fs-small fw-medium">Includes LR-2604-00841</div></div>
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Agent Commission</label><div class="text-dark fs-small fw-medium">₹ 420 (Per Kg)</div></div>
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Packages Received</label><div class="text-dark fs-small fw-medium">12 / 12 <span class="badge bg-success py-1 px-1 ms-1">✔</span></div></div>
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Condition</label><div class="text-dark fs-small fw-medium">Good — No Damage</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">PRS LRs</label><div class="text-dark fs-small fw-medium">Includes {{ prs.lrNumber }}</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Agent Commission</label><div class="text-dark fs-small fw-medium">₹ {{ prs.agentCommision }}</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Packages Received</label><div class="text-dark fs-small fw-medium">{{ prs.pkgsRecieve }} / {{ prs.totalPkgs }} <span class="badge bg-success py-1 px-1 ms-1">✔</span></div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Condition</label><div class="text-dark fs-small fw-medium">{{ prs.damageType }}</div></div>
         </div>
         <!-- HCC Blocks -->
         <div class="row g-2">
-          <div class="col-md-6">
+          <div class="col-md-6" *ngIf="prs.loadingHCCNumber || prs.pdcAmt1">
             <div class="border rounded-2 p-2 d-flex justify-content-between align-items-center" style="background:#e8f0fd !important; border-color:#c5d5f5!important;">
               <div>
-                <div class="fw-bold text-primary" style="font-size:10.5px;">🧾 HCC-1 — Loading &#64; Pickup</div>
-                <div class="text-muted" style="font-size:10px;">HCC/BOM001/2526/Auto</div>
-                <div class="text-dark fw-semibold mt-1" style="font-size:11px;">Payable: Rajesh Kumar (Reimbursement) &nbsp;|&nbsp; <span class="text-primary">₹ 180</span></div>
+                <div class="fw-bold text-primary" style="font-size:10.5px;">🧾 Loading HCC</div>
+                <div class="text-muted" style="font-size:10px;">{{ prs.loadingHCCNumber || '—' }}</div>
+                <div class="text-dark fw-semibold mt-1" style="font-size:11px;">Payable: {{ prs.payable1 || '—' }} &nbsp;|&nbsp; <span class="text-primary">₹ {{ prs.pdcAmt1 }}</span></div>
               </div>
-              <span class="badge bg-success-subtle text-success py-1 px-2 rounded-pill">✅ Paid</span>
+              <span class="badge bg-success-subtle text-success py-1 px-2 rounded-pill">{{ prs.paymentStatus1 }}</span>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6" *ngIf="prs.unLoadingHCCNumber || prs.pdcAmt2">
             <div class="border rounded-2 p-2 d-flex justify-content-between align-items-center" style="background:#fdecea !important; border-color:#f5c6c2!important;">
               <div>
-                <div class="fw-bold text-danger" style="font-size:10.5px;">🧾 HCC-2 — Unloading &#64; Branch</div>
-                <div class="text-muted" style="font-size:10px;">HCC/BOM001/2526/Auto</div>
-                <div class="text-dark fw-semibold mt-1" style="font-size:11px;">Payable: Suresh Naik — Labour Vendor &nbsp;|&nbsp; <span class="text-danger">₹ 240</span></div>
+                <div class="fw-bold text-danger" style="font-size:10.5px;">🧾 Unloading HCC</div>
+                <div class="text-muted" style="font-size:10px;">{{ prs.unLoadingHCCNumber || '—' }}</div>
+                <div class="text-dark fw-semibold mt-1" style="font-size:11px;">Payable: {{ prs.payable2 || '—' }} &nbsp;|&nbsp; <span class="text-danger">₹ {{ prs.pdcAmt2 }}</span></div>
               </div>
-              <span class="badge bg-success-subtle text-success py-1 px-2 rounded-pill">✅ Paid</span>
+              <span class="badge bg-success-subtle text-success py-1 px-2 rounded-pill">{{ prs.paymentStatus2 }}</span>
             </div>
           </div>
         </div>
@@ -112,38 +112,38 @@
   </div>
 
   <!-- Item 4: Loading Sheet -->
-  <div class="timeline-item border-success">
+  <div class="timeline-item border-success" *ngFor="let ls of operationData?.loadingSheet">
     <div class="timeline-dot border-success"></div>
     <div class="card timeline-card border-0">
       <div class="card-header border-dashed py-2 px-3 bg-light bg-opacity-50">
         <div class="d-flex align-items-center gap-3 mb-1">
-          <h6 class="m-0 fw-bold text-dark" style="font-size: 13.5px;">📋 Loading Sheet — Connection to Origin Hub</h6>
-          <span class="text-muted" style="font-size: 11px; font-weight: 600;">LS/BOM001/2526/000314</span>
-          <span class="badge bg-success-subtle text-success rounded-pill fw-bold ms-auto">Completed</span>
+          <h6 class="m-0 fw-bold text-dark" style="font-size: 13.5px;">📋 Loading Sheet ({{ ls.lsType || 'LTL' }})</h6>
+          <span class="text-muted" style="font-size: 11px; font-weight: 600;">{{ ls.lsNo }}</span>
+          <span class="badge bg-success-subtle text-success rounded-pill fw-bold ms-auto">{{ ls.lsStatus || 'Completed' }}</span>
         </div>
         <div class="d-flex align-items-center gap-4 text-dark" style="font-size: 11.5px; font-weight: 500;">
-          <span><span class="text-muted">🕐</span> Cut-off time</span>
-          <span><span class="text-danger">📍</span> Mumbai (BOM-001) → Mumbai Hub (BOM-HUB)</span>
-          <span><span class="text-muted">👤</span> Prakash More (Branch Manager)</span>
+          <span><span class="text-muted">🕐</span> {{ ls.cutOffTime }}</span>
+          <span><span class="text-danger">📍</span> {{ ls.fromtoLocation }}</span>
+          <span><span class="text-muted">👤</span> {{ ls.branchManager || '—' }}</span>
         </div>
       </div>
       <div class="card-body p-3">
         <div class="row g-3 mb-3">
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Loading Vendor</label><div class="text-dark fs-small fw-medium">As per LS</div></div>
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Vehicle</label><div class="text-dark fs-small fw-medium">MH-01-XY-5678</div></div>
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Driver</label><div class="text-dark fs-small fw-medium">Ramesh Gupta (📞 98765 43210)</div></div>
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Connecting To</label><div class="text-dark fs-small fw-medium">Mumbai Hub (BOM-HUB)</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Loading Vendor</label><div class="text-dark fs-small fw-medium">{{ ls.loadingVendorName || '—' }}</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Vehicle</label><div class="text-dark fs-small fw-medium">{{ ls.vehicalNumber || '—' }}</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Driver</label><div class="text-dark fs-small fw-medium">{{ ls.driverName || '—' }} (📞 {{ ls.drMobNo || '—' }})</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Connecting To</label><div class="text-dark fs-small fw-medium">{{ ls.connectingTo || '—' }}</div></div>
         </div>
         <!-- HCC Block -->
-        <div class="row g-2">
+        <div class="row g-2" *ngIf="ls.hccNo || ls.hcAmt">
           <div class="col-md-6">
             <div class="border rounded-2 p-2 d-flex justify-content-between align-items-center" style="background:#e8f0fd !important; border-color:#c5d5f5!important;">
               <div>
-                <div class="fw-bold text-primary" style="font-size:10.5px;">🧾 HCC-3 — Loading → Origin Hub</div>
-                <div class="text-muted" style="font-size:10px;">HCC/BOM001/2526/Auto</div>
-                <div class="text-dark fw-semibold mt-1" style="font-size:11px;">Payable: Loader Vendor &nbsp;|&nbsp; <span class="text-primary">₹ 560</span></div>
+                <div class="fw-bold text-primary" style="font-size:10.5px;">🧾 Loading HCC</div>
+                <div class="text-muted" style="font-size:10px;">{{ ls.hccNo }}</div>
+                <div class="text-dark fw-semibold mt-1" style="font-size:11px;">Payable: Loader Vendor &nbsp;|&nbsp; <span class="text-primary">₹ {{ ls.hcAmt }}</span></div>
               </div>
-              <span class="badge bg-success-subtle text-success py-1 px-2 rounded-pill">✅ Paid</span>
+              <span class="badge bg-success-subtle text-success py-1 px-2 rounded-pill">{{ ls.paymentStatus }}</span>
             </div>
           </div>
         </div>
@@ -152,27 +152,27 @@
   </div>
 
   <!-- Item 5: Manifest -->
-  <div class="timeline-item border-success">
+  <div class="timeline-item border-success" *ngFor="let mf of operationData?.manifest">
     <div class="timeline-dot border-success"></div>
     <div class="card timeline-card border-0">
       <div class="card-header border-dashed py-2 px-3 bg-light bg-opacity-50">
         <div class="d-flex align-items-center gap-3 mb-1">
-          <h6 class="m-0 fw-bold text-dark" style="font-size: 13.5px;">🚚 Manifest Dispatched — Branch → Origin Hub</h6>
-          <span class="text-muted" style="font-size: 11px; font-weight: 600;">MF/BOM001/2526/000089 + THC/BOM001/2526/000067</span>
-          <span class="badge bg-success-subtle text-success rounded-pill fw-bold ms-auto">Completed</span>
+          <h6 class="m-0 fw-bold text-dark" style="font-size: 13.5px;">🚚 Manifest Dispatched</h6>
+          <span class="text-muted" style="font-size: 11px; font-weight: 600;">{{ mf.mfNumber }} + {{ mf.thcNumber }}</span>
+          <span class="badge bg-success-subtle text-success rounded-pill fw-bold ms-auto">{{ mf.menifestStatus || 'Completed' }}</span>
         </div>
         <div class="d-flex align-items-center gap-4 text-dark" style="font-size: 11.5px; font-weight: 500;">
-          <span><span class="text-muted">🕐</span> Post LS</span>
-          <span><span class="text-danger">📍</span> Mumbai (BOM-001) → Mumbai Hub (BOM-HUB)</span>
-          <span><span class="text-muted">👤</span> MH-01-XY-5678 — Ramesh Gupta</span>
+          <span><span class="text-muted">🕐</span> {{ mf.postLS }}</span>
+          <span><span class="text-danger">📍</span> {{ mf.fromLocation || '—' }} → {{ mf.toLocation || '—' }}</span>
+          <span><span class="text-muted">👤</span> {{ mf.vehicleNumber }} — {{ mf.driverName }}</span>
         </div>
       </div>
       <div class="card-body p-3">
         <div class="row g-3">
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">MF No</label><div class="text-dark fs-small fw-medium">MF/BOM001/2526/000089</div></div>
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">THC No</label><div class="text-dark fs-small fw-medium">THC/BOM001/2526/000067</div></div>
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Vehicle</label><div class="text-dark fs-small fw-medium">MH-01-XY-5678</div></div>
-          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Driver</label><div class="text-dark fs-small fw-medium">Ramesh Gupta (📞 98765 43210)</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">MF No</label><div class="text-dark fs-small fw-medium">{{ mf.mfNumber }}</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">THC No</label><div class="text-dark fs-small fw-medium">{{ mf.thcNumber }}</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Vehicle</label><div class="text-dark fs-small fw-medium">{{ mf.vehicleNumber }}</div></div>
+          <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Driver</label><div class="text-dark fs-small fw-medium">{{ mf.driverName }} (📞 {{ mf.drMobNo || '—' }})</div></div>
         </div>
       </div>
     </div>

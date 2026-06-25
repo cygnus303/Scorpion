@@ -7,6 +7,7 @@ import { LrDocumentsTabComponent } from './lr-documents-tab/lr-documents-tab.com
 import { LrExceptionsTabComponent } from './lr-exceptions-tab/lr-exceptions-tab.component';
 import { LrScanningTabComponent } from './lr-scanning-tab/lr-scanning-tab.component';
 import { LrDocketPlTabComponent } from './lr-docket-pl-tab/lr-docket-pl-tab.component';
+import { LrService } from 'app/shared/services/lr.service';
 
 @Component({
   selector: 'app-lr-lifecycle-tracker',
@@ -30,27 +31,26 @@ export class LrLifecycleTrackerComponent {
 
   public lrDetails: any = null;
   public activeTab: string = 'Operational';
-
-  // Dummy mock data for initial UI rendering
-  public dummyData = {
-    lrNumber: 'LR-2604-00841',
-    route: 'Mumbai → New Delhi',
-    status: 'In Transit',
-    bookedOn: '13 Apr 2026, 09:14 AM',
-    edd: '17 Apr 2026',
-    weightPkgs: '487 kg / 12 Pkgs',
-    payBasis: 'PAID',
-    mode: 'Road',
-    currentLocation: 'Nagpur Hub (NGP-HUB)'
-  };
-
-  constructor(private modalService: BsModalService) {}
+  constructor(
+    private modalService: BsModalService,
+    private lrService: LrService
+  ) {}
 
   showPopup(lr: any) {
     if (!lr) return;
-    this.lrDetails = { ...this.dummyData, lrNumber: lr.LrNumber || this.dummyData.lrNumber };
+    const lrNo = lr.LrNumber || lr.lrNumber || lr.lR_Number; 
+    this.lrDetails = null;
     this.activeTab = 'Operational';
-    
+    // Fetch data from API
+    this.lrService.getLRTrackerSummary(lrNo).subscribe({
+      next: (res) => {
+        if (res && res.success && res.data) {
+          this.lrDetails = res.data;
+        }
+      },
+      error: (err) => console.error("Error fetching LR details", err)
+    });
+
     this.modalRef = this.modalService.show(this.TemplateRef, { class: 'modal-xl modal-dialog-centered custom-tracker-modal', backdrop: true });
   }
 

@@ -29,4 +29,12 @@ export class LrService {
     printView(lrNumber:string): Observable<any> {
       return this.apiHandlerService.Get(`Operation/print-view/${lrNumber}`);
     }
+
+    getLRTrackerSummary(lrNumber: string): Observable<IApiBaseResponse<any>> {
+      return this.apiHandlerService.GetLoad(`Operation/GetLRTrackerSummary?lrNumber=${lrNumber}`);
+    }
+
+    getOperationCycle(lrNumber: string): Observable<any> {
+      return this.apiHandlerService.Get(`Operation/operation-cycle/${lrNumber}`);
+    }
 }
