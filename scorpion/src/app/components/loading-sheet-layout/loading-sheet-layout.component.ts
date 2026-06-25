@@ -48,7 +48,7 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
     { value: 'Generated', label: 'Generated' },
     { value: 'MF Generated', label: 'MF Generated' },
     { value: 'Cancelled', label: 'Cancelled' },
-    { value: 'HCC Generated', label: 'HCC Generated' },
+    // { value: 'HCC Generated', label: 'HCC Generated' },
   ];
 
   lsTypeList = [
@@ -124,6 +124,17 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
       case 'Cancelled': return 's-canc';
       default: return '';
     }
+  }
+
+  isHccOpen(hcc: any): boolean {
+    if (hcc === null || hcc === undefined || hcc === '') return false;
+    if (hcc === 'NO HCC' || hcc === 'NOHCC') return false;
+    
+    if (!isNaN(hcc)) {
+      return Number(hcc) === 0;
+    }
+    
+    return true;
   }
 
   onDataUpdate() {

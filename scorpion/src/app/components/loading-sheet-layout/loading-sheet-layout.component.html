@@ -53,7 +53,7 @@
         </div>
 
         <!-- HCC Generated -->
-        <div class="summary-card px-3 py-3 c-teal cursor-pointer"
+        <!-- <div class="summary-card px-3 py-3 c-teal cursor-pointer"
             [class.active-card]="config.statusFilter === 'HCC Generated'" (click)="filterByStatus('HCC Generated')">
             <div class="card-content">
                 <div class="s-label">HCC Generated</div>
@@ -61,7 +61,7 @@
                 <div class="small text-body-tertiary">HCC generated</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🚛</div>
-        </div>
+        </div> -->
 
         <!-- Cancelled -->
         <div class="summary-card px-3 py-3 c-red cursor-pointer"
@@ -133,7 +133,7 @@
                         <th class="text-center">Total Dockets</th>
                         <th class="text-center">MF No.</th>
                         <th class="text-center">Loading HCC No.</th>
-                        <th class="text-center">Unloading HCC No.</th>
+                        <!-- <th class="text-center">Unloading HCC No.</th> -->
                         <th class="text-center">Status</th>
                         <th class="text-center">Actions</th>
                     </tr>
@@ -194,14 +194,14 @@
                                 {{  (row.loadingHCCNo && row.loadingHCCNo !== 'NOHCC') ? 'HCC' :'NO HCC' }}
                             </span>
                         </td>
-                        <td class="text-center cursor-pointer">
+                        <!-- <td class="text-center cursor-pointer">
                             <span class="px-3 py-2 rounded fw-bold border"
                                 [ngClass]="(row.unloadingHCCNo && row.unloadingHCCNo !== 'NOHCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle '"
                                 (click)="row.unloadingHCCNo && row.unloadingHCCNo !== 'NOHCC'?openHccView(row,'U') : null"
                                 style="cursor: pointer;">
                                 {{ (row.unloadingHCCNo && row.unloadingHCCNo !== 'NOHCC') ? 'HCC' : 'NO HCC' }}
                             </span>
-                        </td>
+                        </td> -->
                         <td class="text-center">
                             <span class="pill-badge" [ngClass]="getStatusClass(row.status)">
                                 {{ row.status }}
@@ -214,16 +214,16 @@
                                     (click)="openView(row.lsNo)">
                                     <i class="fa fa-eye"></i> View
                                 </button>
-                                <button (click)="openLSUpdatePopup(row ,'ULS')"  [disabled]="row.mfNo"
+                                <button (click)="openLSUpdatePopup(row ,'ULS')"  [disabled]="row.mfNo||row.status === 'Cancelled'"
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3">
                                     🔄 LS Update
                                 </button>
                                 <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
-                                    (click)="cancelLoadingSheet(row.lsNo)" [disabled]="!row.isCancelAllow">
+                                    (click)="cancelLoadingSheet(row.lsNo)" [disabled]="!row.isCancelAllow||row.status === 'Cancelled'">
                                     🚫 Cancel
                                 </button>
                                 <button (click)="openHHCDetails(row)"
-                                   [disabled]="(row.mfNo == null || row.mfNo === '') || (row.loadingHCCNo || row.unloadingHCCNo)"
+                                   [disabled]="(row.mfNo == null || row.mfNo === '') || isHccOpen(row.loadingNoHCCCnt)||row.status === 'Cancelled'"
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3">
                                     🏷 HCC
                                 </button>
