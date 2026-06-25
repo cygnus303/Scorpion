@@ -496,13 +496,21 @@ freightAndOtherChar(){
         } 
         
         if (this.freightForm.value.discountType === 'F') {
-          if (this.basicDetailForm.value.billingType === "P01" || this.basicDetailForm.value.billingType === "P03") {
-              this.maxfreightChargesDiscount = Number((this.originalSubtotal * this.maxDiscountLimit / 100).toFixed(2));
+          if(result.maxDiscountY_N === 'Y'){
+            if (this.basicDetailForm.value.billingType === "P01" || this.basicDetailForm.value.billingType === "P03") {
+                this.maxfreightChargesDiscount = Number((this.originalSubtotal * this.maxDiscountLimit / 100).toFixed(2));
+              discountControl?.setValidators([
+                Validators.min(0),
+                Validators.max(this.maxfreightChargesDiscount)
+              ]);
+            } 
+          } else {
             discountControl?.setValidators([
-              Validators.min(0),
-              Validators.max(this.maxfreightChargesDiscount)
+              Validators.min(0)
             ]);
-          } 
+            discountControl?.setValue(0);
+            discountAmountControl?.setValue(0);
+          }
         }
 
         discountControl?.updateValueAndValidity();
