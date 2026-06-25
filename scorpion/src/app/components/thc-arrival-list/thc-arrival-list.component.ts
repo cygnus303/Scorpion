@@ -7,7 +7,7 @@ import { environment } from 'environments/environment';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ThcArrivalPopupComponent } from '../thc-arrival-popup/thc-arrival-popup.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { debounceTime, Subscription } from 'rxjs';
+import { debounceTime, Subject, Subscription } from 'rxjs';
 import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { ExportService } from 'app/shared/services/export.service';
@@ -27,6 +27,7 @@ export class ThcArrivalListComponent {
   private listSubscription?: Subscription;
   public summaryData:any;
   public isdownload : boolean = false;
+   private fetchSubject = new Subject<void>();
   @ViewChild('ThcArrivalPopupComponent') ThcArrivalPopupComponent!: ThcArrivalPopupComponent;
 
   public arrivalData:any;
@@ -34,7 +35,7 @@ export class ThcArrivalListComponent {
     { value: 'All', label: 'All Status', color: 'all', bg: 'var(--muted)', count: 0 },
     { value: 'Pending For Arrival', label: 'Pending For Arrival', color: 'pending-for-arrival', bg: 'var(--teal)', count: 0 },
     { value: 'Arrival Completed', label: 'Arrival Completed', color: 'arrival-completed', bg: 'var(--orange)', count: 0 },
-    { value: 'HCC Generated', label: 'HCC Generated', color: 'hcc-generated', bg: 'var(--green)', count: 0 },
+    // { value: 'HCC Generated', label: 'HCC Generated', color: 'hcc-generated', bg: 'var(--green)', count: 0 },
   ];
   public pagination = {
     page: 1,
@@ -52,6 +53,17 @@ export class ThcArrivalListComponent {
 
   ngOnInit() {
     this.buildFilterForm()
+     const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      // this.docketService.loginUserList.LocationCode = 'PIM'
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
+      this.fetchSubject.pipe(debounceTime(300)).subscribe(() => {
+      this.getTHCArrivalDetail();
+    });
     this.fetchData()
   }
 
@@ -218,7 +230,7 @@ export class ThcArrivalListComponent {
   }
 
   openThcView(thcNo: string) {
-    const url = `${this.env.liveUrl}ViewPrint/ChallanView?ChallanNo=${thcNo}&src=angular`;
+    const url = `${this.env.liveUrl}ViewPrint/ViewChallan?DocumentNo=${thcNo}&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );

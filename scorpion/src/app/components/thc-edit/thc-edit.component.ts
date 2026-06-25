@@ -14,15 +14,15 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
   styleUrl: './thc-edit.component.scss'
 })
 export class ThcEditComponent {
-    public modalRef!: BsModalRef;
-    public selectedTHC:string='';
-    public thcData:any; 
-    @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
-  
-  constructor(private modalService: BsModalService,public PRSDRSApiService:PRSDRSApiService,private docketService:DocketService,private swwtAlerSrvice:SweetAlertService) { }
+  public modalRef!: BsModalRef;
+  public selectedTHC: string = '';
+  public thcData: any;
+  @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
 
-  ngOnInit(){
-      const saved = localStorage.getItem("loginUserList");
+  constructor(private modalService: BsModalService, public PRSDRSApiService: PRSDRSApiService, private docketService: DocketService, private sweetAlerService: SweetAlertService) { }
+
+  ngOnInit() {
+    const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
@@ -34,21 +34,21 @@ export class ThcEditComponent {
 
   showPopup(data: any) {
     console.log("HCC Details Data:", data);
-    this.selectedTHC=data.thcNo;
+    this.selectedTHC = data.thcNo;
     this.getTHCEditDetail(data);
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
 
-  getTHCEditDetail(data:any){
-    const params={
-      thcNo:data.thcNo,
-      vendorType:null
+  getTHCEditDetail(data: any) {
+    const params = {
+      thcNo: data.thcNo,
+      vendorType: null
     }
 
     this.PRSDRSApiService.getTHCEditDetail(params).subscribe({
-      next : (response:any)=>{
-        if(response){
-          this.thcData= response.thcsumry;
+      next: (response: any) => {
+        if (response) {
+          this.thcData = response.thcsumry;
         }
       }, error: (err) => {
         console.error(err);
@@ -56,8 +56,8 @@ export class ThcEditComponent {
     })
   }
 
-  submitTHC(){
-    const payload={
+  submitTHC() {
+    const payload = {
       thcNo: this.selectedTHC || "",
       type: "T",
       contractAmount: Number(this.thcData?.contractAmt) || 0,
@@ -73,12 +73,13 @@ export class ThcEditComponent {
     }
 
     this.PRSDRSApiService.THCSubmit(payload).subscribe({
-      next : (response:any)=>{
-        if(response.success){
-          this.swwtAlerSrvice.success(`${response.thcno}response.message`);
+      next: (response: any) => {
+        if (response.success) {
+          this.sweetAlerService.success(`${response.message}`);
         }
-      }, error: (err) => {
+      }, error: (err: any) => {
         console.error(err);
+        this.sweetAlerService.success(`${err.message}`);
       }
     })
   }
