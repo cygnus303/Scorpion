@@ -12,6 +12,7 @@ import { debounceTime, switchMap, tap, catchError, filter, distinctUntilChanged 
 import { LrPrintViewComponent } from './lr-print-view/lr-print-view.component';
 import { LrLifecycleTrackerComponent } from './lr-lifecycle-tracker/lr-lifecycle-tracker.component';
 import { DocketService } from 'app/shared/services/docket.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lr-track-trace-list',
@@ -34,6 +35,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
     private basicDetailService: BasicDetailService,
     private exportService: ExportService,
     public docketService: DocketService,
+    private router: Router,
   ) { }
   public config = {
     fromDateStr: new Date(),
@@ -291,6 +293,17 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
       this.originBranch = null;
     }
     this.searchLRs();
+  }
+
+  openAddLR() {
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      let user = JSON.parse(saved);
+      user.Type = '';
+      this.docketService.loginUserList = user;
+      localStorage.setItem("loginUserList", JSON.stringify(user));
+    }
+    this.router.navigate(['/docket'], { queryParams: { fromLR: 'true' } });
   }
 
   onDestinationSelect(selected: any) {

@@ -221,19 +221,20 @@
                 </span>
                 <span class="badge rounded-pill ms-2">{{ config.totalRecords }}</span>
             </div>
-            <!-- <div>
-                <button class="btn btn-outline-primary d-flex align-items-center gap-1 fw-bold" (click)="exportData()"
-                    [disabled]="isExporting"
-                    style="color: #1e2b5c; border-color: #1e2b5c; background-color: transparent;">
-                    <span *ngIf="isExporting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    <svg *ngIf="!isExporting" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5"
-                        viewBox="0 0 24 24">
-                        <path d="M12 5v14M19 12l-7 7-7-7"></path>
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-sm text-white d-flex align-items-center gap-1 fw-bold px-3 py-1"
+                    style="background-color: #1e2b5c; border-color: #1e2b5c; border-radius: 5px;">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"></circle>
                     </svg>
-                    <span *ngIf="!isExporting">Export</span>
-                    <span *ngIf="isExporting">Exporting...</span>
+                    Columns
                 </button>
-            </div> -->
+                <button class="btn btn-sm text-white d-flex align-items-center gap-1 fw-bold px-3 py-1" (click)="openAddLR()"
+                    style="background-color: #1e2b5c; border-color: #1e2b5c; border-radius: 5px;">
+                    <span class="fw-bold fs-6 lh-1">+</span> New LR
+                </button>
+            </div>
         </div>
 
         <!-- Table Wrap -->
