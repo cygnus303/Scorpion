@@ -36,7 +36,7 @@ export class LoadingSheetService {
       loadedRateType: new FormControl(null),
       sealNo: new FormControl(''),
       vehno: new FormControl(null),
-      preparedBy: new FormControl(`${this.docketService.loginUserList.UserId} : ${this.docketService.loginUserList.BaseUserName}`),
+      preparedBy: new FormControl(null),
       UserName: new FormControl(this.docketService.loginUserList.BaseUserName),
       lsType: new FormControl(null, Type ? Validators.required : null),
       reportrange: new FormControl([fromDate, today]),

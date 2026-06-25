@@ -119,7 +119,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
         Origin: this.originBranch === 'All' || !this.originBranch ? "" : this.originBranch,
         Destination: this.destinationBranch === 'All' || !this.destinationBranch ? "" : this.destinationBranch,
         CustType: this.customerType === 'All' || !this.customerType ? "" : this.customerType,
-        LocCode :this.docketService.loginUserList.LocationCode || ''
+        LocCode: this.docketService.loginUserList.LocationCode || ''
       }
     };
 
@@ -170,7 +170,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
         Origin: this.originBranch === 'All' || !this.originBranch ? "" : this.originBranch,
         Destination: this.destinationBranch === 'All' || !this.destinationBranch ? "" : this.destinationBranch,
         CustType: this.customerType === 'All' || !this.customerType ? "" : this.customerType,
-        LocCode :this.docketService.loginUserList.LocationCode || ''
+        LocCode: this.docketService.loginUserList.LocationCode || ''
       }
     };
 
@@ -189,7 +189,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-      const saved = localStorage.getItem("loginUserList");
+    const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
@@ -337,8 +337,6 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
   }
 
   applyLocalFilters() {
-    // The backend API already filters the data based on Origin, Destination, etc.
-    // Local filtering is redundant and causes bugs if property names differ (e.g. Orgncd vs ORGNCD).
     this.filteredLRs = [...this.allLRs];
   }
 
