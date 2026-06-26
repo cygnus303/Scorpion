@@ -137,17 +137,10 @@ export class ThcArrivalListComponent {
       isDownload: false
     };
 
-    const cacheKey = JSON.stringify(payload);
-    if (this.apiCache.has(cacheKey)) {
-      this.handleApiResponse(this.apiCache.get(cacheKey));
-      return;
-    }
-
     this.isLoading = true;
     this.listSubscription = this.PRSDRSApiService.getTHCArrivalList(payload).subscribe({
       next: (response: any) => {
         this.isLoading = false;
-        this.apiCache.set(cacheKey, response);
         this.handleApiResponse(response);
       },
       error: (err) => {
