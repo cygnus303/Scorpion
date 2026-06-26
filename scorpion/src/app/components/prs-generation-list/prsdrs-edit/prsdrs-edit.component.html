@@ -1,169 +1,141 @@
-<!-- ══ FORWARD PFM MODAL ══ -->
 <ng-template #Templatepod>
-    <div class="modal-header">
-        <div class="d-flex align-items-center gap-3">
-            <div class="pfm-icon shadow-sm">
-                <i class="fas fa-edit text-primary"></i>
-            </div>
-            <div>
-                <div class="fw-bold fs-5">Update PDC Financial Details</div>
-                <div class="pfm-subtitle">Complete PDC Financial Details below</div>
-            </div>
-        </div>
-        <button type="button" class="btn-close pfm-close" (click)="modalRef.hide()"></button>
+  <form [formGroup]="PDCFinancialForm">
+    <div class="modal-header d-flex justify-content-between align-items-center w-100" style="background: linear-gradient(90deg, #c8102e 0%, #9b0a22 100%) !important; padding: 0 22px !important; height: 58px !important; border-bottom: none !important;">
+      <div class="modal-header-left d-flex align-items-center gap-3">
+        <div class="modal-title">Update PDC Financial Details</div>
+        <span class="modal-hcc-tag">{{ this.PDCFinancialForm.value.thcno }}</span>
+      </div>
+      <div class="modal-header-actions ms-auto d-flex align-items-center">
+        <button type="button" class="modal-close" (click)="modalRef.hide()" title="Close" style="background: transparent; color: white; border: none; font-size: 20px; cursor: pointer;">✕</button>
+      </div>
     </div>
-    <form [formGroup]="PDCFinancialForm">
-        <div class="modal-body input-background-color" style="padding:0;gap:0;">
-            <div class="p-3">
-                <div class="control-bar d-block gap-2 mb-0">
-                    <div class="row">
-                        <div class="col-3 align-items-center d-flex">
-                            <div class="form-group-input">
-                                <label class="form-label fw-bold d-flex align-items-center gap-2">
-                                    PDC No :
-                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
-                                        {{this.PDCFinancialForm.value.thcno}}
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-3 align-items-center d-flex">
-                            <div class="form-group-input">
-                                <label class="form-label fw-bold d-flex align-items-center gap-2">
-                                    Contract Type :
-                                    <span class="fw-bold text-secondary" style="word-break: break-all;">
-                                        {{this.PDCFinancialForm.value.conttyp}}
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-6" *ngIf="prsDrsList.vendorType === '04' || prsDrsList.vendorType === 'BUSINESS ASSOCIATE'">
-                            <div class="d-flex justify-content-end">
-                                <button class=" btn btn-primary" (click)="GetInvokeContractDetailsDktwise()">Invoke Contract</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="control-bar d-block gap-2 mb-0 mt-3" >
-                    <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
-                        <div class="fw-bold"><i class="fas fa-credit-card me-2"></i>Payment Details</div>
-                    </div>
-                    <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
-                    <div class="row mb-4 ">
-                        <div class="col-3">
-                            <div class="form-group-input">
-                                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Contract Amt.
-                                </label>
-                                <input type="text" class="form-control" placeholder="Contract Amt." formControlName="pcamt" [readonly]="prsDrsList.vendorType === '04' || prsDrsList.vendorType === 'BUSINESS ASSOCIATE'">
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group-input">
-                                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Advance Amount
-                                </label>
-                                <input type="text" class="form-control" placeholder="Advance Amount" formControlName="advamt">
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group-input">
-                                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Advance Amount Paid
-                                    At
-                                </label>
-                                <ng-select class="required2 clear-icon" placeholder="Advance Amount Paid At" formControlName="fincmplbr">
-                                    <ng-option *ngFor="let location of locationData" [value]="location.locCode">
-                                        {{ location.locCode }} : {{ location.locName }}
-                                    </ng-option>
-                                </ng-select>
-                                <!-- <input type="text" class="form-control" placeholder="Advance Amount Paid At" formControlName="fincmplbr"> -->
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group-input">
-                                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Balance Amount Paid
-                                    At
-                                </label>
-                                <ng-select class="required2 clear-icon" placeholder="Balance Amount Paid At" formControlName="balamtbrcd">
-                                    <ng-option *ngFor="let location of locationData" [value]="location.locCode">
-                                        {{ location.locCode }} : {{ location.locName }}
-                                    </ng-option>
-                                </ng-select>
-                                <!-- <input class="form-control" type="text" placeholder="Balance Amount Paid At" formControlName="balamtbrcd"> -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ── LR Listing ── -->
-                <div class="control-bar d-block gap-2 mb-0 mt-3" *ngIf="prsDrsList.vendorType === '04' || prsDrsList.vendorType === 'BUSINESS ASSOCIATE'">
-                    <div>
-                        <div style="display:flex;align-items:center;justify-content:space-between;" class="mb-2">
-                            <div class="fw-bold"><i class="fas fa-list me-2"></i>CNote List</div>
-                        </div>
-                        <hr style="flex:1;margin:0 10px;border:1px solid var(--border);margin-bottom:10px;">
-                        <div style="border:2px solid var(--border);border-radius:3px; max-height: 400px; overflow-y: auto;">
-                            <div  style="max-height: 300px; overflow: auto;">
-                                <table style="width:100%;border-collapse:collapse;font-size:13px;"
-                                    class="data-table align-middle">
-                                    <thead style="position: sticky; top: 0; z-index: 1;">
-                                        <tr class="input-background-color"
-                                            style="border-bottom:1px solid var(--border);">
-                                            <th class="text-center">Cnote No.</th>
-                                            <th class="text-center">Pay Basis</th>
-                                            <th class="text-center">Origin</th>
-                                            <th class="text-center">Destination</th>
-                                            <th class="text-center">Packges [B/L]</th>
-                                            <th class="text-center">Weight [B/L]</th>
-                                            <th class="text-center">Charge Weight [B/L]</th>
-                                            <th class="text-center">Contract Amt</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let item of financialEditDetail.docketList">
-                                            <td class="text-center">
-                                                {{item.dockno}}
-                                            </td>
-                                            <td class="text-center">
-                                                {{item.payBas}}
-                                            </td>
-                                            <td class="text-center">{{item.orgncd}}</td>
-                                            <td class="text-center">
-                                                {{item.desT_CD}}
-                                            </td>
-                                            <td class="text-center">
-                                                {{item.pkgsno}}
-                                            </td>
-                                            <td class="text-center">
-                                               {{item.actuwt}}
-                                            </td>
-                                            <td class="text-center">
-                                                {{item.chrgwT_Load}}
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control form-control-sm" readonly value="{{item.contractAmount}}">
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+    <div class="modal-body bg-light" style="max-height: 80vh; overflow-y: auto; padding: 9px 7px !important;">
+      <!-- PAYMENT & CONTRACT DETAILS -->
+      <div class="detail-card mb-3 border shadow-sm">
+        <div class="detail-card-head d-flex justify-content-between align-items-center">
+          <div><span class="dch-dot"></span> PAYMENT & CONTRACT DETAILS</div>
+          <button type="button" class="mfbtn mfbtn-submit shadow-sm py-1 px-3" style="font-size: 13px;" *ngIf="prsDrsList.vendorType === '04' || prsDrsList.vendorType === 'BUSINESS ASSOCIATE'" (click)="GetInvokeContractDetailsDktwise()">
+            <i class="fas fa-sync-alt"></i> Invoke Contract
+          </button>
         </div>
-    </form>
-    <div *ngIf="prsDrsList?.vendorType === 'BUSINESS ASSOCIATE'" class="alert alert-warning py-2 px-3 mt-3 mb-0" style="font-size: 13px;">
+        <div class="p-3 bg-white">
+          <div class="row mb-3 pb-3 border-bottom">
+            <div class="col-6 align-items-center d-flex">
+              <div class="form-group-input">
+                <label class="form-label fw-bold d-flex align-items-center gap-2 mb-0">
+                  PDC No. :
+                  <span class="fw-bold text-secondary" style="word-break: break-all;">
+                    {{this.PDCFinancialForm.value.thcno}}
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div class="col-6 align-items-center d-flex">
+              <div class="form-group-input">
+                <label class="form-label fw-bold d-flex align-items-center gap-2 mb-0">
+                  Contract Type :
+                  <span class="fw-bold text-secondary" style="word-break: break-all;">
+                    {{this.PDCFinancialForm.value.conttyp}}
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Contract Amt.</label>
+                <input type="text" class="form-control" placeholder="Contract Amt." formControlName="pcamt" [readonly]="prsDrsList.vendorType === '04' || prsDrsList.vendorType === 'BUSINESS ASSOCIATE'">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Advance Amount</label>
+                <input type="text" class="form-control" placeholder="Advance Amount" formControlName="advamt">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Advance Amount Paid At</label>
+                <ng-select class="required2 clear-icon remove-select-color" placeholder="Advance Amount Paid At" formControlName="fincmplbr" appendTo="body">
+                  <ng-option *ngFor="let location of locationData" [value]="location.locCode">
+                    {{ location.locCode }} : {{ location.locName }}
+                  </ng-option>
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold"> Balance Amount Paid At</label>
+                <ng-select class="required2 clear-icon remove-select-color" placeholder="Balance Amount Paid At" formControlName="balamtbrcd" appendTo="body">
+                  <ng-option *ngFor="let location of locationData" [value]="location.locCode">
+                    {{ location.locCode }} : {{ location.locName }}
+                  </ng-option>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CNOTE LIST -->
+      <div class="docket-card mb-0 border shadow-sm" *ngIf="prsDrsList.vendorType === '04' || prsDrsList.vendorType === 'BUSINESS ASSOCIATE'">
+        <div class="docket-card-head">
+          <div class="docket-card-head-left">
+            <span class="dch-dot"></span> CNOTE LIST
+          </div>
+          <span class="docket-count-badge">{{financialEditDetail.docketList?.length || 0}} LR(S) INCLUDED</span>
+        </div>
+        <div class="p-3 bg-white">
+          <div class="table-responsive" style="border:2px solid var(--border);border-radius:3px; max-height: 400px; overflow: auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:13px;" class="data-table align-middle text-nowrap">
+              <thead style="position: sticky; top: 0; z-index: 2;">
+                <tr>
+                  <th class="p-3 fw-bolder text-center">Cnote No.</th>
+                  <th class="p-3 fw-bolder text-center">Pay Basis</th>
+                  <th class="p-3 fw-bolder text-center">Origin</th>
+                  <th class="p-3 fw-bolder text-center">Destination</th>
+                  <th class="p-3 fw-bolder text-center">Packages [B/L]</th>
+                  <th class="p-3 fw-bolder text-center">Weight [B/L]</th>
+                  <th class="p-3 fw-bolder text-center">Charge Weight [B/L]</th>
+                  <th class="p-3 fw-bolder text-center">Contract Amt</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of financialEditDetail.docketList">
+                  <td class="text-center">{{item.dockno}}</td>
+                  <td class="text-center">{{item.payBas}}</td>
+                  <td class="text-center">{{item.orgncd}}</td>
+                  <td class="text-center">{{item.desT_CD}}</td>
+                  <td class="text-center">{{item.pkgsno}}</td>
+                  <td class="text-center">{{item.actuwt}}</td>
+                  <td class="text-center">{{item.chrgwT_Load}}</td>
+                  <td class="text-center" style="width: 150px;">
+                    <input type="text" class="form-control text-center" readonly [value]="item.contractAmount">
+                  </td>
+                </tr>
+                <tr *ngIf="!financialEditDetail.docketList || financialEditDetail.docketList.length === 0">
+                  <td colspan="8" class="text-center py-3">No CNote Records Found.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="prsDrsList?.vendorType === 'BUSINESS ASSOCIATE'" class="alert alert-warning py-2 px-3 mt-3 mb-0 shadow-sm border" style="font-size: 13px;">
         <strong>Note*:</strong><br>
         1. BA Freight = Basic Freight + Document Charges + FOV + FSC + To pay Charges. (Only For TBB)<br>
         2. BA Freight = Basic Freight + Document Charges + FOV + FSC + To pay Charges - Discounting Amount. (Only For PAID/To Pay)
+      </div>
     </div>
-    <div class="modal-footer d-flex justify-content-end">
-        <div class="gap-3 d-flex">
-            <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Cancel</button>
-            <button type="button" class="btn btn-success px-4 py-2 rounded" (click)="THCEditUpdate()">
-                <span class="me-2 fs-5">↗</span> Submit
-            </button>
-        </div>
-    </div>
+  </form>
+
+  <div class="d-flex justify-content-end py-2 px-4 bg-light border-top gap-2">
+    <button type="button" class="mfbtn mfbtn-submit shadow-sm" (click)="THCEditUpdate()">
+      <i class="fas fa-check"></i> Submit
+    </button>
+    <button type="button" class="mfbtn mfbtn-close shadow-sm" (click)="modalRef.hide()">✕ Close</button>
+  </div>
 </ng-template>
