@@ -174,6 +174,17 @@ export class DrsGenerationListComponent {
     return true;
   }
 
+    isHccOpen(hcc: any): boolean {
+    if (hcc === null || hcc === undefined || hcc === '') return false;
+    if (hcc === 'NO HCC' || hcc === 'NOHCC') return false;
+    
+    if (!isNaN(hcc)) {
+      return Number(hcc) === 0;
+    }
+    
+    return true;
+  }
+
   onFilterChange() {
     this.pagination.page = 1;
     this.getDRSdetail();
