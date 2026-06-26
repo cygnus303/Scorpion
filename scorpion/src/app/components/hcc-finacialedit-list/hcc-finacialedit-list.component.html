@@ -178,7 +178,7 @@
                         </td>
                         <td>
                             <div class="hcc-cell">
-                                <a class="hcc-link" *ngIf="row.HCNumber">{{ row.HCNumber }}</a>
+                                <a class="hcc-link cursor-pointer" *ngIf="row.HCNumber" (click)="openHCCModal(row.HCNumber,row.DocumentNo)">{{ row.HCNumber }}</a>
                                 <span class="hcc-link text-muted" *ngIf="!row.HCNumber">—</span>
                                 <span class="hcc-date">{{ row.HcDt || '—' }}</span>
                             </div>

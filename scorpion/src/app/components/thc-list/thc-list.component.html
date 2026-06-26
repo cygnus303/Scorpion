@@ -157,7 +157,7 @@
                     <tr *ngFor="let data of thcData; let i = index">
                         <td class="text-center text-muted fs-7">{{ i + 1 }}</td>
                         <td>
-                            <div class="fw-bold text-primary cursor-pointer" (click)="openThcView(data.thcNo)"><a>{{
+                            <div class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;" (click)="openThcView(data.thcNo)"><a>{{
                                     data.thcNo }}</a></div>
                             <div class="text-muted fs-7 mt-1">{{ data.thcDate | date:'dd-MMM-yy' }}</div>
                         </td>
