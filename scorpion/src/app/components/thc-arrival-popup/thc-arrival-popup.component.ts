@@ -14,6 +14,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { environment } from 'environments/environment';
 import { CommonDateService } from 'app/shared/services/common-date.service';
 import { CommonModule } from '@angular/common';
+import { CustomerService } from 'app/shared/services/customer.service';
 
 @Component({
   selector: 'app-thc-arrival-popup',
@@ -30,6 +31,7 @@ export class ThcArrivalPopupComponent {
   env = environment;
   minDate: Date | undefined;
   maxDate: Date | undefined;
+  public isloading:boolean=false;
   public THCData: any;
   // public THCFilterForm!: FormGroup;
   public branchWiseLoadingUnloadingList: BranchWiseLoadingUnloading[] = [];
@@ -65,6 +67,7 @@ export class ThcArrivalPopupComponent {
   constructor(
     public docketService: DocketService,
     public commonService: CommonService,
+    public customerService:CustomerService,
     private stockUpdateService: StockUpdateService,
     public generalMasterService: GeneralMasterService,
     public THCService: THCMasterService,
@@ -174,9 +177,10 @@ export class ThcArrivalPopupComponent {
         this.arrivalDetail = response;
         this.generalMasterService.getLoadingByDetail(this.arrivalDetail.loadingBy);
         // this.updateValidatorsByLoadingBy(this.arrivalDetail.loadingBy);
-        this.arrivalForm.patchValue({
-          Unloder: this.arrivalDetail.unloder
-        });
+        // this.arrivalForm.patchValue({
+        //   Unloder: this.arrivalDetail.unloder
+        // });
+        this.fetchPreparedByEmployee()
         this.getPANnumberData(this.arrivalDetail.loadingBy)
       },
     })
@@ -386,6 +390,22 @@ export class ThcArrivalPopupComponent {
     });
   }
 
+     fetchPreparedByEmployee() {
+    const searchText = this.docketService.loginUserList?.UserId;
+    const baseUserName = this.docketService.loginUserList?.BaseUserName;
+    if (!searchText || !baseUserName) return;
+
+    this.customerService.getEmployeeDropdown(searchText, baseUserName).subscribe({
+      next: (response: any) => {
+        if (Array.isArray(response) && response.length > 0) {
+          const emp = response[0];
+          const val = emp.id ? `${emp.id} : ${emp.text}` : emp.text;
+          this.arrivalForm?.get('Unloder')?.setValue(val);
+        }
+      }
+    });
+  }
+
   validateCloseKM() {
     const control = this.arrivalForm.get('CLOSEKM');
     if (control?.value === null || control?.value === '') {
@@ -425,6 +445,7 @@ export class ThcArrivalPopupComponent {
       return;
     }
     if (this.arrivalForm.valid) {
+      this.isloading=true;
       const payload = {
         status: this.arrivalForm.value.s2id_Status,
         thcno:this.THCData?.thcNo,
@@ -455,13 +476,16 @@ export class ThcArrivalPopupComponent {
       this.stockUpdateService.THCArrival(payload).subscribe({
         next: (response) => {
           if (response.success) {
+            this.isloading=false;
             this.sweetAlertService.success(`THC arrived ${this.THCData?.thcNo} successfully.`);
             this.dataEmitter.emit()
             this.modalRef.hide();
           } else {
+            this.isloading=false;
             // this.sweetAlertService.error(response.message || 'Error from server');
           }
         }, error: (error) => {
+          this.isloading=false;
           let errorMessage = error?.error?.message || error?.error?.title || 'An error occurred';
           
           if (error?.error?.errors) {
