@@ -188,10 +188,10 @@
                         </td>
                         <td class="text-center cursor-pointer">
                             <span class="px-3 py-2 rounded fw-bold border"
-                                [ngClass]="(row.loadingHCCNo && row.loadingHCCNo !== 'NOHCC') ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle '"
-                                (click)="row.loadingHCCNo && row.loadingHCCNo !== 'NOHCC'? openHccView(row,'L') : null"
+                                [ngClass]="isHccValid(row.loadingHCCNo) ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle '"
+                                (click)="isHccValid(row.loadingHCCNo) ? openHccView(row,'L') : null"
                                 style="cursor: pointer;">
-                                {{  (row.loadingHCCNo && row.loadingHCCNo !== 'NOHCC') ? 'HCC' :'NO HCC' }}
+                                {{  isHccValid(row.loadingHCCNo) ? 'HCC' : 'NO HCC' }}
                             </span>
                         </td>
                         <!-- <td class="text-center cursor-pointer">
