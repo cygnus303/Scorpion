@@ -123,11 +123,9 @@
                     <tr *ngFor="let row of stockUpdateData; let i = index">
                         <td class="text-center text-muted fs-7">{{ (config.page - 1) * config.pageSize + i + 1 }}</td>
                         <td>
-                            <div class="fw-bold text-primary">
-                                <a href="javascript:void(0)" (click)="openView(row.thcNo)"
-                                    style="text-decoration: underline;">
+                            <div class="fw-bold text-primary cursor-pointer" (click)="openView(row.thcNo)"
+                                style="text-decoration: underline;">
                                     {{ row.thcNo }}
-                                </a>
                             </div>
                             <div class="text-muted fs-7 mt-1">{{ row.thcDate | date:'dd-MMM-yyyy' }}</div>
                         </td>

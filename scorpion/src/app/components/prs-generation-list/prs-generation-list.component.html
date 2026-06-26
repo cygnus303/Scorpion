@@ -172,7 +172,7 @@
                     <tr *ngFor="let row of prsData; let i = index">
                         <td class="text-center text-muted fs-7">{{ (config.page - 1) * config.pageSize + i + 1 }}</td>
                         <td>
-                            <div class="fw-bold text-primary"><a>{{ row.pdcno }}</a></div>
+                            <div class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;" (click)="openView(row.pdcno)"><a>{{ row.pdcno }}</a></div>
                             <div class="text-muted fs-7 mt-1">{{ row.pdcdt | date:'dd-MMM-yyyy' }}</div>
                         </td>
                         <td class="text-center">
