@@ -315,6 +315,7 @@ export class LSUpdatePopupComponent {
       form.get('loadingBy')?.markAsTouched();
       form.get('nextStopLocation')?.markAsTouched();
       form.get('rateType')?.markAsTouched();
+      form.get('lsType')?.markAsTouched();
     }
   }
 
