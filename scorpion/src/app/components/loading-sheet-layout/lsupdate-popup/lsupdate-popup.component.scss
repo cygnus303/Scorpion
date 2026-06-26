@@ -2,8 +2,44 @@
     --bs-modal-width: 1400px !important;
 }
 
+::ng-deep .modal-body {
+    padding: 9px 7px !important;
+}
+
 ::ng-deep .remove-select-color{
     .ng-select-container{
        background: #fff !important;
     }
+}
+
+::ng-deep .form-check-input:checked {
+    background-color: #c8102e !important;
+    border-color: #c8102e !important;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 0;
+
+  thead th {
+    background: #ffebee !important;
+    color: #b71c1c !important;
+    font-weight: 700 !important;
+    padding: 10px 12px !important;
+    text-align: center;
+    border-bottom: 2px solid #ef9a9a !important;
+    white-space: nowrap;
+  }
+
+  tbody td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+  }
+
+  tbody tr:hover td {
+    background: #fff8f8 !important;
+  }
 }

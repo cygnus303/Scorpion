@@ -204,7 +204,8 @@
                                 <span class="vendor-type-badge" [ngClass]="{
                                         'vt-transporter': row.ChargedBy === 'B',
                                         'vt-agent': row.ChargedBy === 'A',
-                                        'vt-own': row.ChargedBy === 'XX9' || row.ChargedBy === 'XX5'
+                                        'vt-own': row.ChargedBy === 'XX9' || row.ChargedBy === 'XX5',
+                                        'vt-agent-own':row.ChargedBy === 'M'
                                     }">
                                     {{ row.ChargedByDesc || '—' }}
                                 </span>
