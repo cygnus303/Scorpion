@@ -112,17 +112,10 @@ export class LrListComponent {
       searchText: this.config.searchText || ''
     };
 
-    // const cacheKey = JSON.stringify(payload);
-    // if (this.apiCache.has(cacheKey)) {
-    //   this.handleApiResponse(this.apiCache.get(cacheKey));
-    //   return;
-    // }
-
     this.isLoading = true;
     this.listSubscription = this.lrService.getLRList(payload).subscribe({
       next: (response: any) => {
         this.isLoading = false;
-        // this.apiCache.set(cacheKey, response);
         this.handleApiResponse(response);
       },
       error: (err: any) => {

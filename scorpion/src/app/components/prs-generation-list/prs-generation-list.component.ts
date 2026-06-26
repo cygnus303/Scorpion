@@ -155,17 +155,9 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
       searchText: this.config.searchText || null
     };
 
-    const cacheKey = JSON.stringify(payload);
-    if (this.requestCache.has(cacheKey)) {
-      this.isLoading = false;
-      this.handleResponse(this.requestCache.get(cacheKey));
-      return;
-    }
-
     this.listSubscription = this.PFMapiService.GetPrsList(payload).subscribe({
       next: (response: any) => {
         this.isLoading = false;
-        this.requestCache.set(cacheKey, response);
         this.handleResponse(response);
       },
       error: (err: any) => {
