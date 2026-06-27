@@ -259,6 +259,10 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
     }
   }
 
+    get isHQTR(): boolean {
+    return this.docketService.loginUserList?.LocationCode === 'HQTR';
+  }
+
   openHccView(data: any, chargeType: string) {
     this.HccViewComponent.showPopup(data, chargeType, 'M');
   }
