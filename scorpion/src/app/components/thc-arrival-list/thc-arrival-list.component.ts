@@ -202,6 +202,13 @@ export class ThcArrivalListComponent {
     });
   }
 
+  isHccValid(hcc: any): boolean {
+    if (!hcc) return false;
+    if (hcc === 'NO HCC' || hcc === 'NOHCC' || hcc === '0' || hcc === 0) return false;
+    if (!isNaN(hcc) && Number(hcc) <= 0) return false;
+    return true;
+  }
+
     openMFView(MFNO: string) {
     const url = `${this.env.liveUrl}ViewPrint/ViewMF?MFNO=${MFNO}&src=angular`;
     const popup = window.open('', 'popupWindow',

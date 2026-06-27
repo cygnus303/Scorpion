@@ -1509,11 +1509,20 @@ export class ChallanListComponent {
             console.log(vehicleType, 'fTLType')
             console.log(response.data.fTlType, 'vehicleType')
             setTimeout(() => {
+              let vendorName = response.data.businessAssociateVendor;
+              if (response.data.businessAssociatecode) {
+                const idx = response.data.businessAssociatecode.indexOf(':');
+                if (idx !== -1) {
+                  vendorName = response.data.businessAssociatecode.substring(idx + 1).trim();
+                }
+              }
+
               // 1 PATCH BASIC DATA IMMEDIATELY
               this.challanService.challanForm.patchValue({
                 deliveryAgentMoNo: response.data.deliveryAgentMobile,
                 vendorType: '04',
                 vendorCode: response.data.businessAssociateVendor,
+                vendorName: vendorName,
                 vehicleNO: response.data.vehicleNo,
                 fTLType: vehicleType?.fleet_Type || '',
                 vehicleType: response.data.fTlType,
@@ -1545,6 +1554,7 @@ export class ChallanListComponent {
               deliveryAgentMoNo: response.data.deliveryAgentMobile,
               vendorType: null,
               vendorCode: null,
+              vendorName: null,
               vehicleNO: null,
               fTLType: null,
               eNGINENO: null,
@@ -1744,7 +1754,7 @@ export class ChallanListComponent {
     );
   }
 
-   onBack() {
-      this.router.navigate(['Operation/THCList']);
+  onBack() {
+    this.router.navigate(['Operation/THCList']);
   }
 }
