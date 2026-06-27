@@ -180,7 +180,7 @@
                                     (click)="openView(row.thcNo)">
                                     <i class="fa fa-eye"></i> View
                                 </button>
-                                <button (click)="openStockUpdate(row)"
+                                <button (click)="openStockUpdate(row)" *ngIf="!isHQTR"
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
                                     [disabled]="row.pendingCNote === 0">
                                     📦 Stock Update

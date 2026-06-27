@@ -218,7 +218,7 @@
                                     (click)="openThcView(data.thcNo)">
                                     <i class="fa fa-eye"></i> View
                                 </button>
-                                <button
+                                <button *ngIf="!isHQTR"
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
                                     (click)="openThcArrival(data)" [disabled]="data.status==='Arrival Completed'">
                                     🏷 THC Arrival

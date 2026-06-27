@@ -266,11 +266,11 @@
                                     [disabled]="data.ispdcUpdate || data.status==='Cancelled'||data.status==='Billed' || data.IsThroughDA ===true || data.vendorType === 'BUSINESS ASSOCIATE' ">
                                     🔄 DRS Update
                                 </button>
-                                <button class="btn btn-sm bg-warning-secondary border-warning-secondary text-warning-emphasis py-1 px-3" (click)="openDeps(data, false)"
+                                <button *ngIf="!isHQTR" class="btn btn-sm bg-warning-secondary border-warning-secondary text-warning-emphasis py-1 px-3" (click)="openDeps(data, false)"
                                 [disabled]="!data.ispdcUpdate || +data.depsNo > 0">     
                                     📋 DEPS
                                 </button>
-                                <button class="btn btn-sm bg-warning-dark border-warning-dark text-warning-emphasis py-1 px-3" (click)="openDeps(data, true)"
+                                <button *ngIf="!isHQTR" class="btn btn-sm bg-warning-dark border-warning-dark text-warning-emphasis py-1 px-3" (click)="openDeps(data, true)"
                                 [disabled]="!data.ispdcUpdate">
                                     ✏️ Edit DEPS
                                 </button>
