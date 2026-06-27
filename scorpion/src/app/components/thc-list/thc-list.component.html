@@ -5,7 +5,7 @@
             THC Generation
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn btn-primary px-4 py-2 rounded" (click)="openTHC()">+ Add THC</button>
+            <button class="btn btn-primary px-4 py-2 rounded" (click)="openTHC()" *ngIf="!isHQTR">+ Add THC</button>
             <button class="btn btn-success px-4 py-2 rounded" (click)="downloadExcel()">
                 <span *ngIf="!isdownload">📥 Download XLS</span>
                 <span *ngIf="isdownload" class="spinner-border spinner-border-sm me-2"></span>
