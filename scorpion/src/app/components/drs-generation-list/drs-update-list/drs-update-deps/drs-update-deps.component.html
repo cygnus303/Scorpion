@@ -18,7 +18,7 @@
     (click)="closeBoxDropdowns()">
     <div class="depsf-meta-item">
       <span class="depsf-meta-label fw-bold text-secondary">Date:</span>
-      <span class="depsf-meta-val text-dark ms-1 fw-bold">{{ dateStr | date:'dd-MMM-yyyy' }}</span>
+      <span class="depsf-meta-val text-dark ms-1 fw-bold">{{ dateStr | date:'dd MMM yyyy' }}</span>
     </div>
     <!-- <div class="depsf-meta-item">
       <span class="depsf-meta-label fw-bold text-secondary">Vendor:</span>
@@ -65,14 +65,14 @@
                 {{ row.value.dockno }}{{ row.value.docketsf }}
               </div>
               <div class="text-muted" style="font-size:10px;">
-                {{ row.value.dockdt | date:'dd-MMM-yy'}}
+                {{ row.value.dockdt | date:'dd MMM yyyy'}}
               </div>
             </td>
 
             <!-- ADD -->
             <td style="white-space:nowrap;">
               <span *ngIf="row.value.dockdt" class="badge bg-light text-dark border px-2 py-1 fs-7 fw-semibold">{{
-                row.value.dockdt | date:'dd-MMM-yy'}}</span>
+                row.value.dockdt | date:'dd MMM yyyy'}}</span>
             </td>
 
             <!-- Org / Dest -->

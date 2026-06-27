@@ -95,10 +95,10 @@
                         <th class="text-center">Total Dockets</th>
                         <th class="text-center">Total MF</th>
                         <th class="text-center">Pending C Note</th>
-                        <!-- <th class="text-center">Vendor Type / Name</th> -->
+                        <th class="text-center">Vendor Type / Name</th>
                         <th class="text-center">Arrival Date</th>
                         <th class="text-center">THC Location</th>
-                        <!-- <th class="text-center">Unloading Sheet No.</th> -->
+                        <th class="text-center">Unloading Sheet No.</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
@@ -147,27 +147,34 @@
                                 {{ row.pendingCNote }}
                             </span>
                         </td>
-                        <!-- <td class="text-center">
+                        <td class="text-center">
                             <div class="d-flex gap-2 flex-column align-items-center">
-                                <span class="badge bg-secondary-subtle text-secondary px-2 py-1"
-                                    style="font-size: 10px;" *ngIf="row.vendorType">
-                                    {{ row.vendorType }}</span>
+                                <div class="px-3 py-1 rounded text-center fw-bold"
+                                    [ngStyle]="{
+                                        'background-color': row.vendorType?.toLowerCase() === 'own' ? '#ffe4e6' : (row.vendorType?.toLowerCase() === 'market' ? '#ede9fe' : '#e0f2fe'),
+                                        'color': row.vendorType?.toLowerCase() === 'own' ? '#9f1239' : (row.vendorType?.toLowerCase() === 'market' ? '#5b21b6' : '#0369a1'),
+                                        'border': '1px solid ' + (row.vendorType?.toLowerCase() === 'own' ? '#fecdd3' : (row.vendorType?.toLowerCase() === 'market' ? '#ddd6fe' : '#bae6fd'))
+                                    }"
+                                    style="font-size: 11px; width: 100%; min-width: 140px; box-sizing: border-box;" *ngIf="row.vendorType">
+                                    {{ row.vendorType | uppercase }}
+                                </div>
                                 <span class="fs-6 text-body-secondary">{{ row.vendorName || '—' }}</span>
                             </div>
-                        </td> -->
+                        </td>
                         <td class="text-center fs-6 text-muted">
                             {{ row.arrivalDate | date:'dd-MMM-yyyy' }}
                         </td>
                         <td class="text-center fw-semibold text-secondary">
                             {{ row.thcLocation }}
                         </td>
-                        <!-- <td class="text-center">
-                            <span class="text-muted" *ngIf="!row.unloadingSheetNo">—</span>
-                            <a href="javascript:void(0)" *ngIf="row.unloadingSheetNo" class="text-primary"
+                        <td class="text-center">
+                            <span class="text-muted" *ngIf="!row.unLoadingSheetNo">—</span>
+                            <a href="javascript:void(0)" *ngIf="row.unLoadingSheetNo" class="text-primary fw-medium"
+                                (click)="openView(row.thcNo)"
                                 style="text-decoration: dashed underline;">
-                                {{ row.unloadingSheetNo }}
+                                {{ row.unLoadingSheetNo }}
                             </a>
-                        </td> -->
+                        </td>
                         <td>
                             <div class="d-flex flex-wrap gap-2 justify-content-center">
                                 <button
@@ -196,3 +203,4 @@
 
 
 <app-stockupdate-popup #StockupdatePopupComponent (dataEmitter)="onDataUpdate()"></app-stockupdate-popup>
+<app-new-stockupdate-popup #NewStockupdatePopupComponent (dataEmitter)="onDataUpdate()"></app-new-stockupdate-popup>

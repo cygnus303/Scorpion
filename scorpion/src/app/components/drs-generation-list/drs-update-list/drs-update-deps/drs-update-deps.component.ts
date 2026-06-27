@@ -63,7 +63,6 @@ export class DrsUpdateDepsComponent {
     if (depstype === 'D') {
       this.fetchDamageTypes();
     }
-    debugger
     return new FormGroup({
       dockno: new FormControl(dockno),
       docketsf: new FormControl(item.docksf || item.docketsf || ''),
@@ -300,7 +299,13 @@ export class DrsUpdateDepsComponent {
       this.sweetAlertService.warning('Please declare at least one DEPS record (Damage/Shortage) with affected packages.');
       return;
     }
-    debugger
+
+    const missingDamageFile = activeRows.find((c: any) => c.value.depstype === 'D' && !c.value.fileAttached);
+    if (missingDamageFile) {
+      this.sweetAlertService.warning(`File upload is required for Damage record on Docket ${missingDamageFile.value.dockno || ''}.`);
+      return;
+    }
+
     const depsData = activeRows.map((c: any) => {
       const v = c.value;
       return {

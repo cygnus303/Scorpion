@@ -10,11 +10,12 @@ import { ExportService } from 'app/shared/services/export.service';
 import { debounceTime, Subject, Subscription } from 'rxjs';
 import { environment } from 'environments/environment';
 import { StockupdatePopupComponent } from './stockupdate-popup/stockupdate-popup.component';
+import { NewStockupdatePopupComponent } from './new-stockupdate-popup/new-stockupdate-popup.component';
 
 @Component({
   selector: 'app-stock-update-layout',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent,StockupdatePopupComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, StockupdatePopupComponent, NewStockupdatePopupComponent],
   templateUrl: './stock-update-layout.component.html',
   styleUrl: './stock-update-layout.component.scss'
 })
@@ -25,6 +26,7 @@ export class StockUpdateLayoutComponent {
   public listSubscription?: Subscription;
   private fetchSubject = new Subject<void>();
   @ViewChild('StockupdatePopupComponent') StockupdatePopupComponent!: StockupdatePopupComponent;
+  @ViewChild('NewStockupdatePopupComponent') NewStockupdatePopupComponent!: NewStockupdatePopupComponent;
 
   public config = {
     fromDateStr: new Date(),
@@ -161,7 +163,7 @@ export class StockUpdateLayoutComponent {
     console.log('Navigating to Stock Update Detail for:', row.thcNo);
     // Usually this would navigate to a route like:
     // this.router.navigate(['Operation/StockUpdateDetail'], { queryParams: { id: row.thcNo } });
-    this.StockupdatePopupComponent.showPopup(row);
+    this.NewStockupdatePopupComponent.showPopup(row);
   }
     
 
