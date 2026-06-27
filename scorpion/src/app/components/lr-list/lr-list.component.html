@@ -162,8 +162,9 @@
                             }}</td>
                         <td>
                             <div class="lr-cell">
-                                <span class="lr-no cursor-pointer" style="text-decoration: underline;" (click)="onView(lr.dockno)">{{ lr.dockno }}</span>
-                                <span class="lr-date">{{ lr.dockdt | date:'dd-MMM-yy' }}</span>
+                                <span class="lr-no cursor-pointer" style="text-decoration: underline;"
+                                    (click)="onView(lr.dockno)">{{ lr.dockno }}</span>
+                                <span class="lr-date">{{ lr.dockdt | date:'dd MMM yyyy' }}</span>
                             </div>
                         </td>
                         <td>
@@ -180,9 +181,9 @@
                         </td>
                         <td>
                             <div class="edd-add-cell">
-                                <span class="edd-ok">{{ lr.editedDate | date:'dd-MMM-yy' }}</span>
+                                <span class="edd-ok">{{ lr.editedDate | date:'dd MMM yyyy' }}</span>
                                 <span class="add-label">ADD</span>
-                                <span class="add-val">—</span>
+                                <span class="add-val">{{ lr.addDate === '1900-01-01T00:00:00' ? '—' : (lr.addDate | date:'dd MMM yyyy') }}</span>
                             </div>
                         </td>
                         <td>{{ lr.party_name }}</td>
@@ -192,7 +193,7 @@
                                     {{ lr.paybas }}
                                 </span>
                                 <span class="pm-mode">{{ lr.trN_MOD }}</span>
-                                 <span>{{ lr.service_Type }}</span>
+                                <span>{{ lr.service_Type }}</span>
                             </div>
                         </td>
                         <td>
@@ -211,16 +212,16 @@
                                     [disabled]="lr.isQuickMode==='Q'||lr.status ==='Cancelled'">💰 Fin Edit</button> -->
                                 <button *ngIf="isHQTR" class="ab ab-cancel" (click)="onCancel(lr.dockno)"
                                     [disabled]="lr.isDocketCancel==='Y'">🚫 Cancel</button>
-                                <div class="track-wrap">
-                                    <button class="ab ab-track" (click)="toggleTrack(i, $event)">📍 Track</button>
-                                    <!-- <div class="track-dropdown" [class.open]="openTrackIndex === i">
+                                <!-- <div class="track-wrap"> -->
+                                <!-- <button class="ab ab-track" (click)="toggleTrack(i, $event)">📍 Track</button> -->
+                                <!-- <div class="track-dropdown" [class.open]="openTrackIndex === i">
                                         <a *ngFor="let item of trackMenuItems"
                                             (click)="onTrackMenuClick(item, lr.dockno)">
                                             <span class="ti">{{ item.icon }}</span> {{ item.label }}
                                         </a>
 
                                     </div> -->
-                                </div>
+                                <!-- </div> -->
                                 <div class="print-wrap">
                                     <button class="ab ab-print" (click)="openPrint(lr.dockno)">🖨 Print</button>
                                     <div class="print-dropdown">
