@@ -162,7 +162,7 @@
                             }}</td>
                         <td>
                             <div class="lr-cell">
-                                <span class="lr-no">{{ lr.dockno }}</span>
+                                <span class="lr-no cursor-pointer" style="text-decoration: underline;" (click)="onView(lr.dockno)">{{ lr.dockno }}</span>
                                 <span class="lr-date">{{ lr.dockdt | date:'dd-MMM-yy' }}</span>
                             </div>
                         </td>

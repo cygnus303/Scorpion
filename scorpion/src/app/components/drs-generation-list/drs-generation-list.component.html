@@ -199,7 +199,7 @@
                     <tr *ngFor="let data of DRSData; let i = index">
                         <td class="text-center text-muted fs-7">{{ i + 1 }}</td>
                         <td>
-                            <div class="fw-bold text-primary"><a>{{ data.drsNo }}</a></div>
+                            <div class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;" (click)="openView(data.drsNo)"><a>{{ data.drsNo }}</a></div>
                             <div class="text-muted fs-7 mt-1">{{ data.drsDate | date:'dd-MMM-yy' }}</div>
                         </td>
                         <td class="text-center">

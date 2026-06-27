@@ -152,7 +152,7 @@
                     <tr *ngFor="let data of arrivalData; let i = index">
                         <td class="text-center text-muted fs-7">{{ i + 1 }}</td>
                         <td>
-                            <div class="fw-bold text-primary cursor-pointer" (click)="openThcView(data.thcNo)"><a>{{
+                            <div class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;" (click)="openThcView(data.thcNo)"><a>{{
                                     data.thcNo }}</a></div>
                             <div class="text-muted fs-7 mt-1">{{ data.thcDate | date:'dd-MMM-yy' }}</div>
                         </td>
@@ -172,7 +172,7 @@
                                 <span class="d-block rounded p-1 fw-bold mb-1 vt-transporter" *ngIf="data.vendorType">
                                     {{ data.vendorType}}</span>
                                 <span class="fw-bold text-muted d-inline-block" *ngIf="data.vendorName"
-                                    style="max-width: 180px;" [title]="data.vendorName">{{ data.vendorName }}</span>
+                                    style="max-width: 180px;" [title]="data.vendorName">{{data.vendorCode}}:{{ data.vendorName }}</span>
                             </div>
                         </td>
                         <td class="text-center" style="width: 110px !important;">

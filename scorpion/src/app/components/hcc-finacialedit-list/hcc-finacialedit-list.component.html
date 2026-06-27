@@ -178,7 +178,7 @@
                         </td>
                         <td>
                             <div class="hcc-cell">
-                                <a class="hcc-link" *ngIf="row.HCNumber">{{ row.HCNumber }}</a>
+                                <a class="hcc-link cursor-pointer" *ngIf="row.HCNumber" (click)="openHCCModal(row.HCNumber,row.DocumentNo)">{{ row.HCNumber }}</a>
                                 <span class="hcc-link text-muted" *ngIf="!row.HCNumber">—</span>
                                 <span class="hcc-date">{{ row.HcDt || '—' }}</span>
                             </div>
@@ -204,7 +204,8 @@
                                 <span class="vendor-type-badge" [ngClass]="{
                                         'vt-transporter': row.ChargedBy === 'B',
                                         'vt-agent': row.ChargedBy === 'A',
-                                        'vt-own': row.ChargedBy === 'XX9' || row.ChargedBy === 'XX5'
+                                        'vt-own': row.ChargedBy === 'XX9' || row.ChargedBy === 'XX5',
+                                        'vt-agent-own':row.ChargedBy === 'M'
                                     }">
                                     {{ row.ChargedByDesc || '—' }}
                                 </span>

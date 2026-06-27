@@ -177,6 +177,13 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
     });
   }
 
+    isHccValid(hcc: any): boolean {
+    if (!hcc) return false;
+    if (hcc === 'NO HCC' || hcc === 'NOHCC' || hcc === '0' || hcc === 0) return false;
+    if (!isNaN(hcc) && Number(hcc) <= 0) return false;
+    return true;
+  }
+
   private handleApiResponse(response: any) {
     if (response && response.data) {
       this.loadingSheetData = response.data;
