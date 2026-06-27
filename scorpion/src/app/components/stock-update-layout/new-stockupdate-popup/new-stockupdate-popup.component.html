@@ -1,0 +1,211 @@
+<ng-template #Templatepod>
+    <!-- MODAL HEADER -->
+    <div class="modal-header text-white py-3 px-4 border-0 d-flex justify-content-between align-items-center bg-navy">
+        <div class="d-flex align-items-center gap-2 fw-bold fs-5">
+            <span>📦</span>
+            <span>Stock Update — {{ stockData?.thcno }}</span>
+        </div>
+        <button type="button" class="btn-close btn-close-white" (click)="modalRef?.hide()"></button>
+    </div>
+
+    <!-- MODAL BODY -->
+    <div class="modal-body bg-white p-4" style="min-height: 250px; position: relative;">
+        <!-- LOADER SPINNER -->
+        <div *ngIf="isLoading"
+            class="position-absolute top-50 start-50 translate-middle d-flex flex-column align-items-center justify-content-center w-100 py-5">
+            <div class="spinner-border text-primary mb-3" role="status"
+                style="width: 3rem; height: 3rem; border-width: 0.25em;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="text-navy fw-bold fs-6">Fetching Stock Update Details...</div>
+        </div>
+
+        <div *ngIf="!isLoading">
+            <!-- THC DETAILS SECTION -->
+            <div class="mb-4">
+                <h5 class="text-navy fw-bold d-flex align-items-center gap-2 mb-3">
+                    <span>🚚</span> <span>THC Details</span>
+                </h5>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-3">
+                        <label class="form-label-custom">THC No.</label>
+                        <input type="text" class="form-control form-control-sm input-readonly-custom" readonly
+                            [value]="stockData?.thcno">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label-custom">THC Date</label>
+                        <input type="text" class="form-control form-control-sm input-readonly-custom" readonly
+                            [value]="stockData?.thcdt">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label-custom">THC Arrival Date & Time</label>
+                        <input type="text" class="form-control form-control-sm input-readonly-custom" readonly
+                            [value]="stockData?.actarrv_dt">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label-custom">Vehicle No.</label>
+                        <input type="text" class="form-control form-control-sm input-readonly-custom" readonly
+                            [value]="stockData?.vehno ">
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label-custom">Stock Update Date</label>
+                        <input type="text" class="form-control form-control-sm input-readonly-custom" readonly
+                            [value]="stockData?.updateDate">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label-custom">Unloader Name <span class="text-danger">*</span></label>
+                        <ng-select placeholder="Search Unloader" (open)="resetUnloaderDropdown()"
+                            (search)="stockUpdateUsers($event)" [notFoundText]="notUnloaderName" [clearable]="true"
+                            [(ngModel)]="unloaderName" [dropdownPosition]="'bottom'" style="font-size: 13px;">
+                            <ng-option *ngFor="let data of unloaderUsers" [value]="data.userId">
+                                {{ data.userId }} - {{ data.name }}
+                            </ng-option>
+                        </ng-select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label-custom">Un Loading Supervisor <span
+                                class="text-danger">*</span></label>
+                        <ng-select placeholder="Search Supervisor" (open)="resetUnloaderDropdown()"
+                            (search)="stockUpdateUsers($event)" [notFoundText]="notUnloaderName" [clearable]="true"
+                            [(ngModel)]="unloadingSupervisor" [dropdownPosition]="'bottom'" style="font-size: 13px;">
+                            <ng-option *ngFor="let data of unloaderUsers" [value]="data.userId">
+                                {{ data.userId }} - {{ data.name }}
+                            </ng-option>
+                        </ng-select>
+                    </div>
+                    <div class="col-md-3">
+                        <!-- Spacing alignment to match grid -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- STOCK UPDATE DETAILS SECTION -->
+            <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="text-navy fw-bold d-flex align-items-center gap-2 mb-0">
+                        <span>📋</span> <span>Stock Update Details</span>
+                    </h5>
+                    <div class="orange-pill-custom align-items-center">
+                        <span class="fw-bold" style="font-size: 13px;">⚙ Set Delivery Process (All Dockets):</span>
+                        <ng-select [items]="dlyPrcList" bindLabel="codeDesc" bindValue="codeId" placeholder="— Select —"
+                            [(ngModel)]="selectedDeliveryProcessAll" (change)="setAllDeliveryProcess()"
+                            [clearable]="false" style="width: 200px; font-size: 13px;">
+                        </ng-select>
+                    </div>
+                </div>
+
+                <!-- TABLE -->
+                <div class="border rounded overflow-hidden">
+                    <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+                        <table class="table table-hover table-bordered mb-0 align-middle text-start">
+                            <thead>
+                                <tr class="table-header-custom text-navy">
+                                    <th class="text-center align-middle"
+                                        style="width: 50px; background-color: #eff1f8;">
+                                        <input type="checkbox" class="form-check-input d-block mx-auto"
+                                            [checked]="isAllSelected()" (change)="toggleAll($event)">
+                                    </th>
+                                    <th class="align-middle fw-bold"
+                                        style="min-width: 140px; background-color: #eff1f8;">MF No.</th>
+                                    <th class="align-middle fw-bold"
+                                        style="min-width: 130px; background-color: #eff1f8;">CNote No.</th>
+                                    <th class="align-middle fw-bold"
+                                        style="min-width: 130px; background-color: #eff1f8;">LR Date / EDD</th>
+                                    <th class="align-middle fw-bold"
+                                        style="min-width: 120px; background-color: #eff1f8;">Total Pkgs / Wt</th>
+                                    <th class="align-middle fw-bold"
+                                        style="min-width: 130px; background-color: #eff1f8;">Service Type</th>
+                                    <th class="align-middle fw-bold text-center"
+                                        style="min-width: 110px; background-color: #eff1f8;">Arrived Pkgs *</th>
+                                    <th class="align-middle fw-bold text-center"
+                                        style="min-width: 100px; background-color: #eff1f8;">Arrived Wt</th>
+                                    <th class="align-middle fw-bold"
+                                        style="min-width: 200px; background-color: #eff1f8;">Delivery Process</th>
+                                    <th class="align-middle fw-bold text-center"
+                                        style="width: 85px; background-color: #eff1f8;">Damage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of listVSFUM; let i = index">
+                                    <td class="text-center table-cell-custom">
+                                        <input type="checkbox" class="form-check-input d-block mx-auto"
+                                            [(ngModel)]="row.isSelected">
+                                    </td>
+                                    <td class="table-cell-custom">
+                                        <span class="fw-bold text-navy">{{ row.tcno }}</span>
+                                    </td>
+                                    <td class="table-cell-custom">
+                                        <span class="text-dark">{{ row.dockNo }}</span>
+                                    </td>
+                                    <td class="table-cell-custom">
+                                        <div class="text-dark fw-medium">{{ row.dockdt }}</div>
+                                        <div class="text-muted" style="font-size: 11px;">EDD: {{ row.cdelydt }}</div>
+                                    </td>
+                                    <td class="table-cell-custom">
+                                        <div class="text-dark fw-medium">{{ row.bkG_PKGSNO }} pkgs</div>
+                                        <div class="text-muted" style="font-size: 11px;">{{ row.bkG_ACTUWT }} kg</div>
+                                    </td>
+                                    <td class="table-cell-custom">
+                                        <span class="text-dark">{{ row.service_Class }}</span>
+                                    </td>
+                                    <td class="text-center table-cell-custom">
+                                        <input type="text"
+                                            class="form-control form-control-sm text-center fw-semibold mx-auto table-input-custom"
+                                            style="width: 70px;" [(ngModel)]="row.arrPkgQty">
+                                    </td>
+                                    <td class="text-center table-cell-custom">
+                                        <input type="text"
+                                            class="form-control form-control-sm text-center input-readonly-custom mx-auto"
+                                            style="width: 70px; height: 32px;" [value]="row.actuwt || '—'" readonly>
+                                    </td>
+                                    <td class="table-cell-custom">
+                                        <ng-select [items]="dlyPrcList" bindLabel="codeDesc" bindValue="codeId"
+                                            placeholder="—" [(ngModel)]="row.dp" [clearable]="true"
+                                            [dropdownPosition]="'bottom'" style="width: 180px; font-size: 13px;">
+                                        </ng-select>
+                                    </td>
+                                    <td class="text-center table-cell-custom">
+                                        <input type="checkbox" class="form-check-input d-block mx-auto"
+                                            [checked]="row.isDamage" (change)="onDamageChange($event, row, i)">
+                                        <div *ngIf="row.depsData"
+                                            class="badge bg-danger-subtle text-danger border border-danger-subtle mt-1 text-nowrap"
+                                            style="font-size: 9px; cursor: pointer; display: inline-flex; align-items: center; gap: 2px; padding: 3px 6px;"
+                                            (click)="openDepsPopup(row, i)">
+                                            ✏️ Edit DEPS details
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FOOTER -->
+    <div
+        class="modal-footer bg-white border-top py-3 px-4 d-flex justify-content-between align-items-center flex-wrap gap-3 shadow-sm">
+        <div class="stats-text-custom">
+            Dockets: <span class="fw-bold text-navy">{{ listVSFUM.length }}</span> &nbsp;|&nbsp;
+            Total Pkgs: <span class="fw-bold text-navy">{{ totalPkgs }}</span> &nbsp;|&nbsp;
+            Arrived Pkgs: <span class="fw-bold text-navy">{{ totalArrivedPkgs }}</span> &nbsp;|&nbsp;
+            Shortage DEPS: <span class="fw-bold text-navy">{{ totalShortage }}</span> &nbsp;|&nbsp;
+            Damage DEPS: <span class="fw-bold text-navy">{{ totalDamage }}</span>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-cancel-custom px-4 py-2" (click)="modalRef?.hide()">Cancel</button>
+            <button type="button" class="btn btn-submit-custom px-4 py-2 d-flex align-items-center gap-2"
+                [disabled]="isLoading" (click)="submitStockUpdate()">
+                <i class="fa fa-save"></i>
+                <span>Submit Stock Update</span>
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<app-drs-update-deps #DrsUpdateDepsComponent (dataEmitter)="onDepsDataReceived($event)"></app-drs-update-deps>

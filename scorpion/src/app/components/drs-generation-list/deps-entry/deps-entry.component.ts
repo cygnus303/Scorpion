@@ -168,7 +168,6 @@ export class DepsEntryComponent {
     const formArray = this.docketsArray;
     formArray.clear();
     this.severityLists = [];
-    debugger
     editList.forEach((editItem: any, index: number) => {
       let prefilledItem = {
         dockno: editItem.dockno,
