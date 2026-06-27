@@ -353,6 +353,7 @@ export class LSUpdatePopupComponent {
       fromDate: this.loadingSheetService.LSForm.value.reportrange ? this.formatDateNoTimezone(this.loadingSheetService.LSForm.value.reportrange[0]) : null,
       toDate: this.loadingSheetService.LSForm.value.reportrange ? this.formatDateNoTimezone(this.loadingSheetService.LSForm.value.reportrange[1]) : null,
       destinationList: this.loadingSheetService.LSForm.value.destinationList,
+      lsType: this.loadingSheetService.LSForm.value.lsType ? this.loadingSheetService.LSForm.value.lsType : '',
       docketNoList: this.loadingSheetService.LSForm.value.docketNoList,
       lsDate: this.formatDateNoTimezone(new Date(this.loadingSheetService.LSForm.value.lsDate)),
       loadingBy: this.loadingSheetService.LSForm.value.loadingBy || '',
@@ -503,10 +504,20 @@ export class LSUpdatePopupComponent {
           this.isSubmitting = false; // Stop loading state
 
           if (response.success) {
-            this.sweetAlertService.success(`<div style="text-align:center;">
-                 <p class="fs-5 mb-1">${response.code}</p>
-                 <p class="fs-5 mb-1"><strong>HC Number:</strong> ${response.hcNumber}</p>
-              </div>`);
+            let alertHtml = `
+              <div style="background: #fff; padding: 20px; border: 2px dashed #198754; border-radius: 10px; text-align: center;">
+                <i class="fa fa-check-circle text-success" style="font-size: 40px; margin-bottom: 10px;"></i>
+                <h4 class="text-success fw-bold m-0" style="font-size: 24px;">${response.code}</h4>
+                ${response.hcNumber ? `
+                <hr style="border-top: 2px dashed #ccc; margin: 15px 0; opacity: 0.5;">
+                <div style="background: #f8f9fa; padding: 10px; border-radius: 5px;">
+                  <span style="font-size: 14px; color: #6c757d; display: block; margin-bottom: 5px;">HC Number</span>
+                  <span style="font-size: 20px; font-weight: 600; color: #212529; letter-spacing: 1px;">${response.hcNumber}</span>
+                </div>
+                ` : ''}
+              </div>
+            `;
+            this.sweetAlertService.success(alertHtml);
             this.dataEmitter.emit()
             this.modalRef.hide();
           } else {
