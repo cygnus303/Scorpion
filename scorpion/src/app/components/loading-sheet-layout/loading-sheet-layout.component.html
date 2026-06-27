@@ -219,7 +219,7 @@
                                     🔄 LS Update
                                 </button>
                                 <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
-                                    (click)="cancelLoadingSheet(row.lsNo)" [disabled]="!row.isCancelAllow||row.status === 'Cancelled'">
+                                    (click)="cancelLoadingSheet(row.lsNo)" [disabled]="!row.isCancelAllow||row.status === 'Cancelled'||row.mfNo">
                                     🚫 Cancel
                                 </button>
                                 <button (click)="openHHCDetails(row)"
