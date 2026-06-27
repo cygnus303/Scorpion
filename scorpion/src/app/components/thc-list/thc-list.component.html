@@ -207,9 +207,9 @@
                         </td>
                         <td class="text-center">
                             <span class="px-3 py-2 cursor-pointer"
-                                [ngClass]="(data.hccNo && data.hccNo) ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
-                                (click)="data.hccNo && data.hccNo ? openHCCModal(data.hccNo) : null">{{
-                                data.hccNo || 'No HCC' }}</span>
+                                [ngClass]="isHccValid(data.hccNo) ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
+                                (click)="isHccValid(data.hccNo) ? openHCCModal(data.hccNo) : null">{{
+                                isHccValid(data.hccNo) ? data.hccNo : 'NO HCC' }}</span>
                         </td>
 
                         <td class="text-center">

@@ -53,7 +53,14 @@ export class VendorChargeHelperService {
     this.THCMasterService.getVendorsList(data).subscribe({
       next: (response: any) => {
         if (response.success) {
-          const list = response.data.map((x: any) => ({ value: x.vendor_Code, text: x.vendor_Name }));
+          const list = response.data.map((x: any) => {
+            let name = x.vendor_Name || '';
+            const idx = name.lastIndexOf(':');
+            if (idx !== -1) {
+              name = name.substring(0, idx).trim();
+            }
+            return { value: x.vendor_Code, text: `${x.vendor_Code}:${name}` };
+          });
           callback(list);
         } else {
           callback([]);

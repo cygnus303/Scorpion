@@ -30,6 +30,7 @@ export class HCCDetailsComponent {
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   public headerVendorList: any[] = [];
   public headerVendor: any = null;
+  public documentType:string='';
   public rowVendorList: any[][] = [];
 
   constructor(private modalService: BsModalService, private CommonService: CommonService,
@@ -62,6 +63,7 @@ export class HCCDetailsComponent {
   showPopup(data: any, flag: any) {
     console.log("HCC Details Data:", data);
     this.selectedHccDetails = data;
+    this.documentType=flag;
     console.log(this.selectedHccDetails)
     // Auto-detect existing HCC type so radio shows pre-selected (disabled) state
     if (this.isHccValid(data.loadingNoHCCCnt) || this.isHccValid(data.loadingNoHCCCnt)) {
@@ -344,7 +346,7 @@ export class HCCDetailsComponent {
       totalWeight: parseFloat(formValue.totalWeight) || 0,
       chargeRate: parseFloat(formValue.chargeRate) || 0,
       chargedBy: formValue.chargedBy || '',
-      documentType: this.selectedHccDetails.drsNo ? 'D' : 'P',
+      documentType: this.documentType,
       rateType: formValue.rateType || '',
       vendorCode: formValue.vendorCode || '',
       vendorName: formValue.vendorName || '',

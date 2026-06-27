@@ -251,7 +251,7 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
 
   openView(docNo: string) {
     if (!docNo) return;
-    const url = `${this.env.liveUrl}ViewPrint/ViewPrint?DocumentNo=${docNo}&src=angular`;
+    const url = `${this.env.liveUrl}ViewPrint/LoadingUnloadingBillView?BillNo=${docNo}&Type=8&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );

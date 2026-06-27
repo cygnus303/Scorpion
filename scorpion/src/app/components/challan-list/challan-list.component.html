@@ -2,14 +2,14 @@
         (filterApplied)="filterListpatchValue($event)"></challan-filter></div>
 
 <div class="cnote-entry-container fade-in m-1" *ngIf="isFilterApplied">
-   <div
-            class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color justify-content-between">
-            <div>
-                <i class="fa fa-edit me-2"></i>
-                Prepare New {{typeName}}
-            </div>
-            <button class="btn btn-light text-dark btn-sm px-3" (click)="onBack()" *ngIf="hideBackButton">Back to {{typeName}} List</button>
+    <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color justify-content-between">
+        <div>
+            <i class="fa fa-edit me-2"></i>
+            Prepare New {{typeName}}
         </div>
+        <button class="btn btn-light text-dark btn-sm px-3" (click)="onBack()" *ngIf="hideBackButton">Back to
+            {{typeName}} List</button>
+    </div>
 
     <div class="form-grid p-4">
         <form [formGroup]="challanService.challanForm">
@@ -1118,8 +1118,8 @@
                                     <th class="p-3 fw-bolder" style="min-width: 150px;">
                                         HCC Vendor Type
                                         <ng-select class="mt-1 clear-icon" [items]="generalMasterService.loadingData"
-                                            bindLabel="codeDesc" bindValue="codeId"  appendTo="body" placeholder="Vendor Type"
-                                            [dropdownPosition]="'bottom'"
+                                            bindLabel="codeDesc" bindValue="codeId" appendTo="body"
+                                            placeholder="Vendor Type" [dropdownPosition]="'bottom'"
                                             (change)="onHeaderHccVendorTypeChange($event)"></ng-select>
                                     </th>
                                     <th class="p-3 fw-bolder" style="min-width: 150px;">
@@ -1127,14 +1127,14 @@
                                         <ng-select class="mt-1 clear-icon remove-white-space" [items]="headerVendorList"
                                             bindLabel="text" bindValue="value" placeholder="Vendor"
                                             [(ngModel)]="headerVendor" [ngModelOptions]="{standalone: true}"
-                                            [dropdownPosition]="'bottom'"  appendTo="body"
+                                            [dropdownPosition]="'bottom'" appendTo="body"
                                             (change)="onHeaderVendorChange($event)"></ng-select>
                                     </th>
                                     <th class="p-3 fw-bolder" style="min-width: 150px;">
                                         Rate Type
                                         <ng-select class="mt-1 clear-icon" [items]="challanService.rateTypeData"
                                             bindLabel="codeDesc" bindValue="codeId" placeholder="Rate Type"
-                                            (change)="onHeaderRateTypeChange($event)"  appendTo="body"></ng-select>
+                                            (change)="onHeaderRateTypeChange($event)" appendTo="body"></ng-select>
                                     </th>
                                     <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '3'">
                                         E-Way Bill No.</th>
@@ -1188,13 +1188,13 @@
                                         <td>{{ item.value.ACTUWT }}/{{ item.value.CHRGWT }}</td>
                                         <td>
                                             <ng-select class="clear-icon" [items]="generalMasterService.loadingData"
-                                                formControlName="luVendorTyp" bindLabel="codeDesc" bindValue="codeId"  appendTo="body"
-                                                [dropdownPosition]="'bottom'" placeholder="Type"
+                                                formControlName="luVendorTyp" bindLabel="codeDesc" bindValue="codeId"
+                                                appendTo="body" [dropdownPosition]="'bottom'" placeholder="Type"
                                                 (change)="onHccVendorTypeChange($event, i)">
                                             </ng-select>
                                         </td>
                                         <td>
-                                            <ng-select class="clear-icon remove-white-space"  appendTo="body"
+                                            <ng-select class="clear-icon remove-white-space" appendTo="body"
                                                 [dropdownPosition]="'bottom'" [ngClass]="{
                                                     'required2': item.get('luVendorTyp')?.value !== 'XX9',
                                                     'border-danger': item.get('luVendorCode')?.hasError('required') && item.get('luVendorCode')?.touched
@@ -1209,7 +1209,7 @@
                                         </td>
 
                                         <td>
-                                            <ng-select class="required2 clear-icon"  appendTo="body"
+                                            <ng-select class="required2 clear-icon" appendTo="body"
                                                 [items]="challanService.rateTypeData" formControlName="rateType"
                                                 bindLabel="codeDesc" bindValue="codeId" placeholder="Type"
                                                 [ngClass]="{'border-danger': item.get('rateType')?.hasError('required') && item.get('rateType')?.touched}"
