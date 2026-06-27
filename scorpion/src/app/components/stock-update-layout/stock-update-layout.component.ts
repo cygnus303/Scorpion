@@ -120,6 +120,10 @@ export class StockUpdateLayoutComponent {
     });
   }
 
+    get isHQTR(): boolean {
+    return this.docketService.loginUserList?.LocationCode === 'HQTR';
+  }
+
   private handleApiResponse(response: any) {
     if (response && response.data) {
       this.stockUpdateData = response.data;

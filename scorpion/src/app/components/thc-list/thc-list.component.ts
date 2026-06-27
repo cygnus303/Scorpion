@@ -162,6 +162,10 @@ getStatusClass(status: string): string {
     this.fetchData()
   }
 
+    get isHQTR(): boolean {
+    return this.docketService.loginUserList?.LocationCode === 'HQTR';
+  }
+
    isHccValid(hcc: any): boolean {
     if (!hcc) return false;
     if (hcc === 'NO HCC' || hcc === 'NOHCC' || hcc === '0' || hcc === 0) return false;

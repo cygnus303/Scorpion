@@ -219,6 +219,10 @@ export class ThcArrivalListComponent {
     }
   }
 
+    get isHQTR(): boolean {
+    return this.docketService.loginUserList?.LocationCode === 'HQTR';
+  }
+
   openHCCModal(hccNo: string) {
     const url = `${this.env.liveUrl}Tracking/TripAllView?LsNO=${hccNo}&VPType=LoadingUnloading&src=angular`;
     const popup = window.open('', 'popupWindow',
