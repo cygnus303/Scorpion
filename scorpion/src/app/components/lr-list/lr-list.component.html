@@ -186,7 +186,7 @@
                                 <span class="add-val">{{ lr.addDate === '1900-01-01T00:00:00' ? '—' : (lr.addDate | date:'dd MMM yyyy') }}</span>
                             </div>
                         </td>
-                        <td>{{ lr.party_name }}</td>
+                        <td>{{ lr.partY_CODE }}:{{ lr.party_name }}</td>
                         <td>
                             <div class="pay-mode">
                                 <span class="badge" [ngClass]="lr.paybas === 'Paid' ? 'badge-pp' : 'badge-tpay'">
