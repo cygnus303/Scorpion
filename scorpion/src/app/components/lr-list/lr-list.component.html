@@ -212,16 +212,16 @@
                                     [disabled]="lr.isQuickMode==='Q'||lr.status ==='Cancelled'">💰 Fin Edit</button> -->
                                 <button *ngIf="isHQTR" class="ab ab-cancel" (click)="onCancel(lr.dockno)"
                                     [disabled]="lr.isDocketCancel==='Y'">🚫 Cancel</button>
-                                <!-- <div class="track-wrap"> -->
-                                <!-- <button class="ab ab-track" (click)="toggleTrack(i, $event)">📍 Track</button> -->
-                                <!-- <div class="track-dropdown" [class.open]="openTrackIndex === i">
+                                <div class="track-wrap">
+                                    <button class="ab ab-track" (click)="toggleTrack(i, $event)">📍 Track</button>
+                                    <div class="track-dropdown" [class.open]="openTrackIndex === i">
                                         <a *ngFor="let item of trackMenuItems"
                                             (click)="onTrackMenuClick(item, lr.dockno)">
                                             <span class="ti">{{ item.icon }}</span> {{ item.label }}
                                         </a>
 
-                                    </div> -->
-                                <!-- </div> -->
+                                    </div>
+                                </div>
                                 <div class="print-wrap">
                                     <button class="ab ab-print" (click)="openPrint(lr.dockno)">🖨 Print</button>
                                     <div class="print-dropdown">

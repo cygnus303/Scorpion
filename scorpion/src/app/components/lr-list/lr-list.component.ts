@@ -35,6 +35,20 @@ export class LrListComponent {
     { label: 'In Transit', value: 'inTransit' },
     { label: 'At Delivery Stock', value: 'delivered' }
   ];
+    trackMenuItems = [
+    { icon: '📊', label: 'Profit / Loss', type: 7 },
+    { icon: '🔄', label: 'Operational Life Cycle', type: 3 },
+    { icon: '💳', label: 'Financial Life Cycle', type: 4 },
+    { icon: '📄', label: 'POD / PFM', type: 5 },
+    { icon: '🕒', label: 'Time Tracking', type: 2 },
+    { icon: '📝', label: 'View Summary', type: 1 },
+    { icon: '📦', label: 'Loading/UnLoading', type: 11 },
+    { icon: '🧭', label: 'On Map', type: null },
+    { icon: '📅', label: 'Expected Delivery Date', type: null },
+    { icon: '🚚', label: 'Movement', type: 6 },
+    { icon: '👁', label: 'DEPS View', type: 17 },
+    { icon: '📡', label: 'UBI Tracking', type: 18 },
+  ];
 
   openTrackIndex: number | null = null;
   @ViewChild('LrViewComponent') LrViewComponent!: LrViewComponent;
@@ -285,6 +299,21 @@ export class LrListComponent {
 onView(row: any){
     this.LrViewComponent.showPopup(row);
 }
+
+  onTrackMenuClick(item: any, dockno: string) {
+    this.openTrackIndex = null;
+
+    if (item.label === 'On Map') {
+      this.openPopup(`${this.env.liveUrl}Tracking/VehicleTrackingShowOnMap?Vehno=&src=angular`);
+      return;
+    }
+    if (item.label === 'Expected Delivery Date') {
+      this.openPopup(`${this.env.liveUrl}ViewPrint/Expected_Delivery_Date_Tracking_ViewPrint?Dockno=${dockno} expe deliv date&src=angular`);
+      return;
+    }
+
+    this.openPopup(`${this.env.liveUrl}ViewPrint/Tracking?Type=${item.type}&DocketNo=${dockno}&DockSf=.&src=angular`);
+  }
 
   openPopup(url: string) {
     const popup = window.open('', 'popupWindow',
