@@ -126,7 +126,7 @@
                         <th class="text-center">Previous Location</th>
                         <th class="text-center">THC Route</th>
                         <th class="text-center">Loading HCC No.</th>
-                        <th class="text-center">Unloading HCC No.</th>
+                        <!-- <th class="text-center">Unloading HCC No.</th> -->
                         <th class="text-center">Status</th>
                         <th class="text-center">Actions</th>
                     </tr>
@@ -154,7 +154,7 @@
                         <td>
                             <div class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;" (click)="openThcView(data.thcNo)"><a>{{
                                     data.thcNo }}</a></div>
-                            <div class="text-muted fs-7 mt-1">{{ data.thcDate | date:'dd-MMM-yy' }}</div>
+                            <div class="text-muted fs-7 mt-1">{{ data.thcDate | date:'dd-MMM-yyyy' }}</div>
                         </td>
 
                         <td class="text-center" style="width: 140px;">
@@ -177,12 +177,12 @@
                         </td>
                         <td class="text-center" style="width: 110px !important;">
                             <span class="px-4 py-2 cursor-pointer">
-                                {{ (data.atd | date:'dd-MM-yy') || '—' }}
+                                {{ (data.atd | date:'dd-MM-yyyy') || '—' }}
                             </span>
                         </td>
                         <td class="text-center cursor-pointer" style="width: 110px !important;">
                             <span class="px-4 py-2 cursor-pointer">
-                                {{data.eta | date:'dd-MM-yy'}}
+                                {{data.eta | date:'dd-MM-yyyy'}}
                             </span>
                         </td>
                         <td class="text-center cursor-pointer">
@@ -201,12 +201,12 @@
                                 (click)="isHccValid(data.loadingHCCNo)? openHCCModal(data.loadingHCCNo) : null">
                               {{isHccValid(data.loadingHCCNo) ? data.loadingHCCNo : 'NO HCC'}}</span>
                         </td>
-                        <td class="text-center">
+                        <!-- <td class="text-center">
                             <span class="px-4 py-2 cursor-pointer"
                                 [ngClass]="isHccValid(data.unloadingHCCNo) ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
                                 (click)="isHccValid(data.unloadingHCCNo)? openHCCModal(data.unloadingHCCNo) : null">
                                 {{isHccValid(data.unloadingHCCNo) ? data.unloadingHCCNo : 'NO HCC'}}</span>
-                        </td>
+                        </td> -->
                         <td class="text-center">
                             <span class="pill-badge px-2 py-1 cursor-pointer" [ngClass]="getStatusClass(data.status)">{{
                                 data.status }}</span>

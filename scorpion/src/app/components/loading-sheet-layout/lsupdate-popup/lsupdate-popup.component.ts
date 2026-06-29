@@ -19,6 +19,7 @@ import { SharedModule } from 'app/shared/shared/shared.module';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.service';
 import { CustomerService } from 'app/shared/services/customer.service';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-lsupdate-popup',
@@ -44,6 +45,7 @@ export class LSUpdatePopupComponent {
   public headerVendorList: any[] = [];
   public headerVendor: any = null;
   public rowVendorList: any[][] = [];
+   public env=environment
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
 
@@ -504,15 +506,31 @@ export class LSUpdatePopupComponent {
           this.isSubmitting = false; // Stop loading state
 
           if (response.success) {
+            const isUls = response.type === 'ULS';
+            const codeUrl = isUls
+              ? `${this.env.liveUrl}ViewPrint/ViewMF?MFNO=${response.code}&src=angular`
+              : `${this.env.liveUrl}ViewPrint/ViewLS?ChallanNo=${response.code}&src=angular`;
+
+            let hcNumberHtml = '';
+            if (response.hcNumber) {
+              const hccList = response.hcNumber.split(',').map((h: string) => h.trim()).filter(Boolean);
+              hcNumberHtml = hccList.map((hccNo: string) => {
+                const hccUrl = `${this.env.liveUrl}ViewPrint/ViewHCC?DocumentNo=${response.code}&HCNo=${hccNo}&src=angular`;
+                return `<a href="javascript:void(0);" onclick="window.open('${hccUrl}', 'popupWindow', 'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'); return false;" style="color: #0d6efd; text-decoration: underline; cursor: pointer;">${hccNo}</a>`;
+              }).join(', ');
+            }
+
             let alertHtml = `
               <div style="background: #fff; padding: 20px; border: 2px dashed #198754; border-radius: 10px; text-align: center;">
                 <i class="fa fa-check-circle text-success" style="font-size: 40px; margin-bottom: 10px;"></i>
-                <h4 class="text-success fw-bold m-0" style="font-size: 24px;">${response.code}</h4>
-                ${response.hcNumber ? `
+                <h4 class="text-success fw-bold m-0" style="font-size: 24px;">
+                  <a href="javascript:void(0);" onclick="window.open('${codeUrl}', 'popupWindow', 'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'); return false;" style="color: #198754; text-decoration: underline; cursor: pointer;">${response.code}</a>
+                </h4>
+                ${hcNumberHtml ? `
                 <hr style="border-top: 2px dashed #ccc; margin: 15px 0; opacity: 0.5;">
                 <div style="background: #f8f9fa; padding: 10px; border-radius: 5px;">
                   <span style="font-size: 14px; color: #6c757d; display: block; margin-bottom: 5px;">HC Number</span>
-                  <span style="font-size: 20px; font-weight: 600; color: #212529; letter-spacing: 1px;">${response.hcNumber}</span>
+                  <span style="font-size: 20px; font-weight: 600; letter-spacing: 1px;">${hcNumberHtml}</span>
                 </div>
                 ` : ''}
               </div>
@@ -553,6 +571,44 @@ export class LSUpdatePopupComponent {
         });
       }
       console.log('Invalid Controls on Submit:', invalidControls);
+    }
+  }
+
+  
+ openView(lsNo: string) {
+    const url = `${this.env.liveUrl}ViewPrint/ViewLS?ChallanNo=${lsNo}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
+    }
+  }
+
+    get isHQTR(): boolean {
+    return this.docketService.loginUserList?.LocationCode === 'HQTR';
+  }
+
+    openMfNoView(mfNo: string) {
+    const url = `${this.env.liveUrl}ViewPrint/ViewMF?MFNO=${mfNo}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
+    }
+  }
+
+   openHCCModal(hccNo: string,documentNo:string) {
+    const url = `${this.env.liveUrl}ViewPrint/ViewHCC?DocumentNo=${documentNo}&HCNo=${hccNo}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
     }
   }
 
