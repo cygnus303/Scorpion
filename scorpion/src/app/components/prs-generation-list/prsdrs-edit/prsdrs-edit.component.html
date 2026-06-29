@@ -52,7 +52,7 @@
             <div class="col-3">
               <div class="form-group-input">
                 <label class="form-label d-flex align-items-center gap-2 fw-bold"> Advance Amount</label>
-                <input type="text" class="form-control" placeholder="Advance Amount" formControlName="advamt">
+                <input type="text" class="form-control" placeholder="Advance Amount" formControlName="advamt" readonly>
               </div>
             </div>
             <div class="col-3">
@@ -133,9 +133,9 @@
   </form>
 
   <div class="d-flex justify-content-end py-2 px-4 bg-light border-top gap-2">
+    <button type="button" class="mfbtn mfbtn-close shadow-sm" (click)="modalRef.hide()">✕ Close</button>
     <button type="button" class="mfbtn mfbtn-submit shadow-sm" (click)="THCEditUpdate()">
       <i class="fas fa-check"></i> Submit
     </button>
-    <button type="button" class="mfbtn mfbtn-close shadow-sm" (click)="modalRef.hide()">✕ Close</button>
   </div>
 </ng-template>
