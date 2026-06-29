@@ -38,7 +38,7 @@ export class DepsDetailsComponent {
     this.dateStr = data.drsDate ;
     const username = this.docketService.loginUserList?.BaseUserName ;
     const location = this.docketService.loginUserList?.LocationCode ;
-    this.generatedBy = `${username} / ${location}`;
+    this.generatedBy = `${location}`;
     this.isLoading = true;
     this.thcMasterService.getHCCDynamicData({
       FilterJson: {
