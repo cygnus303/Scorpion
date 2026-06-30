@@ -316,4 +316,30 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
       popup.location.href = url;
     }
   }
+
+  openDocumentView(row: any) {
+    if (!row || !row.DocumentNo) return;
+
+    const docNo = row.DocumentNo;
+    let url = '';
+
+    if (docNo.startsWith('MF')) {
+      url = `${this.env.liveUrl}ViewPrint/ViewMF?MFNO=${docNo}&src=angular`;
+    } else if (docNo.startsWith('LS')) {
+      url = `${this.env.liveUrl}ViewPrint/ViewLS?ChallanNo=${docNo}&src=angular`;
+    } else if (docNo.startsWith('DS')) {
+      url = `${this.env.liveUrl}ViewPrint/ViewDRS?DocumentNo=${docNo}&src=angular`;
+    } else if (docNo.startsWith('PS')) {
+      url = `${this.env.liveUrl}ViewPrint/ViewPRS?DocumentNo=${docNo}&src=angular`;
+    }
+
+    if (url) {
+      const popup = window.open('', 'popupWindow',
+        'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+      );
+      if (popup) {
+        popup.location.href = url;
+      }
+    }
+  }
 }
