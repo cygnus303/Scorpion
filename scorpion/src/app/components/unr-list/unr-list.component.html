@@ -182,7 +182,7 @@
                                 [notFoundText]="notFoundTextValue"
                                 [(ngModel)]="item.selectedCustomer"
                                 appendTo="body">
-                                <ng-option *ngFor="let opt of customerData" [value]="opt">
+                                <ng-option *ngFor="let opt of customerData" [value]="opt.CUSTCD">
                                     <strong>{{ opt.CUSTCD }}</strong> : {{ opt.CUSTNM}}
                                 </ng-option>
                             </ng-select>
@@ -230,8 +230,46 @@
     </div>
     <div class="footer-btns">
         <button class="btn btn-secondary" id="cancelBtn">✕ Cancel</button>
-        <button class="btn btn-success" id="saveBtn" [disabled]="!hasSelectedRows">✓ Save</button>
+        <button class="btn btn-success" id="saveBtn" [disabled]="!hasSelectedRows" (click)="onSave()">✓ Save</button>
     </div>
 </div>
 
 <app-mr-view #MrViewComponent></app-mr-view>
+
+<!-- Success Modal -->
+<div class="unr-success-modal" id="unrSuccessModal" *ngIf="isSuccess">
+  <div class="unr-success-box">
+
+    <div class="unr-success-header">
+      <div class="unr-success-icon">✓</div>
+      <div class="unr-success-title">UNR Saved Successfully</div>
+      <div class="unr-success-subtitle">Your allocation has been recorded in the system</div>
+    </div>
+
+    <div class="unr-success-body">
+      <div class="unr-number-label">UNR Number Generated</div>
+      <div class="unr-number-value" id="generatedUnrNo">{{ successData.urnNo }}</div>
+
+      <div class="unr-success-stats">
+        <div class="stat-item">
+          <div class="stat-label">Allocations</div>
+          <div class="stat-value" id="successAllocCount">{{ successData.allocCount }}</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Total Amount</div>
+          <div class="stat-value" id="successTotalAmt">₹ {{ successData.totalAmt | number:'1.2-2' }}</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Customers</div>
+          <div class="stat-value" id="successCustCount">{{ successData.custCount }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="unr-success-footer">
+      <button class="btn btn-outline" (click)="copyUnrNumber()">📋 Copy UNR No.</button>
+      <button class="btn btn-primary" (click)="closeUnrSuccessAndRedirect()">→ Back to Listing</button>
+    </div> -->
+
+  </div>
+</div>
