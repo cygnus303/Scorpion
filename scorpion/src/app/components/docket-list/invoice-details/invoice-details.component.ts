@@ -390,7 +390,8 @@ export class InvoiceDetailsComponent {
                     }
 
                     // check expiry date
-                    if (expiryDate && expiryDate < new Date()) {
+                    const today = new Date(new Date().setHours(0, 0, 0, 0));
+                    if (expiryDate && expiryDate < today) {
                       this.sweetAlertService.warning("Please Check EWayBill Expired Date !!!!");
                       if (!isInvoice) {
                         this.docketService.basicDetailForm.patchValue({ ewayBillNo: null });
