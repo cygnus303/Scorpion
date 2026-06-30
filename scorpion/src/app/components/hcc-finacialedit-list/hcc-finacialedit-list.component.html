@@ -5,7 +5,8 @@
             HCC Financial Edit
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="downloadXLS()" [disabled]="isCSVLoading">
+            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="downloadXLS()" [disabled]="isCSVLoading"
+                *ngIf="menuAccessService.hasPermission('Download')">
                 <span *ngIf="!isCSVLoading"> <span class="fs-5 me-1">📥</span> Download XLS</span>
                 <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isCSVLoading">Downloading...</span>
@@ -240,12 +241,12 @@
                         </td>
                         <td>
                             <div class="action-btns">
-                                <button class="ab ab-view" (click)="openHCCview(row)">👁 View</button>
+                                <button *ngIf="menuAccessService.hasPermission('View')" class="ab ab-view" (click)="openHCCview(row)">👁 View</button>
                                 <button class="ab ab-print" (click)="openPrint(row.HCNumber)" [disabled]="!row.HCNumber"
                                     title="Print HCC">🖨 Print</button>
-                                <button class="ab ab-cancel" (click)="onCancel(row)"
+                                <button *ngIf="menuAccessService.hasPermission('Cancel')" class="ab ab-cancel" (click)="onCancel(row)"
                                     [disabled]="!row.HCNumber || row.HCCBillNo || row.HCCStatus === 'Cancelled'" title="Cancel HCC">🚫 Cancel</button>
-                                <button class="ab ab-edit" title="Edit HCC" [disabled]="true">✏️ Edit</button>
+                                <button *ngIf="menuAccessService.hasPermission('Edit')" class="ab ab-edit" title="Edit HCC" [disabled]="true">✏️ Edit</button>
                             </div>
                         </td>
                     </tr>

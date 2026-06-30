@@ -96,7 +96,7 @@ export class DrsGenerationListComponent {
     }
     this.buildFilterForm();
     this.fetchData();
-    this.menuAccessService.loadMenuPermissions(7604);
+    this.menuAccessService.loadMenuPermissions('DR1');
   }
 
   get isHQTR(): boolean {

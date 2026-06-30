@@ -105,7 +105,7 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     });
 
     this.fetchData();
-    this.menuAccessService.loadMenuPermissions(7603);
+    this.menuAccessService.loadMenuPermissions('PR1');
   }
 
   public recordOptions = [

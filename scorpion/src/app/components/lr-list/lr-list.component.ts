@@ -12,6 +12,7 @@ import { debounceTime, Subject, Subscription } from 'rxjs';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { ExportService } from 'app/shared/services/export.service';
 import { LrViewComponent } from './lr-view/lr-view.component';
+import { MenuAccessService } from 'app/shared/services/menu-access.service';
 
 @Component({
   selector: 'app-lr-list',
@@ -60,7 +61,8 @@ export class LrListComponent {
     public lrService: LrService,
     private router: Router,
     private exportService:ExportService,
-    private sweetAlertService: SweetAlertService
+    private sweetAlertService: SweetAlertService,
+    public menuAccessService: MenuAccessService
   ) { }
 
   ngOnInit() {
@@ -76,6 +78,7 @@ export class LrListComponent {
       this.fetchLRList();
     });
     this.fetchData();
+    this.menuAccessService.loadMenuPermissions('LR1');
   }
   public config = {
     fromDateStr: new Date(),
