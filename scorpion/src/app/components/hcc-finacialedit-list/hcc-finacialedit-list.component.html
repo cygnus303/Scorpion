@@ -185,7 +185,7 @@
                         </td>
                         <td>
                             <div class="doc-cell">
-                                <a class="doc-link" *ngIf="row.DocumentNo">{{ row.DocumentNo }}</a>
+                                <a class="doc-link cursor-pointer" *ngIf="row.DocumentNo" (click)="openDocumentView(row)">{{ row.DocumentNo }}</a>
                                 <span class="doc-link text-muted" *ngIf="!row.DocumentNo">—</span>
                                 <span class="doc-date">{{ row.DocumentDt || '—' }}</span>
                             </div>
