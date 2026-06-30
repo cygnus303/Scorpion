@@ -13,6 +13,7 @@ import { ExportService } from 'app/shared/services/export.service';
 import { environment } from 'environments/environment';
 import { Subject, Subscription, debounceTime } from 'rxjs';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { MenuAccessService } from 'app/shared/services/menu-access.service';
 
 @Component({
   selector: 'app-hcc-finacialedit-list',
@@ -65,7 +66,8 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
     private thcMasterService: THCMasterService,
     public docketService: DocketService,
     public exportService: ExportService,
-    private sweetAlertService: SweetAlertService
+    private sweetAlertService: SweetAlertService,
+     public menuAccessService: MenuAccessService
   ) { }
 
   ngOnInit() {
@@ -82,6 +84,8 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
     });
 
     this.fetchData();
+
+    this.menuAccessService.loadMenuPermissions('HCC1');
   }
 
   fetchData() {

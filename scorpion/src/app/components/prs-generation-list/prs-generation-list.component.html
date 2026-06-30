@@ -214,7 +214,7 @@
                                     (click)="openView(row.pdcno)">
                                     <i class="fa fa-eye"></i> View
                                 </button>
-                                <button *ngIf="!isHQTR"
+                                <button *ngIf="!isHQTR && menuAccessService.hasPermission('PRS Arrival')"
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
                                     [disabled]="row.isArrived || row.status ==='Billed'||row.status === 'Cancelled'" (click)="openPRSArrival(row)">
                                     📦 PRS Arrival
@@ -229,7 +229,7 @@
                                     (click)="onCancel(row.pdcno)">
                                     🚫 Cancel
                                 </button>
-                                <button *ngIf="!isHQTR"
+                                <button *ngIf="!isHQTR && menuAccessService.hasPermission('HCC')"
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
                                     (click)="openHHCDetails(row)" [disabled]="isHccOpen(row.loadingNoHCCCnt) && isHccOpen(row.unloadingNoHCCCnt)||row.status === 'Cancelled'">
                                     🏷 HCC

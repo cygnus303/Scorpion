@@ -66,9 +66,9 @@ export class MenuAccessService {
     return false;
   }
 
-  loadMenuPermissions(moduleId: number, userId?: string): void {
+  loadMenuPermissions(MenuCode: string, userId?: string): void {
     this.permissions = {}; // reset
-    this.getUserRolePermission(moduleId, userId).subscribe({
+    this.getUserRolePermission(MenuCode, userId).subscribe({
       next: (response: any) => {
         if (response && response.success && response.data && response.data.permissionNames) {
           response.data.permissionNames.split(',').forEach((p: string) => {
@@ -82,7 +82,7 @@ export class MenuAccessService {
     });
   }
 
-  getUserRolePermission(moduleId: number, userId?: string): Observable<any> {
+  getUserRolePermission(MenuCode: string, userId?: string): Observable<any> {
     if (!userId) {
       const saved = localStorage.getItem("loginUserList");
       if (saved) {
@@ -93,7 +93,7 @@ export class MenuAccessService {
         }
       }
     }
-    return this.apiHandlerService.Get(`Operation/get-user-role-permission?userId=${userId || ''}&moduleId=${moduleId}`);
+    return this.apiHandlerService.Get(`Operation/get-user-role-permission?userId=${userId || ''}&MenuCode=${MenuCode}`);
   }
 
 }

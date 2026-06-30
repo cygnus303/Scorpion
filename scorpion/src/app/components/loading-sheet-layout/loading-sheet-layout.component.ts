@@ -15,6 +15,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { LSUpdatePopupComponent } from './lsupdate-popup/lsupdate-popup.component';
 import Swal from 'sweetalert2';
 import { HccViewComponent } from '../hcc-view/hcc-view.component';
+import { MenuAccessService } from 'app/shared/services/menu-access.service';
 
 @Component({
   selector: 'app-loading-sheet-layout',
@@ -73,7 +74,8 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
     private loadingSheetApiService: LoadingSheetApiService,
     private docketService: DocketService,
     private exportService: ExportService,
-    private sweetAlertService: SweetAlertService
+    private sweetAlertService: SweetAlertService,
+    public menuAccessService: MenuAccessService
   ) { }
 
   ngOnInit() {
@@ -90,6 +92,7 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
     });
 
     this.fetchData();
+    this.menuAccessService.loadMenuPermissions('LS1');
   }
 
   fetchData() {
