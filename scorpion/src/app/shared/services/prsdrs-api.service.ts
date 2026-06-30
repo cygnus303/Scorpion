@@ -75,5 +75,9 @@ export class PRSDRSApiService {
   submitDepsGeneration(payload: any) {
     return this.apiHandlerService.Post(`Operation/DepsGeneration`, payload);
   }
+
+  onUNRSubmit(payload:any){
+    return this.apiHandlerService.Post(`Operation/UNRGeneration`, payload);
+  }
 }
 

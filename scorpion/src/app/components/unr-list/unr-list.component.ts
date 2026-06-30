@@ -12,7 +12,7 @@ import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { ExportService } from 'app/shared/services/export.service';
-
+import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 @Component({
   selector: 'app-unr-list',
   standalone: true,
@@ -32,6 +32,14 @@ export class UNRListComponent {
   public notFoundTextValue = 'Enter at least 3 characters';
   @ViewChild(UnrApprovalComponent) unrApprovalComp!: UnrApprovalComponent;
   @ViewChild('MrViewComponent') MrViewComponent!: MrViewComponent;
+
+  public isSuccess: boolean = false;
+  public successData: any = {
+    urnNo: '',
+    allocCount: 0,
+    totalAmt: 0,
+    custCount: 0
+  };
 
   public config = {
     FromDt: new Date(),
@@ -58,6 +66,7 @@ export class UNRListComponent {
     private exportService: ExportService,
     private dynamicDataService: DynamicDataService,
     private basicDetailService: BasicDetailService,
+    private prsdrsApiService: PRSDRSApiService,
     public sweetAlertService: SweetAlertService
   ) { }
 
@@ -215,10 +224,13 @@ export class UNRListComponent {
     this.notFoundTextValue = 'Enter at least 3 characters';
   }
 
-  onCustomerSelect(selectedItem: any, rowItem: any) {
-    if (selectedItem) {
-      rowItem.newCustCode = selectedItem.CUSTCODE || selectedItem.custcd || selectedItem.CODE;
-      rowItem.newCustName = selectedItem.CUSTNAME || selectedItem.custnm || selectedItem.NAME;
+  onCustomerSelect(selectedId: any, rowItem: any) {
+    if (selectedId) {
+      const selectedItem = this.customerData.find(c => (c.CUSTCD || c.CUSTCODE || c.CODE) === selectedId);
+      if (selectedItem) {
+        rowItem.newCustCode = selectedItem.CUSTCODE || selectedItem.CUSTCD || selectedItem.custcd || selectedItem.CODE;
+        rowItem.newCustName = selectedItem.CUSTNAME || selectedItem.CUSTNM || selectedItem.custnm || selectedItem.NAME;
+      }
     } else {
       rowItem.newCustCode = null;
       rowItem.newCustName = null;
@@ -335,6 +347,85 @@ export class UNRListComponent {
       }
     });
 
+  }
+
+  onSave() {
+    const selectedRows = this.unrList.filter(item => {
+      if (item.isSubRow && item.originalCheckNo) {
+        const parent = this.unrList.find(x => !x.isSubRow && (x.originalCheckNo || x.CHECKNO) === item.originalCheckNo);
+        return parent ? parent.isChecked : item.isChecked;
+      }
+      return item.isChecked;
+    });
+
+    if (selectedRows.length === 0) {
+      this.sweetAlertService.info("Please select at least one UNR to process");
+      return;
+    }
+
+    for (const item of selectedRows) {
+      if (!item.newCustCode) {
+        this.sweetAlertService.info(`Please select a Customer for Check No: ${item.CHECKNO}`);
+        return;
+      }
+      if (!item.transferAmount || parseFloat(item.transferAmount) <= 0) {
+        this.sweetAlertService.info(`Please enter a valid transfer amount for Check No: ${item.CHECKNO}`);
+        return;
+      }
+    }
+
+    const unrmList = selectedRows.map(item => ({
+      custcode: item.CUSTCODE,
+      checkno: item.CHECKNO,
+      checkdate: item.CHECKDATE,
+      checkamount: item.CHECKAMOUNT?.toString(),
+      newcustcode: item.newCustCode,
+      transferamt: item.transferAmount?.toString()
+    }));
+
+    const payload = {
+      unrmList: unrmList,
+      baseFinYear: this.docketService.loginUserList.FinYear,
+      baseUserName: this.docketService.loginUserList.BaseUserName
+    };
+
+    // this.sweetAlertService.showConfirmation('Confirmation', 'Are you sure you want to process this transaction?', 'warning').then((result) => {
+      // if (result) {
+        this.isLoading = true;
+        this.prsdrsApiService.onUNRSubmit(payload).subscribe({
+          next: (res: any) => {
+            this.isLoading = false;
+            if (res.status === 'SUCCESS') {
+              this.isSuccess = true;
+              this.successData = {
+                urnNo: res.urnNo || 'N/A',
+                allocCount: payload.unrmList.length,
+                totalAmt: payload.unrmList.reduce((sum: number, item: any) => sum + (parseFloat(item.transferamt || '0') || 0), 0),
+                custCount: new Set(payload.unrmList.map((item: any) => item.newcustcode)).size
+              };
+              this.getUNRList(); // Refresh list after save
+            } else {
+              this.sweetAlertService.error(res.message || 'Failed to process UNR');
+            }
+          },
+          error: (err: any) => {
+            this.isLoading = false;
+            this.sweetAlertService.error('An error occurred during submission');
+          }
+        });
+      // }
+    // });
+  }
+
+  // copyUnrNumber() {
+  //   if (this.successData.urnNo) {
+  //     navigator.clipboard.writeText(this.successData.urnNo);
+  //     this.sweetAlertService.success("UNR Numbers copied to clipboard!");
+  //   }
+  // }
+
+  closeUnrSuccessAndRedirect() {
+    this.isSuccess = false;
   }
 }
 
