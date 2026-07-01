@@ -3,10 +3,15 @@
 }
 
 ::ng-deep .modal-content {
+    background-color: #ffffff !important;
     border: none !important;
     border-radius: 10px !important;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25) !important;
     overflow: hidden;
+}
+
+::ng-deep .modal-body {
+    background-color: #ffffff !important;
 }
 
 .sticky-top {
@@ -48,7 +53,7 @@
     font-size: 0.875rem;
     border-radius: 6px;
     height: 38px;
-    
+
     &:focus {
         border-color: #2b3990;
         box-shadow: 0 0 0 2px rgba(43, 57, 144, 0.2);
@@ -89,7 +94,7 @@
     font-size: 0.825rem;
     height: 32px;
     padding: 0.25rem 0.5rem;
-    
+
     &:focus {
         border-color: #2b3990;
         box-shadow: 0 0 0 2px rgba(43, 57, 144, 0.2);
@@ -103,7 +108,7 @@
     height: 32px;
     padding: 0.25rem 1.75rem 0.25rem 0.5rem;
     background-color: #ffffff;
-    
+
     &:focus {
         border-color: #2b3990;
         box-shadow: 0 0 0 2px rgba(43, 57, 144, 0.2);
@@ -117,7 +122,7 @@
     font-weight: 600;
     border-radius: 6px;
     transition: all 0.2s;
-    
+
     &:hover {
         background-color: #eff1f8 !important;
     }
@@ -130,7 +135,7 @@
     font-weight: 600;
     border-radius: 6px;
     transition: all 0.2s;
-    
+
     &:hover {
         background-color: #115e29 !important;
     }
@@ -149,11 +154,9 @@
     cursor: pointer;
     border: 1px solid #c4c8d0 !important;
     margin-top: 0 !important;
-    
+
     &:checked {
         background-color: #2b3990 !important;
         border-color: #2b3990 !important;
     }
 }
-
-

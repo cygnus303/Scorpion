@@ -92,12 +92,19 @@ export class StockUpdateLayoutComponent {
 
   private apiCache = new Map<string, any>();
 
+  formatDateToISO(dateVal: any): string | null {
+    if (!dateVal) return null;
+    const d = new Date(dateVal);
+    const tzOffset = d.getTimezoneOffset() * 60000;
+    return new Date(d.getTime() - tzOffset).toISOString();
+  }
+
   fetchStockUpdateList() {
     if (this.listSubscription) { this.listSubscription.unsubscribe(); }
 
     const payload = {
-      fromDate: new Date(this.config.fromDateStr).toISOString(),
-      toDate: new Date(this.config.toDateStr).toISOString(),
+      fromDate: this.formatDateToISO(this.config.fromDateStr),
+      toDate: this.formatDateToISO(this.config.toDateStr),
       locCode: this.docketService.loginUserList.LocationCode || null,
       pageNumber: this.config.page,
       pageSize: this.config.pageSize,
@@ -176,8 +183,8 @@ export class StockUpdateLayoutComponent {
     this.isCSVLoading = true;
 
     const payload = {
-      fromDate: new Date(this.config.fromDateStr).toISOString(),
-      toDate: new Date(this.config.toDateStr).toISOString(),
+      fromDate: this.formatDateToISO(this.config.fromDateStr),
+      toDate: this.formatDateToISO(this.config.toDateStr),
       locCode: this.docketService.loginUserList.LocationCode || null,
       pageNumber: this.config.page,
       pageSize: this.config.pageSize,

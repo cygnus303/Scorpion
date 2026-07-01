@@ -147,6 +147,12 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
 
   private apiCache = new Map<string, any>();
 
+  formatDateToISO(dateVal: any): string | null {
+    if (!dateVal) return null;
+    const d = new Date(dateVal);
+    const tzOffset = d.getTimezoneOffset() * 60000;
+    return new Date(d.getTime() - tzOffset).toISOString();
+  }
 
   fetchLoadingSheetList() {
     if (this.listSubscription) {
@@ -154,8 +160,8 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
     }
 
     const payload = {
-      fromDate: new Date(this.config.fromDateStr).toISOString(),
-      toDate: new Date(this.config.toDateStr).toISOString(),
+      fromDate: this.formatDateToISO(this.config.fromDateStr),
+      toDate: this.formatDateToISO(this.config.toDateStr),
       locCode: this.docketService.loginUserList.LocationCode,
       statusFilter: this.config.statusFilter,
       lsType: this.config.lsType,
@@ -209,8 +215,8 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
     this.isCSVLoading = true;
 
     const payload = {
-      fromDate: new Date(this.config.fromDateStr).toISOString(),
-      toDate: new Date(this.config.toDateStr).toISOString(),
+      fromDate: this.formatDateToISO(this.config.fromDateStr),
+      toDate: this.formatDateToISO(this.config.toDateStr),
       locCode: this.docketService.loginUserList.LocationCode,
       statusFilter: this.config.statusFilter,
       lsType: this.config.lsType,
