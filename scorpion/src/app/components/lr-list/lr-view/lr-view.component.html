@@ -2,7 +2,15 @@
     <div class="modal-body p-0 position-relative" style="padding: 0px !important;">
         <button type="button" class="btn-close position-absolute top-0 end-0 m-3 no-print"
             style="z-index: 1050; filter: invert(1);" aria-label="Close" (click)="modalRef.hide()"></button>
-        <div class="docket-container">
+        
+        <div *ngIf="isLoading" class="d-flex flex-column align-items-center justify-content-center py-5" style="min-height: 400px; background: white;">
+            <div class="spinner-border text-danger" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="mt-3 fw-bold fs-5 text-muted">Loading LR Details...</div>
+        </div>
+
+        <div class="docket-container" *ngIf="!isLoading">
 
             <!-- ──────── HEADER ──────── -->
             <div class="docket-header">
@@ -158,6 +166,10 @@
                                 <div class="route-detail-label">From City Zone</div>
                                 <div class="route-detail-value">{{ lrDetails?.FromCityZone || '—' }}</div>
                             </div>
+                             <div class="route-detail">
+                                <div class="route-detail-label">Charged Zone Matrix</div>
+                                <div class="route-detail-value">{{ lrDetails?.ChargeZoneMatrix ||'—' }}</div>
+                            </div>
                         </div>
                     </div>
                     <div class="route-box">
@@ -183,6 +195,10 @@
                                 <div class="route-detail-label">Rate</div>
                                 <div class="route-detail-value">{{ lrDetails?.Rate}}</div>
                             </div>
+                            <div class="route-detail">
+                                <div class="route-detail-label">Destination Pincode</div>
+                                <div class="route-detail-value">{{ lrDetails?.DestinationPincode}}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -195,7 +211,8 @@
                             <tr>
                                 <th>No. of Packages</th>
                                 <th>Packing Method</th>
-                                <th>Weight (Kg)</th>
+                                <th>Actual wt (KG)</th>
+                                <!-- <th>Actual Weight</th> -->
                                 <th>Charged Weight</th>
                                 <th>Goods Type</th>
                                 <th>Delivery Terms</th>
@@ -206,6 +223,7 @@
                                 <td><strong>{{ lrDetails?.Packages || '—' }}</strong></td>
                                 <td>{{ lrDetails?.PackingMethod || '—' }}</td>
                                 <td><strong>{{ lrDetails?.ActualWeight || '—' }}</strong></td>
+                                <!-- <td>{{ lrDetails?.ActualWeight || '—' }}</td> -->
                                 <td>{{ lrDetails?.ChargedWeight || '—' }}</td>
                                 <td>{{ lrDetails?.GoodsType||'—' }}</td>
                                 <td>{{ lrDetails?.deliveryterm || '—' }}</td>
@@ -217,21 +235,20 @@
                 <!-- ──────── PROCESSING DETAILS ──────── -->
                 <div class="shipment-section">
                     <div class="section-title">⚙️ Processing & Tracking Details</div>
-                    <table>
+                    <!-- <table>
                         <thead>
                             <tr>
-                                <!-- <th>Added By</th>
+                                <th>Added By</th>
                                 <th>Date</th>
                                 <th>Completed By/Edited By</th>
-                                <th>Completed Date / Edited Date</th> -->
-                                <th>Destination Pincode</th>
-                                <th>Actual Weight</th>
-                                <th>Source CNote</th>
+                                <th>Completed Date / Edited Date</th>
+                              <th>Destination Pincode</th> 
+                                <th>Source CNote</th> 
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <!-- <td>{{ lrDetails?.AddedBy || '—' }}</td>
+                                <td>{{ lrDetails?.AddedBy || '—' }}</td>
                                 <td>{{ lrDetails?.AddedDate ? (parseDate(lrDetails?.AddedDate) | date:'dd MMM yyyy') :
                                     '—' }}</td>
                                 <td>
@@ -246,13 +263,12 @@
                                         {{ lrDetails?.Completed_DT ? (parseDate(lrDetails?.Completed_DT) | date:'dd MMM yyyy') : '—' }} / 
                                         {{ lrDetails?.EditedDate ? (parseDate(lrDetails?.EditedDate) | date:'dd MMM yyyy') : '—' }}
                                     </ng-container>
-                                </td> -->
+                                </td>
                                 <td><strong>{{ lrDetails?.DestinationPincode || '—' }}</strong></td>
-                                <td><strong>{{ lrDetails?.ActualWeight || '—' }}</strong></td>
                                 <td>{{ lrDetails?.SourceCNote ||'—' }}</td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table> -->
 
                     <table>
                         <thead>
@@ -261,10 +277,10 @@
                                 <th>ODA Y/N</th>
                                 <th>Volumetric Y/N</th>
                                 <th>Bulk Invoke Y/N</th>
-                                <th>Exempted Service</th>
+                                <th>Exemption Service/Category</th>
                                 <th>Bulk Invoke By</th>
                                 <th>Bulk Invoke Date</th>
-                                <th>Charged Zone Matrix</th>
+                                <th>Source CNote</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -273,11 +289,16 @@
                                 <td>{{ lrDetails?.Is_ODA_Apply || '—' }}</td>
                                 <td>{{ lrDetails?.vol_yn || '—' }}</td>
                                 <td>{{ lrDetails?.BulkInvokeYN || '—' }}</td>
-                                <td>{{ lrDetails?.ExmptServices || '—' }}</td>
+                                <td>
+                                    <span>{{ lrDetails?.ExmptServices ? ('Y / ' + lrDetails.ExmptServices) : 'N / -' }}</span>
+                                    <a *ngIf="lrDetails?.GSTDeclarationDoc" [href]="env.liveUrl + 'UploadedDocumentsBAK/GSTDeclaration/Upload/' + lrDetails.GSTDeclarationDoc" target="_blank" class="ms-2 text-decoration-none" style="cursor: pointer; font-size: 16px; vertical-align: middle;" title="View GST Declaration Image">
+                                        👁️
+                                    </a>
+                                </td>
                                 <td>{{ lrDetails?.BulkInvokBy || '—' }}</td>
                                 <td>{{ lrDetails?.BulkInvokeDate ? (parseDate(lrDetails?.BulkInvokeDate) | date:'dd MMM
                                     yyyy') : '—' }}</td>
-                                <td>{{ lrDetails?.ChargeZoneMatrix ||'—' }}</td>
+                                 <td>{{ lrDetails?.SourceCNote ||'—' }}</td>
                             </tr>
                         </tbody>
                     </table>
