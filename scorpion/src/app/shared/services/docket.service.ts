@@ -1039,13 +1039,15 @@ freightAndOtherChar(){
   }
 
   getExemptData(customerCode:string){
-    // if(this.loginUserList.Type !== '2'){
-    if(this.basicDetailForm.value.exemptServices){
+    const currentBillingParty = this.basicDetailForm.value.billingParty;
+    const isSavedCustomer = this.completiondata?.wmd?.partY_CODE === currentBillingParty;
+
+    if(this.basicDetailForm.value.exemptServices && !isSavedCustomer){
         this.basicDetailForm.patchValue({
           exemptServices: null,
         });
-        this.GetGSTFromTrnMode()
-      }
+        this.GetGSTFromTrnMode();
+    }
       this.basicDetailService.getExemptData(customerCode).subscribe({
         next: (response: any) => {
           if (response && response.data) {
