@@ -198,14 +198,21 @@ export class DrsGenerationListComponent {
     return `${year}-${month}-${day}`;
   }
 
+  formatDateToISO(dateVal: any): string | null {
+    if (!dateVal) return null;
+    const d = new Date(dateVal);
+    const tzOffset = d.getTimezoneOffset() * 60000;
+    return new Date(d.getTime() - tzOffset).toISOString();
+  }
+
   getDRSdetail() {
     if (this.listSubscription) {
       this.listSubscription.unsubscribe();
     }
 
     const payload = {
-      fromDate: new Date(this.DRSFilterForm.value.fromDate).toISOString(),
-      toDate: new Date(this.DRSFilterForm.value.toDate).toISOString(),
+      fromDate: this.formatDateToISO(this.DRSFilterForm.value.fromDate),
+      toDate: this.formatDateToISO(this.DRSFilterForm.value.toDate),
       locCode: this.docketService.loginUserList.LocationCode,
       statusFilter: this.DRSFilterForm.value.statusFilter,
       pageNumber: this.pagination.page,
@@ -247,8 +254,8 @@ export class DrsGenerationListComponent {
   downloadList() {
     this.isdownload = true;
     const payload = {
-      fromDate: new Date(this.DRSFilterForm.value.fromDate).toISOString(),
-      toDate: new Date(this.DRSFilterForm.value.toDate).toISOString(),
+      fromDate: this.formatDateToISO(this.DRSFilterForm.value.fromDate),
+      toDate: this.formatDateToISO(this.DRSFilterForm.value.toDate),
       locCode: this.docketService.loginUserList.LocationCode,
       statusFilter: this.DRSFilterForm.value.statusFilter,
       pageNumber: this.pagination.page,

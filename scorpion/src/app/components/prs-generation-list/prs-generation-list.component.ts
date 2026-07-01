@@ -141,12 +141,19 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     this.fetchSubject.next();
   }
 
+  formatDateToISO(dateVal: any): string | null {
+    if (!dateVal) return null;
+    const d = new Date(dateVal);
+    const tzOffset = d.getTimezoneOffset() * 60000;
+    return new Date(d.getTime() - tzOffset).toISOString();
+  }
+
   fetchPRSList() {
     if (this.listSubscription) { this.listSubscription.unsubscribe(); }
     this.isLoading = true;
     const payload = {
-      fromDate: new Date(this.config.fromDateStr).toISOString(),
-      toDate: new Date(this.config.toDateStr).toISOString(),
+      fromDate: this.formatDateToISO(this.config.fromDateStr),
+      toDate: this.formatDateToISO(this.config.toDateStr),
       locCode: this.docketService.loginUserList.LocationCode || null,
       statusFilter: this.config.statusFilter || 'All',
       pageNumber: this.config.page,
@@ -195,8 +202,8 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
   downloadCSV() {
     this.isCSVLoading = true;
     const payload = {
-      fromDate: new Date(this.config.fromDateStr).toISOString(),
-      toDate: new Date(this.config.toDateStr).toISOString(),
+      fromDate: this.formatDateToISO(this.config.fromDateStr),
+      toDate: this.formatDateToISO(this.config.toDateStr),
       locCode: this.docketService.loginUserList.LocationCode || null,
       statusFilter: this.config.statusFilter || 'All',
       pageNumber: this.config.page,

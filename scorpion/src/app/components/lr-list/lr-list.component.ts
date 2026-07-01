@@ -115,12 +115,19 @@ export class LrListComponent {
 
   private apiCache = new Map<string, any>();
 
+  formatDateToISO(dateVal: any): string | null {
+    if (!dateVal) return null;
+    const d = new Date(dateVal);
+    const tzOffset = d.getTimezoneOffset() * 60000;
+    return new Date(d.getTime() - tzOffset).toISOString();
+  }
+
   fetchLRList() {
     if (this.listSubscription) { this.listSubscription.unsubscribe(); }
 
     const payload = {
-      fromDate: new Date(this.config.fromDateStr).toISOString(),
-      toDate: new Date(this.config.toDateStr).toISOString(),
+      fromDate: this.formatDateToISO(this.config.fromDateStr),
+      toDate: this.formatDateToISO(this.config.toDateStr),
       locCode: this.docketService.loginUserList.LocationCode || null,
       statusFilter: this.config.statusFilter || 'All',
       pageNumber: this.config.page,
@@ -146,8 +153,8 @@ export class LrListComponent {
   onExcelDownload(){
     this.isCSVLoading = true;
     const params = {
-      startDate: new Date(this.config.fromDateStr).toISOString(),
-      endDate: new Date(this.config.toDateStr).toISOString(),
+      startDate: this.formatDateToISO(this.config.fromDateStr),
+      endDate: this.formatDateToISO(this.config.toDateStr),
       locCode: this.docketService.loginUserList.LocationCode || '',
       statusFilter: this.config.statusFilter || 'All',
       searchText: this.config.searchText || ''
