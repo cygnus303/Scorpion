@@ -500,27 +500,32 @@
 
                                                 <!-- 20. POD 1 -->
                                                 <td class="align-top">
-                                                    <ng-container
-                                                        *ngIf="drsList.at(i).value.frontPreview; else frontUpload">
-                                                        <div class="d-flex flex-column gap-1">
-                                                            <img [src]="drsList.at(i).value.frontPreview"
-                                                                style="width:30px;height:30px;object-fit:cover;border-radius:4px;cursor:pointer"
-                                                                (click)="frontInput.click()" />
+                                                    <div *ngIf="validatingIndex === i && validatingType === 'FRONT'" class="d-flex align-items-center gap-1 text-primary p-1" style="font-size: 11px;">
+                                                        <span class="spinner-border spinner-border-sm" role="status"></span> Validating...
+                                                    </div>
+                                                    <ng-container *ngIf="!(validatingIndex === i && validatingType === 'FRONT')">
+                                                        <ng-container
+                                                            *ngIf="drsList.at(i).value.frontPreview; else frontUpload">
+                                                            <div class="d-flex flex-column gap-1">
+                                                                <img [src]="drsList.at(i).value.frontPreview"
+                                                                    style="width:30px;height:30px;object-fit:cover;border-radius:4px;cursor:pointer"
+                                                                    (click)="frontInput.click()" />
+                                                                <button type="button"
+                                                                    class="btn btn-sm text-danger p-0 border-0 bg-transparent"
+                                                                    style="font-size: 10px;"
+                                                                    (click)="removeFile(i, 'FRONT')">Remove</button>
+                                                            </div>
+                                                        </ng-container>
+                                                        <ng-template #frontUpload>
                                                             <button type="button"
-                                                                class="btn btn-sm text-danger p-0 border-0 bg-transparent"
-                                                                style="font-size: 10px;"
-                                                                (click)="removeFile(i, 'FRONT')">Remove</button>
-                                                        </div>
+                                                                class="btn btn-light btn-sm text-primary border-primary border-dashed p-1"
+                                                                style="font-size:11px;" (click)="frontInput.click()">
+                                                                📎 Upload POD 1
+                                                            </button>
+                                                            <div class="text-danger mt-1" style="font-size:10px;"
+                                                                *ngIf="isPodFrontRequired(i)">Required</div>
+                                                        </ng-template>
                                                     </ng-container>
-                                                    <ng-template #frontUpload>
-                                                        <button type="button"
-                                                            class="btn btn-light btn-sm text-primary border-primary border-dashed p-1"
-                                                            style="font-size:11px;" (click)="frontInput.click()">
-                                                            📎 Upload POD 1
-                                                        </button>
-                                                        <div class="text-danger mt-1" style="font-size:10px;"
-                                                            *ngIf="isPodFrontRequired(i)">Required</div>
-                                                    </ng-template>
                                                     <input type="file" #frontInput hidden accept="image/*"
                                                         (change)="onFileSelected($event, i, 'FRONT')" />
                                                 </td>

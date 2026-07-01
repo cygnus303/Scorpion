@@ -42,6 +42,8 @@ export class DRSUpdateListComponent {
   maxCloseKMValue: number = 900000;
   public DRSFilterForm!: FormGroup;
   public isLoading: boolean = false;
+  public validatingIndex: number | null = null;
+  public validatingType: 'FRONT' | 'BACK' | null = null;
   @Input() drsData: any;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('DrsUpdateDepsComponent') depsEntryComponent!: DrsUpdateDepsComponent;
@@ -783,7 +785,9 @@ export class DRSUpdateListComponent {
 
     event.target.value = '';
 
-    this.validatePOD(index);
+    if (type === 'FRONT') {
+      this.validatePOD(index, type);
+    }
   }
 
 
@@ -848,7 +852,7 @@ export class DRSUpdateListComponent {
     }
   }
 
-  validatePOD(index: number) {
+  validatePOD(index: number, type: 'FRONT' | 'BACK' = 'FRONT') {
 
     const row = this.drsList.at(index) as FormGroup;
     const docketNo = row.get('dockno')?.value;
@@ -862,7 +866,7 @@ export class DRSUpdateListComponent {
     const backFiles = row.get('backFiles')?.value || [];
 
     // OPTIONAL: only front mandatory
-    if (!frontFiles.length) {
+    if (!frontFiles.length && type === 'FRONT') {
       return;
     }
 
@@ -878,20 +882,28 @@ export class DRSUpdateListComponent {
       formData.append('PodBackFile', file);
     });
 
-    this.deliveryUpdateService.checkPODValidation(formData).subscribe({
+    this.validatingIndex = index;
+    this.validatingType = type;
+    this.deliveryUpdateService.CheckPODValidation(formData,this.docketService.loginUserList.UserId).subscribe({
       next: (response: any) => {
-        if (response?.success) {
+        this.validatingIndex = null;
+        this.validatingType = null;
+        if (response?.status) {
           row.patchValue({ podValidated: true });
         } else {
-          this.sweetAlertService.error(
-            `POD validation failed for Dock No ${docketNo}`
-          );
+          this.sweetAlertService.error(response.message);
+          this.removeFile(index, 'FRONT');
+          this.removeFile(index, 'BACK');
         }
       },
       error: (error) => {
+        this.validatingIndex = null;
+        this.validatingType = null;
         this.sweetAlertService.error(
           error?.error?.message || `Error validating POD for Dock No ${docketNo}`
         );
+        this.removeFile(index, 'FRONT');
+        this.removeFile(index, 'BACK');
       }
     });
   }
