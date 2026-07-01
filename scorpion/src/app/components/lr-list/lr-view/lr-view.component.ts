@@ -1,6 +1,7 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { LrService } from 'app/shared/services/lr.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { environment } from 'environments/environment';
 
 import { CommonModule } from '@angular/common';
 
@@ -13,6 +14,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './lr-view.component.scss'
 })
 export class LrViewComponent {
+  public env = environment;
   public isLoading = false;
   public modalRef!: BsModalRef;
   @ViewChild('TemplateRef', { static: true }) TemplateRef!: TemplateRef<any>;
@@ -24,16 +26,18 @@ export class LrViewComponent {
 
   showPopup(row: any) {
     if (!row) return;
+    this.lrDetails = null;
+    this.boxDetails = [];
     this.isLoading = true;
+    this.modalRef = this.modalService.show(this.TemplateRef, { class: 'modal-xl modal-dialog-centered hcc-view-modal-custom', backdrop: true });
 
     this.lrService.lrViewDetail(row).subscribe({
       next: (res: any) => {
         this.isLoading = false;
         if (res) {
-          const data =  res;
+          const data = res;
           this.lrDetails = data.Header || null;
           this.boxDetails = data.BoxDetails || [];
-          this.modalRef = this.modalService.show(this.TemplateRef, { class: 'modal-xl modal-dialog-centered hcc-view-modal-custom', backdrop: true });
         }
       },
       error: (err: any) => {

@@ -92,11 +92,13 @@ export class StockUpdateLayoutComponent {
 
   private apiCache = new Map<string, any>();
 
-  formatDateToISO(dateVal: any): string | null {
+ formatDateToISO(dateVal: any): string | null {
     if (!dateVal) return null;
     const d = new Date(dateVal);
-    const tzOffset = d.getTimezoneOffset() * 60000;
-    return new Date(d.getTime() - tzOffset).toISOString();
+    const year = d.getFullYear();
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+    const day = ('0' + d.getDate()).slice(-2);
+    return `${year}-${month}-${day}T00:00:00.000Z`;
   }
 
   fetchStockUpdateList() {
