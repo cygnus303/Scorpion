@@ -16,4 +16,8 @@ constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerServ
     checkPODValidation(formData:any){
     return this.apiHandlerService.Post(`THC/check-validation`,formData);
    }
+
+    CheckPODValidation(formData:any,BaseUserName:string){
+    return this.apiHandlerService.Post(`THC/CheckPODValidation?BaseUserName=${BaseUserName}`,formData);
+   }
 }
