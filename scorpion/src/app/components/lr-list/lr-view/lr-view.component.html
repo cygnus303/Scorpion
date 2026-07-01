@@ -117,11 +117,11 @@
                         <div class="movement-label">Carrier Risk</div>
                         <div class="movement-value">{{ lrDetails?.RiskType || '—' }}</div>
                     </div>
-                    <div class="movement-box">
+                     <div class="movement-box">
                         <div class="movement-label">Is Audited</div>
                         <div class="movement-value">{{ lrDetails?.IsAoudited ? 'Yes' : 'No' }}</div>
                     </div>
-                    <div class="movement-box">
+                    <!--<div class="movement-box">
                         <div class="movement-label">Audited By</div>
                         <div class="movement-value">{{ lrDetails?.AouditedBy || '—' }}</div>
                     </div>
@@ -138,7 +138,7 @@
                         <div class="movement-label">Cancelled Date</div>
                         <div class="movement-value">{{ lrDetails?.cancceldate ? (parseDate(lrDetails?.cancceldate) |
                             date:'dd MMM yyyy') : '—' }}</div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- ──────── ROUTE DETAILS ──────── -->
@@ -220,10 +220,10 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Added By</th>
+                                <!-- <th>Added By</th>
                                 <th>Date</th>
                                 <th>Completed By/Edited By</th>
-                                <th>Completed Date / Edited Date</th>
+                                <th>Completed Date / Edited Date</th> -->
                                 <th>Destination Pincode</th>
                                 <th>Actual Weight</th>
                                 <th>Source CNote</th>
@@ -231,7 +231,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{{ lrDetails?.AddedBy || '—' }}</td>
+                                <!-- <td>{{ lrDetails?.AddedBy || '—' }}</td>
                                 <td>{{ lrDetails?.AddedDate ? (parseDate(lrDetails?.AddedDate) | date:'dd MMM yyyy') :
                                     '—' }}</td>
                                 <td>
@@ -246,7 +246,7 @@
                                         {{ lrDetails?.Completed_DT ? (parseDate(lrDetails?.Completed_DT) | date:'dd MMM yyyy') : '—' }} / 
                                         {{ lrDetails?.EditedDate ? (parseDate(lrDetails?.EditedDate) | date:'dd MMM yyyy') : '—' }}
                                     </ng-container>
-                                </td>
+                                </td> -->
                                 <td><strong>{{ lrDetails?.DestinationPincode || '—' }}</strong></td>
                                 <td><strong>{{ lrDetails?.ActualWeight || '—' }}</strong></td>
                                 <td>{{ lrDetails?.SourceCNote ||'—' }}</td>
@@ -563,6 +563,46 @@
                             ₹ {{ lrDetails?.TotalAmountPayable || '0.00' }}
                         </div>
                     </div>
+                </div>
+
+                <!-- ──────── AUDIT TRAIL DETAILS ──────── -->
+                <div class="shipment-section">
+                    <div class="section-title">🛡️ Audit Trail Details</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Added By & Date</th>
+                                <th>Edited By & Date</th>
+                                <th>Completed By & Date</th>
+                                <th>Cancelled By & Date</th>
+                                <th>Audited By & Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div><strong>{{ lrDetails?.AddedBy || '—' }}</strong></div>
+                                    <div style="color: #555; font-size: 9px; margin-top: 2px;">{{ lrDetails?.AddedDate ? (parseDate(lrDetails?.AddedDate) | date:'dd MMM yyyy') : '' }}</div>
+                                </td>
+                                <td>
+                                    <div><strong>{{ lrDetails?.EditedBy || '—' }}</strong></div>
+                                    <div style="color: #555; font-size: 9px; margin-top: 2px;">{{ lrDetails?.EditedDate ? (parseDate(lrDetails?.EditedDate) | date:'dd MMM yyyy') : '' }}</div>
+                                </td>
+                                <td>
+                                    <div><strong>{{ lrDetails?.CompleteBy || '—' }}</strong></div>
+                                    <div style="color: #555; font-size: 9px; margin-top: 2px;">{{ lrDetails?.Completed_DT ? (parseDate(lrDetails?.Completed_DT) | date:'dd MMM yyyy') : '' }}</div>
+                                </td>
+                                <td>
+                                    <div><strong>{{ lrDetails?.CancelledBy || '—' }}</strong></div>
+                                    <div style="color: #555; font-size: 9px; margin-top: 2px;">{{ lrDetails?.cancceldate ? (parseDate(lrDetails?.cancceldate) | date:'dd MMM yyyy') : '' }}</div>
+                                </td>
+                                <td>
+                                    <div><strong>{{ lrDetails?.AouditedBy || '—' }}</strong></div>
+                                    <div style="color: #555; font-size: 9px; margin-top: 2px;">{{ lrDetails?.AouditedDate ? (parseDate(lrDetails?.AouditedDate) | date:'dd MMM yyyy') : '' }}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <!-- ──────── PAYMENT TERMS ──────── -->
