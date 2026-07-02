@@ -81,6 +81,9 @@ export class AddThcPopupComponent {
       actualDeptDate: [this.formatDateTime(new Date())],
       scheduleDeptDate: [this.formatDateTime(new Date())],
       vendorType: [],
+      bidType: [null],
+      bidNo: [null],
+      BiddingVendor:[''],
       vendorCode: [],
       lorryOwnerPanNo: [],
       vendorName: [],
@@ -160,8 +163,19 @@ export class AddThcPopupComponent {
     this.ThcForm.patchValue({
       vendorCode: null
     })
+    
+    const vendorType = event?.target?.value;
+    const bidTypeCtrl = this.ThcForm.get('bidType');
+    if (vendorType === '19') {
+      bidTypeCtrl?.setValidators([Validators.required]);
+    } else {
+      bidTypeCtrl?.clearValidators();
+      bidTypeCtrl?.setValue(null);
+    }
+    bidTypeCtrl?.updateValueAndValidity();
+
     const data = {
-      vendorType: event?.target?.value,
+      vendorType: vendorType,
       branchCode: this.docketService.loginUserList.LocationCode,
       userName: this.docketService.loginUserList.BaseUserName,
       documentType: "1"

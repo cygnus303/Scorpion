@@ -219,4 +219,8 @@ export class THCMasterService {
     return this.apiHandlerService.Post(`Operation/GetDynamicData`, payload);
 
   }
+
+  getBidDetail(location: string){
+    return this.apiHandlerService.Get(`Operation/closed-bids?BranchCode=${location}`);
+  }
 }
