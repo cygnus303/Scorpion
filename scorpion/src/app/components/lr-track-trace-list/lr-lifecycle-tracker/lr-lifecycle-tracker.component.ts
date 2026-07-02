@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { LrOperationalTabComponent } from './lr-operational-tab/lr-operational-tab.component';
@@ -28,8 +28,11 @@ import { LrService } from 'app/shared/services/lr.service';
 export class LrLifecycleTrackerComponent {
   public modalRef!: BsModalRef;
   @ViewChild('TemplateRef', { static: true }) TemplateRef!: TemplateRef<any>;
+  @Output() viewOnMap = new EventEmitter<any>();
+  @Output() printLr = new EventEmitter<any>();
 
   public lrDetails: any = null;
+  public originalLr: any = null;
   public activeTab: string = 'Operational';
   constructor(
     private modalService: BsModalService,
@@ -38,6 +41,7 @@ export class LrLifecycleTrackerComponent {
 
   showPopup(lr: any) {
     if (!lr) return;
+    this.originalLr = lr;
     const lrNo = lr.LrNumber || lr.lrNumber || lr.lR_Number; 
     this.lrDetails = null;
     this.activeTab = 'Operational';
@@ -56,5 +60,19 @@ export class LrLifecycleTrackerComponent {
 
   setActiveTab(tab: string) {
     this.activeTab = tab;
+  }
+
+  onViewOnMap() {
+    if (this.modalRef) {
+      this.modalRef.hide();
+    }
+    this.viewOnMap.emit(this.originalLr || this.lrDetails);
+  }
+
+  onPrintLr() {
+    if (this.modalRef) {
+      this.modalRef.hide();
+    }
+    this.printLr.emit(this.originalLr || this.lrDetails);
   }
 }

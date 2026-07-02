@@ -104,11 +104,13 @@
 
   <div class="d-flex border-top justify-content-end p-3" style="background-color: #ffffff; border-color: #e2e8f0 !important; gap: 10px;">
     <button class="btn btn-sm fw-bold d-inline-flex align-items-center justify-content-center" 
-      style="background-color: #ffffff; border: 1px solid #1e293b; color: #1e293b; font-size: 12px; padding: 6px 14px; border-radius: 6px; gap: 6px;">
+      style="background-color: #ffffff; border: 1px solid #1e293b; color: #1e293b; font-size: 12px; padding: 6px 14px; border-radius: 6px; gap: 6px;"
+      (click)="onPrintLr()">
       <span>🖨</span> <span>Print LR</span>
     </button>
-    <button class="btn btn-sm fw-bold d-inline-flex align-items-center justify-content-center"
-      style="background-color: #fef3c7; border: 1px solid #fde68a; color: #d97706; font-size: 12px; padding: 6px 14px; border-radius: 6px; gap: 6px;">
+    <button *ngIf="this.originalLr.Status && this.originalLr.Status.includes('InTransit') " class="btn btn-sm fw-bold d-inline-flex align-items-center justify-content-center"
+      style="background-color: #fef3c7; border: 1px solid #fde68a; color: #d97706; font-size: 12px; padding: 6px 14px; border-radius: 6px; gap: 6px;"
+      (click)="onViewOnMap()">
       <span>🗺</span> <span>View on Map</span>
     </button>
     <button class="btn btn-sm fw-bold d-inline-flex align-items-center justify-content-center" 

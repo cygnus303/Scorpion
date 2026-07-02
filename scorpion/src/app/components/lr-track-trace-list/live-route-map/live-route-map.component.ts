@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { LrService } from 'app/shared/services/lr.service';
 
@@ -37,14 +38,15 @@ export class LiveRouteMapComponent {
   public vehicleIgnition: string = 'OFF';
   public reportingTime: string = '';
   public gpsAddress: string = '';
+  public mapUrl: SafeResourceUrl | null = null;
 
   constructor(
     private modalService: BsModalService,
-    private lrService: LrService
+    private lrService: LrService,
+    private sanitizer: DomSanitizer
   ) { }
 
   showPopup(lr: any) {
-    debugger
     if (!lr) return;
     this.lrData = lr;
     this.lrNumber = lr.LrNumber;
@@ -91,6 +93,7 @@ export class LiveRouteMapComponent {
           if (this.gpsAddress && this.gpsAddress !== 'N/A') {
             this.currentLocation = this.gpsAddress;
           }
+          this.updateMapUrl();
         }
       },
       error: (err) => {
@@ -108,6 +111,16 @@ export class LiveRouteMapComponent {
     this.vehicleIgnition = 'N/A';
     this.reportingTime = '';
     this.gpsAddress = '';
+    this.mapUrl = null;
+  }
+
+  updateMapUrl() {
+    if (this.vehicleLat !== null && this.vehicleLong !== null && !isNaN(this.vehicleLat) && !isNaN(this.vehicleLong)) {
+      const url = `https://maps.google.com/maps?q=${this.vehicleLat},${this.vehicleLong}&z=14&output=embed`;
+      this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    } else {
+      this.mapUrl = null;
+    }
   }
 
   parseDescription(desc: string) {

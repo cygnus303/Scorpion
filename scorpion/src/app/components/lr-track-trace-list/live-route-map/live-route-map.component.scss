@@ -1,4 +1,19 @@
 /* BOOTSTRAP UTILITY HELPERS & CUSTOM UTILITIES */
+::ng-deep .custom-live-map-modal {
+  .modal-content {
+    background-color: #ffffff !important;
+    border-radius: 1rem !important;
+    overflow: hidden !important;
+    border: none !important;
+  }
+  .modal-header {
+    background-color: #132f57 !important;
+    border-top-left-radius: 1rem !important;
+    border-top-right-radius: 1rem !important;
+    border: none !important;
+  }
+}
+
 .bg-navy {
   background-color: #132f57 !important;
 }

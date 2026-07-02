@@ -25,35 +25,19 @@
       <!-- MAP & GPS VISUALIZATION BOX -->
       <div class="card border border-primary border-opacity-25 rounded-3 bg-light-blue p-3 mb-4 position-relative overflow-hidden">
         
-        <!-- TOP OVERLAY BAR: LEGEND + LIVE TELEMETRY (BOOTSTRAP FLEX) -->
+        <!-- TOP OVERLAY BAR: LIVE TELEMETRY (BOOTSTRAP FLEX) -->
         <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-3 position-relative z-3">
-          <!-- LEGEND -->
-          <div class="bg-white border rounded shadow-sm px-3 py-2 d-flex flex-column gap-1">
-            <div class="d-flex align-items-center gap-2 font-11 fw-semibold text-secondary">
-              <span class="legend-line-completed"></span>
-              <span>Completed Route</span>
-            </div>
-            <div class="d-flex align-items-center gap-2 font-11 fw-semibold text-secondary">
-              <span class="legend-line-remaining"></span>
-              <span>Remaining Route</span>
-            </div>
-            <div class="d-flex align-items-center gap-2 font-11 fw-semibold text-secondary">
-              <span class="legend-dot-current"></span>
-              <span>Current Position</span>
-            </div>
-          </div>
-
           <!-- LIVE GPS TELEMETRY BADGE -->
-          <div class="bg-white border border-warning rounded shadow-sm p-2 d-flex flex-column gap-1" style="max-width: 480px;">
-            <div class="d-flex align-items-center justify-content-between border-bottom pb-1 mb-1 gap-2">
-              <div class="d-flex align-items-center gap-1">
+          <div *ngIf="vehicleNo || vehicleLat !== null || isLoadingGps" class="bg-white border border-warning rounded shadow-sm p-3 d-flex flex-column gap-2 w-100">
+            <div class="d-flex align-items-center justify-content-between border-bottom pb-2 gap-2 flex-wrap">
+              <div class="d-flex align-items-center gap-2">
                 <span class="pulse-dot bg-success rounded-circle"></span>
-                <span class="fw-bold font-12 text-dark">🚛 Live Vehicle: {{ vehicleNo }}</span>
+                <span class="fw-bold fs-6 text-dark">🚛 Live Vehicle: {{ vehicleNo || 'N/A' }}</span>
               </div>
-              <span class="badge bg-warning-subtle text-warning-emphasis border border-warning font-10" *ngIf="isLoadingGps">Fetching GPS...</span>
+              <span class="badge bg-warning-subtle text-warning-emphasis border border-warning font-11 px-2 py-1" *ngIf="isLoadingGps">Fetching GPS...</span>
             </div>
-            <div class="d-flex flex-wrap align-items-center gap-3 font-11 text-secondary">
-              <div *ngIf="gpsAddress" class="w-100 text-truncate font-11 text-dark">
+            <div class="d-flex flex-wrap align-items-center gap-4 font-12 text-secondary">
+              <div *ngIf="gpsAddress" class="w-100 text-truncate font-12 text-dark">
                 <strong>📍 Address:</strong> {{ gpsAddress }}
               </div>
               <div *ngIf="vehicleLat !== null && vehicleLong !== null">
@@ -72,63 +56,22 @@
           </div>
         </div>
 
-        <!-- ROUTE GRAPHIC -->
-        <div class="route-graphic-container">
-          <svg class="route-svg" viewBox="0 0 800 240" preserveAspectRatio="none">
-            <!-- Grid Lines Background (Subtle) -->
-            <g class="svg-grid" stroke="#cdddef" stroke-width="1" stroke-dasharray="4,4">
-              <line x1="0" y1="60" x2="800" y2="60" />
-              <line x1="0" y1="120" x2="800" y2="120" />
-              <line x1="0" y1="180" x2="800" y2="180" />
-              <line x1="200" y1="0" x2="200" y2="240" />
-              <line x1="400" y1="0" x2="400" y2="240" />
-              <line x1="600" y1="0" x2="600" y2="240" />
-            </g>
-
-            <!-- Completed Route Path (Solid Green) -->
-            <path d="M 120,180 Q 250,140 390,110" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round" />
-
-            <!-- Remaining Route Path (Dashed Orange) -->
-            <path d="M 390,110 Q 550,80 680,60" fill="none" stroke="#f59e0b" stroke-width="4" stroke-dasharray="8,6" stroke-linecap="round" />
-          </svg>
-
-          <!-- OVERLAY NODES & BADGES -->
-          <!-- Origin Node -->
-          <div class="node origin-node" style="left: 15%; top: 75%;">
-            <div class="node-dot origin-dot"></div>
-            <div class="node-label">{{ origin }}</div>
-          </div>
-
-          <!-- Completed Badge -->
-          <div *ngIf="distanceCovered !== null" class="route-badge badge bg-success-subtle text-success border border-success font-11 shadow-sm" style="left: 31%; top: 62%;">
-            ✓ {{ distanceCovered | number }} km (Done)
-          </div>
-
-          <!-- Current Position Node -->
-          <div class="node current-node" style="left: 48.75%; top: 45.8%;">
-            <div class="pulse-ring"></div>
-            <div class="node-dot current-dot"></div>
-            <div class="current-info shadow-sm rounded px-2 py-1 bg-white border border-warning">
-              <div class="fw-bold font-12 text-warning-emphasis">{{ currentLocation ? currentLocation.split(' ')[0] : 'Current' }} ▲</div>
-              <div class="font-10 fw-bold text-danger">📍 Current ({{ vehicleNo }})</div>
-            </div>
-          </div>
-
-          <!-- Remaining Badge -->
-          <div *ngIf="remainingDistance !== null" class="route-badge badge bg-warning-subtle text-warning-emphasis border border-warning font-11 shadow-sm" style="left: 62%; top: 32%;">
-            ⌛ {{ remainingDistance | number }} km (Remaining)
-          </div>
-
-          <!-- Destination Node -->
-          <div class="node dest-node" style="left: 85%; top: 25%;">
-            <div class="node-dot dest-dot"></div>
-            <div class="node-label">{{ destination }}</div>
+        <!-- LIVE INTERACTIVE GOOGLE MAP EMBED -->
+        <div class="live-google-map-container rounded-3 overflow-hidden border bg-white shadow-sm position-relative" style="height: 420px; width: 100%;">
+          <iframe *ngIf="mapUrl" [src]="mapUrl" width="100%" height="100%" frameborder="0" style="border:0; position: absolute; top:0; left:0; width:100%; height:100%;" allowfullscreen=""></iframe>
+          
+          <!-- FALLBACK IF MAP URL IS NOT READY -->
+          <div *ngIf="!mapUrl" class="d-flex flex-column align-items-center justify-content-center h-100 p-4 text-center">
+            <div *ngIf="isLoadingGps" class="spinner-border text-primary mb-2" role="status"></div>
+            <span *ngIf="!isLoadingGps" class="fs-1 mb-2">🗺️</span>
+            <h6 class="fw-bold text-dark">{{ isLoadingGps ? 'Loading Live Map...' : 'Live GPS Location Not Available' }}</h6>
+            <p class="font-12 text-muted mb-0" *ngIf="!isLoadingGps">Live GPS coordinates (Latitude/Longitude) are currently unavailable for this vehicle.</p>
           </div>
         </div>
       </div>
 
       <!-- 4-COLUMN INFO CARDS GRID (BOOTSTRAP ROW) -->
-      <div class="row g-3 mb-3">
+      <!-- <div class="row g-3 mb-3">
         <div class="col-6 col-md-3">
           <div class="card h-100 border bg-light p-3 shadow-sm">
             <div class="text-muted text-uppercase fw-bold font-11 mb-1">ORIGIN</div>
@@ -153,10 +96,10 @@
             <div class="fs-6 fw-bold text-warning-emphasis">{{ edd }}</div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- 3-COLUMN STATS CARDS GRID (BOOTSTRAP ROW) -->
-      <div class="row g-3 mb-3">
+      <!-- <div class="row g-3 mb-3">
         <div class="col-12 col-md-4">
           <div class="card h-100 border bg-light p-3 shadow-sm">
             <div class="text-muted text-uppercase fw-bold font-11 mb-1">TOTAL DISTANCE</div>
@@ -175,10 +118,10 @@
             <div class="fs-5 fw-bold text-warning-emphasis">{{ remainingDistance !== null ? (remainingDistance | number) + ' km' : 'N/A' }}</div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- PROGRESS BAR CARD (BOOTSTRAP PROGRESS) -->
-      <div class="card border bg-light p-3 mb-1 shadow-sm">
+      <!-- <div class="card border bg-light p-3 mb-1 shadow-sm">
         <div class="d-flex justify-content-between align-items-center font-12 fw-semibold mb-2">
           <span class="text-dark">{{ origin }}</span>
           <span class="text-warning-emphasis">📍 {{ currentLocation ? currentLocation.split(' ')[0] : 'Current' }} (Current)</span>
@@ -192,7 +135,7 @@
         <div class="text-center font-11 text-muted fw-medium mt-2">
           Journey Progress: {{ progressPercent }}% complete
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- BOOTSTRAP FOOTER -->
