@@ -1,0 +1,133 @@
+<ng-template #Templatepod>
+<div class="mf-view-overlay" >
+  <div class="mf-view-box thcform-box">
+    <div class="thcform-header">
+      <h2>Add THC (Empty Vehicle)</h2>
+      <button class="mf-view-close" (click)="closePopup()">&times;</button>
+    </div>
+    <div class="thcform-body">
+
+      <!-- Basic Details -->
+      <div class="thcform-section">
+        <div class="thcform-section-title">Basic Details</div>
+        <div class="thcform-grid">
+          <div class="thcform-field">
+            <label>THC Date</label>
+            <input type="text" id="thcDateField" readonly>
+          </div>
+          <div class="thcform-field">
+            <label>Route Mode <span class="req">*</span></label>
+            <div class="thcform-radio-group">
+              <label><input type="radio" name="routeMode" value="Road">Road</label>
+              <label><input type="radio" name="routeMode" value="AIR">AIR</label>
+            </div>
+          </div>
+          <div class="thcform-field">
+            <label>Route Name <span class="req">*</span></label>
+            <select id="routeNameSel">
+              <option value="">-- Select Route --</option>
+            </select>
+          </div>
+          <div class="thcform-field">
+            <label>Actual Dept. Date &amp; Time</label>
+            <input type="text" id="actualDeptField" readonly>
+          </div>
+          <div class="thcform-field">
+            <label>Scheduled Dept Date &amp; Time</label>
+            <input type="text" id="schedDeptField" readonly>
+          </div>
+          <div class="thcform-field">
+            <label>Expected Reporting Date</label>
+            <input type="text" id="expReportingField" readonly>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vendor / Bid Details -->
+      <div class="thcform-section">
+        <div class="thcform-section-title">Vendor / Bid Details</div>
+        <div class="thcform-grid">
+          <div class="thcform-field">
+            <label>Vendor Type <span class="req">*</span></label>
+            <div class="thcform-radio-group">
+              <label><input type="radio" name="vendorType" value="Market">Market</label>
+              <label><input type="radio" name="vendorType" value="Attached">Attached</label>
+            </div>
+          </div>
+          <div class="thcform-field" id="bidTypeWrap" style="display:none;">
+            <label>Bid Type</label>
+            <div class="thcform-radio-group">
+              <label><input type="radio" name="bidType" value="With">With Bid</label>
+              <label><input type="radio" name="bidType" value="Without">Without Bid</label>
+            </div>
+          </div>
+          <div class="thcform-field" id="bidNoWrap" style="display:none;">
+            <label>Bid No</label>
+            <select id="bidNoSel">
+              <option value="">-- Select Bid --</option>
+            </select>
+            <div class="thcform-hint" id="bidNoHint"></div>
+          </div>
+          <div class="thcform-field">
+            <label>Vendor Name <span class="req">*</span></label>
+            <select id="vendorNameSel">
+              <option value="">-- Select Vendor --</option>
+            </select>
+          </div>
+          <div class="thcform-field">
+            <label>Pan No</label>
+            <input type="text" id="panNoField" readonly>
+          </div>
+        </div>
+      </div>
+
+    <!-- Vehicle Depart Details -->
+      <div class="thcform-section">
+        <div class="thcform-section-title">Vehicle Depart Details</div>
+        <div class="thcform-grid">
+          <div class="thcform-field">
+            <label>Loading Supervisor</label>
+            <input type="text" id="emptyLoadingSupField" readonly>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Details -->
+      <div class="thcform-section">
+        <div class="thcform-section-title">Payment Details</div>
+        <div class="thcform-grid">
+          <div class="thcform-field">
+            <label>Contract Amount</label>
+            <input type="text" id="emptyContractAmountField" oninput="recalcEmptyBalanceAmount()">
+          </div>
+          <div class="thcform-field">
+            <label>Advance Amount</label>
+            <input type="text" id="emptyAdvanceAmountField" oninput="recalcEmptyBalanceAmount()">
+            <span class="thcform-hint" id="emptyAdvanceHint" style="display:none;">Advance Amount cannot exceed Contract Amount</span>
+          </div>
+          <div class="thcform-field">
+            <label>Balance Amount</label>
+            <input type="text" id="emptyBalanceAmountField" readonly>
+          </div>
+          <div class="thcform-field">
+            <label>Adv. Location</label>
+            <input type="text" id="emptyAdvLocationField" readonly>
+          </div>
+          <div class="thcform-field">
+            <label>Bal. Location</label>
+            <input type="text" id="emptyBalLocationField" readonly>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    
+    <!-- Footer -->
+    <div class="thcform-footer">
+      <button type="button" class="thcform-btn-cancel" (click)="closePopup()">Cancel</button>
+      <button type="button" class="thcform-btn-submit">Submit</button>
+    </div>
+
+  </div>
+</div>
+</ng-template>

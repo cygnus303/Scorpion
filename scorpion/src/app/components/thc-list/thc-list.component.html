@@ -5,7 +5,10 @@
             THC Generation
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn btn-primary px-4 py-2 rounded" (click)="openTHC()" *ngIf="!isHQTR">+ Add THC</button>
+            <!-- <button class="btn btn-primary px-4 py-2 rounded" (click)="openTHC()" *ngIf="!isHQTR">+ Add THC</button> -->
+            <button class="btn btn-primary px-4 py-2 rounded" (click)="openTHCPopup('A')" *ngIf="!isHQTR">+ Add THC</button>
+            <button class="btn btn-primary px-4 py-2 rounded" (click)="openTHCPopup('E')" *ngIf="!isHQTR">+ THC with
+                Empty Vehicle</button>
             <button class="btn btn-success px-4 py-2 rounded" (click)="downloadExcel()">
                 <span *ngIf="!isdownload">📥 Download XLS</span>
                 <span *ngIf="isdownload" class="spinner-border spinner-border-sm me-2"></span>
@@ -29,6 +32,17 @@
         </div>
 
         <div class="summary-card px-3 py-3 c-orange cursor-pointer"
+            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Pending'"
+            (click)="filterByStatus('Pending')">
+            <div class="card-content">
+                <div class="s-label">MF Pending for THC</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.Pending || 0 }}</div>
+                <div class="small text-body-tertiary">Pending to add MF</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
+        </div>
+
+        <div class="summary-card px-3 py-3 c-teal cursor-pointer"
             [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Departed'"
             (click)="filterByStatus('Departed')">
             <div class="card-content">
@@ -39,7 +53,7 @@
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
         </div>
 
-        <div class="summary-card px-3 py-3 c-teal cursor-pointer"
+        <div class="summary-card px-3 py-3 c-green cursor-pointer"
             [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Completed Journey'"
             (click)="filterByStatus('Completed Journey')">
             <div class="card-content">
@@ -55,7 +69,7 @@
             (click)="filterByStatus('Cancelled')">
             <div class="card-content">
                 <div class="s-label">Cancelled</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.cancelled || 0  }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.cancelled || 0 }}</div>
                 <div class="small text-body-tertiary">Cancelled today</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🚫</div>
@@ -67,7 +81,7 @@
             (click)="filterByStatus('Billed')">
             <div class="card-content">
                 <div class="s-label">Billed</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.billed || 0  }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.billed || 0 }}</div>
                 <div class="small text-body-tertiary">Vendor bill exists</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🧾</div>
@@ -79,7 +93,7 @@
         <form [formGroup]="THCFilterForm">
             <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
                 <div class="control-bar border-0 shadow-none mb-0">
-                    
+
                     <div class="date-range-group">
                         <span class="date-label">Date Range</span>
                         <div class="date-input-wrap" style="padding:0;">
@@ -109,8 +123,9 @@
                 </div>
                 <div class="table-toolbar">
                     <div class="search-box d-flex align-items-center"><span class="text-muted">🔍</span>
-                        <input type="text" placeholder="Search..." class="form-control border-0 shadow-none" formControlName="searchText">
-                    
+                        <input type="text" placeholder="Search..." class="form-control border-0 shadow-none"
+                            formControlName="searchText">
+
                     </div>
                 </div>
             </div>
@@ -157,7 +172,8 @@
                     <tr *ngFor="let data of thcData; let i = index">
                         <td class="text-center text-muted fs-7">{{ i + 1 }}</td>
                         <td>
-                            <div class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;" (click)="openThcView(data.thcNo)"><a>{{
+                            <div class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;"
+                                (click)="openThcView(data.thcNo)"><a>{{
                                     data.thcNo }}</a></div>
                             <div class="text-muted fs-7 mt-1">{{ data.thcDate | date:'dd-MMM-yy' }}</div>
                         </td>
@@ -227,11 +243,13 @@
                                 </button>
                                 <button *ngIf="!isHQTR"
                                     class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3"
-                                    (click)="openEditPopup(data)" [disabled]="data.status === 'Cancelled'|| data.status === 'Billed'">
+                                    (click)="openEditPopup(data)"
+                                    [disabled]="data.status === 'Cancelled'|| data.status === 'Billed'">
                                     ✏️ Edit
                                 </button>
-                                <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3" (click)="onCancel(data.thcNo)"
-                                [disabled]="data.status === 'Cancelled'|| data.status === 'Billed'|| data.status ==='Completed Journey'">
+                                <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
+                                    (click)="onCancel(data.thcNo)"
+                                    [disabled]="data.status === 'Cancelled'|| data.status === 'Billed'|| data.status ==='Completed Journey'">
                                     🚫 Cancel
                                 </button>
                             </div>
@@ -241,8 +259,11 @@
             </table>
         </div>
         <app-pagination [page]="pagination.page" [pageSize]="pagination.pageSize"
-            [totalRecords]="pagination.totalRecords" [totalPages]="pagination.totalPages" (pageChange)="setPage($event)">
+            [totalRecords]="pagination.totalRecords" [totalPages]="pagination.totalPages"
+            (pageChange)="setPage($event)">
         </app-pagination>
     </div>
 </div>
 <app-thc-edit #ThcEditComponent></app-thc-edit>
+<app-thc-empty-vehicle-popup #ThcEmptyVehiclePopupComponent></app-thc-empty-vehicle-popup>
+<app-add-thc-popup #ThcPopupComponent></app-add-thc-popup>

@@ -1,0 +1,72 @@
+/* ===== Add THC Form ===== */
+.mf-view-overlay {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 24px;
+}
+.mf-view-box {
+  position: relative; width: 100%; max-width: 100%; max-height: 92vh;
+  overflow-y: auto; border-radius: 8px;
+}
+.mf-view-close {
+  background: transparent; border: none; color: #fff; font-size: 20px;
+  cursor: pointer; line-height: 1; padding: 0 4px;
+}
+
+.thcform-box { width: 100%; max-width: 96vw; background: #fff; padding: 0; overflow: hidden; }
+.thcform-header {
+  background: linear-gradient(135deg, #0d47a1 0%, #08306b 100%); color: #fff;
+  padding: 14px 20px; display: flex; align-items: center; justify-content: space-between;
+}
+.thcform-header h2 { margin: 0; font-size: 16px; font-weight: 700; }
+.thcform-body { padding: 16px 20px; max-height: 76vh; overflow-y: auto; }
+.thcform-section { margin-bottom: 16px; border: 1px solid #e3e7ee; border-radius: 8px; overflow: hidden; }
+.thcform-section-title {
+  background: #f1f5fb; color: #0d47a1; font-size: 12.5px; font-weight: 700;
+  padding: 8px 14px; letter-spacing: .02em; border-bottom: 1px solid #e3e7ee;
+}
+.thcform-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 16px; padding: 14px;
+}
+.thcform-field { display: flex; flex-direction: column; gap: 4px; }
+.thcform-field.span2 { grid-column: span 2; }
+.thcform-field label { font-size: 10.5px; font-weight: 700; color: #5a6472; text-transform: uppercase; letter-spacing: .02em; }
+.thcform-field label .req { color: #c62828; }
+.thcform-field input[type="text"], .thcform-field input[type="number"],
+.thcform-field input[type="date"], .thcform-field input[type="datetime-local"],
+.thcform-field select {
+  padding: 7px 9px; border: 1px solid #d6dae3; border-radius: 5px; font-size: 12.5px;
+  font-family: inherit; color: #222; background: #fff;
+}
+.thcform-field input:focus, .thcform-field select:focus { outline: none; border-color: #0d47a1; }
+.thcform-field input[readonly], .thcform-field input:disabled, .thcform-field select:disabled {
+  background: #f3f5f8; color: #667; cursor: not-allowed;
+}
+.thcform-radio-group { display: flex; gap: 16px; align-items: center; padding-top: 6px; }
+.thcform-radio-group label {
+  font-size: 12.5px; font-weight: 600; color: #333; display: flex; align-items: center; gap: 5px;
+  cursor: pointer; text-transform: none;
+}
+.thcform-checkbox-field { display: flex; align-items: center; gap: 6px; padding-top: 6px; }
+.thcform-checkbox-field label { font-size: 12.5px; font-weight: 600; color: #333; text-transform: none; }
+.thcform-hint { font-size: 10.5px; color: #c62828; margin-top: 2px; }
+.thcform-mf-wrap { padding: 0 14px 14px; overflow-x: auto; }
+.thcform-mf-wrap table { width: 100%; min-width: 760px; border-collapse: collapse; }
+.thcform-mf-wrap th {
+  background: #f5f7fb; font-size: 10.5px; font-weight: 700; color: #444;
+  padding: 7px 8px; text-align: left; border-bottom: 1px solid #e8eaf0; white-space: nowrap;
+}
+.thcform-mf-wrap td { font-size: 12px; color: #333; padding: 7px 8px; border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
+.thcform-footer {
+  display: flex; justify-content: flex-end; gap: 10px; padding: 12px 20px;
+  border-top: 1px solid #e3e7ee; background: #fafbfc;
+}
+.thcform-btn-cancel {
+  background: #fff; border: 1px solid #c62828; color: #c62828; padding: 8px 20px;
+  border-radius: 5px; font-size: 13px; font-weight: 700; cursor: pointer;
+}
+.thcform-btn-cancel:hover { background: #fdecea; }
+.thcform-btn-submit {
+  background: #2e7d32; border: none; color: #fff; padding: 8px 22px;
+  border-radius: 5px; font-size: 13px; font-weight: 700; cursor: pointer;
+}
+.thcform-btn-submit:hover { background: #225c25; }
