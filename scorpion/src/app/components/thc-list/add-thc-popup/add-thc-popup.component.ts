@@ -54,6 +54,7 @@ export class AddThcPopupComponent {
   public chargesDetailsList: ChargesResponse[] = [];
   public lastFetchedVehicleNo: string | null = null;
   public ThcType:string='';
+  public bidData:any;
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
 
   constructor(
@@ -94,6 +95,9 @@ export class AddThcPopupComponent {
       scheduleDeptDate: [this.formatDateTime(new Date())],
       // CityRouteKM: [],
       vendorType: [],
+      bidType: [null],
+      bidNo: [null],
+      BiddingVendor:[''],
       vendorCode: [],
       lorryOwnerPanNo: [],
       // fromAddress: [],
@@ -250,6 +254,14 @@ export class AddThcPopupComponent {
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
 
+  getBidDetail() {
+    this.THCService.getBidDetail(this.docketService.loginUserList.LocationCode).subscribe({
+      next:(response:any)=>{
+        this.getBidDetail()
+      }
+    })
+  }
+
   challanDateAccess() {
     const payload = {
       moduleCode: '04',
@@ -302,8 +314,19 @@ export class AddThcPopupComponent {
     this.ThcForm.patchValue({
       vendorCode: null
     })
+    
+    const vendorType = event?.target?.value;
+    const bidTypeCtrl = this.ThcForm.get('bidType');
+    if (vendorType === '19') {
+      bidTypeCtrl?.setValidators([Validators.required]);
+    } else {
+      bidTypeCtrl?.clearValidators();
+      bidTypeCtrl?.setValue(null);
+    }
+    bidTypeCtrl?.updateValueAndValidity();
+
     const data = {
-      vendorType: event?.target?.value,
+      vendorType: vendorType,
       branchCode: this.docketService.loginUserList.LocationCode,
       userName: this.docketService.loginUserList.BaseUserName,
       documentType: "1"
