@@ -14,6 +14,7 @@ import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CommonDateService } from 'app/shared/services/common-date.service';
 import { LocationListResponse } from 'app/shared/models/delivery-agent.model';
+import { CustomerService } from 'app/shared/services/customer.service';
 @Component({
   selector: 'app-add-thc-popup',
   standalone: true,
@@ -47,6 +48,7 @@ export class AddThcPopupComponent {
   public chargesDetailsList: ChargesResponse[] = [];
   public lastFetchedVehicleNo: string | null = null;
   public ThcType:string='';
+  public bidData:any;
   @ViewChild('TemplateTHC', { static: true }) TemplateTHC!: TemplateRef<any>;
 
   constructor(
@@ -60,7 +62,7 @@ export class AddThcPopupComponent {
     public basicDetailService: BasicDetailService,
     public commonDateService: CommonDateService,
     private deliveryAgentService: DeliveryAgentService,
-
+    private customerService:CustomerService
   ) { }
 
   ngOnInit() {
@@ -83,7 +85,7 @@ export class AddThcPopupComponent {
       vendorType: [],
       bidType: [null],
       bidNo: [null],
-      BiddingVendor:[''],
+      BiddingVendor:[null],
       vendorCode: [],
       lorryOwnerPanNo: [],
       vendorName: [],
@@ -113,7 +115,7 @@ export class AddThcPopupComponent {
       balanceAmount: [0],
       advanceLocation: [],
       balanceLocation: [],
-      entryBy: [this.docketService.loginUserList.BaseUserName],
+      entryBy: [],
       vehicleCapacity: [],
       isOverLoad: [],
       wtLoaded: [0],
@@ -132,6 +134,22 @@ export class AddThcPopupComponent {
       airWayBillNo: [],
       routeCode: [null, Validators.required],
     }, { validators: this.advanceNotGreaterThanNet.bind(this) });
+
+    this.ThcForm.get('bidType')?.valueChanges.subscribe(val => {
+      const vendorType = this.ThcForm.get('vendorType')?.value;
+      const biddingVendorCtrl = this.ThcForm.get('BiddingVendor');
+      
+      if (vendorType === '19' && val === 'With') {
+        biddingVendorCtrl?.setValidators([Validators.required]);
+        this.getBidDetail();
+      } else {
+        biddingVendorCtrl?.clearValidators();
+        biddingVendorCtrl?.setValue(null);
+      }
+      biddingVendorCtrl?.updateValueAndValidity();
+    });
+
+    this.fetchPreparedByEmployee();
   }
 
   formatDateTime(date: Date): string {
@@ -148,6 +166,22 @@ export class AddThcPopupComponent {
     return `${d} ${m} ${y}, ${pad(hours)}:${minutes} ${ampm}`;
   }
 
+  fetchPreparedByEmployee() {
+    const searchText = this.docketService.loginUserList?.UserId;
+    const baseUserName = this.docketService.loginUserList?.BaseUserName;
+    if (!searchText || !baseUserName) return;
+
+    this.customerService.getEmployeeDropdown(searchText, baseUserName).subscribe({
+      next: (response: any) => {
+        if (Array.isArray(response) && response.length > 0) {
+          const emp = response[0];
+          const val = emp.id ? `${emp.id} : ${emp.text}` : emp.text;
+          this.ThcForm?.get('entryBy')?.setValue(val);
+        }
+      }
+    });
+  }
+
   showPopup(type: string) {
     this.ThcType = type;
     this.buildForm();
@@ -161,16 +195,21 @@ export class AddThcPopupComponent {
 
   getVendorsList(event: any) {
     this.ThcForm.patchValue({
-      vendorCode: null
-    })
+      vendorCode: null,
+      bidType: null,
+      BiddingVendor: null
+    });
     
     const vendorType = event?.target?.value;
     const bidTypeCtrl = this.ThcForm.get('bidType');
+    const biddingVendorCtrl = this.ThcForm.get('BiddingVendor');
+    
     if (vendorType === '19') {
       bidTypeCtrl?.setValidators([Validators.required]);
     } else {
       bidTypeCtrl?.clearValidators();
-      bidTypeCtrl?.setValue(null);
+      biddingVendorCtrl?.clearValidators();
+      biddingVendorCtrl?.updateValueAndValidity();
     }
     bidTypeCtrl?.updateValueAndValidity();
 
@@ -769,5 +808,40 @@ export class AddThcPopupComponent {
         this.sweetAlertService.error(err.error.message)
       }
     });
+  }
+
+  getBidDetail(){
+    this.THCService.getBidDetail(this.docketService.loginUserList.LocationCode).subscribe({
+      next:(response:any)=>{
+        this.bidData=response.data;
+      }
+    })
+  }
+
+  onChangeBid(event:any){
+    let bidNo=event?.bidNo;
+    this.THCService.getDataFromBid(bidNo).subscribe({
+      next:(response:any)=>{
+        this.ThcForm.patchValue({
+          vendorCode:response?.vendorCode,
+          driver1Name:response?.driverName,
+          mKTVehicleNo:response?.vehicleNo,
+          driver1MobileNo:response?.driverMobileNo,
+        })
+          this.getVehicleDetail(response?.vehicleNo);
+      }
+    })
+  }
+
+  onSubmit() {
+    if (this.ThcForm.valid) {
+
+    } else {
+      this.ThcForm.markAllAsTouched();
+      const invalidKeys = Object.keys(this.ThcForm.controls).filter(
+        key => this.ThcForm.controls[key].invalid
+      );
+      console.log('Invalid Form Controls:', invalidKeys);
+    }
   }
 }

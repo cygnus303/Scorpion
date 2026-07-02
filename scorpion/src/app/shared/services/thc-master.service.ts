@@ -223,4 +223,8 @@ export class THCMasterService {
   getBidDetail(location: string){
     return this.apiHandlerService.Get(`Operation/closed-bids?BranchCode=${location}`);
   }
+
+  getDataFromBid(bidNo: string){
+    return this.apiHandlerService.Get(`Operation/bid-details?bidNo=${bidNo}`);
+  }
 }

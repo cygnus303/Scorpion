@@ -63,20 +63,26 @@
                     formControlName="vendorType">Attached</label>
               </div>
             </div>
-            <div class="thcform-field" id="bidTypeWrap">
-              <label>Bid Type</label>
+            <div class="thcform-field" id="bidTypeWrap" *ngIf="ThcForm.value.vendorType === '19'">
+              <label>Bid Type <span class="req">*</span></label>
               <div class="thcform-radio-group">
-                <label><input type="radio" name="bidType" value="With" onchange="onBidTypeChange()">With Bid</label>
-                <label><input type="radio" name="bidType" value="Without" onchange="onBidTypeChange()">Without
+                <label><input type="radio" value="With" formControlName="bidType">With Bid</label>
+                <label><input type="radio" value="Without" formControlName="bidType">Without
                   Bid</label>
               </div>
+              <div class="text-danger text-start"
+                *ngIf="ThcForm.get('bidType')?.invalid && ThcForm.get('bidType')?.touched ">
+                This field is required.</div>
             </div>
-            <div class="thcform-field" id="bidNoWrap">
-              <label>Bid No</label>
-              <select id="bidNoSel" onchange="onBidNoChange()">
-                <option value="">-- Select Bid --</option>
-              </select>
-              <div class="thcform-hint" id="bidNoHint"></div>
+            <div class="thcform-field" id="bidNoWrap" *ngIf="ThcForm.value.vendorType === '19' && ThcForm.value.bidType === 'With'">
+              <label>Bid No <span class="req">*</span></label>
+              <ng-select class="noFoundTextColor required2 clear-icon" [items]="bidData" placeholder="Select Bid" appendTo="body"
+                formControlName="BiddingVendor" appFocusNext notFoundText="No matches found" bindLabel="bidNo"
+                bindValue="bidNo" (change)="onChangeBid($event)"
+                [ngClass]="{ 'border-danger': ThcForm.get('BiddingVendor')?.invalid && ThcForm.get('BiddingVendor')?.touched }"></ng-select>
+              <div class="text-danger text-start"
+                *ngIf="ThcForm.get('BiddingVendor')?.invalid && ThcForm.get('BiddingVendor')?.touched ">
+                This field is required.</div>
             </div>
             <div class="thcform-field">
               <label>Vendor Name <span class="req">*</span></label>
@@ -540,7 +546,7 @@
     <!-- Footer -->
     <div class="thcform-footer">
       <button type="button" class="thcform-btn-cancel" (click)="closePopup()">Cancel</button>
-      <button type="button" class="thcform-btn-submit">Submit</button>
+      <button type="button" class="thcform-btn-submit" (click)="onSubmit()">Submit</button>
     </div>
 
   </div>
