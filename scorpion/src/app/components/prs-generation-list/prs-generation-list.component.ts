@@ -23,7 +23,7 @@ import { MenuAccessService } from 'app/shared/services/menu-access.service';
 @Component({
   selector: 'app-prs-generation-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, PRSArrivalComponent, HCCDetailsComponent, PRSDRSEditComponent,HccViewComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, PRSArrivalComponent, HCCDetailsComponent, PRSDRSEditComponent, HccViewComponent],
   templateUrl: './prs-generation-list.component.html',
   styleUrl: './prs-generation-list.component.scss',
   providers: [PFMapiService, BsModalService]
@@ -45,7 +45,6 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     total_PRS: 0,
     pending_for_Arrival: 0,
     prs_Billed: 0,
-    hcc_Generated: 0,
     cancelled: 0,
     total_PRS_Arrived: 0
   };
@@ -59,12 +58,10 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
 
   statusList = [
     { label: 'All Status', value: 'All' },
-    { label: 'Generated', value: 'Generated' },
-    { label: 'Arrived', value: 'Arrived' },
-    { label: 'Billed', value: 'Billed' },
+    { label: 'Pending for Arrival', value: 'Generated' },
+    { label: 'Total PRS Arrived', value: 'Arrived' },
+    { label: 'PRS Billed', value: 'Billed' },
     { label: 'Cancelled', value: 'Cancelled' },
-    { label: 'HCC Generated', value: 'HCC Generated' },
-
   ];
 
   public config = {
@@ -256,11 +253,11 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
   isHccOpen(hcc: any): boolean {
     if (hcc === null || hcc === undefined || hcc === '') return false;
     if (hcc === 'NO HCC' || hcc === 'NOHCC') return false;
-    
+
     if (!isNaN(hcc)) {
       return Number(hcc) === 0;
     }
-    
+
     return true;
   }
 
@@ -283,8 +280,8 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     this.HCCDetailsComponent.showPopup(data, 'P');
   }
 
-  openHccView(data: any,chargeType:string){
-    this.HccViewComponent.showPopup(data,chargeType,'P');
+  openHccView(data: any, chargeType: string) {
+    this.HccViewComponent.showPopup(data, chargeType, 'P');
   }
 
   openPRSDRSEdit(data: any, flag: string) {
