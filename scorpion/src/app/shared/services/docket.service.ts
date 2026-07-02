@@ -1044,8 +1044,8 @@ freightAndOtherChar(){
         this.basicDetailForm.patchValue({
           exemptServices: null,
         });
-        this.GetGSTFromTrnMode();
-    }
+      }
+      this.GetGSTFromTrnMode();
       this.basicDetailService.getExemptData(customerCode).subscribe({
         next: (response: any) => {
           if (response && response.data) {
