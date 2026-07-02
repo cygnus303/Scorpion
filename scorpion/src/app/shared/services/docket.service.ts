@@ -1040,12 +1040,12 @@ freightAndOtherChar(){
     const currentBillingParty = this.basicDetailForm.value.billingParty;
     const isSavedCustomer = this.completiondata?.wmd?.partY_CODE === currentBillingParty;
 
-    if(this.basicDetailForm.value.exemptServices && !isSavedCustomer){
+    if(this.basicDetailForm.value.exemptServices){
         this.basicDetailForm.patchValue({
           exemptServices: null,
         });
+        this.GetGSTFromTrnMode();
       }
-      this.GetGSTFromTrnMode();
       this.basicDetailService.getExemptData(customerCode).subscribe({
         next: (response: any) => {
           if (response && response.data) {
