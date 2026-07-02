@@ -377,6 +377,7 @@
                                         📍 Track
                                     </button>
                                     <button class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1"
+                                        (click)="openMapView(lr)"
                                         style="font-size: 11px; background: #fff4e0; color: #e07b00; border: 1px solid #f5d38a;">
                                         🗺 Map
                                     </button>
@@ -403,3 +404,4 @@
 <!-- MODALS -->
 <app-lr-print-view #lrPrintView></app-lr-print-view>
 <app-lr-lifecycle-tracker #lrLifecycleTracker></app-lr-lifecycle-tracker>
+<app-live-route-map #liveRouteMap ></app-live-route-map>

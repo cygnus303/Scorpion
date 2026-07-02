@@ -13,17 +13,19 @@ import { LrPrintViewComponent } from './lr-print-view/lr-print-view.component';
 import { LrLifecycleTrackerComponent } from './lr-lifecycle-tracker/lr-lifecycle-tracker.component';
 import { DocketService } from 'app/shared/services/docket.service';
 import { Router } from '@angular/router';
+import { LiveRouteMapComponent } from './live-route-map/live-route-map.component';
 
 @Component({
   selector: 'app-lr-track-trace-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, BsDatepickerModule, PaginationComponent, NgSelectModule, LrPrintViewComponent, LrLifecycleTrackerComponent],
+  imports: [CommonModule, FormsModule, BsDatepickerModule, PaginationComponent, NgSelectModule, LrPrintViewComponent, LrLifecycleTrackerComponent, LiveRouteMapComponent],
   templateUrl: './lr-track-trace-list.component.html',
   styleUrl: './lr-track-trace-list.component.scss'
 })
 export class LrTrackTraceListComponent implements OnInit, OnDestroy {
   @ViewChild('lrPrintView') lrPrintView!: LrPrintViewComponent;
   @ViewChild('lrLifecycleTracker') lrLifecycleTracker!: LrLifecycleTrackerComponent;
+  @ViewChild('liveRouteMap') liveRouteMap!: LiveRouteMapComponent;
 
   private searchSubject = new Subject<string>();
   private fetchDataSubject = new Subject<any>();
@@ -329,6 +331,13 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
   openTrackerView(lr: any) {
     if (this.lrLifecycleTracker) {
       this.lrLifecycleTracker.showPopup(lr);
+    }
+  }
+
+  openMapView(lr: any) {
+    debugger
+    if (this.liveRouteMap) {
+      this.liveRouteMap.showPopup(lr);
     }
   }
 

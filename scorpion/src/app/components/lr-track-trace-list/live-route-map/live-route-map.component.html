@@ -1,0 +1,206 @@
+<ng-template #TemplateMapRef>
+  <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+    <!-- BOOTSTRAP HEADER -->
+    <div class="modal-header bg-navy text-white px-4 py-3 d-flex justify-content-between align-items-center border-0">
+      <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <span class="fs-5">🗺️</span>
+          <h5 class="modal-title fw-bold m-0 text-white">Live Route Map</h5>
+        </div>
+        <div class="d-flex align-items-center flex-wrap gap-2 font-13 text-light opacity-90">
+          <span>{{ lrNumber }}</span>
+          <span>|</span>
+          <span>{{ origin }} → {{ destination }}</span>
+          <span>|</span>
+          <span class="badge bg-light text-dark fw-semibold">📍 {{ currentLocation }}</span>
+          <span *ngIf="vehicleNo">|</span>
+          <span class="badge bg-warning text-dark fw-bold" *ngIf="vehicleNo">🚛 {{ vehicleNo }}</span>
+        </div>
+      </div>
+      <button type="button" class="btn-close btn-close-white" (click)="closePopup()" aria-label="Close"></button>
+    </div>
+
+    <!-- BOOTSTRAP BODY -->
+    <div class="modal-body p-4 bg-white">
+      <!-- MAP & GPS VISUALIZATION BOX -->
+      <div class="card border border-primary border-opacity-25 rounded-3 bg-light-blue p-3 mb-4 position-relative overflow-hidden">
+        
+        <!-- TOP OVERLAY BAR: LEGEND + LIVE TELEMETRY (BOOTSTRAP FLEX) -->
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-3 position-relative z-3">
+          <!-- LEGEND -->
+          <div class="bg-white border rounded shadow-sm px-3 py-2 d-flex flex-column gap-1">
+            <div class="d-flex align-items-center gap-2 font-11 fw-semibold text-secondary">
+              <span class="legend-line-completed"></span>
+              <span>Completed Route</span>
+            </div>
+            <div class="d-flex align-items-center gap-2 font-11 fw-semibold text-secondary">
+              <span class="legend-line-remaining"></span>
+              <span>Remaining Route</span>
+            </div>
+            <div class="d-flex align-items-center gap-2 font-11 fw-semibold text-secondary">
+              <span class="legend-dot-current"></span>
+              <span>Current Position</span>
+            </div>
+          </div>
+
+          <!-- LIVE GPS TELEMETRY BADGE -->
+          <div class="bg-white border border-warning rounded shadow-sm p-2 d-flex flex-column gap-1" style="max-width: 480px;">
+            <div class="d-flex align-items-center justify-content-between border-bottom pb-1 mb-1 gap-2">
+              <div class="d-flex align-items-center gap-1">
+                <span class="pulse-dot bg-success rounded-circle"></span>
+                <span class="fw-bold font-12 text-dark">🚛 Live Vehicle: {{ vehicleNo }}</span>
+              </div>
+              <span class="badge bg-warning-subtle text-warning-emphasis border border-warning font-10" *ngIf="isLoadingGps">Fetching GPS...</span>
+            </div>
+            <div class="d-flex flex-wrap align-items-center gap-3 font-11 text-secondary">
+              <div *ngIf="gpsAddress" class="w-100 text-truncate font-11 text-dark">
+                <strong>📍 Address:</strong> {{ gpsAddress }}
+              </div>
+              <div *ngIf="vehicleLat !== null && vehicleLong !== null">
+                <strong>🛰️ Lat/Long:</strong> {{ vehicleLat | number:'1.4-4' }}, {{ vehicleLong | number:'1.4-4' }}
+              </div>
+              <div>
+                <strong>⚡ Ignition:</strong> <span [ngClass]="vehicleIgnition === 'ON' ? 'badge bg-success text-white' : 'badge bg-danger text-white'">{{ vehicleIgnition }}</span>
+              </div>
+              <div>
+                <strong>🏎️ Speed:</strong> {{ vehicleSpeed }} km/h
+              </div>
+              <div *ngIf="reportingTime" class="text-muted">
+                <strong>🕒 Updated:</strong> {{ reportingTime }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROUTE GRAPHIC -->
+        <div class="route-graphic-container">
+          <svg class="route-svg" viewBox="0 0 800 240" preserveAspectRatio="none">
+            <!-- Grid Lines Background (Subtle) -->
+            <g class="svg-grid" stroke="#cdddef" stroke-width="1" stroke-dasharray="4,4">
+              <line x1="0" y1="60" x2="800" y2="60" />
+              <line x1="0" y1="120" x2="800" y2="120" />
+              <line x1="0" y1="180" x2="800" y2="180" />
+              <line x1="200" y1="0" x2="200" y2="240" />
+              <line x1="400" y1="0" x2="400" y2="240" />
+              <line x1="600" y1="0" x2="600" y2="240" />
+            </g>
+
+            <!-- Completed Route Path (Solid Green) -->
+            <path d="M 120,180 Q 250,140 390,110" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round" />
+
+            <!-- Remaining Route Path (Dashed Orange) -->
+            <path d="M 390,110 Q 550,80 680,60" fill="none" stroke="#f59e0b" stroke-width="4" stroke-dasharray="8,6" stroke-linecap="round" />
+          </svg>
+
+          <!-- OVERLAY NODES & BADGES -->
+          <!-- Origin Node -->
+          <div class="node origin-node" style="left: 15%; top: 75%;">
+            <div class="node-dot origin-dot"></div>
+            <div class="node-label">{{ origin }}</div>
+          </div>
+
+          <!-- Completed Badge -->
+          <div *ngIf="distanceCovered !== null" class="route-badge badge bg-success-subtle text-success border border-success font-11 shadow-sm" style="left: 31%; top: 62%;">
+            ✓ {{ distanceCovered | number }} km (Done)
+          </div>
+
+          <!-- Current Position Node -->
+          <div class="node current-node" style="left: 48.75%; top: 45.8%;">
+            <div class="pulse-ring"></div>
+            <div class="node-dot current-dot"></div>
+            <div class="current-info shadow-sm rounded px-2 py-1 bg-white border border-warning">
+              <div class="fw-bold font-12 text-warning-emphasis">{{ currentLocation ? currentLocation.split(' ')[0] : 'Current' }} ▲</div>
+              <div class="font-10 fw-bold text-danger">📍 Current ({{ vehicleNo }})</div>
+            </div>
+          </div>
+
+          <!-- Remaining Badge -->
+          <div *ngIf="remainingDistance !== null" class="route-badge badge bg-warning-subtle text-warning-emphasis border border-warning font-11 shadow-sm" style="left: 62%; top: 32%;">
+            ⌛ {{ remainingDistance | number }} km (Remaining)
+          </div>
+
+          <!-- Destination Node -->
+          <div class="node dest-node" style="left: 85%; top: 25%;">
+            <div class="node-dot dest-dot"></div>
+            <div class="node-label">{{ destination }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4-COLUMN INFO CARDS GRID (BOOTSTRAP ROW) -->
+      <div class="row g-3 mb-3">
+        <div class="col-6 col-md-3">
+          <div class="card h-100 border bg-light p-3 shadow-sm">
+            <div class="text-muted text-uppercase fw-bold font-11 mb-1">ORIGIN</div>
+            <div class="fs-6 fw-bold text-dark">{{ origin }}</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card h-100 border bg-light p-3 shadow-sm">
+            <div class="text-muted text-uppercase fw-bold font-11 mb-1">CURRENT LOCATION</div>
+            <div class="fs-6 fw-bold text-warning-emphasis">📍 {{ currentLocation }}</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card h-100 border bg-light p-3 shadow-sm">
+            <div class="text-muted text-uppercase fw-bold font-11 mb-1">DESTINATION</div>
+            <div class="fs-6 fw-bold text-dark">{{ destination }}</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card h-100 border bg-light p-3 shadow-sm">
+            <div class="text-muted text-uppercase fw-bold font-11 mb-1">EDD</div>
+            <div class="fs-6 fw-bold text-warning-emphasis">{{ edd }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3-COLUMN STATS CARDS GRID (BOOTSTRAP ROW) -->
+      <div class="row g-3 mb-3">
+        <div class="col-12 col-md-4">
+          <div class="card h-100 border bg-light p-3 shadow-sm">
+            <div class="text-muted text-uppercase fw-bold font-11 mb-1">TOTAL DISTANCE</div>
+            <div class="fs-5 fw-bold text-dark">{{ totalDistance !== null ? (totalDistance | number) + ' km' : 'N/A' }}</div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="card h-100 border bg-light p-3 shadow-sm">
+            <div class="text-muted text-uppercase fw-bold font-11 mb-1">DISTANCE COVERED</div>
+            <div class="fs-5 fw-bold text-success">{{ distanceCovered !== null ? (distanceCovered | number) + ' km' : 'N/A' }} <span *ngIf="distanceCovered !== null" class="font-13 fw-normal text-muted">({{ progressPercent }}%)</span></div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="card h-100 border bg-light p-3 shadow-sm">
+            <div class="text-muted text-uppercase fw-bold font-11 mb-1">REMAINING</div>
+            <div class="fs-5 fw-bold text-warning-emphasis">{{ remainingDistance !== null ? (remainingDistance | number) + ' km' : 'N/A' }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROGRESS BAR CARD (BOOTSTRAP PROGRESS) -->
+      <div class="card border bg-light p-3 mb-1 shadow-sm">
+        <div class="d-flex justify-content-between align-items-center font-12 fw-semibold mb-2">
+          <span class="text-dark">{{ origin }}</span>
+          <span class="text-warning-emphasis">📍 {{ currentLocation ? currentLocation.split(' ')[0] : 'Current' }} (Current)</span>
+          <span class="text-dark">{{ destination }}</span>
+        </div>
+        <div class="progress" style="height: 14px; border-radius: 7px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" [style.width.%]="progressPercent" [attr.aria-valuenow]="progressPercent" aria-valuemin="0" aria-valuemax="100">
+            {{ progressPercent }}%
+          </div>
+        </div>
+        <div class="text-center font-11 text-muted fw-medium mt-2">
+          Journey Progress: {{ progressPercent }}% complete
+        </div>
+      </div>
+    </div>
+
+    <!-- BOOTSTRAP FOOTER -->
+    <div class="modal-footer bg-light px-4 py-3 border-top d-flex justify-content-end gap-2">
+      <button type="button" class="btn btn-outline-secondary fw-semibold px-4" (click)="closePopup()">Close</button>
+      <button type="button" class="btn btn-navy fw-semibold px-4 text-white" (click)="onViewFullLifecycle()">
+        📍 View Full Lifecycle
+      </button>
+    </div>
+  </div>
+</ng-template>
