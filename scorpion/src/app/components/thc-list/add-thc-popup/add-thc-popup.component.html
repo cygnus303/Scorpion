@@ -1,0 +1,547 @@
+<ng-template #TemplateTHC>
+  <div class="mf-view-box thcform-box">
+    <div class="thcform-header">
+      <h2>{{ThcType !== 'A' ? 'Add THC With Empty Vehicle':'Add THC'}}</h2>
+      <button class="mf-view-close" (click)="closePopup()">&times;</button>
+    </div>
+    <form [formGroup]="ThcForm">
+      <div class="thcform-body">
+
+        <!-- Basic Details -->
+        <div class="thcform-section">
+          <div class="thcform-section-title">Basic Details</div>
+          <div class="thcform-grid">
+            <div class="thcform-field">
+              <label>THC Date</label>
+              <input type="text" formControlName="tHCDate" readonly>
+            </div>
+            <div class="thcform-field">
+              <label>Route Mode <span class="req">*</span></label>
+              <div class="thcform-radio-group">
+                <label><input type="radio" value="S" (change)="getRoutesFromRouteType($event)"
+                    formControlName="routeType">Road</label>
+                <label><input type="radio" value="A" (change)="getRoutesFromRouteType($event)"
+                    formControlName="routeType">AIR</label>
+              </div>
+            </div>
+            <div class="thcform-field">
+              <label>Route Name <span class="req">*</span></label>
+              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Route Name" appendTo="body"
+                formControlName="routeCode" notFoundText="No matches found" [items]="routeNameList" bindLabel="text"
+                bindValue="value" appFocusNext  (change)="getERDDate()"
+                [ngClass]="{ 'border-danger': ThcForm.get('routeCode')?.invalid  && ThcForm.get('routeCode')?.touched }"></ng-select>
+              <div class="text-danger text-start"
+                *ngIf="ThcForm.get('routeCode')?.invalid && ThcForm.get('routeCode')?.touched ">
+                This field is required.</div>
+            </div>
+            <div class="thcform-field">
+              <label>Actual Dept. Date &amp; Time</label>
+              <input type="text" formControlName="actualDeptDate" readonly>
+            </div>
+            <div class="thcform-field">
+              <label>Scheduled Dept Date &amp; Time</label>
+              <input type="text" formControlName="scheduleDeptDate" readonly>
+            </div>
+            <div class="thcform-field">
+              <label>Expected Reporting Date</label>
+              <input type="text" formControlName="ERD" readonly>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Vendor / Bid Details -->
+        <div class="thcform-section">
+          <div class="thcform-section-title">Vendor / Bid Details</div>
+          <div class="thcform-grid">
+            <div class="thcform-field">
+              <label>Vendor Type <span class="req">*</span></label>
+              <div class="thcform-radio-group">
+                <label><input type="radio" value="19" (change)="getVendorsList($event);"
+                    formControlName="vendorType">Market</label>
+                <label><input type="radio" value="XX1" (change)="getVendorsList($event);"
+                    formControlName="vendorType">Attached</label>
+              </div>
+            </div>
+            <div class="thcform-field" id="bidTypeWrap">
+              <label>Bid Type</label>
+              <div class="thcform-radio-group">
+                <label><input type="radio" name="bidType" value="With" onchange="onBidTypeChange()">With Bid</label>
+                <label><input type="radio" name="bidType" value="Without" onchange="onBidTypeChange()">Without
+                  Bid</label>
+              </div>
+            </div>
+            <div class="thcform-field" id="bidNoWrap">
+              <label>Bid No</label>
+              <select id="bidNoSel" onchange="onBidNoChange()">
+                <option value="">-- Select Bid --</option>
+              </select>
+              <div class="thcform-hint" id="bidNoHint"></div>
+            </div>
+            <div class="thcform-field">
+              <label>Vendor Name <span class="req">*</span></label>
+              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name"
+                [items]="vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code" appendTo="body" required
+                [ngClass]="{ 'border-danger': ThcForm.get('vendorCode')?.invalid && ThcForm.get('vendorCode')?.touched }"
+                formControlName="vendorCode" (change)="getPANnumberData($event?.vendor_Code)" appFocusNext> <ng-template
+                  ng-option-tmp let-item="item" let-search="searchTerm">
+                  <div [title]="item.vendor_Name"> {{ item.vendor_Name }} </div>
+                </ng-template> </ng-select>
+              <div class="text-danger text-start"
+                *ngIf="ThcForm.get('vendorCode')?.invalid && ThcForm.get('vendorCode')?.touched ">
+                This field is required.</div>
+            </div>
+            <div class="thcform-field">
+              <label>Pan No</label>
+              <input type="text" formControlName="lorryOwnerPanNo" readonly>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flight Details -->
+        <div class="thcform-section" *ngIf="ThcForm.value.routeType === 'A'">
+          <div class="thcform-section-title">Airport</div>
+          <div class="thcform-grid">
+            <div class="thcform-field">
+              <label>Airport</label>
+              <ng-select class="noFoundTextColor" [items]="airportList" placeholder="Airport" appendTo="body"
+                formControlName="airportCode" appFocusNext notFoundText="No matches found" bindLabel="codeDesc"
+                bindValue="codeId" (change)="getFlights()"></ng-select>
+            </div>
+            <div class="thcform-field" id="bidTypeWrap">
+              <label>Airline Name</label>
+              <ng-select class="noFoundTextColor " placeholder="Airline Name" formControlName="airLine" appendTo="body"
+                (change)="getFlights()" appFocusNext notFoundText="No matches found" [items]="airlineList"
+                bindLabel="codeDesc" bindValue="codeId"></ng-select>
+            </div>
+            <div class="thcform-field">
+              <label>Flight No</label>
+              <ng-select class="noFoundTextColor" placeholder="Flight No" formControlName="flightCode" appendTo="body"
+                (change)="getFlightSchTime()" notFoundText="No matches found" [items]="flightsList" bindLabel="codeDesc"
+                bindValue="codeId" appFocusNext></ng-select>
+            </div>
+            <div class="thcform-field">
+              <label>Flight Sch. Dept. Time</label>
+              <input class="form-control" placeholder="Flight Sch. Dept. Time" type="text"
+                formControlName="flightScheduleTime" readonly appFocusNext>
+            </div>
+            <div class="thcform-field">
+              <label>AWB No</label>
+              <input class="form-control" placeholder="AWB No" type="text" formControlName="airWayBillNo"
+                appFocusNext>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vehicle Details -->
+        <div class="thcform-section" *ngIf="ThcType === 'A'">
+          <div class="thcform-section-title">Vehicle Details</div>
+          <div class="thcform-grid">
+            <div class="thcform-field"
+              *ngIf="ThcForm.value.vendorType === 'XX1' || ThcForm.value.vendorType === '19'">
+              <label>Vehicle No. <span class="req">*</span></label>
+              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vehicle No." [items]="vehicleNoList"
+                formControlName="vehicleNO" (change)="getTripSheetList($event);updateVehicleRequiredValidator()"
+                [ngClass]="{ 'border-danger': ThcForm.get('vehicleNO')?.invalid  && ThcForm.get('vehicleNO')?.touched }"
+                appFocusNext notFoundText="No matches found" bindLabel="text" bindValue="value"></ng-select>
+              <div class="text-danger text-start"
+                *ngIf="ThcForm.get('vehicleNO')?.invalid && ThcForm.get('vehicleNO')?.touched ">
+                This field is required.</div>
+            </div>
+            <div class="thcform-field" *ngIf="ThcForm.value.vehicleNO === 'O'">
+              <label>Vehicle No. Digit</label>
+              <div class="thcform-radio-group" style="flex-wrap:wrap; gap:10px;"
+                *ngFor="let digit of [10, 9, 8, 7, 11]">
+                <input class="form-check-input me-1 checkbox-lg" type="radio" name="vehicleDigit" [value]="digit"
+                  (change)="onDigitChange(digit)" [checked]="selectedDigit === digit" appFocusNext />
+                <label class="form-check-label">{{ digit }}</label>
+              </div>
+            </div>
+            <div class="thcform-field" *ngIf="ThcForm.value.vehicleNO ==='O'">
+              <label>Vehicle No. <span class="req">*</span></label>
+              <input class="form-control required2" placeholder="Vehicle No." type="text" formControlName="mKTVehicleNo"
+                appFocusNext (input)="validateVehicleNo()"
+                [ngClass]="{ 'border-danger': ThcForm.get('mKTVehicleNo')?.invalid  && ThcForm.get('mKTVehicleNo')?.touched }">
+              <div *ngIf="isVehicleLoading" class="spinner-border spinner-border-sm text-primary position-absolute"
+                style="right:10px; top:50%; transform:translateY(-50%);">
+              </div>
+              <div class="text-danger text-start"
+                                    *ngIf="ThcForm.get('mKTVehicleNo')?.invalid && ThcForm.get('mKTVehicleNo')?.touched ">
+                                    This field is required.</div>
+            </div>
+            <div class="thcform-field" id="ftlTypeFieldWrap">
+              <label>FTL Type</label>
+              <input type="text" id="ftlTypeField" readonly>
+            </div>
+            <div class="thcform-field" id="ftlTypeSelWrap">
+              <label>FTL Type <span class="req">*</span></label>
+              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="FTL Type"
+                formControlName="vehicleType" [readonly]="ThcForm.value.vendorType === 'XX1'" appFocusNext required
+                notFoundText="No matches found" [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode"
+                (change)="onChangeVehicleType($event)" required
+                [ngClass]="{ 'border-danger': ThcForm.get('vehicleType')?.invalid  && ThcForm.get('vehicleType')?.touched }"></ng-select>
+              <div class="text-danger text-start"
+                *ngIf="ThcForm.get('vehicleType')?.invalid && ThcForm.get('vehicleType')?.touched ">
+                This field is required.</div>
+            </div>
+            <div class="thcform-field">
+              <label>Registration Date</label>
+              <div class="input-group"
+                (click)="!(ThcForm.value.vehicleNO && ThcForm.value.vehicleNO !== 'O') && dvr.toggle(); $event.stopPropagation()">
+                <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="true"
+                  #dvr="bsDatepicker" bsDatepicker formControlName="registrationDate" required
+                  [ngClass]="{'border-danger':ThcForm.get('registrationDate')?.invalid && ThcForm.get('registrationDate')?.touched}"
+                  [bsConfig]="{containerClass: 'theme-dark-blue',dateInputFormat: 'DD MMMM YYYY',maxDate: today}"
+                  (click)="!(ThcForm.value.vehicleNO && ThcForm.value.vehicleNO !== 'O') && dvr.toggle(); $event.stopPropagation()"
+                  appFocusNext />
+
+                <span class="input-group-text cursor-pointer"
+                  (click)="!(ThcForm.value.vehicleNO && ThcForm.value.vehicleNO !== 'O') && dvr.toggle(); $event.stopPropagation()"
+                  [class.disabled-input]="ThcForm.value.vehicleNO && ThcForm.value.vehicleNO !== 'O'">
+                  <i class="fa fa-calendar"></i>
+                </span>
+              </div>
+              <div class="text-danger text-start"
+                *ngIf="ThcForm.get('registrationDate')?.invalid && ThcForm.get('registrationDate')?.touched ">
+                This field is required.</div>
+            </div>
+            <div class="thcform-field">
+              <label>Insurance Validity Date</label>
+              <div class="input-group"
+                (click)="!(ThcForm.value.vehicleNO && ThcForm.value.vehicleNO !== 'O') && ins.toggle(); $event.stopPropagation()">
+                <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" readonly #ins="bsDatepicker"
+                  bsDatepicker formControlName="insuranceDate" (bsValueChange)="checkInsuranceExpiry($event)"
+                  [class.disabled-input]="true" required
+                  [ngClass]="{'border-danger':ThcForm.get('insuranceDate')?.invalid &&ThcForm.get('insuranceDate')?.touched ||isInsuranceExpired}"
+                  [bsConfig]="{containerClass: 'theme-dark-blue',dateInputFormat: 'DD MMMM YYYY',minDate: today }"
+                  appFocusNext
+                  (click)="!(ThcForm.value.vehicleNO && ThcForm.value.vehicleNO !== 'O') && ins.toggle(); $event.stopPropagation()" />
+                <span class="input-group-text cursor-pointer"
+                  (click)="!(ThcForm.value.vehicleNO && ThcForm.value.vehicleNO !== 'O') && ins.toggle(); $event.stopPropagation()"
+                  [class.disabled-input]="ThcForm.value.vehicleNO && ThcForm.value.vehicleNO !== 'O'">
+                  <i class="fa fa-calendar"></i>
+                </span>
+
+              </div>
+
+              <div *ngIf="isInsuranceExpired" class="text-danger text-start fw-bold mt-1">
+                Insurance Date is expired.
+              </div>
+              <div class="text-danger text-start"
+                *ngIf="ThcForm.get('insuranceDate')?.invalid && ThcForm.get('insuranceDate')?.touched ">
+                This field is required.</div>
+            </div>
+            <div class="thcform-field">
+              <label>Fitness Validity Date</label>
+              <div class="input-group"
+                (click)="!(ThcForm.value.vehicleNO && ThcForm.value.vehicleNO !== 'O') && fit.toggle(); $event.stopPropagation()">
+                <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" readonly #fit="bsDatepicker"
+                  bsDatepicker formControlName="fitnessDate" (bsValueChange)="checkFitnessExpiry($event)"
+                  [class.disabled-input]="true" required
+                  [ngClass]="{'border-danger': ThcForm.get('fitnessDate')?.invalid &&ThcForm.get('fitnessDate')?.touched ||isFitnessExpired}"
+                  [bsConfig]="{containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY',minDate: today }"
+                  appFocusNext
+                  (click)="!(ThcForm.value.vehicleNO && ThcForm.value.vehicleNO !== 'O') && fit.toggle(); $event.stopPropagation()" />
+                <span class="input-group-text cursor-pointer"
+                  (click)="!(ThcForm.value.vehicleNO && ThcForm.value.vehicleNO !== 'O') && fit.toggle(); $event.stopPropagation()"
+                  [class.disabled-input]="ThcForm.value.vehicleNO && ThcForm.value.vehicleNO !== 'O'">
+                  <i class="fa fa-calendar"></i>
+                </span>
+              </div>
+              <div *ngIf="isFitnessExpired" class="text-danger text-start fw-bold mt-1">
+                Fitness Date is expired.
+              </div>
+              <div class="text-danger text-start"
+                *ngIf="ThcForm.get('fitnessDate')?.invalid && ThcForm.get('fitnessDate')?.touched ">
+                This field is required.</div>
+            </div>
+            <div class="thcform-field">
+              <label>Engine No</label>
+              <input class="form-control required2" placeholder="Engine No." formControlName="eNGINENO" type="text"
+                [readonly]="ThcForm.value.vehicleNO && ThcForm.value.vehicleNO !== 'O'" required
+                [ngClass]="{ 'border-danger': ThcForm.get('eNGINENO')?.invalid  && ThcForm.get('eNGINENO')?.touched }"
+                appFocusNext>
+              <div class="text-danger text-start"
+                *ngIf="ThcForm.get('eNGINENO')?.invalid && ThcForm.get('eNGINENO')?.touched ">
+                This field is required.</div>
+            </div>
+            <div class="thcform-field">
+              <label>Chassis No</label>
+              <input class="form-control required2" type="text" placeholder="Chasis No." formControlName="cHASISNO"
+                [readonly]="ThcForm.value.vehicleNO && ThcForm.value.vehicleNO !== 'O'" required
+                [ngClass]="{ 'border-danger': ThcForm.get('cHASISNO')?.invalid  && ThcForm.get('cHASISNO')?.touched }"
+                appFocusNext>
+              <div class="text-danger text-start"
+                *ngIf="ThcForm.get('cHASISNO')?.invalid && ThcForm.get('cHASISNO')?.touched ">
+                This field is required.</div>
+            </div>
+            <div class="thcform-field">
+              <label>RC Book No</label>
+              <input class="form-control required2" type="text" placeholder="RC Book No." formControlName="rCBOOKNO"
+                [readonly]="ThcForm.value.vehicleNO && ThcForm.value.vehicleNO !== 'O'" required
+                [ngClass]="{ 'border-danger': ThcForm.get('rCBOOKNO')?.invalid  && ThcForm.get('rCBOOKNO')?.touched }"
+                appFocusNext>
+              <div class="text-danger text-start"
+                *ngIf="ThcForm.get('rCBOOKNO')?.invalid && ThcForm.get('rCBOOKNO')?.touched ">
+                This field is required.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Driver Details -->
+        <div class="thcform-section" *ngIf="ThcType === 'A'">
+          <div class="thcform-section-title">Driver Details</div>
+          <div class="thcform-grid">
+            <div class="thcform-field">
+              <label>Licence No <span class="req">*</span></label>
+              <input class="form-control required2" placeholder="e.g. MH1420180012345" type="text"
+                formControlName="driver1Licence" (input)="onChangeLicenceNumber($event)" appFocusNext
+                [ngClass]="{ 'border-danger': ThcForm.get('driver1Licence')?.invalid  && ThcForm.get('driver1Licence')?.touched }">
+              <div class="text-danger text-start" *ngIf="ThcForm.get('driver1Licence')?.touched">
+                <div *ngIf="ThcForm.get('driver1Licence')?.hasError('required')">
+                  This field is required.</div>
+                <div *ngIf="ThcForm.get('driver1Licence')?.hasError('pattern')">
+                  Please enter a valid License Number. </div>
+              </div>
+            </div>
+            <div class="thcform-field">
+              <label>DOB</label>
+              <div class="input-group" (click)="dbv.toggle(); $event.stopPropagation()">
+                <input class="form-control required2" placeholder="Date Of Birth" type="text"
+                  [class.disabled-input]="true" appFocusNext #dbv="bsDatepicker" bsDatepicker formControlName="d1_DOB"
+                  [ngClass]="{ 'border-danger': ThcForm.get('d1_DOB')?.invalid  && ThcForm.get('d1_DOB')?.touched }"
+                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY',maxDate : today}"
+                  (bsValueChange)="onChangeLicenceNumber($event)">
+                <span class="input-group-text cursor-pointer" (click)="dbv.toggle();$event.stopPropagation()">
+                  <i class="fa fa-calendar"></i>
+                </span>
+              </div>
+              <div class="text-danger text-start"
+                *ngIf="ThcForm.get('d1_DOB')?.invalid && ThcForm.get('d1_DOB')?.touched ">
+                This field is required.</div>
+            </div>
+            <div class="thcform-field">
+              <label>Mobile Number <span class="req">*</span></label>
+              <input class="form-control required2" placeholder="Mobile No." type="text"
+                formControlName="driver1MobileNo" maxlength="10" pattern="[0-9]*"
+                (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
+                [ngClass]="{ 'border-danger': ThcForm.get('driver1MobileNo')?.invalid && ThcForm.get('driver1MobileNo')?.touched}"
+                appFocusNext>
+              <div class="text-danger text-start"
+                *ngIf="ThcForm.get('driver1MobileNo')?.invalid && ThcForm.get('driver1MobileNo')?.touched ">
+                <div *ngIf="ThcForm.get('driver1MobileNo')?.errors?.['required']">
+                  This field is required.
+                </div>
+                <div *ngIf="ThcForm.get('driver1MobileNo')?.errors?.['pattern']">
+                  Please enter a valid Indian mobile number.
+                </div>
+              </div>
+            </div>
+            <div class="thcform-field">
+              <label>Driver Name</label>
+              <input class="form-control required2" placeholder="Driver Name" type="text" formControlName="driver1Name"
+                appFocusNext required
+                [ngClass]="{ 'border-danger':ThcForm.get('driver1Name')?.invalid  &&ThcForm.get('driver1Name')?.touched }">
+              <div class="text-danger text-start"
+                *ngIf="ThcForm.get('driver1Name')?.invalid &&ThcForm.get('driver1Name')?.touched ">
+                This field is required.</div>
+            </div>
+            <div class="thcform-field">
+              <label>Issued by RTO</label>
+              <input class="form-control required2" placeholder="Issue By RTO" type="text"
+                formControlName="driver1RTONo" appFocusNext required
+                [ngClass]="{ 'border-danger':ThcForm.get('driver1RTONo')?.invalid  &&ThcForm.get('driver1RTONo')?.touched }">
+              <div class="text-danger text-start"
+                *ngIf="ThcForm.get('driver1RTONo')?.invalid &&ThcForm.get('driver1RTONo')?.touched ">
+                This field is required.</div>
+            </div>
+            <div class="thcform-field">
+              <label>Licence Validity Date</label>
+              <div class="input-group" (click)="lvd.toggle(); $event.stopPropagation()">
+                <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="true"
+                  appFocusNext #lvd="bsDatepicker" bsDatepicker formControlName="driver1LicenceValDate"
+                  (bsValueChange)="checkLicenseExpiry($event)"
+                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}"
+                  readonly required
+                  [ngClass]="{ 'border-danger': ThcForm.get('driver1LicenceValDate')?.invalid  && ThcForm.get('driver1LicenceValDate')?.touched || isLicenseExpired}">
+                <span class="input-group-text cursor-pointer" (click)="lvd.toggle(); $event.stopPropagation()">
+                  <i class="fa fa-calendar"></i>
+                </span>
+              </div>
+              <div *ngIf="isLicenseExpired" class="text-danger text-start">
+                License validity date is expired.
+              </div>
+              <div class="text-danger text-start"
+                *ngIf="ThcForm.get('driver1LicenceValDate')?.invalid && ThcForm.get('driver1LicenceValDate')?.touched ">
+                This field is required.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vehicle Depart Details -->
+        <div class="thcform-section">
+          <div class="thcform-section-title">Vehicle Depart Details</div>
+          <div class="thcform-grid">
+            <div class="thcform-field">
+              <label>Loading Supervisor</label>
+              <input class="form-control" placeholder="Loading Supervisor/User" type="text" formControlName="entryBy"
+                readonly appFocusNext>
+            </div>
+            <div class="thcform-field" *ngIf="ThcType === 'A'">
+              <label>Vehicle Capacity (In Ton)</label>
+              <input class="form-control" placeholder="Vehicle Capacity (TON)" type="text"
+                formControlName="vehicleCapacity" readonly appFocusNext>
+            </div>
+            <div class="thcform-field"  *ngIf="ThcType === 'A'">
+              <label>Weight Loaded (Kg)</label>
+              <input class="form-control" placeholder="Weight Loaded (kg)" type="text" formControlName="wtLoaded"
+                readonly appFocusNext>
+            </div>
+            <div class="thcform-field"  *ngIf="ThcType === 'A'">
+              <label>Capacity Utilization (%)</label>
+              <input class="form-control" placeholder="Capacity Utilization" type="text"
+                formControlName="vehicleCapacityUti" readonly appFocusNext>
+            </div>
+            <div class="thcform-field"  *ngIf="ThcType === 'A'">
+              <label>Seal No <span class="req">*</span></label>
+              <input class="form-control" placeholder="Seal No" type="text" formControlName="sealNo" appFocusNext>
+            </div>
+            <div class="thcform-field"  *ngIf="ThcType === 'A'">
+              <label>Is Overload</label>
+              <div class="thcform-checkbox-field"><input type="checkbox" style="pointer-events: none;"
+                  class="form-check-input me-4 checkbox-lg custom-big-checkbox" formControlName="isOverLoad"
+                  appFocusNext readonly><label for="isOverloadChk" style="margin:0;">Auto-flagged when over
+                  capacity</label></div>
+            </div>
+            <div class="thcform-field"  *ngIf="ThcType === 'A'">
+              <label>Overload Reason <span class="req">*</span></label>
+              <ng-select class="noFoundTextColor clear-icon" placeholder="Overload Reason"
+                formControlName="overLoadReason" appFocusNext notFoundText="No matches found" bindLabel="codeDesc"
+                bindValue="codeId"
+                [readonly]="!ThcForm.value.isOverLoad && ThcForm.value.vehicleCapacityUti===0"></ng-select>
+            </div>
+          </div>
+        </div>
+
+        <!-- MF Details -->
+        <div class="thcform-section" *ngIf="ThcType === 'A'">
+          <div class="thcform-section-title">MF Details</div>
+          <div class="thcform-mf-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>MF No.</th>
+                  <th>MF Date</th>
+                  <th>MF Branch</th>
+                  <th>Next Stop</th>
+                  <th>Total C-Note</th>
+                  <th>Pkgs L/B</th>
+                  <th>Wt L/B</th>
+                </tr>
+              </thead>
+              <!-- <tbody formArrayName="avalableForTHC">
+                <tr *ngIf="isLoadingMF">
+                  <td colspan="11" class="text-center py-4">
+                    <div class="spinner-border" role="status" style="width:1.8rem; height:1.8rem;">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span class="ms-2">Loading MF list...</span>
+                  </td>
+                </tr>
+                <ng-container *ngIf="!isLoadingMF">
+                  <tr *ngFor="let item of avalableForTHC.controls; let i = index" [formGroupName]="i"
+                    class="align-middle">
+                    <td>
+                      <input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox"
+                        formControlName="selected" style="cursor: pointer;">
+                    </td>
+                    <td>{{ item.value.TCNO}}</td>
+                    <td>{{ item.value.Manual}}</td>
+                    <td>{{ item.value.TCBR}}</td>
+                    <td>{{ item.value.TC_Date }}</td>
+                    <td>{{ item.value.ToBH_CODE }}</td>
+                    <td>{{ item.value.TOT_DKT }}</td>
+                    <td>{{ item.value.Packages }}</td>
+                    <td>{{ item.value.Weight }}</td>
+                    <td>{{ item.value.TotalInternalDocument }}</td>
+                    <td>{{ item.value.VehicleNo }}</td>
+                  </tr>
+
+                  <tr *ngIf="avalableForTHC.length === 0">
+                    <td colspan="11" class="text-center">No MF available</td>
+                  </tr>
+                </ng-container>
+              </tbody> -->
+            </table>
+          </div>
+        </div>
+
+        <!-- Payment Details -->
+        <div class="thcform-section">
+          <div class="thcform-section-title">Payment Details</div>
+          <div class="thcform-grid">
+            <div class="thcform-field">
+              <label>Contract Amount</label>
+              <input min="1" max="99999999" type="text" class="form-control text-end" formControlName="contractAmount"
+                appFocusNext [readOnly]="ThcForm.value.vendorType === 'XX1'"
+                (blur)="changeAmountApplicable($event);restoreIfEmpty('contractAmount')"
+                oninput="this.value = this.value.replace(/[^0-9]/g,'');" (focus)="clearZero('contractAmount')" required
+                [ngClass]="{ 'border-danger': ThcForm.get('contractAmount')?.invalid && ThcForm.get('contractAmount')?.touched }" />
+              <div class="text-danger text-start mt-1 small"
+                *ngIf="ThcForm.get('contractAmount')?.touched && ThcForm.get('contractAmount')?.errors">
+                <span *ngIf="ThcForm.get('contractAmount')?.hasError('required')">
+                  Please enter a value.
+                </span>
+                <span *ngIf="ThcForm.get('contractAmount')?.hasError('max')">
+                  Please enter no more than 8 digits.
+                </span>
+                <span *ngIf="ThcForm.get('contractAmount')?.hasError('min')">
+                  Please enter a value greater than or equal to 1.
+                </span>
+              </div>
+              <div *ngIf="contractAmtMsg" class="text-danger text-start mt-1 small">{{ contractAmtMsg
+                }}</div>
+            </div>
+            <div class="thcform-field">
+              <label>Advance Amount</label>
+              <input class="form-control text-end required2" type="text" [value]="0" formControlName="advanceAmount"
+                (blur)="restoreIfEmpty('advanceAmount')" (focus)="clearZero('advanceAmount')"
+                (input)="calculateBalanceAmount()" (keypress)="docketService.allowNumericDecimal($event)" appFocusNext>
+              <div class="text-danger text-start mt-1 small" *ngIf="ThcForm.get('advanceAmount')?.touched">
+                <div *ngIf="ThcForm.get('advanceAmount')?.hasError('required')">
+                  Please enter a value.
+                </div>
+                <div *ngIf="ThcForm.hasError('advanceInvalid')">
+                  Advance amount cannot be greater than Net amount
+                </div>
+              </div>
+            </div>
+            <div class="thcform-field">
+              <label>Balance Amount</label>
+              <input class="form-control" type="text" [value]="0" formControlName="balanceAmount" readonly appFocusNext>
+            </div>
+            <div class="thcform-field">
+              <label>Adv. Location</label>
+              <ng-select class="required2 clear-icon" [items]="locationData" bindLabel="locName" bindValue="locCode"
+                appFocusNext placeholder="Advance Location" formControlName="advanceLocation"></ng-select>
+            </div>
+            <div class="thcform-field">
+              <label>Bal. Location</label>
+              <ng-select class="required2 clear-icon" [items]="locationData" bindLabel="locName" bindValue="locCode"
+                appFocusNext placeholder="Balance Location" formControlName="balanceLocation"
+                readonly></ng-select>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </form>
+
+    <!-- Footer -->
+    <div class="thcform-footer">
+      <button type="button" class="thcform-btn-cancel" (click)="closePopup()">Cancel</button>
+      <button type="button" class="thcform-btn-submit">Submit</button>
+    </div>
+
+  </div>
+</ng-template>

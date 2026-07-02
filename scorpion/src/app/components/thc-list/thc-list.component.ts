@@ -13,12 +13,14 @@ import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 import { ExportService } from 'app/shared/services/export.service';
 import { environment } from 'environments/environment';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { ThcEmptyVehiclePopupComponent } from './thc-empty-vehicle-popup/thc-empty-vehicle-popup.component';
+import { AddThcPopupComponent } from './add-thc-popup/add-thc-popup.component';
 
 
 @Component({
   selector: 'app-thc-list',
   standalone: true,
-  imports: [NgSelectModule,CommonModule,ReactiveFormsModule,BsDatepickerModule,PaginationComponent,ThcEditComponent],
+  imports: [NgSelectModule,CommonModule,ReactiveFormsModule,BsDatepickerModule,PaginationComponent,ThcEditComponent,ThcEmptyVehiclePopupComponent,AddThcPopupComponent],
   providers: [BsModalService],
   templateUrl: './thc-list.component.html',
   styleUrl: './thc-list.component.scss'
@@ -31,6 +33,9 @@ export class ThcListComponent {
   public isdownload:boolean=false;
   public env = environment;
   @ViewChild('ThcEditComponent') ThcEditComponent!: ThcEditComponent;
+  @ViewChild('ThcPopupComponent') ThcPopupComponent!: AddThcPopupComponent;
+  @ViewChild('ThcEmptyVehiclePopupComponent') ThcEmptyVehiclePopupComponent!: ThcEmptyVehiclePopupComponent;
+
   
   public pagination={
     page: 1,
@@ -272,5 +277,13 @@ getStatusClass(status: string): string {
     if (this.pagination.page === p) return;
     this.pagination.page = p;
     this.getTHCDetail();
+  }
+
+  openEmptyVehicle(){
+    this.ThcEmptyVehiclePopupComponent.showPopup();
+  }
+
+  openTHCPopup(type:string) {
+    this.ThcPopupComponent.showPopup(type);
   }
 }
