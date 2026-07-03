@@ -45,6 +45,7 @@ export class ThcListComponent {
   };
   statusList = [
     { value: 'All', label: 'All Status', color: 'all', bg: 'var(--muted)', count: 0 },
+    { value: 'Pending', label: 'Pending', color: 'pending', bg: 'var(--info)', count: 0 },
     { value: 'Departed', label: 'Departed', color: 'departed', bg: 'var(--teal)', count: 0 },
     { value: 'Completed Journey', label: 'Completed Journey', color: 'completed-journey', bg: 'var(--orange)', count: 0 },
     { value: 'Cancelled', label: 'Cancelled', color: 'cancelled', bg: 'var(--red)', count: 0 },
@@ -285,5 +286,9 @@ getStatusClass(status: string): string {
 
   openTHCPopup(type:string) {
     this.ThcPopupComponent.showPopup(type);
+  }
+
+   get isThcListing(): boolean {
+    return (this.THCFilterForm.get('statusFilter')?.value !== 'Pending');
   }
 }

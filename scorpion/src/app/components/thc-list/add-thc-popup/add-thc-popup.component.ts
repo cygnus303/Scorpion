@@ -47,8 +47,18 @@ export class AddThcPopupComponent {
   public contractAmtMsg: string = '';
   public chargesDetailsList: ChargesResponse[] = [];
   public lastFetchedVehicleNo: string | null = null;
-  public ThcType:string='';
-  public bidData:any;
+  public ThcType: string = '';
+  public bidData: any;
+  public isBidVendorReadonly: boolean = false;
+  public isBidDriverReadonly: boolean = false;
+  public isBidVehicleReadonly: boolean = false;
+  public isBidMobileReadonly: boolean = false;
+  public isBidEngineNoReadonly: boolean = false;
+  public isBidChassisNoReadonly: boolean = false;
+  public isBidRCBookNoReadonly: boolean = false;
+  public isBidRegDateReadonly: boolean = false;
+  public isBidInsDateReadonly: boolean = false;
+  public isBidFitDateReadonly: boolean = false;
   @ViewChild('TemplateTHC', { static: true }) TemplateTHC!: TemplateRef<any>;
 
   constructor(
@@ -62,7 +72,7 @@ export class AddThcPopupComponent {
     public basicDetailService: BasicDetailService,
     public commonDateService: CommonDateService,
     private deliveryAgentService: DeliveryAgentService,
-    private customerService:CustomerService
+    private customerService: CustomerService
   ) { }
 
   ngOnInit() {
@@ -85,7 +95,7 @@ export class AddThcPopupComponent {
       vendorType: [],
       bidType: [null],
       bidNo: [null],
-      BiddingVendor:[null],
+      BiddingVendor: [null],
       vendorCode: [],
       lorryOwnerPanNo: [],
       vendorName: [],
@@ -100,12 +110,12 @@ export class AddThcPopupComponent {
       rCBOOKNO: [],
       insuranceDate: [],
       fitnessDate: [],
-      driver1Licence: ['', [Validators.required, Validators.pattern(/^[A-Za-z]{2}\d{2}\s?\d{11}$/)]],
+      driver1Licence: ['', this.ThcType === 'A' ? [Validators.required, Validators.pattern(/^[A-Za-z]{2}\d{2}\s?\d{11}$/)] : [Validators.pattern(/^[A-Za-z]{2}\d{2}\s?\d{11}$/)]],
       d1_DOB: [''],
       driver1Name: [],
       driver1RTONo: [],
       driver1LicenceValDate: [],
-      driver1MobileNo: [null, [Validators.pattern(mobileNo), Validators.required]],
+      driver1MobileNo: [null, this.ThcType === 'A' ? [Validators.pattern(mobileNo), Validators.required] : [Validators.pattern(mobileNo)]],
       contractAmount: [0, [Validators.required, Validators.min(1), Validators.max(99999999)]],
       isTDSEnabled: [false],
       tDSOnAmount: [0],
@@ -136,12 +146,23 @@ export class AddThcPopupComponent {
     }, { validators: this.advanceNotGreaterThanNet.bind(this) });
 
     this.ThcForm.get('bidType')?.valueChanges.subscribe(val => {
+      this.isBidVendorReadonly = false;
+      this.isBidDriverReadonly = false;
+      this.isBidVehicleReadonly = false;
+      this.isBidMobileReadonly = false;
+      this.isBidEngineNoReadonly = false;
+      this.isBidChassisNoReadonly = false;
+      this.isBidRCBookNoReadonly = false;
+      this.isBidRegDateReadonly = false;
+      this.isBidInsDateReadonly = false;
+      this.isBidFitDateReadonly = false;
       const vendorType = this.ThcForm.get('vendorType')?.value;
       const biddingVendorCtrl = this.ThcForm.get('BiddingVendor');
-      
+
       if (vendorType === '19' && val === 'With') {
         biddingVendorCtrl?.setValidators([Validators.required]);
         this.getBidDetail();
+        this.ThcForm.patchValue({ vehicleNO: 'O' });
       } else {
         biddingVendorCtrl?.clearValidators();
         biddingVendorCtrl?.setValue(null);
@@ -194,17 +215,27 @@ export class AddThcPopupComponent {
   }
 
   getVendorsList(event: any) {
+    this.isBidVendorReadonly = false;
+    this.isBidDriverReadonly = false;
+    this.isBidVehicleReadonly = false;
+    this.isBidMobileReadonly = false;
+    this.isBidEngineNoReadonly = false;
+    this.isBidChassisNoReadonly = false;
+    this.isBidRCBookNoReadonly = false;
+    this.isBidRegDateReadonly = false;
+    this.isBidInsDateReadonly = false;
+    this.isBidFitDateReadonly = false;
     this.ThcForm.patchValue({
       vendorCode: null,
       bidType: null,
       BiddingVendor: null
     });
-    
+
     const vendorType = event?.target?.value;
     const bidTypeCtrl = this.ThcForm.get('bidType');
     const biddingVendorCtrl = this.ThcForm.get('BiddingVendor');
-    
-    if (vendorType === '19') {
+
+    if (vendorType === '19' && this.ThcType === 'A') {
       bidTypeCtrl?.setValidators([Validators.required]);
     } else {
       bidTypeCtrl?.clearValidators();
@@ -810,27 +841,131 @@ export class AddThcPopupComponent {
     });
   }
 
-  getBidDetail(){
+  getBidDetail() {
     this.THCService.getBidDetail(this.docketService.loginUserList.LocationCode).subscribe({
-      next:(response:any)=>{
-        this.bidData=response.data;
+      next: (response: any) => {
+        this.bidData = response.data;
       }
     })
   }
 
-  onChangeBid(event:any){
-    let bidNo=event?.bidNo;
+  onChangeBid(event: any) {
+    let bidNo = event?.bidNo;
+    if (!bidNo) {
+      this.isBidVendorReadonly = false;
+      this.isBidDriverReadonly = false;
+      this.isBidVehicleReadonly = false;
+      this.isBidMobileReadonly = false;
+      this.isBidEngineNoReadonly = false;
+      this.isBidChassisNoReadonly = false;
+      this.isBidRCBookNoReadonly = false;
+      this.isBidRegDateReadonly = false;
+      this.isBidInsDateReadonly = false;
+      this.isBidFitDateReadonly = false;
+      this.ThcForm.patchValue({
+         vendorCode: null,
+         driver1Name: null,
+         mKTVehicleNo: null,
+         driver1MobileNo: null,
+      });
+      if (this.ThcForm.get('bidType')?.value === 'With') {
+              this.getVehicleType('O')
+
+      }
+      return;
+    }
     this.THCService.getDataFromBid(bidNo).subscribe({
-      next:(response:any)=>{
-        this.ThcForm.patchValue({
-          vendorCode:response?.vendorCode,
-          driver1Name:response?.driverName,
-          mKTVehicleNo:response?.vehicleNo,
-          driver1MobileNo:response?.driverMobileNo,
-        })
-          this.getVehicleDetail(response?.vehicleNo);
+      next: (response: any) => {
+        this.isBidVendorReadonly = !!response?.vendorCode;
+        this.isBidDriverReadonly = !!response?.driverName;
+        this.isBidVehicleReadonly = !!response?.vehicleNo;
+        this.isBidMobileReadonly = !!response?.driverMobileNo;
+        
+        const payload: any = {
+          vendorCode: response?.vendorCode || null,
+          driver1Name: response?.driverName || null,
+          mKTVehicleNo: response?.vehicleNo || null,
+          driver1MobileNo: response?.driverMobileNo || null,
+        };
+        
+        if (this.ThcForm.get('bidType')?.value === 'With') {
+           payload.vehicleNO = 'O';
+        }
+
+        this.ThcForm.patchValue(payload);
+
+        if (response?.vehicleNo) {
+           this.getVehicleDetailFromBid(response?.vehicleNo);
+        }else{
+          this.ThcForm.patchValue({
+            eNGINENO: null,
+              cHASISNO: null,
+              rCBOOKNO: null,
+              registrationDate: null,
+              insuranceDate: null,
+              fitnessDate:null
+          })
+          this.isBidEngineNoReadonly = false;
+            this.isBidChassisNoReadonly = false;
+            this.isBidRCBookNoReadonly = false;
+            this.isBidRegDateReadonly = false;
+            this.isBidInsDateReadonly = false;
+            this.isBidFitDateReadonly = false;
+        }
       }
     })
+  }
+
+    getVehicleDetailFromBid(vehicleNo: string) {
+    const params = {
+      vehNo: vehicleNo.toUpperCase(),
+      baseUserName: this.docketService.loginUserList.BaseUserName
+    };
+    this.isVehicleLoading = true;
+    this.deliveryAgentService.getVehicleDetail(params).subscribe({
+      next: (response: any) => {
+        this.isVehicleLoading = false;
+        if (response) {
+          if (this.isBidVehicleReadonly) {
+            this.isBidEngineNoReadonly = !!response.rc_eng_no;
+            this.isBidChassisNoReadonly = !!response.rc_chasi_no;
+            this.isBidRCBookNoReadonly = !!response.rc_regn_no;
+            this.isBidRegDateReadonly = !!response.rc_regn_dt;
+            this.isBidInsDateReadonly = !!response.rc_insurance_upto;
+            this.isBidFitDateReadonly = !!response.rc_fit_upto;
+          } else {
+            this.isBidEngineNoReadonly = false;
+            this.isBidChassisNoReadonly = false;
+            this.isBidRCBookNoReadonly = false;
+            this.isBidRegDateReadonly = false;
+            this.isBidInsDateReadonly = false;
+            this.isBidFitDateReadonly = false;
+          }
+          this.ThcForm.patchValue({
+            eNGINENO: response.rc_eng_no || '',
+            cHASISNO: response.rc_chasi_no || '',
+            rCBOOKNO: response.rc_regn_no || '',
+            registrationDate: response.rc_regn_dt ? new Date(response.rc_regn_dt) : null,
+            insuranceDate: response.rc_insurance_upto ? new Date(response.rc_insurance_upto) : null,
+            fitnessDate: response.rc_fit_upto ? new Date(response.rc_fit_upto) : null
+          });
+        }
+      },
+      error: (err) => {
+        this.isVehicleLoading = false;
+        this.ThcForm.patchValue({
+          mKTVehicleNo: '',
+          eNGINENO: '',
+          cHASISNO: '',
+          rCBOOKNO: '',
+          registrationDate: null,
+          insuranceDate: null,
+          fitnessDate: null
+        });
+        console.error('Error fetching vehicle details:', err.error.message);
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
   }
 
   onSubmit() {
