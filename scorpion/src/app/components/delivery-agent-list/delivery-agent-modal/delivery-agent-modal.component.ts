@@ -135,6 +135,7 @@ applyGPSProviderValidation(){
         gpsProvider:data.gpsProvider ? data.gpsProvider : null,
         location:data.location ? data.location?.split(",").map((x: any) => x.trim()):'',
         LicenseAttachment:data.licenseAttachment ? data.licenseAttachment:'',
+        fTlType:data.vehicleType
       };
       this.licenseAttachmentName = data.licenseAttachment ?  data.licenseAttachment.split('/').pop() || '':'',
       this.dAForm.patchValue(patchData);

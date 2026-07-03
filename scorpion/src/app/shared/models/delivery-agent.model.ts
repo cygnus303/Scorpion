@@ -70,6 +70,7 @@ export interface DeliveryAgentByCodeResponse {
     entryName:string;
     updateName:string;
     driverName:string;
+    vehicleType:string;
 }
 export interface VendorsListResponse {
  vendorCode:string;
