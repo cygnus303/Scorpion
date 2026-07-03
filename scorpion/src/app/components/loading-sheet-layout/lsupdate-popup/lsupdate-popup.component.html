@@ -27,7 +27,13 @@
           <div class="col-3">
             <div class="form-group-input">
               <label class="form-label d-flex align-items-center gap-2 fw-bold"> Loading Sheet Date</label>
-              <input class="form-control required2" formControlName="lsDate" placeholder="Loading Sheet Date" readonly>
+              <div class="input-group">
+                <input type="text" class="form-control required2" formControlName="lsDate" [class.disabled-input]="true"  placeholder="Loading Sheet Date"
+                  #dvL="bsDatepicker" bsDatepicker [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }" readonly>
+                <span class="input-group-text cursor-pointer" >
+                  <i class="fa fa-calendar"></i>
+                </span>
+              </div>
             </div>
           </div>
           <div class="col-3">

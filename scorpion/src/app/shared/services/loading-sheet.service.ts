@@ -26,7 +26,7 @@ export class LoadingSheetService {
 
     this.LSForm = new FormGroup({
       lsNO: new FormControl(''),
-      lsDate: new FormControl(this.formatDateLSDate(today)),
+      lsDate: new FormControl(new Date()),
       manualLsNO: new FormControl('N/A'),
       loadingBy: new FormControl(null),
       nextStopLocation: new FormControl(null, Type ? Validators.required : null),
@@ -48,7 +48,7 @@ export class LoadingSheetService {
       loadingCharge: new FormControl(0),
       isMathadi: new FormControl(false),
       mathadiSlipNo: new FormControl(''),
-      mathadiDate: new FormControl(this.formatDate(today)),
+      mathadiDate: new FormControl(new Date()),
       mathadiAmt: new FormControl(0),
       docketList: new FormArray([]),
       loadingByUser: new FormControl(),
