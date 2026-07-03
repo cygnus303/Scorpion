@@ -1524,8 +1524,8 @@ export class ChallanListComponent {
                 vendorCode: response.data.businessAssociateVendor,
                 vendorName: vendorName,
                 vehicleNO: response.data.vehicleNo,
-                fTLType: vehicleType?.fleet_Type || '',
-                vehicleType: response.data.fTlType,
+                fTLType: response.data.fTlType || '',
+                vehicleType: response.data.vehicleType,
                 eNGINENO: response.data.engineNo,
                 cHASISNO: response.data.chassisNo,
                 rCBOOKNO: response.data.rcBookNo,
@@ -1539,8 +1539,8 @@ export class ChallanListComponent {
                 registrationDate: this.datePipe.transform(response.data.registrationDate, "dd MMMM yyyy"),
                 driver1Name: response.data.driverName
               });
-              if (response.data.fTlType) {
-                this.onChangeFTLType(response.data.fTlType);
+              if (response.data.vehicleType) {
+                this.onChangeFTLType(response.data.vehicleType);
               }
               this.challanService.challanForm.patchValue({ ISNEWDA: false });
               this.isPatching = false;
