@@ -1,0 +1,149 @@
+<ng-template #TemplateMapRef>
+  <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+    <!-- BOOTSTRAP HEADER -->
+    <div class="modal-header bg-navy text-white px-4 py-3 d-flex justify-content-between align-items-center border-0">
+      <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <span class="fs-5">🗺️</span>
+          <h5 class="modal-title fw-bold m-0 text-white">Live Route Map</h5>
+        </div>
+        <div class="d-flex align-items-center flex-wrap gap-2 font-13 text-light opacity-90">
+          <span>{{ lrNumber }}</span>
+          <span>|</span>
+          <span>{{ origin }} → {{ destination }}</span>
+          <span>|</span>
+          <span class="badge bg-light text-dark fw-semibold">📍 {{ currentLocation }}</span>
+          <span *ngIf="vehicleNo">|</span>
+          <span class="badge bg-warning text-dark fw-bold" *ngIf="vehicleNo">🚛 {{ vehicleNo }}</span>
+        </div>
+      </div>
+      <button type="button" class="btn-close btn-close-white" (click)="closePopup()" aria-label="Close"></button>
+    </div>
+
+    <!-- BOOTSTRAP BODY -->
+    <div class="modal-body p-4 bg-white">
+      <!-- MAP & GPS VISUALIZATION BOX -->
+      <div class="card border border-primary border-opacity-25 rounded-3 bg-light-blue p-3 mb-4 position-relative overflow-hidden">
+        
+        <!-- TOP OVERLAY BAR: LIVE TELEMETRY (BOOTSTRAP FLEX) -->
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-3 position-relative z-3">
+          <!-- LIVE GPS TELEMETRY BADGE -->
+          <div *ngIf="vehicleNo || vehicleLat !== null || isLoadingGps" class="bg-white border border-warning rounded shadow-sm p-3 d-flex flex-column gap-2 w-100">
+            <div class="d-flex align-items-center justify-content-between border-bottom pb-2 gap-2 flex-wrap">
+              <div class="d-flex align-items-center gap-2">
+                <span class="pulse-dot bg-success rounded-circle"></span>
+                <span class="fw-bold fs-6 text-dark">🚛 Live Vehicle: {{ vehicleNo || 'N/A' }}</span>
+              </div>
+              <span class="badge bg-warning-subtle text-warning-emphasis border border-warning font-11 px-2 py-1" *ngIf="isLoadingGps">Fetching GPS...</span>
+            </div>
+            <div class="d-flex flex-wrap align-items-center gap-4 font-12 text-secondary">
+              <div *ngIf="gpsAddress" class="w-100 text-truncate font-12 text-dark">
+                <strong>📍 Address:</strong> {{ gpsAddress }}
+              </div>
+              <div *ngIf="vehicleLat !== null && vehicleLong !== null">
+                <strong>🛰️ Lat/Long:</strong> {{ vehicleLat | number:'1.4-4' }}, {{ vehicleLong | number:'1.4-4' }}
+              </div>
+              <div>
+                <strong>⚡ Ignition:</strong> <span [ngClass]="vehicleIgnition === 'ON' ? 'badge bg-success text-white' : 'badge bg-danger text-white'">{{ vehicleIgnition }}</span>
+              </div>
+              <div>
+                <strong>🏎️ Speed:</strong> {{ vehicleSpeed }} km/h
+              </div>
+              <div *ngIf="reportingTime" class="text-muted">
+                <strong>🕒 Updated:</strong> {{ reportingTime }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LIVE INTERACTIVE GOOGLE MAP EMBED -->
+        <div class="live-google-map-container rounded-3 overflow-hidden border bg-white shadow-sm position-relative" style="height: 420px; width: 100%;">
+          <iframe *ngIf="mapUrl" [src]="mapUrl" width="100%" height="100%" frameborder="0" style="border:0; position: absolute; top:0; left:0; width:100%; height:100%;" allowfullscreen=""></iframe>
+          
+          <!-- FALLBACK IF MAP URL IS NOT READY -->
+          <div *ngIf="!mapUrl" class="d-flex flex-column align-items-center justify-content-center h-100 p-4 text-center">
+            <div *ngIf="isLoadingGps" class="spinner-border text-primary mb-2" role="status"></div>
+            <span *ngIf="!isLoadingGps" class="fs-1 mb-2">🗺️</span>
+            <h6 class="fw-bold text-dark">{{ isLoadingGps ? 'Loading Live Map...' : 'Live GPS Location Not Available' }}</h6>
+            <p class="font-12 text-muted mb-0" *ngIf="!isLoadingGps">Live GPS coordinates (Latitude/Longitude) are currently unavailable for this vehicle.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4-COLUMN INFO CARDS GRID (BOOTSTRAP ROW) -->
+      <!-- <div class="row g-3 mb-3">
+        <div class="col-6 col-md-3">
+          <div class="card h-100 border bg-light p-3 shadow-sm">
+            <div class="text-muted text-uppercase fw-bold font-11 mb-1">ORIGIN</div>
+            <div class="fs-6 fw-bold text-dark">{{ origin }}</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card h-100 border bg-light p-3 shadow-sm">
+            <div class="text-muted text-uppercase fw-bold font-11 mb-1">CURRENT LOCATION</div>
+            <div class="fs-6 fw-bold text-warning-emphasis">📍 {{ currentLocation }}</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card h-100 border bg-light p-3 shadow-sm">
+            <div class="text-muted text-uppercase fw-bold font-11 mb-1">DESTINATION</div>
+            <div class="fs-6 fw-bold text-dark">{{ destination }}</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card h-100 border bg-light p-3 shadow-sm">
+            <div class="text-muted text-uppercase fw-bold font-11 mb-1">EDD</div>
+            <div class="fs-6 fw-bold text-warning-emphasis">{{ edd }}</div>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- 3-COLUMN STATS CARDS GRID (BOOTSTRAP ROW) -->
+      <!-- <div class="row g-3 mb-3">
+        <div class="col-12 col-md-4">
+          <div class="card h-100 border bg-light p-3 shadow-sm">
+            <div class="text-muted text-uppercase fw-bold font-11 mb-1">TOTAL DISTANCE</div>
+            <div class="fs-5 fw-bold text-dark">{{ totalDistance !== null ? (totalDistance | number) + ' km' : 'N/A' }}</div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="card h-100 border bg-light p-3 shadow-sm">
+            <div class="text-muted text-uppercase fw-bold font-11 mb-1">DISTANCE COVERED</div>
+            <div class="fs-5 fw-bold text-success">{{ distanceCovered !== null ? (distanceCovered | number) + ' km' : 'N/A' }} <span *ngIf="distanceCovered !== null" class="font-13 fw-normal text-muted">({{ progressPercent }}%)</span></div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="card h-100 border bg-light p-3 shadow-sm">
+            <div class="text-muted text-uppercase fw-bold font-11 mb-1">REMAINING</div>
+            <div class="fs-5 fw-bold text-warning-emphasis">{{ remainingDistance !== null ? (remainingDistance | number) + ' km' : 'N/A' }}</div>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- PROGRESS BAR CARD (BOOTSTRAP PROGRESS) -->
+      <!-- <div class="card border bg-light p-3 mb-1 shadow-sm">
+        <div class="d-flex justify-content-between align-items-center font-12 fw-semibold mb-2">
+          <span class="text-dark">{{ origin }}</span>
+          <span class="text-warning-emphasis">📍 {{ currentLocation ? currentLocation.split(' ')[0] : 'Current' }} (Current)</span>
+          <span class="text-dark">{{ destination }}</span>
+        </div>
+        <div class="progress" style="height: 14px; border-radius: 7px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" [style.width.%]="progressPercent" [attr.aria-valuenow]="progressPercent" aria-valuemin="0" aria-valuemax="100">
+            {{ progressPercent }}%
+          </div>
+        </div>
+        <div class="text-center font-11 text-muted fw-medium mt-2">
+          Journey Progress: {{ progressPercent }}% complete
+        </div>
+      </div> -->
+    </div>
+
+    <!-- BOOTSTRAP FOOTER -->
+    <div class="modal-footer bg-light px-4 py-3 border-top d-flex justify-content-end gap-2">
+      <button type="button" class="btn btn-outline-secondary fw-semibold px-4" (click)="closePopup()">Close</button>
+      <button type="button" class="btn btn-navy fw-semibold px-4 text-white" (click)="onViewFullLifecycle()">
+        📍 View Full Lifecycle
+      </button>
+    </div>
+  </div>
+</ng-template>

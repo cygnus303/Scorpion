@@ -37,4 +37,8 @@ export class LrService {
     getOperationCycle(lrNumber: string): Observable<any> {
       return this.apiHandlerService.Get(`Operation/operation-cycle/${lrNumber}`);
     }
+
+    trackVehicleOnGoogleMap(vehicleNo: string): Observable<any> {
+      return this.apiHandlerService.GetLoad(`Operation/TrackVehicleOnGoogleMap?vehicleNo=${encodeURIComponent(vehicleNo)}`);
+    }
 }

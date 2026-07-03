@@ -214,7 +214,7 @@
                                     (click)="openView(row.lsNo)">
                                     <i class="fa fa-eye"></i> View
                                 </button>
-                                <button  *ngIf="!isHQTR" (click)="openLSUpdatePopup(row ,'ULS')"  [disabled]="row.mfNo||row.status === 'Cancelled'"
+                                <button  *ngIf="!isHQTR" (click)="openLSUpdatePopup(row ,'ULS')"  [disabled]="row.mfNo||row.status === 'Cancelled'||row.status === 'MF Generated'"
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3">
                                     🔄 LS Update
                                 </button>

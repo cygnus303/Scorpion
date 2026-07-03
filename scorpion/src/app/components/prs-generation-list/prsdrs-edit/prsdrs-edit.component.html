@@ -46,7 +46,7 @@
             <div class="col-3">
               <div class="form-group-input">
                 <label class="form-label d-flex align-items-center gap-2 fw-bold"> Contract Amt.</label>
-                <input type="text" class="form-control" placeholder="Contract Amt." formControlName="pcamt" [readonly]="prsDrsList.vendorType === '04' || prsDrsList.vendorType === 'BUSINESS ASSOCIATE'">
+                <input type="text" class="form-control" placeholder="Contract Amt." formControlName="pcamt" [readonly]="prsDrsList.vendorType === '04' || prsDrsList.vendorType === 'BUSINESS ASSOCIATE'" oninput="this.value = this.value.replace(/[^0-9.]/g,'');">
               </div>
             </div>
             <div class="col-3">
@@ -112,7 +112,7 @@
                   <td class="text-center">{{item.actuwt}}</td>
                   <td class="text-center">{{item.chrgwT_Load}}</td>
                   <td class="text-center" style="width: 150px;">
-                    <input type="text" class="form-control text-center" readonly [value]="item.contractAmount">
+                    <input type="text" class="form-control text-center" readonly [value]="item.contractAmount" oninput="this.value = this.value.replace(/[^0-9.]/g,'');">
                   </td>
                 </tr>
                 <tr *ngIf="!financialEditDetail.docketList || financialEditDetail.docketList.length === 0">
