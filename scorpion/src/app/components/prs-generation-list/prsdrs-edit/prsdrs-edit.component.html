@@ -103,21 +103,31 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let item of financialEditDetail.docketList">
-                  <td class="text-center">{{item.dockno}}</td>
-                  <td class="text-center">{{item.payBas}}</td>
-                  <td class="text-center">{{item.orgncd}}</td>
-                  <td class="text-center">{{item.desT_CD}}</td>
-                  <td class="text-center">{{item.pkgsno}}</td>
-                  <td class="text-center">{{item.actuwt}}</td>
-                  <td class="text-center">{{item.chrgwT_Load}}</td>
-                  <td class="text-center" style="width: 150px;">
-                    <input type="text" class="form-control text-center" readonly [value]="item.contractAmount" oninput="this.value = this.value.replace(/[^0-9.]/g,'');">
+                <tr *ngIf="isLoading">
+                  <td colspan="8" class="text-center py-4">
+                    <div class="d-flex align-items-center justify-content-center gap-2">
+                      <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                      <span class="fw-semibold text-muted">Loading Cnote Records...</span>
+                    </div>
                   </td>
                 </tr>
-                <tr *ngIf="!financialEditDetail.docketList || financialEditDetail.docketList.length === 0">
-                  <td colspan="8" class="text-center py-3">No CNote Records Found.</td>
-                </tr>
+                <ng-container *ngIf="!isLoading">
+                  <tr *ngFor="let item of financialEditDetail.docketList">
+                    <td class="text-center">{{item.dockno}}</td>
+                    <td class="text-center">{{item.payBas}}</td>
+                    <td class="text-center">{{item.orgncd}}</td>
+                    <td class="text-center">{{item.desT_CD}}</td>
+                    <td class="text-center">{{item.pkgsno}}</td>
+                    <td class="text-center">{{item.actuwt}}</td>
+                    <td class="text-center">{{item.chrgwT_Load}}</td>
+                    <td class="text-center" style="width: 150px;">
+                      <input type="text" class="form-control text-center" readonly [value]="item.contractAmount" oninput="this.value = this.value.replace(/[^0-9.]/g,'');">
+                    </td>
+                  </tr>
+                  <tr *ngIf="!financialEditDetail.docketList || financialEditDetail.docketList.length === 0">
+                    <td colspan="8" class="text-center py-3">No CNote Records Found.</td>
+                  </tr>
+                </ng-container>
               </tbody>
             </table>
           </div>
