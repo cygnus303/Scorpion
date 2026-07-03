@@ -344,6 +344,7 @@ onChangeLicenceNumber(event?: any) {
       } else {
         this.sweetAlertService.info(response.message);
         this.dAForm.patchValue({ licenseNo: null });
+         this.isLicenceLoading = false;
       }
     },
   });

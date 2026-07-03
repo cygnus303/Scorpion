@@ -23,6 +23,7 @@ export class PRSDRSEditComponent {
   public PDCFinancialForm!: FormGroup;
   public financialEditDetail: any = [];
   public locationData:LocationListResponse[]=[];
+  public isLoading: boolean = false;
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   constructor(
@@ -30,6 +31,7 @@ export class PRSDRSEditComponent {
 
   showPopup(data: any,flag: string) {
     this.prsDrsList = data;
+    this.financialEditDetail = [];
     this.GetTHCFinancialEditDetail(flag);
     this.createForm();
     this.getLocationData();
@@ -59,6 +61,7 @@ export class PRSDRSEditComponent {
   }
 
   GetTHCFinancialEditDetail(flag?: string){
+    this.isLoading = true;
     const payload = {
       thcNo:  this.prsDrsList.drsNo || this.prsDrsList.pdcno,
       flag: flag ,
@@ -66,6 +69,7 @@ export class PRSDRSEditComponent {
     }
     this.prsdrsApiService.GetTHCFinancialEditDetail(payload).subscribe({
       next: (response: any) => {
+        this.isLoading = false;
         if (response) {
           this.financialEditDetail = response;
           if (response.thcsumry && response.thcsumry.pcamt != null) {
@@ -73,6 +77,9 @@ export class PRSDRSEditComponent {
           }
           this.PDCFinancialForm.patchValue(response.thcsumry);
         }
+      },
+      error: () => {
+        this.isLoading = false;
       }
     });
   }
