@@ -50,7 +50,7 @@
           <div class="row">
             <label class="col-sm-5 col-form-label text-end">FTL Type</label>
             <div class="col-sm-7">
-              <ng-select class="noFoundTextColor clear-icon" [items]="vendorContractService.vehicleTypeList"
+              <ng-select class="noFoundTextColor clear-icon required2" [items]="vendorContractService.vehicleTypeList"
                 bindLabel="type_Name" bindValue="typeCode" required placeholder="Select FTL Type"
                 formControlName="fTlType" notFoundText="No matches found"
                 [ngClass]="{ 'border-danger': dAForm.get('fTlType')?.invalid  && dAForm.get('fTlType')?.touched }">
@@ -273,9 +273,9 @@
             <label class="col-sm-5 col-form-label text-end">License validity Date</label>
             <div class="col-sm-7">
               <div class="input-group">
-                <input type="text" class="form-control uppercase-none" #dv="bsDatepicker" bsDatepicker
+                <input type="text" class="form-control uppercase-none required2" #dv="bsDatepicker" bsDatepicker
                   formControlName="licenseValidityDate" [bsValue]="docketService.bsValue"
-                  [ngClass]="{ 'border-danger': isLicenseExpired}" [class.disabled-input]="true"
+                  [ngClass]="{ 'border-danger': isLicenseExpired || (dAForm.get('licenseValidityDate')?.invalid && dAForm.get('licenseValidityDate')?.touched) }" [class.disabled-input]="true"
                   [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}"
                   placeholder="License validity Date" (bsValueChange)="checkLicenseExpiry($event)">
                 <span class="input-group-text cursor-pointer" (click)="dv.toggle()">
@@ -285,6 +285,8 @@
               <small *ngIf="isLicenseExpired" class="text-danger fw-bold mt-1">
                 License validity date is expired.
               </small>
+              <div class="text-danger" *ngIf="dAForm.get('licenseValidityDate')?.invalid && dAForm.get('licenseValidityDate')?.touched "> This
+                field is required.</div>
             </div>
           </div>
         </div>

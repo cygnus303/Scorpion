@@ -218,7 +218,7 @@ checkLicenseExpiry(event?:any) {
       driverName: new FormControl(null),
       dateOfBirth: new FormControl(''),
       issueByRTO: new FormControl(''),
-      licenseValidityDate: new FormControl(''),
+      licenseValidityDate: new FormControl('',Validators.required),
       businessAssociateVendor: new FormControl(null),
       fTlType: new FormControl(null),
       gpsEnabled: new FormControl(false),
