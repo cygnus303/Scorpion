@@ -15,12 +15,13 @@ import { environment } from 'environments/environment';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { ThcEmptyVehiclePopupComponent } from './thc-empty-vehicle-popup/thc-empty-vehicle-popup.component';
 import { AddThcPopupComponent } from './add-thc-popup/add-thc-popup.component';
+import { MfViewComponent } from './mf-view/mf-view.component';
 
 
 @Component({
   selector: 'app-thc-list',
   standalone: true,
-  imports: [NgSelectModule,CommonModule,ReactiveFormsModule,BsDatepickerModule,PaginationComponent,ThcEditComponent,ThcEmptyVehiclePopupComponent,AddThcPopupComponent],
+  imports: [NgSelectModule,CommonModule,ReactiveFormsModule,BsDatepickerModule,PaginationComponent,ThcEditComponent,ThcEmptyVehiclePopupComponent,AddThcPopupComponent,MfViewComponent],
   providers: [BsModalService],
   templateUrl: './thc-list.component.html',
   styleUrl: './thc-list.component.scss'
@@ -31,10 +32,14 @@ export class ThcListComponent {
   public THCFilterForm !:FormGroup;
   private listSubscription?: Subscription;
   public isdownload:boolean=false;
+  public mfData:any;
   public env = environment;
   @ViewChild('ThcEditComponent') ThcEditComponent!: ThcEditComponent;
   @ViewChild('ThcPopupComponent') ThcPopupComponent!: AddThcPopupComponent;
+  @ViewChild('MfViewComponent') MfViewComponent!: MfViewComponent;
   @ViewChild('ThcEmptyVehiclePopupComponent') ThcEmptyVehiclePopupComponent!: ThcEmptyVehiclePopupComponent;
+
+  public selectedMfs: any[] = [];
 
   
   public pagination={
@@ -45,7 +50,7 @@ export class ThcListComponent {
   };
   statusList = [
     { value: 'All', label: 'All Status', color: 'all', bg: 'var(--muted)', count: 0 },
-    { value: 'Pending', label: 'Pending', color: 'pending', bg: 'var(--info)', count: 0 },
+    { value: 'MFPENDING', label: 'MFPENDING', color: 'MFPENDING', bg: 'var(--info)', count: 0 },
     { value: 'Departed', label: 'Departed', color: 'departed', bg: 'var(--teal)', count: 0 },
     { value: 'Completed Journey', label: 'Completed Journey', color: 'completed-journey', bg: 'var(--orange)', count: 0 },
     { value: 'Cancelled', label: 'Cancelled', color: 'cancelled', bg: 'var(--red)', count: 0 },
@@ -88,6 +93,7 @@ export class ThcListComponent {
 
   fetchData() {
     this.pagination.page = 1;
+    this.selectedMfs = []; // Reset selection on fetch
     this.getTHCDetail();
   }
 
@@ -152,6 +158,7 @@ getStatusClass(status: string): string {
       next : (response:any)=>{
         if(response){
           this.thcData= response.data;
+          this.mfData=response.mfData;
            this.pagination.totalRecords = response.pagination.totalRecords;
           this.pagination.totalPages = response.pagination.totalPages;
           this.summaryData = response.summary;
@@ -285,10 +292,26 @@ getStatusClass(status: string): string {
   }
 
   openTHCPopup(type:string) {
-    this.ThcPopupComponent.showPopup(type);
+    this.ThcPopupComponent.showPopup(type, this.selectedMfs);
+  }
+
+  toggleMfSelection(data: any, isChecked: boolean) {
+    if (isChecked) {
+      this.selectedMfs.push(data);
+    } else {
+      this.selectedMfs = this.selectedMfs.filter(mf => mf.tcno !== data.tcno);
+    }
+  }
+
+  isMfSelected(data: any): boolean {
+    return this.selectedMfs.some(mf => mf.tcno === data.tcno);
   }
 
    get isThcListing(): boolean {
-    return (this.THCFilterForm.get('statusFilter')?.value !== 'Pending');
+    return (this.THCFilterForm.get('statusFilter')?.value !== 'MFPENDING');
+  }
+
+  openMFPopup(){
+    this.MfViewComponent.showPopup();
   }
 }

@@ -58,6 +58,7 @@ export class AddThcPopupComponent {
   public isBidRCBookNoReadonly: boolean = false;
   public isBidRegDateReadonly: boolean = false;
   public isBidInsDateReadonly: boolean = false;
+  public selectedMfs: any[] = [];
   public isBidFitDateReadonly: boolean = false;
   @ViewChild('TemplateTHC', { static: true }) TemplateTHC!: TemplateRef<any>;
 
@@ -203,8 +204,9 @@ export class AddThcPopupComponent {
     });
   }
 
-  showPopup(type: string) {
+  showPopup(type: string, mfs: any[] = []) {
     this.ThcType = type;
+    this.selectedMfs = mfs;
     this.buildForm();
     this.getLocationData();
     this.modalRef = this.modalService.show(this.TemplateTHC, { class: 'modal-xl modal-dialog-centered', backdrop: true });
