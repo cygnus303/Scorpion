@@ -445,39 +445,22 @@
                   <th>Wt L/B</th>
                 </tr>
               </thead>
-              <!-- <tbody formArrayName="avalableForTHC">
-                <tr *ngIf="isLoadingMF">
-                  <td colspan="11" class="text-center py-4">
-                    <div class="spinner-border" role="status" style="width:1.8rem; height:1.8rem;">
-                      <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <span class="ms-2">Loading MF list...</span>
-                  </td>
-                </tr>
-                <ng-container *ngIf="!isLoadingMF">
-                  <tr *ngFor="let item of avalableForTHC.controls; let i = index" [formGroupName]="i"
-                    class="align-middle">
-                    <td>
-                      <input type="checkbox" class="form-check-input checkbox-lg custom-big-checkbox"
-                        formControlName="selected" style="cursor: pointer;">
-                    </td>
-                    <td>{{ item.value.TCNO}}</td>
-                    <td>{{ item.value.Manual}}</td>
-                    <td>{{ item.value.TCBR}}</td>
-                    <td>{{ item.value.TC_Date }}</td>
-                    <td>{{ item.value.ToBH_CODE }}</td>
-                    <td>{{ item.value.TOT_DKT }}</td>
-                    <td>{{ item.value.Packages }}</td>
-                    <td>{{ item.value.Weight }}</td>
-                    <td>{{ item.value.TotalInternalDocument }}</td>
-                    <td>{{ item.value.VehicleNo }}</td>
-                  </tr>
-
-                  <tr *ngIf="avalableForTHC.length === 0">
-                    <td colspan="11" class="text-center">No MF available</td>
+              <tbody>
+                <ng-container *ngIf="selectedMfs && selectedMfs.length > 0">
+                  <tr *ngFor="let item of selectedMfs; let i = index" class="align-middle">
+                    <td>{{ item.tcno }}</td>
+                    <td>{{ item.tcdt | date:'dd-MMM-yy' }}</td>
+                    <td>{{ item.tcbr }}</td>
+                    <td>{{ item.toBH_CODE }}</td>
+                    <td>{{ item.toT_DKT }}</td>
+                    <td>{{ item.toT_PKGS }}</td>
+                    <td>{{ item.toT_ACTUWT }}</td>
                   </tr>
                 </ng-container>
-              </tbody> -->
+                <tr *ngIf="!selectedMfs || selectedMfs.length === 0">
+                  <td colspan="7" class="text-center">No MF selected</td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
