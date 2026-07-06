@@ -17,7 +17,7 @@
     </div>
 
     <!-- Show selection if NO HCC is generated yet, else just show the text -->
-    <div class="p-3" style="background: var(--bg);" *ngIf="hccForm">
+    <div class="p-3" style="background: var(--bg);" *ngIf="hccForm && isType !== 'E'">
         <div class="detail-card mb-0">
             <div class="detail-card-head"><span class="dch-dot"></span> HCC TYPE</div>
             <div class="p-3">

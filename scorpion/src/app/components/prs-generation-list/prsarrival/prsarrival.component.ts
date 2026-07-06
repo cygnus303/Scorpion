@@ -514,7 +514,6 @@ export class PRSArrivalComponent implements OnInit {
                  <div class="fw-bold fs-3 mb-2">PRS Arrival Success</div>
                  <p class="fs-5 mb-1"><strong>PDC No:</strong> ${res.pdcNo}</p>
                  <p class="fs-5 mb-1"><strong>HC Number:</strong> ${res.hcNumber}</p>
-                 <p class="fs-5 mb-1"><strong>Total Charge:</strong> ${res.totCharge}</p>
               </div>`);
             this.dataEmitter.emit()
             this.modalRef.hide();

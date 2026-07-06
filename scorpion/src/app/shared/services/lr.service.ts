@@ -41,4 +41,8 @@ export class LrService {
     trackVehicleOnGoogleMap(vehicleNo: string): Observable<any> {
       return this.apiHandlerService.GetLoad(`Operation/TrackVehicleOnGoogleMap?vehicleNo=${encodeURIComponent(vehicleNo)}`);
     }
+
+    getFinancialTracking(lrNumber: string): Observable<any> {
+      return this.apiHandlerService.GetLoad(`Operation/FinancialTracking?lrNumber=${lrNumber}`);
+    }
 }

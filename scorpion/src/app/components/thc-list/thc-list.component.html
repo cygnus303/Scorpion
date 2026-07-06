@@ -6,8 +6,11 @@
         </div>
         <div class="btn-group gap-3 ms-auto">
             <!-- <button class="btn btn-primary px-4 py-2 rounded" (click)="openTHC()" *ngIf="!isHQTR">+ Add THC</button> -->
-            <button class="btn btn-primary px-4 py-2 rounded" (click)="openTHCPopup('A')" *ngIf="!isHQTR && THCFilterForm.get('statusFilter')?.value === 'Pending'">+ Add THC</button>
-            <button class="btn btn-primary px-4 py-2 rounded" (click)="openTHCPopup('E')" *ngIf="!isHQTR && THCFilterForm.get('statusFilter')?.value !== 'Pending'">+ THC with
+            <button class="btn btn-primary px-4 py-2 rounded" (click)="openTHCPopup('A')"
+                [disabled]="selectedMfs.length === 0"
+                *ngIf="!isHQTR && THCFilterForm.get('statusFilter')?.value === 'MFPENDING'">+ Add THC</button>
+            <button class="btn btn-primary px-4 py-2 rounded" (click)="openTHCPopup('E')"
+                *ngIf="!isHQTR && THCFilterForm.get('statusFilter')?.value !== 'MFPENDING'">+ THC with
                 Empty Vehicle</button>
             <button class="btn btn-success px-4 py-2 rounded" (click)="downloadExcel()">
                 <span *ngIf="!isdownload">📥 Download XLS</span>
@@ -32,11 +35,11 @@
         </div>
 
         <div class="summary-card px-3 py-3 c-orange cursor-pointer"
-            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'Pending'"
-            (click)="filterByStatus('Pending')">
+            [class.active-card]="THCFilterForm.get('statusFilter')?.value === 'MFPENDING'"
+            (click)="filterByStatus('MFPENDING')">
             <div class="card-content">
                 <div class="s-label">MF Pending for THC</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.Pending || 0 }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.pendingMFCount || 0 }}</div>
                 <div class="small text-body-tertiary">Pending to add MF</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
@@ -121,11 +124,13 @@
                         </ng-select>
                     </div>
                 </div>
-                <div class="table-toolbar">
+                <div class="table-toolbar d-flex align-items-center gap-3">
+                    <div class="selected-count text-primary fw-bold bg-primary-subtle px-3 py-1 rounded" *ngIf="THCFilterForm.get('statusFilter')?.value === 'MFPENDING' && selectedMfs.length > 0">
+                        {{ selectedMfs.length }} MF Selected
+                    </div>
                     <div class="search-box d-flex align-items-center"><span class="text-muted">🔍</span>
                         <input type="text" placeholder="Search..." class="form-control border-0 shadow-none"
                             formControlName="searchText">
-
                     </div>
                 </div>
             </div>
@@ -173,7 +178,14 @@
                         </td>
                     </tr>
                 </tbody>
-                <tbody *ngIf="!isLoading && thcData.length === 0">
+                <tbody *ngIf="!isLoading && (!thcData || thcData.length === 0) && isThcListing">
+                    <tr>
+                        <td colspan="14" class="text-center py-4 text-muted fs-5">
+                            No records found.
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && (!mfData || mfData.length === 0) && !isThcListing">
                     <tr>
                         <td colspan="14" class="text-center py-4 text-muted fs-5">
                             No records found.
@@ -198,7 +210,7 @@
                         <td class="text-center">
                             <span class="fw-bold cursor-pointer"
                                 [ngClass]="(data.mfNo) ? 'text-primary fw-bold' : 'text-muted'"
-                                (click)="openMFView(data.mfNo)">View MF</span>
+                                (click)="openMFPopup(data.thcNo)">{{data.mfNo ? 'View MF' :'-'}}</span>
                         </td>
                         <td class="text-center">
                             <div class="d-flex gap-2 flex-column">
@@ -268,91 +280,43 @@
                         </td>
                     </tr>
                 </tbody>
-                   <tbody *ngIf="!isLoading && thcData.length > 0 && !isThcListing">
-                    <tr *ngFor="let data of thcData; let i = index">
-                        <td class="text-center text-muted fs-7">{{ i + 1 }}</td>
+                <tbody *ngIf="!isLoading && mfData.length > 0 && !isThcListing">
+                    <tr *ngFor="let data of mfData; let i = index">
+                        <td class="text-center text-muted fs-7">
+                            <input type="checkbox"
+                                   class="form-check-input cursor-pointer"
+                                   [checked]="isMfSelected(data)"
+                                   (change)="toggleMfSelection(data, $any($event.target).checked)">
+                        </td>
                         <td>
                             <div class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;"
-                                (click)="openThcView(data.thcNo)"><a>{{
-                                    data.thcNo }}</a></div>
-                            <div class="text-muted fs-7 mt-1">{{ data.thcDate | date:'dd-MMM-yy' }}</div>
+                                ><a>{{
+                                    data.tcno }}</a></div>
                         </td>
-
+                        <td class="text-center" style="width: 120px;">
+                            <div class="text-muted fs-7 mt-1">{{ data.tcdt | date:'dd-MMM-yy' }}</div>
+                        </td>
                         <td class="text-center" style="width: 120px;">
                             <div class="d-flex gap-2 flex-column">
-                                <span class="d-block rounded p-1 fw-bold mb-1">{{ data.totalDockets}}</span>
-                            </div>
-                        </td>
-                        <td class="text-center">
-                            <span class="fw-bold cursor-pointer"
-                                [ngClass]="(data.mfNo) ? 'text-primary fw-bold' : 'text-muted'"
-                                (click)="openMFView(data.mfNo)">View MF</span>
-                        </td>
-                        <td class="text-center">
-                            <div class="d-flex gap-2 flex-column">
-                                <span class="d-block rounded p-1 fw-bold mb-1 vt-transporter" *ngIf="data.vendorType">
-                                    {{ data.vendorType}}</span>
-                                <span class="fw-bold text-muted d-inline-block" *ngIf="data.vendorName"
-                                    style="max-width: 180px;" [title]="data.vendorName">{{ data.vendorName }}</span>
+                                <span class="d-block rounded p-1 fw-bold mb-1">{{ data.tcbr}}</span>
                             </div>
                         </td>
                         <td class="text-center fs-7">
-                            {{ data.vehicleNo }}</td>
-                        <td class="text-center cursor-pointer">
-                            <div class="d-flex gap-2 flex-column">
-                                <span class="d-block rounded p-1 fw-bold mb-1" *ngIf="data.serviceType">
-                                    {{ data.serviceType}}</span>
-                                <span class="fw-bold text-muted d-inline-block" *ngIf="data.routeMode"
-                                    style="max-width: 180px;" [title]="data.routeMode">{{ data.routeMode }}</span>
-                            </div>
-                        </td>
-                        <td class="text-center cursor-pointer">
-                            <span class="px-4 py-2 cursor-pointer">
-                                {{data.departureDate | date:'dd-MMM-yy'}} &{{data.departureTime}}
-                            </span>
-                        </td>
+                            {{ data.toBH_CODE }}</td>
                         <td class="text-center cursor-pointer">
                             <span class="px-4 py-2">
-                                {{data.tobhCode}}
+                                {{data.lsType}}
                             </span>
                         </td>
                         <td class="text-center">
                             <span class="pill-badge px-2 py-1">
-                                {{ data.routeName }}
+                                {{ data.toT_DKT }}
                             </span>
-                        </td>
-                        <td class="text-center">
-                            <span class="px-3 py-2 cursor-pointer"
-                                [ngClass]="isHccValid(data.hccNo) ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
-                                (click)="isHccValid(data.hccNo) ? openHCCModal(data.hccNo) : null">{{
-                                isHccValid(data.hccNo) ? data.hccNo : 'NO HCC' }}</span>
                         </td>
 
                         <td class="text-center">
-                            <span class="fw-bold text-primary cursor-pointer">{{ data.billNo || '—' }}</span>
-                        </td>
-                        <td class="text-center">
-                            <span class="pill-badge px-2 py-1 cursor-pointer" [ngClass]="getStatusClass(data.status)">{{
-                                data.status }}</span>
-                        </td>
-                        <td style="width: 250px !important;">
-                            <div class="d-flex flex-wrap gap-2 justify-content-center">
-                                <button (click)="onView(data)"
-                                    class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3">
-                                    <i class="fa fa-eye"></i> View
-                                </button>
-                                <button *ngIf="!isHQTR"
-                                    class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3"
-                                    (click)="openEditPopup(data)"
-                                    [disabled]="data.status === 'Cancelled'|| data.status === 'Billed'">
-                                    ✏️ Edit
-                                </button>
-                                <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
-                                    (click)="onCancel(data.thcNo)"
-                                    [disabled]="data.status === 'Cancelled'|| data.status === 'Billed'|| data.status ==='Completed Journey'">
-                                    🚫 Cancel
-                                </button>
-                            </div>
+                            <span class="fw-bold cursor-pointer">{{ data.toT_PKGS || '—'
+                                }}/{{data.toT_ACTUWT}}</span>
                         </td>
                     </tr>
                 </tbody>
@@ -367,3 +331,4 @@
 <app-thc-edit #ThcEditComponent></app-thc-edit>
 <app-thc-empty-vehicle-popup #ThcEmptyVehiclePopupComponent></app-thc-empty-vehicle-popup>
 <app-add-thc-popup #ThcPopupComponent></app-add-thc-popup>
+<app-mf-view #MfViewComponent></app-mf-view>

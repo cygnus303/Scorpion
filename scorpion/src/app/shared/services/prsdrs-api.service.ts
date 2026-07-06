@@ -79,5 +79,10 @@ export class PRSDRSApiService {
   onUNRSubmit(payload:any){
     return this.apiHandlerService.Post(`Operation/UNRGeneration`, payload);
   }
+
+  onMFDetail(thcNo:string){
+    return this.apiHandlerService.Get(`THC/ViewMFDetail?thcNo=${thcNo}`);
+    
+  }
 }
 

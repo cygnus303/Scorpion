@@ -335,7 +335,6 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
   }
 
   openMapView(lr: any) {
-    debugger
     if (this.liveRouteMap) {
       this.liveRouteMap.showPopup(lr);
     }
