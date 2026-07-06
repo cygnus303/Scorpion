@@ -157,7 +157,7 @@ export class HCCDetailsComponent {
       pkgsno: [item.pkgsno],
       weight: [item.weight],
       lrWiseHCCAmount: [item.lrWiseHCCAmount || 0.00],
-      isChecked: [item.lrWiseHCCAmount > 0],
+      isChecked: [false],
       luVendorTyp: [item.chargedBy],
       luVendorCode: [item.vendorCode],
       rateType: [item.rateType],
@@ -462,7 +462,7 @@ export class HCCDetailsComponent {
       const weight = parseFloat(group.get('weight')?.value) || 0;
       const pkgsno = parseFloat(group.get('pkgsno')?.value) || 0;
       const lrWiseAmount = parseFloat(group.get('lrWiseHCCAmount')?.value) || 0;
-      const isAllowZero = group.get('isChecked')?.value === true; // isChecked = false means IsAllowZero
+      const isAllowZero = group.get('isChecked')?.value; // isChecked = false means IsAllowZero
 
       let charge = 0;
       if (rateType == '3') {

@@ -448,6 +448,11 @@ export class LSUpdatePopupComponent {
   }
 
   prepareLoadingSheet() {
+    if (this.isSubmitDisabled) {
+      this.sweetAlertService.error('No Docket Selected! Please select at least one docket.');
+      return;
+    }
+
     if (this.loadingSheetService.LSForm.valid) {
       this.isSubmitting = true; // Start loading state
 

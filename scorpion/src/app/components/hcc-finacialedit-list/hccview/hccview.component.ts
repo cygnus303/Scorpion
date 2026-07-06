@@ -4,17 +4,19 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
+import { LrViewComponent } from 'app/components/lr-list/lr-view/lr-view.component';
 
 @Component({
   selector: 'app-hccview',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule,LrViewComponent],
   templateUrl: './hccview.component.html',
   styleUrl: './hccview.component.scss'
 })
 export class HCCviewComponent {
   public modalRef!: BsModalRef;
   @ViewChild('TemplateRef', { static: true }) TemplateRef!: TemplateRef<any>;
+   @ViewChild('LrViewComponent') LrViewComponent!: LrViewComponent;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
 
   public summary: any = {};
@@ -148,5 +150,9 @@ export class HCCviewComponent {
 
   closeHccModal() {
     this.close();
+  }
+
+  openLRView(row: any){
+    this.LrViewComponent.showPopup(row);
   }
 }

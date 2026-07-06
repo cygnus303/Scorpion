@@ -198,11 +198,17 @@ getStatusClass(status: string): string {
       pageSize:this.pagination.pageSize,
       isDownload: true
     }
-    this.listSubscription = this.PRSDRSApiService.getTHCArrivalList(payload).subscribe({
+    this.listSubscription = this.PRSDRSApiService.getTHCList(payload).subscribe({
       next: (response: any) => {
         this.isdownload = false;
         if (response) {
-          this.exportService.exportToExcel(response.thcList, `THCArrival_Export`);
+          if (this.isThcListing && response.data && response.data.length > 0) {
+            this.exportService.exportToExcel(response.data, `THC_Export`);
+          } else if (!this.isThcListing && response.mfData && response.mfData.length > 0) {
+            this.exportService.exportToExcel(response.mfData, `MF_Export`);
+          } else {
+            this.sweetAlertService.info('No data available to download.');
+          }
         }
       },
       error: (err: any) => {
