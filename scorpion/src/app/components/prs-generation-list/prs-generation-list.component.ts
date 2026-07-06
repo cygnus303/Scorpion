@@ -19,6 +19,7 @@ import { environment } from 'environments/environment';
 import { PRSDRSEditComponent } from './prsdrs-edit/prsdrs-edit.component';
 import { HccViewComponent } from '../hcc-view/hcc-view.component';
 import { MenuAccessService } from 'app/shared/services/menu-access.service';
+import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 
 @Component({
   selector: 'app-prs-generation-list',
@@ -84,7 +85,8 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
     private sweetAlertService: SweetAlertService,
     private prsdrsApiService: PRSDRSApiService,
     private router: Router,
-    public menuAccessService: MenuAccessService
+    public menuAccessService: MenuAccessService,
+    public dynamicDataService:DynamicDataService
   ) { }
 
   ngOnInit() {
@@ -201,21 +203,21 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
   downloadCSV() {
     this.isCSVLoading = true;
     const payload = {
-      fromDate: this.formatDateToISO(this.config.fromDateStr),
-      toDate: this.formatDateToISO(this.config.toDateStr),
-      locCode: this.docketService.loginUserList.LocationCode || null,
-      statusFilter: this.config.statusFilter || 'All',
-      pageNumber: this.config.page,
-      pageSize: this.config.pageSize, // High page size or handling from backend for CSV.
-      isDownload: 1,
-      searchText: this.config.searchText || null
+      "FilterJson": {
+         ReportId: "670",
+         fromDate:  this.formatDateToISO(this.config.fromDateStr),
+         toDate:this.formatDateToISO(this.config.toDateStr),
+         locCode: this.docketService.loginUserList.LocationCode || null,
+         statusFilter: this.config.statusFilter || 'All',
+         searchText: this.config.searchText || null
+       }
     };
 
-    this.listSubscription = this.PFMapiService.GetPrsList(payload).subscribe({
+    this.listSubscription = this.dynamicDataService.getDynamicData(payload).subscribe({
       next: (response: any) => {
         this.isCSVLoading = false;
-        if (response && response.data) {
-          this.exportService.exportToCSV(response.data, `PRS_List`);
+        if (response && response.Table1) {
+          this.exportService.exportToCSV(response.Table1, `PRS_List`);
         }
       },
       error: (err: any) => {

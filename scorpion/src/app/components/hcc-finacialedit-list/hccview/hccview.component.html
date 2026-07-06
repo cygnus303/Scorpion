@@ -124,7 +124,7 @@
                     <tbody>
                         <tr *ngFor="let item of dataList; let i = index">
                             <td>{{ i + 1 }}</td>
-                            <td><a href="#" class="cnote-link" onclick="return false;">{{ item.DOCKNO || '—' }}</a></td>
+                            <td><a class="cnote-link cursor-pointer" (click)="openLRView(item.DOCKNO)">{{ item.DOCKNO || '—' }}</a></td>
                             <td>{{ item.ORGNCD || '—' }}</td>
                             <td>{{ item.DESTCD || '—' }}</td>
                             <td>{{ item.CSGNCD || '—' }}</td>
@@ -152,7 +152,6 @@
 
         <!-- Print-only signature block (visible only on paper) -->
         <div class="print-signatures print-only">
-            <div class="print-sign-box">Prepared By</div>
             <div class="print-sign-box">Checked By</div>
             <div class="print-sign-box">Authorised Signatory</div>
         </div>
@@ -182,3 +181,5 @@
         </div>
     </div>
 </ng-template>
+
+<app-lr-view #LrViewComponent></app-lr-view>

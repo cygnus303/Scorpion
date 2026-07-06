@@ -592,8 +592,10 @@ export class AddThcPopupComponent {
     const licenseControl = this.ThcForm.get('driver1Licence');
 
     if (!licenseControl || licenseControl.invalid || !dob || !licenseNo) {
-      licenseControl?.markAsTouched();
-      this.ThcForm.get('d1_DOB')?.markAsTouched();
+      setTimeout(() => {
+        licenseControl?.markAsTouched();
+        this.ThcForm.get('d1_DOB')?.markAsTouched();
+      });
       return;
     }
     const payload = {
@@ -865,13 +867,13 @@ export class AddThcPopupComponent {
       this.isBidInsDateReadonly = false;
       this.isBidFitDateReadonly = false;
       this.ThcForm.patchValue({
-         vendorCode: null,
-         driver1Name: null,
-         mKTVehicleNo: null,
-         driver1MobileNo: null,
+        vendorCode: null,
+        driver1Name: null,
+        mKTVehicleNo: null,
+        driver1MobileNo: null,
       });
       if (this.ThcForm.get('bidType')?.value === 'With') {
-              this.getVehicleType('O')
+        this.getVehicleType('O')
 
       }
       return;
@@ -882,43 +884,43 @@ export class AddThcPopupComponent {
         this.isBidDriverReadonly = !!response?.driverName;
         this.isBidVehicleReadonly = !!response?.vehicleNo;
         this.isBidMobileReadonly = !!response?.driverMobileNo;
-        
+
         const payload: any = {
           vendorCode: response?.vendorCode || null,
           driver1Name: response?.driverName || null,
           mKTVehicleNo: response?.vehicleNo || null,
           driver1MobileNo: response?.driverMobileNo || null,
         };
-        
+
         if (this.ThcForm.get('bidType')?.value === 'With') {
-           payload.vehicleNO = 'O';
+          payload.vehicleNO = 'O';
         }
 
         this.ThcForm.patchValue(payload);
 
         if (response?.vehicleNo) {
-           this.getVehicleDetailFromBid(response?.vehicleNo);
-        }else{
+          this.getVehicleDetailFromBid(response?.vehicleNo);
+        } else {
           this.ThcForm.patchValue({
             eNGINENO: null,
-              cHASISNO: null,
-              rCBOOKNO: null,
-              registrationDate: null,
-              insuranceDate: null,
-              fitnessDate:null
+            cHASISNO: null,
+            rCBOOKNO: null,
+            registrationDate: null,
+            insuranceDate: null,
+            fitnessDate: null
           })
           this.isBidEngineNoReadonly = false;
-            this.isBidChassisNoReadonly = false;
-            this.isBidRCBookNoReadonly = false;
-            this.isBidRegDateReadonly = false;
-            this.isBidInsDateReadonly = false;
-            this.isBidFitDateReadonly = false;
+          this.isBidChassisNoReadonly = false;
+          this.isBidRCBookNoReadonly = false;
+          this.isBidRegDateReadonly = false;
+          this.isBidInsDateReadonly = false;
+          this.isBidFitDateReadonly = false;
         }
       }
     })
   }
 
-    getVehicleDetailFromBid(vehicleNo: string) {
+  getVehicleDetailFromBid(vehicleNo: string) {
     const params = {
       vehNo: vehicleNo.toUpperCase(),
       baseUserName: this.docketService.loginUserList.BaseUserName

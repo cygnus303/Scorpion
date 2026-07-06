@@ -254,25 +254,21 @@
                 class="data-table align-middle text-nowrap">
                 <thead style="position: sticky; top: 0; z-index: 2;">
                   <tr>
-                    <th class="p-3 fw-bolder text-center" style="width: 60px; min-width: 60px;"><input type="checkbox"
+                    <th class="px-2 py-2 fw-bolder text-center" style="width: 40px; min-width: 40px;"><input type="checkbox"
                         class="form-check-input checkbox-lg custom-big-checkbox" (change)="toggleSelectAll($event)"
                         appFocusNext style="cursor: pointer;"></th>
-                    <th class="p-3 fw-bolder">Cnote No.</th>
-                    <th class="p-3 fw-bolder">Manual Cnote No.</th>
-                    <th class="p-3 fw-bolder">Bkg. Date</th>
-                    <th class="p-3 fw-bolder">Trans. Mode</th>
-                    <th class="p-3 fw-bolder">Bkg. Loc.</th>
-                    <th class="p-3 fw-bolder">Dely. Loc.</th>
-                    <th class="p-3 fw-bolder">City From-To</th>
-                    <th class="p-3 fw-bolder">Comm. Dely Date</th>
-                    <th class="p-3 fw-bolder" style="min-width: 160px;"
+                    <th class="px-2 py-2 fw-bolder">Cnote No. / Date</th>
+                    <th class="px-2 py-2 fw-bolder">Trans. Mode</th>
+                    <th class="px-2 py-2 fw-bolder" style="width: 190px; min-width: 190px; max-width: 190px;">Loc. / City (From - To)</th>
+                    <th class="px-2 py-2 fw-bolder">Comm. Dely Date</th>
+                    <th class="px-2 py-2 fw-bolder" style="width: 110px; min-width: 110px; max-width: 110px;"
                       *ngIf="this.docketService.loginUserList.Type === 'ULS'">HCC Vendor Type
                       <ng-select class="mt-1 clear-icon" [items]="generalMasterService.loadingData" bindLabel="codeDesc"
                         bindValue="codeId" placeholder="Vendor Type" (change)="onHeaderHccVendorTypeChange($event)"
                         [dropdownPosition]="'bottom'" appendTo="body">
                       </ng-select>
                     </th>
-                    <th class="p-3 fw-bolder" style="min-width: 200px;"
+                    <th class="px-2 py-2 fw-bolder" style="width: 220px; min-width: 220px; max-width: 220px;"
                       *ngIf="this.docketService.loginUserList.Type === 'ULS'">HCC VendorCode
                       <ng-select class="mt-1 clear-icon remove-white-space" [items]="headerVendorList" bindLabel="text"
                         bindValue="value" placeholder="Vendor" [(ngModel)]="headerVendor"
@@ -280,7 +276,7 @@
                         [dropdownPosition]="'bottom'" appendTo="body">
                       </ng-select>
                     </th>
-                    <th class="p-3 fw-bolder" style="min-width: 150px;"
+                    <th class="px-2 py-2 fw-bolder" style="width: 145px; min-width: 145px; max-width: 145px;"
                       *ngIf="this.docketService.loginUserList.Type === 'ULS'">
                       Rate Type
                       <ng-select class="clear-icon mt-1" bindLabel="codeDesc" bindValue="codeId"
@@ -288,14 +284,14 @@
                         [items]="generalMasterService.chargeTypeData"
                         (change)="onHeaderRateTypeChange($event)"></ng-select>
                     </th>
-                    <th class="p-3 fw-bolder" style="min-width: 230px;">Pkgs.[L/B]</th>
-                    <th class="p-3 fw-bolder" style="min-width: 230px;">Wt.[L/B]</th>
-                    <th class="p-3 fw-bolder">E-Way Bill No.</th>
+                    <th class="px-2 py-2 fw-bolder" style="min-width: 140px;">Pkgs.[L/B]</th>
+                    <th class="px-2 py-2 fw-bolder" style="min-width: 140px;">Wt.[L/B]</th>
+                    <th class="px-2 py-2 fw-bolder">E-Way Bill No.</th>
                   </tr>
                 </thead>
                 <tbody formArrayName="docketList">
                   <tr *ngIf="isLoadingSheet">
-                    <td colspan="13" class="text-center py-4">
+                    <td colspan="11" class="text-center py-4">
                       <div class="spinner-border" role="status" style="width:1.8rem; height:1.8rem;">
                         <span class="visually-hidden">Loading...</span>
                       </div>
@@ -305,7 +301,7 @@
                   <ng-container *ngIf="!isLoadingSheet">
                     <tr *ngFor="let row of loadingSheetService.docketFormArray.controls; let i = index"
                       [formGroupName]="i">
-                      <td class="text-center" style="max-width: 150px;">
+                      <td class="text-center" style="width: 40px; min-width: 40px; max-width: 150px;">
                         <ng-container *ngIf="row.value.message?.trim(); else checkError">
                           <div class="text-danger fw-semibold text-wrap" style="font-size: 11px;">{{ row.value.message
                             }}</div>
@@ -324,23 +320,24 @@
                             style="cursor: pointer;" appFocusNext />
                         </ng-template>
                       </td>
-                      <td>{{ row.value.docketNo }}</td>
-                      <td>{{ row.value.manual_dockno }}</td>
-                      <td>{{ row.value.docketDate }}</td>
+                      <td>
+                        <div class="fw-bold">{{ row.value.docketNo }}</div>
+                        <div class="text-muted" style="font-size: 10.5px;">{{ row.value.docketDate }}</div>
+                      </td>
                       <td>{{ row.value.transMode }}</td>
-                      <td>{{ row.value.orgCode }}</td>
-                      <td>{{ row.value.reDestCode }}</td>
-
-                      <td>{{ row.value.fromTo }}</td>
+                      <td style="width: 190px; min-width: 190px; max-width: 190px;">
+                        <div class="fw-bold">{{ row.value.orgCode }} - {{ row.value.reDestCode }}</div>
+                        <div class="text-muted" style="font-size: 10.5px;">{{ row.value.fromTo }}</div>
+                      </td>
                       <td>{{ row.value.commited_DelyDate }}</td>
 
-                      <td *ngIf="docketService.loginUserList.Type === 'ULS'">
+                      <td *ngIf="docketService.loginUserList.Type === 'ULS'" style="width: 110px; min-width: 110px; max-width: 110px;">
                         <ng-select class="clear-icon" [items]="generalMasterService.loadingData"
                           formControlName="luVendorTyp" bindLabel="codeDesc" bindValue="codeId" placeholder="Type"
                           [dropdownPosition]="'bottom'" appendTo="body" (change)="onRowVendorTypeChange($event, i)">
                         </ng-select>
                       </td>
-                      <td *ngIf="docketService.loginUserList.Type === 'ULS'">
+                      <td *ngIf="docketService.loginUserList.Type === 'ULS'" style="width: 220px; min-width: 220px; max-width: 220px;">
                         <ng-select class="noFoundTextColor clear-icon remove-white-space" [ngClass]="{
                               'required2': row.value.luVendorTyp && row.value.luVendorTyp !== 'XX9',
                               'border-danger': loadingSheetService.docketFormArray.at(i).get('luVendorCode')?.hasError('required') && loadingSheetService.docketFormArray.at(i).get('luVendorCode')?.touched
@@ -353,7 +350,7 @@
                           This field is required
                         </div>
                       </td>
-                      <td *ngIf="docketService.loginUserList.Type === 'ULS'">
+                      <td *ngIf="docketService.loginUserList.Type === 'ULS'" style="width: 145px; min-width: 145px; max-width: 145px;">
                         <ng-select class="clear-icon" formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"
                           placeholder="Enter rateType" [items]="generalMasterService.chargeTypeData"
                           [dropdownPosition]="'bottom'" appendTo="body"
@@ -374,9 +371,9 @@
                         </span>
                       </td>
 
-                      <td>
+                      <td style="min-width: 140px;">
                         <div class="d-flex align-items-center gap-1">
-                          <input type="text" class="form-control text-end px-2 py-1" style="width: 72px; height: 31px;" formControlName="PackageLB"
+                          <input type="text" class="form-control text-end px-2 py-1" style="width: 55px; height: 28px; padding: 2px 4px !important;" formControlName="PackageLB"
                             [readOnly]="this.docketService.loginUserList.Type==='LS'" (input)="onPackageBlur(row)"
                             oninput="this.value=this.value.replace(/[^0-9.]/g,'').replace(/(\..*)\./g,'$1')"
                             appFocusNext>
@@ -394,9 +391,9 @@
                         </span>
                         <input type="hidden" formControlName="PackagesLB_old" />
                       </td>
-                      <td>
+                      <td style="min-width: 140px;">
                         <div class="d-flex align-items-center gap-1">
-                          <input type="text" class="form-control text-end px-2 py-1" style="width: 72px; height: 31px;" formControlName="WeightsLB"
+                          <input type="text" class="form-control text-end px-2 py-1" style="width: 55px; height: 28px; padding: 2px 4px !important;" formControlName="WeightsLB"
                             readonly appFocusNext>
                           <span class="text-danger fw-semibold text-nowrap ms-1">
                             / {{ row.value.weightLB }} / {{ row.value.actuwt | number:'1.2-2' }}
@@ -406,7 +403,7 @@
                       <td>{{row.value.eWayBillNo}}</td>
                     </tr>
                     <tr *ngIf="loadingSheetService.docketFormArray.length === 0">
-                      <td colspan="13" class="text-center">No Record Found.</td>
+                      <td colspan="11" class="text-center">No Record Found.</td>
                     </tr>
                   </ng-container>
                 </tbody>
