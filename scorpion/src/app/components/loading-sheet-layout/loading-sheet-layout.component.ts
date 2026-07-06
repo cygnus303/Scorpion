@@ -16,6 +16,7 @@ import { LSUpdatePopupComponent } from './lsupdate-popup/lsupdate-popup.componen
 import Swal from 'sweetalert2';
 import { HccViewComponent } from '../hcc-view/hcc-view.component';
 import { MenuAccessService } from 'app/shared/services/menu-access.service';
+import { it } from 'node:test';
 
 @Component({
   selector: 'app-loading-sheet-layout',
@@ -213,6 +214,7 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
   }
 
   downloadXLS() {
+    debugger
     if (this.isCSVLoading) return;
     this.isCSVLoading = true;
 
@@ -239,8 +241,12 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
             'Total Dockets': item.totalDockets,
             'MF No.': item.mfNo || '-',
             'Loading HCC No.': item.loadingHCCNo || '-',
-            'Unloading HCC No.': item.unloadingHCCNo || '-',
-            'Status': item.status
+            'Status': item.status,
+            'Entry By':item.enteryBy,
+            'Cancelled By':item.cancelledBy,
+            'Cancelled Date':item.cancelDate,
+            'Updated By':item.updatedBy,
+            'Updated Date':item.updatedDate,
           }));
           this.exportService.exportToExcel(exportData, `Loading_Sheet_Listing`);
         }
