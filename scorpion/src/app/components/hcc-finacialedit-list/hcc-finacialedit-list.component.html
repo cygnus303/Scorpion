@@ -179,14 +179,16 @@
                         </td>
                         <td>
                             <div class="hcc-cell">
-                                <a class="hcc-link cursor-pointer" *ngIf="row.HCNumber" (click)="openHCCModal(row.HCNumber,row.DocumentNo)">{{ row.HCNumber }}</a>
+                                <a class="hcc-link cursor-pointer" *ngIf="row.HCNumber"
+                                    (click)="openHCCModal(row.HCNumber,row.DocumentNo)">{{ row.HCNumber }}</a>
                                 <span class="hcc-link text-muted" *ngIf="!row.HCNumber">—</span>
                                 <span class="hcc-date">{{ row.HcDt || '—' }}</span>
                             </div>
                         </td>
                         <td>
                             <div class="doc-cell">
-                                <a class="doc-link cursor-pointer" *ngIf="row.DocumentNo" (click)="openDocumentView(row)">{{ row.DocumentNo }}</a>
+                                <a class="doc-link cursor-pointer" *ngIf="row.DocumentNo"
+                                    (click)="openDocumentView(row)">{{ row.DocumentNo }}</a>
                                 <span class="doc-link text-muted" *ngIf="!row.DocumentNo">—</span>
                                 <span class="doc-date">{{ row.DocumentDt || '—' }}</span>
                             </div>
@@ -241,12 +243,17 @@
                         </td>
                         <td>
                             <div class="action-btns">
-                                <button *ngIf="menuAccessService.hasPermission('View')" class="ab ab-view" (click)="openHCCview(row)">👁 View</button>
+                                <button *ngIf="menuAccessService.hasPermission('View')" class="ab ab-view"
+                                    (click)="openHCCview(row)">👁 View</button>
                                 <button class="ab ab-print" (click)="openPrint(row.HCNumber)" [disabled]="!row.HCNumber"
                                     title="Print HCC">🖨 Print</button>
-                                <button *ngIf="menuAccessService.hasPermission('Cancel')" class="ab ab-cancel" (click)="onCancel(row)"
-                                    [disabled]="!row.HCNumber || row.HCCBillNo || row.HCCStatus === 'Cancelled'" title="Cancel HCC">🚫 Cancel</button>
-                                <!-- <button *ngIf="menuAccessService.hasPermission('Edit')" (click)="openEditModal(row)" class="ab ab-edit" title="Edit HCC">✏️ Edit</button> -->
+                                <button *ngIf="menuAccessService.hasPermission('Cancel')" class="ab ab-cancel"
+                                    (click)="onCancel(row)"
+                                    [disabled]="!row.HCNumber || row.HCCBillNo || row.HCCStatus === 'Cancelled'"
+                                    title="Cancel HCC">🚫 Cancel</button>
+                                <button *ngIf="menuAccessService.hasPermission('Edit')" (click)="openEditModal(row)"
+                                    [disabled]="row.HCCStatus?.trim()?.toLowerCase() === 'cancelled'" class="ab ab-edit" title="Edit HCC">✏️
+                                    Edit</button>
                             </div>
                         </td>
                     </tr>

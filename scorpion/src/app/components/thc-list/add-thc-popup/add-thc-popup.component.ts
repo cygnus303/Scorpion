@@ -204,7 +204,7 @@ export class AddThcPopupComponent {
     });
   }
 
-  showPopup(type: string, mfs: any[] = []) {
+  showPopup(type: string, mfs?: any) {
     this.ThcType = type;
     this.selectedMfs = mfs;
     this.buildForm();

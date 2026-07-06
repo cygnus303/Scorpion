@@ -50,7 +50,7 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
     statusFilter: 'All',
     page: 1,
     pageSize: 10,
-    hccType:'All',
+    hccType: 'All',
     totalRecords: 0,
     totalPages: 1,
     searchText: ''
@@ -67,7 +67,7 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
     public docketService: DocketService,
     public exportService: ExportService,
     private sweetAlertService: SweetAlertService,
-     public menuAccessService: MenuAccessService
+    public menuAccessService: MenuAccessService
   ) { }
 
   ngOnInit() {
@@ -97,7 +97,7 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
     this.fetchData();
   }
 
-  
+
   filterByStatus(status: string) {
     this.config.statusFilter = status;
     this.fetchData();
@@ -266,9 +266,7 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
 
   openEditModal(row?: any) {
     if (row) {
-      this.HCCDetailsComponent.showPopup(row, 'H');
-    } else {
-      this.HCCDetailsComponent.showPopup('', 'H');
+      this.HCCDetailsComponent.showPopup(row, '', 'E');
     }
   }
 
@@ -277,7 +275,7 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
     this.fetchSubject.complete();
   }
 
-   onCancel(row: any) {
+  onCancel(row: any) {
     this.sweetAlertService.cancel(`Are you sure you want to cancel HCC ${row.HCNumber}?`, () => {
       this.hCCCancellation(row);
     });
@@ -306,7 +304,7 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
     });
   }
 
-  openHCCModal(hccNo: string,documentNo:string) {
+  openHCCModal(hccNo: string, documentNo: string) {
     const url = `${this.env.liveUrl}ViewPrint/ViewHCC?DocumentNo=${documentNo}&HCNo=${hccNo}&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'

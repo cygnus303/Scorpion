@@ -31,6 +31,7 @@ export class HCCDetailsComponent {
   public headerVendorList: any[] = [];
   public headerVendor: any = null;
   public documentType:string='';
+  public isType:string='';
   public rowVendorList: any[][] = [];
 
   constructor(private modalService: BsModalService, private CommonService: CommonService,
@@ -52,6 +53,9 @@ export class HCCDetailsComponent {
 
   get hasExistingHcc(): boolean {
     if (!this.selectedHccDetails) return false;
+    if (this.isType === 'E' || !!(this.selectedHccDetails.HCNumber || this.selectedHccDetails.hcNumber)) {
+      return true;
+    }
     return !!(
       this.isHccValid(this.selectedHccDetails.loadingNoHCCCnt) ||
       this.isHccValid(this.selectedHccDetails.unloadingNoHCCCnt) ||
@@ -60,24 +64,33 @@ export class HCCDetailsComponent {
     );
   }
 
-  showPopup(data: any, flag: any) {
+  showPopup(data: any, flag: any,type?:string) {
     console.log("HCC Details Data:", data);
     this.selectedHccDetails = data;
-    this.documentType=flag;
+    this.isType = type || '';
+    this.documentType = this.isType === 'E' ? data.DocumentType : flag;
     console.log(this.selectedHccDetails)
     // Auto-detect existing HCC type so radio shows pre-selected (disabled) state
-    if (this.isHccValid(data.loadingNoHCCCnt) || this.isHccValid(data.loadingNoHCCCnt)) {
-      this.selectedHccType = 'Unloading';
-    } else if (this.isHccValid(data.unloadingNoHCCCnt) || this.isHccValid(data.unloadingNoHCCCnt)) {
-      this.selectedHccType = 'Loading';
-    } else {
-      this.selectedHccType = '';
+    if(this.isType === 'E'){
+      this.selectedHccType = data.ChargesType === 'U' ? 'Unloading' : 'Loading';
+    }else{
+      if (this.isHccValid(data.loadingNoHCCCnt) || this.isHccValid(data.loadingNoHCCCnt)) {
+        this.selectedHccType = 'Unloading';
+      } else if (this.isHccValid(data.unloadingNoHCCCnt) || this.isHccValid(data.unloadingNoHCCCnt)) {
+        this.selectedHccType = 'Loading';
+      } else {
+        this.selectedHccType = '';
+      }
     }
     this.buildForm();
     this.headerVendor = null;
-    this.getVendorType(flag);
     this.generalMasterService.getChargeTypeData();
-    this.getHCCDetail(data);
+    this.getVendorType(this.documentType);
+    if(this.isType === 'E'){
+      this.getHCCEditDetail(data);
+    }else{
+      this.getHCCDetail(data);
+    }
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered hcc-view-modal-custom', backdrop: true });
   }
 
@@ -201,6 +214,64 @@ export class HCCDetailsComponent {
         this.isLoading = false;
       }
     })
+  }
+
+  getHCCEditDetail(data: any) {
+    this.hccForm.patchValue({
+      hhcLocation: data.HCCLocation,
+      hcNumber: data.HCNumber,
+      documentNo:data.DocumentNo,
+      chargesType:data.ChargesType === 'U' ? 'Unloading' : 'Loading',
+      chargedBy: data.ChargedBy || null,
+      vendorCode: data.VendorCode || null,
+      // rateType: data.rateType || null,
+      // chargeRate: data.chargeRate,
+      // vendorName: data.vendorName,
+    })
+
+    const payload = {
+      FilterJson: {
+        ReportId: "669",
+        HCCNo:data.HCNumber,
+	      Chargetype:data.ChargesType,
+	      DocumentNo:data.DocumentNo
+      }
+    };
+
+    this.isLoading = true;
+    this.lrList.clear();
+    this.thcMasterService.getHCCDynamicData(payload).subscribe({
+      next: (response: any) => {
+        if (response && response.Table1 && response.Table1.length > 0) {
+          const tableData = response.Table1;
+          this.lrList.clear();
+          tableData.forEach((rowItem: any) => {
+            const mappedItem = {
+              lr: rowItem.LR || rowItem.DOCKNO  || '',
+              origin: rowItem.Origin || '',
+              destination: rowItem.Destination || '',
+              pkgsno: parseFloat(rowItem.PKGSNO ||  0),
+              weight: parseFloat(rowItem.Weight ||  0),
+              lrWiseHCCAmount: rowItem.LRWiseHCCAmount !== undefined && rowItem.LRWiseHCCAmount !== null ? parseFloat(rowItem.LRWiseHCCAmount) : (parseFloat(rowItem.ChargeAmount) || 0),
+              chargedBy: rowItem.LuVendorTyp || null,
+              vendorCode: rowItem.LuVendorCode || null,
+              rateType: rowItem.RateType !== undefined && rowItem.RateType !== null ? String(rowItem.RateType) : null,
+              chargeRate: parseFloat(rowItem.ChargeRate || 0)
+            };
+            this.lrList.push(this.createLRGroup(mappedItem));
+          });
+          this.prefetchVendorLists();
+          this.calculateTotals();
+          this.isLoading = false;
+        } else {
+          this.isLoading = false;
+        }
+      },
+      error: (err: any) => {
+        console.error("Error fetching HCC Edit detail:", err);
+        this.isLoading = false;
+      }
+    });
   }
 
   calculateTotals() {
