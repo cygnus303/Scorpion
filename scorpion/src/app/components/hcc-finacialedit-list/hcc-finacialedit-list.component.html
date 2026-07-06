@@ -249,10 +249,10 @@
                                     title="Print HCC">🖨 Print</button>
                                 <button *ngIf="menuAccessService.hasPermission('Cancel')" class="ab ab-cancel"
                                     (click)="onCancel(row)"
-                                    [disabled]="!row.HCNumber || row.HCCBillNo || row.HCCStatus === 'Cancelled'"
+                                    [disabled]="!row.HCNumber || row.HCCBillNo || row.HCCStatus === 'Cancelled' || row.HCCStatus === 'Billed'"
                                     title="Cancel HCC">🚫 Cancel</button>
                                 <button *ngIf="menuAccessService.hasPermission('Edit')" (click)="openEditModal(row)"
-                                    [disabled]="row.HCCStatus?.trim()?.toLowerCase() === 'cancelled'" class="ab ab-edit" title="Edit HCC">✏️
+                                    [disabled]="row.HCCStatus?.trim()?.toLowerCase() === 'cancelled'|| row.HCCStatus === 'Billed'" class="ab ab-edit" title="Edit HCC">✏️
                                     Edit</button>
                             </div>
                         </td>
