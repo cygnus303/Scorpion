@@ -210,7 +210,7 @@
                         <td class="text-center">
                             <span class="fw-bold cursor-pointer"
                                 [ngClass]="(data.mfNo) ? 'text-primary fw-bold' : 'text-muted'"
-                                (click)="openMFView(data.mfNo)">View MF</span>
+                                (click)="openMFPopup(data.thcNo)">{{data.mfNo ? 'View MF' :'-'}}</span>
                         </td>
                         <td class="text-center">
                             <div class="d-flex gap-2 flex-column">

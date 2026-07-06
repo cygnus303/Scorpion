@@ -311,7 +311,7 @@ getStatusClass(status: string): string {
     return (this.THCFilterForm.get('statusFilter')?.value !== 'MFPENDING');
   }
 
-  openMFPopup(){
-    this.MfViewComponent.showPopup();
+  openMFPopup(thcNo:string){
+    this.MfViewComponent.showPopup(thcNo);
   }
 }
