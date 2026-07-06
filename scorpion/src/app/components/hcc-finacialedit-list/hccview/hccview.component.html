@@ -58,7 +58,9 @@
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Loading / Unloading Type</div>
-                    <div class="detail-value"><span [ngClass]="summary?.ChargesType === 'UnLoading' ? 'type-unloading' : 'type-loading'">{{ summary?.ChargesType || '—' }}</span></div>
+                    <div class="detail-value"><span
+                            [ngClass]="summary?.ChargesType === 'UnLoading' ? 'type-unloading' : 'type-loading'">{{
+                            summary?.ChargesType || '—' }}</span></div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">PAN No.</div>
@@ -66,7 +68,8 @@
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">HCC Amount Total</div>
-                    <div class="detail-value highlight">₹ {{ summary?.ChargeAmount !== null ? (summary?.ChargeAmount | number:'1.2-2') : '0.00' }}</div>
+                    <div class="detail-value highlight">₹ {{ summary?.ChargeAmount !== null ? (summary?.ChargeAmount |
+                        number:'1.2-2') : '0.00' }}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Vendor Type</div>
@@ -78,19 +81,30 @@
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">HCC Status</div>
-                    <div class="detail-value"><span class="status-badge" [ngClass]="{'status-generated': summary?.HCCStatus === 'Generated'}">{{ summary?.HCCStatus || '—' }}</span></div>
+                    <div class="detail-value"><span class="status-badge"
+                            [ngClass]="{'status-generated': summary?.HCCStatus === 'Generated'}">{{ summary?.HCCStatus
+                            || '—' }}</span></div>
                 </div>
                 <div class="detail-item">
-                    <div class="detail-label">Prepared By</div>
-                    <div class="detail-value grey">{{ summary?.PreparedBy || '—' }}</div>
+                    <div class="detail-label">Prepared By/Date & Time</div>
+                    <div class="detail-value grey text-center">
+                        <span class="d-block">{{ summary?.PreparedBy || '—' }}</span>
+                        <span class="d-block" *ngIf="summary?.HCDate">{{ summary?.HCDate }}</span>
+                    </div>
                 </div>
                 <div class="detail-item">
-                    <div class="detail-label">Edited By</div>
-                    <div class="detail-value grey">{{ summary?.EditedBy || '—' }}</div>
+                    <div class="detail-label">Edited By/Date & Time</div>
+                    <div class="detail-value grey text-center">
+                        <span class="d-block">{{ summary?.EditedBy || '—' }}</span>
+                        <span class="d-block" *ngIf="summary?.EditedDate">{{ summary?.EditedDate }}</span>
+                    </div>
                 </div>
                 <div class="detail-item">
-                    <div class="detail-label">Cancelled By</div>
-                    <div class="detail-value grey">{{ summary?.CancelledBy || '—' }}</div>
+                    <div class="detail-label">Cancelled By/Date & Time</div>
+                    <div class="detail-value grey text-center">
+                        <span class="d-block">{{ summary?.CancelledBy || '—' }}</span>
+                        <span class="d-block" *ngIf="summary?.CancelledDate">{{ summary?.CancelledDate }}</span>
+                    </div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">HCC Bill No.</div>
@@ -124,7 +138,8 @@
                     <tbody>
                         <tr *ngFor="let item of dataList; let i = index">
                             <td>{{ i + 1 }}</td>
-                            <td><a class="cnote-link cursor-pointer" (click)="openLRView(item.DOCKNO)">{{ item.DOCKNO || '—' }}</a></td>
+                            <td><a class="cnote-link cursor-pointer" (click)="openLRView(item.DOCKNO)">{{ item.DOCKNO ||
+                                    '—' }}</a></td>
                             <td>{{ item.ORGNCD || '—' }}</td>
                             <td>{{ item.DESTCD || '—' }}</td>
                             <td>{{ item.CSGNCD || '—' }}</td>

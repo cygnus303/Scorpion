@@ -136,7 +136,7 @@ getStatusClass(status: string): string {
     const year = d.getFullYear();
     const month = ('0' + (d.getMonth() + 1)).slice(-2);
     const day = ('0' + d.getDate()).slice(-2);
-    return `${year}-${month}-${day}`;
+    return `${year}-${month}-${day}T00:00:00.000Z`;
   }
 
     getTHCDetail() {
@@ -189,7 +189,7 @@ getStatusClass(status: string): string {
     downloadExcel() {
     this.isdownload = true;
     const payload={
-      brcd:'PIM',
+      locCode:this.docketService.loginUserList.LocationCode,
       fromDate: this.formatDate(this.THCFilterForm.value.fromDate),
       toDate: this.formatDate(this.THCFilterForm.value.toDate),
       searchText: this.THCFilterForm.value.searchText,

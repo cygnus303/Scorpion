@@ -434,7 +434,11 @@ export class HCCDetailsComponent {
     this.thcMasterService.submitHCC(payload, params).subscribe({
       next: (res: any) => {
         if (res.success) {
-          this.sweetAlertService.success(`HCC No. ${res.data.hcNo} has been Edited successfully.`);
+          if(this.isType === 'E'){
+          this.sweetAlertService.success(`HCC No. ${formValue.hcNumber}has been edited successfully and generated new hCC number as ${res.data.hcNo}`);
+          }else{
+          this.sweetAlertService.success(`HCC No. ${res.data.hcNo} has been generated successfully!!`);
+          }
           this.dataEmitter.emit()
           this.modalRef.hide();
         } else {
