@@ -40,7 +40,7 @@
             <div class="card-content">
                 <div class="s-label">MF Pending for THC</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.pendingMFCount || 0 }}</div>
-                <div class="small text-body-tertiary">Pending to add MF</div>
+                <div class="small text-body-tertiary">Pending to Add THC</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
         </div>
@@ -150,7 +150,6 @@
                         <th class="text-center">Departure Date & Time</th>
                         <th class="text-center">Last Location</th>
                         <th class="text-center">THC Route</th>
-                        <th class="text-center">HCC No.</th>
                         <th class="text-center">Vendor Bill No.</th>
                         <th class="text-center">Status</th>
                         <th class="text-center" style="width: 250px !important;">Actions</th>
@@ -224,7 +223,8 @@
                             {{ data.vehicleNo }}</td>
                         <td class="text-center cursor-pointer">
                             <div class="d-flex gap-2 flex-column">
-                                <span class="d-block rounded p-1 fw-bold mb-1" *ngIf="data.serviceType">
+                                <span class="d-block rounded p-1 fw-bold mb-1" *ngIf="data.serviceType"
+                                [ngClass]="data.serviceType === 'FTL' ? 'bg-danger-subtle text-danger' : 'bg-info-subtle text-info'">
                                     {{ data.serviceType}}</span>
                                 <span class="fw-bold text-muted d-inline-block" *ngIf="data.routeMode"
                                     style="max-width: 180px;" [title]="data.routeMode">{{ data.routeMode }}</span>
@@ -245,12 +245,12 @@
                                 {{ data.routeName }}
                             </span>
                         </td>
-                        <td class="text-center">
+                        <!-- <td class="text-center">
                             <span class="px-3 py-2 cursor-pointer"
                                 [ngClass]="isHccValid(data.hccNo) ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
                                 (click)="isHccValid(data.hccNo) ? openHCCModal(data.hccNo) : null">{{
                                 isHccValid(data.hccNo) ? data.hccNo : 'NO HCC' }}</span>
-                        </td>
+                        </td> -->
 
                         <td class="text-center">
                             <span class="fw-bold text-primary cursor-pointer">{{ data.billNo || '—' }}</span>

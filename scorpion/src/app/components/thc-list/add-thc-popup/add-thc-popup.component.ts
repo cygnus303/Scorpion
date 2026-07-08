@@ -206,8 +206,9 @@ export class AddThcPopupComponent {
 
   showPopup(type: string, mfs?: any) {
     this.ThcType = type;
-    this.selectedMfs = mfs;
+    this.selectedMfs = mfs || [];
     this.buildForm();
+    this.calculateWeightAndUtilization();
     this.getLocationData();
     this.modalRef = this.modalService.show(this.TemplateTHC, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
@@ -546,10 +547,49 @@ export class AddThcPopupComponent {
         if (response && response.data) {
           this.ThcForm.patchValue({
             vehicleCapacity: response.data.capacity
-          })
+          });
+          this.calculateWeightAndUtilization();
         }
       },
     });
+  }
+
+  calculateWeightAndUtilization() {
+    if (!this.ThcForm) return;
+
+    let totalWeight = 0;
+    if (this.selectedMfs && Array.isArray(this.selectedMfs)) {
+      this.selectedMfs.forEach(item => {
+        totalWeight += Number(item.toT_ACTUWT || item.actuwt || item.ArrWeightQty || 0);
+      });
+    }
+    const roundedWeight = Number(totalWeight.toFixed(2));
+    this.ThcForm.patchValue({
+      wtLoaded: roundedWeight
+    });
+
+    const vehicleCapacity = this.ThcForm.value.vehicleCapacity;
+    const weightLoaded = roundedWeight;
+    if (vehicleCapacity && weightLoaded) {
+      const utilization = (weightLoaded / (vehicleCapacity * 1000)) * 100;
+      const roundedUtilization = Number(utilization.toFixed(2));
+      this.ThcForm.patchValue({
+        vehicleCapacityUti: roundedUtilization
+      });
+    } else {
+      this.ThcForm.patchValue({
+        vehicleCapacityUti: 0
+      });
+    }
+    if (this.ThcForm.value.wtLoaded > vehicleCapacity) {
+      this.ThcForm.patchValue({
+        isOverLoad: true
+      })
+    } else {
+      this.ThcForm.patchValue({
+        isOverLoad: false
+      })
+    }
   }
 
 
@@ -974,7 +1014,16 @@ export class AddThcPopupComponent {
 
   onSubmit() {
     if (this.ThcForm.valid) {
+const payload={
 
+}
+this.THCService.thcSubmit(payload).subscribe({
+  next:(response:any)=>{
+    if(response?.success){
+      this.sweetAlertService.success(response?.message)
+    }
+  }
+})
     } else {
       this.ThcForm.markAllAsTouched();
       const invalidKeys = Object.keys(this.ThcForm.controls).filter(

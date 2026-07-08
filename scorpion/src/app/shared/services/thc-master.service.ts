@@ -227,4 +227,8 @@ export class THCMasterService {
   getDataFromBid(bidNo: string){
     return this.apiHandlerService.Get(`Operation/bid-details?bidNo=${bidNo}`);
   }
+
+  thcSubmit(formData:any){
+    return this.apiHandlerService.Post(`THC/THCSubmit`,formData);
+  }
 }
