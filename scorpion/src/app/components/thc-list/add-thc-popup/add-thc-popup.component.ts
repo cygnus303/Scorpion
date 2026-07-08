@@ -1014,7 +1014,16 @@ export class AddThcPopupComponent {
 
   onSubmit() {
     if (this.ThcForm.valid) {
+const payload={
 
+}
+this.THCService.thcSubmit(payload).subscribe({
+  next:(response:any)=>{
+    if(response?.success){
+      this.sweetAlertService.success(response?.message)
+    }
+  }
+})
     } else {
       this.ThcForm.markAllAsTouched();
       const invalidKeys = Object.keys(this.ThcForm.controls).filter(

@@ -141,7 +141,7 @@
         </div>
 
         <!-- Vehicle Details -->
-        <div class="thcform-section" *ngIf="ThcType === 'A'">
+        <div class="thcform-section">
           <div class="thcform-section-title">Vehicle Details</div>
           <div class="thcform-grid">
             <div class="thcform-field" *ngIf="(ThcForm.value.vendorType === 'XX1' || ThcForm.value.vendorType === '19') && ThcForm.value.bidType !== 'With'">
@@ -185,7 +185,7 @@
               <ng-select class="noFoundTextColor required2 clear-icon" placeholder="FTL Type"
                 formControlName="vehicleType" [readonly]="ThcForm.value.vendorType === 'XX1'" appFocusNext required
                 notFoundText="No matches found" [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode"
-                (change)="onChangeVehicleType($event)" required
+                (change)="onChangeVehicleType($event)" required appendTo="body"
                 [ngClass]="{ 'border-danger': ThcForm.get('vehicleType')?.invalid  && ThcForm.get('vehicleType')?.touched }"></ng-select>
               <div class="text-danger text-start"
                 *ngIf="ThcForm.get('vehicleType')?.invalid && ThcForm.get('vehicleType')?.touched ">
@@ -296,7 +296,7 @@
         </div>
 
         <!-- Driver Details -->
-        <div class="thcform-section" *ngIf="ThcType === 'A'">
+        <div class="thcform-section">
           <div class="thcform-section-title">Driver Details</div>
           <div class="thcform-grid">
             <div class="thcform-field">
@@ -512,7 +512,7 @@
             </div>
             <div class="thcform-field">
               <label>Adv. Location</label>
-              <ng-select class="required2 clear-icon" [items]="locationData" bindLabel="locName" bindValue="locCode"
+              <ng-select class="required2 clear-icon" [items]="locationData" bindLabel="locName" bindValue="locCode" [dropdownPosition]="'bottom'" appendTo="body"
                 appFocusNext placeholder="Advance Location" formControlName="advanceLocation"></ng-select>
             </div>
             <div class="thcform-field">
