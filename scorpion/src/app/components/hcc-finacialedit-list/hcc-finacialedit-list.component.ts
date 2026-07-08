@@ -218,7 +218,8 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
         VendorType: [],
         VendorCode: [],
         HCCStatus: [],
-        SearchText: this.config.searchText || ''
+        SearchText: this.config.searchText || '',
+        isDownload:true
       },
       PageNo: 1,
       PageSize: 100000

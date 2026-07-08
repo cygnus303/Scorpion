@@ -156,28 +156,29 @@
             </div>
             <div class="thcform-field" *ngIf="ThcForm.value.vehicleNO === 'O' && ThcForm.value.bidType !== 'With'">
               <label>Vehicle No. Digit</label>
-              <div class="thcform-radio-group" style="flex-wrap:wrap; gap:10px;"
-                *ngFor="let digit of [10, 9, 8, 7, 11]">
-                <input class="form-check-input me-1 checkbox-lg" type="radio" name="vehicleDigit" [value]="digit"
-                  (change)="onDigitChange(digit)" [checked]="selectedDigit === digit" appFocusNext />
-                <label class="form-check-label">{{ digit }}</label>
+              <div class="d-flex align-items-center" style="flex-wrap: wrap; gap: 18px; padding-top: 6px;">
+                <label class="d-flex align-items-center gap-1 mb-0" style="cursor: pointer; font-weight: 600; color: #333;"
+                  *ngFor="let digit of [10, 9, 8, 7, 11]">
+                  <input class="form-check-input checkbox-lg m-0" type="radio" name="vehicleDigit" [value]="digit"
+                    (change)="onDigitChange(digit)" [checked]="selectedDigit === digit" appFocusNext style="cursor: pointer;" />
+                  <span>{{ digit }}</span>
+                </label>
               </div>
             </div>
             <div class="thcform-field" *ngIf="ThcForm.value.vehicleNO ==='O' || ThcForm.value.bidType === 'With'">
               <label>Vehicle No. <span class="req">*</span></label>
-              <input class="form-control required2" placeholder="Vehicle No." type="text" formControlName="mKTVehicleNo"
-                appFocusNext (input)="validateVehicleNo()" [readonly]="isBidVehicleReadonly"
-                [ngClass]="{ 'border-danger': ThcForm.get('mKTVehicleNo')?.invalid  && ThcForm.get('mKTVehicleNo')?.touched }">
-              <div *ngIf="isVehicleLoading" class="spinner-border spinner-border-sm text-primary position-absolute"
-                style="right:10px; top:50%; transform:translateY(-50%);">
+              <div style="position: relative; width: 100%;">
+                <input class="form-control required2" placeholder="Vehicle No." type="text" formControlName="mKTVehicleNo"
+                  appFocusNext (input)="validateVehicleNo()" [readonly]="isBidVehicleReadonly"
+                  style="padding-right: 30px;"
+                  [ngClass]="{ 'border-danger': ThcForm.get('mKTVehicleNo')?.invalid  && ThcForm.get('mKTVehicleNo')?.touched }">
+                <div *ngIf="isVehicleLoading" class="spinner-border spinner-border-sm text-primary"
+                  style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); z-index: 5;">
+                </div>
               </div>
               <div class="text-danger text-start"
                 *ngIf="ThcForm.get('mKTVehicleNo')?.invalid && ThcForm.get('mKTVehicleNo')?.touched ">
                 This field is required.</div>
-            </div>
-            <div class="thcform-field" id="ftlTypeFieldWrap">
-              <label>FTL Type</label>
-              <input type="text" id="ftlTypeField" readonly>
             </div>
             <div class="thcform-field" id="ftlTypeSelWrap">
               <label>FTL Type <span class="req">*</span></label>
@@ -414,8 +415,8 @@
             </div>
             <div class="thcform-field" *ngIf="ThcType === 'A'">
               <label>Is Overload</label>
-              <div class="thcform-checkbox-field"><input type="checkbox" style="pointer-events: none;"
-                  class="form-check-input me-4 checkbox-lg custom-big-checkbox" formControlName="isOverLoad"
+              <div class="thcform-checkbox-field" style="padding-top: 8px;"><input type="checkbox" style="pointer-events: none;"
+                  class="form-check-input checkbox-lg custom-big-checkbox" formControlName="isOverLoad"
                   appFocusNext readonly><label for="isOverloadChk" style="margin:0;">Auto-flagged when over
                   capacity</label></div>
             </div>
