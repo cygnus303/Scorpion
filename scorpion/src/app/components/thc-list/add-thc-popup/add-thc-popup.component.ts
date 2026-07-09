@@ -1014,16 +1014,91 @@ export class AddThcPopupComponent {
 
   onSubmit() {
     if (this.ThcForm.valid) {
-const payload={
+      const formValue = this.ThcForm.value;
+      const getISOString = (dateVal: any) => {
+        if (!dateVal) return null;
+        const d = new Date(dateVal);
+        if (isNaN(d.getTime())) return null;
+        const year = d.getFullYear();
+        const month = ('0' + (d.getMonth() + 1)).slice(-2);
+        const day = ('0' + d.getDate()).slice(-2);
+        return `${year}-${month}-${day}T00:00:00.000Z`;
+      };
 
-}
-this.THCService.thcSubmit(payload).subscribe({
-  next:(response:any)=>{
-    if(response?.success){
-      this.sweetAlertService.success(response?.message)
-    }
-  }
-})
+      let thcChargeArray: any[] = [];
+      if (this.chargesDetailsList && this.chargesDetailsList.length > 0) {
+        this.chargesDetailsList.forEach((charge: any) => {
+          thcChargeArray.push({
+            chargecode: charge.chargecode,
+            chargename: charge.chargename,
+            operator: charge.operator,
+            acccode: charge.acccode,
+            chargeAmount: formValue.charges?.[charge.chargecode] ? Number(formValue.charges[charge.chargecode]) : 0,
+            cnt: 0
+          });
+        });
+      }
+
+      const payload = {
+        cvm: {
+          cth: {
+            thcDate: getISOString(formValue.tHCDate),
+            routeMode: formValue.routeType,
+            routeCode: formValue.routeCode,
+            routeName: formValue.routeCode,
+            vehicleNO: formValue.vehicleNO === 'O' ? formValue.mKTVehicleNo : formValue.vehicleNO,
+            vendorType: formValue.vendorType,
+            vendorCode: formValue.vendorCode,
+            vendorName: formValue.vendorName,
+            entryBy: formValue.entryBy,
+            actualDeptDate: getISOString(formValue.actualDeptDate),
+            scheduleDeptDate: getISOString(formValue.scheduleDeptDate),
+            erd: getISOString(formValue.ERD),
+            isEmpty: this.ThcType !== 'A'
+          },
+          ctfd: {
+            panno: formValue.PANNO || formValue.lorryOwnerPanNo || '',
+            contractAmount: Number(formValue.contractAmount),
+            advanceAmount: Number(formValue.advanceAmount),
+            balanceAmount: Number(formValue.balanceAmount),
+            advanceLocation: formValue.advanceLocation,
+            balanceLocation: formValue.balanceLocation
+          },
+          ctvd: {
+            ftlType: formValue.fTLType,
+            registrationDate: getISOString(formValue.registrationDate),
+            insuranceDate: getISOString(formValue.insuranceDate),
+            fitnessDate: getISOString(formValue.fitnessDate),
+            engineno: formValue.eNGINENO,
+            chasisno: formValue.cHASISNO,
+            rcbookno: formValue.rCBOOKNO,
+            driver1Licence: formValue.driver1Licence,
+            d1_DOB: getISOString(formValue.d1_DOB),
+            driver1MobileNo: formValue.driver1MobileNo,
+            driver1Name: formValue.driver1Name,
+            driver1RTONo: formValue.driver1RTONo,
+            driver1LicenceValDate: getISOString(formValue.driver1LicenceValDate)
+          },
+          isMathadi: false,
+          rateType: "",
+          isMobileUser: "N"
+        },
+        thcCharge: thcChargeArray,
+        baseUserType: this.docketService.loginUserList?.Type?.toString() || "",
+        baseLocationCode: this.docketService.loginUserList?.LocationCode || "",
+        baseUserName: this.docketService.loginUserList?.BaseUserName || "",
+        baseCompanyCode: this.docketService.loginUserList?.Companycode || "",
+        baseFinYear: this.docketService.loginUserList?.FinYear || "",
+        isnewda: true
+      };
+
+      this.THCService.thcSubmit(payload).subscribe({
+        next: (response: any) => {
+          if (response?.success) {
+            this.sweetAlertService.success(response?.message)
+          }
+        }
+      })
     } else {
       this.ThcForm.markAllAsTouched();
       const invalidKeys = Object.keys(this.ThcForm.controls).filter(
