@@ -207,7 +207,7 @@ checkLicenseExpiry(event?:any) {
       dA_Code: new FormControl(null),
       deliveryAgentName: new FormControl(''),
       deliveryAgentMobile: new FormControl(''),
-      vehicleNo: new FormControl('', [ Validators.required,Validators.pattern(/^[A-Za-z]{2}\d{1,2}[A-Za-z]{1,2}\d{4}$/i)]),
+      vehicleNo: new FormControl('', [ Validators.required,Validators.pattern(/^[A-Za-z]{2}\d{1,2}[A-Za-z]{1,3}\d{4}$/i)]),
       registrationDate: new FormControl(''),
       engineNo: new FormControl(''),
       chassisNo: new FormControl(''),

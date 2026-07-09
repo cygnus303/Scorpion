@@ -173,7 +173,7 @@
                             <div class="action-btns text-center">
                                 <button  class="ab ab-view" (click)="onView(lr.dockno)">👁 View</button>
                                 <button class="ab ab-finedit" (click)="openEdit(lr.dockno)"
-                                    [disabled]="lr.isQuickMode==='Q'||lr.status ==='Cancelled'">💰 Fin Edit</button>
+                                    [disabled]="lr.isQuickMode==='Q'||lr.status ==='Cancelled'|| lr.isBilled === 'Billed'">💰 Fin Edit</button>
                                 <div class="track-wrap">
                                     <button class="ab ab-track" >📍 Track</button>
                                     <!-- <div class="track-dropdown" [class.open]="openTrackIndex === i">
