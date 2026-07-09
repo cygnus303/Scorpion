@@ -769,17 +769,28 @@ export class ChallanListComponent {
       },
       error: (err) => {
         this.isVehicleLoading = false;
-        this.challanService.challanForm.patchValue({
-          mKTVehicleNo: '',
-          eNGINENO: '',
-          cHASISNO: '',
-          rCBOOKNO: '',
-          registrationDate: null,
-          insuranceDate: null,
-          fitnessDate: null
-        });
-        console.error('Error fetching vehicle details:', err.error.message);
+        if(this.challanService.challanForm.value.vendorType==='19'){
+          this.challanService.challanForm.patchValue({
+            eNGINENO: '',
+            cHASISNO: '',
+            rCBOOKNO: '',
+            registrationDate: null,
+            insuranceDate: null,
+            fitnessDate: null
+          });
+        }else{
+          this.challanService.challanForm.patchValue({
+            mKTVehicleNo: '',
+            eNGINENO: '',
+            cHASISNO: '',
+            rCBOOKNO: '',
+            registrationDate: null,
+            insuranceDate: null,
+            fitnessDate: null
+          });
+        }
         this.sweetAlertService.error(err.error.message)
+        console.error('Error fetching vehicle details:', err.error.message);
       }
     });
   }

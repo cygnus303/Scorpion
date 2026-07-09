@@ -45,4 +45,8 @@ export class LrService {
     getFinancialTracking(lrNumber: string): Observable<any> {
       return this.apiHandlerService.GetLoad(`Operation/FinancialTracking?lrNumber=${lrNumber}`);
     }
+
+    getLRFinList(payload:any): Observable<IApiBaseResponse<any[]>> {
+      return this.apiHandlerService.Post(`Operation/GetFinancialDocketListing`,payload);
+    }
 }
