@@ -1,0 +1,210 @@
+<div style="background: var(--bg);" class="p-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="page-title">
+            <span class="icon">📋</span>
+            LR Financial Edit
+        </div>
+        <div class="btn-group gap-3 ms-auto">
+            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="onExcelDownload()"
+                >
+                <span *ngIf="!isCSVLoading"> <span class="fs-5 me-1">📥</span> Download XLS</span>
+                <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
+                <span *ngIf="isCSVLoading">Downloading...</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Summary Strip -->
+    <div class="summary-strip">
+        <div class="summary-card c-blue cursor-pointer px-3 py-3" [class.active-card]="config.statusFilter === 'All'"
+            (click)="filterByStatus('All')">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="card-content">
+                    <div class="s-label">Total LR</div>
+                    <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.totalDockets || 0 }}</div>
+                    <div class="small text-body-tertiary">All dockets for today</div>
+                </div>
+                <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📋</div>
+            </div>
+        </div>
+
+        <div class="summary-card px-3 py-3 c-orange cursor-pointer"
+            [class.active-card]="config.statusFilter === 'pendingforQuickCompletion'"
+            (click)="filterByStatus('pendingforQuickCompletion')">
+            <div class="card-content">
+                <div class="s-label">EDITED LR</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.pendingforQuickCompletion || 0 }}</div>
+                <div class="small text-body-tertiary">Financial details edited</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
+        </div>
+    </div>
+
+    <!-- Table Panel -->
+    <div>
+        <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
+            <div class="control-bar border-0 shadow-none mb-0">
+                <div class="date-range-group">
+                    <span class="date-label">Date Range</span>
+                    <div class="date-input-wrap" style="padding:0;">
+                        <input type="text" id="dateFrom" bsDatepicker [(ngModel)]="config.fromDateStr"
+                            (ngModelChange)="fetchData()"
+                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                            style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
+                        <span
+                            style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+                    </div>
+                    <span class="date-sep">→</span>
+                    <div class="date-input-wrap" style="padding:0;">
+                        <input type="text" id="dateTo" bsDatepicker [(ngModel)]="config.toDateStr"
+                            (ngModelChange)="fetchData()" [minDate]="config.fromDateStr"
+                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                            style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
+                        <span
+                            style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+                    </div>
+                </div>
+                <div class="divider-v"></div>
+                <div class="filter-group d-flex align-items-center gap-2 px-2">
+                    <span class="filter-label">Status</span>
+                    <ng-select type="text" placeholder="Status" class="custom-status-select clear-icon"
+                        [items]="statusList" bindLabel="label" bindValue="value" [(ngModel)]="config.statusFilter"
+                        (change)="fetchData()"></ng-select>
+                </div> 
+                <div class="divider-v"></div>
+                <div class="filter-group d-flex align-items-center gap-2 px-2">
+                    <span class="filter-label">Is Billed</span>
+                    <ng-select type="text" placeholder="Billed" class="custom-status-select clear-icon"
+                        [items]="billedList" bindLabel="label" bindValue="value" [(ngModel)]="config.isBilledFilter"
+                        (change)="fetchData()"></ng-select>
+                </div>
+            </div>
+            <div class="table-toolbar">
+                <div class="search-box d-flex align-items-center"><span class="text-muted">🔍</span>
+                    <input type="text" placeholder="Search…" class="form-control border-0 shadow-none"
+                        [(ngModel)]="config.searchText" (keyup)="onSearchChange()">
+                </div>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table class="table align-middle  data-table mb-0">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">LR No. / Date</th>
+                        <th class="text-center">Org / Dest</th>
+                        <th class="text-center">From / To City</th>
+                        <th class="text-center">EDD /ADD</th>
+                        <th class="text-center">Billing Party</th>
+                        <th class="text-center">Pay Base /Mode /Service</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Is Billed</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="isLoading">
+                    <tr>
+                        <td colspan="10" class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && LREditList.length === 0">
+                    <tr>
+                        <td colspan="9" class="text-center py-4 text-muted fs-5">
+                            No records found.
+                        </td>
+                    </tr>
+                </tbody>
+
+                <tbody *ngIf="!isLoading && LREditList.length > 0">
+                    <tr *ngFor="let lr of LREditList; let i = index">
+                        <td style="color:#9e9e9e;text-align:center">{{ (config.page - 1) * config.pageSize + i + 1
+                            }}</td>
+                        <td>
+                            <div class="lr-cell">
+                                <span class="lr-no cursor-pointer" style="text-decoration: underline;"
+                                    (click)="onView(lr.dockno)">{{ lr.dockno }}</span>
+                                <span class="lr-date">{{ lr.dockdt | date:'dd MMM yyyy' }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="route">
+                                <span class="org">{{ lr.orgncd }}</span>
+                                <span class="dest">{{ lr.destcd }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="city">
+                                <span class="from">{{ lr.from_loc }}</span>
+                                <span class="to">→ {{ lr.to_loc }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="edd-add-cell">
+                                <span class="edd-ok">{{ lr.editedDate | date:'dd MMM yyyy' }}</span>
+                                <span class="add-label">ADD</span>
+                                <span class="add-val">{{ lr.addDate === '1900-01-01T00:00:00' ? '—' : (lr.addDate | date:'dd MMM yyyy') }}</span>
+                            </div>
+                        </td>
+                        <td>{{ lr.party_name }}</td>
+                        <td>
+                            <div class="pay-mode">
+                                <span class="badge" [ngClass]="lr.paybas === 'Paid' ? 'badge-pp' : 'badge-tpay'">
+                                    {{ lr.paybas }}
+                                </span>
+                                <span class="pm-mode">{{ lr.trN_MOD }}</span>
+                                <span>{{ lr.serviceClass }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-chip" [ngClass]="getStatusClass(lr.status)">
+                                {{ getStatusIcon(lr.status) }}{{lr.status}}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="pill" [ngClass]="lr.isBilled === 'Billed' ? 'pill-billed' : 'pill-unbilled'">{{lr.isBilled}}</span>
+                        </td>
+                        <td>
+                            <div class="action-btns text-center">
+                                <button  class="ab ab-view" (click)="onView(lr.dockno)">👁 View</button>
+                                <button class="ab ab-finedit" (click)="openEdit(lr.dockno)"
+                                    [disabled]="lr.isQuickMode==='Q'||lr.status ==='Cancelled'">💰 Fin Edit</button>
+                                <div class="track-wrap">
+                                    <button class="ab ab-track" >📍 Track</button>
+                                    <!-- <div class="track-dropdown" [class.open]="openTrackIndex === i">
+                                        <a *ngFor="let item of trackMenuItems"
+                                            (click)="onTrackMenuClick(item, lr.dockno)">
+                                            <span class="ti">{{ item.icon }}</span> {{ item.label }}
+                                        </a>
+
+                                    </div> -->
+                                </div>
+                                <div class="print-wrap">
+                                    <button class="ab ab-print" (click)="openPrint(lr.dockno)">🖨 Print</button>
+                                    <div class="print-dropdown">
+                                        <a><span class="pi">🏷️</span> LR with Barcode Print</a>
+                                        <a><span class="pi">📄</span> LR without Barcode Print</a>
+                                        <a><span class="pi">🔖</span> UBI Sticker Print</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <app-pagination [page]="config.page" [pageSize]="config.pageSize" [totalRecords]="config.totalRecords"
+            [totalPages]="config.totalPages" (pageChange)="setPage($event)">
+        </app-pagination>
+    </div>
+</div>
+
+<app-lr-view #LrViewComponent></app-lr-view>

@@ -87,6 +87,11 @@ export const ChallanRoutes: Routes = [
     path: 'LRTrackList',
     loadComponent: () => import('../lr-track-trace-list/lr-track-trace-list.component').then(m => m.LrTrackTraceListComponent),
     canActivate: [DocketGuard]
+  },
+  {
+    path: 'LRFinEditList',
+    loadComponent: () => import('../lr-finacial-edit/lr-finacial-edit.component').then(m => m.LrFinacialEditComponent),
+    // canActivate: [DocketGuard]
   }
 
 ];
