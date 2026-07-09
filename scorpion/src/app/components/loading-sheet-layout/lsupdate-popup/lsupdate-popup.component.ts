@@ -495,6 +495,7 @@ export class LSUpdatePopupComponent {
           baseCompanyCode: this.docketService.loginUserList.Companycode,
           location: this.docketService.loginUserList.LocationCode,
           Type: this.docketService.loginUserList.Type,
+          preparedBy:this.docketService.loginUserList.BaseUserName,
         },
         docketList: selected,
         internalDocumentList: [

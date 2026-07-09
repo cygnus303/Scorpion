@@ -5,9 +5,9 @@
             Loading Sheet
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn background-color fw-bold text-light px-4 py-2 rounded" *ngIf="!isHQTR"
+            <button class="btn background-color fw-bold text-light px-4 py-2 rounded" *ngIf="!isHQTR && menuAccessService.hasPermission('Add')"
                 (click)="openLSUpdatePopup('','LS')">＋ Add Loading Sheet</button>
-            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="downloadXLS()" [disabled]="isCSVLoading">
+            <button *ngIf="menuAccessService.hasPermission('Download')" class="btn btn-success px-4 py-2 rounded fw-bold" (click)="downloadXLS()" [disabled]="isCSVLoading">
                 <span *ngIf="!isCSVLoading"> <span class="fs-5 me-1">📥</span> Download XLS</span>
                 <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isCSVLoading">Downloading...</span>
@@ -209,20 +209,20 @@
                         </td>
                         <td>
                             <div class="d-flex flex-wrap gap-2 justify-content-center">
-                                <button
+                                <button *ngIf="menuAccessService.hasPermission('View')"
                                     class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3"
                                     (click)="openView(row.lsNo)">
                                     <i class="fa fa-eye"></i> View
                                 </button>
-                                <button  *ngIf="!isHQTR" (click)="openLSUpdatePopup(row ,'ULS')"  [disabled]="row.mfNo||row.status === 'Cancelled'||row.status === 'MF Generated'"
+                                <button *ngIf="!isHQTR && menuAccessService.hasPermission('Edit')" (click)="openLSUpdatePopup(row ,'ULS')"  [disabled]="row.mfNo||row.status === 'Cancelled'||row.status === 'MF Generated'"
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3">
                                     🔄 LS Update
                                 </button>
-                                <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
+                                <button *ngIf="menuAccessService.hasPermission('Cancel')" class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
                                     (click)="cancelLoadingSheet(row.lsNo)" [disabled]="!row.isCancelAllow||row.status === 'Cancelled'||row.mfNo">
                                     🚫 Cancel
                                 </button>
-                                <button (click)="openHHCDetails(row)" *ngIf="!isHQTR"
+                                <button (click)="openHHCDetails(row)" *ngIf="!isHQTR && menuAccessService.hasPermission('HCC')"
                                    [disabled]="(row.mfNo == null || row.mfNo === '') || isHccOpen(row.loadingNoHCCCnt)||row.status === 'Cancelled'"
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3">
                                     🏷 HCC
