@@ -126,6 +126,8 @@ export class InvoiceDetailsComponent {
     const hasEwayNo = ewayNo && ewayNo.toString().trim().length > 0;
     const userType = this.docketService.loginUserList?.Type;
 
+    let ewayInvoiceRequired = false;
+
     if (requireValidators || hasEwayNo) {
       row.get('ewayBillNo')?.setValidators([Validators.required]);
 
@@ -134,10 +136,19 @@ export class InvoiceDetailsComponent {
         expiryVals.push(pastDateValidator());
       }
       row.get('ewayBillExpiry')?.setValidators(expiryVals);
-      row.get('ewayinvoiceDate')?.setValidators([Validators.required]);
+      ewayInvoiceRequired = true;
     } else {
       row.get('ewayBillNo')?.clearValidators();
       row.get('ewayBillExpiry')?.clearValidators();
+    }
+
+    if (!hasEwayNo && userType?.toString() !== '2' && userType?.toString() !== '1') {
+      ewayInvoiceRequired = true;
+    }
+
+    if (ewayInvoiceRequired) {
+      row.get('ewayinvoiceDate')?.setValidators([Validators.required]);
+    } else {
       row.get('ewayinvoiceDate')?.clearValidators();
     }
 
@@ -177,6 +188,41 @@ export class InvoiceDetailsComponent {
       return true;
     }
     return false;
+  }
+
+  isEwayInvoiceDateRequired(row: AbstractControl): boolean {
+    const ewayNo = row.get('ewayBillNo')?.value;
+    const hasEwayNo = ewayNo && ewayNo.toString().trim().length > 0;
+    const userType = this.docketService.loginUserList?.Type?.toString();
+    
+    if (this.isEwayRequired(row) || hasEwayNo) return true;
+    if (!hasEwayNo && userType !== '2' && userType !== '1') return true;
+    return false;
+  }
+
+  getMinInvoiceDate(row: AbstractControl): Date | undefined {
+    const ewayNo = row.get('ewayBillNo')?.value;
+    const hasEwayNo = ewayNo && ewayNo.toString().trim().length > 0;
+    const userType = this.docketService.loginUserList?.Type?.toString();
+    
+    if (!hasEwayNo && userType !== '2' && userType !== '1') {
+      const minDate = new Date();
+      minDate.setDate(minDate.getDate() - 15);
+      minDate.setHours(0,0,0,0);
+      return minDate;
+    }
+    return undefined;
+  }
+
+  getMaxInvoiceDate(row: AbstractControl): Date | undefined {
+    const ewayNo = row.get('ewayBillNo')?.value;
+    const hasEwayNo = ewayNo && ewayNo.toString().trim().length > 0;
+    const userType = this.docketService.loginUserList?.Type?.toString();
+    
+    if (!hasEwayNo && userType !== '2' && userType !== '1') {
+      return new Date(); // Today
+    }
+    return undefined;
   }
 
 

@@ -116,10 +116,11 @@
                             <div class="input-group">
                               <input type="text" class="form-control uppercase-none" #dp2="bsDatepicker" bsDatepicker
                                 [class.disabled-input]="row.get('ewayBillNo')?.value?.length > 0"
+                                [minDate]="getMinInvoiceDate(row)" [maxDate]="getMaxInvoiceDate(row)"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }"
                                 [attr.tabindex]="-1" placeholder="dd/MMM/yyyy" formControlName="ewayinvoiceDate"
                                 [ngClass]="{'border-danger': row.get('ewayinvoiceDate')?.invalid && row.get('ewayinvoiceDate')?.touched, 
-                                              'required2': isEwayRequired(row)}" [class.disabled-input]="true">
+                                              'required2': isEwayInvoiceDateRequired(row)}" [class.disabled-input]="true">
                               <span class="input-group-text cursor-pointer" (click)="dp2.toggle()"
                                 [class.disabled-input]="row.get('ewayBillNo')?.value?.length > 0">
                                 <i class="fa fa-calendar"></i>
