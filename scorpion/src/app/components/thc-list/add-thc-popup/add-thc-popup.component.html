@@ -141,7 +141,7 @@
         </div>
 
         <!-- Vehicle Details -->
-        <div class="thcform-section">
+        <div class="thcform-section" *ngIf="ThcForm.value.routeType === 'S'">
           <div class="thcform-section-title">Vehicle Details</div>
           <div class="thcform-grid">
             <div class="thcform-field" *ngIf="(ThcForm.value.vendorType === 'XX1' || ThcForm.value.vendorType === '19') && ThcForm.value.bidType !== 'With'">
@@ -296,7 +296,7 @@
         </div>
 
         <!-- Driver Details -->
-        <div class="thcform-section">
+        <div class="thcform-section" *ngIf="ThcForm.value.routeType === 'S'">
           <div class="thcform-section-title">Driver Details</div>
           <div class="thcform-grid">
             <div class="thcform-field">
