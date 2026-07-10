@@ -1,0 +1,169 @@
+<div style="background: var(--bg);" class="p-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="page-title">
+            <span class="icon">📋</span>
+            THC Departure
+        </div>
+        <div class="btn-group gap-3 ms-auto">
+            <!-- <button class="btn background-color fw-bold text-light px-4 py-2 rounded" (click)="openAddLR()"
+                *ngIf="!isHQTR && menuAccessService.hasPermission('Add')">
+                <span class="fs-5 me-1">➕</span> Add LR
+            </button> -->
+            <button class="btn btn-success px-4 py-2 rounded fw-bold">
+                <span *ngIf="!isCSVLoading"> <span class="fs-5 me-1">📥</span> Download XLS</span>
+                <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
+                <span *ngIf="isCSVLoading">Downloading...</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="summary-strip">
+        <div class="summary-card c-purple cursor-pointer px-3 py-3" [class.active-card]="config.statusFilter === 'All'"
+            (click)="filterByStatus('All')">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="card-content">
+                    <div class="s-label">Total THC</div>
+                    <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.total || 0 }}</div>
+                    <div class="small text-body-tertiary">All multi-hop empty THCs</div>
+                </div>
+                <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📋</div>
+            </div>
+        </div>
+
+        <div class="summary-card px-3 py-3 c-orange cursor-pointer"
+            [class.active-card]="config.statusFilter === 'pendingforQuickCompletion'"
+            (click)="filterByStatus('pendingforQuickCompletion')">
+            <div class="card-content">
+                <div class="s-label">Pending for departure</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.pendingforQuickCompletion || 0 }}</div>
+                <div class="small text-body-tertiary">Awaiting departure action</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
+        </div>
+
+        <div class="summary-card px-3 py-3 c-green cursor-pointer"
+            [class.active-card]="config.statusFilter === 'booking'" (click)="filterByStatus('booking')">
+            <div class="card-content">
+                <div class="s-label">Departed</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.booking || 0 }}</div>
+                <div class="small text-body-tertiary">Successfully departed</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">✅</div>
+        </div>
+    </div>
+
+    <div>
+        <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
+            <div class="control-bar border-0 shadow-none mb-0">
+                <div class="date-range-group">
+                    <span class="date-label">Date Range</span>
+                    <div class="date-input-wrap" style="padding:0;">
+                        <input type="text" id="dateFrom" bsDatepicker [(ngModel)]="config.fromDateStr"
+                            (ngModelChange)="fetchData()"
+                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                            style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
+                        <span
+                            style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+                    </div>
+                    <span class="date-sep">→</span>
+                    <div class="date-input-wrap" style="padding:0;">
+                        <input type="text" id="dateTo" bsDatepicker [(ngModel)]="config.toDateStr"
+                            (ngModelChange)="fetchData()" [minDate]="config.fromDateStr"
+                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                            style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
+                        <span
+                            style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+                    </div>
+                </div>
+                <div class="divider-v"></div>
+                <div class="filter-group d-flex align-items-center gap-2 px-2">
+                    <span class="filter-label">Status</span>
+                    <ng-select type="text" placeholder="Status" class="custom-status-select clear-icon"
+                        [items]="statusList" bindLabel="label" bindValue="value" [(ngModel)]="config.statusFilter"
+                        (change)="fetchData()"></ng-select>
+                </div>
+                <div class="divider-v"></div>
+                <div class="filter-group d-flex align-items-center gap-2 px-2">
+                    <span class="filter-label">Mode</span>
+                    <ng-select type="text" placeholder="Mode" class="custom-status-select clear-icon"
+                        [items]="modeList" bindLabel="label" bindValue="value" 
+                        (change)="fetchData()"></ng-select>
+                </div>
+            </div>
+            <div class="table-toolbar">
+                <div class="search-box d-flex align-items-center"><span class="text-muted">🔍</span>
+                    <input type="text" placeholder="Search…" class="form-control border-0 shadow-none"
+                        [(ngModel)]="config.searchText" (keyup)="onSearchChange()">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="table-wrap">
+            <table class="table align-middle data-table mb-0">
+                <thead>
+                    <tr>
+                        <th style="width:36px;text-align:center"><input type="checkbox" class="checkbox" id="chk-all"></th>
+                        <th style="text-align:left">THC No</th>
+                        <th style="text-align:left">THC Date</th>
+                        <th style="text-align:left">THC Branch</th>
+                        <th style="text-align:left">Transport Mode</th>
+                        <th style="text-align:left">Service Type</th>
+                        <th style="text-align:left">THC Route</th>
+                        <th style="text-align:left">Arrival Date</th>
+                        <th style="text-align:center">Status</th>
+                        <th style="text-align:center">Action</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="isLoading">
+                    <tr>
+                        <td colspan="10" class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && thcData.length === 0">
+                    <tr>
+                        <td colspan="10" class="text-center py-4 text-muted fs-5">
+                            No records found.
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && thcData.length > 0">
+                     <tr *ngFor="let data of thcData; let i = index">
+                        <td class="text-center">
+                            <input type="checkbox" class="checkbox row-chk" [disabled]="data.status !== 'Pending for Departure'" [style.opacity]="data.status !== 'Pending for Departure' ? '0.3' : '1'">
+                        </td>
+                        <td><a class="thc-link">{{ data.thcNo }}</a></td>
+                        <td>{{ data.thcDate }}</td>
+                        <td>{{ data.branch }}</td>
+                        <td>
+                            <span style="display:inline-flex;align-items:center;gap:4px">
+                                <i class="ti" [ngClass]="{'ti-plane': data.mode === 'Air', 'ti-train': data.mode === 'Rail', 'ti-truck': data.mode === 'Road', 'ti-car': data.mode === 'Car'}" style="font-size:13px;color:#7a7a76"></i>{{ data.mode }}
+                            </span>
+                        </td>
+                        <td><span style="font-weight:600;color:#1a2b45">{{ data.service }}</span></td>
+                        <td style="max-width:200px;white-space:normal;line-height:1.4">{{ data.route }}</td>
+                        <td>{{ data.arrival }}</td>
+                        <td class="text-center">
+                            <span class="badge" [ngClass]="data.status === 'Pending for Departure' ? 'badge-pending' : 'badge-departed'">{{ data.status }}</span>
+                        </td>
+                        <td class="text-center" style="width: 140px;">
+                            <button *ngIf="data.status === 'Pending for Departure'" class="action-btn btn-depart"><i class="ti ti-send"></i> Depart THC</button>
+                            <button *ngIf="data.status !== 'Pending for Departure'" class="action-btn btn-departed-done" disabled><i class="ti ti-check"></i> Departed</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <!-- Pagination -->
+        <app-pagination [page]="config.page" [pageSize]="config.pageSize" [totalRecords]="config.totalRecords"
+            [totalPages]="config.totalPages" (pageChange)="setPage($event)">
+        </app-pagination>
+    </div>
+</div>
