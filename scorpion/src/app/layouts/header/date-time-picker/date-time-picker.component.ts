@@ -14,6 +14,10 @@ export class DateTimePickerComponent implements OnInit {
   @Input() disabled: boolean = false;
   @Input() maxDate?: Date;
   @Input() minDate?: Date;
+  @Input() dropUp: boolean = false;
+  @Input() placement: 'bottom' | 'top' = 'bottom';
+
+  @ViewChild('popupEl') popupEl?: ElementRef<HTMLElement>;
 
   showPicker = false;
 
@@ -51,25 +55,85 @@ export class DateTimePickerComponent implements OnInit {
 
   ngOnDestroy() {
     document.removeEventListener('click', this.handleOutsideClick.bind(this));
+    this.removePopupFromBody();
   }
 
   handleOutsideClick(event: MouseEvent) {
     if (!this.showPicker) return;
     const el = event.target as HTMLElement;
-    if (!this.elementRef.nativeElement.contains(el)) {
-      this.showPicker = false;
+    const isClickInsideInput = this.elementRef.nativeElement.contains(el);
+    const isClickInsidePopup = this.popupEl?.nativeElement?.contains(el);
+    if (!isClickInsideInput && !isClickInsidePopup) {
+      this.closePicker();
     }
   }
 
   togglePicker(event?: MouseEvent) {
     if (this.disabled) return;
     if (event) event.stopPropagation();
-    this.showPicker = !this.showPicker;
+    if (this.showPicker) {
+      this.closePicker();
+    } else {
+      this.showPicker = true;
+      setTimeout(() => this.positionPopup(), 0);
+    }
   }
 
   onIconClick(event: MouseEvent) {
     event.stopPropagation();
     this.togglePicker();
+  }
+
+  closePicker() {
+    this.showPicker = false;
+    this.removePopupFromBody();
+  }
+
+  removePopupFromBody() {
+    if (this.popupEl && this.popupEl.nativeElement.parentNode === document.body) {
+      document.body.removeChild(this.popupEl.nativeElement);
+    }
+  }
+
+  positionPopup() {
+    if (!this.popupEl) return;
+    const popupNode = this.popupEl.nativeElement;
+    const inputRect = this.elementRef.nativeElement.getBoundingClientRect();
+
+    if (popupNode.parentNode !== document.body) {
+      document.body.appendChild(popupNode);
+    }
+
+    popupNode.style.position = 'fixed';
+    popupNode.style.zIndex = '105000';
+
+    const popupWidth = popupNode.offsetWidth || 310;
+    let left = inputRect.left;
+    if (left + popupWidth > window.innerWidth - 10) {
+      left = window.innerWidth - popupWidth - 10;
+    }
+    if (left < 10) left = 10;
+    popupNode.style.left = `${left}px`;
+
+    const popupHeight = popupNode.offsetHeight || 380;
+    const spaceBelow = window.innerHeight - inputRect.bottom;
+    const shouldDropUp = this.placement === 'top' || this.dropUp || (spaceBelow < popupHeight && inputRect.top > popupHeight);
+
+    if (shouldDropUp) {
+      let top = inputRect.top - popupHeight - 4;
+      if (top < 10) {
+        top = 10;
+      }
+      popupNode.style.top = `${top}px`;
+      popupNode.style.bottom = 'auto';
+    } else {
+      let top = inputRect.bottom + 4;
+      if (top + popupHeight > window.innerHeight - 10) {
+        top = window.innerHeight - popupHeight - 10;
+      }
+      popupNode.style.top = `${top}px`;
+      popupNode.style.bottom = 'auto';
+    }
   }
 
   updateFinal() {
@@ -111,6 +175,6 @@ export class DateTimePickerComponent implements OnInit {
 
     this.control.patchValue(final);
     this.updateFinal();
-    this.showPicker = false;
+    this.closePicker();
   }
 }

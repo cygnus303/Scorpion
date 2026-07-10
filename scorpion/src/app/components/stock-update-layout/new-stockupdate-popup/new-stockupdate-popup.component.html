@@ -59,22 +59,32 @@
                         <label class="form-label-custom">Unloader Name <span class="text-danger">*</span></label>
                         <ng-select placeholder="Search Unloader" (open)="resetUnloaderDropdown()"
                             (search)="stockUpdateUsers($event)" [notFoundText]="notUnloaderName" [clearable]="true"
-                            [(ngModel)]="unloaderName" [dropdownPosition]="'bottom'" style="font-size: 13px;">
+                            [(ngModel)]="unloaderName" [dropdownPosition]="'bottom'" style="font-size: 13px;"
+                            [ngStyle]="{'border': (submitted && !unloaderName) ? '1px solid #dc3545' : '', 'border-radius': '4px'}">
                             <ng-option *ngFor="let data of unloaderUsers" [value]="data.userId">
                                 {{ data.userId }} - {{ data.name }}
                             </ng-option>
                         </ng-select>
+                        <div *ngIf="submitted && !unloaderName" class="text-danger mt-1 fw-medium"
+                            style="font-size: 11px;">
+                            Please select Unloader Name
+                        </div>
                     </div>
                     <div class="col-md-3">
                         <label class="form-label-custom">Un Loading Supervisor <span
                                 class="text-danger">*</span></label>
                         <ng-select placeholder="Search Supervisor" (open)="resetUnloaderDropdown()"
                             (search)="stockUpdateUsers($event)" [notFoundText]="notUnloaderName" [clearable]="true"
-                            [(ngModel)]="unloadingSupervisor" [dropdownPosition]="'bottom'" style="font-size: 13px;">
+                            [(ngModel)]="unloadingSupervisor" [dropdownPosition]="'bottom'" style="font-size: 13px;"
+                            [ngStyle]="{'border': (submitted && !unloadingSupervisor) ? '1px solid #dc3545' : '', 'border-radius': '4px'}">
                             <ng-option *ngFor="let data of unloaderUsers" [value]="data.userId">
                                 {{ data.userId }} - {{ data.name }}
                             </ng-option>
                         </ng-select>
+                        <div *ngIf="submitted && !unloadingSupervisor" class="text-danger mt-1 fw-medium"
+                            style="font-size: 11px;">
+                            Please select Un Loading Supervisor
+                        </div>
                     </div>
                     <div class="col-md-3">
                         <!-- Spacing alignment to match grid -->
@@ -88,7 +98,7 @@
                     <h5 class="text-navy fw-bold d-flex align-items-center gap-2 mb-0">
                         <span>📋</span> <span>Stock Update Details</span>
                     </h5>
-                    <div class="orange-pill-custom align-items-center">
+                    <div class="orange-pill-custom align-items-center" *ngIf="hasAnyEligibleForDeliveryProcess">
                         <span class="fw-bold" style="font-size: 13px;">⚙ Set Delivery Process (All Dockets):</span>
                         <ng-select [items]="dlyPrcList" bindLabel="codeDesc" bindValue="codeId" placeholder="— Select —"
                             [(ngModel)]="selectedDeliveryProcessAll" (change)="setAllDeliveryProcess()"
@@ -122,62 +132,219 @@
                                         style="min-width: 110px; background-color: #eff1f8;">Arrived Pkgs *</th>
                                     <th class="align-middle fw-bold text-center"
                                         style="min-width: 100px; background-color: #eff1f8;">Arrived Wt</th>
-                                    <th class="align-middle fw-bold"
+                                    <th class="align-middle fw-bold text-center"
+                                        style="min-width: 150px; background-color: #eff1f8;">
+                                        Type
+                                        <ng-select class="mt-1 clear-icon text-start fw-normal" [dropdownPosition]="'bottom'"
+                                            appendTo="body" [items]="generalMasterService.loadingData" bindLabel="codeDesc"
+                                            bindValue="codeId" placeholder="Type" [(ngModel)]="headerVendorTyp" [ngModelOptions]="{standalone: true}"
+                                            (change)="onHeaderHccVendorTypeChange($event)"></ng-select>
+                                    </th>
+                                    <th class="align-middle fw-bold text-center"
+                                        style="min-width: 180px; background-color: #eff1f8;">
+                                        Vendor
+                                        <ng-select class="mt-1 clear-icon remove-white-space text-start fw-normal"
+                                            [dropdownPosition]="'bottom'" appendTo="body" [items]="headerVendorList"
+                                            bindLabel="text" bindValue="value" placeholder="Vendor"
+                                            [(ngModel)]="headerVendor" [ngModelOptions]="{standalone: true}"
+                                            (change)="onHeaderVendorChange($event)"></ng-select>
+                                    </th>
+                                    <th class="align-middle fw-bold text-center"
+                                        style="min-width: 150px; background-color: #eff1f8;">
+                                        Rate Type
+                                        <ng-select class="mt-1 clear-icon text-start fw-normal" [dropdownPosition]="'bottom'"
+                                            appendTo="body" bindLabel="codeDesc" bindValue="codeId" placeholder="Rate Type"
+                                            [items]="generalMasterService.chargeTypeData" [(ngModel)]="headerRateType" [ngModelOptions]="{standalone: true}"
+                                            (change)="onHeaderRateTypeChange($event)"></ng-select>
+                                    </th>
+                                    <th class="align-middle fw-bold" *ngIf="hasAnyEligibleForDeliveryProcess"
                                         style="min-width: 200px; background-color: #eff1f8;">Delivery Process</th>
                                     <th class="align-middle fw-bold text-center"
                                         style="width: 85px; background-color: #eff1f8;">Damage</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let row of listVSFUM; let i = index">
-                                    <td class="text-center table-cell-custom">
-                                        <input type="checkbox" class="form-check-input d-block mx-auto"
-                                            [(ngModel)]="row.isSelected">
-                                    </td>
-                                    <td class="table-cell-custom">
-                                        <span class="fw-bold text-navy">{{ row.tcno }}</span>
-                                    </td>
-                                    <td class="table-cell-custom">
-                                        <span class="text-dark">{{ row.dockNo }}</span>
-                                    </td>
-                                    <td class="table-cell-custom">
-                                        <div class="text-dark fw-medium">{{ row.dockdt }}</div>
-                                        <div class="text-muted" style="font-size: 11px;">EDD: {{ row.cdelydt }}</div>
-                                    </td>
-                                    <td class="table-cell-custom">
-                                        <div class="text-dark fw-medium">{{ row.bkG_PKGSNO }} pkgs</div>
-                                        <div class="text-muted" style="font-size: 11px;">{{ row.bkG_ACTUWT }} kg</div>
-                                    </td>
-                                    <td class="table-cell-custom">
-                                        <span class="text-dark">{{ row.service_Class }}</span>
-                                    </td>
-                                    <td class="text-center table-cell-custom">
-                                        <input type="text"
-                                            class="form-control form-control-sm text-center fw-semibold mx-auto table-input-custom"
-                                            style="width: 70px;" [(ngModel)]="row.arrPkgQty">
-                                    </td>
-                                    <td class="text-center table-cell-custom">
-                                        <input type="text"
-                                            class="form-control form-control-sm text-center input-readonly-custom mx-auto"
-                                            style="width: 70px; height: 32px;" [value]="row.actuwt || '—'" readonly>
-                                    </td>
-                                    <td class="table-cell-custom">
-                                        <ng-select [items]="dlyPrcList" bindLabel="codeDesc" bindValue="codeId"
-                                            placeholder="—" [(ngModel)]="row.dp" [clearable]="true"
-                                            [dropdownPosition]="'bottom'" style="width: 180px; font-size: 13px;">
-                                        </ng-select>
-                                    </td>
-                                    <td class="text-center table-cell-custom">
-                                        <input type="checkbox" class="form-check-input d-block mx-auto"
-                                            [checked]="row.isDamage" (change)="onDamageChange($event, row, i)">
-                                        <div *ngIf="row.depsData"
-                                            class="badge bg-danger-subtle text-danger border border-danger-subtle mt-1 text-nowrap"
-                                            style="font-size: 9px; cursor: pointer; display: inline-flex; align-items: center; gap: 2px; padding: 3px 6px;"
-                                            (click)="openDepsPopup(row, i)">
-                                            ✏️ Edit DEPS details
-                                        </div>
-                                    </td>
-                                </tr>
+                                <ng-container *ngFor="let row of listVSFUM; let i = index">
+                                    <tr>
+                                        <td class="text-center table-cell-custom">
+                                            <input type="checkbox" class="form-check-input d-block mx-auto"
+                                                [(ngModel)]="row.isSelected">
+                                        </td>
+                                        <td class="table-cell-custom">
+                                            <span class="fw-bold text-navy">{{ row.tcno }}</span>
+                                        </td>
+                                        <td class="table-cell-custom">
+                                            <span class="text-dark">{{ row.dockNo }}</span>
+                                        </td>
+                                        <td class="table-cell-custom">
+                                            <div class="text-dark fw-medium">{{ row.dockdt }}</div>
+                                            <div class="text-muted" style="font-size: 11px;">EDD: {{ row.cdelydt }}</div>
+                                        </td>
+                                        <td class="table-cell-custom">
+                                            <div class="text-dark fw-medium">{{ row.bkG_PKGSNO }} pkgs</div>
+                                            <div class="text-muted" style="font-size: 11px;">{{ row.bkG_ACTUWT }} kg</div>
+                                        </td>
+                                        <td class="table-cell-custom">
+                                            <span class="text-dark">{{ row.service_Class }}</span>
+                                        </td>
+                                        <td class="text-center table-cell-custom">
+                                            <input type="text"
+                                                class="form-control form-control-sm text-center fw-semibold mx-auto table-input-custom"
+                                                [ngClass]="{'border-danger text-danger': +row.pkgsno > +row.bkG_PKGSNO}"
+                                                style="width: 70px;" [(ngModel)]="row.pkgsno"
+                                                (ngModelChange)="onArrivedPkgsChange(row)">
+                                            <div *ngIf="+row.pkgsno > +row.bkG_PKGSNO"
+                                                class="text-danger mt-1 text-center fw-medium"
+                                                style="font-size: 10px; line-height: 1.2; max-width: 120px;">
+                                                Arrived Pkgs cannot be greater than Total Pkgs ({{ row.bkG_PKGSNO }}).
+                                            </div>
+                                        </td>
+                                        <td class="text-center table-cell-custom">
+                                            <input type="text"
+                                                class="form-control form-control-sm text-center input-readonly-custom mx-auto"
+                                                style="width: 70px; height: 32px;" [(ngModel)]="row.actuwt" readonly>
+                                        </td>
+                                        <td style="width:150px; max-width: 150px;">
+                                            <ng-select class="clear-icon text-start" [dropdownPosition]="'bottom'"
+                                                appendTo="body" [items]="generalMasterService.loadingData"
+                                                [(ngModel)]="row.luVendorTyp" bindLabel="codeDesc" bindValue="codeId"
+                                                placeholder="Type" (change)="onRowVendorTypeChange($event, i)">
+                                            </ng-select>
+                                        </td>
+                                        <td style="width:180px; max-width: 180px;">
+                                            <ng-select class="noFoundTextColor clear-icon remove-white-space text-start"
+                                                [dropdownPosition]="'bottom'" appendTo="body" [ngClass]="{
+                                                'required2': row.luVendorTyp && row.luVendorTyp !== 'XX9',
+                                                'border-danger': submitted && row.luVendorTyp && row.luVendorTyp !== 'XX9' && !row.luVendorCode
+                                            }" [(ngModel)]="row.luVendorCode" [items]="rowVendorList[i] || []"
+                                                bindLabel="text" bindValue="value" placeholder="Vendor"
+                                                (change)="onRowVendorCodeChange($event, i)">
+                                            </ng-select>
+                                            <div class="text-danger small mt-1 text-start"
+                                                *ngIf="submitted && row.luVendorTyp && row.luVendorTyp !== 'XX9' && !row.luVendorCode">
+                                                This field is required
+                                            </div>
+                                        </td>
+                                        <td style="width:150px; max-width: 150px;">
+                                            <ng-select class="clear-icon text-start" [dropdownPosition]="'bottom'"
+                                                appendTo="body" [ngClass]="{
+                                                'required2': row.luVendorTyp && row.luVendorTyp !== 'XX9',
+                                                'border-danger': submitted && row.luVendorTyp && row.luVendorTyp !== 'XX9' && !row.rateType
+                                            }" [(ngModel)]="row.rateType" bindLabel="codeDesc" bindValue="codeId"
+                                                placeholder="Rate Type" [items]="generalMasterService.chargeTypeData"
+                                                (change)="onRowRateTypeChange(row)"
+                                                [readonly]="row.luVendorTyp === 'XX9' || row.luVendorTyp === 'XX5'"></ng-select>
+                                            <div class="text-danger small mt-1 text-start"
+                                                *ngIf="submitted && row.luVendorTyp && row.luVendorTyp !== 'XX9' && !row.rateType">
+                                                This field is required
+                                            </div>
+                                            <input type="text" class="form-control form-control-sm mt-1"
+                                                placeholder="Charge Rate" [(ngModel)]="row.newRate"
+                                                [readOnly]="row.luVendorTyp === 'XX5' || row.luVendorTyp === 'XX9'"
+                                                (focus)="clearNewRateOnFocus(i)"
+                                                (ngModelChange)="validateRate(row)"
+                                                oninput="this.value = this.value.replace(/[^0-9.]/g,'');"
+                                                (blur)="resetNewRateOnBlur(i)" />
+                                            <div class="text-danger small mt-1 text-start" *ngIf="row.rateError">
+                                                {{ row.rateError }}
+                                            </div>
+                                        </td>
+                                        <ng-container *ngIf="hasAnyEligibleForDeliveryProcess">
+                                            <td class="table-cell-custom" *ngIf="isEligibleForDeliveryProcess(row); else emptyDpCell">
+                                                <ng-select [items]="dlyPrcList" bindLabel="codeDesc" bindValue="codeId"  appendTo="body"
+                                                    placeholder="Delivery Process" [(ngModel)]="row.dp" [clearable]="true"
+                                                    [dropdownPosition]="'bottom'" style="width: 180px; font-size: 13px;">
+                                                </ng-select>
+                                            </td>
+                                            <ng-template #emptyDpCell>
+                                                <td class="table-cell-custom"></td>
+                                            </ng-template>
+                                        </ng-container>
+                                        <td class="text-center table-cell-custom">
+                                            <input type="checkbox" class="form-check-input d-block mx-auto"
+                                                [checked]="row.isDamage" (change)="onDamageChange($event, row, i)">
+                                            <div *ngIf="row.depsData"
+                                                class="badge bg-danger-subtle text-danger border border-danger-subtle mt-1 text-nowrap"
+                                                style="font-size: 9px; cursor: pointer; display: inline-flex; align-items: center; gap: 2px; padding: 3px 6px;"
+                                                (click)="openDepsPopup(row, i)">
+                                                ✏️ Edit DEPS details
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="isDeliveryOnArrival(row)" class="bg-light border-bottom">
+                                        <td colspan="3" class="p-2 text-start align-middle">
+                                            <div class="fw-bold text-navy mb-1" style="font-size: 11px;">📄 POD Front File <span class="text-danger">*</span></div>
+                                            <div *ngIf="row.isValidatingFront" class="d-flex align-items-center justify-content-center gap-2 bg-light p-2 rounded border w-100 my-1" style="min-height: 44px;">
+                                                <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                                                <span class="fw-medium text-primary" style="font-size: 11px;">Validating POD...</span>
+                                            </div>
+                                            <ng-container *ngIf="!row.isValidatingFront">
+                                                <ng-container *ngIf="row.frontPreview; else frontUpload">
+                                                    <div class="d-flex align-items-center gap-2 bg-white p-1 rounded border">
+                                                        <img *ngIf="isImageFile(row.frontFile)" [src]="row.frontPreview" class="img-thumbnail p-0" style="width: 42px; height: 42px; object-fit: cover;" />
+                                                        <div *ngIf="!isImageFile(row.frontFile)" class="d-flex align-items-center justify-content-center bg-light border rounded" style="width: 42px; height: 42px; min-width: 42px;">
+                                                            <i class="fas fa-file-pdf text-danger fs-4"></i>
+                                                        </div>
+                                                        <div class="d-flex flex-column gap-1 flex-grow-1">
+                                                            <div class="text-truncate text-dark fw-medium" style="font-size: 10px; max-width: 90px;" [title]="row.frontFile?.name || ''">{{ row.frontFile?.name || 'File Selected' }}</div>
+                                                            <div class="d-flex gap-1">
+                                                                <button type="button" class="btn btn-outline-primary btn-sm py-0 px-1" style="font-size: 10px;" (click)="frontInput.click()">Change</button>
+                                                                <button type="button" class="btn btn-outline-danger btn-sm py-0 px-1" style="font-size: 10px;" (click)="removeFile(row, 'FRONT')">Remove</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                                <ng-template #frontUpload>
+                                                    <button type="button" class="btn btn-outline-primary btn-sm w-100 py-1 d-flex align-items-center justify-content-center gap-1" style="font-size: 11px;" (click)="frontInput.click()">
+                                                        <i class="fas fa-upload"></i>
+                                                        <span>Choose POD Front</span>
+                                                    </button>
+                                                    <div *ngIf="submitted && (!row.frontFiles || row.frontFiles.length === 0)" class="text-danger mt-1 fw-medium" style="font-size: 10px;">
+                                                        POD Front is required
+                                                    </div>
+                                                </ng-template>
+                                            </ng-container>
+                                            <input type="file" #frontInput hidden accept="image/*,application/pdf" (change)="onFileSelected($event, row, 'FRONT')" />
+                                        </td>
+                                        <td colspan="2" class="p-2 text-start align-middle">
+                                            <div class="fw-bold text-navy mb-1" style="font-size: 11px;">📄 POD Back File</div>
+                                            <ng-container *ngIf="row.backPreview; else backUpload">
+                                                <div class="d-flex align-items-center gap-2 bg-white p-1 rounded border">
+                                                    <img *ngIf="isImageFile(row.backFile)" [src]="row.backPreview" class="img-thumbnail p-0" style="width: 42px; height: 42px; object-fit: cover;" />
+                                                    <div *ngIf="!isImageFile(row.backFile)" class="d-flex align-items-center justify-content-center bg-light border rounded" style="width: 42px; height: 42px; min-width: 42px;">
+                                                        <i class="fas fa-file-pdf text-danger fs-4"></i>
+                                                    </div>
+                                                    <div class="d-flex flex-column gap-1 flex-grow-1">
+                                                        <div class="text-truncate text-dark fw-medium" style="font-size: 10px; max-width: 90px;" [title]="row.backFile?.name || ''">{{ row.backFile?.name || 'File Selected' }}</div>
+                                                        <div class="d-flex gap-1">
+                                                            <button type="button" class="btn btn-outline-primary btn-sm py-0 px-1" style="font-size: 10px;" (click)="backInput.click()">Change</button>
+                                                            <button type="button" class="btn btn-outline-danger btn-sm py-0 px-1" style="font-size: 10px;" (click)="removeFile(row, 'BACK')">Remove</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                            <ng-template #backUpload>
+                                                <button type="button" class="btn btn-outline-secondary btn-sm w-100 py-1 d-flex align-items-center justify-content-center gap-1" style="font-size: 11px;" (click)="backInput.click()">
+                                                    <i class="fas fa-upload"></i>
+                                                    <span>Choose POD Back</span>
+                                                </button>
+                                            </ng-template>
+                                            <input type="file" #backInput hidden accept="image/*,application/pdf" (change)="onFileSelected($event, row, 'BACK')" />
+                                        </td>
+                                        <td [attr.colspan]="hasAnyEligibleForDeliveryProcess ? 4 : 4" class="p-2 text-start align-middle">
+                                            <div class="row align-items-center" *ngIf="row.delyForm" [formGroup]="row.delyForm">
+                                                <label class="col-sm-3 col-form-label text-end fw-bold text-navy" style="font-size: 11px;">Delivery Date & Time:</label>
+                                                <div class="col-sm-9 text-start">
+                                                    <app-date-time-picker controlName="DELYDATE" [maxDate]="maxDate"
+                                                        [placeholder]="'Delivery Date & Time'"
+                                                        [minDate]="row.bookingDate"
+                                                        [dropUp]="true" [placement]="'top'">
+                                                    </app-date-time-picker>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-container>
                             </tbody>
                         </table>
                     </div>
@@ -201,7 +368,7 @@
             <button type="button" class="btn btn-cancel-custom px-4 py-2" (click)="modalRef?.hide()">Cancel</button>
             <button type="button" class="btn btn-submit-custom px-4 py-2 d-flex align-items-center gap-2"
                 [disabled]="isLoading" (click)="submitStockUpdate()">
-                <i class="fa fa-save"></i>
+                <i class="fas fa-save"></i>
                 <span>Submit Stock Update</span>
             </button>
         </div>
