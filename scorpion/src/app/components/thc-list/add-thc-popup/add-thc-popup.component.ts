@@ -1095,7 +1095,8 @@ export class AddThcPopupComponent {
       this.THCService.thcSubmit(payload).subscribe({
         next: (response: any) => {
           if (response?.success) {
-            this.sweetAlertService.success(response?.message)
+            this.sweetAlertService.success(`THC ${response.data.docno} Generated Successfully!!`);
+            this.closePopup();
           }
         }
       })
@@ -1108,3 +1109,14 @@ export class AddThcPopupComponent {
     }
   }
 }
+// {
+//     "success": true,
+//     "data": {
+//         "docno": "VH/PIM/2627/000011",
+//         "doctyp": "THC",
+//         "tranXaction": "Successfully Generated",
+//         "isError": false,
+//         "message": []
+//     },
+//     "totalCount": 0
+// }

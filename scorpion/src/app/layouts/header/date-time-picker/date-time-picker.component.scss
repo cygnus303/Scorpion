@@ -1,35 +1,6 @@
-.datepicker {
-  ::ng-deep .bs-datepicker {
-    box-shadow: none !important;
-  }
-
-  ::ng-deep .bs-datepicker-container {
-    padding: 0 !important;
-  }
-}
-
 .datetime-picker-wrapper {
   position: relative;
   width: 100%;
-
-  .picker-popup {
-    position: absolute;
-    top: 100%;       // below input
-    left: 0;
-    width: 300px;    // adjust as needed
-    background: #fff;
-    border: 1px solid #ccc;
-    padding: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-    z-index: 1000;
-  }
-
-  .datepicker,
-  timepicker {
-    display: block;
-    width: 100%;
-    margin-bottom: 0.5rem;
-  }
 
   .input-group-text {
     cursor: pointer;
@@ -38,5 +9,62 @@
   .disabled-input {
     background-color: #e9ecef;
     cursor: not-allowed;
+  }
+}
+
+/* Top-level styles so when popup is appended to document.body, ALL CSS styles are preserved! */
+::ng-deep .picker-popup {
+  position: fixed !important;
+  z-index: 105000 !important;
+  width: 310px !important;
+  background: #ffffff !important;
+  border: 1px solid #dcdfe6 !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18) !important;
+
+  .datepicker {
+    display: block !important;
+    width: 100% !important;
+    margin-bottom: 8px !important;
+
+    ::ng-deep .bs-datepicker {
+      box-shadow: none !important;
+      margin: 0 auto !important;
+    }
+
+    ::ng-deep .bs-datepicker-container {
+      padding: 0 !important;
+    }
+  }
+
+  timepicker {
+    display: block !important;
+    width: 100% !important;
+    margin-bottom: 10px !important;
+    background: #f8f9fa !important;
+    padding: 6px !important;
+    border-radius: 6px !important;
+    border: 1px solid #ebedf0 !important;
+
+    ::ng-deep .form-control {
+      text-align: center !important;
+      font-weight: 600 !important;
+      height: 32px !important;
+      padding: 2px !important;
+      font-size: 13px !important;
+    }
+
+    ::ng-deep .btn-link {
+      color: #0d6efd !important;
+      padding: 0 !important;
+    }
+  }
+
+  .btn-primary {
+    font-weight: 600 !important;
+    border-radius: 6px !important;
+    padding: 6px 12px !important;
+    font-size: 13px !important;
   }
 }

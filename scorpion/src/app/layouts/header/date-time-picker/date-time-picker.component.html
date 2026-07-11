@@ -17,7 +17,7 @@
   <input type="hidden" [formControl]="control" />
 
   <!-- POPUP -->
-  <div *ngIf="showPicker" class="picker-popup" (click)="$event.stopPropagation()">
+  <div *ngIf="showPicker" #popupEl class="picker-popup" (click)="$event.stopPropagation()">
     <bs-datepicker-inline
       class="datepicker"
       [(bsValue)]="selectedDate"
