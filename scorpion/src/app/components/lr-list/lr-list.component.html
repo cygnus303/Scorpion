@@ -9,9 +9,9 @@
                 *ngIf="!isHQTR && menuAccessService.hasPermission('Add')">
                 <span class="fs-5 me-1">➕</span> Add LR
             </button>
-            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="onExcelDownload()"
+            <button class="btn btn-success px-4 py-2 rounded fw-bold" 
                 *ngIf="menuAccessService.hasPermission('Download')">
-                <span *ngIf="!isCSVLoading"> <span class="fs-5 me-1">📥</span> Download XLS</span>
+                <span *ngIf="!isCSVLoading" (click)="onExcelDownload()"> <span class="fs-5 me-1">📥</span> Download XLS</span>
                 <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isCSVLoading">Downloading...</span>
             </button>
@@ -199,7 +199,7 @@
                         </td>
                         <td>
                             <span class="status-chip" [ngClass]="getStatusClass(lr.status)">
-                                {{ getStatusIcon(lr.status) }} {{ lr.oP_StockType }}
+                                {{ getStatusIcon(lr.status) }} {{ lr.status }}
                             </span>
                         </td>
                         <td>
@@ -215,13 +215,13 @@
                                     [disabled]="lr.isDocketCancel==='Y'">🚫 Cancel</button>
                                 <div class="track-wrap">
                                     <button class="ab ab-track" (click)="toggleTrack(i, $event)">📍 Track</button>
-                                    <div class="track-dropdown" [class.open]="openTrackIndex === i">
+                                    <!-- <div class="track-dropdown" [class.open]="openTrackIndex === i">
                                         <a *ngFor="let item of trackMenuItems"
                                             (click)="onTrackMenuClick(item, lr.dockno)">
                                             <span class="ti">{{ item.icon }}</span> {{ item.label }}
                                         </a>
 
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="print-wrap">
                                     <button class="ab ab-print" (click)="openPrint(lr.dockno)">🖨 Print</button>

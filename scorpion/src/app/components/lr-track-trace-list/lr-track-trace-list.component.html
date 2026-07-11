@@ -8,8 +8,8 @@
             LR Track & Trace
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="exportData()">
-                <span *ngIf="!isExporting"><span class="fs-5 me-1">📥</span> Download XLS</span>
+            <button class="btn btn-success px-4 py-2 rounded fw-bold" >
+                <span *ngIf="!isExporting" (click)="exportData()"><span class="fs-5 me-1">📥</span> Download XLS</span>
                 <span *ngIf="isExporting" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isExporting">Downloading...</span>
             </button>
