@@ -181,12 +181,11 @@
 </div>
 
 <!-- PHASE 2 -->
-<div class="phase-header text-muted mt-3">
+<!-- <div class="phase-header text-muted mt-3">
   🏭 PHASE 2 — ORIGIN HUB (MUMBAI HUB (BOM-HUB))
 </div>
 
 <div class="timeline-wrapper">
-  <!-- Item 1: Vehicle Arrived -->
   <div class="timeline-item border-success">
     <div class="timeline-dot border-success"></div>
     <div class="card timeline-card border-0">
@@ -208,7 +207,6 @@
           <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Stock Updated</label><div class="text-dark fs-small fw-medium"><span class="badge bg-success py-1 px-1 me-1">✔</span> LR in Mumbai Hub (BOM-HUB) Stock</div></div>
           <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Unloading Vendor</label><div class="text-dark fs-small fw-medium">Hub Labour Vendor</div></div>
         </div>
-        <!-- HCC Block -->
         <div class="row g-2">
           <div class="col-md-6">
             <div class="border rounded-2 p-2 d-flex justify-content-between align-items-center" style="background:#fdecea !important; border-color:#f5c6c2!important;">
@@ -225,7 +223,6 @@
     </div>
   </div>
 
-  <!-- Item 2: Dispatched -->
   <div class="timeline-item border-success">
     <div class="timeline-dot border-success"></div>
     <div class="card timeline-card border-0">
@@ -249,7 +246,6 @@
           <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Vehicle</label><div class="text-dark fs-small fw-medium">MH-14-GH-9900</div></div>
           <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Driver</label><div class="text-dark fs-small fw-medium">Sunil Yadav (📞 99001 88765)</div></div>
         </div>
-        <!-- HCC Block -->
         <div class="row g-2">
           <div class="col-md-6">
             <div class="border rounded-2 p-2 d-flex justify-content-between align-items-center" style="background:#e8f0fd !important; border-color:#c5d5f5!important;">
@@ -267,13 +263,11 @@
   </div>
 </div>
 
-<!-- PHASE 3 -->
 <div class="phase-header text-muted mt-3">
   🔄 PHASE 3 — TRANSSHIPMENT HUB (NAGPUR HUB (NGP-HUB))
 </div>
 
 <div class="timeline-wrapper">
-  <!-- Item 1: Vehicle Arrived -->
   <div class="timeline-item border-primary">
     <div class="timeline-dot dot-primary pulse"></div>
     <div class="card timeline-card border-primary" style="background-color: #f0f6ff !important;">
@@ -295,7 +289,6 @@
           <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Stock Updated</label><div class="text-dark fs-small fw-medium"><span class="badge bg-success py-1 px-1 me-1">✔</span> In Transshipment Hub Stock</div></div>
           <div class="col-md-3"><label class="text-muted text-uppercase fw-semibold fs-tiny mb-1">Onward Dispatch</label><div class="text-dark fs-small fw-medium">Awaiting Vehicle Assignment</div></div>
         </div>
-        <!-- HCC Block -->
         <div class="row g-2">
           <div class="col-md-6">
             <div class="border rounded-2 p-2 d-flex justify-content-between align-items-center bg-white" style="border-color:#f5c6c2!important;">
@@ -312,7 +305,6 @@
     </div>
   </div>
   
-  <!-- Item 2: Dispatch Pending -->
   <div class="timeline-item border-pending">
     <div class="timeline-dot dot-pending"></div>
     <div class="card timeline-card border-0 bg-transparent opacity-75">
@@ -329,7 +321,6 @@
   </div>
 </div>
 
-<!-- PHASE 4 -->
 <div class="phase-header text-muted mt-3">
   🏭 PHASE 4 — DESTINATION HUB (DELHI HUB (DEL-HUB))
 </div>
@@ -365,7 +356,6 @@
   </div>
 </div>
 
-<!-- PHASE 5 -->
 <div class="phase-header text-muted mt-3">
   🏠 PHASE 5 — DESTINATION BRANCH (DELHI (DEL-001))
 </div>
@@ -415,14 +405,12 @@
   </div>
 </div>
 
-<!-- HCC Trail Footer Block -->
 <div class="card rounded-3 mt-4" style="background-color: #f8fafd !important; border: 1px solid #e0e7f1 !important; box-shadow: none;">
   <div class="card-body p-3">
     <h6 class="mb-3 d-flex align-items-center gap-2" style="font-size: 13px; font-weight: 700; color: #1e293b; letter-spacing: 0.5px;">
       <span style="font-size: 16px;">📜</span> HCC TRAIL — {{ lrDetails?.lrNumber }}
     </h6>
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
-      <!-- Paid -->
       <div style="background: #eaf6ee; border: 1px solid #cbe9d8; border-radius: 6px; padding: 10px;">
         <div style="font-size: 11.5px; color: #334155; margin-bottom: 6px;"><span style="font-weight: 700;">HCC-1</span> Loading &#64; Pickup</div>
         <div style="font-size: 12px; color: #10b981;">₹ 180 <span class="badge bg-success ms-1" style="padding: 3px 4px; border-radius: 3px;">✔</span></div>
@@ -443,12 +431,10 @@
         <div style="font-size: 11.5px; color: #334155; margin-bottom: 6px;"><span style="font-weight: 700;">HCC-5</span> Loading → Onward</div>
         <div style="font-size: 12px; color: #10b981;">₹ 750 <span class="badge bg-success ms-1" style="padding: 3px 4px; border-radius: 3px;">✔</span></div>
       </div>
-      <!-- Active -->
       <div style="background: #eef4ff; border: 1px solid #d1e0ff; border-radius: 6px; padding: 10px;">
         <div style="font-size: 11.5px; color: #334155; margin-bottom: 6px;"><span style="font-weight: 700;">HCC-6</span> Unloading &#64; Trans Hub</div>
         <div style="font-size: 12px; color: #3b82f6;">₹ 290 <span style="font-size: 13px; margin-left: 2px;">⚡</span></div>
       </div>
-      <!-- Pending -->
       <div style="background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px;">
         <div style="font-size: 11.5px; color: #334155; margin-bottom: 6px;"><span style="font-weight: 700;">HCC-7</span> Unloading &#64; Dest Hub</div>
         <div style="font-size: 12px; color: #94a3b8;">— <span style="font-size: 13px; margin-left: 2px;">⏳</span></div>
@@ -463,4 +449,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
