@@ -15,6 +15,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CommonDateService } from 'app/shared/services/common-date.service';
 import { LocationListResponse } from 'app/shared/models/delivery-agent.model';
 import { CustomerService } from 'app/shared/services/customer.service';
+import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 @Component({
   selector: 'app-add-thc-popup',
   standalone: true,
@@ -73,7 +74,8 @@ export class AddThcPopupComponent {
     public basicDetailService: BasicDetailService,
     public commonDateService: CommonDateService,
     private deliveryAgentService: DeliveryAgentService,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private dynamicDataService: DynamicDataService
   ) { }
 
   ngOnInit() {
@@ -207,6 +209,32 @@ export class AddThcPopupComponent {
   showPopup(type: string, mfs?: any) {
     this.ThcType = type;
     this.selectedMfs = mfs || [];
+
+    // Construct unique ToBH_CODE from selected MFs
+    const tobhCodes = this.selectedMfs.map(mf => mf.toBH_CODE).filter(c => !!c);
+    const uniqueTobhCodes = [...new Set(tobhCodes)].join(',');
+
+    const payload = {
+      FilterJson: {
+        ReportId: "671",
+        TCBR: this.docketService.loginUserList?.LocationCode || 'PIM',
+        ToBH_CODE: uniqueTobhCodes,
+        Route_Mode: "S"
+      }
+    };
+
+    this.dynamicDataService.getDynamicData(payload).subscribe({
+      next: (res: any) => {
+        const data = res?.data || res || {};
+        const table1 = data.Table1 || [];
+        // Assuming this populates routeNameList or something similar
+        if (table1.length > 0) {
+          this.routeNameList = table1;
+        }
+      },
+      error: (err) => console.error('Error fetching dynamic data for THC popup', err)
+    });
+
     this.buildForm();
     this.calculateWeightAndUtilization();
     this.getLocationData();
