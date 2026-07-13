@@ -93,7 +93,7 @@ export class ThcListComponent {
 
   fetchData() {
     this.pagination.page = 1;
-    this.selectedMfs = []; // Reset selection on fetch
+    // this.selectedMfs = []; // REMOVED: Do not reset selection on search/fetch
     this.getTHCDetail();
   }
 
