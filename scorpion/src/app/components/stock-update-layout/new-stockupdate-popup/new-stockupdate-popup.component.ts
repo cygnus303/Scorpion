@@ -9,6 +9,7 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { DeliveryUpdateService } from 'app/shared/services/delivery-update.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DrsUpdateDepsComponent } from 'app/components/drs-generation-list/drs-update-list/drs-update-deps/drs-update-deps.component';
+import { NewStockupdateShortagePopupComponent } from 'app/components/stock-update-layout/new-stockupdate-shortage-popup/new-stockupdate-shortage-popup.component';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { SharedModule } from 'app/shared/shared/shared.module';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
@@ -17,7 +18,7 @@ import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.ser
 @Component({
   selector: 'app-new-stockupdate-popup',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgSelectModule, DrsUpdateDepsComponent, SharedModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgSelectModule, DrsUpdateDepsComponent, NewStockupdateShortagePopupComponent, SharedModule],
   templateUrl: './new-stockupdate-popup.component.html',
   styleUrl: './new-stockupdate-popup.component.scss',
   providers: [BsModalService]
@@ -26,6 +27,7 @@ export class NewStockupdatePopupComponent implements OnInit {
   public modalRef?: BsModalRef;
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @ViewChild('DrsUpdateDepsComponent') depsEntryComponent!: DrsUpdateDepsComponent;
+  @ViewChild('NewStockupdateShortagePopupComponent') shortagePopupComponent!: NewStockupdateShortagePopupComponent;
   @Output() dataEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   public isLoading: boolean = false;
@@ -339,39 +341,56 @@ export class NewStockupdatePopupComponent implements OnInit {
     if (!originalState) {
       row.isDamage = true;
       row.isSelected = true; // Auto select the row when checking damage
-      this.openDepsPopup(row, index);
+      this.openDepsPopup(row, index, 'D');
     } else {
-      if (row.depsData) {
+      if (row.damageDepsData || (row.depsData && row.depsData.depsTyp === 'D')) {
         const confirmClear = confirm('This docket already has DEPS details. Do you want to remove them?\n\n- Click "OK" to delete DEPS details.\n- Click "Cancel" to keep them and edit details.');
         if (confirmClear) {
           row.isDamage = false;
-          row.depsData = null;
+          row.damageDepsData = null;
+          if (row.depsData && row.depsData.depsTyp === 'D') {
+            row.depsData = row.shortageDepsData || null;
+          }
           row.damageQry = 0;
           row.damageWeight = 0;
           row.damageType = '';
           row.severity = '';
-          row.remarks = '';
+          row.remarks = row.shortRemarks || '';
           row.depsfile = '';
         } else {
-          this.openDepsPopup(row, index);
+          this.openDepsPopup(row, index, 'D');
         }
       } else {
         row.isDamage = false;
-        row.depsData = null;
+        row.damageDepsData = null;
+        if (row.depsData && row.depsData.depsTyp === 'D') {
+          row.depsData = row.shortageDepsData || null;
+        }
         row.damageQry = 0;
         row.damageWeight = 0;
         row.damageType = '';
         row.severity = '';
-        row.remarks = '';
+        row.remarks = row.shortRemarks || '';
         row.depsfile = '';
       }
     }
   }
 
-  openDepsPopup(row: any, index: number) {
+  openDepsPopup(row: any, index: number, depsType: 'D' | 'S' = 'D') {
+    const existingDmg = row.damageDepsData || (row.depsData && row.depsData.depsTyp === 'D' ? row.depsData : null);
+    const dmgPkgsVal = +row.pkgsno || 0;
+    const dockno = row.dockNo || row.docketNo || '';
+    const validBoxIds: string[] = [];
+    for (let k = 1; k <= dmgPkgsVal; k++) {
+      validBoxIds.push(`${dockno}_${k.toString().padStart(3, '0')}`);
+    }
+    const rawSelectedBoxes = (existingDmg && existingDmg.selectedBoxIds) || row.damageSelectedBoxIds || [];
+    const cleanSelectedBoxes = rawSelectedBoxes.filter((id: string) => validBoxIds.includes(id));
     const popupData = {
       ...row,
-      dockno: row.dockNo,
+      selectedBoxIds: cleanSelectedBoxes,
+      depsData: existingDmg,
+      dockno: dockno,
       docketsf: row.dockSF || row.docksf || '.',
       booking_Date: this.parseDate(row.dockdt),
       orgncd: row.orgncd,
@@ -384,6 +403,78 @@ export class NewStockupdatePopupComponent implements OnInit {
     const thcNo = this.stockData.thcno || '';
     const thcDt = this.stockData.thcdt || '';
     this.depsEntryComponent.showPopup(popupData, thcNo, thcDt, '', 1, index);
+    if (this.depsEntryComponent) {
+      this.depsEntryComponent.depsTypeList = [
+        { value: 'D', label: '🔴 Damage' }
+      ];
+      const formArray = this.depsEntryComponent.docketsArray;
+      if (formArray && formArray.controls) {
+        formArray.controls.forEach((group: any) => {
+          const depstypeCtrl = group.get('depstype');
+          if (depstypeCtrl) {
+            depstypeCtrl.setValue('D');
+            depstypeCtrl.disable();
+          }
+          if (typeof this.depsEntryComponent.fetchDamageTypes === 'function') {
+            this.depsEntryComponent.fetchDamageTypes();
+          }
+          try {
+            Object.defineProperty(group, 'value', {
+              get: () => group.getRawValue(),
+              set: (v) => {},
+              configurable: true
+            });
+          } catch (e) {
+            // ignore
+          }
+        });
+      }
+      if (this.depsEntryComponent.depsForm) {
+        try {
+          Object.defineProperty(this.depsEntryComponent.depsForm, 'value', {
+            get: () => this.depsEntryComponent.depsForm.getRawValue(),
+            set: (v) => {},
+            configurable: true
+          });
+        } catch (e) {
+          // ignore
+        }
+      }
+    }
+  }
+
+  openShortagePopup(row: any, index: number) {
+    const existingShrt = row.shortageDepsData || (row.depsData && row.depsData.depsTyp === 'S' ? row.depsData : null);
+    const shortageQtyVal = +row.shortQty || +row.shortageQty || (+row.bkG_PKGSNO - +row.pkgsno) || 0;
+    const dockno = row.dockNo || row.docketNo || '';
+    const validBoxIds: string[] = [];
+    for (let k = 1; k <= shortageQtyVal; k++) {
+      validBoxIds.push(`${dockno}_${k.toString().padStart(3, '0')}`);
+    }
+    const rawSelectedBoxes = (existingShrt && existingShrt.selectedBoxIds) || row.shortageSelectedBoxIds || [];
+    const cleanSelectedBoxes = rawSelectedBoxes.filter((id: string) => validBoxIds.includes(id));
+    const popupData = {
+      ...row,
+      selectedBoxIds: cleanSelectedBoxes,
+      depsData: existingShrt,
+      dockno: dockno,
+      docketsf: row.dockSF || row.docksf || '.',
+      booking_Date: this.parseDate(row.dockdt),
+      orgncd: row.orgncd,
+      destcd: row.desT_CD || row.destcd,
+      pkgsno: row.pkgsno,
+      invval: row.invval || 0,
+      depstype: 'S',
+      affectedPkgs: shortageQtyVal,
+      remarks: row.shortRemarks || row.shortageRemarks || '',
+      affectedInvVal: (+row.bkG_PKGSNO || +row.pkgsno) > 0 ? Number((( (row.invval || 0) / (+row.bkG_PKGSNO || +row.pkgsno || 1) ) * shortageQtyVal).toFixed(2)) : 0
+    };
+    
+    const thcNo = this.stockData.thcno || '';
+    const thcDt = this.stockData.thcdt || '';
+    if (this.shortagePopupComponent) {
+      this.shortagePopupComponent.showPopup(popupData, thcNo, thcDt, index);
+    }
   }
 
   onDepsDataReceived(event: any) {
@@ -391,6 +482,10 @@ export class NewStockupdatePopupComponent implements OnInit {
     const index = event.rowIndex;
     const depsData = event.depsData;
     if (this.listVSFUM[index]) {
+      if (depsData && depsData.selectedBoxIds) {
+        this.listVSFUM[index].damageSelectedBoxIds = depsData.selectedBoxIds;
+      }
+      this.listVSFUM[index].damageDepsData = depsData;
       this.listVSFUM[index].depsData = depsData;
       this.listVSFUM[index].isDamage = true;
       this.listVSFUM[index].damageQry = depsData.affectedQty || 0;
@@ -399,6 +494,39 @@ export class NewStockupdatePopupComponent implements OnInit {
       this.listVSFUM[index].severity = depsData.severity || '';
       this.listVSFUM[index].remarks = depsData.remarks || '';
       this.listVSFUM[index].depsfile = depsData.depsfile || '';
+      if (this.listVSFUM[index].damageDepsData && depsData && depsData.selectedBoxIds) {
+        this.listVSFUM[index].damageDepsData.selectedBoxIds = depsData.selectedBoxIds;
+      }
+    }
+  }
+
+  onShortageDataReceived(event: any) {
+    console.log('Received Shortage DEPS Data:', event);
+    const index = event.rowIndex;
+    const depsData = event.depsData;
+    if (this.listVSFUM[index]) {
+      if (depsData && depsData.selectedBoxIds) {
+        this.listVSFUM[index].shortageSelectedBoxIds = depsData.selectedBoxIds;
+      }
+      this.listVSFUM[index].shortageDepsData = depsData;
+      this.listVSFUM[index].depsData = depsData;
+      if (this.listVSFUM[index].shortageDepsData && depsData && depsData.selectedBoxIds) {
+        this.listVSFUM[index].shortageDepsData.selectedBoxIds = depsData.selectedBoxIds;
+      }
+      const shortQty = +(depsData.affectedQty || 0);
+      this.listVSFUM[index].shortQty = shortQty;
+      this.listVSFUM[index].shortageQty = shortQty;
+
+      const totalPkgs = +(this.listVSFUM[index].bkG_PKGSNO || 0);
+      const totalWt = +(this.listVSFUM[index].bkG_ACTUWT || 0);
+      const shortWt = totalPkgs > 0 ? Number(((totalWt * shortQty) / totalPkgs).toFixed(2)) : 0;
+
+      this.listVSFUM[index].shortWt = shortWt;
+      this.listVSFUM[index].shortageWeight = shortWt;
+      this.listVSFUM[index].shortReason = depsData.reason || '';
+      this.listVSFUM[index].shortageReason = depsData.reason || '';
+      this.listVSFUM[index].shortRemarks = depsData.remarks || '';
+      this.listVSFUM[index].shortageRemarks = depsData.remarks || '';
     }
   }
 
@@ -548,7 +676,7 @@ export class NewStockupdatePopupComponent implements OnInit {
     return new Date().toISOString();
   }
 
-  onArrivedPkgsChange(row: any) {
+  onArrivedPkgsChange(row: any, index?: number) {
     const arrPkgs = +row.pkgsno || 0;
     const totalPkgs = +row.bkG_PKGSNO || 0;
     const totalWt = +row.bkG_ACTUWT || 0;
@@ -556,6 +684,29 @@ export class NewStockupdatePopupComponent implements OnInit {
     if (totalPkgs > 0 && arrPkgs >= 0) {
       const calculatedWt = (arrPkgs * totalWt) / totalPkgs;
       row.actuwt = Number.isInteger(calculatedWt) ? calculatedWt : Number(calculatedWt.toFixed(2));
+      const newShortageQty = totalPkgs - arrPkgs;
+      if (row.selectedBoxIds && Array.isArray(row.selectedBoxIds)) {
+        const dockno = row.dockNo || row.docketNo || '';
+        const validBoxIds: string[] = [];
+        for (let k = 1; k <= newShortageQty; k++) {
+          validBoxIds.push(`${dockno}_${k.toString().padStart(3, '0')}`);
+        }
+        row.selectedBoxIds = row.selectedBoxIds.filter((id: string) => validBoxIds.includes(id));
+      }
+    }
+  }
+
+  checkAndOpenShortagePopup(row: any, index: number) {
+    const arrPkgs = +row.pkgsno || 0;
+    const totalPkgs = +row.bkG_PKGSNO || 0;
+    if (totalPkgs > 0 && arrPkgs >= 0 && arrPkgs < totalPkgs) {
+      const shortageQty = totalPkgs - arrPkgs;
+      row.shortQty = shortageQty;
+      row.shortageQty = shortageQty;
+      if (!row.depsData || row.depsData.depsTyp !== 'S' || +row.depsData.affectedQty !== shortageQty || row._lastShortageArrPkgs !== arrPkgs) {
+        row._lastShortageArrPkgs = arrPkgs;
+        this.openShortagePopup(row, index);
+      }
     }
   }
 
@@ -891,7 +1042,11 @@ export class NewStockupdatePopupComponent implements OnInit {
         thC_NextLoc: this.docketService.Location || this.docketService.loginUserList?.LocationCode || row.thC_NextLoc || '',
         luVendorCode: row.luVendorCode || '',
         vendorCode: row.luVendorCode || '',
-        depsId: row.depsData?.depsId || row.depsId || ''
+        depsId: row.depsData?.depsId || row.depsId || '',
+        shortageQty: row.shortQty || row.shortageQty || 0,
+        shortageWeight: row.shortWt || row.shortageWeight || 0,
+        shortageReason: row.shortReason || row.shortageReason || '',
+        shortageRemarks: row.shortRemarks || row.shortageRemarks || '',
       };
     });
 
@@ -900,6 +1055,10 @@ export class NewStockupdatePopupComponent implements OnInit {
     formData.append("ViewModel.VSFUM.THC_NextLoc", this.docketService.Location || this.docketService.loginUserList?.LocationCode || '');
     formData.append("ViewModel.VSFUM.UpdateDate", isoUpdateDate);
     formData.append("ViewModel.VSFUM.DepsId", selectedRows[0]?.depsData?.depsId || selectedRows[0]?.depsId || '');
+    // const totalShortageQty = selectedRows.reduce((sum, r) => sum + (+r.shortQty || +r.shortageQty || 0), 0);
+    // const totalShortageWt = selectedRows.reduce((sum, r) => sum + (+r.shortWt || +r.shortageWeight || 0), 0);
+    // formData.append("ViewModel.VSFUM.ShortageQty", totalShortageQty.toString());
+    // formData.append("ViewModel.VSFUM.ShortageWeight", totalShortageWt.toString());
     formData.append("ViewModel.VSFUM.ISCheckRemarks", 'ddfg');
     formData.append("ViewModel.VSFUM.UnLoadingSupervisor", this.unloadingSupervisor || '');
     formData.append("ViewModel.VSFUM.UnLoaderName", this.unloaderName || '');
@@ -932,7 +1091,21 @@ export class NewStockupdatePopupComponent implements OnInit {
       next: (res: any) => {
         this.isLoading = false;
         if (res) {
-          this.sweetAlertService.success(`Stock Update Success for THC No: ${this.stockData.thcno}`);
+          this.sweetAlertService.success(`<div style="text-align:left;font-size:15px;">
+    <h3 style="margin:0 0 10px;color:#28a745;">
+        ✅ Stock Update Successful
+    </h3>
+
+    <div style="padding:10px;background:#f8f9fa;border-radius:8px;">
+        <p style="margin:5px 0;">
+            <strong>📦 THC No:</strong> ${this.stockData.thcno}
+        </p>
+
+        <p style="margin:5px 0;">
+            <strong>🆔 DEPS ID:</strong> ${res.depsId}
+        </p>
+    </div>
+</div>`);
           this.dataEmitter.emit();
           this.modalRef?.hide();
         }
