@@ -64,6 +64,13 @@ export class DepsEntryComponent {
       this.fetchDamageTypes();
     }
 
+    const totalPkgsVal = +(item.bkG_PKGSNO || item.totalPkgs || item.pkgsno || 1);
+    const initialAffectedPkgs = +(item.selectedBoxIds ? item.selectedBoxIds.length : (item.affectedPkgs || 0));
+    let initialAffectedInvVal = Number(item.affectedInvVal || 0.00);
+    if (!item.affectedInvVal && totalPkgsVal > 0 && initialAffectedPkgs > 0) {
+      initialAffectedInvVal = Number((( (item.invval || 0) / totalPkgsVal ) * initialAffectedPkgs).toFixed(2));
+    }
+
     return new FormGroup({
       dockno: new FormControl(item.dockno),
       docketsf: new FormControl(item.docksf || item.docketsf),
@@ -71,12 +78,13 @@ export class DepsEntryComponent {
       orgncd: new FormControl(item.orgncd),
       destcd: new FormControl(item.destcd),
       pkgsno: new FormControl(item.pkgsno),
+      bkG_PKGSNO: new FormControl(totalPkgsVal),
       invval: new FormControl(item.invval),
       depstype: new FormControl(item.depstype || null),
       damageType: new FormControl(item.damageType || null),
       severity: new FormControl(item.severity || null),
-      affectedPkgs: new FormControl(item.affectedPkgs || 0),
-      affectedInvVal: new FormControl(item.affectedInvVal || 0.00),
+      affectedPkgs: new FormControl(initialAffectedPkgs),
+      affectedInvVal: new FormControl(initialAffectedInvVal),
       remarks: new FormControl(item.remarks || ''),
       fileAttached: new FormControl(!!item.fileAttached),
       fileName: new FormControl(item.fileName || ''),
@@ -316,11 +324,11 @@ export class DepsEntryComponent {
       const affectedPkgsCount = newSelected.length;
       row.get('affectedPkgs')?.setValue(affectedPkgsCount);
 
-      const invval = row.get('invval')?.value || 0;
-      const pkgsno = row.get('pkgsno')?.value || 0;
+      const invval = +row.get('invval')?.value || 0;
+      const totalPkgs = +row.get('bkG_PKGSNO')?.value || +row.get('pkgsno')?.value || 1;
       let rawVal = 0.00;
-      if (pkgsno > 0 && affectedPkgsCount > 0) {
-        rawVal = (invval / pkgsno) * affectedPkgsCount;
+      if (totalPkgs > 0 && affectedPkgsCount > 0) {
+        rawVal = (invval / totalPkgs) * affectedPkgsCount;
         rawVal = Number(rawVal.toFixed(2));
       }
       row.get('affectedInvVal')?.setValue(rawVal);
