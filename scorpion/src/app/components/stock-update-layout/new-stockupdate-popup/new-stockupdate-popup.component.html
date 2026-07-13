@@ -192,11 +192,18 @@
                                                 class="form-control form-control-sm text-center fw-semibold mx-auto table-input-custom"
                                                 [ngClass]="{'border-danger text-danger': +row.pkgsno > +row.bkG_PKGSNO}"
                                                 style="width: 70px;" [(ngModel)]="row.pkgsno"
-                                                (ngModelChange)="onArrivedPkgsChange(row)">
+                                                (ngModelChange)="onArrivedPkgsChange(row, i)"
+                                                (blur)="checkAndOpenShortagePopup(row, i)">
                                             <div *ngIf="+row.pkgsno > +row.bkG_PKGSNO"
                                                 class="text-danger mt-1 text-center fw-medium"
                                                 style="font-size: 10px; line-height: 1.2; max-width: 120px;">
                                                 Arrived Pkgs cannot be greater than Total Pkgs ({{ row.bkG_PKGSNO }}).
+                                            </div>
+                                            <div *ngIf="row.shortageDepsData || (row.depsData && row.depsData.depsTyp === 'S')"
+                                                class="badge bg-warning-subtle text-warning border border-warning-subtle mt-1 text-nowrap"
+                                                style="font-size: 9px; cursor: pointer; display: inline-flex; align-items: center; gap: 2px; padding: 3px 6px;"
+                                                (click)="openShortagePopup(row, i)">
+                                                ✏️ Edit Shortage details
                                             </div>
                                         </td>
                                         <td class="text-center table-cell-custom">
@@ -263,7 +270,7 @@
                                         <td class="text-center table-cell-custom">
                                             <input type="checkbox" class="form-check-input d-block mx-auto"
                                                 [checked]="row.isDamage" (change)="onDamageChange($event, row, i)">
-                                            <div *ngIf="row.depsData"
+                                            <div *ngIf="row.damageDepsData || (row.depsData && row.depsData.depsTyp === 'D')"
                                                 class="badge bg-danger-subtle text-danger border border-danger-subtle mt-1 text-nowrap"
                                                 style="font-size: 9px; cursor: pointer; display: inline-flex; align-items: center; gap: 2px; padding: 3px 6px;"
                                                 (click)="openDepsPopup(row, i)">
@@ -376,3 +383,4 @@
 </ng-template>
 
 <app-drs-update-deps #DrsUpdateDepsComponent (dataEmitter)="onDepsDataReceived($event)"></app-drs-update-deps>
+<app-new-stockupdate-shortage-popup #NewStockupdateShortagePopupComponent (dataEmitter)="onShortageDataReceived($event)"></app-new-stockupdate-shortage-popup>
