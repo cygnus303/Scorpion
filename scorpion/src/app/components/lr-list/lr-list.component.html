@@ -73,11 +73,21 @@
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🚫</div>
         </div>
 
-        <div class="summary-card px-3 py-3 c-green cursor-pointer"
+         <div class="summary-card px-3 py-3 c-green cursor-pointer"
             [class.active-card]="config.statusFilter === 'delivered'" (click)="filterByStatus('delivered')">
             <div class="card-content">
-                <div class="s-label">At Delivery Stock</div>
+                <div class="s-label">Delivered</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.delivered || 0 }}</div>
+                <div class="small text-body-tertiary">Ready for delivery</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">✅</div>
+        </div>
+
+        <div class="summary-card px-3 py-3 c-pink cursor-pointer"
+            [class.active-card]="config.statusFilter === 'At Delivery Stock'" (click)="filterByStatus('At Delivery Stock')">
+            <div class="card-content">
+                <div class="s-label">At Delivery Stock</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.atDeliveredStock || 0 }}</div>
                 <div class="small text-body-tertiary">Ready for delivery</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">💰</div>

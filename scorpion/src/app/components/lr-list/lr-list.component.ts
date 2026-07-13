@@ -34,7 +34,8 @@ export class LrListComponent {
     { label: 'Pending for Quick Completion', value: 'pendingforQuickCompletion' },
     { label: 'At Booking Stock', value: 'booking' },
     { label: 'In Transit', value: 'inTransit' },
-    { label: 'At Delivery Stock', value: 'delivered' }
+    { label: 'Delivered', value: 'delivered' },
+    { label: 'At Delivery Stock', value: 'At Delivery Stock' }
   ];
     trackMenuItems = [
     { icon: '📊', label: 'Profit / Loss', type: 7 },
@@ -97,6 +98,7 @@ export class LrListComponent {
       'InTransit': 'chip-transit',
       'Booking': 'chip-booking',
       'Delivered': 'chip-delivery',
+      'At Delivery Stock': 'chip-deliveryStock',
       'Cancelled':'chip-danger'
     };
     return map[status] ?? 'chip-pending';
@@ -108,6 +110,7 @@ export class LrListComponent {
       'InTransit': '🚛',
       'Booking': '🏭',
       'Delivered': '🏬',
+      'At Delivery Stock':'💰',
       'Cancelled':'🚫'
     };
     return icons[status] ?? '⏳';

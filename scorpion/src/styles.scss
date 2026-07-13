@@ -1744,6 +1744,18 @@ input:checked+.toggle-slider:before {
       color: #2e7d32;
     }
   }
+   &.c-pink {
+    border-left-color: #b124a6;
+
+    .s-val {
+      color: #b124a6;
+    }
+
+    &.active-card {
+      border-left-color: #b124a6;
+      color: #b124a6;
+    }
+  }
 }
 
 // PRS DRS 

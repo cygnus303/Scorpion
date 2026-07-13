@@ -429,7 +429,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
     if (s.includes('DELIVERED')) return 'bg-success-subtle text-success border-success-subtle';
     if (s.includes('TRANSIT')) return 'bg-warning-subtle text-warning border-warning-subtle';
     if (s.includes('BOOK')) return 'bg-primary-subtle text-primary border-primary-subtle';
-    if (s.includes('Cancelled')) return 'bg-danger-subtle text-danger border-danger-subtle';
+    if (s.includes('CANCELLED')) return 'bg-danger-subtle text-danger border-danger-subtle';
     return 'bg-secondary-subtle text-dark border-secondary-subtle';
   }
 
@@ -438,7 +438,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
     if (s.includes('DELIVERED')) return 'bg-success';
     if (s.includes('TRANSIT')) return 'bg-warning';
     if (s.includes('BOOK')) return 'bg-primary';
-    if (s.includes('Cancelled')) return 'bg-danger';
+    if (s.includes('CANCELLED')) return 'bg-danger';
     return 'bg-secondary';
   }
 
@@ -447,7 +447,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
     if (s.includes('DELIVERED')) return 'Delivered';
     if (s.includes('TRANSIT')) return 'In Transit';
     if (s.includes('BOOK')) return 'Booked';
-    if (s.includes('Cancelled')) return 'Cancelled';
+    if (s.includes('CANCELLED')) return 'Cancelled';
     return status || 'Unknown';
   }
 
