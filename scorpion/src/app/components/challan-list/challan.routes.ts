@@ -91,7 +91,7 @@ export const ChallanRoutes: Routes = [
   {
     path: 'LRFinEditList',
     loadComponent: () => import('../lr-finacial-edit/lr-finacial-edit.component').then(m => m.LrFinacialEditComponent),
-    // canActivate: [DocketGuard]
+    canActivate: [DocketGuard]
   },
   {
     path: 'THCDepatureList',
