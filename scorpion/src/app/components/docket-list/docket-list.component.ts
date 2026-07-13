@@ -473,11 +473,22 @@ export class DocketListComponent implements OnInit {
         });
       });
       const invoiceList = this.docketService.invoiceRows.value.map((row: any, index: number) => {
+        let invDtStr = new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().slice(0, -1);
+        let ewayInvDtStr: string | null = null;
+
+        if (row.ewayinvoiceDate) {
+          const d = new Date(row.ewayinvoiceDate);
+          d.setHours(0, 0, 0, 0);
+          const localIso = new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().slice(0, -1);
+          invDtStr = localIso;
+          ewayInvDtStr = localIso;
+        }
+
         const obj: any = {
           SrNo: Number(row.srNo),
           DOCKNO: this.docketService.basicDetailForm.value.cNoteNo,
           INVNO: row.invoiceNo || '',
-          INVDT: row.ewayinvoiceDate ? new Date(row.ewayinvoiceDate).toISOString() : new Date().toISOString(),
+          INVDT: invDtStr,
           DECLVAL: Number(row.declaredvalue) || 0,
           PKGSNO: Number(row.noOfPkgs) || 0,
           ACTUWT: Number(row.actualWeight) || 0,
@@ -489,7 +500,7 @@ export class DocketListComponent implements OnInit {
           Part_No: '',
           EWayBillNo: row.ewayBillNo || '',
           EWayInvoicevalue: 0,
-          EWayBillInvoiceDate: row.ewayinvoiceDate ? new Date(row.ewayinvoiceDate).toISOString() : null,
+          EWayBillInvoiceDate: ewayInvDtStr,
           CHRGWT: 0,
           eWayBillExpiredDate: "",
           hsnCode: "",
@@ -827,7 +838,7 @@ export class DocketListComponent implements OnInit {
 
 
       formData.append("DVM.WMD.AppointmentDT", this.docketService.basicDetailForm.value.appointmentDT ? new Date(this.docketService.basicDetailForm.value.appointmentDT).toISOString() : new Date().toISOString()),
-        formData.append("DVM.WMD.Version", String(Number('19')));
+        formData.append("DVM.WMD.Version", String(Number('20')));
       formData.append("DVM.docketType", "DKT");
       // RequestLogs............
       const requestLogs = this.formDataToJson(formData); // Use formDataToJson for the RequestLogs
@@ -889,6 +900,17 @@ export class DocketListComponent implements OnInit {
       this.docketService.invoiceform.markAllAsTouched();
       this.docketService.freightForm.markAllAsTouched();
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.docketService.invoiceRows.value.map((row: any) => {
+        if (row.ewayinvoiceDate) {
+          const originalDate = new Date(row.ewayinvoiceDate);
+          originalDate.setHours(0, 0, 0, 0);
+
+          // Fix: offset the timezone to keep it exactly at midnight local time before converting to string
+          const localIsoString = new Date(originalDate.getTime() - (originalDate.getTimezoneOffset() * 60000)).toISOString().slice(0, -1);
+          console.log("Original Date Object:", originalDate);
+          console.log("Fixed Local ISO String:", localIsoString);
+        }
+      });
     }
   }
 
