@@ -6,8 +6,8 @@
         </div>
         <div class="btn-group gap-3 ms-auto">
             <!-- <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="refreshFilter()">✕ Clear</button> -->
-            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="downloadExcel()">
-                <span *ngIf="!isdownload">📥 Download XLS</span>
+            <button class="btn btn-success px-4 py-2 rounded fw-bold" >
+                <span *ngIf="!isdownload" (click)="downloadExcel()">📥 Download XLS</span>
                 <span *ngIf="isdownload" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isdownload">Downloading...</span>
             </button>

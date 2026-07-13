@@ -5,9 +5,9 @@
             LR Financial Edit
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="onExcelDownload()"
+            <button class="btn btn-success px-4 py-2 rounded fw-bold" 
                 >
-                <span *ngIf="!isCSVLoading"> <span class="fs-5 me-1">📥</span> Download XLS</span>
+                <span *ngIf="!isCSVLoading" (click)="onExcelDownload()"> <span class="fs-5 me-1">📥</span> Download XLS</span>
                 <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isCSVLoading">Downloading...</span>
             </button>
@@ -15,7 +15,7 @@
     </div>
 
     <!-- Summary Strip -->
-    <div class="summary-strip">
+    <!-- <div class="summary-strip">
         <div class="summary-card c-blue cursor-pointer px-3 py-3" [class.active-card]="config.statusFilter === 'All'"
             (click)="filterByStatus('All')">
             <div class="d-flex justify-content-between align-items-center">
@@ -37,6 +37,14 @@
                 <div class="small text-body-tertiary">Financial details edited</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
+        </div>
+    </div> -->
+    <div class="cards">
+        <div class="card">
+            <span class="dot"></span>
+            <div class="label">TOTAL LR</div>
+            <div class="value">{{ summaryData?.totalDockets || 0 }}</div>
+            <div class="sub">All dockets for today</div>
         </div>
     </div>
 
@@ -64,13 +72,13 @@
                             style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
                     </div>
                 </div>
-                <div class="divider-v"></div>
+                <!-- <div class="divider-v"></div>
                 <div class="filter-group d-flex align-items-center gap-2 px-2">
                     <span class="filter-label">Status</span>
                     <ng-select type="text" placeholder="Status" class="custom-status-select clear-icon"
                         [items]="statusList" bindLabel="label" bindValue="value" [(ngModel)]="config.statusFilter"
                         (change)="fetchData()"></ng-select>
-                </div> 
+                </div>  -->
                 <div class="divider-v"></div>
                 <div class="filter-group d-flex align-items-center gap-2 px-2">
                     <span class="filter-label">Is Billed</span>
@@ -115,7 +123,7 @@
                 </tbody>
                 <tbody *ngIf="!isLoading && LREditList.length === 0">
                     <tr>
-                        <td colspan="9" class="text-center py-4 text-muted fs-5">
+                        <td colspan="10" class="text-center py-4 text-muted fs-5">
                             No records found.
                         </td>
                     </tr>

@@ -86,15 +86,15 @@
                                                 <tr>
 
                                                     <td class="text-center">
-                                                      <input type="text" class="form-control form-control-sm" name="contractAmt" [(ngModel)]="thcData.contractAmt">
+                                                      <input type="text" class="form-control form-control-sm" name="contractAmt" [(ngModel)]="thcData.contractAmt" oninput="this.value = this.value.replace(/[^0-9.]/g,'');">
                                                     </td>
 
                                                     <td class="text-center">
-                                                      <input type="text" class="form-control form-control-sm" name="stdAmt" [(ngModel)]="thcData.stdAmt">
+                                                      <input type="text" class="form-control form-control-sm" name="stdAmt" [(ngModel)]="thcData.stdAmt" oninput="this.value = this.value.replace(/[^0-9.]/g,'');">
                                                     </td>
 
                                                     <td class="text-center">
-                                                      <input type="text" class="form-control form-control-sm" name="advamt" [(ngModel)]="thcData.advamt">
+                                                      <input type="text" class="form-control form-control-sm" name="advamt" [(ngModel)]="thcData.advamt" oninput="this.value = this.value.replace(/[^0-9.]/g,'');">
                                                     </td>
 
                                                     <td class="text-center">

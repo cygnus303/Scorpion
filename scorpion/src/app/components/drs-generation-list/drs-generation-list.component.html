@@ -7,8 +7,8 @@
         <div class="btn-group gap-3 ms-auto">
             <!-- <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="refreshFilter()">✕ Clear</button> -->
             <button class="btn background-color fw-bold text-light px-4 py-2 rounded" (click)="onAddDRS()" *ngIf="!isHQTR && menuAccessService.hasPermission('Add')">＋ Add DRS</button>
-            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="downloadList()" [disabled]="isdownload" *ngIf="menuAccessService.hasPermission('Download')">
-                <span *ngIf="!isdownload">📥 Download XLS</span>
+            <button class="btn btn-success px-4 py-2 rounded fw-bold"  [disabled]="isdownload" *ngIf="menuAccessService.hasPermission('Download')">
+                <span *ngIf="!isdownload" (click)="downloadList()">📥 Download XLS</span>
                 <span *ngIf="isdownload" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isdownload">Downloading...</span>
             </button>

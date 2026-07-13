@@ -6,8 +6,8 @@
             <!-- <div class="page-subtitle">Unidentified Receipts — Customer Allocation &amp; Transfer</div> -->
         </div>
         <div class="header-actions">
-            <button class="btn btn-primary" (click)="onDownload()">
-                 <span *ngIf="!isCSVLoading"> <span class="fs-5 me-1">📥</span> Download XLS</span>
+            <button class="btn btn-primary" >
+                 <span *ngIf="!isCSVLoading" (click)="onDownload()"> <span class="fs-5 me-1">📥</span> Download XLS</span>
                 <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isCSVLoading">Downloading...</span></button>
         </div>
