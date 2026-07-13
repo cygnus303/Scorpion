@@ -28,6 +28,7 @@
           <th class="text-end" style="min-width: 130px;">Invoice Value (₹)</th>
           <th style="width: 150px; min-width: 150px;">DEPS Type <span class="text-danger">*</span></th>
           <th class="text-center" style="min-width: 110px;">Affected Pkgs *</th>
+          <th class="text-end" style="min-width: 120px;">Affected Wt</th>
           <th class="text-end" style="min-width: 140px;">Affected Inv. Value (₹)</th>
           <th style="min-width: 200px;">Remarks</th>
         </tr>
@@ -83,6 +84,12 @@
               <input class="form-control form-control-sm text-center text-primary fw-bold" type="text"
                 formControlName="affectedPkgs" readonly
                 style="width: 90px; margin: 0 auto; background-color: #f1f5f9;" />
+            </td>
+
+            <!-- Affected Wt (kg) -->
+            <td>
+              <input class="form-control form-control-sm text-end" type="text" [value]="(row.value.affectedWeight | number:'1.2-2')" readonly
+                style="width: 110px; background-color: #f1f5f9; color: #1a237e; font-weight: 600;" />
             </td>
 
             <!-- Affected Inv. Value -->
