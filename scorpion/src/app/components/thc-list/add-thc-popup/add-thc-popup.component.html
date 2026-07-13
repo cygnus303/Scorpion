@@ -27,8 +27,8 @@
             <div class="thcform-field">
               <label>Route Name <span class="req">*</span></label>
               <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Route Name" appendTo="body"
-                formControlName="routeCode" notFoundText="No matches found" [items]="routeNameList" bindLabel="text"
-                bindValue="value" appFocusNext (change)="getERDDate()"
+                formControlName="routeCode" notFoundText="No matches found" [items]="routeNameList" bindLabel="Text"
+                bindValue="Value" appFocusNext (change)="getERDDate()"
                 [ngClass]="{ 'border-danger': ThcForm.get('routeCode')?.invalid  && ThcForm.get('routeCode')?.touched }"></ng-select>
               <div class="text-danger text-start"
                 *ngIf="ThcForm.get('routeCode')?.invalid && ThcForm.get('routeCode')?.touched ">
