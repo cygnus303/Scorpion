@@ -112,14 +112,22 @@ export class NewStockupdateShortagePopupComponent {
       boxIds.push(`${dockno}_${k.toString().padStart(3, '0')}`);
     }
 
-    const selectedBoxes = (item.selectedBoxIds || []).filter((id: string) => boxIds.includes(id));
+    let selectedBoxes = (item.selectedBoxIds || []).filter((id: string) => boxIds.includes(id));
+    if (selectedBoxes.length === 0 && boxIds.length > 0) {
+      selectedBoxes = [...boxIds];
+    }
     const affectedPkgsVal = selectedBoxes.length;
 
     const totalPkgsVal = +(item.bkG_PKGSNO || item.deliveredPkgs || item.pkgsDelivered || (item.pkgsno && +item.pkgsno > pkgsCount ? +item.pkgsno : 0) || (item.pkgsno ? +item.pkgsno + +pkgsCount : 0) || pkgsCount || 1);
+    const totalWtVal = +(item.bkG_ACTUWT || item.actuwt || item.totWeight || item.totalWeight || 0);
 
     let affectedInvValCalc = 0.00;
+    let affectedWeightCalc = +(item.affectedWeight || item.shortWt || item.shortageWeight || 0);
     if (totalPkgsVal > 0 && affectedPkgsVal > 0) {
       affectedInvValCalc = Number((( (item.invval || 0) / totalPkgsVal ) * affectedPkgsVal).toFixed(2));
+      if (totalWtVal > 0) {
+        affectedWeightCalc = Number(((totalWtVal / totalPkgsVal) * affectedPkgsVal).toFixed(2));
+      }
     }
 
     return new FormGroup({
@@ -130,10 +138,12 @@ export class NewStockupdateShortagePopupComponent {
       destcd: new FormControl(item.destcd),
       pkgsno: new FormControl(pkgsCount),
       bkG_PKGSNO: new FormControl(totalPkgsVal),
+      bkG_ACTUWT: new FormControl(totalWtVal),
       invval: new FormControl(item.invval || 0),
       depstype: new FormControl('S'),
       affectedPkgs: new FormControl(affectedPkgsVal),
       affectedInvVal: new FormControl(affectedInvValCalc),
+      affectedWeight: new FormControl(affectedWeightCalc),
       remarks: new FormControl(item.remarks || item.shortRemarks || item.shortageRemarks || ''),
       boxIds: new FormControl(boxIds),
       selectedBoxIds: new FormControl(selectedBoxes),
@@ -191,12 +201,19 @@ export class NewStockupdateShortagePopupComponent {
     const affectedPkgsCount = +row.get('affectedPkgs')?.value || 0;
     const invval = +row.get('invval')?.value || 0;
     const totalPkgs = +row.get('bkG_PKGSNO')?.value || +row.get('pkgsno')?.value || 1;
-    let rawVal = 0.00;
+    const totalWt = +row.get('bkG_ACTUWT')?.value || 0;
+    let rawInvVal = 0.00;
+    let rawWt = 0.00;
     if (totalPkgs > 0 && affectedPkgsCount > 0) {
-      rawVal = (invval / totalPkgs) * affectedPkgsCount;
-      rawVal = Number(rawVal.toFixed(2));
+      rawInvVal = (invval / totalPkgs) * affectedPkgsCount;
+      rawInvVal = Number(rawInvVal.toFixed(2));
+      if (totalWt > 0) {
+        rawWt = (totalWt / totalPkgs) * affectedPkgsCount;
+        rawWt = Number(rawWt.toFixed(2));
+      }
     }
-    row.get('affectedInvVal')?.setValue(rawVal);
+    row.get('affectedInvVal')?.setValue(rawInvVal);
+    row.get('affectedWeight')?.setValue(rawWt);
   }
 
   closePopup() {
@@ -228,9 +245,9 @@ export class NewStockupdateShortagePopupComponent {
         docket: v.dockno || '',
         docketsf: v.docketsf || '',
         pkgsDelivered: v.pkgsno || 0,
-        totWeight: 0,
+        totWeight: +v.bkG_ACTUWT || 0,
         affectedQty: +v.affectedPkgs || 0,
-        affectedWeight: 0,
+        affectedWeight: +v.affectedWeight || 0,
         affectedInvVal: +v.affectedInvVal || 0,
         fileName: '',
         depsfile: '',

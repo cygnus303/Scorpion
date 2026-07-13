@@ -445,14 +445,21 @@ export class NewStockupdatePopupComponent implements OnInit {
 
   openShortagePopup(row: any, index: number) {
     const existingShrt = row.shortageDepsData || (row.depsData && row.depsData.depsTyp === 'S' ? row.depsData : null);
-    const shortageQtyVal = +row.shortQty || +row.shortageQty || (+row.bkG_PKGSNO - +row.pkgsno) || 0;
-    const dockno = row.dockNo || row.docketNo || '';
+    const shortageQtyVal = +row.shortQty || +row.shortageQty || 0;
+    const dockno = row.dockNo || '';
     const validBoxIds: string[] = [];
     for (let k = 1; k <= shortageQtyVal; k++) {
       validBoxIds.push(`${dockno}_${k.toString().padStart(3, '0')}`);
     }
     const rawSelectedBoxes = (existingShrt && existingShrt.selectedBoxIds) || row.shortageSelectedBoxIds || [];
-    const cleanSelectedBoxes = rawSelectedBoxes.filter((id: string) => validBoxIds.includes(id));
+    let cleanSelectedBoxes = rawSelectedBoxes.filter((id: string) => validBoxIds.includes(id));
+    if (cleanSelectedBoxes.length === 0 && validBoxIds.length > 0) {
+      cleanSelectedBoxes = [...validBoxIds];
+    }
+    const totalPkgsVal = +row.bkG_PKGSNO ;
+    const totalWtVal = +row.bkG_ACTUWT || 0;
+    const affectedWeightVal = totalPkgsVal > 0 ? Number(((totalWtVal / totalPkgsVal) * shortageQtyVal).toFixed(2)) : (+row.shortWt || +row.shortageWeight || 0);
+
     const popupData = {
       ...row,
       selectedBoxIds: cleanSelectedBoxes,
@@ -465,9 +472,10 @@ export class NewStockupdatePopupComponent implements OnInit {
       pkgsno: row.pkgsno,
       invval: row.invval || 0,
       depstype: 'S',
-      affectedPkgs: shortageQtyVal,
+      affectedPkgs: cleanSelectedBoxes.length,
+      affectedWeight: affectedWeightVal,
       remarks: row.shortRemarks || row.shortageRemarks || '',
-      affectedInvVal: (+row.bkG_PKGSNO || +row.pkgsno) > 0 ? Number((( (row.invval || 0) / (+row.bkG_PKGSNO || +row.pkgsno || 1) ) * shortageQtyVal).toFixed(2)) : 0
+      affectedInvVal: (+row.bkG_PKGSNO || +row.pkgsno) > 0 ? Number((( (row.invval || 0) / (+row.bkG_PKGSNO || +row.pkgsno || 0) ) * shortageQtyVal).toFixed(2)) : 0
     };
     
     const thcNo = this.stockData.thcno || '';
@@ -519,7 +527,7 @@ export class NewStockupdatePopupComponent implements OnInit {
 
       const totalPkgs = +(this.listVSFUM[index].bkG_PKGSNO || 0);
       const totalWt = +(this.listVSFUM[index].bkG_ACTUWT || 0);
-      const shortWt = totalPkgs > 0 ? Number(((totalWt * shortQty) / totalPkgs).toFixed(2)) : 0;
+      const shortWt = +(depsData.affectedWeight) || (totalPkgs > 0 ? Number(((totalWt * shortQty) / totalPkgs).toFixed(2)) : 0);
 
       this.listVSFUM[index].shortWt = shortWt;
       this.listVSFUM[index].shortageWeight = shortWt;

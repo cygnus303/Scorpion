@@ -1,3 +1,26 @@
+<!-- CARD TYPE (SKELETON) LOADER (COMPACT) -->
+<div *ngIf="isLoading" class="py-2">
+  <div class="phase-header text-muted">⏳ FETCHING OPERATIONAL LIFECYCLE TRACKING...</div>
+  <div class="timeline-wrapper">
+    <div *ngFor="let i of [1, 2, 3]; let first = first" class="timeline-item" [ngClass]="first ? 'border-primary' : 'border-success'">
+      <div class="timeline-dot pulse" [ngClass]="first ? 'dot-primary' : 'border-success'"></div>
+      <div class="card timeline-card border-0 p-3" [ngClass]="first ? 'border-primary bg-primary bg-opacity-10' : ''">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div class="skeleton-box rounded" style="width: 160px; height: 16px;"></div>
+          <div class="skeleton-box rounded-pill" style="width: 80px; height: 20px;"></div>
+        </div>
+        <div class="row g-3">
+          <div *ngFor="let j of [1, 2, 3, 4]" class="col-md-3">
+            <div class="skeleton-box rounded mb-1" style="width: 70px; height: 10px;"></div>
+            <div class="skeleton-box rounded" style="width: 120px; height: 14px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="!isLoading">
 <!-- PHASE 1 -->
 <div class="phase-header text-muted">
   📦 PHASE 1 — ORIGIN BRANCH (MUMBAI (BOM-001))
@@ -450,3 +473,4 @@
     </div>
   </div>
 </div> -->
+</ng-container>
