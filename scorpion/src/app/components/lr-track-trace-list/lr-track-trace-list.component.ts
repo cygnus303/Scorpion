@@ -14,11 +14,12 @@ import { LrLifecycleTrackerComponent } from './lr-lifecycle-tracker/lr-lifecycle
 import { DocketService } from 'app/shared/services/docket.service';
 import { Router } from '@angular/router';
 import { LiveRouteMapComponent } from './live-route-map/live-route-map.component';
+import { LrViewComponent } from '../lr-list/lr-view/lr-view.component';
 
 @Component({
   selector: 'app-lr-track-trace-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, BsDatepickerModule, PaginationComponent, NgSelectModule, LrPrintViewComponent, LrLifecycleTrackerComponent, LiveRouteMapComponent],
+  imports: [CommonModule, FormsModule, BsDatepickerModule, PaginationComponent, NgSelectModule, LrPrintViewComponent, LrLifecycleTrackerComponent, LiveRouteMapComponent, LrViewComponent],
   templateUrl: './lr-track-trace-list.component.html',
   styleUrl: './lr-track-trace-list.component.scss'
 })
@@ -26,6 +27,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
   @ViewChild('lrPrintView') lrPrintView!: LrPrintViewComponent;
   @ViewChild('lrLifecycleTracker') lrLifecycleTracker!: LrLifecycleTrackerComponent;
   @ViewChild('liveRouteMap') liveRouteMap!: LiveRouteMapComponent;
+  @ViewChild('LrViewComponent') LrViewComponent!: LrViewComponent;
 
   private searchSubject = new Subject<string>();
   private fetchDataSubject = new Subject<any>();
@@ -55,7 +57,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
     { label: 'Booking', value: 'Booking' },
     { label: 'In Transit', value: 'InTransit' },
     { label: 'Delivered', value: 'Delivered' },
-    { label: 'Exception', value: 'Exception' }
+    { label: 'Cancelled', value: 'Cancelled' }
   ];
 
   public statusCounts: any = {
@@ -63,14 +65,14 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
     Booking: 0,
     InTransit: 0,
     Delivered: 0,
-    Exception: 0
+    Cancelled: 0
   };
 
   get totalLRsCount() { return this.statusCounts.Total || 0; }
   get bookedCount() { return this.statusCounts.Booking || 0; }
   get transitCount() { return this.statusCounts.InTransit || 0; }
   get deliveredCount() { return this.statusCounts.Delivered || 0; }
-  get exceptionsCount() { return this.statusCounts.Exception || 0; }
+  get CancelledCount() { return this.statusCounts.Cancelled || 0; }
 
   public originBranch: string | null = null;
   public destinationBranch: string | null = null;
@@ -227,7 +229,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
       if (table2.length > 0) {
         this.statusCounts = table2[0];
       } else {
-        this.statusCounts = { Total: 0, Booking: 0, InTransit: 0, Delivered: 0, Exception: 0 };
+        this.statusCounts = { Total: 0, Booking: 0, InTransit: 0, Delivered: 0, Cancelled: 0 };
       }
 
       if (table1.length > 0) {
@@ -269,7 +271,12 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
         tap(() => setLoading(false))
       ))
     ).subscribe((res: any) => {
-      setLocations(Array.isArray(res) ? res : (res?.data || []));
+      let locations = Array.isArray(res) ? res : (res?.data || []);
+      locations = locations.map((loc: any) => ({
+        ...loc,
+        displayName: loc.locCode ? `${loc.locCode} - ${loc.locName}` : loc.locName
+      }));
+      setLocations(locations);
       setLoading(false);
     });
   }
@@ -422,7 +429,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
     if (s.includes('DELIVERED')) return 'bg-success-subtle text-success border-success-subtle';
     if (s.includes('TRANSIT')) return 'bg-warning-subtle text-warning border-warning-subtle';
     if (s.includes('BOOK')) return 'bg-primary-subtle text-primary border-primary-subtle';
-    if (s.includes('EXCEPTION')) return 'bg-danger-subtle text-danger border-danger-subtle';
+    if (s.includes('Cancelled')) return 'bg-danger-subtle text-danger border-danger-subtle';
     return 'bg-secondary-subtle text-dark border-secondary-subtle';
   }
 
@@ -431,7 +438,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
     if (s.includes('DELIVERED')) return 'bg-success';
     if (s.includes('TRANSIT')) return 'bg-warning';
     if (s.includes('BOOK')) return 'bg-primary';
-    if (s.includes('EXCEPTION')) return 'bg-danger';
+    if (s.includes('Cancelled')) return 'bg-danger';
     return 'bg-secondary';
   }
 
@@ -440,9 +447,13 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
     if (s.includes('DELIVERED')) return 'Delivered';
     if (s.includes('TRANSIT')) return 'In Transit';
     if (s.includes('BOOK')) return 'Booked';
-    if (s.includes('EXCEPTION')) return 'Exception';
+    if (s.includes('Cancelled')) return 'Cancelled';
     return status || 'Unknown';
   }
+
+  onView(row: any){
+    this.LrViewComponent.showPopup(row);
+}
 }
 
 

@@ -61,10 +61,10 @@
 
         <!-- EXCEPTIONS -->
         <div class="summary-card px-3 py-3 c-red cursor-pointer"
-            [class.active-card]="config.statusFilter === 'Exception'" (click)="filterByStatus('Exception')">
+            [class.active-card]="config.statusFilter === 'Cancelled'" (click)="filterByStatus('Cancelled')">
             <div class="card-content">
-                <div class="s-label">Exceptions</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ exceptionsCount }}</div>
+                <div class="s-label">Cancelled</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ CancelledCount }}</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⚠️</div>
         </div>
@@ -95,7 +95,7 @@
                 <div class="col-auto">
                     <label class="form-label text-muted fw-semibold mb-1" style="font-size: 11px;">Date Range</label>
                     <div class="d-flex align-items-center gap-2" style="width: 380px;">
-                        <div class="position-relative flex-grow-1">
+                        <!-- <div class="position-relative flex-grow-1">
                             <input type="text" id="dateFrom" bsDatepicker
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD-MM-YYYY'}"
                                 [(ngModel)]="config.fromDateStr" (ngModelChange)="searchLRs()"
@@ -129,22 +129,36 @@
                                     <line x1="3" y1="10" x2="21" y2="10"></line>
                                 </svg>
                             </span>
-                        </div>
+                        </div> -->
+                              <div class="date-range-group">
+                    <div class="date-input-wrap" style="padding:0;">
+                        <input type="text" id="dateFrom" bsDatepicker [(ngModel)]="config.fromDateStr" (ngModelChange)="searchLRs()"
+                             [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD-MM-YYYY'}"
+                            style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
+                        <span
+                            style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+                    </div>
+                    <span class="date-sep">→</span>
+                    <div class="date-input-wrap" style="padding:0;">
+                        <input type="text" id="dateTo" bsDatepicker  [(ngModel)]="config.toDateStr" (ngModelChange)="searchLRs()" [minDate]="config.fromDateStr"
+                           [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD-MM-YYYY'}"
+                            style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
+                        <span
+                            style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+                    </div>
+                </div>
                     </div>
                 </div>
 
                 <!-- Origin -->
                 <div class="col-auto">
                     <label class="form-label text-muted fw-semibold mb-1" style="font-size: 11px;">Origin Branch</label>
-                    <ng-select [items]="originLocations" bindLabel="locName" bindValue="locName"
+                    <ng-select [items]="originLocations" bindLabel="displayName" bindValue="displayName"
                         [typeahead]="originSearchInput$" [loading]="isOriginLoading" [(ngModel)]="originBranch"
                         (change)="onOriginSelect($event)" placeholder="Origin Branch" [searchable]="true"
                         class="custom-status-select" style="width: 250px;">
-                        <ng-template ng-label-tmp let-item="item">
-                            {{ item.locCode ? item.locCode + ' - ' : '' }}{{ item.locName }}
-                        </ng-template>
                         <ng-template ng-option-tmp let-item="item">
-                            {{ item.locCode ? item.locCode + ' - ' : '' }}{{ item.locName }}
+                            {{ item.displayName }}
                         </ng-template>
                     </ng-select>
                 </div>
@@ -153,16 +167,13 @@
                 <div class="col-auto">
                     <label class="form-label text-muted fw-semibold mb-1" style="font-size: 11px;">Destination
                         Branch</label>
-                    <ng-select [items]="destinationLocations" bindLabel="locName" bindValue="locName"
+                    <ng-select [items]="destinationLocations" bindLabel="displayName" bindValue="displayName"
                         [typeahead]="destinationSearchInput$" [loading]="isDestinationLoading"
                         placeholder="Destination Branch" [(ngModel)]="destinationBranch"
                         (change)="onDestinationSelect($event)" [searchable]="true" class="custom-status-select"
                         style="width: 250px;">
-                        <ng-template ng-label-tmp let-item="item">
-                            {{ item.locCode ? item.locCode + ' - ' : '' }}{{ item.locName }}
-                        </ng-template>
                         <ng-template ng-option-tmp let-item="item">
-                            {{ item.locCode ? item.locCode + ' - ' : '' }}{{ item.locName }}
+                            {{ item.displayName }}
                         </ng-template>
                     </ng-select>
                 </div>
@@ -221,7 +232,7 @@
                 </span>
                 <span class="badge rounded-pill ms-2">{{ config.totalRecords }}</span>
             </div>
-            <div class="d-flex align-items-center gap-2">
+            <!-- <div class="d-flex align-items-center gap-2">
                 <button class="btn btn-sm text-white d-flex align-items-center gap-1 fw-bold px-3 py-1"
                     style="background-color: #1e2b5c; border-color: #1e2b5c; border-radius: 5px;">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -234,7 +245,7 @@
                     style="background-color: #1e2b5c; border-color: #1e2b5c; border-radius: 5px;">
                     <span class="fw-bold fs-6 lh-1">+</span> New LR
                 </button>
-            </div>
+            </div> -->
         </div>
 
         <!-- Table Wrap -->
@@ -252,9 +263,7 @@
                                 style="font-size: 9px; text-transform: lowercase;">expected / actual delivery</span>
                         </th>
                         <th class="text-center text-uppercase text-muted fw-bold"
-                            style="font-size: 11px; letter-spacing: 0.5px;">STATUS</th>
-                        <th class="text-center text-uppercase text-muted fw-bold"
-                            style="font-size: 11px; letter-spacing: 0.5px;">ORIGIN - DEST</th>
+                        style="font-size: 11px; letter-spacing: 0.5px;">ORIGIN - DEST</th>
                         <th class="text-start text-uppercase text-muted fw-bold"
                             style="font-size: 11px; letter-spacing: 0.5px;">FROM CITY</th>
                         <th class="text-start text-uppercase text-muted fw-bold"
@@ -264,11 +273,13 @@
                         <th class="text-center text-uppercase text-muted fw-bold"
                             style="font-size: 11px; letter-spacing: 0.5px;">MODE</th>
                         <th class="text-center text-uppercase text-muted fw-bold"
-                            style="font-size: 11px; letter-spacing: 0.5px;">SERVICE</th>
+                        style="font-size: 11px; letter-spacing: 0.5px;">SERVICE</th>
                         <th class="text-center text-uppercase text-muted fw-bold"
-                            style="font-size: 11px; letter-spacing: 0.5px;">CUST TYPE</th>
+                        style="font-size: 11px; letter-spacing: 0.5px;">CUST TYPE</th>
                         <th class="text-start text-uppercase text-muted fw-bold"
-                            style="font-size: 11px; letter-spacing: 0.5px;">CUSTOMER NAME</th>
+                        style="font-size: 11px; letter-spacing: 0.5px;">CUSTOMER NAME</th>
+                        <th class="text-center text-uppercase text-muted fw-bold"
+                            style="font-size: 11px; letter-spacing: 0.5px;">STATUS</th>
                         <th class="text-center text-uppercase text-muted fw-bold pe-3"
                             style="font-size: 11px; letter-spacing: 0.5px;">ACTIONS</th>
                     </tr>
@@ -288,8 +299,8 @@
                     <ng-container *ngIf="!isLoading">
                         <tr *ngFor="let lr of pagedLRs">
                             <td class="ps-3">
-                                <a href="javascript:void(0)" class="fw-bold text-decoration-none"
-                                    style="color: #0969da; font-size: 13.5px;">
+                                <a href="javascript:void(0)" class="fw-bold text-decoration-none`"
+                                    style="color: #0969da; font-size: 13.5px;" (click)="onView(lr.LrNumber)">
                                     {{ lr.LrNumber }}
                                 </a>
                             </td>
@@ -320,15 +331,6 @@
                                         {{ lr.addStatus }}
                                     </span>
                                 </div>
-                            </td>
-                            <td class="text-center">
-                                <span
-                                    class="badge rounded-pill px-2 py-1 fw-bold d-inline-flex align-items-center gap-1 border"
-                                    [ngClass]="getStatusClass(lr.Status)" style="font-size: 11px;">
-                                    <span class="rounded-circle" [ngClass]="getStatusIconClass(lr.Status)"
-                                        style="width: 6px; height: 6px;"></span>
-                                    {{ getStatusText(lr.Status) }}
-                                </span>
                             </td>
                             <!-- ORIGIN - DEST -->
                             <td class="text-center">
@@ -363,6 +365,15 @@
                             <!-- CUSTOMER NAME -->
                             <td><span class="fw-semibold text-dark" style="font-size: 13px; white-space: nowrap;">{{
                                     lr.party_name }}</span></td>
+                            <td class="text-center">
+                                <span
+                                    class="badge rounded-pill px-2 py-1 fw-bold d-inline-flex align-items-center gap-1 border"
+                                    [ngClass]="getStatusClass(lr.Status)" style="font-size: 11px;">
+                                    <span class="rounded-circle" [ngClass]="getStatusIconClass(lr.Status)"
+                                        style="width: 6px; height: 6px;"></span>
+                                    {{ getStatusText(lr.Status) }}
+                                </span>
+                            </td>
                             <!-- ACTIONS -->
                             <td class="pe-3">
                                 <div class="d-flex justify-content-start align-items-center gap-2">
@@ -405,3 +416,4 @@
 <app-lr-print-view #lrPrintView></app-lr-print-view>
 <app-lr-lifecycle-tracker #lrLifecycleTracker (viewOnMap)="openMapView($event)" (printLr)="openPrintView($event)"></app-lr-lifecycle-tracker>
 <app-live-route-map #liveRouteMap (viewLifecycle)="openTrackerView($event)"></app-live-route-map>
+<app-lr-view #LrViewComponent></app-lr-view>
