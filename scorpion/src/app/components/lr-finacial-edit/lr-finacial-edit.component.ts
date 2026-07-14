@@ -112,7 +112,7 @@ onExcelDownload(){
       isBilledFilter:this.config.isBilledFilter || 'All',
       pageNumber: this.config.page,
       pageSize: this.config.pageSize,
-      isDownload: false,
+      isDownload: true,
       searchText: this.config.searchText || ''
     };
 
