@@ -27,6 +27,9 @@ export class DeliveryAgentListComponent {
   public loading: boolean = false;
   public selectedDeliveryAgent: string = '';
   public generatedPassword: string = '';
+  public confirmPassword: string = '';
+  public showNewPassword: boolean = false;
+  public showConfirmPassword: boolean = false;
   modalInstance!: Modal;
   public filters: { [key: string]: string } = {}; // Dynamic filter object
   @ViewChild('deliveryAgentPopup') deliveryAgentPopup!: DeliveryAgentModalComponent;
@@ -127,20 +130,13 @@ export class DeliveryAgentListComponent {
     }
   }
 
-  generateRandomPassword(length: number = 6): string {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let password = '';
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * chars.length);
-      password += chars.charAt(randomIndex);
-    }
-    return password;
-  }
-
   openResetPasswordPopup(event: Event, code?: any) {
     event.preventDefault(); // Prevent default anchor behavior
     this.selectedDeliveryAgent = code || '';
-    this.generatedPassword = this.generateRandomPassword(6);
+    this.generatedPassword = '';
+    this.confirmPassword = '';
+    this.showNewPassword = false;
+    this.showConfirmPassword = false;
 
     const modalElement = document.getElementById('showPasswordModal');
     if (modalElement) {
@@ -150,6 +146,11 @@ export class DeliveryAgentListComponent {
   }
 
   onSubmitPassword() {
+    if (this.generatedPassword !== this.confirmPassword) {
+      this.sweetAlertService.error('Password and Confirm Password do not match!');
+      return;
+    }
+
     const payload = {
       id: this.selectedDeliveryAgent,
       newPassword: this.generatedPassword,
@@ -158,7 +159,7 @@ export class DeliveryAgentListComponent {
     this.deliveryAgentService.onResetPassword(payload).subscribe({
       next: (response: any) => {
         if (response === true) {
-          this.sweetAlertService.success('Password reset successfully!!');
+          this.sweetAlertService.success('Password changed successfully!!');
           this.closePopup();
         }
       },

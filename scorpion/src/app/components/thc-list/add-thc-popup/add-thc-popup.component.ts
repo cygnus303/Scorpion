@@ -92,7 +92,7 @@ export class AddThcPopupComponent {
     const mobileNo = /^[0-9]{10}$/;
     this.ThcForm = this.fb.group({
       tHCDate: [this.formatDateTime(new Date())],
-      routeType: [Validators.required],
+      routeType: ['S' ,Validators.required],
       actualDeptDate: [this.formatDateTime(new Date())],
       scheduleDeptDate: [this.formatDateTime(new Date())],
       vendorType: [],
@@ -210,34 +210,10 @@ export class AddThcPopupComponent {
     this.ThcType = type;
     this.selectedMfs = mfs || [];
 
-    // Construct unique ToBH_CODE from selected MFs
-    const tobhCodes = this.selectedMfs.map(mf => mf.toBH_CODE).filter(c => !!c);
-    const uniqueTobhCodes = [...new Set(tobhCodes)].join(',');
-
-    const payload = {
-      FilterJson: {
-        ReportId: "671",
-        TCBR: this.docketService.loginUserList?.LocationCode || 'PIM',
-        ToBH_CODE: uniqueTobhCodes,
-        Route_Mode: "S"
-      }
-    };
-
-    this.dynamicDataService.getDynamicData(payload).subscribe({
-      next: (res: any) => {
-        const data = res?.data || res || {};
-        const table1 = data.Table1 || [];
-        // Assuming this populates routeNameList or something similar
-        if (table1.length > 0) {
-          this.routeNameList = table1;
-        }
-      },
-      error: (err) => console.error('Error fetching dynamic data for THC popup', err)
-    });
-
     this.buildForm();
     this.calculateWeightAndUtilization();
     this.getLocationData();
+    this.getRoutesFromRouteType();
     this.modalRef = this.modalService.show(this.TemplateTHC, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
 
@@ -290,29 +266,37 @@ export class AddThcPopupComponent {
     });
   }
 
-  getRoutesFromRouteType(event: any) {
+  getRoutesFromRouteType(event?: any) {
     this.ThcForm.patchValue({
       vendorType: null,
       vendorCode: null,
       routeCode: null
     })
 
-    const selectedRouteType = event?.target?.value;
-    const paylaod = {
-      routeType: selectedRouteType,
-      isEmpty: 'N',
-      locationCode: this.docketService.loginUserList.LocationCode
-    }
-    this.THCService.getRoutesFromRouteType(paylaod).subscribe({
-      next: (response: any) => {
-        if (response) {
-          this.routeNameList = response
+    const selectedRouteType = event ? event?.target?.value : 'S';
+        // Construct unique ToBH_CODE from selected MFs
+    const tobhCodes = this.selectedMfs.map(mf => mf.toBH_CODE).filter(c => !!c);
+    const uniqueTobhCodes = [...new Set(tobhCodes)].join(',');
+
+    const payload = {
+      FilterJson: {
+        ReportId: "671",
+        TCBR: this.docketService.loginUserList?.LocationCode || '',
+        ToBH_CODE: uniqueTobhCodes,
+        Route_Mode: selectedRouteType 
+      }
+    };
+
+    this.dynamicDataService.getDynamicData(payload).subscribe({
+      next: (res: any) => {
+        const data = res?.data || res || {};
+        const table1 = data.Table1 || [];
+        // Assuming this populates routeNameList or something similar
+        if (table1.length > 0) {
+          this.routeNameList = table1;
         }
       },
-      error: (err) => {
-        console.error('Error fetching vehicle details:', err.error.message);
-        this.sweetAlertService.error(err.error.message)
-      }
+      error: (err) => console.error('Error fetching dynamic data for THC popup', err)
     });
     if (selectedRouteType === 'S') {
       this.getVehicleType('O')

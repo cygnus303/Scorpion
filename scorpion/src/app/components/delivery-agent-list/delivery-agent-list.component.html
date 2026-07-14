@@ -80,7 +80,7 @@
                         <span
                             class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer me-2"
                             (click)="openResetPasswordPopup($event,data.dA_Code)">
-                            <i class="fas fa-lock me-2 text-Secondary"></i> Reset Password
+                            <i class="fas fa-lock me-2 text-Secondary"></i> Change Password
                         </span>
                         <span
                             *ngIf="this.docketService.loginUserList.BaseUserName === 'CYGNUSTEAM'||this.docketService.loginUserList.BaseUserName === '2807'||
@@ -113,8 +113,62 @@
 <delivery-agent-modal #deliveryAgentPopup (dataEvent)="getDeliveryAgentList()"></delivery-agent-modal>
 <delivery-agent-view #deliveryAgentViewPopup></delivery-agent-view>
 
-<!-- Reset Password Modal -->
+<!-- Change Password Modal -->
 <div class="modal fade" id="showPasswordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header background-color text-white d-flex justify-content-between">
+                <h5 class="modal-title">
+                    Change Password
+                </h5>
+                <button type="button" class="btn text-white" (click)="closePopup()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">Delivery Agent ID</label>
+                    <input type="text" class="form-control fw-bold bg-light" [value]="selectedDeliveryAgent" readonly disabled />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">New Password</label>
+                    <div class="input-group">
+                        <input [type]="showNewPassword ? 'text' : 'password'" class="form-control fw-bold text-success" [(ngModel)]="generatedPassword" placeholder="Enter new password" />
+                        <button class="btn btn-outline-secondary" type="button" (click)="showNewPassword = !showNewPassword" title="Show/Hide Password">
+                            <i class="fas" [ngClass]="showNewPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">Confirm Password</label>
+                    <div class="input-group">
+                        <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control fw-bold text-success" [(ngModel)]="confirmPassword" placeholder="Enter confirm password" />
+                        <button class="btn btn-outline-secondary" type="button" (click)="showConfirmPassword = !showConfirmPassword" title="Show/Hide Password">
+                            <i class="fas" [ngClass]="showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                        </button>
+                    </div>
+                    <small *ngIf="generatedPassword && confirmPassword && generatedPassword !== confirmPassword" class="text-danger fw-semibold mt-1 d-block">
+                        <i class="fas fa-exclamation-circle me-1"></i> Password and Confirm Password do not match.
+                    </small>
+                </div>
+                <div class="alert alert-warning mb-0 py-2 px-3 d-flex align-items-center" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <span class="small">Are you sure you want to change the password for delivery agent <b>{{selectedDeliveryAgent}}</b>?</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true" (click)="closePopup()">
+                    <i class="fas fa-times"></i> Close
+                </button>
+                <button class="btn btn-success" type="submit" [disabled]="!generatedPassword || !confirmPassword || generatedPassword !== confirmPassword" (click)="onSubmitPassword()">
+                    <i class="fas fa-check"></i> Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="modal fade" id="showPasswordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -148,4 +202,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
