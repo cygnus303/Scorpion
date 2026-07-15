@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { LrService } from 'app/shared/services/lr.service';
 
 @Component({
   selector: 'app-lr-docket-pl-tab',
@@ -8,8 +9,10 @@ import { CommonModule } from '@angular/common';
   templateUrl: './lr-docket-pl-tab.component.html',
   styles: []
 })
-export class LrDocketPlTabComponent {
+export class LrDocketPlTabComponent implements OnInit, OnChanges {
   @Input() lrDetails: any;
+  public isLoading: boolean = false;
+  private lastFetchedLrNumber: string | null = null;
 
   public topMetaData = {
     dockNo: '63378343',
@@ -29,19 +32,43 @@ export class LrDocketPlTabComponent {
     profitPercentage: 33.85
   };
 
-  public expenses = [
-    { type: 'PRS', docNo: 'PRS/PRM/2627/000765', amount: 50.00 },
-    { type: 'PRS L HCC NO', docNo: 'HC/PRM/2627/001740', amount: 35.00 },
-    { type: 'PRS UL HCC NO', docNo: '—', amount: 0.00 },
-    { type: 'DRS', docNo: 'DRS/GWT/2627/001211', amount: 70.18 },
-    { type: 'DRS L HCC NO', docNo: 'HC/GWT/2627/000917', amount: 7.50 },
-    { type: 'DRS UL HCC NO', docNo: 'HC/GWT/2627/000918', amount: 15.85 },
-    { type: 'THC', docNo: 'VH/BWH/2627/000872, VH/SLH/2627/000462', amount: 478.35 },
-    { type: 'THC L HCC NO', docNo: 'HC/BWH/2627/003468, HC/SLH/2627/000941', amount: 7.14 },
-    { type: 'THC UL HCC NO', docNo: 'HC/SLH/2627/000930, HC/GWT/2627/000962', amount: 13.80 }
-  ];
+  public expenses: any[] = [];
+
+  constructor(private lrService: LrService) {}
+
+  ngOnInit() {
+    this.fetchExpenseData();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['lrDetails']) {
+      this.fetchExpenseData();
+    }
+  }
+
+  fetchExpenseData() {
+    const lrNumber = this.lrDetails?.lR_Number || this.lrDetails?.lrNumber || this.lrDetails?.LrNumber || this.lrDetails?.dockNo || this.lrDetails?.docket_No || this.lrDetails?.docketNo || '61247251';
+    if (!lrNumber || lrNumber === this.lastFetchedLrNumber) return;
+
+    this.lastFetchedLrNumber = lrNumber;
+    this.isLoading = true;
+    this.lrService.getExpenseDetailTracking(lrNumber).subscribe({
+      next: (res: any) => {
+        this.isLoading = false;
+        if (res) {
+          this.expenses = res.data || res || [];
+          this.incomeDetails.totalExpense = this.totalExpense;
+          this.incomeDetails.totalProfit = this.incomeDetails.totalIncome - this.totalExpense;
+          this.incomeDetails.profitPercentage = Number(((this.incomeDetails.totalProfit / this.incomeDetails.totalIncome) * 100).toFixed(2));
+        }
+      },
+      error: () => {
+        this.isLoading = false;
+      }
+    });
+  }
 
   public get totalExpense(): number {
-    return this.expenses.reduce((acc, curr) => acc + curr.amount, 0);
+    return this.expenses.reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
   }
 }

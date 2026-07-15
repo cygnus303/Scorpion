@@ -1,143 +1,213 @@
 <div class="scanning-tab-container pb-4">
-  <!-- Top Summary Cards -->
-  <div class="row g-3 mb-4">
-    <div class="col" *ngFor="let sum of summaries">
-      <div class="card h-100 p-3 text-center d-flex flex-column justify-content-center align-items-center" [ngStyle]="getSummaryStyle(sum.colorType)" style="box-shadow: none; border-radius: 8px !important;">
-        <div style="font-size: 16px; line-height: 1; margin-bottom: 6px;">{{getIcon(sum.colorType)}}</div>
-        <div class="fw-bolder" [ngStyle]="{'color': getSummaryCountColor(sum.colorType), 'font-size': '22px', 'line-height': '1'}">{{sum.count}}</div>
-        <div class="fw-bold text-uppercase mt-1" [ngStyle]="{'color': getSummaryLabelColor(sum.colorType), 'font-size': '10px', 'letter-spacing': '0.5px'}">{{sum.label}}</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Divider -->
-  <div class="d-flex align-items-center mb-4">
-    <hr class="flex-grow-1" style="border-color: #cbd5e1; opacity: 1;">
-    <div class="px-3 d-flex align-items-center gap-2" style="font-size: 11px; font-weight: 700; color: #64748b; letter-spacing: 0.5px; text-transform: uppercase;">
-      <span style="font-size: 12px; filter: grayscale(100%); opacity: 0.7;">🔭</span> SCAN TRAIL — BOOKING TO DELIVERY
-    </div>
-    <hr class="flex-grow-1" style="border-color: #cbd5e1; opacity: 1;">
-  </div>
-
-  <!-- Timeline -->
-  <div class="timeline-container px-2">
-    <div class="timeline-item d-flex position-relative mb-3" *ngFor="let ev of timeline; let i = index">
-      
-      <!-- Vertical Line -->
-      <div class="timeline-line position-absolute" *ngIf="i !== timeline.length - 1" style="left: 6px; top: 24px; bottom: -20px; width: 2px; background-color: #cbd5e1;"></div>
-      
-      <!-- Timeline Dot -->
-      <div class="timeline-dot position-relative" style="margin-right: 16px; margin-top: 24px; z-index: 1;">
-        <div [ngStyle]="getTimelineDotStyle(ev.theme, ev.isOutscan)">
-           <span *ngIf="ev.theme === 'gold'" style="color: white; font-size: 8px;">✔</span>
+  <!-- Box Type / Card Skeleton Loader while API is fetching -->
+  <div *ngIf="isLoading" class="py-2">
+    <!-- Top Summary Cards Skeleton -->
+    <div class="row g-3 mb-4">
+      <div class="col" *ngFor="let i of [1, 2, 3, 4, 5]">
+        <div class="card h-100 p-3 text-center d-flex flex-column justify-content-center align-items-center bg-light border border-light-subtle" style="box-shadow: none; border-radius: 8px !important;">
+          <div class="skeleton-box rounded-circle mb-2" style="width: 26px; height: 26px;"></div>
+          <div class="skeleton-box rounded mb-1" style="width: 38px; height: 22px;"></div>
+          <div class="skeleton-box rounded" style="width: 60px; height: 10px;"></div>
         </div>
       </div>
+    </div>
 
-      <!-- Timeline Content Card -->
-      <div class="card flex-grow-1 p-3 mb-0" [ngStyle]="getCardStyle(ev.theme)" style="box-shadow: none;">
+    <!-- Divider Line Skeleton -->
+    <div class="d-flex align-items-center mb-4">
+      <hr class="flex-grow-1" style="border-color: #cbd5e1; opacity: 1;">
+      <div class="px-3 d-flex align-items-center gap-2" style="font-size: 11px; font-weight: 700; color: #64748b; letter-spacing: 0.5px; text-transform: uppercase;">
+        <span style="font-size: 12px; opacity: 0.7;">⏳</span> FETCHING SCAN TRAIL DATA...
+      </div>
+      <hr class="flex-grow-1" style="border-color: #cbd5e1; opacity: 1;">
+    </div>
+
+    <!-- Timeline Cards Skeleton -->
+    <div class="timeline-container px-2">
+      <div class="timeline-item d-flex position-relative mb-3" *ngFor="let i of [1, 2, 3]; let first = first">
+        <div class="timeline-line position-absolute" *ngIf="i !== 3" style="left: 6px; top: 24px; bottom: -20px; width: 2px; background-color: #cbd5e1;"></div>
+        <div class="timeline-dot position-relative" style="margin-right: 16px; margin-top: 24px; z-index: 1;">
+          <div class="skeleton-box rounded-circle pulse" style="width: 14px; height: 14px; border: 2px solid #fff; box-shadow: 0 0 0 2px #94a3b8;"></div>
+        </div>
+        <div class="card flex-grow-1 p-3 mb-0 bg-light bg-opacity-75" style="border-radius: 12px; border: 1.5px solid #cbd5e1 !important; box-shadow: none;">
+          <!-- Header Skeleton -->
+          <div class="d-flex align-items-start justify-content-between mb-2">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <div class="skeleton-box rounded-circle" style="width: 22px; height: 22px;"></div>
+              <div class="skeleton-box rounded-pill" style="width: 55px; height: 20px;"></div>
+              <div class="skeleton-box rounded" style="width: 160px; height: 16px;"></div>
+              <div class="skeleton-box rounded-pill" style="width: 110px; height: 18px;"></div>
+            </div>
+            <div class="skeleton-box rounded" style="width: 100px; height: 12px;"></div>
+          </div>
+          <!-- Subtitle Skeleton -->
+          <div class="skeleton-box rounded mb-3" style="width: 35%; height: 12px;"></div>
+          <!-- 4 Inner Grid Boxes Skeleton -->
+          <div class="row g-2 mb-2">
+            <div class="col-md-3" *ngFor="let j of [1, 2, 3, 4]">
+              <div class="bg-white p-2 d-flex flex-column justify-content-center" style="border-radius: 6px; height: 60px; border: 1px solid #cbd5e1;">
+                <div class="skeleton-box rounded mb-2" style="width: 65px; height: 10px;"></div>
+                <div class="skeleton-box rounded" style="width: 100px; height: 13px;"></div>
+              </div>
+            </div>
+          </div>
+          <!-- Result Block Skeleton -->
+          <div class="p-2 mb-1 mt-1 bg-white" style="border-radius: 6px; border: 1px solid #cbd5e1;">
+            <div class="skeleton-box rounded mb-1" style="width: 130px; height: 10px;"></div>
+            <div class="skeleton-box rounded" style="width: 180px; height: 13px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
+    <!-- Top Summary Cards -->
+    <div class="row g-3 mb-4">
+      <div class="col" *ngFor="let sum of summaries">
+        <div class="card h-100 text-center d-flex flex-column justify-content-center align-items-center" [ngStyle]="getSummaryStyle(sum.colorType)">
+          <div *ngIf="sum.colorType !== 'gold'" style="font-size: 14px !important; line-height: 1 !important; margin-bottom: 4px !important;">{{getIcon(sum.colorType)}}</div>
+          <div *ngIf="sum.colorType === 'gold'" style="width: 18px !important; height: 18px !important; background-color: #16a34a !important; border: 1px solid #15803d !important; border-radius: 4px !important; display: flex !important; align-items: center !important; justify-content: center !important; color: white !important; font-size: 11px !important; font-weight: bold !important; margin-bottom: 4px !important;">✔</div>
+          <div [style.color]="getSummaryCountColor(sum.colorType)" style="font-size: 17px !important; font-weight: 800 !important; line-height: 1 !important; margin-bottom: 3px !important; display: block !important;">{{sum.count}}</div>
+          <div [style.color]="getSummaryLabelColor(sum.colorType)" style="font-size: 9.5px !important; font-weight: 700 !important; letter-spacing: 0.3px !important; text-transform: uppercase !important; display: block !important; line-height: 1.1 !important;">{{sum.label}}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="d-flex align-items-center mb-4">
+      <hr class="flex-grow-1" style="border-top: 1.5px solid #cbd5e1; opacity: 1; margin: 0;">
+      <div class="px-3 d-flex align-items-center gap-2" style="font-size: 12.5px; font-weight: 700; color: #64748b; letter-spacing: 0.6px; text-transform: uppercase;">
+        <span style="font-size: 14px; filter: grayscale(1); opacity: 0.85;">📡</span> SCAN TRAIL — BOOKING TO DELIVERY
+      </div>
+      <hr class="flex-grow-1" style="border-top: 1.5px solid #cbd5e1; opacity: 1; margin: 0;">
+    </div>
+
+    <!-- No Data Message -->
+    <div *ngIf="sortedDetails.length === 0" class="text-center py-5 my-4 bg-light rounded-3 border border-light-subtle">
+      <div style="font-size: 2rem; margin-bottom: 8px;">🔍</div>
+      <h6 class="fw-bold text-dark mb-1">No Scan Tracking Records Found</h6>
+      <p class="text-muted mb-0" style="font-size: 13px;">There are currently no scan events recorded for this docket.</p>
+    </div>
+
+    <!-- Timeline Sorted Strictly by srNo (Ascending: 1, 2, 3...) -->
+    <div class="timeline-container px-2" *ngIf="sortedDetails.length > 0">
+      <div class="timeline-item d-flex position-relative mb-3" *ngFor="let ev of sortedDetails; let i = index">
         
-        <!-- Header -->
-        <div class="d-flex align-items-start justify-content-between mb-2">
-          <div class="d-flex align-items-center gap-2 flex-wrap">
-            <span style="font-size: 16px;">{{getIcon(ev.theme)}}</span>
-            <span class="badge rounded-pill" [ngStyle]="getBadgeStyle(ev.theme, ev.badge)">{{ev.badge}}</span>
-            <span class="fw-bolder" [ngStyle]="{'color': getTitleColor(ev.theme), 'font-size': '15px', 'letter-spacing': '0.5px'}">{{ev.title}}</span>
-            <span *ngIf="ev.docNo" class="badge rounded-pill px-2 py-1 font-monospace" [ngStyle]="getDocBadgeStyle(ev.theme)" style="font-size: 10.5px; font-weight: 600;">{{ev.docNo}}</span>
-          </div>
-          <div class="d-flex align-items-center gap-1 text-muted" style="font-size: 11.5px; font-weight: 500; white-space: nowrap;">
-            <span style="font-size: 12px; filter: grayscale(1); opacity: 0.7;">🕐</span> {{ev.time}}
+        <!-- Vertical Line -->
+        <div class="timeline-line position-absolute" *ngIf="i !== sortedDetails.length - 1" style="left: 6px; top: 24px; bottom: -20px; width: 2px; background-color: #cbd5e1;"></div>
+        
+        <!-- Timeline Dot -->
+        <div class="timeline-dot position-relative" style="margin-right: 16px; margin-top: 24px; z-index: 1;">
+          <div [ngStyle]="getTimelineDotStyle(getTheme(ev), ev.scanType === 'OUT' && getTheme(ev) !== 'gold')">
+            <span *ngIf="getTheme(ev) === 'gold'" style="color: #b45309; font-size: 8px;">•</span>
           </div>
         </div>
 
-        <!-- Subtitle -->
-        <div class="mb-3" [ngStyle]="{'color': getTitleColor(ev.theme)}" style="font-size: 11.5px; font-style: italic; font-weight: 500;">
-          {{ev.subtitle}}
-        </div>
+        <!-- Timeline Content Card -->
+        <div class="card flex-grow-1 p-3 mb-0" [ngStyle]="getCardStyle(getTheme(ev))" style="box-shadow: none;">
+          
+          <!-- Header -->
+          <div class="d-flex align-items-start justify-content-between mb-2">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <span *ngIf="getTheme(ev) !== 'gold'" style="font-size: 16px;">{{getIcon(getTheme(ev))}}</span>
+              <div *ngIf="getTheme(ev) === 'gold'" style="width: 22px; height: 22px; background-color: #16a34a; border: 1px solid #15803d; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 13px; font-weight: bold;">✔</div>
+              <span class="badge rounded-pill" [ngStyle]="getBadgeStyle(getTheme(ev), ev.scanType || (getTheme(ev) === 'gold' ? 'POD' : 'SCAN'))">{{getTheme(ev) === 'gold' ? 'POD' : (ev.scanType || 'IN')}}</span>
+              <span class="fw-bolder" [ngStyle]="{'color': getTitleColor(getTheme(ev)), 'font-size': '15px', 'letter-spacing': '0.5px'}">{{ev.headerTitle || ev.stage || '--'}}</span>
+              <span *ngIf="getTheme(ev) !== 'gold' && (ev.documentDisplayNo || ev.documentNo)" [ngStyle]="getDocBadgeStyle(getTheme(ev))">{{ev.documentDisplayNo || ev.documentNo}}</span>
+            </div>
+            <div class="d-flex align-items-center gap-1 text-muted" style="font-size: 11.5px; font-weight: 500; white-space: nowrap;">
+              <span style="font-size: 12px; filter: grayscale(1); opacity: 0.7;">🕐</span> {{ev.scanDate || '--'}}
+            </div>
+          </div>
 
-        <!-- Standard Metadata (Non-POD) -->
-        <div class="row g-2 mb-2" *ngIf="ev.theme !== 'gold'">
-          <div class="col-md-3">
-            <div class="bg-white p-2 d-flex flex-column justify-content-center" style="border-radius: 6px; height: 100%;">
-              <span style="font-size: 10px; font-weight: 700; color: #1e3a8a; letter-spacing: 0.5px;">SCAN LOCATION</span>
-              <span class="fw-bold mt-1" style="font-size: 13px; color: #1e293b;"><span style="color: #dc2626; font-size: 11px;">📍</span> {{ev.scanLoc?.name}}</span>
-              <span class="text-muted" style="font-size: 11px;">{{ev.scanLoc?.code}}</span>
-            </div>
+          <!-- Subtitle / Remarks -->
+          <div class="mb-3" [ngStyle]="{'color': getTheme(ev) === 'gold' ? '#b45309' : getTitleColor(getTheme(ev))}" style="font-size: 11.5px; font-style: italic; font-weight: 500;">
+            {{ev.subTitle || (getTheme(ev) === 'gold' ? 'Proof of Delivery Captured' : ev.remarks) || '--'}}
           </div>
-          <div class="col-md-3">
-            <div class="bg-white p-2 d-flex flex-column justify-content-center" style="border-radius: 6px; height: 100%;">
-              <span style="font-size: 10px; font-weight: 700; color: #1e3a8a; letter-spacing: 0.5px;">SCANNED BY</span>
-              <span class="fw-bold mt-1" style="font-size: 13px; color: #1e293b;"><span style="color: #475569; font-size: 11px;">👤</span> {{ev.scannedBy?.user}}</span>
-              <span class="text-muted" style="font-size: 11px;">{{ev.scannedBy?.name}}</span>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="bg-white p-2 d-flex flex-column justify-content-center" style="border-radius: 6px; height: 100%;">
-              <span style="font-size: 10px; font-weight: 700; color: #1e3a8a; letter-spacing: 0.5px;">LRS IN DOC</span>
-              <span class="fw-bolder mt-1" style="font-size: 20px; line-height: 1.1; color: #1d4ed8;">{{ev.lrsCount}}</span>
-              <span class="text-muted mt-1" style="font-size: 11px;">LRs covered</span>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="bg-white p-2 d-flex flex-column justify-content-center" style="border-radius: 6px; height: 100%;">
-              <span style="font-size: 10px; font-weight: 700; color: #1e3a8a; letter-spacing: 0.5px;">TOTAL PACKAGES</span>
-              <span class="fw-bolder mt-1" style="font-size: 20px; line-height: 1.1; color: #1d4ed8;">{{ev.pkgsCount}}</span>
-              <span class="text-muted mt-1" style="font-size: 11px;">across all LRs</span>
-            </div>
-          </div>
-        </div>
 
-        <!-- POD Metadata -->
-        <div class="row g-2 mb-2" *ngIf="ev.theme === 'gold'">
-          <div class="col-md-3">
-            <div class="bg-white p-2 d-flex flex-column justify-content-center" style="border-radius: 6px; height: 100%;">
-              <span style="font-size: 10px; font-weight: 700; color: #854d0e; letter-spacing: 0.5px;">DELIVERY LOCATION</span>
-              <span class="fw-bold mt-1" style="font-size: 13px; color: #1e293b; line-height: 1.3;"><span style="color: #dc2626; font-size: 11px;">📍</span> {{ev.deliveryLoc}}</span>
+          <!-- Standard Metadata Boxes (Non-Delivered/Non-POD) -->
+          <div class="row g-2 mb-2" *ngIf="getTheme(ev) !== 'gold'">
+            <div class="col-md-3">
+              <div class="bg-white p-2 d-flex flex-column justify-content-center" style="border-radius: 6px; height: 100%; border: 1px solid #cbd5e1;">
+                <span style="font-size: 10px; font-weight: 700; color: #1e3a8a; letter-spacing: 0.5px;">SCAN LOCATION</span>
+                <span class="fw-bold mt-1" style="font-size: 13px; color: #1e293b;"><span style="color: #dc2626; font-size: 11px;">📍</span> {{ev.locationName || ev.scanLocation || (ev.branch ? ('Branch ' + ev.branch) : '--')}}</span>
+                <span class="text-muted" style="font-size: 11px;">Code: {{ev.locationCode || ev.scanLocationCode || ev.branch || '--'}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="bg-white p-2 d-flex flex-column justify-content-center" style="border-radius: 6px; height: 100%; border: 1px solid #cbd5e1;">
+                <span style="font-size: 10px; font-weight: 700; color: #1e3a8a; letter-spacing: 0.5px;">SCANNED BY</span>
+                <span class="fw-bold mt-1" style="font-size: 13px; color: #1e293b;"><span style="color: #475569; font-size: 11px;">👤</span> {{ev.userId || ev.scanBy || '--'}}</span>
+                <span class="text-muted" style="font-size: 11px;">{{ev.scannedByName|| '--'}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="bg-white p-2 d-flex flex-column justify-content-center" style="border-radius: 6px; height: 100%; border: 1px solid #cbd5e1;">
+                <span style="font-size: 10px; font-weight: 700; color: #1e3a8a; letter-spacing: 0.5px;">LRS IN DOC</span>
+                <span class="fw-bolder mt-1" style="font-size: 20px; line-height: 1.1; color: #1d4ed8;">{{(ev.totalLRs !== undefined && ev.totalLRs !== null && ev.totalLRs !== '') ? ev.totalLRs : '--'}}</span>
+                <span class="text-muted mt-1" style="font-size: 11px;">LRs covered</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="bg-white p-2 d-flex flex-column justify-content-center" style="border-radius: 6px; height: 100%; border: 1px solid #cbd5e1;">
+                <span style="font-size: 10px; font-weight: 700; color: #1e3a8a; letter-spacing: 0.5px;">TOTAL PACKAGES</span>
+                <span class="fw-bolder mt-1" style="font-size: 20px; line-height: 1.1; color: #1e293b;">{{ev.packageTotal ? ev.packageTotal :'--' }}</span>
+                <span class="text-muted mt-1" style="font-size: 11px;">across all LRs</span>
+              </div>
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="bg-white p-2 d-flex flex-column justify-content-center" style="border-radius: 6px; height: 100%;">
-              <span style="font-size: 10px; font-weight: 700; color: #854d0e; letter-spacing: 0.5px;">DELIVERED BY</span>
-              <span class="fw-bold mt-1" style="font-size: 13px; color: #1e293b; line-height: 1.3;"><span style="color: #475569; font-size: 11px;">👤</span> {{ev.deliveredBy}}</span>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="bg-white p-2 d-flex flex-column justify-content-center" style="border-radius: 6px; height: 100%;">
-              <span style="font-size: 10px; font-weight: 700; color: #854d0e; letter-spacing: 0.5px;">PACKAGES DELIVERED</span>
-              <span class="fw-bolder mt-1" style="font-size: 20px; color: #a16207;">{{ev.pkgsDelivered}}</span>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="bg-white p-2 d-flex flex-column justify-content-center" style="border-radius: 6px; height: 100%;">
-              <span style="font-size: 10px; font-weight: 700; color: #854d0e; letter-spacing: 0.5px;">RECEIVED & SIGNED BY</span>
-              <span class="fw-bold mt-1" style="font-size: 13px; color: #a16207;">✍️ {{ev.receivedBy?.name}}</span>
-              <span class="text-muted" style="font-size: 11px;">{{ev.receivedBy?.role}}</span>
-            </div>
-          </div>
-        </div>
 
-        <!-- Result Block (Non-POD) -->
-        <div *ngIf="ev.resultType" class="p-2 mb-2 mt-1" [ngStyle]="{'background-color': ev.resultType === 'success' ? '#dcfce7' : '#fee2e2', 'border': '1px solid ' + (ev.resultType === 'success' ? '#bbf7d0' : '#fecaca'), 'border-radius': '6px'}">
-          <div style="font-size: 10px; font-weight: 700; color: #475569; letter-spacing: 0.5px; text-transform: uppercase;">
-            <span style="color: #64748b; font-size: 12px; opacity: 0.8;">📦</span> PACKAGE SCAN RESULT
-          </div>
-          <div class="d-flex align-items-center gap-2 mt-1 flex-wrap">
-            <div class="fw-bold d-flex align-items-center" [ngStyle]="{'color': ev.resultType === 'success' ? '#166534' : '#dc2626', 'font-size': '13px'}">
-              <span *ngIf="ev.resultType === 'success'" style="display: inline-block; width: 14px; height: 14px; background-color: #22c55e; color: white; border-radius: 2px; text-align: center; line-height: 14px; font-size: 10px; margin-right: 6px;">✔</span>
-              <span *ngIf="ev.resultType === 'warning'" style="display: inline-block; margin-right: 4px; font-size: 14px;">⚠️</span>
-              {{ev.resultText}}
+          <!-- POD / Delivered Metadata Boxes -->
+          <div class="row g-2 mb-2" *ngIf="getTheme(ev) === 'gold'">
+            <div class="col-md-3">
+              <div class="bg-white p-2 d-flex flex-column justify-content-center" style="border-radius: 6px; height: 100%; border: 1px solid #cbd5e1;">
+                <span style="font-size: 10px; font-weight: 700; color: #854d0e; letter-spacing: 0.5px;">DELIVERY LOCATION</span>
+                <span class="fw-bold mt-1" style="font-size: 13px; color: #1e293b; line-height: 1.3;"><span style="color: #dc2626; font-size: 11px;">📍</span> {{ev.locationName || ev.scanLocation || (ev.branch ? ('Branch ' + ev.branch) : '--')}}</span>
+              </div>
             </div>
-            <span *ngIf="ev.resultShortBadge" class="badge rounded-1" style="background-color: #fee2e2; color: #dc2626; border: 1px solid #fecaca; font-size: 10px; font-weight: 700;">{{ev.resultShortBadge}}</span>
-            <span *ngIf="ev.resultDepsTag" class="badge bg-white rounded-pill px-2" style="color: #dc2626; border: 1px solid #fecaca; font-size: 10px; font-weight: 600;"><span style="color: #64748b;">🏷️</span> {{ev.resultDepsTag}}</span>
+            <div class="col-md-3">
+              <div class="bg-white p-2 d-flex flex-column justify-content-center" style="border-radius: 6px; height: 100%; border: 1px solid #cbd5e1;">
+                <span style="font-size: 10px; font-weight: 700; color: #854d0e; letter-spacing: 0.5px;">DELIVERED BY</span>
+                <span class="fw-bold mt-1" style="font-size: 13px; color: #1e293b; line-height: 1.3;"><span style="color: #475569; font-size: 11px;">👤</span> {{ev.scannedByName || ev.userFullName || ev.driverName || ev.userId || '--'}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="bg-white p-2 d-flex flex-column justify-content-center" style="border-radius: 6px; height: 100%; border: 1px solid #cbd5e1;">
+                <span style="font-size: 10px; font-weight: 700; color: #854d0e; letter-spacing: 0.5px;">PACKAGES DELIVERED</span>
+                <span class="fw-bolder mt-1" style="font-size: 20px; color: #854d0e;">{{ev.packageTotal ? ev.packageTotal : '--' }} Pkgs</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="bg-white p-2 d-flex flex-column justify-content-center" style="border-radius: 6px; height: 100%; border: 1px solid #cbd5e1;">
+                <span style="font-size: 10px; font-weight: 700; color: #854d0e; letter-spacing: 0.5px;">RECEIVED & SIGNED BY</span>
+                <span class="fw-bold mt-1 d-block" style="font-size: 13px; color: #854d0e; line-height: 1.3;"><span style="font-size: 11px;">✍️</span> {{ev.receivedBy || ev.signedBy || ev.receiverName || ev.scannedByName || ev.userFullName || ev.scanResult || '--'}}</span>
+                <span *ngIf="ev.receiverTitle || ev.receiverDesignation" class="d-block mt-1" style="font-size: 11px; color: #854d0e !important; opacity: 0.85;">({{ev.receiverTitle || ev.receiverDesignation}})</span>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <!-- Footer Block -->
-        <div class="d-flex align-items-center gap-1 mt-2" style="font-size: 11px; font-weight: 500; color: #64748b;">
-          <span style="font-size: 12px; filter: grayscale(1); opacity: 0.6;">{{getFooterIcon(ev.resultType)}}</span>
-          <span>{{ev.footerText}}</span>
-        </div>
+          <!-- Result Block (Only shown for non-POD / non-Delivered cards) -->
+          <div class="p-2 mb-2 mt-1" *ngIf="getTheme(ev) !== 'gold'" [ngStyle]="getResultBoxStyle(ev)">
+            <div style="font-size: 10px; font-weight: 700; color: #475569; letter-spacing: 0.5px; text-transform: uppercase;">
+              <span style="color: #64748b; font-size: 12px; opacity: 0.8;">📦</span> PACKAGE SCAN RESULT
+            </div>
+            <div class="d-flex align-items-center gap-2 mt-1 flex-wrap">
+              <div class="fw-bold d-flex align-items-center" [ngStyle]="{'color': getResultTextColor(ev), 'font-size': '13px'}">
+                <span *ngIf="isGreenResult(ev)" style="display: inline-block; width: 16px; height: 16px; background-color: #10b981; color: white; border-radius: 3px; text-align: center; line-height: 16px; font-size: 11px; margin-right: 6px;">✔</span>
+                <span *ngIf="!isGreenResult(ev)" style="font-size: 14px; margin-right: 6px;">⚠️</span>
+                {{getResultText(ev)}}
+              </div>
+            </div>
+          </div>
 
+          <!-- Footer Block -->
+          <div class="d-flex align-items-center gap-1 mt-2" style="font-size: 11px; font-weight: 500; color: #64748b;">
+            <span style="font-size: 12px; filter: grayscale(1); opacity: 0.6;">💬</span>
+            <span>{{ev.remarks || ev.connectionRemark || ev.vehicleArrivalRemark || ev.stage || '--'}} <ng-container *ngIf="ev.vehicleNo">— Vehicle: {{ev.vehicleNo}}</ng-container> <ng-container *ngIf="ev.driverName">(Driver: {{ev.driverName}})</ng-container></span>
+          </div>
+
+        </div>
       </div>
     </div>
-  </div>
+  </ng-container>
 </div>

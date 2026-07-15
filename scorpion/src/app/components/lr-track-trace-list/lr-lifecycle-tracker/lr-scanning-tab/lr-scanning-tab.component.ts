@@ -1,42 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface ScanSummary {
-  count: number;
-  label: string;
-  colorType: 'blue' | 'purple' | 'orange' | 'green' | 'gold';
-}
-
-interface ScanEvent {
-  theme: 'blue' | 'purple' | 'orange' | 'green' | 'gold';
-  badge: string;
-  title: string;
-  docNo?: string;
-  time: string;
-  subtitle: string;
-  isOutscan?: boolean;
-  
-  // Metadata for standard scans
-  scanLoc?: { name: string; code: string };
-  scannedBy?: { user: string; name: string };
-  lrsCount?: number;
-  pkgsCount?: number;
-
-  // Metadata for POD
-  deliveryLoc?: string;
-  deliveredBy?: string;
-  pkgsDelivered?: string;
-  receivedBy?: { name: string; role: string };
-
-  // Scan Result
-  resultType?: 'success' | 'warning';
-  resultText?: string;
-  resultShortBadge?: string;
-  resultDepsTag?: string;
-
-  // Footer
-  footerText: string;
-}
+import { LrService } from 'app/shared/services/lr.service';
 
 @Component({
   selector: 'app-lr-scanning-tab',
@@ -45,171 +9,79 @@ interface ScanEvent {
   templateUrl: './lr-scanning-tab.component.html',
   styles: []
 })
-export class LrScanningTabComponent {
+export class LrScanningTabComponent implements OnInit, OnChanges {
   @Input() lrDetails: any;
+  public scanningData: any = null;
+  public isLoading: boolean = false;
+  private lastFetchedDockNo: string | null = null;
 
-  public summaries: ScanSummary[] = [
-    { count: 1, label: 'PRS INSCAN', colorType: 'blue' },
-    { count: 3, label: 'LS OUTSCAN', colorType: 'purple' },
-    { count: 3, label: 'THC INSCAN', colorType: 'orange' },
-    { count: 1, label: 'DRS OUTSCAN', colorType: 'green' },
-    { count: 1, label: 'DELIVERY', colorType: 'gold' }
-  ];
+  constructor(private lrService: LrService) {}
 
-  public timeline: ScanEvent[] = [
-    {
-      theme: 'blue',
-      badge: 'IN',
-      title: 'PRS INSCAN',
-      docNo: 'PRS/MAA001/2526/000087',
-      time: '13 Apr 2026, 09:40 AM',
-      subtitle: 'Consignment Received from Booking Agent',
-      isOutscan: false,
-      scanLoc: { name: 'Chennai Branch (MAA-001)', code: 'Code: MAA-001' },
-      scannedBy: { user: 'USR-MAA-009', name: 'Murugan S.' },
-      lrsCount: 5,
-      pkgsCount: 22,
-      resultType: 'success',
-      resultText: '22 / 22 pkgs — Full Count',
-      footerText: 'Agent Murugan S. — 5 LRs received, sealed boxes & docs verified'
-    },
-    {
-      theme: 'purple',
-      badge: 'OUT',
-      title: 'LS OUTSCAN',
-      docNo: 'LS/MAA001/2526/000142',
-      time: '13 Apr 2026, 12:00 PM',
-      subtitle: 'Consignment Despatched — Vehicle Loading',
-      isOutscan: true,
-      scanLoc: { name: 'Chennai Branch (MAA-001)', code: 'Code: MAA-001' },
-      scannedBy: { user: 'USR-MAA-009', name: 'Murugan S.' },
-      lrsCount: 5,
-      pkgsCount: 22,
-      resultType: 'success',
-      resultText: '22 / 22 pkgs — Full Count',
-      footerText: 'Despatched to Chennai Hub — Vehicle TN-07-CC-4400 (express run for air connection)'
-    },
-    {
-      theme: 'orange',
-      badge: 'IN',
-      title: 'THC INSCAN',
-      docNo: 'THC/MAA001/2526/000029',
-      time: '13 Apr 2026, 01:30 PM',
-      subtitle: 'Vehicle Arrived — Unloading & Stock-in',
-      isOutscan: false,
-      scanLoc: { name: 'Chennai Hub (MAA-HUB)', code: 'Code: MAA-HUB' },
-      scannedBy: { user: 'USR-HUB-MAA-002', name: 'Ravi Kumar' },
-      lrsCount: 5,
-      pkgsCount: 22,
-      resultType: 'warning',
-      resultText: '21 / 22 pkgs scanned',
-      resultShortBadge: 'SHORT: 1 pkg',
-      resultDepsTag: 'DEPS/BLR001/2526/000031',
-      footerText: '1 pkg short on this LR — crate missing. DEPS raised. Pkg traced & recovered by 13:55'
-    },
-    {
-      theme: 'purple',
-      badge: 'OUT',
-      title: 'LS OUTSCAN',
-      docNo: 'LS/MAAHUB/2526/000088',
-      time: '13 Apr 2026, 04:00 PM',
-      subtitle: 'Consignment Despatched — Vehicle Loading',
-      isOutscan: true,
-      scanLoc: { name: 'Chennai Hub (MAA-HUB)', code: 'Code: MAA-HUB' },
-      scannedBy: { user: 'USR-HUB-MAA-002', name: 'Ravi Kumar' },
-      lrsCount: 5,
-      pkgsCount: 22,
-      resultType: 'success',
-      resultText: '22 / 22 pkgs — Full Count',
-      footerText: 'All 22 pkgs (recovered crate included) loaded — Air Cargo IndiGo Freight IXC-2604-03'
-    },
-    {
-      theme: 'orange',
-      badge: 'IN',
-      title: 'THC INSCAN',
-      docNo: 'THC/MAAHUB/2526/000048',
-      time: '13 Apr 2026, 06:30 PM',
-      subtitle: 'Vehicle Arrived — Unloading & Stock-in',
-      isOutscan: false,
-      scanLoc: { name: 'Bangalore Hub (BLR-HUB)', code: 'Code: BLR-HUB' },
-      scannedBy: { user: 'USR-HUB-BLR-004', name: 'Sridhar K.' },
-      lrsCount: 5,
-      pkgsCount: 22,
-      resultType: 'success',
-      resultText: '22 / 22 pkgs — Full Count',
-      footerText: 'Air cargo arrived at BLR-HUB — all 22 pkgs intact, stock updated'
-    },
-    {
-      theme: 'purple',
-      badge: 'OUT',
-      title: 'LS OUTSCAN',
-      docNo: 'LS/BLRHUB/2526/000051',
-      time: '13 Apr 2026, 07:30 PM',
-      subtitle: 'Consignment Despatched — Vehicle Loading',
-      isOutscan: true,
-      scanLoc: { name: 'Bangalore Hub (BLR-HUB)', code: 'Code: BLR-HUB' },
-      scannedBy: { user: 'USR-HUB-BLR-004', name: 'Sridhar K.' },
-      lrsCount: 5,
-      pkgsCount: 22,
-      resultType: 'success',
-      resultText: '22 / 22 pkgs — Full Count',
-      footerText: 'Connected to Bangalore Branch — Vehicle KA-05-NN-3311, Driver Mohan V.'
-    },
-    {
-      theme: 'orange',
-      badge: 'IN',
-      title: 'THC INSCAN',
-      docNo: 'THC/BLRHUB/2526/000034',
-      time: '13 Apr 2026, 09:00 PM',
-      subtitle: 'Vehicle Arrived — Unloading & Stock-in',
-      isOutscan: false,
-      scanLoc: { name: 'Bangalore Branch (BLR-001)', code: 'Code: BLR-001' },
-      scannedBy: { user: 'USR-BLR-008', name: 'Praveen G.' },
-      lrsCount: 5,
-      pkgsCount: 22,
-      resultType: 'success',
-      resultText: '22 / 22 pkgs — Full Count',
-      footerText: 'Vehicle KA-05-NN-3311 arrived at delivery branch — 22 pkgs received, stock updated'
-    },
-    {
-      theme: 'green',
-      badge: 'OUT',
-      title: 'DRS OUTSCAN',
-      docNo: 'DRS/BLR001/2526/000009',
-      time: '13 Apr 2026, 10:00 PM',
-      subtitle: 'Consignment Handed Over to Delivery Agent',
-      isOutscan: true,
-      scanLoc: { name: 'Bangalore Branch (BLR-001)', code: 'Code: BLR-001' },
-      scannedBy: { user: 'USR-BLR-008', name: 'Praveen G.' },
-      lrsCount: 4,
-      pkgsCount: 18,
-      resultType: 'success',
-      resultText: '18 / 18 pkgs — Full Count',
-      footerText: 'Delivery agent Mohan R. — 4 LRs assigned for night delivery run'
-    },
-    {
-      theme: 'gold',
-      badge: 'POD',
-      title: 'DELIVERED',
-      time: '13 Apr 2026, 11:45 PM',
-      subtitle: 'Proof of Delivery Captured',
-      isOutscan: false,
-      deliveryLoc: 'MG Road, Bengaluru — TVS Dealership (BLR-001)',
-      deliveredBy: 'USR-BLR-DEL-003 : Mohan R.',
-      pkgsDelivered: '6 Pkgs',
-      receivedBy: { name: 'Suresh Kumar', role: '(Warehouse Incharge)' },
-      footerText: 'Early delivery — EDD 14 Apr, delivered 13 Apr. All 6 pkgs in good condition, POD uploaded'
+  ngOnInit() {
+    this.fetchScanningData();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['lrDetails']) {
+      this.fetchScanningData();
     }
-  ];
+  }
+
+  fetchScanningData() {
+    if (!this.lrDetails) return;
+    const dockNo = this.lrDetails?.dockNo || this.lrDetails?.docket_No || this.lrDetails?.docketNo || this.lrDetails?.lR_Number || this.lrDetails?.lrNumber || this.lrDetails?.LrNumber;
+    if (!dockNo || dockNo === this.lastFetchedDockNo) return;
+
+    this.lastFetchedDockNo = dockNo;
+    this.isLoading = true;
+    this.lrService.getScanningTracking(dockNo).subscribe({
+      next: (res: any) => {
+        this.isLoading = false;
+        if (res) {
+          this.scanningData = res.data || res;
+        }
+      },
+      error: () => {
+        this.isLoading = false;
+      }
+    });
+  }
+
+  get sortedDetails(): any[] {
+    const list = this.scanningData?.details || this.lrDetails?.details || [];
+    return [...list].sort((a: any, b: any) => Number(a?.srNo || 0) - Number(b?.srNo || 0));
+  }
+
+  get summaries(): any[] {
+    const sum = this.scanningData?.summary || this.lrDetails?.summary || {};
+    return [
+      { count: sum.prS_Inscan || sum.prs_Inscan || 0, label: 'PRS INSCAN', colorType: 'blue' },
+      { count: sum.lS_Outscan || sum.ls_Outscan || 0, label: 'LS OUTSCAN', colorType: 'purple' },
+      { count: sum.thC_Inscan || sum.thc_Inscan || 0, label: 'THC INSCAN', colorType: 'orange' },
+      { count: sum.drS_Outscan || sum.drs_Outscan || 0, label: 'DRS OUTSCAN', colorType: 'green' },
+      { count: sum.delivery || sum.Delivery || 0, label: 'DELIVERY', colorType: 'gold' }
+    ];
+  }
+
+  getTheme(item: any): string {
+    const stage = (item?.stage || '').toLowerCase();
+    const docType = (item?.documentType || '').toLowerCase();
+    if (stage.includes('deliver') || docType === 'pdc' || docType === 'pod') return 'gold';
+    if (stage.includes('prs') || docType === 'prs') return 'blue';
+    if (stage.includes('ls') || docType === 'ls') return 'purple';
+    if (stage.includes('thc') || docType === 'thc') return 'orange';
+    if (stage.includes('drs') || docType === 'drs') return 'green';
+    return 'blue';
+  }
 
   getSummaryStyle(theme: string): any {
     switch(theme) {
-      case 'blue': return { 'background-color': '#f8fafc', 'border': '1px solid #bfdbfe', 'border-radius': '10px' };
-      case 'purple': return { 'background-color': '#fdfbff', 'border': '1px solid #e9d5ff', 'border-radius': '10px' };
-      case 'orange': return { 'background-color': '#fffaf5', 'border': '1px solid #fed7aa', 'border-radius': '10px' };
-      case 'green': return { 'background-color': '#f4fdf8', 'border': '1px solid #bbf7d0', 'border-radius': '10px' };
-      case 'gold': return { 'background-color': '#fffbeb', 'border': '1px solid #fde047', 'border-radius': '10px' };
-      default: return {};
+      case 'blue': return { 'background-color': '#f0f9ff', 'border': '1px solid #93c5fd', 'border-radius': '6px', 'min-height': '74px', 'padding': '8px 6px', 'box-shadow': 'none' };
+      case 'purple': return { 'background-color': '#faf5ff', 'border': '1px solid #d8b4fe', 'border-radius': '6px', 'min-height': '74px', 'padding': '8px 6px', 'box-shadow': 'none' };
+      case 'orange': return { 'background-color': '#fff7ed', 'border': '1px solid #fdba74', 'border-radius': '6px', 'min-height': '74px', 'padding': '8px 6px', 'box-shadow': 'none' };
+      case 'green': return { 'background-color': '#f0fdf4', 'border': '1px solid #86efac', 'border-radius': '6px', 'min-height': '74px', 'padding': '8px 6px', 'box-shadow': 'none' };
+      case 'gold': return { 'background-color': '#fefce8', 'border': '1px solid #fde047', 'border-radius': '6px', 'min-height': '74px', 'padding': '8px 6px', 'box-shadow': 'none' };
+      default: return { 'border-radius': '6px', 'min-height': '74px', 'padding': '8px 6px', 'box-shadow': 'none' };
     }
   }
 
@@ -225,29 +97,35 @@ export class LrScanningTabComponent {
   }
 
   getSummaryLabelColor(theme: string): string {
-    return '#64748b'; // In the image, all labels are grey
+    return '#64748b';
   }
 
   getCardStyle(theme: string): any {
     switch(theme) {
-      case 'blue': return { 'background-color': '#f0f9ff', 'border': '1px solid #bae6fd', 'border-radius': '12px' };
-      case 'purple': return { 'background-color': '#faf5ff', 'border': '1px solid #e9d5ff', 'border-radius': '12px' };
-      case 'orange': return { 'background-color': '#fff7ed', 'border': '1px solid #fed7aa', 'border-radius': '12px' };
-      case 'green': return { 'background-color': '#f0fdf4', 'border': '1px solid #bbf7d0', 'border-radius': '12px' };
-      case 'gold': return { 'background-color': '#fefce8', 'border': '1px solid #fde047', 'border-radius': '12px' };
+      case 'blue': return { 'background-color': '#f0f9ff', 'border': '1.5px solid #60a5fa', 'border-radius': '12px' };
+      case 'purple': return { 'background-color': '#faf5ff', 'border': '1.5px solid #c084fc', 'border-radius': '12px' };
+      case 'orange': return { 'background-color': '#fff7ed', 'border': '1.5px solid #fb923c', 'border-radius': '12px' };
+      case 'green': return { 'background-color': '#f0fdf4', 'border': '1.5px solid #4ade80', 'border-radius': '12px' };
+      case 'gold': return { 'background-color': '#fefce8', 'border': '1.5px solid #eab308', 'border-radius': '12px' };
       default: return {};
     }
   }
 
   getBadgeStyle(theme: string, type: string): any {
-    if (type === 'IN') return { 'background-color': '#dcfce7', 'color': '#166534', 'font-size': '10px', 'font-weight': '800' };
-    if (type === 'POD') return { 'background-color': '#fef08a', 'color': '#854d0e', 'font-size': '10px', 'font-weight': '800' };
-    
-    // OUT badges
+    if (type === 'IN') {
+      if (theme === 'orange') return { 'background-color': '#fef3c7', 'color': '#b45309', 'font-size': '10px', 'font-weight': '800' };
+      return { 'background-color': '#dcfce7', 'color': '#166534', 'font-size': '10px', 'font-weight': '800' };
+    }
+    if (type === 'POD' || theme === 'gold') return { 'background-color': '#fef08a', 'color': '#854d0e', 'font-size': '10px', 'font-weight': '800' };
+    if (type === 'OUT') {
+      if (theme === 'green') return { 'background-color': '#dcfce7', 'color': '#15803d', 'font-size': '10px', 'font-weight': '800' };
+      return { 'background-color': '#f3e8ff', 'color': '#7e22ce', 'font-size': '10px', 'font-weight': '800' };
+    }
     switch(theme) {
       case 'purple': return { 'background-color': '#f3e8ff', 'color': '#7e22ce', 'font-size': '10px', 'font-weight': '800' };
       case 'green': return { 'background-color': '#dcfce7', 'color': '#15803d', 'font-size': '10px', 'font-weight': '800' };
-      default: return { 'background-color': '#f3e8ff', 'color': '#7e22ce', 'font-size': '10px', 'font-weight': '800' };
+      case 'orange': return { 'background-color': '#fef3c7', 'color': '#b45309', 'font-size': '10px', 'font-weight': '800' };
+      default: return { 'background-color': '#dcfce7', 'color': '#166534', 'font-size': '10px', 'font-weight': '800' };
     }
   }
 
@@ -264,16 +142,15 @@ export class LrScanningTabComponent {
 
   getDocBadgeStyle(theme: string): any {
     switch(theme) {
-      case 'blue': return { 'background-color': '#ffffff', 'color': '#3b82f6', 'border': '1px solid #93c5fd' };
-      case 'purple': return { 'background-color': '#ffffff', 'color': '#9333ea', 'border': '1px solid #d8b4fe' };
-      case 'orange': return { 'background-color': '#ffffff', 'color': '#ea580c', 'border': '1px solid #fdba74' };
-      case 'green': return { 'background-color': '#ffffff', 'color': '#22c55e', 'border': '1px solid #86efac' };
-      default: return {};
+      case 'blue': return { 'background-color': '#ffffff', 'color': '#0284c7', 'border': '1px solid #7dd3fc', 'border-radius': '6px', 'padding': '2px 10px', 'font-size': '12px', 'font-weight': '700', 'letter-spacing': '0.3px', 'display': 'inline-block' };
+      case 'purple': return { 'background-color': '#ffffff', 'color': '#7e22ce', 'border': '1px solid #d8b4fe', 'border-radius': '6px', 'padding': '2px 10px', 'font-size': '12px', 'font-weight': '700', 'letter-spacing': '0.3px', 'display': 'inline-block' };
+      case 'orange': return { 'background-color': '#ffffff', 'color': '#c2410c', 'border': '1px solid #fdba74', 'border-radius': '6px', 'padding': '2px 10px', 'font-size': '12px', 'font-weight': '700', 'letter-spacing': '0.3px', 'display': 'inline-block' };
+      case 'green': return { 'background-color': '#ffffff', 'color': '#15803d', 'border': '1px solid #86efac', 'border-radius': '6px', 'padding': '2px 10px', 'font-size': '12px', 'font-weight': '700', 'letter-spacing': '0.3px', 'display': 'inline-block' };
+      default: return { 'background-color': '#ffffff', 'color': '#334155', 'border': '1px solid #cbd5e1', 'border-radius': '6px', 'padding': '2px 10px', 'font-size': '12px', 'font-weight': '700', 'letter-spacing': '0.3px', 'display': 'inline-block' };
     }
   }
 
   getTimelineDotStyle(theme: string, isOutscan?: boolean): any {
-    // Circle for IN/POD, Square for OUT
     let borderRadius = isOutscan ? '4px' : '50%';
     let color = '';
     switch(theme) {
@@ -281,25 +158,12 @@ export class LrScanningTabComponent {
       case 'purple': color = '#7e22ce'; break;
       case 'orange': color = '#c2410c'; break;
       case 'green': color = '#15803d'; break;
-      case 'gold': color = '#a16207'; borderRadius = '4px'; break; // POD is filled square in image
+      case 'gold': color = '#b45309'; borderRadius = '50%'; break;
     }
-    
     if (theme === 'gold') {
-       return { 'width': '14px', 'height': '14px', 'border-radius': borderRadius, 'background-color': color, 'border': `2px solid #fff`, 'box-shadow': `0 0 0 2px ${color}`, 'display': 'flex', 'align-items': 'center', 'justify-content': 'center' };
+       return { 'width': '14px', 'height': '14px', 'border-radius': '50%', 'background-color': '#ffffff', 'border': `3px solid #b45309`, 'box-shadow': `0 0 0 1px #b45309`, 'display': 'flex', 'align-items': 'center', 'justify-content': 'center' };
     }
-
-    return {
-      'width': '14px',
-      'height': '14px',
-      'border-radius': borderRadius,
-      'background-color': color,
-      'border': `3px solid #fff`,
-      'box-shadow': `0 0 0 2px ${color}`
-    };
-  }
-
-  getTimelineLineColor(theme: string): string {
-    return '#cbd5e1'; // In the image, the timeline line is a subtle blue/gray
+    return { 'width': '14px', 'height': '14px', 'border-radius': borderRadius, 'background-color': color, 'border': `3px solid #fff`, 'box-shadow': `0 0 0 2px ${color}` };
   }
 
   getIcon(theme: string): string {
@@ -313,7 +177,66 @@ export class LrScanningTabComponent {
     }
   }
 
-  getFooterIcon(resultType?: string): string {
-    return resultType === 'warning' ? '⚠️' : '💬';
+  isGreenResult(ev: any): boolean {
+    if (!ev) return true;
+    if (ev.pending !== undefined && ev.pending !== null && ev.pending !== '' && Number(ev.pending) > 0) {
+      return false;
+    }
+    const resultStr = (String(ev.packageScanned || '') + ' ' + String(ev.scanResult || '') + ' ' + String(ev.scanStatus || '')).toLowerCase();
+    if (resultStr.includes('half') || resultStr.includes('short') || resultStr.includes('missing') || resultStr.includes('excess') || resultStr.includes('damage') || resultStr.includes('discrepancy') || resultStr.includes('warning') || resultStr.includes('pending') || resultStr.includes('error')) {
+      return false;
+    }
+    if (resultStr.startsWith('0 /') || resultStr.startsWith('0.00 /')) {
+      return false;
+    }
+    if (resultStr.includes('full count') || resultStr.includes('full')) {
+      return true;
+    }
+    if (ev.resultType === 'warning' || ev.resultType === 'short' || ev.resultType === 'error' || ev.resultType === 'red') {
+      return false;
+    }
+    if (ev.packageScanned && String(ev.packageScanned).includes(' / ')) {
+      const parts = String(ev.packageScanned).split(' / ');
+      const scannedNum = parseFloat(parts[0]);
+      if (!isNaN(scannedNum) && scannedNum === 0) return false;
+    }
+    return true;
+  }
+
+  getResultBoxStyle(ev: any): any {
+    if (this.isGreenResult(ev)) {
+      return { 'background-color': 'rgb(244, 255, 250)', 'border': '1px solid rgb(138, 235, 190)', 'border-radius': '6px' };
+    } else {
+      return { 'background-color': 'rgb(255, 243, 243)', 'border': '1px solid rgb(243, 136, 136)', 'border-radius': '6px' };
+    }
+  }
+
+  getResultTextColor(ev: any): string {
+    return this.isGreenResult(ev) ? 'rgb(13, 148, 136)' : '#dc2626';
+  }
+
+  getResultText(ev: any): string {
+    if (!ev) return '--';
+
+    // Show only packageScanned key when available, as requested
+    if (ev.packageScanned !== undefined && ev.packageScanned !== null && ev.packageScanned !== '') {
+      return String(ev.packageScanned);
+    }
+
+    if (ev.scanResult) return ev.scanResult;
+    if (ev.scanStatus) return ev.scanStatus;
+
+    const pendingVal = (ev.pending !== undefined && ev.pending !== null && ev.pending !== '') ? Number(ev.pending) : 0;
+    const totalVal = (ev.packageTotal !== undefined && ev.packageTotal !== null && ev.packageTotal !== '' && ev.packageTotal !== '--')
+      ? Number(ev.packageTotal)
+      : ((ev.totalPackages !== undefined && ev.totalPackages !== null && ev.totalPackages !== '') ? Number(ev.totalPackages) : ((ev.packages !== undefined && ev.packages !== null && ev.packages !== '') ? Number(ev.packages) : 0));
+
+    if (pendingVal > 0) {
+      const scannedVal = Math.max(0, totalVal - pendingVal);
+      const statusStr = pendingVal === totalVal ? `Pending: ${pendingVal} Pkgs` : `Short: ${pendingVal} Pkgs`;
+      return totalVal > 0 ? `${scannedVal} / ${totalVal} Pkgs — ${statusStr}` : statusStr;
+    }
+
+    return totalVal > 0 ? `${totalVal} / ${totalVal} Pkgs — Full Count` : '--';
   }
 }

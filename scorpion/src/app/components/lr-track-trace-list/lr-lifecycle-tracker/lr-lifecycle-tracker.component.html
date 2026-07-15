@@ -83,7 +83,8 @@
       <li class="nav-item">
         <a class="nav-link d-flex align-items-center gap-1" [class.active]="activeTab === 'Scanning'"
           (click)="setActiveTab('Scanning')">
-          🔍 Scanning <span class="badge rounded-pill ms-1" style="background-color: #8b5cf6;">9</span>
+          🔍 Scanning 
+          <!-- <span class="badge rounded-pill ms-1" style="background-color: #8b5cf6;">9</span> -->
         </a>
       </li>
       <li class="nav-item">
@@ -96,10 +97,10 @@
     <!-- Tab Content Sections -->
     <app-lr-operational-tab [lrDetails]="lrDetails" *ngIf="activeTab === 'Operational'"></app-lr-operational-tab>
     <app-lr-financial-tab [lrDetails]="lrDetails" *ngIf="activeTab === 'Financial'"></app-lr-financial-tab>
-    <!-- <app-lr-documents-tab [lrDetails]="lrDetails" *ngIf="activeTab === 'Documents'"></app-lr-documents-tab>
-    <app-lr-exceptions-tab [lrDetails]="lrDetails" *ngIf="activeTab === 'Exceptions'"></app-lr-exceptions-tab>
+    <!-- <app-lr-documents-tab [lrDetails]="lrDetails" *ngIf="activeTab === 'Documents'"></app-lr-documents-tab> -->
+    <!-- <app-lr-exceptions-tab [lrDetails]="lrDetails" *ngIf="activeTab === 'Exceptions'"></app-lr-exceptions-tab> -->
     <app-lr-scanning-tab [lrDetails]="lrDetails" *ngIf="activeTab === 'Scanning'"></app-lr-scanning-tab>
-    <app-lr-docket-pl-tab [lrDetails]="lrDetails" *ngIf="activeTab === 'Docket'"></app-lr-docket-pl-tab> -->
+    <app-lr-docket-pl-tab [lrDetails]="lrDetails" *ngIf="activeTab === 'Docket'"></app-lr-docket-pl-tab>
   </div>
 
   <div class="d-flex border-top justify-content-end p-3" style="background-color: #ffffff; border-color: #e2e8f0 !important; gap: 10px;">
