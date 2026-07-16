@@ -88,11 +88,27 @@ export class AddThcPopupComponent {
     }
   }
 
+  public isRouteModeAutoSelected: boolean = false;
+
   buildForm() {
     const mobileNo = /^[0-9]{10}$/;
+    
+    let initialRouteType = this.ThcType === 'A' ? 'S' : null;
+    this.isRouteModeAutoSelected = false;
+    
+    if (this.ThcType === 'A' && this.selectedMfs && this.selectedMfs.length > 0) {
+      const mode = this.selectedMfs[0].routE_MODE;
+      if (mode && mode.toUpperCase() === 'AIR') {
+        initialRouteType = 'A';
+      } else if (mode && mode.toUpperCase() === 'ROAD') {
+        initialRouteType = 'S';
+      }
+      this.isRouteModeAutoSelected = true;
+    }
+
     this.ThcForm = this.fb.group({
       tHCDate: [this.formatDateTime(new Date())],
-      routeType: ['S' ,Validators.required],
+      routeType: [initialRouteType, Validators.required],
       actualDeptDate: [this.formatDateTime(new Date())],
       scheduleDeptDate: [this.formatDateTime(new Date())],
       vendorType: [],
@@ -211,14 +227,20 @@ export class AddThcPopupComponent {
     this.selectedMfs = mfs || [];
 
     this.buildForm();
+    if(type === 'A'){
+      this.getRoutesFromMF();
+    }
     this.calculateWeightAndUtilization();
     this.getLocationData();
-    this.getRoutesFromRouteType();
     this.modalRef = this.modalService.show(this.TemplateTHC, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
 
   closePopup() {
     this.modalRef?.hide();
+    this.routeNameList = [];
+    if (this.ThcForm) {
+      this.ThcForm.get('routeCode')?.setValue(null);
+    }
   }
 
   getVendorsList(event: any) {
@@ -266,14 +288,9 @@ export class AddThcPopupComponent {
     });
   }
 
-  getRoutesFromRouteType(event?: any) {
-    this.ThcForm.patchValue({
-      vendorType: null,
-      vendorCode: null,
-      routeCode: null
-    })
+  getRoutesFromMF(event?: any) {
 
-    const selectedRouteType = event ? event?.target?.value : 'S';
+    const selectedRouteType = event ? event?.target?.value : (this.ThcForm.get('routeType')?.value || 'S');
         // Construct unique ToBH_CODE from selected MFs
     const tobhCodes = this.selectedMfs.map(mf => mf.toBH_CODE).filter(c => !!c);
     const uniqueTobhCodes = [...new Set(tobhCodes)].join(',');
@@ -292,8 +309,9 @@ export class AddThcPopupComponent {
         const data = res?.data || res || {};
         const table1 = data.Table1 || [];
         // Assuming this populates routeNameList or something similar
-        if (table1.length > 0) {
-          this.routeNameList = table1;
+        this.routeNameList = table1;
+        if (this.routeNameList.length === 0 && this.ThcForm) {
+          this.ThcForm.get('routeCode')?.setValue(null);
         }
       },
       error: (err) => console.error('Error fetching dynamic data for THC popup', err)
@@ -306,6 +324,45 @@ export class AddThcPopupComponent {
       this.getAirlineList()
     }
   }
+
+  getRoutesFromRouteType(event?: any) {
+    if(this.ThcType === 'E'){
+ const selectedRouteType = event?.target?.value;
+    const paylaod = {
+      routeType: selectedRouteType ,
+      isEmpty: 'N',
+      locationCode: this.docketService.loginUserList.LocationCode
+    }
+    this.THCService.getRoutesFromRouteType(paylaod).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.routeNameList = response;
+          if (this.routeNameList.length === 0 && this.ThcForm) {
+            this.ThcForm.get('routeCode')?.setValue(null);
+          }
+        } else {
+          this.routeNameList = [];
+          if (this.ThcForm) {
+            this.ThcForm.get('routeCode')?.setValue(null);
+          }
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching vehicle details:', err.error.message);
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
+    if (event.codeId === 'S') {
+      this.getVehicleType('O')
+    }
+    if (event.codeId === 'A') {
+      this.getAirportDetail()
+      this.getAirlineList()
+  }
+}else{
+  this.getRoutesFromMF()
+}
+}
 
   getVehicleType(vehicleNo: string) {
     this.THCService.getVehicleType(vehicleNo).subscribe({

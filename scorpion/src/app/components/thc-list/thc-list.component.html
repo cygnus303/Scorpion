@@ -123,6 +123,13 @@
                             formControlName="statusFilter" [items]="statusList" bindLabel="label" bindValue="value">
                         </ng-select>
                     </div>
+                    <div class="divider-v"></div>
+                    <div class="filter-group" *ngIf="THCFilterForm.get('statusFilter')?.value === 'MFPENDING'">
+                        <span class="filter-label">Transport Mode</span>
+                        <ng-select type="text" placeholder="Transport Mode" class="custom-status-select clear-icon"
+                            formControlName="mode" [items]="modeData" bindLabel="label" bindValue="value">
+                        </ng-select>
+                    </div>
                 </div>
                 <div class="table-toolbar d-flex align-items-center gap-3">
                     <div class="selected-count text-primary fw-bold bg-primary-subtle px-3 py-1 rounded" *ngIf="THCFilterForm.get('statusFilter')?.value === 'MFPENDING' && selectedMfs.length > 0">
@@ -162,6 +169,7 @@
                         <th class="text-center">MF Date</th>
                         <th class="text-center" style="width: 140px;">MF Branch</th>
                         <th class="text-center">Next Stop</th>
+                        <th class="text-center">Transport Mode</th>
                         <th class="text-center">Service Type</th>
                         <th class="text-center">Total C-Note</th>
                         <th class="text-center">Pkgs / Wt.</th>
@@ -186,7 +194,7 @@
                 </tbody>
                 <tbody *ngIf="!isLoading && (!mfData || mfData.length === 0) && !isThcListing">
                     <tr>
-                        <td colspan="14" class="text-center py-4 text-muted fs-5">
+                        <td colspan="15" class="text-center py-4 text-muted fs-5">
                             No records found.
                         </td>
                     </tr>
@@ -287,7 +295,7 @@
                                    class="form-check-input cursor-pointer"
                                    style="width: 15px; height: 15px;"
                                    [checked]="isMfSelected(data)"
-                                   (change)="toggleMfSelection(data, $any($event.target).checked)">
+                                   (change)="toggleMfSelection(data, $event)">
                         </td>
                         <td>
                             <div class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;"
@@ -304,6 +312,11 @@
                         </td>
                         <td class="text-center fs-7">
                             {{ data.toBH_CODE }}</td>
+                            <td class="text-center cursor-pointer">
+                            <span class="mf-mode-badge" [ngClass]="data.routE_MODE === 'Road'?'mf-mode-road':'mf-mode-air'">
+                                {{data.routE_MODE}}
+                            </span>
+                        </td>
                         <td class="text-center cursor-pointer">
                             <span class="px-4 py-2">
                                 {{data.lsType}}

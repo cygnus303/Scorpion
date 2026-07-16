@@ -17,18 +17,21 @@
             </div>
             <div class="thcform-field">
               <label>Route Mode <span class="req">*</span></label>
-              <div class="thcform-radio-group">
+              <div class="thcform-radio-group" [ngStyle]="{'pointer-events': isRouteModeAutoSelected ? 'none' : 'auto', 'opacity': isRouteModeAutoSelected ? '0.7' : '1'}">
                 <label><input type="radio" value="S" (change)="getRoutesFromRouteType($event)"
                     formControlName="routeType">Road</label>
                 <label><input type="radio" value="A" (change)="getRoutesFromRouteType($event)"
                     formControlName="routeType">AIR</label>
               </div>
+              <div *ngIf="isRouteModeAutoSelected" style="color: #dc3545; font-size: 12px; margin-top: 4px;">
+                Auto-selected from MF Transport Mode
+              </div>
             </div>
             <div class="thcform-field">
               <label>Route Name <span class="req">*</span></label>
               <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Route Name" appendTo="body"
-                formControlName="routeCode" notFoundText="No matches found" [items]="routeNameList" bindLabel="Text"
-                bindValue="Value" appFocusNext (change)="getERDDate()"
+                formControlName="routeCode" notFoundText="No matches found" [items]="routeNameList" bindLabel="text"
+                bindValue="value" appFocusNext (change)="getERDDate()"
                 [ngClass]="{ 'border-danger': ThcForm.get('routeCode')?.invalid  && ThcForm.get('routeCode')?.touched }"></ng-select>
               <div class="text-danger text-start"
                 *ngIf="ThcForm.get('routeCode')?.invalid && ThcForm.get('routeCode')?.touched ">
