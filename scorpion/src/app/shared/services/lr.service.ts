@@ -34,6 +34,10 @@ export class LrService {
       return this.apiHandlerService.GetLoad(`Operation/GetLRTrackerSummary?lrNumber=${lrNumber}`);
     }
 
+    getScanningTracking(dockNo: string): Observable<any> {
+      return this.apiHandlerService.GetLoad(`Operation/ScanningTracking?dockNo=${dockNo}`);
+    }
+
     getOperationCycle(lrNumber: string): Observable<any> {
       return this.apiHandlerService.Get(`Operation/operation-cycle/${lrNumber}`);
     }
@@ -44,6 +48,10 @@ export class LrService {
 
     getFinancialTracking(lrNumber: string): Observable<any> {
       return this.apiHandlerService.GetLoad(`Operation/FinancialTracking?lrNumber=${lrNumber}`);
+    }
+
+    getExpenseDetailTracking(lrNumber: string): Observable<any> {
+      return this.apiHandlerService.GetLoad(`Operation/ExpenseDetailTracking?lrNumber=${lrNumber}`);
     }
 
     getLRFinList(payload:any): Observable<IApiBaseResponse<any[]>> {

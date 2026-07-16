@@ -21,18 +21,18 @@ import { MfViewComponent } from './mf-view/mf-view.component';
 @Component({
   selector: 'app-thc-list',
   standalone: true,
-  imports: [NgSelectModule,CommonModule,ReactiveFormsModule,BsDatepickerModule,PaginationComponent,ThcEditComponent,ThcEmptyVehiclePopupComponent,AddThcPopupComponent,MfViewComponent],
+  imports: [NgSelectModule, CommonModule, ReactiveFormsModule, BsDatepickerModule, PaginationComponent, ThcEditComponent, ThcEmptyVehiclePopupComponent, AddThcPopupComponent, MfViewComponent],
   providers: [BsModalService],
   templateUrl: './thc-list.component.html',
   styleUrl: './thc-list.component.scss'
 })
 export class ThcListComponent {
   public isLoading: boolean = false;
-  public summaryData:any;
-  public THCFilterForm !:FormGroup;
+  public summaryData: any;
+  public THCFilterForm !: FormGroup;
   private listSubscription?: Subscription;
-  public isdownload:boolean=false;
-  public mfData:any;
+  public isdownload: boolean = false;
+  public mfData: any;
   public env = environment;
   @ViewChild('ThcEditComponent') ThcEditComponent!: ThcEditComponent;
   @ViewChild('ThcPopupComponent') ThcPopupComponent!: AddThcPopupComponent;
@@ -40,11 +40,16 @@ export class ThcListComponent {
   @ViewChild('ThcEmptyVehiclePopupComponent') ThcEmptyVehiclePopupComponent!: ThcEmptyVehiclePopupComponent;
 
   public selectedMfs: any[] = [];
+  public modeData = [
+    { value: 'All', label: 'All Status', color: 'all', bg: 'var(--muted)', count: 0 },
+    { value: 'S', label: 'Road Cargo' },
+    { value: 'A', label: 'Air' }
+  ]
 
-  
-  public pagination={
+
+  public pagination = {
     page: 1,
-    pageSize: 10,
+    pageSize: 60,
     totalRecords: 0,
     totalPages: 0,
   };
@@ -56,14 +61,14 @@ export class ThcListComponent {
     { value: 'Cancelled', label: 'Cancelled', color: 'cancelled', bg: 'var(--red)', count: 0 },
     { value: 'Billed', label: 'Billed', color: 'billed', bg: 'var(--accent-hover)', count: 0 },
   ];
-  public thcData:any;
+  public thcData: any;
 
-    constructor(private fb: FormBuilder,private docketService:DocketService,private router: Router,
-      public PRSDRSApiService:PRSDRSApiService,private exportService:ExportService,private sweetAlertService: SweetAlertService) { }
-  
+  constructor(private fb: FormBuilder, private docketService: DocketService, private router: Router,
+    public PRSDRSApiService: PRSDRSApiService, private exportService: ExportService, private sweetAlertService: SweetAlertService) { }
 
-    ngOnInit() {
-      const saved = localStorage.getItem("loginUserList");
+
+  ngOnInit() {
+    const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
@@ -71,25 +76,26 @@ export class ThcListComponent {
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
-      this.buildFilterForm();
+    this.buildFilterForm();
+    this.fetchData()
+  }
+
+
+  buildFilterForm() {
+    this.THCFilterForm = this.fb.group({
+      fromDate: [new Date()],
+      toDate: [new Date()],
+      statusFilter: ['All'],
+      mode: ['All'],
+      searchText: ['']
+    });
+
+    this.THCFilterForm.valueChanges.pipe(
+      debounceTime(300)
+    ).subscribe(() => {
       this.fetchData()
-    }
-    
-  
-    buildFilterForm() {
-      this.THCFilterForm = this.fb.group({
-        fromDate: [new Date()],
-        toDate: [new Date()],
-        statusFilter: ['All'],
-        searchText: ['']
-      });
-  
-      this.THCFilterForm.valueChanges.pipe(
-        debounceTime(300)
-      ).subscribe(() => {
-        this.fetchData()
-      });
-    }
+    });
+  }
 
   fetchData() {
     this.pagination.page = 1;
@@ -97,26 +103,26 @@ export class ThcListComponent {
     this.getTHCDetail();
   }
 
-getStatusClass(status: string): string {
-  switch (status) {
-    case 'Billed':
-      return 's-billed';   // yellow
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'Billed':
+        return 's-billed';   // yellow
 
-    case 'Completed Journey':
-      return 's-hcc'; // green/teal
+      case 'Completed Journey':
+        return 's-hcc'; // green/teal
 
-    case 'Departed':
-      return 's-gen'; // blue/orange
+      case 'Departed':
+        return 's-gen'; // blue/orange
 
-    case 'Cancelled':
-      return 's-canc'; // red
+      case 'Cancelled':
+        return 's-canc'; // red
 
-    default:
-      return '';
+      default:
+        return '';
+    }
   }
-  }
 
-    openTHC() {
+  openTHC() {
     const saved = localStorage.getItem("loginUserList");
     if (saved) {
       let user = JSON.parse(saved);
@@ -127,11 +133,11 @@ getStatusClass(status: string): string {
     this.router.navigate(['Operation/ChallanList'], { queryParams: { fromPRS: 'true' } });
   }
 
-    openEditPopup(data: any) {
+  openEditPopup(data: any) {
     this.ThcEditComponent.showPopup(data);
   }
 
-   formatDate(date: any): string {
+  formatDate(date: any): string {
     const d = new Date(date);
     const year = d.getFullYear();
     const month = ('0' + (d.getMonth() + 1)).slice(-2);
@@ -139,27 +145,28 @@ getStatusClass(status: string): string {
     return `${year}-${month}-${day}T00:00:00.000Z`;
   }
 
-    getTHCDetail() {
+  getTHCDetail() {
     if (this.listSubscription) {
       this.listSubscription.unsubscribe();
     }
-    const payload={
-      locCode:this.docketService.loginUserList.LocationCode || null,
+    const payload = {
+      locCode: this.docketService.loginUserList.LocationCode || null,
       fromDate: this.formatDate(this.THCFilterForm.value.fromDate),
       toDate: this.formatDate(this.THCFilterForm.value.toDate),
       searchText: this.THCFilterForm.value.searchText,
       statusFilter: this.THCFilterForm.value.statusFilter,
+mode:this.THCFilterForm.value.mode,
       pageNumber: this.pagination.page,
-      pageSize:this.pagination.pageSize,
+      pageSize: this.pagination.pageSize,
       isDownload: false
     }
-     this.isLoading = true;
+    this.isLoading = true;
     this.listSubscription = this.PRSDRSApiService.getTHCList(payload).subscribe({
-      next : (response:any)=>{
-        if(response){
-          this.thcData= response.data;
-          this.mfData=response.mfData;
-           this.pagination.totalRecords = response.pagination.totalRecords;
+      next: (response: any) => {
+        if (response) {
+          this.thcData = response.data;
+          this.mfData = response.mfData;
+          this.pagination.totalRecords = response.pagination.totalRecords;
           this.pagination.totalPages = response.pagination.totalPages;
           this.summaryData = response.summary;
           this.isLoading = false;
@@ -170,32 +177,32 @@ getStatusClass(status: string): string {
       }
     })
   }
-    refreshFilter() {
+  refreshFilter() {
     this.buildFilterForm();
     this.fetchData()
   }
 
-    get isHQTR(): boolean {
+  get isHQTR(): boolean {
     return this.docketService.loginUserList?.LocationCode === 'HQTR';
   }
 
-   isHccValid(hcc: any): boolean {
+  isHccValid(hcc: any): boolean {
     if (!hcc) return false;
     if (hcc === 'NO HCC' || hcc === 'NOHCC' || hcc === '0' || hcc === 0) return false;
     if (!isNaN(hcc) && Number(hcc) <= 0) return false;
     return true;
   }
 
-    downloadExcel() {
+  downloadExcel() {
     this.isdownload = true;
-    const payload={
-      locCode:this.docketService.loginUserList.LocationCode,
+    const payload = {
+      locCode: this.docketService.loginUserList.LocationCode,
       fromDate: this.formatDate(this.THCFilterForm.value.fromDate),
       toDate: this.formatDate(this.THCFilterForm.value.toDate),
       searchText: this.THCFilterForm.value.searchText,
       statusFilter: this.THCFilterForm.value.statusFilter,
       pageNumber: this.pagination.page,
-      pageSize:this.pagination.pageSize,
+      pageSize: this.pagination.pageSize,
       isDownload: true
     }
     this.listSubscription = this.PRSDRSApiService.getTHCList(payload).subscribe({
@@ -218,7 +225,7 @@ getStatusClass(status: string): string {
     });
   }
 
-   filterByStatus(status: string) {
+  filterByStatus(status: string) {
     this.THCFilterForm.patchValue({ statusFilter: status }, { emitEvent: false });
     this.fetchData();
   }
@@ -233,8 +240,8 @@ getStatusClass(status: string): string {
     }
   }
 
-  onView(data:any){
-     const url = `${this.env.liveUrl}ViewPrint/ViewChallan?DocumentNo=${data?.thcNo}&src=angular`;
+  onView(data: any) {
+    const url = `${this.env.liveUrl}ViewPrint/ViewChallan?DocumentNo=${data?.thcNo}&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );
@@ -263,16 +270,16 @@ getStatusClass(status: string): string {
     }
   }
 
-    onCancel(thcNo: string) {
+  onCancel(thcNo: string) {
     this.sweetAlertService.cancel(`Are You Sure You Want to Cancel ${thcNo}?`, () => {
       this.onCancelTHC(thcNo);
     });
   }
 
-  onCancelTHC(thcNo:any){
-    const payload={
-      thcno:thcNo,
-      userName:this.docketService.baseUsername
+  onCancelTHC(thcNo: any) {
+    const payload = {
+      thcno: thcNo,
+      userName: this.docketService.baseUsername
     }
     this.PRSDRSApiService.CancelTHC(payload).subscribe({
       next: (response: any) => {
@@ -293,16 +300,41 @@ getStatusClass(status: string): string {
     this.getTHCDetail();
   }
 
-  openEmptyVehicle(){
+  openEmptyVehicle() {
     this.ThcEmptyVehiclePopupComponent.showPopup();
   }
 
-  openTHCPopup(type:string) {
+  openTHCPopup(type: string) {
+    if (this.selectedMfs && this.selectedMfs.length > 1) {
+      const isAirMode = this.selectedMfs[0].routE_MODE?.toUpperCase() === 'AIR';
+      if (isAirMode) {
+        const firstDest = this.selectedMfs[0].toBH_CODE;
+        const hasDifferentDest = this.selectedMfs.some(mf => mf.toBH_CODE !== firstDest);
+        if (hasDifferentDest) {
+          const msg = `<div style="text-align: left; font-size: 14px; font-weight: normal; color: #333;">In Air Route multi hopping not allowed.<br>All selected AIR MFs must have the same Next Stop destination.</div>`;
+          this.sweetAlertService.info(msg);
+          return;
+        }
+      }
+    }
     this.ThcPopupComponent.showPopup(type, this.selectedMfs);
   }
 
-  toggleMfSelection(data: any, isChecked: boolean) {
+  toggleMfSelection(data: any, event: any) {
+    const isChecked =event.target.checked;
     if (isChecked) {
+      if (this.selectedMfs.length > 0) {
+        const firstMode = this.selectedMfs[0].routE_MODE;
+        if (firstMode !== data.routE_MODE) {
+          const modeDisplay = firstMode ? firstMode.toUpperCase() : 'UNKNOWN';
+          const msg = `<div style="text-align: left; font-size: 14px; font-weight: normal; color: #333;">Transport Mode mismatch!<br>You have already selected ${modeDisplay} mode MF(s).<br>Please select MFs of the same Transport Mode only.</div>`;
+          this.sweetAlertService.info(msg);
+          if (event && event.target) {
+            event.target.checked = false;
+          }
+          return;
+        }
+      }
       this.selectedMfs.push(data);
     } else {
       this.selectedMfs = this.selectedMfs.filter(mf => mf.tcno !== data.tcno);
@@ -313,11 +345,11 @@ getStatusClass(status: string): string {
     return this.selectedMfs.some(mf => mf.tcno === data.tcno);
   }
 
-   get isThcListing(): boolean {
+  get isThcListing(): boolean {
     return (this.THCFilterForm.get('statusFilter')?.value !== 'MFPENDING');
   }
 
-  openMFPopup(thcNo:string){
+  openMFPopup(thcNo: string) {
     this.MfViewComponent.showPopup(thcNo);
   }
 }
