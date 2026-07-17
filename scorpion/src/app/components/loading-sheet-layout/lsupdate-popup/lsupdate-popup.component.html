@@ -81,6 +81,18 @@
                 This field is required. </div>
             </div>
           </div>
+             <div class="col-3">
+              <div class="form-group-input">
+                <label class="form-label d-flex align-items-center gap-2 fw-bold">LS Transport Mode</label>
+                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select LS Transport Mode"
+                  formControlName="mF_TransportMode" notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
+                  [items]="generalMasterService.LsTransportModeData" appFocusNext
+                  [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('mF_TransportMode')?.invalid  && loadingSheetService.LSForm.get('mF_TransportMode')?.touched }"></ng-select>
+                <div class="text-danger text-start"
+                  *ngIf="loadingSheetService.LSForm.get('mF_TransportMode')?.invalid && loadingSheetService.LSForm.get('mF_TransportMode')?.touched">
+                  This field is required. </div>
+              </div>
+            </div>
         </div>
         <div class="row mb-3">
           <div class="col-3">
