@@ -151,12 +151,15 @@
                         <th class="text-center">THC No. / Date</th>
                         <th class="text-center">Total Dockets</th>
                         <th class="text-center" style="width: 140px;">MF No.</th>
+                        <th class="text-center">Is Empty THC</th>
                         <th class="text-center">Vendor Type / Name</th>
                         <th class="text-center">Vehicle No.</th>
                         <th class="text-center">Service Type / Mode</th>
                         <th class="text-center">Departure Date & Time</th>
                         <th class="text-center">Last Location</th>
                         <th class="text-center">THC Route</th>
+                        <th class="text-center">Loading HCC</th>
+                        <th class="text-center">Unloading HCC</th>
                         <th class="text-center">Vendor Bill No.</th>
                         <th class="text-center">Status</th>
                         <th class="text-center" style="width: 250px !important;">Actions</th>
@@ -177,7 +180,7 @@
                 </thead>
                 <tbody *ngIf="isLoading">
                     <tr>
-                        <td colspan="14" class="text-center py-5">
+                        <td colspan="16" class="text-center py-5">
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">Loading...</span>
                             </div>
@@ -187,7 +190,7 @@
                 </tbody>
                 <tbody *ngIf="!isLoading && (!thcData || thcData.length === 0) && isThcListing">
                     <tr>
-                        <td colspan="14" class="text-center py-4 text-muted fs-5">
+                        <td colspan="16" class="text-center py-4 text-muted fs-5">
                             No records found.
                         </td>
                     </tr>
@@ -218,6 +221,11 @@
                             <span class="fw-bold cursor-pointer"
                                 [ngClass]="(data.mfNo) ? 'text-primary fw-bold' : 'text-muted'"
                                 (click)="openMFPopup(data.thcNo)">{{data.mfNo ? 'View MF' :'-'}}</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="fw-bold cursor-pointer status-badge"
+                                [ngClass]="(data.isEmtpyThc) ? 'empty-thc-yes' : 'empty-thc-no'"
+                                >{{data.isEmtpyThc ? 'Yes' :'No'}}</span>
                         </td>
                         <td class="text-center">
                             <div class="d-flex gap-2 flex-column">
@@ -253,12 +261,12 @@
                                 {{ data.routeName }}
                             </span>
                         </td>
-                        <!-- <td class="text-center">
-                            <span class="px-3 py-2 cursor-pointer"
-                                [ngClass]="isHccValid(data.hccNo) ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
-                                (click)="isHccValid(data.hccNo) ? openHCCModal(data.hccNo) : null">{{
-                                isHccValid(data.hccNo) ? data.hccNo : 'NO HCC' }}</span>
-                        </td> -->
+                        <td class="text-center">
+                            <span class="fw-bold text-primary cursor-pointer" (click)="openHccPopup(data.thcNo,'L')">{{ data.isloadingHcc ?'View Hcc':'-' }}</span>
+                        </td>
+                           <td class="text-center">
+                            <span class="fw-bold text-primary cursor-pointer" (click)="openHccPopup(data.thcNo,'U')">{{ data.isunloadingHcc ?'View Hcc':'-' }}</span>
+                        </td>
 
                         <td class="text-center">
                             <span class="fw-bold text-primary cursor-pointer">{{ data.billNo || '—' }}</span>
@@ -346,3 +354,4 @@
 <app-thc-empty-vehicle-popup #ThcEmptyVehiclePopupComponent></app-thc-empty-vehicle-popup>
 <app-add-thc-popup #ThcPopupComponent></app-add-thc-popup>
 <app-mf-view #MfViewComponent></app-mf-view>
+<app-hcc-view #HccViewComponent></app-hcc-view>
