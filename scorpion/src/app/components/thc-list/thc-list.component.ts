@@ -17,12 +17,13 @@ import { ThcEmptyVehiclePopupComponent } from './thc-empty-vehicle-popup/thc-emp
 import { AddThcPopupComponent } from './add-thc-popup/add-thc-popup.component';
 import { MfViewComponent } from './mf-view/mf-view.component';
 import { HccViewComponent } from '../hcc-view/hcc-view.component';
+import { HCCviewComponent } from '../hcc-finacialedit-list/hccview/hccview.component';
 
 
 @Component({
   selector: 'app-thc-list',
   standalone: true,
-  imports: [NgSelectModule, CommonModule, ReactiveFormsModule, BsDatepickerModule, PaginationComponent, ThcEditComponent, ThcEmptyVehiclePopupComponent, AddThcPopupComponent, MfViewComponent],
+  imports: [NgSelectModule, CommonModule, ReactiveFormsModule, BsDatepickerModule, PaginationComponent, ThcEditComponent, ThcEmptyVehiclePopupComponent, AddThcPopupComponent, MfViewComponent,HCCviewComponent],
   providers: [BsModalService],
   templateUrl: './thc-list.component.html',
   styleUrl: './thc-list.component.scss'
