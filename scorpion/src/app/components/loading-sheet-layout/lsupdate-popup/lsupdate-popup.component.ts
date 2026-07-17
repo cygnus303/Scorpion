@@ -309,7 +309,7 @@ export class LSUpdatePopupComponent {
 
   getLoadinglist() {
     const form = this.loadingSheetService.LSForm;
-    if (form.get('loadingBy')?.valid && form.get('nextStopLocation')?.valid && form.get('rateType')?.valid) {
+    if (form.get('loadingBy')?.valid && form.get('nextStopLocation')?.valid && form.get('rateType')?.valid && form.get('mF_TransportMode')?.valid) {
       this.getDocketListForMFDetail();
       this.isgetLoadingList = true;
     } else {
@@ -318,6 +318,7 @@ export class LSUpdatePopupComponent {
       form.get('nextStopLocation')?.markAsTouched();
       form.get('rateType')?.markAsTouched();
       form.get('lsType')?.markAsTouched();
+      form.get('mF_TransportMode')?.markAsTouched();
     }
   }
 
@@ -551,6 +552,15 @@ export class LSUpdatePopupComponent {
         error: (err: any) => {
           this.isSubmitting = false; // Stop loading state on error
           console.error('Error preparing loading sheet', err);
+          let errorMessage = 'An error occurred while preparing the loading sheet.';
+          if (err?.error?.errors) {
+            errorMessage = Object.values(err.error.errors).flat().join('\\n');
+          } else if (err?.error?.title) {
+            errorMessage = err.error.title;
+          } else if (err?.error?.message) {
+            errorMessage = err.error.message;
+          }
+          this.sweetAlertService.error(errorMessage);
         }
       });
     } else {
@@ -665,7 +675,7 @@ export class LSUpdatePopupComponent {
       event?.value || event,
       this.loadingSheetService.LSForm.get('docketList') as FormArray,
       'luVendorCode',
-      this.loadingSheetService.LSForm.get('mF_TransportMode')?.value === 'S' ? 'L' : 'U',
+      this.docketService.loginUserList.Type === 'LS' ? 'L' : 'U',
       this.loadingSheetService.LSForm.get('loadedRateType')?.value,
       'ratetype',
       'newRate',
@@ -708,7 +718,7 @@ export class LSUpdatePopupComponent {
       event?.value || event,
       index,
       this.loadingSheetService.LSForm.get('docketList') as FormArray,
-      this.loadingSheetService.LSForm.get('mF_TransportMode')?.value === 'S' ? 'L' : 'U',
+      this.docketService.loginUserList.Type === 'LS' ? 'L' : 'U',
       this.loadingSheetService.LSForm.get('loadedRateType')?.value,
       'ratetype',
       'newRate'
