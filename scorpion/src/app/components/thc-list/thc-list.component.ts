@@ -16,12 +16,13 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { ThcEmptyVehiclePopupComponent } from './thc-empty-vehicle-popup/thc-empty-vehicle-popup.component';
 import { AddThcPopupComponent } from './add-thc-popup/add-thc-popup.component';
 import { MfViewComponent } from './mf-view/mf-view.component';
+import { HccViewComponent } from '../hcc-view/hcc-view.component';
 
 
 @Component({
   selector: 'app-thc-list',
   standalone: true,
-  imports: [NgSelectModule, CommonModule, ReactiveFormsModule, BsDatepickerModule, PaginationComponent, ThcEditComponent, ThcEmptyVehiclePopupComponent, AddThcPopupComponent, MfViewComponent],
+  imports: [NgSelectModule, CommonModule, ReactiveFormsModule, BsDatepickerModule, PaginationComponent, ThcEditComponent, ThcEmptyVehiclePopupComponent, AddThcPopupComponent, MfViewComponent,HccViewComponent],
   providers: [BsModalService],
   templateUrl: './thc-list.component.html',
   styleUrl: './thc-list.component.scss'
@@ -35,6 +36,7 @@ export class ThcListComponent {
   public mfData: any;
   public env = environment;
   @ViewChild('ThcEditComponent') ThcEditComponent!: ThcEditComponent;
+  @ViewChild('HccViewComponent') HccViewComponent!: HccViewComponent;
   @ViewChild('ThcPopupComponent') ThcPopupComponent!: AddThcPopupComponent;
   @ViewChild('MfViewComponent') MfViewComponent!: MfViewComponent;
   @ViewChild('ThcEmptyVehiclePopupComponent') ThcEmptyVehiclePopupComponent!: ThcEmptyVehiclePopupComponent;
@@ -49,7 +51,7 @@ export class ThcListComponent {
 
   public pagination = {
     page: 1,
-    pageSize: 60,
+    pageSize: 10,
     totalRecords: 0,
     totalPages: 0,
   };
@@ -351,5 +353,9 @@ mode:this.THCFilterForm.value.mode,
 
   openMFPopup(thcNo: string) {
     this.MfViewComponent.showPopup(thcNo);
+  }
+
+  openHccPopup(data: any, chargeType: string){
+    this.HccViewComponent.showPopup(data, chargeType, 'M');
   }
 }

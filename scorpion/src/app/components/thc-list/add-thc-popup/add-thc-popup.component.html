@@ -29,7 +29,7 @@
             </div>
             <div class="thcform-field">
               <label>Route Name <span class="req">*</span></label>
-              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Route Name" appendTo="body"
+              <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Route Name"
                 formControlName="routeCode" notFoundText="No matches found" [items]="routeNameList" bindLabel="text"
                 bindValue="value" appFocusNext (change)="getERDDate()"
                 [ngClass]="{ 'border-danger': ThcForm.get('routeCode')?.invalid  && ThcForm.get('routeCode')?.touched }"></ng-select>
@@ -81,7 +81,7 @@
               *ngIf="ThcForm.value.vendorType === '19' && ThcForm.value.bidType === 'With'">
               <label>Bid No <span class="req">*</span></label>
               <ng-select class="noFoundTextColor required2 clear-icon" [items]="bidData" placeholder="Select Bid"
-                appendTo="body" formControlName="BiddingVendor" appFocusNext notFoundText="No matches found"
+                formControlName="BiddingVendor" appFocusNext notFoundText="No matches found"
                 bindLabel="bidNo" bindValue="bidNo" (change)="onChangeBid($event)"
                 [ngClass]="{ 'border-danger': ThcForm.get('BiddingVendor')?.invalid && ThcForm.get('BiddingVendor')?.touched }"></ng-select>
               <div class="text-danger text-start"
@@ -91,7 +91,7 @@
             <div class="thcform-field">
               <label>Vendor Name <span class="req">*</span></label>
               <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Vendor Code/Name"
-                [items]="vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code" appendTo="body" required
+                [items]="vendorsList" bindLabel="vendor_Name" bindValue="vendor_Code" required
                 [ngClass]="{ 'border-danger': ThcForm.get('vendorCode')?.invalid && ThcForm.get('vendorCode')?.touched }"
                 formControlName="vendorCode" (change)="getPANnumberData($event?.vendor_Code)" appFocusNext
                 [readonly]="isBidVendorReadonly"> <ng-template
@@ -115,19 +115,19 @@
           <div class="thcform-grid">
             <div class="thcform-field">
               <label>Airport</label>
-              <ng-select class="noFoundTextColor" [items]="airportList" placeholder="Airport" appendTo="body"
+              <ng-select class="noFoundTextColor" [items]="airportList" placeholder="Airport" 
                 formControlName="airportCode" appFocusNext notFoundText="No matches found" bindLabel="codeDesc"
                 bindValue="codeId" (change)="getFlights()"></ng-select>
             </div>
             <div class="thcform-field" id="bidTypeWrap">
               <label>Airline Name</label>
-              <ng-select class="noFoundTextColor " placeholder="Airline Name" formControlName="airLine" appendTo="body"
+              <ng-select class="noFoundTextColor " placeholder="Airline Name" formControlName="airLine" 
                 (change)="getFlights()" appFocusNext notFoundText="No matches found" [items]="airlineList"
                 bindLabel="codeDesc" bindValue="codeId"></ng-select>
             </div>
             <div class="thcform-field">
               <label>Flight No</label>
-              <ng-select class="noFoundTextColor" placeholder="Flight No" formControlName="flightCode" appendTo="body"
+              <ng-select class="noFoundTextColor" placeholder="Flight No" formControlName="flightCode" 
                 (change)="getFlightSchTime()" notFoundText="No matches found" [items]="flightsList" bindLabel="codeDesc"
                 bindValue="codeId" appFocusNext></ng-select>
             </div>
@@ -188,7 +188,7 @@
               <ng-select class="noFoundTextColor required2 clear-icon" placeholder="FTL Type"
                 formControlName="vehicleType" [readonly]="ThcForm.value.vendorType === 'XX1'" appFocusNext required
                 notFoundText="No matches found" [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode"
-                (change)="onChangeVehicleType($event)" required appendTo="body"
+                (change)="onChangeVehicleType($event)" required 
                 [ngClass]="{ 'border-danger': ThcForm.get('vehicleType')?.invalid  && ThcForm.get('vehicleType')?.touched }"></ng-select>
               <div class="text-danger text-start"
                 *ngIf="ThcForm.get('vehicleType')?.invalid && ThcForm.get('vehicleType')?.touched ">
