@@ -247,7 +247,8 @@
             <div class="modal-footer-btns">
                 <!-- <button class="mfbtn mfbtn-download"><span class="icon">📥</span> Download XLS</button> -->
                 <button class="mfbtn mfbtn-close" (click)="modalRef.hide()">✕ Cancel</button>
-                <button class="mfbtn mfbtn-submit" (click)="onSubmit()">✓ Submit</button>
+                <button class="mfbtn mfbtn-submit" [class.disabled-input]="isLoading || !lrList || lrList.length === 0"
+                    (click)="onSubmit()">✓ Submit</button>
             </div>
         </div>
     </div>
