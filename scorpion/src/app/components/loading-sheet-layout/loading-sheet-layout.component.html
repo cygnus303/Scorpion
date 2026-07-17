@@ -132,6 +132,7 @@
                         <th class="text-center">LS Type</th>
                         <th class="text-center">Total Dockets</th>
                         <th class="text-center">MF No.</th>
+                        <th class="text-center">Transport Mode</th>
                         <th class="text-center">Loading HCC No.</th>
                         <!-- <th class="text-center">Unloading HCC No.</th> -->
                         <th class="text-center">Status</th>
@@ -185,6 +186,12 @@
                                 </a>
                             </span>
                             <span class="text-muted" *ngIf="!row.mfNo">—</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="mf-mode-badge" *ngIf="row.route_Mode" [ngClass]="'mode-' + row.route_Mode.toLowerCase()">
+                                {{ row.route_Mode }}
+                            </span>
+                            <span class="text-muted fw-medium" *ngIf="!row.route_Mode">—</span>
                         </td>
                         <td class="text-center cursor-pointer">
                             <span class="px-3 py-2 rounded fw-bold border"
