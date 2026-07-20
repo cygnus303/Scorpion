@@ -179,7 +179,7 @@ export class ThcArrivalListComponent {
   downloadExcel() {
     this.isdownload = true;
     const payload={
-      brcd:'PIM',
+      brcd:this.docketService.loginUserList.LocationCode,
       fromDate: this.formatDate(this.THCArrivalFilterForm.value.fromDate),
       toDate: this.formatDate(this.THCArrivalFilterForm.value.toDate),
       searchText: this.THCArrivalFilterForm.value.searchText,
@@ -192,7 +192,7 @@ export class ThcArrivalListComponent {
       next: (response: any) => {
         this.isdownload = false;
         if (response) {
-          this.exportService.exportToExcel(response.thcList, `THCArrival_Export`);
+          this.exportService.exportToCSV(response.thcList, `THCArrival_Export`);
         }
       },
       error: (err: any) => {
