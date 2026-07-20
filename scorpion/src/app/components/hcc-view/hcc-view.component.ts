@@ -21,17 +21,18 @@ export class HccViewComponent {
 
   constructor(private modalService: BsModalService, private thcMasterService: THCMasterService) { }
 
-  showPopup(data: any, chargeType: string, flag: any) {
+  showPopup(data: any, chargeType: string, flag: any,docNo?:any) {
     console.log("HCC Details Data:", data);
-    this.getHCCViewData(data, chargeType, flag);
+    this.getHCCViewData(data, chargeType, flag,docNo);
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
 
-  getHCCViewData(data: any, chargeType: string, flag: any) {
+  getHCCViewData(data: any, chargeType: string, flag: any,docNo?:any) {
+    const Type=docNo === 'T'?data.thcNo:data.pdcno ||data.drsNo||data.mfNo;
     const payload = {
       "FilterJson": {
         "ReportId": "364",
-        "Docno": data.pdcno ||data.drsNo||data.mfNo,
+        "Docno": Type,
         "DocType": flag,
         "ChargeType": chargeType
       }

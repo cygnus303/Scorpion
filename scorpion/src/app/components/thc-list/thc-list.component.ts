@@ -35,6 +35,7 @@ export class ThcListComponent {
   public isdownload: boolean = false;
   public mfData: any;
   public env = environment;
+  public requestCache = new Map<string, any>();
   @ViewChild('ThcEditComponent') ThcEditComponent!: ThcEditComponent;
   @ViewChild('HccViewComponent') HccViewComponent!: HccViewComponent;
   @ViewChild('ThcPopupComponent') ThcPopupComponent!: AddThcPopupComponent;
@@ -356,6 +357,11 @@ mode:this.THCFilterForm.value.mode,
   }
 
   openHccPopup(data: any, chargeType: string){
-    this.HccViewComponent.showPopup(data, chargeType, 'M');
+    this.HccViewComponent.showPopup(data, chargeType, 'M','T');
+  }
+
+  refreshData() {
+    this.requestCache.clear();
+    this.fetchData();
   }
 }

@@ -477,7 +477,7 @@
               <label>Contract Amount</label>
               <input min="1" max="99999999" type="text" class="form-control text-end" formControlName="contractAmount"
                 appFocusNext [readOnly]="ThcForm.value.vendorType === 'XX1'"
-                (blur)="changeAmountApplicable($event);restoreIfEmpty('contractAmount')"
+                (blur)="calculateNetAmount();restoreIfEmpty('contractAmount')"
                 oninput="this.value = this.value.replace(/[^0-9]/g,'');" (focus)="clearZero('contractAmount')" required
                 [ngClass]="{ 'border-danger': ThcForm.get('contractAmount')?.invalid && ThcForm.get('contractAmount')?.touched }" />
               <div class="text-danger text-start mt-1 small"
@@ -532,7 +532,12 @@
     <!-- Footer -->
     <div class="thcform-footer">
       <button type="button" class="thcform-btn-cancel" (click)="closePopup()">Cancel</button>
-      <button type="button" class="thcform-btn-submit" (click)="onSubmit()">Submit</button>
+      <button type="button" class="thcform-btn-submit" (click)="onSubmit()" [disabled]="isSubmitting"
+      [ngClass]="{'opacity-50 cursor-not-allowed': isSubmitting}">
+         <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"
+                            aria-hidden="true"></span>
+          <i class="fas fa-save me-2" *ngIf="!isSubmitting"></i> Submit  THC
+      </button>
     </div>
 
   </div>

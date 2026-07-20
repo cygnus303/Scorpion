@@ -231,4 +231,8 @@ export class THCMasterService {
   thcSubmit(formData:any){
     return this.apiHandlerService.Post(`THC/THCSubmit`,formData);
   }
+
+  thcGeneration(formData:any){
+    return this.apiHandlerService.Post(`THC/THCGeneration`,formData);
+  }
 }
