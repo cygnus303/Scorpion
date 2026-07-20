@@ -947,7 +947,7 @@ export class ChallanListComponent {
         this.sweetAlertService.error(err.error.message)
       }
     });
-    this.getTDSDetailsFromVendor(event);
+    // this.getTDSDetailsFromVendor(event);
     this.getVehicleFromVendorList(event);
     if (this.challanService.challanForm.value.vendorType === 'XX4' || this.challanService.challanForm.value.vendorType === 'XX1') {
       this.GetVehicleTypesForChallanFromRouteVendType()

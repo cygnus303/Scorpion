@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CommonModule, DatePipe } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -60,8 +60,10 @@ export class AddThcPopupComponent {
   public isBidRegDateReadonly: boolean = false;
   public isBidInsDateReadonly: boolean = false;
   public selectedMfs: any[] = [];
+  public isSubmitting :boolean=false;
   public isBidFitDateReadonly: boolean = false;
   @ViewChild('TemplateTHC', { static: true }) TemplateTHC!: TemplateRef<any>;
+  @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(
     private modalService: BsModalService,
@@ -402,7 +404,7 @@ export class AddThcPopupComponent {
         this.sweetAlertService.error(err.error.message)
       }
     });
-    this.getTDSDetailsFromVendor(event);
+    // this.getTDSDetailsFromVendor(event);
     this.getVehicleFromVendorList(event);
     if (this.ThcForm.value.vendorType === 'XX1') {
       this.GetVehicleTypesForChallanFromRouteVendType()
@@ -743,50 +745,50 @@ export class AddThcPopupComponent {
     });
   }
 
-  changeAmountApplicable(event: any) {
-    this.ThcForm.patchValue({ tDSOnAmount: event.target.value });
-    this.calculateNetAmount()
-  }
+  // changeAmountApplicable(event: any) {
+  //   // this.ThcForm.patchValue({ tDSOnAmount: event.target.value });
+  //   this.calculateNetAmount()
+  // }
 
   calculateNetAmount() {
     const contractAmount = Number(this.ThcForm.get('contractAmount')?.value) || 0;
-    const chargesGroup = this.ThcForm.get('charges') as FormGroup;
-    let netChargesEffect = 0;
+    // const chargesGroup = this.ThcForm.get('charges') as FormGroup;
+    // let netChargesEffect = 0;
 
-    if (this.chargesDetailsList && this.chargesDetailsList.length) {
-      this.chargesDetailsList.forEach(ch => {
-        const ctrl = chargesGroup.get(ch.chargecode);
-        const val = Number(ctrl?.value) || 0;
-        if (ch.operator === '+' || ch.operator === '+') {
-          netChargesEffect += val;
-        } else if (ch.operator === '-' || ch.operator === '−') {
-          netChargesEffect -= val;
-        } else {
-          netChargesEffect += val;
-        }
-      });
-    } else {
-      const telephoneCharges = Number(this.ThcForm.get('telephoneCharges')?.value) || 0;
-      const humaliCharges = Number(this.ThcForm.get('humaliCharges')?.value) || 0;
-      const mamulCharges = Number(this.ThcForm.get('mamulCharges')?.value) || 0;
-      netChargesEffect = telephoneCharges + humaliCharges - mamulCharges;
-    }
+    // if (this.chargesDetailsList && this.chargesDetailsList.length) {
+    //   this.chargesDetailsList.forEach(ch => {
+    //     const ctrl = chargesGroup.get(ch.chargecode);
+    //     const val = Number(ctrl?.value) || 0;
+    //     if (ch.operator === '+' || ch.operator === '+') {
+    //       netChargesEffect += val;
+    //     } else if (ch.operator === '-' || ch.operator === '−') {
+    //       netChargesEffect -= val;
+    //     } else {
+    //       netChargesEffect += val;
+    //     }
+    //   });
+    // } else {
+    //   const telephoneCharges = Number(this.ThcForm.get('telephoneCharges')?.value) || 0;
+    //   const humaliCharges = Number(this.ThcForm.get('humaliCharges')?.value) || 0;
+    //   const mamulCharges = Number(this.ThcForm.get('mamulCharges')?.value) || 0;
+    //   netChargesEffect = telephoneCharges + humaliCharges - mamulCharges;
+    // }
 
-    const netAmountBeforeTDS = contractAmount + netChargesEffect;
+    // const netAmountBeforeTDS = contractAmount ;
 
-    const staxOnAmount = parseFloat(this.ThcForm.get('tDSOnAmount')?.value || '0');
-    const isTDSEnabled = this.ThcForm.get('isTDSEnabled')?.value;
-    const tdsRate = parseFloat(this.ThcForm.get('TDSPercent')?.value || '0');
-    let tdsAmount = 0;
+    // const staxOnAmount = parseFloat(this.ThcForm.get('tDSOnAmount')?.value || '0');
+    // const isTDSEnabled = this.ThcForm.get('isTDSEnabled')?.value;
+    // const tdsRate = parseFloat(this.ThcForm.get('TDSPercent')?.value || '0');
+    // let tdsAmount = 0;
 
-    if (isTDSEnabled) {
-      tdsAmount = this.rounditn((staxOnAmount * tdsRate) / 100, 0);
-    }
+    // if (isTDSEnabled) {
+    //   tdsAmount = this.rounditn((staxOnAmount * tdsRate) / 100, 0);
+    // }
 
-    const finalNet = netAmountBeforeTDS - tdsAmount;
+    const finalNet = contractAmount;
 
     this.ThcForm.patchValue({
-      totalTDSAmount: tdsAmount.toFixed(2),
+      // totalTDSAmount: tdsAmount.toFixed(2),
       netAmount: finalNet.toFixed(2),
     }, { emitEvent: false });
 
@@ -1108,67 +1110,146 @@ export class AddThcPopupComponent {
         });
       }
 
-      const payload = {
-        cvm: {
-          cth: {
-            thcDate: getISOString(formValue.tHCDate),
-            routeMode: formValue.routeType,
-            routeCode: formValue.routeCode,
-            routeName: formValue.routeCode,
-            vehicleNO: formValue.vehicleNO === 'O' ? formValue.mKTVehicleNo : formValue.vehicleNO,
-            vendorType: formValue.vendorType,
-            vendorCode: formValue.vendorCode,
-            vendorName: formValue.vendorName,
-            entryBy: formValue.entryBy,
-            actualDeptDate: getISOString(formValue.actualDeptDate),
-            scheduleDeptDate: getISOString(formValue.scheduleDeptDate),
-            erd: getISOString(formValue.ERD),
-            isEmpty: this.ThcType !== 'A'
-          },
-          ctfd: {
-            panno: formValue.PANNO || formValue.lorryOwnerPanNo || '',
-            contractAmount: Number(formValue.contractAmount),
-            advanceAmount: Number(formValue.advanceAmount),
-            balanceAmount: Number(formValue.balanceAmount),
-            advanceLocation: formValue.advanceLocation,
-            balanceLocation: formValue.balanceLocation
-          },
-          ctvd: {
-            ftlType: formValue.fTLType,
-            registrationDate: getISOString(formValue.registrationDate),
-            insuranceDate: getISOString(formValue.insuranceDate),
-            fitnessDate: getISOString(formValue.fitnessDate),
-            engineno: formValue.eNGINENO,
-            chasisno: formValue.cHASISNO,
-            rcbookno: formValue.rCBOOKNO,
-            driver1Licence: formValue.driver1Licence,
-            d1_DOB: getISOString(formValue.d1_DOB),
-            driver1MobileNo: formValue.driver1MobileNo,
-            driver1Name: formValue.driver1Name,
-            driver1RTONo: formValue.driver1RTONo,
-            driver1LicenceValDate: getISOString(formValue.driver1LicenceValDate)
-          },
-          isMathadi: false,
-          rateType: "",
-          isMobileUser: "N"
-        },
-        thcCharge: thcChargeArray,
-        baseUserType: this.docketService.loginUserList?.Type?.toString() || "",
-        baseLocationCode: this.docketService.loginUserList?.LocationCode || "",
-        baseUserName: this.docketService.loginUserList?.BaseUserName || "",
-        baseCompanyCode: this.docketService.loginUserList?.Companycode || "",
-        baseFinYear: this.docketService.loginUserList?.FinYear || "",
-        isnewda: true
+
+       const payload = {
+      "CTH": {
+        "ManualTHCNo": "",
+        "THCDate": getISOString(formValue.tHCDate) || null,
+        "THCBRCD": this.docketService.loginUserList?.LocationCode || "",
+        "FROMCITY": "",
+        "TOCITY": "",
+        "THCType": 1,
+        "RouteCategory": "",
+        "RouteType": formValue.routeType || "",
+        "RouteCode": formValue.routeCode || "",
+        "RouteName": formValue.routeCode || "",
+        "VehicleNO": formValue.vehicleNO === 'O' ? (formValue.mKTVehicleNo || "") : (formValue.vehicleNO || formValue.vehicleNo || ""),
+        "OpenKM": 0.0,
+        "TotalManifest": 0.0,
+        "FreeSpace": 0.0,
+        "WtLoaded": Number(formValue.wtLoaded) || 0.0,
+        "IsOverLoad": formValue.isOverLoad || false,
+        "OverLoadReason": formValue.overLoadReason || "",
+        "VendorCode": formValue.vendorCode || "",
+        "VendorName": formValue.vendorName || "",
+        "VendorType": formValue.vendorType || "",
+        "SUPPLYERNAME": "",
+        "AirportCode": formValue.airportCode || "",
+        "FlightCode": formValue.flightCode || "",
+        "FlightScheduleTime": formValue.flightScheduleTime || "",
+        "AirWayBillNo": formValue.airWayBillNo || "",
+        "THCRemarks": "",
+        "EntryBy": formValue.entryBy || "",
+        "LorryOwnerPanNo": formValue.lorryOwnerPanNo || "",
+        "SealNo": formValue.sealNo || "",
+        "ActualDeptDate": getISOString(formValue.actualDeptDate) || null,
+        "ScheduleDeptDate": getISOString(formValue.scheduleDeptDate) || null,
+        "ScheduleTime": "",
+        "LateDepaturereason": "",
+        "IsEmpty": this.ThcType !== 'A',
+        "IsCityEnabled": false,
+        "DeliveryZone": "",
+        "MKTVehicleNo": formValue.mKTVehicleNo || "",
+        "VehicleCapacity": Number(formValue.vehicleCapacity) || 0.0,
+        "VehicleCapacityUti": Number(formValue.vehicleCapacityUti) || 0.0,
+        "TrainName": "",
+        "TrainNo": "",
+        "RRNo": "",
+        "AirLine": formValue.airLine || "",
+        "EWayBillNo": "",
+        "EWayBillExpiredDate": null,
+        "IsMonthlyBillAllow": false,
+        "LoadingDate": null,
+        "CityRouteCode": "",
+        "CityRouteKM": "",
+        "LoadingSlipAttachment": "",
+        "ApprovedBy": "",
+        "ERD": getISOString(formValue.ERD) || null,
+        "Version": 0
+      },
+      "CTFD": {
+        "ContractAmount": Number(formValue.contractAmount) || 0.0,
+        "StandardContractAmount": 0.0,
+        "AdvanceAmount": Number(formValue.advanceAmount) || 0.0,
+        "AdvanceLocation": formValue.advanceLocation || "",
+        "BalanceAmount": Number(formValue.balanceAmount) || 0.0,
+        "BalanceLocation": formValue.balanceLocation || "",
+        "PANNO": formValue.PANNO || formValue.lorryOwnerPanNo || "",
+        "TotalTDSAmount": Number(formValue.totalTDSAmount) || 0.0,
+        "IsMathadi": false,
+        "MathadiSlipNo": "",
+        "MathadiDate": null,
+        "MathadiAmt": 0.0,
+        "Is_Local_ODA_id": ""
+      },
+      "CTVD": {
+        "VehicleNO": formValue.vehicleNO === 'O' ? (formValue.mKTVehicleNo || "") : (formValue.vehicleNO || formValue.vehicleNo || ""),
+        "FTLType": formValue.fTLType || "",
+        "Driver1Name": formValue.driver1Name || "",
+        "Driver1MobileNo": formValue.driver1MobileNo || "",
+        "Driver1RTONo": formValue.driver1RTONo || "",
+        "Driver1Licence": formValue.driver1Licence || "",
+        "D1_DOB": getISOString(formValue.d1_DOB) || "",
+        "Driver1LicenceValDate": getISOString(formValue.driver1LicenceValDate) || null,
+        "Driver2LicenceValDate": null,
+        "CHASISNO": formValue.cHASISNO || "",
+        "ENGINENO": formValue.eNGINENO || "",
+        "RCBOOKNO": formValue.rCBOOKNO || "",
+        "RegistrationDate": getISOString(formValue.registrationDate) || null,
+        "FitnessDate": getISOString(formValue.fitnessDate) || null,
+        "PermitDate": null,
+        "InsuranceDate": getISOString(formValue.insuranceDate) || null,
+        "VehicleTypeSize": formValue.vehicleType || "",
+        "CustomerName": "",
+        "Driver": ""
+      },
+      "ISAttechedVendor": false,
+      "ISContractualVendor": false,
+      "RateType": "",
+       MFList: this.selectedMfs ? this.selectedMfs.map((mf: any) => ({
+         TCNO: mf.tcno || "",
+         TOT_DKT: mf.toT_DKT || 0,
+         TOT_LOAD_PKGS: mf.toT_PKGS || 0,
+         TOT_LOAD_ACTWT: mf.toT_ACTUWT || 0,
+         IsEnabled: true
+       })) : [],
+       BaseLocationCode:this.docketService.loginUserList.LocationCode,
+       BaseUserName:this.docketService.loginUserList.BaseUserName,
+       BaseCompanyCode:this.docketService.loginUserList.Companycode,
+       BaseFinYear:this.docketService.loginUserList.FinYear
       };
 
-      this.THCService.thcSubmit(payload).subscribe({
+      console.log(payload);
+      
+      const formData = new FormData();
+      formData.append('jsonrequest', JSON.stringify(payload));
+      this.isSubmitting=true;
+      this.THCService.thcGeneration(formData).subscribe({
         next: (response: any) => {
           if (response?.success) {
-            this.sweetAlertService.success(`THC ${response.data.docno} Generated Successfully!!`);
-            this.closePopup();
+            if (response.data && response.data.isError) {
+              const errorMsg = (response.data.message && response.data.message.length > 0)
+                ? response.data.message.join(', ')
+                : 'An error occurred while generating THC.';
+              this.isSubmitting = false;
+              this.sweetAlertService.error(errorMsg);
+            } else {
+              this.isSubmitting=false;
+              this.sweetAlertService.success(`THC ${response.data?.docno || ''} Generated Successfully!!`);
+              this.closePopup();
+              this.dataEmitter.emit();
+            }
+          } else {
+            this.isSubmitting=false;
+            this.sweetAlertService.error('Failed to generate THC.');
           }
+        },
+        error: (err: any) => {
+          console.error(err);
+          this.isSubmitting=false;
+          this.sweetAlertService.error('Something went wrong!');
         }
-      })
+      });
     } else {
       this.ThcForm.markAllAsTouched();
       const invalidKeys = Object.keys(this.ThcForm.controls).filter(
@@ -1178,14 +1259,3 @@ export class AddThcPopupComponent {
     }
   }
 }
-// {
-//     "success": true,
-//     "data": {
-//         "docno": "VH/PIM/2627/000011",
-//         "doctyp": "THC",
-//         "tranXaction": "Successfully Generated",
-//         "isError": false,
-//         "message": []
-//     },
-//     "totalCount": 0
-// }

@@ -841,7 +841,7 @@ export class ChallanService {
         MathadiDate: new Date().toISOString(),
         MathadiAmt: 0,
         Is_Local_ODA_id: this.filterList ? this.filterList?.odaType : '',
-        IsTDSEnabled: challanForm?.isTDSEnabled,
+        IsTDSEnabled: challanForm?.isTDSEnabled || false,
         TDSAcccode: challanForm?.TDSAcccode,
         TDSAccdesc: "",
         TDSOnAmount: Number(challanForm?.tDSOnAmount),
@@ -957,7 +957,7 @@ export class ChallanService {
             this.isRedirect = true;
             window.parent.location.href = `${this.env.liveUrl}Operation/ChallanDone?DOCNO=${response.data.docno}&DOCTYP=${response.data.doctyp}&TranXaction=${response.data.tranXaction}&IsError=${response.data.isError}&src=angular`;
           } else {
-            this.sweetAlertService.error('You have some form errors. Please check below.');
+            this.sweetAlertService.error(response.data.message[0]);
             this.isSubmitting = false;
           }
         }, error: (error) => {

@@ -1,20 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface DepsTicket {
-  type: 'SHORTAGE' | 'DAMAGE' | 'EXCESS' | 'PILFERAGE';
-  id: string;
-  raisedOn: string;
-  raisedAt: string;
-  raisedBy: string;
-  pkgsAffected: string;
-  weightAffected: string;
-  description: string;
-  closed: boolean;
-  closedOn?: string;
-  closureRemarks?: string;
-  icon: string;
-}
+import { LrService } from 'app/shared/services/lr.service';
 
 @Component({
   selector: 'app-lr-exceptions-tab',
@@ -23,23 +9,48 @@ interface DepsTicket {
   templateUrl: './lr-exceptions-tab.component.html',
   styles: []
 })
-export class LrExceptionsTabComponent {
+export class LrExceptionsTabComponent implements OnInit, OnChanges {
   @Input() lrDetails: any;
+  public isLoading: boolean = false;
+  public tickets: any[] = [];
 
-  public tickets: DepsTicket[] = [
-    {
-      type: 'SHORTAGE',
-      id: 'DEPS/BLR001/2526/000031',
-      raisedOn: '13 Apr 2026, 08:40 AM',
-      raisedAt: 'Chennai Hub (MAA-HUB)',
-      raisedBy: 'USR-HUB-MAA-002 : Ravi Kumar',
-      pkgsAffected: '1 Pkg(s)',
-      weightAffected: '35 kg',
-      description: '1 wooden crate missing on arrival at MAA-HUB. Manifest shows 6 pkgs, received 5.',
-      closed: true,
-      closedOn: '13 Apr 2026, 10:00 AM',
-      closureRemarks: 'Traced and loaded on next vehicle. Delivered with main consignment.',
-      icon: '⚖️'
+  constructor(private lrService: LrService) {}
+
+  ngOnInit() {
+    // Data is fetched via ngOnChanges when lrDetails is passed
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['lrDetails'] && this.lrDetails) {
+      this.fetchExceptionData();
     }
-  ];
+  }
+
+  fetchExceptionData() {
+    const lrNumber = this.lrDetails?.lR_Number;
+    if (!lrNumber) return;
+
+    this.isLoading = true;
+    this.lrService.getExceptionTracking(lrNumber).subscribe({
+      next: (res: any) => {
+        this.isLoading = false;
+        if (res) {
+          this.tickets = Array.isArray(res?.data) ? res.data : (Array.isArray(res) ? res : []);
+        }
+      },
+      error: () => {
+        this.isLoading = false;
+        this.tickets = [];
+      }
+    });
+  }
+
+  getIconForExceptionType(type: string): string {
+    const lowerType = (type || '').toLowerCase();
+    if (lowerType.includes('damage')) return '📦';
+    if (lowerType.includes('shortage')) return '➖';
+    if (lowerType.includes('excess')) return '➕';
+    if (lowerType.includes('pilferage')) return '🕵️‍♂️';
+    return '⚠️';
+  }
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 import { FormsModule } from '@angular/forms';
@@ -17,6 +17,7 @@ export class ThcEditComponent {
   public modalRef!: BsModalRef;
   public selectedTHC: string = '';
   public thcData: any;
+  @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
 
   constructor(private modalService: BsModalService, public PRSDRSApiService: PRSDRSApiService, private docketService: DocketService, private sweetAlerService: SweetAlertService) { }
@@ -76,6 +77,7 @@ export class ThcEditComponent {
       next: (response: any) => {
         if (response.success) {
           this.sweetAlerService.success(`${response.message}`);
+          this.dataEmitter.emit();
         }
       }, error: (err: any) => {
         console.error(err);

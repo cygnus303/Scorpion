@@ -77,7 +77,8 @@
       </li>
       <li class="nav-item">
         <a class="nav-link d-flex align-items-center gap-1" [class.active]="activeTab === 'Exceptions'" (click)="setActiveTab('Exceptions')">
-          ⚠️ Exceptions <span class="badge rounded-pill ms-1" style="background-color: #dc2626;">1</span>
+          ⚠️ Exceptions 
+          <!-- <span class="badge rounded-pill ms-1" style="background-color: #dc2626;">1</span> -->
         </a>
       </li>
       <li class="nav-item">
@@ -98,7 +99,7 @@
     <app-lr-operational-tab [lrDetails]="lrDetails" *ngIf="activeTab === 'Operational'"></app-lr-operational-tab>
     <app-lr-financial-tab [lrDetails]="lrDetails" *ngIf="activeTab === 'Financial'"></app-lr-financial-tab>
     <!-- <app-lr-documents-tab [lrDetails]="lrDetails" *ngIf="activeTab === 'Documents'"></app-lr-documents-tab> -->
-    <!-- <app-lr-exceptions-tab [lrDetails]="lrDetails" *ngIf="activeTab === 'Exceptions'"></app-lr-exceptions-tab> -->
+    <app-lr-exceptions-tab [lrDetails]="lrDetails" *ngIf="activeTab === 'Exceptions'"></app-lr-exceptions-tab>
     <app-lr-scanning-tab [lrDetails]="lrDetails" *ngIf="activeTab === 'Scanning'"></app-lr-scanning-tab>
     <app-lr-docket-pl-tab [lrDetails]="lrDetails" *ngIf="activeTab === 'Docket'"></app-lr-docket-pl-tab>
   </div>

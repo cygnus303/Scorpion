@@ -224,8 +224,8 @@
                         </td>
                         <td class="text-center">
                             <span class="fw-bold cursor-pointer status-badge"
-                                [ngClass]="(data.isEmtpyThc) ? 'empty-thc-yes' : 'empty-thc-no'"
-                                >{{data.isEmtpyThc ? 'Yes' :'No'}}</span>
+                                [ngClass]="(data.isEmpty > 0) ? 'empty-thc-yes' : 'empty-thc-no'"
+                                >{{data.isEmpty > 0 ? 'Yes' :'No'}}</span>
                         </td>
                         <td class="text-center">
                             <div class="d-flex gap-2 flex-column">
@@ -262,10 +262,10 @@
                             </span>
                         </td>
                         <td class="text-center">
-                            <span class="fw-bold text-primary cursor-pointer" (click)="openHccPopup(data.thcNo,'L')">{{ data.isloadingHcc ?'View Hcc':'-' }}</span>
+                            <span class="fw-bold text-primary cursor-pointer" (click)="openHccPopup(data,'L')">{{ data.loadingHCCnt > 0 ?'View Hcc':'-' }}</span>
                         </td>
                            <td class="text-center">
-                            <span class="fw-bold text-primary cursor-pointer" (click)="openHccPopup(data.thcNo,'U')">{{ data.isunloadingHcc ?'View Hcc':'-' }}</span>
+                            <span class="fw-bold text-primary cursor-pointer" (click)="openHccPopup(data,'U')">{{ data.unloadingHCCnt > 0 ?'View Hcc':'-' }}</span>
                         </td>
 
                         <td class="text-center">
@@ -290,7 +290,7 @@
                                 <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
                                     (click)="onCancel(data.thcNo)"
                                     [disabled]="data.status === 'Cancelled'|| data.status === 'Billed'|| data.status ==='Completed Journey'">
-                                    🚫 Cancel
+                                    🚫 Cancel   
                                 </button>
                             </div>
                         </td>
@@ -350,8 +350,8 @@
         </app-pagination>
     </div>
 </div>
-<app-thc-edit #ThcEditComponent></app-thc-edit>
+<app-thc-edit #ThcEditComponent (dataEmitter)="refreshData()"></app-thc-edit>
 <app-thc-empty-vehicle-popup #ThcEmptyVehiclePopupComponent></app-thc-empty-vehicle-popup>
-<app-add-thc-popup #ThcPopupComponent></app-add-thc-popup>
+<app-add-thc-popup #ThcPopupComponent (dataEmitter)="refreshData()"></app-add-thc-popup>
 <app-mf-view #MfViewComponent></app-mf-view>
 <app-hcc-view #HccViewComponent></app-hcc-view>
