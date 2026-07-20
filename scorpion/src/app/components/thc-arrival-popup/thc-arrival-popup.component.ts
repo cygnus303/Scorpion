@@ -2,7 +2,6 @@ import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angula
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { BranchWiseLoadingUnloading } from 'app/shared/models/thc-master.model';
 import { CommonService } from 'app/shared/services/common.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
@@ -28,14 +27,13 @@ export class ThcArrivalPopupComponent {
   public modalRef!: BsModalRef;
   public arrivalForm!: FormGroup;
   public arrivalDetail: any;
-  env = environment;
-  minDate: Date | undefined;
-  maxDate: Date | undefined;
-  public isloading:boolean=false;
+  public env = environment;
+  public minDate: Date | undefined;
+  public maxDate: Date | undefined;
+  public isloading: boolean = false;
   public THCData: any;
-  // public THCFilterForm!: FormGroup;
-  public branchWiseLoadingUnloadingList: BranchWiseLoadingUnloading[] = [];
-  maxCloseKMValue: number = 900000;
+  public isFetchingData: boolean = false;
+  public maxCloseKMValue: number = 900000;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
 
@@ -67,7 +65,7 @@ export class ThcArrivalPopupComponent {
   constructor(
     public docketService: DocketService,
     public commonService: CommonService,
-    public customerService:CustomerService,
+    public customerService: CustomerService,
     private stockUpdateService: StockUpdateService,
     public generalMasterService: GeneralMasterService,
     public THCService: THCMasterService,
@@ -77,23 +75,12 @@ export class ThcArrivalPopupComponent {
 
   showPopup(data: any) {
     this.buildForm();
-    this.generalMasterService.getDeliveryProcessData();
     this.dateAccess();
-    // this.buildFilterForm();
     this.THCData = data;
-    // this.generalMasterService.getLoadingBy()
-    // this.generalMasterService.getChargeTypeData();
     console.log(this.THCData);
     this.refreshData();
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
-  // buildFilterForm() {
-  //   this.THCFilterForm = new FormGroup({
-  //     loadBy: new FormControl(null),
-  //     chargeType: new FormControl(null)
-  //   })
-  // }
-
 
   buildForm() {
     this.arrivalForm = new FormGroup({
@@ -109,168 +96,50 @@ export class ThcArrivalPopupComponent {
       Rate: new FormControl(0),
       LoadingCharge: new FormControl(0)
     });
-    // this.arrivalForm.get('LoadingBy')?.valueChanges.subscribe(value => this.updateValidatorsByLoadingBy(value));
   }
 
-  // onLoadingByChange() {
-  //   const loadBy = this.THCFilterForm.get('loadBy')?.value;
-  //   if (loadBy === 'XX5' || loadBy === 'XX9') {
-  //     this.THCFilterForm.get('chargeType')?.setValue(null);
-  //   }
-  //   this.refreshData();
-  // }
-
   refreshData() {
-    // this.docketService.loginUserList.loadBy = this.THCFilterForm.value.loadBy;
-    // this.docketService.loginUserList.chargeType = this.THCFilterForm.value.chargeType;
     this.docketService.loginUserList.id = this.THCData.thcNo;
     this.buildForm();
     this.getArrival();
   }
 
-  // updateValidatorsByLoadingBy(loadingBy: string) {
-  //   const vendorCtrl = this.arrivalForm.get('VendorCode');
-  //   const loadingChargeCtrl = this.arrivalForm.get('LoadingCharge');
-
-  //   if (loadingBy === 'XX9') {
-  //     vendorCtrl?.clearValidators();
-  //     loadingChargeCtrl?.clearValidators();
-  //   }
-
-  //   else {
-  //     vendorCtrl?.setValidators([Validators.required]);
-  //     loadingChargeCtrl?.setValidators([
-  //       Validators.required,
-  //     ]);
-  //   }
-
-  //   vendorCtrl?.updateValueAndValidity();
-  //   loadingChargeCtrl?.updateValueAndValidity();
-  // }
-
   getCurrentDateTime(): string {
     const now = new Date();
-
     const day = now.getDate().toString().padStart(2, '0');
     const month = now.toLocaleString('en-US', { month: 'short' });
     const year = now.getFullYear();
-
     let hours = now.getHours();
     const minutes = now.getMinutes().toString().padStart(2, '0');
     const ampm = hours >= 12 ? 'PM' : 'AM';
-
     hours = hours % 12 || 12; // 12-hour format
-
     return `${day} ${month} ${year} ${hours}:${minutes} ${ampm}`;
   }
+
 
   getArrival() {
     const params = {
       id: this.docketService.loginUserList.id,
-      loadBy:'',
-      chargeType:'',
+      loadBy: '',
+      chargeType: '',
       BaseLocationCode: this.docketService.loginUserList.LocationCode,
       BaseUserName: this.docketService.loginUserList.BaseUserName
     }
+    this.isFetchingData = true;
     this.stockUpdateService.getArrivalDetail(params).subscribe({
       next: (response) => {
         this.arrivalDetail = response;
-        this.generalMasterService.getLoadingByDetail(this.arrivalDetail.loadingBy);
-        // this.updateValidatorsByLoadingBy(this.arrivalDetail.loadingBy);
-        // this.arrivalForm.patchValue({
-        //   Unloder: this.arrivalDetail.unloder
-        // });
+        this.arrivalForm.patchValue({
+          CLOSEKM: this.arrivalDetail.closekm
+        });
         this.fetchPreparedByEmployee()
-        this.getPANnumberData(this.arrivalDetail.loadingBy)
+        this.isFetchingData = false;
       },
+      error: (err) => {
+        this.isFetchingData = false;
+        console.error('Error fetching arrival details:', err);
+      }
     })
-  }
-
-  getPANnumberData(vendorCode: any) {
-    const ChargedBy = vendorCode;
-    if (ChargedBy === 'B' || ChargedBy == '04') {
-      this.getChargesVendorsList('04');
-    }
-    if (ChargedBy === 'A' || ChargedBy == 'XX1') {
-      this.getChargesVendorsList('XX1');
-    }
-    if (ChargedBy === 'M') {
-      this.getChargesVendorsList('19');
-    }
-    if (ChargedBy === 'XX5' || ChargedBy === 'XX8') {
-      this.branchWiseLoadingUnloading(vendorCode);
-    }
-  }
-
-  getLoadingCharge(event: any) {
-    if (event) {
-      this.arrivalForm.patchValue({
-        vendorName: event.text
-      })
-    }
-    const data = {
-      loadUnloadType: 'U',
-      vendorCode: event.value,
-      typeModule: 'M',
-      chargeType:'',
-      brdc: this.docketService.loginUserList.LocationCode,
-      loadingBy: this.arrivalDetail.loadingBy,
-    };
-    if (this.arrivalDetail?.loadingBy === 'XX5') {
-      this.THCService.getLoadingCharge(data).subscribe({
-        next: (response: any) => {
-          this.arrivalForm.patchValue({
-            Rate: response.rate
-          });
-          this.arrivalDetail.rateType = response.rateType;
-
-        },
-        error: (err) => {
-          console.error('Error fetching loading charge:', err);
-        }
-      });
-    }
-    setTimeout(() => {
-      this.calculateCharge();
-    }, 200);
-  }
-
-  rateErrorMsg: any;
-  validateRate(): boolean {
-    const loadingBy = this.arrivalDetail.loadingBy;
-
-    // Skip validation if 'LoadingBy' is 'XX9'
-    if (loadingBy === 'XX9') {
-      return true;
-    }
-
-    const rateType = this.arrivalDetail.rateType;
-    const rate = parseFloat(this.arrivalForm.get('Rate')?.value || '0') || 0;
-    const chrgwt = parseFloat(this.arrivalDetail.chrgwt || '0') || 0;
-    const noofpkg = parseFloat(this.arrivalDetail.pkgsno || '0') || 0;
-
-    let maxlimitcalculation = 0;
-
-    if (rateType === '4') {
-      if (chrgwt === 0) return false;
-      maxlimitcalculation = rate / chrgwt;
-    }
-    else if (rateType === '3') {
-      if (chrgwt === 0) return false;
-      maxlimitcalculation = (rate * noofpkg) / chrgwt;
-    }
-    else {
-      maxlimitcalculation = rate;
-    }
-
-    if (maxlimitcalculation > 5) {
-      this.rateErrorMsg = 'Rate Amount Is High Please Check';
-      this.arrivalForm.patchValue({ Rate: '0.00' });
-      return false;
-    }
-
-    this.rateErrorMsg = '';
-    return true;
   }
 
   onFocusCloseKM() {
@@ -280,90 +149,22 @@ export class ThcArrivalPopupComponent {
     }
   }
 
-
-  onFocusRate() {
-    const control = this.arrivalForm.get('Rate');
-    if (control?.value === 0) {
-      control.setValue(null);
-    }
-  }
-
-  onBlurRate() {
-    const control = this.arrivalForm.get('Rate');
-    if (control?.value === null || control?.value === '') {
-      control.setValue(0);
-    }
-  }
-
-
-  calculateCharge() {
-    const isValid = this.validateRate();
-    if (!isValid) {
-      this.arrivalForm.patchValue({ LoadingCharge: (0).toFixed(2) })
-      return;
-    }
-    const rateType = this.arrivalDetail.rateType;
-    const newRate = parseFloat(this.arrivalForm.value.Rate || 0);
-    const actuwt = parseFloat(this.arrivalDetail.chrgwt || 0);
-    const pkgsno = parseFloat(this.arrivalDetail.pkgsno || 0);
-    let charge = 0;
-    switch (rateType) {
-      case '1': // PER KG
-        charge = actuwt * newRate;
-        break;
-      case '3': // PER PACKAGES
-        charge = pkgsno * newRate;
-        break;
-      case '4': // FLAT
-        charge = newRate;
-        break;
-      default:
-        charge = 0;
-    }
-    this.arrivalForm.patchValue({
-      LoadingCharge: charge.toFixed(2)
-    })
-  }
-
-  branchWiseLoadingUnloading(event: any) {
-    const data = {
-      vendorType: event,
-      baseLocationCode: this.docketService.loginUserList.LocationCode,
-      type: 'U',
-    }
-    this.THCService.getBranchWiseLoadingUnloadingVendorList(data).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.branchWiseLoadingUnloadingList = response.data;
-        }
-      },
-    });
-  }
-
-  backtoStockUpdate() {
-    window.parent.location.href = `${this.env.liveUrl}/Operation/ArrivalUpdate/${'1'}?type=${"1"}&src=angular`;
-  }
-
   dateAccess() {
     const payload = {
       moduleCode: '46',
       baseUserName: this.docketService.baseUsername
     };
-
     this.commonDateService.userDateSelection(payload).subscribe({
       next: (res: any) => {
         if (res && res.length > 0) {
           const rule = res[0];
-
           // API min_Date
           this.minDate = new Date(rule.min_Date);
-
           // BackDate days logic
           if (rule.backDate_Days && rule.backDate_Days > 0) {
             const today = new Date();
             this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
           }
-
           // Max date = today
           this.maxDate = new Date();
         }
@@ -371,26 +172,7 @@ export class ThcArrivalPopupComponent {
     });
   }
 
-  getChargesVendorsList(event: any) {
-    const data = {
-      vendorType: event?.codeId ? event?.codeId : event,
-      branchCode: this.docketService.loginUserList.LocationCode,
-      userName: this.docketService.loginUserList.BaseUserName,
-      documentType: this.docketService.loginUserList.Type
-    }
-    this.THCService.getVendorsList(data).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.branchWiseLoadingUnloadingList = response.data.map((x: any) => ({
-            value: x.vendor_Code,
-            text: x.vendor_Name
-          }));
-        }
-      },
-    });
-  }
-
-     fetchPreparedByEmployee() {
+  fetchPreparedByEmployee() {
     const searchText = this.docketService.loginUserList?.UserId;
     const baseUserName = this.docketService.loginUserList?.BaseUserName;
     if (!searchText || !baseUserName) return;
@@ -445,10 +227,10 @@ export class ThcArrivalPopupComponent {
       return;
     }
     if (this.arrivalForm.valid) {
-      this.isloading=true;
+      this.isloading = true;
       const payload = {
         status: this.arrivalForm.value.s2id_Status,
-        thcno:this.THCData?.thcNo,
+        thcno: this.THCData?.thcNo,
         openkm: this.arrivalDetail?.openkm,
         closekm: this.arrivalForm.value.CLOSEKM?.toString(),
         ad: new Date(this.arrivalForm.value.AD)?.toISOString(),
@@ -474,28 +256,19 @@ export class ThcArrivalPopupComponent {
         baseUserName: this.docketService.loginUserList.BaseUserName
       }
       this.stockUpdateService.THCArrival(payload).subscribe({
-        next: (response) => {
+        next: (response:any) => {
           if (response.success) {
-            this.isloading=false;
+            this.isloading = false;
             this.sweetAlertService.success(`THC arrived ${this.THCData?.thcNo} successfully.`);
             this.dataEmitter.emit()
             this.modalRef.hide();
           } else {
-            this.isloading=false;
-            // this.sweetAlertService.error(response.message || 'Error from server');
+            this.isloading = false;
+            this.sweetAlertService.error(response.message || 'Error from server');
           }
         }, error: (error) => {
-          this.isloading=false;
-          let errorMessage = error?.error?.message || error?.error?.title || 'An error occurred';
-          
-          if (error?.error?.errors) {
-            const validationErrors = Object.values(error.error.errors).flat().join('\n');
-            if (validationErrors) {
-              errorMessage = validationErrors;
-            }
-          }
-          
-          this.sweetAlertService.error(errorMessage);
+          this.isloading = false;
+          this.sweetAlertService.error(error?.error?.message || error?.error?.title);
         }
       })
     }
