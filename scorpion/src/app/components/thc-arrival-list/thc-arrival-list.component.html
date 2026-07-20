@@ -157,7 +157,7 @@
                             <div class="text-muted fs-7 mt-1">{{ data.thcDate | date:'dd-MMM-yyyy' }}</div>
                         </td>
 
-                        <td class="text-center" style="width: 140px;">
+                        <td class="text-center" style="width:80px;">
                             <div class="d-flex gap-2 flex-column">
                                 <span class="d-block rounded p-1 fw-bold mb-1">{{ data.totalDockets}}</span>
                             </div>
@@ -175,14 +175,14 @@
                                     style="max-width: 180px;" [title]="data.vendorName">{{data.vendorCode}}:{{ data.vendorName }}</span>
                             </div>
                         </td>
-                        <td class="text-center" style="width: 110px !important;">
+                        <td class="text-center" style="width: 130px !important;">
                             <span class="px-4 py-2 cursor-pointer">
-                                {{ (data.atd | date:'dd-MM-yyyy') || '—' }}
+                                {{ (data.atd | date:'dd-MMM-yyyy') || '—' }}
                             </span>
                         </td>
-                        <td class="text-center cursor-pointer" style="width: 110px !important;">
+                        <td class="text-center cursor-pointer" style="width: 130px !important;">
                             <span class="px-4 py-2 cursor-pointer">
-                                {{data.eta | date:'dd-MM-yyyy'}}
+                                {{data.eta | date:'dd-MMM-yyyy'}}
                             </span>
                         </td>
                         <td class="text-center cursor-pointer">
