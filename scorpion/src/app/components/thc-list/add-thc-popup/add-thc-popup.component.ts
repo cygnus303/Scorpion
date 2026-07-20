@@ -131,12 +131,12 @@ export class AddThcPopupComponent {
       rCBOOKNO: [],
       insuranceDate: [],
       fitnessDate: [],
-      driver1Licence: ['', this.ThcType === 'A' ? [Validators.required, Validators.pattern(/^[A-Za-z]{2}\d{2}\s?\d{11}$/)] : [Validators.pattern(/^[A-Za-z]{2}\d{2}\s?\d{11}$/)]],
+      driver1Licence: ['', initialRouteType === 'S' ? [Validators.required, Validators.pattern(/^[A-Za-z]{2}\d{2}\s?\d{11}$/)] : [Validators.pattern(/^[A-Za-z]{2}\d{2}\s?\d{11}$/)]],
       d1_DOB: [''],
       driver1Name: [],
       driver1RTONo: [],
       driver1LicenceValDate: [],
-      driver1MobileNo: [null, this.ThcType === 'A' ? [Validators.pattern(mobileNo), Validators.required] : [Validators.pattern(mobileNo)]],
+      driver1MobileNo: [null, initialRouteType === 'S' ? [Validators.pattern(mobileNo), Validators.required] : [Validators.pattern(mobileNo)]],
       contractAmount: [0, [Validators.required, Validators.min(1), Validators.max(99999999)]],
       isTDSEnabled: [false],
       tDSOnAmount: [0],
@@ -165,6 +165,35 @@ export class AddThcPopupComponent {
       airWayBillNo: [],
       routeCode: [null, Validators.required],
     }, { validators: this.advanceNotGreaterThanNet.bind(this) });
+
+    this.ThcForm.get('routeType')?.valueChanges.subscribe(val => {
+      const licenceCtrl = this.ThcForm.get('driver1Licence');
+      const mobileCtrl = this.ThcForm.get('driver1MobileNo');
+      
+      const hiddenFields = [
+        'registrationDate', 'eNGINENO', 'cHASISNO', 'rCBOOKNO', 
+        'insuranceDate', 'fitnessDate', 'driver1Name', 
+        'driver1RTONo', 'driver1LicenceValDate'
+      ];
+
+      if (val === 'S') {
+        licenceCtrl?.setValidators([Validators.required, Validators.pattern(/^[A-Za-z]{2}\d{2}\s?\d{11}$/)]);
+        mobileCtrl?.setValidators([Validators.pattern(mobileNo), Validators.required]);
+      } else {
+        licenceCtrl?.setValidators([Validators.pattern(/^[A-Za-z]{2}\d{2}\s?\d{11}$/)]);
+        mobileCtrl?.setValidators([Validators.pattern(mobileNo)]);
+        
+        hiddenFields.forEach(f => {
+          const ctrl = this.ThcForm.get(f);
+          if (ctrl) {
+            ctrl.clearValidators();
+            ctrl.updateValueAndValidity();
+          }
+        });
+      }
+      licenceCtrl?.updateValueAndValidity();
+      mobileCtrl?.updateValueAndValidity();
+    });
 
     this.ThcForm.get('bidType')?.valueChanges.subscribe(val => {
       this.isBidVendorReadonly = false;
