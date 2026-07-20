@@ -1051,7 +1051,7 @@
                                     [readOnly]="((this.docketService.loginUserList.Type === '2' ||this.docketService.loginUserList.Type === '3') && challanService.challanForm.value.vendorType === '04') ||
                             (challanService.challanForm.value.vendorType === 'XX1' && this.docketService.loginUserList.Type === '1')"
                                     (blur)="changeAmountApplicable($event);restoreIfEmpty('contractAmount')"
-                                    oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                                    oninput="this.value = this.value.replace(/[^0-9.]/g,'');"
                                     (focus)="clearZero('contractAmount')" required
                                     [ngClass]="{ 'border-danger': challanService.challanForm.get('contractAmount')?.invalid && challanService.challanForm.get('contractAmount')?.touched }" />
                                 <div class="text-danger text-start mt-1 small"
@@ -1348,7 +1348,7 @@
                                     formControlName="contractAmount" appFocusNext
                                     [readOnly]="challanService.challanForm.value.vendorType === 'XX1' && this.docketService.loginUserList.Type === '1'"
                                     (blur)="changeAmountApplicable($event);restoreIfEmpty('contractAmount')"
-                                    oninput="this.value = this.value.replace(/[^0-9]/g,'');"
+                                    oninput="this.value = this.value.replace(/[^0-9.]/g,'');"
                                     (focus)="clearZero('contractAmount')" required
                                     [ngClass]="{ 'border-danger': challanService.challanForm.get('contractAmount')?.invalid && challanService.challanForm.get('contractAmount')?.touched }" />
                                 <div class="text-danger text-start mt-1 small"

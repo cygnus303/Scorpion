@@ -57,4 +57,8 @@ export class LrService {
     getLRFinList(payload:any): Observable<IApiBaseResponse<any[]>> {
       return this.apiHandlerService.Post(`Operation/GetFinancialDocketListing`,payload);
     }
+
+    getExceptionTracking(dockNo: string): Observable<any> {
+      return this.apiHandlerService.GetLoad(`Operation/ExceptionTracking?dockNo=${dockNo}`);
+    }
 }
