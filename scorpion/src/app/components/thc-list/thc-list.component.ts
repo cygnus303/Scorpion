@@ -22,7 +22,7 @@ import { HccViewComponent } from '../hcc-view/hcc-view.component';
 @Component({
   selector: 'app-thc-list',
   standalone: true,
-  imports: [NgSelectModule, CommonModule, ReactiveFormsModule, BsDatepickerModule, PaginationComponent, ThcEditComponent, ThcEmptyVehiclePopupComponent, AddThcPopupComponent, MfViewComponent,HccViewComponent],
+  imports: [NgSelectModule, CommonModule, ReactiveFormsModule, BsDatepickerModule, PaginationComponent, ThcEditComponent, ThcEmptyVehiclePopupComponent, AddThcPopupComponent, MfViewComponent, HccViewComponent],
   providers: [BsModalService],
   templateUrl: './thc-list.component.html',
   styleUrl: './thc-list.component.scss'
@@ -158,7 +158,7 @@ export class ThcListComponent {
       toDate: this.formatDate(this.THCFilterForm.value.toDate),
       searchText: this.THCFilterForm.value.searchText,
       statusFilter: this.THCFilterForm.value.statusFilter,
-mode:this.THCFilterForm.value.mode,
+      mode: this.THCFilterForm.value.mode,
       pageNumber: this.pagination.page,
       pageSize: this.pagination.pageSize,
       isDownload: false
@@ -314,7 +314,7 @@ mode:this.THCFilterForm.value.mode,
         const firstDest = this.selectedMfs[0].toBH_CODE;
         const hasDifferentDest = this.selectedMfs.some(mf => mf.toBH_CODE !== firstDest);
         if (hasDifferentDest) {
-          const msg = `<div style="text-align: left; font-size: 14px; font-weight: normal; color: #333;">In Air Route multi hopping not allowed.<br>All selected AIR MFs must have the same Next Stop destination.</div>`;
+          const msg = `In Air Route multi hopping not allowed. All selected AIR MFs must have the same Next Stop destination.`;
           this.sweetAlertService.info(msg);
           return;
         }
@@ -324,13 +324,13 @@ mode:this.THCFilterForm.value.mode,
   }
 
   toggleMfSelection(data: any, event: any) {
-    const isChecked =event.target.checked;
+    const isChecked = event.target.checked;
     if (isChecked) {
       if (this.selectedMfs.length > 0) {
         const firstMode = this.selectedMfs[0].routE_MODE;
         if (firstMode !== data.routE_MODE) {
           const modeDisplay = firstMode ? firstMode.toUpperCase() : 'UNKNOWN';
-          const msg = `<div style="text-align: left; font-size: 14px; font-weight: normal; color: #333;">Transport Mode mismatch!<br>You have already selected ${modeDisplay} mode MF(s).<br>Please select MFs of the same Transport Mode only.</div>`;
+          const msg = `Transport Mode mismatch!! You have already selected ${modeDisplay} mode MF(s).Please select MFs of the same Transport Mode only.`;
           this.sweetAlertService.info(msg);
           if (event && event.target) {
             event.target.checked = false;
@@ -356,8 +356,8 @@ mode:this.THCFilterForm.value.mode,
     this.MfViewComponent.showPopup(thcNo);
   }
 
-  openHccPopup(data: any, chargeType: string){
-    this.HccViewComponent.showPopup(data, chargeType, 'M','T');
+  openHccPopup(data: any, chargeType: string) {
+    this.HccViewComponent.showPopup(data, chargeType, 'M', 'T');
   }
 
   refreshData() {
