@@ -5,14 +5,13 @@
             THC Departure
         </div>
         <div class="btn-group gap-3 ms-auto">
-            <!-- <button class="btn background-color fw-bold text-light px-4 py-2 rounded" (click)="openAddLR()"
-                *ngIf="!isHQTR && menuAccessService.hasPermission('Add')">
-                <span class="fs-5 me-1">➕</span> Add LR
-            </button> -->
-            <button class="btn btn-success px-4 py-2 rounded fw-bold">
+            <button class="btn btn-success px-4 py-2 rounded fw-bold" (click)="exportExcel()">
                 <span *ngIf="!isCSVLoading"> <span class="fs-5 me-1">📥</span> Download XLS</span>
                 <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isCSVLoading">Downloading...</span>
+            </button>
+            <button *ngIf="selectedCount > 0" class="btn btn-danger px-4 py-2 rounded fw-bold d-flex align-items-center" style="background-color: #d32f2f; border: none; color: white;" (click)="openConfirmPopup()">
+                 <i class="ti ti-send me-2"></i> Depart selected ({{selectedCount}})
             </button>
         </div>
     </div>
@@ -23,36 +22,43 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div class="card-content">
                     <div class="s-label">Total THC</div>
-                    <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.total || 0 }}</div>
-                    <div class="small text-body-tertiary">All multi-hop empty THCs</div>
+                    <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.totalTHC || 0 }}</div>
+                    <div class="small text-body-tertiary">All THCs</div>
+
+                    
                 </div>
                 <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📋</div>
             </div>
         </div>
 
         <div class="summary-card px-3 py-3 c-orange cursor-pointer"
-            [class.active-card]="config.statusFilter === 'pendingforQuickCompletion'"
-            (click)="filterByStatus('pendingforQuickCompletion')">
+            [class.active-card]="config.statusFilter === 'Pending for Departure'"
+            (click)="filterByStatus('Pending for Departure')">
             <div class="card-content">
                 <div class="s-label">Pending for departure</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.pendingforQuickCompletion || 0 }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.pendingDeparture || 0 }}</div>
                 <div class="small text-body-tertiary">Awaiting departure action</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
         </div>
 
         <div class="summary-card px-3 py-3 c-green cursor-pointer"
-            [class.active-card]="config.statusFilter === 'booking'" (click)="filterByStatus('booking')">
+            [class.active-card]="config.statusFilter === 'Departed'" (click)="filterByStatus('Departed')">
             <div class="card-content">
                 <div class="s-label">Departed</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.booking || 0 }}</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.departed || 0 }}</div>
                 <div class="small text-body-tertiary">Successfully departed</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">✅</div>
         </div>
     </div>
 
-    <div>
+    <div *ngIf="selectedCount > 0" class="selection-banner d-flex align-items-center mt-3 p-2 px-3 rounded" style="background-color: #fdeaea; color: #d32f2f; border: 1px solid #f8c8c8;">
+         <span class="fw-bold d-flex align-items-center"><i class="ti ti-checkbox me-2"></i> {{selectedCount}} THCs selected</span>
+         <button class="btn btn-sm ms-3 d-flex align-items-center fw-bold" style="background: white; color: #d32f2f; border: 1px solid #f8c8c8; border-radius: 4px;" (click)="clearSelection()"><i class="ti ti-x me-1"></i> Clear</button>
+    </div>
+
+    <div class="mt-3">
         <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
             <div class="control-bar border-0 shadow-none mb-0">
                 <div class="date-range-group">
@@ -86,7 +92,7 @@
                 <div class="filter-group d-flex align-items-center gap-2 px-2">
                     <span class="filter-label">Mode</span>
                     <ng-select type="text" placeholder="Mode" class="custom-status-select clear-icon"
-                        [items]="modeList" bindLabel="label" bindValue="value" 
+                        [items]="modeList" bindLabel="label" bindValue="value" [(ngModel)]="config.modeFilter"
                         (change)="fetchData()"></ng-select>
                 </div>
             </div>
@@ -103,7 +109,7 @@
             <table class="table align-middle data-table mb-0">
                 <thead>
                     <tr>
-                        <th style="width:36px;text-align:center"><input type="checkbox" class="checkbox" id="chk-all"></th>
+                        <th style="width:36px;text-align:center"><input type="checkbox" class="checkbox" id="chk-all" [(ngModel)]="selectAllChecked" (change)="toggleSelectAll($event)"></th>
                         <th style="text-align:left">THC No</th>
                         <th style="text-align:left">THC Date</th>
                         <th style="text-align:left">THC Branch</th>
@@ -135,25 +141,25 @@
                 <tbody *ngIf="!isLoading && thcData.length > 0">
                      <tr *ngFor="let data of thcData; let i = index">
                         <td class="text-center">
-                            <input type="checkbox" class="checkbox row-chk" [disabled]="data.status !== 'Pending for Departure'" [style.opacity]="data.status !== 'Pending for Departure' ? '0.3' : '1'">
+                            <input type="checkbox" class="checkbox row-chk" [disabled]="data.departureStatus === 'Departed'" [style.opacity]="data.departureStatus === 'Departed' ? '0.3' : '1'" [(ngModel)]="data.isSelected" (change)="onRowSelect(data)">
                         </td>
-                        <td><a class="thc-link">{{ data.thcNo }}</a></td>
-                        <td>{{ data.thcDate }}</td>
-                        <td>{{ data.branch }}</td>
+                        <td><a class="thc-link" (click)="openThcView(data.thcno)">{{ data.thcno }}</a></td>
+                        <td>{{ data.thcdt }}</td>
+                        <td>{{ data.thcbr }}</td>
                         <td>
                             <span style="display:inline-flex;align-items:center;gap:4px">
-                                <i class="ti" [ngClass]="{'ti-plane': data.mode === 'Air', 'ti-train': data.mode === 'Rail', 'ti-truck': data.mode === 'Road', 'ti-car': data.mode === 'Car'}" style="font-size:13px;color:#7a7a76"></i>{{ data.mode }}
+                                <i class="ti" [ngClass]="{'ti-plane': data.rut_cat === 'Air', 'ti-train': data.rut_cat === 'Train' || data.rut_cat === 'Rail', 'ti-truck': data.rut_cat === 'Road', 'ti-car': data.rut_cat === 'Car'}" style="font-size:13px;color:#7a7a76"></i>{{ data.rut_cat }}
                             </span>
                         </td>
-                        <td><span style="font-weight:600;color:#1a2b45">{{ data.service }}</span></td>
-                        <td style="max-width:200px;white-space:normal;line-height:1.4">{{ data.route }}</td>
-                        <td>{{ data.arrival }}</td>
+                        <td><span style="font-weight:600;color:#1a2b45">{{ data.serviceType ? data.serviceType :'--'  }}</span></td>
+                        <td style="max-width:200px;white-space:normal;line-height:1.4">{{ data.routeName }}</td>
+                        <td>{{ data.ata || '--' }}</td>
                         <td class="text-center">
-                            <span class="badge" [ngClass]="data.status === 'Pending for Departure' ? 'badge-pending' : 'badge-departed'">{{ data.status }}</span>
+                            <span class="badge" [ngClass]="data.departureStatus === 'Departed' ? 'badge-departed' : 'badge-pending'">{{ data.departureStatus || 'Pending' }}</span>
                         </td>
                         <td class="text-center" style="width: 140px;">
-                            <button *ngIf="data.status === 'Pending for Departure'" class="action-btn btn-depart"><i class="ti ti-send"></i> Depart THC</button>
-                            <button *ngIf="data.status !== 'Pending for Departure'" class="action-btn btn-departed-done" disabled><i class="ti ti-check"></i> Departed</button>
+                            <button *ngIf="data.departureStatus !== 'Departed'" class="action-btn btn-depart" (click)="openConfirmPopup(data.thcno)"><i class="ti ti-send"></i> Depart THC</button>
+                            <button *ngIf="data.departureStatus === 'Departed'" class="action-btn btn-departed-done" disabled><i class="ti ti-check"></i> Departed</button>
                         </td>
                     </tr>
                 </tbody>
@@ -167,3 +173,4 @@
         </app-pagination>
     </div>
 </div>
+

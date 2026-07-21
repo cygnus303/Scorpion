@@ -2,8 +2,8 @@
 /* ── Table ── */
 table.data-table tbody td{padding:10px 12px;color:#1a1a18;vertical-align:middle}
 
-.thc-link{color:#C8181A;text-decoration:none;font-weight:700;cursor:pointer;font-size:12px}
-.thc-link:hover{text-decoration:underline}
+.thc-link{color:#0d6efd;text-decoration:underline;font-weight:600;cursor:pointer;font-size:13px}
+.thc-link:hover{color:#0a58ca}
 
 .badge{display:inline-flex;align-items:center;gap:4px;padding:11px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
 .badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block}

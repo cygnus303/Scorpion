@@ -149,6 +149,14 @@ export class THCMasterService {
     return this.apiHandlerService.Post(`THC/SearchUsers`, searchTerm);
   }
 
+  getTHCDepartureList(payload: any): Observable<any> {
+    return this.apiHandlerService.Post(`THC/Get_THC_Departure_List`, payload);
+  }
+
+  exportTHCDepartureExcel(payload: any): Observable<any> {
+    return this.apiHandlerService.Post(`THC/ExportTHCDepartureExcel`, payload);
+  }
+
   getBranchWiseLoadingUnloadingVendorList(data: any) {
     return this.apiHandlerService.Get(`THC/getBranchWiseLoadingUnloadingVendorListJson?type=${data?.type ? data?.type : 'L'}&vendorType=${data.vendorType}&baseLocationCode=${data.baseLocationCode}`);
   }
