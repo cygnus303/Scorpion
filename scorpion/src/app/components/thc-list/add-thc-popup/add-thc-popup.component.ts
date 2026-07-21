@@ -263,7 +263,7 @@ export class AddThcPopupComponent {
     }
     this.calculateWeightAndUtilization();
     this.getLocationData();
-    this.modalRef = this.modalService.show(this.TemplateTHC, { class: 'modal-xl modal-dialog-centered', backdrop: true });
+    this.modalRef = this.modalService.show(this.TemplateTHC, { class: 'modal-xl modal-dialog-centered', backdrop: 'static', keyboard: false });
   }
 
   closePopup() {
@@ -1193,6 +1193,7 @@ export class AddThcPopupComponent {
         "CityRouteKM": "",
         "LoadingSlipAttachment": "",
         "ApprovedBy": "",
+        "BiddingVendor":formValue.biddingVendor || "",
         "ERD": getISOString(formValue.ERD) || null,
         "Version": 0
       },
