@@ -200,6 +200,10 @@ export class THCMasterService {
     return this.apiHandlerService.Post(`THC/THCDepartureSubmit`, payload);
   }
 
+  submitTHCDepartureMultiple(payload: any) {
+    return this.apiHandlerService.Post(`THC/THCDepartureSubmitMultiple`, payload);
+  }
+
   getHCCDetail(payload: any) {
     return this.apiHandlerService.Post(`THC/HHCFinancialEditDetail`, payload);
   }
