@@ -61,4 +61,8 @@ export class LrService {
     getExceptionTracking(dockNo: string): Observable<any> {
       return this.apiHandlerService.GetLoad(`Operation/ExceptionTracking?dockNo=${dockNo}`);
     }
+
+    getDocumentTracking(dockNo: string): Observable<any> {
+      return this.apiHandlerService.GetLoad(`Operation/GetDocumentTracking?dockNo=${dockNo}`);
+    }
 }
