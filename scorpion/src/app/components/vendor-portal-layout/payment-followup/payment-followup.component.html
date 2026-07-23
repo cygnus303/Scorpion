@@ -1,0 +1,82 @@
+<div class="vendor-section">
+        <div class="dash-wrap">
+          <div class="dash-title">Payment Followup</div>
+          <div class="dash-sub">Approved bills awaiting payment &mdash; track and follow up with Accounts</div>
+
+          <div class="pf-card-grid">
+            <div class="pf-card">
+              <div class="pf-ico pf-ico-blue">&#8377;</div>
+              <div><div class="pf-label">Total Billed</div><div class="pf-amt"><span>&#8377;</span> 4,95,180.00</div></div>
+            </div>
+            <div class="pf-card">
+              <div class="pf-ico pf-ico-green">&#10003;</div>
+              <div><div class="pf-label">Paid</div><div class="pf-amt"><span>✓</span> 1,18,200.00</div></div>
+            </div>
+            <div class="pf-card">
+              <div class="pf-ico pf-ico-amber">🕑</div>
+              <div><div class="pf-label">Pending</div><div class="pf-amt" id="pfPendingCardAmt"><span>&#8377;</span> 2,90,750.00</div></div>
+            </div>
+            <div class="pf-card">
+              <div class="pf-ico pf-ico-red">!</div>
+              <div><div class="pf-label">On Hold / Query</div><div class="pf-amt"><span>&#8377;</span> 1,02,450.00</div></div>
+            </div>
+          </div>
+
+          <div class="prs-card">
+            <div class="modal-section-title" style="color: #E2001A; text-transform: uppercase;">BILLS PENDING FOR PAYMENT</div>
+            <div id="pfListing">
+              <table class="am-table itd-table" style="margin-top: 10px;">
+                <thead>
+                  <tr>
+                    <th>Bill No</th>
+                    <th>Vendor Bill No</th>
+                    <th>Approved Date</th>
+                    <th>Amount (&#8377;)</th>
+                    <th>Pending Amount (&#8377;)</th>
+                    <th>Days Pending</th>
+                    <th>Expected Payment Date</th>
+                    <th>Last Followup</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>BEABA_262700538</td>
+                    <td>VH/ABA/2627/000812</td>
+                    <td>28 Jun 2026</td>
+                    <td>77,547</td>
+                    <td class="text-red font-bold">38,743</td>
+                    <td>17</td>
+                    <td>26 Jul 2026</td>
+                    <td>&mdash;</td>
+                    <td><button class="action-btn-outline disabled" disabled>Send Followup</button></td>
+                  </tr>
+                  <tr>
+                    <td>BL/2627/00009</td>
+                    <td>BILL NO 42 DT 12.06.2026</td>
+                    <td>22 Jun 2026</td>
+                    <td>48,657</td>
+                    <td class="text-red font-bold">48,657</td>
+                    <td>23</td>
+                    <td>20 Jul 2026</td>
+                    <td>21 Jul 2026</td>
+                    <td><button class="action-btn-outline success">Send Followup</button></td>
+                  </tr>
+                  <tr>
+                    <td>BEAMD_262700003</td>
+                    <td>MTS/SE/2526/061</td>
+                    <td>15 Jun 2026</td>
+                    <td>3,33,350</td>
+                    <td class="text-red font-bold">2,03,350</td>
+                    <td>30</td>
+                    <td>18 Jul 2026</td>
+                    <td>01 Jul 2026</td>
+                    <td><button class="action-btn-outline success">Send Followup</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <footer class="note">UI Mockup only &mdash; values are sample data.</footer>
+      </div>

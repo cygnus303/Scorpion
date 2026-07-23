@@ -1,0 +1,90 @@
+<div id="vsec-invoice-tracker" class="vendor-section">
+  <div class="dash-wrap">
+    <div class="dash-title">Invoice Tracker</div>
+    <div class="dash-sub">Enter a bill number to track its complete lifecycle</div>
+
+    <!-- Tracking Criteria -->
+    <div class="it-card">
+      <div class="it-card-head">&#9636; Vendor Invoice Tracking Criteria</div>
+      <div class="it-criteria-body">
+        <label for="itBillInput">Enter Bill Number:</label>
+        <input type="text" id="itBillInput" placeholder="Add BILL NO" autocomplete="off" [(ngModel)]="billNo" (keydown.enter)="onGetInvoiceData()">
+        <button class="it-fetch-btn" (click)="onGetInvoiceData()">🔍 Get Invoice Data</button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="it-tabs">
+      <button class="it-tab active" id="it-tab-bill" onclick="invTabSwitch('bill')">Bill Details</button>
+      <button class="it-tab" id="it-tab-voucher" onclick="invTabSwitch('voucher')">Voucher Details</button>
+      <button class="it-tab" id="it-tab-debit" onclick="invTabSwitch('debit')">Debit Note Details</button>
+      <button class="it-tab" id="it-tab-support" onclick="invTabSwitch('support')">Supporting Document</button>
+      <button class="it-tab" id="it-tab-hold" onclick="invTabSwitch('hold')">Hold &amp; Release Details</button>
+      <button class="it-tab" id="it-tab-payreq" onclick="invTabSwitch('payreq')">Payment Request Details</button>
+    </div>
+
+    <!-- Panel: Bill Details -->
+    <div class="it-card it-panel active" id="it-panel-bill">
+      <div class="it-card-head">&#9998; Bill Details</div>
+      <div class="it-grid">
+        <div class="it-field"><span class="it-label">Bill No :</span><span class="it-value" id="itBillNo">{{billDetail?.BILLNO}}</span></div>
+        <div class="it-field"><span class="it-label">Vendor Name :</span><span class="it-value" id="itVendorName">{{billDetail?.VENDORNAME}}</span></div>
+        <div class="it-field"><span class="it-label">BILL Date :</span><span class="it-value" id="itBillDate">{{billDetail?.BILLDate}}</span></div>
+
+        <div class="it-field"><span class="it-label">Bill Type :</span><span class="it-value" id="itBillType">{{billDetail?.betype}}</span></div>
+        <div class="it-field"><span class="it-label">Bill Status :</span><span class="it-value" id="itBillStatus">{{billDetail?.bill_Status}}</span></div>
+        <div class="it-field"><span class="it-label">Vendor Bill No :</span><span class="it-value" id="itVendorBillNo">{{billDetail?.VENDORBILLNO}}</span></div>
+
+        <div class="it-field"><span class="it-label">Bill Generation Branch :</span><span class="it-value" id="itGenBranch">{{billDetail?.BRCD}}</span></div>
+        <div class="it-field"><span class="it-label">Bill Finalization Branch :</span><span class="it-value" id="itFinBranch">{{billDetail?.BillFinZbranch}}</span></div>
+        <div class="it-field"><span class="it-label">Bill Payment Branch :</span><span class="it-value" id="itPayBranch">{{billDetail?.BillPaybranch}}</span></div>
+
+        <div class="it-field"><span class="it-label">Finalize :</span><span class="it-value" id="itFinalize">{{billDetail?.finalized}}</span></div>
+        <div class="it-field"><span class="it-label">Finalize Date :</span><span class="it-value" id="itFinalizeDate">{{billDetail?.Finalizeddate}}</span></div>
+        <div class="it-field"><span class="it-label">Bill Amount :</span><span class="it-value" id="itBillAmount">{{billDetail?.NETAMT}}</span></div>
+
+        <div class="it-field"><span class="it-label">Balance Pending :</span><span class="it-value" id="itBalancePending">{{billDetail?.pendamt}}</span></div>
+        <div class="it-field"><span class="it-label">TDS Amount :</span><span class="it-value" id="itTdsAmount">{{billDetail?.TDS}}</span></div>
+        <div class="it-field"><span class="it-label">New Vendor Bill View Print :</span><button class="it-print-btn" onclick="invViewPrint()">&#128424; View || Print</button></div>
+
+        <div class="it-field"><span class="it-label">Bill Edited BY :</span><span class="it-value" id="itEditedBy">{{billDetail?.Editby}}</span></div>
+        <div class="it-field"><span class="it-label">Bill Edited Date :</span><span class="it-value" id="itEditedDate">{{billDetail?.EditDate}}</span></div>
+        <div class="it-field"></div>
+
+        <div class="it-field"><span class="it-label">Bill Cancel By :</span><span class="it-value" id="itCancelBy">{{billDetail?.cancel_by}}</span></div>
+        <div class="it-field"><span class="it-label">Bill Cancel Date :</span><span class="it-value" id="itCancelDate">{{billDetail?.canceldt}}</span></div>
+        <div class="it-field"><span class="it-label">Bill Cancel Reason :</span><span class="it-value" id="itCancelReason">{{billDetail?.cancel_reason}}</span></div>      </div>
+    </div>
+
+    <!-- Panel: Voucher Details -->
+    <div class="it-card it-panel" id="it-panel-voucher">
+      <div class="it-card-head">&#9998; Voucher Details</div>
+      <div id="itVoucherBody"><div class="it-empty">Enter a bill number and click "Get Invoice Data" to view voucher details.</div></div>
+    </div>
+
+    <!-- Panel: Debit Note Details -->
+    <div class="it-card it-panel" id="it-panel-debit">
+      <div class="it-card-head">&#9998; Debit Note Details</div>
+      <div id="itDebitBody"><div class="it-empty">Enter a bill number and click "Get Invoice Data" to view debit note details.</div></div>
+    </div>
+
+    <!-- Panel: Supporting Document -->
+    <div class="it-card it-panel" id="it-panel-support">
+      <div class="it-card-head">&#9998; Supporting Document</div>
+      <div class="it-empty" id="itSupportEmpty">Enter a bill number and click "Get Invoice Data" to view supporting documents.</div>
+    </div>
+
+    <!-- Panel: Hold & Release Details -->
+    <div class="it-card it-panel" id="it-panel-hold">
+      <div class="it-card-head">&#9998; Hold &amp; Release Details</div>
+      <div class="it-empty" id="itHoldEmpty">Enter a bill number and click "Get Invoice Data" to view hold &amp; release details.</div>
+    </div>
+
+    <!-- Panel: Payment Request Details -->
+    <div class="it-card it-panel" id="it-panel-payreq">
+      <div class="it-card-head">&#9998; Payment Request Details</div>
+      <div id="itPayreqBody"><div class="it-empty">Enter a bill number and click "Get Invoice Data" to view payment request details.</div></div>
+    </div>
+
+  </div>
+</div>
