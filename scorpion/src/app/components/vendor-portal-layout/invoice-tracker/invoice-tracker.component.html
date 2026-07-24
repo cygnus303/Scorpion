@@ -1,90 +1,236 @@
-<div id="vsec-invoice-tracker" class="vendor-section">
+<div class="vendor-section">
   <div class="dash-wrap">
     <div class="dash-title">Invoice Tracker</div>
     <div class="dash-sub">Enter a bill number to track its complete lifecycle</div>
 
     <!-- Tracking Criteria -->
     <div class="it-card">
-      <div class="it-card-head">&#9636; Vendor Invoice Tracking Criteria</div>
+      <div class="it-card-head">▤ Vendor Invoice Tracking Criteria</div>
       <div class="it-criteria-body">
         <label for="itBillInput">Enter Bill Number:</label>
-        <input type="text" id="itBillInput" placeholder="Add BILL NO" autocomplete="off" [(ngModel)]="billNo" (keydown.enter)="onGetInvoiceData()">
-        <button class="it-fetch-btn" (click)="onGetInvoiceData()">🔍 Get Invoice Data</button>
+        <input type="text" placeholder="Add BILL NO" autocomplete="off" [(ngModel)]="billNo" [class.error-anim]="isBillNoInvalid" (keydown.enter)="onGetInvoiceData('1')">
+        <button class="it-fetch-btn" (click)="onGetInvoiceData('1')">🔍 Get Invoice Data</button>
       </div>
     </div>
 
     <!-- Tabs -->
     <div class="it-tabs">
-      <button class="it-tab active" id="it-tab-bill" onclick="invTabSwitch('bill')">Bill Details</button>
-      <button class="it-tab" id="it-tab-voucher" onclick="invTabSwitch('voucher')">Voucher Details</button>
-      <button class="it-tab" id="it-tab-debit" onclick="invTabSwitch('debit')">Debit Note Details</button>
-      <button class="it-tab" id="it-tab-support" onclick="invTabSwitch('support')">Supporting Document</button>
-      <button class="it-tab" id="it-tab-hold" onclick="invTabSwitch('hold')">Hold &amp; Release Details</button>
-      <button class="it-tab" id="it-tab-payreq" onclick="invTabSwitch('payreq')">Payment Request Details</button>
+      <button class="it-tab" [class.active]="activeTab === '1'" (click)="onGetInvoiceData('1')">Bill Details</button>
+      <button class="it-tab" [class.active]="activeTab === '2'" (click)="onGetInvoiceData('2')">Voucher Details</button>
+      <button class="it-tab" [class.active]="activeTab === '3'" (click)="onGetInvoiceData('3')">Debit Note Details</button>
+      <button class="it-tab" [class.active]="activeTab === '4'" (click)="onGetInvoiceData('4')">Supporting Document</button>
+      <button class="it-tab" [class.active]="activeTab === '6'" (click)="onGetInvoiceData('6')">Hold & Release Details</button>
+      <button class="it-tab" [class.active]="activeTab === '5'" (click)="onGetInvoiceData('5')">Payment Request Details</button>
     </div>
 
     <!-- Panel: Bill Details -->
-    <div class="it-card it-panel active" id="it-panel-bill">
-      <div class="it-card-head">&#9998; Bill Details</div>
-      <div class="it-grid">
-        <div class="it-field"><span class="it-label">Bill No :</span><span class="it-value" id="itBillNo">{{billDetail?.BILLNO}}</span></div>
-        <div class="it-field"><span class="it-label">Vendor Name :</span><span class="it-value" id="itVendorName">{{billDetail?.VENDORNAME}}</span></div>
-        <div class="it-field"><span class="it-label">BILL Date :</span><span class="it-value" id="itBillDate">{{billDetail?.BILLDate}}</span></div>
+    <div class="it-card it-panel" [class.active]="activeTab === '1'">
+      <div class="it-card-head">✎  Bill Details</div>
+      
+      <div class="it-empty" *ngIf="isLoading">
+        <div class="it-spinner"></div> Fetching data...
+      </div>
+      <div class="it-empty" *ngIf="!isLoading && !billDetail">
+        {{ hasSearched ? 'No Data Found' : 'Enter a bill number and click "Get Invoice Data" to view bill details.' }}
+      </div>
 
-        <div class="it-field"><span class="it-label">Bill Type :</span><span class="it-value" id="itBillType">{{billDetail?.betype}}</span></div>
-        <div class="it-field"><span class="it-label">Bill Status :</span><span class="it-value" id="itBillStatus">{{billDetail?.bill_Status}}</span></div>
-        <div class="it-field"><span class="it-label">Vendor Bill No :</span><span class="it-value" id="itVendorBillNo">{{billDetail?.VENDORBILLNO}}</span></div>
+      <div class="it-grid" *ngIf="!isLoading && billDetail">
+        <div class="it-field"><span class="it-label">Bill No :</span><span class="it-value" >{{billDetail?.BILLNO}}</span></div>
+        <div class="it-field"><span class="it-label">Vendor Name :</span><span class="it-value" >{{billDetail?.VENDORNAME}}</span></div>
+        <div class="it-field"><span class="it-label">BILL Date :</span><span class="it-value" >{{billDetail?.BILLDate}}</span></div>
 
-        <div class="it-field"><span class="it-label">Bill Generation Branch :</span><span class="it-value" id="itGenBranch">{{billDetail?.BRCD}}</span></div>
-        <div class="it-field"><span class="it-label">Bill Finalization Branch :</span><span class="it-value" id="itFinBranch">{{billDetail?.BillFinZbranch}}</span></div>
-        <div class="it-field"><span class="it-label">Bill Payment Branch :</span><span class="it-value" id="itPayBranch">{{billDetail?.BillPaybranch}}</span></div>
+        <div class="it-field"><span class="it-label">Bill Type :</span><span class="it-value" >{{billDetail?.betype}}</span></div>
+        <div class="it-field"><span class="it-label">Bill Status :</span><span class="it-value" >{{billDetail?.bill_Status}}</span></div>
+        <div class="it-field"><span class="it-label">Vendor Bill No :</span><span class="it-value" >{{billDetail?.VENDORBILLNO}}</span></div>
 
-        <div class="it-field"><span class="it-label">Finalize :</span><span class="it-value" id="itFinalize">{{billDetail?.finalized}}</span></div>
-        <div class="it-field"><span class="it-label">Finalize Date :</span><span class="it-value" id="itFinalizeDate">{{billDetail?.Finalizeddate}}</span></div>
-        <div class="it-field"><span class="it-label">Bill Amount :</span><span class="it-value" id="itBillAmount">{{billDetail?.NETAMT}}</span></div>
+        <div class="it-field"><span class="it-label">Bill Generation Branch :</span><span class="it-value" >{{billDetail?.BRCD}}</span></div>
+        <div class="it-field"><span class="it-label">Bill Finalization Branch :</span><span class="it-value" >{{billDetail?.BillFinZbranch}}</span></div>
+        <div class="it-field"><span class="it-label">Bill Payment Branch :</span><span class="it-value" >{{billDetail?.BillPaybranch}}</span></div>
 
-        <div class="it-field"><span class="it-label">Balance Pending :</span><span class="it-value" id="itBalancePending">{{billDetail?.pendamt}}</span></div>
-        <div class="it-field"><span class="it-label">TDS Amount :</span><span class="it-value" id="itTdsAmount">{{billDetail?.TDS}}</span></div>
-        <div class="it-field"><span class="it-label">New Vendor Bill View Print :</span><button class="it-print-btn" onclick="invViewPrint()">&#128424; View || Print</button></div>
+        <div class="it-field"><span class="it-label">Finalize :</span><span class="it-value" >{{billDetail?.finalized}}</span></div>
+        <div class="it-field"><span class="it-label">Finalize Date :</span><span class="it-value" >{{billDetail?.Finalizeddate}}</span></div>
+        <div class="it-field"><span class="it-label">Bill Amount :</span><span class="it-value" >{{billDetail?.NETAMT}}</span></div>
 
-        <div class="it-field"><span class="it-label">Bill Edited BY :</span><span class="it-value" id="itEditedBy">{{billDetail?.Editby}}</span></div>
-        <div class="it-field"><span class="it-label">Bill Edited Date :</span><span class="it-value" id="itEditedDate">{{billDetail?.EditDate}}</span></div>
+        <div class="it-field"><span class="it-label">Balance Pending :</span><span class="it-value" >{{billDetail?.pendamt}}</span></div>
+        <div class="it-field"><span class="it-label">TDS Amount :</span><span class="it-value" >{{billDetail?.TDS}}</span></div>
+        <div class="it-field"><span class="it-label">New Vendor Bill View Print :</span><button class="it-print-btn" (click)="openViewPrint(billDetail?.BillUrl)">🖨 View || Print</button></div>
+
+        <div class="it-field"><span class="it-label">Bill Edited BY :</span><span class="it-value" >{{billDetail?.Editby}}</span></div>
+        <div class="it-field"><span class="it-label">Bill Edited Date :</span><span class="it-value" >{{billDetail?.EditDate}}</span></div>
         <div class="it-field"></div>
 
-        <div class="it-field"><span class="it-label">Bill Cancel By :</span><span class="it-value" id="itCancelBy">{{billDetail?.cancel_by}}</span></div>
-        <div class="it-field"><span class="it-label">Bill Cancel Date :</span><span class="it-value" id="itCancelDate">{{billDetail?.canceldt}}</span></div>
-        <div class="it-field"><span class="it-label">Bill Cancel Reason :</span><span class="it-value" id="itCancelReason">{{billDetail?.cancel_reason}}</span></div>      </div>
+        <div class="it-field"><span class="it-label">Bill Cancel By :</span><span class="it-value" >{{billDetail?.cancel_by}}</span></div>
+        <div class="it-field"><span class="it-label">Bill Cancel Date :</span><span class="it-value" >{{billDetail?.canceldt}}</span></div>
+        <div class="it-field"><span class="it-label">Bill Cancel Reason :</span><span class="it-value" >{{billDetail?.cancel_reason}}</span></div>      </div>
     </div>
 
     <!-- Panel: Voucher Details -->
-    <div class="it-card it-panel" id="it-panel-voucher">
-      <div class="it-card-head">&#9998; Voucher Details</div>
-      <div id="itVoucherBody"><div class="it-empty">Enter a bill number and click "Get Invoice Data" to view voucher details.</div></div>
+    <div class="it-card it-panel" [class.active]="activeTab === '2'">
+      <div class="it-card-head">✎  Voucher Details</div>
+      <div>
+        <div class="it-empty" *ngIf="isLoading">
+          <div class="it-spinner"></div> Fetching data...
+        </div>
+        <div class="it-empty" *ngIf="!isLoading && (!voucherDetails || voucherDetails.length === 0)">
+          {{ hasSearched ? 'No Data Found' : 'Enter a bill number and click "Get Invoice Data" to view voucher details.' }}
+        </div>
+        <div class="itd-wrap" *ngIf="!isLoading && voucherDetails && voucherDetails.length > 0">
+          <table class="itd-table">
+            <thead>
+              <tr>
+                <th>Voucher No.</th>
+                <th>Voucher Date</th>
+                <th>Voucher Amount</th>
+                <th>Voucher Type</th>
+                <th>Generated By</th>
+                <th>Entry Date</th>
+                <th>Print</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let voucher of voucherDetails">
+                <td>{{voucher.Voucherno}}</td>
+                <td>{{voucher.VoucherDt}}</td>
+                <td>{{voucher.Voucher_Amount}}</td>
+                <td>{{voucher.Vouchertype}}</td>
+                <td>{{voucher.entryby}}</td>
+                <td>{{voucher.entrydt}}</td>
+                <td><button class="it-print-btn" (click)="openViewPrint(voucher.VoucherUrl)">🖨 View || Print</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <!-- Panel: Debit Note Details -->
-    <div class="it-card it-panel" id="it-panel-debit">
-      <div class="it-card-head">&#9998; Debit Note Details</div>
-      <div id="itDebitBody"><div class="it-empty">Enter a bill number and click "Get Invoice Data" to view debit note details.</div></div>
+    <div class="it-card it-panel" [class.active]="activeTab === '3'">
+      <div class="it-card-head">✎  Debit Note Details</div>
+      <div>
+        <div class="it-empty" *ngIf="isLoading">
+          <div class="it-spinner"></div> Fetching data...
+        </div>
+        <div class="it-empty" *ngIf="!isLoading && (!debitnoteDetails || debitnoteDetails.length === 0)">
+          {{ hasSearched ? 'No Data Found' : 'Enter a bill number and click "Get Invoice Data" to view debit note details.' }}
+        </div>
+        <div class="itd-wrap" *ngIf="!isLoading && debitnoteDetails && debitnoteDetails.length > 0">
+          <table class="itd-table">
+            <thead>
+              <tr>
+                <th>Debit Note Number</th>
+                <th>Debit Note Date	</th>
+                <th>Voucher No</th>
+                <th>Debit Note Amount	</th>
+                <th>Bill Amount</th>
+                <th>Cancel Status</th>
+                <th>Generated By</th>
+                <th>Entry Date</th>
+                <th>Print</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let debitnote of debitnoteDetails">
+                <td class="text-primary">{{debitnote.DocumentNo}}</td>
+                <td>{{debitnote.DocumentDate}}</td>
+                <td class="text-primary">{{debitnote.VoucherNo}}</td>
+                <td>{{debitnote.NetAmount}}</td>
+                <td>{{debitnote.BillAmount}}</td>
+                <td>{{debitnote.Status}}</td>
+                <td>{{debitnote.EntryBy}}</td>
+                <td>{{debitnote.EntryDate}}</td>
+                <td><button class="it-print-btn" (click)="openViewPrint(debitnote.VoucherUrl)">🖨 View || Print</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <!-- Panel: Supporting Document -->
-    <div class="it-card it-panel" id="it-panel-support">
-      <div class="it-card-head">&#9998; Supporting Document</div>
-      <div class="it-empty" id="itSupportEmpty">Enter a bill number and click "Get Invoice Data" to view supporting documents.</div>
+    <div class="it-card it-panel" [class.active]="activeTab === '4'">
+      <div class="it-card-head">✎  Supporting Document</div>
+      <div class="it-empty" *ngIf="isLoading">
+        <div class="it-spinner"></div> Fetching data...
+      </div>
+      <div class="it-empty" *ngIf="!isLoading && (!supportingDocDetails || supportingDocDetails.length === 0)">
+        {{ hasSearched ? 'No Data Found' : 'Enter a bill number and click "Get Invoice Data" to view supporting documents.' }}
+      </div>
+      <div class="itd-wrap" *ngIf="!isLoading && supportingDocDetails && supportingDocDetails.length > 0">
+          <table class="itd-table">
+            <thead>
+              <tr>
+                <th>Document No.</th>
+                <th>Document Date		</th>
+                <th>Document Amount</th>
+                <th>Generate By	</th>
+                <th>Generated Date</th>
+                <th>Document Type</th>
+                <th>Vendor Bill Upload Copy</th>
+                <th>Attachment</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let document of supportingDocDetails">
+                <td>{{document.DocumentNo}}</td>
+                <td>{{document.DocumentDate}}</td>
+                <td>{{document.NetAmount}}</td>
+                <td>{{document.EntryBy}}</td>
+                <td>{{document.EntryDate}}</td>
+                <td>{{document.BETYPE}}</td>
+                <td>{{document.VendorBillAttachmentCount}}</td>
+                <td><button class="it-print-btn" (click)="openViewPrint(document.VoucherUrl)">🖨 View Attachment</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
     </div>
 
     <!-- Panel: Hold & Release Details -->
-    <div class="it-card it-panel" id="it-panel-hold">
-      <div class="it-card-head">&#9998; Hold &amp; Release Details</div>
-      <div class="it-empty" id="itHoldEmpty">Enter a bill number and click "Get Invoice Data" to view hold &amp; release details.</div>
+    <div class="it-card it-panel" [class.active]="activeTab === '6'">
+      <div class="it-card-head">✎  Hold & Release Details</div>
+      <div class="it-empty" *ngIf="isLoading">
+        <div class="it-spinner"></div> Fetching data...
+      </div>
+      <div class="it-empty" *ngIf="!isLoading">
+        {{ hasSearched ? 'No Data Found' : 'Enter a bill number and click "Get Invoice Data" to view hold & release details.' }}
+      </div>
     </div>
 
     <!-- Panel: Payment Request Details -->
-    <div class="it-card it-panel" id="it-panel-payreq">
-      <div class="it-card-head">&#9998; Payment Request Details</div>
-      <div id="itPayreqBody"><div class="it-empty">Enter a bill number and click "Get Invoice Data" to view payment request details.</div></div>
+    <div class="it-card it-panel" [class.active]="activeTab === '5'">
+      <div class="it-card-head">✎  Payment Request Details</div>
+      <div>
+        <div class="it-empty" *ngIf="isLoading">
+          <div class="it-spinner"></div> Fetching data...
+        </div>
+        <div class="it-empty" *ngIf="!isLoading && (!PaymentDetails || PaymentDetails.length === 0)">
+          {{ hasSearched ? 'No Data Found' : 'Enter a bill number and click "Get Invoice Data" to view payment request details.' }}
+        </div>
+       <div class="itd-wrap" *ngIf="!isLoading && PaymentDetails && PaymentDetails.length > 0">
+          <table class="itd-table">
+            <thead>
+              <tr>
+                <th>Request ID</th>
+                <th>Request Amount</th>
+                <th>RequestId Approval Status</th>
+                <th>Request Date</th>
+                <th>Request Approval Name</th>
+                <th>Bank Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let payment of PaymentDetails">
+                <td>{{payment.RequestId}}</td>
+                <td>{{payment.Amount}}</td>
+                <td>{{payment.Status}}</td>
+                <td>{{payment.RequestDate}}</td>
+                <td>{{payment.RequestApprovalName}}</td>
+                <td>{{payment.BankStaus}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
     </div>
-
+    </div>
   </div>
 </div>

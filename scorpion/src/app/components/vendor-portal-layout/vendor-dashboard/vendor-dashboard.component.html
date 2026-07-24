@@ -1,40 +1,111 @@
-<div class="dash-wrap">
+<div class="dash-wrap" [hidden]="showUnbilledDetail">
   <div class="dash-title">Vendor Dashboard</div>
   <div class="dash-sub">Overview of your billing and payment status</div>
 
   <div class="prs-card" style="margin-bottom:18px;">
-    <div style="display:flex;gap:20px;align-items:flex-end;flex-wrap:wrap;">
+    <div style="display:flex;gap:20px;align-items:flex-end;flex-wrap:wrap;" [formGroup]="filterForm">
       <div class="field-group" style="margin:0;min-width:160px;">
         <label>From Date</label>
-        <input type="date" id="vendorFilterFromDate" (change)="onVendorFilterChange()">
+        <div class="date-input-wrap">
+          <input type="text" id="vendorFilterFromDate" bsDatepicker formControlName="fromDateStr"
+            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+          <span class="cal-icon">📅</span>
+        </div>
       </div>
       <div class="field-group" style="margin:0;min-width:160px;">
         <label>To Date</label>
-        <input type="date" id="vendorFilterToDate" (change)="onVendorFilterChange()">
+        <div class="date-input-wrap">
+          <input type="text" id="vendorFilterToDate" bsDatepicker formControlName="toDateStr"
+            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+          <span class="cal-icon">📅</span>
+        </div>
       </div>
       <div class="field-group" style="margin:0;min-width:240px;">
         <label>Vendor Name</label>
-        <select id="vendorFilterVendor" (change)="onVendorFilterChange()">
-          <option value="">All Vendors</option>
-        </select>
+        <ng-select placeholder="Search Vendor..." bindLabel="VENDORNAME" bindValue="VENDORCODE" [items]="vendorList"
+          [typeahead]="vendorSearchInput$" [loading]="isVendorLoading" formControlName="Vendor"
+          typeToSearchText="Please enter at least 3 characters" loadingText="Searching..."
+          notFoundText="No vendor found" class="custom-status-select clear-icon">
+          <ng-template ng-label-tmp let-item="item">
+            {{item.VENDORCODE}}: {{item.VENDORNAME}}
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item">
+            {{item.VENDORCODE}}: {{item.VENDORNAME}}
+          </ng-template>
+        </ng-select>
       </div>
-      <button class="save-btn secondary" style="width:120px;height:38px;" (click)="resetVendorDashboardFilter()">Reset</button>
+      <button class="save-btn secondary" style="width:120px;height:38px;"
+        (click)="resetVendorDashboardFilter()">Reset</button>
     </div>
-    <div class="editable-note" style="margin-top:10px;margin-bottom:0;">Unbilled PRS, Unbilled THC, Unbilled DRS, Unbilled HCC and Service Bills each have their own Month/Year/Billing Preference period filter on their listing pages, separate from the Date Range filter above (which still drives the counts shown on these cards here).</div>
+    <div class="editable-note" style="margin-top:10px;margin-bottom:0;">Unbilled PRS, Unbilled THC, Unbilled DRS,
+      Unbilled HCC and Service Bills each have their own Month/Year/Billing Preference period filter on their listing
+      pages, separate from the Date Range filter above (which still drives the counts shown on these cards here).</div>
   </div>
 
   <div class="card-grid">
-    <div class="stat-card" id="prsCard" style="cursor:pointer;" (click)="openPrsListing()"><div class="icon">📄</div><div class="label">Unbilled PRS</div><div class="value">18 <span>records</span></div></div>
-    <div class="stat-card" id="vendorThcCard" style="cursor:pointer;" (click)="openVendorUnbilledThcListing()"><div class="icon">🚚</div><div class="label">Unbilled THC</div><div class="value" id="vendorThcCountValue">0 <span>records</span></div></div>
-    <div class="stat-card" id="vendorDrsCard" style="cursor:pointer;" (click)="openVendorUnbilledDrsListing()"><div class="icon">📦</div><div class="label">Unbilled DRS</div><div class="value" id="vendorDrsCountValue">0 <span>records</span></div></div>
-    <div class="stat-card" id="vendorHccCard" style="cursor:pointer;" (click)="openVendorUnbilledHccListing()"><div class="icon">🏗️</div><div class="label">Unbilled HCC</div><div class="value" id="vendorHccCountValue">0 <span>records</span></div></div>
-    <div class="stat-card" id="vendorServiceBillsCard" style="cursor:pointer;" (click)="openVendorServiceBillsListing()"><div class="icon">🧰</div><div class="label">Service Bills</div></div>
-    <div class="stat-card" id="provisionalCard" style="cursor:pointer;" (click)="openProvisionalBillsListing()"><div class="icon">🧾</div><div class="label">Provisional Bills</div><div class="value" id="provisionalCountValue">9 <span>records</span></div></div>
-    <div class="stat-card" id="submittedCard" style="cursor:pointer;" (click)="openSubmittedBillsListing()"><div class="icon">✅</div><div class="label">Submitted Bills</div><div class="value" id="submittedCountValue">24 <span>records</span></div></div>
-    <div class="stat-card" id="pendingApprovalCard" style="cursor:pointer;" (click)="openPendingApprovalListing()"><div class="icon">🕵️</div><div class="label">Pending for Approval</div><div class="value" id="pendingApprovalCountValue">8 <span>records</span></div></div>
-    <div class="stat-card" id="pendingAccountsCard" style="cursor:pointer;" (click)="openPendingAccountsListing()"><div class="icon">🧮</div><div class="label">Pending with Accounts</div><div class="value" id="pendingAccountsCountValue">5 <span>records</span></div></div>
-    <div class="stat-card" id="vendorPendingPaymentCard" style="cursor:pointer;" (click)="openVendorPendingPaymentListing()"><div class="icon">⏳</div><div class="label">Pending for Payment</div><div class="value" id="pendingPaymentCountValue">6 <span>records</span></div></div>
-    <div class="stat-card" id="vendorPaymentProcessedCard" style="cursor:pointer;" (click)="openVendorPaymentProcessedListing()"><div class="icon">💰</div><div class="label">Payment Processed</div><div class="value" id="paymentProcessedCountValue">31 <span>records</span></div></div>
-    <div class="stat-card" id="vendorDebitNoteCard" style="cursor:pointer;" (click)="openVendorDebitNoteListing()"><div class="icon">↩️</div><div class="label">Debit Note</div><div class="value" id="vendorDebitNoteCountValue">3 <span>records</span></div></div>
+    <div class="stat-card" id="prsCard" style="cursor:pointer;" (click)="openVendorUnbilledListing('PRS')">
+      <div class="icon">📄</div>
+      <div class="label">Unbilled PRS</div>
+      <div class="value">18 <span>records</span></div>
+    </div>
+    <div class="stat-card" id="vendorThcCard" style="cursor:pointer;" (click)="openVendorUnbilledListing('THC')">
+      <div class="icon">🚚</div>
+      <div class="label">Unbilled THC</div>
+      <div class="value" id="vendorThcCountValue">0 <span>records</span></div>
+    </div>
+    <div class="stat-card" id="vendorDrsCard" style="cursor:pointer;" (click)="openVendorUnbilledListing('DRS')">
+      <div class="icon">📦</div>
+      <div class="label">Unbilled DRS</div>
+      <div class="value" id="vendorDrsCountValue">0 <span>records</span></div>
+    </div>
+    <div class="stat-card" id="vendorHccCard" style="cursor:pointer;" (click)="openVendorUnbilledListing('HCC')">
+      <div class="icon">🏗️</div>
+      <div class="label">Unbilled HCC</div>
+      <div class="value" id="vendorHccCountValue">0 <span>records</span></div>
+    </div>
+    <div class="stat-card" id="vendorServiceBillsCard" style="cursor:pointer;"
+      (click)="openVendorServiceBillsListing()">
+      <div class="icon">🧰</div>
+      <div class="label">Service Bills</div>
+    </div>
+    <div class="stat-card" id="provisionalCard" style="cursor:pointer;" (click)="openProvisionalBillsListing()">
+      <div class="icon">🧾</div>
+      <div class="label">Provisional Bills</div>
+      <div class="value" id="provisionalCountValue">9 <span>records</span></div>
+    </div>
+    <div class="stat-card" id="submittedCard" style="cursor:pointer;" (click)="openSubmittedBillsListing()">
+      <div class="icon">✅</div>
+      <div class="label">Submitted Bills</div>
+      <div class="value" id="submittedCountValue">24 <span>records</span></div>
+    </div>
+    <div class="stat-card" id="pendingApprovalCard" style="cursor:pointer;" (click)="openPendingApprovalListing()">
+      <div class="icon">🕵️</div>
+      <div class="label">Pending for Approval</div>
+      <div class="value" id="pendingApprovalCountValue">8 <span>records</span></div>
+    </div>
+    <div class="stat-card" id="pendingAccountsCard" style="cursor:pointer;" (click)="openPendingAccountsListing()">
+      <div class="icon">🧮</div>
+      <div class="label">Pending with Accounts</div>
+      <div class="value" id="pendingAccountsCountValue">5 <span>records</span></div>
+    </div>
+    <div class="stat-card" id="vendorPendingPaymentCard" style="cursor:pointer;"
+      (click)="openVendorPendingPaymentListing()">
+      <div class="icon">⏳</div>
+      <div class="label">Pending for Payment</div>
+      <div class="value" id="pendingPaymentCountValue">6 <span>records</span></div>
+    </div>
+    <div class="stat-card" id="vendorPaymentProcessedCard" style="cursor:pointer;"
+      (click)="openVendorPaymentProcessedListing()">
+      <div class="icon">💰</div>
+      <div class="label">Payment Processed</div>
+      <div class="value" id="paymentProcessedCountValue">31 <span>records</span></div>
+    </div>
+    <div class="stat-card" id="vendorDebitNoteCard" style="cursor:pointer;" (click)="openVendorDebitNoteListing()">
+      <div class="icon">↩️</div>
+      <div class="label">Debit Note</div>
+      <div class="value" id="vendorDebitNoteCountValue">3 <span>records</span></div>
+    </div>
   </div>
 </div>
+<app-unbilled-detail #unbilledDetailComponent [hidden]="!showUnbilledDetail"
+  (close)="closeUnbilledListing()"></app-unbilled-detail>

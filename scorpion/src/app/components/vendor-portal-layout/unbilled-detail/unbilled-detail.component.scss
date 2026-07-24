@@ -12,24 +12,6 @@
   margin: 0 auto;
 }
 
-.back-btn {
-  background: transparent;
-  border: none;
-  color: #646a75;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-bottom: 16px;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  transition: color .2s;
-}
-
-.back-btn:hover {
-  color: #E2001A;
-}
-
 .dash-title {
   font-size: 23px !important;
   font-weight: 700;
@@ -282,3 +264,15 @@
   margin-top: 32px;
   padding-bottom: 24px;
 }
+
+ .back-btn{
+    background:#fff;
+    border:1.5px solid #e4e6eb;
+    padding:8px 16px;
+    border-radius:7px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    margin-bottom:18px;
+    color:#1a1d23;
+  }

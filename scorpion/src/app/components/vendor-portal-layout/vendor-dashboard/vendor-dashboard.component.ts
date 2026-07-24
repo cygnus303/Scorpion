@@ -1,40 +1,80 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { Subscription, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { UnbilledDetailComponent } from '../unbilled-detail/unbilled-detail.component';
+import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-vendor-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,NgSelectModule,ReactiveFormsModule,BsDatepickerModule,UnbilledDetailComponent],
   templateUrl: './vendor-dashboard.component.html',
   styleUrl: './vendor-dashboard.component.scss'
 })
-export class VendorDashboardComponent {
+export class VendorDashboardComponent implements OnInit {
+  private listSubscription?: Subscription;
+  public vendorList: any[] = [];
+  public vendorSearchInput$ = new Subject<string>();
+  public isVendorLoading: boolean = false;
+  @ViewChild(UnbilledDetailComponent) unbilledDetailComponent!: UnbilledDetailComponent;
+
+  public filterForm!: FormGroup;
+  public showUnbilledDetail: boolean = false;
   
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router, 
+    private dynamicDataService: DynamicDataService,
+    private fb: FormBuilder
+  ) {
+    this.buildForm();
+  }
+
+  buildForm(){
+this.filterForm = this.fb.group({
+      fromDateStr: [new Date()],
+      toDateStr: [new Date()],
+      Vendor: [null]
+    });
+  }
+
+  ngOnInit() {
+    this.vendorSearchInput$.pipe(
+      debounceTime(400),
+      distinctUntilChanged()
+    ).subscribe((term: string) => {
+      if (term && term.trim().length >= 3) {
+        this.isVendorLoading = true;
+        this.getVendorList(term.trim());
+      } else {
+        this.isVendorLoading = false;
+      }
+    });
+
+    this.filterForm.valueChanges.subscribe(val => {
+      this.onVendorFilterChange();
+    });
+  }
 
   onVendorFilterChange() {
-    console.log('Filter changed');
+    console.log('Filter changed', this.filterForm.value);
   }
 
   resetVendorDashboardFilter() {
-    console.log('Filter reset');
+   this.buildForm();
   }
 
-  openPrsListing() {
-    this.router.navigate(['/Vendor/unbilled-detail'], { queryParams: { type: 'PRS', source: 'dashboard' } });
+  openVendorUnbilledListing(type:string) {
+    this.showUnbilledDetail = true;
+    this.unbilledDetailComponent.showPopup(this.filterForm.value, type,'dashboard');
   }
 
-  openVendorUnbilledThcListing() {
-    this.router.navigate(['/Vendor/unbilled-detail'], { queryParams: { type: 'THC', source: 'dashboard' } });
-  }
-
-  openVendorUnbilledDrsListing() {
-    this.router.navigate(['/Vendor/unbilled-detail'], { queryParams: { type: 'DRS', source: 'dashboard' } });
-  }
-
-  openVendorUnbilledHccListing() {
-    this.router.navigate(['/Vendor/unbilled-detail'], { queryParams: { type: 'HCC', source: 'dashboard' } });
+  closeUnbilledListing() {
+    this.showUnbilledDetail = false;
   }
 
   openVendorServiceBillsListing() {
@@ -67,5 +107,32 @@ export class VendorDashboardComponent {
 
   openVendorDebitNoteListing() {
     console.log('Open Debit Note Listing');
+  }
+
+  getVendorList(searchTerm: string) {
+    if (this.listSubscription) {
+      this.listSubscription.unsubscribe();
+    }
+    const payload = {
+      FilterJson: {
+        "ReportId": "05",
+        "Search": searchTerm
+      }
+    };
+
+    this.listSubscription = this.dynamicDataService.getDynamicData(payload).subscribe({
+      next: (res: any) => {
+        this.isVendorLoading = false;
+        if (res && res.Table1 && res.Table1.length > 0) {
+          this.vendorList = res.Table1;
+        } else {
+          this.vendorList = [];
+        }
+      },
+      error: (err: any) => {
+        this.isVendorLoading = false;
+        this.vendorList = [];
+      }
+    });
   }
 }
