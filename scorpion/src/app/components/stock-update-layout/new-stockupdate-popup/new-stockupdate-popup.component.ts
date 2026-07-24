@@ -1120,7 +1120,7 @@ export class NewStockupdatePopupComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        this.sweetAlertService.error(err?.error?.message || 'Error submitting stock update details.');
+        this.sweetAlertService.error(err?.error?.Error?.Message || 'Error submitting stock update details.');
       }
     });
   }
