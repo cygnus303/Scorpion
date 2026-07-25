@@ -113,4 +113,15 @@ export class InvoiceTrackerComponent {
     }
   }
 
+  openDebitView(debitNo: string){
+     const url = `${this.env.liveUrl}ViewPrint/ViewDebitNote?VoucherNo=${debitNo}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
+    }
+  }
+
 }
