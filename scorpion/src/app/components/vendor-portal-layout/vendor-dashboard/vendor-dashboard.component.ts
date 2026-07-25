@@ -70,7 +70,7 @@ this.filterForm = this.fb.group({
 
   openVendorUnbilledListing(type:string) {
     this.showUnbilledDetail = true;
-    this.unbilledDetailComponent.showPopup(this.filterForm.value, type,'dashboard');
+    this.unbilledDetailComponent.showPopup(type,'dashboard');
   }
 
   closeUnbilledListing() {

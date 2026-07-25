@@ -14,15 +14,15 @@
             <label>Month</label>
            <ng-select class="noFoundTextColor clear-icon remove-white-space text-start" [items]="monthList"
                                                 bindLabel="text" bindValue="value"
-                                                placeholder="Vendor" >
+                                                placeholder="Vendor" [(ngModel)]="selectedMonth" (ngModelChange)="generateBillingPeriods()">
                                             </ng-select>
           </div>
           <div class="field-group">
             <label>Year</label>
-            <select id="thcYear" onchange="renderVendorUnbilledPeriods('thc')">
+            <select id="thcYear" [(ngModel)]="selectedYear" (ngModelChange)="generateBillingPeriods()">
               <option value="2024">2024</option>
               <option value="2025">2025</option>
-              <option value="2026" selected>2026</option>
+              <option value="2026">2026</option>
               <option value="2027">2027</option>
             </select>
           </div>
@@ -30,7 +30,7 @@
             <label>Billing Preference <span class="label-sub">(Vendor Master — demo control)</span></label>
             <ng-select class="noFoundTextColor clear-icon remove-white-space text-start" [items]="billingPreference"
                                                 bindLabel="text" bindValue="value"
-                                                placeholder="Vendor" >
+                                                placeholder="Vendor" [(ngModel)]="selectedPreference" (ngModelChange)="generateBillingPeriods()">
                                             </ng-select>
           </div>
         </div>
@@ -41,7 +41,13 @@
 
       <div class="prs-card">
         <div class="modal-section-title">Select Billing Period</div>
-        <div class="radio-group" id="thcRadioGroup"></div>
+        <div class="radio-group" id="thcRadioGroup">
+          <label class="period-radio-card" *ngFor="let period of billingPeriods">
+            <input type="radio" name="billingPeriod" [value]="period.value" [(ngModel)]="selectedPeriod" (ngModelChange)="onPeriodSelect()">
+            <span class="period-text">{{ period.label }}</span>
+            <span class="no-records-badge">No Records</span>
+          </label>
+        </div>
       </div>
 
       <!-- I've removed the 'hidden' class here so the form is visible to you in the mockup -->
@@ -150,18 +156,22 @@
             <table class="doc-table">
               <thead>
                 <tr>
-                  <th><input type="checkbox" id="thcSelectAllDocs" checked
+                  <th *ngIf="source != 'dashboard'"><input type="checkbox" id="thcSelectAllDocs" checked
                       onchange="toggleSelectAllFullDocs('thc', this)"></th>
                   <th>Doc. No.</th>
                   <th>Doc. Date</th>
-                  <th>Vehicle No.</th>
-                  <th>FTL Type</th>
-                  <th>Route Name</th>
                   <th>Amount (₹)</th>
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody id="thcDocTableBody"></tbody>
+              <tbody >
+                <tr *ngFor="let document of documentDetail">
+                  <td>{{ document.Docno }}</td>
+                  <td>{{ document.Docdt }}</td>
+                  <td>{{ document.Contract_Amt }}</td>
+                  <td><button>View</button></td>
+                </tr>
+              </tbody>
             </table>
           </div>
 
