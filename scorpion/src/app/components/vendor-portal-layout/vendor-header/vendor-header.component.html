@@ -9,11 +9,12 @@
       <span class="avatar">👤</span> <span id="loggedInUserLabel">vendor1</span> <span class="caret">▾</span>
     </button>
     <div class="user-dropdown" id="userDropdown" [class.hidden]="!isUserMenuOpen">
-      <button (click)="openModal('profileModal')">🪪 User Profile</button>
-      <button (click)="openModal('alertsModal')">🔔 Alerts &amp; Notifications</button>
-      <button (click)="openModal('resetPwModal')">🔑 Reset Password</button>
+      <button (click)="openProfile()">🪪 User Profile</button>
+      <button >🔔 Alerts &amp; Notifications</button>
+      <button >🔑 Reset Password</button>
       <div class="dropdown-divider"></div>
       <button class="logout-item" (click)="logout()">🚪 Logout</button>
     </div>
   </div>
 </div>
+<app-vendor-profile #vendorProfileComponent ></app-vendor-profile>

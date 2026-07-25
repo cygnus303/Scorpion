@@ -1,16 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { VendorLayoutService } from '../vendor-layout.service';
+import { VendorProfileComponent } from '../vendor-profile/vendor-profile.component';
 
 @Component({
   selector: 'app-vendor-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,VendorProfileComponent],
   templateUrl: './vendor-header.component.html',
   styleUrl: './vendor-header.component.scss'
 })
 export class VendorHeaderComponent {
   isUserMenuOpen = false;
+   @ViewChild(VendorProfileComponent) vendorProfileComponent!: VendorProfileComponent;
+  
 
   constructor(private layoutService: VendorLayoutService) {}
 
@@ -22,11 +25,12 @@ export class VendorHeaderComponent {
     this.layoutService.toggleSidebar();
   }
 
-  openModal(modalId: string) {
-    console.log('Open modal:', modalId);
-  }
-
   logout() {
     console.log('Logout clicked');
+  }
+
+  openProfile(){
+    this.vendorProfileComponent.showPopup();
+
   }
 }
