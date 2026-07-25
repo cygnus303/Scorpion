@@ -11,25 +11,28 @@
       </div>
 
       <!-- VENDOR PROFILE TAB -->
-      <div *ngIf="activeTab === 'profile'">
+      <div *ngIf="activeTab === 'profile' && vendorProfile">
         <div class="modal-section-title">Vendor Master Details (Non-editable)</div>
         <div class="ro-grid">
-          <div class="ro-field"><div class="ro-label">Vendor Code</div><div class="ro-value">VEN-10245</div></div>
-          <div class="ro-field"><div class="ro-label">Vendor Name</div><div class="ro-value" id="vendorNameValue">ABC Logistics Pvt Ltd</div></div>
-          <div class="ro-field"><div class="ro-label">PAN</div><div class="ro-value">ABCDE1234F</div></div>
-          <div class="ro-field"><div class="ro-label">GSTIN</div><div class="ro-value" id="vendorGstinValue">27ABCDE1234F1Z5</div></div>
-          <div class="ro-field"><div class="ro-label">Vendor Category</div><div class="ro-value">Transport Service Provider</div></div>
-          <div class="ro-field"><div class="ro-label">Vendor Since</div><div class="ro-value">12-Mar-2021</div></div>
-          <div class="ro-field"><div class="ro-label">Bank Account No.</div><div class="ro-value">XXXXXXXX4521</div></div>
-          <div class="ro-field"><div class="ro-label">IFSC Code</div><div class="ro-value">HDFC0001234</div></div>
+          <div class="ro-field"><div class="ro-label">Vendor Code</div><div class="ro-value">{{ vendorProfile.VENDORCODE || 'N/A' }}</div></div>
+          <div class="ro-field"><div class="ro-label">Vendor Name</div><div class="ro-value" id="vendorNameValue">{{ vendorProfile.VENDORNAME || 'N/A' }}</div></div>
+          <div class="ro-field"><div class="ro-label">PAN</div><div class="ro-value">{{ vendorProfile.PAN_NO || 'N/A' }}</div></div>
+          <div class="ro-field"><div class="ro-label">GSTIN</div><div class="ro-value" id="vendorGstinValue">{{ vendorProfile.GSTNo || 'N/A' }}</div></div>
+          <div class="ro-field"><div class="ro-label">Vendor Category</div><div class="ro-value">{{ vendorProfile.VendorTypeDesc || 'N/A' }}</div></div>
+          <div class="ro-field"><div class="ro-label">Vendor Since</div><div class="ro-value">{{ vendorProfile.Entrydt | date:'dd-MMM-yyyy' || 'N/A' }}</div></div>
+          <div class="ro-field"><div class="ro-label">Bank Account No.</div><div class="ro-value">{{ vendorProfile.BankAccountNo || 'N/A' }}</div></div>
+          <div class="ro-field"><div class="ro-label">IFSC Code</div><div class="ro-value">{{ vendorProfile.BankIFSCCode || 'N/A' }}</div></div>
         </div>
 
         <div class="modal-section-title">KYC Documents</div>
         <div class="kyc-list">
-          <div class="kyc-item"><span class="kyc-name">📄 PAN Card.pdf</span><span class="kyc-status">Verified</span></div>
-          <div class="kyc-item"><span class="kyc-name">📄 GST Certificate.pdf</span><span class="kyc-status">Verified</span></div>
-          <div class="kyc-item"><span class="kyc-name">📄 Cancelled Cheque.pdf</span><span class="kyc-status">Verified</span></div>
-          <div class="kyc-item"><span class="kyc-name">📄 Address Proof.pdf</span><span class="kyc-status">Verified</span></div>
+          <div class="kyc-item" *ngIf="vendorProfile.pancardattachments"><span class="kyc-name">📄 PAN Card</span><span class="kyc-status">Available</span></div>
+          <div class="kyc-item" *ngIf="vendorProfile.GSTattachments"><span class="kyc-name">📄 GST Certificate</span><span class="kyc-status">Available</span></div>
+          <div class="kyc-item" *ngIf="vendorProfile.cancelchqueattachments"><span class="kyc-name">📄 Cancelled Cheque</span><span class="kyc-status">Available</span></div>
+          <div class="kyc-item" *ngIf="vendorProfile.AddressProof"><span class="kyc-name">📄 Address Proof</span><span class="kyc-status">Available</span></div>
+          <div class="kyc-item" *ngIf="!vendorProfile.pancardattachments && !vendorProfile.GSTattachments && !vendorProfile.cancelchqueattachments && !vendorProfile.AddressProof">
+            <span class="kyc-name">No KYC Documents Available</span>
+          </div>
         </div>
 
         <div class="modal-section-title">Company Logo</div>
@@ -48,38 +51,57 @@
         <div class="editable-note">Only Address, Email ID, Contact No. and Company Logo can be updated. All other fields are Vendor Master driven and locked.</div>
         <div class="field-group">
           <label>Address</label>
-          <input type="text" id="profileAddress" value="Plot 14, Industrial Area, Phase 2, Gurugram, Haryana - 122001">
+          <input type="text" id="profileAddress" [value]="vendorProfile.Default_Addr || ''">
         </div>
         <div class="field-group">
           <label>Email ID</label>
-          <input type="text" id="profileEmail" value="contact@abclogistics.com">
+          <input type="text" id="profileEmail" [value]="vendorProfile.VENDOREMAIL || ''">
         </div>
         <div class="field-group">
           <label>Contact No.</label>
-          <input type="text" id="profileContact" value="+91 98765 43210">
+          <input type="text" id="profileContact" [value]="vendorProfile.VENDORPHONE || ''">
         </div>
         <button class="save-btn">Save Changes</button>
       </div>
 
       <!-- VENDOR CONTRACT TAB -->
       <div *ngIf="activeTab === 'contract'">
-        <div class="modal-section-title">Vendor Contract Details (Non-editable)</div>
-        <div class="ro-grid">
-          <div class="ro-field"><div class="ro-label">Contract No.</div><div class="ro-value">CNT-2024-0187</div></div>
-          <div class="ro-field"><div class="ro-label">Contract Type</div><div class="ro-value">Annual Service Agreement</div></div>
-          <div class="ro-field"><div class="ro-label">Effective From</div><div class="ro-value">01-Apr-2024</div></div>
-          <div class="ro-field"><div class="ro-label">Effective To</div><div class="ro-value">31-Mar-2027</div></div>
-          <div class="ro-field"><div class="ro-label">Renewal Date</div><div class="ro-value">31-Mar-2027</div></div>
-          <div class="ro-field"><div class="ro-label">Payment Terms</div><div class="ro-value">Net 30 Days</div></div>
-          <div class="ro-field"><div class="ro-label">Rate Type</div><div class="ro-value">Per Shipment (Slab-based)</div></div>
-          <div class="ro-field"><div class="ro-label">SLA Commitment</div><div class="ro-value">98% On-time Delivery</div></div>
-          <div class="ro-field"><div class="ro-label">Contract Status</div><div class="ro-value"><span class="status-badge submitted">Active</span></div></div>
-        </div>
+        <ng-container *ngIf="vendorContracts && vendorContracts.length > 0; else noContracts">
+          <div *ngFor="let contract of vendorContracts; let i = index" class="contract-card" [style.margin-top]="i > 0 ? '24px' : '0'">
+            <div class="modal-section-title">Vendor Contract Details (Non-editable)</div>
+            <div class="ro-grid">
+              <div class="ro-field"><div class="ro-label">Contract No.</div><div class="ro-value">{{ contract.CONTRACTCD || 'N/A' }}</div></div>
+              <div class="ro-field"><div class="ro-label">Contract Type</div><div class="ro-value">{{ contract.ContractType || 'N/A' }}</div></div>
+              <div class="ro-field"><div class="ro-label">Effective From</div><div class="ro-value">{{ contract.Start_Dt | date:'dd-MMM-yyyy' || 'N/A' }}</div></div>
+              <div class="ro-field"><div class="ro-label">Effective To</div><div class="ro-value">{{ contract.Valid_uptodt | date:'dd-MMM-yyyy' || 'N/A' }}</div></div>
+              <div class="ro-field"><div class="ro-label">Renewal Date</div><div class="ro-value">{{ contract.RenewalDt | date:'dd-MMM-yyyy' || 'N/A' }}</div></div>
+              <div class="ro-field"><div class="ro-label">Payment Interval</div><div class="ro-value">{{ contract.Payment_interval || 'N/A' }}</div></div>
+              <div class="ro-field"><div class="ro-label">Rate Type</div><div class="ro-value">{{ contract.RateType || 'N/A' }}</div></div>
+              <div class="ro-field"><div class="ro-label">SLA Commitment</div><div class="ro-value">{{ contract.SLACommitment || 'N/A' }}</div></div>
+              <div class="ro-field"><div class="ro-label">Contract Status</div><div class="ro-value">
+                <span class="status-badge" [class.submitted]="contract.Status === 'A'" [class.draft]="contract.Status !== 'A'">
+                  {{ contract.Status === 'A' ? 'Active' : (contract.Status || 'N/A') }}
+                </span>
+              </div></div>
+            </div>
 
-        <div class="modal-section-title">Contract Document</div>
-        <div class="kyc-list">
-          <div class="kyc-item"><span class="kyc-name">📄 Vendor_Contract_Agreement.pdf</span><span class="kyc-status">Verified</span></div>
-        </div>
+            <div class="modal-section-title">Contract Document</div>
+            <div class="kyc-list">
+              <div class="kyc-item" *ngIf="contract.ContractDoc">
+                <span class="kyc-name">📄 Contract Document</span>
+                <span class="kyc-status">Available</span>
+              </div>
+              <div class="kyc-item" *ngIf="!contract.ContractDoc">
+                <span class="kyc-name">No Contract Document Available</span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #noContracts>
+          <div style="text-align: center; padding: 40px; color: #718096; font-weight: 500;">
+            No Vendor Contracts Found
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>

@@ -12,10 +12,10 @@
         <div class="filter-row">
           <div class="field-group">
             <label>Month</label>
-           <ng-select class="noFoundTextColor clear-icon remove-white-space text-start" [items]="monthList"
-                                                bindLabel="text" bindValue="value"
-                                                placeholder="Vendor" [(ngModel)]="selectedMonth" (ngModelChange)="generateBillingPeriods()">
-                                            </ng-select>
+            <ng-select class="noFoundTextColor clear-icon remove-white-space text-start" [items]="monthList"
+              bindLabel="text" bindValue="value" placeholder="Vendor" [(ngModel)]="selectedMonth"
+              (ngModelChange)="generateBillingPeriods()">
+            </ng-select>
           </div>
           <div class="field-group">
             <label>Year</label>
@@ -29,9 +29,9 @@
           <div class="field-group">
             <label>Billing Preference <span class="label-sub">(Vendor Master — demo control)</span></label>
             <ng-select class="noFoundTextColor clear-icon remove-white-space text-start" [items]="billingPreference"
-                                                bindLabel="text" bindValue="value"
-                                                placeholder="Vendor" [(ngModel)]="selectedPreference" (ngModelChange)="generateBillingPeriods()">
-                                            </ng-select>
+              bindLabel="text" bindValue="value" placeholder="Vendor" [(ngModel)]="selectedPreference"
+              (ngModelChange)="generateBillingPeriods()">
+            </ng-select>
           </div>
         </div>
         <div class="editable-note" style="margin-top:16px;margin-bottom:0;">Billing periods below are generated
@@ -43,7 +43,8 @@
         <div class="modal-section-title">Select Billing Period</div>
         <div class="radio-group" id="thcRadioGroup">
           <label class="period-radio-card" *ngFor="let period of billingPeriods">
-            <input type="radio" name="billingPeriod" [value]="period.value" [(ngModel)]="selectedPeriod" (ngModelChange)="onPeriodSelect()">
+            <input type="radio" name="billingPeriod" [value]="period.value" [(ngModel)]="selectedPeriod"
+              (ngModelChange)="onPeriodSelect()">
             <span class="period-text">{{ period.label }}</span>
             <span class="no-records-badge">No Records</span>
           </label>
@@ -160,17 +161,35 @@
                       onchange="toggleSelectAllFullDocs('thc', this)"></th>
                   <th>Doc. No.</th>
                   <th>Doc. Date</th>
+                  <th *ngIf="type==='THC'">Vehicle No.</th>
+                  <th *ngIf="type==='THC'">FTL Type</th>
+                  <th *ngIf="type==='THC'">Route Name</th>
                   <th>Amount (₹)</th>
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody >
-                <tr *ngFor="let document of documentDetail">
-                  <td>{{ document.Docno }}</td>
-                  <td>{{ document.Docdt }}</td>
-                  <td>{{ document.Contract_Amt }}</td>
-                  <td><button>View</button></td>
+              <tbody>
+                <tr *ngIf="isLoading">
+                  <td colspan="8" style="text-align: center; padding: 24px; font-weight: 500;">
+                    Fetching data...
+                  </td>
                 </tr>
+                <tr *ngIf="!isLoading && (!documentDetail || documentDetail.length === 0)">
+                  <td colspan="8" style="text-align: center; padding: 24px; font-weight: 500;">
+                    No Record Found
+                  </td>
+                </tr>
+                <ng-container *ngIf="!isLoading">
+                  <tr *ngFor="let document of documentDetail">
+                    <td>{{ document.Docno }}</td>
+                    <td>{{ document.Docdt }}</td>
+                    <td *ngIf="type==='THC'">{{ document.vehno }}</td>
+                    <td *ngIf="type==='THC'">{{ document.FtlTypeDesc }}</td>
+                    <td *ngIf="type==='THC'">{{ document.RouteCD }}</td>
+                    <td>{{ document.Contract_Amt }}</td>
+                    <td><button class="action-btn track" (click)="onViewDocument(document.Docno)">View</button></td>
+                  </tr>
+                </ng-container>
               </tbody>
             </table>
           </div>

@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { CommonModule, DatePipe } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-unbilled-detail',
@@ -17,10 +18,11 @@ export class UnbilledDetailComponent implements OnInit {
     private listSubscription?: Subscription;
     public source:string| undefined;
     public documentDetail:any;
-
+    public env:any = environment;
     public selectedMonth: string = '0';
     public selectedYear: string = '2024';
     public selectedPreference: string = '1';
+    public isLoading: boolean = false;
     
     public billingPeriods: any[] = [];
     public selectedPeriod: string | null = null;
@@ -134,24 +136,54 @@ export class UnbilledDetailComponent implements OnInit {
       "FilterJson": {
         "ReportId":"06",
         "UserName":"CYGNUSTEAM",
-        "Vendor": '',
+        // "Vendor": 'V10821',
+        "Vendor": 'V0566',
         "FromDt": fromDateStr,
         "ToDt": toDateStr,
         "Type": this.type
       }
     }
 
+    this.isLoading = true;
+    this.documentDetail = [];
+    
     this.listSubscription = this.dynamicDataService.getDynamicData(payload).subscribe({
       next: (res: any) => {
+        this.isLoading = false;
         if (res && res.Table1 && res.Table1.length > 0) {
-          this.documentDetail=res.Table1;
+          this.documentDetail = res.Table1;
         } else {
+          this.documentDetail = [];
           console.log('API Success, No Data:', res);
         }
       },
       error: (err: any) => {
+        this.isLoading = false;
+        this.documentDetail = [];
         console.error('API Error:', err);
       }
     });
+  }
+
+  onViewDocument(documentNo: string) {
+    let url = '';
+    if (this.type === 'THC') {
+      url = `${this.env.liveUrl}ViewPrint/ViewChallan?DocumentNo=${documentNo}&src=angular`;
+    }else if(this.type ==='PRS'){
+      url = `${this.env.liveUrl}ViewPrint/ViewPRS?DocumentNo=${documentNo}&src=angular&src=angular`;
+    }else if(this.type === 'DRS'){
+      url = `${this.env.liveUrl}ViewPrint/ViewDRS?DocumentNo=${documentNo}&src=angular&src=angular`;
+    }
+    
+    if (url) {
+      const popup = window.open('', 'popupWindow',
+        'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+      );
+      if (popup) {
+        popup.location.href = url;
+      }
+    } else {
+      console.warn(`No view URL defined for document type: ${this.type}`);
+    }
   }
 }
