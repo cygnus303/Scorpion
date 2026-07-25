@@ -5,7 +5,7 @@
     </button>
   </div>
   <div class="user-menu-wrap">
-    <button class="user-chip-btn" (click)="toggleUserMenu()">
+    <button class="user-chip-btn" (click)="toggleUserMenu($event)">
       <span class="avatar">👤</span> <span id="loggedInUserLabel">vendor1</span> <span class="caret">▾</span>
     </button>
     <div class="user-dropdown" id="userDropdown" [class.hidden]="!isUserMenuOpen">
