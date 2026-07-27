@@ -435,11 +435,11 @@ export class AddThcPopupComponent {
     });
     // this.getTDSDetailsFromVendor(event);
     this.getVehicleFromVendorList(event);
-    if (this.ThcForm.value.vendorType === 'XX1') {
-      this.GetVehicleTypesForChallanFromRouteVendType()
-    } else {
-      this.getVehicleType('O')
-    }
+    // if (this.ThcForm.value.vendorType === 'XX1') {
+    //   // this.GetVehicleTypesForChallanFromRouteVendType()
+    // } else {
+    //   this.getVehicleType('O')
+    // }
   }
 
   getTDSDetailsFromVendor(vendorCode: string) {
@@ -536,6 +536,7 @@ export class AddThcPopupComponent {
             fitnessDate: response.data.fitnessValDt ? new Date(response.data.fitnessValDt) : null,
             openKM: response.data.startKM
           });
+          this.getVehicleCapacity(response.data.vehicle_Type)
         }
       },
       error: (err) => {
@@ -711,7 +712,7 @@ export class AddThcPopupComponent {
         vehicleCapacityUti: 0
       });
     }
-    if (this.ThcForm.value.wtLoaded > vehicleCapacity) {
+    if ((this.ThcForm.value.wtLoaded / 1000) > vehicleCapacity) {
       this.ThcForm.patchValue({
         isOverLoad: true
       })

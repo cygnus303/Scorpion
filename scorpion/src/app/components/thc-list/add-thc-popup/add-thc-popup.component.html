@@ -304,7 +304,7 @@
           <div class="thcform-grid">
             <div class="thcform-field">
               <label>Licence No <span class="req">*</span></label>
-              <input class="form-control required2" placeholder="e.g. MH1420180012345" type="text"
+              <input class="form-control required2" placeholder="Enter Licence No" type="text"
                 formControlName="driver1Licence" (input)="onChangeLicenceNumber($event)" appFocusNext
                 [ngClass]="{ 'border-danger': ThcForm.get('driver1Licence')?.invalid  && ThcForm.get('driver1Licence')?.touched }">
               <div class="text-danger text-start" *ngIf="ThcForm.get('driver1Licence')?.touched">
@@ -423,12 +423,12 @@
                   appFocusNext readonly><label for="isOverloadChk" style="margin:0;">Auto-flagged when over
                   capacity</label></div>
             </div>
-            <div class="thcform-field" *ngIf="ThcType === 'A'">
+            <div class="thcform-field" *ngIf="ThcType === 'A' && ThcForm.value.isOverLoad">
               <label>Overload Reason <span class="req">*</span></label>
               <ng-select class="noFoundTextColor clear-icon" placeholder="Overload Reason"
                 formControlName="overLoadReason" appFocusNext notFoundText="No matches found" bindLabel="codeDesc"
                 bindValue="codeId"
-                [readonly]="!ThcForm.value.isOverLoad && ThcForm.value.vehicleCapacityUti===0"></ng-select>
+                [readonly]="!ThcForm.value.isOverLoad && ThcForm.value.vehicleCapacityUti === 0"></ng-select>
             </div>
           </div>
         </div>

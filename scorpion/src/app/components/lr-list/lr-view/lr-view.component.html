@@ -46,6 +46,7 @@
                             <strong>GSTIN:</strong> {{lrDetails?.ConsignorGSTIN || '—' }}<br>
                             <strong>Location:</strong> {{ lrDetails?.OriginCity || '—' }}<br>
                             <strong>Phone:</strong> {{ lrDetails?.ConsignorMobile || '—' }}<br>
+                            <strong>PIN Code:</strong> {{ lrDetails?.ConsignorPincode || '—' }}<br>
                             <strong>Date:</strong> {{ lrDetails?.bookingdate ? (parseDate(lrDetails?.bookingdate) |
                             date:'dd MMM yyyy') : '—' }}
                         </div>
@@ -296,8 +297,8 @@
                                     </a>
                                 </td>
                                 <td>{{ lrDetails?.BulkInvokBy || '—' }}</td>
-                                <td>{{ lrDetails?.BulkInvokeDate ? (parseDate(lrDetails?.BulkInvokeDate) | date:'dd MMM
-                                    yyyy') : '—' }}</td>
+                                <td>
+                                    {{ lrDetails?.BulkInvokeDate ? (parseDate(lrDetails?.BulkInvokeDate) | date:'dd MMM yyyy') : '—' }}</td>
                                  <td>{{ lrDetails?.SourceCNote ||'—' }}</td>
                             </tr>
                         </tbody>
@@ -321,14 +322,11 @@
                         <tbody>
                             <tr>
                                 <td>{{ lrDetails?.AppointmentNo || '—' }}</td>
-                                <td>{{ lrDetails?.AppointmentDT ? (parseDate(lrDetails?.AppointmentDT) | date:'dd MMM
-                                    yyyy') : '—' }}</td>
+                                <td>{{ lrDetails?.AppointmentDT ? (parseDate(lrDetails?.AppointmentDT) | date:'dd MMM yyyy') : '—' }}</td>
                                 <td>{{lrDetails?.ApmtEntryBy || '—' }}</td>
-                                <td>{{lrDetails?.ApmtEntryDate ? (parseDate(lrDetails?.ApmtEntryDate) | date:'dd MMM
-                                    yyyy') : '—'}}</td>
+                                <td>{{lrDetails?.ApmtEntryDate ? (parseDate(lrDetails?.ApmtEntryDate) | date:'dd MMM yyyy') : '—'}}</td>
                                 <td>{{ lrDetails?.ApmtUpdateBy ||'—' }}</td>
-                                <td>{{ lrDetails?.ApmtUdateDate ? (parseDate(lrDetails?.ApmtUdateDate) | date:'dd MMM
-                                    yyyy') : '—' }}</td>
+                                <td>{{ lrDetails?.ApmtUdateDate ? (parseDate(lrDetails?.ApmtUdateDate) | date:'dd MMM yyyy') : '—' }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -351,12 +349,12 @@
                         <tbody>
                             <tr>
                                 <td>{{ lrDetails?.CSDNo ||'—' }}</td>
-                                <td>{{ lrDetails?.CSDDate ? (parseDate(lrDetails?.CSDDate) | date:'dd MMM yyyy') : '—'
-                                    }}</td>
+                                <td>
+                                    {{ lrDetails?.CSDDate ? (parseDate(lrDetails?.CSDDate) | date:'dd MMM yyyy') : '—'}}</td>
                                 <td>{{lrDetails?.CSDEntryBy || '—' }}</td>
                                 <td>{{lrDetails?.MSDNo || '—' }}</td>
-                                <td>{{ lrDetails?.MSDDate ? (parseDate(lrDetails?.MSDDate) | date:'dd MMM yyyy') : '—'
-                                    }}</td>
+                                <td>
+                                    {{ lrDetails?.MSDDate ? (parseDate(lrDetails?.MSDDate) | date:'dd MMM yyyy') : '—'}}</td>
                                 <td>{{ lrDetails?.MSDEntryBy ||'—' }}</td>
                             </tr>
                         </tbody>

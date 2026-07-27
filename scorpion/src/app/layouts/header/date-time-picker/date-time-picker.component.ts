@@ -64,7 +64,7 @@ export class DateTimePickerComponent implements OnInit {
     const isClickInsideInput = this.elementRef.nativeElement.contains(el);
     const isClickInsidePopup = this.popupEl?.nativeElement?.contains(el);
     if (!isClickInsideInput && !isClickInsidePopup) {
-      this.closePicker();
+      this.applyDateTime();
     }
   }
 
