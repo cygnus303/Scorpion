@@ -78,6 +78,7 @@ export class ThcEditComponent {
         if (response.success) {
           this.sweetAlerService.success(`${response.message}`);
           this.dataEmitter.emit();
+          this.modalRef.hide();
         }
       }, error: (err: any) => {
         console.error(err);
