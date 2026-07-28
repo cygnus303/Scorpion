@@ -34,6 +34,7 @@ export class ThcArrivalPopupComponent {
   public THCData: any;
   public isFetchingData: boolean = false;
   public maxCloseKMValue: number = 900000;
+  public isLarRequired: boolean = false;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
 
@@ -96,6 +97,10 @@ export class ThcArrivalPopupComponent {
       Rate: new FormControl(0),
       LoadingCharge: new FormControl(0)
     });
+
+    this.arrivalForm.get('AD')?.valueChanges.subscribe(() => {
+      this.validateLateArrivalReason();
+    });
   }
 
   refreshData() {
@@ -134,6 +139,7 @@ export class ThcArrivalPopupComponent {
         });
         this.fetchPreparedByEmployee()
         this.isFetchingData = false;
+        this.validateLateArrivalReason();
       },
       error: (err) => {
         this.isFetchingData = false;
@@ -142,12 +148,31 @@ export class ThcArrivalPopupComponent {
     })
   }
 
-  onFocusCloseKM() {
-    const control = this.arrivalForm.get('CLOSEKM');
-    if (control?.value === '0' || control?.value === 0) {
-      control.setValue(null);
+  validateLateArrivalReason() {
+    if (!this.arrivalDetail || !this.arrivalDetail.eta) return;
+    
+    const adValue = this.arrivalForm.get('AD')?.value;
+    if (!adValue) return;
+
+    const adDate = new Date(adValue);
+    const etaDate = new Date(this.arrivalDetail.eta);
+    const larControl = this.arrivalForm.get('LAR');
+    if (adDate > etaDate) {
+      this.isLarRequired = true;
+      larControl?.setValidators([Validators.required]);
+    } else {
+      this.isLarRequired = false;
+      larControl?.clearValidators();
     }
+    larControl?.updateValueAndValidity({ emitEvent: false });
   }
+
+  // onFocusCloseKM() {
+  //   const control = this.arrivalForm.get('CLOSEKM');
+  //   if (control?.value === '0' || control?.value === 0) {
+  //     control.setValue(null);
+  //   }
+  // }
 
   dateAccess() {
     const payload = {
@@ -188,32 +213,32 @@ export class ThcArrivalPopupComponent {
     });
   }
 
-  validateCloseKM() {
-    const control = this.arrivalForm.get('CLOSEKM');
-    if (control?.value === null || control?.value === '') {
-      control.setValue(0);
-    }
-    const loadingBy = this.arrivalDetail?.loadingBy;
-    const opnKm = Number(this.arrivalDetail?.openkm);
-    const closeKMControl = this.arrivalForm.get('CLOSEKM');
+  // validateCloseKM() {
+  //   const control = this.arrivalForm.get('CLOSEKM');
+  //   if (control?.value === null || control?.value === '') {
+  //     control.setValue(0);
+  //   }
+  //   const loadingBy = this.arrivalDetail?.loadingBy;
+  //   const opnKm = Number(this.arrivalDetail?.openkm);
+  //   const closeKMControl = this.arrivalForm.get('CLOSEKM');
 
-    // DEFAULT MAX (always applicable)
-    this.maxCloseKMValue = 900000;
+  //   // DEFAULT MAX (always applicable)
+  //   this.maxCloseKMValue = 900000;
 
-    // Additional restriction only when NOT B / XX6
-    // if (loadingBy !== 'B' && loadingBy !== 'XX6') {
-    //   const calculatedMax = opnKm + 2000;
-    //   this.maxCloseKMValue =
-    //     calculatedMax > 900000 ? 900000 : calculatedMax;
-    // }
+  //   // Additional restriction only when NOT B / XX6
+  //   // if (loadingBy !== 'B' && loadingBy !== 'XX6') {
+  //   //   const calculatedMax = opnKm + 2000;
+  //   //   this.maxCloseKMValue =
+  //   //     calculatedMax > 900000 ? 900000 : calculatedMax;
+  //   // }
 
-    closeKMControl?.setValidators([
-      Validators.required,
-      Validators.max(this.maxCloseKMValue)
-    ]);
+  //   closeKMControl?.setValidators([
+  //     Validators.required,
+  //     Validators.max(this.maxCloseKMValue)
+  //   ]);
 
-    closeKMControl?.updateValueAndValidity();
-  }
+  //   closeKMControl?.updateValueAndValidity();
+  // }
 
   onSubmit() {
     if (this.arrivalForm.invalid) {
@@ -232,7 +257,7 @@ export class ThcArrivalPopupComponent {
         status: this.arrivalForm.value.s2id_Status,
         thcno: this.THCData?.thcNo,
         openkm: this.arrivalDetail?.openkm,
-        closekm: this.arrivalForm.value.CLOSEKM?.toString(),
+        closekm: this.arrivalForm.value.CLOSEKM?.toString() || '',
         ad: new Date(this.arrivalForm.value.AD)?.toISOString(),
         at: "",
         lar: this.arrivalForm.value.LAR,

@@ -223,15 +223,26 @@ export class ThcArrivalListComponent {
     return this.docketService.loginUserList?.LocationCode === 'HQTR';
   }
 
-  openHCCModal(hccNo: string) {
-    const url = `${this.env.liveUrl}Tracking/TripAllView?LsNO=${hccNo}&VPType=LoadingUnloading&src=angular`;
+  // openHCCModal(hccNo: string) {
+  //   const url = `${this.env.liveUrl}Tracking/TripAllView?LsNO=${hccNo}&VPType=LoadingUnloading&src=angular`;
+  //   const popup = window.open('', 'popupWindow',
+  //     'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+  //   );
+  //   if (popup) {
+  //     popup.location.href = url;
+  //   } 
+  // }
+    openHCCModal(hccNo: string, documentNo: string) {
+    const url = `${this.env.liveUrl}ViewPrint/ViewHCC?DocumentNo=${documentNo}&HCNo=${hccNo}&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );
+
     if (popup) {
       popup.location.href = url;
     }
   }
+  
 
   openThcView(thcNo: string) {
     const url = `${this.env.liveUrl}ViewPrint/ViewChallan?DocumentNo=${thcNo}&src=angular`;

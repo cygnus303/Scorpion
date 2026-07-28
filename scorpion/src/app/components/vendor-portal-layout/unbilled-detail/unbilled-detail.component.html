@@ -1,0 +1,254 @@
+<div class="vendor-section">
+  <div class="dash-wrap">
+    <div class="prs-content">
+      <button class="back-btn" (click)="backToDashboard()">← Back to {{ source === 'invoice-generation' ? 'Invoice
+        Generation' : 'Dashboard' }}</button>
+
+      <div class="dash-title">Unbilled {{ type }}</div>
+      <div class="dash-sub">Select Month and Year to view applicable billing periods</div>
+
+      <div class="prs-card">
+        <div class="modal-section-title">Billing Period Filters</div>
+        <div class="filter-row">
+          <div class="field-group">
+            <label>Month</label>
+            <ng-select class="noFoundTextColor clear-icon remove-white-space text-start" [items]="monthList"
+              bindLabel="text" bindValue="value" placeholder="Vendor" [(ngModel)]="selectedMonth"
+              (ngModelChange)="generateBillingPeriods()">
+            </ng-select>
+          </div>
+          <div class="field-group">
+            <label>Year</label>
+            <select id="thcYear" [(ngModel)]="selectedYear" (ngModelChange)="generateBillingPeriods()">
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+              <option value="2027">2027</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label>Billing Preference <span class="label-sub">(Vendor Master — demo control)</span></label>
+            <ng-select class="noFoundTextColor clear-icon remove-white-space text-start" [items]="billingPreference"
+              bindLabel="text" bindValue="value" placeholder="Vendor" [(ngModel)]="selectedPreference"
+              (ngModelChange)="generateBillingPeriods()">
+            </ng-select>
+          </div>
+        </div>
+        <div class="editable-note" style="margin-top:16px;margin-bottom:0;">Billing periods below are generated
+          automatically based on the Billing Preference mapped in Vendor Master (Weekly / Fortnightly / Monthly). The
+          dropdown above is shown for demo purposes only — in production this value is read-only.</div>
+      </div>
+
+      <div class="prs-card">
+        <div class="modal-section-title">Select Billing Period</div>
+        <div class="radio-group" id="thcRadioGroup">
+          <label class="period-radio-card" *ngFor="let period of billingPeriods">
+            <input type="radio" name="billingPeriod" [value]="period.value" [(ngModel)]="selectedPeriod"
+              (ngModelChange)="onPeriodSelect()">
+            <span class="period-text">{{ period.label }}</span>
+            <span class="no-records-badge">No Records</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- I've removed the 'hidden' class here so the form is visible to you in the mockup -->
+      <div id="thcDocsSection" class="prs-card">
+        <div id="thcDocsFormArea">
+          <div class="legacy-hidden" *ngIf="source != 'dashboard'">
+            <div class="modal-section-title">Vendor Details</div>
+            <div class="filter-row">
+              <div class="field-group">
+                <label>Bill Date</label>
+                <input type="datetime-local" id="thcBillDate">
+              </div>
+              <div class="field-group">
+                <label>PAN No.</label>
+                <input type="text" id="thcPanNo" readonly>
+              </div>
+              <div class="field-group">
+                <label>Vendor Name</label>
+                <input type="text" id="thcVdName" readonly>
+              </div>
+            </div>
+            <div class="filter-row">
+              <div class="field-group">
+                <label>Registered Type</label>
+                <input type="text" id="thcRegType" readonly>
+              </div>
+              <div class="field-group">
+                <label>Supply State</label>
+                <select id="thcSupplyState" onchange="fullAutoGstType('thc')">
+                  <option value="">Select State</option>
+                  <option>Maharashtra</option>
+                  <option>Gujarat</option>
+                  <option>Karnataka</option>
+                  <option>Tamil Nadu</option>
+                  <option>Delhi</option>
+                  <option>Rajasthan</option>
+                  <option>Uttar Pradesh</option>
+                  <option>West Bengal</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label>Booking State</label>
+                <input type="text" id="thcBookingState" readonly>
+              </div>
+            </div>
+            <div class="filter-row">
+              <div class="field-group">
+                <label>GST Type</label>
+                <select id="thcGstType">
+                  <option value="">Select</option>
+                  <option value="IGST">IGST</option>
+                  <option value="CGST+SGST">CGST + SGST</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label>SAC Code</label>
+                <select id="thcSacCode" onchange="fullUpdateGstPct('thc')">
+                  <option value="">Select SAC Code</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label>GST Percentage (%)</label>
+                <input type="text" id="thcGstPct" readonly placeholder="-">
+              </div>
+            </div>
+
+            <div class="modal-section-title">Vendor Invoice Details<span class="req-mark">*</span></div>
+            <div class="editable-note">All fields in this section are mandatory and must be filled before the proforma
+              can be generated.</div>
+            <div class="filter-row">
+              <div class="field-group">
+                <label>Vendor Inv. No.<span class="req-mark">*</span></label>
+                <input type="text" id="thcVendorInvNo" placeholder="Enter Vendor Invoice No." required>
+              </div>
+              <div class="field-group">
+                <label>Vendor Inv. Date<span class="req-mark">*</span></label>
+                <input type="date" id="thcVendorInvDate" required>
+              </div>
+              <div class="field-group">
+                <label>Upload Supporting Document<span class="req-mark">*</span></label>
+                <label class="upload-btn">
+                  📎 <span id="thcUploadLabel">Choose File</span>
+                  <input type="file" id="thcUploadInput" style="display:none" onchange="handleFullUpload('thc', this)"
+                    required>
+                </label>
+              </div>
+            </div>
+            <div class="filter-row">
+              <div class="field-group">
+                <label>Bill No. Type<span class="req-mark">*</span></label>
+                <select id="thcBillNoType" onchange="applyFullBillNoType('thc')">
+                  <option value="System Generated" selected>System Generated</option>
+                  <option value="Own Bill No.">Own Bill No.</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label>Vendor Bill No.<span class="req-mark">*</span></label>
+                <input type="text" id="thcVendorBillNo" placeholder="Enter Vendor Bill No."
+                  oninput="updateFullProvisionalPreview('thc')">
+              </div>
+            </div>
+
+          </div>
+          <div class="modal-section-title" style="margin-top:22px;">Operation Documents for Selected Period</div>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th *ngIf="source != 'dashboard'"><input type="checkbox" id="thcSelectAllDocs" checked
+                      onchange="toggleSelectAllFullDocs('thc', this)"></th>
+                  <th>Doc. No.</th>
+                  <th>Doc. Date</th>
+                  <th *ngIf="type==='THC'">Vehicle No.</th>
+                  <th *ngIf="type==='THC'">FTL Type</th>
+                  <th *ngIf="type==='THC'">Route Name</th>
+                  <th>Amount (₹)</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="isLoading">
+                  <td colspan="8" style="text-align: center; padding: 24px; font-weight: 500;">
+                    Fetching data...
+                  </td>
+                </tr>
+                <tr *ngIf="!isLoading && (!documentDetail || documentDetail.length === 0)">
+                  <td colspan="8" style="text-align: center; padding: 24px; font-weight: 500;">
+                    No Record Found
+                  </td>
+                </tr>
+                <ng-container *ngIf="!isLoading">
+                  <tr *ngFor="let document of documentDetail">
+                    <td>{{ document.Docno }}</td>
+                    <td>{{ document.Docdt }}</td>
+                    <td *ngIf="type==='THC'">{{ document.vehno }}</td>
+                    <td *ngIf="type==='THC'">{{ document.FtlTypeDesc }}</td>
+                    <td *ngIf="type==='THC'">{{ document.RouteCD }}</td>
+                    <td>{{ document.Contract_Amt }}</td>
+                    <td><button class="action-btn track" (click)="onViewDocument(document.Docno)">View</button></td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="legacy-hidden" *ngIf="source != 'dashboard'">
+            <div class="modal-section-title" style="margin-top:22px;">Provisional Bill Preview</div>
+            <div class="ro-grid">
+              <div class="ro-field">
+                <div class="ro-label">Bill No.</div>
+                <div class="ro-value" id="thcPreviewBillNo">-</div>
+              </div>
+              <div class="ro-field">
+                <div class="ro-label">Selected OPS Documents</div>
+                <div class="ro-value" id="thcPreviewDocCount">0</div>
+              </div>
+              <div class="ro-field">
+                <div class="ro-label">Basic Amount (₹)</div>
+                <div class="ro-value" id="thcPreviewBasicAmount">0</div>
+              </div>
+              <div class="ro-field" id="thcPreviewGstRow">
+                <div class="ro-label" id="thcPreviewGstLabel">GST</div>
+                <div class="ro-value" id="thcPreviewGstAmount">0</div>
+              </div>
+              <div class="ro-field">
+                <div class="ro-label">Gross Amount (₹)</div>
+                <div class="ro-value" id="thcPreviewGrossAmount">0</div>
+              </div>
+              <div class="ro-field">
+                <div class="ro-label" id="thcPreviewTdsLabel">TDS</div>
+                <div class="ro-value" id="thcPreviewTdsAmount">0</div>
+              </div>
+              <div class="ro-field">
+                <div class="ro-label">Net Amount (₹)</div>
+                <div class="ro-value" id="thcPreviewNetAmount">0</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:12px;margin-top:16px;">
+              <button class="save-btn secondary" onclick="openFullBillPreview('thc')">Download Preview</button>
+              <button class="save-btn" onclick="generateFullProformaAsBill('thc')">Generate Proforma</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="thcProformaSuccessPage" class="hidden proforma-success-page">
+          <div class="proforma-success-icon">✔</div>
+          <h3>Proforma Generated Successfully</h3>
+          <p>The proforma has been generated for the selected operation documents. You can now generate the vendor bill
+            from Provisional Bills.</p>
+          <div class="proforma-no-badge" id="thcBeamdBillBadge"
+            style="background:#c8102e;color:#fff;border-color:#c8102e;font-size:1.05rem;letter-spacing:1px;">
+            PRO/2627/00001</div>
+          <span id="thcProformaNoValue" style="display:none;"></span>
+          <div style="margin-top:18px;">
+            <button class="save-btn" style="max-width:240px;margin:0 auto;"
+              onclick="backToFullBillingPeriods('thc')">Back to Billing Periods</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

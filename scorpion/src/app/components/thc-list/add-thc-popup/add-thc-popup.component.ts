@@ -435,11 +435,11 @@ export class AddThcPopupComponent {
     });
     // this.getTDSDetailsFromVendor(event);
     this.getVehicleFromVendorList(event);
-    if (this.ThcForm.value.vendorType === 'XX1') {
-      this.GetVehicleTypesForChallanFromRouteVendType()
-    } else {
-      this.getVehicleType('O')
-    }
+    // if (this.ThcForm.value.vendorType === 'XX1') {
+    //   // this.GetVehicleTypesForChallanFromRouteVendType()
+    // } else {
+    //   this.getVehicleType('O')
+    // }
   }
 
   getTDSDetailsFromVendor(vendorCode: string) {
@@ -497,8 +497,9 @@ export class AddThcPopupComponent {
 
   getTripSheetList(event: any) {
     this.ThcForm.patchValue({ mKTVehicleNo: '' });
-
-    if (event.value === 'O') {
+     if (event.value !== 'O') {
+      this.getNewVehicleDetail(event.value)
+    } else {
       this.ThcForm.patchValue({
         vehicleType: '',
         fTLType: null,
@@ -506,13 +507,43 @@ export class AddThcPopupComponent {
         eNGINENO: '',
         cHASISNO: '',
         rCBOOKNO: '',
+        // permitDate: null,
         insuranceDate: null,
         fitnessDate: null,
       });
+      if (event.value === 'O') {
+        this.getVehicleType(event.value)
+      }
     }
     this.checkInsuranceExpiry();
     this.checkFitnessExpiry();
     this.checkLicenseExpiry();
+  }
+
+    getNewVehicleDetail(vehicleNo: string) {
+    this.THCService.getNewVehicleDetail(vehicleNo.toUpperCase()).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.ThcForm.patchValue({
+            vehicleType: response.data.vehicle_Type,
+            fTLType: response.data.ftltyPe,
+            eNGINENO: response.data.engineNo || '',
+            cHASISNO: response.data.chasisNo || '',
+            rCBOOKNO: response.data.rcBookNo || '',
+            registrationDate: response.data.registrationDt ? new Date(response.data.registrationDt) : null,
+            // permitDate: response.data.vehprmdt ? new Date(response.data.vehprmdt) : null,
+            insuranceDate: response.data.insuranceValDt ? new Date(response.data.insuranceValDt) : null,
+            fitnessDate: response.data.fitnessValDt ? new Date(response.data.fitnessValDt) : null,
+            openKM: response.data.startKM
+          });
+          this.getVehicleCapacity(response.data.vehicle_Type)
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching vehicle details:', err.error.message);
+        this.sweetAlertService.error(err.error.message)
+      }
+    });
   }
 
   updateVehicleRequiredValidator() {
@@ -681,7 +712,7 @@ export class AddThcPopupComponent {
         vehicleCapacityUti: 0
       });
     }
-    if (this.ThcForm.value.wtLoaded > vehicleCapacity) {
+    if ((this.ThcForm.value.wtLoaded / 1000) > vehicleCapacity) {
       this.ThcForm.patchValue({
         isOverLoad: true
       })

@@ -61,7 +61,7 @@ export class ThcEditComponent {
     const payload = {
       thcNo: this.selectedTHC || "",
       type: "T",
-      contractAmount: Number(this.thcData?.contractAmt) || 0,
+      contractAmount: Number(this.thcData?.pcamt) || 0,
       standardContractAmount: Number(this.thcData?.stdAmt) || 0,
       advanceAmount: Number(this.thcData?.advamt) || 0,
       advanceAmountPaidAt: this.thcData?.fincmplbr || "",
@@ -78,6 +78,7 @@ export class ThcEditComponent {
         if (response.success) {
           this.sweetAlerService.success(`${response.message}`);
           this.dataEmitter.emit();
+          this.modalRef.hide();
         }
       }, error: (err: any) => {
         console.error(err);

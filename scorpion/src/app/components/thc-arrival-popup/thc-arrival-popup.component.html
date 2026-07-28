@@ -156,7 +156,7 @@
                                         </div>
                                     </div>
                                     <div class="row mb-4 ">
-                                        <div class="col-4">
+                                        <!-- <div class="col-4">
                                             <div class="form-group-input">
                                                 <label
                                                     class="form-label d-flex align-items-center gap-2 fw-bold">Closing
@@ -182,7 +182,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div class="col-4">
                                             <div class="form-group-input">
                                                 <label class="form-label d-flex align-items-center gap-2 fw-bold">
@@ -211,11 +211,16 @@
                                         <div class="col-4">
                                             <div class="form-group-input">
                                                 <label class="form-label d-flex align-items-center gap-2 fw-bold">
-                                                    Late Arrival Reason (if any):
+                                                    Late Arrival Reason (if any): <span class="req" *ngIf="isLarRequired">*</span>
                                                 </label>
                                                 <ng-select class="clear-icon" [items]="Reasonlist" bindLabel="text"
                                                     bindValue="value" appFocusNext placeholder="Late Arrival Reason"
-                                                    formControlName="LAR"></ng-select>
+                                                    formControlName="LAR"
+                                                    [ngClass]="{ 'required2': isLarRequired, 'border-danger': arrivalForm.get('LAR')?.invalid && (arrivalForm.get('LAR')?.touched || arrivalForm.get('LAR')?.dirty) }"></ng-select>
+                                                <div class="text-danger text-start mt-1 small"
+                                                    *ngIf="arrivalForm.get('LAR')?.invalid && (arrivalForm.get('LAR')?.touched || arrivalForm.get('LAR')?.dirty)">
+                                                    This field is required.
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-4 d-print-inline-block align-content-end">

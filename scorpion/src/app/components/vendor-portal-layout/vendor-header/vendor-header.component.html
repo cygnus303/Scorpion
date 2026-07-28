@@ -1,0 +1,20 @@
+<div class="brandbar">
+  <div style="display:flex;align-items:center;">
+    <button class="hamburger-btn" id="hamburgerBtn" (click)="toggleVendorDrawer()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="user-menu-wrap">
+    <button class="user-chip-btn" (click)="toggleUserMenu($event)">
+      <span class="avatar">👤</span> <span id="loggedInUserLabel">vendor1</span> <span class="caret">▾</span>
+    </button>
+    <div class="user-dropdown" id="userDropdown" [class.hidden]="!isUserMenuOpen">
+      <button (click)="openProfile()">🎫 User Profile</button>
+      <button >🔔 Alerts &amp; Notifications</button>
+      <button >🔑 Reset Password</button>
+      <div class="dropdown-divider"></div>
+      <button class="logout-item" (click)="logout()">🚪 Logout</button>
+    </div>
+  </div>
+</div>
+<app-vendor-profile #vendorProfileComponent ></app-vendor-profile>

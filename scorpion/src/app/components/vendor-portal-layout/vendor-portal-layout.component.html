@@ -1,0 +1,11 @@
+<div class="admin-layout">
+  <app-vendor-sidebar></app-vendor-sidebar>
+
+  <!-- Main Content Area -->
+  <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+    <app-vendor-header></app-vendor-header>
+    <div style="flex:1; overflow:auto; position: relative;">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

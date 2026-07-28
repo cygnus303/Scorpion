@@ -1,0 +1,153 @@
+.vendor-section {
+  background: #f2f3f7;
+  min-height: calc(100vh - 60px);
+}
+
+.dash-wrap {
+  padding: 24px 32px;
+  margin: 0 auto;
+}
+
+.prs-content {
+  margin: 0 auto;
+}
+
+.back-btn {
+  background: transparent;
+  border: none;
+  color: #646a75;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 16px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  transition: color .2s;
+}
+
+.back-btn:hover {
+  color: #E2001A;
+}
+
+.dash-title {
+  font-size: 23px !important;
+  font-weight: 700;
+  color: #1a1d23;
+  margin-bottom: 4px;
+}
+
+.dash-sub {
+  font-size: 13px !important;
+  color: #646a75;
+  margin-bottom: 24px;
+}
+
+.prs-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 2px rgba(16,24,40,.05), 0 1px 3px rgba(16,24,40,.07);
+  border: 1px solid #e4e6eb;
+  margin-bottom: 20px;
+}
+
+.modal-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1d23;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e4e6eb;
+  padding-bottom: 8px;
+}
+
+.doc-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #e4e6eb;
+  border-radius: 8px;
+}
+
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.doc-table th {
+  background: #f9fafb;
+  color: #646a75;
+  font-weight: 600;
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid #e4e6eb;
+}
+
+.doc-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #e4e6eb;
+  color: #1a1d23;
+}
+
+.doc-table tr:last-child td {
+  border-bottom: none;
+}
+
+.save-btn {
+  background: #E2001A;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s;
+}
+
+.save-btn:hover {
+  background: #B50013;
+}
+
+.proforma-success-page {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.proforma-success-icon {
+  font-size: 40px;
+  color: #1c8a3e;
+  margin-bottom: 16px;
+}
+
+.proforma-success-page h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1d23;
+  margin-bottom: 8px;
+}
+
+.proforma-success-page p {
+  font-size: 13px;
+  color: #646a75;
+  margin-bottom: 24px;
+}
+
+.proforma-no-badge {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.note {
+  text-align: center;
+  font-size: 11px !important;
+  color: #646a75;
+  margin-top: 32px;
+  padding-bottom: 24px;
+}

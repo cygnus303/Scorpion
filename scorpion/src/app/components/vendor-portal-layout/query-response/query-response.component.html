@@ -1,0 +1,98 @@
+<div class="vendor-section">
+    <div class="dash-wrap">
+        <div class="dash-title">Query Response</div>
+        <div class="dash-sub">Queries raised by Accountants on your bills &mdash; respond with remarks and supporting
+            documents</div>
+
+        <div class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr));margin-bottom:22px;">
+            <div class="stat-card qr-card qr-active" id="qrCardTotal" style="cursor:pointer;" onclick="qrShowView('total')">
+                <div class="icon">💬</div>
+                <div class="label">Total Query</div>
+                <div class="value" id="qrTotalCount">5 <span>records</span></div>
+            </div>
+            <div class="stat-card qr-card" id="qrCardResponded" style="cursor:pointer;"
+                onclick="qrShowView('responded')">
+                <div class="icon">&#9989;</div>
+                <div class="label">Query Responded</div>
+                <div class="value" id="qrRespondedCount">2 <span>records</span></div>
+            </div>
+            <div class="stat-card qr-card" id="qrCardPending" style="cursor:pointer;" onclick="qrShowView('pending')">
+                <div class="icon">&#9203;</div>
+                <div class="label">Query Pending for Response</div>
+                <div class="value" id="qrPendingCount">3 <span>records</span></div>
+            </div>
+        </div>
+
+        <div class="prs-card">
+            <div class="modal-section-title" id="qrListingTitle" style="color: #E2001A; text-transform: uppercase;">TOTAL QUERY (5)</div>
+            <div id="qrListing">
+                <table class="am-table itd-table" style="margin-top: 10px;">
+                    <thead>
+                        <tr>
+                            <th>Vendor Bill No</th>
+                            <th>Query Description</th>
+                            <th>Query Date</th>
+                            <th>Raised By/Date</th>
+                            <th>Remarks</th>
+                            <th>Status</th>
+                            <th>Attachment</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>BEABA_262700551</td>
+                            <td>TDS amount mismatch between vendor bill and voucher entry</td>
+                            <td>10 Jul 2026</td>
+                            <td>accounts1 : Priya Nair (Accountant) / 10 Jul 2026</td>
+                            <td>&mdash;</td>
+                            <td><span class="qr-badge raised">Query Raised</span></td>
+                            <td><a href="#" class="qr-attach-link">View</a></td>
+                            <td><button class="action-btn-outline">View</button></td>
+                        </tr>
+                        <tr>
+                            <td>BEAMD_262700001</td>
+                            <td>Supporting LR copies missing for 3 consignments</td>
+                            <td>08 Jul 2026</td>
+                            <td>accounts1 : Priya Nair (Accountant) / 08 Jul 2026</td>
+                            <td>&mdash;</td>
+                            <td><span class="qr-badge raised">Query Raised</span></td>
+                            <td><a href="#" class="qr-attach-link">View</a></td>
+                            <td><button class="action-btn-outline">View</button></td>
+                        </tr>
+                        <tr>
+                            <td>BL/2627/00013</td>
+                            <td>GST rate applied as 18% &mdash; SAC code indicates exempt (RCM)</td>
+                            <td>05 Jul 2026</td>
+                            <td>accounts2 : Suresh Iyer (Accountant) / 05 Jul 2026</td>
+                            <td>&mdash;</td>
+                            <td><span class="qr-badge raised">Query Raised</span></td>
+                            <td><a href="#" class="qr-attach-link">View</a></td>
+                            <td><button class="action-btn-outline">View</button></td>
+                        </tr>
+                        <tr>
+                            <td>BL/2526/00002</td>
+                            <td>Duplicate freight line item in annexure &mdash; please confirm</td>
+                            <td>28 Jun 2026</td>
+                            <td>accounts1 : Priya Nair (Accountant) / 28 Jun 2026</td>
+                            <td>Duplicate removed &mdash; revised annexure attached.</td>
+                            <td><span class="qr-badge responded">Query Responded</span></td>
+                            <td><a href="#" class="qr-attach-link">View</a></td>
+                            <td><button class="action-btn-outline">View</button></td>
+                        </tr>
+                        <tr>
+                            <td>BEABA_262700545</td>
+                            <td>PAN on invoice differs from vendor master record</td>
+                            <td>25 Jun 2026</td>
+                            <td>accounts2 : Suresh Iyer (Accountant) / 25 Jun 2026</td>
+                            <td>Correct PAN is AURPK3719P &mdash; invoice reprinted and attached.</td>
+                            <td><span class="qr-badge responded">Query Responded</span></td>
+                            <td><a href="#" class="qr-attach-link">View</a></td>
+                            <td><button class="action-btn-outline">View</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
