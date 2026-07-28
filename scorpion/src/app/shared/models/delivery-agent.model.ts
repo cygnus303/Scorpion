@@ -34,6 +34,7 @@ export interface DeliveryAgentsListRepsonse {
  baName:string;
  vehicleNo:string;
  licenseNo:string;
+ isUser:boolean;
 }
 
 export interface DeliveryAgentByCodeResponse {
