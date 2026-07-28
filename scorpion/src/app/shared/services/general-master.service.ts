@@ -31,7 +31,7 @@ export class GeneralMasterService {
   public ownerList: PRSGeneralMasterResponse[] = [];
   public menuAccessList: PRSGeneralMasterResponse[] = [];
   public roleTypeList: PRSGeneralMasterResponse[] = [];
-
+  public overloadReasonList: PRSGeneralMasterResponse[] = [];
 
 
 
@@ -253,6 +253,16 @@ export class GeneralMasterService {
       next: (response) => {
         if (response.success) {
           this.roleTypeList = response.data;
+        }
+      }
+    });
+  }
+
+   getOverloadReason() {
+    this.THCMasterService.getGeneralMasterDetail('OVLD').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.overloadReasonList = response.data;
         }
       }
     });

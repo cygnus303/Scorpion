@@ -425,10 +425,11 @@
             </div>
             <div class="thcform-field" *ngIf="ThcType === 'A' && ThcForm.value.isOverLoad">
               <label>Overload Reason <span class="req">*</span></label>
-              <ng-select class="noFoundTextColor clear-icon" placeholder="Overload Reason"
-                formControlName="overLoadReason" appFocusNext notFoundText="No matches found" bindLabel="codeDesc"
-                bindValue="codeId"
+              <ng-select class="noFoundTextColor clear-icon" placeholder="Overload Reason" 
+              [items]="generalMasterService.overloadReasonList" bindLabel="codeDesc" bindValue="codeId"
+                formControlName="overLoadReason" appFocusNext notFoundText="No matches found"
                 [readonly]="!ThcForm.value.isOverLoad && ThcForm.value.vehicleCapacityUti === 0"></ng-select>
+                
             </div>
           </div>
         </div>
