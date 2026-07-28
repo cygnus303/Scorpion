@@ -67,6 +67,11 @@
                         </label>
                     </td>
                     <td class="text-center">
+                        <span [class.invisible]="data.isUser"
+                            class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer me-2"
+                            (click)="!data.isUser && onCreateUser(data.dA_Code)">
+                           <i class="fas fa-user-plus"></i>
+                        </span>
                         <span
                             class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer me-2"
                             (click)="opendeliveryAgentViewPopup(data.dA_Code)">

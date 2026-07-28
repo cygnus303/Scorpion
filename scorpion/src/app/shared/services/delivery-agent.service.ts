@@ -58,4 +58,8 @@ export class DeliveryAgentService {
   daStatusChange(payload: any) {
     return this.apiHandlerService.Post(`Master/UpdateDAStatus`, payload);
   }
+
+  createUser(code: number): Observable<any> {
+    return this.apiHandlerService.Post(`User/CreateUser?User=${code}`, {});
+  }
 }

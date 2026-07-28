@@ -238,4 +238,24 @@ export class DeliveryAgentListComponent {
       });
     }
   }
+
+  onCreateUser(code: number) {
+    this.sweetAlertService.confirm(`Do you want to create a user account for DA ${code}?`).then((result) => {
+      if (result.isConfirmed) {
+        this.deliveryAgentService.createUser(code).subscribe({
+          next: (response: any) => {
+            if (response.status === 0) {
+              this.sweetAlertService.success(response.message);
+              this.getDeliveryAgentList();
+            } else {
+              this.sweetAlertService.error(response.message);
+            }
+          },
+          error: (err) => {
+            this.sweetAlertService.error(err.error?.message || err.message);
+          }
+        });
+      }
+    });
+  }
 }
