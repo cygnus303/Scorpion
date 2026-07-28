@@ -16,6 +16,7 @@ import { CommonDateService } from 'app/shared/services/common-date.service';
 import { LocationListResponse } from 'app/shared/models/delivery-agent.model';
 import { CustomerService } from 'app/shared/services/customer.service';
 import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
+import { GeneralMasterService } from 'app/shared/services/general-master.service';
 @Component({
   selector: 'app-add-thc-popup',
   standalone: true,
@@ -77,7 +78,8 @@ export class AddThcPopupComponent {
     public commonDateService: CommonDateService,
     private deliveryAgentService: DeliveryAgentService,
     private customerService: CustomerService,
-    private dynamicDataService: DynamicDataService
+    private dynamicDataService: DynamicDataService,
+    public generalMasterService: GeneralMasterService
   ) { }
 
   ngOnInit() {
@@ -263,6 +265,7 @@ export class AddThcPopupComponent {
     }
     this.calculateWeightAndUtilization();
     this.getLocationData();
+    this.generalMasterService.getOverloadReason();
     this.modalRef = this.modalService.show(this.TemplateTHC, { class: 'modal-xl modal-dialog-centered', backdrop: 'static', keyboard: false });
   }
 
