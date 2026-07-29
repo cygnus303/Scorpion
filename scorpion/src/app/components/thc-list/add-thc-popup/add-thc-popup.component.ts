@@ -1151,12 +1151,22 @@ export class AddThcPopupComponent {
       const formValue = this.ThcForm.value;
       const getISOString = (dateVal: any) => {
         if (!dateVal) return null;
-        const d = new Date(dateVal);
+        let d: Date;
+        if (typeof dateVal === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateVal)) {
+          const [y, m, day] = dateVal.split('-').map(Number);
+          d = new Date(y, m - 1, day);
+        } else {
+          d = new Date(dateVal);
+        }
         if (isNaN(d.getTime())) return null;
+
         const year = d.getFullYear();
         const month = ('0' + (d.getMonth() + 1)).slice(-2);
         const day = ('0' + d.getDate()).slice(-2);
-        return `${year}-${month}-${day}T00:00:00.000Z`;
+        const hours = ('0' + d.getHours()).slice(-2);
+        const minutes = ('0' + d.getMinutes()).slice(-2);
+        const seconds = ('0' + d.getSeconds()).slice(-2);
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.000Z`;
       };
 
       let thcChargeArray: any[] = [];
