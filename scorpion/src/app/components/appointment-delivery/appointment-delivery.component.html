@@ -1,0 +1,259 @@
+<div style="background: var(--bg);" class="p-3">
+    
+    <!-- Top Title Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="page-title d-flex align-items-center gap-3">
+            <div class="icon bg-white rounded-3 fs-4 border shadow-sm d-flex align-items-center justify-content-center" style="border-color: #e2e8f0 !important; width: 42px; height: 42px;">📦</div>
+            <div class="d-flex flex-column" style="gap: 4px;">
+                <span class="fw-bold fs-5 lh-1 m-0" style="color: #0f172a;">Delivery Appointment List</span>
+                <span class="lh-1 m-0 fw-medium" style="font-size: 13px; color: #64748b;">Manage and monitor all shipment delivery schedules</span>
+            </div>
+        </div>
+        
+        <div class="btn-group gap-3 ms-auto">
+          <button class="btn background-color fw-bold text-light px-4 py-2 rounded" (click)="openAddModal()">＋ Add New</button>
+            <button class="btn btn-success px-4 py-2 rounded fw-bold" [disabled]="isExportLoading">
+                <span *ngIf="!isExportLoading">📥 Download XLS</span>
+                <span *ngIf="isExportLoading" class="spinner-border spinner-border-sm me-2"></span>
+                <span *ngIf="isExportLoading">Downloading...</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Summary Strip -->
+    <div class="summary-strip">
+        <div class="summary-card px-3 py-3 c-blue cursor-pointer">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="card-content">
+                    <div class="s-label">Total Appointment</div>
+                    <div class="s-val fs-2 fw-bold lh-1">{{ summaryCounts?.totalAppointment || 0 }}</div>
+                    <div class="small text-body-tertiary">All records today</div>
+                </div>
+                <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📋</div>
+            </div>
+        </div>
+
+        <div class="summary-card px-3 py-3 c-green cursor-pointer">
+            <div class="card-content">
+                <div class="s-label">Today's Appointment</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryCounts?.todayAppointment || 0 }}</div>
+                <div class="small text-body-tertiary">0 completed</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">✅</div>
+        </div>
+
+        <div class="summary-card px-3 py-3 c-orange cursor-pointer">
+            <div class="card-content">
+                <div class="s-label">Rescheduled Appointment</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryCounts?.rescheduledAppointment || 0 }}</div>
+                <div class="small text-body-tertiary">Today</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
+        </div>
+
+        <div class="summary-card px-3 py-3 c-red cursor-pointer">
+            <div class="card-content">
+                <div class="s-label">Total CSD Delivery</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryCounts?.totalCSD || 0 }}</div>
+                <div class="small text-body-tertiary">All records</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🚫</div>
+        </div>
+
+        <div class="summary-card px-3 py-3 c-purple cursor-pointer">
+            <div class="card-content">
+                <div class="s-label">Total Mall Delivery</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryCounts?.totalMall || 0 }}</div>
+                <div class="small text-body-tertiary">All records</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🏬</div>
+        </div>
+    </div>
+    <div>
+      <!-- Table Panel & Tabs -->
+      <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
+          <div class="control-bar border-0 shadow-none mb-0">
+              
+              <!-- <div class="d-flex align-items-center gap-3"> -->
+                  <!-- COMPACT BOOTSTRAP TABS -->
+                  <ul class="nav nav-pills gap-3 m-0 p-2 bg-white rounded-3 shadow-sm d-inline-flex align-items-center"
+                      style="border: 1px solid #f1f5f9;">
+                    <li class="nav-item">
+                      <button type="button"
+                        class="nav-link btn btn-sm px-3 py-2 fw-bold d-flex align-items-center gap-2 border-0"
+                        [ngClass]="activeTab === 'APMT' ? 'active text-white' : 'text-secondary bg-transparent'"
+                        [style.background]="activeTab === 'APMT' ? '#E11D48' : 'transparent'"
+                        [style.boxShadow]="activeTab === 'APMT' ? '0 4px 12px rgba(225, 29, 72, 0.4)' : 'none'"
+                        style="border-radius: 4px; font-size: 13px; transition: all 0.3s ease;"
+                        (click)="setTab('APMT')">
+                        <span style="font-size: 15px;">📋</span> <span>Appointment Delivery</span>
+                      </button>
+                    </li>
+                    <li class="nav-item">
+                      <button type="button"
+                        class="nav-link btn btn-sm px-3 py-2 fw-bold d-flex align-items-center gap-2 border-0"
+                        [ngClass]="activeTab === 'CSD' ? 'active text-white' : 'text-secondary bg-transparent'"
+                        [style.background]="activeTab === 'CSD' ? '#E11D48' : 'transparent'"
+                        [style.boxShadow]="activeTab === 'CSD' ? '0 4px 12px rgba(225, 29, 72, 0.4)' : 'none'"
+                        style="border-radius: 4px; font-size: 13px; transition: all 0.3s ease;"
+                        (click)="setTab('CSD')">
+                        <span style="font-size: 15px;">🛡️</span> <span>CSD Delivery</span>
+                      </button>
+                    </li>
+                    <li class="nav-item">
+                      <button type="button"
+                        class="nav-link btn btn-sm px-3 py-2 fw-bold d-flex align-items-center gap-2 border-0"
+                        [ngClass]="activeTab === 'MSD' ? 'active text-white' : 'text-secondary bg-transparent'"
+                        [style.background]="activeTab === 'MSD' ? '#E11D48' : 'transparent'"
+                        [style.boxShadow]="activeTab === 'MSD' ? '0 4px 12px rgba(225, 29, 72, 0.4)' : 'none'"
+                        style="border-radius: 4px; font-size: 13px; transition: all 0.3s ease;"
+                        (click)="setTab('MSD')">
+                        <span style="font-size: 15px;">🏬</span> <span>Mall Delivery</span>
+                      </button>
+                    </li>
+                  </ul>
+
+                  <!-- Date Range Filter -->
+                     <div class="divider-v"></div>
+                 <div class="date-range-group">
+                    <span class="date-label">Date Range</span>
+                    <div class="date-input-wrap" style="padding:0;">
+                        <input type="text" id="dateFrom" bsDatepicker
+                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                            [(ngModel)]="config.fromDateStr" (ngModelChange)="fetchData()"
+                            style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
+                        <span
+                            style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+                    </div>
+                    <span class="date-sep">→</span>
+                    <div class="date-input-wrap" style="padding:0;">
+                        <input type="text" id="dateTo" bsDatepicker [minDate]="config.fromDateStr"
+                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                            [(ngModel)]="config.toDateStr" (ngModelChange)="fetchData()"
+                            style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
+                        <span
+                            style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+                    </div>
+                </div>
+              <!-- </div> -->
+            </div>
+            <div class="table-toolbar">
+                <div class="search-box d-flex align-items-center bg-white border rounded px-3 py-1">
+                    <span class="text-muted me-2">🔍</span>
+                    <input type="text" placeholder="Search..." class="form-control border-0 shadow-none p-0"
+                        style="width:200px; font-size: 13px;" [(ngModel)]="config.searchText" (keyup)="fetchData()">
+                </div>
+            </div>
+      </div>
+
+
+      <!-- 3. TABLE SECTION (DRS Generation Style) -->
+      <div class="table-wrap">
+        <table class="table align-middle data-table mb-0">
+          <thead>
+            <tr>
+              <th class="text-center">APPOINTMENT ID</th>
+              <th class="text-center">CUSTOMER</th>
+              <th class="text-center">DOCKET NO</th>
+              <th class="text-center">ORG / DESTINATION</th>
+              <th class="text-center">DATE & TIME</th>
+              <th class="text-center">STATUS</th>
+              <th class="text-center">ACTION</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="isLoading">
+            <tr>
+              <td colspan="7" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
+              </td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="!isLoading && (!appointments || appointments.length === 0)">
+            <tr>
+              <td colspan="7" class="text-center py-4 text-muted fs-5">
+                No records found.
+              </td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="!isLoading && appointments && appointments.length > 0">
+              <tr *ngFor="let item of appointments">
+                <!-- ID -->
+                <td class="text-center">
+                  <span class="px-3 py-1 fw-bold d-inline-block"
+                        style="background-color: #FFF5F5; color: #CC0000; border: 1px solid #FCA5A5; border-radius: 6px; font-size: 11px;">
+                    {{ item.appointmentNo || item.csdNo || item.msdNo || '-' }}
+                  </span>
+                </td>
+                <!-- Customer -->
+                <td class="text-center">
+                  <div class="d-flex gap-2 flex-column align-items-center">
+                    <span class="fw-bold text-truncate d-inline-block text-dark" style="max-width: 180px;" [title]="item.custnm">{{ item.custnm || '-' }}</span>
+                  </div>
+                </td>
+                <!-- Docket No -->
+                <td class="text-center">
+                  <span class="rounded-pill px-3 py-1 fw-bold"
+                        style="background-color: #F1F5F9; color: #475569; border: 1px solid #E2E8F0; font-size: 11px;">
+                    {{ item.dockno || '-' }}
+                  </span>
+                </td>
+                <!-- Route -->
+                <td class="text-center">
+                  <div class="d-flex justify-content-center align-items-center gap-1 fw-bold">
+                    <span style="color: #2563EB;">{{ item.orgncd || '-' }}</span>
+                    <span class="text-muted" style="font-size: 10px;">➔</span>
+                    <span class="text-dark">{{ item.destcd || '-' }}</span>
+                  </div>
+                </td>
+                <!-- Date & Time -->
+                <td class="text-center">
+                  <div class="fw-bold text-dark" style="font-size: 12px;">{{ formatListDate(item.appointmentDT || item.csdDate || item.msdDate) }}</div>
+                  <div class="text-muted mt-1" style="font-size: 11px;" *ngIf="item.appointmentTime">{{ item.appointmentTime }}</div>
+                </td>
+                <!-- Status -->
+                <td class="text-center">
+                  <span class="rounded-pill px-3 py-1 fw-bold"
+                        [style.backgroundColor]="((item.apmtstatus || item.csDstatus || item.msDstatus) === 'Delivered' || (item.apmtstatus || item.csDstatus || item.msDstatus) === 'Completed') ? '#DCFCE7' : '#FEF9C3'"
+                        [style.color]="((item.apmtstatus || item.csDstatus || item.msDstatus) === 'Delivered' || (item.apmtstatus || item.csDstatus || item.msDstatus) === 'Completed') ? '#15803D' : '#A16207'"
+                        [style.border]="((item.apmtstatus || item.csDstatus || item.msDstatus) === 'Delivered' || (item.apmtstatus || item.csDstatus || item.msDstatus) === 'Completed') ? '1px solid #BBF7D0' : '1px solid #FEF08A'"
+                        style="font-size: 11px;">
+                    {{item.apmtstatus || item.csDstatus || item.msDstatus || '--' }}
+                  </span>
+                </td>
+                <!-- Action Buttons -->
+                <td class="text-center">
+                  <div class="d-flex flex-wrap gap-2 justify-content-center">
+                      <button class="btn btn-sm rounded-1 px-3 py-1 fw-bold d-flex align-items-center gap-1 shadow-sm"
+                              (click)="openViewModal(item)" style="background-color: #E0E7FF; color: #4338CA; border: 1px solid #C7D2FE; font-size: 11px;">
+                          <i class="fa fa-eye"></i> View
+                      </button>
+                      <button class="btn btn-sm rounded-1 px-3 py-1 fw-bold d-flex align-items-center gap-1 shadow-sm"
+                              style="background-color: #E0F2FE; color: #0369A1; border: 1px solid #BAE6FD; font-size: 11px;"
+                             *ngIf="activeTab === 'APMT'" (click)="openRescheduleModal(item)">
+                          🔄 Reschedule
+                      </button>
+                  </div>
+                </td>
+              </tr>
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+          <app-pagination [page]="pagination.page" [pageSize]="pagination.pageSize"
+              [totalRecords]="pagination.totalRecords" [totalPages]="pagination.totalPages"
+              (pageChange)="setPage($event)">
+          </app-pagination>
+      </div>
+    </div>
+</div>
+
+<!-- ══ ADD NEW DELIVERY APPOINTMENT CHILD COMPONENT ══ -->
+<app-add-appointment #addAppointmentModal (onSaved)="fetchData()"></app-add-appointment>
+
+<!-- ══ VIEW APPOINTMENT CHILD COMPONENT ══ -->
+<app-view-appointment #viewAppointmentModal></app-view-appointment>
+<app-reschedule-appointment #rescheduleModal (onUpdate)="fetchData()"></app-reschedule-appointment>
+<!-- <app-update-appointment #updateModal></app-update-appointment> -->
