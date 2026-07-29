@@ -97,6 +97,11 @@ export const ChallanRoutes: Routes = [
     path: 'THCDepatureList',
     loadComponent: () => import('../thc-depature-list/thc-depature-list.component').then(m => m.ThcDepatureListComponent),
     canActivate: [DocketGuard]
+  },
+  {
+    path: 'PRQList',
+    loadComponent: () => import('../prq-list/prq-list.component').then(m => m.PrqListComponent),
+    // canActivate: [DocketGuard]
   }
 
 ];
