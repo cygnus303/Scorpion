@@ -1,0 +1,184 @@
+<!-- ══ ADD NEW DELIVERY APPOINTMENT MODAL (PROJECT STANDARD + FIXED FOOTER) ══ -->
+<ng-template #addModal>
+  <div class="bg-white" style="border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; max-height: 88vh;">
+    
+    <!-- 1. FIXED HEADER (matching add-prq & add-meeting) -->
+    <div class="modal-header border-0 pb-2 pt-3 px-4" style="background: #fff; flex-shrink: 0; border-bottom: 1px solid #f1f5f9 !important;">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:36px;height:36px;background:var(--red, #CC0000);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px" class="text-light shadow-sm">
+          📦
+        </div>
+        <div>
+          <div class="modal-title fw-bold text-dark" style="font-size: 16px;">Add New — Delivery Charges</div>
+          <div style="font-size:11px;color:var(--text3, #64748B);margin-top:1px">Schedule or record delivery charges — docket details auto-captured</div>
+        </div>
+      </div>
+      <button type="button" class="btn-close shadow-none" (click)="closeModal()" aria-label="Close"></button>
+    </div>
+
+    <!-- WRAP BODY AND FOOTER IN FORM -->
+    <form [formGroup]="appointmentForm" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+    <!-- 2. SCROLLABLE BODY -->
+    <div class="modal-body py-3 px-4" style="overflow-y: auto; flex: 1 1 auto;">
+      
+      <!-- Entry Type Card (matching add-prq) -->
+      <div class="card no-hover border shadow-sm mb-4" style="border-radius: 10px; padding: 12px 16px; background: #fff;">
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div style="font-size:13px;font-weight:700;color:var(--text1, #1E293B);min-width:110px">Entry Type:</div>
+          <div style="display:flex;gap:32px;flex:1;align-items:center">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:600;color:#334155;">
+              <input type="radio" value="APMT" formControlName="entryType" style="width:16px;height:16px;cursor:pointer;accent-color:var(--red, #CC0000)">
+              Appointment
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:600;color:#334155;">
+              <input type="radio" value="CSD" formControlName="entryType" style="width:16px;height:16px;cursor:pointer;accent-color:var(--red, #CC0000)">
+              CSD
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:600;color:#334155;">
+              <input type="radio" value="MSD" formControlName="entryType" style="width:16px;height:16px;cursor:pointer;accent-color:var(--red, #CC0000)">
+              Mall
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 1: Docket & Shipment Details -->
+      <div style="display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;color:var(--text3, #64748B);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:14px;margin-top:6px;">
+        <div style="width:22px;height:22px;border-radius:50%;background:var(--red, #CC0000);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;">1</div>
+        Docket & Shipment Details
+      </div>
+      <div class="row g-3 mb-4">
+        <div class="col-lg-6 col-md-6 col-12">
+          <label class="form-label fw-bold" style="font-size: 12px; color: var(--text1, #334155); margin-bottom: 5px;">Docket No <span class="text-danger">*</span></label>
+          <div class="position-relative">
+            <input type="text" class="form-control" placeholder="Enter Docket No" formControlName="docketNo" 
+              [ngClass]="{'is-invalid': appointmentForm.get('docketNo')?.invalid && appointmentForm.get('docketNo')?.touched}">
+            <div *ngIf="isDocketLoading" class="position-absolute end-0 top-50 translate-middle-y me-3">
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="color: #CC0000;"></span>
+            </div>
+          </div>
+          <div *ngIf="appointmentForm.get('docketNo')?.invalid && appointmentForm.get('docketNo')?.touched" class="text-danger mt-1" style="font-size: 11px;">
+            Docket No is required.
+          </div>
+          <div *ngIf="docketEligibilityError" class="text-danger mt-1 fw-bold" style="font-size: 11px;">
+            {{ docketEligibilityError }}
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-12">
+          <label class="input-group form-label fw-semibold" >Origin / Destination</label>
+          <input type="text" class="form-control bg-light text-dark fw-bold" readonly formControlName="orgDest" placeholder="Auto-captured from docket" >
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-bold" >Current Status</label>
+          <textarea class="form-control bg-light text-dark fw-bold" rows="4" cols="50" style="height:50px; resize: vertical;" readonly formControlName="currentStatus" placeholder="Auto-captured from docket"></textarea>
+        </div>
+        <div class="col-lg-6 col-md-6 col-12">
+          <label class="form-label fw-bold" >Docket Date</label>
+          <input type="text" class="form-control bg-light text-dark fw-bold" readonly formControlName="docketDate" placeholder="Auto-captured from docket" >
+        </div>
+        <div class="col-lg-6 col-md-6 col-12">
+          <label class="form-label fw-bold" >EDD</label>
+          <input type="text" class="form-control bg-light text-dark fw-bold" readonly formControlName="edd" placeholder="Auto-captured from docket">
+        </div>
+      </div>
+
+      <!-- Section 2: Consignee Details -->
+      <div style="display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;color:var(--text3, #64748B);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:14px;margin-top:18px;">
+        <div style="width:22px;height:22px;border-radius:50%;background:var(--red, #CC0000);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;">2</div>
+        Consignee Details
+      </div>
+      <div class="row g-3 mb-4">
+        <div class="col-lg-6 col-md-6 col-12">
+          <label class="form-label fw-bold" >Name</label>
+          <input type="text" class="form-control bg-light text-dark fw-bold" readonly formControlName="consigneeName" placeholder="Auto-captured from docket">
+        </div>
+        <div class="col-lg-6 col-md-6 col-12">
+          <label class="form-label fw-bold" >Contact No</label>
+          <input type="text" class="form-control bg-light text-dark fw-bold" readonly formControlName="consigneeContact" placeholder="Auto-captured from docket">
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-bold" >Address</label>
+          <input type="text" class="form-control bg-light text-dark fw-bold" readonly formControlName="consigneeAddress" placeholder="Auto-captured from docket">
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-bold" >Email ID</label>
+          <input type="text" class="form-control bg-light text-dark fw-bold" readonly formControlName="consigneeEmail" placeholder="Auto-captured from docket">
+        </div>
+      </div>
+
+      <!-- Section 3: Appointment Details (ONLY for APMT Entry Type) -->
+      <ng-container *ngIf="entryType === 'APMT'">
+        <div style="display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;color:var(--text3, #64748B);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:14px;margin-top:18px;">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--red, #CC0000);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;">3</div>
+          Appointment Details
+        </div>
+        <div class="row g-3 pb-2">
+          <div class="col-lg-6 col-md-6 col-12">
+            <label class="input-group form-label fw-semibold" >Appointment Date <span class="text-danger">*</span></label>
+            <div class="position-relative d-flex align-items-center">
+              <input type="text" class="form-control pe-5" placeholder="dd-mm-yyyy" formControlName="appointmentDate" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD MMM YYYY', containerClass: 'theme-red', showWeekNumbers: false }"
+                [ngClass]="{'is-invalid': appointmentForm.get('appointmentDate')?.invalid && appointmentForm.get('appointmentDate')?.touched}">
+              <i class="ri-calendar-line position-absolute end-0 me-3 text-secondary" style="pointer-events: none; font-size: 16px;"></i>
+            </div>
+            <div *ngIf="appointmentForm.get('appointmentDate')?.invalid && appointmentForm.get('appointmentDate')?.touched" class="text-danger mt-1" style="font-size: 11px;">
+              Appointment Date is required.
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-12">
+            <label class="form-label fw-bold" >Person Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Name of person to meet" formControlName="personName"
+              [ngClass]="{'is-invalid': appointmentForm.get('personName')?.invalid && appointmentForm.get('personName')?.touched}">
+            <div *ngIf="appointmentForm.get('personName')?.invalid && appointmentForm.get('personName')?.touched" class="text-danger mt-1" style="font-size: 11px;">
+              Person Name is required.
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-12">
+            <label class="form-label fw-bold" >Contact No. <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="10-digit contact number" formControlName="contactNo" maxlength="10" (keypress)="numberOnly($event)"
+              [ngClass]="{'is-invalid': appointmentForm.get('contactNo')?.invalid && appointmentForm.get('contactNo')?.touched}">
+            <div *ngIf="appointmentForm.get('contactNo')?.invalid && appointmentForm.get('contactNo')?.touched" class="text-danger mt-1" style="font-size: 11px;">
+              <span *ngIf="appointmentForm.get('contactNo')?.errors?.['required']">Contact No. is required.</span>
+              <span *ngIf="appointmentForm.get('contactNo')?.errors?.['pattern']">Please enter a valid 10-digit number.</span>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-12">
+            <label class="form-label fw-bold" >Appointment Time — From <span class="text-danger">*</span></label>
+            <input type="time" class="form-control" formControlName="timeFrom"
+              [ngClass]="{'is-invalid': appointmentForm.get('timeFrom')?.invalid && appointmentForm.get('timeFrom')?.touched}">
+            <div *ngIf="appointmentForm.get('timeFrom')?.invalid && appointmentForm.get('timeFrom')?.touched" class="text-danger mt-1" style="font-size: 11px;">
+              From Time is required.
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-12">
+            <label class="form-label fw-bold" >Appointment Time — To <span class="text-danger">*</span></label>
+            <input type="time" class="form-control" formControlName="timeTo"
+              [ngClass]="{'is-invalid': appointmentForm.get('timeTo')?.invalid && appointmentForm.get('timeTo')?.touched}">
+            <div *ngIf="appointmentForm.get('timeTo')?.invalid && appointmentForm.get('timeTo')?.touched" class="text-danger mt-1" style="font-size: 11px;">
+              <span *ngIf="appointmentForm.get('timeTo')?.errors?.['required']">To Time is required.</span>
+              <span *ngIf="appointmentForm.get('timeTo')?.errors?.['timeInvalid']">To Time must be greater than From Time.</span>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-12"></div>
+          <div class="col-12">
+            <label class="form-label fw-bold" >Appointment Remarks <span class="text-danger">*</span></label>
+            <textarea class="form-control" placeholder="Notes for the appointment" formControlName="remarks" rows="4" cols="50" style="height:50px; resize: vertical;"
+              [ngClass]="{'is-invalid': appointmentForm.get('remarks')?.invalid && appointmentForm.get('remarks')?.touched}"></textarea>
+            <div *ngIf="appointmentForm.get('remarks')?.invalid && appointmentForm.get('remarks')?.touched" class="text-danger mt-1" style="font-size: 11px;">
+              Remarks are required.
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+    </div>
+
+    <!-- 3. FIXED FOOTER (matching add-prq & add-meeting, always visible at bottom!) -->
+    <div class="modal-footer border-0 py-3 px-4 bg-white shadow-lg" style="flex-shrink: 0; border-top: 1px solid #e2e8f0 !important; z-index: 10;">
+      <div style="display:flex;gap:12px;justify-content:flex-end;width:100%;">
+        <button type="button" class="btn btn-secondary px-4 py-2 rounded-3 fw-bold" (click)="closeModal()" style="font-size: 13px; background: #64748B; border: none; min-width: 100px;">Cancel</button>
+        <button type="button" class="btn btn-danger px-4 py-2 rounded-3 fw-bold shadow-none" (click)="submitForm()" style="background: var(--red, #CC0000); border-color: var(--red, #CC0000); font-size: 13px; min-width: 120px;">Submit</button>
+      </div>
+    </div>
+    </form>
+  </div>
+</ng-template>
