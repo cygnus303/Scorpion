@@ -203,6 +203,10 @@
                                     [disabled]="row.PRQStatus === 'Cancelled'" (click)="onCancel(row.PRQNo)">
                                     🚫 Cancel
                                 </button>
+                                 <!-- <button class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1" (click)="onTrack()"
+                                        style="font-size: 11px; background: #fff4e0; color: #e07b00; border: 1px solid #f5d38a;">
+                                       📍 Track
+                                  </button> -->
                             </div>
                         </td>
                     </tr>
@@ -216,8 +220,6 @@
         </app-pagination>
     </div>
 </div>
-<app-prq-view #PrqViewComponent></app-prq-view>
-<app-add-prq #AddPrqComponent (dataEmitter)="refreshData()"></app-add-prq>
 
 <ng-template #cancelPrqModal>
     <div class="modal-body text-center p-6" style="border-radius: 15px;">
@@ -252,3 +254,7 @@
         </div>
     </div>
 </ng-template>
+
+<app-prq-view #PrqViewComponent></app-prq-view>
+<app-add-prq #AddPrqComponent (dataEmitter)="refreshData()"></app-add-prq>
+<app-prq-track #PrqTrackComponent></app-prq-track>

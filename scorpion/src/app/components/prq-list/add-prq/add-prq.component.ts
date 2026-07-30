@@ -208,7 +208,7 @@ export class AddPrqComponent {
   showPopup(prqNo?: string) {
     this.PRQNo = prqNo;
     this.initForm();
-    this.getContract();
+    // this.getContract();
     this.getFleetType()
     this.modalRef = this.modalService.show(this.Templatepod, {
       backdrop: 'static',
@@ -347,7 +347,7 @@ export class AddPrqComponent {
         customer_Name: ''
       });
     }
-    // this.getContract(event?.id);
+    this.getContract(event?.id);
   }
 
   onColdChainCategoryChange(event?: any) {
@@ -375,9 +375,9 @@ export class AddPrqComponent {
   }
 
   getContract(customerId?: any) {
-    // const custCode = 'C00120010';
-    const custCode = this.docketService.baseUsername;
-    this.prqService.getContractDetail(custCode).subscribe({
+    const custCode = 'C00120010';
+    // const custCode = this.docketService.baseUsername;
+    this.prqService.getContractDetail(customerId).subscribe({
       next: (response: any) => {
         if (response && response.data && response.data.length > 0) {
           const serviceTypesStr = response.data[0].serviceTypes || '';

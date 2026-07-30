@@ -1,0 +1,92 @@
+<ng-template #Templatepod>
+    <div style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:10px;overflow:hidden;width:700px;max-width:96vw;height:520px;max-height:92vh;display:flex;flex-direction:column;box-shadow:0 8px 40px rgba(0,0,0,.4)">
+    <!-- Header -->
+    <div style="background:#D0021B;color:#fff;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <div style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px">
+        <i class="ti ti-map-pin-2" style="font-size:16px"></i>
+        Live DA Tracking — <span id="da-track-prqno" style="font-family:monospace"></span>
+      </div>
+      <button onclick="closeDATracking()" style="background:rgba(255,255,255,.18);border:none;color:#fff;width:26px;height:26px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1">×</button>
+    </div>
+    <!-- Body -->
+    <div style="display:flex;flex:1;overflow:hidden;min-height:0">
+      <!-- Map side -->
+      <div style="flex:1;position:relative;min-width:0">
+        <div id="da-track-map" style="width:100%;height:100%"></div>
+        <!-- Map / Satellite toggle -->
+        <div style="position:absolute;top:10px;right:10px;z-index:1000;background:#fff;border-radius:5px;overflow:hidden;box-shadow:0 1px 5px rgba(0,0,0,.25);display:flex;font-size:11px;font-weight:600">
+          <button id="da-map-btn" onclick="switchDAMapLayer('map')" style="padding:5px 11px;border:none;background:#e5e7eb;cursor:pointer;color:#1a1a2e">Map</button>
+          <button id="da-sat-btn" onclick="switchDAMapLayer('satellite')" style="padding:5px 11px;border:none;background:#fff;cursor:pointer;color:#6b7280;border-left:1px solid #e5e7eb">Satellite</button>
+        </div>
+        <!-- LIVE badge -->
+        <div style="position:absolute;bottom:10px;left:10px;z-index:1000;background:rgba(26,26,46,.88);color:#fff;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:6px;backdrop-filter:blur(4px)">
+          <span style="width:8px;height:8px;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse-dot 1.2s infinite"></span>
+          LIVE&nbsp;<span id="da-live-time" style="font-weight:400;font-size:10px;opacity:.85"></span>
+        </div>
+      </div>
+      <!-- Right info panel -->
+      <div style="width:210px;flex-shrink:0;overflow-y:auto;padding:14px 14px 10px;border-left:1px solid #f0f0f0;font-size:12px;background:#fafafa">
+        <div style="font-size:13px;font-weight:800;color:#D0021B;margin-bottom:3px;font-family:monospace" id="da-panel-prqno"></div>
+        <div id="da-panel-badge" style="margin-bottom:12px"></div>
+
+        <div style="font-weight:700;font-size:12px;margin-bottom:10px;color:#1a1a2e;line-height:1.3" id="da-panel-custname"></div>
+
+        <div style="margin-bottom:12px">
+          <div style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#166534">
+            <span style="width:9px;height:9px;background:#16a34a;border-radius:50%;flex-shrink:0"></span>
+            <span id="da-panel-from"></span>
+          </div>
+          <div style="margin:2px 0 2px 13px;border-left:2px dashed #d1d5db;padding-left:8px;color:#6366f1;font-size:10px">1 route</div>
+          <div style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#D0021B">
+            <span style="width:9px;height:9px;background:#D0021B;border-radius:50%;flex-shrink:0"></span>
+            <span id="da-panel-to"></span>
+          </div>
+        </div>
+
+        <div style="margin-bottom:12px">
+          <div style="font-size:10px;color:#9ca3af;font-weight:700;letter-spacing:.05em;margin-bottom:5px">JOURNEY PROGRESS</div>
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
+            <div style="flex:1;height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden">
+              <div id="da-panel-bar" style="height:100%;background:#3b82f6;border-radius:3px;transition:width .4s"></div>
+            </div>
+            <span id="da-panel-pct" style="font-size:11px;font-weight:700;color:#3b82f6;white-space:nowrap"></span>
+          </div>
+          <div id="da-panel-prog-label" style="font-size:10px;color:#6b7280;line-height:1.4"></div>
+        </div>
+
+        <div style="margin-bottom:10px;padding-top:10px;border-top:1px solid #f0f0f0">
+          <div style="font-size:10px;color:#9ca3af;font-weight:700;letter-spacing:.05em;margin-bottom:7px">DELIVERY AGENT</div>
+          <div style="display:flex;gap:8px;align-items:flex-start">
+            <div style="width:30px;height:30px;background:#f3f4f6;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid #e5e7eb">
+              <i class="ti ti-user" style="font-size:14px;color:#6b7280"></i>
+            </div>
+            <div style="min-width:0">
+              <div style="font-weight:700;font-size:12px;color:#1a1a2e;margin-bottom:1px" id="da-panel-name"></div>
+              <div style="color:#6b7280;font-size:11px" id="da-panel-phone"></div>
+              <div style="color:#6b7280;font-size:10px;margin-top:1px" id="da-panel-hub"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="font-size:11px;border-top:1px solid #f0f0f0;padding-top:8px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <span style="color:#9ca3af">Assigned On</span>
+            <span style="color:#1a1a2e;font-weight:600" id="da-panel-assigned"></span>
+          </div>
+          <div style="display:flex;justify-content:space-between">
+            <span style="color:#9ca3af">Docket No.</span>
+            <span id="da-panel-docket" style="font-weight:600"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Footer -->
+    <div style="padding:9px 16px;border-top:1px solid #f0f0f0;display:flex;justify-content:center;flex-shrink:0;background:#fff">
+      <button onclick="closeDATracking()" style="padding:7px 28px;font-size:12px;font-weight:600;border-radius:6px;border:1.5px solid #9ca3af;background:#fff;color:#374151;cursor:pointer;display:inline-flex;align-items:center;gap:6px">
+        <i class="ti ti-x" style="font-size:13px"></i> Close Tracking
+      </button>
+    </div>
+  </div>
+</div>
+</ng-template>
