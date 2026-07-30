@@ -12,11 +12,12 @@ import { AddPrqComponent } from './add-prq/add-prq.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ExportService } from 'app/shared/services/export.service';
 import { PrqViewComponent } from './prq-view/prq-view.component';
+import { PrqTrackComponent } from './prq-track/prq-track.component';
 
 @Component({
   selector: 'app-prq-list',
   standalone: true,
-  imports: [BsDatepickerModule, CommonModule, NgSelectModule, PaginationComponent, FormsModule, AddPrqComponent,PrqViewComponent],
+  imports: [BsDatepickerModule, CommonModule, NgSelectModule, PaginationComponent, FormsModule, AddPrqComponent,PrqViewComponent,PrqTrackComponent],
   providers: [BsModalService],
   templateUrl: './prq-list.component.html',
   styleUrl: './prq-list.component.scss'
@@ -25,6 +26,8 @@ export class PrqListComponent {
   @ViewChild('cancelPrqModal') cancelPrqModalTemplate!: TemplateRef<any>;
   @ViewChild('AddPrqComponent') AddPrqComponent!: AddPrqComponent;
   @ViewChild('PrqViewComponent') PrqViewComponent!: PrqViewComponent;
+  @ViewChild('PrqTrackComponent') PrqTrackComponent!: PrqTrackComponent;
+
   public requestCache = new Map<string, any>();
   public isLoading: boolean = false;
   public isCSVLoading: boolean = false;
@@ -281,6 +284,10 @@ export class PrqListComponent {
         this.sweetAlertService.error(error?.error?.message || 'Download failed');
       },
     });
+  }
+
+  onTrack(){
+    this.PrqTrackComponent.showPopup();
   }
 
 

@@ -106,7 +106,7 @@ export const ChallanRoutes: Routes = [
   {
     path: 'PRQList',
     loadComponent: () => import('../prq-list/prq-list.component').then(m => m.PrqListComponent),
-    // canActivate: [DocketGuard]
+    canActivate: [DocketGuard]
   }
 
 ];
