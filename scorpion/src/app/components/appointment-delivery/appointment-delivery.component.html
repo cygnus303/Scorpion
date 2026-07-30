@@ -152,7 +152,9 @@
         <table class="table align-middle data-table mb-0">
           <thead>
             <tr>
-              <th class="text-center">APPOINTMENT ID</th>
+              <th class="py-2 px-2 border-bottom" style="width: 12%; min-width: 120px;">
+              {{ activeTab === 'APMT' ? 'APPOINTMENT ID' : (activeTab === 'CSD' ? 'CSD ID' : 'MALL ID') }}
+            </th>
               <th class="text-center">CUSTOMER</th>
               <th class="text-center">DOCKET NO</th>
               <th class="text-center">ORG / DESTINATION</th>
@@ -182,10 +184,11 @@
               <tr *ngFor="let item of appointments">
                 <!-- ID -->
                 <td class="text-center">
-                  <span class="px-3 py-1 fw-bold d-inline-block"
-                        style="background-color: #FFF5F5; color: #CC0000; border: 1px solid #FCA5A5; border-radius: 6px; font-size: 11px;">
-                    {{ item.appointmentNo || item.csdNo || item.msdNo || '-' }}
-                  </span>
+                  <span
+                  class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 py-1 px-2 rounded-1 fw-semibold font-monospace"
+                  style="font-size: 11px;">
+                  {{ (activeTab === 'APMT' ? item.appointmentNo : (activeTab === 'CSD' ? item.csdNo : item.msdNo)) || item.appointmentNo || item.csdNo || item.msdNo || '-' }}
+                </span>
                 </td>
                 <!-- Customer -->
                 <td class="text-center">

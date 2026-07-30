@@ -150,7 +150,7 @@
                         <th class="text-center">#</th>
                         <th class="text-center">THC No. / Date</th>
                         <th class="text-center">Total Dockets</th>
-                        <th class="text-center" style="width: 140px;">MF No.</th>
+                        <th class="text-center" style="width: 80px;">MF No.</th>
                         <th class="text-center">Is Empty THC</th>
                         <th class="text-center">Vendor Type / Name</th>
                         <th class="text-center">Vehicle No.</th>
@@ -209,15 +209,15 @@
                             <div class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;"
                                 (click)="openThcView(data.thcNo)"><a>{{
                                     data.thcNo }}</a></div>
-                            <div class="text-muted fs-7 mt-1">{{ data.thcDate | date:'dd-MMM-yy' }}</div>
+                            <div class="text-muted fs-7 mt-1">{{ data.thcDate | date:'dd MMM yyyy' }}</div>
                         </td>
 
-                        <td class="text-center" style="width: 120px;">
+                        <td class="text-center" style="width: 60px;">
                             <div class="d-flex gap-2 flex-column">
                                 <span class="d-block rounded p-1 fw-bold mb-1">{{ data.totalDockets}}</span>
                             </div>
                         </td>
-                        <td class="text-center">
+                        <td class="text-center" style="width: 80px;">
                             <span class="fw-bold cursor-pointer"
                                 [ngClass]="(data.mfNo) ? 'text-primary fw-bold' : 'text-muted'"
                                 (click)="openMFPopup(data.thcNo)">{{data.mfNo ? 'View MF' :'-'}}</span>
@@ -247,9 +247,8 @@
                             </div>
                         </td>
                         <td class="text-center cursor-pointer">
-                            <span class="px-4 py-2 cursor-pointer">
-                                {{data.departureDate | date:'dd-MMM-yy'}} &{{data.departureTime}}
-                            </span>
+                            <div>{{ (data.departureDate | date:'dd MMM yyyy') || '—' }}</div>
+                            <div class="text-muted fs-7" *ngIf="data.departureTime">{{ data.departureTime }}</div>
                         </td>
                         <td class="text-center cursor-pointer">
                             <span class="px-4 py-2">
@@ -311,7 +310,7 @@
                                     data.tcno }}</a></div>
                         </td>
                         <td class="text-center" style="width: 120px;">
-                            <div class="text-muted fs-7 mt-1">{{ data.tcdt | date:'dd-MMM-yy' }}</div>
+                            <div class="text-muted fs-7 mt-1">{{ data.tcdt | date:'dd MMM yyyy' }}</div>
                         </td>
                         <td class="text-center" style="width: 120px;">
                             <div class="d-flex gap-2 flex-column">
@@ -337,8 +336,9 @@
                         </td>
 
                         <td class="text-center">
-                            <span class="fw-bold cursor-pointer">{{ data.toT_PKGS || '—'
-                                }}/{{data.toT_ACTUWT}}</span>
+                            <span class="fw-bold cursor-pointer">
+                                {{ data.toT_PKGS || '—'}}/{{data.toT_ACTUWT}}
+                            </span>
                         </td>
                     </tr>
                 </tbody>
