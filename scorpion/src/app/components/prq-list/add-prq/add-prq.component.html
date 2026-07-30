@@ -104,7 +104,7 @@
                                     Date</label>
                                 <input type="text" formControlName="prqDate" [class.disabled-input]="true"
                                     style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;background:#f8fafc;font-size:13px;cursor:not-allowed"
-                                    bsDatepicker [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }"
+                                    bsDatepicker [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }"
                                     [ngClass]="{'border-danger': prqForm.get('prqDate')?.invalid && prqForm.get('prqDate')?.touched}">
                                 <div *ngIf="prqForm.get('prqDate')?.invalid && prqForm.get('prqDate')?.touched"
                                     class="error-msg">This field is required</div>
@@ -277,7 +277,7 @@
                                     <label
                                         style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Eway
                                         Bill Date <span style="color:#D0021B">*</span></label>
-                                    <input type="text" formControlName="ewayBillDate"
+                                    <input type="text" formControlName="ewayBillDate" 
                                         [readonly]="prqForm.get('ewayBill')?.value === 'with'"
                                         placeholder="Auto-filled from Eway Bill No."
                                         style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;outline:none;background:#f8fafc;cursor:not-allowed"
@@ -319,11 +319,16 @@
                                 <label
                                     style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Invoice
                                     Date <span style="color:#D0021B">*</span></label>
-                                <input type="text" formControlName="invoiceDate"
-                                    placeholder="Auto-filled from Eway Bill"
-                                    style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;outline:none;"
-                                    [readonly]="prqForm.get('ewayBill')?.value === 'with'"
+                                <div class="input-group">
+                                    <input type="text" formControlName="invoiceDate" [class.disabled-input]="true"
+                                     placeholder="Auto-filled from Eway Bill" #dp="bsDatepicker"
+                                   class="form-control uppercase-none"
+                                    bsDatepicker [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }"
                                     [ngClass]="{'border-danger': prqForm.get('invoiceDate')?.invalid && prqForm.get('invoiceDate')?.touched}">
+                                    <span class="input-group-text cursor-pointer" (click)="dp.toggle()"  [class.disabled-input]="prqForm.get('ewayBill')?.value === 'with'" >
+                  <i class="fa fa-calendar"></i>
+                </span>
+                </div>
                                 <div *ngIf="prqForm.get('invoiceDate')?.invalid && prqForm.get('invoiceDate')?.touched"
                                     class="error-msg">This field is required</div>
                             </div>
@@ -334,7 +339,7 @@
                                     style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Invoice
                                     Value (&#8377;) <span style="color:#D0021B">*</span></label>
                                 <input type="text" formControlName="invoiceValue"
-                                    placeholder="Auto-filled from Eway Bill"
+                                    placeholder="Auto-filled from Eway Bill" oninput="this.value = this.value.replace(/[^0-9.]/g,'');"
                                     style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;outline:none;"
                                     [readonly]="prqForm.get('ewayBill')?.value === 'with'"
                                     [ngClass]="{'border-danger': prqForm.get('invoiceValue')?.invalid && prqForm.get('invoiceValue')?.touched}">

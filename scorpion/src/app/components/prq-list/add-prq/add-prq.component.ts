@@ -385,6 +385,9 @@ export class AddPrqComponent {
           this.getTransportModes('', transportTypesStr)
 
           this.serviceData = serviceTypesStr.split(',').map((s: string) => ({ name: s.trim(), value: s.trim() })).filter((s: any) => s.value !== '');
+          if (this.serviceData.length === 1) {
+            this.prqForm.patchValue({ service_Type: this.serviceData[0].value });
+          }
         }
       },
       error: (response: any) => {
@@ -433,6 +436,19 @@ export class AddPrqComponent {
           if (data.ConsignorPincode) this.consignorPincodeData = [{ Value: data.ConsignorPincode, Text: data.ConsignorPincode }];
           if (data.ConsigneePincode) this.consigneePincodeData = [{ Value: data.ConsigneePincode, Text: data.ConsigneePincode }];
           setTimeout(() => {
+            const formatToDDMMMYYYY = (dStr: any) => {
+              if (!dStr || dStr === '1900-01-01T00:00:00') return null;
+              let d = new Date(dStr);
+              if (isNaN(d.getTime()) && typeof dStr === 'string' && dStr.includes('/')) {
+                const parts = dStr.split('/');
+                if (parts.length === 3) {
+                  d = new Date(+parts[2], +parts[1] - 1, +parts[0]);
+                }
+              }
+              if (isNaN(d.getTime())) return dStr;
+              const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+              return `${d.getDate().toString().padStart(2, '0')} ${months[d.getMonth()]} ${d.getFullYear()}`;
+            };
             // Map the available fields from ReportId 222
             this.prqForm.patchValue({
               groupCode: data.PRQNo,
@@ -458,10 +474,10 @@ export class AddPrqComponent {
               consignorPin: data.ConsignorPincode,
               consigneePin: data.ConsigneePincode,
               ewayBillNo:data.EWayBillNo,
-              ewayBillDate:data.EWayBillDate,
-              ewayExpDate:data.EWayBillExpiryDate,
+              ewayBillDate: formatToDDMMMYYYY(data.EWayBillDate),
+              ewayExpDate: formatToDDMMMYYYY(data.EWayBillExpiryDate),
               invoiceNo:data.InvoiceNo,
-              invoiceDate:data.InvoiceDate,
+              invoiceDate: formatToDDMMMYYYY(data.InvoiceDate),
               invoiceValue:data.InvoiceValue
             });
           }, 500);
@@ -526,7 +542,9 @@ export class AddPrqComponent {
                   const fmtDate = (dStr: any) => {
                     if (!dStr || dStr === '1900-01-01T00:00:00') return null;
                     const d = new Date(dStr);
-                    return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+                    if (isNaN(d.getTime())) return dStr;
+                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    return `${d.getDate().toString().padStart(2, '0')} ${months[d.getMonth()]} ${d.getFullYear()}`;
                   };
 
                   if (response.toPincode) {
@@ -585,6 +603,20 @@ export class AddPrqComponent {
     }
   }
 
+  formatDateToString(dStr: any) {
+    if (!dStr || dStr === '1900-01-01T00:00:00') return '';
+    let d = new Date(dStr);
+    if (isNaN(d.getTime()) && typeof dStr === 'string' && dStr.includes('/')) {
+      const parts = dStr.split('/');
+      if (parts.length === 3) {
+        d = new Date(+parts[2], +parts[1] - 1, +parts[0]);
+      }
+    }
+    if (isNaN(d.getTime())) return dStr;
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${d.getDate().toString().padStart(2, '0')} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  }
+
   onSubmit() {
     if (this.prqForm.valid) {
       const formData = this.prqForm.getRawValue();
@@ -606,10 +638,10 @@ export class AddPrqComponent {
         ewayBillType: formData.ewayBill || '',
         serviceType: formData.service_Type || '',
         eWayBillNo: formData.ewayBillNo || '',
-        eWayBillDateStr: formData.ewayBillDate || '',
-        eWayBillExpiryDateStr: formData.ewayExpDate || '',
+        eWayBillDateStr: this.formatDateToString(formData.ewayBillDate) || '',
+        eWayBillExpiryDateStr: this.formatDateToString(formData.ewayExpDate) || '',
         invoiceNo: formData.invoiceNo || '',
-        invoiceDateStr: formData.invoiceDate || '',
+        invoiceDateStr: this.formatDateToString(formData.invoiceDate) || '',
         invoiceValue: Number(formData.invoiceValue) || 0,
         consignorName: formData.consignorName || '',
         consigneeName: formData.consigneeName || '',
@@ -617,7 +649,7 @@ export class AddPrqComponent {
         consigneeAddress: formData.consigneeAddress || '',
         consignorPincode: formData.consignorPin?.toString() || '',
         consigneePincode: formData.consigneePin?.toString() || '',
-        prqDate: formData.prqDate || '',
+        prqDate: this.formatDateToString(formData.prqDate) || '',
         baseLocationCode: branchCode || '',
         baseUserName: this.docketService.loginUserList.BaseUserName || '',
         baseFinYear: finyear,
