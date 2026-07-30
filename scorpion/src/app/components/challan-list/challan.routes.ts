@@ -102,6 +102,11 @@ export const ChallanRoutes: Routes = [
     path: 'AppointmentDelivery',
     loadComponent: () => import('../appointment-delivery/appointment-delivery.component').then(m => m.AppointmentDeliveryComponent),
     canActivate: [DocketGuard]
+  },
+  {
+    path: 'PRQList',
+    loadComponent: () => import('../prq-list/prq-list.component').then(m => m.PrqListComponent),
+    // canActivate: [DocketGuard]
   }
 
 ];

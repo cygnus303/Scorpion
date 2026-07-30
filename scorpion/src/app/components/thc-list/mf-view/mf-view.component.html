@@ -65,7 +65,7 @@
                                             (click)="openMFView(row.mfNo)">
                                             {{ row.mfNo || '—' }}
                                         </td>                                    
-                                        <td class="text-center px-2 py-2">{{ row.tcdt || '—' }}</td>
+                                        <td class="text-center px-2 py-2">{{ (row.tcdt | date:'dd MMM yyyy') || '—' }}</td>
                                         <td class="text-center px-2 py-2">{{ row.mfBranch || '—' }}</td>
                                         <td class="text-center px-2 py-2 fw-bold">{{ row.nextStop ||'-'}}</td>
                                         <td class="text-center px-2 py-2 fw-bold">{{ row.serviceType ||'-'}}</td>

@@ -95,18 +95,40 @@
             </div>
         </div>
         <div class="row mb-3">
-          <div class="col-3">
+          <div class="col-4">
             <div class="form-group-input">
               <label class="form-label d-flex align-items-center gap-2 fw-bold"> Select Date</label>
-              <div class="input-group" (click)="!isgetLoadingList && dvr.toggle()">
-                <input type="text" placeholder="Daterangepicker"
-                  class="form-control border-start-1 text-center line-height" bsDaterangepicker #dvr="bsDaterangepicker"
-                  formControlName="reportrange" [class.disabled-input]="true" appFocusNext
-                  [bsConfig]="{ ranges: commonService.ranges, rangeInputFormat: 'MMMM D, YYYY',containerClass: 'theme-dark-blue', dateInputFormat: 'MMMM D, YYYY',maxDate: today}" />
-                <span class="input-group-text cursor-pointer" (click)="dvr.toggle()"
-                  [class.disabled-input]="this.docketService.isComplition">
-                  <i class="fa fa-calendar"></i>
-                </span>
+              <div class="d-flex align-items-center gap-1 flex-wrap flex-xl-nowrap">
+                <!-- From Date -->
+                <div class="input-group flex-nowrap" (click)="!isgetLoadingList && dpFrom.toggle()">
+                  <span class="input-group-text cursor-pointer px-2" (click)="dpFrom.toggle()"
+                    [class.disabled-input]="this.docketService.isComplition">
+                    <i class="fa fa-calendar"></i>
+                  </span>
+                  <input type="text" placeholder="From Date"
+                    class="form-control border-start-1 text-center line-height px-1" bsDatepicker #dpFrom="bsDatepicker" container="body" placement="top"
+                    [bsValue]="loadingSheetService.LSForm.value.reportrange ? loadingSheetService.LSForm.value.reportrange[0] : null"
+                    (bsValueChange)="loadingSheetService.LSForm.patchValue({ reportrange: [$event, (loadingSheetService.LSForm.value.reportrange[1] < $event ? $event : loadingSheetService.LSForm.value.reportrange[1])] })"
+                    [class.disabled-input]="true" appFocusNext
+                    [bsConfig]="{ dateInputFormat: 'DD MMMM YYYY', containerClass: 'theme-dark-blue' }" />
+                </div>
+
+                <span class="fw-bold text-muted">&rarr;</span>
+
+                <!-- To Date -->
+                <div class="input-group flex-nowrap" (click)="!isgetLoadingList && dpTo.toggle()">
+                  <span class="input-group-text cursor-pointer px-2" (click)="dpTo.toggle()"
+                    [class.disabled-input]="this.docketService.isComplition">
+                    <i class="fa fa-calendar"></i>
+                  </span>
+                  <input type="text" placeholder="To Date"
+                    class="form-control border-start-1 text-center line-height px-1" bsDatepicker #dpTo="bsDatepicker" container="body" placement="top"
+                    [bsValue]="loadingSheetService.LSForm.value.reportrange ? loadingSheetService.LSForm.value.reportrange[1] : null"
+                    (bsValueChange)="loadingSheetService.LSForm.patchValue({ reportrange: [loadingSheetService.LSForm.value.reportrange[0], $event] })"
+                    [minDate]="loadingSheetService.LSForm.value.reportrange ? loadingSheetService.LSForm.value.reportrange[0] : null"
+                    [class.disabled-input]="true" appFocusNext
+                    [bsConfig]="{ dateInputFormat: 'DD MMMM YYYY', containerClass: 'theme-dark-blue' }" />
+                </div>
               </div>
             </div>
           </div>
@@ -118,7 +140,7 @@
                 [items]="generalMasterService.modeData"></ng-select>
             </div>
           </div>
-          <div class="col-3">
+          <div class="col-2">
             <div class="form-group-input">
               <label class="form-label d-flex align-items-center gap-2 fw-bold"> Destination</label>
               <input class="form-control" formControlName="destinationList" placeholder="Destination" appFocusNext>
