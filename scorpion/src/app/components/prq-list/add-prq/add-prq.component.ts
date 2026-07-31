@@ -59,6 +59,7 @@ export class AddPrqComponent {
   public PRQNo: any;
   public minDate = new Date();
   public vehicleCountList = Array.from({ length: 10 }, (_, i) => ({ id: i + 1, text: (i + 1).toString() }));
+  public isSubmitting: boolean = false;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(
@@ -642,6 +643,7 @@ export class AddPrqComponent {
 
   onSubmit() {
     if (this.prqForm.valid) {
+      this.isSubmitting = true;
       const formData = this.prqForm.getRawValue();
       let branchCode = this.docketService.loginUserList.LocationCode;
       let finyear = this.docketService.loginUserList.FinYear;
@@ -693,6 +695,7 @@ export class AddPrqComponent {
 
       this.prqService.submitPRQ(payload).subscribe({
         next: (res: any) => {
+          this.isSubmitting = false;
           if (res.success) {
             this.sweetAlertService.success(`${res.data.message} : <b style="color:#0d6efd">${res.data.id}</b>`);
             this.dataEmitter.emit();
@@ -702,6 +705,7 @@ export class AddPrqComponent {
           }
         },
         error: (err) => {
+          this.isSubmitting = false;
           let errorMessage = err.error?.message;
           if (!errorMessage && err.error?.errors) {
             errorMessage = Object.values(err.error.errors).flat().join('\\n');

@@ -27,14 +27,15 @@ export class PrqTrackComponent {
   showPopup(data:any){
     this.mapLoaded = false;
     this.prqData = data;
-    const origin = data?.FromCity || 'India';
-    const dest = data?.ToCity || 'India';
+    const origin = data?.FromCity || '';
+    const dest = data?.ToCity || '';
     
-    // If CurrentLocation is empty or null, fallback to FromCity
-    const currentLoc = (data?.CurrentLocation && data.CurrentLocation.trim() !== '') ? data.CurrentLocation : origin;
+    // Fallback if cities are missing
+    const qOrigin = origin ? encodeURIComponent(origin) : 'India';
+    const qDest = dest ? encodeURIComponent(dest) : 'India';
     
-    // Using saddr and daddr for driving directions, routing through currentLoc
-    const rawUrl = `https://maps.google.com/maps?saddr=${origin}&daddr=${currentLoc}+to:${dest}&dirflg=d&output=embed`;
+    // Simple direct route URL that works reliably in classic embed
+    const rawUrl = `https://maps.google.com/maps?saddr=${qOrigin}&daddr=${qDest}&output=embed`;
     this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl);
 
     this.modalRef = this.modalService.show(this.Templatepod, {
