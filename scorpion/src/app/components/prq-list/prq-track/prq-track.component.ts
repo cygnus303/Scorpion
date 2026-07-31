@@ -1,8 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-prq-track',
@@ -14,14 +15,41 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 export class PrqTrackComponent {
    @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
     public modalRef!: BsModalRef;
+  public prqData: any;
+  public mapUrl!: SafeResourceUrl;
+  public mapLoaded: boolean = false;
 
-  constructor(private modalService: BsModalService){}
+  constructor(
+    private modalService: BsModalService,
+    private sanitizer: DomSanitizer
+  ){}
 
-  showPopup(){
+  showPopup(data:any){
+    this.mapLoaded = false;
+    this.prqData = data;
+    const origin = data?.FromCity || 'India';
+    const dest = data?.ToCity || 'India';
+    
+    // If CurrentLocation is empty or null, fallback to FromCity
+    const currentLoc = (data?.CurrentLocation && data.CurrentLocation.trim() !== '') ? data.CurrentLocation : origin;
+    
+    // Using saddr and daddr for driving directions, routing through currentLoc
+    const rawUrl = `https://maps.google.com/maps?saddr=${origin}&daddr=${currentLoc}+to:${dest}&dirflg=d&output=embed`;
+    this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl);
+
     this.modalRef = this.modalService.show(this.Templatepod, {
       backdrop: 'static',
       class: 'modal-lg modal-dialog-centered'
     });
   }
 
+  onMapLoad() {
+    setTimeout(() => {
+      this.mapLoaded = true;
+    });
+  }
+
+  closeDATracking() {
+    this.modalRef?.hide();
+  }
 }

@@ -15,7 +15,7 @@
             <div class="scrollable-content">
 
                 <!-- Eway Bill Tag Selector (Top Row) -->
-                <div style="margin-bottom: 16px;">
+                <!-- <div style="margin-bottom: 16px;">
                     <label
                         style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px">
                         Eway Bill <span style="color:#D0021B">*</span>
@@ -35,7 +35,7 @@
                             <span class="tag-label">Without Eway Bill</span>
                         </label>
                     </div>
-                </div>
+                </div> -->
                 <div>
                                 <label
                                     style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Customer
@@ -60,7 +60,7 @@
                 
                 <!-- Service Type Tag Selector (Bottom Row) -->
 
-                <div *ngIf="prqForm.get('ewayBill')?.value && prqForm.get('customerCode')?.value">
+                <div *ngIf="prqForm.get('customerCode')?.value">
                     <div id="add-main-fields">
                         <hr style="border:none;border-top:1px solid var(--border);margin-bottom:16px">
 
@@ -102,14 +102,28 @@
                                 <label
                                     style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">PRQ
                                     Date</label>
-                                <input type="text" formControlName="prqDate" [class.disabled-input]="true"
-                                    style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;background:#f8fafc;font-size:13px;cursor:not-allowed"
-                                    bsDatepicker [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }"
-                                    [ngClass]="{'border-danger': prqForm.get('prqDate')?.invalid && prqForm.get('prqDate')?.touched}">
+                                <div class="input-group">
+                                    <input type="text" formControlName="prqDate" [class.disabled-input]="true" placeholder="Auto-filled from Eway Bill"
+                                        #dp="bsDatepicker" class="form-control uppercase-none" bsDatepicker
+                                        [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }"
+                                        [ngClass]="{'border-danger': prqForm.get('prqDate')?.invalid && prqForm.get('prqDate')?.touched}">
+                                    <span class="input-group-text cursor-pointer" (click)="dp.toggle()"
+                                        [class.disabled-input]="PRQNo == null ? true : false">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
                                 <div *ngIf="prqForm.get('prqDate')?.invalid && prqForm.get('prqDate')?.touched"
                                     class="error-msg">This field is required</div>
                             </div>
-                            <div></div>
+                             <div>
+                            <label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">
+                                PRQ TIME <span style="color:#D0021B">*</span>
+                            </label>
+                            <input type="time" formControlName="prqTime" [class.disabled-input]="PRQNo == null ? true : false"
+                                style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;background:#fff;font-size:13px;"
+                                [ngClass]="{'is-invalid-field': prqForm.get('prqTime')?.invalid && prqForm.get('prqTime')?.touched}">
+                            <div *ngIf="prqForm.get('prqTime')?.invalid && prqForm.get('prqTime')?.touched" class="error-msg">This field is required</div>
+                        </div>
                         </div>
 
                         <div class="form-row">
@@ -226,7 +240,7 @@
 
                         <!-- Cold chain (shown if FTL + Cold Chain mode) -->
                         <div
-                            *ngIf="prqForm.get('transportMode')?.value === 'Cold Chain' && prqForm.get('service_Type')?.value === 'FTL'">
+                            *ngIf="prqForm.get('transportMode')?.value === '11' && prqForm.get('service_Type')?.value === 'FTL'">
                             <div class="form-row">
                                 <div>
                                     <label
@@ -255,7 +269,7 @@
                             style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid var(--scorpion-red);display:inline-block">
                             Eway Bill Details</div>
 
-                        <div style="margin-top:10px" *ngIf="prqForm.get('ewayBill')?.value === 'with'">
+                        <!--<div style="margin-top:10px" *ngIf="prqForm.get('ewayBill')?.value === 'with'">
                             <div class="form-row">
                                 <div>
                                     <label
@@ -301,13 +315,13 @@
                                 </div>
                                 <div></div>
                             </div>
-                        </div>
+                        </div>-->
 
                         <div class="form-row" style="margin-top:6px">
                             <div>
                                 <label
                                     style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Invoice
-                                    No. <span style="color:#D0021B">*</span></label>
+                                    No.</label>
                                 <input type="text" formControlName="invoiceNo" placeholder="Auto-filled from Eway Bill"
                                     style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;outline:none;"
                                     [readonly]="prqForm.get('ewayBill')?.value === 'with'"
@@ -318,19 +332,26 @@
                             <div>
                                 <label
                                     style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Invoice
-                                    Date <span style="color:#D0021B">*</span></label>
-                                <div class="input-group">
+                                    Date</label>
+                                <!-- <div class="input-group">
                                     <input type="text" formControlName="invoiceDate" [class.disabled-input]="true"
-                                     placeholder="Auto-filled from Eway Bill" #dp="bsDatepicker"
-                                   class="form-control uppercase-none"
-                                    bsDatepicker [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }"
-                                    [ngClass]="{'border-danger': prqForm.get('invoiceDate')?.invalid && prqForm.get('invoiceDate')?.touched}">
-                                    <span class="input-group-text cursor-pointer" (click)="dp.toggle()"  [class.disabled-input]="prqForm.get('ewayBill')?.value === 'with'" >
-                  <i class="fa fa-calendar"></i>
-                </span>
-                </div>
-                                <div *ngIf="prqForm.get('invoiceDate')?.invalid && prqForm.get('invoiceDate')?.touched"
-                                    class="error-msg">This field is required</div>
+                                        placeholder="Auto-filled from Eway Bill" #dp="bsDatepicker" class="form-control uppercase-none" bsDatepicker
+                                        [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }"
+                                        [ngClass]="{'border-danger': prqForm.get('invoiceDate')?.invalid && prqForm.get('invoiceDate')?.touched}">
+                                    <span class="input-group-text cursor-pointer" (click)="dp.toggle()"
+                                        [class.disabled-input]="prqForm.get('ewayBill')?.value === 'with'">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div> -->
+                                <div class="input-group">
+                                    <input class="form-control" placeholder="dd/mm/yyyy" #dpUpdate="bsDatepicker" bsDatepicker
+                                        formControlName="invoiceDate" [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }" container="body" [isDisabled]="true"
+                                        [class.disabled-input]="true"  [minDate]="minDate"
+                                        >
+                                    <button class="btn btn-outline-secondary border shadow-none" (click)="dpUpdate.toggle()" type="button"
+                                       >📅</button>
+                                </div>
+                               
                             </div>
                         </div>
                         <div class="form-row">

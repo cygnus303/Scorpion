@@ -286,8 +286,8 @@ export class PrqListComponent {
     });
   }
 
-  onTrack(){
-    this.PrqTrackComponent.showPopup();
+  onTrack(data: any){
+    this.PrqTrackComponent.showPopup(data);
   }
 
 
