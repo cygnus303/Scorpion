@@ -358,7 +358,7 @@
                             <div>
                                 <label
                                     style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Invoice
-                                    Value (&#8377;) <span style="color:#D0021B">*</span></label>
+                                    Value </label>
                                 <input type="text" formControlName="invoiceValue"
                                     placeholder="Auto-filled from Eway Bill" oninput="this.value = this.value.replace(/[^0-9.]/g,'');"
                                     style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;outline:none;"
@@ -465,8 +465,11 @@
             <!-- Fixed Footer Buttons (Always visible at bottom without scrolling) -->
             <div class="fixed-modal-footer">
                 <button type="button" class="btn-secondary" (click)="onClose()">Cancel</button>
-                <button type="submit" class="btn-primary"><i class="ti ti-send" style="margin-right:5px"></i>Submit
-                    PRQ</button>
+                <button type="submit" class="btn-primary" [disabled]="isSubmitting">
+                    <i *ngIf="!isSubmitting" class="ti ti-send" style="margin-right:5px"></i>
+                    <i *ngIf="isSubmitting" class="fa fa-spinner fa-spin" style="margin-right:5px"></i>
+                    {{ isSubmitting ? 'Submitting...' : 'Submit PRQ' }}
+                </button>
             </div>
         </form>
     </div>
