@@ -24,29 +24,31 @@
   <div class="dash-wrap">
     <div class="it-card">
       <div class="it-card-head">&#9636; Billing Summary Report Criteria</div>
-      <div class="lr-criteria">
+      <form class="lr-criteria" [formGroup]="billingForm" (ngSubmit)="getBillingSummary()">
         <div class="field-group lr-fg">
           <label>From Date <span class="req-mark">*</span></label>
           <div class="date-input-wrap">
-            <input type="text" id="bsrFromDate" bsDatepicker [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+            <input type="text" id="bsrFromDate" formControlName="fromDate" bsDatepicker
+             [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY'}">
             <span class="cal-icon">📅</span>
           </div>
         </div>
         <div class="field-group lr-fg">
           <label>To Date <span class="req-mark">*</span></label>
           <div class="date-input-wrap">
-            <input type="text" id="bsrToDate" bsDatepicker [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
+            <input type="text" id="bsrToDate" formControlName="toDate" bsDatepicker 
+            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
             <span class="cal-icon">📅</span>
           </div>
         </div>
         <div class="field-group lr-fg lr-fg-wide">
           <label>Document No <span class="label-sub">&mdash; optional, search bill no wise / debit note
               wise</span></label>
-          <input type="text" id="bsrDocNo" placeholder="Enter Bill No / Vendor Bill No / Debit Note No&hellip;"
+          <input type="text" id="bsrDocNo" formControlName="docNo" placeholder="Enter Bill No / Vendor Bill No / Debit Note No&hellip;"
             autocomplete="off">
         </div>
-        <button class="lr-download-btn" onclick="bsrDownloadZip()">&#11015; Download Zip</button>
-      </div>
+        <button type="submit" class="lr-download-btn">&#11015; Download Zip</button>
+      </form>
       <div class="lr-note">The zip file contains the <b>Vendor Bill Summary</b> CSV for the chosen date range &mdash;
         bill-wise with vendor details, TDS / GST breakup, paid &amp; pending amounts, vouchers and linked debit notes.
         Enter a Document No to limit the report to matching bills or debit notes.</div>

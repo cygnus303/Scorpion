@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import JSZip from 'jszip';
 
 @Injectable({
   providedIn: 'root',
@@ -45,6 +46,20 @@ export class ExportService {
     const csvData = this.convertToCSV(data);
     const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
     saveAs(blob, `${fileName}.csv`);
+  }
+
+  /**
+   * Export data to a Zip file containing the CSV
+   * @param data Array of objects to be exported
+   * @param fileName Name of the exported Zip file
+   */
+  exportToZip(data: any[], fileName: string = 'exported-data') {
+    const csvData = this.convertToCSV(data);
+    const zip = new JSZip();
+    zip.file(`${fileName}.csv`, csvData);
+    zip.generateAsync({ type: 'blob' }).then((content) => {
+      saveAs(content, `${fileName}.zip`);
+    });
   }
 
   /**
