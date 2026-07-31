@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule ,DatePipe} from '@angular/common';
 import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -57,6 +57,7 @@ export class AddPrqComponent {
   public fleetTypeData: any[] = [];
   public serviceData: any[] = [];
   public PRQNo: any;
+  public minDate = new Date();
   public vehicleCountList = Array.from({ length: 10 }, (_, i) => ({ id: i + 1, text: (i + 1).toString() }));
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
 
@@ -66,7 +67,8 @@ export class AddPrqComponent {
     private docketService: DocketService,
     private prqService: PrqService,
     private basicDetailService: BasicDetailService,
-    private dynamicDataService: DynamicDataService
+    private dynamicDataService: DynamicDataService,
+    private datePipe:DatePipe
   ) { }
 
   ngOnInit(): void {
@@ -236,11 +238,15 @@ export class AddPrqComponent {
   }
 
   initForm() {
+    const now = new Date();
+    const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
     this.prqForm = new FormGroup({
       indentNo: new FormControl(null),
       groupCode: new FormControl(null),
       customerCode: new FormControl(null, Validators.required),
       prqDate: new FormControl(new Date(), Validators.required),
+      prqTime: new FormControl(currentTime, Validators.required),
       pkgs: new FormControl(null, Validators.required),
       fleetType: new FormControl(null),
       weight: new FormControl('', Validators.required),
@@ -252,7 +258,7 @@ export class AddPrqComponent {
       branchCode: new FormControl(''), // Pickup Branch
       customer_Name: new FormControl(''),
       desBranchCode: new FormControl(''), // Destination Branch
-      ewayBill: new FormControl(''),
+      ewayBill: new FormControl('without'),
       fromCity: new FormControl('', Validators.required),
       fromCityCode: new FormControl(''),
       transportMode: new FormControl(null, Validators.required),
@@ -382,6 +388,15 @@ export class AddPrqComponent {
         if (response && response.data && response.data.length > 0) {
           const serviceTypesStr = response.data[0].serviceTypes || '';
           const transportTypesStr = response.data[0].transportTypes || '';
+
+          if (serviceTypesStr.trim() === '' && transportTypesStr.trim() === '') {
+            this.sweetAlertService.info('Contract details are not available for this customer. Cannot proceed with PRQ generation.');
+              this.prqForm.patchValue({
+              customerCode: null,
+              })
+            return;
+          }
+
           this.getTransportModes('', transportTypesStr)
 
           this.serviceData = serviceTypesStr.split(',').map((s: string) => ({ name: s.trim(), value: s.trim() })).filter((s: any) => s.value !== '');
@@ -449,11 +464,19 @@ export class AddPrqComponent {
               const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
               return `${d.getDate().toString().padStart(2, '0')} ${months[d.getMonth()]} ${d.getFullYear()}`;
             };
+            let parsedDate = new Date();
+          let parsedTime = `${parsedDate.getHours().toString().padStart(2, '0')}:${parsedDate.getMinutes().toString().padStart(2, '0')}`;
+          if (data.PRQDate) {
+            parsedDate = new Date(data.PRQDate);
+            parsedTime = `${parsedDate.getHours().toString().padStart(2, '0')}:${parsedDate.getMinutes().toString().padStart(2, '0')}`;
+          }
+          
             // Map the available fields from ReportId 222
             this.prqForm.patchValue({
               groupCode: data.PRQNo,
               ewayBill: data.EwayBillType,
-              prqDate: data.PRQDate ? new Date(data.PRQDate) : new Date(),
+              prqDate: parsedDate,
+               prqTime: parsedTime,
               service_Type: data.ServiceType,
               customerCode: data.CustomerCode,
               fromCity: data.FromCity,
@@ -474,8 +497,8 @@ export class AddPrqComponent {
               consignorPin: data.ConsignorPincode,
               consigneePin: data.ConsigneePincode,
               ewayBillNo:data.EWayBillNo,
-              ewayBillDate: formatToDDMMMYYYY(data.EWayBillDate),
-              ewayExpDate: formatToDDMMMYYYY(data.EWayBillExpiryDate),
+              ewayBillDate: data.EWayBillDate,
+              ewayExpDate: data.EWayBillExpiryDate,
               invoiceNo:data.InvoiceNo,
               invoiceDate: formatToDDMMMYYYY(data.InvoiceDate),
               invoiceValue:data.InvoiceValue
@@ -489,119 +512,119 @@ export class AddPrqComponent {
       },
     });
   }
-  getEwayBillData(event: any) {
-    const search = event.target.value;
-    if (search.length.toString() === "12") {
-      this.basicDetailService.checkEWayBill(search).subscribe({
-        next: (checkRes: any) => {
-          if (checkRes.status === "N" && search.length.toString() === "12") {
-            // If not exist in ERP, call eWayBillData API
-            this.basicDetailService.eWayBillData(search).subscribe({
-              next: (response: any) => {
-                if (response.status === 1) {
-                  const invoiceDate = response.eWayBillInvoiceDate ? new Date(response.eWayBillInvoiceDate) : null;
-                  const expiryDate =
-                    response.eWayBillExpiredDate && response.eWayBillExpiredDate !== '1900-01-01T00:00:00'
-                      ? new Date(response.eWayBillExpiredDate)
-                      : null;
+  // getEwayBillData(event: any) {
+  //   const search = event.target.value;
+  //   if (search.length.toString() === "12") {
+  //     this.basicDetailService.checkEWayBill(search).subscribe({
+  //       next: (checkRes: any) => {
+  //         if (checkRes.status === "N" && search.length.toString() === "12") {
+  //           // If not exist in ERP, call eWayBillData API
+  //           this.basicDetailService.eWayBillData(search).subscribe({
+  //             next: (response: any) => {
+  //               if (response.status === 1) {
+  //                 const invoiceDate = response.eWayBillInvoiceDate ? new Date(response.eWayBillInvoiceDate) : null;
+  //                 const expiryDate =
+  //                   response.eWayBillExpiredDate && response.eWayBillExpiredDate !== '1900-01-01T00:00:00'
+  //                     ? new Date(response.eWayBillExpiredDate)
+  //                     : null;
 
-                  if (invoiceDate) {
-                    const today = new Date();
-                    const diffTime = Math.abs(today.getTime() - invoiceDate.getTime());
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    if (diffDays > 15) {
-                      this.sweetAlertService.warning("Error! E-Way Bill is older than 15 days.");
-                      this.prqForm.patchValue({
-                        ewayinvoiceDate: null,
-                        ewayBillExpiry: null,
-                        ewayBillDate: null,
-                        invoicedate: null,
-                        ewayBillNo: null,
-                        invoiceNo: null,
-                        declaredvalue: null,
-                        transportation_distance: null
-                      });
-                      return;
-                    }
-                  }
+  //                 if (invoiceDate) {
+  //                   const today = new Date();
+  //                   const diffTime = Math.abs(today.getTime() - invoiceDate.getTime());
+  //                   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  //                   if (diffDays > 15) {
+  //                     this.sweetAlertService.warning("Error! E-Way Bill is older than 15 days.");
+  //                     this.prqForm.patchValue({
+  //                       ewayinvoiceDate: null,
+  //                       ewayBillExpiry: null,
+  //                       ewayBillDate: null,
+  //                       invoicedate: null,
+  //                       ewayBillNo: null,
+  //                       invoiceNo: null,
+  //                       declaredvalue: null,
+  //                       transportation_distance: null
+  //                     });
+  //                     return;
+  //                   }
+  //                 }
 
-                  if (expiryDate && expiryDate < new Date()) {
-                    this.sweetAlertService.warning("Please Check EWayBill Expired Date !!!!");
-                    this.prqForm.patchValue({
-                      ewayinvoiceDate: null,
-                      ewayBillExpiry: null,
-                      ewayBillDate: null,
-                      invoicedate: null,
-                      ewayBillNo: null,
-                      invoiceNo: null,
-                      declaredvalue: null,
-                      transportation_distance: null
-                    });
-                    return;
-                  }
-                  const fmtDate = (dStr: any) => {
-                    if (!dStr || dStr === '1900-01-01T00:00:00') return null;
-                    const d = new Date(dStr);
-                    if (isNaN(d.getTime())) return dStr;
-                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                    return `${d.getDate().toString().padStart(2, '0')} ${months[d.getMonth()]} ${d.getFullYear()}`;
-                  };
+  //                 if (expiryDate && expiryDate < new Date()) {
+  //                   this.sweetAlertService.warning("Please Check EWayBill Expired Date !!!!");
+  //                   this.prqForm.patchValue({
+  //                     ewayinvoiceDate: null,
+  //                     ewayBillExpiry: null,
+  //                     ewayBillDate: null,
+  //                     invoicedate: null,
+  //                     ewayBillNo: null,
+  //                     invoiceNo: null,
+  //                     declaredvalue: null,
+  //                     transportation_distance: null
+  //                   });
+  //                   return;
+  //                 }
+  //                 const fmtDate = (dStr: any) => {
+  //                   if (!dStr || dStr === '1900-01-01T00:00:00') return null;
+  //                   const d = new Date(dStr);
+  //                   if (isNaN(d.getTime())) return dStr;
+  //                   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  //                   return `${d.getDate().toString().padStart(2, '0')} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  //                 };
 
-                  if (response.toPincode) {
-                    this.consigneePincodeData = [{ Value: response.toPincode.toString(), Text: response.toPincode.toString() }];
-                  }
-                  if (response.pincode) {
-                    this.consignorPincodeData = [{ Value: response.pincode.toString(), Text: response.pincode.toString() }];
-                  }
+  //                 if (response.toPincode) {
+  //                   this.consigneePincodeData = [{ Value: response.toPincode.toString(), Text: response.toPincode.toString() }];
+  //                 }
+  //                 if (response.pincode) {
+  //                   this.consignorPincodeData = [{ Value: response.pincode.toString(), Text: response.pincode.toString() }];
+  //                 }
 
-                  this.prqForm.patchValue({
-                    ewayinvoiceDate: fmtDate(response.eWayBillInvoiceDate),
-                    ewayBillDate: fmtDate(response.invdt),
-                    ewayExpDate: fmtDate(response.eWayBillExpiredDate),
-                    invoiceDate: fmtDate(response.invdt),
-                    ewayBillNo: search,
-                    invoiceNo: response.invno,
-                    invoiceValue: response.decval,
-                    consignorName: response.csgnm,
-                    consigneeName: response.csgenm,
-                    consignorAddress: response.csgnAdd,
-                    consigneeAddress: response.csgeAdd,
-                    consigneePin: response.toPincode ? response.toPincode.toString() : null,
-                    consignorPin: response.pincode ? response.pincode.toString() : null,
-                  })
-                }
-              },
-              error: () => {
-                this.sweetAlertService.error("Error !! Unable to fetch EWayBill data.");
-              }
-            });
-          } else {
-            this.sweetAlertService.warning("This EWay Bill Already Exist in ERP !!!");
-            this.prqForm.patchValue({
-              ewayinvoiceDate: null,
-              ewayExpDate: null,
-              invoicedate: null,
-              ewayBillNo: null,
-              ewayBillDate: null,
-              invoiceNo: null,
-              invoiceValue: null
-            });
-          }
-        },
-        error: () => {
-          this.sweetAlertService.error("Error !! Failed to check EWay Bill in ERP.");
-        }
-      });
+  //                 this.prqForm.patchValue({
+  //                   ewayinvoiceDate: fmtDate(response.eWayBillInvoiceDate),
+  //                   ewayBillDate: fmtDate(response.invdt),
+  //                   ewayExpDate: fmtDate(response.eWayBillExpiredDate),
+  //                   invoiceDate: fmtDate(response.invdt),
+  //                   ewayBillNo: search,
+  //                   invoiceNo: response.invno,
+  //                   invoiceValue: response.decval,
+  //                   consignorName: response.csgnm,
+  //                   consigneeName: response.csgenm,
+  //                   consignorAddress: response.csgnAdd,
+  //                   consigneeAddress: response.csgeAdd,
+  //                   consigneePin: response.toPincode ? response.toPincode.toString() : null,
+  //                   consignorPin: response.pincode ? response.pincode.toString() : null,
+  //                 })
+  //               }
+  //             },
+  //             error: () => {
+  //               this.sweetAlertService.error("Error !! Unable to fetch EWayBill data.");
+  //             }
+  //           });
+  //         } else {
+  //           this.sweetAlertService.warning("This EWay Bill Already Exist in ERP !!!");
+  //           this.prqForm.patchValue({
+  //             ewayinvoiceDate: null,
+  //             ewayExpDate: null,
+  //             invoicedate: null,
+  //             ewayBillNo: null,
+  //             ewayBillDate: null,
+  //             invoiceNo: null,
+  //             invoiceValue: null
+  //           });
+  //         }
+  //       },
+  //       error: () => {
+  //         this.sweetAlertService.error("Error !! Failed to check EWay Bill in ERP.");
+  //       }
+  //     });
 
-    }else{
-      if (search.length > 0 && search.length < 12) {
-        this.prqForm.get('ewayBillNo')?.setErrors({ maxlength: true });
-        this.prqForm.get('ewayBillNo')?.markAsDirty();
-      } else if (search.length === 12 || search.length === 0) {
-        this.prqForm.get('ewayBillNo')?.setErrors(null);
-      }
-    }
-  }
+  //   }else{
+  //     if (search.length > 0 && search.length < 12) {
+  //       this.prqForm.get('ewayBillNo')?.setErrors({ maxlength: true });
+  //       this.prqForm.get('ewayBillNo')?.markAsDirty();
+  //     } else if (search.length === 12 || search.length === 0) {
+  //       this.prqForm.get('ewayBillNo')?.setErrors(null);
+  //     }
+  //   }
+  // }
 
   formatDateToString(dStr: any) {
     if (!dStr || dStr === '1900-01-01T00:00:00') return '';
@@ -622,6 +645,17 @@ export class AddPrqComponent {
       const formData = this.prqForm.getRawValue();
       let branchCode = this.docketService.loginUserList.LocationCode;
       let finyear = this.docketService.loginUserList.FinYear;
+
+        let prqDateStr = '';
+      if (formData.prqDate) {
+        const d = new Date(formData.prqDate);
+        if (formData.prqTime) {
+          const [hours, minutes] = formData.prqTime.split(':');
+          d.setHours(Number(hours), Number(minutes), 0, 0);
+        }
+        prqDateStr = this.datePipe.transform(d, "yyyy-MM-dd'T'HH:mm:ss.000'Z'") || '';
+      }
+
       const payload = {
         customerCode: formData.customerCode || '',
         customerName: formData.customer_Name || '',
@@ -638,8 +672,8 @@ export class AddPrqComponent {
         ewayBillType: formData.ewayBill || '',
         serviceType: formData.service_Type || '',
         eWayBillNo: formData.ewayBillNo || '',
-        eWayBillDateStr: this.formatDateToString(formData.ewayBillDate) || '',
-        eWayBillExpiryDateStr: this.formatDateToString(formData.ewayExpDate) || '',
+        eWayBillDateStr: formData.ewayBillDate || '',
+        eWayBillExpiryDateStr: formData.ewayExpDate || '',
         invoiceNo: formData.invoiceNo || '',
         invoiceDateStr: this.formatDateToString(formData.invoiceDate) || '',
         invoiceValue: Number(formData.invoiceValue) || 0,
@@ -649,7 +683,7 @@ export class AddPrqComponent {
         consigneeAddress: formData.consigneeAddress || '',
         consignorPincode: formData.consignorPin?.toString() || '',
         consigneePincode: formData.consigneePin?.toString() || '',
-        prqDate: this.formatDateToString(formData.prqDate) || '',
+        RequiredPlacementDateTime: prqDateStr || '',
         baseLocationCode: branchCode || '',
         baseUserName: this.docketService.loginUserList.BaseUserName || '',
         baseFinYear: finyear,
