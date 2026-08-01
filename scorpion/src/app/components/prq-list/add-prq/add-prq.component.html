@@ -100,15 +100,15 @@
                         <div class="form-row">
                             <div>
                                 <label
-                                    style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">PRQ
+                                    style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Loading
                                     Date</label>
                                 <div class="input-group">
-                                    <input type="text" formControlName="prqDate" [class.disabled-input]="true" placeholder="Auto-filled from Eway Bill"
-                                        #dp="bsDatepicker" class="form-control uppercase-none" bsDatepicker
-                                        [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }"
+                                    <input type="text" formControlName="prqDate"  placeholder="Auto-filled from Eway Bill"
+                                        #dp="bsDatepicker" class="form-control uppercase-none" bsDatepicker [minDate]="PRQNo? undefined : minDate"
+                                        [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }" [class.disabled-input]="true"
                                         [ngClass]="{'border-danger': prqForm.get('prqDate')?.invalid && prqForm.get('prqDate')?.touched}">
                                     <span class="input-group-text cursor-pointer" (click)="dp.toggle()"
-                                        [class.disabled-input]="PRQNo == null ? true : false">
+                                        >
                                         <i class="fa fa-calendar"></i>
                                     </span>
                                 </div>
@@ -117,9 +117,9 @@
                             </div>
                              <div>
                             <label style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">
-                                PRQ TIME <span style="color:#D0021B">*</span>
+                                Loading TIME <span style="color:#D0021B">*</span>
                             </label>
-                            <input type="time" formControlName="prqTime" [class.disabled-input]="PRQNo == null ? true : false"
+                            <input type="time" formControlName="prqTime" 
                                 style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;background:#fff;font-size:13px;"
                                 [ngClass]="{'is-invalid-field': prqForm.get('prqTime')?.invalid && prqForm.get('prqTime')?.touched}">
                             <div *ngIf="prqForm.get('prqTime')?.invalid && prqForm.get('prqTime')?.touched" class="error-msg">This field is required</div>
