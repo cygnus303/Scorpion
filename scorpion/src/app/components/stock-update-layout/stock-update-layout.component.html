@@ -29,8 +29,28 @@
             </div>
         </div>
 
-        <!-- LTL Manifest-->
         <div class="summary-card px-3 py-3 c-orange cursor-pointer"
+            [class.active-card]="config.statusFilter === ''" (click)="filterByStatus('')">
+            <div class="card-content">
+                <div class="s-label">Pending for Stock Update </div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ 0 }}</div>
+                <div class="small text-body-tertiary">Stock Update Pending</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📋</div>
+        </div>
+
+        <div class="summary-card px-3 py-3 c-teal cursor-pointer"
+            [class.active-card]="config.statusFilter === ''" (click)="filterByStatus('')">
+            <div class="card-content">
+                <div class="s-label">Stock Updated</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ 0}}</div>
+                <div class="small text-body-tertiary">All done</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📋</div>
+        </div>
+
+        <!-- LTL Manifest-->
+        <div class="summary-card px-3 py-3 c-yellow cursor-pointer"
             [class.active-card]="config.statusFilter === 'LTLManifest'" (click)="filterByStatus('LTLManifest')">
             <div class="card-content">
                 <div class="s-label">LTL Manifest</div>
@@ -41,7 +61,7 @@
         </div>
 
         <!-- FTL Manifest -->
-        <div class="summary-card px-3 py-3 c-teal cursor-pointer"
+        <div class="summary-card px-3 py-3 c-green cursor-pointer"
             [class.active-card]="config.statusFilter === 'FTLManifest'" (click)="filterByStatus('FTLManifest')">
             <div class="card-content">
                 <div class="s-label">FTL Manifest</div>
@@ -99,6 +119,7 @@
                         <th class="text-center">Arrival Date</th>
                         <th class="text-center">THC Location</th>
                         <th class="text-center">Unloading Sheet No.</th>
+                        <th class="text-center">Deps Details</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
@@ -171,6 +192,13 @@
                                 (click)="openView(row.thcNo)"
                                 style="text-decoration: dashed underline;">
                                 {{ row.unLoadingSheetNo }}
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a href="javascript:void(0)" *ngIf="row.unLoadingSheetNo" class="text-primary fw-medium"
+                                (click)="openView(row.thcNo)"
+                                style="text-decoration: dashed underline;">
+                                {{'-' }}
                             </a>
                         </td>
                         <td>
