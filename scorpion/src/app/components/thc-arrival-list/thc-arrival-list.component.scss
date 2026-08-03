@@ -51,25 +51,75 @@
 }
 
 .modal-xl {
-  max-width: 95% !important;  /* tame 100% pan kari sako */
+    max-width: 95% !important;
+    /* tame 100% pan kari sako */
 }
 
 .bg-success-purple {
-    background: #f5f3ff !important;  // Bootstrap purple-700
+    background: #f5f3ff !important; // Bootstrap purple-700
     border-color: #c4b5fd !important;
     color: #5b21b6 !important;
 }
- 
+
 .bg-success-purple:hover {
-    background: #ede7f6 !important;  // Darker purple variant
+    background: #ede7f6 !important; // Darker purple variant
     border-color: #c4b5fd !important;
 }
 
-.cursor-pointer{
+.cursor-pointer {
     cursor: pointer;
 }
 
-  .empty-thc-yes    { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
-  .empty-thc-no     { background: #eceff1; color: #455a64; border: 1px solid #b0bec5; }
-  .hcc-link  { color: #1a237e; text-decoration: none; font-weight: 700; font-size: 12px; border-bottom: 1px dashed #1a237e; }
-.hcc-link:hover  { color: #283593; border-bottom-style: solid; }
+.status-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.empty-thc-yes {
+    background: #fff3e0;
+    color: #e65100;
+    border: 1px solid #ffcc80;
+}
+
+.empty-thc-no {
+    background: #eceff1;
+    color: #455a64;
+    border: 1px solid #b0bec5;
+}
+
+.hcc-link {
+    color: #1a237e;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 12px;
+    border-bottom: 1px dashed #1a237e;
+}
+
+.hcc-link:hover {
+    color: #283593;
+    border-bottom-style: solid;
+}
+
+.mf-mode-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.mf-mode-road {
+    background: #e3f2fd;
+    color: #1565c0;
+    border: 1px solid #90caf9;
+}
+
+.mf-mode-air {
+    background: #f3e5f5;
+    color: #6a1b9a;
+    border: 1px solid #ce93d8;
+}

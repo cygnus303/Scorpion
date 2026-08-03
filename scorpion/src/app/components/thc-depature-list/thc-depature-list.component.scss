@@ -55,3 +55,29 @@ table.data-table tbody td{padding:10px 12px;color:#1a1a18;vertical-align:middle}
   font-size: 11px;
   cursor: default;
 }
+
+.mf-mode-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.mf-mode-road {
+    background: #e3f2fd;
+    color: #1565c0;
+    border: 1px solid #90caf9;
+}
+
+.mf-mode-air {
+    background: #f3e5f5;
+    color: #6a1b9a;
+    border: 1px solid #ce93d8;
+}
+
+.mf-mode-train{
+    background: #e9fde3;
+    color: #9ec015;
+    border: 1px solid #9bf990;
+}

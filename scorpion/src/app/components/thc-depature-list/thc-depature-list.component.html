@@ -110,13 +110,13 @@
                 <thead>
                     <tr>
                         <th style="width:36px;text-align:center"><input type="checkbox" class="checkbox" id="chk-all" [(ngModel)]="selectAllChecked" (change)="toggleSelectAll($event)"></th>
-                        <th style="text-align:left">THC No</th>
-                        <th style="text-align:left">THC Date</th>
-                        <th style="text-align:left">THC Branch</th>
-                        <th style="text-align:left">Transport Mode</th>
-                        <th style="text-align:left">Service Type</th>
-                        <th style="text-align:left">THC Route</th>
-                        <th style="text-align:left">Arrival Date</th>
+                        <th style="text-align:center">THC No</th>
+                        <th style="text-align:center">THC Date</th>
+                        <th style="text-align:center">THC Branch</th>
+                        <th style="text-align:center">Transport Mode</th>
+                        <th style="text-align:center">Service Type</th>
+                        <th style="text-align:center">THC Route</th>
+                        <th style="text-align:center">Arrival Date</th>
                         <th style="text-align:center">Status</th>
                         <th style="text-align:center">Action</th>
                     </tr>
@@ -143,17 +143,21 @@
                         <td class="text-center">
                             <input type="checkbox" class="checkbox row-chk" [disabled]="data.departureStatus === 'Departed'" [style.opacity]="data.departureStatus === 'Departed' ? '0.3' : '1'" [(ngModel)]="data.isSelected" (change)="onRowSelect(data)">
                         </td>
-                        <td><a class="thc-link" (click)="openThcView(data.thcno)">{{ data.thcno }}</a></td>
-                        <td>{{ data.thcdt }}</td>
-                        <td>{{ data.thcbr }}</td>
-                        <td>
-                            <span style="display:inline-flex;align-items:center;gap:4px">
-                                <i class="ti" [ngClass]="{'ti-plane': data.rut_cat === 'Air', 'ti-train': data.rut_cat === 'Train' || data.rut_cat === 'Rail', 'ti-truck': data.rut_cat === 'Road', 'ti-car': data.rut_cat === 'Car'}" style="font-size:13px;color:#7a7a76"></i>{{ data.rut_cat }}
+                        <td class="text-center"><a class="thc-link" (click)="openThcView(data.thcno)">{{ data.thcno }}</a></td>
+                        <td class="text-center">{{ data.thcdt }}</td>
+                        <td class="text-center">{{ data.thcbr }}</td>
+                        <td class="text-center">
+                            <span class="mf-mode-badge" [ngClass]="{'mf-mode-road':data.rut_cat === 'Road','mf-mode-air':data.rut_cat === 'Air' ,'mf-mode-train': data.rut_cat === 'Train'}">
+                            {{ data.rut_cat }}
                             </span>
                         </td>
-                        <td><span style="font-weight:600;color:#1a2b45">{{ data.serviceType ? data.serviceType :'--'  }}</span></td>
-                        <td style="max-width:200px;white-space:normal;line-height:1.4">{{ data.routeName }}</td>
-                        <td>{{ data.ata || '--' }}</td>
+                        <td class="text-center">
+                             <span class="d-block rounded p-1 fw-bold mb-1" *ngIf="data.serviceType"
+                                [ngClass]="data.serviceType === 'FTL' ? 'bg-danger-subtle text-danger' : 'bg-info-subtle text-info'">
+                                    {{ data.serviceType}}</span>
+                        </td>
+                        <td class="text-center" style="max-width:200px;white-space:normal;line-height:1.4">{{ data.routeName }}</td>
+                        <td class="text-center">{{ data.ata || '--' }}</td>
                         <td class="text-center">
                             <span class="badge" [ngClass]="data.departureStatus === 'Departed' ? 'badge-departed' : 'badge-pending'">{{ data.departureStatus || 'Pending' }}</span>
                         </td>
@@ -173,4 +177,4 @@
         </app-pagination>
     </div>
 </div>
-
+
