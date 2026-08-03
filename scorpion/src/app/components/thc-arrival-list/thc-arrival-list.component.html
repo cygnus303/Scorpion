@@ -123,6 +123,7 @@
                         <th class="text-center">Vendor Type / Name</th>
                         <th class="text-center">ATD</th>
                         <th class="text-center">ETA</th>
+                        <th class="text-center">Transport Mode</th>
                         <th class="text-center">Previous Location</th>
                         <th class="text-center">THC Route</th>
                         <th class="text-center">Is Empty THC</th>
@@ -187,6 +188,10 @@
                             </span>
                         </td>
                         <td class="text-center cursor-pointer">
+                             <span class="mf-mode-badge" [ngClass]="data.routeMode === 'ROAD'?'mf-mode-road':'mf-mode-air'" *ngIf="data.routeMode"
+                                    style="max-width: 180px;" [title]="data.routeMode">{{ data.routeMode }}</span>
+                        </td>
+                        <td class="text-center cursor-pointer">
                             <span class="px-4 py-2">
                                 {{data.previousLocation}}
                             </span>
@@ -197,12 +202,12 @@
                             </span>
                         </td>
                          <td class="text-center">
-                            <span class="fw-bold p-2 cursor-pointer status-badge"
+                            <span class="fw-bold cursor-pointer status-badge"
                                 [ngClass]="(data.isEmpty > 0) ? 'empty-thc-yes' : 'empty-thc-no'"
                                 >{{data.isEmpty > 0 ? 'Yes' :'No'}}</span>
                         </td>
-                        <td class="text-center">
-                            <span class="cursor-pointer hcc-link"
+                        <td class="text-center cursor-pointer">
+                            <span class="px-3 py-2 rounded fw-bold border"
                                 [ngClass]="isHccValid(data.loadingHCCNo) ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
                                 (click)="isHccValid(data.loadingHCCNo)? openHCCModal(data.loadingHCCNo, data.mfNo) : null">
                               {{isHccValid(data.loadingHCCNo) ? data.loadingHCCNo : 'NO HCC'}}</span>
