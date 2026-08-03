@@ -12,16 +12,10 @@
     <div class="track-body">
       <!-- Map side -->
       <div class="track-map-wrapper">
-        <div id="da-track-map" class="track-map-container">
+        <div id="da-leaflet-map" class="track-map-container" style="width: 100%; height: 100%;">
           <div *ngIf="!mapLoaded" class="track-loader-overlay">
             <div class="spinner-border text-danger track-spinner" role="status"></div>
             Loading Route...
-          </div>
-          <iframe *ngIf="mapUrl" [src]="mapUrl" (load)="onMapLoad()" width="100%" height="100%" class="track-map-iframe" allowfullscreen></iframe>
-          
-          <!-- Mock Truck Marker Overlay -->
-          <div *ngIf="mapLoaded" class="track-truck-marker">
-            <i class="fa fa-truck track-truck-icon"></i>
           </div>
         </div>
         <!-- LIVE badge -->
