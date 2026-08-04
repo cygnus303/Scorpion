@@ -25,7 +25,7 @@
 
     <!-- Panel: Bill Details -->
     <div class="it-card it-panel" [class.active]="activeTab === '1'">
-      <div class="it-card-head">✎  Bill Details</div>
+      <div class="it-card-head">✎ Bill Details</div>
       
       <div class="it-empty" *ngIf="isLoading">
         <div class="it-spinner"></div> Fetching data...
@@ -53,7 +53,7 @@
 
         <div class="it-field"><span class="it-label">Balance Pending :</span><span class="it-value" >{{billDetail?.pendamt}}</span></div>
         <div class="it-field"><span class="it-label">TDS Amount :</span><span class="it-value" >{{billDetail?.TDS}}</span></div>
-        <div class="it-field"><span class="it-label">New Vendor Bill View Print :</span><button class="it-print-btn" (click)="openViewPrint(billDetail?.BillUrl)">🖨 View || Print</button></div>
+        <div class="it-field"><span class="it-label">New Vendor Bill View Print :</span><button class="it-print-btn" (click)="openViewPrint(billDetail?.BillUrl)">🖨 View / Print</button></div>
 
         <div class="it-field"><span class="it-label">Bill Edited BY :</span><span class="it-value" >{{billDetail?.Editby}}</span></div>
         <div class="it-field"><span class="it-label">Bill Edited Date :</span><span class="it-value" >{{billDetail?.EditDate}}</span></div>
@@ -66,7 +66,7 @@
 
     <!-- Panel: Voucher Details -->
     <div class="it-card it-panel" [class.active]="activeTab === '2'">
-      <div class="it-card-head">✎  Voucher Details</div>
+      <div class="it-card-head">✎ Voucher Details</div>
       <div>
         <div class="it-empty" *ngIf="isLoading">
           <div class="it-spinner"></div> Fetching data...
@@ -95,7 +95,7 @@
                 <td>{{voucher.Vouchertype}}</td>
                 <td>{{voucher.entryby}}</td>
                 <td>{{voucher.entrydt}}</td>
-                <td><button class="it-print-btn" (click)="openViewPrint(voucher.VoucherUrl)">🖨 View || Print</button></td>
+                <td><button class="it-print-btn" (click)="openViewPrint(voucher.VoucherUrl)">🖨 View / Print</button></td>
               </tr>
             </tbody>
           </table>
@@ -105,7 +105,7 @@
 
     <!-- Panel: Debit Note Details -->
     <div class="it-card it-panel" [class.active]="activeTab === '3'">
-      <div class="it-card-head">✎  Debit Note Details</div>
+      <div class="it-card-head">✎ Debit Note Details</div>
       <div>
         <div class="it-empty" *ngIf="isLoading">
           <div class="it-spinner"></div> Fetching data...
@@ -138,7 +138,7 @@
                 <td>{{debitnote.Status}}</td>
                 <td>{{debitnote.EntryBy}}</td>
                 <td>{{debitnote.EntryDate}}</td>
-                <td><button class="it-print-btn" (click)="openDebitView(debitnote.DocumentNo)">🖨 View || Print</button></td>
+                <td><button class="it-print-btn" (click)="openDebitView(debitnote.DocumentNo)">🖨 View / Print</button></td>
               </tr>
             </tbody>
           </table>
@@ -148,7 +148,7 @@
 
     <!-- Panel: Supporting Document -->
     <div class="it-card it-panel" [class.active]="activeTab === '4'">
-      <div class="it-card-head">✎  Supporting Document</div>
+      <div class="it-card-head">✎ Supporting Document</div>
       <div class="it-empty" *ngIf="isLoading">
         <div class="it-spinner"></div> Fetching data...
       </div>
