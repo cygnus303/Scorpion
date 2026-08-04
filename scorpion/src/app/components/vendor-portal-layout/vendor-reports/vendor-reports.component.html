@@ -28,15 +28,20 @@
         <div class="field-group lr-fg">
           <label>From Date <span class="req-mark">*</span></label>
           <div class="date-input-wrap">
-            <input type="text" id="bsrFromDate" formControlName="fromDate" bsDatepicker
-             [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY'}">
-            <span class="cal-icon">📅</span>
+            <div class="input-group">
+                                    <input type="text" formControlName="fromDate" placeholder="Auto-filled from Eway Bill" #dp="bsDatepicker"
+                                      class="form-control uppercase-none" bsDatepicker
+                                      [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }" [class.disabled-input]="true">
+                                    <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                                      <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
           </div>
         </div>
         <div class="field-group lr-fg">
           <label>To Date <span class="req-mark">*</span></label>
           <div class="date-input-wrap">
-            <input type="text" id="bsrToDate" formControlName="toDate" bsDatepicker 
+            <input type="text" id="bsrToDate" formControlName="toDate" bsDatepicker [class.disabled-input]="true"
             [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
             <span class="cal-icon">📅</span>
           </div>
