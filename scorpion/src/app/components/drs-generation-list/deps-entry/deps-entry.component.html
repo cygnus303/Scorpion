@@ -148,18 +148,20 @@
 
             <!-- Damage Type -->
             <td style="width: 230px; max-width: 230px;min-width: 230px;">
-              <ng-select [items]="damageTypes" bindLabel="codeDesc" bindValue="codeId" formControlName="damageType"
-                [readonly]="row.get('depstype')?.value !== 'D'" (change)="onDamageTypeChange(i)"
+              <ng-select [items]="damageTypes" bindLabel="codeDesc" bindValue="codeId" class="clear-icon" formControlName="damageType"
+                [readonly]="row.get('depstype')?.value !== 'D'" (change)="onDamageTypeChange(i, $event)"
                 placeholder="Select Damage" [clearable]="true" appendTo="body" [dropdownPosition]="'bottom'">
               </ng-select>
             </td>
 
             <!-- Severity -->
             <td style="width: 140px; max-width: 140px;min-width: 140px;">
-              <ng-select [items]="severityLists[i] || []" bindLabel="codeDesc" bindValue="codeId"
+               <input class="form-control form-control-sm" type="text" formControlName="severity"  readonly
+                style="width:110px; background-color: #f1f5f9; color: #1a237e; font-weight: 600;" />
+              <!-- <ng-select [items]="severityLists[i] || []" bindLabel="codeDesc" bindValue="codeId"
                 formControlName="severity" [readonly]="!row.get('damageType')?.value" placeholder="Select Severity"
                 [clearable]="true" appendTo="body" [dropdownPosition]="'bottom'">
-              </ng-select>
+              </ng-select> -->
             </td>
 
             <!-- Affected Pkgs -->

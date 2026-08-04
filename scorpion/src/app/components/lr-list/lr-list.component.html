@@ -214,6 +214,7 @@
                         </td>
                         <td>
                             <div class="action-btns text-center">
+                                <button class="ab ab-view">🧾 E-Way No.</button>
                                 <button *ngIf="menuAccessService.hasPermission('View')" class="ab ab-view" (click)="onView(lr.dockno)">👁 View</button>
                                 <button *ngIf="!isHQTR && menuAccessService.hasPermission('Edit')" class="ab ab-edit" (click)="openQuick(lr.dockno)"
                                     [disabled]="lr.isQuickMode!=='Q'">✏️ Quick LR

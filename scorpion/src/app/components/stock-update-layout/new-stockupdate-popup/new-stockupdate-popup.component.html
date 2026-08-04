@@ -88,6 +88,13 @@
                     </div>
                     <div class="col-md-3">
                         <!-- Spacing alignment to match grid -->
+                        <label class="form-label-custom">Un Loading Charge</label>
+                        <input class="form-control hcc-readonly-input highlight-red-text" placeholder="UnLoading Charge" type="text"
+                            [formControl]="loadingChargeCtrl" readonly min="0.01" appFocusNext
+                            [ngClass]="{ 'border-danger': loadingChargeCtrl.hasError('min') && loadingChargeCtrl.touched}">
+                        <div *ngIf="loadingChargeCtrl.hasError('min') && loadingChargeCtrl.touched"class="text-danger text-start" style="font-size: 11px; margin-top: 4px;">
+                           Please enter a value >= 0.01.
+                        </div>
                     </div>
                 </div>
             </div>
