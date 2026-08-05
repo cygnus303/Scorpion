@@ -31,7 +31,7 @@ export class DepsDetailsComponent {
   constructor(private modalService: BsModalService,private docketService: DocketService,private thcMasterService: THCMasterService) {}
 
   showPopup(data: any) {
-    this.drsNo = data.drsNo;
+    this.drsNo = data.drsNo || data.thcNo;
     this.depsNo = data.depsNo ;
     this.vendorName = data.vendorName ;
     this.totalDeliveredDockets = data.deliveredCount || data.totalDockets || 0;

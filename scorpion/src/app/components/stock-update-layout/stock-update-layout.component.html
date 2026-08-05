@@ -29,22 +29,22 @@
             </div>
         </div>
 
-        <div class="summary-card px-3 py-3 c-orange cursor-pointer"
-            [class.active-card]="config.statusFilter === ''" (click)="filterByStatus('')">
+       <div class="summary-card px-3 py-3 c-teal cursor-pointer"
+            [class.active-card]="config.statusFilter === 'stockUpdated'" (click)="filterByStatus('stockUpdated')">
             <div class="card-content">
-                <div class="s-label">Pending for Stock Update </div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ 0 }}</div>
-                <div class="small text-body-tertiary">Stock Update Pending</div>
+                <div class="s-label">Stock Updated</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{summaryData.stockUpdated | number }}</div>
+                <div class="small text-body-tertiary">All done</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📋</div>
         </div>
 
-        <div class="summary-card px-3 py-3 c-teal cursor-pointer"
-            [class.active-card]="config.statusFilter === ''" (click)="filterByStatus('')">
+        <div class="summary-card px-3 py-3 c-orange cursor-pointer"
+            [class.active-card]="config.statusFilter === 'pendingForStockUpdate'" (click)="filterByStatus('pendingForStockUpdate')">
             <div class="card-content">
-                <div class="s-label">Stock Updated</div>
-                <div class="s-val fs-2 fw-bold lh-1">{{ 0}}</div>
-                <div class="small text-body-tertiary">All done</div>
+                <div class="s-label">Pending for Stock Update </div>
+                <div class="s-val fs-2 fw-bold lh-1">{{summaryData.pendingForStockUpdate | number }}</div>
+                <div class="small text-body-tertiary">Stock Update Pending</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📋</div>
         </div>
@@ -118,6 +118,7 @@
                         <th class="text-center">Vendor Type / Name</th>
                         <th class="text-center">Arrival Date</th>
                         <th class="text-center">THC Location</th>
+                        <th class="text-center">Unloading HCC No.</th>
                         <th class="text-center">Unloading Sheet No.</th>
                         <th class="text-center">Deps Details</th>
                         <th class="text-center">Actions</th>
@@ -125,7 +126,7 @@
                 </thead>
                 <tbody *ngIf="isLoading">
                     <tr>
-                        <td colspan="10" class="text-center py-5">
+                        <td colspan="12" class="text-center py-5">
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">Loading...</span>
                             </div>
@@ -135,7 +136,7 @@
                 </tbody>
                 <tbody *ngIf="!isLoading && stockUpdateData.length === 0">
                     <tr>
-                        <td colspan="10" class="text-center py-4 text-muted fs-5">
+                        <td colspan="12" class="text-center py-4 text-muted fs-5">
                             No records found for the selected period.
                         </td>
                     </tr>
@@ -186,6 +187,13 @@
                         <td class="text-center fw-semibold text-secondary">
                             {{ row.thcLocation }}
                         </td>
+                         <td class="text-center">
+                            <a href="javascript:void(0)"  class="text-primary fw-medium"
+                               (click)="openHccPopup(row,'U')"
+                                style="text-decoration: dashed underline;">
+                               {{ row.unLoadingHCNo === 'YES' ?'View Hcc':'-' }}
+                            </a>
+                        </td>    
                         <td class="text-center">
                             <span class="text-muted" *ngIf="!row.unLoadingSheetNo">—</span>
                             <a href="javascript:void(0)" *ngIf="row.unLoadingSheetNo" class="text-primary fw-medium"
@@ -193,12 +201,12 @@
                                 style="text-decoration: dashed underline;">
                                 {{ row.unLoadingSheetNo }}
                             </a>
-                        </td>
-                        <td class="text-center">
-                            <a href="javascript:void(0)" *ngIf="row.unLoadingSheetNo" class="text-primary fw-medium"
-                                (click)="openView(row.thcNo)"
+                        </td>   
+                          <td class="text-center cursor-pointer">
+                            <a class="text-primary fw-medium"
+                               (click)="openDepsDetails(row)"
                                 style="text-decoration: dashed underline;">
-                                {{'-' }}
+                                DEPS IDs
                             </a>
                         </td>
                         <td>
@@ -227,6 +235,7 @@
     </div>
 </div>
 
-
+<app-hcc-view #HccViewComponent></app-hcc-view>
 <app-stockupdate-popup #StockupdatePopupComponent (dataEmitter)="onDataUpdate()"></app-stockupdate-popup>
 <app-new-stockupdate-popup #NewStockupdatePopupComponent (dataEmitter)="onDataUpdate()"></app-new-stockupdate-popup>
+<app-deps-details #DepsDetailsComponent ></app-deps-details>

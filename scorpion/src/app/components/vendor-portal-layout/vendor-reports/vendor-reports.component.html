@@ -23,22 +23,27 @@
 <div class="vendor-section" *ngIf="activeReport === 'billing'">
   <div class="dash-wrap">
     <div class="it-card">
-      <div class="it-card-head">&#9636; Billing Summary Report Criteria</div>
+      <div class="it-card-head"><i class="fa fa-filter me-2"></i> Billing Summary Report Criteria</div>
       <form class="lr-criteria" [formGroup]="billingForm" (ngSubmit)="getBillingSummary()">
         <div class="field-group lr-fg">
           <label>From Date <span class="req-mark">*</span></label>
           <div class="date-input-wrap">
-            <input type="text" id="bsrFromDate" formControlName="fromDate" bsDatepicker
-             [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY'}">
-            <span class="cal-icon">📅</span>
+            <div class="input-group">
+                                    <input type="text" formControlName="fromDate" placeholder="Auto-filled from Eway Bill" #dp="bsDatepicker"
+                                      class="form-control uppercase-none" bsDatepicker
+                                      [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }" [class.disabled-input]="true">
+                                    <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                                      <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
           </div>
         </div>
         <div class="field-group lr-fg">
           <label>To Date <span class="req-mark">*</span></label>
           <div class="date-input-wrap">
-            <input type="text" id="bsrToDate" formControlName="toDate" bsDatepicker 
+            <input type="text" id="bsrToDate" formControlName="toDate" bsDatepicker [class.disabled-input]="true"
             [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
-            <span class="cal-icon">📅</span>
+            <span class="cal-icon"><i class="fa fa-calendar text-muted"></i></span>
           </div>
         </div>
         <div class="field-group lr-fg lr-fg-wide">
@@ -47,7 +52,7 @@
           <input type="text" id="bsrDocNo" formControlName="docNo" placeholder="Enter Bill No / Vendor Bill No / Debit Note No&hellip;"
             autocomplete="off">
         </div>
-        <button type="submit" class="lr-download-btn">&#11015; Download Zip</button>
+        <button type="submit" class="lr-download-btn"><i class="fa fa-download me-1"></i> Download Zip</button>
       </form>
       <div class="lr-note">The zip file contains the <b>Vendor Bill Summary</b> CSV for the chosen date range &mdash;
         bill-wise with vendor details, TDS / GST breakup, paid &amp; pending amounts, vouchers and linked debit notes.
@@ -61,20 +66,20 @@
   <div class="dash-wrap">
 
     <div class="it-card">
-      <div class="it-card-head">&#9636; Ledger Report Criteria</div>
+      <div class="it-card-head"><i class="fa fa-filter me-2"></i> Ledger Report Criteria</div>
       <div class="lr-criteria">
         <div class="field-group lr-fg">
           <label>From Date <span class="req-mark">*</span></label>
           <div class="date-input-wrap">
             <input type="text" id="lrFromDate" bsDatepicker [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
-            <span class="cal-icon">📅</span>
+            <span class="cal-icon"><i class="fa fa-calendar text-muted"></i></span>
           </div>
         </div>
         <div class="field-group lr-fg">
           <label>To Date <span class="req-mark">*</span></label>
           <div class="date-input-wrap">
             <input type="text" id="lrToDate" bsDatepicker [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
-            <span class="cal-icon">📅</span>
+            <span class="cal-icon"><i class="fa fa-calendar text-muted"></i></span>
           </div>
         </div>
         <div class="field-group lr-fg lr-fg-wide">
@@ -85,7 +90,7 @@
             <div class="selected-tags" id="lrSelectedTags"></div>
           </div>
         </div>
-        <button class="lr-download-btn" onclick="lrDownloadZip()">&#11015; Download Zip</button>
+        <button class="lr-download-btn" onclick="lrDownloadZip()"><i class="fa fa-download me-1"></i> Download Zip</button>
       </div>
       <div class="lr-note">The zip file contains one <b>General Ledgers Report (Vendor Wise)</b> CSV per selected ledger, covering the chosen date range &mdash; with opening balance, voucher-wise debit / credit entries and running balance.</div>
     </div>
@@ -97,27 +102,27 @@
   <div class="dash-wrap">
 
     <div class="it-card">
-      <div class="it-card-head">&#9636; Debit Note Report Criteria</div>
+      <div class="it-card-head"><i class="fa fa-filter me-2"></i> Debit Note Report Criteria</div>
       <div class="lr-criteria">
         <div class="field-group lr-fg">
           <label>From Date <span class="req-mark">*</span></label>
           <div class="date-input-wrap">
             <input type="text" id="dnrFromDate" bsDatepicker [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
-            <span class="cal-icon">📅</span>
+            <span class="cal-icon"><i class="fa fa-calendar text-muted"></i></span>
           </div>
         </div>
         <div class="field-group lr-fg">
           <label>To Date <span class="req-mark">*</span></label>
           <div class="date-input-wrap">
             <input type="text" id="dnrToDate" bsDatepicker [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}">
-            <span class="cal-icon">📅</span>
+            <span class="cal-icon"><i class="fa fa-calendar text-muted"></i></span>
           </div>
         </div>
         <div class="field-group lr-fg lr-fg-wide">
           <label>Document No <span class="label-sub">&mdash; optional, search debit note wise</span></label>
           <input type="text" id="dnrDocNo" placeholder="Enter Debit Note No / Voucher No / Bill No&hellip;" autocomplete="off">
         </div>
-        <button class="lr-download-btn" onclick="dnrDownloadZip()">&#11015; Download Zip</button>
+        <button class="lr-download-btn" onclick="dnrDownloadZip()"><i class="fa fa-download me-1"></i> Download Zip</button>
       </div>
       <div class="lr-note">The zip file contains the <b>Debit Note Report</b> CSV for the chosen date range, with GST / TDS breakup, reason for issue and narration &mdash; debit note wise. Enter a Document No to limit the report to matching debit notes.</div>
     </div>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, ViewChild } from '@angular/core';
+import { Component, HostListener, ViewChild, TemplateRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -13,13 +13,18 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { ExportService } from 'app/shared/services/export.service';
 import { LrViewComponent } from './lr-view/lr-view.component';
 import { MenuAccessService } from 'app/shared/services/menu-access.service';
+import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { BasicDetailService } from 'app/shared/services/basic-detail.service';
+import { EwayBillPreviewComponent } from '../eway-bill-preview/eway-bill-preview.component';
 
 @Component({
   selector: 'app-lr-list',
   standalone: true,
   imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent,LrViewComponent],
   templateUrl: './lr-list.component.html',
-  styleUrl: './lr-list.component.scss'
+  styleUrl: './lr-list.component.scss',
+  providers: [BsModalService]
 })
 export class LrListComponent {
   public isLoading: boolean = false;
@@ -53,6 +58,9 @@ export class LrListComponent {
   ];
 
   openTrackIndex: number | null = null;
+  public modalRef!: BsModalRef;
+  @ViewChild('ewayBillModal') ewayBillModal!: TemplateRef<any>;
+  public ewaybillData: any[] = [];
   @ViewChild('LrViewComponent') LrViewComponent!: LrViewComponent;
 
 
@@ -61,9 +69,12 @@ export class LrListComponent {
     public docketService: DocketService,
     public lrService: LrService,
     private router: Router,
-    private exportService:ExportService,
+    private exportService: ExportService,
     private sweetAlertService: SweetAlertService,
-    public menuAccessService: MenuAccessService
+    public menuAccessService: MenuAccessService,
+    private dynamicDataService: DynamicDataService,
+    private modalService: BsModalService,
+    private basicDetailService: BasicDetailService
   ) { }
 
   ngOnInit() {
@@ -292,7 +303,7 @@ export class LrListComponent {
     const saved = localStorage.getItem("loginUserList");
     if (saved) {
       let user = JSON.parse(saved);
-      user.Type = '1';
+      user.Type = '3';
       user.DocketNo = dockno;
       user.IsFromBillGeneration = "true";
       this.docketService.loginUserList = user;
@@ -347,6 +358,54 @@ onView(row: any){
     if (popup) {
       popup.location.href = url;
     }
+  }
+
+  getEwaybillData(dockno: string) {
+    const payload = {
+      "FilterJson": {
+        "ReportId": "11",
+        "DockNo": dockno
+      }
+    }
+    this.listSubscription = this.dynamicDataService.getDynamicData(payload).subscribe((response: any) => {
+      this.isLoading = false;
+      if (response?.Table1 && response.Table1.length > 0) {
+        this.ewaybillData = response.Table1;
+        this.modalRef = this.modalService.show(this.ewayBillModal, { class: 'modal-lg modal-dialog-centered' });
+      } else {
+        this.sweetAlertService.info('No E-Way bill data found for this docket.');
+      }
+    }, error => {
+      this.isLoading = false;
+      this.sweetAlertService.error('Error fetching E-Way bill data');
+    });
+  }
+
+  downloadEWayBillPDF(ewaybillNo: string) {
+    if (!ewaybillNo) return;
+    const payload = {
+      "FilterJson": {
+        "ReportId": "12",
+        "EwaybillNo": ewaybillNo
+      }
+    }
+
+    
+    this.dynamicDataService.getDynamicData(payload).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.modalService.show(EwayBillPreviewComponent, {
+            initialState: { response },
+            class: 'modal-lg modal-dialog-centered'
+          });
+        } else {
+          this.sweetAlertService.error('E-Way Bill Details Not Found');
+        }
+      },
+      error: () => {
+        this.sweetAlertService.error('Failed to fetch E-Way Bill Details');
+      }
+    });
   }
 
 }

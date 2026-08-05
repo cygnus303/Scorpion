@@ -3,96 +3,283 @@
         <div class="dash-title">Query Response</div>
         <div class="dash-sub">Queries raised by Accountants on your bills &mdash; respond with remarks and supporting
             documents</div>
-
-        <div class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr));margin-bottom:22px;">
-            <div class="stat-card qr-card qr-active" id="qrCardTotal" style="cursor:pointer;" onclick="qrShowView('total')">
-                <div class="icon">💬</div>
-                <div class="label">Total Query</div>
-                <div class="value" id="qrTotalCount">5 <span>records</span></div>
+        <div class="cards-grid">
+            <div class="card total" (click)="filterByStatus('0')" [class.active-card]="config.Status === '0'">
+                <div class="card-icon">💬</div>
+                <div class="card-label">Total Query</div>
+                <div class="card-count" id="cardTotal">{{summaryData?.TotalQuery || 0}}</div>
+                <div class="card-sub">Within selected period</div>
             </div>
-            <div class="stat-card qr-card" id="qrCardResponded" style="cursor:pointer;"
-                onclick="qrShowView('responded')">
-                <div class="icon">&#9989;</div>
-                <div class="label">Query Responded</div>
-                <div class="value" id="qrRespondedCount">2 <span>records</span></div>
+            <div class="card pending" (click)="filterByStatus('2')" [class.active-card]="config.Status === '2'">
+                <div class="card-icon">⏳</div>
+                <div class="card-label">Query Pending for Response</div>
+                <div class="card-count" id="cardPending">{{summaryData?.QueryPending || 0}}</div>
+                <div class="card-sub">Awaiting customer mapping</div>
             </div>
-            <div class="stat-card qr-card" id="qrCardPending" style="cursor:pointer;" onclick="qrShowView('pending')">
-                <div class="icon">&#9203;</div>
-                <div class="label">Query Pending for Response</div>
-                <div class="value" id="qrPendingCount">3 <span>records</span></div>
+            <div class="card complete" (click)="filterByStatus('1')" [class.active-card]="config.Status === '1'">
+                <div class="card-icon">✅</div>
+                <div class="card-label">Query Responded</div>
+                <div class="card-count" id="cardComplete">{{summaryData?.QueryResponded || 0}}</div>
+                <div class="card-sub">Ready for accounting</div>
             </div>
         </div>
 
-        <div class="prs-card">
-            <div class="modal-section-title" id="qrListingTitle" style="color: #E2001A; text-transform: uppercase;">TOTAL QUERY (5)</div>
-            <div id="qrListing">
-                <table class="am-table itd-table" style="margin-top: 10px;">
+        <div class="filter-bar">
+
+            <div class="filter-field" id="fromField">
+                <label for="dateFrom">From Date</label>
+                <div style="position: relative; display: flex; align-items: center;">
+                    <span
+                        style="position: absolute; left: 10px; cursor: pointer; pointer-events: none; z-index: 1;">📅</span>
+                    <input type="text" id="dateFrom" bsDatepicker
+                        [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                        [(ngModel)]="config.fromDateStr" (ngModelChange)="fetchData()"
+                        style="padding-left: 32px; width: 100%; position: relative;">
+                </div>
+            </div>
+            <div class="filter-field" id="toField">
+                <label for="dateTo">To Date</label>
+                <div style="position: relative; display: flex; align-items: center;">
+                    <span
+                        style="position: absolute; left: 10px; cursor: pointer; pointer-events: none; z-index: 1;">📅</span>
+                    <input type="text" id="dateTo" bsDatepicker [minDate]="config.fromDateStr"
+                        [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                        [(ngModel)]="config.toDateStr" (ngModelChange)="fetchData()"
+                        style="padding-left: 32px; width: 100%; position: relative;">
+                </div>
+            </div>
+
+            <div class="filter-field search" id="onAccountField">
+                <label for="onAccountSearch">Search</label>
+                <input type="text" placeholder="Search VendorBillno.." autocomplete="off"
+                    [(ngModel)]="config.searchText" (keyup)="onSearchChange()" />
+            </div>
+        </div>
+        <div class="table-card">
+            <div class="table-card-header">
+                <h3>📋 Query Listing</h3>
+            </div>
+
+            <div class="tbl-wrap">
+                <table>
                     <thead>
                         <tr>
-                            <th>Vendor Bill No</th>
-                            <th>Query Description</th>
+                            <th *ngIf="config.Status === '1'"></th>
+                            <th *ngIf="config.Status !== '1'">#</th>
+                            <th style="max-width:180px;">Vendor Bill No</th>
+                            <th style="max-width:180px;">Query Description</th>
                             <th>Query Date</th>
                             <th>Raised By/Date</th>
                             <th>Remarks</th>
+                            <th *ngIf="config.Status === '1'">Browse</th>
                             <th>Status</th>
                             <th>Attachment</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody *ngIf="isLoading">
                         <tr>
-                            <td>BEABA_262700551</td>
-                            <td>TDS amount mismatch between vendor bill and voucher entry</td>
-                            <td>10 Jul 2026</td>
-                            <td>accounts1 : Priya Nair (Accountant) / 10 Jul 2026</td>
-                            <td>&mdash;</td>
-                            <td><span class="qr-badge raised">Query Raised</span></td>
-                            <td><a href="#" class="qr-attach-link">View</a></td>
-                            <td><button class="action-btn-outline">View</button></td>
+                            <td colspan="9" class="text-center py-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
+                            </td>
                         </tr>
+                    </tbody>
+                    <tbody *ngIf="!isLoading && queryList.length === 0">
                         <tr>
-                            <td>BEAMD_262700001</td>
-                            <td>Supporting LR copies missing for 3 consignments</td>
-                            <td>08 Jul 2026</td>
-                            <td>accounts1 : Priya Nair (Accountant) / 08 Jul 2026</td>
-                            <td>&mdash;</td>
-                            <td><span class="qr-badge raised">Query Raised</span></td>
-                            <td><a href="#" class="qr-attach-link">View</a></td>
-                            <td><button class="action-btn-outline">View</button></td>
+                            <td colspan="9" class="text-center py-4 text-muted fs-5">
+                                No records found.
+                            </td>
                         </tr>
-                        <tr>
-                            <td>BL/2627/00013</td>
-                            <td>GST rate applied as 18% &mdash; SAC code indicates exempt (RCM)</td>
-                            <td>05 Jul 2026</td>
-                            <td>accounts2 : Suresh Iyer (Accountant) / 05 Jul 2026</td>
-                            <td>&mdash;</td>
-                            <td><span class="qr-badge raised">Query Raised</span></td>
-                            <td><a href="#" class="qr-attach-link">View</a></td>
-                            <td><button class="action-btn-outline">View</button></td>
+                    </tbody>
+                    <tbody *ngIf="!isLoading && queryList.length > 0">
+                        <tr class="row-base" *ngFor="let item of queryList; let i = index">
+                            <td class="cb-cell" *ngIf="config.Status === '1'">
+                                <input type="checkbox" class="row-cb" [(ngModel)]="item.isChecked">
+                            </td>
+                            <td class="sno" *ngIf="config.Status !== '1'" style="font-weight: 500; text-align: center;">
+                                <ng-container>{{ i+1 }}</ng-container>
+                                <ng-container><span style="font-size: 16px;">↳</span></ng-container>
+                            </td>
+                            <td style="max-width:180px;">
+                                <div class="cust-cell">
+                                    <span class="cust-code">{{ item.VendorBillNo || '-' }}</span>
+                                </div>
+                            </td>
+                            <td style="max-width:180px;">
+                                <span class="chq-no">{{ item.QueryDescription || '-'}}</span>
+                            </td>
+                            <td><span class="chq-date">{{ item.QueryDate | date:'dd-MMM-yyyy'}}</span></td>
+                            <td>
+                                <div class="cust-cell">
+                                    <span class="cust-name">{{ item.RaisedBy || '-'}}</span>
+                                    <span class="chq-no">{{ item.RaisedDate || '-'}}</span>
+                                </div>
+                            </td>
+                            <td *ngIf="config.Status !== '1'"><span class="chq-date">{{ item.Remarks || '-' }}</span>
+                            </td>
+                            <td *ngIf="config.Status === '1'">
+                                <input type="text" class="row-input row-transfer" [(ngModel)]="item.newRemarks"
+                                    placeholder="Enter Remarks">
+                                <div *ngIf="item.isChecked && !item.newRemarks" class="text-danger"
+                                    style="font-size: 10px; margin-top: 2px;">
+                                    *This field is required
+                                </div>
+                            </td>
+                            <td *ngIf="config.Status === '1'">
+                                <input type="file" #fileInput style="display: none"
+                                    (change)="onFileSelected($event, item)">
+                                <button (click)="fileInput.click()"
+                                    class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
+                                    style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                                    [title]="item.fileName || 'Browse'">
+                                    <i class="fa" [ngClass]="item.fileName ? 'fa-file' : 'fa-folder-open'"></i> {{
+                                    item.fileName || 'Browse' }}
+                                </button>
+                            </td>
+                            <td class="text-center">
+                                <span class="pill-badge" [ngClass]="getStatusClass(item.Status)">
+                                    {{ item.Status }}
+                                </span>
+                            </td>
+                            <td><a class="mr-link" title="View On-Account MR details">View</a></td>
+                            <td>
+                                <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                    <button *ngIf="config.Status === '1'"
+                                        class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
+                                        [disabled]="!item.isChecked" (click)="onSubmit()">
+                                        Submit
+                                    </button>
+                                    <button
+                                        class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3"
+                                        (click)="openView(queryDetailsModal, item)">
+                                        <i class="fa fa-eye"></i> View
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
-                        <tr>
-                            <td>BL/2526/00002</td>
-                            <td>Duplicate freight line item in annexure &mdash; please confirm</td>
-                            <td>28 Jun 2026</td>
-                            <td>accounts1 : Priya Nair (Accountant) / 28 Jun 2026</td>
-                            <td>Duplicate removed &mdash; revised annexure attached.</td>
-                            <td><span class="qr-badge responded">Query Responded</span></td>
-                            <td><a href="#" class="qr-attach-link">View</a></td>
-                            <td><button class="action-btn-outline">View</button></td>
-                        </tr>
-                        <tr>
-                            <td>BEABA_262700545</td>
-                            <td>PAN on invoice differs from vendor master record</td>
-                            <td>25 Jun 2026</td>
-                            <td>accounts2 : Suresh Iyer (Accountant) / 25 Jun 2026</td>
-                            <td>Correct PAN is AURPK3719P &mdash; invoice reprinted and attached.</td>
-                            <td><span class="qr-badge responded">Query Responded</span></td>
-                            <td><a href="#" class="qr-attach-link">View</a></td>
-                            <td><button class="action-btn-outline">View</button></td>
+
+                        <tr *ngIf="!queryList || queryList.length === 0">
+                            <td colspan="11" style="text-align: center; padding: 20px;">No records found.</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+
+            <app-pagination [page]="config.page" [pageSize]="config.pageSize" [totalRecords]="config.totalRecords"
+                [totalPages]="config.totalPages" (pageChange)="setPage($event)">
+            </app-pagination>
         </div>
     </div>
 </div>
+
+<ng-template #queryDetailsModal>
+    <div class="modal-header d-flex justify-content-between align-items-center"
+        style="background-color: #c8102e; color: #fff; border-radius: 4px 4px 0 0; padding: 14px 20px;">
+        <h5 class="modal-title m-0" style="font-size: 15px; font-weight: 600;">
+            Query Details
+        </h5>
+        <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="closeModal()"
+            style="font-size: 12px; opacity: 1;"></button>
+    </div>
+
+    <div class="modal-body p-4 p-md-5">
+        <div class="row" style="row-gap: 32px;">
+
+            <!-- Row 1 -->
+            <div class="col-md-4">
+                <div class="text-uppercase"
+                    style="font-size: 12px; font-weight: 700; color: #8f9bb3; letter-spacing: 0.5px; margin-bottom: 6px;">
+                    Vendor Bill No</div>
+                <div style="font-size: 15px; font-weight: 700; color: #222b45;">{{ selectedItem?.VendorBillNo || '-' }}
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="text-uppercase"
+                    style="font-size: 12px; font-weight: 700; color: #8f9bb3; letter-spacing: 0.5px; margin-bottom: 6px;">
+                    Query Date</div>
+                <div style="font-size: 15px; font-weight: 700; color: #222b45;">{{ (selectedItem?.QueryDate |
+                    date:'dd/MM/yyyy') || '-' }}</div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="text-uppercase"
+                    style="font-size: 12px; font-weight: 700; color: #8f9bb3; letter-spacing: 0.5px; margin-bottom: 6px;">
+                    Status</div>
+                <div>
+                    <span class="pill-badge" [ngClass]="getStatusClass(selectedItem?.Status)"
+                        style="background-color: #e2e8f0; color: #3b82f6; border: none; padding: 4px 12px; font-weight: 600; font-size: 13px; border-radius: 4px;">
+                        {{ selectedItem?.Status || '-' }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="col-md-4">
+                <div class="text-uppercase"
+                    style="font-size: 12px; font-weight: 700; color: #8f9bb3; letter-spacing: 0.5px; margin-bottom: 6px;">
+                    Raised By</div>
+                <div style="font-size: 15px; font-weight: 700; color: #222b45;">{{ selectedItem?.RaisedBy || '-' }}
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="text-uppercase"
+                    style="font-size: 12px; font-weight: 700; color: #8f9bb3; letter-spacing: 0.5px; margin-bottom: 6px;">
+                    Raised Date</div>
+                <div style="font-size: 15px; font-weight: 700; color: #222b45;">{{ selectedItem?.RaisedDate || '-' }}
+                </div>
+            </div>
+
+            <div class="col-md-4"></div>
+
+            <!-- Row 3 full width descriptions -->
+            <div class="col-md-12">
+                <div class="text-uppercase"
+                    style="font-size: 12px; font-weight: 700; color: #8f9bb3; letter-spacing: 0.5px; margin-bottom: 6px;">
+                    Query Description</div>
+                <div style="font-size: 15px; font-weight: 600; color: #222b45; line-height: 1.5; max-width: 900px;">{{
+                    selectedItem?.QueryDescription || '-' }}</div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="text-uppercase"
+                    style="font-size: 12px; font-weight: 700; color: #8f9bb3; letter-spacing: 0.5px; margin-bottom: 6px;">
+                    Response Remarks</div>
+                <div style="font-size: 15px; font-weight: 600; color: #222b45; line-height: 1.5; max-width: 900px;">
+                    <ng-container *ngIf="selectedItem?.Remarks; else noRemarks">
+                        {{ selectedItem?.Remarks }}
+                    </ng-container>
+                    <ng-template #noRemarks>
+                        <span style="color: #8f9bb3; font-style: italic; font-weight: 500;">-</span>
+                    </ng-template>
+                </div>
+            </div>
+
+            <!-- Row 4 files -->
+            <div class="col-md-4">
+                <div class="text-uppercase"
+                    style="font-size: 12px; font-weight: 700; color: #8f9bb3; letter-spacing: 0.5px; margin-bottom: 6px;">
+                    Query Attachment</div>
+                <a href="javascript:void(0)"
+                    style="font-size: 14px; font-weight: 600; color: #3366ff; text-decoration: none;"><i
+                        class="fa fa-paperclip me-1"></i> View File</a>
+            </div>
+
+            <div class="col-md-4">
+                <div class="text-uppercase"
+                    style="font-size: 12px; font-weight: 700; color: #8f9bb3; letter-spacing: 0.5px; margin-bottom: 6px;">
+                    Response Attachment</div>
+                <a *ngIf="selectedItem?.ResponseAttachment" href="javascript:void(0)"
+                    style="font-size: 14px; font-weight: 600; color: #3366ff; text-decoration: none;"><i
+                        class="fa fa-paperclip me-1"></i> View File</a>
+                <div *ngIf="!selectedItem?.ResponseAttachment"
+                    style="font-size: 15px; font-weight: 700; color: #222b45;">-</div>
+            </div>
+
+        </div>
+    </div>
+</ng-template>

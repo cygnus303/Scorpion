@@ -160,16 +160,16 @@ export class DrsUpdateDepsComponent {
     }
   }
 
-  onDamageTypeChange(index: number) {
+  onDamageTypeChange(index: number, event: any) {
     const row = this.docketsArray.at(index) as FormGroup;
-    const damageType = row.get('damageType')?.value;
+    // const damageType = row.get('damageType')?.value;
 
-    row.get('severity')?.setValue(null);
-    if (!damageType) {
-      this.severityLists[index] = [];
-    } else {
-      this.fetchSeverityDataForRow(index, damageType);
-    }
+    row.get('severity')?.setValue(event.codeFor);
+    // if (!damageType) {
+    //   this.severityLists[index] = [];
+    // } else {
+    //   this.fetchSeverityDataForRow(index, damageType);
+    // }
   }
 
   fetchSeverityDataForRow(index: number, damageTypeDesc: string) {

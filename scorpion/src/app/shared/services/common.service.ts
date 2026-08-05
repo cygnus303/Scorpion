@@ -111,4 +111,14 @@ export class CommonService {
       }
     });
   }
+
+  formatDateToISO(dateVal: any): string | null {
+    if (!dateVal) return null;
+    const d = new Date(dateVal);
+    const year = d.getFullYear();
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const month = monthNames[d.getMonth()];
+    const day = ('0' + d.getDate()).slice(-2);
+    return `${day} ${month} ${year}`;
+  }
 }

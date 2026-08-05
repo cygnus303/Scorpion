@@ -829,6 +829,7 @@ stockUpdate() {
                  <div class="fw-bold fs-3 mb-2">Stock Update Success</div>
                  <p class="fs-5 mb-1"><strong>ThcNo:</strong> ${this.stockData?.thcno}</p>
                  <p class="fs-5 mb-1"><strong>DepsId:</strong> ${response.depsId}</p>
+                 <p class="fs-5 mb-1"><strong>HccNo:</strong> ${response.hccNo}</p>
               </div>`);
         this.dataEmitter.emit()
         this.modalRef.hide();

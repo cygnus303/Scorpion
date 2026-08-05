@@ -214,6 +214,7 @@
                         </td>
                         <td>
                             <div class="action-btns text-center">
+                                <button class="ab ab-view" (click)="getEwaybillData(lr.dockno)">🧾 E-Way No.</button>
                                 <button *ngIf="menuAccessService.hasPermission('View')" class="ab ab-view" (click)="onView(lr.dockno)">👁 View</button>
                                 <button *ngIf="!isHQTR && menuAccessService.hasPermission('Edit')" class="ab ab-edit" (click)="openQuick(lr.dockno)"
                                     [disabled]="lr.isQuickMode!=='Q'">✏️ Quick LR
@@ -257,3 +258,65 @@
 </div>
 
 <app-lr-view #LrViewComponent></app-lr-view>
+
+<ng-template #ewayBillModal>
+    <!-- Compact Modern Premium Header -->
+    <div class="modal-header border-0 py-2 px-3" style="background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); color: white; border-top-left-radius: 0.3rem; border-top-right-radius: 0.3rem; position: relative; overflow: hidden;">
+        <!-- Decorative subtle circle -->
+        <div style="position: absolute; right: -20px; top: -40px; width: 100px; height: 100px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
+        
+        <div class="d-flex align-items-center gap-2 position-relative z-1">
+            <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 32px; height: 32px; background: rgba(255,255,255,0.15); backdrop-filter: blur(4px);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16">
+                    <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
+                </svg>
+            </div>
+            <h5 class="mb-0 fw-bold" style="letter-spacing: 0.5px; font-size: 1rem;">E-Way Bill Details</h5>
+        </div>
+        <button type="button" class="btn-close btn-close-white opacity-75 position-relative z-1" (click)="modalRef.hide()" style="transition: all 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.75'"></button>
+    </div>
+    
+    <!-- Compact Body -->
+    <div class="modal-body p-1" style="background-color: #f4f7f9;">
+        
+        <div class="table-responsive rounded border shadow-sm m-0" style="background-color: white;">
+            <table class="table align-middle mb-0" style="border-collapse: separate; border-spacing: 0;">
+                <thead style="background-color: #fcfdfe;">
+                    <tr>
+                        <th class="text-center text-muted fw-bold py-2 border-bottom" style="width: 70px; font-size: 0.75rem; text-transform: uppercase;">Sr. No.</th>
+                        <th class="text-muted fw-bold py-2 border-bottom" style="font-size: 0.75rem; text-transform: uppercase;">E-Way Bill No.</th>
+                        <th class="text-muted fw-bold py-2 border-bottom" style="font-size: 0.75rem; text-transform: uppercase;">Invoice No.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of ewaybillData; let i = index; let last = last" style="cursor: default; transition: background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#f8fafd'" onmouseout="this.style.backgroundColor='transparent'">
+                        
+                        <td class="text-center py-2" [class.border-bottom-0]="last" style="border-bottom: 1px solid #f0f2f5;">
+                            <span class="d-inline-flex align-items-center justify-content-center rounded-circle fw-bold text-secondary" style="width: 24px; height: 24px; background: #f1f3f5; font-size: 0.75rem;">
+                                {{ i + 1 }}
+                            </span>
+                        </td>
+                        
+                        <td class="py-2" [class.border-bottom-0]="last" style="border-bottom: 1px solid #f0f2f5;">
+                            <span *ngIf="item.EWayBillNo" (click)="downloadEWayBillPDF(item.EWayBillNo)" class="d-inline-flex align-items-center rounded-pill px-2 py-1 shadow-sm" style="background: rgba(43, 116, 224, 0.08); color: #2b74e0; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: 1px solid rgba(43, 116, 224, 0.2); transition: transform 0.1s ease;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'" title="Download E-Way Bill PDF">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+                                    <path d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm5.5 1.5v2a1 1 0 0 0 1 1h2l-3-3zM4.5 9a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7zM4 11.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z"/>
+                                </svg>
+                                {{ item.EWayBillNo }}
+                            </span>
+                            <span *ngIf="!item.EWayBillNo" class="text-muted fw-medium fs-6">—</span>
+                        </td>
+                        
+                        <td class="py-2" [class.border-bottom-0]="last" style="border-bottom: 1px solid #f0f2f5;">
+                            <span *ngIf="item.INVNO" class="text-dark fw-bold" style="font-size: 0.85rem;">
+                                <span class="text-muted fw-normal me-1" style="font-size: 0.75rem;">#</span>{{ item.INVNO }}
+                            </span>
+                            <span *ngIf="!item.INVNO" class="text-muted fw-medium fs-6">—</span>
+                        </td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</ng-template>

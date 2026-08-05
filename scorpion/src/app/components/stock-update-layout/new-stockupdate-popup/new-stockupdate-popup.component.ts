@@ -10,7 +10,7 @@ import { DeliveryUpdateService } from 'app/shared/services/delivery-update.servi
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DrsUpdateDepsComponent } from 'app/components/drs-generation-list/drs-update-list/drs-update-deps/drs-update-deps.component';
 import { NewStockupdateShortagePopupComponent } from 'app/components/stock-update-layout/new-stockupdate-shortage-popup/new-stockupdate-shortage-popup.component';
-import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { SharedModule } from 'app/shared/shared/shared.module';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.service';
@@ -45,6 +45,7 @@ export class NewStockupdatePopupComponent implements OnInit {
   public headerVendor: any = null;
   public headerVendorTyp: any = null;
   public headerRateType: any = null;
+  public loadingChargeCtrl = new FormControl('0.00', [Validators.min(0.01)]);
 
   public stockData: any = {
     thcno: '',
@@ -936,16 +937,47 @@ export class NewStockupdatePopupComponent implements OnInit {
     if (maxlimitcalculation > 5.0) {
       row.rateError = 'Rate Amount Is High, Please Check';
       row.newRate = '0.00';
+      this.updateTotalLoadingCharge();
       return false;
     } else {
       row.rateError = '';
+      this.updateTotalLoadingCharge();
       return true;
     }
+  }
+
+  updateTotalLoadingCharge(): void {
+    const total = this.listVSFUM.reduce((sum, row) => {
+      let charge = 0;
+      const rateType = row.rateType?.toString();
+      const newRate = parseFloat(row.newRate || '0') || 0;
+      const actuwt = parseFloat(row.actuwt || '0') || 0;
+      const pkgsno = parseFloat(row.pkgsno || '0') || 0;
+      switch (rateType) {
+        case '1':
+          charge = actuwt * newRate;
+          break;
+        case '3':
+          charge = pkgsno * newRate;
+          break;
+        case '4':
+          charge = newRate;
+          break;
+      }
+      return sum + charge;
+    }, 0);
+    this.loadingChargeCtrl.setValue(total.toFixed(2), { emitEvent: false });
+    this.loadingChargeCtrl.markAsTouched();
   }
 
   submitStockUpdate() {
     this.submitted = true;
     if (!this.unloaderName || !this.unloadingSupervisor) {
+      return;
+    }
+    
+    if (this.loadingChargeCtrl.invalid) {
+      this.loadingChargeCtrl.markAsTouched();
       return;
     }
 
