@@ -118,8 +118,8 @@
                         <th class="text-center">Vendor Type / Name</th>
                         <th class="text-center">Arrival Date</th>
                         <th class="text-center">THC Location</th>
+                        <th class="text-center">Unloading HCC No.</th>
                         <th class="text-center">Unloading Sheet No.</th>
-                        <th class="text-center">Unloading HCC</th>
                         <th class="text-center">Deps Details</th>
                         <th class="text-center">Actions</th>
                     </tr>
@@ -187,6 +187,13 @@
                         <td class="text-center fw-semibold text-secondary">
                             {{ row.thcLocation }}
                         </td>
+                         <td class="text-center">
+                            <a href="javascript:void(0)"  class="text-primary fw-medium"
+                               (click)="openHccPopup(row,'U')"
+                                style="text-decoration: dashed underline;">
+                               {{ row.unLoadingHCNo === 'YES' ?'View Hcc':'-' }}
+                            </a>
+                        </td>    
                         <td class="text-center">
                             <span class="text-muted" *ngIf="!row.unLoadingSheetNo">—</span>
                             <a href="javascript:void(0)" *ngIf="row.unLoadingSheetNo" class="text-primary fw-medium"
@@ -194,15 +201,8 @@
                                 style="text-decoration: dashed underline;">
                                 {{ row.unLoadingSheetNo }}
                             </a>
-                        </td>              
-                        <td class="text-center">
-                            <span class="text-muted" *ngIf="!row.unLoadingHCNo">—</span>
-                            <a href="javascript:void(0)" *ngIf="row.unLoadingHCNo" class="text-primary fw-medium"
-                                style="text-decoration: dashed underline;">
-                                {{ row.unLoadingHCNo }}
-                            </a>
-                        </td>
-                          <td class="text-center">
+                        </td>   
+                          <td class="text-center cursor-pointer">
                             <a class="text-primary fw-medium"
                                (click)="openDepsDetails(row)"
                                 style="text-decoration: dashed underline;">
@@ -235,7 +235,7 @@
     </div>
 </div>
 
-
+<app-hcc-view #HccViewComponent></app-hcc-view>
 <app-stockupdate-popup #StockupdatePopupComponent (dataEmitter)="onDataUpdate()"></app-stockupdate-popup>
 <app-new-stockupdate-popup #NewStockupdatePopupComponent (dataEmitter)="onDataUpdate()"></app-new-stockupdate-popup>
 <app-deps-details #DepsDetailsComponent ></app-deps-details>

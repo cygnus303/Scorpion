@@ -13,11 +13,12 @@ import { StockupdatePopupComponent } from './stockupdate-popup/stockupdate-popup
 import { NewStockupdatePopupComponent } from './new-stockupdate-popup/new-stockupdate-popup.component';
 import { DepsDetailsComponent } from '../drs-generation-list/deps-details/deps-details.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { HccViewComponent } from '../hcc-view/hcc-view.component';
 
 @Component({
   selector: 'app-stock-update-layout',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent,DepsDetailsComponent, StockupdatePopupComponent, NewStockupdatePopupComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent,DepsDetailsComponent, StockupdatePopupComponent, NewStockupdatePopupComponent,HccViewComponent],
   templateUrl: './stock-update-layout.component.html',
   styleUrl: './stock-update-layout.component.scss',
   providers: [BsModalService],
@@ -28,6 +29,7 @@ export class StockUpdateLayoutComponent {
   public isCSVLoading: boolean = false;
   public listSubscription?: Subscription;
   private fetchSubject = new Subject<void>();
+  @ViewChild('HccViewComponent') HccViewComponent!: HccViewComponent;
   @ViewChild('StockupdatePopupComponent') StockupdatePopupComponent!: StockupdatePopupComponent;
   @ViewChild('NewStockupdatePopupComponent') NewStockupdatePopupComponent!: NewStockupdatePopupComponent;
   @ViewChild('DepsDetailsComponent') depsDetailsComponent!: DepsDetailsComponent;
@@ -215,5 +217,9 @@ export class StockUpdateLayoutComponent {
         this.isCSVLoading = false;
       }
     });
+  }
+
+  openHccPopup(data: any, chargeType: string){
+    this.HccViewComponent.showPopup(data, chargeType, 'M', 'T');
   }
 }

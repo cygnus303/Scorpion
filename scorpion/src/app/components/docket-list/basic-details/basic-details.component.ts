@@ -678,9 +678,9 @@ viewFile() {
 
    onBack() {
     if(this.docketService.loginUserList.Type === '1'){
-      this.router.navigate(['Operation/docketList']);
-    }else{
       this.router.navigate(['Operation/LRFinEditList']);
+    }else{
+      this.router.navigate(['Operation/docketList']);
     }
   }
 }
