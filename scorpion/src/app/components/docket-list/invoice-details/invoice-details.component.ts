@@ -630,7 +630,58 @@ export class InvoiceDetailsComponent {
       }
 
       this.setEwayRowValidators(row, requireValidators);
+
+      if (declared < 50000 && this.docketService.loginUserList.Type !== '2') {
+        row.get('invoiceCopy')?.setValidators([Validators.required]);
+      } else {
+        row.get('invoiceCopy')?.clearValidators();
+      }
+      row.get('invoiceCopy')?.updateValueAndValidity({ emitEvent: false });
     });
+  }
+
+  onFileSelected(event: any, row: any) {
+    const file = event.target.files[0];
+    if (file) {
+      row.patchValue({
+        invoiceCopy: file,
+        invoiceFileName: file.name
+      });
+      row.get('isChangingFile')?.setValue(true);
+      row.get('invoiceCopy')?.markAsTouched();
+      row.get('invoiceCopy')?.updateValueAndValidity();
+    } else {
+      row.patchValue({
+        invoiceCopy: null,
+        invoiceFileName: ''
+      });
+      row.get('invoiceCopy')?.markAsTouched();
+      row.get('invoiceCopy')?.updateValueAndValidity();
+    }
+  }
+
+  viewFile(row: any) {
+    const file = row.get('invoiceCopy')?.value;
+    const url = row.get('invoiceFileUrl')?.value;
+    
+    let viewUrl = '';
+    if (file instanceof File) {
+      viewUrl = URL.createObjectURL(file);
+    } else if (typeof file === 'string' && file) {
+      viewUrl = file;
+    } else if (url) {
+      viewUrl = url;
+    }
+    
+    if (viewUrl) {
+      window.open(viewUrl, '_blank');
+    }
+  }
+
+  changeFile(row: any) {
+    row.get('isChangingFile')?.setValue(true);
+    row.get('invoiceCopy')?.setValue(null);
+    row.get('invoiceFileName')?.setValue('');
   }
 
   ngOnDestroy() {

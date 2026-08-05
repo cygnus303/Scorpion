@@ -364,6 +364,11 @@ export class DocketService {
       invoiceNo: new FormControl('', Validators.required),
       declaredvalue: new FormControl(0, Validators.required),
       transportation_distance: new FormControl(0),
+      invoiceCopy: new FormControl(null),
+      invoiceFileName: new FormControl(''),
+      isExistingFile: new FormControl(false),
+      isChangingFile: new FormControl(false),
+      invoiceFileUrl: new FormControl(null),
     });
   }
 
