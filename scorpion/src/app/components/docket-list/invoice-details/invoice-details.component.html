@@ -69,6 +69,9 @@
                           <th class="center">
                             Invoice Value
                           </th>
+                          <th class="center">
+                             Invoice Copy
+                          </th>
                           <th class="center">X</th>
                         </tr>
                       </thead>
@@ -154,6 +157,38 @@
                               class="text-danger text-start">
                               This field is required.
                             </div>
+                          </td>
+                          <td class="center" style="min-width: 150px;">
+                            <!-- FILE INPUT: Add / Change mode -->
+                            <ng-container *ngIf="(!row.get('isExistingFile')?.value || row.get('isChangingFile')?.value) || docketService.loginUserList.Type !== '2'">
+                              <div class="d-flex align-items-center justify-content-center">
+                                <label class="btn btn-outline-primary btn-sm mb-0 p-1 px-2" style="cursor: pointer; white-space: nowrap;" 
+                                       [class.btn-outline-danger]="row.get('invoiceCopy')?.invalid && row.get('invoiceCopy')?.touched">
+                                 {{ row.get('invoiceFileName')?.value ? 'Change' : 'Upload' }}
+                                  <input type="file" class="d-none" (change)="onFileSelected($event, row)">
+                                </label>
+                                <span class="ms-2 text-truncate" style="max-width: 80px; font-size: 12px; display: inline-block;" 
+                                      [title]="row.get('invoiceFileName')?.value || 'No file chosen'">
+                                  {{ row.get('invoiceFileName')?.value || 'No file chosen' }}
+                                </span>
+                              </div>
+                              <div *ngIf="row.get('invoiceCopy')?.invalid && row.get('invoiceCopy')?.touched"
+                                class="text-danger text-center mt-1" style="font-size: 11px;">
+                                This field is required.
+                              </div>
+                            </ng-container>
+
+                            <!-- VIEW/CHANGE BUTTONS (existing file only) -->
+                            <ng-container *ngIf="row.get('isExistingFile')?.value && !row.get('isChangingFile')?.value && docketService.loginUserList.Type === '2'">
+                              <div class="d-flex align-items-center justify-content-center gap-1">
+                                <button type="button" class="btn btn-sm btn-outline-primary mb-0 p-1 px-2" (click)="viewFile(row)">
+                                  View
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary mb-0 p-1 px-2" (click)="changeFile(row)">
+                                  Change
+                                </button>
+                              </div>
+                            </ng-container>
                           </td>
                           <td class="center">
                             <div *ngIf="i !== 0" (click)="removeRow(i)"

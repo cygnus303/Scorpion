@@ -315,6 +315,15 @@ export class DocketListComponent implements OnInit {
       transportation_distance: item.transportation_distance
     });
 
+    if (item.ewaybillInvoiceFile) {
+      const baseUrl = `${this.env.liveUrl}UploadedDocumentsBAK/EwaybillInvoiceFile/Upload/`; // Update folder name if needed
+      row.patchValue({
+        invoiceFileName: item.ewaybillInvoiceFile,
+        isExistingFile: true,
+        invoiceFileUrl: baseUrl + item.ewaybillInvoiceFile
+      });
+    }
+
     // Set initial E-way bill number for tracking
     (row as any).initialEwayBillNo = item.eWayBillNo;
 
@@ -825,6 +834,21 @@ export class DocketListComponent implements OnInit {
       } else {
         formData.append("GSTDeclaration", existingGstDoc);
       }
+      
+      // EwaybillInvoiceFile array
+      this.docketService.invoiceRows.controls.forEach((row) => {
+        const file = row.get('invoiceCopy')?.value;
+        const existingName = row.get('invoiceFileName')?.value;
+        
+        if (file instanceof File) {
+          formData.append("EwaybillInvoiceFile", file, file.name);
+        } else if (existingName) {
+          formData.append("EwaybillInvoiceFile", existingName);
+        } else {
+          formData.append("EwaybillInvoiceFile", "");
+        }
+      });
+
       formData.append("BaseFinYear", this.docketService.loginUserList.FinYear);
       formData.append("BaseCompanyCode", this.docketService.loginUserList.Companycode);
       formData.append("BaseUserName", this.docketService.BaseUserCode);
