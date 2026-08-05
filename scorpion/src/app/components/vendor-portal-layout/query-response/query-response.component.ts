@@ -138,4 +138,28 @@ export class QueryResponseComponent {
   closeModal() {
     this.modalRef?.hide();
   }
+
+  onSubmit(){
+    const payload = {
+      FilterJson: {
+        "QueryNo": "",
+        "VendorBillNo": "BEABA_262700551",
+        "Remarks": "Corrected TDS entry, revised voucher attached.",
+        "ResponseAttachmentName": "TDS-Correction.pdf",
+        "ResponseAttachmentPath": "/uploads/vendor-response/TDS-Correction.pdf",
+        "UpdatedBy": "vendorportal"
+      }
+    };
+
+  this.dynamicDataService.getDynamicData(payload).subscribe({
+      next: (response: any) => {
+        if (response) {
+          
+        }
+      },
+      error: (err: any) => {
+        console.error('API Error:', err);
+      }
+    });
+  }
 }
