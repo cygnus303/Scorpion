@@ -5,9 +5,12 @@ import { PaginationComponent } from 'app/shared/components/pagination/pagination
 import { CommonService } from 'app/shared/services/common.service';
 import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 import { ExportService } from 'app/shared/services/export.service';
+import { VendorService } from 'app/shared/services/vendor.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService, ModalModule } from 'ngx-bootstrap/modal';
 import { debounceTime, Subject, Subscription } from 'rxjs';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-query-response',
@@ -24,6 +27,7 @@ export class QueryResponseComponent {
   public summaryData: any;
   public modalRef?: BsModalRef;
   public selectedItem: any;
+  public env = environment;
 
   public queryList: any = [];
   public config = {
@@ -40,7 +44,9 @@ export class QueryResponseComponent {
   constructor(
     public dynamicDataService: DynamicDataService,
     private commonService: CommonService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    public vendorService:VendorService,
+    private sweetAlertService: SweetAlertService
   ) { }
 
   ngOnInit() {
@@ -69,6 +75,7 @@ export class QueryResponseComponent {
         "SearchText": this.config.searchText
       }
     };
+    this.isLoading= true;
 
     this.listSubscription = this.dynamicDataService.getDynamicData(payload).subscribe({
       next: (response: any) => {
@@ -83,10 +90,12 @@ export class QueryResponseComponent {
             this.config.page = response.Table3[0].PageNo || 1;
             this.config.pageSize = response.Table3[0].PageSize || 50;
           }
+          this.isLoading= false;
         }
       },
       error: (err: any) => {
         console.error('API Error:', err);
+        this.isLoading= false;
       }
     });
   }
@@ -139,26 +148,44 @@ export class QueryResponseComponent {
     this.modalRef?.hide();
   }
 
-  onSubmit(){
-    const payload = {
-      FilterJson: {
-        "QueryNo": "",
-        "VendorBillNo": "BEABA_262700551",
-        "Remarks": "Corrected TDS entry, revised voucher attached.",
-        "ResponseAttachmentName": "TDS-Correction.pdf",
-        "ResponseAttachmentPath": "/uploads/vendor-response/TDS-Correction.pdf",
-        "UpdatedBy": "vendorportal"
-      }
-    };
+  viewAttachment(fileName: string) {
+    if (fileName) {
+      const fileUrl = `${this.env.liveUrl}uploads/vendor-response/${fileName}`; 
+      window.open(fileUrl, '_blank');
+    } else {
+      this.sweetAlertService.info("Attachment not found.");
+    }
+  }
 
-  this.dynamicDataService.getDynamicData(payload).subscribe({
+  onSubmit(item:any){
+    const formData = new FormData();
+    formData.append('QueryNo', item.QueryNo || '');
+    formData.append('VendorBillNo', item.VendorBillNo || '');
+    formData.append('Remarks', item.newRemarks || '');
+    
+    if (item.file) {
+      formData.append('File', item.file);
+      formData.append('ResponseAttachmentName', item.fileName);
+    } else {
+      formData.append('ResponseAttachmentName', '');
+    }
+    
+    formData.append('UpdatedBy', 'cygnusteam');
+
+    this.vendorService.queryResponse(formData).subscribe({
       next: (response: any) => {
         if (response) {
-          
+          if (response.status === 1) {
+            this.sweetAlertService.success(response.message);
+          } else {
+            this.sweetAlertService.info(response.message);
+          }
+          this.getQueryResponse();
         }
       },
       error: (err: any) => {
         console.error('API Error:', err);
+        this.sweetAlertService.error(err.error?.message || 'Something went wrong');
       }
     });
   }
