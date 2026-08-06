@@ -1,0 +1,92 @@
+/* ── SCORPION PALETTE (Modern Clean UI) ── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:host {
+  display: block;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: #F8F9FA; /* Super clean light gray background */
+  color: #1a1a1a;
+  font-size: 13px;
+  min-height: 100vh;
+}
+
+/* ── APP SHELL / TABS ── */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+}
+
+.top-nav-wrapper {
+  background: #ffffff;
+  padding: 16px 24px;
+  border-bottom: 1px solid #E5E7EB;
+  display: flex;
+}
+
+.segmented-control {
+  display: inline-flex;
+  align-items: center;
+  background: #F3F4F6;
+  padding: 6px;
+  border-radius: 12px;
+  gap: 4px;
+}
+
+.sc-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #6B7280;
+  text-decoration: none;
+  user-select: none;
+}
+
+.sc-icon {
+  font-size: 16px;
+}
+
+.sc-title {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.sc-tab:hover:not(.active) {
+  color: #374151;
+  background: rgba(0,0,0,0.04);
+}
+
+.sc-tab.active {
+  background: linear-gradient(135deg, #CC0000, #A30000);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(204, 0, 0, 0.25);
+}
+
+.sc-badge {
+  background: #E5E7EB;
+  color: #4B5563;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: 4px;
+}
+
+.sc-tab.active .sc-badge {
+  background: #ffffff;
+  color: #CC0000;
+}
+
+/* ── MAIN CONTENT ── */
+.main-content {
+  padding: 24px;
+  width: 100%;
+  flex: 1;
+}
