@@ -5,7 +5,7 @@ import { BasicDetailService } from './basic-detail.service';
 import { EmailRegex, mobileNo } from '../constants/common';
 import { MobileNumberValidator } from '../directives/validators/mobile-number-validator';
 import { SweetAlertService } from './sweet-alert.service';
-import {  Subject } from 'rxjs';
+import {  Subject, Subscription } from 'rxjs';
 
 export function pastDateValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -101,6 +101,10 @@ export class DocketService {
   public isContarctService:boolean = false;
   public isSezCustomer: boolean = false;
   public ewayBillDataDisplayed: boolean = false;
+  public listSubscription?: Subscription;
+  public otherSubscription?: Subscription;
+
+  
 
   constructor(private basicDetailService: BasicDetailService, private sweetAlertService: SweetAlertService) { }
 
@@ -308,6 +312,11 @@ export class DocketService {
     this.validateLBHValidators();
   }
 
+  ngOnDestroy(){
+    if(this.listSubscription){this.listSubscription.unsubscribe();}
+    if(this.otherSubscription){this.otherSubscription.unsubscribe();}
+  }
+
   validateLBHValidators(){
     if (this.basicDetailForm.value.serviceType === '1' && this.step2DetailsList?.isVolumentric === 'Y') {
       const maxValidator = this.loginUserList.Type ==='2' ? Validators.max(199.99) : null;
@@ -388,7 +397,7 @@ freightAndOtherChar(){
     this.getBaseCode2();
     this.getBaseCode1();
     this.GetFreightContractDetails();
-    this.getOtherChargesDetail();
+    // this.getOtherChargesDetail();
     this.getFovContractDetails();
 
     // setTimeout(() => {
@@ -1402,6 +1411,7 @@ calculateChargeWeight(){
   }
 
   GetFreightContractDetails() {
+    if (this.listSubscription) { this.listSubscription.unsubscribe(); }
     let cNoteDate = new Date(this.basicDetailForm.value.cNoteDate);
     let dockdt = new Date(Date.UTC(cNoteDate.getFullYear(), cNoteDate.getMonth(), cNoteDate.getDate())).toISOString();
 
@@ -1446,7 +1456,7 @@ calculateChargeWeight(){
     }
     const currentRequestId = ++this.requestId;
 
-    this.basicDetailService.GetFreightContractDetails(data).subscribe({
+    this.listSubscription=this.basicDetailService.GetFreightContractDetails(data).subscribe({
       next: (response: any) => {
         if (response) {
           if (currentRequestId !== this.requestId) {
@@ -1484,6 +1494,7 @@ calculateChargeWeight(){
             });
           }
           this.validateAppointmentDate();
+          this.getOtherChargesDetail();
           this.getFuelSurcharge(this.freightData?.freightCharge);
         }
       }
@@ -1538,6 +1549,7 @@ calculateChargeWeight(){
     });
   }
   getOtherChargesDetail() {
+    if (this.otherSubscription) { this.otherSubscription.unsubscribe(); }
     const chargedWeight = Math.max(this.invoiceform.value.totalActualWeight || 0, this.invoiceform.value.totalCubicWeight || 0)?.toString();
     const payload = {
       "chargeRule":this.ruleDetailForChargeRule?.defaultvalue || 'NONE',
@@ -1574,7 +1586,7 @@ calculateChargeWeight(){
     }
 
     // Call API only if all fields are filled
-    this.basicDetailService.getOtherChargesDetail(payload).subscribe({
+    this.otherSubscription=this.basicDetailService.getOtherChargesDetail(payload).subscribe({
       next: (response) => {
         if (response) {
           this.isSubmiting=true;
