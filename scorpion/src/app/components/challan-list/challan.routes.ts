@@ -113,6 +113,11 @@ export const ChallanRoutes: Routes = [
     loadComponent: () => import('../approver-master/approver-master.component').then(m => m.ApproverMasterComponent),
     loadChildren: () => import('../approver-master/approver-master.routes').then(m => m.APPROVER_MASTER_ROUTES)
     // canActivate: [DocketGuard]
+  },
+   {
+    path: 'approval-master',
+    loadComponent: () => import('../approval-master/approval-master.component').then(m => m.ApprovalMasterComponent),
+    // canActivate: [DocketGuard]
   }
 
 
