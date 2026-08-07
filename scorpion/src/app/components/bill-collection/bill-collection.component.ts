@@ -99,6 +99,14 @@ export class BillCollectionComponent implements OnInit {
     this.billingPartyData = [];
   }
 
+    statusList = [
+    { label: 'All Status', value: 'ALL' },
+    { label: 'Pending', value: 'PENDING' },
+    { label: 'Rejected', value: 'REJECTED' },
+    { label: 'Pending Approval', value: 'PendingApproval' },
+
+  ];
+
   getBillingList() {
     if (this.listSubscription) { this.listSubscription.unsubscribe(); }
 
@@ -108,6 +116,7 @@ export class BillCollectionComponent implements OnInit {
         "Fromdt" : this.commonService.formatDateToISO(this.config.FromDt),
         "Todt" : this.commonService.formatDateToISO(this.config.ToDt),
         "Billtype" : "All",
+        "Status":this.config.Status,
         "Party_code" :this.config.Party_code,
         "billno" : this.config.billNo,
         "PageNo" : this.config.PageNo,
