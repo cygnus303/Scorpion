@@ -1,1 +1,155 @@
-<p>bill-collection works!</p>
+<div class="page">
+    <div class="page-header">
+        <div>
+            <div class="page-title"><span class="icon">💸</span> Bill Collection</div>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="cards-grid">
+        <div class="card total">
+            <div class="card-icon">📄</div>
+            <div class="card-label">Total Bills</div>
+            <div class="card-count" id="cardTotal">6</div>
+            <div class="card-sub">Within selected period</div>
+        </div>
+        <div class="card pending">
+            <div class="card-icon">⏳</div>
+            <div class="card-label">Pending for Collection</div>
+            <div class="card-count" id="cardPending">6</div>
+            <div class="card-sub">Awaiting customer mapping</div>
+        </div>
+        <div class="card partial">
+            <div class="card-icon">🔄</div>
+            <div class="card-label">Partial Collected</div>
+            <div class="card-count" id="cardPartial">0</div>
+            <div class="card-sub">Some balance remaining</div>
+        </div>
+    </div>
+    <div class="filter-bar">
+
+        <div class="filter-field" id="fromField">
+            <label for="dateFrom">From Date</label>
+            <div style="position: relative; display: flex; align-items: center;">
+                <span style="position: absolute; left: 10px; cursor: pointer; pointer-events: none; z-index: 1;">📅</span>
+                <input type="text" id="dateFrom" bsDatepicker
+                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                    [(ngModel)]="config.FromDt" 
+                    style="padding-left: 32px; width: 100%; position: relative;">
+            </div>
+        </div>
+        <div class="filter-field" id="toField">
+            <label for="dateTo">To Date</label>
+            <div style="position: relative; display: flex; align-items: center;">
+                <span style="position: absolute; left: 10px; cursor: pointer; pointer-events: none; z-index: 1;">📅</span>
+                <input type="text" id="dateTo" bsDatepicker [minDate]="config.FromDt"
+                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                    [(ngModel)]="config.ToDt" 
+                    style="padding-left: 32px; width: 100%; position: relative;">
+            </div>
+        </div>
+
+        <div class="filter-field search" id="custField">
+            <label for="custSearch">Customer Name / Code</label>
+            <input type="text" id="custSearch" list="customerList" placeholder="Type code or name…"
+                autocomplete="off" [(ngModel)]="config.SearchText"/>
+            <datalist id="customerList"></datalist>
+        </div>
+
+        <div class="filter-field search" id="onAccountField">
+            <label for="onAccountSearch">Bill No.</label>
+            <input type="text" placeholder="Enter Bill number…" autocomplete="off" [(ngModel)]="config.SearchText" />
+        </div>
+    </div>
+
+    <!-- Table Card — Regular UNR Listing -->
+    <div class="table-card">
+        <div class="table-card-header">
+            <h3>
+                📋 Bill Listing
+                <span class="selection-count" id="selectionCount" style="display:none;">0 selected</span>
+            </h3>
+            <span class="tbl-meta" id="tblMeta">Showing 6 records</span>
+        </div>
+
+        <div class="tbl-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <!-- <th class="cb-cell"><input type="checkbox" id="selectAllCb" class="row-cb" title="Select all" [checked]="isAllSelected" (change)="toggleSelectAll($event)" />
+                        </th> -->
+                        <th class="sno">#</th>
+                        <th>Bill No</th>
+                        <th>Customer Name</th>
+                        <th>Bill Branch</th>
+                        <th>Bill Type</th>
+                        <th>Taxable Amt</th>
+                        <th>GST Amt</th>
+                        <th>Total Amt</th>
+                        <th>Pending Amt</th>
+                        <th>MR</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="isLoading">
+                    <tr>
+                        <td colspan="9" class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && billList.length === 0">
+                    <tr>
+                        <td colspan="9" class="text-center py-4 text-muted fs-5">
+                            No records found.
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading">
+                    <tr class="row-base" *ngFor="let item of billList; let i = index">
+                        <td class="sno" style="font-weight: 500; text-align: center;">
+                            {{ item.sno }}
+                        </td>
+                        <td>
+                            <div class="cust-cell">
+                                <span class="cust-code">{{ item.BILLNO }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="cust-cell">
+                                <span class="cust-code">{{ item.CUSTCODE }}</span>
+                                <span class="cust-name">{{ item.CUSTNAME }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="chq-date">{{ item.BILLBRANCH }}</span>
+                        </td>
+                        <td>
+                            <span class="chq-no">{{ item.BILLTYPE }}</span>
+                        </td>
+                        <td class="amount-cell"><span class="currency">₹</span><span class="amt">{{ item.TAXABLEAMT | number:'1.2-2' }}</span></td>
+                        <td class="amount-cell"><span class="currency">₹</span><span class="amt">{{ item.GSTAMT | number:'1.2-2' }}</span></td>
+                        <td class="amount-cell"><span class="currency">₹</span><span class="amt">{{ item.TOTALAMT | number:'1.2-2' }}</span></td>
+                        <td class="amount-cell"><span class="currency">₹</span><span class="amt">{{ item.PENDINGAMT | number:'1.2-2' }}</span></td>
+                        <td>
+                            <a *ngIf="item.MRNO !== '-'" class="mr-link" title="View MR details">{{ item.MRNO }}</a>
+                            <span *ngIf="item.MRNO === '-'">-</span>
+                        </td>
+                        <td>
+                            <span class="status-badge" [ngStyle]="getStatusStyles(item)">
+                                {{ item.STATUS }}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+         <app-pagination [page]="config.PageNo" [pageSize]="config.PageSize" [totalRecords]="config.totalRecords"
+        [totalPages]="config.totalPages" (pageChange)="setPage($event)">
+    </app-pagination>
+    </div>
+</div>
