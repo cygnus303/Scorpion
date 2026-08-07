@@ -19,6 +19,8 @@ import { DocketService } from 'app/shared/services/docket.service';
 export class BillReceiptComponent {
   @ViewChild('TemplateReceipt', { static: true }) TemplateReceipt!: TemplateRef<any>;
   @ViewChild('BillInvoiceViewComponent') invoiceViewRef!: BillInvoiceViewComponent;
+  @ViewChild('BillInvoiceViewComponent') BillInvoiceViewComponent!: BillInvoiceViewComponent;
+
   @Output() close = new EventEmitter<void>();
   minDate: Date | undefined;
   maxDate: Date | undefined;
@@ -54,12 +56,9 @@ export class BillReceiptComponent {
     this.close.emit();
   }
 
-  openInvoiceView(bill: any) {
-    this.modalService.show(BillInvoiceViewComponent, {
-      initialState: { selectedInvoiceBill: bill },
-      class: 'modal-xl modal-dialog-centered modal-dialog-scrollable',
-      backdrop: true
-    });
+  openInvoiceView(data: any) {
+      this.BillInvoiceViewComponent.showPopup(data);
+    
   }
 
   onFileSelected(event: any) {

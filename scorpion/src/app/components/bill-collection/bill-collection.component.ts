@@ -10,16 +10,20 @@ import { debounceTime, Subject, Subscription } from 'rxjs';
 import { CommonService } from 'app/shared/services/common.service';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { DocketService } from 'app/shared/services/docket.service';
+import { BillInvoiceViewComponent } from './bill-invoice-view/bill-invoice-view.component';
+import { BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-bill-collection',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgSelectModule, BsDatepickerModule, PaginationComponent,BillReceiptComponent],
+  imports: [CommonModule, FormsModule, NgSelectModule, BsDatepickerModule, PaginationComponent,BillReceiptComponent,BillInvoiceViewComponent],
+  providers: [BsModalService],
   templateUrl: './bill-collection.component.html',
   styleUrl: './bill-collection.component.scss'
 })
 export class BillCollectionComponent implements OnInit {
   @ViewChild('BillReceiptComponent') BillReceiptComponent!: BillReceiptComponent;
+  @ViewChild('BillInvoiceViewComponent') BillInvoiceViewComponent!: BillInvoiceViewComponent;
   public isLoading: boolean = false;
   public listSubscription!:Subscription;
   private fetchSubject = new Subject<void>();
@@ -27,7 +31,11 @@ export class BillCollectionComponent implements OnInit {
   public summaryData:any;
   public billingPartyData: any[] = [];
   public notFoundTextValue: string = 'Enter at least 3 characters';
-  
+  statusList = [
+    { label: 'All Status', value: '' },
+    { label: 'Pending', value: 'Bill Due, not Collected' },
+
+  ];
   public config = {
     FromDt: new Date(),
     ToDt: new Date(),
@@ -36,7 +44,7 @@ export class BillCollectionComponent implements OnInit {
     PageSize: 10,
     totalRecords: 0,
     totalPages: 1,
-    billNo: '',
+    billNo: null,
     SearchText: '',
     Party_code: null
   };
@@ -76,6 +84,11 @@ export class BillCollectionComponent implements OnInit {
     this.getBillingList();
   }
 
+    filterByStatus(status: string) {
+    this.config.Status = status;
+    this.fetchData();
+  }
+
   getBillingPartyData(event: any) {
     const searchText = event.term;
     if (!searchText || searchText.length < 3) {
@@ -110,14 +123,6 @@ export class BillCollectionComponent implements OnInit {
     this.billingPartyData = [];
   }
 
-    statusList = [
-    { label: 'All Status', value: 'ALL' },
-    { label: 'Pending', value: 'PENDING' },
-    { label: 'Rejected', value: 'REJECTED' },
-    { label: 'Pending Approval', value: 'PendingApproval' },
-
-  ];
-
   getBillingList() {
     if (this.listSubscription) { this.listSubscription.unsubscribe(); }
 
@@ -134,7 +139,7 @@ export class BillCollectionComponent implements OnInit {
         "IsDownload" : "0",
         "SearchText" : this.config.SearchText,
         "Company_Code": this.docketService.Companycode,
-        "loccode"  : "HQTR",
+        "loccode"  : this.docketService.Location,
       }
     }
     this.isLoading = true;
@@ -147,13 +152,13 @@ export class BillCollectionComponent implements OnInit {
           this.config.totalPages = Math.ceil(this.config.totalRecords / this.config.PageSize);
         } 
         if(response && response.Table1){
-        this.config.totalRecords = response.Table1[0].TotalCount || this.billList.length;
-        this.config.totalPages = response.Table1[0].totalPages || 1;
-        this.config.PageNo = response.Table1[0].currentPage || 1;
-        this.config.PageSize = response.Table1[0].pageSize || 50;
+        this.config.totalRecords = response.Table1[0].TotalRecords || this.billList.length;
+        this.config.totalPages = response.Table1[0].TotalPages || 1;
+        this.config.PageNo = response.Table1[0].PageNo || 1;
+        this.config.PageSize = response.Table1[0].PageSize || 50;
         }
         if(response && response.Table2){
-        this.summaryData=response.Table2;
+        this.summaryData=response.Table2[0];
         }
       } else {
         this.billList = [];
@@ -190,4 +195,8 @@ export class BillCollectionComponent implements OnInit {
   openPopup() {
     this.BillReceiptComponent.showPopup();
   }
+
+    openInvoiceView(data: any) {
+      this.BillInvoiceViewComponent.showPopup(data);
+    }
 }

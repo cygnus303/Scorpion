@@ -7,13 +7,13 @@
 
     <!-- Summary Cards -->
     <div class="cards-grid">
-        <div class="card total">
+        <div class="card total"  [class.active-card]="config.Status === ''" (click)="filterByStatus('')">
             <div class="card-icon">📄</div>
             <div class="card-label">Total Bills</div>
             <div class="card-count" id="cardTotal">{{summaryData?.TotalBillsCount|| 0}}</div>
             <div class="card-sub">{{summaryData?.TotalBillsAmt || 0}} Pending</div>
         </div>
-        <div class="card pending">
+        <div class="card pending"  [class.active-card]="config.Status === 'All'" (click)="filterByStatus('Bill Due, not Collected')">
             <div class="card-icon">⏳</div>
             <div class="card-label">Pending for Collection</div>
             <div class="card-count" id="cardPending">{{summaryData?.TotalPendingCount|| 0}}</div>
@@ -81,7 +81,6 @@
                 <span class="selection-count" id="selectionCount" style="display:none;">0 selected</span>
             </h3>
             <div style="display: flex; align-items: center; gap: 12px;">
-                <span class="tbl-meta" id="tblMeta">Showing 6 records</span>
                 <button type="button" (click)="openPopup()" class="btn btn-danger btn-sm px-4 fw-medium"
                     style="background-color: #b71c1c;">Prepare MR ›</button>
             </div>
@@ -91,7 +90,8 @@
             <table>
                 <thead>
                     <tr>
-                        <th></th>
+                        <th *ngIf="config.Status === ''">#</th>
+                        <th *ngIf="config.Status !== ''"></th>
                         <th>Bill No</th>
                         <th>Bill Date</th>
                         <th>Customer Name</th>
@@ -122,13 +122,14 @@
                         </td>
                     </tr>
                 </tbody>
-                <tbody *ngIf="!isLoading">
+                <tbody *ngIf="!isLoading && billList.length !== 0">
                     <tr class="row-base" *ngFor="let item of billList; let i = index">
-                        <td class="cb-cell">
+                        <td *ngIf="config.Status === ''">{{ i + 1 }}</td>
+                        <td class="cb-cell" *ngIf="config.Status !== ''">
                             <input type="checkbox" class="row-cb" >
                         </td>
                         <td>
-                            <a style="color: #c8102e; font-weight: 700; text-decoration: underline; cursor: pointer; text-underline-offset: 3px;">
+                            <a style="color: #c8102e; font-weight: 700; text-decoration: underline; cursor: pointer; text-underline-offset: 3px;" (click)="openInvoiceView(item?.BILLNO)">
                                 {{ item.BILLNO || '-' }}
                             </a>
                         </td>
@@ -159,7 +160,7 @@
                             {{ item.PENDAMT != null ? (item.PENDAMT | number:'1.2-2') : '-' }}
                         </td>
                         <td style="text-align: center;">
-                            <a style="color: #c8102e; font-weight: 700; text-decoration: underline; cursor: pointer; text-underline-offset: 3px; font-size: 14px;">
+                            <a style="color: #c8102e; font-weight: 700;cursor: pointer; font-size: 14px;">
                                 {{ item.MRNO || '-' }}
                             </a>
                         </td>
@@ -178,5 +179,5 @@
         </app-pagination>
     </div>
 </div>
-
+<app-bill-invoice-view #BillInvoiceViewComponent></app-bill-invoice-view>
 <app-bill-receipt #BillReceiptComponent></app-bill-receipt>
