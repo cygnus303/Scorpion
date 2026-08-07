@@ -3,19 +3,25 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BillInvoiceViewComponent } from '../bill-invoice-view/bill-invoice-view.component';
+import { CommonDateService } from 'app/shared/services/common-date.service';
+import { DocketService } from 'app/shared/services/docket.service';
 
 @Component({
   selector: 'app-bill-receipt',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgSelectModule],
+  imports: [CommonModule, FormsModule, NgSelectModule, BsDatepickerModule,BillInvoiceViewComponent],
   templateUrl: './bill-receipt.component.html',
   styleUrl: './bill-receipt.component.scss',
   providers: [BsModalService]
 })
 export class BillReceiptComponent {
   @ViewChild('TemplateReceipt', { static: true }) TemplateReceipt!: TemplateRef<any>;
+  @ViewChild('BillInvoiceViewComponent') invoiceViewRef!: BillInvoiceViewComponent;
   @Output() close = new EventEmitter<void>();
-
+  minDate: Date | undefined;
+  maxDate: Date | undefined;
   public modalRef!: BsModalRef;
 
   paymentMode: 'cash' | 'bank' = 'cash';
@@ -32,9 +38,12 @@ export class BillReceiptComponent {
   roundOff = 0.00;
   netReceived = 24662.00;
 
-  constructor(private modalService: BsModalService) {}
+  selectedFileName: string = '';
+
+  constructor(private modalService: BsModalService,public commonDateService:CommonDateService,public docketService: DocketService) {}
 
   showPopup(data: any = null) {
+    this.dateAccess();
     this.modalRef = this.modalService.show(this.TemplateReceipt, { class: 'modal-xl modal-dialog-centered modal-dialog-scrollable', backdrop: true });
   }
 
@@ -44,4 +53,45 @@ export class BillReceiptComponent {
     }
     this.close.emit();
   }
+
+  openInvoiceView(bill: any) {
+    this.modalService.show(BillInvoiceViewComponent, {
+      initialState: { selectedInvoiceBill: bill },
+      class: 'modal-xl modal-dialog-centered modal-dialog-scrollable',
+      backdrop: true
+    });
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFileName = file.name;
+    }
+  }
+
+  removeFile() {
+    this.selectedFileName = '';
+  }
+
+   dateAccess() {
+  const payload = {
+    moduleCode: '03',
+    baseUserName: this.docketService.baseUsername
+  };
+
+  this.commonDateService.userDateSelection(payload).subscribe({
+    next: (res: any) => {
+      if (res && res.length > 0) {
+        const rule = res[0];
+        this.minDate = new Date(rule.min_Date);
+        if (rule.backDate_Days && rule.backDate_Days > 0) {
+          const today = new Date();
+          this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
+        }
+
+        this.maxDate = new Date();
+      }
+    }
+  });
+}
 }

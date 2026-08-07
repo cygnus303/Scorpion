@@ -13,7 +13,15 @@
     <div class="row g-3 mb-3">
       <div class="col-md-3">
         <label class="form-label small text-muted mb-1">MR Date</label>
-        <input type="text" class="form-control form-control-sm bg-white" value="07/08/2026 10:36:08" disabled>
+        <div class="input-group input-group-sm">
+          <input type="text" class="form-control bg-white shadow-none" #mrDp="bsDatepicker" bsDatepicker
+            [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"
+            [minDate]="minDate" [maxDate]="maxDate"
+            value="07 August 2026" readonly style="border-color: #ced4da;">
+          <span class="input-group-text cursor-pointer bg-white" (click)="mrDp.toggle()" style="border-color: #ced4da;">
+            <i class="fa fa-calendar"></i>
+          </span>
+        </div>
       </div>
       <div class="col-md-6">
         <label class="form-label small text-muted mb-1">Party Name</label>
@@ -33,27 +41,27 @@
 
     <!-- Section: BILL DETAILS -->
     <h6 class="text-danger fw-bold border-bottom border-danger pb-2 mb-3" style="font-size: 0.9rem;">BILL DETAILS</h6>
-    <div class="table-responsive mb-2">
-      <table class="table table-bordered table-sm align-middle mb-0 bg-white" style="font-size: 0.8rem;">
-        <thead class="text-center" style="background-color: #fcfcfc;">
+    <div class="table-responsive mb-3 border-bottom pb-2">
+      <table class="table table-bordered table-sm align-middle mb-0 bg-white" style="font-size: 0.85rem; border-color: #e0e0e0;">
+        <thead class="text-center align-middle">
           <tr>
-            <th class="text-danger fw-bold" style="font-size: 0.8rem;">Bill No</th>
-            <th class="text-danger fw-bold" style="font-size: 0.8rem;">Bill Date</th>
-            <th class="text-danger fw-bold" style="font-size: 0.8rem;">Bill Branch</th>
-            <th class="text-danger fw-bold" style="font-size: 0.8rem;">Bill Type</th>
-            <th class="text-danger fw-bold" style="font-size: 0.8rem;">Taxable Amt</th>
-            <th class="text-danger fw-bold" style="font-size: 0.8rem;">GST Amt</th>
-            <th class="text-danger fw-bold" style="font-size: 0.8rem;">Total Amt</th>
-            <th class="text-danger fw-bold" style="font-size: 0.8rem;">Collection Amount</th>
-            <th class="text-danger fw-bold" style="font-size: 0.8rem;">Pending Amt</th>
-            <th class="text-danger fw-bold" style="font-size: 0.8rem;">TDS Amt (-)</th>
-            <th class="text-danger fw-bold" style="font-size: 0.8rem;">Bank Charges</th>
-            <th class="text-danger fw-bold" style="font-size: 0.8rem;">Round Off</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Bill No</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Bill Date</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Bill Branch</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Bill Type</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Taxable Amt</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">GST Amt</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Total Amt</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Collection Amount</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Pending Amt</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">TDS Amt (-)</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Bank Charges</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Round Off</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let bill of bills" class="text-center">
-            <td><a href="javascript:void(0)" class="text-danger fw-bold text-decoration-underline">{{ bill.no }}</a></td>
+            <td><a href="javascript:void(0)" class="text-danger fw-bold text-decoration-underline" (click)="openInvoiceView(bill)">{{ bill.no }}</a></td>
             <td>{{ bill.date }}</td>
             <td>{{ bill.branch }}</td>
             <td>{{ bill.type }}</td>
@@ -61,17 +69,17 @@
             <td>{{ bill.gst | number:'1.2-2' }}</td>
             <td>{{ bill.total | number:'1.2-2' }}</td>
             <td>
-              <input type="number" class="form-control form-control-sm text-center" [value]="bill.collection" style="width: 80px; margin: 0 auto;">
+              <input type="number" class="form-control form-control-sm text-end shadow-none" [value]="bill.collection" style="width: 100px; margin: 0 auto; border-color: #ced4da;">
             </td>
             <td>{{ bill.pending | number:'1.2-2' }}</td>
             <td>
-              <input type="number" class="form-control form-control-sm text-center" [value]="bill.tds" style="width: 60px; margin: 0 auto;">
+              <input type="number" class="form-control form-control-sm text-end shadow-none" [value]="bill.tds" style="width: 80px; margin: 0 auto; border-color: #ced4da;">
             </td>
             <td>
-              <input type="number" class="form-control form-control-sm text-center" [value]="bill.bankChg" style="width: 60px; margin: 0 auto;">
+              <input type="number" class="form-control form-control-sm text-end shadow-none" [value]="bill.bankChg" style="width: 80px; margin: 0 auto; border-color: #ced4da;">
             </td>
             <td>
-              <input type="checkbox" class="form-check-input" [checked]="bill.roundOff">
+              <input type="checkbox" class="form-check-input shadow-none" [checked]="bill.roundOff" style="border-color: #ced4da;">
             </td>
           </tr>
         </tbody>
@@ -80,9 +88,15 @@
     
     <!-- Attachment -->
     <div class="mb-4">
-      <label class="form-label small mb-1">Attachment (deposit slip / proof) <span class="text-danger">*</span></label>
-      <input type="file" class="form-control form-control-sm" style="width: 300px; background-color: #fff;">
-      <div class="form-text small" style="font-size: 0.75rem;">Attachment is mandatory before submitting the MR.</div>
+      <label class="form-label small fw-bold mb-2 text-secondary">Attachment (deposit slip / proof) <span class="text-danger">*</span></label>
+      
+      <div>
+        <input type="file" style="border: 1px solid #ced4da; border-radius: 4px; padding: 4px; width: 400px; background-color: #fff; font-size: 0.85rem;" (change)="onFileSelected($event)">
+      </div>
+      
+      <div class="form-text mt-1 text-muted" style="font-size: 0.75rem;">
+        Attachment is mandatory before submitting the MR.
+      </div>
     </div>
 
     <!-- Section: COLLECTION DETAILS -->
@@ -136,7 +150,14 @@
           </div>
           <div class="col-md-3" *ngIf="bankMode === 'cheque'">
             <label class="form-label small text-muted mb-1">Cheque Date</label>
-            <input type="date" class="form-control form-control-sm bg-white">
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control bg-white shadow-none" #dp="bsDatepicker" bsDatepicker
+                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"
+                placeholder="Select Date" readonly style="border-color: #ced4da;">
+              <span class="input-group-text cursor-pointer bg-white" (click)="dp.toggle()" style="border-color: #ced4da;">
+                <i class="fa fa-calendar"></i>
+              </span>
+            </div>
           </div>
         </div>
 
@@ -188,8 +209,9 @@
   </div>
   
   <!-- Modal Footer -->
-  <div class="modal-footer border-top p-3 bg-white d-flex justify-content-end">
+  <div class="modal-footer border-top p-3 bg-white d-flex justify-content-end gap-2">
     <button type="button" class="btn btn-outline-secondary btn-sm px-4 fw-medium" (click)="closePopup()">Cancel</button>
-    <button type="button" class="btn btn-danger btn-sm px-4 fw-medium ms-2" style="background-color: #b71c1c;">Submit</button>
+    <button type="button" class="btn btn-danger btn-sm px-4 fw-medium shadow-sm" style="background-color: #b71c1c;">Submit</button>
   </div>
 </ng-template>
+<app-bill-invoice-view #BillInvoiceViewComponent></app-bill-invoice-view>
