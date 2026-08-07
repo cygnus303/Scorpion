@@ -163,6 +163,7 @@ export class BillReceiptComponent {
       date: new FormControl(b?.BGNDT || ''),
       branch: new FormControl(b?.Bbrcdnm || ''),
       type: new FormControl(b?.PAYBAS || ''),
+      PAYMode: new FormControl(b?.PAYMode || ''),
       tax: new FormControl(b?.Taxable_Amt || 0),
       gst: new FormControl(b?.GSTAmt || 0),
       total: new FormControl(b?.BILLAMT || 0),
@@ -295,7 +296,7 @@ export class BillReceiptComponent {
       const ampm = hours >= 12 ? 'PM' : 'AM';
       hours = hours % 12;
       hours = hours ? hours : 12; 
-      return `${month}/${day}/${year} ${pad(hours)}:${minutes}:${seconds} ${ampm}`;
+      return `${pad(month)}/${pad(day)}/${year} ${pad(hours)}:${minutes}:${seconds} ${ampm}`;
     };
 
     const formData = new FormData();
@@ -306,7 +307,10 @@ export class BillReceiptComponent {
     formData.append('VM.ObjBillMst.BILLNO', bills.length > 0 ? bills[0].no : "");
     formData.append('VM.ObjBillMst.PENDAMT', String(bills.reduce((sum: number, b: any) => sum + (Number(b.pending) || 0), 0)));
     formData.append('VM.ObjBillMst.Netamt', String(this.netReceived));
-    formData.append('VM.ObjBillMst.UNEXPDED', "0");
+    
+    const totalBalance = bills.reduce((sum: number, b: any) => sum + ((Number(b.pending) || 0) - (Number(b.collection) || 0)), 0);
+    formData.append('VM.ObjBillMst.UNEXPDED', String(totalBalance));
+    
     formData.append('VM.ObjBillMst.REMARK', formVal.remarks || "");
     formData.append('VM.ObjBillMst.Col_Amt', String(this.totalCollection));
     formData.append('VM.ObjBillMst.RoundOffP', String(bills.reduce((sum: number, b: any) => sum + (Number(b.roundOffPlus) || 0), 0)));
@@ -315,9 +319,9 @@ export class BillReceiptComponent {
     formData.append('VM.ObjBillMst.Freight_Deduction', "0");
     formData.append('VM.ObjBillMst.Claim_Deduction', "0");
     formData.append('VM.ObjBillMst.Other_Amount', String(this.bankCharges));
-    formData.append('VM.ObjBillMst.Bank_Charges', "0");
+    formData.append('VM.ObjBillMst.Bank_Charges', String(this.bankCharges));
     formData.append('VM.ObjBillMst.PTMSCD', this.originalBills.length > 0 ? this.originalBills[0].PTMSCD : "");
-    formData.append('VM.ObjBillMst.PAYBAS', bills.length > 0 ? bills[0].type : "");
+    formData.append('VM.ObjBillMst.PAYBAS', bills.length > 0 ? bills[0].PAYMode : "");
     formData.append('VM.ObjBillMst.BILLAMT', String(bills.reduce((sum: number, b: any) => sum + (Number(b.total) || 0), 0)));
     formData.append('VM.ObjBillMst.cess_rate', "0");
     formData.append('VM.ObjBillMst.H_cess_rate', "0");
@@ -326,7 +330,7 @@ export class BillReceiptComponent {
     formData.append('VM.ManualMRNO', "-");
     formData.append('VM.PartyCode', this.originalBills.length > 0 ? this.originalBills[0].PTMSCD : "-");
     formData.append('VM.PartyName', formVal.partyName || "-");
-    formData.append('VM.PAYBAS', bills.length > 0 ? bills[0].type : "-");
+    formData.append('VM.PAYBAS', bills.length > 0 ? bills[0].PAYMode : "-");
     formData.append('VM.SecurityLedger', "-");
     formData.append('VM.TDSLedger', "-");
     formData.append('VM.Remarks', formVal.remarks || "-");
@@ -348,14 +352,16 @@ export class BillReceiptComponent {
       const netamt = (Number(b.collection) || 0) - (Number(b.tds) || 0) + (Number(b.bankChg) || 0) - (Number(b.roundOffMinus) || 0) + (Number(b.roundOffPlus) || 0);
       formData.append(`BillList[${index}].netamt`, String(netamt));
       
-      formData.append(`BillList[${index}].paybas`, b.type || "");
+      formData.append(`BillList[${index}].paybas`, b.PAYMode || "");
       formData.append(`BillList[${index}].roundOffM`, String(b.roundOffMinus || 0));
       formData.append(`BillList[${index}].roundOffP`, String(b.roundOffPlus || 0));
-      formData.append(`BillList[${index}].bank_Charges`, "0");
+      formData.append(`BillList[${index}].bank_Charges`, String(b.bankChg || 0));
       formData.append(`BillList[${index}].uploadedFile`, b.attachment || this.selectedFileName || "");
       formData.append(`BillList[${index}].cess_rate`, "0");
       formData.append(`BillList[${index}].pendamt`, String(b.pending || 0));
-      formData.append(`BillList[${index}].unexpded`, "0");
+      
+      const balanceAmt = (Number(b.pending) || 0) - (Number(b.collection) || 0);
+      formData.append(`BillList[${index}].unexpded`, String(balanceAmt));
     });
 
     formData.append('PC.ChequeNo', formVal.chequeNo || "-");
@@ -363,8 +369,8 @@ export class BillReceiptComponent {
       formData.append('PC.ChequeDate', formatCustomDate(chequeDateObj));
     }
     formData.append('PC.PayAmount', String(this.netReceived));
-    const finalPaymentMode = formVal.paymentMode === 'bank' ? formVal.bankMode : formVal.paymentMode;
-    formData.append('PC.PaymentMode', finalPaymentMode || "-");
+    // const finalPaymentMode = formVal.paymentMode === 'bank' ? formVal.bankMode : formVal.paymentMode;
+    formData.append('PC.PaymentMode', formVal.paymentMode || "-");
     
     const isCash = formVal.paymentMode === 'cash';
     formData.append('PC.ChequeAmount', String(isCash ? 0 : this.netReceived));
