@@ -196,7 +196,12 @@ export class BillCollectionComponent implements OnInit {
     this.BillReceiptComponent.showPopup();
   }
 
-    openInvoiceView(data: any) {
-      this.BillInvoiceViewComponent.showPopup(data);
-    }
+  openInvoiceView(data: any) {
+    this.BillInvoiceViewComponent.showPopup(data);
+  }
+  
+  onSearchChange() {
+    this.config.PageNo = 1;
+    this.fetchSubject.next();
+  }
 }

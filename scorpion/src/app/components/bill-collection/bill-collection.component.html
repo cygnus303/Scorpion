@@ -63,7 +63,7 @@
 
         <div class="filter-field search" id="onAccountField">
             <label for="onAccountSearch">Bill No.</label>
-            <input type="text" placeholder="Enter Bill number…" autocomplete="off" [(ngModel)]="config.SearchText" />
+            <input type="text" placeholder="Enter Bill number…" autocomplete="off" [(ngModel)]="config.SearchText" (keyup)="onSearchChange()"/>
         </div>
     </div>
 
