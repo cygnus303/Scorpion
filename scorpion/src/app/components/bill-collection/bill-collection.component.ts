@@ -221,25 +221,18 @@ export class BillCollectionComponent implements OnInit {
         return;
       }
       this.selectedPartyCode = pCode;
+      item.selected = true;
       
-      // Auto-select all bills for this customer
-      this.billList.forEach(b => {
-        if (this.getPartyCode(b) === this.selectedPartyCode) {
-          b.selected = true;
-          if (!this.selectedBills.find(sb => sb.BILLNO === b.BILLNO)) {
-            this.selectedBills.push(b);
-          }
-        }
-      });
+      if (!this.selectedBills.find(sb => sb.BILLNO === item.BILLNO)) {
+        this.selectedBills.push(item);
+      }
     } else {
-      // Unselect all bills for this customer
-      this.billList.forEach(b => {
-        if (this.getPartyCode(b) === this.selectedPartyCode) {
-          b.selected = false;
-        }
-      });
-      this.selectedBills = [];
-      this.selectedPartyCode = null;
+      item.selected = false;
+      this.selectedBills = this.selectedBills.filter(sb => sb.BILLNO !== item.BILLNO);
+      
+      if (this.selectedBills.length === 0) {
+        this.selectedPartyCode = null;
+      }
     }
   }
 
