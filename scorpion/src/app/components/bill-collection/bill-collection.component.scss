@@ -160,8 +160,17 @@
   box-shadow: 0 0 0 2px rgba(200, 16, 46, 0.12);
 }
 
-.filter-field.search { flex: 1; min-width: 200px; }
-#custField { flex: 1.3; min-width: 240px; } /* Slightly increased width for the customer dropdown */
+.filter-field.search {
+  flex: 1;
+  min-width: 200px;
+}
+
+#custField {
+  flex: 1.3;
+  min-width: 240px;
+}
+
+/* Slightly increased width for the customer dropdown */
 
 /* ── Filter Bar ng-select styling overrides ── */
 .filter-field.search input {
@@ -214,11 +223,36 @@
   margin-left: 8px;
 }
 
-.tbl-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-thead th { background: #a50f0f; color: #ffffff; font-weight: 600; padding: 11px 12px; text-align: left; border: none; white-space: nowrap; font-size: 12px; }
-tbody td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
-tbody tr:hover { background: #fdfdfd; }
+.tbl-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+thead th {
+  background: #a50f0f;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 11px 12px;
+  text-align: left;
+  border: none;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+tbody tr:hover {
+  background: #fdfdfd;
+}
 
 .sno {
   color: #9e9e9e;

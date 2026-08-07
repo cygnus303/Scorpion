@@ -7,13 +7,14 @@
 
     <!-- Summary Cards -->
     <div class="cards-grid">
-        <div class="card total"  [class.active-card]="config.Status === ''" (click)="filterByStatus('')">
+        <div class="card total" [class.active-card]="config.Status === ''" (click)="filterByStatus('')">
             <div class="card-icon">📄</div>
             <div class="card-label">Total Bills</div>
             <div class="card-count" id="cardTotal">{{summaryData?.TotalBillsCount|| 0}}</div>
             <div class="card-sub">{{summaryData?.TotalBillsAmt || 0}} Pending</div>
         </div>
-        <div class="card pending"  [class.active-card]="config.Status === 'All'" (click)="filterByStatus('Bill Due, not Collected')">
+        <div class="card pending" [class.active-card]="config.Status === 'All'"
+            (click)="filterByStatus('Bill Due, not Collected')">
             <div class="card-icon">⏳</div>
             <div class="card-label">Pending for Collection</div>
             <div class="card-count" id="cardPending">{{summaryData?.TotalPendingCount|| 0}}</div>
@@ -42,19 +43,17 @@
                     [(ngModel)]="config.ToDt" style="padding-left: 32px; width: 100%; position: relative;">
             </div>
         </div>
-         <div class="filter-field" id="billtyField" >
+        <div class="filter-field" id="billtyField">
             <label>Bill Type</label>
-             <ng-select type="text" placeholder="Bill Type" [items]="statusList" bindLabel="label" bindValue="value"
-                        [(ngModel)]="config.Status" (change)="fetchData()"
-                        class="custom-status-select clear-icon"></ng-select>
+            <ng-select type="text" placeholder="Bill Type" [items]="statusList" bindLabel="label" bindValue="value"
+                [(ngModel)]="config.Status" (change)="fetchData()" class="custom-status-select clear-icon"></ng-select>
         </div>
 
         <div class="filter-field search" id="custField">
             <label for="custSearch">Customer Name / Code</label>
-            <ng-select class="noFoundTextColor remove-white-space" placeholder="Select Customer"
-                [searchable]="true" [clearable]="true" (search)="getBillingPartyData($event)"
-                [(ngModel)]="config.Party_code" [notFoundText]="notFoundTextValue" (change)="fetchData()"
-                (open)="resetBillingPartyDropdown()">
+            <ng-select class="noFoundTextColor remove-white-space" placeholder="Select Customer" [searchable]="true"
+                [clearable]="true" (search)="getBillingPartyData($event)" [(ngModel)]="config.Party_code"
+                [notFoundText]="notFoundTextValue" (change)="fetchData()" (open)="resetBillingPartyDropdown()">
                 <ng-option *ngFor="let item of billingPartyData" [value]="item.custcd">
                     <strong>{{ item.custcd }}</strong> : {{ item.custnm }}
                 </ng-option>
@@ -63,7 +62,8 @@
 
         <div class="filter-field search" id="onAccountField">
             <label for="onAccountSearch">Bill No.</label>
-            <input type="text" placeholder="Enter Bill number…" autocomplete="off" [(ngModel)]="config.SearchText" (keyup)="onSearchChange()"/>
+            <input type="text" placeholder="Enter Bill number…" autocomplete="off" [(ngModel)]="config.SearchText"
+                (keyup)="onSearchChange()" />
         </div>
     </div>
 
@@ -120,10 +120,11 @@
                     <tr class="row-base" *ngFor="let item of billList; let i = index">
                         <td *ngIf="config.Status === ''">{{ i + 1 }}</td>
                         <td class="cb-cell" *ngIf="config.Status !== ''">
-                            <input type="checkbox" class="row-cb" >
+                            <input type="checkbox" class="row-cb">
                         </td>
                         <td>
-                            <a style="color: #c8102e; font-weight: 700; text-decoration: underline; cursor: pointer; text-underline-offset: 3px;" (click)="openInvoiceView(item?.BILLNO)">
+                            <a style="color: #c8102e; font-weight: 700; text-decoration: underline; cursor: pointer; text-underline-offset: 3px;"
+                                (click)="openInvoiceView(item?.BILLNO)">
                                 {{ item.BILLNO || '-' }}
                             </a>
                         </td>
