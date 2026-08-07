@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { PaginationComponent } from 'app/shared/components/pagination/pagination.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CommonModule } from '@angular/common';
+import { BillReceiptComponent } from './bill-receipt/bill-receipt.component';
 
 @Component({
   selector: 'app-bill-collection',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgSelectModule, BsDatepickerModule, PaginationComponent],
+  imports: [CommonModule, FormsModule, NgSelectModule, BsDatepickerModule, PaginationComponent,BillReceiptComponent],
   templateUrl: './bill-collection.component.html',
   styleUrl: './bill-collection.component.scss'
 })
 export class BillCollectionComponent implements OnInit {
+  @ViewChild('BillReceiptComponent') BillReceiptComponent!: BillReceiptComponent;
   public isLoading: boolean = false;
   public billList: any[] = [];
   public config = {
@@ -126,5 +128,10 @@ export class BillCollectionComponent implements OnInit {
       return { 'background': '#e8f5e9', 'color': '#2e7d32', 'border': '1px solid #a5d6a7' };
     }
     return {};
+  }
+
+
+  openPopup() {
+    this.BillReceiptComponent.showPopup();
   }
 }

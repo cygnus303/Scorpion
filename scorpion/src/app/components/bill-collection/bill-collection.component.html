@@ -70,6 +70,7 @@
                 <span class="selection-count" id="selectionCount" style="display:none;">0 selected</span>
             </h3>
             <span class="tbl-meta" id="tblMeta">Showing 6 records</span>
+            <button type="button" (click)="openPopup()" class="btn btn-danger btn-sm px-4 fw-medium ms-2" style="background-color: #b71c1c;">Prepare MR ›</button>
         </div>
 
         <div class="tbl-wrap">
@@ -153,3 +154,5 @@
     </app-pagination>
     </div>
 </div>
+
+<app-bill-receipt #BillReceiptComponent></app-bill-receipt>
