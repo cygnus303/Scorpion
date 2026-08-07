@@ -119,8 +119,8 @@
                 <tbody *ngIf="!isLoading && billList.length !== 0">
                     <tr class="row-base" *ngFor="let item of billList; let i = index">
                         <td *ngIf="config.Status === ''">{{ i + 1 }}</td>
-                        <td class="cb-cell" *ngIf="config.Status !== ''">
-                            <input type="checkbox" class="row-cb">
+                        <td class="cb-cell" >
+                            <input *ngIf="!selectedPartyCode || selectedPartyCode === getPartyCode(item)" type="checkbox" class="row-cb" [checked]="item.selected" (change)="onCheckboxChange(item, $event)">
                         </td>
                         <td>
                             <a style="color: #c8102e; font-weight: 700; text-decoration: underline; cursor: pointer; text-underline-offset: 3px;"

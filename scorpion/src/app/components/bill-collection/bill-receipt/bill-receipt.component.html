@@ -8,7 +8,7 @@
   </div>
 
   <!-- Modal Body -->
-  <div class="modal-body" style="background-color: #f8f9fa;">
+  <div class="modal-body" style="background-color: #f8f9fa;" [formGroup]="receiptForm">
     <!-- Top Info Row -->
     <div class="row g-3 mb-3">
       <div class="col-md-3">
@@ -16,8 +16,8 @@
         <div class="input-group input-group-sm">
           <input type="text" class="form-control bg-white shadow-none" #mrDp="bsDatepicker" bsDatepicker
             [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"
-            [minDate]="minDate" [maxDate]="maxDate"
-            value="07 August 2026" readonly style="border-color: #ced4da;">
+            [minDate]="minDate" [maxDate]="maxDate" [class.disabled-input]="true"
+            formControlName="mrDate" readonly style="border-color: #ced4da;">
           <span class="input-group-text cursor-pointer bg-white" (click)="mrDp.toggle()" style="border-color: #ced4da;">
             <i class="fa fa-calendar"></i>
           </span>
@@ -25,18 +25,18 @@
       </div>
       <div class="col-md-6">
         <label class="form-label small text-muted mb-1">Party Name</label>
-        <input type="text" class="form-control form-control-sm bg-white" value="C00120010 : ALKEM LAB LTD - SAMPLE" disabled>
+        <input type="text" class="form-control form-control-sm bg-white" formControlName="partyName" readonly>
       </div>
       <div class="col-md-3">
         <label class="form-label small text-muted mb-1">MR Branch</label>
-        <input type="text" class="form-control form-control-sm bg-white" value="HDR : HARIDWAR" disabled>
+        <input type="text" class="form-control form-control-sm bg-white" formControlName="mrBranch" readonly>
       </div>
     </div>
 
     <!-- Remarks -->
     <div class="mb-4">
       <label class="form-label small text-muted mb-1">Remarks</label>
-      <input type="text" class="form-control form-control-sm bg-white" placeholder="Enter remarks (optional)">
+      <input type="text" class="form-control form-control-sm bg-white" placeholder="Enter remarks (optional)" formControlName="remarks">
     </div>
 
     <!-- Section: BILL DETAILS -->
@@ -52,34 +52,49 @@
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Taxable Amt</th>
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">GST Amt</th>
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Total Amt</th>
-            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Collection Amount</th>
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Pending Amt</th>
-            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">TDS Amt (-)</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Collection Amt.</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Balance Amt.</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">TDS Amt. (-)</th>
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Bank Charges</th>
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Round Off</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Net Recd. Amt.</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Attachment</th>
           </tr>
         </thead>
-        <tbody>
-          <tr *ngFor="let bill of bills" class="text-center">
-            <td><a href="javascript:void(0)" class="text-danger fw-bold text-decoration-underline" (click)="openInvoiceView(bill)">{{ bill.no }}</a></td>
-            <td>{{ bill.date }}</td>
-            <td>{{ bill.branch }}</td>
-            <td>{{ bill.type }}</td>
-            <td>{{ bill.tax | number:'1.2-2' }}</td>
-            <td>{{ bill.gst | number:'1.2-2' }}</td>
-            <td>{{ bill.total | number:'1.2-2' }}</td>
+        <tbody formArrayName="bills">
+          <tr *ngFor="let bill of billsArray.controls; let i = index" [formGroupName]="i" class="text-center">
+            <td><a href="javascript:void(0)" class="text-danger fw-bold text-decoration-underline" (click)="openInvoiceView(bill.value)">{{ bill.value.no }}</a></td>
+            <td>{{ bill.value.date | date:'dd MMM yyyy' }}</td>
+            <td>{{ bill.value.branch }}</td>
+            <td>{{ bill.value.type }}</td>
+            <td>{{ bill.value.tax | number:'1.2-2' }}</td>
+            <td>{{ bill.value.gst | number:'1.2-2' }}</td>
+            <td>{{ bill.value.total | number:'1.2-2' }}</td>
+            <td>{{ bill.value.pending | number:'1.2-2' }}</td>
             <td>
-              <input type="number" class="form-control form-control-sm text-end shadow-none" [value]="bill.collection" style="width: 100px; margin: 0 auto; border-color: #ced4da;">
-            </td>
-            <td>{{ bill.pending | number:'1.2-2' }}</td>
-            <td>
-              <input type="number" class="form-control form-control-sm text-end shadow-none" [value]="bill.tds" style="width: 80px; margin: 0 auto; border-color: #ced4da;">
-            </td>
-            <td>
-              <input type="number" class="form-control form-control-sm text-end shadow-none" [value]="bill.bankChg" style="width: 80px; margin: 0 auto; border-color: #ced4da;">
+              <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g,'');" class="form-control form-control-sm text-end shadow-none" formControlName="collection" style="width: 100px; margin: 0 auto; border-color: #ced4da;" [ngClass]="{'border-danger': bill.get('collection')?.value > bill.get('pending')?.value, 'text-danger': bill.get('collection')?.value > bill.get('pending')?.value}">
+              <div *ngIf="bill.get('collection')?.value > bill.get('pending')?.value" class="text-danger mt-1" style="font-size: 0.7rem; line-height: 1.1; max-width: 120px; text-align: left; margin: 0 auto;">
+                Please enter a value less than or equal to {{ bill.get('pending')?.value }}.
+              </div>
             </td>
             <td>
-              <input type="checkbox" class="form-check-input shadow-none" [checked]="bill.roundOff" style="border-color: #ced4da;">
+               <input type="text" class="form-control form-control-sm text-end bg-light shadow-none" [value]="(bill.value.pending - bill.value.collection) | number:'1.2-2'" style="width: 100px; margin: 0 auto; border-color: #ced4da;" readonly disabled>
+            </td>
+            <td>
+              <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g,'');" class="form-control form-control-sm text-end shadow-none" formControlName="tds" style="width: 80px; margin: 0 auto; border-color: #ced4da;">
+            </td>
+            <td>
+              <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g,'');" class="form-control form-control-sm text-end shadow-none" formControlName="bankChg" style="width: 80px; margin: 0 auto; border-color: #ced4da;">
+            </td>
+            <td>
+              <input type="checkbox" class="form-check-input" formControlName="isRoundOff" style="width: 1.2em; height: 1.2em; margin-top: 0.3em; border-color: #ced4da;">
+            </td>
+            <td>
+               <input type="text" class="form-control form-control-sm text-end bg-light shadow-none" [value]="getNetRecdAmt(i) | number:'1.2-2'" style="width: 100px; margin: 0 auto; border-color: #ced4da;" readonly disabled>
+            </td>
+            <td>
+              <input type="file" class="form-control form-control-sm shadow-none" style="width: 180px; margin: 0 auto; border-color: #ced4da; font-size: 0.75rem;" (change)="onBillFileSelected($event, i)">
             </td>
           </tr>
         </tbody>
@@ -87,7 +102,7 @@
     </div>
     
     <!-- Attachment -->
-    <div class="mb-4">
+    <!-- <div class="mb-4">
       <label class="form-label small fw-bold mb-2 text-secondary">Attachment (deposit slip / proof) <span class="text-danger">*</span></label>
       
       <div>
@@ -97,18 +112,18 @@
       <div class="form-text mt-1 text-muted" style="font-size: 0.75rem;">
         Attachment is mandatory before submitting the MR.
       </div>
-    </div>
+    </div> -->
 
     <!-- Section: COLLECTION DETAILS -->
     <h6 class="text-danger fw-bold border-bottom border-danger pb-2 mb-3" style="font-size: 0.9rem;">COLLECTION DETAILS</h6>
     <div class="mb-3">
       <label class="form-label small text-muted mb-2 d-block">Payment Mode</label>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="paymentMode" id="cashRadio" value="cash" [(ngModel)]="paymentMode">
+        <input class="form-check-input" type="radio" name="paymentMode" id="cashRadio" value="cash" formControlName="paymentMode" (change)="getLedgerList('CASH')">
         <label class="form-check-label small text-dark" for="cashRadio">Cash</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="paymentMode" id="bankRadio" value="bank" [(ngModel)]="paymentMode">
+        <input class="form-check-input" type="radio" name="paymentMode" id="bankRadio" value="bank" formControlName="paymentMode" (change)="getLedgerList('BANK')">
         <label class="form-check-label small text-dark" for="bankRadio">Bank</label>
       </div>
     </div>
@@ -119,11 +134,11 @@
         <div class="row g-3">
           <div class="col-md-3">
             <label class="form-label small text-muted mb-1">Amount Applicable</label>
-            <input type="text" class="form-control form-control-sm bg-light" value="24,662.00" disabled>
+            <input type="text" class="form-control form-control-sm bg-light" [value]="netReceived | number:'1.2-2'" disabled>
           </div>
           <div class="col-md-9">
             <label class="form-label small text-muted mb-1">Account Code</label>
-            <input type="text" class="form-control form-control-sm bg-light" value="Cash In Hand-HO/RO/BRANCH" disabled>
+            <ng-select [items]="cashLedgers" bindLabel="Text" bindValue="Value" placeholder="Select Account Code" formControlName="cashAccountCode" class="bg-white"></ng-select>
           </div>
         </div>
       </div>
@@ -134,25 +149,30 @@
       <div class="card-body p-3">
         <div class="mb-3">
           <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="bankMode" id="chequeRadio" value="cheque" [(ngModel)]="bankMode">
+            <input class="form-check-input" type="radio" name="bankMode" id="chequeRadio" value="cheque" formControlName="bankMode">
             <label class="form-check-label small text-primary fw-medium" for="chequeRadio">Cheque No.</label>
           </div>
           <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="bankMode" id="rtgsRadio" value="rtgs" [(ngModel)]="bankMode">
+            <input class="form-check-input" type="radio" name="bankMode" id="rtgsRadio" value="rtgs" formControlName="bankMode">
             <label class="form-check-label small text-dark" for="rtgsRadio">RTGS / NEFT No.</label>
           </div>
         </div>
         
         <div class="row g-3 mb-4">
           <div class="col-md-3">
+            <label class="form-label small text-muted mb-1">{{ bankMode === 'cheque' ? 'Cheque Amount' : 'Amount' }}</label>
+            <input type="text" class="form-control form-control-sm bg-light" [value]="netReceived | number:'1.2-2'" disabled>
+          </div>
+          <div class="col-md-3">
             <label class="form-label small text-muted mb-1">{{ bankMode === 'cheque' ? 'Cheque No.' : 'RTGS / NEFT No.' }}</label>
-            <input type="text" class="form-control form-control-sm bg-white" placeholder="Enter number">
+            <input type="text" class="form-control form-control-sm bg-white" placeholder="Enter number" formControlName="chequeNo" (change)="checkBouncedCheque()">
           </div>
           <div class="col-md-3" *ngIf="bankMode === 'cheque'">
             <label class="form-label small text-muted mb-1">Cheque Date</label>
             <div class="input-group input-group-sm">
               <input type="text" class="form-control bg-white shadow-none" #dp="bsDatepicker" bsDatepicker
                 [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"
+                formControlName="chequeDate"
                 placeholder="Select Date" readonly style="border-color: #ced4da;">
               <span class="input-group-text cursor-pointer bg-white" (click)="dp.toggle()" style="border-color: #ced4da;">
                 <i class="fa fa-calendar"></i>
@@ -162,20 +182,18 @@
         </div>
 
         <h6 class="text-danger fw-bold border-bottom border-danger pb-2 mb-3" style="font-size: 0.85rem;">BANK DETAILS</h6>
-        <div class="row g-3">
+        <div class="row g-3 mb-3">
           <div class="col-md-4">
             <label class="form-label small text-muted mb-1">Deposited In Bank</label>
-            <select class="form-select form-select-sm bg-white">
-               <option selected>HDFC BANK C C A/C 50200033944301 (MR)</option>
-            </select>
+            <ng-select [items]="bankLedgers" bindLabel="Text" bindValue="Value" placeholder="Select Bank" formControlName="depositedInBank" class="bg-white"></ng-select>
           </div>
           <div class="col-md-4">
             <label class="form-label small text-muted mb-1">Received From Bank</label>
-            <input type="text" class="form-control form-control-sm bg-white" placeholder="e.g. AXIS BANK">
+            <input type="text" class="form-control form-control-sm bg-white" placeholder="e.g. AXIS BANK" formControlName="receivedFromBank">
           </div>
           <div class="col-md-4">
             <label class="form-label small text-muted mb-1">Bank Branch</label>
-            <input type="text" class="form-control form-control-sm bg-white" placeholder="e.g. Haridwar Main">
+            <input type="text" class="form-control form-control-sm bg-white" placeholder="e.g. Haridwar Main" formControlName="bankBranch">
           </div>
         </div>
       </div>
@@ -185,12 +203,15 @@
     <h6 class="text-danger fw-bold border-bottom border-danger pb-2 mb-3" style="font-size: 0.9rem;">TDS DETAILS</h6>
     <div class="row g-3 mb-4">
       <div class="col-md-6">
-        <label class="form-label small text-muted mb-1">TDS Type</label>
-        <input type="text" class="form-control form-control-sm bg-light" value="TDS Receivable : CLA0014" disabled>
+        <label class="form-label small text-muted mb-1">TDS Type <span *ngIf="totalTds > 0" class="text-danger">*</span></label>
+        <ng-select [items]="tdsTypes" bindLabel="Text" bindValue="Value" placeholder="Select TDS Type" formControlName="tdsType" class="bg-white" [ngClass]="{'border-danger': totalTds > 0 && !receiptForm.get('tdsType')?.value}"></ng-select>
+        <div *ngIf="totalTds > 0 && !receiptForm.get('tdsType')?.value" class="text-danger mt-1" style="font-size: 0.75rem;">
+          This field is required.
+        </div>
       </div>
       <div class="col-md-6">
         <label class="form-label small text-muted mb-1">TDS Amt</label>
-        <input type="text" class="form-control form-control-sm bg-light" style="width: 250px;" value="0.00" disabled>
+        <input type="text" class="form-control form-control-sm bg-light fw-bold text-danger" style="width: 250px;" value="{{ totalTds | number:'1.2-2' }}" readonly disabled>
         <div class="form-text small" style="font-size: 0.75rem;">Sum of TDS entered in bill rows</div>
       </div>
     </div>
@@ -211,7 +232,8 @@
   <!-- Modal Footer -->
   <div class="modal-footer border-top p-3 bg-white d-flex justify-content-end gap-2">
     <button type="button" class="btn btn-outline-secondary btn-sm px-4 fw-medium" (click)="closePopup()">Cancel</button>
-    <button type="button" class="btn btn-danger btn-sm px-4 fw-medium shadow-sm" style="background-color: #b71c1c;">Submit</button>
+    <button type="button" class="btn btn-danger btn-sm px-4 fw-medium shadow-sm" style="background-color: #b71c1c;" (click)="submit()">Submit</button>
   </div>
 </ng-template>
-<app-bill-invoice-view #BillInvoiceViewComponent></app-bill-invoice-view>
+
+<!-- <app-bill-invoice-view #BillInvoiceViewComponent></app-bill-invoice-view> -->

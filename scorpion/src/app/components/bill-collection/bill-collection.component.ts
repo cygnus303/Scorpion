@@ -36,6 +36,10 @@ export class BillCollectionComponent implements OnInit {
     { label: 'Pending', value: 'Bill Due, not Collected' },
 
   ];
+  
+  public selectedBills: any[] = [];
+  public selectedPartyCode: string | null = null;
+  
   public config = {
     FromDt: new Date(),
     ToDt: new Date(),
@@ -162,6 +166,8 @@ export class BillCollectionComponent implements OnInit {
         }
       } else {
         this.billList = [];
+        this.selectedBills = [];
+        this.selectedPartyCode = null;
         this.config.totalRecords = 0;
         this.config.totalPages = 1;
       }
@@ -193,7 +199,48 @@ export class BillCollectionComponent implements OnInit {
 
 
   openPopup() {
-    this.BillReceiptComponent.showPopup();
+    if (this.selectedBills.length === 0) {
+      alert('Please select at least one bill.');
+      return;
+    }
+    this.BillReceiptComponent.showPopup(this.selectedBills);
+  }
+
+  getPartyCode(item: any): string {
+    if (item.PTMSCD) return item.PTMSCD;
+    if (item.ptmsstr) return item.ptmsstr.split(' : ')[0].trim();
+    return '';
+  }
+
+  onCheckboxChange(item: any, event: any) {
+    const pCode = this.getPartyCode(item);
+    if (event.target.checked) {
+      if (this.selectedPartyCode && this.selectedPartyCode !== pCode) {
+        event.target.checked = false;
+        alert('You can only select bills for the same Customer (Party Code: ' + this.selectedPartyCode + ').');
+        return;
+      }
+      this.selectedPartyCode = pCode;
+      
+      // Auto-select all bills for this customer
+      this.billList.forEach(b => {
+        if (this.getPartyCode(b) === this.selectedPartyCode) {
+          b.selected = true;
+          if (!this.selectedBills.find(sb => sb.BILLNO === b.BILLNO)) {
+            this.selectedBills.push(b);
+          }
+        }
+      });
+    } else {
+      // Unselect all bills for this customer
+      this.billList.forEach(b => {
+        if (this.getPartyCode(b) === this.selectedPartyCode) {
+          b.selected = false;
+        }
+      });
+      this.selectedBills = [];
+      this.selectedPartyCode = null;
+    }
   }
 
   openInvoiceView(data: any) {

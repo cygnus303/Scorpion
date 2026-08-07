@@ -25,4 +25,8 @@ export class DynamicDataService {
     return this.apiHandlerService.Get(`Operation/customer-types`);
   }
 
+  submitBillCollection(payload: any): Observable<any> {
+    return this.apiHandlerService.PostLoad(`Operation/BillCollectionSubmit`, payload);
+  }
+
 }
