@@ -13,7 +13,7 @@ import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 @Component({
   selector: 'app-bill-receipt',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgSelectModule, BsDatepickerModule,BillInvoiceViewComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgSelectModule, BsDatepickerModule, BillInvoiceViewComponent],
   templateUrl: './bill-receipt.component.html',
   styleUrl: './bill-receipt.component.scss',
   providers: [BsModalService]
@@ -45,7 +45,7 @@ export class BillReceiptComponent {
   constructor(
     private modalService: BsModalService,
     public commonDateService: CommonDateService,
-    public sweetalertService:SweetAlertService,
+    public sweetalertService: SweetAlertService,
     private docketService: DocketService,
     private dynamicDataService: DynamicDataService,
   ) {
@@ -56,7 +56,7 @@ export class BillReceiptComponent {
     const payload = {
       "FilterJson": {
         "ReportId": 374,
-        "BRCD": this.docketService.loginUserList?.LocationCode 
+        "BRCD": this.docketService.loginUserList?.LocationCode
       }
     };
     this.dynamicDataService.getDynamicData(payload).subscribe({
@@ -71,45 +71,45 @@ export class BillReceiptComponent {
     });
   }
 
-    ngOnInit() {
-      const saved = localStorage.getItem("loginUserList");
-      if (saved) {
-        this.docketService.loginUserList = JSON.parse(saved);
-        this.docketService.Location = this.docketService.loginUserList.LocationCode;
-        // this.docketService.loginUserList.LocationCode = 'PIM'
-        this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
-        this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
-      }
-      this.getTdsTypes();
-      this.getLedgerList('CASH')
+  ngOnInit() {
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      // this.docketService.loginUserList.LocationCode = 'PIM'
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
+    this.getTdsTypes();
+    this.getLedgerList('CASH')
+  }
 
-    getLedgerList(type: string) {
-      const payload = {
-        "FilterJson": {
-          "ReportId": 372,
-          "Type": type,
-          "BaseLocationCode": this.docketService.loginUserList?.LocationCode 
-        }
-      };
-      this.dynamicDataService.getDynamicData(payload).subscribe({
-        next: (res: any) => {
-          if (res && res.Table1) {
-            if (type === 'BANK') {
-              this.bankLedgers = res.Table1;
-            } else {
-              this.cashLedgers = res.Table1;
-            }
+  getLedgerList(type: string) {
+    const payload = {
+      "FilterJson": {
+        "ReportId": 372,
+        "Type": type,
+        "BaseLocationCode": this.docketService.loginUserList?.LocationCode
+      }
+    };
+    this.dynamicDataService.getDynamicData(payload).subscribe({
+      next: (res: any) => {
+        if (res && res.Table1) {
+          if (type === 'BANK') {
+            this.bankLedgers = res.Table1;
+          } else {
+            this.cashLedgers = res.Table1;
           }
-        },
-        error: (err) => console.error(`Error fetching ${type} ledger`, err)
-      });
-    }
+        }
+      },
+      error: (err) => console.error(`Error fetching ${type} ledger`, err)
+    });
+  }
 
   checkBouncedCheque() {
     const chequeNo = this.receiptForm.get('chequeNo')?.value;
     const bankMode = this.receiptForm.get('bankMode')?.value;
-    
+
     if (bankMode === 'cheque' && chequeNo) {
       const payload = {
         "FilterJson": {
@@ -117,7 +117,7 @@ export class BillReceiptComponent {
           "ChequeNo": chequeNo
         }
       };
-      
+
       this.dynamicDataService.getDynamicData(payload).subscribe({
         next: (res: any) => {
           if (res && res.Table1 && res.Table1.length > 0) {
@@ -139,7 +139,7 @@ export class BillReceiptComponent {
       mrDate: new FormControl(new Date()),
       partyName: new FormControl(billsArrayData.length > 0 ? billsArrayData[0].ptmsstr : ''),
       mrBranch: new FormControl(billsArrayData.length > 0 ? billsArrayData[0].Bbrcdnm : ''),
-      remarks: new FormControl(''),
+      remarks: new FormControl('', Validators.required),
       paymentMode: new FormControl('cash'),
       bankMode: new FormControl('cheque'),
       chequeNo: new FormControl(''),
@@ -148,13 +148,61 @@ export class BillReceiptComponent {
       cashAccountCode: new FormControl(null),
       receivedFromBank: new FormControl(''),
       bankBranch: new FormControl(''),
-      tdsType: new FormControl(''),
+      tdsType: new FormControl(null),
       bills: new FormArray<FormGroup>(billsArrayData.map(b => this.createBillGroup(b)))
     });
 
     this.receiptForm.valueChanges.subscribe(() => {
       this.calculateTotals();
     });
+
+    this.receiptForm.get('paymentMode')?.valueChanges.subscribe(mode => {
+      this.updateValidators(mode, this.receiptForm.get('bankMode')?.value);
+    });
+
+    this.receiptForm.get('bankMode')?.valueChanges.subscribe(bMode => {
+      this.updateValidators(this.receiptForm.get('paymentMode')?.value, bMode);
+    });
+
+    // Initial setup
+    this.updateValidators('cash', 'cheque');
+  }
+
+  updateValidators(paymentMode: string, bankMode: string) {
+    const cashAcc = this.receiptForm.get('cashAccountCode');
+    const chequeNo = this.receiptForm.get('chequeNo');
+    const chequeDate = this.receiptForm.get('chequeDate');
+    const depBank = this.receiptForm.get('depositedInBank');
+    const recBank = this.receiptForm.get('receivedFromBank');
+    const branch = this.receiptForm.get('bankBranch');
+
+    // Clear all validators first
+    cashAcc?.clearValidators();
+    chequeNo?.clearValidators();
+    chequeDate?.clearValidators();
+    depBank?.clearValidators();
+    recBank?.clearValidators();
+    branch?.clearValidators();
+
+    if (paymentMode === 'cash') {
+      cashAcc?.setValidators(Validators.required);
+    } else if (paymentMode === 'bank') {
+      chequeNo?.setValidators(Validators.required);
+      if (bankMode === 'cheque') {
+        chequeDate?.setValidators(Validators.required);
+      }
+      depBank?.setValidators(Validators.required);
+      recBank?.setValidators(Validators.required);
+      branch?.setValidators(Validators.required);
+    }
+
+    // Update validity
+    cashAcc?.updateValueAndValidity();
+    chequeNo?.updateValueAndValidity();
+    chequeDate?.updateValueAndValidity();
+    depBank?.updateValueAndValidity();
+    recBank?.updateValueAndValidity();
+    branch?.updateValueAndValidity();
   }
 
   createBillGroup(b: any): FormGroup {
@@ -197,22 +245,22 @@ export class BillReceiptComponent {
       billsArrayData = Array.isArray(data) ? data : [data];
       this.originalBills = billsArrayData;
     }
-    
+
     this.initForm(billsArrayData);
     this.calculateTotals();
-    
+
     this.modalRef = this.modalService.show(this.TemplateReceipt, { class: 'modal-xl modal-dialog-centered modal-dialog-scrollable', backdrop: true });
   }
 
   calculateTotals() {
     this.billsArray.controls.forEach((control) => {
       const b = control.value;
-      
+
       if (b.isRoundOff) {
         const netBeforeRoundOff = (Number(b.collection) || 0) - (Number(b.tds) || 0) + (Number(b.bankChg) || 0);
         const roundedNet = Math.round(netBeforeRoundOff);
         const diff = roundedNet - netBeforeRoundOff;
-        
+
         let roPlus = 0;
         let roMinus = 0;
         if (diff > 0) {
@@ -220,7 +268,7 @@ export class BillReceiptComponent {
         } else if (diff < 0) {
           roMinus = parseFloat(Math.abs(diff).toFixed(2));
         }
-        
+
         if (b.roundOffPlus !== roPlus || b.roundOffMinus !== roMinus) {
           control.patchValue({ roundOffPlus: roPlus, roundOffMinus: roMinus }, { emitEvent: false });
         }
@@ -232,7 +280,7 @@ export class BillReceiptComponent {
 
       const updatedB = control.value;
       const netAmt = (Number(updatedB.collection) || 0) - (Number(updatedB.tds) || 0) + (Number(updatedB.bankChg) || 0) - (Number(updatedB.roundOffMinus) || 0) + (Number(updatedB.roundOffPlus) || 0);
-      
+
       if (netAmt < 0) {
         this.sweetalertService.info('Net Recd. Amount Not in Negative');
         control.patchValue({
@@ -251,7 +299,7 @@ export class BillReceiptComponent {
     this.bankCharges = bills.reduce((sum: number, b: any) => sum + (Number(b.bankChg) || 0), 0);
     const totalRoundOffPlus = bills.reduce((sum: number, b: any) => sum + (Number(b.roundOffPlus) || 0), 0);
     const totalRoundOffMinus = bills.reduce((sum: number, b: any) => sum + (Number(b.roundOffMinus) || 0), 0);
-    
+
     this.roundOff = totalRoundOffPlus - totalRoundOffMinus;
     this.netReceived = this.totalCollection - this.totalTds + this.bankCharges - totalRoundOffMinus + totalRoundOffPlus;
   }
@@ -269,12 +317,25 @@ export class BillReceiptComponent {
   }
 
   openInvoiceView(data: any) {
-      this.BillInvoiceViewComponent.showPopup(data);
-    
+    this.BillInvoiceViewComponent.showPopup(data);
+
   }
 
   submit() {
-    debugger
+    this.receiptForm.markAllAsTouched();
+
+    if (this.receiptForm.invalid) {
+      const invalidFields: string[] = [];
+      Object.keys(this.receiptForm.controls).forEach(key => {
+        const control = this.receiptForm.get(key);
+        if (control?.invalid) {
+          invalidFields.push(key);
+        }
+      });
+      console.log('Validation Error: The following fields are invalid: ', invalidFields);
+      return;
+    }
+
     if (this.totalTds > 0 && !this.receiptForm.get('tdsType')?.value) {
       this.sweetalertService.info('Please select TDS Type as TDS Amount is greater than 0.');
       return;
@@ -300,7 +361,7 @@ export class BillReceiptComponent {
     };
 
     const formData = new FormData();
-    
+
     if (this.selectedFile) {
       formData.append('VM.ObjBillMst.UploadedFile', this.selectedFile);
     }
@@ -348,7 +409,7 @@ export class BillReceiptComponent {
       formData.append(`BillList[${index}].freight_Deduction`, "0");
       formData.append(`BillList[${index}].col_Amt`, String(b.collection || 0));
       formData.append(`BillList[${index}].ptmscd`, this.originalBills.length > 0 ? this.originalBills[0].PTMSCD : "");
-      
+
       const netamt = (Number(b.collection) || 0) - (Number(b.tds) || 0) + (Number(b.bankChg) || 0) - (Number(b.roundOffMinus) || 0) + (Number(b.roundOffPlus) || 0);
       formData.append(`BillList[${index}].netamt`, String(netamt));
       
@@ -375,7 +436,7 @@ export class BillReceiptComponent {
     const isCash = formVal.paymentMode === 'cash';
     formData.append('PC.ChequeAmount', String(isCash ? 0 : this.netReceived));
     formData.append('PC.CashAmount', String(isCash ? this.netReceived : 0));
-    
+
     formData.append('PC.BankLedger', !isCash ? (formVal.depositedInBank || "-") : "-");
     formData.append('PC.Collection_Amt_From_Cheque', String(this.netReceived));
     formData.append('PC.ChequeAmount_Fromcheque', String(this.netReceived));
@@ -449,25 +510,25 @@ export class BillReceiptComponent {
     this.selectedFileName = '';
   }
 
-   dateAccess() {
-  const payload = {
-    moduleCode: '03',
-    baseUserName: this.docketService.baseUsername
-  };
+  dateAccess() {
+    const payload = {
+      moduleCode: '03',
+      baseUserName: this.docketService.baseUsername
+    };
 
-  this.commonDateService.userDateSelection(payload).subscribe({
-    next: (res: any) => {
-      if (res && res.length > 0) {
-        const rule = res[0];
-        this.minDate = new Date(rule.min_Date);
-        if (rule.backDate_Days && rule.backDate_Days > 0) {
-          const today = new Date();
-          this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
+    this.commonDateService.userDateSelection(payload).subscribe({
+      next: (res: any) => {
+        if (res && res.length > 0) {
+          const rule = res[0];
+          this.minDate = new Date(rule.min_Date);
+          if (rule.backDate_Days && rule.backDate_Days > 0) {
+            const today = new Date();
+            this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
+          }
+
+          this.maxDate = new Date();
         }
-
-        this.maxDate = new Date();
       }
-    }
-  });
-}
+    });
+  }
 }

@@ -2,7 +2,8 @@
   <!-- Modal Header -->
   <div class="modal-header text-white" style="background-color: #b71c1c;">
     <h5 class="modal-title fw-bold" style="font-size: 1.1rem;">
-      Money Receipt (MR) Entry &mdash; 2 <span style="background-color: #0d6efd; padding: 0 4px; border-radius: 3px;">bill(s)</span>
+      Money Receipt (MR) Entry &mdash; 2 <span
+        style="background-color: #0d6efd; padding: 0 4px; border-radius: 3px;">bill(s)</span>
     </h5>
     <button type="button" class="btn-close btn-close-white" (click)="closePopup()"></button>
   </div>
@@ -15,9 +16,9 @@
         <label class="form-label small text-muted mb-1">MR Date</label>
         <div class="input-group input-group-sm">
           <input type="text" class="form-control bg-white shadow-none" #mrDp="bsDatepicker" bsDatepicker
-            [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"
-            [minDate]="minDate" [maxDate]="maxDate" [class.disabled-input]="true"
-            formControlName="mrDate" readonly style="border-color: #ced4da;">
+            [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }" [minDate]="minDate"
+            [maxDate]="maxDate" [class.disabled-input]="true" formControlName="mrDate" readonly
+            style="border-color: #ced4da;">
           <span class="input-group-text cursor-pointer bg-white" (click)="mrDp.toggle()" style="border-color: #ced4da;">
             <i class="fa fa-calendar"></i>
           </span>
@@ -35,16 +36,23 @@
 
     <!-- Remarks -->
     <div class="mb-4">
-      <label class="form-label small text-muted mb-1">Remarks</label>
-      <input type="text" class="form-control form-control-sm bg-white" placeholder="Enter remarks (optional)" formControlName="remarks">
+      <label class="form-label small text-muted mb-1">Remarks <span class="text-danger">*</span></label>
+      <input type="text" class="form-control form-control-sm bg-white" placeholder="Enter remarks"
+        formControlName="remarks"
+        [ngClass]="{'border-danger': receiptForm.get('remarks')?.invalid && receiptForm.get('remarks')?.touched}">
+      <div *ngIf="receiptForm.get('remarks')?.invalid && receiptForm.get('remarks')?.touched" class="text-danger mt-1"
+        style="font-size: 0.75rem;">
+        This field is required.
+      </div>
     </div>
 
     <!-- Section: BILL DETAILS -->
     <h6 class="text-danger fw-bold border-bottom border-danger pb-2 mb-3" style="font-size: 0.9rem;">BILL DETAILS</h6>
-    <div class="table-responsive mb-3 border-bottom pb-2">
-      <table class="table table-bordered table-sm align-middle mb-0 bg-white" style="font-size: 0.85rem; border-color: #e0e0e0;">
-        <thead class="text-center align-middle">
-          <tr>
+    <div class="table-responsive mb-4 custom-scrollbar" style="max-height: 250px; overflow-y: auto; overflow-x: auto;">
+      <table class="table table-sm table-bordered align-middle mb-0 text-nowrap"
+        style="font-size: 0.8rem; border-color: #f1f3f4;">
+        <thead class="sticky-top bg-light" style="z-index: 10;">
+          <tr class="text-center">
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Bill No</th>
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Bill Date</th>
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Bill Branch</th>
@@ -58,13 +66,15 @@
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">TDS Amt. (-)</th>
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Bank Charges</th>
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Round Off</th>
-            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Net Recd. Amt.</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;display: none;">Net Recd.
+              Amt.</th>
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Attachment</th>
           </tr>
         </thead>
         <tbody formArrayName="bills">
           <tr *ngFor="let bill of billsArray.controls; let i = index" [formGroupName]="i" class="text-center">
-            <td><a href="javascript:void(0)" class="text-danger fw-bold text-decoration-underline" (click)="openInvoiceView(bill.value)">{{ bill.value.no }}</a></td>
+            <td><a href="javascript:void(0)" class="text-danger fw-bold text-decoration-underline"
+                (click)="openInvoiceView(bill.value)">{{ bill.value.no }}</a></td>
             <td>{{ bill.value.date | date:'dd MMM yyyy' }}</td>
             <td>{{ bill.value.branch }}</td>
             <td>{{ bill.value.type }}</td>
@@ -73,127 +83,193 @@
             <td>{{ bill.value.total | number:'1.2-2' }}</td>
             <td>{{ bill.value.pending | number:'1.2-2' }}</td>
             <td>
-              <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g,'');" class="form-control form-control-sm text-end shadow-none" formControlName="collection" style="width: 100px; margin: 0 auto; border-color: #ced4da;" [ngClass]="{'border-danger': bill.get('collection')?.value > bill.get('pending')?.value, 'text-danger': bill.get('collection')?.value > bill.get('pending')?.value}">
-              <div *ngIf="bill.get('collection')?.value > bill.get('pending')?.value" class="text-danger mt-1" style="font-size: 0.7rem; line-height: 1.1; max-width: 120px; text-align: left; margin: 0 auto;">
+              <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g,'');"
+                class="form-control form-control-sm text-end shadow-none" formControlName="collection"
+                style="width: 100px; margin: 0 auto; border-color: #ced4da;"
+                [ngClass]="{'border-danger': bill.get('collection')?.value > bill.get('pending')?.value, 'text-danger': bill.get('collection')?.value > bill.get('pending')?.value}">
+              <div *ngIf="bill.get('collection')?.value > bill.get('pending')?.value" class="text-danger mt-1"
+                style="font-size: 0.7rem; line-height: 1.1; max-width: 120px; text-align: left; margin: 0 auto;">
                 Please enter a value less than or equal to {{ bill.get('pending')?.value }}.
               </div>
             </td>
             <td>
-               <input type="text" class="form-control form-control-sm text-end bg-light shadow-none" [value]="(bill.value.pending - bill.value.collection) | number:'1.2-2'" style="width: 100px; margin: 0 auto; border-color: #ced4da;" readonly disabled>
+              <input type="text" class="form-control form-control-sm text-end bg-light shadow-none"
+                [value]="(bill.value.pending - bill.value.collection) | number:'1.2-2'"
+                style="width: 100px; margin: 0 auto; border-color: #ced4da;" readonly disabled>
             </td>
             <td>
-              <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g,'');" class="form-control form-control-sm text-end shadow-none" formControlName="tds" style="width: 80px; margin: 0 auto; border-color: #ced4da;">
+              <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g,'');"
+                class="form-control form-control-sm text-end shadow-none" formControlName="tds"
+                style="width: 80px; margin: 0 auto; border-color: #ced4da;">
             </td>
             <td>
-              <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g,'');" class="form-control form-control-sm text-end shadow-none" formControlName="bankChg" style="width: 80px; margin: 0 auto; border-color: #ced4da;">
+              <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g,'');"
+                class="form-control form-control-sm text-end shadow-none" formControlName="bankChg"
+                style="width: 80px; margin: 0 auto; border-color: #ced4da;">
             </td>
             <td>
-              <input type="checkbox" class="form-check-input" formControlName="isRoundOff" style="width: 1.2em; height: 1.2em; margin-top: 0.3em; border-color: #ced4da;">
+              <input type="checkbox" class="form-check-input" formControlName="isRoundOff"
+                style="width: 1.2em; height: 1.2em; margin-top: 0.3em; border-color: #ced4da;">
+            </td>
+            <td style="display: none;">
+              <input type="text" class="form-control form-control-sm text-end bg-light shadow-none"
+                [value]="getNetRecdAmt(i) | number:'1.2-2'" style="width: 100px; margin: 0 auto; border-color: #ced4da;"
+                readonly disabled>
             </td>
             <td>
-               <input type="text" class="form-control form-control-sm text-end bg-light shadow-none" [value]="getNetRecdAmt(i) | number:'1.2-2'" style="width: 100px; margin: 0 auto; border-color: #ced4da;" readonly disabled>
-            </td>
-            <td>
-              <input type="file" class="form-control form-control-sm shadow-none" style="width: 180px; margin: 0 auto; border-color: #ced4da; font-size: 0.75rem;" (change)="onBillFileSelected($event, i)">
+              <div class="position-relative d-flex align-items-center justify-content-center"
+                style="width: 150px; margin: 0 auto;">
+                <input type="file" class="position-absolute w-100 h-100 opacity-0 cursor-pointer" style="z-index: 2;"
+                  (change)="onBillFileSelected($event, i)" title="Choose file">
+                <button type="button"
+                  class="btn btn-outline-danger btn-sm w-100 shadow-none d-flex align-items-center justify-content-center gap-2 text-truncate"
+                  style="font-size: 0.75rem; z-index: 1; padding: 4px 8px;"
+                  [title]="bill.get('attachment')?.value || 'Upload Proof'">
+                  <span class="text-truncate" style="max-width: 90px;">{{ bill.get('attachment')?.value || 'Upload
+                    Proof' }}</span>
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    
-    <!-- Attachment -->
-    <!-- <div class="mb-4">
-      <label class="form-label small fw-bold mb-2 text-secondary">Attachment (deposit slip / proof) <span class="text-danger">*</span></label>
-      
-      <div>
-        <input type="file" style="border: 1px solid #ced4da; border-radius: 4px; padding: 4px; width: 400px; background-color: #fff; font-size: 0.85rem;" (change)="onFileSelected($event)">
-      </div>
-      
-      <div class="form-text mt-1 text-muted" style="font-size: 0.75rem;">
-        Attachment is mandatory before submitting the MR.
-      </div>
-    </div> -->
 
     <!-- Section: COLLECTION DETAILS -->
-    <h6 class="text-danger fw-bold border-bottom border-danger pb-2 mb-3" style="font-size: 0.9rem;">COLLECTION DETAILS</h6>
+    <h6 class="text-danger fw-bold border-bottom border-danger pb-2 mb-3" style="font-size: 0.9rem;">COLLECTION DETAILS
+    </h6>
     <div class="mb-3">
       <label class="form-label small text-muted mb-2 d-block">Payment Mode</label>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="paymentMode" id="cashRadio" value="cash" formControlName="paymentMode" (change)="getLedgerList('CASH')">
+        <input class="form-check-input" type="radio" name="paymentMode" id="cashRadio" value="cash"
+          formControlName="paymentMode" (change)="getLedgerList('CASH')">
         <label class="form-check-label small text-dark" for="cashRadio">Cash</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="paymentMode" id="bankRadio" value="bank" formControlName="paymentMode" (change)="getLedgerList('BANK')">
+        <input class="form-check-input" type="radio" name="paymentMode" id="bankRadio" value="bank"
+          formControlName="paymentMode" (change)="getLedgerList('BANK')">
         <label class="form-check-label small text-dark" for="bankRadio">Bank</label>
       </div>
     </div>
 
-    <!-- Cash Details -->
-    <div class="card bg-white border border-light shadow-sm mb-4" *ngIf="paymentMode === 'cash'">
-      <div class="card-body p-3">
-        <div class="row g-3">
-          <div class="col-md-3">
-            <label class="form-label small text-muted mb-1">Amount Applicable</label>
-            <input type="text" class="form-control form-control-sm bg-light" [value]="netReceived | number:'1.2-2'" disabled>
-          </div>
-          <div class="col-md-9">
-            <label class="form-label small text-muted mb-1">Account Code</label>
-            <ng-select [items]="cashLedgers" bindLabel="Text" bindValue="Value" placeholder="Select Account Code" formControlName="cashAccountCode" class="bg-white"></ng-select>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bank Details -->
-    <div class="card bg-white border border-light shadow-sm mb-4" *ngIf="paymentMode === 'bank'">
-      <div class="card-body p-3">
-        <div class="mb-3">
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="bankMode" id="chequeRadio" value="cheque" formControlName="bankMode">
-            <label class="form-check-label small text-primary fw-medium" for="chequeRadio">Cheque No.</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="bankMode" id="rtgsRadio" value="rtgs" formControlName="bankMode">
-            <label class="form-check-label small text-dark" for="rtgsRadio">RTGS / NEFT No.</label>
-          </div>
-        </div>
-        
-        <div class="row g-3 mb-4">
-          <div class="col-md-3">
-            <label class="form-label small text-muted mb-1">{{ bankMode === 'cheque' ? 'Cheque Amount' : 'Amount' }}</label>
-            <input type="text" class="form-control form-control-sm bg-light" [value]="netReceived | number:'1.2-2'" disabled>
-          </div>
-          <div class="col-md-3">
-            <label class="form-label small text-muted mb-1">{{ bankMode === 'cheque' ? 'Cheque No.' : 'RTGS / NEFT No.' }}</label>
-            <input type="text" class="form-control form-control-sm bg-white" placeholder="Enter number" formControlName="chequeNo" (change)="checkBouncedCheque()">
-          </div>
-          <div class="col-md-3" *ngIf="bankMode === 'cheque'">
-            <label class="form-label small text-muted mb-1">Cheque Date</label>
-            <div class="input-group input-group-sm">
-              <input type="text" class="form-control bg-white shadow-none" #dp="bsDatepicker" bsDatepicker
-                [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"
-                formControlName="chequeDate"
-                placeholder="Select Date" readonly style="border-color: #ced4da;">
-              <span class="input-group-text cursor-pointer bg-white" (click)="dp.toggle()" style="border-color: #ced4da;">
-                <i class="fa fa-calendar"></i>
-              </span>
+    <div class="row g-4 mb-4">
+      <!-- CASH DETAILS -->
+      <div class="col-md-5" *ngIf="paymentMode === 'cash'">
+        <div class="card border-0 bg-light shadow-sm">
+          <div class="card-body p-3">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label small text-muted mb-1 text-nowrap">Amount Applicable</label>
+                <input type="text" class="form-control form-control-sm bg-light" [value]="netReceived | number:'1.2-2'"
+                  disabled>
+              </div>
+              <div class="col-md-8">
+                <label class="form-label small text-muted mb-1">Account Code <span *ngIf="paymentMode === 'cash'"
+                    class="text-danger">*</span></label>
+                <ng-select [items]="cashLedgers" bindLabel="Text" bindValue="Value" placeholder="Select Account Code"
+                  formControlName="cashAccountCode" class="bg-white"
+                  [ngClass]="{'border-danger': receiptForm.get('cashAccountCode')?.invalid && receiptForm.get('cashAccountCode')?.touched}"></ng-select>
+                <div *ngIf="receiptForm.get('cashAccountCode')?.invalid && receiptForm.get('cashAccountCode')?.touched"
+                  class="text-danger mt-1" style="font-size: 0.75rem;">
+                  This field is required.
+                </div>
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <h6 class="text-danger fw-bold border-bottom border-danger pb-2 mb-3" style="font-size: 0.85rem;">BANK DETAILS</h6>
-        <div class="row g-3 mb-3">
-          <div class="col-md-4">
-            <label class="form-label small text-muted mb-1">Deposited In Bank</label>
-            <ng-select [items]="bankLedgers" bindLabel="Text" bindValue="Value" placeholder="Select Bank" formControlName="depositedInBank" class="bg-white"></ng-select>
-          </div>
-          <div class="col-md-4">
-            <label class="form-label small text-muted mb-1">Received From Bank</label>
-            <input type="text" class="form-control form-control-sm bg-white" placeholder="e.g. AXIS BANK" formControlName="receivedFromBank">
-          </div>
-          <div class="col-md-4">
-            <label class="form-label small text-muted mb-1">Bank Branch</label>
-            <input type="text" class="form-control form-control-sm bg-white" placeholder="e.g. Haridwar Main" formControlName="bankBranch">
+      <!-- BANK DETAILS -->
+      <div class="col-md-12" *ngIf="paymentMode === 'bank'">
+        <div class="card border-0 bg-light shadow-sm">
+          <div class="card-body p-3">
+            <div class="mb-3">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="bankMode" id="chequeRadio" value="cheque"
+                  formControlName="bankMode">
+                <label class="form-check-label small text-primary fw-medium" for="chequeRadio">Cheque No.</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="bankMode" id="rtgsRadio" value="rtgs"
+                  formControlName="bankMode">
+                <label class="form-check-label small text-dark" for="rtgsRadio">RTGS / NEFT No.</label>
+              </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+              <div class="col-md-3">
+                <label class="form-label small text-muted mb-1">{{ bankMode === 'cheque' ? 'Cheque Amount' : 'Amount'
+                  }}</label>
+                <input type="text" class="form-control form-control-sm bg-light" [value]="netReceived | number:'1.2-2'"
+                  disabled>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label small text-muted mb-1">{{ bankMode === 'cheque' ? 'Cheque No.' : 'RTGS / NEFT
+                  No.' }} <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm bg-white" placeholder="Enter number"
+                  formControlName="chequeNo" (change)="checkBouncedCheque()"
+                  [ngClass]="{'border-danger': receiptForm.get('chequeNo')?.invalid && receiptForm.get('chequeNo')?.touched}">
+                <div *ngIf="receiptForm.get('chequeNo')?.invalid && receiptForm.get('chequeNo')?.touched"
+                  class="text-danger mt-1" style="font-size: 0.75rem;">
+                  This field is required.
+                </div>
+              </div>
+              <div class="col-md-3" *ngIf="bankMode === 'cheque'">
+                <label class="form-label small text-muted mb-1">Cheque Date <span class="text-danger">*</span></label>
+                <div class="input-group input-group-sm"
+                  [ngClass]="{'border border-danger rounded': receiptForm.get('chequeDate')?.invalid && receiptForm.get('chequeDate')?.touched}">
+                  <input type="text" class="form-control bg-white shadow-none" #dp="bsDatepicker" bsDatepicker
+                    [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"
+                    formControlName="chequeDate" placeholder="Select Date" readonly style="border-color: #ced4da;">
+                  <span class="input-group-text cursor-pointer bg-white" (click)="dp.toggle()"
+                    style="border-color: #ced4da;">
+                    <i class="fa fa-calendar"></i>
+                  </span>
+                </div>
+                <div *ngIf="receiptForm.get('chequeDate')?.invalid && receiptForm.get('chequeDate')?.touched"
+                  class="text-danger mt-1" style="font-size: 0.75rem;">
+                  This field is required.
+                </div>
+              </div>
+            </div>
+
+            <h6 class="text-danger fw-bold border-bottom border-danger pb-2 mb-3" style="font-size: 0.85rem;">BANK
+              DETAILS</h6>
+            <div class="row g-3 mb-3">
+              <div class="col-md-4">
+                <label class="form-label small text-muted mb-1">Deposited In Bank <span
+                    class="text-danger">*</span></label>
+                <ng-select [items]="bankLedgers" bindLabel="Text" bindValue="Value" placeholder="Select Bank"
+                  formControlName="depositedInBank" class="bg-white"
+                  [ngClass]="{'border-danger': receiptForm.get('depositedInBank')?.invalid && receiptForm.get('depositedInBank')?.touched}"></ng-select>
+                <div *ngIf="receiptForm.get('depositedInBank')?.invalid && receiptForm.get('depositedInBank')?.touched"
+                  class="text-danger mt-1" style="font-size: 0.75rem;">
+                  This field is required.
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small text-muted mb-1">Received From Bank <span
+                    class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm bg-white" placeholder="e.g. AXIS BANK"
+                  formControlName="receivedFromBank"
+                  [ngClass]="{'border-danger': receiptForm.get('receivedFromBank')?.invalid && receiptForm.get('receivedFromBank')?.touched}">
+                <div
+                  *ngIf="receiptForm.get('receivedFromBank')?.invalid && receiptForm.get('receivedFromBank')?.touched"
+                  class="text-danger mt-1" style="font-size: 0.75rem;">
+                  This field is required.
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small text-muted mb-1">Bank Branch <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm bg-white" placeholder="e.g. Haridwar Main"
+                  formControlName="bankBranch"
+                  [ngClass]="{'border-danger': receiptForm.get('bankBranch')?.invalid && receiptForm.get('bankBranch')?.touched}">
+                <div *ngIf="receiptForm.get('bankBranch')?.invalid && receiptForm.get('bankBranch')?.touched"
+                  class="text-danger mt-1" style="font-size: 0.75rem;">
+                  This field is required.
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -203,16 +279,20 @@
     <h6 class="text-danger fw-bold border-bottom border-danger pb-2 mb-3" style="font-size: 0.9rem;">TDS DETAILS</h6>
     <div class="row g-3 mb-4">
       <div class="col-md-6">
-        <label class="form-label small text-muted mb-1">TDS Type <span *ngIf="totalTds > 0" class="text-danger">*</span></label>
-        <ng-select [items]="tdsTypes" bindLabel="Text" bindValue="Value" placeholder="Select TDS Type" formControlName="tdsType" class="bg-white" [ngClass]="{'border-danger': totalTds > 0 && !receiptForm.get('tdsType')?.value}"></ng-select>
-        <div *ngIf="totalTds > 0 && !receiptForm.get('tdsType')?.value" class="text-danger mt-1" style="font-size: 0.75rem;">
+        <label class="form-label small text-muted mb-1">TDS Type <span *ngIf="totalTds > 0"
+            class="text-danger">*</span></label>
+        <ng-select [items]="tdsTypes" bindLabel="Text" bindValue="Value" placeholder="Select TDS Type"
+          formControlName="tdsType" class="bg-white"
+          [ngClass]="{'border-danger': totalTds > 0 && !receiptForm.get('tdsType')?.value}"></ng-select>
+        <div *ngIf="totalTds > 0 && !receiptForm.get('tdsType')?.value" class="text-danger mt-1"
+          style="font-size: 0.75rem;">
           This field is required.
         </div>
       </div>
       <div class="col-md-6">
         <label class="form-label small text-muted mb-1">TDS Amt</label>
-        <input type="text" class="form-control form-control-sm bg-light fw-bold text-danger" style="width: 250px;" value="{{ totalTds | number:'1.2-2' }}" readonly disabled>
-        <div class="form-text small" style="font-size: 0.75rem;">Sum of TDS entered in bill rows</div>
+        <input type="text" class="form-control form-control-sm bg-light fw-bold text-danger" style="width: 250px;"
+          value="{{ totalTds | number:'1.2-2' }}" readonly disabled>
       </div>
     </div>
 
@@ -228,11 +308,12 @@
     </div>
 
   </div>
-  
+
   <!-- Modal Footer -->
   <div class="modal-footer border-top p-3 bg-white d-flex justify-content-end gap-2">
     <button type="button" class="btn btn-outline-secondary btn-sm px-4 fw-medium" (click)="closePopup()">Cancel</button>
-    <button type="button" class="btn btn-danger btn-sm px-4 fw-medium shadow-sm" style="background-color: #b71c1c;" (click)="submit()">Submit</button>
+    <button type="button" class="btn btn-danger btn-sm px-4 fw-medium shadow-sm" style="background-color: #b71c1c;"
+      (click)="submit()">Submit</button>
   </div>
 </ng-template>
 
