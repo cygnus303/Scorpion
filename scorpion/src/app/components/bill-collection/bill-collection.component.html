@@ -10,21 +10,21 @@
         <div class="card total">
             <div class="card-icon">📄</div>
             <div class="card-label">Total Bills</div>
-            <div class="card-count" id="cardTotal">6</div>
-            <div class="card-sub">Within selected period</div>
+            <div class="card-count" id="cardTotal">{{summaryData?.TotalBillsCount|| 0}}</div>
+            <div class="card-sub">{{summaryData?.TotalBillsAmt || 0}} Pending</div>
         </div>
         <div class="card pending">
             <div class="card-icon">⏳</div>
             <div class="card-label">Pending for Collection</div>
-            <div class="card-count" id="cardPending">6</div>
-            <div class="card-sub">Awaiting customer mapping</div>
+            <div class="card-count" id="cardPending">{{summaryData?.TotalPendingCount|| 0}}</div>
+            <div class="card-sub">{{summaryData?.TotalPendingAmt|| 0}} Pending</div>
         </div>
-        <div class="card partial">
+        <!-- <div class="card partial">
             <div class="card-icon">🔄</div>
             <div class="card-label">Partial Collected</div>
-            <div class="card-count" id="cardPartial">0</div>
-            <div class="card-sub">Some balance remaining</div>
-        </div>
+            <div class="card-count" id="cardPartial">{{summaryData?.}}</div>
+            <div class="card-sub">{{summaryData?.}} Pending</div>
+        </div> -->
     </div>
     <div class="filter-bar">
 

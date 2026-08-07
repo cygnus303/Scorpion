@@ -24,13 +24,14 @@ export class BillCollectionComponent implements OnInit {
   public listSubscription!:Subscription;
   private fetchSubject = new Subject<void>();
   public billList: any[] = [];
+  public summaryData:any;
   public billingPartyData: any[] = [];
-  public notFoundTextValue: string = 'No matches found';
+  public notFoundTextValue: string = 'Enter at least 3 characters';
   
   public config = {
     FromDt: new Date(),
     ToDt: new Date(),
-    Status: 'ALL',
+    Status: '',
     PageNo: 1,
     PageSize: 10,
     totalRecords: 0,
@@ -48,6 +49,16 @@ export class BillCollectionComponent implements OnInit {
   ){}
 
   ngOnInit() {
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      // this.docketService.loginUserList.LocationCode = 'PIM'
+      this.docketService.FinYear = this.docketService.loginUserList.FinYear,
+        this.docketService.Companycode = this.docketService.loginUserList.Companycode
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
      this.fetchSubject.pipe(debounceTime(300)).subscribe(() => {
        this.getBillingList();
         });
@@ -115,27 +126,34 @@ export class BillCollectionComponent implements OnInit {
        "ReportId" : "371",
         "Fromdt" : this.commonService.formatDateToISO(this.config.FromDt),
         "Todt" : this.commonService.formatDateToISO(this.config.ToDt),
-        "Billtype" : "All",
-        "Status":this.config.Status,
-        "Party_code" :this.config.Party_code,
+        "billstatus":this.config.Status || '',
+        "Party_code" :this.config.Party_code || '',
         "billno" : this.config.billNo,
         "PageNo" : this.config.PageNo,
         "PageSize" : this.config.PageSize,
         "IsDownload" : "0",
-        "SearchText" : this.config.SearchText
+        "SearchText" : this.config.SearchText,
+        "Company_Code": this.docketService.Companycode,
+        "loccode"  : "HQTR",
       }
     }
     this.isLoading = true;
     this.listSubscription = this.dynamicDataService.getDynamicData(payload).subscribe((response: any) => {
       this.isLoading = false;
-      if (response && response.Table1) {
-        this.billList = response.Table1;
+      if (response && response.Table4) {
+        this.billList = response.Table4;
         if (this.billList.length > 0) {
           this.config.totalRecords = this.billList[0].TotalCount;
           this.config.totalPages = Math.ceil(this.config.totalRecords / this.config.PageSize);
-        } else {
-          this.config.totalRecords = 0;
-          this.config.totalPages = 1;
+        } 
+        if(response && response.Table1){
+        this.config.totalRecords = response.Table1[0].TotalCount || this.billList.length;
+        this.config.totalPages = response.Table1[0].totalPages || 1;
+        this.config.PageNo = response.Table1[0].currentPage || 1;
+        this.config.PageSize = response.Table1[0].pageSize || 50;
+        }
+        if(response && response.Table2){
+        this.summaryData=response.Table2;
         }
       } else {
         this.billList = [];
