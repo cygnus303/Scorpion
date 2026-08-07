@@ -1,0 +1,176 @@
+<div class="card">
+  <div class="card-header">
+    <h2>✅ Approval Master Configuration</h2>
+    <span>Manage approval workflows and permissions</span>
+  </div>
+  <div class="card-body">
+
+    <div class="radio-section">
+      <div class="radio-section-label">Approval Mode</div>
+      <div class="radio-row">
+        <label class="radio-pill" [class.checked]="approvalMode === 'All'">
+          <input type="radio" name="apm-mode" value="All" [(ngModel)]="approvalMode"> All
+        </label>
+        <label class="radio-pill" [class.checked]="approvalMode === 'Criteria Base'">
+          <input type="radio" name="apm-mode" value="Criteria Base" [(ngModel)]="approvalMode"> Criteria Base
+        </label>
+      </div>
+    </div>
+
+    <!-- "All" info panel -->
+    <div *ngIf="approvalMode === 'All'">
+      <div class="info-panel">
+        <div class="i-icon">ℹ️</div>
+        <div>
+          <div class="i-title">All Operational Documents</div>
+          <div class="i-text">All operational documents will go through the approval process according to the
+            <strong>Approver Master</strong> mapping.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- "Criteria Base" section -->
+    <div *ngIf="approvalMode === 'Criteria Base'">
+      <div class="tbl-wrap" style="margin-top:6px">
+        <table style="min-width:1080px">
+          <thead>
+            <tr>
+              <th class="cc-sno">#</th>
+              <th class="cc-doc">Doc. Type</th>
+              <th class="cc-oda">Service Type</th>
+              <th class="cc-oda">ODA / Non ODA</th>
+              <th class="cc-cat">Category</th>
+              <th class="cc-vnd">Vendor Type</th>
+              <th class="cc-dev">Deviation Type</th>
+              <th class="cc-srt">Sort</th>
+              <th class="cc-val">Value</th>
+              <th class="cc-act">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of apmRows; let i = index">
+              <td class="row-num">{{ i + 1 }}</td>
+              <td>
+                <select [(ngModel)]="row.doc" (change)="docChanged(row)" [ngClass]="{'field-err': row.docErr}">
+                  <option value="">-- Select --</option>
+                  <option *ngFor="let d of apmDocOpts" [value]="d">{{ d }}</option>
+                </select>
+              </td>
+              <td>
+                <select [(ngModel)]="row.svc" [disabled]="getSvcDisabled(row)"
+                  [class.fld-disabled]="getSvcDisabled(row)"
+                  [title]="getSvcDisabled(row) ? (row.doc ? 'Enabled only for THC' : 'Select Doc. Type first') : ''">
+                  <option value="">{{ getSvcDisabled(row) ? 'N/A' : '-- Select --' }}</option>
+                  <option *ngFor="let s of apmSvcOpts" [value]="s">{{ s }}</option>
+                </select>
+              </td>
+              <td>
+                <select [(ngModel)]="row.oda" [disabled]="getOdaDisabled(row)"
+                  [class.fld-disabled]="getOdaDisabled(row)"
+                  [title]="getOdaDisabled(row) ? (row.doc ? 'Enabled only for DRS' : 'Select Doc. Type first') : ''">
+                  <option value="">{{ getOdaDisabled(row) ? 'N/A' : '-- Select --' }}</option>
+                  <option *ngFor="let o of apmOdaOpts" [value]="o">{{ o }}</option>
+                </select>
+              </td>
+              <td>
+                <select [(ngModel)]="row.cat" [disabled]="getCatDisabled(row)"
+                  [class.fld-disabled]="getCatDisabled(row)"
+                  [title]="getCatDisabled(row) ? 'Enabled only for ODA' : ''">
+                  <option value="">{{ getCatDisabled(row) ? 'N/A' : '-- Select --' }}</option>
+                  <option *ngFor="let c of apmCatOpts" [value]="c">{{ c }}</option>
+                </select>
+              </td>
+              <td>
+                <select [(ngModel)]="row.vnd" [disabled]="!row.doc" [class.fld-disabled]="!row.doc">
+                  <option value="">{{ !row.doc ? 'N/A' : '-- Select --' }}</option>
+                  <option *ngFor="let v of apmVndByDoc[row.doc] || []" [value]="v">{{ v }}</option>
+                </select>
+              </td>
+              <td>
+                <select [(ngModel)]="row.dev" [disabled]="!row.doc" [class.fld-disabled]="!row.doc">
+                  <option value="">{{ !row.doc ? 'N/A' : '-- Select --' }}</option>
+                  <option *ngFor="let dv of getDevOpts(row)" [value]="dv">{{ dv }}</option>
+                </select>
+              </td>
+              <td>
+                <select [(ngModel)]="row.sort">
+                  <option value="">-- Select --</option>
+                  <option *ngFor="let st of apmSortOpts" [value]="st">{{ st }}</option>
+                </select>
+              </td>
+              <td>
+                <input type="text" class="val-input" [(ngModel)]="row.val" [disabled]="!row.sort"
+                  [class.fld-disabled]="!row.sort" placeholder="Enter Value...">
+              </td>
+              <td style="text-align:center;padding-top:10px">
+                <button class="btn-del" (click)="removeRow(i)" title="Remove Row">✕</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="action-row">
+        <button class="btn-add-row" (click)="addRow()">
+          <span class="btn-add-icon">＋</span> Add Row
+        </button>
+        <button class="btn-submit" (click)="submitForm()">✓ &nbsp;Submit</button>
+      </div>
+
+      <div class="crit-note">Note: When a Sort option is selected and a Value is entered, only documents matching the
+        criteria will be available for approval.</div>
+    </div>
+
+  </div>
+</div>
+
+<div *ngIf="approvalMode === 'Criteria Base'">
+  <div class="listing-hdr">
+    <h3>Saved Approval Criteria</h3>
+    <span class="rec-count">{{ apmSavedRecs.length }}</span>
+  </div>
+  <div class="card">
+    <div class="lt-wrap">
+      <table class="lt">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Doc. Type</th>
+            <th>Service Type</th>
+            <th>ODA / Non ODA</th>
+            <th>Category</th>
+            <th>Vendor Type</th>
+            <th>Deviation Type</th>
+            <th>Sort</th>
+            <th>Value</th>
+            <th>Saved On</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="apmSavedRecs.length === 0">
+            <td colspan="10">
+              <div class="empty-st">
+                <div class="e-icon">📂</div>
+                <p>No criteria saved yet. Fill the form and click Submit.</p>
+              </div>
+            </td>
+          </tr>
+          <tr *ngFor="let r of apmSavedRecs; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td><strong>{{ r.doc }}</strong></td>
+            <td>{{ r.svc }}</td>
+            <td>{{ r.oda }}</td>
+            <td>{{ r.cat }}</td>
+            <td>{{ r.vnd }}</td>
+            <td>{{ r.dev }}</td>
+            <td>{{ r.sort }}</td>
+            <td>{{ r.val }}</td>
+            <td style="color:#aaa;font-size:11px">{{ r.ts }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="toast" [ngClass]="toastType" [class.show]="showToast">{{ toastMsg }}</div>
