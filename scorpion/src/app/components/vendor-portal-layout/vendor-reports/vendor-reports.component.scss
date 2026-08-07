@@ -216,3 +216,15 @@
     pointer-events: none;
     font-size: 16px;
 }
+
+/* ── Filter Bar (Query Response Style) ── */
+.filter-bar { background: #fff; border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; display: flex; align-items: flex-end; gap: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); flex-wrap: wrap; }
+.filter-field { display: flex; flex-direction: column; gap: 4px; }
+.filter-field label { font-size: 11px; color: #616161; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.filter-bar input, .filter-bar select {
+  padding: 8px 12px; border: 1.5px solid #ef9a9a; border-radius: 6px;
+  font-size: 13px; color: #222; outline: none; background: #fffafa; min-width: 140px;
+  font-family: inherit;
+}
+.filter-bar input:focus, .filter-bar select:focus { border-color: #c8102e; box-shadow: 0 0 0 2px rgba(200,16,46,0.12); }
+.filter-field.search input { min-width: 260px; padding-left: 32px; background-position: 10px center; background-repeat: no-repeat; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23c8102e' stroke-width='2.5'><circle cx='11' cy='11' r='7'/><line x1='21' y1='21' x2='16.65' y2='16.65'/></svg>"); }
