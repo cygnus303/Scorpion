@@ -25,7 +25,7 @@ export const routes: Routes = [
       path: 'Contract',
       loadChildren: () =>import('./components/customer-contract/customer-contract.module').then( (m) => m.CustomerContractModule),
     },
-     {
+    {
       path: 'Vendor',
       loadChildren: () =>import('./components/vendor-portal-layout/vendor-portal.module').then( (m) => m.VendorPortalModule),
     },

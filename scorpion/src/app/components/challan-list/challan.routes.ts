@@ -118,7 +118,12 @@ export const ChallanRoutes: Routes = [
     path: 'approval-master',
     loadComponent: () => import('../approval-master/approval-master.component').then(m => m.ApprovalMasterComponent),
     // canActivate: [DocketGuard]
-  }
+  },
+  {
+    path: 'BillCollection',
+    loadComponent: () => import('../bill-collection/bill-collection.component').then(m => m.BillCollectionComponent),
+    // canActivate: [DocketGuard]
+  },
 
 
 ];
