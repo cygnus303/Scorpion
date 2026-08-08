@@ -54,6 +54,17 @@
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">✅</div>
         </div>
 
+         <!-- PRQ Arranged -->
+        <div class="summary-card px-3 py-3 c-purple cursor-pointer"
+            [class.active-card]="config.statusFilter === 'Arranged'" (click)="filterByStatus('Arranged')">
+            <div class="card-content">
+                <div class="s-label">PRQ Arranged</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.prq_Arranged || 0 }}</div>
+                <div class="small text-body-tertiary">Arranged PRQs</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📦</div>
+        </div>
+
         <!-- CANCELLED -->
         <div class="summary-card px-3 py-3 c-red cursor-pointer"
             [class.active-card]="config.statusFilter === 'Cancelled'" (click)="filterByStatus('Cancelled')">
@@ -169,9 +180,15 @@
                             </div>
                         </td>
                         <td class="text-center">
-                            <span class="pill-badge">
-                                {{ row.EntryBy }}
-                            </span>
+                            <div class="custom-tooltip-wrapper">
+                                <span class="pill-badge">
+                                    {{ row.EntryBy }}
+                                </span>
+                                <div class="custom-tooltip-content">
+                                    <div>📞 Contact No: {{ row.GeneratedByContctNo || '-' }}</div>
+                                    <div>✉️ Email:{{ row.GeneratedByEmailId || '-' }}</div>
+                                </div>
+                            </div>
                         </td>
                         <td class="text-center">
                             <span class="pill-badge">
