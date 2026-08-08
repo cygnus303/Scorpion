@@ -122,7 +122,7 @@ export const ChallanRoutes: Routes = [
   {
     path: 'BillCollection',
     loadComponent: () => import('../bill-collection/bill-collection.component').then(m => m.BillCollectionComponent),
-    // canActivate: [DocketGuard]
+    canActivate: [DocketGuard]
   },
 
 
