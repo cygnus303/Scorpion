@@ -140,7 +140,7 @@
                 <div><span class="label">Assigned By/Date: </span><span class="value">{{ prqData.AssignedBy || '—' }}
                         <span *ngIf="prqData.AssignDate">/ {{ prqData.AssignDate | date:'dd-MMM-yyyy' }}</span></span>
                 </div>
-                <div><span class="label">Arranged By/Date: </span><span class="value">{{ prqData.ArrangedBy1 || '—' }}
+                <div><span class="label">Arranged By/Date: </span><span class="value">{{ prqData.ArrangedBy || '—' }}
                         <span *ngIf="prqData.ArrangeDate">/ {{ prqData.ArrangedDate | date:'dd-MMM-yyyy' }}</span></span>
                 </div>
                 <div><span class="label">Cancelled By/Date: </span><span class="value">{{ prqData.CancelBy || '—' }}
