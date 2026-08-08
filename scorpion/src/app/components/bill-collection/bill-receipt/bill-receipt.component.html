@@ -125,8 +125,7 @@
                   class="btn btn-outline-danger btn-sm w-100 shadow-none d-flex align-items-center justify-content-center gap-2 text-truncate"
                   style="font-size: 0.75rem; z-index: 1; padding: 4px 8px;"
                   [title]="bill.get('attachment')?.value || 'Upload Proof'">
-                  <span class="text-truncate" style="max-width: 90px;">{{ bill.get('attachment')?.value || 'Upload
-                    Proof' }}</span>
+                  <span class="text-truncate" style="max-width: 90px;">{{ bill.get('attachment')?.value || 'Upload Proof' }}</span>
                 </button>
               </div>
             </td>
@@ -198,14 +197,12 @@
 
             <div class="row g-3 mb-4">
               <div class="col-md-3">
-                <label class="form-label small text-muted mb-1">{{ bankMode === 'cheque' ? 'Cheque Amount' : 'Amount'
-                  }}</label>
+                <label class="form-label small text-muted mb-1">{{ bankMode === 'cheque' ? 'Cheque Amount' : 'Amount'}}</label>
                 <input type="text" class="form-control form-control-sm bg-light" [value]="netReceived | number:'1.2-2'"
                   disabled>
               </div>
               <div class="col-md-3">
-                <label class="form-label small text-muted mb-1">{{ bankMode === 'cheque' ? 'Cheque No.' : 'RTGS / NEFT
-                  No.' }} <span class="text-danger">*</span></label>
+                <label class="form-label small text-muted mb-1">{{ bankMode === 'cheque' ? 'Cheque No.' : 'RTGS / NEFT No.' }} <span class="text-danger">*</span></label>
                 <input type="text" class="form-control form-control-sm bg-white" placeholder="Enter number"
                   formControlName="chequeNo" (change)="checkBouncedCheque()"
                   [ngClass]="{'border-danger': receiptForm.get('chequeNo')?.invalid && receiptForm.get('chequeNo')?.touched}">
@@ -297,7 +294,8 @@
     </div>
 
     <!-- Footer Summary Bar -->
-    <div class="alert mb-0 rounded-1" style="background-color: #fde8e8; border: 1px solid #f9caca; font-size: 0.85rem;">
+    <div class="alert mb-0 rounded-1" style="background-color: #fde8e8; border: 1px solid #f9caca; font-size: 0.85rem;"
+         [ngClass]="{'border-danger': netReceived < 1}">
       <div class="d-flex justify-content-end gap-4 text-dark align-items-center">
         <span>Total Collection: <strong class="text-danger">₹ {{ totalCollection | number:'1.2-2' }}</strong></span>
         <span>Total TDS (-): <strong class="text-danger">₹ {{ totalTds | number:'1.2-2' }}</strong></span>
@@ -306,6 +304,9 @@
         <span>Net. Received Amount: <strong class="text-danger">₹ {{ netReceived | number:'1.2-2' }}</strong></span>
       </div>
     </div>
+    <div *ngIf="netReceived < 1" class="text-danger text-end mt-1 me-2 fw-bold" style="font-size: 0.8rem;">
+      Please enter a value greater than or equal to 1.
+    </div>
 
   </div>
 
@@ -313,7 +314,10 @@
   <div class="modal-footer border-top p-3 bg-white d-flex justify-content-end gap-2">
     <button type="button" class="btn btn-outline-secondary btn-sm px-4 fw-medium" (click)="closePopup()">Cancel</button>
     <button type="button" class="btn btn-danger btn-sm px-4 fw-medium shadow-sm" style="background-color: #b71c1c;"
-      (click)="submit()">Submit</button>
+      (click)="submit()" [disabled]="isSubmitting">
+      <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+      {{ isSubmitting ? 'Submitting...' : 'Submit' }}
+    </button>
   </div>
 </ng-template>
 

@@ -33,9 +33,11 @@ export class BillReceiptComponent {
   bankCharges = 0.00;
   roundOff = 0.00;
   netReceived = 0.00;
+  isSubmitting = false;
 
   selectedFile: File | null = null;
   selectedFileName: string = '';
+  billFiles: { [key: number]: File } = {};
   originalBills: any[] = [];
   receiptForm!: FormGroup;
   tdsTypes: any[] = [];
@@ -341,6 +343,13 @@ export class BillReceiptComponent {
       return;
     }
 
+    if (this.netReceived < 1) {
+      this.sweetalertService.info('Please enter a value greater than or equal to 1.');
+      return;
+    }
+
+    this.isSubmitting = true;
+
     const formVal = this.receiptForm.getRawValue();
     const bills = formVal.bills;
     const mrDateObj = formVal.mrDate ? new Date(formVal.mrDate) : new Date();
@@ -362,9 +371,11 @@ export class BillReceiptComponent {
 
     const formData = new FormData();
 
+    // Main attachment (if any)
     if (this.selectedFile) {
       formData.append('VM.ObjBillMst.UploadedFile', this.selectedFile);
     }
+    
     formData.append('VM.ObjBillMst.BILLNO', bills.length > 0 ? bills[0].no : "");
     formData.append('VM.ObjBillMst.PENDAMT', String(bills.reduce((sum: number, b: any) => sum + (Number(b.pending) || 0), 0)));
     formData.append('VM.ObjBillMst.Netamt', String(this.netReceived));
@@ -417,15 +428,21 @@ export class BillReceiptComponent {
       formData.append(`BillList[${index}].roundOffM`, String(b.roundOffMinus || 0));
       formData.append(`BillList[${index}].roundOffP`, String(b.roundOffPlus || 0));
       formData.append(`BillList[${index}].bank_Charges`, String(b.bankChg || 0));
-      formData.append(`BillList[${index}].uploadedFile`, b.attachment || this.selectedFileName || "");
+      // Removed string append for uploadedFile to avoid conflict with the actual binary file
       formData.append(`BillList[${index}].cess_rate`, "0");
       formData.append(`BillList[${index}].pendamt`, String(b.pending || 0));
       
       const balanceAmt = (Number(b.pending) || 0) - (Number(b.collection) || 0);
       formData.append(`BillList[${index}].unexpded`, String(balanceAmt));
+
+      // Append the actual binary file for this row to UploadedFile
+      const file = this.billFiles[index];
+      if (file) {
+        formData.append(`BillList[${index}].UploadedFile`, file);
+      }
     });
 
-    formData.append('PC.ChequeNo', formVal.chequeNo || "-");
+    formData.append('PC.ChequeNo', formVal.chequeNo || "");
     formData.append('PC.ChequeDate', formatCustomDate(chequeDateObj));
     formData.append('PC.PayAmount', String(this.netReceived));
     // const finalPaymentMode = formVal.paymentMode === 'bank' ? formVal.bankMode : formVal.paymentMode;
@@ -468,6 +485,7 @@ export class BillReceiptComponent {
 
     this.dynamicDataService.submitBillCollection(formData).subscribe({
       next: (res: any) => {
+        this.isSubmitting = false;
         const msg = res.message || res.Message || 'Operation completed.';
         if (res.success || res.isSuccess || res.Status === 200 || res.status === 200) {
           this.sweetalertService.success(msg);
@@ -477,8 +495,27 @@ export class BillReceiptComponent {
         }
       },
       error: (err) => {
+        this.isSubmitting = false;
         console.error("Submit Error:", err);
-        const msg = err.error?.message || err.error?.Message || err.message || 'Failed to submit the bill receipt.';
+        let msg = err.error?.message || err.error?.Message || err.message || 'Failed to submit the bill receipt.';
+        
+        if (err.error && err.error.errors) {
+          const errorMessages = [];
+          for (const key in err.error.errors) {
+            if (err.error.errors.hasOwnProperty(key)) {
+              const messages = err.error.errors[key];
+              if (Array.isArray(messages)) {
+                errorMessages.push(`${messages.join(', ')}`);
+              } else {
+                errorMessages.push(`${messages}`);
+              }
+            }
+          }
+          if (errorMessages.length > 0) {
+            msg = errorMessages.join('\n');
+          }
+        }
+        
         this.sweetalertService.error(msg);
       }
     });
@@ -495,6 +532,7 @@ export class BillReceiptComponent {
   onBillFileSelected(event: any, index: number) {
     const file = event.target.files[0];
     if (file) {
+      this.billFiles[index] = file;
       const billsFormArray = this.receiptForm.get('bills') as FormArray;
       const billGroup = billsFormArray.at(index) as FormGroup;
       billGroup.patchValue({ attachment: file.name }, { emitEvent: false });
