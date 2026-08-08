@@ -33,6 +33,7 @@ export class PrqListComponent {
   public isCSVLoading: boolean = false;
   private fetchSubject = new Subject<void>();
   public listSubscription?: Subscription;
+  public cardSubscription?: Subscription;
   public cancelModalRef?: BsModalRef;
   public cancelPrqNo: string = '';
   public cancelReason: string = '';
@@ -50,6 +51,7 @@ export class PrqListComponent {
     { label: 'All Status', value: 'All' },
     { label: 'PRQ Generated', value: 'Generated' },
     { label: 'PRQ Assigned', value: 'Assigned' },
+    { label: 'PRQ Arranged', value: 'Arranged' },
     { label: 'PRQ Cancelled', value: 'Cancelled' },
   ];
 
@@ -118,7 +120,7 @@ export class PrqListComponent {
         IsDownload: "0"
       }
     }
-    this.dynamicDataService.getDynamicData(payload).subscribe((response: any) => {
+    this.listSubscription=this.dynamicDataService.getDynamicData(payload).subscribe((response: any) => {
       this.isLoading = false;
       this.prqList = response.Table2;
       if (response.Table1) {
@@ -159,6 +161,8 @@ export class PrqListComponent {
   }
 
   getPRQCardList() {
+    if (this.cardSubscription) { this.cardSubscription.unsubscribe(); }
+
     const payload = {
       "FilterJson": {
         "ReportId": "224",
@@ -166,9 +170,10 @@ export class PrqListComponent {
         "ToDate": this.formatDateToISO(this.config.toDateStr),
         "BaseLocation": this.docketService.loginUserList.LocationCode || null,
         "UserName": this.docketService.loginUserList.BaseUserName,
+        "PRQNo":this.config.searchText
       }
     };
-    this.dynamicDataService.getDynamicData(payload).subscribe({
+    this.cardSubscription=this.dynamicDataService.getDynamicData(payload).subscribe({
       next: (response: any) => {
         if (response && response.Table1 && response.Table1.length > 0) {
           const data = response.Table1;
@@ -176,6 +181,7 @@ export class PrqListComponent {
             total_PRQ: data.find((x: any) => x.CodeDesc === 'Total PRQ')?.CNT || 0,
             prq_Generated: data.find((x: any) => x.CodeDesc === 'PRQ Generated')?.CNT || 0,
             prq_Assigned: data.find((x: any) => x.CodeDesc === 'PRQ Assigned')?.CNT || 0,
+            prq_Arranged: data.find((x: any) => x.CodeDesc === 'PRQ Arranged')?.CNT || 0,
             cancelled: data.find((x: any) => x.CodeDesc === 'Cancelled')?.CNT || 0,
           };
         }
@@ -191,6 +197,7 @@ export class PrqListComponent {
       case 'Generated': return 's-gen';
       case 'Cancelled': return 's-canc';
       case 'Assigned': return 's-hcc';
+      case 'ARRANGED': return 's-billed';
       default: return '';
     }
   }
