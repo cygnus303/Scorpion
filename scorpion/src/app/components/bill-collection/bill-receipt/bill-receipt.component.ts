@@ -23,6 +23,7 @@ export class BillReceiptComponent {
   @ViewChild('BillInvoiceViewComponent') BillInvoiceViewComponent!: BillInvoiceViewComponent;
 
   @Output() close = new EventEmitter<void>();
+  @Output() submitSuccess = new EventEmitter<void>();
   minDate: Date | undefined;
   maxDate: Date | undefined;
   public modalRef!: BsModalRef;
@@ -387,9 +388,9 @@ export class BillReceiptComponent {
     formData.append('VM.ObjBillMst.RoundOffP', String(bills.reduce((sum: number, b: any) => sum + (Number(b.roundOffPlus) || 0), 0)));
     formData.append('VM.ObjBillMst.RoundOffM', String(bills.reduce((sum: number, b: any) => sum + (Number(b.roundOffMinus) || 0), 0)));
     formData.append('VM.ObjBillMst.TDSDED', String(this.totalTds));
-    formData.append('VM.ObjBillMst.Freight_Deduction', "0");
+    formData.append('VM.ObjBillMst.Freight_Deduction', String(bills.reduce((sum: number, b: any) => sum + (Number(b.roundOffMinus) || 0), 0)));
     formData.append('VM.ObjBillMst.Claim_Deduction', "0");
-    formData.append('VM.ObjBillMst.Other_Amount', String(this.bankCharges));
+    formData.append('VM.ObjBillMst.Other_Amount', String(bills.reduce((sum: number, b: any) => sum + (Number(b.roundOffPlus) || 0), 0)));
     formData.append('VM.ObjBillMst.Bank_Charges', String(this.bankCharges));
     formData.append('VM.ObjBillMst.PTMSCD', this.originalBills.length > 0 ? this.originalBills[0].PTMSCD : "");
     formData.append('VM.ObjBillMst.PAYBAS', bills.length > 0 ? bills[0].PAYMode : "");
@@ -414,9 +415,9 @@ export class BillReceiptComponent {
       formData.append(`BillList[${index}].billamt`, String(b.total || 0));
       formData.append(`BillList[${index}].claim_Deduction`, "0");
       formData.append(`BillList[${index}].h_cess_rate`, "0");
-      formData.append(`BillList[${index}].other_Amount`, String(b.bankChg || 0));
+      formData.append(`BillList[${index}].other_Amount`, String(b.roundOffPlus || 0));
       formData.append(`BillList[${index}].billno`, b.no || "");
-      formData.append(`BillList[${index}].freight_Deduction`, "0");
+      formData.append(`BillList[${index}].freight_Deduction`, String(b.roundOffMinus || 0));
       formData.append(`BillList[${index}].col_Amt`, String(b.collection || 0));
       formData.append(`BillList[${index}].ptmscd`, this.originalBills.length > 0 ? this.originalBills[0].PTMSCD : "");
 
@@ -493,6 +494,7 @@ export class BillReceiptComponent {
             displayMsg = `${msg} | MRSNO: ${mrsno}`;
           }
           this.sweetalertService.success(displayMsg);
+          this.submitSuccess.emit();
           this.closePopup();
         } else {
           this.sweetalertService.error(msg);
