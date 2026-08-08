@@ -95,7 +95,48 @@ export class BillInvoiceViewComponent {
   }
 
   downloadInvoice() {
-    window.print();
+    const printContents = document.querySelector('.invoice-print')?.outerHTML;
+    if (!printContents) {
+      window.print();
+      return;
+    }
+    
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Print Invoice</title>
+            <base href="${window.location.origin}/">
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+            <style>
+              body { 
+                margin: 0; 
+                padding: 0;
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+                background-color: white;
+              }
+              .invoice-print, .invoice-container {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 15px !important;
+                box-shadow: none !important;
+              }
+              @media print {
+                @page { margin: 5mm; size: A4 portrait; }
+                body { zoom: 90%; } /* Chrome/Edge scaling */
+              }
+            </style>
+          </head>
+          <body onload="setTimeout(() => { window.print(); window.close(); }, 500)">
+            ${printContents}
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+    }
   }
 
   closeInvoiceView() {
