@@ -487,8 +487,13 @@ export class BillReceiptComponent {
       next: (res: any) => {
         this.isSubmitting = false;
         const msg = res.message || res.Message || 'Operation completed.';
-        if (res.success || res.isSuccess || res.Status === 200 || res.status === 200) {
-          this.sweetalertService.success(msg);
+        if (res.success || res.isSuccess || res.Status === 200 || res.status === 200 || res.status === "1" || res.Status === "1") {
+          let displayMsg = msg;
+          const mrsno = res.MRSNO || res.mrsno || res.result?.MRSNO || res.Result?.MRSNO || res.data?.MRSNO;
+          if (mrsno) {
+            displayMsg = `${msg} | MRSNO: ${mrsno}`;
+          }
+          this.sweetalertService.success(displayMsg);
           this.closePopup();
         } else {
           this.sweetalertService.error(msg);
