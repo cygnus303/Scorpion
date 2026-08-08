@@ -186,4 +186,4 @@
     </div>
 </div>
 <app-bill-invoice-view #BillInvoiceViewComponent></app-bill-invoice-view>
-<app-bill-receipt #BillReceiptComponent></app-bill-receipt>
+<app-bill-receipt #BillReceiptComponent (submitSuccess)="fetchData()"></app-bill-receipt>
