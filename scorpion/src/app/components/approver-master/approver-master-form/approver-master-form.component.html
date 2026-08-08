@@ -1,0 +1,301 @@
+<div class="card">
+  <div class="card-header">
+    <h2>📋 Approver Master Configuration</h2>
+    <span>Configure approval hierarchy for payable documents</span>
+  </div>
+  <div class="card-body">
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="c-sno">#</th>
+            <th class="c-doc">Document</th>
+            <th class="c-svc">Service Type</th>
+            <th class="c-vnd">Vendor Type</th>
+            <th class="c-apr">Initiator</th>
+            <th class="c-apr">Approver 1</th>
+            <th class="c-apr">Approver 2</th>
+            <th class="c-apr">Final Approver</th>
+            <th class="c-act">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of rows; let i = index">
+            <td class="row-num">{{ i + 1 }}</td>
+            <td>
+              <select [(ngModel)]="row.doc" [ngClass]="{'field-err': row.docErr, 'field-dup': row.dupErr}">
+                <option value="">-- Select --</option>
+                <option *ngFor="let d of docs" [value]="d">{{ d }}</option>
+              </select>
+            </td>
+            <td>
+              <select [(ngModel)]="row.svc" [ngClass]="{'field-err': row.svcErr, 'field-dup': row.dupErr}">
+                <option value="">-- Select --</option>
+                <option *ngFor="let s of svcTypes" [value]="s">{{ s }}</option>
+              </select>
+            </td>
+            <td>
+              <select [(ngModel)]="row.vnd" [ngClass]="{'field-err': row.vndErr, 'field-dup': row.dupErr}">
+                <option value="">-- Select --</option>
+                <option *ngFor="let v of vndTypes" [value]="v">{{ v }}</option>
+              </select>
+            </td>
+
+            <!-- Initiator -->
+            <td>
+              <div class="ss-wrap">
+                <div class="ss-mode-row">
+                  <button class="mode-btn" [class.active]="row.initiator.mode === 'all'"
+                    (click)="setMode(row, 'initiator', 'all')">All</button>
+                  <button class="mode-btn" [class.active]="row.initiator.mode === 'user'"
+                    (click)="setMode(row, 'initiator', 'user')">User</button>
+                  <button class="mode-btn" [class.active]="row.initiator.mode === 'role'"
+                    (click)="setMode(row, 'initiator', 'role')">Role</button>
+                </div>
+                <div class="ss-input-row">
+                  <div *ngIf="row.initiator.selected" class="ss-chip">
+                    <span class="ibadge"
+                      [ngClass]="row.initiator.selected.type === 'user' ? 'ibadge-user' : 'ibadge-role'">
+                      {{ row.initiator.selected.type === 'user' ? 'USER' : 'ROLE' }}
+                    </span>
+                    {{ row.initiator.selected.name }}
+                    <span class="chip-rm" (click)="clearSelection(row, 'initiator')">✕</span>
+                  </div>
+                  <input *ngIf="!row.initiator.selected" class="ss-input" type="text" placeholder="Search Initiator…"
+                    autocomplete="off" [(ngModel)]="row.initiator.search" (focus)="row.initiator.showDd = true"
+                    (click)="row.initiator.showDd = true" />
+                </div>
+                <div class="ss-dd open" *ngIf="!row.initiator.selected && row.initiator.showDd">
+                  <div *ngIf="row.initiator.mode !== 'role' && getUsers(row, 'initiator').length > 0">
+                    <div class="dd-group-label">👤 Users</div>
+                    <div *ngFor="let u of getUsers(row, 'initiator')" class="dd-item"
+                      [class.dd-disabled]="isUsedElsewhere(row, 'initiator', u.id)"
+                      (click)="selectItem(row, 'initiator', u)">
+                      <span class="ibadge ibadge-user">USER</span> {{ u.name }}
+                      <span *ngIf="isUsedElsewhere(row, 'initiator', u.id)" class="dd-tag-used">USED</span>
+                    </div>
+                  </div>
+                  <div *ngIf="row.initiator.mode !== 'user' && getRoles(row, 'initiator').length > 0">
+                    <div class="dd-group-label">🔑 Roles</div>
+                    <div *ngFor="let r of getRoles(row, 'initiator')" class="dd-item"
+                      [class.dd-disabled]="isUsedElsewhere(row, 'initiator', r.id)"
+                      (click)="selectItem(row, 'initiator', r)">
+                      <span class="ibadge ibadge-role">ROLE</span> {{ r.name }}
+                      <span *ngIf="isUsedElsewhere(row, 'initiator', r.id)" class="dd-tag-used">USED</span>
+                    </div>
+                  </div>
+                  <div *ngIf="getFilteredList(row, 'initiator').length === 0" class="dd-no">No results found</div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Approver 1 -->
+            <td>
+              <div class="ss-wrap">
+                <div class="ss-mode-row">
+                  <button class="mode-btn" [class.active]="row.approver1.mode === 'all'"
+                    (click)="setMode(row, 'approver1', 'all')">All</button>
+                  <button class="mode-btn" [class.active]="row.approver1.mode === 'user'"
+                    (click)="setMode(row, 'approver1', 'user')">User</button>
+                  <button class="mode-btn" [class.active]="row.approver1.mode === 'role'"
+                    (click)="setMode(row, 'approver1', 'role')">Role</button>
+                </div>
+                <div class="ss-input-row">
+                  <div *ngIf="row.approver1.selected" class="ss-chip">
+                    <span class="ibadge"
+                      [ngClass]="row.approver1.selected.type === 'user' ? 'ibadge-user' : 'ibadge-role'">
+                      {{ row.approver1.selected.type === 'user' ? 'USER' : 'ROLE' }}
+                    </span>
+                    {{ row.approver1.selected.name }}
+                    <span class="chip-rm" (click)="clearSelection(row, 'approver1')">✕</span>
+                  </div>
+                  <input *ngIf="!row.approver1.selected" class="ss-input" type="text" placeholder="Search Approver 1…"
+                    autocomplete="off" [(ngModel)]="row.approver1.search" (focus)="row.approver1.showDd = true"
+                    (click)="row.approver1.showDd = true" />
+                </div>
+                <div class="ss-dd open" *ngIf="!row.approver1.selected && row.approver1.showDd">
+                  <div *ngIf="row.approver1.mode !== 'role' && getUsers(row, 'approver1').length > 0">
+                    <div class="dd-group-label">👤 Users</div>
+                    <div *ngFor="let u of getUsers(row, 'approver1')" class="dd-item"
+                      [class.dd-disabled]="isUsedElsewhere(row, 'approver1', u.id)"
+                      (click)="selectItem(row, 'approver1', u)">
+                      <span class="ibadge ibadge-user">USER</span> {{ u.name }}
+                      <span *ngIf="isUsedElsewhere(row, 'approver1', u.id)" class="dd-tag-used">USED</span>
+                    </div>
+                  </div>
+                  <div *ngIf="row.approver1.mode !== 'user' && getRoles(row, 'approver1').length > 0">
+                    <div class="dd-group-label">🔑 Roles</div>
+                    <div *ngFor="let r of getRoles(row, 'approver1')" class="dd-item"
+                      [class.dd-disabled]="isUsedElsewhere(row, 'approver1', r.id)"
+                      (click)="selectItem(row, 'approver1', r)">
+                      <span class="ibadge ibadge-role">ROLE</span> {{ r.name }}
+                      <span *ngIf="isUsedElsewhere(row, 'approver1', r.id)" class="dd-tag-used">USED</span>
+                    </div>
+                  </div>
+                  <div *ngIf="getFilteredList(row, 'approver1').length === 0" class="dd-no">No results found</div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Approver 2 -->
+            <td>
+              <div class="ss-wrap">
+                <div class="ss-mode-row">
+                  <button class="mode-btn" [class.active]="row.approver2.mode === 'all'"
+                    (click)="setMode(row, 'approver2', 'all')">All</button>
+                  <button class="mode-btn" [class.active]="row.approver2.mode === 'user'"
+                    (click)="setMode(row, 'approver2', 'user')">User</button>
+                  <button class="mode-btn" [class.active]="row.approver2.mode === 'role'"
+                    (click)="setMode(row, 'approver2', 'role')">Role</button>
+                </div>
+                <div class="ss-input-row">
+                  <div *ngIf="row.approver2.selected" class="ss-chip">
+                    <span class="ibadge"
+                      [ngClass]="row.approver2.selected.type === 'user' ? 'ibadge-user' : 'ibadge-role'">
+                      {{ row.approver2.selected.type === 'user' ? 'USER' : 'ROLE' }}
+                    </span>
+                    {{ row.approver2.selected.name }}
+                    <span class="chip-rm" (click)="clearSelection(row, 'approver2')">✕</span>
+                  </div>
+                  <input *ngIf="!row.approver2.selected" class="ss-input" type="text" placeholder="Search Approver 2…"
+                    autocomplete="off" [(ngModel)]="row.approver2.search" (focus)="row.approver2.showDd = true"
+                    (click)="row.approver2.showDd = true" />
+                </div>
+                <div class="ss-dd open" *ngIf="!row.approver2.selected && row.approver2.showDd">
+                  <div *ngIf="row.approver2.mode !== 'role' && getUsers(row, 'approver2').length > 0">
+                    <div class="dd-group-label">👤 Users</div>
+                    <div *ngFor="let u of getUsers(row, 'approver2')" class="dd-item"
+                      [class.dd-disabled]="isUsedElsewhere(row, 'approver2', u.id)"
+                      (click)="selectItem(row, 'approver2', u)">
+                      <span class="ibadge ibadge-user">USER</span> {{ u.name }}
+                      <span *ngIf="isUsedElsewhere(row, 'approver2', u.id)" class="dd-tag-used">USED</span>
+                    </div>
+                  </div>
+                  <div *ngIf="row.approver2.mode !== 'user' && getRoles(row, 'approver2').length > 0">
+                    <div class="dd-group-label">🔑 Roles</div>
+                    <div *ngFor="let r of getRoles(row, 'approver2')" class="dd-item"
+                      [class.dd-disabled]="isUsedElsewhere(row, 'approver2', r.id)"
+                      (click)="selectItem(row, 'approver2', r)">
+                      <span class="ibadge ibadge-role">ROLE</span> {{ r.name }}
+                      <span *ngIf="isUsedElsewhere(row, 'approver2', r.id)" class="dd-tag-used">USED</span>
+                    </div>
+                  </div>
+                  <div *ngIf="getFilteredList(row, 'approver2').length === 0" class="dd-no">No results found</div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Final Approver -->
+            <td>
+              <div class="ss-wrap">
+                <div class="ss-mode-row">
+                  <button class="mode-btn" [class.active]="row.finalApprover.mode === 'all'"
+                    (click)="setMode(row, 'finalApprover', 'all')">All</button>
+                  <button class="mode-btn" [class.active]="row.finalApprover.mode === 'user'"
+                    (click)="setMode(row, 'finalApprover', 'user')">User</button>
+                  <button class="mode-btn" [class.active]="row.finalApprover.mode === 'role'"
+                    (click)="setMode(row, 'finalApprover', 'role')">Role</button>
+                </div>
+                <div class="ss-input-row">
+                  <div *ngIf="row.finalApprover.selected" class="ss-chip">
+                    <span class="ibadge"
+                      [ngClass]="row.finalApprover.selected.type === 'user' ? 'ibadge-user' : 'ibadge-role'">
+                      {{ row.finalApprover.selected.type === 'user' ? 'USER' : 'ROLE' }}
+                    </span>
+                    {{ row.finalApprover.selected.name }}
+                    <span class="chip-rm" (click)="clearSelection(row, 'finalApprover')">✕</span>
+                  </div>
+                  <input *ngIf="!row.finalApprover.selected" class="ss-input" type="text"
+                    placeholder="Search Final Approver…" autocomplete="off" [(ngModel)]="row.finalApprover.search"
+                    (focus)="row.finalApprover.showDd = true" (click)="row.finalApprover.showDd = true" />
+                </div>
+                <div class="ss-dd open" *ngIf="!row.finalApprover.selected && row.finalApprover.showDd">
+                  <div *ngIf="row.finalApprover.mode !== 'role' && getUsers(row, 'finalApprover').length > 0">
+                    <div class="dd-group-label">👤 Users</div>
+                    <div *ngFor="let u of getUsers(row, 'finalApprover')" class="dd-item"
+                      [class.dd-disabled]="isUsedElsewhere(row, 'finalApprover', u.id)"
+                      (click)="selectItem(row, 'finalApprover', u)">
+                      <span class="ibadge ibadge-user">USER</span> {{ u.name }}
+                      <span *ngIf="isUsedElsewhere(row, 'finalApprover', u.id)" class="dd-tag-used">USED</span>
+                    </div>
+                  </div>
+                  <div *ngIf="row.finalApprover.mode !== 'user' && getRoles(row, 'finalApprover').length > 0">
+                    <div class="dd-group-label">🔑 Roles</div>
+                    <div *ngFor="let r of getRoles(row, 'finalApprover')" class="dd-item"
+                      [class.dd-disabled]="isUsedElsewhere(row, 'finalApprover', r.id)"
+                      (click)="selectItem(row, 'finalApprover', r)">
+                      <span class="ibadge ibadge-role">ROLE</span> {{ r.name }}
+                      <span *ngIf="isUsedElsewhere(row, 'finalApprover', r.id)" class="dd-tag-used">USED</span>
+                    </div>
+                  </div>
+                  <div *ngIf="getFilteredList(row, 'finalApprover').length === 0" class="dd-no">No results found</div>
+                </div>
+              </div>
+            </td>
+
+            <td style="text-align:center;padding-top:10px">
+              <button class="btn-del" (click)="removeRow(i)" title="Remove Row">✕</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-add-row" (click)="addRow()">
+        <span class="btn-add-icon">＋</span> Add Row
+      </button>
+      <button class="btn-submit" (click)="submitForm()">✓ &nbsp;Submit</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Listing -->
+<div class="listing-hdr">
+  <h3>Saved Records</h3>
+  <span class="rec-count">{{ savedRecs.length }}</span>
+</div>
+<div class="card">
+  <div class="lt-wrap">
+    <table class="lt">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Document</th>
+          <th>Service Type</th>
+          <th>Vendor Type</th>
+          <th>Initiator</th>
+          <th>Approver 1</th>
+          <th>Approver 2</th>
+          <th>Final Approver</th>
+          <th>Saved On</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="savedRecs.length === 0">
+          <td colspan="9">
+            <div class="empty-st">
+              <div class="e-icon">📂</div>
+              <p>No records yet. Fill the form and click Submit.</p>
+            </div>
+          </td>
+        </tr>
+        <tr *ngFor="let r of savedRecs; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td><strong>{{ r.doc }}</strong></td>
+          <td>{{ r.svc }}</td>
+          <td>{{ r.vnd }}</td>
+          <td>{{ r.init }}</td>
+          <td>{{ r.apr1 }}</td>
+          <td>{{ r.apr2 }}</td>
+          <td>{{ r.final }}</td>
+          <td style="color:#aaa;font-size:11px">{{ r.ts }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="toast" [ngClass]="toastType" [class.show]="showToast">{{ toastMsg }}</div>

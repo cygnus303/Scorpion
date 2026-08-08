@@ -64,14 +64,15 @@
                 <table>
                     <thead>
                         <tr>
-                            <th *ngIf="config.Status === '1'"></th>
-                            <th *ngIf="config.Status !== '1'">#</th>
+                            <th *ngIf="config.Status === '2'"></th>
+                            <th *ngIf="config.Status !== '2'">#</th>
+                            <th style="max-width:180px;">Query No.</th>
                             <th style="max-width:180px;">Vendor Bill No</th>
                             <th style="max-width:180px;">Query Description</th>
                             <th>Query Date</th>
                             <th>Raised By/Date</th>
                             <th>Remarks</th>
-                            <th *ngIf="config.Status === '1'">Browse</th>
+                            <th *ngIf="config.Status === '2'">Browse</th>
                             <th>Status</th>
                             <th>Attachment</th>
                             <th>Action</th>
@@ -96,16 +97,21 @@
                     </tbody>
                     <tbody *ngIf="!isLoading && queryList.length > 0">
                         <tr class="row-base" *ngFor="let item of queryList; let i = index">
-                            <td class="cb-cell" *ngIf="config.Status === '1'">
+                            <td class="cb-cell" *ngIf="config.Status === '2'">
                                 <input type="checkbox" class="row-cb" [(ngModel)]="item.isChecked">
                             </td>
-                            <td class="sno" *ngIf="config.Status !== '1'" style="font-weight: 500; text-align: center;">
+                            <td class="sno" *ngIf="config.Status !== '2'" style="font-weight: 500; text-align: center;">
                                 <ng-container>{{ i+1 }}</ng-container>
                                 <ng-container><span style="font-size: 16px;">↳</span></ng-container>
                             </td>
+                             <td style="max-width:180px;">
+                                <div class="cust-cell">
+                                    <span class="cust-code">{{ item.QueryNo || '-' }}</span>
+                                </div>
+                            </td>
                             <td style="max-width:180px;">
                                 <div class="cust-cell">
-                                    <span class="cust-code">{{ item.VendorBillNo || '-' }}</span>
+                                    <span class="cust-name">{{ item.VendorBillNo || '-' }}</span>
                                 </div>
                             </td>
                             <td style="max-width:180px;">
@@ -118,9 +124,9 @@
                                     <span class="chq-no">{{ item.RaisedDate || '-'}}</span>
                                 </div>
                             </td>
-                            <td *ngIf="config.Status !== '1'"><span class="chq-date">{{ item.Remarks || '-' }}</span>
+                            <td *ngIf="config.Status !== '2'"><span class="chq-date">{{ item.Remarks || '-' }}</span>
                             </td>
-                            <td *ngIf="config.Status === '1'">
+                            <td *ngIf="config.Status === '2'">
                                 <input type="text" class="row-input row-transfer" [(ngModel)]="item.newRemarks"
                                     placeholder="Enter Remarks">
                                 <div *ngIf="item.isChecked && !item.newRemarks" class="text-danger"
@@ -128,7 +134,7 @@
                                     *This field is required
                                 </div>
                             </td>
-                            <td *ngIf="config.Status === '1'">
+                            <td *ngIf="config.Status === '2'">
                                 <input type="file" #fileInput style="display: none"
                                     (change)="onFileSelected($event, item)">
                                 <button (click)="fileInput.click()"
@@ -144,12 +150,15 @@
                                     {{ item.Status }}
                                 </span>
                             </td>
-                            <td><a class="mr-link" title="View On-Account MR details">View</a></td>
+                            <td>
+                                <a *ngIf="item.ResponseAttachmentName || item.ResponseAttachment" class="mr-link" style="cursor: pointer;" title="View Attachment" (click)="viewAttachment(item.ResponseAttachmentName || item.ResponseAttachment)">View</a>
+                                <span *ngIf="!item.ResponseAttachmentName && !item.ResponseAttachment">-</span>
+                            </td>
                             <td>
                                 <div class="d-flex flex-wrap gap-2 justify-content-center">
-                                    <button *ngIf="config.Status === '1'"
+                                    <button *ngIf="config.Status === '2'"
                                         class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
-                                        [disabled]="!item.isChecked" (click)="onSubmit()">
+                                        [disabled]="!item.isChecked" (click)="onSubmit(item)">
                                         Submit
                                     </button>
                                     <button
@@ -264,19 +273,21 @@
                 <div class="text-uppercase"
                     style="font-size: 12px; font-weight: 700; color: #8f9bb3; letter-spacing: 0.5px; margin-bottom: 6px;">
                     Query Attachment</div>
-                <a href="javascript:void(0)"
+                <a *ngIf="selectedItem?.QueryAttachment" href="javascript:void(0)" (click)="viewAttachment(selectedItem.QueryAttachment)"
                     style="font-size: 14px; font-weight: 600; color: #3366ff; text-decoration: none;"><i
                         class="fa fa-paperclip me-1"></i> View File</a>
+                <div *ngIf="!selectedItem?.QueryAttachment"
+                    style="font-size: 15px; font-weight: 700; color: #222b45;">-</div>
             </div>
 
             <div class="col-md-4">
                 <div class="text-uppercase"
                     style="font-size: 12px; font-weight: 700; color: #8f9bb3; letter-spacing: 0.5px; margin-bottom: 6px;">
                     Response Attachment</div>
-                <a *ngIf="selectedItem?.ResponseAttachment" href="javascript:void(0)"
+                <a *ngIf="selectedItem?.ResponseAttachmentName || selectedItem?.ResponseAttachment" href="javascript:void(0)" (click)="viewAttachment(selectedItem.ResponseAttachmentName || selectedItem.ResponseAttachment)"
                     style="font-size: 14px; font-weight: 600; color: #3366ff; text-decoration: none;"><i
                         class="fa fa-paperclip me-1"></i> View File</a>
-                <div *ngIf="!selectedItem?.ResponseAttachment"
+                <div *ngIf="!selectedItem?.ResponseAttachmentName && !selectedItem?.ResponseAttachment"
                     style="font-size: 15px; font-weight: 700; color: #222b45;">-</div>
             </div>
 

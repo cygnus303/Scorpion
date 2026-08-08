@@ -1,0 +1,178 @@
+<div class="page">
+    <div class="page-header">
+        <div>
+            <div class="page-title"><span class="icon">💸</span> Bill Collection</div>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="cards-grid">
+        <div class="card total" [class.active-card]="config.Status === ''" (click)="filterByStatus('')">
+            <div class="card-icon">📄</div>
+            <div class="card-label">Total Bills</div>
+            <div class="card-count" id="cardTotal">{{summaryData?.TotalBillsCount|| 0}}</div>
+            <div class="card-sub">{{summaryData?.TotalBillsAmt || 0}} Pending</div>
+        </div>
+        <div class="card pending" [class.active-card]="config.Status === 'All'"
+            (click)="filterByStatus('Bill Due, not Collected')">
+            <div class="card-icon">⏳</div>
+            <div class="card-label">Pending for Collection</div>
+            <div class="card-count" id="cardPending">{{summaryData?.TotalPendingCount|| 0}}</div>
+            <div class="card-sub">{{summaryData?.TotalPendingAmt|| 0}} Pending</div>
+        </div>
+    </div>
+    <div class="filter-bar">
+
+        <div class="filter-field" id="fromField">
+            <label for="dateFrom">From Date</label>
+            <div style="position: relative; display: flex; align-items: center;">
+                <span
+                    style="position: absolute; left: 10px; cursor: pointer; pointer-events: none; z-index: 1;">📅</span>
+                <input type="text" id="dateFrom" bsDatepicker (ngModelChange)="fetchData()"
+                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                    [(ngModel)]="config.FromDt" style="padding-left: 32px; width: 100%; position: relative;">
+            </div>
+        </div>
+        <div class="filter-field" id="toField">
+            <label for="dateTo">To Date</label>
+            <div style="position: relative; display: flex; align-items: center;">
+                <span
+                    style="position: absolute; left: 10px; cursor: pointer; pointer-events: none; z-index: 1;">📅</span>
+                <input type="text" id="dateTo" bsDatepicker [minDate]="config.FromDt" (ngModelChange)="fetchData()"
+                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                    [(ngModel)]="config.ToDt" style="padding-left: 32px; width: 100%; position: relative;">
+            </div>
+        </div>
+        <div class="filter-field" id="billtyField">
+            <label>Bill Type</label>
+            <ng-select type="text" placeholder="Bill Type" [items]="statusList" bindLabel="label" bindValue="value"
+                [(ngModel)]="config.Status" (change)="fetchData()" class="custom-status-select clear-icon"></ng-select>
+        </div>
+
+        <div class="filter-field search" id="custField">
+            <label for="custSearch">Customer Name / Code</label>
+            <ng-select class="noFoundTextColor remove-white-space" placeholder="Select Customer" [searchable]="true"
+                [clearable]="true" (search)="getBillingPartyData($event)" [(ngModel)]="config.Party_code"
+                [notFoundText]="notFoundTextValue" (change)="fetchData()" (open)="resetBillingPartyDropdown()">
+                <ng-option *ngFor="let item of billingPartyData" [value]="item.custcd">
+                    <strong>{{ item.custcd }}</strong> : {{ item.custnm }}
+                </ng-option>
+            </ng-select>
+        </div>
+
+        <div class="filter-field search" id="onAccountField">
+            <label for="onAccountSearch">Bill No.</label>
+            <input type="text" placeholder="Enter Bill number…" autocomplete="off" [(ngModel)]="config.SearchText"
+                (keyup)="onSearchChange()" />
+        </div>
+    </div>
+
+    <!-- Table Card — Regular UNR Listing -->
+    <div class="table-card">
+        <div class="table-card-header">
+            <h3>
+                📋 Bill Listing
+                <span class="selection-count" id="selectionCount" style="display:none;">0 selected</span>
+            </h3>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button type="button" (click)="openPopup()" class="btn btn-danger btn-sm px-4 fw-medium"
+                    style="background-color: #b71c1c;">Prepare MR ›</button>
+            </div>
+        </div>
+
+        <div class="tbl-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th *ngIf="config.Status === ''">#</th>
+                        <th *ngIf="config.Status !== ''"></th>
+                        <th>Bill No</th>
+                        <th>Bill Date</th>
+                        <th>Customer Name</th>
+                        <th>Bill Branch</th>
+                        <th>Bill Type</th>
+                        <th style="text-align: right;">Taxable Amt</th>
+                        <th style="text-align: right;">GST Amt</th>
+                        <th style="text-align: right;">Total Amt</th>
+                        <th style="text-align: right;">Pending Amt</th>
+                        <th style="text-align: center;">MR</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="isLoading">
+                    <tr>
+                        <td colspan="11" class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && billList.length === 0">
+                    <tr>
+                        <td colspan="11" class="text-center py-4 text-muted fs-5">
+                            No records found.
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && billList.length !== 0">
+                    <tr class="row-base" *ngFor="let item of billList; let i = index">
+                        <td *ngIf="config.Status === ''">{{ i + 1 }}</td>
+                        <td class="cb-cell" *ngIf="config.Status !== ''">
+                            <input *ngIf="!selectedPartyCode || selectedPartyCode === getPartyCode(item)" type="checkbox" class="row-cb" [checked]="item.selected" (change)="onCheckboxChange(item, $event)">
+                        </td>
+                        <td>
+                            <a style="color: #c8102e; font-weight: 700; text-decoration: underline; cursor: pointer; text-underline-offset: 3px;"
+                                (click)="openInvoiceView(item?.BILLNO)">
+                                {{ item.BILLNO || '-' }}
+                            </a>
+                        </td>
+                        <td>
+                            <span class="chq-date">{{ (item.BGNDT | date:'dd/MM/yyyy') || '-' }}</span>
+                        </td>
+                        <td>
+                            <div class="cust-cell">
+                                <span class="cust-name">{{ item.ptmsstr || '-' }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="chq-date">{{ item.Bbrcdnm || '-' }}</span>
+                        </td>
+                        <td>
+                            <span class="chq-no">{{ item.PAYBAS || '-' }}</span>
+                        </td>
+                        <td class="amount-cell">
+                            {{ item.Taxable_Amt != null ? (item.Taxable_Amt | number:'1.2-2') : '-' }}
+                        </td>
+                        <td class="amount-cell">
+                            {{ item.GSTAmt != null ? (item.GSTAmt | number:'1.2-2') : '-' }}
+                        </td>
+                        <td class="amount-cell">
+                            {{ item.BILLAMT != null ? (item.BILLAMT | number:'1.2-2') : '-' }}
+                        </td>
+                        <td class="amount-cell" style="font-weight: 800; color: #111;">
+                            {{ item.PENDAMT != null ? (item.PENDAMT | number:'1.2-2') : '-' }}
+                        </td>
+                        <td style="text-align: center;">
+                            <a style="color: #c8102e; font-weight: 700;cursor: pointer; font-size: 14px;">
+                                {{ item.MRNO || '-' }}
+                            </a>
+                        </td>
+                        <td>
+                            <span class="status-badge" [ngStyle]="getStatusStyles(item)">
+                                {{ getCalculatedStatus(item) }}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <app-pagination [page]="config.PageNo" [pageSize]="config.PageSize" [totalRecords]="config.totalRecords"
+            [totalPages]="config.totalPages" (pageChange)="setPage($event)">
+        </app-pagination>
+    </div>
+</div>
+<app-bill-invoice-view #BillInvoiceViewComponent></app-bill-invoice-view>
+<app-bill-receipt #BillReceiptComponent></app-bill-receipt>

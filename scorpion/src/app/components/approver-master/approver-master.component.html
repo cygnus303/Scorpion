@@ -1,0 +1,25 @@
+<div class="app-shell">
+    <div class="top-nav-wrapper">
+        <div class="segmented-control">
+            <div class="sc-tab" routerLink="./form" routerLinkActive="active">
+                <span class="sc-icon">⚙️</span>
+                <span class="sc-title">Approver Master</span>
+            </div>
+            
+            <div class="sc-tab" routerLink="./approval-master" routerLinkActive="active">
+                <span class="sc-icon">👥</span>
+                <span class="sc-title">Approval Master</span>
+            </div>
+            
+            <div class="sc-tab" routerLink="./document-approval" routerLinkActive="active">
+                <span class="sc-icon">📄</span>
+                <span class="sc-title">Document Approval</span>
+                <span class="sc-badge">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <router-outlet></router-outlet>
+    </div>
+</div>

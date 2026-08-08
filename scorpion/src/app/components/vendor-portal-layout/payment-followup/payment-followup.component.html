@@ -3,31 +3,63 @@
           <div class="dash-title">Payment Followup</div>
           <div class="dash-sub">Approved bills awaiting payment &mdash; track and follow up with Accounts</div>
 
-          <div class="pf-card-grid">
-            <div class="pf-card">
-              <div class="pf-ico pf-ico-blue">&#8377;</div>
-              <div><div class="pf-label">Total Billed</div><div class="pf-amt"><span>&#8377;</span> 4,95,180.00</div></div>
-            </div>
-            <div class="pf-card">
-              <div class="pf-ico pf-ico-green">&#10003;</div>
-              <div><div class="pf-label">Paid</div><div class="pf-amt"><span>✓</span> 1,18,200.00</div></div>
-            </div>
-            <div class="pf-card">
-              <div class="pf-ico pf-ico-amber">🕑</div>
-              <div><div class="pf-label">Pending</div><div class="pf-amt" id="pfPendingCardAmt"><span>&#8377;</span> 2,90,750.00</div></div>
-            </div>
-            <div class="pf-card">
-              <div class="pf-ico pf-ico-red">!</div>
-              <div><div class="pf-label">On Hold / Query</div><div class="pf-amt"><span>&#8377;</span> 1,02,450.00</div></div>
-            </div>
-          </div>
+  <div class="pf-card-grid">
+    <div class="pf-card">
+      <div class="pf-ico pf-ico-blue">&#8377;</div>
+      <div><div class="pf-label">Total Billed</div><div class="pf-amt"><span>&#8377;</span> {{ summaryData?.TotalBilled || 0}}</div></div>
+    </div>
+    <div class="pf-card">
+      <div class="pf-ico pf-ico-green">&#10003;</div>
+      <div><div class="pf-label">Paid</div><div class="pf-amt"><span>✓</span> {{ summaryData?.Paid || 0 }}</div></div>
+    </div>
+    <div class="pf-card">
+      <div class="pf-ico pf-ico-amber">🕑</div>
+      <div><div class="pf-label">Pending</div><div class="pf-amt" id="pfPendingCardAmt"><span>&#8377;</span> {{ summaryData?.Pending || 0 }}</div></div>
+    </div>
+    <div class="pf-card">
+      <div class="pf-ico pf-ico-red">!</div>
+      <div><div class="pf-label">On Hold / Query</div><div class="pf-amt"><span>&#8377;</span> {{ summaryData?.On_Hold_Query || 0}}</div></div>
+    </div>
+  </div>
 
-          <div class="prs-card">
-            <div class="modal-section-title" style="color: #E2001A; text-transform: uppercase;">BILLS PENDING FOR PAYMENT</div>
-            <div id="pfListing">
-              <table class="am-table itd-table" style="margin-top: 10px;">
+  <div class="filter-bar mt-4 mb-3">
+    <div class="filter-field" id="fromField">
+        <label for="dateFrom">From Date</label>
+        <div style="position: relative; display: flex; align-items: center;">
+            <span style="position: absolute; left: 10px; cursor: pointer; pointer-events: none; z-index: 1;">📅</span>
+            <input type="text" id="dateFrom" bsDatepicker
+                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                [(ngModel)]="config.fromDateStr" (ngModelChange)="fetchData()"
+                style="padding-left: 32px; width: 100%; position: relative;">
+        </div>
+    </div>
+    <div class="filter-field" id="toField">
+        <label for="dateTo">To Date</label>
+        <div style="position: relative; display: flex; align-items: center;">
+            <span style="position: absolute; left: 10px; cursor: pointer; pointer-events: none; z-index: 1;">📅</span>
+            <input type="text" id="dateTo" bsDatepicker [minDate]="config.fromDateStr"
+                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                [(ngModel)]="config.toDateStr" (ngModelChange)="fetchData()"
+                style="padding-left: 32px; width: 100%; position: relative;">
+        </div>
+    </div>
+
+    <div class="filter-field search" id="onAccountField">
+        <label for="onAccountSearch">Search</label>
+        <input type="text" placeholder="Search Bill No.." autocomplete="off"
+            [(ngModel)]="config.searchText" (keyup)="onSearchChange()" />
+    </div>
+  </div>
+
+        <div class="table-card">
+            <div class="table-card-header">
+                <h3>📋 Payment Listing</h3>
+            </div>
+            <div class="tbl-wrap">
+              <table>
                 <thead>
                   <tr>
+                    <th>#</th>
                     <th>Bill No</th>
                     <th>Vendor Bill No</th>
                     <th>Approved Date</th>
@@ -39,44 +71,52 @@
                     <th>Action</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody *ngIf="isLoading">
                   <tr>
-                    <td>BEABA_262700538</td>
-                    <td>VH/ABA/2627/000812</td>
-                    <td>28 Jun 2026</td>
-                    <td>77,547</td>
-                    <td class="text-red font-bold">38,743</td>
-                    <td>17</td>
-                    <td>26 Jul 2026</td>
-                    <td>&mdash;</td>
-                    <td><button class="action-btn-outline disabled" disabled>Send Followup</button></td>
+                      <td colspan="9" class="text-center py-5">
+                          <div class="spinner-border text-primary" role="status">
+                              <span class="visually-hidden">Loading...</span>
+                          </div>
+                          <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
+                      </td>
                   </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && paymentList.length === 0">
                   <tr>
-                    <td>BL/2627/00009</td>
-                    <td>BILL NO 42 DT 12.06.2026</td>
-                    <td>22 Jun 2026</td>
-                    <td>48,657</td>
-                    <td class="text-red font-bold">48,657</td>
-                    <td>23</td>
-                    <td>20 Jul 2026</td>
-                    <td>21 Jul 2026</td>
-                    <td><button class="action-btn-outline success">Send Followup</button></td>
+                      <td colspan="9" class="text-center py-4 text-muted fs-5">
+                          No records found.
+                      </td>
                   </tr>
-                  <tr>
-                    <td>BEAMD_262700003</td>
-                    <td>MTS/SE/2526/061</td>
-                    <td>15 Jun 2026</td>
-                    <td>3,33,350</td>
-                    <td class="text-red font-bold">2,03,350</td>
-                    <td>30</td>
-                    <td>18 Jul 2026</td>
-                    <td>01 Jul 2026</td>
-                    <td><button class="action-btn-outline success">Send Followup</button></td>
+                </tbody>
+                <tbody *ngIf="!isLoading && paymentList.length > 0">
+                  <tr class="row-base" *ngFor="let item of paymentList; let i = index">
+                    <td>{{ (config.page - 1) * config.pageSize + i + 1 }}</td>
+                    <td style="font-weight: 500;">
+                        <span style="font-size: 16px; margin-right: 4px; color: #9e9e9e;"></span>
+                        {{ item.BILLNO || '-' }}
+                    </td>
+                    <td>{{ item.VENDORBILLNO || '-' }}</td>
+                    <td>{{ item.Approved_Date || '-' }}</td>
+                    <td>{{ item.Amount || '0' }}</td>
+                    <td class="text-red font-bold">{{ item.Pending_Amount || '0' }}</td>
+                    <td>{{ item.Day_Pending || '-' }}</td>
+                    <td>{{ item.Expected_Payment_Date || '-' }}</td>
+                    <td>{{ item.Last_FollowUp || '&mdash;' }}</td>
+                    <td>
+                        <button class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3" 
+                                [ngClass]="{'bg-success-subtle border-success-subtle text-success-emphasis': item.CanFollowup, 'disabled': !item.CanFollowup}" 
+                                [disabled]="!item.CanFollowup">
+                            Send Followup
+                        </button>
+                    </td>
                   </tr>
                 </tbody>
               </table>
             </div>
-          </div>
+            <app-pagination *ngIf="!isLoading && paymentList.length > 0"
+                [page]="config.page" [pageSize]="config.pageSize" [totalRecords]="config.totalRecords"
+                [totalPages]="config.totalPages" (pageChange)="setPage($event)">
+            </app-pagination>
         </div>
-        <footer class="note">UI Mockup only &mdash; values are sample data.</footer>
+        </div>
       </div>

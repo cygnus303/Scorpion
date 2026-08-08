@@ -107,6 +107,23 @@ export const ChallanRoutes: Routes = [
     path: 'PRQList',
     loadComponent: () => import('../prq-list/prq-list.component').then(m => m.PrqListComponent),
     canActivate: [DocketGuard]
-  }
+  },
+   {
+    path: 'ApproverMaster',
+    loadComponent: () => import('../approver-master/approver-master.component').then(m => m.ApproverMasterComponent),
+    loadChildren: () => import('../approver-master/approver-master.routes').then(m => m.APPROVER_MASTER_ROUTES)
+    // canActivate: [DocketGuard]
+  },
+   {
+    path: 'approval-master',
+    loadComponent: () => import('../approval-master/approval-master.component').then(m => m.ApprovalMasterComponent),
+    // canActivate: [DocketGuard]
+  },
+  {
+    path: 'BillCollection',
+    loadComponent: () => import('../bill-collection/bill-collection.component').then(m => m.BillCollectionComponent),
+    // canActivate: [DocketGuard]
+  },
+
 
 ];

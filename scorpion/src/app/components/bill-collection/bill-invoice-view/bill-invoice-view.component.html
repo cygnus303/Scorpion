@@ -1,0 +1,318 @@
+<ng-template #TemplateInvoice>
+  <!-- Main Container -->
+  <div class="modal-body p-0" style="background-color: #f8f9fa; max-height: calc(100vh - 50px); overflow-y: auto;">
+    <div class="invoice-container mx-auto bg-white p-4" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; font-size: 0.8rem;">
+      
+      <!-- Top Section -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- Logo -->
+        <div class="d-flex justify-content-center align-items-center" style="width: 140px; height: 75px; border: 1px solid #dc3545; border-radius: 4px;">
+          <img src="assets/images/logo.png" alt="Scorpion" style="max-height: 80%; max-width: 80%; object-fit: contain;" 
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="justify-content-center align-items-center w-100 h-100 bg-white" style="display: none; border-radius: 4px;">
+            <span class="text-danger fw-bold fst-italic" style="font-family: serif; font-size: 1.4rem;">Scorpion</span>
+          </div>
+        </div>
+
+        <!-- Address -->
+        <div class="text-center flex-grow-1 px-3">
+          <h4 class="text-danger fw-bold mb-1" style="font-size: 1.3rem;">SCORPION EXPRESS PVT. LTD.</h4>
+          <div style="font-size: 0.75rem; color: #666; line-height: 1.4;">
+            Near Hotel Sikka, Opposite Fire Station Office, Baddi Barotiwala Road,<br>
+            Village Jhudikalan, Baddi 173205<br>
+            Tel: +91 22 2497 8815/16/17 &nbsp;&bull;&nbsp; <span class="text-danger">info&#64;scorpiongroup.in</span> &nbsp;&bull;&nbsp; <span class="text-danger">scorpiongroup.in</span>
+          </div>
+        </div>
+
+        <!-- Tax Invoice Box -->
+        <div class="text-end" style="width: 180px;">
+          <div class="rounded text-center overflow-hidden mb-2" style="border: 1px solid #dc3545;">
+            <div class="text-white fw-bold py-1" style="font-size: 0.8rem; background-color: #dc3545;">TAX INVOICE</div>
+            <div class="text-danger fw-bold py-1 bg-white" style="font-size: 0.95rem;">Nº {{ billList[0]?.BILLNO || selectedInvoiceBill?.no || '-' }}</div>
+          </div>
+          <div class="text-muted" style="font-size: 0.7rem; text-align: right;">
+            Bill Date: <strong>{{ billList[0]?.BillDate || selectedInvoiceBill?.date || '-' }}</strong><br>
+            Financial Year: <strong>{{ billList[0]?.FinancialYear || '-' }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Registration Row -->
+      <div class="row g-0 mb-3" style="font-size: 0.7rem; border: 1px solid #dc3545;">
+        <div class="col px-2 py-1" style="border-right: 1px solid #dc3545;">
+          <div class="text-danger fw-bold mb-1" style="font-size: 0.6rem;">PAN NO.</div>
+          <div class="fw-bold text-dark">{{ billList[0]?.GSTIN_No ? (billList[0].GSTIN_No | slice:2:12) : '-' }}</div>
+        </div>
+        <div class="col px-2 py-1" style="border-right: 1px solid #dc3545;">
+          <div class="text-danger fw-bold mb-1" style="font-size: 0.6rem;">GSTIN</div>
+          <div class="fw-bold text-dark">{{ billList[0]?.GSTIN_No || '-' }}</div>
+        </div>
+        <div class="col px-2 py-1" style="border-right: 1px solid #dc3545;">
+          <div class="text-danger fw-bold mb-1" style="font-size: 0.6rem;">CIN</div>
+          <div class="fw-bold text-dark">{{ billList[0]?.CIN || '-' }}</div>
+        </div>
+        <div class="col px-2 py-1" style="border-right: 1px solid #dc3545;">
+          <div class="text-danger fw-bold mb-1" style="font-size: 0.6rem;">STATE CODE</div>
+          <div class="fw-bold text-dark">{{ billList[0]?.statecode || '-' }}</div>
+        </div>
+        <div class="col px-2 py-1">
+          <div class="text-danger fw-bold mb-1" style="font-size: 0.6rem;">SAC</div>
+          <div class="fw-bold text-dark">{{ billList[0]?.SAC_Code || '-' }}</div>
+        </div>
+      </div>
+
+      <!-- Parties Row -->
+      <div class="row g-0 mb-4" style="border: 1px solid #dc3545;">
+        <!-- Billed To -->
+        <div class="col-6 p-2" style="border-right: 1px solid #dc3545;">
+          <h6 class="text-danger fw-bold mb-2" style="font-size: 0.8rem;">BILLED TO</h6>
+          <div class="fw-bold text-dark mb-1" style="font-size: 0.85rem;">{{ billList[0]?.PartyName || '-' }}</div>
+          <div class="text-dark" style="font-size: 0.75rem; line-height: 1.4;">
+            Customer Code: {{ billList[0]?.PTMSCD || '-' }}<br>
+            {{ billList[0]?.Address || '-' }}<br>
+            State Code: {{ billList[0]?.statecodePS || '-' }}<br>
+            GSTIN: <strong>{{ billList[0]?.CustGSTNo || billList[0]?.GSTIN || '-' }}</strong>
+          </div>
+        </div>
+        
+        <!-- Service Details -->
+        <div class="col-6 p-0">
+          <div class="p-2 border-bottom border-light">
+            <h6 class="text-danger fw-bold mb-1" style="font-size: 0.8rem;">SERVICE DETAILS</h6>
+          </div>
+          <table class="table table-sm table-borderless mb-0 w-100 text-dark" style="font-size: 0.75rem;">
+            <tbody>
+              <tr style="border-bottom: 1px solid #e0e0e0;">
+                <td class="text-muted ps-2 py-1" style="width: 40%;">Nature of Service</td>
+                <td class="py-1">{{ billList[0]?.Nature_Of_Service || '-' }}</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #e0e0e0;">
+                <td class="text-muted ps-2 py-1">Billing Party</td>
+                <td class="py-1">{{ billList[0]?.PartyName || '-' }}</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #e0e0e0;">
+                <td class="text-muted ps-2 py-1">Bill Branch</td>
+                <td class="py-1">{{ selectedInvoiceBill?.branch || billList[0]?.fincmplbr || '-' }}</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #e0e0e0;">
+                <td class="text-muted ps-2 py-1">Bill Type</td>
+                <td class="py-1">{{ selectedInvoiceBill?.type || '-' }}</td>
+              </tr>
+              <tr>
+                <td class="text-muted ps-2 py-1">Tax Payable By</td>
+                <td class="py-1">Scorpion Express Pvt Ltd (Forward Charge)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Consignment Details -->
+      <h6 class="text-danger fw-bold mb-2" style="font-size: 0.85rem;">CONSIGNMENT DETAILS</h6>
+      <div class="mb-4" style="border: 1px solid #dc3545;">
+        <table class="table table-sm text-center align-middle mb-0" style="font-size: 0.7rem;">
+          <thead style="background-color: #dc3545 !important;">
+            <tr>
+              <th class="py-2 border-0" style="font-weight: 600; color: white !important; background-color: transparent !important;">SR</th>
+              <th class="py-2 border-0" style="font-weight: 600; color: white !important; background-color: transparent !important;">C/N NO.</th>
+              <th class="py-2 border-0" style="font-weight: 600; color: white !important; background-color: transparent !important;">C/N DATE</th>
+              <th class="py-2 border-0" style="font-weight: 600; color: white !important; background-color: transparent !important;">INVOICE NO.</th>
+              <th class="py-2 border-0" style="font-weight: 600; color: white !important; background-color: transparent !important;">INVOICE DATE</th>
+              <th class="py-2 border-0" style="font-weight: 600; color: white !important; background-color: transparent !important;">PKG</th>
+              <th class="py-2 border-0" style="font-weight: 600; color: white !important; background-color: transparent !important;">FROM</th>
+              <th class="py-2 border-0" style="font-weight: 600; color: white !important; background-color: transparent !important;">TO</th>
+              <th class="py-2 border-0 text-start" style="font-weight: 600; color: white !important; background-color: transparent !important;">CONSIGNEE</th>
+              <th class="py-2 border-0" style="font-weight: 600; color: white !important; background-color: transparent !important;">TRUCK</th>
+              <th class="py-2 border-0" style="font-weight: 600; color: white !important; background-color: transparent !important;">CHARGE WT</th>
+              <th class="py-2 border-0" style="font-weight: 600; color: white !important; background-color: transparent !important;">RATE</th>
+              <th class="py-2 border-0 text-end" style="font-weight: 600; color: white !important; background-color: transparent !important;">FREIGHT ₹</th>
+              <th class="py-2 border-0 text-end" style="font-weight: 600; color: white !important; background-color: transparent !important;">OTHER CHG ₹</th>
+              <th class="py-2 border-0 text-end" style="font-weight: 600; color: white !important; background-color: transparent !important;">TOTAL ₹</th>
+            </tr>
+          </thead>
+          <tbody style="border-top: none;">
+            <tr style="border-bottom: 1px solid #dc3545;" *ngFor="let item of billList">
+              <td class="border-0">{{ item.srno }}</td>
+              <td class="border-0">{{ item.dockno }}</td>
+              <td class="border-0">{{ item.DOCKDT }}</td>
+              <td class="border-0">{{ item.INVNO }}</td>
+              <td class="border-0">{{ item.INVDT }}</td>
+              <td class="border-0">{{ item.PKGSNO }}</td>
+              <td class="border-0">{{ item.Fromcity }}</td>
+              <td class="border-0">{{ item.Tocity }}</td>
+              <td class="text-start text-truncate border-0" style="max-width: 100px;">{{ item.consigneenm || item.ConsigneeName }}</td>
+              <td class="border-0">{{ item.TruckTYPE || item.trucktype || 'LTL' }}</td>
+              <td class="border-0">{{ item.CHRGWT | number:'1.2-2' }}</td>
+              <td class="border-0">{{ item.FRT_RATE | number:'1.2-2' }}</td>
+              <td class="border-0 text-end">{{ item.FREIGHT | number:'1.2-2' }}</td>
+              <td class="border-0 text-end">{{ item.OtherCharges | number:'1.2-2' }}</td>
+              <td class="border-0 text-end">{{ item.SubTotal | number:'1.2-2' }}</td>
+            </tr>
+            <tr class="fw-bold bg-white" *ngIf="billList?.length">
+              <td colspan="10" class="text-start border-0 py-2">Total</td>
+              <td class="border-0 py-2">{{ totalChargeWt | number:'1.2-2' }}</td>
+              <td class="border-0 py-2">{{ totalRate | number:'1.2-2' }}</td>
+              <td class="border-0 text-end py-2">{{ totalFreight | number:'1.2-2' }}</td>
+              <td class="border-0 text-end py-2">{{ totalOtherCharges | number:'1.2-2' }}</td>
+              <td class="border-0 text-end py-2">{{ totalSubTotal | number:'1.2-2' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Annexure Details -->
+      <h6 class="text-danger fw-bold mb-2 mt-4" style="font-size: 0.85rem;">ANNEXURE — OSC CHARGES BREAKUP</h6>
+      <div class="mb-2" style="border: 1px solid #dc3545;">
+        <table class="table table-sm text-center align-middle mb-0" style="font-size: 0.7rem;">
+          <thead style="background-color: #dc3545 !important;">
+            <tr>
+              <th class="py-2 text-start border-0 ps-3" style="font-weight: 600; width: 10%; color: white !important; background-color: transparent !important;">SR</th>
+              <th class="py-2 text-start border-0" style="font-weight: 600; width: 15%; color: white !important; background-color: transparent !important;">DATE</th>
+              <th class="py-2 text-start border-0" style="font-weight: 600; width: 25%; color: white !important; background-color: transparent !important;">C/N NO.</th>
+              <th class="py-2 text-end border-0" style="font-weight: 600; width: 20%; color: white !important; background-color: transparent !important;">DOCUMENT CHG ₹</th>
+              <th class="py-2 text-end border-0" style="font-weight: 600; width: 20%; color: white !important; background-color: transparent !important;">FUEL SURCHARGE ₹</th>
+              <th class="py-2 text-end border-0 pe-3" style="font-weight: 600; width: 10%; color: white !important; background-color: transparent !important;">TOTAL ₹</th>
+            </tr>
+          </thead>
+          <tbody style="border-top: none;">
+            <tr style="border-bottom: 1px solid #dc3545;" *ngFor="let item of billList">
+              <td class="text-start border-0 ps-3">{{ item.srno }}</td>
+              <td class="text-start border-0">{{ item.DOCKDT }}</td>
+              <td class="text-start border-0">{{ item.dockno }}</td>
+              <td class="text-end border-0">{{ item.DocumentCharges | number:'1.2-2' }}</td>
+              <td class="text-end border-0">{{ item.FuelSurcharge | number:'1.2-2' }}</td>
+              <td class="text-end border-0 pe-3">{{ item.OtherCharges | number:'1.2-2' }}</td>
+            </tr>
+            <tr class="fw-bold bg-white" *ngIf="billList?.length">
+              <td colspan="3" class="text-start border-0 py-2 ps-3">Total Other Charges</td>
+              <td class="text-end border-0 py-2">{{ totalDocumentCharges | number:'1.2-2' }}</td>
+              <td class="text-end border-0 py-2">{{ totalFuelSurcharge | number:'1.2-2' }}</td>
+              <td class="text-end border-0 py-2 pe-3">{{ totalOtherCharges | number:'1.2-2' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="text-muted mb-4 pb-2" style="font-size: 0.55rem; line-height: 1.2;">
+        Charge heads with NIL (0.00) values are not displayed: Topay Chg, Fov Chg, Other Chg, Extra Handling Chg, Special Chg, ODA Dely Chg, Covid Chg, CSD Delivery Chg, Demmurage Chg, Physical POD, Cartage Chg, Mall Delivery Chg, Extra Delivery Chg, Late Delivery, Detention Chg, Varai Chg, West Bengal Diesel Hike, Kerala Chg, Unloading, J & K, Loading Chg, Loading Detention, GreenTax Chg, Sikkim Tax, Appointment Chg, Second Attempt, For North East.
+      </div>
+
+      <!-- Amounts Section -->
+      <div class="row mb-4">
+        <!-- Left: Amount in Words -->
+        <div class="col-7">
+          <div class="bg-danger bg-opacity-10 rounded p-3 mb-2" style="border: 1px solid #dc3545;">
+            <div class="text-danger fw-bold mb-1" style="font-size: 0.7rem;">AMOUNT IN WORDS</div>
+            <div class="fw-bold text-dark fst-italic" style="font-size: 0.85rem;">{{ billList[0]?.AmountInWords || '-' }}</div>
+          </div>
+          <div class="text-muted" style="font-size: 0.7rem;">
+            Person liable for paying Goods & Service Tax: <strong class="text-dark">Scorpion Express Pvt Ltd</strong>
+          </div>
+        </div>
+        
+        <!-- Right: Totals -->
+        <div class="col-5">
+          <table class="table table-sm table-borderless mb-0 text-dark" style="font-size: 0.75rem;">
+            <tbody>
+              <tr style="border-bottom: 1px solid #e0e0e0;">
+                <td class="py-2">Total Charged Amount</td>
+                <td class="py-2 text-end">₹ {{ totalSubTotal | number:'1.2-2' }}</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #e0e0e0;">
+                <td class="py-2">Taxable Value (Gross Bill Amount)</td>
+                <td class="py-2 text-end">₹ {{ totalSubTotal | number:'1.2-2' }}</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #e0e0e0;">
+                <td class="py-2">IGST &#64; {{ billList[0]?.IGSTRate || 0 | number:'1.2-2' }}%</td>
+                <td class="py-2 text-end">₹ {{ totalIGST | number:'1.2-2' }}</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #e0e0e0;">
+                <td class="py-2">SGST / UTGST &#64; {{ billList[0]?.SGSTRate || 0 | number:'1.2-2' }}%</td>
+                <td class="py-2 text-end">₹ {{ totalSGST | number:'1.2-2' }}</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #e0e0e0;">
+                <td class="py-2">CGST &#64; {{ billList[0]?.CGSTRate || 0 | number:'1.2-2' }}%</td>
+                <td class="py-2 text-end">₹ {{ totalCGST | number:'1.2-2' }}</td>
+              </tr>
+              <tr>
+                <td colspan="2" class="p-0 pt-3">
+                  <div class="text-white d-flex justify-content-between align-items-center px-3 py-2" style="border-radius: 4px; background-color: #dc3545;">
+                    <strong style="font-size: 0.9rem;">TOTAL AMOUNT</strong>
+                    <strong style="font-size: 1.1rem;">₹ {{ billList[0]?.BILLAMT | number:'1.2-2' }}</strong>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Terms & Bank Details -->
+      <div class="row g-0 mb-4 rounded overflow-hidden" style="border: 1px solid #dc3545;">
+        <!-- Terms -->
+        <div class="col-7 p-3" style="font-size: 0.65rem; line-height: 1.5; border-right: 1px solid #dc3545;">
+          <h6 class="text-danger fw-bold mb-2" style="font-size: 0.75rem;">TERMS OF PAYMENT</h6>
+          <ol class="ps-3 mb-0 text-dark">
+            <li class="mb-1">Payment should be made to authorized officer only against official Receipt.</li>
+            <li class="mb-1">Payment should be made by cheque/draft in the name of <strong>SCORPION EXPRESS PVT LTD.</strong></li>
+            <li class="mb-1">Payment should be made within 15 days from submission of bills.</li>
+            <li class="mb-1">Payment beyond credit period is subject to interest charges &#64; 18% p.a.</li>
+            <li>Jurisdiction Clause: Any disputes arising out of this invoice shall be subject to exclusive jurisdiction of the Courts in Mumbai, Maharashtra.</li>
+          </ol>
+        </div>
+        
+        <!-- Bank Details -->
+        <div class="col-5 p-3" style="font-size: 0.7rem;">
+          <h6 class="text-danger fw-bold mb-2" style="font-size: 0.75rem;">BANK DETAILS</h6>
+          <table class="table table-sm table-borderless mb-0">
+            <tbody>
+              <tr style="border-bottom: 1px solid #e0e0e0;">
+                <td class="text-muted py-1" style="width: 45%;">Beneficiary Name</td>
+                <td class="py-1 text-dark">SCORPION EXPRESS PVT LTD</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #e0e0e0;">
+                <td class="text-muted py-1">Bank Name</td>
+                <td class="py-1 text-dark">HDFC BANK</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #e0e0e0;">
+                <td class="text-muted py-1">Account Number</td>
+                <td class="py-1 text-dark">50200033944301</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #e0e0e0;">
+                <td class="text-muted py-1">IFSC Code</td>
+                <td class="py-1 text-dark">HDFC0000012</td>
+              </tr>
+              <tr>
+                <td class="text-muted py-1">Branch</td>
+                <td class="py-1 text-dark">PRABHADEVI</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Signatures -->
+      <div class="d-flex justify-content-between align-items-end mb-4 pt-4" style="font-size: 0.75rem;">
+        <div>
+          <strong class="text-danger fs-6">For : SCORPION EXPRESS PVT. LTD.</strong>
+        </div>
+        <div class="text-center" style="width: 200px; color: #666;">
+          <div class="border-bottom border-dark mb-1" style="opacity: 0.5;"></div>
+          Checked By
+        </div>
+        <div class="text-center" style="width: 200px; color: #666;">
+          <div class="border-bottom border-dark mb-1" style="opacity: 0.5;"></div>
+          Authorized Signature
+        </div>
+      </div>
+
+      <!-- Declarations -->
+      <div class="bg-danger bg-opacity-10 p-3" style="font-size: 0.6rem; border-top: 1px solid #dc3545; border-bottom: 1px solid #dc3545; color: #555; line-height: 1.4;">
+        <strong class="text-danger d-block mb-1" style="font-size: 0.65rem;">Declarations:</strong>
+        <div class="mb-1">1. We, Scorpion Express Pvt Ltd, hereby declare that though our aggregate turnover in any preceding financial year from 2017-18 onwards is more than the aggregate turnover notified under sub-rule (4) of rule 48, we are not required to prepare an invoice in terms of the provisions of the said sub-rule.</div>
+        <div class="mb-1">2. We, Scorpion Express Pvt Ltd, have taken registration under the CGST Act, 2017 and have exercised the option to pay tax on services of GTA in relation to transport of goods supplied by us under forward charge.</div>
+        <div>3. In terms of the provisions of section 206AB/206CCA of the Act, Scorpion Express Pvt Ltd confirms that it has filed Original Return of Income u/s 139(1) for the latest two assessment years for which the time limit of filing has expired.</div>
+      </div>
+
+    </div>
+  </div>
+</ng-template>
