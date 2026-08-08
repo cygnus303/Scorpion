@@ -20,7 +20,6 @@ import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 })
 export class BillReceiptComponent {
   @ViewChild('TemplateReceipt', { static: true }) TemplateReceipt!: TemplateRef<any>;
-  @ViewChild('BillInvoiceViewComponent') invoiceViewRef!: BillInvoiceViewComponent;
   @ViewChild('BillInvoiceViewComponent') BillInvoiceViewComponent!: BillInvoiceViewComponent;
 
   @Output() close = new EventEmitter<void>();
@@ -534,6 +533,8 @@ export class BillReceiptComponent {
     }
   }
 
+  billFilePreviews: { [key: number]: string | null } = {};
+
   onBillFileSelected(event: any, index: number) {
     const file = event.target.files[0];
     if (file) {
@@ -541,7 +542,28 @@ export class BillReceiptComponent {
       const billsFormArray = this.receiptForm.get('bills') as FormArray;
       const billGroup = billsFormArray.at(index) as FormGroup;
       billGroup.patchValue({ attachment: file.name }, { emitEvent: false });
+
+      // Generate preview if it's an image
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.billFilePreviews[index] = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        this.billFilePreviews[index] = null;
+      }
     }
+  }
+
+  removeBillFile(index: number) {
+    if (this.billFiles[index]) {
+      delete this.billFiles[index];
+    }
+    this.billFilePreviews[index] = null;
+    const billsFormArray = this.receiptForm.get('bills') as FormArray;
+    const billGroup = billsFormArray.at(index) as FormGroup;
+    billGroup.patchValue({ attachment: '' }, { emitEvent: false });
   }
 
   removeFile() {

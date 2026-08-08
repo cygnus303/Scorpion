@@ -117,16 +117,36 @@
                 readonly disabled>
             </td>
             <td>
+              <!-- Default Upload State (When no file is selected) -->
               <div class="position-relative d-flex align-items-center justify-content-center"
-                style="width: 150px; margin: 0 auto;">
+                style="width: 150px; margin: 0 auto;" *ngIf="!bill.get('attachment')?.value">
                 <input type="file" class="position-absolute w-100 h-100 opacity-0 cursor-pointer" style="z-index: 2;"
                   (change)="onBillFileSelected($event, i)" title="Choose file">
                 <button type="button"
                   class="btn btn-outline-danger btn-sm w-100 shadow-none d-flex align-items-center justify-content-center gap-2 text-truncate"
                   style="font-size: 0.75rem; z-index: 1; padding: 4px 8px;"
-                  [title]="bill.get('attachment')?.value || 'Upload Proof'">
-                  <span class="text-truncate" style="max-width: 90px;">{{ bill.get('attachment')?.value || 'Upload Proof' }}</span>
+                  title="Upload Proof">
+                  <span class="text-truncate" style="max-width: 90px;">Upload Proof</span>
                 </button>
+              </div>
+
+              <!-- Selected File State -->
+              <div *ngIf="bill.get('attachment')?.value" class="d-flex flex-column align-items-center justify-content-center" style="width: 150px; margin: 0 auto; gap: 4px;">
+                <!-- Small File Name Preview -->
+                <div class="d-flex align-items-center gap-2 text-muted fw-medium" style="font-size: 0.7rem; max-width: 100%;">
+                   <img *ngIf="billFilePreviews[i]" [src]="billFilePreviews[i]" class="border" style="height: 24px; width: 24px; object-fit: cover; border-radius: 4px;">
+                   <span *ngIf="!billFilePreviews[i]">📄</span>
+                   <span class="text-truncate" [title]="bill.get('attachment')?.value">{{ bill.get('attachment')?.value }}</span>
+                </div>
+                <!-- Action Buttons: Change and Remove -->
+                <div class="d-flex gap-1 w-100">
+                    <div class="position-relative flex-grow-1">
+                        <input type="file" class="position-absolute w-100 h-100 opacity-0 cursor-pointer" style="z-index: 2;"
+                            (change)="onBillFileSelected($event, i)" title="Change file">
+                        <button type="button" class="btn btn-sm btn-outline-secondary w-100 shadow-none" style="font-size: 0.65rem; padding: 2px 4px; z-index: 1;">Change</button>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-danger flex-grow-1 shadow-none" style="font-size: 0.65rem; padding: 2px 4px;" (click)="removeBillFile(i)">Remove</button>
+                </div>
               </div>
             </td>
           </tr>
