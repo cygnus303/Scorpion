@@ -426,9 +426,7 @@ export class BillReceiptComponent {
     });
 
     formData.append('PC.ChequeNo', formVal.chequeNo || "-");
-    if (formVal.chequeDate) {
-      formData.append('PC.ChequeDate', formatCustomDate(chequeDateObj));
-    }
+    formData.append('PC.ChequeDate', formatCustomDate(chequeDateObj));
     formData.append('PC.PayAmount', String(this.netReceived));
     // const finalPaymentMode = formVal.paymentMode === 'bank' ? formVal.bankMode : formVal.paymentMode;
     formData.append('PC.PaymentMode', formVal.paymentMode || "-");
@@ -455,9 +453,7 @@ export class BillReceiptComponent {
     formData.append('CCP.CashAmount', String(isCash ? this.netReceived : 0));
     formData.append('CCP.IsChequeDeposited', formVal.paymentMode === 'bank' ? 'true' : 'false');
     formData.append('CCP.ChequeNo', formVal.chequeNo || "-");
-    if (formVal.chequeDate) {
-      formData.append('CCP.ChequeDate', formatCustomDate(chequeDateObj));
-    }
+    formData.append('CCP.ChequeDate', formatCustomDate(chequeDateObj));
     formData.append('CCP.ChequeBankName', formVal.receivedFromBank || "-");
     formData.append('CCP.ChequeBankBranchName', formVal.bankBranch || "-");
     formData.append('CCP.OnAccountBalance', "-");
