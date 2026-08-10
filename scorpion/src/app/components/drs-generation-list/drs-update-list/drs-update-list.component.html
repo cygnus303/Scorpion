@@ -440,6 +440,7 @@
                                                         bindValue="codeId"
                                                         [items]="generalMasterService.deliveredToData"
                                                         placeholder="Select" appFocusNext appendTo="body"
+                                                        [readonly]="row.value.deliveredPkgs == 0"
                                                         [ngClass]="{ 'border-danger': drsList.at(i).get('DeliveredTo')?.invalid && drsList.at(i).get('DeliveredTo')?.touched , 'required2': isRequired('DeliveredTo', i)}">
                                                         <ng-template ng-option-tmp let-item="item">
                                                             <div class="remove-white-space-option">{{ item.codeDesc }}
@@ -454,14 +455,15 @@
                                                         <input class="form-control form-control-sm"
                                                             formControlName="DlyPerson" placeholder="Person Name"
                                                             appFocusNext
-                                                            [readonly]="isRequired('DlyPerson', i) ? false : true"
+                                                            [readonly]="isRequired('DlyPerson', i) ? false : true || row.value.deliveredPkgs == 0"
                                                             [ngClass]="{ 'border-danger': drsList.at(i).get('DlyPerson')?.invalid && drsList.at(i).get('DlyPerson')?.touched ,'required2': isRequired('DlyPerson', i)}">
                                                     </div>
                                                     <div *ngIf="drsList.at(i).get('showReason')?.value">
-                                                        <input class="form-control form-control-sm required2"
+                                                        <input class="form-control form-control-sm"
                                                             placeholder="Person Name" appFocusNext
                                                             formControlName="DELYPERSON"
-                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('DELYPERSON')?.invalid && drsList.at(i).get('DELYPERSON')?.touched}" />
+                                                            [readonly]="row.value.deliveredPkgs == 0"
+                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('DELYPERSON')?.invalid && drsList.at(i).get('DELYPERSON')?.touched, 'required2': row.value.deliveredPkgs > 0}" />
                                                     </div>
                                                 </td>
 
@@ -473,20 +475,22 @@
                                                             minlength="10" maxlength="10"
                                                             oninput="this.value = this.value.replace(/[^0-9]/g,'');"
                                                             appFocusNext
-                                                            [readonly]="isRequired('DlyContactNo', i) ? false : true"
+                                                            [readonly]="isRequired('DlyContactNo', i) ? false : true || row.value.deliveredPkgs == 0"
                                                             [ngClass]="{ 'border-danger': drsList.at(i).get('DlyContactNo')?.invalid && drsList.at(i).get('DlyContactNo')?.touched,'required2': isRequired('DlyContactNo', i) }">
                                                     </div>
                                                     <div *ngIf="drsList.at(i).get('showReason')?.value"
                                                         class="d-flex flex-column gap-1">
-                                                        <input class="form-control form-control-sm required2"
+                                                        <input class="form-control form-control-sm"
                                                             maxlength="10" formControlName="cboMobileNo"
                                                             placeholder="Mobile No"
                                                             oninput="this.value = this.value.replace(/[^0-9]/g,'');"
                                                             appFocusNext
-                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('cboMobileNo')?.invalid && drsList.at(i).get('cboMobileNo')?.touched}">
-                                                        <input class="form-control form-control-sm required2"
+                                                            [readonly]="row.value.deliveredPkgs == 0"
+                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('cboMobileNo')?.invalid && drsList.at(i).get('cboMobileNo')?.touched, 'required2': row.value.deliveredPkgs > 0}">
+                                                        <input class="form-control form-control-sm"
                                                             placeholder="Email" appFocusNext formControlName="cboEmail"
-                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('cboEmail')?.invalid && drsList.at(i).get('cboEmail')?.touched}">
+                                                            [readonly]="row.value.deliveredPkgs == 0"
+                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('cboEmail')?.invalid && drsList.at(i).get('cboEmail')?.touched, 'required2': row.value.deliveredPkgs > 0}">
                                                     </div>
                                                 </td>
 
@@ -495,6 +499,7 @@
                                                     <app-date-time-picker controlName="DELYDATE" [maxDate]="maxDate"
                                                         appendTo="body" [placeholder]="'dd-mm-yyyy'"
                                                         [minDate]="row.value.booking_Date"
+                                                        [disabled]="row.value.deliveredPkgs == 0"
                                                         appFocusNext></app-date-time-picker>
                                                 </td>
 
@@ -519,7 +524,8 @@
                                                         <ng-template #frontUpload>
                                                             <button type="button"
                                                                 class="btn btn-light btn-sm text-primary border-primary border-dashed p-1"
-                                                                style="font-size:11px;" (click)="frontInput.click()">
+                                                                style="font-size:11px;" (click)="row.value.deliveredPkgs == 0 ? null : frontInput.click()"
+                                                                [disabled]="row.value.deliveredPkgs == 0">
                                                                 📎 Upload POD 1
                                                             </button>
                                                             <div class="text-danger mt-1" style="font-size:10px;"
@@ -547,7 +553,8 @@
                                                     <ng-template #backUpload>
                                                         <button type="button"
                                                             class="btn btn-light btn-sm text-primary border-primary border-dashed p-1"
-                                                            style="font-size:11px;" (click)="backInput.click()">
+                                                            style="font-size:11px;" (click)="row.value.deliveredPkgs == 0 ? null : backInput.click()"
+                                                            [disabled]="row.value.deliveredPkgs == 0">
                                                             📎 Upload POD 2
                                                         </button>
                                                     </ng-template>
@@ -557,7 +564,7 @@
 
                                                 <!-- 22. POD Quality -->
                                                 <td class="align-middle">
-                                                    <div class="d-flex flex-column gap-2">
+                                                    <div class="d-flex flex-column gap-2" [ngStyle]="{'pointer-events': row.value.deliveredPkgs == 0 ? 'none' : 'auto', 'opacity': row.value.deliveredPkgs == 0 ? '0.5' : '1'}">
                                                         <div
                                                             class="form-check m-0 d-flex align-items-center gap-1 ps-0">
                                                             <input
