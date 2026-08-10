@@ -221,8 +221,8 @@ export class BillReceiptComponent {
       pending: new FormControl(b?.PENDAMT || 0),
       tds: new FormControl(0),
       bankChg: new FormControl(0),
-      roundOffMinus: new FormControl(0),
-      roundOffPlus: new FormControl(0),
+      roundOffMinus: new FormControl(0, [Validators.max(10)]),
+      roundOffPlus: new FormControl(0, [Validators.max(10)]),
       isRoundOff: new FormControl(false),
       attachment: new FormControl('')
     });
@@ -258,30 +258,30 @@ export class BillReceiptComponent {
     this.billsArray.controls.forEach((control) => {
       const b = control.value;
 
-      if (b.isRoundOff) {
-        const netBeforeRoundOff = (Number(b.collection) || 0) - (Number(b.tds) || 0) + (Number(b.bankChg) || 0);
-        const roundedNet = Math.round(netBeforeRoundOff);
-        const diff = roundedNet - netBeforeRoundOff;
+      // // if (b.isRoundOff) {
+      // const netBeforeRoundOff = (Number(b.collection) || 0) - (Number(b.tds) || 0) + (Number(b.bankChg) || 0);
+      // const roundedNet = Math.round(netBeforeRoundOff);
+      // const diff = roundedNet - netBeforeRoundOff;
 
-        let roPlus = 0;
-        let roMinus = 0;
-        if (diff > 0) {
-          roPlus = parseFloat(diff.toFixed(2));
-        } else if (diff < 0) {
-          roMinus = parseFloat(Math.abs(diff).toFixed(2));
-        }
+      // let roPlus = 0;
+      // let roMinus = 0;
+      // if (diff > 0) {
+      //   roPlus = parseFloat(diff.toFixed(2));
+      // } else if (diff < 0) {
+      //   roMinus = parseFloat(Math.abs(diff).toFixed(2));
+      // }
 
-        if (b.roundOffPlus !== roPlus || b.roundOffMinus !== roMinus) {
-          control.patchValue({ roundOffPlus: roPlus, roundOffMinus: roMinus }, { emitEvent: false });
-        }
-      } else {
-        if (b.roundOffPlus !== 0 || b.roundOffMinus !== 0) {
-          control.patchValue({ roundOffPlus: 0, roundOffMinus: 0 }, { emitEvent: false });
-        }
-      }
+      // if (b.roundOffPlus !== roPlus || b.roundOffMinus !== roMinus) {
+      //   control.patchValue({ roundOffPlus: roPlus, roundOffMinus: roMinus }, { emitEvent: false });
+      // }
+      // // } else {
+      // //   if (b.roundOffPlus !== 0 || b.roundOffMinus !== 0) {
+      // //     control.patchValue({ roundOffPlus: 0, roundOffMinus: 0 }, { emitEvent: false });
+      // //   }
+      // // }
 
       const updatedB = control.value;
-      const netAmt = (Number(updatedB.collection) || 0) - (Number(updatedB.tds) || 0) + (Number(updatedB.bankChg) || 0) - (Number(updatedB.roundOffMinus) || 0) + (Number(updatedB.roundOffPlus) || 0);
+      const netAmt = (Number(updatedB.collection) || 0) - (Number(updatedB.tds) || 0) - (Number(updatedB.bankChg) || 0) - (Number(updatedB.roundOffMinus) || 0) + (Number(updatedB.roundOffPlus) || 0);
 
       if (netAmt < 0) {
         this.sweetalertService.info('Net Recd. Amount Not in Negative');
@@ -303,12 +303,12 @@ export class BillReceiptComponent {
     const totalRoundOffMinus = bills.reduce((sum: number, b: any) => sum + (Number(b.roundOffMinus) || 0), 0);
 
     this.roundOff = totalRoundOffPlus - totalRoundOffMinus;
-    this.netReceived = this.totalCollection - this.totalTds + this.bankCharges - totalRoundOffMinus + totalRoundOffPlus;
+    this.netReceived = this.totalCollection - this.totalTds - this.bankCharges - totalRoundOffMinus + totalRoundOffPlus;
   }
 
   getNetRecdAmt(index: number): number {
     const b = this.billsArray.at(index).value;
-    return (Number(b.collection) || 0) - (Number(b.tds) || 0) + (Number(b.bankChg) || 0) - (Number(b.roundOffMinus) || 0) + (Number(b.roundOffPlus) || 0);
+    return (Number(b.collection) || 0) - (Number(b.tds) || 0) - (Number(b.bankChg) || 0) - (Number(b.roundOffMinus) || 0) + (Number(b.roundOffPlus) || 0);
   }
 
   closePopup() {
@@ -331,7 +331,17 @@ export class BillReceiptComponent {
       Object.keys(this.receiptForm.controls).forEach(key => {
         const control = this.receiptForm.get(key);
         if (control?.invalid) {
-          invalidFields.push(key);
+          if (key === 'bills' && control instanceof FormArray) {
+            control.controls.forEach((billGroup, index) => {
+              Object.keys((billGroup as FormGroup).controls).forEach(billKey => {
+                if (billGroup.get(billKey)?.invalid) {
+                  invalidFields.push(`bills[${index}].${billKey}`);
+                }
+              });
+            });
+          } else {
+            invalidFields.push(key);
+          }
         }
       });
       console.log('Validation Error: The following fields are invalid: ', invalidFields);
@@ -348,10 +358,14 @@ export class BillReceiptComponent {
       return;
     }
 
-    this.isSubmitting = true;
-
     const formVal = this.receiptForm.getRawValue();
     const bills = formVal.bills;
+    const hasInvalidRoundOff = bills.some((b: any) => (Number(b.roundOffMinus) > 10 || Number(b.roundOffPlus) > 10));
+    if (hasInvalidRoundOff) {
+      return;
+    }
+
+    this.isSubmitting = true;
     const mrDateObj = formVal.mrDate ? new Date(formVal.mrDate) : new Date();
     const chequeDateObj = formVal.chequeDate ? new Date(formVal.chequeDate) : new Date();
 
@@ -372,14 +386,14 @@ export class BillReceiptComponent {
     if (this.selectedFile) {
       formData.append('VM.ObjBillMst.UploadedFile', this.selectedFile);
     }
-    
+
     formData.append('VM.ObjBillMst.BILLNO', bills.length > 0 ? bills[0].no : "");
     formData.append('VM.ObjBillMst.PENDAMT', String(bills.reduce((sum: number, b: any) => sum + (Number(b.pending) || 0), 0)));
     formData.append('VM.ObjBillMst.Netamt', String(this.netReceived));
-    
+
     const totalBalance = bills.reduce((sum: number, b: any) => sum + ((Number(b.pending) || 0) - (Number(b.collection) || 0)), 0);
     formData.append('VM.ObjBillMst.UNEXPDED', String(totalBalance));
-    
+
     formData.append('VM.ObjBillMst.REMARK', formVal.remarks || "");
     formData.append('VM.ObjBillMst.Col_Amt', String(this.totalCollection));
     formData.append('VM.ObjBillMst.RoundOffP', String(bills.reduce((sum: number, b: any) => sum + (Number(b.roundOffPlus) || 0), 0)));
@@ -418,9 +432,9 @@ export class BillReceiptComponent {
       formData.append(`BillList[${index}].col_Amt`, String(b.collection || 0));
       formData.append(`BillList[${index}].ptmscd`, this.originalBills.length > 0 ? this.originalBills[0].PTMSCD : "");
 
-      const netamt = (Number(b.collection) || 0) - (Number(b.tds) || 0) + (Number(b.bankChg) || 0) - (Number(b.roundOffMinus) || 0) + (Number(b.roundOffPlus) || 0);
+      const netamt = (Number(b.collection) || 0) - (Number(b.tds) || 0) - (Number(b.bankChg) || 0) - (Number(b.roundOffMinus) || 0) + (Number(b.roundOffPlus) || 0);
       formData.append(`BillList[${index}].netamt`, String(netamt));
-      
+
       formData.append(`BillList[${index}].paybas`, b.PAYMode || "");
       formData.append(`BillList[${index}].roundOffM`, String(b.roundOffMinus || 0));
       formData.append(`BillList[${index}].roundOffP`, String(b.roundOffPlus || 0));
@@ -428,7 +442,7 @@ export class BillReceiptComponent {
       // Removed string append for uploadedFile to avoid conflict with the actual binary file
       formData.append(`BillList[${index}].cess_rate`, "0");
       formData.append(`BillList[${index}].pendamt`, String(b.pending || 0));
-      
+
       const balanceAmt = (Number(b.pending) || 0) - (Number(b.collection) || 0);
       formData.append(`BillList[${index}].unexpded`, String(balanceAmt));
 
@@ -444,7 +458,7 @@ export class BillReceiptComponent {
     formData.append('PC.PayAmount', String(this.netReceived));
     // const finalPaymentMode = formVal.paymentMode === 'bank' ? formVal.bankMode : formVal.paymentMode;
     formData.append('PC.PaymentMode', formVal.paymentMode || "-");
-    
+
     const isCash = formVal.paymentMode === 'cash';
     formData.append('PC.ChequeAmount', String(isCash ? 0 : this.netReceived));
     formData.append('PC.CashAmount', String(isCash ? this.netReceived : 0));
@@ -501,7 +515,7 @@ export class BillReceiptComponent {
         this.isSubmitting = false;
         console.error("Submit Error:", err);
         let msg = err.error?.message || err.error?.Message || err.message || 'Failed to submit the bill receipt.';
-        
+
         if (err.error && err.error.errors) {
           const errorMessages = [];
           for (const key in err.error.errors) {
@@ -518,7 +532,7 @@ export class BillReceiptComponent {
             msg = errorMessages.join('\n');
           }
         }
-        
+
         this.sweetalertService.error(msg);
       }
     });
