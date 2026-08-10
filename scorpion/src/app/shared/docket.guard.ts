@@ -28,7 +28,14 @@ export class DocketGuard implements CanActivate {
       const decrypted = this.decryptService.decrypt(encrypted, key);
       const parsedData = JSON.parse(decrypted);
 
-      const currentRoute = route.routeConfig?.path ?? '';
+      let currentRoute = route.routeConfig?.path ?? '';
+      if (currentRoute === '' && route.parent?.routeConfig?.path) {
+        currentRoute = route.parent.routeConfig.path;
+      }
+      if (currentRoute === '' && window.location.pathname.includes('DefaultContract')) {
+        currentRoute = 'DefaultContract';
+      }
+
       if (currentRoute.includes("docketFinancialEdit")) {
         return this.handleFinancialEdit(parsedData);
       }
@@ -59,6 +66,9 @@ export class DocketGuard implements CanActivate {
       else if (currentRoute.includes("docketEditCretria") || currentRoute.includes("BillCollection") || currentRoute.includes("PRQList") || currentRoute.includes("AppointmentDelivery") || currentRoute.includes("LRTrackList") || currentRoute.includes("THCDepatureList") || currentRoute.includes("LRFinEditList") || currentRoute === 'docketList' || currentRoute === 'THCList' || currentRoute.includes("docket") || currentRoute.includes("delivery-agent") || currentRoute.includes("ScanFMDocuments") || currentRoute.includes("PFM") || currentRoute.includes("MenuAccess") || currentRoute.includes("PRSList") || currentRoute.includes("DRSList") || currentRoute.includes("StockUpdate") || currentRoute.includes("LoadingSheetList") || currentRoute.includes("THCArrivalList") || currentRoute === 'HccFinEditList') {
         return this.handleNormalDocket(parsedData);
       }
+      else if (currentRoute === 'DefaultContract') {
+        return this.handleDefaultContract(parsedData);
+      }
       else {
         this.router.navigate(['/error']);
         return false;
@@ -84,6 +94,21 @@ export class DocketGuard implements CanActivate {
       console.log("👉 Normal docket / EditCretria flow loaded");
       return true;
     }
+    this.router.navigate(['/error']);
+    return false;
+  }
+
+  private handleDefaultContract(parsedData: any): boolean {
+    if (parsedData) {
+      // For DefaultContract, only BaseUserName might be passed (and even that is optional)
+      this.docketService.baseUsername = parsedData.BaseUserName || '';
+      
+      // Save it to localStorage
+      localStorage.setItem("loginUserList", JSON.stringify(parsedData));
+      console.log("👉 DefaultContract flow loaded");
+      return true;
+    }
+    
     this.router.navigate(['/error']);
     return false;
   }

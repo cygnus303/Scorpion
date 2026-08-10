@@ -30,6 +30,12 @@ export class DefaultContractComponent {
   ) { }
 
   ngOnInit() {
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
+  
     this.buildForm();
     this.docketService.getTransportModeData();
     this.getcontractservicecharge();
@@ -222,7 +228,8 @@ export class DefaultContractComponent {
       totalCFT: this.DefaultcontractForm.value.cftTotal || 0,
       packageCount: this.DefaultcontractForm.value.Pkgs || 0,
       originPincode: this.DefaultcontractForm.value.originPincode,
-      destinationPincode: this.DefaultcontractForm.value.destination_pincode
+      destinationPincode: this.DefaultcontractForm.value.destination_pincode,
+      UserName :this.docketService.loginUserList.BaseUserName || ''
     }
     if (!payload.trnMode || !payload.originPincode) {
       return;
