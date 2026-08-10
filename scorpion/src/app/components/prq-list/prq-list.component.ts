@@ -170,7 +170,7 @@ export class PrqListComponent {
         "ToDate": this.formatDateToISO(this.config.toDateStr),
         "BaseLocation": this.docketService.loginUserList.LocationCode || null,
         "UserName": this.docketService.loginUserList.BaseUserName,
-        "PRQNo":this.config.searchText
+        "SearchText":this.config.searchText
       }
     };
     this.cardSubscription=this.dynamicDataService.getDynamicData(payload).subscribe({
@@ -273,6 +273,7 @@ export class PrqListComponent {
         Status: this.config.statusFilter || 'All',
         PageNo: this.config.page,
         PageSize: this.config.pageSize,
+        SearchText:this.config.searchText,
         IsDownload: "1"
       }
     }
