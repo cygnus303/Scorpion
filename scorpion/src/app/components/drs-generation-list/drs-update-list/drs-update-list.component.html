@@ -78,7 +78,7 @@
                         <div class="row align-items-center m-0">
                             <!-- Start/Close KM Input -->
                             <div class="col-md-6">
-                                <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <!-- <div class="d-flex align-items-center gap-2 flex-wrap">
                                     <span class="text-muted fw-semibold" style="font-size: 12px;">Start/Close KM:</span>
                                     <span class="fw-bold text-dark" style="font-size: 12px;">{{ DRSInformation?.start_KM
                                         }}</span>
@@ -96,7 +96,7 @@
                                         style="font-size: 10px;">
                                         Max: {{ maxCloseKMValue }}
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
 
                             <!-- Vehicle & Consignment Info -->
@@ -224,9 +224,9 @@
                                             <!-- <th class="align-middle"
                                                 style="background-color: #f3e5f5; color: #6a1b9a; min-width: 120px;">HCC
                                                 Amt (₹)</th> -->
-                                            <th class="align-middle"
+                                            <!-- <th class="align-middle"
                                                 style="background-color: #f3e5f5; color: #6a1b9a; min-width: 120px;">OTP
-                                            </th>
+                                            </th> -->
 
                                             <!-- Group 4: Light Green (delivery info) -->
                                             <th class="align-middle"
@@ -427,10 +427,10 @@
                                                 </td> -->
 
                                                 <!-- 15. OTP -->
-                                                <td class="align-top">
+                                                <!-- <td class="align-top">
                                                     <input type="text" class="form-control form-control-sm"
                                                         formControlName="otp" placeholder="Enter OTP">
-                                                </td>
+                                                </td> -->
 
                                                 <!-- 16. Delivered To -->
                                                 <td class="align-top">
@@ -492,10 +492,10 @@
 
                                                 <!-- 19. Delivery Date -->
                                                 <td class="align-top">
-                                                    <app-drs-date-time-picker controlName="DELYDATE" [maxDate]="maxDate"
+                                                    <app-date-time-picker controlName="DELYDATE" [maxDate]="maxDate"
                                                         appendTo="body" [placeholder]="'dd-mm-yyyy'"
                                                         [minDate]="row.value.booking_Date"
-                                                        appFocusNext></app-drs-date-time-picker>
+                                                        appFocusNext></app-date-time-picker>
                                                 </td>
 
                                                 <!-- 20. POD 1 -->

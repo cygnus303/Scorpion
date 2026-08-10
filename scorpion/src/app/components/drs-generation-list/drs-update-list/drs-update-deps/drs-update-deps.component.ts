@@ -65,9 +65,19 @@ export class DrsUpdateDepsComponent {
     }
 
     const totalPkgsVal = +(item.bkG_PKGSNO || item.totalPkgs || (item.pkgsno && +item.pkgsno > pkgsCount ? +item.pkgsno : 0) || pkgsCount || 1);
-    const initialAffectedPkgs = +(item.selectedBoxIds ? item.selectedBoxIds.length : (item.affectedPkgs || item.affectedQty || 0));
-    let initialAffectedInvVal = Number(item.affectedInvVal || 0.00);
-    if (!item.affectedInvVal && totalPkgsVal > 0 && initialAffectedPkgs > 0) {
+    let initialAffectedPkgs = pkgsCount; // Default to pkgsCount
+    if (item.affectedPkgs !== undefined && item.affectedPkgs !== null) {
+      initialAffectedPkgs = +(item.affectedPkgs);
+    } else if (item.affectedQty !== undefined && item.affectedQty !== null) {
+      initialAffectedPkgs = +(item.affectedQty);
+    } else if (item.selectedBoxIds && item.selectedBoxIds.length > 0) {
+      initialAffectedPkgs = item.selectedBoxIds.length;
+    }
+
+    let initialAffectedInvVal = Number(item.invval || 0.00); // Default to invval
+    if (item.affectedInvVal !== undefined && item.affectedInvVal !== null && item.affectedInvVal !== 0) {
+      initialAffectedInvVal = Number(item.affectedInvVal);
+    } else if (totalPkgsVal > 0 && initialAffectedPkgs > 0) {
       initialAffectedInvVal = Number((( (item.invval || 0) / totalPkgsVal ) * initialAffectedPkgs).toFixed(2));
     }
 
@@ -197,6 +207,7 @@ export class DrsUpdateDepsComponent {
     }
   }
 
+  /*
   toggleBoxDropdown(index: number, event: MouseEvent) {
     event.stopPropagation();
     if (this.activeBoxDropdownIndex === index) {
@@ -252,6 +263,7 @@ export class DrsUpdateDepsComponent {
       return `${selectedCount} boxes selected`;
     }
   }
+  */
 
   onFileSelected(index: number, event: Event) {
     const input = event.target as HTMLInputElement;

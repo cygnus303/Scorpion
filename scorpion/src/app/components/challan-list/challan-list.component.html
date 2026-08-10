@@ -1113,7 +1113,7 @@
                                         Cnote Added By</th>
                                     <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '3'">
                                         Arrival Date<br> StockUpdate Date</th>
-                                    <th class="p-3 fw-bolder">Booked Pkg</th>
+                                    <th class="p-3 fw-bolder">Actu. / Pend. /Arr. Pkgs.</th>
                                     <th class="p-3 fw-bolder">Act wt/Chrg. Wt.</th>
                                     <th class="p-3 fw-bolder" style="min-width: 150px;">
                                         HCC Vendor Type
@@ -1177,14 +1177,14 @@
                                         </td>
                                         <td>{{ item.value.PAYBAS_Str }} / {{item.value.ORGNCD}} / {{item.value.DEST_CD}}
                                         </td>
-                                        <td>{{ item.value.Bkg_Date }} <br> {{ item.value.Commited_Dely_Date | date :'dd
-                                            MMM yyyy'}}</td>
+                                        <td>{{ item.value.Bkg_Date }} <br> {{ item.value.Commited_Dely_Date | date :'dd MMM yyyy'}}</td>
                                         <td *ngIf="this.docketService.loginUserList.Type === '2'">{{ item.value.entryBy
                                             }} </td>
-                                        <td *ngIf="this.docketService.loginUserList.Type === '3'">{{
-                                            item.value.Arrival_Date | date :'dd-MMMM-yyyy' }} <br> {{
+                                        <td *ngIf="this.docketService.loginUserList.Type === '3'">
+                                            {{ item.value.Arrival_Date | date :'dd-MMMM-yyyy' }} <br> 
+                                            {{
                                             item.value.Stock_Update_DT }}</td>
-                                        <td>{{item.value.PKGSNO}}</td>
+                                        <td>{{item.value.PKGSNO}} /{{item.value.PendPkgQty}} /{{item.value.ArrPkgQty}}</td>
                                         <td>{{ item.value.ACTUWT }}/{{ item.value.CHRGWT }}</td>
                                         <td>
                                             <ng-select class="clear-icon" [items]="generalMasterService.loadingData"

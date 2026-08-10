@@ -40,9 +40,16 @@ export class DepsDetailsComponent {
     const location = this.docketService.loginUserList?.LocationCode ;
     this.generatedBy = `${location}`;
     this.isLoading = true;
+
+    // Open popup instantly to show loader
+    this.modalRef = this.modalService.show(this.TemplateDepsDetails, {
+      class: 'modal-xxl modal-dialog-centered deps-details-modal-wrapper',
+      backdrop: 'static'
+    });
+
     this.thcMasterService.getHCCDynamicData({
       FilterJson: {
-        ReportId: '365',
+        ReportId: '377',
         Thcno: this.drsNo
       }
     }).subscribe({next: (res: any) => {
@@ -54,10 +61,10 @@ export class DepsDetailsComponent {
           fileUrl: `${this.env.liveUrl}Uploads/${item.DepsImage}`
         }));
         this.totalExceptions = this.depsList.length;
-        this.modalRef = this.modalService.show(this.TemplateDepsDetails, {
-          class: 'modal-xxl modal-dialog-centered deps-details-modal-wrapper',
-          backdrop: 'static'
-        });
+      }, error: (err: any) => {
+        this.isLoading = false;
+        this.depsList = [];
+        this.totalExceptions = 0;
       }});
   }
 

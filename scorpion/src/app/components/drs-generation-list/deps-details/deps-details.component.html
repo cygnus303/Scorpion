@@ -71,7 +71,7 @@
         <tbody>
           <!-- Loading Spinner Row -->
           <tr *ngIf="isLoading">
-            <td colspan="12" class="text-center py-5 bg-white">
+            <td colspan="13" class="text-center py-5 bg-white">
               <div class="spinner-border text-danger" role="status">
                 <span class="visually-hidden">Loading...</span>
               </div>
@@ -80,7 +80,7 @@
           </tr>
           <!-- Empty Records Row -->
           <tr *ngIf="!isLoading && depsList.length === 0">
-            <td colspan="12" class="text-center py-5 text-muted fw-semibold bg-white">
+            <td colspan="13" class="text-center py-5 text-muted fw-semibold bg-white">
               No exception records found for this DRS.
             </td>
           </tr>
