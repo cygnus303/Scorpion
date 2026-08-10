@@ -65,7 +65,9 @@
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Balance Amt.</th>
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">TDS Amt. (-)</th>
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Bank Charges</th>
-            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Round Off</th>
+            <!-- <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Round Off</th> -->
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Round Off (-)</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Round Off (+)</th>
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;display: none;">Net Recd.
               Amt.</th>
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Attachment</th>
@@ -107,9 +109,29 @@
                 class="form-control form-control-sm text-end shadow-none" formControlName="bankChg"
                 style="width: 80px; margin: 0 auto; border-color: #ced4da;">
             </td>
-            <td>
+            <!-- <td>
               <input type="checkbox" class="form-check-input" formControlName="isRoundOff"
                 style="width: 1.2em; height: 1.2em; margin-top: 0.3em; border-color: #ced4da;">
+            </td> -->
+            <td>
+              <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g,'');"
+                class="form-control form-control-sm text-end shadow-none" formControlName="roundOffMinus"
+                style="width: 80px; margin: 0 auto; border-color: #ced4da;"
+                [ngClass]="{'border-danger': bill.get('roundOffMinus')?.invalid, 'text-danger': bill.get('roundOffMinus')?.invalid}">
+              <div *ngIf="bill.get('roundOffMinus')?.invalid" class="text-danger mt-1"
+                style="font-size: 0.65rem; line-height: 1.1; white-space: normal; text-align: center; margin: 0 auto;">
+                Max value 10
+              </div>
+            </td>
+            <td>
+              <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g,'');"
+                class="form-control form-control-sm text-end shadow-none" formControlName="roundOffPlus"
+                style="width: 80px; margin: 0 auto; border-color: #ced4da;"
+                [ngClass]="{'border-danger': bill.get('roundOffPlus')?.invalid, 'text-danger': bill.get('roundOffPlus')?.invalid}">
+              <div *ngIf="bill.get('roundOffPlus')?.invalid" class="text-danger mt-1"
+                style="font-size: 0.65rem; line-height: 1.1; white-space: normal; text-align: center; margin: 0 auto;">
+                Max value 10
+              </div>
             </td>
             <td style="display: none;">
               <input type="text" class="form-control form-control-sm text-end bg-light shadow-none"

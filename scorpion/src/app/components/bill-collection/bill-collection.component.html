@@ -57,15 +57,6 @@
                 <div class="divider-v"></div>
                 
                 <div class="filter-group d-flex align-items-center gap-2 px-2">
-                    <span class="filter-label">Bill Type</span>
-                    <ng-select type="text" placeholder="Bill Type" class="custom-status-select clear-icon"
-                        [items]="statusList" bindLabel="label" bindValue="value" [(ngModel)]="config.Status"
-                        (change)="fetchData()" style="width: 140px;"></ng-select>
-                </div>
-                
-                <div class="divider-v"></div>
-                
-                <div class="filter-group d-flex align-items-center gap-2 px-2">
                     <span class="filter-label">Customer</span>
                     <ng-select class="noFoundTextColor remove-white-space custom-status-select clear-icon" placeholder="Select Customer" [searchable]="true"
                         [clearable]="true" (search)="getBillingPartyData($event)" [(ngModel)]="config.Party_code"
@@ -75,6 +66,15 @@
                         </ng-option>
                     </ng-select>
                 </div>
+                <div class="divider-v"></div>
+                
+                <div class="filter-group d-flex align-items-center gap-2 px-2">
+                    <span class="filter-label">Bill Type</span>
+                    <ng-select type="text" placeholder="Bill Type" class="custom-status-select clear-icon"
+                        [items]="statusList" bindLabel="label" bindValue="value" [(ngModel)]="config.Status"
+                        (change)="fetchData()" style="width: 140px;"></ng-select>
+                </div>
+                
 
             </div>
             <div class="table-toolbar d-flex align-items-center gap-3">
