@@ -788,6 +788,9 @@ export class DRSUpdateListComponent {
     if (type === 'FRONT') {
       this.validatePOD(index, type);
     }
+    else if(type === 'BACK'){
+      this.validatePOD(index, type);
+    }
   }
 
 
@@ -879,7 +882,7 @@ export class DRSUpdateListComponent {
 
     // If backend needs back also
     backFiles.forEach((file: File) => {
-      formData.append('PodBackFile', file);
+      formData.append('PodFile', file);
     });
 
     this.validatingIndex = index;

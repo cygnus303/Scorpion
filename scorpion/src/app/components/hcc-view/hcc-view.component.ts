@@ -21,14 +21,14 @@ export class HccViewComponent {
 
   constructor(private modalService: BsModalService, private thcMasterService: THCMasterService) { }
 
-  showPopup(data: any, chargeType: string, flag: any,docNo?:any) {
+  showPopup(data: any, chargeType: string, flag: any, docNo?: any) {
     console.log("HCC Details Data:", data);
-    this.getHCCViewData(data, chargeType, flag,docNo);
+    this.getHCCViewData(data, chargeType, flag, docNo);
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
 
-  getHCCViewData(data: any, chargeType: string, flag: any,docNo?:any) {
-    const Type=docNo === 'T'?data.thcNo:data.pdcno ||data.drsNo||data.mfNo;
+  getHCCViewData(data: any, chargeType: string, flag: any, docNo?: any) {
+    const Type = docNo === 'T' ? data.thcNo : data.pdcno || data.drsNo || data.mfNo;
     const payload = {
       "FilterJson": {
         "ReportId": "364",
@@ -49,8 +49,19 @@ export class HccViewComponent {
     });
   }
 
-    openHCCModal(hccNo: string,documentNo:string) {
+  openHCCModal(hccNo: string, documentNo: string) {
     const url = `${this.env.liveUrl}ViewPrint/ViewHCC?DocumentNo=${documentNo}&HCNo=${hccNo}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
+    }
+  }
+
+  BillNumberView(BillNo: string) {
+    const url = `${this.env.liveUrl}ViewPrint/LoadingUnloadingBillView?BillNo=${BillNo}&Type=8&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );
