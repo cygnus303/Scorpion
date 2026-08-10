@@ -175,16 +175,16 @@ export class BillReceiptComponent {
     const chequeNo = this.receiptForm.get('chequeNo');
     const chequeDate = this.receiptForm.get('chequeDate');
     const depBank = this.receiptForm.get('depositedInBank');
-    const recBank = this.receiptForm.get('receivedFromBank');
-    const branch = this.receiptForm.get('bankBranch');
+    // const recBank = this.receiptForm.get('receivedFromBank');
+    // const branch = this.receiptForm.get('bankBranch');
 
     // Clear all validators first
     cashAcc?.clearValidators();
     chequeNo?.clearValidators();
     chequeDate?.clearValidators();
     depBank?.clearValidators();
-    recBank?.clearValidators();
-    branch?.clearValidators();
+    // recBank?.clearValidators();
+    // branch?.clearValidators();
 
     if (paymentMode === 'cash') {
       cashAcc?.setValidators(Validators.required);
@@ -194,8 +194,8 @@ export class BillReceiptComponent {
         chequeDate?.setValidators(Validators.required);
       }
       depBank?.setValidators(Validators.required);
-      recBank?.setValidators(Validators.required);
-      branch?.setValidators(Validators.required);
+      // recBank?.setValidators(Validators.required);
+      // branch?.setValidators(Validators.required);
     }
 
     // Update validity
@@ -203,8 +203,8 @@ export class BillReceiptComponent {
     chequeNo?.updateValueAndValidity();
     chequeDate?.updateValueAndValidity();
     depBank?.updateValueAndValidity();
-    recBank?.updateValueAndValidity();
-    branch?.updateValueAndValidity();
+    // recBank?.updateValueAndValidity();
+    // branch?.updateValueAndValidity();
   }
 
   createBillGroup(b: any): FormGroup {
@@ -360,13 +360,10 @@ export class BillReceiptComponent {
       const month = dateObj.getMonth() + 1;
       const day = dateObj.getDate();
       const year = dateObj.getFullYear();
-      let hours = dateObj.getHours();
+      const hours = pad(dateObj.getHours());
       const minutes = pad(dateObj.getMinutes());
       const seconds = pad(dateObj.getSeconds());
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12;
-      hours = hours ? hours : 12; 
-      return `${pad(month)}/${pad(day)}/${year} ${pad(hours)}:${minutes}:${seconds} ${ampm}`;
+      return `${year}-${pad(month)}-${pad(day)}T${hours}:${minutes}:${seconds}`;
     };
 
     const formData = new FormData();
