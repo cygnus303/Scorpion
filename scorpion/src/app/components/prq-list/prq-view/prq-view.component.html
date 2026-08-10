@@ -4,7 +4,14 @@
         <button class="modal-close" (click)="modalRef.hide()" title="Close">✕</button>
     </div>
 
-    <div class="modal-body-custom" *ngIf="prqData">
+    <div class="modal-body-custom text-center py-5" *ngIf="isLoading">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="mt-2 text-muted">Loading PRQ details...</div>
+    </div>
+
+    <div class="modal-body-custom" *ngIf="!isLoading && prqData">
         <div class="detail-grid">
             <div>
                 <div class="section-title">PRQ Details</div>
