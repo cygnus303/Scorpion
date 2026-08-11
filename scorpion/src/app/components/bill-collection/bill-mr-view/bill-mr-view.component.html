@@ -1,0 +1,52 @@
+<ng-template #TemplateMr>
+    <div class="modal-content mr-modal-content">
+        <div class="modal-header mr-modal-header d-flex justify-content-between align-items-center">
+            <h5 class="modal-title mb-0"><span style="background: #fce4e6; padding: 4px 8px; border-radius: 6px; font-size: 14px;">📄</span> MR Details</h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="closeMrView()"></button>
+        </div>
+        <div class="modal-body p-0">
+            <div *ngIf="isLoading" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="mt-2 text-muted fw-bold">Fetching MR Data...</div>
+            </div>
+
+            <div *ngIf="!isLoading" class="mr-table-wrap">
+                <table class="table table-bordered table-striped mb-0 mr-table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">MR No.</th>
+                            <th class="text-center">MR Date</th>
+                            <th class="text-center">MR Amount</th>
+                            <th class="text-center">Net Amount</th>
+                            <th class="text-center">TDS Deduction Detail</th>
+                            <th class="text-center">MR Status</th>
+                            <th class="text-center">MR Voucher No</th>
+                            <th class="text-center">Bill Collection View</th>
+                            <th class="text-center">MR Made by</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="mrList.length === 0">
+                            <td colspan="9" class="text-center py-4 text-muted">
+                                No MR records found.
+                            </td>
+                        </tr>
+                        <tr *ngFor="let item of mrList">
+                            <td class="text-center"><a class="mr-link">{{ item.MRNo || item.mrno || '-' }}</a></td>
+                            <td class="text-center">{{ item.MRDate || item.mrdt || '-' }}</td>
+                            <td class="text-end">{{ (item.MRAmount || item.mramt || 0) | number:'1.2-2' }}</td>
+                            <td class="text-end">{{ (item.NetAmount || item.netamt || 0) | number:'1.2-2' }}</td>
+                            <td class="text-center">{{ item.TDSDeduction || item.tds_ded || '-' }}</td>
+                            <td class="text-center">{{ item.MRStatus || item.mr_status || '-' }}</td>
+                            <td class="text-center"><a class="mr-link">{{ item.MRVoucherNo || item.mr_voucherno || '-' }}</a></td>
+                            <td class="text-center"><a class="action-link">{{ item.BillCollectionView || item.bill_collection_view || 'View' }}</a></td>
+                            <td class="text-center">{{ item.MRMadeBy || item.mr_madeby || '-' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</ng-template>

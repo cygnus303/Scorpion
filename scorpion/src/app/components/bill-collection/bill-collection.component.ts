@@ -5,6 +5,7 @@ import { PaginationComponent } from 'app/shared/components/pagination/pagination
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CommonModule } from '@angular/common';
 import { BillReceiptComponent } from './bill-receipt/bill-receipt.component';
+import { BillMrViewComponent } from './bill-mr-view/bill-mr-view.component';
 import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 import { debounceTime, Subject, Subscription } from 'rxjs';
 import { CommonService } from 'app/shared/services/common.service';
@@ -16,7 +17,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 @Component({
   selector: 'app-bill-collection',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgSelectModule, BsDatepickerModule, PaginationComponent,BillReceiptComponent,BillInvoiceViewComponent],
+  imports: [CommonModule, FormsModule, NgSelectModule, BsDatepickerModule, PaginationComponent, BillReceiptComponent, BillInvoiceViewComponent, BillMrViewComponent],
   providers: [BsModalService],
   templateUrl: './bill-collection.component.html',
   styleUrl: './bill-collection.component.scss'
@@ -24,22 +25,24 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 export class BillCollectionComponent implements OnInit {
   @ViewChild('BillReceiptComponent') BillReceiptComponent!: BillReceiptComponent;
   @ViewChild('BillInvoiceViewComponent') BillInvoiceViewComponent!: BillInvoiceViewComponent;
+  @ViewChild('BillMrViewComponent') BillMrViewComponent!: BillMrViewComponent;
   public isLoading: boolean = false;
-  public listSubscription!:Subscription;
+  public listSubscription!: Subscription;
   private fetchSubject = new Subject<void>();
   public billList: any[] = [];
-  public summaryData:any;
+  public summaryData: any;
   public billingPartyData: any[] = [];
   public notFoundTextValue: string = 'Enter at least 3 characters';
   statusList = [
     { label: 'All Status', value: '' },
-    { label: 'Pending', value: 'Bill Due, not Collected' },
-
+    { label: 'Pending for Collection', value: 'Bill Due, not Collected' },
+    { label: 'Collected', value: 'Bill Collected'},
+    { label: 'Partially Collected', value: 'Partially Collected' },
   ];
-  
+
   public selectedBills: any[] = [];
   public selectedPartyCode: string | null = null;
-  
+
   public config = {
     FromDt: new Date(),
     ToDt: new Date(),
@@ -55,10 +58,10 @@ export class BillCollectionComponent implements OnInit {
 
   constructor(
     private dynamicDataService: DynamicDataService,
-    private commonService:CommonService,
+    private commonService: CommonService,
     private basicDetailService: BasicDetailService,
     public docketService: DocketService
-  ){}
+  ) { }
 
   ngOnInit() {
     const saved = localStorage.getItem("loginUserList");
@@ -71,11 +74,11 @@ export class BillCollectionComponent implements OnInit {
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
-     this.fetchSubject.pipe(debounceTime(300)).subscribe(() => {
-       this.getBillingList();
-        });
-    
-        this.fetchData();
+    this.fetchSubject.pipe(debounceTime(300)).subscribe(() => {
+      this.getBillingList();
+    });
+
+    this.fetchData();
   }
 
   fetchData() {
@@ -88,7 +91,7 @@ export class BillCollectionComponent implements OnInit {
     this.getBillingList();
   }
 
-    filterByStatus(status: string) {
+  filterByStatus(status: string) {
     this.config.Status = status;
     this.fetchData();
   }
@@ -102,7 +105,7 @@ export class BillCollectionComponent implements OnInit {
     }
     const payload = {
       searchTerm: searchText,
-      paybs: 'P02', 
+      paybs: 'P02',
       location: this.docketService.loginUserList?.LocationCode || this.docketService.Location || 'BWH'
     }
     this.notFoundTextValue = 'Searching...';
@@ -132,18 +135,18 @@ export class BillCollectionComponent implements OnInit {
 
     const payload = {
       "FilterJson": {
-       "ReportId" : "371",
-        "Fromdt" : this.commonService.formatDateToISO(this.config.FromDt),
-        "Todt" : this.commonService.formatDateToISO(this.config.ToDt),
-        "billstatus":this.config.Status || '',
-        "Party_code" :this.config.Party_code || '',
-        "billno" : this.config.billNo,
-        "PageNo" : this.config.PageNo,
-        "PageSize" : this.config.PageSize,
-        "IsDownload" : "0",
-        "SearchText" : this.config.SearchText,
+        "ReportId": "371",
+        "Fromdt": this.commonService.formatDateToISO(this.config.FromDt),
+        "Todt": this.commonService.formatDateToISO(this.config.ToDt),
+        "billstatus": this.config.Status || '',
+        "Party_code": this.config.Party_code || '',
+        "billno": this.config.billNo,
+        "PageNo": this.config.PageNo,
+        "PageSize": this.config.PageSize,
+        "IsDownload": "0",
+        "SearchText": this.config.SearchText,
         "Company_Code": this.docketService.Companycode,
-        "loccode"  : this.docketService.Location,
+        "loccode": this.docketService.Location,
       }
     }
     this.isLoading = true;
@@ -154,15 +157,15 @@ export class BillCollectionComponent implements OnInit {
         if (this.billList.length > 0) {
           this.config.totalRecords = this.billList[0].TotalCount;
           this.config.totalPages = Math.ceil(this.config.totalRecords / this.config.PageSize);
-        } 
-        if(response && response.Table1){
-        this.config.totalRecords = response.Table1[0].TotalRecords || this.billList.length;
-        this.config.totalPages = response.Table1[0].TotalPages || 1;
-        this.config.PageNo = response.Table1[0].PageNo || 1;
-        this.config.PageSize = response.Table1[0].PageSize || 50;
         }
-        if(response && response.Table2){
-        this.summaryData=response.Table2[0];
+        if (response && response.Table1) {
+          this.config.totalRecords = response.Table1[0].TotalRecords || this.billList.length;
+          this.config.totalPages = response.Table1[0].TotalPages || 1;
+          this.config.PageNo = response.Table1[0].PageNo || 1;
+          this.config.PageSize = response.Table1[0].PageSize || 50;
+        }
+        if (response && response.Table2) {
+          this.summaryData = response.Table2[0];
         }
       } else {
         this.billList = [];
@@ -222,14 +225,14 @@ export class BillCollectionComponent implements OnInit {
       }
       this.selectedPartyCode = pCode;
       item.selected = true;
-      
+
       if (!this.selectedBills.find(sb => sb.BILLNO === item.BILLNO)) {
         this.selectedBills.push(item);
       }
     } else {
       item.selected = false;
       this.selectedBills = this.selectedBills.filter(sb => sb.BILLNO !== item.BILLNO);
-      
+
       if (this.selectedBills.length === 0) {
         this.selectedPartyCode = null;
       }
@@ -239,9 +242,13 @@ export class BillCollectionComponent implements OnInit {
   openInvoiceView(data: any) {
     this.BillInvoiceViewComponent.showPopup(data);
   }
-  
+
   onSearchChange() {
     this.config.PageNo = 1;
     this.fetchSubject.next();
+  }
+
+  viewMr(data: any) {
+    this.BillMrViewComponent.showPopup(data);
   }
 }
