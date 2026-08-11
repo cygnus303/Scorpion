@@ -240,6 +240,14 @@ export class PrqListComponent {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
+      const fileName = file.name.toLowerCase();
+      if (!fileName.endsWith('.xls') && !fileName.endsWith('.xlsx')) {
+        this.sweetAlertService.info('Only .xls and .xlsx file types are supported.');
+        this.selectedFile = null;
+        this.selectedFileName = '';
+        event.target.value = '';
+        return;
+      }
       this.selectedFile = file;
       this.selectedFileName = file.name;
       this.validateFile(file);
@@ -274,8 +282,15 @@ export class PrqListComponent {
   public isSubmittingBulk: boolean = false;
 
   submitBulkUpload() {
+     const now = new Date();
+    const pad = (n: number) => n < 10 ? '0' + n : n;
+    const formattedDate = `${pad(now.getDate())}/${pad(now.getMonth() + 1)}/${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+
     const payload = {
-      items: this.validationResults,
+      items: this.validationResults.map(item => ({
+        ...item,
+        prqDate: formattedDate
+      })),
       baseLocation: this.docketService.loginUserList?.LocationCode || '',
       baseUserName: this.docketService.loginUserList?.BaseUserName || '',
       baseFinYear: this.docketService.loginUserList?.FinYear || ''
