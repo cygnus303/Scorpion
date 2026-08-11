@@ -25,4 +25,16 @@ export class PrqService {
   getCustomerList(partyName: string, paybas: string = ''): Observable<IApiBaseResponse<any[]>> {
     return this.apiHandlerService.Get(`Master/GetAllBillingParty?partyName=${partyName}&paybas=${paybas}`);
   }
+
+  downloadTemplate(){
+    return this.apiHandlerService.DownloadFile(`User/DownloadPRQTemplate`);
+  }
+
+  validateExcel(payload:any){
+    return this.apiHandlerService.Post(`User/UploadPRQExcel`,payload);
+  }
+
+  uploadExcel(payload:any){
+    return this.apiHandlerService.PostDownloadFile(`User/SubmitBulkPRQ`,payload);
+  }
 }

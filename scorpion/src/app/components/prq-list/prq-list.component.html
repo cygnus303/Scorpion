@@ -14,6 +14,14 @@
                 <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isCSVLoading">Downloading...</span>
             </button>
+            <button class="btn btn-info text-white px-4 py-2 rounded fw-bold" >
+                <span *ngIf="!isTemplateLoading" (click)="onDownloadTemplate()"><span class="fs-5 me-1">📄</span> Download Template</span>
+                <span *ngIf="isTemplateLoading" class="spinner-border spinner-border-sm me-2"></span>
+                <span *ngIf="isTemplateLoading">Downloading...</span>
+            </button>
+            <button class="btn btn-primary px-4 py-2 rounded fw-bold" (click)="openBulkUpload()">
+                <span><span class="fs-5 me-1">📤</span> Upload File</span>
+            </button>
         </div>
     </div>
 
@@ -275,3 +283,140 @@
 <app-prq-view #PrqViewComponent></app-prq-view>
 <app-add-prq #AddPrqComponent (dataEmitter)="refreshData()"></app-add-prq>
 <app-prq-track #PrqTrackComponent></app-prq-track>
+
+<ng-template #TemplateBulkUpload>
+    <div class="modal-content" style="border: none; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+        <div class="modal-header d-flex justify-content-between align-items-center" style="background-color: #8b5cf6; color: white; border-bottom: none; padding: 14px 20px;">
+            <h5 class="modal-title mb-0" style="font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 8px;">
+                <span>☁️</span> Bulk Upload Pickup Requests (PRQ)
+            </h5>
+            <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="closeBulkUploadModal()" style="font-size: 12px; filter: invert(1) grayscale(100%) brightness(200%);"></button>
+        </div>
+        <div class="modal-body" style="padding: 24px;">
+            <div class="upload-area" style="border: 2px dashed #cbd5e1; border-radius: 8px; padding: 40px 20px; text-align: center; background-color: #ffffff;">
+                <div class="excel-icon mb-3">
+                    <span style="font-size: 34px; color: #94a3b8; display: inline-block; background: white; border: 2.5px solid #cbd5e1; border-radius: 6px; padding: 8px 14px; font-weight: 900; line-height: 1; position: relative;">
+                        X
+                        <span style="position: absolute; top: -6px; right: -6px; background: white; width: 12px; height: 12px; border-bottom: 2.5px solid #cbd5e1; border-left: 2.5px solid #cbd5e1;"></span>
+                    </span>
+                </div>
+                <h5 style="color: #0f172a; font-weight: 600; font-size: 16px; margin-bottom: 6px;">Select Excel File</h5>
+                <p style="color: #64748b; font-size: 13px; margin-bottom: 24px;">Only .xls and .xlsx file types are supported.</p>
+                
+                <div class="d-flex justify-content-center align-items-center gap-3">
+                    <input type="file" #fileInput (change)="onFileSelected($event)" accept=".xls,.xlsx" style="display: none;">
+                    <button class="btn btn-outline-secondary bg-white text-dark fw-bold" style="border-color: #cbd5e1; padding: 6px 16px; font-size: 13px;" (click)="fileInput.click()">
+                        Choose File
+                    </button>
+                    <span style="color: #64748b; font-size: 13px; min-width: 100px; text-align: left;">{{ selectedFileName || 'No file selected' }}</span>
+                </div>
+
+                <!-- Validation Loader -->
+                <div *ngIf="isValidating" class="mt-4 mb-2 text-center">
+                    <span class="spinner-border spinner-border-sm me-2" style="color: #8b5cf6;"></span>
+                    <span style="color: #8b5cf6; font-weight: 600; font-size: 14px;">Validating File...</span>
+                </div>
+
+                <!-- Validation Summary Strip -->
+                <div *ngIf="isValidationComplete" class="validation-summary mt-4 p-3 rounded text-start" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <div style="font-size: 13px; color: #475569;">
+                            Total Rows parsed: <span class="fw-bold">{{ totalRows }}</span> | 
+                            Valid Rows: <span class="fw-bold" style="color: #22c55e;">{{ validRows }}</span> | 
+                            Invalid Rows: <span class="fw-bold" style="color: #ef4444;">{{ invalidRows }}</span>
+                        </div>
+                        <div *ngIf="invalidRows > 0" style="color: #ef4444; font-size: 12px; font-weight: 600;">
+                            ⚠️ Fix invalid rows in Excel before uploading or submit valid rows only.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Validation Preview Table -->
+                <div *ngIf="isValidationComplete" class="validation-table mt-4 text-start">
+                    <h6 class="fw-bold mb-2" style="color: #475569; font-size: 14px;">Data Validation Preview</h6>
+                    <div class="table-responsive custom-scroll" style="max-height: 250px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px;">
+                        <table class="table table-bordered table-sm mb-0" style="font-size: 12px; white-space: nowrap;">
+                            <thead style="background-color: #f1f5f9; color: #64748b;">
+                                <tr>
+                                    <th class="text-center" style="font-weight: 600; padding: 10px; border-bottom: none;">STATUS</th>
+                                    <th style="font-weight: 600; padding: 10px; border-bottom: none;">MESSAGE / REASON</th>
+                                    <th class="text-center" style="font-weight: 600; padding: 10px; border-bottom: none;">CUST CODE</th>
+                                    <th style="font-weight: 600; padding: 10px; border-bottom: none;">CUST NAME</th>
+                                    <th class="text-center" style="font-weight: 600; padding: 10px; border-bottom: none;">PKGS</th>
+                                    <th class="text-center" style="font-weight: 600; padding: 10px; border-bottom: none;">WEIGHT</th>
+                                    <th class="text-center" style="font-weight: 600; padding: 10px; border-bottom: none;">TRANSIT</th>
+                                    <th class="text-center" style="font-weight: 600; padding: 10px; border-bottom: none;">SERVICE</th>
+                                    <th class="text-center" style="font-weight: 600; padding: 10px; border-bottom: none;">PICKUP PIN</th>
+                                    <th class="text-center" style="font-weight: 600; padding: 10px; border-bottom: none;">FROM CITY</th>
+                                    <th class="text-center" style="font-weight: 600; padding: 10px; border-bottom: none;">DEL PIN</th>
+                                    <th class="text-center" style="font-weight: 600; padding: 10px; border-bottom: none;">TO CITY</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="validationResults.length === 0">
+                                    <td colspan="12" class="text-center py-3 text-muted">No data found in file.</td>
+                                </tr>
+                                <tr *ngFor="let item of validationResults">
+                                    <td class="text-center align-middle">
+                                        <span class="badge" [ngClass]="item.isValid ? 'bg-success' : 'bg-danger'" style="padding: 5px 10px; border-radius: 4px;">
+                                            <span *ngIf="!item.isValid">✖ Invalid</span>
+                                            <span *ngIf="item.isValid">✔ Valid</span>
+                                        </span>
+                                    </td>
+                                    <td class="align-middle fw-bold" [ngStyle]="{'color': item.isValid ? '#22c55e' : '#ef4444'}">
+                                        {{ item.validationMessage || (item.isValid ? 'Valid record' : '-') }}
+                                    </td>
+                                    <td class="text-center align-middle" style="color: #475569; font-weight: 600;">
+                                        {{ item.customerCode || '-' }}
+                                    </td>
+                                    <td class="align-middle" style="color: #0f172a;">
+                                        {{ item.customerName || '-' }}
+                                    </td>
+                                    <td class="text-center align-middle" style="color: #475569;">
+                                        {{ item.pkgs || '-' }}
+                                    </td>
+                                    <td class="text-center align-middle" style="color: #475569;">
+                                        {{ item.approxWeight || '-' }}
+                                    </td>
+                                    <td class="text-center align-middle" style="color: #0f172a;">
+                                        {{ item.transitMode || '-' }}
+                                    </td>
+                                    <td class="text-center align-middle" style="color: #475569;">
+                                        {{ item.serviceType || '-' }}
+                                    </td>
+                                    <td class="text-center align-middle" style="color: #475569;">
+                                        {{ item.pickupPincode || '-' }}
+                                    </td>
+                                    <td class="text-center align-middle fw-bold" style="color: #0f172a;">
+                                        {{ item.fromCity || '-' }}
+                                    </td>
+                                    <td class="text-center align-middle" style="color: #475569;">
+                                        {{ item.deliveryPincode || '-' }}
+                                    </td>
+                                    <td class="text-center align-middle fw-bold" style="color: #0f172a;">
+                                        {{ item.toCity || '-' }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-center gap-3" style="border-top: none; padding: 0 24px 24px;">
+            <button type="button" class="btn btn-outline-secondary bg-white text-dark fw-bold px-4" (click)="closeBulkUploadModal()" style="border-color: #cbd5e1; font-size: 14px;">Cancel</button>
+            
+            <ng-container *ngIf="isValidationComplete && invalidRows === 0 && validRows > 0; else defaultBtn">
+                <button type="button" class="btn fw-bold px-4 text-white" style="background-color: #22c55e; font-size: 14px;" (click)="submitBulkUpload()" [disabled]="isSubmittingBulk">
+                    <span *ngIf="!isSubmittingBulk"><span class="me-2">✅</span> Submit</span>
+                    <span *ngIf="isSubmittingBulk"><span class="spinner-border spinner-border-sm me-2"></span> Submitting...</span>
+                </button>
+            </ng-container>
+            <ng-template #defaultBtn>
+                <button type="button" class="btn fw-bold px-4 text-white" style="background-color: #8b5cf6; font-size: 14px;" [disabled]="!selectedFile || invalidRows > 0">
+                    <span class="me-2">🪄</span> Upload & Parse
+                </button>
+            </ng-template>
+        </div>
+    </div>
+</ng-template>

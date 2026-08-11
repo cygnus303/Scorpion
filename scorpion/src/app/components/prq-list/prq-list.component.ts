@@ -11,6 +11,7 @@ import { debounceTime, Subject, Subscription } from 'rxjs';
 import { AddPrqComponent } from './add-prq/add-prq.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ExportService } from 'app/shared/services/export.service';
+import { PrqService } from 'app/shared/services/prq.service';
 import { PrqViewComponent } from './prq-view/prq-view.component';
 import { PrqTrackComponent } from './prq-track/prq-track.component';
 
@@ -27,10 +28,12 @@ export class PrqListComponent {
   @ViewChild('AddPrqComponent') AddPrqComponent!: AddPrqComponent;
   @ViewChild('PrqViewComponent') PrqViewComponent!: PrqViewComponent;
   @ViewChild('PrqTrackComponent') PrqTrackComponent!: PrqTrackComponent;
+  @ViewChild('TemplateBulkUpload') TemplateBulkUpload!: TemplateRef<any>;
 
   public requestCache = new Map<string, any>();
   public isLoading: boolean = false;
   public isCSVLoading: boolean = false;
+  public isTemplateLoading : boolean = false;
   private fetchSubject = new Subject<void>();
   public listSubscription?: Subscription;
   public cardSubscription?: Subscription;
@@ -46,6 +49,16 @@ export class PrqListComponent {
     prq_Assigned: 0,
     cancelled: 0
   };
+
+  public bulkUploadModalRef?: BsModalRef;
+  public selectedFile: File | null = null;
+  public selectedFileName: string = '';
+  public isValidating: boolean = false;
+  public isValidationComplete: boolean = false;
+  public validationResults: any[] = [];
+  public totalRows: number = 0;
+  public validRows: number = 0;
+  public invalidRows: number = 0;
 
   statusList = [
     { label: 'All Status', value: 'All' },
@@ -71,7 +84,8 @@ export class PrqListComponent {
     private docketService: DocketService,
     private sweetAlertService: SweetAlertService,
     private modalService: BsModalService,
-    private exportService: ExportService
+    private exportService: ExportService,
+    private prqService: PrqService
   ) { }
 
   ngOnInit() {
@@ -210,6 +224,88 @@ export class PrqListComponent {
     this.PrqViewComponent.showPopup(prqNo);
   }
 
+  openBulkUpload() {
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    this.isValidating = false;
+    this.isValidationComplete = false;
+    this.validationResults = [];
+    this.bulkUploadModalRef = this.modalService.show(this.TemplateBulkUpload, { class: 'modal-dialog-centered modal-lg', backdrop: 'static' });
+  }
+
+  closeBulkUploadModal() {
+    this.bulkUploadModalRef?.hide();
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
+      this.validateFile(file);
+    }
+  }
+
+  validateFile(file: File) {
+    const formData = new FormData();
+    formData.append('excelFile', file);
+    // Include user details if needed by the backend
+    // formData.append('UserName', this.docketService.loginUserList?.BaseUserName || '');
+    
+    this.isValidating = true;
+    this.isValidationComplete = false;
+    
+    this.prqService.validateExcel(formData).subscribe({
+      next: (response: any) => {
+        this.isValidating = false;
+        this.isValidationComplete = true;
+        this.validationResults = response?.items || [];
+        this.totalRows = this.validationResults.length;
+        this.validRows = this.validationResults.filter((x: any) => x.isValid).length;
+        this.invalidRows = this.totalRows - this.validRows;
+      },
+      error: (err: any) => {
+        this.isValidating = false;
+        this.sweetAlertService.error(err?.error?.message || 'Failed to validate the file.');
+      }
+    });
+  }
+
+  public isSubmittingBulk: boolean = false;
+
+  submitBulkUpload() {
+    const payload = {
+      items: this.validationResults,
+      baseLocation: this.docketService.loginUserList?.LocationCode || '',
+      baseUserName: this.docketService.loginUserList?.BaseUserName || '',
+      baseFinYear: this.docketService.loginUserList?.FinYear || ''
+    };
+
+    this.isSubmittingBulk = true;
+    this.prqService.uploadExcel(payload).subscribe({
+      next: (response: Blob) => {
+        this.isSubmittingBulk = false;
+        
+        const url = window.URL.createObjectURL(response);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Bulk_PRQ_Upload_Result.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+
+        this.sweetAlertService.success('PRQs submitted successfully!');
+        this.closeBulkUploadModal();
+        this.refreshData();
+      },
+      error: (err: any) => {
+        this.isSubmittingBulk = false;
+        this.sweetAlertService.error(err?.error?.message || 'An error occurred during submission.');
+      }
+    });
+  }
+
   selectPrqType(prqNo?: string) {
     // this.addPRQ.showPopup();
     this.AddPrqComponent.showPopup(prqNo);
@@ -298,5 +394,25 @@ export class PrqListComponent {
     this.PrqTrackComponent.showPopup(data);
   }
 
+  onDownloadTemplate(){
+    this.isTemplateLoading = true;
+    this.prqService.downloadTemplate().subscribe({
+      next: (response: Blob) => {
+        const url = window.URL.createObjectURL(response);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'PRQ_Template.xlsx'; // Or the correct filename/extension
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        this.isTemplateLoading = false;
+      },
+      error: (error: any) => {
+        this.isTemplateLoading = false;
+        this.sweetAlertService.error('Failed to download template.');
+      }
+    });
+  }
 
 }

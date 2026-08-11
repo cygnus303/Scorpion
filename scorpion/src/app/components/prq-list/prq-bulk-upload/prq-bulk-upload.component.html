@@ -1,0 +1,36 @@
+<ng-template #TemplateBulkUpload>
+    <div class="modal-content" style="border: none; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+        <div class="modal-header d-flex justify-content-between align-items-center" style="background-color: #8b5cf6; color: white; border-bottom: none; padding: 14px 20px;">
+            <h5 class="modal-title mb-0" style="font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 8px;">
+                <span>☁️</span> Bulk Upload Pickup Requests (PRQ)
+            </h5>
+            <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="closeModal()" style="font-size: 12px; filter: invert(1) grayscale(100%) brightness(200%);"></button>
+        </div>
+        <div class="modal-body" style="padding: 24px;">
+            <div class="upload-area" style="border: 2px dashed #cbd5e1; border-radius: 8px; padding: 40px 20px; text-align: center; background-color: #ffffff;">
+                <div class="excel-icon mb-3">
+                    <span style="font-size: 34px; color: #94a3b8; display: inline-block; background: white; border: 2.5px solid #cbd5e1; border-radius: 6px; padding: 8px 14px; font-weight: 900; line-height: 1; position: relative;">
+                        X
+                        <span style="position: absolute; top: -6px; right: -6px; background: white; width: 12px; height: 12px; border-bottom: 2.5px solid #cbd5e1; border-left: 2.5px solid #cbd5e1;"></span>
+                    </span>
+                </div>
+                <h5 style="color: #0f172a; font-weight: 600; font-size: 16px; margin-bottom: 6px;">Select Excel File</h5>
+                <p style="color: #64748b; font-size: 13px; margin-bottom: 24px;">Only .xls and .xlsx file types are supported.</p>
+                
+                <div class="d-flex justify-content-center align-items-center gap-3">
+                    <input type="file" #fileInput (change)="onFileSelected($event)" accept=".xls,.xlsx" style="display: none;">
+                    <button class="btn btn-outline-secondary bg-white text-dark fw-bold" style="border-color: #cbd5e1; padding: 6px 16px; font-size: 13px;" (click)="fileInput.click()">
+                        Choose File
+                    </button>
+                    <span style="color: #64748b; font-size: 13px; min-width: 100px; text-align: left;">{{ selectedFileName || 'No file selected' }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-center gap-3" style="border-top: none; padding: 0 24px 24px;">
+            <button type="button" class="btn btn-outline-secondary bg-white text-dark fw-bold px-4" (click)="closeModal()" style="border-color: #cbd5e1; font-size: 14px;">Cancel</button>
+            <button type="button" class="btn fw-bold px-4 text-white" style="background-color: #8b5cf6; font-size: 14px;" [disabled]="!selectedFile">
+                <span class="me-2">🪄</span> Upload & Parse
+            </button>
+        </div>
+    </div>
+</ng-template>

@@ -82,4 +82,8 @@ constructor(public httpClient: HttpClient,private apiLoading: ApiLoadingService)
   DownloadFile(url: string): Observable<Blob> {
     return this.httpClient.get<Blob>(environment.apiUrl + url, {responseType: 'blob' as 'json'});
   }
+
+  PostDownloadFile(url: string, body: any): Observable<Blob> {
+    return this.httpClient.post<Blob>(environment.apiUrl + url, body, {responseType: 'blob' as 'json'});
+  }
 }
