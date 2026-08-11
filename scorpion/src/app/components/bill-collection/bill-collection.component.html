@@ -79,7 +79,7 @@
             </div>
             <div class="table-toolbar d-flex align-items-center gap-3">
                 <div class="search-box d-flex align-items-center"><span class="text-muted">🔍</span>
-                    <input type="text" placeholder="Search Bill No…" class="form-control border-0 shadow-none"
+                    <input type="text" placeholder="Search Bill No,Mr No,check no…" class="form-control border-0 shadow-none"
                         [(ngModel)]="config.SearchText" (keyup)="onSearchChange()">
                 </div>
                 <button type="button" (click)="openPopup()" class="btn btn-danger btn-sm px-4 fw-medium text-nowrap"
@@ -164,9 +164,12 @@
                             {{ item.PENDAMT != null ? (item.PENDAMT | number:'1.2-2') : '-' }}
                         </td>
                         <td class="text-center">
-                            <a style="color: #c8102e; font-weight: 700;cursor: pointer; font-size: 14px;">
-                                {{ item.MRNO || '-' }}
+                            <a *ngIf="item.MR > 0; else noMr" style="color: #c8102e; font-weight: 700; text-decoration: underline; cursor: pointer; text-underline-offset: 3px; font-size: 14px;" (click)="viewMr(item.BILLNO)">
+                                View MR
                             </a>
+                            <ng-template #noMr>
+                                <span style="color: #333; font-weight: 700; font-size: 14px;">-</span>
+                            </ng-template>
                         </td>
                         <td class="text-center">
                             <span class="status-badge" [ngStyle]="getStatusStyles(item)">
@@ -187,3 +190,4 @@
 </div>
 <app-bill-invoice-view #BillInvoiceViewComponent></app-bill-invoice-view>
 <app-bill-receipt #BillReceiptComponent (submitSuccess)="fetchData()"></app-bill-receipt>
+<app-bill-mr-view #BillMrViewComponent></app-bill-mr-view>

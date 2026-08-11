@@ -692,13 +692,24 @@ export class DRSUpdateListComponent {
       this.generalMasterService.getReason(reasonType);
 
       // 🔹 Apply validators ONLY when showReason = true
-      row.get('DELYPERSON')?.setValidators([Validators.required]);
       row.get('cboReason')?.setValidators([Validators.required]);
-      row.get('cboEmail')?.setValidators([Validators.required, Validators.email]);
-      row.get('cboMobileNo')?.setValidators([
-        Validators.required,
-        Validators.pattern('^[0-9]{10}$')
-      ]);
+      
+      if (delivered > 0) {
+        row.get('DELYPERSON')?.setValidators([Validators.required]);
+        row.get('cboEmail')?.setValidators([Validators.required, Validators.email]);
+        row.get('cboMobileNo')?.setValidators([
+          Validators.required,
+          Validators.pattern('^[0-9]{10}$')
+        ]);
+      } else {
+        // If 0, clear their values and they are not required
+        row.get('DELYPERSON')?.setValue(null);
+        row.get('cboEmail')?.setValue(null);
+        row.get('cboMobileNo')?.setValue(null);
+        row.get('DeliveredTo')?.setValue(null);
+        row.get('DlyPerson')?.setValue(null);
+        row.get('DlyContactNo')?.setValue(null);
+      }
     } else {
       row.patchValue({
         showReason: false,
