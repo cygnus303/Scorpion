@@ -1,10 +1,37 @@
-.modal-wrapper {
-  display: flex;
-  flex-direction: column;
-  background: #f4f6fb;
-  height: 100vh;
-  width: 100%;
-  font-family: inherit;
+.custom-scrollbar {
+  /* Sleek custom scrollbars */
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f8fafc;
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+    &:hover {
+      background: #94a3b8;
+    }
+  }
+}
+
+/* Shake Attention Animation */
+@keyframes shake-attention {
+  0% { transform: scale(1); }
+  10% { transform: scale(1.05) rotate(-3deg); }
+  20% { transform: scale(1.05) rotate(3deg); }
+  30% { transform: scale(1.05) rotate(-3deg); }
+  40% { transform: scale(1.05) rotate(3deg); }
+  50% { transform: scale(1) rotate(0); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+.shake-btn {
+  display: inline-block;
+  animation: shake-attention 1.8s ease-in-out infinite;
+  box-shadow: 0 0 10px rgba(13, 110, 253, 0.3);
 }
 
 /* Header */
@@ -168,10 +195,10 @@
 ng-select.mselect .ng-select-container,
 ng-select.mselect .ng-value-container,
 ng-select.mselect .ng-value {
-    white-space: normal !important;
-    height: auto !important;
-    flex-wrap: wrap !important;
-    word-break: break-word !important;
+  white-space: normal !important;
+  height: auto !important;
+  flex-wrap: wrap !important;
+  word-break: break-word !important;
 }
 
 .cell-sub {
@@ -229,7 +256,9 @@ ng-select.mselect .ng-value {
       overflow: visible !important;
       text-overflow: unset !important;
 
-      .ng-option-label, span, div {
+      .ng-option-label,
+      span,
+      div {
         white-space: normal !important;
         word-break: break-word !important;
         overflow: visible !important;
@@ -244,8 +273,10 @@ ng-select.mselect .ng-value {
     .ng-value {
       white-space: normal !important;
       word-break: break-word !important;
-      
-      .ng-value-label, span, div {
+
+      .ng-value-label,
+      span,
+      div {
         white-space: normal !important;
         word-break: break-word !important;
         overflow: visible !important;

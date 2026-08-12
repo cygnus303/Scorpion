@@ -83,6 +83,8 @@ export class BillCollectionComponent implements OnInit {
 
   fetchData() {
     this.config.PageNo = 1;
+    this.selectedBills = [];
+    this.selectedPartyCode = null;
     this.fetchSubject.next();
   }
 

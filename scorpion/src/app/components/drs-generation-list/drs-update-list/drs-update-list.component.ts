@@ -44,9 +44,19 @@ export class DRSUpdateListComponent {
   public isLoading: boolean = false;
   public validatingIndex: number | null = null;
   public validatingType: 'FRONT' | 'BACK' | null = null;
+  public isDrsListCollapsed: boolean = true;
+  public showDrsListModal: boolean = false;
+  public isDrsListOpenedOnce: boolean = false;
   @Input() drsData: any;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('DrsUpdateDepsComponent') depsEntryComponent!: DrsUpdateDepsComponent;
+
+  toggleDrsList() {
+    this.showDrsListModal = !this.showDrsListModal;
+    if (this.showDrsListModal) {
+      this.isDrsListOpenedOnce = true;
+    }
+  }
   constructor(public challanService: ChallanService, public deliveryUpdateService: DeliveryUpdateService,
     public THCMasterService: THCMasterService,
     private vendorChargeHelper: VendorChargeHelperService,
@@ -693,7 +703,7 @@ export class DRSUpdateListComponent {
 
       // 🔹 Apply validators ONLY when showReason = true
       row.get('cboReason')?.setValidators([Validators.required]);
-      
+
       if (delivered > 0) {
         row.get('DELYPERSON')?.setValidators([Validators.required]);
         row.get('cboEmail')?.setValidators([Validators.required, Validators.email]);
@@ -799,7 +809,7 @@ export class DRSUpdateListComponent {
     if (type === 'FRONT') {
       this.validatePOD(index, type);
     }
-    else if(type === 'BACK'){
+    else if (type === 'BACK') {
       this.validatePOD(index, type);
     }
   }
@@ -898,7 +908,7 @@ export class DRSUpdateListComponent {
 
     this.validatingIndex = index;
     this.validatingType = type;
-    this.deliveryUpdateService.CheckPODValidation(formData,this.docketService.loginUserList.UserId).subscribe({
+    this.deliveryUpdateService.CheckPODValidation(formData, this.docketService.loginUserList.UserId).subscribe({
       next: (response: any) => {
         this.validatingIndex = null;
         this.validatingType = null;
