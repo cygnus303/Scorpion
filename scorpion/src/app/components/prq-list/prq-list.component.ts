@@ -14,6 +14,7 @@ import { ExportService } from 'app/shared/services/export.service';
 import { PrqService } from 'app/shared/services/prq.service';
 import { PrqViewComponent } from './prq-view/prq-view.component';
 import { PrqTrackComponent } from './prq-track/prq-track.component';
+import saveAs from 'file-saver';
 
 @Component({
   selector: 'app-prq-list',
@@ -289,7 +290,7 @@ export class PrqListComponent {
     const payload = {
       items: this.validationResults.map(item => ({
         ...item,
-        prqDate: formattedDate
+        prqDate: item.requiredPlacementDateTime
       })),
       baseLocation: this.docketService.loginUserList?.LocationCode || '',
       baseUserName: this.docketService.loginUserList?.BaseUserName || '',
@@ -413,14 +414,10 @@ export class PrqListComponent {
     this.isTemplateLoading = true;
     this.prqService.downloadTemplate().subscribe({
       next: (response: Blob) => {
-        const url = window.URL.createObjectURL(response);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'PRQ_Template.xlsx'; // Or the correct filename/extension
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
+       const blob: Blob = new Blob([response], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+        saveAs(blob, `PRQ_Template.xlsx`);
         this.isTemplateLoading = false;
       },
       error: (error: any) => {
