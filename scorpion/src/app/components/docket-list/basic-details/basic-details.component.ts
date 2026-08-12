@@ -239,7 +239,11 @@ applyVehicleNoValidation(){
         // BackDate days logic
         if (rule.backDate_Days && rule.backDate_Days > 0) {
           const today = new Date();
-          this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
+          if(this.docketService.loginUserList.Type === '1'){
+            this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
+          }else{
+            this.minDate = new Date();
+          }
         }
 
         // Max date = today
