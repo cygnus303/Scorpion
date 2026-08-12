@@ -20,10 +20,8 @@
                             <th class="text-center">MR Date</th>
                             <th class="text-center">MR Amount</th>
                             <th class="text-center">Net Amount</th>
-                            <th class="text-center">TDS Deduction Detail</th>
                             <th class="text-center">MR Status</th>
                             <th class="text-center">MR Voucher No</th>
-                            <th class="text-center">Bill Collection View</th>
                             <th class="text-center">MR Made by</th>
                         </tr>
                     </thead>
@@ -34,15 +32,13 @@
                             </td>
                         </tr>
                         <tr *ngFor="let item of mrList">
-                            <td class="text-center"><a class="mr-link">{{ item.MRNo || item.mrno || '-' }}</a></td>
-                            <td class="text-center">{{ item.MRDate || item.mrdt || '-' }}</td>
-                            <td class="text-end">{{ (item.MRAmount || item.mramt || 0) | number:'1.2-2' }}</td>
-                            <td class="text-end">{{ (item.NetAmount || item.netamt || 0) | number:'1.2-2' }}</td>
-                            <td class="text-center">{{ item.TDSDeduction || item.tds_ded || '-' }}</td>
-                            <td class="text-center">{{ item.MRStatus || item.mr_status || '-' }}</td>
-                            <td class="text-center"><a class="mr-link">{{ item.MRVoucherNo || item.mr_voucherno || '-' }}</a></td>
-                            <td class="text-center"><a class="action-link">{{ item.BillCollectionView || item.bill_collection_view || 'View' }}</a></td>
-                            <td class="text-center">{{ item.MRMadeBy || item.mr_madeby || '-' }}</td>
+                            <td class="text-center"><a class="mr-link">{{ item.MRSNO }}</a></td>
+                            <td class="text-center">{{ item.MRSDT || '-' }}</td>
+                            <td class="text-end">{{ item.MRSAMT || '-' }}</td>
+                            <td class="text-end">{{ item.NETAMT || '-' }}</td>
+                            <td class="text-center">{{ item.MRSTATUS || '-' }}</td>
+                            <td class="text-center"><a class="mr-link">{{ item.Voucherno || '-' }}</a></td>
+                            <td class="text-center">{{ item.ENTRYBY || '-'}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -50,3 +46,4 @@
         </div>
     </div>
 </ng-template>
+

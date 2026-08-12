@@ -28,10 +28,9 @@ export class BillMrViewComponent {
   }
 
   getMrData(billNo: any) {
-    // TODO: Update ReportId and parameters as required by API
     const payload = {
       "FilterJson": {
-        "ReportId": "", // Fill in with actual report id for fetching MR details by bill no
+        "ReportId": "378",
         "BillNo": billNo
       }
     };
