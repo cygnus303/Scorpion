@@ -34,10 +34,10 @@ export class BillCollectionComponent implements OnInit {
   public billingPartyData: any[] = [];
   public notFoundTextValue: string = 'Enter at least 3 characters';
   statusList = [
-    { label: 'All Status', value: '' },
-    { label: 'Pending for Collection', value: 'Bill Due, not Collected' },
-    { label: 'Collected', value: 'Bill Collected'},
-    { label: 'Partially Collected', value: 'Partially Collected' },
+    { label: 'All Status', value: 'All' },
+    { label: 'Pending for Collection', value: 'PEND' },
+    { label: 'Collected', value: 'COL'},
+    { label: 'Partially Collected', value: 'PCOL' },
   ];
 
   public selectedBills: any[] = [];
@@ -46,7 +46,7 @@ export class BillCollectionComponent implements OnInit {
   public config = {
     FromDt: new Date(),
     ToDt: new Date(),
-    Status: '',
+    Status: 'All',
     PageNo: 1,
     PageSize: 10,
     totalRecords: 0,
@@ -180,16 +180,7 @@ export class BillCollectionComponent implements OnInit {
     });
   }
 
-  getCalculatedStatus(item: any): string {
-    if (item.PENDAMT == null) return '-';
-    if (item.PENDAMT === item.BILLAMT) return 'Pending for Collection';
-    if (item.PENDAMT > 0 && item.PENDAMT < item.BILLAMT) return 'Partially Collected';
-    if (item.PENDAMT === 0) return 'Collected';
-    return 'Pending for Collection';
-  }
-
-  getStatusStyles(item: any) {
-    const status = this.getCalculatedStatus(item);
+  getStatusStyles(status: any) {
     if (status === 'Pending for Collection') {
       return { 'background': '#ffecb3', 'color': '#ff8f00', 'border': '1px solid #ffe082', 'padding': '4px 10px', 'border-radius': '12px' };
     } else if (status === 'Partially Collected') {
