@@ -40,13 +40,24 @@
                 <form [formGroup]="DRSSummaryForm">
                     <!-- Header -->
                     <div class="modal-header">
-                        <div class="modal-title">
+                        <div class="modal-title d-flex align-items-center flex-wrap gap-2">
                             <i class="fas fa-sync-alt"></i> DRS Update
                             <span class="mtag">{{ DRSInformation?.pdcno || drsData?.drsNo }}</span>
                             <span class="mtag" style="font-size:11px; opacity:.85;">{{ (DRSInformation?.drsDate ||
                                 drsData?.drsDate) | date:'dd-MMM-yy' }}</span>
+
+                            <!-- Toggle DRS Delivery List Button -->
+                            <button type="button"
+                                class="btn btn-xs btn-light text-primary border-0 ms-3 d-flex align-items-center gap-1"
+                                [class.shake-btn]="!isDrsListOpenedOnce"
+                                *ngIf="drsDeliveryList && drsDeliveryList.length > 0" (click)="toggleDrsList()"
+                                style="font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px;">
+                                <i class="fas fa-list"></i>
+                                View DRS List
+                            </button>
                         </div>
-                        <button type="button" class="modal-close" (click)="closeModal()">✕</button>
+                        <button type="button" class="btn-close btn-close-white" (click)="closeModal()"
+                            aria-label="Close"></button>
                     </div>
 
                     <!-- Info Bar -->
@@ -112,36 +123,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="cnote-entry-container" *ngIf="drsDeliveryList.length > 0">
-                        <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
-                            <i class="fas fa-list me-2"></i>
-                            DRS Delivery List
-                        </div>
-                        <div class="table-wrapper position-relative p-4">
-                            <table class="table table-bordered table-striped table-condensed flip-content mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Sr.No</th>
-                                        <th>Dock. No</th>
-                                        <th>Dock. Date</th>
-                                        <th>DRS Date</th>
-                                        <th>Pkg / Act</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let item of drsDeliveryList;let i=index">
-                                        <td>{{i+1}}</td>
-                                        <td>{{item.dockno}}</td>
-                                        <td>{{item.dockdt}}</td>
-                                        <td>{{item.drS_DT}}</td>
-                                        <td>{{item.pkgsno | number:'1.2-2'}}/{{item.actuwt | number:'1.2-2'}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
                     </div>
 
                     <div class="cnote-entry-container mt-3">
@@ -480,15 +461,13 @@
                                                     </div>
                                                     <div *ngIf="drsList.at(i).get('showReason')?.value"
                                                         class="d-flex flex-column gap-1">
-                                                        <input class="form-control form-control-sm"
-                                                            maxlength="10" formControlName="cboMobileNo"
-                                                            placeholder="Mobile No"
+                                                        <input class="form-control form-control-sm" maxlength="10"
+                                                            formControlName="cboMobileNo" placeholder="Mobile No"
                                                             oninput="this.value = this.value.replace(/[^0-9]/g,'');"
-                                                            appFocusNext
-                                                            [readonly]="row.value.deliveredPkgs == 0"
+                                                            appFocusNext [readonly]="row.value.deliveredPkgs == 0"
                                                             [ngClass]="{ 'border-danger': drsList.at(i).get('cboMobileNo')?.invalid && drsList.at(i).get('cboMobileNo')?.touched, 'required2': row.value.deliveredPkgs > 0}">
-                                                        <input class="form-control form-control-sm"
-                                                            placeholder="Email" appFocusNext formControlName="cboEmail"
+                                                        <input class="form-control form-control-sm" placeholder="Email"
+                                                            appFocusNext formControlName="cboEmail"
                                                             [readonly]="row.value.deliveredPkgs == 0"
                                                             [ngClass]="{ 'border-danger': drsList.at(i).get('cboEmail')?.invalid && drsList.at(i).get('cboEmail')?.touched, 'required2': row.value.deliveredPkgs > 0}">
                                                     </div>
@@ -505,10 +484,14 @@
 
                                                 <!-- 20. POD 1 -->
                                                 <td class="align-top">
-                                                    <div *ngIf="validatingIndex === i && validatingType === 'FRONT'" class="d-flex align-items-center gap-1 text-primary p-1" style="font-size: 11px;">
-                                                        <span class="spinner-border spinner-border-sm" role="status"></span> Validating...
+                                                    <div *ngIf="validatingIndex === i && validatingType === 'FRONT'"
+                                                        class="d-flex align-items-center gap-1 text-primary p-1"
+                                                        style="font-size: 11px;">
+                                                        <span class="spinner-border spinner-border-sm"
+                                                            role="status"></span> Validating...
                                                     </div>
-                                                    <ng-container *ngIf="!(validatingIndex === i && validatingType === 'FRONT')">
+                                                    <ng-container
+                                                        *ngIf="!(validatingIndex === i && validatingType === 'FRONT')">
                                                         <ng-container
                                                             *ngIf="drsList.at(i).value.frontPreview; else frontUpload">
                                                             <div class="d-flex flex-column gap-1">
@@ -524,7 +507,8 @@
                                                         <ng-template #frontUpload>
                                                             <button type="button"
                                                                 class="btn btn-light btn-sm text-primary border-primary border-dashed p-1"
-                                                                style="font-size:11px;" (click)="row.value.deliveredPkgs == 0 ? null : frontInput.click()"
+                                                                style="font-size:11px;"
+                                                                (click)="row.value.deliveredPkgs == 0 ? null : frontInput.click()"
                                                                 [disabled]="row.value.deliveredPkgs == 0">
                                                                 📎 Upload POD 1
                                                             </button>
@@ -553,7 +537,8 @@
                                                     <ng-template #backUpload>
                                                         <button type="button"
                                                             class="btn btn-light btn-sm text-primary border-primary border-dashed p-1"
-                                                            style="font-size:11px;" (click)="row.value.deliveredPkgs == 0 ? null : backInput.click()"
+                                                            style="font-size:11px;"
+                                                            (click)="row.value.deliveredPkgs == 0 ? null : backInput.click()"
                                                             [disabled]="row.value.deliveredPkgs == 0">
                                                             📎 Upload POD 2
                                                         </button>
@@ -564,13 +549,15 @@
 
                                                 <!-- 22. POD Quality -->
                                                 <td class="align-middle">
-                                                    <div class="d-flex flex-column gap-2" [ngStyle]="{'pointer-events': row.value.deliveredPkgs == 0 ? 'none' : 'auto', 'opacity': row.value.deliveredPkgs == 0 ? '0.5' : '1'}">
+                                                    <div class="d-flex flex-column gap-2"
+                                                        [ngStyle]="{'pointer-events': row.value.deliveredPkgs == 0 ? 'none' : 'auto', 'opacity': row.value.deliveredPkgs == 0 ? '0.5' : '1'}">
                                                         <div
                                                             class="form-check m-0 d-flex align-items-center gap-1 ps-0">
                                                             <input
                                                                 class="form-check-input text-success m-0 ms-1 me-1 border-success"
                                                                 type="radio" [name]="'badpod'+i" id="badpodNo{{ i }}"
-                                                                [value]="false" [formControl]="getRadioControl(i)" (change)="clearDepsData(i)">
+                                                                [value]="false" [formControl]="getRadioControl(i)"
+                                                                (change)="clearDepsData(i)">
                                                             <label class="text-success small fw-bold m-0"
                                                                 for="badpodNo{{ i }}"><i class="bi bi-check-circle"></i>
                                                                 Good POD</label>
@@ -580,12 +567,16 @@
                                                             <input
                                                                 class="form-check-input text-danger m-0 ms-1 me-1 border-danger"
                                                                 type="radio" [name]="'badpod'+i" id="badpodYes{{ i }}"
-                                                                [value]="true" [formControl]="getRadioControl(i)"  (click)="openDeps(row.value, i)">
+                                                                [value]="true" [formControl]="getRadioControl(i)"
+                                                                (click)="openDeps(row.value, i)">
                                                             <label class="text-danger small fw-bold m-0"
                                                                 for="badpodYes{{ i }}"><i class="bi bi-x-circle"></i>
                                                                 Bad POD</label>
                                                         </div>
-                                                        <div *ngIf="row.get('depsData')?.value" class="badge bg-danger-subtle text-danger border border-danger-subtle mt-1 text-wrap" style="font-size: 9px; cursor: pointer; display: inline-block; width: fit-content;" (click)="openDeps(row.value, i)">
+                                                        <div *ngIf="row.get('depsData')?.value"
+                                                            class="badge bg-danger-subtle text-danger border border-danger-subtle mt-1 text-wrap"
+                                                            style="font-size: 9px; cursor: pointer; display: inline-block; width: fit-content;"
+                                                            (click)="openDeps(row.value, i)">
                                                             DEPS Generated <i class="fas fa-edit ms-1"></i>
                                                         </div>
                                                     </div>
@@ -635,4 +626,49 @@
         <div class="mt-3 custom-text">Submitting...</div>
     </div>
 </div>
+<!-- DRS Delivery List Modal -->
+<div class="modal fade show" tabindex="-1" *ngIf="showDrsListModal"
+    style="display:block; background: rgba(0,0,0,0.5); z-index: 1060;" (click)="toggleDrsList()">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" (click)="$event.stopPropagation()">
+        <div class="modal-content shadow border-0">
+            <div class="modal-header text-white" style="background-color: #2b3b7e;">
+                <div class="modal-title font-weight-bold d-flex align-items-center">
+                    <i class="fas fa-list me-2"></i> DRS Delivery List
+                    <span class="mtag ms-2" style="font-size: 11px;">{{ drsDeliveryList.length }} Dockets</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white" (click)="toggleDrsList()"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3">
+                <div class="table-responsive custom-scrollbar" style="max-height: 400px;">
+                    <table class="table table-hover table-bordered table-striped align-middle mb-0"
+                        style="font-size: 12px;">
+                        <thead class="sticky-top bg-light" style="z-index: 1;">
+                            <tr>
+                                <th style="background-color: #f8f9fa;">Sr.No</th>
+                                <th style="background-color: #f8f9fa;">Dock. No</th>
+                                <th style="background-color: #f8f9fa;">Dock. Date</th>
+                                <th style="background-color: #f8f9fa;">DRS Date</th>
+                                <th style="background-color: #f8f9fa;">Pkg / Act</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of drsDeliveryList;let i=index">
+                                <td>{{i+1}}</td>
+                                <td>{{item.dockno}}</td>
+                                <td>{{item.dockdt}}</td>
+                                <td>{{item.drS_DT}}</td>
+                                <td>{{item.pkgsno | number:'1.2-2'}}/{{item.actuwt | number:'1.2-2'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer p-2 bg-light d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-secondary btn-sm px-3" (click)="toggleDrsList()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <app-drs-update-deps #DrsUpdateDepsComponent (dataEmitter)="onDepsDataReceived($event)"></app-drs-update-deps>
