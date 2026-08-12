@@ -20,7 +20,8 @@
             </div>
         </div>
 
-        <div class="summary-card c-orange cursor-pointer px-3 py-3" [class.active-card]="config.Status === 'PEND,PCOL' || config.Status === 'PEND'"
+        <div class="summary-card c-orange cursor-pointer px-3 py-3"
+            [class.active-card]="config.Status === 'PEND,PCOL' || config.Status === 'PEND'"
             (click)="filterByStatus('PEND,PCOL')">
             <div class="card-content">
                 <div class="s-label">Pending for Collection</div>
@@ -42,7 +43,8 @@
                             (ngModelChange)="fetchData()"
                             [bsConfig]="{ containerClass: 'theme-red' , dateInputFormat: 'DD MMMM YYYY'}"
                             style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
-                        <span style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+                        <span
+                            style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
                     </div>
                     <span class="date-sep">→</span>
                     <div class="date-input-wrap" style="padding:0;">
@@ -50,37 +52,41 @@
                             (ngModelChange)="fetchData()" [minDate]="config.FromDt"
                             [bsConfig]="{ containerClass: 'theme-red' , dateInputFormat: 'DD MMMM YYYY'}"
                             style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
-                        <span style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
+                        <span
+                            style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
                     </div>
                 </div>
-                
+
                 <div class="divider-v"></div>
-                
+
                 <div class="filter-group d-flex align-items-center gap-2 px-2">
                     <span class="filter-label">Customer</span>
-                    <ng-select class="noFoundTextColor remove-white-space custom-status-select clear-icon" placeholder="Select Customer" [searchable]="true"
-                        [clearable]="true" (search)="getBillingPartyData($event)" [(ngModel)]="config.Party_code"
-                        [notFoundText]="notFoundTextValue" (change)="fetchData()" (open)="resetBillingPartyDropdown()" style="width: 220px;">
+                    <ng-select class="noFoundTextColor remove-white-space custom-status-select clear-icon"
+                        placeholder="Select Customer" [searchable]="true" [clearable]="true"
+                        (search)="getBillingPartyData($event)" [(ngModel)]="config.Party_code"
+                        [notFoundText]="notFoundTextValue" (change)="fetchData()" (open)="resetBillingPartyDropdown()"
+                        style="width: 220px;">
                         <ng-option *ngFor="let item of billingPartyData" [value]="item.custcd">
                             <strong>{{ item.custcd }}</strong> : {{ item.custnm }}
                         </ng-option>
                     </ng-select>
                 </div>
                 <div class="divider-v"></div>
-                
+
                 <div class="filter-group d-flex align-items-center gap-2 px-2">
                     <span class="filter-label">Bill Type</span>
                     <ng-select type="text" placeholder="Bill Type" class="custom-status-select clear-icon"
                         [items]="statusList" bindLabel="label" bindValue="value" [(ngModel)]="config.Status"
                         (change)="fetchData()" style="width: 140px;"></ng-select>
                 </div>
-                
+
 
             </div>
             <div class="table-toolbar d-flex align-items-center gap-3">
                 <div class="search-box d-flex align-items-center"><span class="text-muted">🔍</span>
-                    <input type="text" placeholder="Search Bill No,Mr No,check no…" class="form-control border-0 shadow-none"
-                        [(ngModel)]="config.SearchText" (keyup)="onSearchChange()">
+                    <input type="text" placeholder="Search Bill No,Mr No,check no…"
+                        class="form-control border-0 shadow-none" [(ngModel)]="config.SearchText"
+                        (keyup)="onSearchChange()">
                 </div>
                 <button type="button" (click)="openPopup()" class="btn btn-danger btn-sm px-4 fw-medium text-nowrap"
                     style="background-color: #b71c1c;">Prepare MR ›</button>
@@ -91,8 +97,8 @@
             <table class="table align-middle data-table mb-0">
                 <thead>
                     <tr>
-                        <th class="text-center" *ngIf="config.Status === ''">#</th>
-                        <th class="text-center" *ngIf="config.Status !== ''"></th>
+                        <th class="text-center" *ngIf="config.Status === 'All'">#</th>
+                        <th class="text-center" *ngIf="config.Status !== 'All' && config.Status !== 'COL'"></th>
                         <th class="text-center">Bill No</th>
                         <th class="text-center">Bill Date</th>
                         <th class="text-center">Customer Name</th>
@@ -125,11 +131,12 @@
                 </tbody>
                 <tbody *ngIf="!isLoading && billList.length !== 0">
                     <tr *ngFor="let item of billList; let i = index">
-                        <td class="text-center text-muted" *ngIf="config.Status === ''">{{ i + 1 }}</td>
-                        <td class="text-center" *ngIf="config.Status !== ''">
-                            <input *ngIf="!selectedPartyCode || selectedPartyCode === getPartyCode(item)"
-                                type="checkbox" class="form-check-input" [checked]="item.selected"
-                                (change)="onCheckboxChange(item, $event)" style="width: 18px; height: 18px; cursor: pointer; margin-top: 0; vertical-align: middle;">
+                        <td class="text-center text-muted" *ngIf="config.Status === 'All'">{{ i + 1 }}</td>
+                        <td class="text-center" *ngIf="config.Status !== 'All' && config.Status !== 'COL'">
+                            <input type="checkbox"
+                                class="form-check-input" [checked]="item.selected"
+                                (change)="onCheckboxChange(item, $event)"
+                                style="width: 18px; height: 18px; cursor: pointer; margin-top: 0; vertical-align: middle;">
                         </td>
                         <td class="text-center">
                             <a style="color: #c8102e; font-weight: 700; text-decoration: underline; cursor: pointer; text-underline-offset: 3px;"
@@ -142,7 +149,8 @@
                         </td>
                         <td>
                             <div class="cust-cell">
-                                <span class="cust-name text-truncate d-inline-block" style="max-width: 200px;" title="{{ item.ptmsstr || '-' }}">{{ item.ptmsstr || '-' }}</span>
+                                <span class="cust-name text-truncate d-inline-block" style="max-width: 200px;"
+                                    title="{{ item.ptmsstr || '-' }}">{{ item.ptmsstr || '-' }}</span>
                             </div>
                         </td>
                         <td class="text-center">
@@ -164,7 +172,9 @@
                             {{ item.PENDAMT != null ? (item.PENDAMT | number:'1.2-2') : '-' }}
                         </td>
                         <td class="text-center">
-                            <a *ngIf="item.MR > 0; else noMr" style="color: #c8102e; font-weight: 700; text-decoration: underline; cursor: pointer; text-underline-offset: 3px; font-size: 14px;" (click)="viewMr(item.BILLNO)">
+                            <a *ngIf="item.MR > 0; else noMr"
+                                style="color: #c8102e; font-weight: 700; text-decoration: underline; cursor: pointer; text-underline-offset: 3px; font-size: 14px;"
+                                (click)="viewMr(item.BILLNO)">
                                 View MR
                             </a>
                             <ng-template #noMr>
