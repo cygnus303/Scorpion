@@ -222,36 +222,33 @@ applyVehicleNoValidation(){
     });
   }
 
-  dateAccess() {
-  const payload = {
-    moduleCode: '01',
-    baseUserName: this.docketService.baseUsername
-  };
+ dateAccess() {
+    const payload = {
+      moduleCode: '01',
+      baseUserName: this.docketService.baseUsername
+    };
 
-  this.commonDateService.userDateSelection(payload).subscribe({
-    next: (res: any) => {
-      if (res && res.length > 0) {
-        const rule = res[0];
-
-        // API min_Date
-        this.minDate = new Date(rule.min_Date);
-
-        // BackDate days logic
-        if (rule.backDate_Days && rule.backDate_Days > 0) {
-          const today = new Date();
-          if(this.docketService.loginUserList.Type === '1'){
-            this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
-          }else{
+    this.commonDateService.userDateSelection(payload).subscribe({
+      next: (res: any) => {
+        if (res && res.length > 0) {
+          const rule = res[0];
+          if (this.docketService.loginUserList.Type === '1') {
+            // API min_Date
+            this.minDate = new Date(rule.min_Date);
+            // BackDate days logic
+            if (rule.backDate_Days && rule.backDate_Days > 0) {
+              const today = new Date();
+              this.minDate = new Date(today.setDate(today.getDate() - rule.backDate_Days));
+            }
+          } else {
             this.minDate = new Date();
           }
+          // Max date = today
+          this.maxDate = new Date();
         }
-
-        // Max date = today
-        this.maxDate = new Date();
       }
-    }
-  });
-}
+    });
+  }
 
 OnChangeCNoteDate(event:any){
     if (event) {
