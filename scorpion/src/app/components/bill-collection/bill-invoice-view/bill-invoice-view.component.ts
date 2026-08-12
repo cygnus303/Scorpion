@@ -12,26 +12,31 @@ import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 })
 export class BillInvoiceViewComponent {
   public selectedInvoiceBill: any;
-  public billDetail:any;
+  public billDetail: any;
   public billList: any[] = [];
+  public oscChargesList: any[] = [];
+  
+  public dynamicColumns: string[] = [];
+  public dynamicTotals: any = {};
+  public totalOscOther: number = 0;
   @ViewChild('TemplateInvoice', { static: true }) TemplateInvoice!: TemplateRef<any>;
 
   constructor(
     public modalRef: BsModalRef,
-    public modalService:BsModalService,
-    public dynamicDataService:DynamicDataService
-  ) {}
+    public modalService: BsModalService,
+    public dynamicDataService: DynamicDataService
+  ) { }
 
-  showPopup(data :any){
+  showPopup(data: any) {
     this.getBillData(data);
     this.modalRef = this.modalService.show(this.TemplateInvoice, { class: 'modal-xl modal-dialog-centered modal-dialog-scrollable', backdrop: true });
   }
 
-  getBillData(data:any){
+  getBillData(data: any) {
     const payload = {
       "FilterJson": {
-       "ReportId" : "375",
-        "BillNo" : data
+        "ReportId": "375",
+        "BillNo": data
       }
     };
     this.dynamicDataService.getDynamicData(payload).subscribe((response: any) => {
@@ -41,7 +46,28 @@ export class BillInvoiceViewComponent {
         } else {
           this.billList = [];
         }
-        
+
+        if (response.Table2 && response.Table2.length > 0) {
+          this.oscChargesList = response.Table2;
+          
+          // Extract dynamic columns (excluding fixed columns)
+          const allKeys = Object.keys(response.Table2[0]);
+          this.dynamicColumns = allKeys.filter(key => key !== 'DOCKNO' && key !== 'OtherCharges');
+          
+          // Calculate totals dynamically
+          this.dynamicTotals = {};
+          this.dynamicColumns.forEach(col => {
+            this.dynamicTotals[col] = this.oscChargesList.reduce((sum, item) => sum + (Number(item[col]) || 0), 0);
+          });
+          
+          this.totalOscOther = this.oscChargesList.reduce((sum, item) => sum + (Number(item.OtherCharges) || 0), 0);
+        } else {
+          this.oscChargesList = [];
+          this.dynamicColumns = [];
+          this.dynamicTotals = {};
+          this.totalOscOther = 0;
+        }
+
         if (response.Table4 && response.Table4.length > 0) {
           this.billDetail = response.Table4[0];
         } else {
@@ -100,7 +126,7 @@ export class BillInvoiceViewComponent {
       window.print();
       return;
     }
-    
+
     const printWindow = window.open('', '_blank');
     if (printWindow) {
       printWindow.document.write(`
@@ -141,5 +167,16 @@ export class BillInvoiceViewComponent {
 
   closeInvoiceView() {
     this.modalRef.hide();
+  }
+
+  getBillDate(dockno: string): string {
+    if (!this.billList) return '-';
+    const bill = this.billList.find(b => b.dockno === dockno || b.DOCKNO === dockno);
+    return bill ? (bill.DOCKDT || '-') : '-';
+  }
+
+  formatColumnName(col: string): string {
+    if (!col) return '';
+    return col.replace(/_Charges|_Charge/gi, ' CHG').replace(/_/g, ' ').toUpperCase();
   }
 }
