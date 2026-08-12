@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <div class="summary-card c-orange cursor-pointer px-3 py-3" [class.active-card]="config.Status === 'All'"
+        <div class="summary-card c-orange cursor-pointer px-3 py-3" [class.active-card]="config.Status === 'Bill Due, not Collected'"
             (click)="filterByStatus('Bill Due, not Collected')">
             <div class="card-content">
                 <div class="s-label">Pending for Collection</div>
@@ -28,6 +28,26 @@
                 <div class="small text-body-tertiary">{{summaryData?.TotalPendingAmt|| 0}} Pending</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
+        </div>
+
+        <div class="summary-card c-green cursor-pointer px-3 py-3" [class.active-card]="config.Status === 'Bill Collected'"
+            (click)="filterByStatus('Bill Collected')">
+            <div class="card-content">
+                <div class="s-label">Collected</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{summaryData?.TotalCollectedCount|| 0}}</div>
+                <div class="small text-body-tertiary">{{summaryData?.TotalCollectedAmt|| 0}} Collected</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">✅</div>
+        </div>
+
+        <div class="summary-card c-purple cursor-pointer px-3 py-3" [class.active-card]="config.Status === 'Partially Collected'"
+            (click)="filterByStatus('Partially Collected')">
+            <div class="card-content">
+                <div class="s-label">Partially Collected</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.TotalPartialCount || 0}}</div>
+                <div class="small text-body-tertiary">{{ summaryData?.TotalPartialAmt || 0}} Partial</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⚖️</div>
         </div>
     </div>
 
