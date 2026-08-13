@@ -32,6 +32,7 @@ export class BillCollectionComponent implements OnInit {
   private fetchSubject = new Subject<void>();
   public billList: any[] = [];
   public summaryData: any;
+  public customerSubscription!:Subscription
   public billingPartyData: any[] = [];
   public notFoundTextValue: string = 'Enter at least 3 characters';
   statusList = [
@@ -60,7 +61,6 @@ export class BillCollectionComponent implements OnInit {
   constructor(
     private dynamicDataService: DynamicDataService,
     private commonService: CommonService,
-    private basicDetailService: BasicDetailService,
     public docketService: DocketService
   ) { }
 
@@ -100,6 +100,7 @@ export class BillCollectionComponent implements OnInit {
   }
 
   getBillingPartyData(event: any) {
+    if(this.customerSubscription){this.customerSubscription.unsubscribe();}
     const searchText = event.term;
     if (!searchText || searchText.length < 3) {
       this.billingPartyData = [];
@@ -107,15 +108,17 @@ export class BillCollectionComponent implements OnInit {
       return;
     }
     const payload = {
-      searchTerm: searchText,
-      paybs: 'P02',
-      location: this.docketService.loginUserList?.LocationCode || this.docketService.Location || 'BWH'
-    }
+      "FilterJson": {
+        "ReportId": "14",
+        "id":"1",
+        "SearchText": searchText
+      }
+    };
     this.notFoundTextValue = 'Searching...';
-    this.basicDetailService.getBillingParty(payload).subscribe({
+    this.customerSubscription=this.dynamicDataService.getDynamicData(payload).subscribe({
       next: (response: any) => {
-        if (response.success) {
-          this.billingPartyData = response.data;
+        if (response.Table1) {
+          this.billingPartyData = response.Table1;
           this.notFoundTextValue = 'No matches found';
         } else {
           this.billingPartyData = [];

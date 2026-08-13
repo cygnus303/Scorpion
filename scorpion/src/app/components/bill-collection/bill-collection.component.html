@@ -50,7 +50,7 @@
             <!-- Message for Pending Status (Actionable view) -->
             <div *ngIf="config.Status !== 'All' && config.Status !== 'COL' && selectedBills.length === 0">
                 <strong class="d-block mb-1">Step 1: Select Bills</strong>
-                <span>Please select one or more pending bills from the table below to prepare a Money Receipt
+                <span>Please select one or more pending bills from the table above to prepare a Money Receipt
                     (MR).</span>
             </div>
             <div *ngIf="config.Status !== 'All' && config.Status !== 'COL' && selectedBills.length > 0">
@@ -70,13 +70,13 @@
 
                 <div class="filter-group d-flex align-items-center gap-2 px-2">
                     <span class="filter-label">Customer</span>
-                    <ng-select class="noFoundTextColor remove-white-space custom-status-select clear-icon"
+                    <ng-select class="noFoundTextColor remove-white-space custom-status-select"
                         placeholder="Select Customer" [searchable]="true" [clearable]="true"
                         (search)="getBillingPartyData($event)" [(ngModel)]="config.Party_code"
                         [notFoundText]="notFoundTextValue" (change)="fetchData()" (open)="resetBillingPartyDropdown()"
                         style="width: 220px;">
-                        <ng-option *ngFor="let item of billingPartyData" [value]="item.custcd">
-                            <strong>{{ item.custcd }}</strong> : {{ item.custnm }}
+                        <ng-option *ngFor="let item of billingPartyData" [value]="item.CUSTCD">
+                            <strong>{{ item.CUSTCD }}</strong> : {{ item.CUSTNM }}
                         </ng-option>
                     </ng-select>
                 </div>
@@ -166,7 +166,7 @@
                         </td>
                         <td>
                             <div class="cust-cell">
-                                <span class="cust-name text-truncate d-inline-block" style="max-width: 200px;"
+                                <span class="cust-name text-truncate d-inline-block" style="max-width: 350px;"
                                     title="{{ item.ptmsstr || '-' }}">{{ item.ptmsstr || '-' }}</span>
                             </div>
                         </td>

@@ -2,11 +2,13 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
+import { MrDetailComponent } from '../mr-detail/mr-detail.component';
+import { VoucherViewComponent } from '../voucher-view/voucher-view.component';
 
 @Component({
   selector: 'app-bill-mr-view',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MrDetailComponent, VoucherViewComponent],
   providers: [BsModalService],
   templateUrl: './bill-mr-view.component.html',
   styleUrl: './bill-mr-view.component.scss'
@@ -15,6 +17,8 @@ export class BillMrViewComponent {
   public mrList: any[] = [];
   public isLoading: boolean = false;
   @ViewChild('TemplateMr', { static: true }) TemplateMr!: TemplateRef<any>;
+  @ViewChild(MrDetailComponent) mrDetailComponent!: MrDetailComponent;
+  @ViewChild(VoucherViewComponent) voucherViewComponent!: VoucherViewComponent;
 
   constructor(
     public modalRef: BsModalRef,
@@ -34,6 +38,7 @@ export class BillMrViewComponent {
         "BillNo": billNo
       }
     };
+
     this.isLoading = true;
     this.dynamicDataService.getDynamicData(payload).subscribe((response: any) => {
       this.isLoading = false;
@@ -53,4 +58,20 @@ export class BillMrViewComponent {
   closeMrView() {
     this.modalRef.hide();
   }
+
+  printMrList() {
+    document.body.classList.add('modal-open');
+    setTimeout(() => {
+      window.print();
+    }, 100);
+  }
+
+  openMrPopup(item: any) {
+    this.mrDetailComponent.showPopup(item);
+  }
+
+  openVoucherPopup(item: any){
+    this.voucherViewComponent.showPopup(item);
+  }
 }
+
