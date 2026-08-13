@@ -99,7 +99,7 @@
                 <!-- Date Range -->
                 <div class="col-auto">
                     <label class="form-label text-muted fw-semibold mb-1" style="font-size: 11px;">Date Range</label>
-                    <div class="d-flex align-items-center gap-2" style="width: 380px;">
+                    <div class="d-flex align-items-center gap-2">
                         <!-- <div class="position-relative flex-grow-1">
                             <input type="text" id="dateFrom" bsDatepicker
                                 [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD-MM-YYYY'}"
@@ -135,23 +135,11 @@
                                 </svg>
                             </span>
                         </div> -->
-                              <div class="date-range-group">
-                    <div class="date-input-wrap" style="padding:0;">
-                        <input type="text" id="dateFrom" bsDatepicker [(ngModel)]="config.fromDateStr" (ngModelChange)="searchLRs()"
-                             [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD-MM-YYYY'}"
-                            style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
-                        <span
-                            style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
-                    </div>
-                    <span class="date-sep">→</span>
-                    <div class="date-input-wrap" style="padding:0;">
-                        <input type="text" id="dateTo" bsDatepicker  [(ngModel)]="config.toDateStr" (ngModelChange)="searchLRs()" [minDate]="config.fromDateStr"
-                           [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD-MM-YYYY'}"
-                            style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
-                        <span
-                            style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
-                    </div>
-                </div>
+                    <app-date-range-picker
+                        [initialFromDate]="config.fromDateStr"
+                        [initialToDate]="config.toDateStr"
+                        (onRangeSelect)="onDateRangeSelected($event)">
+                    </app-date-range-picker>
                     </div>
                 </div>
 

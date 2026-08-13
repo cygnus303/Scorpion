@@ -115,7 +115,7 @@
 
                   <!-- Date Range Filter -->
                      <div class="divider-v"></div>
-                 <div class="date-range-group">
+                 <!-- <div class="date-range-group">
                     <span class="date-label">Date Range</span>
                     <div class="date-input-wrap" style="padding:0;">
                         <input type="text" id="dateFrom" bsDatepicker
@@ -134,7 +134,13 @@
                         <span
                             style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
                     </div>
-                </div>
+                </div> -->
+                 <app-date-range-picker
+                    theme="red"
+                    [initialFromDate]="config.fromDateStr"
+                    [initialToDate]="config.toDateStr"
+                    (onRangeSelect)="onDateRangeSelected($event)">
+                </app-date-range-picker>
               <!-- </div> -->
             </div>
             <div class="table-toolbar">

@@ -76,25 +76,11 @@
                             formControlName="searchText">
 
                     </div> -->
-                    <div class="date-range-group">
-                        <span class="date-label">Date Range</span>
-                        <div class="date-input-wrap" style="padding:0;">
-                            <input type="text" id="dateFrom" bsDatepicker formControlName="fromDate"
-                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
-                                style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
-                            <span
-                                style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
-                        </div>
-                        <span class="date-sep">→</span>
-                        <div class="date-input-wrap" style="padding:0;">
-                            <input type="text" id="dateTo" bsDatepicker formControlName="toDate"
-                                [minDate]="THCArrivalFilterForm.get('fromDate')?.value"
-                                [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
-                                style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
-                            <span
-                                style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
-                        </div>
-                    </div>
+                    <app-date-range-picker
+                        [initialFromDate]="THCArrivalFilterForm.get('fromDate')?.value"
+                        [initialToDate]="THCArrivalFilterForm.get('toDate')?.value"
+                        (onRangeSelect)="onDateRangeSelected($event)">
+                    </app-date-range-picker>
                     <div class="divider-v"></div>
                     <div class="filter-group">
                         <span class="filter-label">Status</span>

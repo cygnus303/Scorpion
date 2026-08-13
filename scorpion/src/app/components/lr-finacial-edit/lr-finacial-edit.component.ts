@@ -13,11 +13,12 @@ import { LrViewComponent } from '../lr-list/lr-view/lr-view.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { debounceTime, Subject, Subscription } from 'rxjs';
+import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 
 @Component({
   selector: 'app-lr-finacial-edit',
   standalone: true,
-  imports: [CommonModule,PaginationComponent,FormsModule,LrViewComponent,NgSelectModule, BsDatepickerModule],
+  imports: [CommonModule,PaginationComponent,FormsModule,LrViewComponent,NgSelectModule, BsDatepickerModule, DateRangePickerComponent],
   templateUrl: './lr-finacial-edit.component.html',
   styleUrl: './lr-finacial-edit.component.scss'
 })
@@ -134,6 +135,12 @@ onExcelDownload(){
   onSearchChange() {
     this.config.page = 1;
     this.fetchSubject.next();
+  }
+
+  onDateRangeSelected(event: { fromDate: Date, toDate: Date, rangeType: string }) {
+    this.config.fromDateStr = event.fromDate;
+    this.config.toDateStr = event.toDate;
+    this.fetchData();
   }
 
   filterByStatus(status: string) {

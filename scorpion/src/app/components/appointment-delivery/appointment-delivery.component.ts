@@ -14,6 +14,7 @@ import { AddAppointment } from './add-appointment/add-appointment';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { RescheduleAppointment } from './reschedule-appointment/reschedule-appointment';
 import { ViewAppointment } from './view-appointment/view-appointment';
+import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 
 @Component({
   selector: 'app-appointment-delivery',
@@ -23,7 +24,7 @@ import { ViewAppointment } from './view-appointment/view-appointment';
     FormsModule, 
     NgSelectModule, 
     BsDatepickerModule, 
-    PaginationComponent,AddAppointment,RescheduleAppointment,ViewAppointment
+    PaginationComponent,AddAppointment,RescheduleAppointment,ViewAppointment, DateRangePickerComponent
   ],
   templateUrl: './appointment-delivery.component.html',
   styleUrl: './appointment-delivery.component.scss',
@@ -91,15 +92,18 @@ export class AppointmentDeliveryComponent implements OnInit, OnDestroy {
     if (this.appointmentSubscription) { this.appointmentSubscription.unsubscribe(); }
   }
 
-  formatToISODate(dateStr: string | Date): string {
-    if (!dateStr) return new Date().toISOString();
-    if (dateStr instanceof Date) return dateStr.toISOString();
-    const parts = dateStr.split('/');
-    if (parts.length === 3) {
-      const date = new Date(Date.UTC(+parts[2], +parts[1] - 1, +parts[0]));
-      return date.toISOString();
-    }
-    return new Date(dateStr).toISOString();
+  formatToISODate(date: string | Date): string {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+    const day = ('0' + d.getDate()).slice(-2);
+    return `${year}-${month}-${day}T00:00:00.000Z`;
+  }
+
+  onDateRangeSelected(event: { fromDate: Date, toDate: Date, rangeType: string }) {
+    this.config.fromDateStr = event.fromDate;
+    this.config.toDateStr = event.toDate;
+    this.fetchData();
   }
 
   fetchData() {

@@ -12,11 +12,12 @@ import { DocketService } from 'app/shared/services/docket.service';
 import { ExportService } from 'app/shared/services/export.service';
 import Swal from 'sweetalert2';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 
 @Component({
   selector: 'app-thc-depature-list',
   standalone: true,
-  imports: [NgSelectModule, CommonModule, BsDatepickerModule, FormsModule, PaginationComponent],
+  imports: [NgSelectModule, CommonModule, BsDatepickerModule, FormsModule, PaginationComponent, DateRangePickerComponent],
   templateUrl: './thc-depature-list.component.html',
   styleUrl: './thc-depature-list.component.scss'
 })
@@ -86,6 +87,12 @@ export class ThcDepatureListComponent implements OnInit {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}T00:00:00.000Z`;
+  }
+
+  onDateRangeSelected(event: { fromDate: Date, toDate: Date, rangeType: string }) {
+    this.config.fromDateStr = event.fromDate;
+    this.config.toDateStr = event.toDate;
+    this.fetchData();
   }
 
   fetchData() {
