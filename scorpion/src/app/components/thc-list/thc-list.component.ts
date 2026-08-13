@@ -17,12 +17,13 @@ import { ThcEmptyVehiclePopupComponent } from './thc-empty-vehicle-popup/thc-emp
 import { AddThcPopupComponent } from './add-thc-popup/add-thc-popup.component';
 import { MfViewComponent } from './mf-view/mf-view.component';
 import { HccViewComponent } from '../hcc-view/hcc-view.component';
+import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 
 
 @Component({
   selector: 'app-thc-list',
   standalone: true,
-  imports: [NgSelectModule, CommonModule, ReactiveFormsModule, BsDatepickerModule, PaginationComponent, ThcEditComponent, ThcEmptyVehiclePopupComponent, AddThcPopupComponent, MfViewComponent, HccViewComponent],
+  imports: [NgSelectModule, CommonModule, ReactiveFormsModule, BsDatepickerModule, PaginationComponent, ThcEditComponent, ThcEmptyVehiclePopupComponent, AddThcPopupComponent, MfViewComponent, HccViewComponent, DateRangePickerComponent],
   providers: [BsModalService],
   templateUrl: './thc-list.component.html',
   styleUrl: './thc-list.component.scss'
@@ -104,6 +105,13 @@ export class ThcListComponent {
     this.pagination.page = 1;
     // this.selectedMfs = []; // REMOVED: Do not reset selection on search/fetch
     this.getTHCDetail();
+  }
+
+  onDateRangeSelected(event: { fromDate: Date, toDate: Date, rangeType: string }) {
+    this.THCFilterForm.patchValue({
+      fromDate: event.fromDate,
+      toDate: event.toDate
+    });
   }
 
   getStatusClass(status: string): string {

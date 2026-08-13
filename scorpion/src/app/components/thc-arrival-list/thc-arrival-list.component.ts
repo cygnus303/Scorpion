@@ -11,11 +11,12 @@ import { debounceTime, Subject, Subscription } from 'rxjs';
 import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { ExportService } from 'app/shared/services/export.service';
+import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 
 @Component({
   selector: 'app-thc-arrival-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, NgSelectModule, BsDatepickerModule, PaginationComponent, ThcArrivalPopupComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NgSelectModule, BsDatepickerModule, PaginationComponent, ThcArrivalPopupComponent, DateRangePickerComponent],
   providers: [BsModalService],
   templateUrl: './thc-arrival-list.component.html',
   styleUrl: './thc-arrival-list.component.scss'
@@ -105,6 +106,13 @@ export class ThcArrivalListComponent {
   fetchData() {
     this.pagination.page = 1;
     this.getTHCArrivalDetail();
+  }
+
+  onDateRangeSelected(event: { fromDate: Date, toDate: Date, rangeType: string }) {
+    this.THCArrivalFilterForm.patchValue({
+      fromDate: event.fromDate,
+      toDate: event.toDate
+    });
   }
 
   onDataUpdate() {

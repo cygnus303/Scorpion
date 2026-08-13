@@ -20,11 +20,12 @@ import { HccViewComponent } from '../hcc-view/hcc-view.component';
 import { MenuAccessService } from 'app/shared/services/menu-access.service';
 import { DepsEntryComponent } from './deps-entry/deps-entry.component';
 import { DepsDetailsComponent } from './deps-details/deps-details.component';
+import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 
 @Component({
   selector: 'app-drs-generation-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, ReactiveFormsModule, DRSUpdateListComponent, PRSDRSEditComponent, SingleCnoteDrsUpdateComponent, HCCDetailsComponent, HccViewComponent, DepsEntryComponent, DepsDetailsComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, ReactiveFormsModule, DRSUpdateListComponent, PRSDRSEditComponent, SingleCnoteDrsUpdateComponent, HCCDetailsComponent, HccViewComponent, DepsEntryComponent, DepsDetailsComponent, DateRangePickerComponent],
   providers: [BsModalService],
   templateUrl: './drs-generation-list.component.html',
   styleUrl: './drs-generation-list.component.scss'
@@ -33,6 +34,13 @@ export class DrsGenerationListComponent {
   public DRSFilterForm !: FormGroup;
   public DRSData: any[] = [];
   public isLoading: boolean = false;
+
+  onDateRangeSelected(event: { fromDate: Date, toDate: Date, rangeType: string }) {
+    this.DRSFilterForm.patchValue({
+      fromDate: event.fromDate,
+      toDate: event.toDate
+    });
+  }
   private listSubscription?: Subscription;
   public summaryData: any;
   public isdownload: boolean = false;

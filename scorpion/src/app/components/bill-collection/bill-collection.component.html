@@ -37,59 +37,46 @@
         <!-- User Guide Banner -->
         <div class="guide-banner d-flex align-items-center gap-3 mb-3" *ngIf="billList.length > 0"
             [ngClass]="{'ready': selectedBills.length > 0 && config.Status !== 'All' && config.Status !== 'COL'}">
-            <span class="fs-4 lh-1">{{ (selectedBills.length === 0 || config.Status === 'All' || config.Status === 'COL') ? '💡' : '✅' }}</span>
-            
+            <span class="fs-4 lh-1">{{ (selectedBills.length === 0 || config.Status === 'All' || config.Status ===
+                'COL') ? '💡' : '✅' }}</span>
+
             <!-- Message for All or COL Status (Read-only view) -->
             <div *ngIf="config.Status === 'All' || config.Status === 'COL'">
                 <strong class="d-block mb-1">Welcome to Bill Collection!</strong>
-                <span>To prepare a Money Receipt (MR), please click on the <b>Pending for Collection</b> card above.</span>
+                <span>To prepare a Money Receipt (MR), please click on the <b>Pending for Collection</b> card
+                    above.</span>
             </div>
 
             <!-- Message for Pending Status (Actionable view) -->
             <div *ngIf="config.Status !== 'All' && config.Status !== 'COL' && selectedBills.length === 0">
                 <strong class="d-block mb-1">Step 1: Select Bills</strong>
-                <span>Please select one or more pending bills from the table below to prepare a Money Receipt (MR).</span>
+                <span>Please select one or more pending bills from the table above to prepare a Money Receipt
+                    (MR).</span>
             </div>
             <div *ngIf="config.Status !== 'All' && config.Status !== 'COL' && selectedBills.length > 0">
                 <strong class="d-block mb-1">Step 2: Prepare MR</strong>
-                <span>You have selected <b>{{ selectedBills.length }}</b> bill(s). Click the <b>Prepare MR</b> button on the right to proceed to the next step.</span>
+                <span>You have selected <b>{{ selectedBills.length }}</b> bill(s). Click the <b>Prepare MR</b> button on
+                    the right to proceed to the next step.</span>
             </div>
         </div>
 
         <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
             <div class="control-bar border-0 shadow-none mb-0 flex-wrap">
-                <div class="date-range-group">
-                    <span class="date-label">Date Range</span>
-                    <div class="date-input-wrap" style="padding:0;">
-                        <input type="text" id="dateFrom" bsDatepicker [(ngModel)]="config.FromDt"
-                            (ngModelChange)="fetchData()"
-                            [bsConfig]="{ containerClass: 'theme-red' , dateInputFormat: 'DD MMMM YYYY'}"
-                            style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
-                        <span
-                            style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
-                    </div>
-                    <span class="date-sep">→</span>
-                    <div class="date-input-wrap" style="padding:0;">
-                        <input type="text" id="dateTo" bsDatepicker [(ngModel)]="config.ToDt"
-                            (ngModelChange)="fetchData()" [minDate]="config.FromDt"
-                            [bsConfig]="{ containerClass: 'theme-red' , dateInputFormat: 'DD MMMM YYYY'}"
-                            style="border:none;background:transparent;font-size:13px;font-family:'IBM Plex Sans',sans-serif;color:var(--text-primary);padding:7px 10px 7px 32px;outline:none;cursor:pointer;width:150px;">
-                        <span
-                            style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
-                    </div>
-                </div>
+                <app-date-range-picker theme="red" [initialFromDate]="config.FromDt" [initialToDate]="config.ToDt"
+                    (onRangeSelect)="onDateRangeSelected($event)">
+                </app-date-range-picker>
 
                 <div class="divider-v"></div>
 
                 <div class="filter-group d-flex align-items-center gap-2 px-2">
                     <span class="filter-label">Customer</span>
-                    <ng-select class="noFoundTextColor remove-white-space custom-status-select clear-icon"
+                    <ng-select class="noFoundTextColor remove-white-space custom-status-select"
                         placeholder="Select Customer" [searchable]="true" [clearable]="true"
                         (search)="getBillingPartyData($event)" [(ngModel)]="config.Party_code"
                         [notFoundText]="notFoundTextValue" (change)="fetchData()" (open)="resetBillingPartyDropdown()"
                         style="width: 220px;">
-                        <ng-option *ngFor="let item of billingPartyData" [value]="item.custcd">
-                            <strong>{{ item.custcd }}</strong> : {{ item.custnm }}
+                        <ng-option *ngFor="let item of billingPartyData" [value]="item.CUSTCD">
+                            <strong>{{ item.CUSTCD }}</strong> : {{ item.CUSTNM }}
                         </ng-option>
                     </ng-select>
                 </div>
@@ -110,13 +97,15 @@
                         class="form-control border-0 shadow-none" [(ngModel)]="config.SearchText"
                         (keyup)="onSearchChange()">
                 </div>
-                
+
                 <!-- Hint Text Animation -->
-                <div class="hint-text fw-bold d-none d-md-block" *ngIf="selectedBills.length > 0 && config.Status !== 'All' && config.Status !== 'COL'">
-                   👉 Click here
+                <div class="hint-text fw-bold d-none d-md-block"
+                    *ngIf="selectedBills.length > 0 && config.Status !== 'All' && config.Status !== 'COL'">
+                    👉 Click here
                 </div>
 
-                <button type="button" (click)="openPopup()" class="btn btn-danger btn-sm px-4 fw-medium text-nowrap" *ngIf="config.Status !== 'All' && config.Status !== 'COL'"
+                <button type="button" (click)="openPopup()" class="btn btn-danger btn-sm px-4 fw-medium text-nowrap"
+                    *ngIf="config.Status !== 'All' && config.Status !== 'COL'"
                     [ngClass]="{'btn-pulse-active': selectedBills.length > 0}"
                     style="background-color: #b71c1c; border-radius: 6px;">Prepare MR ›</button>
             </div>
@@ -162,8 +151,7 @@
                     <tr *ngFor="let item of billList; let i = index">
                         <td class="text-center text-muted" *ngIf="config.Status === 'All'">{{ i + 1 }}</td>
                         <td class="text-center" *ngIf="config.Status !== 'All' && config.Status !== 'COL'">
-                            <input type="checkbox"
-                                class="form-check-input" [checked]="item.selected"
+                            <input type="checkbox" class="form-check-input" [checked]="item.selected"
                                 (change)="onCheckboxChange(item, $event)"
                                 style="width: 18px; height: 18px; cursor: pointer; margin-top: 0; vertical-align: middle;">
                         </td>
@@ -178,7 +166,7 @@
                         </td>
                         <td>
                             <div class="cust-cell">
-                                <span class="cust-name text-truncate d-inline-block" style="max-width: 200px;"
+                                <span class="cust-name text-truncate d-inline-block" style="max-width: 350px;"
                                     title="{{ item.ptmsstr || '-' }}">{{ item.ptmsstr || '-' }}</span>
                             </div>
                         </td>

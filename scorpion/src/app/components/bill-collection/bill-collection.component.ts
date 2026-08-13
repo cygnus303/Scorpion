@@ -13,11 +13,12 @@ import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { BillInvoiceViewComponent } from './bill-invoice-view/bill-invoice-view.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 
 @Component({
   selector: 'app-bill-collection',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgSelectModule, BsDatepickerModule, PaginationComponent, BillReceiptComponent, BillInvoiceViewComponent, BillMrViewComponent],
+  imports: [CommonModule, FormsModule, NgSelectModule, BsDatepickerModule, PaginationComponent, BillReceiptComponent, BillInvoiceViewComponent, BillMrViewComponent, DateRangePickerComponent],
   providers: [BsModalService],
   templateUrl: './bill-collection.component.html',
   styleUrl: './bill-collection.component.scss'
@@ -31,6 +32,7 @@ export class BillCollectionComponent implements OnInit {
   private fetchSubject = new Subject<void>();
   public billList: any[] = [];
   public summaryData: any;
+  public customerSubscription!:Subscription
   public billingPartyData: any[] = [];
   public notFoundTextValue: string = 'Enter at least 3 characters';
   statusList = [
@@ -59,7 +61,6 @@ export class BillCollectionComponent implements OnInit {
   constructor(
     private dynamicDataService: DynamicDataService,
     private commonService: CommonService,
-    private basicDetailService: BasicDetailService,
     public docketService: DocketService
   ) { }
 
@@ -99,6 +100,7 @@ export class BillCollectionComponent implements OnInit {
   }
 
   getBillingPartyData(event: any) {
+    if(this.customerSubscription){this.customerSubscription.unsubscribe();}
     const searchText = event.term;
     if (!searchText || searchText.length < 3) {
       this.billingPartyData = [];
@@ -106,15 +108,17 @@ export class BillCollectionComponent implements OnInit {
       return;
     }
     const payload = {
-      searchTerm: searchText,
-      paybs: 'P02',
-      location: this.docketService.loginUserList?.LocationCode || this.docketService.Location || 'BWH'
-    }
+      "FilterJson": {
+        "ReportId": "14",
+        "id":"1",
+        "SearchText": searchText
+      }
+    };
     this.notFoundTextValue = 'Searching...';
-    this.basicDetailService.getBillingParty(payload).subscribe({
+    this.customerSubscription=this.dynamicDataService.getDynamicData(payload).subscribe({
       next: (response: any) => {
-        if (response.success) {
-          this.billingPartyData = response.data;
+        if (response.Table1) {
+          this.billingPartyData = response.Table1;
           this.notFoundTextValue = 'No matches found';
         } else {
           this.billingPartyData = [];
@@ -126,6 +130,12 @@ export class BillCollectionComponent implements OnInit {
         this.notFoundTextValue = 'No matches found';
       }
     });
+  }
+
+  onDateRangeSelected(event: { fromDate: Date, toDate: Date, rangeType: string }) {
+    this.config.FromDt = event.fromDate;
+    this.config.ToDt = event.toDate;
+    this.fetchData();
   }
 
   resetBillingPartyDropdown() {

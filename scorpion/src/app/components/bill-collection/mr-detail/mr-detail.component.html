@@ -1,0 +1,176 @@
+<ng-template #TemplateMrDetail>
+    <div class="modal-content border-0">
+        <!-- Red Header -->
+        <div class="modal-header d-flex justify-content-between align-items-center"
+            style="background-color: #a50f0f; color: white;">
+            <h5 class="modal-title mb-0 fs-6 fw-bold">MR View / Print</h5>
+            <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="closePopup()"></button>
+        </div>
+        <div class="modal-body p-4" style="background-color: #f7f7f7;">
+            <!-- Details Container (white box) -->
+            <div class="receipt-container bg-white border border-secondary border-opacity-25 rounded-1">
+                <!-- Top Company Header -->
+                <div class="d-flex align-items-center p-3 border-bottom border-secondary border-opacity-25">
+                    <img src="assets/img/logos/logo_login.jpg" alt="Scorpion" class="me-3" style="width: 80px;">
+                    <div>
+                        <h6 class="fw-bold mb-1" style="color: #c8102e; font-size: 15px;">SCORPION EXPRESS PVT LTD</h6>
+                        <p class="mb-0 fs-8 text-secondary">Address :- 405, Shah and Nahar Industrial Estate, Dr. E
+                            Moses Road, Worli Mumbai, INDIA - 400 018.</p>
+                        <p class="mb-0 fs-8 text-secondary">WhatsApp No. :- 1800221945 &nbsp; E-Mail :-
+                            infoscorpiongroup.in &nbsp; Web :- https://scorpiongroup.in/</p>
+                    </div>
+                </div>
+
+                <!-- Money Receipt Header -->
+                <div class="text-center py-2 border-bottom border-secondary border-opacity-25 fw-bold bg-pink"
+                    style="color: #a50f0f; font-size: 13px; letter-spacing: 0.5px;">
+                    MONEY RECEIPT
+                </div>
+
+                <!-- Info Grid -->
+                <div class="receipt-info-grid">
+                    <div class="info-cell border-end border-bottom border-secondary border-opacity-25">
+                        <span class="info-label fw-bold text-secondary">Mr No.</span>
+                        <span class="info-val fw-bold">{{ MRData?.MRSNO || '--' }}</span>
+                    </div>
+                    <div class="info-cell border-bottom border-secondary border-opacity-25">
+                        <span class="info-label fw-bold text-secondary">Branch</span>
+                        <span class="info-val text-uppercase">{{ MRData?.MRSBR || '--' }}</span>
+                    </div>
+                    <div class="info-cell border-end border-bottom border-secondary border-opacity-25">
+                        <span class="info-label fw-bold text-secondary">Voucher No.</span>
+                        <span class="info-val fw-bold" style="color: #a50f0f; text-decoration: underline;">{{
+                            MRData?.Voucherno || '--' }}</span>
+                    </div>
+                    <div class="info-cell border-bottom border-secondary border-opacity-25">
+                        <span class="info-label fw-bold text-secondary">Dt.</span>
+                        <span class="info-val">{{ MRData?.MRSDATE || '--' }}</span>
+                    </div>
+                    <div class="info-cell border-end border-bottom border-secondary border-opacity-25">
+                        <span class="info-label fw-bold text-secondary">MR Status</span>
+                        <span class="info-val">{{ MRData?.MRSTATUS || '--' }}</span>
+                    </div>
+                    <div class="info-cell border-bottom border-secondary border-opacity-25">
+                        <span class="info-label fw-bold text-secondary">MR Bank</span>
+                        <span class="info-val text-uppercase">{{ MRData?.bankname || '--' }}</span>
+                    </div>
+                    <div class="info-cell border-bottom border-secondary border-opacity-25"
+                        style="grid-column: 1 / span 2;">
+                        <span class="info-label fw-bold text-secondary">Customer Name</span>
+                        <span class="info-val fw-bold text-uppercase">{{ MRData?.PTCD ? MRData?.PTCD + ' : ' +
+                            MRData?.PTNAME : '--' }}</span>
+                    </div>
+                </div>
+
+                <div class="p-2 border-bottom border-secondary border-opacity-25 fs-8">
+                    {{ MRData?.DisplayText || '--' }}
+                </div>
+
+                <!-- Table -->
+                <table class="table table-bordered mb-0 receipt-bills-table" style="border-width: 0;">
+                    <thead class="bg-pink">
+                        <tr class="fw-bold text-center fs-8">
+                            <th class="border-secondary border-opacity-25 border-top-0 border-start-0 py-2">SrNo.</th>
+                            <th class="border-secondary border-opacity-25 border-top-0 py-2">Bill No.</th>
+                            <th class="border-secondary border-opacity-25 border-top-0 py-2">Bill Date</th>
+                            <th class="border-secondary border-opacity-25 border-top-0 py-2">Bill Amt</th>
+                            <th class="border-secondary border-opacity-25 border-top-0 py-2">TDS Amt</th>
+                            <th class="border-secondary border-opacity-25 border-top-0 py-2">Bank Charges</th>
+                            <th class="border-secondary border-opacity-25 border-top-0 py-2">Round Off (-)</th>
+                            <th class="border-secondary border-opacity-25 border-top-0 py-2">Round Off (+)</th>
+                            <th class="border-secondary border-opacity-25 border-top-0 py-2">Net Amt</th>
+                            <th class="border-secondary border-opacity-25 border-top-0 border-end-0 py-2">Narration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let bill of MRBills; let i = index" class="fs-8">
+                            <td class="text-center border-secondary border-opacity-25 border-start-0 py-2">{{ i + 1 }}
+                            </td>
+                            <td class="text-center border-secondary border-opacity-25 py-2">{{ bill.BillNo || '--' }}
+                            </td>
+                            <td class="text-center border-secondary border-opacity-25 py-2">{{ bill.BillDT || '--' }}
+                            </td>
+                            <td class="text-end border-secondary border-opacity-25 py-2">{{ bill.BillAMT ? (bill.BillAMT
+                                | number:'1.2-2') : '0.00' }}</td>
+                            <td class="text-end border-secondary border-opacity-25 py-2">{{ bill.TDSAmt ? (bill.TDSAmt |
+                                number:'1.2-2') : '0.00' }}</td>
+                            <td class="text-end border-secondary border-opacity-25 py-2">{{ bill.BankCharges ?
+                                (bill.BankCharges | number:'1.2-2') : '0.00' }}</td>
+                            <td class="text-end border-secondary border-opacity-25 py-2">{{ bill.RoungOff_M ?
+                                (bill.RoungOff_M | number:'1.2-2') : '0.00' }}</td>
+                            <td class="text-end border-secondary border-opacity-25 py-2">{{ bill.RoundOff_P ?
+                                (bill.RoundOff_P | number:'1.2-2') : '0.00' }}</td>
+                            <td class="text-end border-secondary border-opacity-25 py-2">{{ bill.NETAmt ? (bill.NETAmt |
+                                number:'1.2-2') : '0.00' }}</td>
+                            <td class="border-secondary border-opacity-25 border-end-0 py-2">{{ bill.Narration || '--'
+                                }}</td>
+                        </tr>
+                        <tr class="fw-bold fs-8 bg-pink">
+                            <td colspan="3" class="border-secondary border-opacity-25 border-start-0 py-2">Total</td>
+                            <td class="text-end border-secondary border-opacity-25 py-2">{{ totalBillAmt |
+                                number:'1.2-2' }}</td>
+                            <td class="text-end border-secondary border-opacity-25 py-2">{{ totalTdsAmt | number:'1.2-2'
+                                }}</td>
+                            <td class="text-end border-secondary border-opacity-25 py-2">{{ totalBankCharges |
+                                number:'1.2-2' }}</td>
+                            <td class="text-end border-secondary border-opacity-25 py-2">{{ totalRoundOffMinus |
+                                number:'1.2-2' }}</td>
+                            <td class="text-end border-secondary border-opacity-25 py-2">{{ totalRoundOffPlus |
+                                number:'1.2-2' }}</td>
+                            <td class="text-end border-secondary border-opacity-25 py-2">{{ totalNetAmt | number:'1.2-2'
+                                }}</td>
+                            <td class="border-secondary border-opacity-25 border-end-0 py-2"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div
+                    class="p-2 border-bottom border-top border-secondary border-opacity-25 fs-8 fst-italic fw-bold text-secondary">
+                    {{ MRData?.amtInWord || '--' }}
+                </div>
+
+                <div class="p-2 border-bottom border-secondary border-opacity-25 fs-8 fw-bold bg-pink">
+                    Audit Trail
+                </div>
+
+                <div class="audit-grid fs-8 p-2">
+                    <div class="audit-cell">
+                        <span class="audit-label fw-bold">Entry By</span>
+                        <span class="audit-val text-secondary mt-1 d-block">{{ MRData?.ENTRYBY || '--' }}</span>
+                    </div>
+                    <div class="audit-cell border-start border-secondary border-opacity-25 px-2">
+                        <span class="audit-label fw-bold">Edited By</span>
+                        <span class="audit-val text-secondary mt-1 d-block">{{ MRData?.lastupdateby || '--' }}</span>
+                    </div>
+                    <div class="audit-cell border-start border-secondary border-opacity-25 px-2">
+                        <span class="audit-label fw-bold">Cancelled By</span>
+                        <span class="audit-val text-secondary mt-1 d-block">{{MRData?.CancelledBy}}</span>
+                    </div>
+                    <div class="audit-cell mt-2">
+                        <span class="audit-label fw-bold">Entry Date</span>
+                        <span class="audit-val text-secondary mt-1 d-block">{{ (MRData?.ENTRYDT | date:'dd MMM yyyy') ||
+                            '--' }}</span>
+                    </div>
+                    <div class="audit-cell border-start border-secondary border-opacity-25 px-2 mt-2">
+                        <span class="audit-label fw-bold">Edited Date</span>
+                        <span class="audit-val text-secondary mt-1 d-block">{{ (MRData?.lastupdatedt | date:'dd MMM
+                            yyyy') || '--' }}</span>
+                    </div>
+                    <div class="audit-cell border-start border-secondary border-opacity-25 px-2 mt-2">
+                        <span class="audit-label fw-bold">Cancelled Date</span>
+                        <span class="audit-val text-secondary mt-1 d-block">{{(MRData?.CancelledDT | date:'dd MMM yyyy')
+                            || '--'}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end align-items-center bg-white border-0 py-3 rounded-bottom">
+            <div style="gap: 0px;justify-content: end !important;">
+                <button class="btn btn-outline-secondary px-4 py-2 fw-bold" style="font-size: 13px; border-radius: 6px;"
+                    (click)="closePopup()">Close</button>
+                <button class="btn btn-danger px-4 py-2 ms-2 fw-bold"
+                    style="background-color: #a50f0f; font-size: 13px; border-radius: 6px;" (click)="printReceipt()">Print</button>
+            </div>
+        </div>
+    </div>
+</ng-template>

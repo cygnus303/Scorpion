@@ -316,8 +316,7 @@
                 </div>
               </div>
               <div class="col-md-4">
-                <label class="form-label small text-muted mb-1">Received From Bank <span
-                    class="text-danger">*</span></label>
+                <label class="form-label small text-muted mb-1">Received From Bank </label>
                 <input type="text" class="form-control form-control-sm bg-white" placeholder="e.g. AXIS BANK"
                   formControlName="receivedFromBank"
                   [ngClass]="{'border-danger': receiptForm.get('receivedFromBank')?.invalid && receiptForm.get('receivedFromBank')?.touched}">
@@ -328,7 +327,7 @@
                 </div>
               </div>
               <div class="col-md-4">
-                <label class="form-label small text-muted mb-1">Bank Branch <span class="text-danger">*</span></label>
+                <label class="form-label small text-muted mb-1">Bank Branch </label>
                 <input type="text" class="form-control form-control-sm bg-white" placeholder="e.g. Haridwar Main"
                   formControlName="bankBranch"
                   [ngClass]="{'border-danger': receiptForm.get('bankBranch')?.invalid && receiptForm.get('bankBranch')?.touched}">

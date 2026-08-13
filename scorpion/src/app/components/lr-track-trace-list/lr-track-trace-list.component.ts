@@ -15,11 +15,12 @@ import { DocketService } from 'app/shared/services/docket.service';
 import { Router } from '@angular/router';
 import { LiveRouteMapComponent } from './live-route-map/live-route-map.component';
 import { LrViewComponent } from '../lr-list/lr-view/lr-view.component';
+import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 
 @Component({
   selector: 'app-lr-track-trace-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, BsDatepickerModule, PaginationComponent, NgSelectModule, LrPrintViewComponent, LrLifecycleTrackerComponent, LiveRouteMapComponent, LrViewComponent],
+  imports: [CommonModule, FormsModule, BsDatepickerModule, PaginationComponent, NgSelectModule, LrPrintViewComponent, LrLifecycleTrackerComponent, LiveRouteMapComponent, LrViewComponent, DateRangePickerComponent],
   templateUrl: './lr-track-trace-list.component.html',
   styleUrl: './lr-track-trace-list.component.scss'
 })
@@ -51,6 +52,12 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
     totalPages: 1,
     searchText: ''
   };
+
+  onDateRangeSelected(event: { fromDate: Date, toDate: Date, rangeType: string }) {
+    this.config.fromDateStr = event.fromDate;
+    this.config.toDateStr = event.toDate;
+    this.searchLRs();
+  }
 
   public statusList = [
     { label: 'All Status', value: 'All' },

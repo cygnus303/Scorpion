@@ -1,0 +1,147 @@
+<ng-template #TemplateVoucherView>
+    <div class="modal-content border-0">
+        <!-- Red Header -->
+        <div class="modal-header d-flex justify-content-between align-items-center"
+            style="background-color: #a50f0f; color: white;">
+            <h5 class="modal-title mb-0 fs-6 fw-bold">Voucher View / Print</h5>
+            <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="closePopup()"></button>
+        </div>
+        <div class="modal-body p-4 bg-light">
+            <div class="receipt-container bg-white border border-secondary border-opacity-25 rounded-1">
+                <!-- Top Company Header -->
+                <div class="d-flex align-items-center p-3 border-bottom border-secondary border-opacity-25">
+                    <img src="assets/img/logos/logo_login.jpg" alt="Scorpion" class="me-3" style="width: 80px;">
+                    <div>
+                        <h6 class="fw-bold mb-1" style="color: #c8102e; font-size: 15px;">SCORPION EXPRESS PVT LTD</h6>
+                        <p class="mb-0 fs-8 text-secondary">Address :- 405, Shah and Nahar Industrial Estate, Dr. E
+                            Moses Road, Worli Mumbai, INDIA - 400 018.</p>
+                        <p class="mb-0 fs-8 text-secondary">WhatsApp No. :- 1800221945 &nbsp; E-Mail :-
+                            infoscorpiongroup.in &nbsp; Web :- https://scorpiongroup.in/</p>
+                    </div>
+                </div>
+
+                <!-- Voucher Header -->
+                <div class="text-center py-2 border-bottom border-secondary border-opacity-25 fw-bold bg-pink"
+                    style="color: #a50f0f; font-size: 13px; letter-spacing: 0.5px;">
+                    DEBIT / CREDIT VOUCHER
+                </div>
+
+                <!-- Info Grid -->
+                <div class="receipt-info-grid">
+                    <div class="info-cell border-end border-bottom border-secondary border-opacity-25">
+                        <span class="info-label fw-bold text-secondary">Voucher No.</span>
+                        <span class="info-val fw-bold">{{ VoucherData?.voucherno || '--' }}</span>
+                    </div>
+                    <div class="info-cell border-bottom border-secondary border-opacity-25">
+                        <span class="info-label fw-bold text-secondary">Voucher Date</span>
+                        <span class="info-val">{{ VoucherData?.VoucherDate || '--' }}</span>
+                    </div>
+                    <div class="info-cell border-end border-bottom border-secondary border-opacity-25">
+                        <span class="info-label fw-bold text-secondary">MR Location</span>
+                        <span class="info-val text-uppercase">{{ VoucherData?.MR_Location || '--' }}</span>
+                    </div>
+                    <div class="info-cell border-bottom border-secondary border-opacity-25">
+                        <span class="info-label fw-bold text-secondary">Trans Type</span>
+                        <span class="info-val">{{ VoucherData?.transtype || '--' }}</span>
+                    </div>
+                    <div class="info-cell border-bottom border-secondary border-opacity-25"
+                        style="grid-column: 1 / span 2;">
+                        <span class="info-label fw-bold text-secondary">Pay To / Received From</span>
+                        <span class="info-val fw-bold text-uppercase">{{ VoucherData?.pbov_code ? VoucherData.pbov_code
+                            + ' - ' + VoucherData.pbov_name : '--' }}</span>
+                    </div>
+                    <div class="info-cell border-bottom border-secondary border-opacity-25"
+                        style="grid-column: 1 / span 2;">
+                        <span class="info-label fw-bold text-secondary">Cheque No. & Date</span>
+                        <span class="info-val fw-bold">{{ VoucherData?.chqno ? VoucherData.chqno + ' /' +
+                            VoucherData.Chqdate : '--' }}</span>
+                    </div>
+                    <div class="info-cell border-bottom border-secondary border-opacity-25"
+                        style="grid-column: 1 / span 2;">
+                        <span class="info-label fw-bold text-secondary">MR No.</span>
+                        <span class="info-val fw-bold" style="color: #a50f0f; text-decoration: underline;">{{
+                            VoucherData?.MR_NO || '--' }}</span>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <table class="table table-bordered mb-0 receipt-bills-table" style="border-width: 0;">
+                    <thead class="bg-pink">
+                        <tr class="fw-bold text-center fs-8">
+                            <th class="border-secondary border-opacity-25 border-top-0 border-start-0 py-2">Sr. No</th>
+                            <th class="border-secondary border-opacity-25 border-top-0 py-2" style="width: 40%;">
+                                Description</th>
+                            <th class="border-secondary border-opacity-25 border-top-0 py-2">Debit Amount</th>
+                            <th class="border-secondary border-opacity-25 border-top-0 py-2">Credit Amount</th>
+                            <th class="border-secondary border-opacity-25 border-top-0 border-end-0 py-2">Narration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of VoucherDetails; let i = index" class="fs-8">
+                            <td class="text-center border-secondary border-opacity-25 border-start-0 py-2">{{ i + 1 }}
+                            </td>
+                            <td class="border-secondary border-opacity-25 py-2">{{ item.AccountDescription || '--' }}
+                            </td>
+                            <td class="text-end border-secondary border-opacity-25 py-2">{{ item.DebitAmount ?
+                                (item.DebitAmount | number:'1.2-2') : '0.00' }}</td>
+                            <td class="text-end border-secondary border-opacity-25 py-2">{{ item.CreditAmount ?
+                                (item.CreditAmount | number:'1.2-2') : '0.00' }}</td>
+                            <td class="border-secondary border-opacity-25 border-end-0 py-2">{{ item.Narration || '--'
+                                }}</td>
+                        </tr>
+                        <tr class="fw-bold fs-8 bg-pink">
+                            <td colspan="2" class="text-center border-secondary border-opacity-25 border-start-0 py-2">
+                                Sub Total</td>
+                            <td class="text-end border-secondary border-opacity-25 py-2">{{ totalDebit | number:'1.2-2'
+                                }}</td>
+                            <td class="text-end border-secondary border-opacity-25 py-2">{{ totalCredit | number:'1.2-2'
+                                }}</td>
+                            <td class="border-secondary border-opacity-25 border-end-0 py-2"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div
+                    class="p-2 border-bottom border-top border-secondary border-opacity-25 fs-8 fst-italic fw-bold text-secondary">
+                    {{ VoucherData?.Amount_InWords || '--' }}
+                </div>
+
+                <div class="p-2 border-bottom border-secondary border-opacity-25 fs-8 fw-bold bg-pink">
+                    Audit Trail
+                </div>
+
+                <div class="audit-grid fs-8 p-2">
+                    <div class="audit-cell">
+                        <span class="audit-label fw-bold">Entry By</span>
+                        <span class="audit-val text-secondary mt-1 d-block">{{ VoucherData?.EntryBY || '--' }}</span>
+                    </div>
+                    <div class="audit-cell border-start border-secondary border-opacity-25 px-2"
+                        style="grid-column: span 2;">
+                        <span class="audit-label fw-bold">Cancelled By</span>
+                        <span class="audit-val text-secondary mt-1 d-block">{{ VoucherData?.CancelledBy || '--'
+                            }}</span>
+                    </div>
+                    <div class="audit-cell mt-2">
+                        <span class="audit-label fw-bold">Entry Date</span>
+                        <span class="audit-val text-secondary mt-1 d-block">{{ (VoucherData?.EntryDT | date:'dd MMM yy')
+                            || '--' }}</span>
+                    </div>
+                    <div class="audit-cell border-start border-secondary border-opacity-25 px-2 mt-2"
+                        style="grid-column: span 2;">
+                        <span class="audit-label fw-bold">Cancelled Date</span>
+                        <span class="audit-val text-secondary mt-1 d-block">{{ (VoucherData?.CancelledDT | date:'dd MMM
+                            yy') || '--' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end align-items-center bg-white border-0 py-3 rounded-bottom">
+            <div style="gap: 0px;justify-content: end !important;">
+                <button type="button" class="btn btn-outline-secondary px-4 py-2 fw-bold"
+                    style="font-size: 13px; border-radius: 6px;" (click)="closePopup()">Close</button>
+                <button type="button" class="btn btn-danger px-4 py-2 ms-2 fw-bold"
+                    style="background-color: #a50f0f; font-size: 13px; border-radius: 6px;" (click)="printReceipt()">Print</button>
+            </div>
+        </div>
+    </div>
+</ng-template>

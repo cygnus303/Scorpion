@@ -14,11 +14,12 @@ import { NewStockupdatePopupComponent } from './new-stockupdate-popup/new-stocku
 import { DepsDetailsComponent } from '../drs-generation-list/deps-details/deps-details.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { HccViewComponent } from '../hcc-view/hcc-view.component';
+import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 
 @Component({
   selector: 'app-stock-update-layout',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent,DepsDetailsComponent, StockupdatePopupComponent, NewStockupdatePopupComponent,HccViewComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent,DepsDetailsComponent, StockupdatePopupComponent, NewStockupdatePopupComponent,HccViewComponent, DateRangePickerComponent],
   templateUrl: './stock-update-layout.component.html',
   styleUrl: './stock-update-layout.component.scss',
   providers: [BsModalService],
@@ -80,6 +81,12 @@ export class StockUpdateLayoutComponent {
   fetchData() {
     this.config.page = 1;
     this.fetchSubject.next();
+  }
+
+  onDateRangeSelected(event: { fromDate: Date, toDate: Date, rangeType: string }) {
+    this.config.fromDateStr = event.fromDate;
+    this.config.toDateStr = event.toDate;
+    this.fetchData();
   }
 
   setPage(p: number) {
