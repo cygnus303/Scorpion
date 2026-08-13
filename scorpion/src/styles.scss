@@ -2432,3 +2432,17 @@ input:checked+.toggle-slider:before {
     background: #1b5e20;
   }
 }
+/* Custom DatePicker Theme: theme-indigo */
+.theme-indigo .bs-datepicker-head {
+    background-color: #6366f1 !important;
+}
+.theme-indigo .bs-datepicker-body table td span.selected,
+.theme-indigo .bs-datepicker-body table td.selected span,
+.theme-indigo .bs-datepicker-body table td span[class*="select-"]:after,
+.theme-indigo .bs-datepicker-body table td[class*="select-"] span:after {
+    background-color: #6366f1 !important;
+}
+.theme-indigo .bs-datepicker-body table td.week span {
+    color: #6366f1 !important;
+}
+

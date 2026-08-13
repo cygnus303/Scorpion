@@ -13,11 +13,12 @@ import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { BillInvoiceViewComponent } from './bill-invoice-view/bill-invoice-view.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 
 @Component({
   selector: 'app-bill-collection',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgSelectModule, BsDatepickerModule, PaginationComponent, BillReceiptComponent, BillInvoiceViewComponent, BillMrViewComponent],
+  imports: [CommonModule, FormsModule, NgSelectModule, BsDatepickerModule, PaginationComponent, BillReceiptComponent, BillInvoiceViewComponent, BillMrViewComponent, DateRangePickerComponent],
   providers: [BsModalService],
   templateUrl: './bill-collection.component.html',
   styleUrl: './bill-collection.component.scss'
@@ -124,6 +125,12 @@ export class BillCollectionComponent implements OnInit {
         this.notFoundTextValue = 'No matches found';
       }
     });
+  }
+
+  onDateRangeSelected(event: { fromDate: Date, toDate: Date, rangeType: string }) {
+    this.config.FromDt = event.fromDate;
+    this.config.ToDt = event.toDate;
+    this.fetchData();
   }
 
   resetBillingPartyDropdown() {
