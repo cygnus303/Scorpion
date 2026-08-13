@@ -1,22 +1,97 @@
 .modal-dialog-scrollable .modal-content {
-    max-height: 100%;
-    overflow: hidden;
-    width: 1211px !important;
+  max-height: 100%;
+  overflow: hidden;
+  width: 1211px !important;
 }
 
 /* Custom Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+  width: 8px;
+  height: 8px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-track {
-    background: #f8f9fa; 
-    border-radius: 4px;
+  background: #f8f9fa;
+  border-radius: 4px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #c1c1c1; 
-    border-radius: 4px;
+  background: #c1c1c1;
+  border-radius: 4px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8; 
+  background: #a8a8a8;
+}
+
+/* ── Animations for UX Suggestions ── */
+@keyframes pulseButton {
+  0% {
+    box-shadow: 0 0 0 0 rgba(200, 16, 46, 0.7);
+    transform: scale(1);
+  }
+
+  50% {
+    box-shadow: 0 0 0 10px rgba(200, 16, 46, 0);
+    transform: scale(1.05);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(200, 16, 46, 0);
+    transform: scale(1);
+  }
+}
+
+.btn-pulse-active {
+  animation: pulseButton 2s infinite !important;
+  background-color: #c8102e !important;
+  color: #fff !important;
+}
+
+@keyframes bounceLeftRight {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(-5px);
+  }
+}
+
+.hint-text {
+  font-size: 13px;
+  color: #2e7d32;
+  animation: bounceLeftRight 1s infinite;
+  white-space: nowrap;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.guide-banner {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  border-left: 4px solid #1976d2;
+  border-radius: 8px;
+  padding: 12px 18px;
+  color: #0d47a1;
+  font-size: 13.5px;
+  animation: fadeSlideIn 0.4s ease-out forwards;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.guide-banner.ready {
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  border-left-color: #2e7d32;
+  color: #1b5e20;
 }

@@ -203,39 +203,43 @@
           <thead style="background-color: #dc3545 !important;">
             <tr>
               <th class="py-2 text-start border-0 ps-3"
-                style="font-weight: 600; width: 10%; color: white !important; background-color: transparent !important;">
+                style="font-weight: 600; color: white !important; background-color: transparent !important;">
                 SR</th>
               <th class="py-2 text-start border-0"
-                style="font-weight: 600; width: 15%; color: white !important; background-color: transparent !important;">
+                style="font-weight: 600; color: white !important; background-color: transparent !important;">
                 DATE</th>
               <th class="py-2 text-start border-0"
-                style="font-weight: 600; width: 25%; color: white !important; background-color: transparent !important;">
+                style="font-weight: 600; color: white !important; background-color: transparent !important;">
                 C/N NO.</th>
-              <th class="py-2 text-end border-0"
-                style="font-weight: 600; width: 20%; color: white !important; background-color: transparent !important;">
-                DOCUMENT CHG ₹</th>
-              <th class="py-2 text-end border-0"
-                style="font-weight: 600; width: 20%; color: white !important; background-color: transparent !important;">
-                FUEL SURCHARGE ₹</th>
+              
+              <!-- Dynamic Headers -->
+              <th *ngFor="let col of dynamicColumns" class="py-2 text-end border-0"
+                style="font-weight: 600; color: white !important; background-color: transparent !important; white-space: normal; min-width: 90px; vertical-align: bottom;">
+                {{ formatColumnName(col) }} ₹</th>
+                
               <th class="py-2 text-end border-0 pe-3"
-                style="font-weight: 600; width: 10%; color: white !important; background-color: transparent !important;">
+                style="font-weight: 600; color: white !important; background-color: transparent !important; vertical-align: bottom;">
                 TOTAL ₹</th>
             </tr>
           </thead>
           <tbody style="border-top: none;">
-            <tr style="border-bottom: 1px solid #dc3545;" *ngFor="let item of billList">
-              <td class="text-start border-0 ps-3">{{ item.srno }}</td>
-              <td class="text-start border-0">{{ item.DOCKDT }}</td>
-              <td class="text-start border-0">{{ item.dockno }}</td>
-              <td class="text-end border-0">{{ item.DocumentCharges | number:'1.2-2' }}</td>
-              <td class="text-end border-0">{{ item.FuelSurcharge | number:'1.2-2' }}</td>
+            <tr style="border-bottom: 1px solid #dc3545;" *ngFor="let item of oscChargesList; let i = index">
+              <td class="text-start border-0 ps-3">{{ i + 1 }}</td>
+              <td class="text-start border-0">{{ getBillDate(item.DOCKNO) }}</td>
+              <td class="text-start border-0">{{ item.DOCKNO }}</td>
+              
+              <!-- Dynamic Data Cells -->
+              <td *ngFor="let col of dynamicColumns" class="text-end border-0">{{ item[col] | number:'1.2-2' }}</td>
+              
               <td class="text-end border-0 pe-3">{{ item.OtherCharges | number:'1.2-2' }}</td>
             </tr>
-            <tr class="fw-bold bg-white" *ngIf="billList?.length">
+            <tr class="fw-bold bg-white" *ngIf="oscChargesList?.length">
               <td colspan="3" class="text-start border-0 py-2 ps-3">Total Other Charges</td>
-              <td class="text-end border-0 py-2">{{ totalDocumentCharges | number:'1.2-2' }}</td>
-              <td class="text-end border-0 py-2">{{ totalFuelSurcharge | number:'1.2-2' }}</td>
-              <td class="text-end border-0 py-2 pe-3">{{ totalOtherCharges | number:'1.2-2' }}</td>
+              
+              <!-- Dynamic Total Cells -->
+              <td *ngFor="let col of dynamicColumns" class="text-end border-0 py-2">{{ dynamicTotals[col] | number:'1.2-2' }}</td>
+              
+              <td class="text-end border-0 py-2 pe-3">{{ totalOscOther | number:'1.2-2' }}</td>
             </tr>
           </tbody>
         </table>

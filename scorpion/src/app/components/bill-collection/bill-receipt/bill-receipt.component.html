@@ -10,6 +10,27 @@
 
   <!-- Modal Body -->
   <div class="modal-body" style="background-color: #f8f9fa;" [formGroup]="receiptForm">
+    <!-- User Guide Banner -->
+    <div class="guide-banner d-flex align-items-center gap-3 mb-4" [ngClass]="{'ready': netReceived > 0}">
+      <span class="fs-4 lh-1">{{ receiptForm.valid && netReceived > 0 ? '🎉' : (netReceived === 0 ? '💡' : '✅')
+        }}</span>
+      <div *ngIf="netReceived === 0">
+        <strong class="d-block mb-1">Step 1: Enter Collection Amount</strong>
+        <span>Please enter the amount you want to collect for each bill in the <b>Collection Amt.</b> column
+          below.</span>
+      </div>
+      <div *ngIf="netReceived > 0 && !receiptForm.valid">
+        <strong class="d-block mb-1">Step 2: Complete Payment Details</strong>
+        <span>Now, please select a <b>Payment Mode (Cash/Bank)</b> below and fill in the required payment
+          details.</span>
+      </div>
+      <div *ngIf="receiptForm.valid && netReceived > 0">
+        <strong class="d-block mb-1">Step 3: Submit MR</strong>
+        <span>Everything looks good! Click the <b>Submit</b> button at the bottom right to generate the Money
+          Receipt.</span>
+      </div>
+    </div>
+
     <!-- Top Info Row -->
     <div class="row g-3 mb-3">
       <div class="col-md-3">
@@ -146,28 +167,34 @@
                   (change)="onBillFileSelected($event, i)" title="Choose file">
                 <button type="button"
                   class="btn btn-outline-danger btn-sm w-100 shadow-none d-flex align-items-center justify-content-center gap-2 text-truncate"
-                  style="font-size: 0.75rem; z-index: 1; padding: 4px 8px;"
-                  title="Upload Proof">
+                  style="font-size: 0.75rem; z-index: 1; padding: 4px 8px;" title="Upload Proof">
                   <span class="text-truncate" style="max-width: 90px;">Upload Proof</span>
                 </button>
               </div>
 
               <!-- Selected File State -->
-              <div *ngIf="bill.get('attachment')?.value" class="d-flex flex-column align-items-center justify-content-center" style="width: 150px; margin: 0 auto; gap: 4px;">
+              <div *ngIf="bill.get('attachment')?.value"
+                class="d-flex flex-column align-items-center justify-content-center"
+                style="width: 150px; margin: 0 auto; gap: 4px;">
                 <!-- Small File Name Preview -->
-                <div class="d-flex align-items-center gap-2 text-muted fw-medium" style="font-size: 0.7rem; max-width: 100%;">
-                   <img *ngIf="billFilePreviews[i]" [src]="billFilePreviews[i]" class="border" style="height: 24px; width: 24px; object-fit: cover; border-radius: 4px;">
-                   <span *ngIf="!billFilePreviews[i]">📄</span>
-                   <span class="text-truncate" [title]="bill.get('attachment')?.value">{{ bill.get('attachment')?.value }}</span>
+                <div class="d-flex align-items-center gap-2 text-muted fw-medium"
+                  style="font-size: 0.7rem; max-width: 100%;">
+                  <img *ngIf="billFilePreviews[i]" [src]="billFilePreviews[i]" class="border"
+                    style="height: 24px; width: 24px; object-fit: cover; border-radius: 4px;">
+                  <span *ngIf="!billFilePreviews[i]">📄</span>
+                  <span class="text-truncate" [title]="bill.get('attachment')?.value">{{ bill.get('attachment')?.value
+                    }}</span>
                 </div>
                 <!-- Action Buttons: Change and Remove -->
                 <div class="d-flex gap-1 w-100">
-                    <div class="position-relative flex-grow-1">
-                        <input type="file" class="position-absolute w-100 h-100 opacity-0 cursor-pointer" style="z-index: 2;"
-                            (change)="onBillFileSelected($event, i)" title="Change file">
-                        <button type="button" class="btn btn-sm btn-outline-secondary w-100 shadow-none" style="font-size: 0.65rem; padding: 2px 4px; z-index: 1;">Change</button>
-                    </div>
-                    <button type="button" class="btn btn-sm btn-outline-danger flex-grow-1 shadow-none" style="font-size: 0.65rem; padding: 2px 4px;" (click)="removeBillFile(i)">Remove</button>
+                  <div class="position-relative flex-grow-1">
+                    <input type="file" class="position-absolute w-100 h-100 opacity-0 cursor-pointer"
+                      style="z-index: 2;" (change)="onBillFileSelected($event, i)" title="Change file">
+                    <button type="button" class="btn btn-sm btn-outline-secondary w-100 shadow-none"
+                      style="font-size: 0.65rem; padding: 2px 4px; z-index: 1;">Change</button>
+                  </div>
+                  <button type="button" class="btn btn-sm btn-outline-danger flex-grow-1 shadow-none"
+                    style="font-size: 0.65rem; padding: 2px 4px;" (click)="removeBillFile(i)">Remove</button>
                 </div>
               </div>
             </td>
@@ -239,12 +266,14 @@
 
             <div class="row g-3 mb-4">
               <div class="col-md-3">
-                <label class="form-label small text-muted mb-1">{{ bankMode === 'cheque' ? 'Cheque Amount' : 'Amount'}}</label>
+                <label class="form-label small text-muted mb-1">{{ bankMode === 'cheque' ? 'Cheque Amount' :
+                  'Amount'}}</label>
                 <input type="text" class="form-control form-control-sm bg-light" [value]="netReceived | number:'1.2-2'"
                   disabled>
               </div>
               <div class="col-md-3">
-                <label class="form-label small text-muted mb-1">{{ bankMode === 'cheque' ? 'Cheque No.' : 'RTGS / NEFT No.' }} <span class="text-danger">*</span></label>
+                <label class="form-label small text-muted mb-1">{{ bankMode === 'cheque' ? 'Cheque No.' : 'RTGS / NEFT
+                  No.' }} <span class="text-danger">*</span></label>
                 <input type="text" class="form-control form-control-sm bg-white" placeholder="Enter number"
                   formControlName="chequeNo" (change)="checkBouncedCheque()"
                   [ngClass]="{'border-danger': receiptForm.get('chequeNo')?.invalid && receiptForm.get('chequeNo')?.touched}">
@@ -337,7 +366,7 @@
 
     <!-- Footer Summary Bar -->
     <div class="alert mb-0 rounded-1" style="background-color: #fde8e8; border: 1px solid #f9caca; font-size: 0.85rem;"
-         [ngClass]="{'border-danger': netReceived < 1}">
+      [ngClass]="{'border-danger': netReceived < 1}">
       <div class="d-flex justify-content-end gap-4 text-dark align-items-center">
         <span>Total Collection: <strong class="text-danger">₹ {{ totalCollection | number:'1.2-2' }}</strong></span>
         <span>Total TDS (-): <strong class="text-danger">₹ {{ totalTds | number:'1.2-2' }}</strong></span>
@@ -353,10 +382,18 @@
   </div>
 
   <!-- Modal Footer -->
-  <div class="modal-footer border-top p-3 bg-white d-flex justify-content-end gap-2">
+  <div class="modal-footer border-top p-3 bg-white d-flex justify-content-end gap-2 align-items-center">
+
+    <!-- Hint Text Animation -->
+    <div class="hint-text fw-bold me-2 d-none d-md-block" *ngIf="receiptForm.valid && netReceived > 0">
+      👉 Click to Generate MR
+    </div>
+
     <button type="button" class="btn btn-outline-secondary btn-sm px-4 fw-medium" (click)="closePopup()">Cancel</button>
-    <button type="button" class="btn btn-danger btn-sm px-4 fw-medium shadow-sm" style="background-color: #b71c1c;"
-      (click)="submit()" [disabled]="isSubmitting">
+    <button type="button" class="btn btn-danger btn-sm px-4 fw-medium shadow-sm"
+      style="background-color: #b71c1c; position: relative;"
+      [ngClass]="{'btn-pulse-active': receiptForm.valid && netReceived > 0}" (click)="submit()"
+      [disabled]="isSubmitting">
       <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
       {{ isSubmitting ? 'Submitting...' : 'Submit' }}
     </button>

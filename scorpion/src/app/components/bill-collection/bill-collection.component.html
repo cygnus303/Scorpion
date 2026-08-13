@@ -34,12 +34,35 @@
 
     <!-- Table Panel -->
     <div class="mt-3">
+        <!-- User Guide Banner -->
+        <div class="guide-banner d-flex align-items-center gap-3 mb-3" *ngIf="billList.length > 0"
+            [ngClass]="{'ready': selectedBills.length > 0 && config.Status !== 'All' && config.Status !== 'COL'}">
+            <span class="fs-4 lh-1">{{ (selectedBills.length === 0 || config.Status === 'All' || config.Status ===
+                'COL') ? '💡' : '✅' }}</span>
+
+            <!-- Message for All or COL Status (Read-only view) -->
+            <div *ngIf="config.Status === 'All' || config.Status === 'COL'">
+                <strong class="d-block mb-1">Welcome to Bill Collection!</strong>
+                <span>To prepare a Money Receipt (MR), please click on the <b>Pending for Collection</b> card
+                    above.</span>
+            </div>
+
+            <!-- Message for Pending Status (Actionable view) -->
+            <div *ngIf="config.Status !== 'All' && config.Status !== 'COL' && selectedBills.length === 0">
+                <strong class="d-block mb-1">Step 1: Select Bills</strong>
+                <span>Please select one or more pending bills from the table below to prepare a Money Receipt
+                    (MR).</span>
+            </div>
+            <div *ngIf="config.Status !== 'All' && config.Status !== 'COL' && selectedBills.length > 0">
+                <strong class="d-block mb-1">Step 2: Prepare MR</strong>
+                <span>You have selected <b>{{ selectedBills.length }}</b> bill(s). Click the <b>Prepare MR</b> button on
+                    the right to proceed to the next step.</span>
+            </div>
+        </div>
+
         <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
             <div class="control-bar border-0 shadow-none mb-0 flex-wrap">
-                <app-date-range-picker 
-                    theme="red"
-                    [initialFromDate]="config.FromDt" 
-                    [initialToDate]="config.ToDt"
+                <app-date-range-picker theme="red" [initialFromDate]="config.FromDt" [initialToDate]="config.ToDt"
                     (onRangeSelect)="onDateRangeSelected($event)">
                 </app-date-range-picker>
 
@@ -74,8 +97,17 @@
                         class="form-control border-0 shadow-none" [(ngModel)]="config.SearchText"
                         (keyup)="onSearchChange()">
                 </div>
+
+                <!-- Hint Text Animation -->
+                <div class="hint-text fw-bold d-none d-md-block"
+                    *ngIf="selectedBills.length > 0 && config.Status !== 'All' && config.Status !== 'COL'">
+                    👉 Click here
+                </div>
+
                 <button type="button" (click)="openPopup()" class="btn btn-danger btn-sm px-4 fw-medium text-nowrap"
-                    style="background-color: #b71c1c;">Prepare MR ›</button>
+                    *ngIf="config.Status !== 'All' && config.Status !== 'COL'"
+                    [ngClass]="{'btn-pulse-active': selectedBills.length > 0}"
+                    style="background-color: #b71c1c; border-radius: 6px;">Prepare MR ›</button>
             </div>
         </div>
 
@@ -119,8 +151,7 @@
                     <tr *ngFor="let item of billList; let i = index">
                         <td class="text-center text-muted" *ngIf="config.Status === 'All'">{{ i + 1 }}</td>
                         <td class="text-center" *ngIf="config.Status !== 'All' && config.Status !== 'COL'">
-                            <input type="checkbox"
-                                class="form-check-input" [checked]="item.selected"
+                            <input type="checkbox" class="form-check-input" [checked]="item.selected"
                                 (change)="onCheckboxChange(item, $event)"
                                 style="width: 18px; height: 18px; cursor: pointer; margin-top: 0; vertical-align: middle;">
                         </td>
@@ -186,5 +217,4 @@
 </div>
 <app-bill-invoice-view #BillInvoiceViewComponent></app-bill-invoice-view>
 <app-bill-receipt #BillReceiptComponent (submitSuccess)="fetchData()"></app-bill-receipt>
-<app-bill-mr-view #BillMrViewComponent></app-bill-mr-view>   
- 
+<app-bill-mr-view #BillMrViewComponent></app-bill-mr-view>
