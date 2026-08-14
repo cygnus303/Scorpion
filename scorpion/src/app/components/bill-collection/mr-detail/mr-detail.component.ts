@@ -1,12 +1,13 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
+import { VoucherViewComponent } from '../voucher-view/voucher-view.component';
 
 @Component({
   selector: 'app-mr-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, forwardRef(() => VoucherViewComponent)],
   providers: [BsModalService],
   templateUrl: './mr-detail.component.html',
   styleUrl: './mr-detail.component.scss'
@@ -21,6 +22,7 @@ export class MrDetailComponent {
   public totalRoundOffPlus: number = 0;
   public totalNetAmt: number = 0;
   @ViewChild('TemplateMrDetail', { static: true }) TemplateMrDetail!: TemplateRef<any>;
+  @ViewChild(forwardRef(() => VoucherViewComponent)) voucherViewComponent!: VoucherViewComponent;
 
   constructor(
     public modalRef: BsModalRef,
@@ -83,5 +85,9 @@ export class MrDetailComponent {
       window.print();
       document.body.classList.remove('printing-modal');
     }, 100);
+  }
+
+  openVoucherPopup(item: any){
+    this.voucherViewComponent.showPopup(item);
   }
 }

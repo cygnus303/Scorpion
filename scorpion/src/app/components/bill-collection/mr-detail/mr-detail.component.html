@@ -37,10 +37,10 @@
                         <span class="info-label fw-bold text-secondary">Branch</span>
                         <span class="info-val text-uppercase">{{ MRData?.MRSBR || '--' }}</span>
                     </div>
-                    <div class="info-cell border-end border-bottom border-secondary border-opacity-25">
+                    <div class="info-cell border-end border-bottom border-secondary border-opacity-25" (click)="openVoucherPopup(MRData?.VoucherNO)">
                         <span class="info-label fw-bold text-secondary">Voucher No.</span>
-                        <span class="info-val fw-bold" style="color: #a50f0f; text-decoration: underline;">{{
-                            MRData?.Voucherno || '--' }}</span>
+                        <span class="info-val fw-bold" style="color: #a50f0f; text-decoration: underline;">
+                            {{MRData?.VoucherNO || '--' }}</span>
                     </div>
                     <div class="info-cell border-bottom border-secondary border-opacity-25">
                         <span class="info-label fw-bold text-secondary">Dt.</span>
@@ -153,13 +153,13 @@
                     </div>
                     <div class="audit-cell border-start border-secondary border-opacity-25 px-2 mt-2">
                         <span class="audit-label fw-bold">Edited Date</span>
-                        <span class="audit-val text-secondary mt-1 d-block">{{ (MRData?.lastupdatedt | date:'dd MMM
-                            yyyy') || '--' }}</span>
+                        <span class="audit-val text-secondary mt-1 d-block">
+                            {{ (MRData?.lastupdatedt | date:'dd MMM yyyy') || '--' }}</span>
                     </div>
                     <div class="audit-cell border-start border-secondary border-opacity-25 px-2 mt-2">
                         <span class="audit-label fw-bold">Cancelled Date</span>
-                        <span class="audit-val text-secondary mt-1 d-block">{{(MRData?.CancelledDT | date:'dd MMM yyyy')
-                            || '--'}}</span>
+                        <span class="audit-val text-secondary mt-1 d-block">
+                            {{(MRData?.CancelledDT | date:'dd MMM yyyy') || '--'}}</span>
                     </div>
                 </div>
             </div>
@@ -174,3 +174,5 @@
         </div>
     </div>
 </ng-template>
+
+<app-voucher-view #voucherViewComponent></app-voucher-view>

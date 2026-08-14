@@ -1,5 +1,6 @@
 import { Component, Output, EventEmitter, ViewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -20,7 +21,12 @@ import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 })
 export class BillReceiptComponent {
   @ViewChild('TemplateReceipt', { static: true }) TemplateReceipt!: TemplateRef<any>;
+  @ViewChild('SuccessModalTemplate', { static: true }) SuccessModalTemplate!: TemplateRef<any>;
   @ViewChild('BillInvoiceViewComponent') BillInvoiceViewComponent!: BillInvoiceViewComponent;
+  successModalRef?: BsModalRef;
+  successMrsno: string = '';
+  successVoucherNo: string = '';
+  successMsg: string = '';
 
   @Output() close = new EventEmitter<void>();
   @Output() submitSuccess = new EventEmitter<void>();
@@ -499,25 +505,14 @@ export class BillReceiptComponent {
         this.isSubmitting = false;
         const msg = res.message || res.Message || 'Operation completed.';
         if (res.success) {
-          let displayMsg = `<div class="mb-2">${msg}</div>`;
-          const mrsno = res.mrsno;
-          const voucherNo = res.voucherNo;
+          this.successMrsno = res.mrsno;
+          this.successVoucherNo = res.voucherNo;
+          this.successMsg = msg.replace('Money Receipt and Debit/Credit Voucher have been created for ', '').replace('.', '');
           
-          let linksHtml = '';
-          if (mrsno) {
-            linksHtml += `<div class="mb-1" style="font-size: 14px;"> MRSNO: <a href="javascript:void(0)" onclick="document.dispatchEvent(new CustomEvent('openMrDetail', {detail: '${mrsno}'}))" class="text-primary text-decoration-underline fw-bold">${mrsno}</a></div>`;
-          }
-          if (voucherNo) {
-            linksHtml += `<div style="font-size: 14px;"> Voucher No: <a href="javascript:void(0)" onclick="document.dispatchEvent(new CustomEvent('openVoucherDetail', {detail: '${voucherNo}'}))" class="text-primary text-decoration-underline fw-bold">${voucherNo}</a></div>`;
-          }
-          
-          if(linksHtml) {
-              displayMsg += `<div class="mt-3 p-2 bg-light border rounded text-start">${linksHtml}</div>`;
-          }
-
-          this.sweetalertService.success(displayMsg).then(() => {
-            this.submitSuccess.emit();
-            this.closePopup();
+          this.successModalRef = this.modalService.show(this.SuccessModalTemplate, {
+            class: 'modal-dialog-centered success-modal',
+            backdrop: false,
+            keyboard: false
           });
         } else {
           this.sweetalertService.error(msg);
@@ -616,5 +611,15 @@ export class BillReceiptComponent {
         }
       }
     });
+  }
+
+  closeSuccessModal() {
+    this.successModalRef?.hide();
+    this.submitSuccess.emit();
+    this.closePopup();
+  }
+
+  handleLinkClick(eventName: string, detail: string) {
+    document.dispatchEvent(new CustomEvent(eventName, { detail }));
   }
 }

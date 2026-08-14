@@ -57,9 +57,9 @@
                             VoucherData.Chqdate : '--' }}</span>
                     </div>
                     <div class="info-cell border-bottom border-secondary border-opacity-25"
-                        style="grid-column: 1 / span 2;">
+                        style="grid-column: 1 / span 2;"  >
                         <span class="info-label fw-bold text-secondary">MR No.</span>
-                        <span class="info-val fw-bold" style="color: #a50f0f; text-decoration: underline;">{{
+                        <span class="info-val fw-bold" style="color: #a50f0f;">{{
                             VoucherData?.MR_NO || '--' }}</span>
                     </div>
                 </div>
@@ -123,14 +123,14 @@
                     </div>
                     <div class="audit-cell mt-2">
                         <span class="audit-label fw-bold">Entry Date</span>
-                        <span class="audit-val text-secondary mt-1 d-block">{{ (VoucherData?.EntryDT | date:'dd MMM yy')
+                        <span class="audit-val text-secondary mt-1 d-block">{{ (VoucherData?.EntryDT | date:'dd MMM yyyy')
                             || '--' }}</span>
                     </div>
                     <div class="audit-cell border-start border-secondary border-opacity-25 px-2 mt-2"
                         style="grid-column: span 2;">
                         <span class="audit-label fw-bold">Cancelled Date</span>
-                        <span class="audit-val text-secondary mt-1 d-block">{{ (VoucherData?.CancelledDT | date:'dd MMM
-                            yy') || '--' }}</span>
+                        <span class="audit-val text-secondary mt-1 d-block">
+                            {{ (VoucherData?.CancelledDT | date:'dd MMM yyyy') || '--' }}</span>
                     </div>
                 </div>
             </div>
