@@ -276,7 +276,9 @@ export class AddPrqComponent {
       consignorAddress: new FormControl(''),
       consigneeAddress: new FormControl(''),
       consignorPin: new FormControl(null),
-      consigneePin: new FormControl(null)
+      consigneePin: new FormControl(null),
+      consigneeContactNo:new FormControl(null),
+      consignorContactNo:new FormControl(null,[Validators.required, Validators.pattern('^[0-9]{10}$')])
     });
 
     this.prqForm.get('service_Type')?.valueChanges.subscribe((val) => {
@@ -501,6 +503,8 @@ export class AddPrqComponent {
               ewayBillDate: data.EWayBillDate,
               ewayExpDate: data.EWayBillExpiryDate,
               invoiceNo:data.InvoiceNo,
+              consignorContactNo:data.ConsignorContactno,
+              consigneeContactNo:data.ConsigneeContactno,
               invoiceDate: formatToDDMMMYYYY(data.InvoiceDate),
               invoiceValue:data.InvoiceValue
             });
@@ -690,7 +694,9 @@ export class AddPrqComponent {
         baseUserName: this.docketService.loginUserList.BaseUserName || '',
         baseFinYear: finyear,
         type: formData.groupCode ? 'E' : '',
-        prqNo: formData.groupCode || ''
+        prqNo: formData.groupCode || '',
+        consignorContactno:formData.consignorContactNo,
+        consigneeContactno:formData.consigneeContactNo,
       };
 
       this.prqService.submitPRQ(payload).subscribe({
