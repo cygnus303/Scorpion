@@ -1,5 +1,6 @@
 import { Component, Output, EventEmitter, ViewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -20,7 +21,12 @@ import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 })
 export class BillReceiptComponent {
   @ViewChild('TemplateReceipt', { static: true }) TemplateReceipt!: TemplateRef<any>;
+  @ViewChild('SuccessModalTemplate', { static: true }) SuccessModalTemplate!: TemplateRef<any>;
   @ViewChild('BillInvoiceViewComponent') BillInvoiceViewComponent!: BillInvoiceViewComponent;
+  successModalRef?: BsModalRef;
+  successMrsno: string = '';
+  successVoucherNo: string = '';
+  successMsg: string = '';
 
   @Output() close = new EventEmitter<void>();
   @Output() submitSuccess = new EventEmitter<void>();
@@ -498,15 +504,16 @@ export class BillReceiptComponent {
       next: (res: any) => {
         this.isSubmitting = false;
         const msg = res.message || res.Message || 'Operation completed.';
-        if (res.success || res.isSuccess || res.Status === 200 || res.status === 200 || res.status === "1" || res.Status === "1") {
-          let displayMsg = msg;
-          const mrsno = res.MRSNO || res.mrsno || res.result?.MRSNO || res.Result?.MRSNO || res.data?.MRSNO;
-          if (mrsno) {
-            displayMsg = `${msg} | MRSNO: ${mrsno}`;
-          }
-          this.sweetalertService.success(displayMsg);
-          this.submitSuccess.emit();
-          this.closePopup();
+        if (res.success) {
+          this.successMrsno = res.mrsno;
+          this.successVoucherNo = res.voucherNo;
+          this.successMsg = msg.replace('Money Receipt and Debit/Credit Voucher have been created for ', '').replace('.', '');
+          
+          this.successModalRef = this.modalService.show(this.SuccessModalTemplate, {
+            class: 'modal-dialog-centered success-modal',
+            backdrop: false,
+            keyboard: false
+          });
         } else {
           this.sweetalertService.error(msg);
         }
@@ -604,5 +611,15 @@ export class BillReceiptComponent {
         }
       }
     });
+  }
+
+  closeSuccessModal() {
+    this.successModalRef?.hide();
+    this.submitSuccess.emit();
+    this.closePopup();
+  }
+
+  handleLinkClick(eventName: string, detail: string) {
+    document.dispatchEvent(new CustomEvent(eventName, { detail }));
   }
 }

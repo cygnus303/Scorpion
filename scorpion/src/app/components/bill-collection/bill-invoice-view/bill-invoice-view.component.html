@@ -52,7 +52,7 @@
       <div class="row g-0 mb-3" style="font-size: 0.7rem; border: 1px solid #dc3545;">
         <div class="col px-2 py-1" style="border-right: 1px solid #dc3545;">
           <div class="text-danger fw-bold mb-1" style="font-size: 0.6rem;">PAN NO.</div>
-          <div class="fw-bold text-dark">{{ billList[0]?.GSTIN_No ? (billList[0].GSTIN_No | slice:2:12) : '-' }}</div>
+          <div class="fw-bold text-dark">{{ bankDetail[0]?.PANNo  }}</div>
         </div>
         <div class="col px-2 py-1" style="border-right: 1px solid #dc3545;">
           <div class="text-danger fw-bold mb-1" style="font-size: 0.6rem;">GSTIN</div>
@@ -327,23 +327,23 @@
             <tbody>
               <tr style="border-bottom: 1px solid #e0e0e0;">
                 <td class="text-muted py-1" style="width: 45%;">Beneficiary Name</td>
-                <td class="py-1 text-dark">SCORPION EXPRESS PVT LTD</td>
+                <td class="py-1 text-dark">{{bankDetail[0]?.BeneficiaryName || '-'}}</td>
               </tr>
               <tr style="border-bottom: 1px solid #e0e0e0;">
                 <td class="text-muted py-1">Bank Name</td>
-                <td class="py-1 text-dark">HDFC BANK</td>
+                <td class="py-1 text-dark">{{bankDetail[0]?.BankName || '-'}}</td>
               </tr>
               <tr style="border-bottom: 1px solid #e0e0e0;">
                 <td class="text-muted py-1">Account Number</td>
-                <td class="py-1 text-dark">50200033944301</td>
+                <td class="py-1 text-dark">{{bankDetail[0]?.BankAccountNo || '-'}}</td>
               </tr>
               <tr style="border-bottom: 1px solid #e0e0e0;">
                 <td class="text-muted py-1">IFSC Code</td>
-                <td class="py-1 text-dark">HDFC0000012</td>
+                <td class="py-1 text-dark">{{bankDetail[0]?.IFSCCode || '-'}}</td>
               </tr>
               <tr>
                 <td class="text-muted py-1">Branch</td>
-                <td class="py-1 text-dark">PRABHADEVI</td>
+                <td class="py-1 text-dark">{{bankDetail[0]?.BranchName || '-'}}</td>
               </tr>
             </tbody>
           </table>

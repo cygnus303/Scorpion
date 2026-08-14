@@ -14,6 +14,7 @@ export class BillInvoiceViewComponent {
   public selectedInvoiceBill: any;
   public billDetail: any;
   public billList: any[] = [];
+  public bankDetail:any;
   public oscChargesList: any[] = [];
   
   public dynamicColumns: string[] = [];
@@ -66,6 +67,12 @@ export class BillInvoiceViewComponent {
           this.dynamicColumns = [];
           this.dynamicTotals = {};
           this.totalOscOther = 0;
+        }
+
+        if(response.Table3 && response.Table3.length > 0){
+          this.bankDetail = response.Table3;
+        } else {
+          this.bankDetail = null;
         }
 
         if (response.Table4 && response.Table4.length > 0) {
