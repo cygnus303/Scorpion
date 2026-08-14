@@ -14,11 +14,14 @@ import { DocketService } from 'app/shared/services/docket.service';
 import { BillInvoiceViewComponent } from './bill-invoice-view/bill-invoice-view.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
-
+import { MrDetailComponent } from './mr-detail/mr-detail.component';
+import { VoucherViewComponent } from './voucher-view/voucher-view.component';
+import { HostListener } from '@angular/core';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-bill-collection',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgSelectModule, BsDatepickerModule, PaginationComponent, BillReceiptComponent, BillInvoiceViewComponent, BillMrViewComponent, DateRangePickerComponent],
+  imports: [CommonModule, FormsModule, NgSelectModule, BsDatepickerModule, PaginationComponent, BillReceiptComponent, BillInvoiceViewComponent, BillMrViewComponent, DateRangePickerComponent, MrDetailComponent, VoucherViewComponent],
   providers: [BsModalService],
   templateUrl: './bill-collection.component.html',
   styleUrl: './bill-collection.component.scss'
@@ -27,6 +30,8 @@ export class BillCollectionComponent implements OnInit {
   @ViewChild('BillReceiptComponent') BillReceiptComponent!: BillReceiptComponent;
   @ViewChild('BillInvoiceViewComponent') BillInvoiceViewComponent!: BillInvoiceViewComponent;
   @ViewChild('BillMrViewComponent') BillMrViewComponent!: BillMrViewComponent;
+  @ViewChild(MrDetailComponent) mrDetailComponent!: MrDetailComponent;
+  @ViewChild(VoucherViewComponent) voucherViewComponent!: VoucherViewComponent;
   public isLoading: boolean = false;
   public listSubscription!: Subscription;
   private fetchSubject = new Subject<void>();
@@ -253,5 +258,19 @@ export class BillCollectionComponent implements OnInit {
 
   viewMr(data: any) {
     this.BillMrViewComponent.showPopup(data);
+  }
+
+  @HostListener('document:openMrDetail', ['$event'])
+  onOpenMrDetail(event: CustomEvent) {
+    if(this.mrDetailComponent) {
+      this.mrDetailComponent.showPopup(event.detail);
+    }
+  }
+
+  @HostListener('document:openVoucherDetail', ['$event'])
+  onOpenVoucherDetail(event: CustomEvent) {
+    if(this.voucherViewComponent) {
+      this.voucherViewComponent.showPopup(event.detail);
+    }
   }
 }

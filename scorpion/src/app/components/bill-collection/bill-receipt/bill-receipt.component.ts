@@ -498,15 +498,27 @@ export class BillReceiptComponent {
       next: (res: any) => {
         this.isSubmitting = false;
         const msg = res.message || res.Message || 'Operation completed.';
-        if (res.success || res.isSuccess || res.Status === 200 || res.status === 200 || res.status === "1" || res.Status === "1") {
-          let displayMsg = msg;
-          const mrsno = res.MRSNO || res.mrsno || res.result?.MRSNO || res.Result?.MRSNO || res.data?.MRSNO;
+        if (res.success) {
+          let displayMsg = `<div class="mb-2">${msg}</div>`;
+          const mrsno = res.mrsno;
+          const voucherNo = res.voucherNo;
+          
+          let linksHtml = '';
           if (mrsno) {
-            displayMsg = `${msg} | MRSNO: ${mrsno}`;
+            linksHtml += `<div class="mb-1" style="font-size: 14px;"> MRSNO: <a href="javascript:void(0)" onclick="document.dispatchEvent(new CustomEvent('openMrDetail', {detail: '${mrsno}'}))" class="text-primary text-decoration-underline fw-bold">${mrsno}</a></div>`;
           }
-          this.sweetalertService.success(displayMsg);
-          this.submitSuccess.emit();
-          this.closePopup();
+          if (voucherNo) {
+            linksHtml += `<div style="font-size: 14px;"> Voucher No: <a href="javascript:void(0)" onclick="document.dispatchEvent(new CustomEvent('openVoucherDetail', {detail: '${voucherNo}'}))" class="text-primary text-decoration-underline fw-bold">${voucherNo}</a></div>`;
+          }
+          
+          if(linksHtml) {
+              displayMsg += `<div class="mt-3 p-2 bg-light border rounded text-start">${linksHtml}</div>`;
+          }
+
+          this.sweetalertService.success(displayMsg).then(() => {
+            this.submitSuccess.emit();
+            this.closePopup();
+          });
         } else {
           this.sweetalertService.error(msg);
         }
