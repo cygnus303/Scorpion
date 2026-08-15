@@ -113,6 +113,22 @@
       border-radius: 0 !important;
     }
 
+    .mr-table-wrap {
+        overflow-x: visible !important;
+        overflow-y: visible !important;
+    }
+
+    /* Shrink table to prevent cutoff on right side */
+    .mr-table {
+        font-size: 10px !important;
+        white-space: normal !important;
+    }
+
+    .mr-table thead th,
+    .mr-table tbody td {
+        padding: 6px 8px !important;
+    }
+
     /* Hide close and print buttons */
     body.modal-open .btn-close,
     body.modal-open button.btn {

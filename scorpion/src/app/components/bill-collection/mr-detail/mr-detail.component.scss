@@ -1,59 +1,62 @@
 .receipt-container {
-    min-width: 800px;
+  min-width: 800px;
 }
 
 .receipt-info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 .info-cell {
-    display: flex;
-    padding: 6px 8px;
-    font-size: 12px;
+  display: flex;
+  padding: 6px 8px;
+  font-size: 12px;
 }
 
 .info-cell .info-label {
-    min-width: 140px;
-    flex-shrink: 0;
+  min-width: 140px;
+  flex-shrink: 0;
 }
 
 .info-cell .info-val {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 .fs-8 {
-    font-size: 11px !important;
+  font-size: 11px !important;
 }
 
 .audit-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .audit-cell {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .bg-pink {
-    background-color: #fdf0f0 !important;
+  background-color: #fdf0f0 !important;
 }
 
 .receipt-bills-table {
-    th, tr.bg-pink td {
-        background-color: #fdf0f0 !important;
-    }
+
+  th,
+  tr.bg-pink td {
+    background-color: #fdf0f0 !important;
+  }
 }
 
 /* Print styling localized to this component */
 @media print {
   ::ng-deep {
+
     /* Hide the main application layout so it doesn't take up space */
     body.modal-open app-root {
       display: none !important;
     }
-    
+
     /* Hide the dark overlay */
     body.modal-open .modal-backdrop {
       display: none !important;
@@ -93,10 +96,19 @@
       display: none !important;
     }
 
+    body.modal-open .modal-body {
+      padding: 0 !important;
+      overflow: hidden !important;
+    }
+
     body.modal-open .receipt-container {
       width: 100% !important;
+      min-width: 100% !important;
+      /* Removed fixed 800px min-width to prevent scroll */
       margin: 0 !important;
-      border: none !important;
+      border: 1px solid #dee2e6 !important;
+      /* Show border in print */
+      overflow: hidden !important;
     }
 
     * {
