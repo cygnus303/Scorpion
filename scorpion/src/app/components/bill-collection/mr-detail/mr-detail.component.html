@@ -37,7 +37,8 @@
                         <span class="info-label fw-bold text-secondary">Branch</span>
                         <span class="info-val text-uppercase">{{ MRData?.MRSBR || '--' }}</span>
                     </div>
-                    <div class="info-cell border-end border-bottom border-secondary border-opacity-25" (click)="openVoucherPopup(MRData?.VoucherNO)">
+                    <div class="info-cell border-end border-bottom border-secondary border-opacity-25"
+                        (click)="openVoucherPopup(MRData?.VoucherNO)">
                         <span class="info-label fw-bold text-secondary">Voucher No.</span>
                         <span class="info-val fw-bold" style="color: #a50f0f; text-decoration: underline;">
                             {{MRData?.VoucherNO || '--' }}</span>
@@ -169,7 +170,8 @@
                 <button class="btn btn-outline-secondary px-4 py-2 fw-bold" style="font-size: 13px; border-radius: 6px;"
                     (click)="closePopup()">Close</button>
                 <button class="btn btn-danger px-4 py-2 ms-2 fw-bold"
-                    style="background-color: #a50f0f; font-size: 13px; border-radius: 6px;" (click)="printReceipt()">Print</button>
+                    style="background-color: #a50f0f; font-size: 13px; border-radius: 6px;"
+                    (click)="printReceipt()">Print</button>
             </div>
         </div>
     </div>

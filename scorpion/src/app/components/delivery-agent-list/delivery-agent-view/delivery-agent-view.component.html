@@ -21,17 +21,17 @@
           <td><strong>Engine No:</strong> {{ deliveryAgentViewList.engineNo }}</td>
         </tr>
         <tr>
-          <td><strong>Registration date:</strong> {{ deliveryAgentViewList.registrationDate | date:'dd/MM/yyy'}}</td>
+          <td><strong>Registration date:</strong> {{ deliveryAgentViewList.registrationDate | date:'dd MMM yyyy'}}</td>
           <td><strong>Chassis No: </strong> {{ deliveryAgentViewList.chassisNo }}</td>
         </tr>
         <tr>
           <td><strong>RC Book No:</strong> {{ deliveryAgentViewList.rcBookNo }}</td>
           <!-- <td><strong>Permit validity Date:</strong> {{ deliveryAgentViewList.permitValidityDate | date:'dd/MM/yyy' }}</td> -->
-          <td><strong>Insurance Validity Date:</strong> {{ deliveryAgentViewList.insuranceValidityDate  | date:'dd/MM/yyy'}}</td>
+          <td><strong>Insurance Validity Date:</strong> {{ deliveryAgentViewList.insuranceValidityDate  | date:'dd MMM yyyy'}}</td>
         </tr>
         <tr>
-          <td><strong>Fitness Validity Date:</strong> {{ deliveryAgentViewList.fitnessValidityDate | date:'dd/MM/yyy' }}</td>
-          <td><strong>Date of Birth:</strong> {{ deliveryAgentViewList.dateOfBirth | date:'dd/MM/yyy' }}</td>
+          <td><strong>Fitness Validity Date:</strong> {{ deliveryAgentViewList.fitnessValidityDate | date:'dd MMM yyyy' }}</td>
+          <td><strong>Date of Birth:</strong> {{ deliveryAgentViewList.dateOfBirth | date:'dd MMM yyyy' }}</td>
         </tr>
         <tr>
           <td><strong>License No:</strong> {{ deliveryAgentViewList.licenseNo }}</td>
@@ -39,7 +39,7 @@
         </tr>
         <tr>
           <td><strong>Issue By RTO:</strong> {{ deliveryAgentViewList.issueByRTO }}</td>
-          <td><strong>License validity Date:</strong> {{ deliveryAgentViewList.licenseValidityDate | date:'dd/MM/yyy' }}</td>
+          <td><strong>License validity Date:</strong> {{ deliveryAgentViewList.licenseValidityDate | date:'dd MMM yyyy' }}</td>
         </tr>
          <tr>
           <td><strong>Business Associate Vendor:</strong> {{ deliveryAgentViewList.businessAssociatecode }}</td>
@@ -59,11 +59,11 @@
         </tr> -->
         <tr>
           <td><strong>Added By:</strong> {{ deliveryAgentViewList.entryName }}</td>
-          <td><strong>Added Date:</strong> {{ deliveryAgentViewList.entryDate | date:'dd/MM/yyy' }}</td>
+          <td><strong>Added Date:</strong> {{ deliveryAgentViewList.entryDate | date:'dd MMM yyyy' }}</td>
         </tr>
         <tr>
           <td><strong>Edited  By:</strong> {{ deliveryAgentViewList.updateName}}</td>
-          <td><strong>Edited  Date:</strong> {{ deliveryAgentViewList.updatedDate | date:'dd/MM/yyy' }}</td>
+          <td><strong>Edited  Date:</strong> {{ deliveryAgentViewList.updatedDate | date:'dd MMM yyyy' }}</td>
         </tr>
       </tbody>
     </table>

@@ -162,7 +162,8 @@ export class HCCDetailsComponent {
       luVendorCode: [item.vendorCode],
       rateType: [item.rateType],
       chargeRate: [item.chargeRate || 0],
-      rateError: ['']
+      rateError: [''],
+      lrdate: [item.lrdate || ''],
     });
 
     const vendorType = group.get('luVendorTyp')?.value;
@@ -256,7 +257,8 @@ export class HCCDetailsComponent {
               chargedBy: rowItem.LuVendorTyp || null,
               vendorCode: rowItem.LuVendorCode || null,
               rateType: rowItem.RateType !== undefined && rowItem.RateType !== null ? String(rowItem.RateType) : null,
-              chargeRate: parseFloat(rowItem.ChargeRate || 0)
+              chargeRate: parseFloat(rowItem.ChargeRate || 0),
+              lrdate: rowItem.lrdate || null,
             };
             this.lrList.push(this.createLRGroup(mappedItem));
           });

@@ -357,19 +357,19 @@ formatDateToISO(dateVal: any): string | null {
     this.PRSDRSEditComponent.showPopup(data, flag);
   }
 
-  openHCCModal(hccNo: string) {
-    const url = `${this.env.liveUrl}Tracking/TripAllView?LsNO=${hccNo}&VPType=LoadingUnloading&src=angular`;
-    const popup = window.open('', 'popupWindow',
-      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
-    );
+  // openHCCModal(hccNo: string) {
+  //   const url = `${this.env.liveUrl}Tracking/TripAllView?LsNO=${hccNo}&VPType=LoadingUnloading&src=angular`;
+  //   const popup = window.open('', 'popupWindow',
+  //     'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+  //   );
 
-    if (popup) {
-      popup.location.href = url;
-    }
-  }
+  //   if (popup) {
+  //     popup.location.href = url;
+  //   }
+  // }
 
    THCPDCBillView(BillNo: string) {
-    const url = `${this.env.liveUrl}ViewPrint/THCPDCBillView?BillNo=BEHQTR262700001&Billtype=THC-PDC&src=angular`;
+    const url = `${this.env.liveUrl}ViewPrint/BABillPaymentView?BillNo=${BillNo}&Billtype=BA_Bill&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );

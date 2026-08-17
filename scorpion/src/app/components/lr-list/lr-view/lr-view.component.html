@@ -44,7 +44,7 @@
                         <div class="party-name">{{ lrDetails?.ConsignorName || '—' }}</div>
                         <div class="party-info">
                             <strong>GSTIN:</strong> {{lrDetails?.ConsignorGSTIN || '—' }}<br>
-                            <strong>Location:</strong> {{ lrDetails?.OriginCity || '—' }}<br>
+                            <strong>Location:</strong>{{lrDetails?.ORGNCD}} :{{ lrDetails?.OriginCity || '—' }}<br>
                             <strong>Phone:</strong> {{ lrDetails?.ConsignorMobile || '—' }}<br>
                             <strong>PIN Code:</strong> {{ lrDetails?.ConsignorPincode || '—' }}<br>
                             <strong>Date:</strong> {{ lrDetails?.bookingdate ? (parseDate(lrDetails?.bookingdate) |

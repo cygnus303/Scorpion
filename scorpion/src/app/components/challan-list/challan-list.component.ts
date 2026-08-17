@@ -515,7 +515,7 @@ export class ChallanListComponent {
         vehicleCapacityUti: 0
       });
     }
-    if (this.challanService.challanForm.value.wtLoaded > vehicleCapacity) {
+    if ((this.challanService.challanForm.value.wtLoaded / 1000) > Number(vehicleCapacity)) {
       this.challanService.challanForm.patchValue({
         isOverLoad: true
       })

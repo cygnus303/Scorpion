@@ -217,7 +217,7 @@
                                 [disabled]="row.displayStatus === 'Acknowledged' || (row.displayStatus === 'Forwarded' && this.docketService.loginUserList.LocationCode === row.fM_FWD_LocCode) || row.displayStatus === 'Cancelled'"
                                 (change)="onRowSelect(row)">
                         </td>
-                        <td class="lr-date">{{ row.dockDt | date:'dd-MM-yyyy' }}</td>
+                        <td class="lr-date">{{ row.dockDt | date:'dd MMM yyyy' }}</td>
                         <td class="lr-no">{{ row.dockNo }}</td>
                         <td class="text-center">
                             <span class="branch-badge" *ngIf="row.fM_FWD_LocCode">{{ row.fM_FWD_LocCode }}</span>
@@ -248,7 +248,7 @@
                             </span>
                         </td>
                         <td class="lr-date fs-6">
-                            {{ row.fM_Date ? (row.fM_Date | date:'dd-MM-yyyy') : '—' }}
+                            {{ row.fM_Date ? (row.fM_Date | date:'dd MMM yyyy') : '—' }}
                         </td>
                         <td class="days-text fs-6 text-center">
                             {{ row.daysSince }}d
@@ -287,7 +287,7 @@
                                 [disabled]="row.displayStatus === 'Acknowledged' || (row.displayStatus === 'Forwarded' && this.docketService.loginUserList.LocationCode === row.fM_FWD_LocCode)"
                                 (change)="onRowSelect(row)">
                         </td>
-                        <td class="lr-date">{{ row.fM_Date | date:'dd-MM-yyyy' }}</td>
+                        <td class="lr-date">{{ row.fM_Date | date:'dd MMM yyyy' }}</td>
                         <td class="lr-no fw-bold">{{ row.fM_No }}</td>
                         <td class="text-center fw-bold text-primary">{{ row.totalLRs }}</td>
                         <td *ngIf="isHQTR" class="text-center">
