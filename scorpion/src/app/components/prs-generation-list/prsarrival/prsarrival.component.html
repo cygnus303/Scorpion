@@ -32,7 +32,7 @@
                         <div class="detail-item">
                             <div class="detail-label">PDC DATE</div>
                             <input type="text" class="form-control hcc-readonly-input" readonly
-                                [value]="(PRSArrivalDetails?.pdcdt | date:'dd-MM-yyyy') || '—'" />
+                                [value]="(PRSArrivalDetails?.pdcdt) || '—'" />
                         </div>
                         <div class="detail-item">
                             <div class="detail-label">VENDOR</div>
@@ -50,7 +50,7 @@
                                 <input class="form-control hcc-readonly-input" type="text" placeholder="Arrival Date"
                                     formControlName="arrivalDate" #dp="bsDatepicker" bsDatepicker
                                     [bsValue]="docketService.bsValue" [class.disabled-input]="true"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}" style="cursor: pointer; background-color: #fff !important; width: 1% !important; flex: 1 1 auto !important;">
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY'}" style="cursor: pointer; background-color: #fff !important; width: 1% !important; flex: 1 1 auto !important;">
                                 <span class="input-group-text cursor-pointer" style="background: transparent; border: 1px solid #e2e8f0; border-left: none; height: 34px !important; display: flex; align-items: center;">
                                     <i class="fa fa-calendar" style="color: #64748b;"></i>
                                 </span>

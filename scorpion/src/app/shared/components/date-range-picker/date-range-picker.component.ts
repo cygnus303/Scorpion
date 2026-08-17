@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
       <!-- Trigger Button -->
       <button type="button" class="trigger-btn" (click)="togglePicker($event)">
         <i class="far fa-calendar-alt"></i>
-        <span>{{ initialFromDate | date:'dd/MM/yyyy' }} – {{ initialToDate | date:'dd/MM/yyyy' }}</span>
+        <span>{{ initialFromDate | date:'dd MMM yyyy' }} – {{ initialToDate | date:'dd MMM yyyy' }}</span>
         <i class="fas fa-chevron-down caret" [class.rotated]="showPicker"></i>
       </button>
 
@@ -44,7 +44,7 @@ import { FormsModule } from '@angular/forms';
               <div class="input-wrapper">
                 <i class="far fa-calendar-alt"></i>
                 <input type="text"
-                       placeholder="DD/MM/YYYY"
+                       placeholder="DD MMM YYYY"
                        class="form-control"
                        bsDatepicker
                        [(ngModel)]="tempStartDate"
@@ -62,7 +62,7 @@ import { FormsModule } from '@angular/forms';
               <div class="input-wrapper">
                 <i class="far fa-calendar-check"></i>
                 <input type="text"
-                       placeholder="DD/MM/YYYY"
+                       placeholder="DD MMM YYYY"
                        class="form-control"
                        bsDatepicker
                        [(ngModel)]="tempEndDate"
@@ -367,7 +367,7 @@ export class DateRangePickerComponent implements OnInit, OnChanges {
 
   bsConfig: Partial<BsDatepickerConfig> = {
     containerClass: this.theme === 'red' ? 'theme-red' : 'theme-indigo',
-    dateInputFormat: 'DD/MM/YYYY',
+    dateInputFormat: 'DD MMM YYYY',
     showWeekNumbers: false,
   };
 
