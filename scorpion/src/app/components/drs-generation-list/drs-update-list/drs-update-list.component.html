@@ -44,7 +44,7 @@
                             <i class="fas fa-sync-alt"></i> DRS Update
                             <span class="mtag">{{ DRSInformation?.pdcno || drsData?.drsNo }}</span>
                             <span class="mtag" style="font-size:11px; opacity:.85;">{{ (DRSInformation?.drsDate ||
-                                drsData?.drsDate) | date:'dd-MMM-yy' }}</span>
+                                drsData?.drsDate) | date:'dd MMM yyyy' }}</span>
 
                             <!-- Toggle DRS Delivery List Button -->
                             <button type="button"
@@ -268,7 +268,7 @@
                                                     <div class="text-primary text-decoration-underline fw-bold mb-1">{{
                                                         row.value.dockno }}</div>
                                                     <div class="text-muted">{{ row.value.booking_Date |
-                                                        date:'dd-MMM-yy'}}</div>
+                                                        date:'dd MMM yyyy'}}</div>
                                                 </td>
 
                                                 <!-- 3. Org / Dest / Paybase -->

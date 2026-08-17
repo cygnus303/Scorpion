@@ -166,7 +166,7 @@
                             <div class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;" (click)="openPRQView(row.PRQNo)"><a>{{
                                     row.PRQNo }}</a></div>
                         </td>
-                        <td class="text-center fs-6 text-muted">{{ (row.PRQDate | date:'dd-MMM-yy') || '--' }}</td>
+                        <td class="text-center fs-6 text-muted">{{ (row.PRQDate | date:'dd MMM yyyy') || '--' }}</td>
                         <td class="text-center">
                             <div class="d-flex gap-2 flex-column">
                                 <span class="fs-6 text-body-secondary">{{row.CustomerCode}}:{{ row.CustomerName
