@@ -10,6 +10,7 @@ import { ChallanFilterComponent } from './challan-filter/challan-filter.componen
 import { SharedModule } from 'app/shared/shared/shared.module';
 import { DateTimePickerComponent } from 'app/layouts/header/date-time-picker/date-time-picker.component';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
+import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 
 @NgModule({
   declarations: [ChallanListComponent, ChallanFilterComponent],
@@ -21,10 +22,12 @@ import { TimepickerModule } from 'ngx-bootstrap/timepicker';
     ReactiveFormsModule,
     NgSelectModule,
     SharedModule,
-    TimepickerModule.forRoot()
+    TimepickerModule.forRoot(),
+    DateRangePickerComponent
   ],
   exports: [RouterModule, DateTimePickerComponent, ChallanFilterComponent],
   providers: [DatePipe],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ChallanModule { }
+``

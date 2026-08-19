@@ -26,6 +26,7 @@ export class BillReceiptComponent {
   successModalRef?: BsModalRef;
   successMrsno: string = '';
   successVoucherNo: string = '';
+  successVoucherList: string[] = [];
   successMsg: string = '';
 
   @Output() close = new EventEmitter<void>();
@@ -40,6 +41,7 @@ export class BillReceiptComponent {
   roundOff = 0.00;
   netReceived = 0.00;
   isSubmitting = false;
+  isSubmitted = false;
 
   selectedFile: File | null = null;
   selectedFileName: string = '';
@@ -230,7 +232,7 @@ export class BillReceiptComponent {
       roundOffMinus: new FormControl(0, [Validators.max(10)]),
       roundOffPlus: new FormControl(0, [Validators.max(10)]),
       isRoundOff: new FormControl(false),
-      attachment: new FormControl('')
+      attachment: new FormControl('', Validators.required)
     });
   }
 
@@ -330,15 +332,20 @@ export class BillReceiptComponent {
   }
 
   submit() {
+    this.isSubmitted = true;
     this.receiptForm.markAllAsTouched();
 
     if (this.receiptForm.invalid) {
       const invalidFields: string[] = [];
+      let attachmentMissing = false;
       Object.keys(this.receiptForm.controls).forEach(key => {
         const control = this.receiptForm.get(key);
         if (control?.invalid) {
           if (key === 'bills' && control instanceof FormArray) {
             control.controls.forEach((billGroup, index) => {
+              if (billGroup.get('attachment')?.invalid) {
+                attachmentMissing = true;
+              }
               Object.keys((billGroup as FormGroup).controls).forEach(billKey => {
                 if (billGroup.get(billKey)?.invalid) {
                   invalidFields.push(`bills[${index}].${billKey}`);
@@ -351,6 +358,10 @@ export class BillReceiptComponent {
         }
       });
       console.log('Validation Error: The following fields are invalid: ', invalidFields);
+      
+      if (attachmentMissing) {
+        this.sweetalertService.info('Please upload the required Attachment (Proof) for the bill(s). Scroll right in the Bill Details table if needed.');
+      }
       return;
     }
 
@@ -507,6 +518,7 @@ export class BillReceiptComponent {
         if (res.success) {
           this.successMrsno = res.mrsno;
           this.successVoucherNo = res.voucherNo;
+          this.successVoucherList = res.voucherNo ? res.voucherNo.split(',') : [];
           this.successMsg = msg.replace('Money Receipt and Debit/Credit Voucher have been created for ', '').replace('.', '');
           
           this.successModalRef = this.modalService.show(this.SuccessModalTemplate, {

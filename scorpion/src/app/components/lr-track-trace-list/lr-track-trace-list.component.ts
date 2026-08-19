@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 import { LiveRouteMapComponent } from './live-route-map/live-route-map.component';
 import { LrViewComponent } from '../lr-list/lr-view/lr-view.component';
 import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-lr-track-trace-list',
@@ -29,6 +30,7 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
   @ViewChild('lrLifecycleTracker') lrLifecycleTracker!: LrLifecycleTrackerComponent;
   @ViewChild('liveRouteMap') liveRouteMap!: LiveRouteMapComponent;
   @ViewChild('LrViewComponent') LrViewComponent!: LrViewComponent;
+  public env=environment;
 
   private searchSubject = new Subject<string>();
   private fetchDataSubject = new Subject<any>();
@@ -342,9 +344,17 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
     }
   }
 
-  openTrackerView(lr: any) {
-    if (this.lrLifecycleTracker) {
-      this.lrLifecycleTracker.showPopup(lr);
+  openTrackerView(docketNo: any) {
+    // if (this.lrLifecycleTracker) {
+    //   this.lrLifecycleTracker.showPopup(lr);
+    // }
+    const url = `${this.env.liveUrl}Tracking/LRLifecycleTracker?DocketNo=${docketNo}&DockSf=.&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
     }
   }
 

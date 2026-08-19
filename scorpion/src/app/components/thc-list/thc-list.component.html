@@ -13,7 +13,7 @@
                 *ngIf="!isHQTR && THCFilterForm.get('statusFilter')?.value !== 'MFPENDING'">+ THC with
                 Empty Vehicle</button>
             <button class="btn btn-success px-4 py-2 rounded">
-                <span *ngIf="!isdownload"  (click)="downloadExcel()">📥 Download XLS</span>
+                <span *ngIf="!isdownload" (click)="downloadExcel()">📥 Download XLS</span>
                 <span *ngIf="isdownload" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isdownload">Downloading...</span>
             </button>
@@ -97,8 +97,7 @@
             <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
                 <div class="control-bar border-0 shadow-none mb-0">
 
-                    <app-date-range-picker
-                        [initialFromDate]="THCFilterForm.get('fromDate')?.value"
+                    <app-date-range-picker [initialFromDate]="THCFilterForm.get('fromDate')?.value"
                         [initialToDate]="THCFilterForm.get('toDate')?.value"
                         (onRangeSelect)="onDateRangeSelected($event)">
                     </app-date-range-picker>
@@ -118,7 +117,8 @@
                     </div>
                 </div>
                 <div class="table-toolbar d-flex align-items-center gap-3">
-                    <div class="selected-count text-primary fw-bold bg-primary-subtle px-3 py-1 rounded" *ngIf="THCFilterForm.get('statusFilter')?.value === 'MFPENDING' && selectedMfs.length > 0">
+                    <div class="selected-count text-primary fw-bold bg-primary-subtle px-3 py-1 rounded"
+                        *ngIf="THCFilterForm.get('statusFilter')?.value === 'MFPENDING' && selectedMfs.length > 0">
                         {{ selectedMfs.length }} MF Selected
                     </div>
                     <div class="search-box d-flex align-items-center"><span class="text-muted">🔍</span>
@@ -210,8 +210,8 @@
                         </td>
                         <td class="text-center">
                             <span class="fw-bold cursor-pointer status-badge"
-                                [ngClass]="(data.isEmpty > 0) ? 'empty-thc-yes' : 'empty-thc-no'"
-                                >{{data.isEmpty > 0 ? 'Yes' :'No'}}</span>
+                                [ngClass]="(data.isEmpty > 0) ? 'empty-thc-yes' : 'empty-thc-no'">{{data.isEmpty > 0 ?
+                                'Yes' :'No'}}</span>
                         </td>
                         <td class="text-center">
                             <div class="d-flex gap-2 flex-column">
@@ -226,10 +226,12 @@
                         <td class="text-center cursor-pointer">
                             <div class="d-flex gap-2 flex-column">
                                 <span class="d-block rounded p-1 fw-bold mb-1" *ngIf="data.serviceType"
-                                [ngClass]="data.serviceType === 'FTL' ? 'bg-danger-subtle text-danger' : 'bg-info-subtle text-info'">
+                                    [ngClass]="data.serviceType === 'FTL' ? 'bg-danger-subtle text-danger' : 'bg-info-subtle text-info'">
                                     {{ data.serviceType}}</span>
-                                <span class="mf-mode-badge" [ngClass]="data.routeMode === 'ROAD'?'mf-mode-road':'mf-mode-air'" *ngIf="data.routeMode"
-                                    style="max-width: 180px;" [title]="data.routeMode">{{ data.routeMode }}</span>
+                                <span class="mf-mode-badge"
+                                    [ngClass]="data.routeMode === 'ROAD'?'mf-mode-road':'mf-mode-air'"
+                                    *ngIf="data.routeMode" style="max-width: 180px;" [title]="data.routeMode">{{
+                                    data.routeMode }}</span>
                             </div>
                         </td>
                         <td class="text-center cursor-pointer">
@@ -247,10 +249,12 @@
                             </span>
                         </td>
                         <td class="text-center">
-                            <span class="fw-bold text-primary cursor-pointer" (click)="openHccPopup(data,'L')">{{ data.loadingHCCnt > 0 ?'View Hcc':'-' }}</span>
+                            <span class="fw-bold text-primary cursor-pointer" (click)="openHccPopup(data,'L')">{{
+                                data.loadingHCCnt > 0 ?'View Hcc':'-' }}</span>
                         </td>
-                           <td class="text-center">
-                            <span class="fw-bold text-primary cursor-pointer" (click)="openHccPopup(data,'U')">{{ data.unloadingHCCnt > 0 ?'View Hcc':'-' }}</span>
+                        <td class="text-center">
+                            <span class="fw-bold text-primary cursor-pointer" (click)="openHccPopup(data,'U')">{{
+                                data.unloadingHCCnt > 0 ?'View Hcc':'-' }}</span>
                         </td>
 
                         <td class="text-center">
@@ -275,7 +279,7 @@
                                 <button class="btn btn-sm bg-danger-subtle border-danger-subtle text-danger py-1 px-3"
                                     (click)="onCancel(data.thcNo)"
                                     [disabled]="data.status === 'Cancelled'|| data.status === 'Billed'|| data.status ==='Completed Journey'">
-                                    🚫 Cancel   
+                                    🚫 Cancel
                                 </button>
                             </div>
                         </td>
@@ -284,15 +288,12 @@
                 <tbody *ngIf="!isLoading && mfData?.length > 0 && !isThcListing">
                     <tr *ngFor="let data of mfData; let i = index">
                         <td class="text-center text-muted fs-7">
-                            <input type="checkbox"
-                                   class="form-check-input cursor-pointer"
-                                   style="width: 15px; height: 15px;"
-                                   [checked]="isMfSelected(data)"
-                                   (change)="toggleMfSelection(data, $event)">
+                            <input type="checkbox" class="form-check-input cursor-pointer"
+                                style="width: 15px; height: 15px;" [checked]="isMfSelected(data)"
+                                (change)="toggleMfSelection(data, $event)">
                         </td>
                         <td>
-                            <div class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;"
-                                ><a>{{
+                            <div class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;"><a>{{
                                     data.tcno }}</a></div>
                         </td>
                         <td class="text-center" style="width: 120px;">
@@ -305,8 +306,9 @@
                         </td>
                         <td class="text-center fs-7">
                             {{ data.toBH_CODE }}</td>
-                            <td class="text-center cursor-pointer">
-                            <span class="mf-mode-badge" [ngClass]="data.routE_MODE === 'Road'?'mf-mode-road':'mf-mode-air'">
+                        <td class="text-center cursor-pointer">
+                            <span class="mf-mode-badge"
+                                [ngClass]="data.routE_MODE === 'Road'?'mf-mode-road':'mf-mode-air'">
                                 {{data.routE_MODE}}
                             </span>
                         </td>
