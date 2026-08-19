@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 import { VoucherViewComponent } from '../voucher-view/voucher-view.component';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-mr-detail',
@@ -13,6 +14,7 @@ import { VoucherViewComponent } from '../voucher-view/voucher-view.component';
   styleUrl: './mr-detail.component.scss'
 })
 export class MrDetailComponent {
+  public env = environment;
   public MRData: any;
   public MRBills: any[] = [];
   public totalBillAmt: number = 0;
@@ -87,7 +89,15 @@ export class MrDetailComponent {
     }, 100);
   }
 
-  openVoucherPopup(item: any){
-    this.voucherViewComponent.showPopup(item);
+  openVoucherPopup(VoucherNO: any){
+    // this.voucherViewComponent.showPopup(item);
+    const url = `${this.env.liveUrl}ViewPrint/ViewDCVoucher?VoucherNO=${VoucherNO}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
+    }
   }
 }

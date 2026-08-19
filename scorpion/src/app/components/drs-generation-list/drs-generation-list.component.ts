@@ -368,8 +368,8 @@ formatDateToISO(dateVal: any): string | null {
   //   }
   // }
 
-   THCPDCBillView(BillNo: string) {
-    const url = `${this.env.liveUrl}ViewPrint/BABillPaymentView?BillNo=${BillNo}&Billtype=BA_Bill&src=angular`;
+   THCPDCBillView(bill_Url: string) {
+    const url = `${this.env.liveUrl}${bill_Url}`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );

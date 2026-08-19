@@ -96,8 +96,8 @@
         </thead>
         <tbody formArrayName="bills">
           <tr *ngFor="let bill of billsArray.controls; let i = index" [formGroupName]="i" class="text-center">
-            <td><a href="javascript:void(0)" class="text-danger fw-bold text-decoration-underline"
-                (click)="openInvoiceView(bill.value)">{{ bill.value.no }}</a></td>
+            <td>
+              <span class="text-danger fw-bold" (click)="openInvoiceView(bill.value)">{{ bill.value.no }}</span></td>
             <td>{{ bill.value.date | date:'dd MMM yyyy' }}</td>
             <td>{{ bill.value.branch }}</td>
             <td>{{ bill.value.type }}</td>
