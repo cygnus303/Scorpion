@@ -1,4 +1,4 @@
-﻿import { Component, EventEmitter, Input, OnInit, OnChanges, Output, HostListener, ElementRef } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnChanges, Output, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { FormsModule } from '@angular/forms';
@@ -124,6 +124,22 @@ import { FormsModule } from '@angular/forms';
         --theme-primary-shadow-md: rgba(220,38,38,0.14);
         --theme-primary-shadow: rgba(220,38,38,0.25);
         --theme-primary-shadow-focus: rgba(220,38,38,0.12);
+      }
+
+      &.theme-blue {
+        --theme-primary: #172a5a;
+        --theme-primary-hover: #0d1a3a;
+        --theme-primary-bg: #f0f4ff;
+        --theme-primary-border: #c4d7ff;
+        --theme-primary-light-hover: #e0e8ff;
+        --theme-primary-text: #172a5a;
+        --theme-primary-border-light: #a3c0ff;
+        --theme-primary-bg-light: #f7f9fc;
+        --theme-primary-hover-border: #7aa1ff;
+        --theme-primary-shadow-light: rgba(23,42,90,0.1);
+        --theme-primary-shadow-md: rgba(23,42,90,0.14);
+        --theme-primary-shadow: rgba(23,42,90,0.25);
+        --theme-primary-shadow-focus: rgba(23,42,90,0.12);
       }
     }
 
@@ -366,7 +382,7 @@ export class DateRangePickerComponent implements OnInit, OnChanges {
   tempEndDate: Date = new Date();
 
   bsConfig: Partial<BsDatepickerConfig> = {
-    containerClass: this.theme === 'red' ? 'theme-red' : 'theme-indigo',
+    containerClass: this.theme === 'red' ? 'theme-red' : (this.theme === 'blue' ? 'theme-dark-blue' : 'theme-indigo'),
     dateInputFormat: 'DD MMM YYYY',
     showWeekNumbers: false,
   };
@@ -383,13 +399,13 @@ export class DateRangePickerComponent implements OnInit, OnChanges {
   constructor(private el: ElementRef) {}
 
   ngOnInit() {
-    this.bsConfig.containerClass = this.theme === 'red' ? 'theme-red' : 'theme-indigo';
+    this.bsConfig.containerClass = this.theme === 'red' ? 'theme-red' : (this.theme === 'blue' ? 'theme-dark-blue' : 'theme-indigo');
     this.tempStartDate = this.initialFromDate ? new Date(this.initialFromDate) : new Date();
     this.tempEndDate   = this.initialToDate   ? new Date(this.initialToDate)   : new Date();
   }
 
   ngOnChanges() {
-    this.bsConfig.containerClass = this.theme === 'red' ? 'theme-red' : 'theme-indigo';
+    this.bsConfig.containerClass = this.theme === 'red' ? 'theme-red' : (this.theme === 'blue' ? 'theme-dark-blue' : 'theme-indigo');
     this.tempStartDate = this.initialFromDate ? new Date(this.initialFromDate) : new Date();
     this.tempEndDate   = this.initialToDate   ? new Date(this.initialToDate)   : new Date();
   }

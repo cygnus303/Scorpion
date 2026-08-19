@@ -102,6 +102,13 @@ export class ChallanFilterComponent {
     });
   }
 
+  onDateRangeSelected(event: any) {
+    this.challanService.filterForm.patchValue({
+      dateRange: [event.fromDate, event.toDate]
+    });
+    this.onSearch();
+  }
+
   onSearch() {
     if (this.challanService.filterForm.valid) {
       // this.router.navigate(['Operation/ChallanList'],{

@@ -68,7 +68,12 @@
     </div>
 
     <!-- Section: BILL DETAILS -->
-    <h6 class="text-danger fw-bold border-bottom border-danger pb-2 mb-3" style="font-size: 0.9rem;">BILL DETAILS</h6>
+    <h6 class="text-danger fw-bold border-bottom border-danger pb-2 mb-3 d-flex justify-content-between align-items-center" style="font-size: 0.9rem;">
+      <span>BILL DETAILS</span>
+      <span *ngIf="receiptForm.get('bills')?.invalid && isSubmitted" class="text-danger fw-medium" style="font-size: 0.75rem;">
+        <i class="fas fa-exclamation-circle me-1"></i> Please complete all required fields (scroll right for Attachments 👉)
+      </span>
+    </h6>
     <div class="table-responsive mb-4 custom-scrollbar" style="max-height: 250px; overflow-y: auto; overflow-x: auto;">
       <table class="table table-sm table-bordered align-middle mb-0 text-nowrap"
         style="font-size: 0.8rem; border-color: #f1f3f4;">
@@ -91,13 +96,14 @@
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Round Off (+)</th>
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;display: none;">Net Recd.
               Amt.</th>
-            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Attachment</th>
+            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Attachment <span class="text-danger">*</span></th>
           </tr>
         </thead>
         <tbody formArrayName="bills">
           <tr *ngFor="let bill of billsArray.controls; let i = index" [formGroupName]="i" class="text-center">
             <td>
-              <span class="text-danger fw-bold" (click)="openInvoiceView(bill.value)">{{ bill.value.no }}</span></td>
+              <span class="text-danger fw-bold" (click)="openInvoiceView(bill.value)">{{ bill.value.no }}</span>
+            </td>
             <td>{{ bill.value.date | date:'dd MMM yyyy' }}</td>
             <td>{{ bill.value.branch }}</td>
             <td>{{ bill.value.type }}</td>
@@ -161,15 +167,21 @@
             </td>
             <td>
               <!-- Default Upload State (When no file is selected) -->
-              <div class="position-relative d-flex align-items-center justify-content-center"
+              <div class="position-relative d-flex flex-column align-items-center justify-content-center"
                 style="width: 150px; margin: 0 auto;" *ngIf="!bill.get('attachment')?.value">
-                <input type="file" class="position-absolute w-100 h-100 opacity-0 cursor-pointer" style="z-index: 2;"
-                  (change)="onBillFileSelected($event, i)" title="Choose file">
-                <button type="button"
-                  class="btn btn-outline-danger btn-sm w-100 shadow-none d-flex align-items-center justify-content-center gap-2 text-truncate"
-                  style="font-size: 0.75rem; z-index: 1; padding: 4px 8px;" title="Upload Proof">
-                  <span class="text-truncate" style="max-width: 90px;">Upload Proof</span>
-                </button>
+                <div class="position-relative w-100 h-100">
+                  <input type="file" class="position-absolute w-100 h-100 opacity-0 cursor-pointer" style="z-index: 2; left:0; top:0"
+                    (change)="onBillFileSelected($event, i)" title="Choose file">
+                  <button type="button"
+                    class="btn btn-outline-danger btn-sm w-100 shadow-none d-flex align-items-center justify-content-center gap-2 text-truncate"
+                    [ngClass]="{'border-danger text-danger': bill.get('attachment')?.invalid && isSubmitted}"
+                    style="font-size: 0.75rem; z-index: 1; padding: 4px 8px;" title="Upload Proof">
+                    <span class="text-truncate" style="max-width: 90px;">Upload Proof</span>
+                  </button>
+                </div>
+                <div *ngIf="bill.get('attachment')?.invalid && isSubmitted" class="text-danger mt-1 fw-bold" style="font-size: 0.75rem;">
+                  Required
+                </div>
               </div>
 
               <!-- Selected File State -->
@@ -273,7 +285,8 @@
               </div>
               <div class="col-md-3">
                 <label class="form-label small text-muted mb-1">
-                  {{ bankMode === 'cheque' ? 'Cheque No.' : 'RTGS / NEFT No.' }} <span class="text-danger">*</span></label>
+                  {{ bankMode === 'cheque' ? 'Cheque No.' : 'RTGS / NEFT No.' }} <span
+                    class="text-danger">*</span></label>
                 <input type="text" class="form-control form-control-sm bg-white" placeholder="Enter number"
                   formControlName="chequeNo" (change)="checkBouncedCheque()"
                   [ngClass]="{'border-danger': receiptForm.get('chequeNo')?.invalid && receiptForm.get('chequeNo')?.touched}">
@@ -404,28 +417,45 @@
   <div class="modal-body p-0 bg-white" style="border-radius: 0.5rem;">
     <div class="text-center pt-5 px-4 pb-2">
       <!-- Success Icon -->
-      <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px; background-color: #d1e7dd; border-radius: 50%;">
+      <div class="mx-auto mb-3 d-flex align-items-center justify-content-center"
+        style="width: 70px; height: 70px; background-color: #d1e7dd; border-radius: 50%;">
         <i class="fas fa-check text-success" style="font-size: 35px;"></i>
       </div>
-      
+
       <h4 class="text-success fw-bold mb-2" style="font-size: 1.25rem;">MR Generated Successfully</h4>
-      <p class="text-muted mb-4" style="font-size: 13px;">Money Receipt and Debit/Credit Voucher have been created for {{successMsg}}.</p>
-      
+      <p class="text-muted mb-4" style="font-size: 13px;">Money Receipt and Debit/Credit Voucher have been created for
+        {{successMsg}}.</p>
+
       <div class="d-flex gap-3 justify-content-center px-3">
-        <div *ngIf="successMrsno" class="border rounded p-3 bg-white" style="flex: 1; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-          <div class="text-muted mb-1" style="font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;">MR NUMBER</div>
-          <a href="javascript:void(0)" (click)="handleLinkClick('openMrDetail', successMrsno)" class="text-danger fw-bold text-decoration-underline" style="font-size: 15px;">{{successMrsno}}</a>
+        <div *ngIf="successMrsno" class="border rounded p-3 bg-white"
+          style="flex: 1; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+          <div class="text-muted mb-1"
+            style="font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;">MR NUMBER</div>
+          <a href="javascript:void(0)" (click)="handleLinkClick('openMrDetail', successMrsno)"
+            class="text-danger fw-bold text-decoration-underline" style="font-size: 15px;">{{successMrsno}}</a>
         </div>
-        
-        <div *ngIf="successVoucherNo" class="border rounded p-3 bg-white" style="flex: 1; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-          <div class="text-muted mb-1" style="font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;">VOUCHER NUMBER</div>
-          <a href="javascript:void(0)" (click)="handleLinkClick('openVoucherDetail', successVoucherNo)" class="text-danger fw-bold text-decoration-underline" style="font-size: 15px;">{{successVoucherNo}}</a>
+
+        <div *ngIf="successVoucherList && successVoucherList.length > 0" class="border rounded p-3 bg-white"
+          style="flex: 1; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.02); max-height: 150px; overflow-y: auto;">
+          <div class="text-muted mb-2"
+            style="font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;">VOUCHER
+            NUMBER(S)</div>
+          <div class="d-flex flex-column gap-2">
+            <div *ngFor="let vNo of successVoucherList; let last = last"
+              class="d-flex align-items-center justify-content-between" [ngClass]="{'border-bottom pb-2': !last}">
+              <a href="javascript:void(0)" (click)="handleLinkClick('openVoucherDetail', vNo)"
+                class="text-danger fw-bold text-decoration-underline"
+                style="font-size: 13px; word-break: break-all; margin-right: 10px;">{{vNo}}</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    
-    <div class="w-100 d-flex justify-content-end border-top pt-3 pe-4 pb-3 mt-4 bg-white" style="border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem;">
-      <button type="button" class="btn px-4 py-2 fw-bold shadow-sm rounded-3 text-white" style="background-color: #b71c1c; border-color: #b71c1c;" (click)="closeSuccessModal()">Done</button>
+
+    <div class="w-100 d-flex justify-content-end border-top pt-3 pe-4 pb-3 mt-4 bg-white"
+      style="border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem;">
+      <button type="button" class="btn px-4 py-2 fw-bold shadow-sm rounded-3 text-white"
+        style="background-color: #b71c1c; border-color: #b71c1c;" (click)="closeSuccessModal()">Done</button>
     </div>
   </div>
 </ng-template>

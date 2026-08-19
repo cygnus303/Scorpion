@@ -42,7 +42,14 @@
                             <td class="text-end">{{ item.MRSAMT || '-' }}</td>
                             <td class="text-end">{{ item.NETAMT || '-' }}</td>
                             <td class="text-center">{{ item.MRSTATUS || '-' }}</td>
-                            <td class="text-center"><a class="mr-link"  (click)="openVoucherPopup(item.Voucherno)">{{ item.Voucherno || '-' }}</a></td>
+                            <td class="text-center">
+                                <ng-container *ngIf="item.Voucherno; else noVoucher">
+                                    <div *ngFor="let vNo of item.Voucherno.split(','); let last = last" [class.mb-1]="!last">
+                                        <a class="mr-link text-danger" (click)="openVoucherPopup(vNo)" style="cursor:pointer; text-decoration: underline;">{{ vNo }}</a>
+                                    </div>
+                                </ng-container>
+                                <ng-template #noVoucher>-</ng-template>
+                            </td>
                             <td class="text-center">{{ item.ENTRYBY || '-'}}</td>
                         </tr>
                     </tbody>
