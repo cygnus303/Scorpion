@@ -138,6 +138,19 @@ async handleKeydown(event: KeyboardEvent) {
       this.moveFocus(true);
     }
   }
+
+  private  closeOpenNgSelects() {
+  // Blur whatever currently has focus (closes native inputs/selects)
+  (document.activeElement as HTMLElement)?.blur();
+
+  // Force any open ng-select panel to close by simulating an outside click,
+  // which is what ng-select internally listens for to collapse itself
+  const openPanels = document.querySelectorAll('ng-select.ng-select-opened');
+  if (openPanels.length) {
+    document.body.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+    document.body.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  }
+}
 @HostListener('document:click', ['$event'])
 async handleOutsideClick(event: MouseEvent) {
   const currentUrl = this.router.url;
@@ -168,7 +181,7 @@ async handleOutsideClick(event: MouseEvent) {
   }
 
   let confirmedYes = false;
-
+this.closeOpenNgSelects();
 await Swal.fire({
   title: 'Are you sure you do not have EWayBill No. to Add?',
   icon: 'warning',
