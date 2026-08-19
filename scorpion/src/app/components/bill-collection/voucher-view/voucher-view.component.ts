@@ -2,6 +2,7 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-voucher-view',
@@ -16,6 +17,7 @@ export class VoucherViewComponent {
   public VoucherDetails: any[] = [];
   public totalDebit: number = 0;
   public totalCredit: number = 0;
+  public env = environment;
 
   @ViewChild('TemplateVoucherView', { static: true }) TemplateVoucherView!: TemplateRef<any>;
 
@@ -81,6 +83,17 @@ export class VoucherViewComponent {
       window.print();
       document.body.classList.remove('printing-modal');
     }, 100);
+  }
+
+  openMRPopup(MRNO: string){
+    const url = `${this.env.liveUrl}ViewPrint/ViewMRS?MRSNO=${MRNO}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
+    }
   }
 }
 
