@@ -88,6 +88,7 @@ export class DocketService {
   public isSubmiting:boolean=false;
   public originalSubtotal: number = 0;
   private lastRequestId = 0;
+  public selectedOdAcategory: string = '';
   public calculateSummary = new Subject<boolean>();
   public isComplition : boolean = false;
   public completiondata: any;
@@ -438,6 +439,7 @@ freightAndOtherChar(){
 
   onChangePinCode(event: any) {
     if (!event) return;
+    // this.selectedOdAcategory = event.odAcategory || '';
     this.getpincodeData(event.value)
     this.basicDetailForm.patchValue({ destination: event.destination , toCity:null});
     this.consignorForm.patchValue({ consigneePincode: event.value });
@@ -451,11 +453,24 @@ freightAndOtherChar(){
           this.getPincodeMaster = response;
           this.basicDetailForm.patchValue({
             isODAApplicable: this.getPincodeMaster.is_ODA_Apply === "Y" ? true : false,
-          })
+          });
+          // this.checkODAApplicableAlert();
         }
       }
     });
   }
+
+  // checkODAApplicableAlert() {
+  //   const pincode = this.basicDetailForm.get('pincode')?.value;
+  //   const billingParty = this.basicDetailForm.get('billingParty')?.value;
+  //   const isODAApplicable = this.basicDetailForm.get('isODAApplicable')?.value;
+
+  //   if (pincode && billingParty && isODAApplicable) {
+  //     const msg = `"${pincode} falls under ODA with ${this.selectedOdAcategory}, ODA charges will be applicable."`;
+  //     this.sweetAlertService.warning(msg);
+  //   }
+  // }
+
 
   getMaxDiscountLimit() {
     const date = new Date(this.basicDetailForm.value.cNoteDate);
