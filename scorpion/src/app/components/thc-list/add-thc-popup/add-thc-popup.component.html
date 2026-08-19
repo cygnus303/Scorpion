@@ -490,7 +490,7 @@
                 <ng-container *ngIf="selectedMfs && selectedMfs.length > 0">
                   <tr *ngFor="let item of selectedMfs; let i = index" class="align-middle">
                     <td>{{ item.tcno }}</td>
-                    <td>{{ item.tcdt | date:'dd-MMM-yy' }}</td>
+                    <td>{{ item.tcdt | date:'dd MMM yyyy' }}</td>
                     <td>{{ item.tcbr }}</td>
                     <td>{{ item.toBH_CODE }}</td>
                     <td>{{ item.toT_DKT }}</td>
