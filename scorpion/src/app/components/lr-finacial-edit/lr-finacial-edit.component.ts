@@ -245,4 +245,15 @@ formatDateToISO(dateVal: any): string | null {
   onView(row: any){
     this.LrViewComponent.showPopup(row);
 }
+
+openTrack(dockno: string){
+  const url = `${this.env.liveUrl}Tracking/LRLifecycleTracker?DocketNo=${dockno}&DockSf=.&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
+    }
+}
 }

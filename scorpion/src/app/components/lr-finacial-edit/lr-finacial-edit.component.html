@@ -168,14 +168,7 @@
                                 <button class="ab ab-finedit" (click)="openEdit(lr.dockno)"
                                     [disabled]="lr.isQuickMode==='Q'||lr.status ==='Cancelled'|| lr.isBilled === 'Billed'">💰 Fin Edit</button>
                                 <div class="track-wrap">
-                                    <button class="ab ab-track" >📍 Track</button>
-                                    <!-- <div class="track-dropdown" [class.open]="openTrackIndex === i">
-                                        <a *ngFor="let item of trackMenuItems"
-                                            (click)="onTrackMenuClick(item, lr.dockno)">
-                                            <span class="ti">{{ item.icon }}</span> {{ item.label }}
-                                        </a>
-
-                                    </div> -->
+                                    <button class="ab ab-track" (click)="openTrack(lr.dockno)">📍 Track</button>
                                 </div>
                                 <div class="print-wrap">
                                     <button class="ab ab-print" (click)="openPrint(lr.dockno)">🖨 Print</button>
