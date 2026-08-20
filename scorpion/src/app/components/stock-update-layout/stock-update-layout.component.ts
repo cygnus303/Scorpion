@@ -237,4 +237,14 @@ export class StockUpdateLayoutComponent {
   openHccPopup(data: any, chargeType: string){
     this.HccViewComponent.showPopup(data, chargeType, 'M', 'T');
   }
+
+  openLoadingSheetNoView(ChallanNo:any){
+  const url = `${this.env.liveUrl}ViewPrint/ViewLS?ChallanNo=${ChallanNo}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+    if (popup) {
+      popup.location.href = url;
+    }
+  }
 }

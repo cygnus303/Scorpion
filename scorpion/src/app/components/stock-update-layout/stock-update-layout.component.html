@@ -182,7 +182,7 @@
                         <td class="text-center">
                             <span class="text-muted" *ngIf="!row.unLoadingSheetNo">—</span>
                             <a href="javascript:void(0)" *ngIf="row.unLoadingSheetNo" class="text-primary fw-medium"
-                                (click)="openView(row.thcNo)"
+                                (click)="openLoadingSheetNoView(row.unLoadingSheetNo)"
                                 style="text-decoration: dashed underline;">
                                 {{ row.unLoadingSheetNo }}
                             </a>
