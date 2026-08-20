@@ -413,8 +413,10 @@ export class BillReceiptComponent {
 
     formData.append('VM.ObjBillMst.REMARK', formVal.remarks || "");
     formData.append('VM.ObjBillMst.Col_Amt', String(this.totalCollection));
-    formData.append('VM.ObjBillMst.RoundOffP', String(bills.reduce((sum: number, b: any) => sum + (Number(b.roundOffPlus) || 0), 0)));
-    formData.append('VM.ObjBillMst.RoundOffM', String(bills.reduce((sum: number, b: any) => sum + (Number(b.roundOffMinus) || 0), 0)));
+    // formData.append('VM.ObjBillMst.RoundOffP', String(bills.reduce((sum: number, b: any) => sum + (Number(b.roundOffPlus) || 0), 0)));
+    // formData.append('VM.ObjBillMst.RoundOffM', String(bills.reduce((sum: number, b: any) => sum + (Number(b.roundOffMinus) || 0), 0)));
+    formData.append('VM.ObjBillMst.RoundOffP', '0');
+    formData.append('VM.ObjBillMst.RoundOffM', '0');
     formData.append('VM.ObjBillMst.TDSDED', String(this.totalTds));
     formData.append('VM.ObjBillMst.Freight_Deduction', String(bills.reduce((sum: number, b: any) => sum + (Number(b.roundOffMinus) || 0), 0)));
     formData.append('VM.ObjBillMst.Claim_Deduction', "0");
