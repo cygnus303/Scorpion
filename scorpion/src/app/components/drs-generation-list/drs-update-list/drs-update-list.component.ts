@@ -313,6 +313,9 @@ export class DRSUpdateListComponent {
       group.get('deliveredPkgs')?.valueChanges.subscribe(() => {
         this.updateDeliveryValidators(group);
       });
+      group.get('isChecked')?.valueChanges.subscribe(() => {
+        this.updateDeliveryValidators(group);
+      });
       this.drsList.push(group);
       group.get('deliveredPkgs')?.updateValueAndValidity({ emitEvent: false });
       this.updateDeliveryValidators(group);
@@ -628,13 +631,27 @@ export class DRSUpdateListComponent {
   updateDeliveryValidators(row: FormGroup): void {
     const delivered = Number(row.get('deliveredPkgs')?.value || 0);
     const pending = Number(row.get('pkgs_Pending')?.value || 0);
+    const isChecked = row.get('isChecked')?.value;
 
     const deliveredToCtrl = row.get('DeliveredTo');
     const personCtrl = row.get('DlyPerson');
     const contactCtrl = row.get('DlyContactNo');
 
-    if (delivered === pending && pending > 0) {
+    if (!isChecked || (delivered !== pending && pending > 0)) {
+      deliveredToCtrl?.clearValidators();
+      personCtrl?.clearValidators();
+      contactCtrl?.clearValidators();
 
+      if (!isChecked) {
+        deliveredToCtrl?.setValue(null, { emitEvent: false });
+        personCtrl?.setValue(null, { emitEvent: false });
+        contactCtrl?.setValue(null, { emitEvent: false });
+      } else {
+        deliveredToCtrl?.setValue(null, { emitEvent: false });
+        personCtrl?.setValue(null, { emitEvent: false });
+        contactCtrl?.setValue(null, { emitEvent: false });
+      }
+    } else {
       deliveredToCtrl?.setValidators([Validators.required]);
 
       personCtrl?.setValidators([
@@ -646,17 +663,6 @@ export class DRSUpdateListComponent {
         Validators.required,
         Validators.pattern('^[0-9]{10}$')
       ]);
-
-    } else {
-
-      deliveredToCtrl?.clearValidators();
-      personCtrl?.clearValidators();
-      contactCtrl?.clearValidators();
-
-      deliveredToCtrl?.setValue(null, { emitEvent: false });
-      personCtrl?.setValue(null, { emitEvent: false });
-      contactCtrl?.setValue(null, { emitEvent: false });
-
     }
 
     deliveredToCtrl?.updateValueAndValidity({ emitEvent: false });
@@ -843,8 +849,10 @@ export class DRSUpdateListComponent {
 
     const deliveredPkgs = Number(row.get('deliveredPkgs')?.value || 0);
     const frontPreview = row.get('frontPreview')?.value;
+    const isChecked = row.get('isChecked')?.value;
 
     return (
+      isChecked &&
       deliveredPkgs > 0 &&
       !frontPreview &&
       (row.get('frontFiles')?.touched || this.isSubmit)
@@ -972,8 +980,9 @@ export class DRSUpdateListComponent {
     this.drsList.controls.forEach((row: any, index: number) => {
       const deliveredPkgs = Number(row.get('deliveredPkgs')?.value || 0);
       const frontFiles = row.get('frontFiles')?.value || [];
+      const isChecked = row.get('isChecked')?.value;
 
-      if (deliveredPkgs > 0 && frontFiles.length === 0) {
+      if (isChecked && deliveredPkgs > 0 && frontFiles.length === 0) {
         invalidIndexes.push(index);
       }
     });
@@ -987,8 +996,9 @@ export class DRSUpdateListComponent {
     this.drsList.controls.forEach((row: any) => {
       const deliveredPkgs = Number(row.get('deliveredPkgs')?.value || 0);
       const frontFiles = row.get('frontFiles')?.value || [];
+      const isChecked = row.get('isChecked')?.value;
 
-      if (deliveredPkgs > 0 && frontFiles.length === 0) {
+      if (isChecked && deliveredPkgs > 0 && frontFiles.length === 0) {
         hasError = true;
         row.get('frontFiles')?.markAsTouched();
       }
@@ -1001,11 +1011,13 @@ export class DRSUpdateListComponent {
   deliveryUpdate() {
     const DepsList: any[] = [];
     this.drsList.controls.forEach(ctrl => {
-      if (ctrl.value.depsData) {
+      if (ctrl.value.depsData && ctrl.value.isChecked === true) {
         DepsList.push(ctrl.value.depsData);
       }
     });
-    const DRSDocketsUpdateList = this.drsList.getRawValue().map((row: any) => ({
+    const DRSDocketsUpdateList = this.drsList.getRawValue()
+      .filter((row: any) => row.isChecked === true)
+      .map((row: any) => ({
       remark: row.remarks || '',
       isEnabledBadPodoption: row.isBadPod === true,
       autoNo: row.autoNo,
@@ -1057,13 +1069,15 @@ export class DRSUpdateListComponent {
     formData.append("FinYear", this.docketService.loginUserList.FinYear);
 
     this.drsList.controls.forEach((ctrl: any) => {
-      ctrl.value.frontFiles.forEach((file: File) => {
-        formData.append('Files', file, `${ctrl.value.dockno}_FRONT_${file.name}`);
-      });
+      if (ctrl.value.isChecked === true) {
+        ctrl.value.frontFiles.forEach((file: File) => {
+          formData.append('Files', file, `${ctrl.value.dockno}_FRONT_${file.name}`);
+        });
 
-      ctrl.value.backFiles.forEach((file: File) => {
-        formData.append('BackFiles', file, `${ctrl.value.dockno}_BACK_${file.name}`);
-      });
+        ctrl.value.backFiles.forEach((file: File) => {
+          formData.append('BackFiles', file, `${ctrl.value.dockno}_BACK_${file.name}`);
+        });
+      }
     });
     const podError = this.hasPODError();
     if (this.DRSSummaryForm.valid && !podError) {
