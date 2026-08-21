@@ -173,10 +173,11 @@
                             {{ row.thcLocation }}
                         </td>
                          <td class="text-center">
-                            <a href="javascript:void(0)"  class="text-primary fw-medium"
+                            <span *ngIf="row.unLoadingHCNo !== 'YES'" class="text-muted">—</span>
+                            <a href="javascript:void(0)" *ngIf="row.unLoadingHCNo === 'YES'" class="text-primary fw-medium"
                                (click)="openHccPopup(row,'U')"
                                 style="text-decoration: dashed underline;">
-                               {{ row.unLoadingHCNo === 'YES' ?'View Hcc':'-' }}
+                               View Hcc
                             </a>
                         </td>    
                         <td class="text-center">
