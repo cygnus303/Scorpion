@@ -89,7 +89,15 @@
                                     <td class="text-center px-2 py-2">{{ row.VendorCode || '—' }}</td>
                                     <td class="text-center px-2 py-2 fw-bold">₹ {{ row.ChargeAmount | number:'1.2-2' }}</td>
                                     <td class="text-center px-2 py-2 fw-bold">{{ row.IsCancel ?  'Cancelled' :'-'}}</td>
-                                    <td class="text-center px-2 py-2 fw-bold cursor-pointer" style="text-decoration: underline;" (click)="BillNumberView(row.BillNo)">{{ row.BillNo ||'-' }}</td>
+                                    <td class="text-center px-2 py-2 fw-bold">
+                                        <span *ngIf="!row.BillNo" class="text-muted">—</span>
+                                        <a href="javascript:void(0)" *ngIf="row.BillNo"
+                                           class="cursor-pointer text-primary"
+                                           style="text-decoration: underline;"
+                                           (click)="BillNumberView(row.BillNo)">
+                                            {{ row.BillNo }}
+                                        </a>
+                                    </td>
                                 </tr>
 
                                 

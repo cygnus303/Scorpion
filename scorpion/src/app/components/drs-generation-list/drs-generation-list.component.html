@@ -206,9 +206,15 @@
                                     style="max-width: 180px;" [title]="data.vendorName">{{ data.vendorName }}</span>
                             </div>
                         </td>
-                        <td class="text-center fs-7 cursor-pointer" style="text-decoration: underline;" 
-                           (click)="THCPDCBillView(data.bill_Url)" [ngClass]="(data.vendorBillNo) ? 'text-primary fw-bold' : 'text-muted'">
-                            {{ data.vendorBillNo || '—' }}</td>
+                        <td class="text-center fs-7">
+                            <span *ngIf="!data.vendorBillNo" class="text-muted">—</span>
+                            <a href="javascript:void(0)" *ngIf="data.vendorBillNo"
+                               class="text-primary fw-bold cursor-pointer"
+                               style="text-decoration: underline;"
+                               (click)="THCPDCBillView(data.bill_Url)">
+                                {{ data.vendorBillNo }}
+                            </a>
+                        </td>
                         <td class="text-center cursor-pointer">
                             <span class="px-4 py-2 rounded fw-bold border"
                                 [ngClass]="isHccValid(data.loadingHCCNo) ? 'bg-success-subtle text-success border-success-subtle text-decoration-underline' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
@@ -246,10 +252,16 @@
                                     (click)="openView(data.drsNo)">
                                     <i class="fa fa-eye"></i> View
                                 </button>
-                                <button *ngIf="!isHQTR"
+                                <!-- <button *ngIf="!isHQTR"
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
                                     (click)="openUpdateModal(data)"
                                     [disabled]="data.ispdcUpdate || data.status==='Cancelled'||data.status==='Billed' || data.IsThroughDA ===true || data.vendorType?.toUpperCase() === 'BUSINESS ASSOCIATE' ">
+                                    🔄 DRS Update
+                                </button> -->
+                                 <button *ngIf="!isHQTR"
+                                    class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
+                                    (click)="openUpdateModal(data)"
+                                    [disabled]="data.IsUpdateDRSForPending || data.status==='Cancelled'||data.status==='Billed' || data.IsThroughDA ===true || data.vendorType?.toUpperCase() === 'BUSINESS ASSOCIATE' ">
                                     🔄 DRS Update
                                 </button>
                                 <button *ngIf="!isHQTR" class="btn btn-sm bg-warning-secondary border-warning-secondary text-warning-emphasis py-1 px-3" (click)="openDeps(data, false)"
