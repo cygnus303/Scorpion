@@ -22,8 +22,8 @@ export class FreightDetailsComponent {
   ) { }
 
   ngOnInit() {
-    this.docketService.getIGSTchargesDetail();
     this.docketService.freightbuild();
+    this.docketService.getIGSTchargesDetail();
     this.docketService.basicDetailForm.get('IsMAllDeliveryN')?.valueChanges.subscribe(value => {
     // this.updateCharge('SCHG17', value); // Mall Delivery Charges
     this.docketService.freightForm.patchValue({SCHG17:0})
