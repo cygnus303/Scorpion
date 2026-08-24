@@ -92,6 +92,10 @@ export class DocketService {
   public ruleDetailForChargeRule: any;
   public isWeightRecalculated = false;
   public hasConfirmedNoEwayBill = false;
+  
+  // Trigger to show Invoice Upload modal in basic-details component
+  triggerInvoiceUpload$ = new Subject<boolean>();
+
   public maxDiscountLimit: number = 0;
   public maxfreightChargesDiscount: number = 0;
   public isPORequired:boolean=false;

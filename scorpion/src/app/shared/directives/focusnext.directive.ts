@@ -102,6 +102,7 @@ async handleKeydown(event: KeyboardEvent) {
 
       confirmedYes = true;
       this.docketService.hasConfirmedNoEwayBill = true;
+      this.docketService.triggerInvoiceUpload$.next(true);
     }
         });
 
@@ -206,6 +207,7 @@ await Swal.fire({
     if (result.isConfirmed) {
       confirmedYes = true;
       this.docketService.hasConfirmedNoEwayBill = true;
+      this.docketService.triggerInvoiceUpload$.next(true);
     }
   });
 }
