@@ -8,6 +8,9 @@ import { Validators } from '@angular/forms';
 import { EmailRegex, mobileNo } from '../../../shared/constants/common';
 import { CommonDateService } from '../../../shared/services/common-date.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SweetAlertService } from '../../../shared/services/sweet-alert.service';
+import { HttpClient } from '@angular/common/http';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'basic-details',
@@ -36,10 +39,17 @@ export class BasicDetailsComponent {
   public notToCityValue = 'Please enter at least 1 characters';
   public notVehicleNoValue = 'Please enter at least 1 characters';
 
+  public showInvoiceUpload: boolean = false;
+  public isDragging: boolean = false;
+  public uploadedFiles: File[] = [];
+  public isUploading: boolean = false;
+
   constructor(
     public docketService: DocketService,
     private basicDetailService: BasicDetailService, public generalMasterService: GeneralMasterService,
-    public commonDateService:CommonDateService, private route: ActivatedRoute, private router: Router) { }
+    public commonDateService:CommonDateService, private route: ActivatedRoute, private router: Router,
+    private sweetAlertService: SweetAlertService,
+    private http: HttpClient) { }
 
   ngOnInit() {
     this.appoinmentDate = new Date();
@@ -49,6 +59,12 @@ export class BasicDetailsComponent {
       const fromPRSList = params['fromLR'] === 'true';
       if (fromPRSList) {
         this.hideBackButton = true;
+      }
+    });
+
+    this.docketService.triggerInvoiceUpload$.subscribe((trigger: boolean) => {
+      if (trigger) {
+        this.showInvoiceUpload = true;
       }
     });
 
@@ -117,10 +133,114 @@ export class BasicDetailsComponent {
 
     callEwayBillFromParent(event: any) {
       const data =event.target.value;
-        if (data.length.toString() === "12") {
-          this.docketService.ewayBill$.next(event);
-        }
+      if (data.length.toString() === "12") {
+        this.docketService.ewayBill$.next(event);
+      }
     }
+
+    closeInvoiceUpload() {
+      this.showInvoiceUpload = false;
+      this.uploadedFiles = [];
+      this.isUploading = false;
+    }
+
+    onDragOver(event: DragEvent) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.isDragging = true;
+    }
+
+    onDragLeave(event: DragEvent) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.isDragging = false;
+    }
+
+    onFileDropped(event: DragEvent) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.isDragging = false;
+      if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+        this.handleFiles(Array.from(event.dataTransfer.files));
+      }
+    }
+
+    onFileSelected(event: any) {
+      if (event.target.files && event.target.files.length > 0) {
+        this.handleFiles(Array.from(event.target.files));
+      }
+    }
+
+    handleFiles(files: File[]) {
+      this.uploadedFiles = files;
+      if (files.length > 0) {
+        this.uploadInvoiceOCR(files[0]);
+      }
+    }
+
+    uploadInvoiceOCR(file: File) {
+      this.isUploading = true;
+      const formData = new FormData();
+      formData.append('api_key', 'zck096ek4f43bza1rscb');
+      formData.append('file', file, file.name);
+
+      this.http.post('https://scorpion.nextapi.in/api/get/ocr/info?full=null', formData).subscribe({
+        next: (response: any) => {
+          this.isUploading = false;
+          this.showInvoiceUpload = false;
+          if (response && response.success && response.data) {
+            this.autoFillForms(response.data);
+            this.sweetAlertService.success('Invoice details extracted successfully!').then(() => {
+            });
+          } else {
+            this.sweetAlertService.error('Failed to extract invoice details.');
+          }
+        },
+        error: (err: any) => {
+          this.isUploading = false;
+          console.error('OCR API error', err);
+          this.sweetAlertService.error('Failed to extract invoice details. Please try again.');
+        }
+      });
+    }
+
+    autoFillForms(data: any) {
+      if (data.invoice_no || data.invoice_date) {
+        if (this.docketService.invoiceRows.length > 0) {
+          const row = this.docketService.invoiceRows.at(0) as FormGroup;
+          if (data.invoice_no) row.get('invoiceNo')?.setValue(data.invoice_no);
+          if (data.invoice_date) row.get('ewayinvoiceDate')?.setValue(new Date(data.invoice_date));
+        }
+      }
+      
+      if (this.docketService.consignorForm) {
+        if (data.consignor_gst) this.docketService.consignorForm.get('consignorGSTNo')?.setValue(data.consignor_gst);
+        if (data.consignee_gst) this.docketService.consignorForm.get('consigneeGSTNo')?.setValue(data.consignee_gst);
+        if (data.consignor_address) this.docketService.consignorForm.get('consignorAddress')?.setValue(data.consignor_address);
+        if (data.consignee_address) this.docketService.consignorForm.get('consigneeAddress')?.setValue(data.consignee_address);
+        
+        if (data.consignor_city_or_pincode) {
+          const pinMatch = data.consignor_city_or_pincode.match(/\d{6}/);
+          if (pinMatch) {
+            this.docketService.getpincodeData(pinMatch[0]);
+            this.docketService.consignorForm.get('consignorPincode')?.setValue(pinMatch[0]);
+          }
+          const cityMatch = data.consignor_city_or_pincode.split('-')[0]?.trim();
+          if (cityMatch) this.docketService.consignorForm.get('consignorCity')?.setValue(cityMatch);
+        }
+        
+        if (data.consignee_city_or_pincode) {
+          const pinMatch = data.consignee_city_or_pincode.match(/\d{6}/);
+          if (pinMatch) {
+            this.docketService.getpincodeData(pinMatch[0]);
+            this.docketService.consignorForm.get('consigneePincode')?.setValue(pinMatch[0]);
+          }
+          const cityMatch = data.consignee_city_or_pincode.split('-')[0]?.trim();
+          if (cityMatch) this.docketService.consignorForm.get('consigneeCity')?.setValue(cityMatch);
+        }
+      }
+    }
+
 
     onApplyDeliveryChangeValidators(){
      this.docketService.basicDetailForm.get('isAppointmentDelivery')?.valueChanges.subscribe((isAppointment) => {
