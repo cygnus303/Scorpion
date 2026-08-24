@@ -19,6 +19,8 @@ import { VendorContractService } from 'app/shared/services/vendor-contract.servi
 export class DeliveryAgentModalComponent {
   public bsModalRef!: BsModalRef;
   public dAForm!: FormGroup;
+  public selectedDigit: number = 10;
+  public lastFetchedVehicleNo: string = '';
   public deliveryAgentCode!:string;
   public vendorsList:VendorsListResponse[]=[];
   public locationData:LocationListResponse[]=[];
@@ -44,6 +46,58 @@ export class DeliveryAgentModalComponent {
     public sweetAlertService:SweetAlertService,
     public basicDetailService:BasicDetailService,public vendorContractService:VendorContractService
   ) {}
+
+  onDigitChange(digit: number) {
+    this.selectedDigit = digit;
+    const vehicleNoControl = this.dAForm?.get('vehicleNo');
+    if (vehicleNoControl) {
+      vehicleNoControl.setValidators([Validators.required, Validators.minLength(digit), Validators.maxLength(digit)]);
+      vehicleNoControl.updateValueAndValidity();
+      vehicleNoControl.reset('');
+    }
+  }
+
+  validateVehicleNo(event?: any) {
+    const control = this.dAForm.get('vehicleNo');
+    if (!control) return;
+    let value = (control.value || '').toUpperCase();
+    let filtered = '';
+    const patternMap: { [key: number]: RegExp[] } = {
+      7: [/[A-Z]/, /[A-Z]/, /[A-Z]/, /\d/, /\d/, /\d/, /\d/], // GJ01A12
+      8: [/[A-Z]/, /[A-Z]/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/], // GJ01AB12
+      9: [/[A-Z]/, /[A-Z]/, /\d/, /\d/, /[A-Z]/, /\d/, /\d/, /\d/, /\d/], // GJ01AB123
+      10: [/[A-Z]/, /[A-Z]/, /\d/, /\d/, /[A-Z]/, /[A-Z]/, /\d/, /\d/, /\d/, /\d/], // GJ01AB1234
+      11: [/[A-Z]/, /[A-Z]/, /\d/, /\d/, /[A-Z]/, /[A-Z]/, /[A-Z]/, /\d/, /\d/, /\d/, /\d/] // GJ01ABC1234
+    };
+    const pattern = patternMap[this.selectedDigit];
+    if (pattern) {
+      for (let i = 0; i < value.length && i < pattern.length; i++) {
+        const ch = value[i];
+        if (pattern[i].test(ch)) filtered += ch;
+      }
+    } else {
+      filtered = value.replace(/[^A-Z0-9]/g, '').slice(0, this.selectedDigit);
+    }
+    if (filtered.length > this.selectedDigit) {
+      filtered = filtered.slice(0, this.selectedDigit);
+    }
+    control.setValue(filtered, { emitEvent: false });
+    if (filtered.length === this.selectedDigit && filtered !== this.lastFetchedVehicleNo) {
+      this.lastFetchedVehicleNo = filtered;
+      // if (filtered.startsWith('TS')) {
+      //   this.dAForm.patchValue({
+      //     engineNo: '',
+      //     chassisNo: '',
+      //     rcBookNo: '',
+      //     registrationDate: null,
+      //     insuranceValidityDate: null,
+      //     fitnessValidityDate: null
+      //   });
+      // } else  {
+        this.getVehicleDetail();
+      // }
+    }
+  }
 
 getVehicleDetail(event?: any) {
   const vehicleNo = event ? event.target.value.trim() : this.dAForm.value.vehicleNo?.trim();
@@ -124,6 +178,11 @@ applyGPSProviderValidation(){
    this.docketService.getTypeofMovementData('');
     if(data){
       this.deliveryAgentCode = data.dA_Code;
+      if (data.vehicleNo) {
+        this.selectedDigit = data.vehicleNo.length || 10;
+        this.dAForm?.get('vehicleNo')?.setValidators([Validators.required, Validators.minLength(this.selectedDigit), Validators.maxLength(this.selectedDigit)]);
+        this.dAForm?.get('vehicleNo')?.updateValueAndValidity();
+      }
       const patchData = {
         ...data,
         registrationDate: data.registrationDate ? new Date(data.registrationDate) : null,
@@ -207,7 +266,7 @@ checkLicenseExpiry(event?:any) {
       dA_Code: new FormControl(null),
       deliveryAgentName: new FormControl(''),
       deliveryAgentMobile: new FormControl(''),
-      vehicleNo: new FormControl('', [ Validators.required,Validators.pattern(/^[A-Za-z]{2}\d{1,2}[A-Za-z]{1,3}\d{4}$/i)]),
+      vehicleNo: new FormControl('', [ Validators.required, Validators.minLength(this.selectedDigit), Validators.maxLength(this.selectedDigit) ]),
       registrationDate: new FormControl(''),
       engineNo: new FormControl(''),
       chassisNo: new FormControl(''),
@@ -381,7 +440,8 @@ onChangeLicenceNumber(event?: any) {
         formData.append(key, value ?? '');
       }
     });
-      this.deliveryAgentService.addDeliveryAgent(formData).subscribe({next: (response) => {
+      this.deliveryAgentService.addDeliveryAgent(formData).subscribe({
+        next: (response) => {
           if (response) {
             this.sweetAlertService.success(response.message).then(()=>{
               this.bsModalRef.hide();
@@ -389,8 +449,14 @@ onChangeLicenceNumber(event?: any) {
               this.dataEvent.emit(true);
             });
           }
-        this.isSubmiiting=false;
+          this.isSubmiiting=false;
         },
+        error: (err) => {
+          console.error('Error adding delivery agent:', err);
+          const errMsg = err?.error?.Error?.Message || err?.error?.message || err?.message || 'Something went wrong while saving data.';
+          this.sweetAlertService.error(errMsg);
+          this.isSubmiiting=false;
+        }
       });
        this.isSubmiiting = false;
     }else{

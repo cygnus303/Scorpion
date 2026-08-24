@@ -66,11 +66,26 @@
       <div class="row pb-3">
         <div class="col-6">
           <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Vehicle No. digit</label>
+            <div class="col-sm-7 d-flex align-items-center">
+                <div class="form-check ms-1 me-2" *ngFor="let digit of [10, 9, 8, 7, 11]">
+                    <input class="form-check-input me-1 checkbox-lg" type="radio" name="vehicleDigit"
+                        [value]="digit" (change)="onDigitChange(digit)"
+                        [checked]="selectedDigit === digit" />
+                    <label class="form-check-label">{{ digit }}</label>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row pb-3">
+        <div class="col-6">
+          <div class="row">
             <label class="col-sm-5 col-form-label text-end">Vehicle No</label>
             <div class="col-sm-7">
               <div class="d-flex">
                 <input class="form-control required2" type="text" placeholder="Vehicle No" formControlName="vehicleNo"
-                  (input)="getVehicleDetail($event)" required  maxlength="11"
+                  (input)="validateVehicleNo($event)" required  [maxlength]="selectedDigit"
                   [ngClass]="{ 'border-danger': dAForm.get('vehicleNo')?.invalid  && dAForm.get('vehicleNo')?.touched }">
                 <button class="btn background-color text-white ms-2" type="button"
                   *ngIf="deliveryAgentCode && showVehicleInvokeButton? true:false" (click)="getVehicleDetail()"
@@ -87,6 +102,7 @@
               <div class="text-danger" *ngIf="dAForm.get('vehicleNo')?.touched">
                 <div *ngIf="dAForm.get('vehicleNo')?.hasError('required')"> This field is required.</div>
                 <div *ngIf="dAForm.get('vehicleNo')?.hasError('pattern')">Please enter a valid Vehicle No. </div>
+                <div *ngIf="dAForm.get('vehicleNo')?.hasError('minlength')">Please enter exactly {{ selectedDigit }} characters.</div>
               </div>
             </div>
           </div>
