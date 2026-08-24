@@ -57,6 +57,13 @@ export class ThcEditComponent {
     })
   }
 
+   get isAdvanceAmountInvalid(): boolean {
+    if (!this.thcData) return false;
+    const contractAmt = Number(this.thcData.pcamt) || 0;
+    const advanceAmt = Number(this.thcData.advamt) || 0;
+    return advanceAmt > contractAmt;
+  }
+
   submitTHC() {
     const payload = {
       thcNo: this.selectedTHC || "",
