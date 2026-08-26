@@ -269,6 +269,8 @@ export class DRSUpdateListComponent {
         ratetype: new FormControl(item.rateType),
         newRate: new FormControl(0),
         otp: new FormControl(''),
+        otpVerified: new FormControl(false),
+        otpError: new FormControl(''),
         DELYDATE: new FormControl(this.getCurrentDateTime()),
         cboReason: new FormControl(),
         cboEmail: new FormControl(''),
@@ -1007,6 +1009,24 @@ export class DRSUpdateListComponent {
     return hasError;
   }
 
+  hasOTPError(): boolean {
+    let hasError = false;
+
+    this.drsList.controls.forEach((row: any) => {
+      const deliveredPkgs = Number(row.get('deliveredPkgs')?.value || 0);
+      const isChecked = row.get('isChecked')?.value;
+      const otpVerified = row.get('otpVerified')?.value;
+
+      if (isChecked && deliveredPkgs > 0 && !otpVerified) {
+        hasError = true;
+        row.patchValue({ otpError: 'OTP Verification is mandatory' });
+      }
+    });
+
+    return hasError;
+  }
+
+
 
   deliveryUpdate() {
     const DepsList: any[] = [];
@@ -1080,7 +1100,8 @@ export class DRSUpdateListComponent {
       }
     });
     const podError = this.hasPODError();
-    if (this.DRSSummaryForm.valid && !podError) {
+    const otpError = this.hasOTPError();
+    if (this.DRSSummaryForm.valid && !podError && !otpError) {
       this.isSubmit = true;
       this.deliveryUpdateService.deliveryUpdate(formData).subscribe({
         next: (response: any) => {
@@ -1138,6 +1159,91 @@ export class DRSUpdateListComponent {
       if (podInvalidRows.length) {
         console.log('❌ POD Front missing at rows:', podInvalidRows);
       }
+    }
+  }
+
+  verifyOTP(index: number) {
+    const row = this.drsList.at(index) as FormGroup;
+    const otp = row.get('otp')?.value;
+    const dockno = row.get('dockno')?.value;
+    const drsNo = this.docketService.loginUserList.drsId;
+
+    if (!otp) {
+      row.patchValue({ otpVerified: false, otpError: 'Enter OTP first' });
+      return;
+    }
+
+    const payload = {
+      opt: otp,
+      dockno: dockno,
+      drsNo: drsNo
+    };
+
+    this.THCMasterService.checkOTPIsExists(payload).subscribe({
+      next: (res: any) => {
+        if (res.message === 'Done') {
+          row.patchValue({ otpVerified: true, otpError: '' });
+          this.sweetAlertService.success('OTP Verified Successfully');
+        } else {
+          row.patchValue({ otpVerified: false, otpError: 'OTP Not Exists' });
+        }
+      },
+      error: () => {
+        row.patchValue({ otpVerified: false, otpError: 'Error verifying OTP' });
+      }
+    });
+  }
+
+  resendOTP(index: number) {
+    const row = this.drsList.at(index) as FormGroup;
+    
+    // Clear OTP value and verification status
+    row.patchValue({
+      otp: '',
+      otpVerified: false,
+      otpError: ''
+    });
+
+    const dockno = row.get('dockno')?.value;
+    const drsNo = this.docketService.loginUserList.drsId;
+
+    const payload = {
+      dockno: dockno,
+      drsNo: drsNo
+    };
+
+    this.THCMasterService.resendDRSOTP(payload).subscribe({
+      next: (res: any) => {
+        if (res.message === 'OTP Resent Successfully') {
+          this.sweetAlertService.success('OTP Resent Successfully');
+        } else {
+          this.sweetAlertService.error(res.message || 'Failed to resend OTP');
+        }
+      },
+      error: () => {
+        this.sweetAlertService.error('Error resending OTP');
+      }
+    });
+  }
+
+  otpTimeoutMap: { [key: number]: any } = {};
+
+  onOTPInput(index: number) {
+    const row = this.drsList.at(index) as FormGroup;
+    const otp = row.get('otp')?.value;
+    
+    // Clear previous verification status when typing
+    row.patchValue({ otpVerified: false, otpError: '' }, { emitEvent: false });
+    
+    if (this.otpTimeoutMap[index]) {
+      clearTimeout(this.otpTimeoutMap[index]);
+    }
+    
+    // Auto-verify after 700ms of no typing if length >= 4
+    if (otp && otp.length >= 4) {
+      this.otpTimeoutMap[index] = setTimeout(() => {
+        this.verifyOTP(index);
+      }, 700);
     }
   }
 

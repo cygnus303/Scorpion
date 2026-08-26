@@ -205,9 +205,9 @@
                                             <!-- <th class="align-middle"
                                                 style="background-color: #f3e5f5; color: #6a1b9a; min-width: 120px;">HCC
                                                 Amt (₹)</th> -->
-                                            <!-- <th class="align-middle"
+                                            <th class="align-middle"
                                                 style="background-color: #f3e5f5; color: #6a1b9a; min-width: 120px;">OTP
-                                            </th> -->
+                                            </th>
 
                                             <!-- Group 4: Light Green (delivery info) -->
                                             <th class="align-middle"
@@ -408,10 +408,23 @@
                                                 </td> -->
 
                                                 <!-- 15. OTP -->
-                                                <!-- <td class="align-top">
-                                                    <input type="text" class="form-control form-control-sm"
-                                                        formControlName="otp" placeholder="Enter OTP">
-                                                </td> -->
+                                                <td class="align-top">
+                                                    <div class="input-group input-group-sm">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            formControlName="otp" placeholder="Enter OTP" (input)="onOTPInput(i)" (blur)="verifyOTP(i)">
+                                                        <button class="btn btn-outline-primary" type="button" (click)="resendOTP(i)" title="Resend OTP">
+                                                            <i class="fas fa-redo"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="text-success mt-1" style="font-size: 11px;"
+                                                        *ngIf="drsList.at(i).get('otpVerified')?.value">
+                                                        <i class="fas fa-check-circle"></i> Verified
+                                                    </div>
+                                                    <div class="text-danger mt-1" style="font-size: 11px;"
+                                                        *ngIf="drsList.at(i).get('otpError')?.value">
+                                                        {{ drsList.at(i).get('otpError')?.value }}
+                                                    </div>
+                                                </td>
 
                                                 <!-- 16. Delivered To -->
                                                 <td class="align-top">

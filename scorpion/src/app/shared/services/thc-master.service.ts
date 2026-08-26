@@ -247,4 +247,12 @@ export class THCMasterService {
   thcGeneration(formData:any){
     return this.apiHandlerService.Post(`THC/THCGeneration`,formData);
   }
+
+  checkOTPIsExists(payload: any) {
+    return this.apiHandlerService.Post(`Master/CheckOTPIsExists`, payload);
+  }
+
+  resendDRSOTP(payload: any) {
+    return this.apiHandlerService.Post(`Master/ResendDRSOTP`, payload);
+  }
 }
