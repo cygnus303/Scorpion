@@ -20,7 +20,7 @@
                     <th>Sr. No</th>
                     <th>Delivery Agent ID</th>
                     <th>Delivery Agent Name</th>
-                    <th>Locations</th>
+                    <th style="min-width: 250px; max-width: 300px; white-space: normal;">Locations</th>
                     <th>Vehicle Number</th>
                     <th>License Number</th>
                     <th>BA Name</th>
@@ -35,7 +35,7 @@
                             (input)="getDeliveryAgentList()"></td>
                     <td><input type="text" class="form-control" [(ngModel)]="filters['DeliveryAgentName']"
                             (input)="getDeliveryAgentList()"></td>
-                    <td><input type="text" class="form-control" [(ngModel)]="filters['Location']"
+                    <td style="min-width: 250px; max-width: 300px;"><input type="text" class="form-control" [(ngModel)]="filters['Location']"
                             (input)="getDeliveryAgentList()"></td>
                     <td><input type="text" class="form-control" [(ngModel)]="filters['VehicleNo']"
                             (input)="getDeliveryAgentList()"></td>
@@ -50,7 +50,7 @@
                     <td>{{data.srno}}</td>
                     <td>{{data.dA_Code}}</td>
                     <td>{{data.deliveryAgentName}}</td>
-                    <td>{{data.location}}</td>
+                    <td style="min-width: 250px; max-width: 300px; white-space: normal; word-wrap: break-word;">{{data.location}}</td>
                     <td>{{data.vehicleNo}}</td>
                     <td>{{data.licenseNo}}</td>
                     <td>{{data.baName}}</td>
