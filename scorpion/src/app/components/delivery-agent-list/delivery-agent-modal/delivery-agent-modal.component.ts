@@ -309,7 +309,7 @@ onFileSelected(event: any) {
 }
 
   getVendors() {
-    this.deliveryAgentService.getVendors().subscribe({next: (response) => {
+    this.deliveryAgentService.getVendors(this.docketService.loginUserList?.LocationCode).subscribe({next: (response) => {
         if (response) {
           this.vendorsList = response;
         }

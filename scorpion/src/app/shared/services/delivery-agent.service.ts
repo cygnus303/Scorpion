@@ -27,8 +27,8 @@ export class DeliveryAgentService {
     return this.apiHandlerService.DownloadFile(`Master/DA-export-excel`);
   }
 
-  getVendors(): Observable<any> {
-    return this.apiHandlerService.Get(`External/GetVendors`);
+  getVendors(location:string): Observable<any> {
+    return this.apiHandlerService.Get(`External/GetVendors?Location=${location}`);
   }
 
   getLocation(): Observable<any> {
