@@ -1009,6 +1009,24 @@ export class DRSUpdateListComponent {
     return hasError;
   }
 
+  hasOTPError(): boolean {
+    let hasError = false;
+
+    this.drsList.controls.forEach((row: any) => {
+      const deliveredPkgs = Number(row.get('deliveredPkgs')?.value || 0);
+      const isChecked = row.get('isChecked')?.value;
+      const otpVerified = row.get('otpVerified')?.value;
+
+      if (isChecked && deliveredPkgs > 0 && !otpVerified) {
+        hasError = true;
+        row.patchValue({ otpError: 'OTP Verification is mandatory' });
+      }
+    });
+
+    return hasError;
+  }
+
+
 
   deliveryUpdate() {
     const DepsList: any[] = [];
@@ -1082,7 +1100,8 @@ export class DRSUpdateListComponent {
       }
     });
     const podError = this.hasPODError();
-    if (this.DRSSummaryForm.valid && !podError) {
+    const otpError = this.hasOTPError();
+    if (this.DRSSummaryForm.valid && !podError && !otpError) {
       this.isSubmit = true;
       this.deliveryUpdateService.deliveryUpdate(formData).subscribe({
         next: (response: any) => {
