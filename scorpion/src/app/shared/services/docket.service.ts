@@ -665,7 +665,7 @@ freightAndOtherChar(){
   }
 
   validateDropdownValue(formControlName: string, newList: any[], key: string = 'codeId') {
-    const currentValue = this.basicDetailForm.get(formControlName)?.value;
+    const currentValue = this.basicDetailForm?.get(formControlName)?.value;
     if (currentValue && !newList.some(item => item[key] === currentValue)) {
       this.basicDetailForm.get(formControlName)?.reset(null); // remove old value
     }

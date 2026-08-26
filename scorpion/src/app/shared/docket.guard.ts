@@ -18,7 +18,8 @@ export class DocketGuard implements CanActivate {
 
     if (!encrypted) {
       const saved = localStorage.getItem("loginUserList");
-      if (saved) {
+      const isSessionActive = sessionStorage.getItem("sessionActive");
+      if (saved && isSessionActive) {
         return true;
       }
       this.router.navigate(['/error']);
@@ -27,6 +28,7 @@ export class DocketGuard implements CanActivate {
     try {
       const decrypted = this.decryptService.decrypt(encrypted, key);
       const parsedData = JSON.parse(decrypted);
+      sessionStorage.setItem("sessionActive", "true");
 
       let currentRoute = route.routeConfig?.path ?? '';
       if (currentRoute === '' && route.parent?.routeConfig?.path) {
