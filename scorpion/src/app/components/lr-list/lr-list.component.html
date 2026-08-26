@@ -225,14 +225,7 @@
                                 <button *ngIf="isHQTR && menuAccessService.hasPermission('Cancel')" class="ab ab-cancel" (click)="onCancel(lr.dockno)"
                                     [disabled]="lr.isDocketCancel==='Y'">🚫 Cancel</button>
                                 <div class="track-wrap">
-                                    <button class="ab ab-track" (click)="toggleTrack(i, $event)">📍 Track</button>
-                                    <!-- <div class="track-dropdown" [class.open]="openTrackIndex === i">
-                                        <a *ngFor="let item of trackMenuItems"
-                                            (click)="onTrackMenuClick(item, lr.dockno)">
-                                            <span class="ti">{{ item.icon }}</span> {{ item.label }}
-                                        </a>
-
-                                    </div> -->
+                                    <button class="ab ab-track" (click)="openTrack(lr.dockno)">📍 Track</button>
                                 </div>
                                 <div class="print-wrap">
                                     <button class="ab ab-print" (click)="openPrint(lr.dockno)">🖨 Print</button>
