@@ -5,6 +5,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
+import { LoadingSheetApiService } from 'app/shared/services/loading-sheet-api.service';
 import { PrqService } from 'app/shared/services/prq.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -22,6 +23,7 @@ import { debounceTime, Subject } from 'rxjs';
 export class AddPrqComponent {
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   public modalRef!: BsModalRef;
+  public branchList :any;
   public PRQType: string = '';
   public transportModes: any[] = [];
   public coldChainCategories: any[] = [
@@ -60,6 +62,8 @@ export class AddPrqComponent {
   public minDate = new Date();
   public vehicleCountList = Array.from({ length: 10 }, (_, i) => ({ id: i + 1, text: (i + 1).toString() }));
   public isSubmitting: boolean = false;
+  public branchSearchSubject: Subject<string> = new Subject<string>();
+  public isBranchLoading: boolean = false;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(
@@ -69,6 +73,7 @@ export class AddPrqComponent {
     private prqService: PrqService,
     private basicDetailService: BasicDetailService,
     private dynamicDataService: DynamicDataService,
+    private loadingSheetApiService: LoadingSheetApiService,
     private datePipe:DatePipe
   ) { }
 
@@ -81,6 +86,12 @@ export class AddPrqComponent {
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
     }
     this.initForm();
+    // Branch Search Subscription
+    this.branchSearchSubject.pipe(debounceTime(400)).subscribe((term: any) => {
+      if (typeof term === 'string' && term.trim()) {
+        this.getLocations(term);
+      }
+    });
 
     // Customer Search Subscription
     this.customerSearchSubject.pipe(debounceTime(400)).subscribe((term: string) => {
@@ -208,6 +219,27 @@ export class AddPrqComponent {
     });
   }
 
+  getLocations(term: string) {
+    this.isBranchLoading = true;
+    this.loadingSheetApiService.getLocationList(term).subscribe({
+      next: (response: any) => {
+        if (response && response.success) {
+          this.branchList = response.data.map((item: any) => ({
+            locCode: item.id,
+            locName: `${item.id}: ${item.text}`,
+          }));
+        } else {
+          this.branchList = [];
+        }
+        this.isBranchLoading = false;
+      },
+      error: () => {
+        this.branchList = [];
+        this.isBranchLoading = false;
+      }
+    });
+  }
+
   showPopup(prqNo?: string) {
     this.PRQNo = prqNo;
     this.initForm();
@@ -278,6 +310,7 @@ export class AddPrqComponent {
       consignorPin: new FormControl(null),
       consigneePin: new FormControl(null),
       consigneeContactNo:new FormControl(null),
+      PickupBranch:new FormControl(null, Validators.required),
       consignorContactNo:new FormControl(null,[Validators.required, Validators.pattern('^[0-9]{10}$')])
     });
 
@@ -453,6 +486,9 @@ export class AddPrqComponent {
           if (data.DeliveryPincode) this.destPincodeData = [{ Value: data.DeliveryPincode, Text: data.DeliveryPincode }];
           if (data.ConsignorPincode) this.consignorPincodeData = [{ Value: data.ConsignorPincode, Text: data.ConsignorPincode }];
           if (data.ConsigneePincode) this.consigneePincodeData = [{ Value: data.ConsigneePincode, Text: data.ConsigneePincode }];
+          if (data.PickupBranch) {
+            this.getLocations(data.PickupBranch);
+          }
           setTimeout(() => {
             const formatToDDMMMYYYY = (dStr: any) => {
               if (!dStr || dStr === '1900-01-01T00:00:00') return null;
@@ -506,7 +542,8 @@ export class AddPrqComponent {
               consignorContactNo:data.ConsignorContactno,
               consigneeContactNo:data.ConsigneeContactno,
               invoiceDate: formatToDDMMMYYYY(data.InvoiceDate),
-              invoiceValue:data.InvoiceValue
+              invoiceValue:data.InvoiceValue,
+              PickupBranch: data.PickupBranch
             });
           }, 500);
         }
@@ -697,6 +734,7 @@ export class AddPrqComponent {
         prqNo: formData.groupCode || '',
         consignorContactno:formData.consignorContactNo,
         consigneeContactno:formData.consigneeContactNo,
+        PickupBranch:formData.PickupBranch || '',
       };
 
       this.prqService.submitPRQ(payload).subscribe({
