@@ -210,6 +210,7 @@ export class BasicDetailsComponent {
           const row = this.docketService.invoiceRows.at(0) as FormGroup;
           if (data.invoice_no) row.get('invoiceNo')?.setValue(data.invoice_no);
           if (data.invoice_date) row.get('ewayinvoiceDate')?.setValue(new Date(data.invoice_date));
+          if(data.invoice_value) row.get('declaredvalue')?.setValue(data.invoice_value);
         }
       }
       
