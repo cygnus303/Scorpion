@@ -357,10 +357,14 @@ export class AddPrqComponent {
     this.prqService.getBranchCityFromPincode(event?.Value).subscribe((res: any) => {
       if (res.success && res.data && res.data.length > 0) {
         const loc = res.data[0];
+         if (loc.locCode) {
+            this.getLocations(loc.locCode);
+          }
         this.prqForm.patchValue({
           branchCode: loc.branch,
           fromCity: loc.city,
-          fromCityCode: loc.cityCode
+          fromCityCode: loc.cityCode,
+          PickupBranch: loc.locCode
         });
       }
     });
