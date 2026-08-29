@@ -26,6 +26,8 @@ export class DocketGuard implements CanActivate {
 
     if (!encrypted) {
       if (currentRoute === 'DefaultContract') {
+        localStorage.removeItem("loginUserList");
+        this.docketService.loginUserList = {} as any;
         return true;
       }
       
