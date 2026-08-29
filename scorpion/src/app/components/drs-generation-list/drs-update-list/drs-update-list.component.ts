@@ -648,10 +648,12 @@ export class DRSUpdateListComponent {
         deliveredToCtrl?.setValue(null, { emitEvent: false });
         personCtrl?.setValue(null, { emitEvent: false });
         contactCtrl?.setValue(null, { emitEvent: false });
+        row.patchValue({ otpError: null }, { emitEvent: false });
       } else {
         deliveredToCtrl?.setValue(null, { emitEvent: false });
         personCtrl?.setValue(null, { emitEvent: false });
         contactCtrl?.setValue(null, { emitEvent: false });
+        row.patchValue({ otpError: null }, { emitEvent: false });
       }
     } else {
       deliveredToCtrl?.setValidators([Validators.required]);
@@ -1020,6 +1022,8 @@ export class DRSUpdateListComponent {
       if (isChecked && deliveredPkgs > 0 && !otpVerified) {
         hasError = true;
         row.patchValue({ otpError: 'OTP Verification is mandatory' });
+      } else {
+        row.patchValue({ otpError: null });
       }
     });
 
