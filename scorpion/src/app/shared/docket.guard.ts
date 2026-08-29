@@ -13,10 +13,22 @@ export class DocketGuard implements CanActivate {
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
+    let currentRoute = route.routeConfig?.path ?? '';
+    if (currentRoute === '' && route.parent?.routeConfig?.path) {
+      currentRoute = route.parent.routeConfig.path;
+    }
+    if (currentRoute === '' && window.location.pathname.includes('DefaultContract')) {
+      currentRoute = 'DefaultContract';
+    }
+
     const encrypted = route.queryParams['data'];
     const key = 'WebX';
 
     if (!encrypted) {
+      if (currentRoute === 'DefaultContract') {
+        return true;
+      }
+      
       const saved = localStorage.getItem("loginUserList");
       const isSessionActive = sessionStorage.getItem("sessionActive");
       if (saved && isSessionActive) {
@@ -29,14 +41,6 @@ export class DocketGuard implements CanActivate {
       const decrypted = this.decryptService.decrypt(encrypted, key);
       const parsedData = JSON.parse(decrypted);
       sessionStorage.setItem("sessionActive", "true");
-
-      let currentRoute = route.routeConfig?.path ?? '';
-      if (currentRoute === '' && route.parent?.routeConfig?.path) {
-        currentRoute = route.parent.routeConfig.path;
-      }
-      if (currentRoute === '' && window.location.pathname.includes('DefaultContract')) {
-        currentRoute = 'DefaultContract';
-      }
 
       if (currentRoute.includes("docketFinancialEdit")) {
         return this.handleFinancialEdit(parsedData);
