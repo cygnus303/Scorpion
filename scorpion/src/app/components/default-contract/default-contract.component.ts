@@ -229,7 +229,7 @@ export class DefaultContractComponent {
       packageCount: this.DefaultcontractForm.value.Pkgs || 0,
       originPincode: this.DefaultcontractForm.value.originPincode,
       destinationPincode: this.DefaultcontractForm.value.destination_pincode,
-      UserName :this.docketService.loginUserList.BaseUserName || ''
+      UserName :this.docketService?.loginUserList?.BaseUserName || ''
     }
     if (!payload.trnMode || !payload.originPincode) {
       return;
@@ -498,7 +498,7 @@ logInvalidControls() {
       
       customerEmail: data.email,
       quotationStatus: "",
-      entryBy: ""
+      entryBy:this.docketService?.loginUserList?.BaseUserName || ''
     }
     console.log(payload)
     if (this.DefaultcontractForm.valid) {
