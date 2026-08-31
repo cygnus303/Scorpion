@@ -300,7 +300,7 @@ export class ChallanListComponent {
         this.getVehicleType('O');
         deliveryAgentControl?.setValidators([Validators.required]);
         deliveryAgentControl?.updateValueAndValidity();
-        const allowedVendorCodes = ['04'];
+        const allowedVendorCodes = ['04','19'];
         this.challanService.vendorTypeList = this.challanService.vendtyData.filter((x: any) => allowedVendorCodes.includes(x.codeId));
         this.getDeliveryAgents();
       } else {
@@ -1531,7 +1531,7 @@ export class ChallanListComponent {
               // 1 PATCH BASIC DATA IMMEDIATELY
               this.challanService.challanForm.patchValue({
                 deliveryAgentMoNo: response.data.deliveryAgentMobile,
-                vendorType: '04',
+                vendorType: response.data.vendor_Type || '04',
                 vendorCode: response.data.businessAssociateVendor,
                 vendorName: vendorName,
                 vehicleNO: response.data.vehicleNo,
@@ -1555,7 +1555,7 @@ export class ChallanListComponent {
               }
               this.challanService.challanForm.patchValue({ ISNEWDA: false });
               this.isPatching = false;
-              this.challanService.getVendorsList('04');
+              this.challanService.getVendorsList(response.data.vendor_Type || '04');
               this.avalabledocketinPRS();
             }, 0);
           } else {
