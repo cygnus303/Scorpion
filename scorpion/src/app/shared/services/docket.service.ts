@@ -1656,12 +1656,12 @@ calculateChargeWeight(){
           // this.subTotalCalculation();
           this.isSubmiting=false
           this.getFuelSurcharge(this.freightData?.freightCharge);
+          setTimeout(() => {
+           this.getDieselRate();
+          }, 500);
         }
       },
     });
-    setTimeout(() => {
-      this.getDieselRate();
-    }, 600);
     // this.isSubmiting=false;
   }
 
