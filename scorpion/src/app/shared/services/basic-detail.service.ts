@@ -196,6 +196,9 @@ loginData: any = JSON.parse(localStorage.getItem("loginUserList") || 'null');
   }
 
   GetDieselRate(data: any) {
-    return this.apiHandlerService.Get(`Operation/GetDieselRate?ContractID=${data.contractId}&DockDt=${data.dockDt}`);
+   this.apiLoading.start();
+    return this.apiHandlerService.Get(`Operation/GetDieselRate?ContractID=${data.contractId}&DockDt=${data.dockDt}`).pipe(
+    finalize(() => this.apiLoading.stop()) // ✅ Stop loader automatically when API completes
+    )
   }
 }
