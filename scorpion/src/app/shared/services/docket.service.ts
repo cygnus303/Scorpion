@@ -110,6 +110,7 @@ export class DocketService {
   public ewayBillDataDisplayed: boolean = false;
   public listSubscription?: Subscription;
   public otherSubscription?: Subscription;
+  public DieselRateSubscription?: Subscription;
 
   
 
@@ -322,6 +323,7 @@ export class DocketService {
   ngOnDestroy(){
     if(this.listSubscription){this.listSubscription.unsubscribe();}
     if(this.otherSubscription){this.otherSubscription.unsubscribe();}
+    if (this.DieselRateSubscription) { this.DieselRateSubscription.unsubscribe(); }
   }
 
   validateLBHValidators(){
@@ -931,6 +933,7 @@ freightAndOtherChar(){
   }
 
   getDieselRate() {
+   if (this.DieselRateSubscription) { this.DieselRateSubscription.unsubscribe(); }
     const contractId = this.step2DetailsList?.contractid;
     const dockDt = this.basicDetailForm.value.cNoteDate;
     const freightCharges = parseFloat(this.freightForm.value.freightCharges || 0);
@@ -941,7 +944,7 @@ freightAndOtherChar(){
         dockDt: new Date(dockDt).toISOString()
       };
 
-      this.basicDetailService.GetDieselRate(data).subscribe({
+      this.DieselRateSubscription = this.basicDetailService.GetDieselRate(data).subscribe({
         next: (response: any) => {
           if (response && response.data.length > 0) {
             const currentDieselPercentage = parseFloat(response.data[0].currentDieselPercentage || 0);
