@@ -954,7 +954,7 @@ export class ChallanListComponent {
     } else {
       this.getVehicleType('O')
     }
-    if (this.challanService.challanForm.value.vendorType === '04') {
+    if (this.challanService.challanForm.value.vendorType === '04' || this.challanService.challanForm.value.vendorType === '19') {
       this.avalabledocketinPRS(event);
     }
     this.getContractDetail()
@@ -1531,7 +1531,7 @@ export class ChallanListComponent {
               // 1 PATCH BASIC DATA IMMEDIATELY
               this.challanService.challanForm.patchValue({
                 deliveryAgentMoNo: response.data.deliveryAgentMobile,
-                vendorType: response.data.vendor_Type || '04',
+                vendorType: response.data.vendor_Type,
                 vendorCode: response.data.businessAssociateVendor,
                 vendorName: vendorName,
                 vehicleNO: response.data.vehicleNo,
@@ -1555,7 +1555,7 @@ export class ChallanListComponent {
               }
               this.challanService.challanForm.patchValue({ ISNEWDA: false });
               this.isPatching = false;
-              this.challanService.getVendorsList(response.data.vendor_Type || '04');
+              this.challanService.getVendorsList(response.data.vendor_Type);
               this.avalabledocketinPRS();
             }, 0);
           } else {
