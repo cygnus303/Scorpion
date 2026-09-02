@@ -111,6 +111,7 @@ export class DocketService {
   public listSubscription?: Subscription;
   public otherSubscription?: Subscription;
   public DieselRateSubscription?: Subscription;
+  public currentDieselPercentage: number = 0;
 
   
 
@@ -947,8 +948,8 @@ freightAndOtherChar(){
       this.DieselRateSubscription = this.basicDetailService.GetDieselRate(data).subscribe({
         next: (response: any) => {
           if (response && response.data.length > 0) {
-            const currentDieselPercentage = parseFloat(response.data[0].currentDieselPercentage || 0);
-            const chargeAmount = parseFloat(((freightCharges * currentDieselPercentage) / 100).toFixed(2));
+            this.currentDieselPercentage = parseFloat(response.data[0].currentDieselPercentage || 0);
+            const chargeAmount = parseFloat(((freightCharges * this.currentDieselPercentage) / 100).toFixed(2));
 
             // Map SCHG24 from MVC to the equivalent form control (lowercased based on getIGSTchargesDetail)
             if (this.freightForm.contains('SCHG24')) {
