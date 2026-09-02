@@ -446,6 +446,20 @@ export class DocketListComponent implements OnInit {
     }
 
     if (this.docketService.basicDetailForm.valid && this.docketService.consignorForm.valid && this.docketService.invoiceform.valid && this.docketService.freightForm.valid) {
+      if (this.docketService.loginUserList?.Type !== '2') {
+        if (this.docketService.freightForm.contains('SCHG24')) {
+          const freightCharges = parseFloat(this.docketService.freightForm.value.freightCharges || 0);
+          const expectedSCHG24 = parseFloat(((freightCharges * this.docketService.currentDieselPercentage) / 100).toFixed(2));
+          const actualSCHG24 = parseFloat(this.docketService.freightForm.get('SCHG24')?.value || 0);
+
+          if (expectedSCHG24 !== actualSCHG24) {
+            this.sweetAlertService.error("Diesel charge calculation mismatch. Please wait or recalculate.");
+            // this.docketService.submitErrorMsg = 'Diesel charge calculation mismatch. Please wait or recalculate.';
+            return;
+          }
+        }
+      }
+
       const listCCH = this.docketService.freightchargingData.map(charge => ({
         ChargeCode: charge.chargeCode,
         ChargeName: charge.chargeName,
