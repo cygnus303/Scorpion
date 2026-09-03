@@ -4,6 +4,7 @@ import { DocketService, pastDateValidator } from '../../../shared/services/docke
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { SweetAlertService } from '../../../shared/services/sweet-alert.service';
 import { Subscription } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'invoice-details',
@@ -22,7 +23,8 @@ export class InvoiceDetailsComponent {
   constructor(
     public docketService: DocketService,
     public basicDetailService: BasicDetailService,
-    private sweetAlertService: SweetAlertService
+    private sweetAlertService: SweetAlertService,
+    private http: HttpClient
   ) { }
 
   ngOnInit() {
@@ -640,6 +642,12 @@ export class InvoiceDetailsComponent {
     });
   }
 
+  openInvoiceUpload(index: number, row: any) {
+    this.docketService.activeInvoiceRowIndex = index;
+    this.docketService.triggerInvoiceUpload$.next(true);
+  }
+
+  // Keeping onFileSelected and uploadInvoiceOCR for fallback if needed, but they are replaced by the popup.
   onFileSelected(event: any, row: any) {
     const file = event.target.files[0];
     if (file) {
@@ -650,6 +658,8 @@ export class InvoiceDetailsComponent {
       row.get('isChangingFile')?.setValue(true);
       row.get('invoiceCopy')?.markAsTouched();
       row.get('invoiceCopy')?.updateValueAndValidity();
+      
+      this.uploadInvoiceOCR(file, row);
     } else {
       row.patchValue({
         invoiceCopy: null,
@@ -658,6 +668,33 @@ export class InvoiceDetailsComponent {
       row.get('invoiceCopy')?.markAsTouched();
       row.get('invoiceCopy')?.updateValueAndValidity();
     }
+  }
+
+  uploadInvoiceOCR(file: File, row: any) {
+    const formData = new FormData();
+    formData.append('api_key', 'zck096ek4f43bza1rscb');
+    formData.append('file', file, file.name);
+
+    this.http.post('https://scorpion.nextapi.in/api/get/ocr/info?full=null', formData).subscribe({
+      next: (response: any) => {
+        if (response && response.success && response.data) {
+          const data = response.data;
+          
+          if (data.invoice_no) row.get('invoiceNo')?.setValue(data.invoice_no);
+          if (data.invoice_date) row.get('ewayinvoiceDate')?.setValue(new Date(data.invoice_date));
+          if (data.invoice_value) row.get('declaredvalue')?.setValue(data.invoice_value);
+          
+          this.sweetAlertService.success('Invoice details extracted successfully!').then(() => {
+          });
+        } else {
+          this.sweetAlertService.error('Failed to extract invoice details.');
+        }
+      },
+      error: (err: any) => {
+        console.error('OCR API error', err);
+        this.sweetAlertService.error('Failed to extract invoice details. Please try again.');
+      }
+    });
   }
 
   viewFile(row: any) {
@@ -678,10 +715,11 @@ export class InvoiceDetailsComponent {
     }
   }
 
-  changeFile(row: any) {
+  changeFile(index: number, row: any) {
     row.get('isChangingFile')?.setValue(true);
     row.get('invoiceCopy')?.setValue(null);
     row.get('invoiceFileName')?.setValue('');
+    this.openInvoiceUpload(index, row);
   }
 
   ngOnDestroy() {
