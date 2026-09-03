@@ -42,7 +42,7 @@ export class ThcArrivalPopupComponent {
   public Reasonlist = [
     {
       text: "Late Dept. of Vehicle",
-      Value: "P84"
+      value: "P84"
     }, {
       text: "Vehicle break down",
       value: "P88"
