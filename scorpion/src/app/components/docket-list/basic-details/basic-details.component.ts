@@ -82,203 +82,214 @@ export class BasicDetailsComponent {
     this.getStatesFromPartyCode();
 
     this.docketService.basicDetailForm.get('originState')?.valueChanges.subscribe((selectedValue: string) => {
-    if (selectedValue) {
-      const selectedObj = this.getStatesFromPartyCodeList.find(x => x.text === selectedValue);
-      if (selectedObj) {
-        this.docketService.basicDetailForm.get('custGSTState')?.setValue(selectedObj.value);
+      if (selectedValue) {
+        const selectedObj = this.getStatesFromPartyCodeList.find(x => x.text === selectedValue);
+        if (selectedObj) {
+          this.docketService.basicDetailForm.get('custGSTState')?.setValue(selectedObj.value);
+        }
+      } else {
+        this.docketService.basicDetailForm.get('custGSTState')?.setValue('');
       }
-    } else {
-      this.docketService.basicDetailForm.get('custGSTState')?.setValue('');
-    }
-  });
-    this.docketService.basicDetailForm.get('destinationState')?.valueChanges.subscribe((selectedValue: string) => {   
-    if (selectedValue) {
-      const selectedObj = this.getStatesFromPartyCodeList.find(x => x.text === selectedValue);
-      if (selectedObj) {
-        this.docketService.basicDetailForm.get('csgeCustGSTState')?.setValue(selectedObj.value);
+    });
+    this.docketService.basicDetailForm.get('destinationState')?.valueChanges.subscribe((selectedValue: string) => {
+      if (selectedValue) {
+        const selectedObj = this.getStatesFromPartyCodeList.find(x => x.text === selectedValue);
+        if (selectedObj) {
+          this.docketService.basicDetailForm.get('csgeCustGSTState')?.setValue(selectedObj.value);
+        }
+      } else {
+        this.docketService.basicDetailForm.get('csgeCustGSTState')?.setValue('');
       }
-    } else {
-      this.docketService.basicDetailForm.get('csgeCustGSTState')?.setValue('');
-    }
-  });
-     this.onApplyDeliveryChangeValidators();
+    });
+    this.onApplyDeliveryChangeValidators();
     this.docketService?.basicDetailForm?.get('serviceType')?.valueChanges.subscribe(() => {
       this.applyTypeMovementValidation();
       this.applyVehicleNoValidation();
     });
     this.docketService.basicDetailForm.get('vehicleType')?.valueChanges.subscribe(() => {
       this.applyVehicleNoValidation();
-    });       
+    });
 
-  // Run validation whenever appointmentDT changes
-  this.docketService.basicDetailForm?.get('appointmentDT')?.valueChanges.subscribe(() => {
-    this.docketService.validateAppointmentDate();
-  });
+    // Run validation whenever appointmentDT changes
+    this.docketService.basicDetailForm?.get('appointmentDT')?.valueChanges.subscribe(() => {
+      this.docketService.validateAppointmentDate();
+    });
 
     this.dateAccess();
     const exemptCtrl = this.docketService.basicDetailForm.get('exemptServices');
-  const gstCtrl = this.docketService.basicDetailForm.get('GSTDeclaration');
- 
-  exemptCtrl?.valueChanges.subscribe(value => {
-    if (value) {
-      gstCtrl?.setValidators([Validators.required]);
-    } else {
-      gstCtrl?.clearValidators();
-      gstCtrl?.reset(); // optional – file clear karva mate
-    }
-    gstCtrl?.updateValueAndValidity();
-  });
+    const gstCtrl = this.docketService.basicDetailForm.get('GSTDeclaration');
+
+    exemptCtrl?.valueChanges.subscribe(value => {
+      if (value) {
+        gstCtrl?.setValidators([Validators.required]);
+      } else {
+        gstCtrl?.clearValidators();
+        gstCtrl?.reset(); // optional – file clear karva mate
+      }
+      gstCtrl?.updateValueAndValidity();
+    });
 
   }
 
-    callEwayBillFromParent(event: any) {
+  callEwayBillFromParent(event: any) {
       const data =event.target.value;
-      if (data.length.toString() === "12") {
-        this.docketService.ewayBill$.next(event);
-      }
+    if (data.length.toString() === "12") {
+      this.docketService.ewayBill$.next(event);
     }
+  }
 
-    closeInvoiceUpload() {
-      this.showInvoiceUpload = false;
-      this.uploadedFiles = [];
-      this.isUploading = false;
+  closeInvoiceUpload() {
+    this.showInvoiceUpload = false;
+    this.uploadedFiles = [];
+    this.isUploading = false;
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = true;
+  }
+
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
+  }
+
+  onFileDropped(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
+    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+      this.handleFiles(Array.from(event.dataTransfer.files));
     }
+  }
 
-    onDragOver(event: DragEvent) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.isDragging = true;
+  onFileSelected(event: any) {
+    if (event.target.files && event.target.files.length > 0) {
+      this.handleFiles(Array.from(event.target.files));
     }
+  }
 
-    onDragLeave(event: DragEvent) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.isDragging = false;
+  handleFiles(files: File[]) {
+    this.uploadedFiles = files;
+    if (files.length > 0) {
+      this.uploadInvoiceOCR(files[0]);
     }
+  }
 
-    onFileDropped(event: DragEvent) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.isDragging = false;
-      if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
-        this.handleFiles(Array.from(event.dataTransfer.files));
-      }
-    }
+  uploadInvoiceOCR(file: File) {
+    this.isUploading = true;
+    const formData = new FormData();
+    formData.append('api_key', 'zck096ek4f43bza1rscb');
+    formData.append('file', file, file.name);
 
-    onFileSelected(event: any) {
-      if (event.target.files && event.target.files.length > 0) {
-        this.handleFiles(Array.from(event.target.files));
-      }
-    }
-
-    handleFiles(files: File[]) {
-      this.uploadedFiles = files;
-      if (files.length > 0) {
-        this.uploadInvoiceOCR(files[0]);
-      }
-    }
-
-    uploadInvoiceOCR(file: File) {
-      this.isUploading = true;
-      const formData = new FormData();
-      formData.append('api_key', 'zck096ek4f43bza1rscb');
-      formData.append('file', file, file.name);
-
-      this.http.post('https://scorpion.nextapi.in/api/get/ocr/info?full=null', formData).subscribe({
-        next: (response: any) => {
-          this.isUploading = false;
-          this.showInvoiceUpload = false;
-          if (response && response.success && response.data) {
-            this.autoFillForms(response.data);
-            this.sweetAlertService.success('Invoice details extracted successfully!').then(() => {
-            });
-          } else {
-            this.sweetAlertService.error('Failed to extract invoice details.');
-          }
-        },
-        error: (err: any) => {
-          this.isUploading = false;
-          console.error('OCR API error', err);
-          this.sweetAlertService.error('Failed to extract invoice details. Please try again.');
+    this.http.post('https://scorpion.nextapi.in/api/get/ocr/info?full=null', formData).subscribe({
+      next: (response: any) => {
+        this.isUploading = false;
+        this.showInvoiceUpload = false;
+        if (response && response.success && response.data) {
+          this.autoFillForms(response.data, file);
+          this.sweetAlertService.success('Invoice details extracted successfully!').then(() => {
+          });
+        } else {
+          this.sweetAlertService.error('Failed to extract invoice details.');
         }
-      });
-    }
-
-    autoFillForms(data: any) {
-      if (data.invoice_no || data.invoice_date) {
-        if (this.docketService.invoiceRows.length > 0) {
-          const row = this.docketService.invoiceRows.at(0) as FormGroup;
-          if (data.invoice_no) row.get('invoiceNo')?.setValue(data.invoice_no);
-          if (data.invoice_date) row.get('ewayinvoiceDate')?.setValue(new Date(data.invoice_date));
-          if(data.invoice_value) row.get('declaredvalue')?.setValue(data.invoice_value);
-        }
+      },
+      error: (err: any) => {
+        this.isUploading = false;
+        console.error('OCR API error', err);
+        this.sweetAlertService.error('Failed to extract invoice details. Please try again.');
       }
-      
-      if (this.docketService.consignorForm) {
-        if (data.consignor_gst) this.docketService.consignorForm.get('consignorGSTNo')?.setValue(data.consignor_gst);
-        if (data.consignee_gst) this.docketService.consignorForm.get('consigneeGSTNo')?.setValue(data.consignee_gst);
-        if (data.consignor_address) this.docketService.consignorForm.get('consignorAddress')?.setValue(data.consignor_address);
-        if (data.consignee_address) this.docketService.consignorForm.get('consigneeAddress')?.setValue(data.consignee_address);
-        
-        if (data.consignor_city_or_pincode) {
-          const pinMatch = data.consignor_city_or_pincode.match(/\d{6}/);
-          if (pinMatch) {
-            this.docketService.getpincodeData(pinMatch[0]);
-            this.docketService.consignorForm.get('consignorPincode')?.setValue(pinMatch[0]);
-          }
-          const cityMatch = data.consignor_city_or_pincode.split('-')[0]?.trim();
-          if (cityMatch) this.docketService.consignorForm.get('consignorCity')?.setValue(cityMatch);
-        }
-        
-        if (data.consignee_city_or_pincode) {
-          const pinMatch = data.consignee_city_or_pincode.match(/\d{6}/);
-          if (pinMatch) {
-            this.docketService.getpincodeData(pinMatch[0]);
-            this.docketService.consignorForm.get('consigneePincode')?.setValue(pinMatch[0]);
-          }
-          const cityMatch = data.consignee_city_or_pincode.split('-')[0]?.trim();
-          if (cityMatch) this.docketService.consignorForm.get('consigneeCity')?.setValue(cityMatch);
+    });
+  }
+
+  autoFillForms(data: any, file?: File) {
+    if (data.invoice_no || data.invoice_date || file) {
+      if (this.docketService.invoiceRows.length > 0) {
+        const rowIndex = this.docketService.activeInvoiceRowIndex || 0;
+        const row = this.docketService.invoiceRows.at(rowIndex) as FormGroup;
+        if (data.invoice_no) row.get('invoiceNo')?.setValue(data.invoice_no);
+        if (data.invoice_date) row.get('ewayinvoiceDate')?.setValue(new Date(data.invoice_date));
+        if (data.invoice_value) row.get('declaredvalue')?.setValue(data.invoice_value);
+        if (file) {
+          row.patchValue({
+            invoiceCopy: file,
+            invoiceFileName: file.name
+          });
+          row.get('isChangingFile')?.setValue(true);
+          row.get('invoiceCopy')?.markAsTouched();
+          row.get('invoiceCopy')?.updateValueAndValidity();
         }
       }
     }
+
+    const rowIndex = this.docketService.activeInvoiceRowIndex || 0;
+    if (this.docketService.consignorForm && rowIndex === 0) {
+      if (data.consignor_gst) this.docketService.consignorForm.get('consignorGSTNo')?.setValue(data.consignor_gst);
+      if (data.consignee_gst) this.docketService.consignorForm.get('consigneeGSTNo')?.setValue(data.consignee_gst);
+      if (data.consignor_address) this.docketService.consignorForm.get('consignorAddress')?.setValue(data.consignor_address);
+      if (data.consignee_address) this.docketService.consignorForm.get('consigneeAddress')?.setValue(data.consignee_address);
+
+      if (data.consignor_city_or_pincode) {
+        const pinMatch = data.consignor_city_or_pincode.match(/\d{6}/);
+        if (pinMatch) {
+          this.docketService.getpincodeData(pinMatch[0]);
+          this.docketService.consignorForm.get('consignorPincode')?.setValue(pinMatch[0]);
+        }
+        const cityMatch = data.consignor_city_or_pincode.split('-')[0]?.trim();
+        if (cityMatch) this.docketService.consignorForm.get('consignorCity')?.setValue(cityMatch);
+      }
+
+      if (data.consignee_city_or_pincode) {
+        const pinMatch = data.consignee_city_or_pincode.match(/\d{6}/);
+        if (pinMatch) {
+          this.docketService.getpincodeData(pinMatch[0]);
+          this.docketService.consignorForm.get('consigneePincode')?.setValue(pinMatch[0]);
+        }
+        const cityMatch = data.consignee_city_or_pincode.split('-')[0]?.trim();
+        if (cityMatch) this.docketService.consignorForm.get('consigneeCity')?.setValue(cityMatch);
+      }
+    }
+  }
 
 
     onApplyDeliveryChangeValidators(){
-     this.docketService.basicDetailForm.get('isAppointmentDelivery')?.valueChanges.subscribe((isAppointment) => {
-    if (isAppointment) {
-      this.docketService.basicDetailForm.get('appointmentDT')?.setValidators([Validators.required]);
-      this.docketService.basicDetailForm.get('personName')?.setValidators([Validators.required]);
-      this.docketService.basicDetailForm.get('contactNo')?.setValidators([Validators.required, Validators.pattern(mobileNo)]);
-      this.docketService.basicDetailForm.get('remarks')?.setValidators([Validators.required]);
+    this.docketService.basicDetailForm.get('isAppointmentDelivery')?.valueChanges.subscribe((isAppointment) => {
+      if (isAppointment) {
+        this.docketService.basicDetailForm.get('appointmentDT')?.setValidators([Validators.required]);
+        this.docketService.basicDetailForm.get('personName')?.setValidators([Validators.required]);
+        this.docketService.basicDetailForm.get('contactNo')?.setValidators([Validators.required, Validators.pattern(mobileNo)]);
+        this.docketService.basicDetailForm.get('remarks')?.setValidators([Validators.required]);
+      } else {
+        this.docketService.basicDetailForm.get('appointmentDT')?.clearValidators();
+        this.docketService.basicDetailForm.get('personName')?.clearValidators();
+        this.docketService.basicDetailForm.get('contactNo')?.clearValidators();
+        this.docketService.basicDetailForm.get('remarks')?.clearValidators();
+      }
+      // update validity after setting/clearing validators
+      this.docketService.basicDetailForm.get('appointmentDT')?.updateValueAndValidity();
+      this.docketService.basicDetailForm.get('personName')?.updateValueAndValidity();
+      this.docketService.basicDetailForm.get('contactNo')?.updateValueAndValidity();
+      this.docketService.basicDetailForm.get('remarks')?.updateValueAndValidity();
+    });
+  }
+
+  onApplyReferenceDktChangeValidators() {
+    const isReferenceCtrl = this.docketService.basicDetailForm.get('isreferenceDKT');
+    const refDocketCtrl = this.docketService.basicDetailForm.get('referenceDocket');
+
+    if (!isReferenceCtrl || !refDocketCtrl) return;
+
+    // 1. Apply once at init (so it works first time)
+    if (isReferenceCtrl.value) {
+      refDocketCtrl.setValidators([Validators.required]);
     } else {
-      this.docketService.basicDetailForm.get('appointmentDT')?.clearValidators();
-      this.docketService.basicDetailForm.get('personName')?.clearValidators();
-      this.docketService.basicDetailForm.get('contactNo')?.clearValidators();
-      this.docketService.basicDetailForm.get('remarks')?.clearValidators();
+      refDocketCtrl.clearValidators();
+      refDocketCtrl.setValue(null);
     }
-    // update validity after setting/clearing validators
-    this.docketService.basicDetailForm.get('appointmentDT')?.updateValueAndValidity();
-    this.docketService.basicDetailForm.get('personName')?.updateValueAndValidity();
-    this.docketService.basicDetailForm.get('contactNo')?.updateValueAndValidity();
-    this.docketService.basicDetailForm.get('remarks')?.updateValueAndValidity();
-  });
-  }
-
-onApplyReferenceDktChangeValidators() {
-  const isReferenceCtrl = this.docketService.basicDetailForm.get('isreferenceDKT');
-  const refDocketCtrl = this.docketService.basicDetailForm.get('referenceDocket');
-
-  if (!isReferenceCtrl || !refDocketCtrl) return;
-
-  // 1. Apply once at init (so it works first time)
-  if (isReferenceCtrl.value) {
-    refDocketCtrl.setValidators([Validators.required]);
-  } else {
-    refDocketCtrl.clearValidators();
-    refDocketCtrl.setValue(null);
-  }
-  refDocketCtrl.updateValueAndValidity();
-   const freightCharges = this.docketService.freightForm.get('freightCharges');
+    refDocketCtrl.updateValueAndValidity();
+    const freightCharges = this.docketService.freightForm.get('freightCharges');
     const freightRate = this.docketService.freightForm.get('freightRate');
     if (this.docketService.basicDetailForm.value.isreferenceDKT === true) {
       freightCharges?.clearValidators();
@@ -291,47 +302,47 @@ onApplyReferenceDktChangeValidators() {
     freightCharges?.updateValueAndValidity();
     freightRate?.updateValueAndValidity();
 
-  // 2. Subscribe to changes for future updates
-  isReferenceCtrl.valueChanges.subscribe((isReference) => {
-    if (isReference) {
-      refDocketCtrl.setValidators([Validators.required]);
-    } else {
-      refDocketCtrl.clearValidators();
-      refDocketCtrl.setValue(null);
-    }
-    refDocketCtrl.updateValueAndValidity();
-  });
+    // 2. Subscribe to changes for future updates
+    isReferenceCtrl.valueChanges.subscribe((isReference) => {
+      if (isReference) {
+        refDocketCtrl.setValidators([Validators.required]);
+      } else {
+        refDocketCtrl.clearValidators();
+        refDocketCtrl.setValue(null);
+      }
+      refDocketCtrl.updateValueAndValidity();
+    });
 
-  this.docketService.freightAndOtherChar()
-}
-
-applyTypeMovementValidation() {
-  const control = this.docketService.basicDetailForm.get('typeMovement');
-
-  if (this.docketService?.basicDetailForm?.get('serviceType')?.value === '2') {
-    control?.setValidators([Validators.required]);
-  } else {
-    control?.clearValidators();
-    control?.setErrors(null); // 👈 clear old error if any
+    this.docketService.freightAndOtherChar()
   }
 
-  control?.updateValueAndValidity({ onlySelf: true, emitEvent: false });
-}
+  applyTypeMovementValidation() {
+    const control = this.docketService.basicDetailForm.get('typeMovement');
+
+    if (this.docketService?.basicDetailForm?.get('serviceType')?.value === '2') {
+      control?.setValidators([Validators.required]);
+    } else {
+      control?.clearValidators();
+      control?.setErrors(null); // 👈 clear old error if any
+    }
+
+    control?.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+  }
 
 applyVehicleNoValidation(){
-  const serviceType = this.docketService.basicDetailForm.get('serviceType')?.value;
-  const vehicleType = this.docketService.basicDetailForm.get('vehicleType')?.value;
-  const control = this.docketService.basicDetailForm.get('vehicleno');
+    const serviceType = this.docketService.basicDetailForm.get('serviceType')?.value;
+    const vehicleType = this.docketService.basicDetailForm.get('vehicleType')?.value;
+    const control = this.docketService.basicDetailForm.get('vehicleno');
 
-  if (serviceType === '2' && vehicleType === 'own') {   // 👈 condition tame change kari shako
-    control?.setValidators([Validators.required]);
-  } else {
-    control?.clearValidators();
-    control?.setErrors(null);
+    if (serviceType === '2' && vehicleType === 'own') {   // 👈 condition tame change kari shako
+      control?.setValidators([Validators.required]);
+    } else {
+      control?.clearValidators();
+      control?.setErrors(null);
+    }
+
+    control?.updateValueAndValidity({ onlySelf: true, emitEvent: false });
   }
-
-  control?.updateValueAndValidity({ onlySelf: true, emitEvent: false });
-}
 
   getBillingTypeData() {
     this.basicDetailService.getGeneralMasterList('PAYTYP', null, null).subscribe({
@@ -343,7 +354,7 @@ applyVehicleNoValidation(){
     });
   }
 
- dateAccess() {
+  dateAccess() {
     const payload = {
       moduleCode: '01',
       baseUserName: this.docketService.baseUsername
@@ -377,8 +388,8 @@ OnChangeCNoteDate(event:any){
         cNoteDate: event
       });
     }
-  this.docketService.freightAndOtherChar()
-}
+    this.docketService.freightAndOtherChar()
+  }
 
   getCityList(event?: any, locCode?: any, type?: 'from' | 'to') {
     const searchText = event.term;
@@ -523,7 +534,7 @@ OnChangeCNoteDate(event:any){
       next: (response) => {
         if (response) {
           this.vehicleNumbersList = response;
-           this.notVehicleNoValue = 'No matches found';
+          this.notVehicleNoValue = 'No matches found';
         } else {
           this.vehicleNumbersList = [];
           this.notVehicleNoValue = '';
@@ -531,7 +542,7 @@ OnChangeCNoteDate(event:any){
       },
       error: () => {
         this.vehicleNumbersList = [];
-         this.notVehicleNoValue = '';
+        this.notVehicleNoValue = '';
       }
     });
   }
@@ -543,9 +554,9 @@ OnChangeCNoteDate(event:any){
     });
     if(this.docketService.freightForm.value.discountType || this.docketService.freightForm.value.discount){
       this.docketService.freightForm.patchValue({
-       discountType: null,
-       discount: "0"
-     });
+        discountType: null,
+        discount: "0"
+      });
     }
     if (this.docketService.loginUserList.Type === '2' || this.docketService.loginUserList.Type === '1') {
       if (this.docketService.completiondata && this.docketService.completiondata.listCharges?.length) {
@@ -567,15 +578,15 @@ OnChangeCNoteDate(event:any){
       }
     }
      if(this.docketService.loginUserList.Type !== '2'){
-       if (this?.docketService.freightchargingData) {
-         this?.docketService.freightchargingData?.forEach((item: any) => {
-           const code = item.chargeCode;
-           if (this.docketService.freightForm.contains(code)) {
-             this.docketService.freightForm.get(code)?.patchValue(0, { emitEvent: false });
-           }
-         });
-       }
-     }
+      if (this?.docketService.freightchargingData) {
+        this?.docketService.freightchargingData?.forEach((item: any) => {
+          const code = item.chargeCode;
+          if (this.docketService.freightForm.contains(code)) {
+            this.docketService.freightForm.get(code)?.patchValue(0, { emitEvent: false });
+          }
+        });
+      }
+    }
   }
 
   onChangedestinationsList(event: any) {
@@ -591,27 +602,27 @@ OnChangeCNoteDate(event:any){
     const origin = this.docketService?.basicDetailForm?.get('origin')?.value;
     const localNoteControl = this.docketService?.basicDetailForm?.get('isLocalNote');
     if (destination && origin && destination === origin) {
-      localNoteControl?.setValue(true); 
-      this.docketService?.basicDetailForm?.get('IsLocalDocket')?.setValue(true); 
+      localNoteControl?.setValue(true);
+      this.docketService?.basicDetailForm?.get('IsLocalDocket')?.setValue(true);
     } else {
       localNoteControl?.setValue(false);
-      this.docketService?.basicDetailForm?.get('IsLocalDocket')?.setValue(false); 
+      this.docketService?.basicDetailForm?.get('IsLocalDocket')?.setValue(false);
     }
   }
 
 
-onFileSelect(event: Event) {
-  const input = event.target as HTMLInputElement;
-  if (input.files?.length) {
-    const file = input.files[0];
-    this.docketService.selectedFile = file;
-    this.docketService.basicDetailForm.get('GSTDeclaration')?.setValue(file);
-    this.docketService.isChangingFile = false;
-     this.docketService.isExistingFile = false;
+  onFileSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files?.length) {
+      const file = input.files[0];
+      this.docketService.selectedFile = file;
+      this.docketService.basicDetailForm.get('GSTDeclaration')?.setValue(file);
+      this.docketService.isChangingFile = false;
+      this.docketService.isExistingFile = false;
+    }
   }
-}
 
-viewFile() {
+  viewFile() {
     const value = this.docketService.basicDetailForm.get('GSTDeclaration')?.value;
     let url = '';
     if (value instanceof File) {
@@ -632,7 +643,7 @@ viewFile() {
 
   onChangeCityListList(event: any, type: any) {
     if (type === 'from') {
-       this.docketService.consignorForm.patchValue({
+      this.docketService.consignorForm.patchValue({
         consignorCity: event
       });
       // this.docketService.basicDetailForm.patchValue({
@@ -718,9 +729,9 @@ viewFile() {
     }
     freightCharges?.updateValueAndValidity();
     freightRate?.updateValueAndValidity();
-    
-// consignorEmail Validators
-   const emailControl = this.docketService.consignorForm.get('consignorEmail');
+
+    // consignorEmail Validators
+    const emailControl = this.docketService.consignorForm.get('consignorEmail');
     if (event?.codeId === 'P01') {
       emailControl?.setValidators([
         Validators.required,
@@ -762,14 +773,14 @@ viewFile() {
     });
   }
   onExemptServicesChange(event: any) {
-  if (event === null || event === undefined) {
-    return; 
+    if (event === null || event === undefined) {
+      return;
+    }
+    this.docketService.GetDKTGSTForGTA();
+    setTimeout(() => {
+      this.docketService.getGSTCalculation();
+    }, 300);
   }
-  this.docketService.GetDKTGSTForGTA();
-  setTimeout(() => {
-    this.docketService.getGSTCalculation();
-  }, 300);
-}
 
    ReferenceDocket(event:any) {
     const payload = {
@@ -788,7 +799,7 @@ viewFile() {
     });
   }
 
-    getStatesFromPartyCode() {
+  getStatesFromPartyCode() {
     this.basicDetailService.getStatesFromPartyCode(8888).subscribe({
       next: (response: any) => {
         if (response) {
@@ -798,7 +809,7 @@ viewFile() {
     });
   }
 
-   onBack() {
+  onBack() {
     if(this.docketService.loginUserList.Type === '2'|| this.docketService.loginUserList.Type === '1'){
       this.router.navigate(['Operation/LRFinEditList']);
     }else{
