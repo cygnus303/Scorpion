@@ -305,7 +305,7 @@ export class InvoiceDetailsComponent {
 
     invoiceDetailRows.forEach((r: any) => {
       if (r.declaredvalue) {
-        totalDeclaredValue += +r.declaredvalue || 0;
+        // totalDeclaredValue += +r.declaredvalue || 0;
         const val = typeof r.declaredvalue === 'string' ? r.declaredvalue.replace(/,/g, '') : r.declaredvalue;
         totalDeclaredValue += +val || 0;
       }
