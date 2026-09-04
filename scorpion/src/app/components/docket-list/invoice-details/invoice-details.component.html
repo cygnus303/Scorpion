@@ -118,14 +118,14 @@
                           <td class="center">
                             <div class="input-group">
                               <input type="text" class="form-control uppercase-none" #dp2="bsDatepicker" bsDatepicker
-                                [class.disabled-input]="row.get('ewayBillNo')?.value?.length > 0"
+                                [class.disabled-input]="row.get('ewayBillNo')?.value?.length > 0 || row.get('isOcrReadOnly')?.value"
                                 [minDate]="getMinInvoiceDate(row)" [maxDate]="getMaxInvoiceDate(row)"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }"
                                 [attr.tabindex]="-1" placeholder="dd/MMM/yyyy" formControlName="ewayinvoiceDate"
                                 [ngClass]="{'border-danger': row.get('ewayinvoiceDate')?.invalid && row.get('ewayinvoiceDate')?.touched, 
-                                              'required2': isEwayInvoiceDateRequired(row)}" [class.disabled-input]="true">
+                                              'required2': isEwayInvoiceDateRequired(row)}">
                               <span class="input-group-text cursor-pointer" (click)="dp2.toggle()"
-                                [class.disabled-input]="row.get('ewayBillNo')?.value?.length > 0">
+                                [class.disabled-input]="row.get('ewayBillNo')?.value?.length > 0 || row.get('isOcrReadOnly')?.value">
                                 <i class="fa fa-calendar"></i>
                               </span>
                             </div>
@@ -136,7 +136,7 @@
                           </td>
                           <td class="center">
                             <input class="form-control required required2" placeholder="Invoice No." type="text"
-                              [readonly]="row.get('ewayBillNo')?.value?.length > 0" formControlName="invoiceNo" required
+                              [readonly]="row.get('ewayBillNo')?.value?.length > 0 || row.get('isOcrReadOnly')?.value" formControlName="invoiceNo" required
                               (blur)="checkDuplicateInvoices(i,row)"
                               [ngClass]="{ 'border-danger': row.get('invoiceNo')?.invalid && row.get('invoiceNo')?.touched}">
                             <div *ngIf="row.get('invoiceNo')?.invalid && row.get('invoiceNo')?.touched"
@@ -149,7 +149,7 @@
                               (keypress)="docketService.allowNumericDecimal($event)" placeholder="Invoice value"
                               type="text" value="0" formControlName="declaredvalue" required
                               (focus)="clearZero(row, 'declaredvalue')"
-                              [readonly]="row.get('ewayBillNo')?.value?.length > 0" (input)="calculateSummary(i)"
+                              [readonly]="row.get('ewayBillNo')?.value?.length > 0 || row.get('isOcrReadOnly')?.value" (input)="calculateSummary(i)"
                               (change)="docketService.freightAndOtherChar();handleDeclaredValueChange(row)"
                               [ngClass]="{ 'border-danger': row.get('declaredvalue')?.invalid && row.get('declaredvalue')?.touched}"
                               (blur)="restoreIfEmpty(row, 'declaredvalue')">
@@ -424,7 +424,8 @@
             <div
               *ngIf="docketService.invoiceform.get('totalDeclaredValue')?.invalid && docketService.invoiceform.get('totalDeclaredValue')?.touched"
               class="text-danger text-start ">
-              This field is required.
+              <span *ngIf="docketService.invoiceform.get('totalDeclaredValue')?.hasError('required')">This field is required.</span>
+              <span *ngIf="docketService.invoiceform.get('totalDeclaredValue')?.hasError('max')">Total Declared Amt. should not exceed 10,00,000.</span>
             </div>
           </div>
         </div>

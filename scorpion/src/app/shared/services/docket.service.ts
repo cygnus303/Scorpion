@@ -264,7 +264,7 @@ export class DocketService {
       boxDetailRows:new FormArray([]),
       // Summary row 1
       cftTotal: new FormControl(),
-      totalDeclaredValue: new FormControl(),
+      totalDeclaredValue: new FormControl(0),
       totalNoOfPkgs: new FormControl(),
       totalCubicWeight: new FormControl(0),
       totalActualWeight: new FormControl(0, [Validators.required, Validators.min(1)]),
@@ -279,6 +279,12 @@ export class DocketService {
     // Add default 1 row
     this.addRows();
     this.addBoxDetailRows();
+    
+    // Apply 10L validation only if Type is not '2'
+    if (this.loginUserList?.Type !== '2') {
+      this.invoiceform.get('totalDeclaredValue')?.setValidators([Validators.max(1000000)]);
+      this.invoiceform.get('totalDeclaredValue')?.updateValueAndValidity();
+    }
 
     this.reIndexSrNo();
     this.boxDetailIndexSrNo();
@@ -389,6 +395,7 @@ export class DocketService {
       isExistingFile: new FormControl(false),
       isChangingFile: new FormControl(false),
       invoiceFileUrl: new FormControl(null),
+      isOcrReadOnly: new FormControl(false),
     });
   }
 
