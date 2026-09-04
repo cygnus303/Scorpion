@@ -306,6 +306,8 @@ export class InvoiceDetailsComponent {
     invoiceDetailRows.forEach((r: any) => {
       if (r.declaredvalue) {
         totalDeclaredValue += +r.declaredvalue || 0;
+        const val = typeof r.declaredvalue === 'string' ? r.declaredvalue.replace(/,/g, '') : r.declaredvalue;
+        totalDeclaredValue += +val || 0;
       }
     });
 
@@ -317,6 +319,7 @@ export class InvoiceDetailsComponent {
       chargeWeightPerPkg: totalNoOfPkgs,
       finalActualWeight: +Math.max(totalActualWeight || 0, totalCubicWeight || 0).toFixed(2)
     }, { emitEvent: false });
+    this.docketService.invoiceform.get('totalDeclaredValue')?.markAsTouched();
     this.getCFTCalculation(i);
     this.docketService.calculateChargeWeight()
   }
@@ -372,8 +375,13 @@ export class InvoiceDetailsComponent {
       const row = invoiceRows.at(index) as FormGroup;
       row.patchValue({
         invoiceNo: null,
-        declaredvalue: null
+        declaredvalue: null,
+        invoiceCopy: null,
+        invoiceFileName: null,
+        isChangingFile: false,
+        isOcrReadOnly: false
       });
+      this.calculateSummary(index);
       const oldValue = (row as any).initialEwayBillNo;
       if (oldValue && oldValue === search) {
         return; // No popup on auto-loaded edit data
@@ -608,8 +616,13 @@ export class InvoiceDetailsComponent {
       }
       row.patchValue({
         invoiceNo: null,
-        declaredvalue: null
+        declaredvalue: null,
+        invoiceCopy: null,
+        invoiceFileName: null,
+        isChangingFile: false,
+        isOcrReadOnly: false
       });
+      this.calculateSummary(index);
     }
   }
 
@@ -680,9 +693,17 @@ export class InvoiceDetailsComponent {
         if (response && response.success && response.data) {
           const data = response.data;
           
+          const hasDetails = !!(data.invoice_no || data.invoice_date || data.invoice_value);
+          if (this.docketService.loginUserList?.Type !== '2') {
+            row.get('isOcrReadOnly')?.setValue(hasDetails);
+          } else {
+            row.get('isOcrReadOnly')?.setValue(false);
+          }
+
           if (data.invoice_no) row.get('invoiceNo')?.setValue(data.invoice_no);
           if (data.invoice_date) row.get('ewayinvoiceDate')?.setValue(new Date(data.invoice_date));
           if (data.invoice_value) row.get('declaredvalue')?.setValue(data.invoice_value);
+          row.get('ewayBillNo')?.setValue(null);
           
           this.sweetAlertService.success('Invoice details extracted successfully!').then(() => {
           });
