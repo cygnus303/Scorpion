@@ -118,7 +118,8 @@ export class AppointmentDeliveryComponent implements OnInit, OnDestroy {
       searchText: this.config.searchText || '',
       userId: this.docketService.loginUserList.UserId.toString(),
       pageno: this.pagination.page,
-      pageSize: this.pagination.pageSize
+      pageSize: this.pagination.pageSize,
+      locationCode:this.docketService.loginUserList.LocationCode
     };
 
     this.isLoading = true;
@@ -170,7 +171,8 @@ export class AppointmentDeliveryComponent implements OnInit, OnDestroy {
       searchText: this.config.searchText || '',
       userId: this.docketService.loginUserList.UserId.toString(),
       pageno: this.pagination.page,
-      pageSize: this.pagination.pageSize
+      pageSize: this.pagination.pageSize,
+      locationCode:this.docketService.loginUserList.LocationCode
     };
 
     this.isExportLoading = true;
