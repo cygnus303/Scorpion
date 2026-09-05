@@ -42,16 +42,20 @@
           <td><strong>License validity Date:</strong> {{ deliveryAgentViewList.licenseValidityDate | date:'dd MMM yyyy' }}</td>
         </tr>
          <tr>
-          <td><strong>Business Associate Vendor:</strong> {{ deliveryAgentViewList.businessAssociatecode }}</td>
+          <td><strong>Vendor Type:</strong> {{ deliveryAgentViewList.vendor_TypeDA }}</td>
+          <td><strong>Vendor Name:</strong> {{ deliveryAgentViewList.businessAssociatecode }}</td>
+        </tr>
+         <tr>
           <td><strong>Location:</strong> {{ deliveryAgentViewList.locationName }}</td>
-        </tr>
-         <tr>
           <td><strong>GPS Enabled:</strong> {{ deliveryAgentViewList.gpsEnabled===true?'Yes':'No' }}</td>
-          <td><strong>GPS Provider:</strong> {{ deliveryAgentViewList.gpsName }}</td>
         </tr>
          <tr>
+          <td><strong>GPS Provider:</strong> {{ deliveryAgentViewList.gpsName }}</td>
           <td><strong>Active Flag:</strong> {{ deliveryAgentViewList.isActive ===true?'Yes':'No'}}</td>
+        </tr>
+         <tr>
           <td><strong>License Attachment:</strong> <a [href]="deliveryAgentViewList.licenseAttachment" target="_blank"> View Attachment</a></td>
+          <td></td>
         </tr>
          <!-- <tr>
           <td><strong>Active Flag:</strong> {{ deliveryAgentViewList.isActive ===true?'Yes':'No'}}</td>

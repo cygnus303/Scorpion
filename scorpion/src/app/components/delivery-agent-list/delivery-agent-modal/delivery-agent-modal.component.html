@@ -310,9 +310,25 @@
       <div class="row pb-3">
         <div class="col-6">
           <div class="row">
-            <label class="col-sm-5 col-form-label text-end">Business Associate Vendor</label>
+            <label class="col-sm-5 col-form-label text-end">Vendor Type</label>
             <div class="col-sm-7">
-              <ng-select class="required2" placeholder="Business Associate Vendor" required
+              <ng-select class="required2" placeholder="Select Vendor Type" required
+                formControlName="vendorType" (change)="getVendors($event.codeId)"
+                [readonly]="deliveryAgentCode?true:false"
+                [items]="vendorTypeList" bindLabel="codeDesc" bindValue="codeId"
+                [ngClass]="{ 'border-danger': dAForm.get('vendorType')?.invalid  && dAForm.get('vendorType')?.touched }">
+              </ng-select>
+              <div class="text-danger"
+                *ngIf="dAForm.get('vendorType')?.invalid && dAForm.get('vendorType')?.touched ">
+                This field is required.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="row">
+            <label class="col-sm-5 col-form-label text-end">Vendor Name</label>
+            <div class="col-sm-7">
+              <ng-select class="required2" placeholder="Select Vendor Name" required
                 formControlName="businessAssociateVendor" (change)="getLocation($event)"
                 (clear)="dAForm.get('location')?.reset()" [readonly]="deliveryAgentCode?true:false"
                 [items]="vendorsList" bindLabel="vendorDisplayName" bindValue="vendorCode"
@@ -324,6 +340,8 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="row pb-3">
         <div class="col-6">
           <div class="row">
             <label class="col-sm-5 col-form-label text-end">Location</label>
@@ -338,8 +356,6 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="row pb-3">
         <div class="col-6 mb-3">
           <div class="row">
             <label class="col-sm-5 col-form-label text-end">GPS Enabled </label>
@@ -360,6 +376,8 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="row pb-3">
         <!-- <div class="col-6">
           <div class="row">
             <label class="col-sm-5 col-form-label text-end">License Attachment</label>
