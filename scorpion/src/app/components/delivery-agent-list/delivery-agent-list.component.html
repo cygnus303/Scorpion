@@ -23,7 +23,8 @@
                     <th style="min-width: 250px; max-width: 300px; white-space: normal;">Locations</th>
                     <th>Vehicle Number</th>
                     <th>License Number</th>
-                    <th>BA Name</th>
+                    <th>Vendor Type</th>
+                    <th>Vendor Name</th>
                     <th class="text-center">Status</th>
                     <th class="text-center">Action</th>
                 </tr>
@@ -41,6 +42,8 @@
                             (input)="getDeliveryAgentList()"></td>
                     <td><input type="text" class="form-control" [(ngModel)]="filters['LicenseNo']"
                             (input)="getDeliveryAgentList()"></td>
+                    <td><input type="text" class="form-control" [(ngModel)]="filters['VendorType']"
+                            (input)="getDeliveryAgentList()"></td>
                     <td><input type="text" class="form-control" [(ngModel)]="filters['BAName']"
                             (input)="getDeliveryAgentList()"></td>
                     <td></td>
@@ -53,6 +56,7 @@
                     <td style="min-width: 250px; max-width: 300px; white-space: normal; word-wrap: break-word;">{{data.location}}</td>
                     <td>{{data.vehicleNo}}</td>
                     <td>{{data.licenseNo}}</td>
+                    <td>{{data.vendorType}}</td>
                     <td>{{data.baName}}</td>
                     <td class="text-center">
                         <!-- <ng-container *ngIf="data.isActive; else inactive">

@@ -8,6 +8,7 @@ import { DeliveryAgentByCodeResponse, LocationListResponse, VendorsListResponse 
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { generalMasterResponse } from 'app/shared/models/general-master.model';
 import { VendorContractService } from 'app/shared/services/vendor-contract.service';
+import { THCMasterService } from 'app/shared/services/thc-master.service';
 
 @Component({
   selector: 'delivery-agent-modal',
@@ -25,6 +26,7 @@ export class DeliveryAgentModalComponent {
   public vendorsList:VendorsListResponse[]=[];
   public locationData:LocationListResponse[]=[];
   public gpsdata:generalMasterResponse[]=[];
+  public vendorTypeList: any[] = [];
   public showInvokeButton:boolean = false;
   public showVehicleInvokeButton:boolean=false;
   public isLicenceLoading : boolean =  false; 
@@ -168,7 +170,7 @@ applyGPSProviderValidation(){
   
   showPopup(data?:DeliveryAgentByCodeResponse){
    this.buildForm();
-   this.getVendors();
+   this.getVendorTypes();
    this.getLocationData();
    this.getGPSProviderData();
       this.dAForm?.get('gpsEnabled')?.valueChanges.subscribe(() => {
@@ -183,6 +185,11 @@ applyGPSProviderValidation(){
         this.dAForm?.get('vehicleNo')?.setValidators([Validators.required, Validators.minLength(this.selectedDigit), Validators.maxLength(this.selectedDigit)]);
         this.dAForm?.get('vehicleNo')?.updateValueAndValidity();
       }
+       if(data.vendor_TypeDA){
+        this.getVendors(data.vendor_Type);
+      }else{
+        this.vendorsList = [];
+      }
       const patchData = {
         ...data,
         registrationDate: data.registrationDate ? new Date(data.registrationDate) : null,
@@ -194,7 +201,8 @@ applyGPSProviderValidation(){
         gpsProvider:data.gpsProvider ? data.gpsProvider : null,
         location:data.location ? data.location?.split(",").map((x: any) => x.trim()):'',
         LicenseAttachment:data.licenseAttachment ? data.licenseAttachment:'',
-        fTlType:data.vehicleType
+        fTlType:data.vehicleType,
+        vendorType:data.vendor_Type
       };
       this.licenseAttachmentName = data.licenseAttachment ?  data.licenseAttachment.split('/').pop() || '':'',
       this.dAForm.patchValue(patchData);
@@ -279,6 +287,7 @@ checkLicenseExpiry(event?:any) {
       dateOfBirth: new FormControl(''),
       issueByRTO: new FormControl(''),
       licenseValidityDate: new FormControl('',Validators.required),
+      vendorType: new FormControl(null, Validators.required),
       businessAssociateVendor: new FormControl(null),
       fTlType: new FormControl(null),
       gpsEnabled: new FormControl(false),
@@ -308,8 +317,20 @@ onFileSelected(event: any) {
   }
 }
 
-  getVendors() {
-    this.deliveryAgentService.getVendors(this.docketService.loginUserList?.LocationCode).subscribe({next: (response) => {
+  getVendorTypes() {
+    this.basicDetailService.getGeneralMasterList('VENDTY', '', '').subscribe({
+      next: (response: any) => {
+        if (response.success) {
+          const allowedVendorCodes = ['04', '19', 'XX1'];
+          this.vendorTypeList = response.data.filter((x: any) => allowedVendorCodes.includes(x.codeId));
+        }
+      }
+    });
+  }
+
+  getVendors(event?: any) {
+    const vendorType = event;
+    this.deliveryAgentService.getVendors(this.docketService.loginUserList?.LocationCode,vendorType).subscribe({next: (response) => {
         if (response) {
           this.vendorsList = response;
         }

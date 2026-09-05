@@ -23,6 +23,7 @@ export interface DeliveryAgent {
   entryBy: string;
   updateBy: string;
   LicenseAttachmentPath:File;
+  vendorType?: string;
 }
 
 export interface DeliveryAgentsListRepsonse {
@@ -35,6 +36,7 @@ export interface DeliveryAgentsListRepsonse {
  vehicleNo:string;
  licenseNo:string;
  isUser:boolean;
+ vendorType?: string;
 }
 
 export interface DeliveryAgentByCodeResponse {
@@ -72,6 +74,8 @@ export interface DeliveryAgentByCodeResponse {
     updateName:string;
     driverName:string;
     vehicleType:string;
+    vendor_TypeDA?: string;
+    vendor_Type?:string;
 }
 export interface VendorsListResponse {
  vendorCode:string;
