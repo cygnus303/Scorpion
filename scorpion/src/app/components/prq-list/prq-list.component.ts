@@ -211,6 +211,7 @@ export class PrqListComponent {
     switch (status) {
       case 'Generated': return 's-gen';
       case 'Cancelled': return 's-canc';
+      case 'Auto Cancelled': return 's-canc';
       case 'Assigned': return 's-hcc';
       case 'ARRANGED': return 's-billed';
       default: return '';
