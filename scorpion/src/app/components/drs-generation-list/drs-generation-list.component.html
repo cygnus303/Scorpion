@@ -261,7 +261,7 @@
                                  <button *ngIf="!isHQTR"
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
                                     (click)="openUpdateModal(data)"
-                                    [disabled]="data.IsUpdateDRSForPending || data.status==='Cancelled'||data.status==='Billed' || data.IsThroughDA ===true || data.vendorType?.toUpperCase() === 'BUSINESS ASSOCIATE' ">
+                                    [disabled]="data.isUpdateDRSForPending || data.status==='Cancelled'||data.status==='Billed' || data.isThroughDA ===true || data.vendorType?.toUpperCase() === 'BUSINESS ASSOCIATE' ">
                                     🔄 DRS Update
                                 </button>
                                 <button *ngIf="!isHQTR" class="btn btn-sm bg-warning-secondary border-warning-secondary text-warning-emphasis py-1 px-3" (click)="openDeps(data, false)"

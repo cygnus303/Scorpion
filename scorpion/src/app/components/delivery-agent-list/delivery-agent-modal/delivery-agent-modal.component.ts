@@ -185,7 +185,7 @@ applyGPSProviderValidation(){
         this.dAForm?.get('vehicleNo')?.setValidators([Validators.required, Validators.minLength(this.selectedDigit), Validators.maxLength(this.selectedDigit)]);
         this.dAForm?.get('vehicleNo')?.updateValueAndValidity();
       }
-       if(data.vendor_TypeDA){
+       if(data.vendor_Type){
         this.getVendors(data.vendor_Type);
       }else{
         this.vendorsList = [];
