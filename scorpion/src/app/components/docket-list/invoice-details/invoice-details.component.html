@@ -118,14 +118,14 @@
                           <td class="center">
                             <div class="input-group">
                               <input type="text" class="form-control uppercase-none" #dp2="bsDatepicker" bsDatepicker
-                                [class.disabled-input]="row.get('ewayBillNo')?.value?.length > 0 || row.get('isOcrReadOnly')?.value"
+                                [class.disabled-input]="row.get('ewayBillNo')?.value?.length > 0"
                                 [minDate]="getMinInvoiceDate(row)" [maxDate]="getMaxInvoiceDate(row)"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }"
                                 [attr.tabindex]="-1" placeholder="dd/MMM/yyyy" formControlName="ewayinvoiceDate"
                                 [ngClass]="{'border-danger': row.get('ewayinvoiceDate')?.invalid && row.get('ewayinvoiceDate')?.touched, 
                                               'required2': isEwayInvoiceDateRequired(row)}">
                               <span class="input-group-text cursor-pointer" (click)="dp2.toggle()"
-                                [class.disabled-input]="row.get('ewayBillNo')?.value?.length > 0 || row.get('isOcrReadOnly')?.value">
+                                [class.disabled-input]="row.get('ewayBillNo')?.value?.length > 0">
                                 <i class="fa fa-calendar"></i>
                               </span>
                             </div>
@@ -136,7 +136,7 @@
                           </td>
                           <td class="center">
                             <input class="form-control required required2" placeholder="Invoice No." type="text"
-                              [readonly]="row.get('ewayBillNo')?.value?.length > 0 || row.get('isOcrReadOnly')?.value" formControlName="invoiceNo" required
+                              [readonly]="row.get('ewayBillNo')?.value?.length > 0" formControlName="invoiceNo" required
                               (blur)="checkDuplicateInvoices(i,row)"
                               [ngClass]="{ 'border-danger': row.get('invoiceNo')?.invalid && row.get('invoiceNo')?.touched}">
                             <div *ngIf="row.get('invoiceNo')?.invalid && row.get('invoiceNo')?.touched"
