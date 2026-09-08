@@ -211,11 +211,7 @@ export class BasicDetailsComponent {
         const row = this.docketService.invoiceRows.at(rowIndex) as FormGroup;
         
         const hasDetails = !!(data.invoice_no || data.invoice_date || data.invoice_value);
-        if (this.docketService.loginUserList?.Type !== '2') {
-          row.get('isOcrReadOnly')?.setValue(hasDetails);
-        } else {
-          row.get('isOcrReadOnly')?.setValue(false);
-        }
+        row.get('isOcrReadOnly')?.setValue(hasDetails);
 
         if (data.invoice_no) row.get('invoiceNo')?.setValue(data.invoice_no);
         if (data.invoice_date) row.get('ewayinvoiceDate')?.setValue(new Date(data.invoice_date));

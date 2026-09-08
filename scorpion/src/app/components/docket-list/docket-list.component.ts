@@ -322,6 +322,8 @@ export class DocketListComponent implements OnInit {
         isExistingFile: true,
         invoiceFileUrl: baseUrl + item.ewaybillInvoiceFile
       });
+      const hasDetails = !!(item.invno || item.eWayBillInvoiceDate || item.declval);
+      row.get('isOcrReadOnly')?.setValue(hasDetails);
     }
 
     // Set initial E-way bill number for tracking
