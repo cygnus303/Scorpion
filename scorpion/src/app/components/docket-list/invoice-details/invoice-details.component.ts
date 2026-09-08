@@ -134,7 +134,7 @@ export class InvoiceDetailsComponent {
       row.get('ewayBillNo')?.setValidators([Validators.required]);
 
       const expiryVals = [Validators.required];
-      if (hasEwayNo && userType !== '2') {
+      if (hasEwayNo) {
         expiryVals.push(pastDateValidator());
       }
       row.get('ewayBillExpiry')?.setValidators(expiryVals);
@@ -144,7 +144,7 @@ export class InvoiceDetailsComponent {
       row.get('ewayBillExpiry')?.clearValidators();
     }
 
-    if (!hasEwayNo && userType?.toString() !== '2' && userType?.toString() !== '1') {
+    if (!hasEwayNo && userType?.toString() !== '1') {
       ewayInvoiceRequired = true;
     }
 
@@ -176,17 +176,19 @@ export class InvoiceDetailsComponent {
     const ewayNo = row.get('ewayBillNo')?.value;
     const hasEwayNo = ewayNo && ewayNo.toString().trim().length > 0;
 
+    const hasInvoiceCopy = !!(row.get('invoiceCopy')?.value || row.get('invoiceFileName')?.value || row.get('invoiceFileUrl')?.value);
+
     if (hasEwayNo) {
       return true;
     }
 
     if (!originState || !destState) return false;
-    // Rule 1: Same state + declared > 100000
-    if (declared >= 100000 && originState === destState) {
+    // Rule 1: Same state + declared >= 100000
+    if (declared >= 100000 && originState === destState && !hasInvoiceCopy) {
       return true;
     }
-    // Rule 2: Different states + declared > 50000
-    if (declared >= 50000 && originState !== destState) {
+    // Rule 2: Different states + declared >= 50000
+    if (declared >= 50000 && originState !== destState && !hasInvoiceCopy) {
       return true;
     }
     return false;
@@ -198,7 +200,7 @@ export class InvoiceDetailsComponent {
     const userType = this.docketService.loginUserList?.Type?.toString();
     
     if (this.isEwayRequired(row) || hasEwayNo) return true;
-    if (!hasEwayNo && userType !== '2' && userType !== '1') return true;
+    if (!hasEwayNo && userType !== '1') return true;
     return false;
   }
 
@@ -207,7 +209,7 @@ export class InvoiceDetailsComponent {
     const hasEwayNo = ewayNo && ewayNo.toString().trim().length > 0;
     const userType = this.docketService.loginUserList?.Type?.toString();
     
-    if (!hasEwayNo && userType !== '2' && userType !== '1') {
+    if (!hasEwayNo && userType !== '1') {
       const minDate = new Date();
       minDate.setDate(minDate.getDate() - 15);
       minDate.setHours(0,0,0,0);
@@ -221,7 +223,7 @@ export class InvoiceDetailsComponent {
     const hasEwayNo = ewayNo && ewayNo.toString().trim().length > 0;
     const userType = this.docketService.loginUserList?.Type?.toString();
     
-    if (!hasEwayNo && userType !== '2' && userType !== '1') {
+    if (!hasEwayNo && userType !== '1') {
       return new Date(); // Today
     }
     return undefined;
@@ -636,17 +638,20 @@ export class InvoiceDetailsComponent {
 
       let requireValidators = false;
 
-      if (declared >= 100000 && originState && destState && originState === destState) {
+      const hasInvoiceCopy = !!(row.get('invoiceCopy')?.value || row.get('invoiceFileName')?.value || row.get('invoiceFileUrl')?.value);
+
+      if (declared >= 100000 && originState && destState && originState === destState && !hasInvoiceCopy) {
         requireValidators = true;
       }
 
-      if (declared >= 50000 && originState && destState && originState !== destState) {
+      if (declared >= 50000 && originState && destState && originState !== destState && !hasInvoiceCopy) {
         requireValidators = true;
       }
 
       this.setEwayRowValidators(row, requireValidators);
 
-      if (declared < 50000 && this.docketService.loginUserList.Type !== '2') {
+      const ewayBillNo = row.get('ewayBillNo')?.value;
+      if (declared < 50000 && !ewayBillNo) {
         row.get('invoiceCopy')?.setValidators([Validators.required]);
       } else {
         row.get('invoiceCopy')?.clearValidators();
@@ -694,11 +699,7 @@ export class InvoiceDetailsComponent {
           const data = response.data;
           
           const hasDetails = !!(data.invoice_no || data.invoice_date || data.invoice_value);
-          if (this.docketService.loginUserList?.Type !== '2') {
-            row.get('isOcrReadOnly')?.setValue(hasDetails);
-          } else {
-            row.get('isOcrReadOnly')?.setValue(false);
-          }
+          row.get('isOcrReadOnly')?.setValue(hasDetails);
 
           if (data.invoice_no) row.get('invoiceNo')?.setValue(data.invoice_no);
           if (data.invoice_date) row.get('ewayinvoiceDate')?.setValue(new Date(data.invoice_date));
