@@ -72,17 +72,22 @@ export class PrqTrackComponent {
         this.map.remove();
       }
 
-      this.map = L.map(mapContainer).setView([22.5, 72.5], 5);
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        attribution: '© OpenStreetMap contributors, © CARTO'
-      }).addTo(this.map);
+      // Initialize map without Leaflet zoom controls, so our custom fake controls look real
+      this.map = L.map(mapContainer, { zoomControl: false, attributionControl: false }).setView([22.5, 72.5], 5);
+      
+      this.setMapType('roadmap');
 
       // Geocode cities
-      const [originCoord, destCoord, currentCoord] = await Promise.all([
-        this.geocode(origin),
-        this.geocode(dest),
-        this.geocode(currentLoc)
-      ]);
+      let originCoord = await this.geocode(origin);
+      let destCoord = (dest === origin) ? originCoord : await this.geocode(dest);
+      let currentCoord = (currentLoc === origin) ? originCoord : 
+                         (currentLoc === dest) ? destCoord : 
+                         await this.geocode(currentLoc);
+
+      // Fallbacks if geocode fails
+      if (!originCoord) originCoord = [19.0760, 72.8777]; // Default to Mumbai
+      if (!destCoord) destCoord = [28.7041, 77.1025];   // Default to Delhi
+      if (!currentCoord) currentCoord = originCoord;
 
       if (originCoord && destCoord) {
         // Fetch Route
@@ -94,9 +99,10 @@ export class PrqTrackComponent {
           const polyline = L.polyline(latLngs, { color: '#3b82f6', weight: 4 }).addTo(this.map);
           this.map.fitBounds(polyline.getBounds(), { padding: [50, 50] });
 
-          // Add Truck Marker on route (snap to closest)
-          const targetCoord = currentCoord || originCoord;
-          const closest = this.getClosestPoint(targetCoord, latLngs);
+          // Place truck at the progress percentage along the route
+          const progressPct = data?.PRQStatus === 'Generated' ? 0.10 : 0.66;
+          const targetIndex = Math.floor(latLngs.length * progressPct);
+          const closest = latLngs[targetIndex] || latLngs[0];
           
           const truckIconHtml = `
             <div style="width:36px;height:36px;border-radius:50%;background:#ffb800;border:3px solid #fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 5px rgba(0,0,0,0.3);">
@@ -111,18 +117,49 @@ export class PrqTrackComponent {
           });
           
           L.marker(closest, { icon: truckIcon }).addTo(this.map);
+        } else {
+           // Fallback: draw straight line if routing fails
+           const latLngs = [originCoord, destCoord];
+           const polyline = L.polyline(latLngs, { color: '#3b82f6', weight: 4, dashArray: '10, 10' }).addTo(this.map);
+           this.map.fitBounds(polyline.getBounds(), { padding: [50, 50] });
+
+           const truckIcon = L.divIcon({
+            html: `<div style="width:36px;height:36px;border-radius:50%;background:#ffb800;border:3px solid #fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 5px rgba(0,0,0,0.3);"><i class="fa fa-truck" style="color:#000;font-size:16px;"></i></div>`,
+            className: '',
+            iconSize: [36, 36],
+            iconAnchor: [18, 18]
+          });
+          L.marker(originCoord, { icon: truckIcon }).addTo(this.map);
         }
       }
       this.mapLoaded = true;
-    }, 300);
+      // Force Leaflet to recalculate size after the loader disappears and modal is fully open
+      setTimeout(() => {
+        if (this.map) {
+           this.map.invalidateSize();
+        }
+      }, 100);
+    }, 10); // Reduced timeout significantly
   }
 
+  private geocodeCache: { [city: string]: number[] } = {};
+
   private async geocode(city: string): Promise<any> {
+    const cityName = city.toLowerCase().trim();
+    
+    if (this.geocodeCache[cityName]) {
+      return this.geocodeCache[cityName];
+    }
+
     try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}&limit=1`);
+      // Append India to get better local results, or fallback to generic search if it's already "India"
+      const query = city.toLowerCase() === 'india' ? 'India' : `${city}, India`;
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`);
       const data = await res.json();
       if (data && data.length > 0) {
-        return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+        const coord = [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+        this.geocodeCache[cityName] = coord;
+        return coord;
       }
     } catch (e) {
       console.error('Geocode error', e);
@@ -152,6 +189,67 @@ export class PrqTrackComponent {
       }
     }
     return closest;
+  }
+
+  // --- Map Controls ---
+  public mapType: 'roadmap' | 'satellite' = 'roadmap';
+  private tileLayer: any;
+
+  setMapType(type: 'roadmap' | 'satellite') {
+    this.mapType = type;
+    if (!this.map) return;
+    
+    // Remove old layer
+    if (this.tileLayer) {
+      this.map.removeLayer(this.tileLayer);
+    }
+    
+    let url = 'http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}'; // roadmap
+    if (type === 'satellite') {
+      url = 'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}'; // hybrid satellite
+    }
+
+    this.tileLayer = L.tileLayer(url, {
+      maxZoom: 20,
+      subdomains:['mt0','mt1','mt2','mt3']
+    }).addTo(this.map);
+  }
+
+  zoomIn() {
+    if (this.map) this.map.zoomIn();
+  }
+
+  zoomOut() {
+    if (this.map) this.map.zoomOut();
+  }
+
+  toggleFullscreen() {
+    const container = this.document.querySelector('.track-map-wrapper');
+    if (!container) return;
+
+    if (!this.document.fullscreenElement) {
+      if (container.requestFullscreen) {
+        container.requestFullscreen();
+      } else if ((container as any).webkitRequestFullscreen) {
+        (container as any).webkitRequestFullscreen();
+      } else if ((container as any).msRequestFullscreen) {
+        (container as any).msRequestFullscreen();
+      }
+    } else {
+      if (this.document.exitFullscreen) {
+        this.document.exitFullscreen();
+      } else if ((this.document as any).webkitExitFullscreen) {
+        (this.document as any).webkitExitFullscreen();
+      } else if ((this.document as any).msExitFullscreen) {
+        (this.document as any).msExitFullscreen();
+      }
+    }
+  }
+
+  openStreetView() {
+    if (!this.map) return;
+    const center = this.map.getCenter();
+    window.open(`https://www.google.com/maps?layer=c&cbll=${center.lat},${center.lng}`, '_blank');
   }
 
   closeDATracking() {
