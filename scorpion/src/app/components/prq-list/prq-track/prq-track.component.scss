@@ -3,7 +3,7 @@
   border-radius: 4px;
   overflow: hidden;
   width: 100%;
-  height: 520px;
+  height: 700px;
   display: flex;
   flex-direction: column;
 }
@@ -406,5 +406,124 @@
 .track-truck-icon {
   font-size: 18px;
   color: #000;
+}
+
+/* FAKE GOOGLE MAPS CONTROLS STYLES */
+
+.gm-style-mtc {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  display: flex;
+  background: #fff;
+  border-radius: 2px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+  cursor: pointer;
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 14px;
+}
+
+.gm-style-mtc .gm-btn {
+  padding: 8px 12px;
+  color: #565656;
+}
+
+.gm-style-mtc .gm-active {
+  font-weight: 500;
+  color: #000;
+  border-right: 1px solid #ebebeb;
+}
+
+.gm-fullscreen {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  background: #fff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 2px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gm-bottom-right {
+  position: absolute;
+  bottom: 22px;
+  right: 10px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.gm-zoom {
+  background: #fff;
+  border-radius: 2px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+  display: flex;
+  flex-direction: column;
+}
+
+.gm-zbtn {
+  background: transparent;
+  border: none;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gm-zout {
+  border-top: 1px solid #ebebeb;
+}
+
+.gm-pegman {
+  background: #fff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 2px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gm-bottom-left {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.gm-terms {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 1px 5px;
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 10px;
+  color: #444;
+}
+
+.gm-terms a {
+  color: #444;
+  text-decoration: none;
+}
+.gm-terms a:hover {
+  text-decoration: underline;
 }
 

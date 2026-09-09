@@ -11,12 +11,50 @@
     <!-- Body -->
     <div class="track-body">
       <!-- Map side -->
-      <div class="track-map-wrapper">
+      <div class="track-map-wrapper" style="position: relative;">
         <div id="da-leaflet-map" class="track-map-container" style="width: 100%; height: 100%;">
           <div *ngIf="!mapLoaded" class="track-loader-overlay">
             <div class="spinner-border text-danger track-spinner" role="status"></div>
             Loading Route...
           </div>
+        </div>
+
+        <!-- FAKE GOOGLE MAPS CONTROLS -->
+        <div class="gm-style-mtc">
+          <div class="gm-btn" [class.gm-active]="mapType === 'roadmap'" (click)="setMapType('roadmap')">Map</div>
+          <div class="gm-btn" [class.gm-active]="mapType === 'satellite'" (click)="setMapType('satellite')">Satellite</div>
+        </div>
+        <button class="gm-fullscreen" title="Toggle fullscreen view" (click)="toggleFullscreen()">
+          <svg viewBox="0 0 18 18" width="18" height="18"><path fill="#333" d="M4.5 11H3v4h4v-1.5H4.5V11zM3 7h1.5V4.5H7V3H3v4zm10.5 6.5H11V15h4v-4h-1.5v2.5zM11 3v1.5h2.5V7H15V3h-4z"/></svg>
+        </button>
+        <div class="gm-bottom-right">
+          <div class="gm-zoom">
+            <button class="gm-zbtn" title="Zoom in" (click)="zoomIn()"><svg viewBox="0 0 18 18" width="18" height="18"><path fill="#333" d="M14.5 8H10V3.5H8V8H3.5v2H8v4.5h2V10h4.5z"/></svg></button>
+            <button class="gm-zbtn gm-zout" title="Zoom out" (click)="zoomOut()"><svg viewBox="0 0 18 18" width="18" height="18"><path fill="#333" d="M3.5 8h11v2h-11z"/></svg></button>
+          </div>
+          <button class="gm-pegman" title="Click Pegman to open Street View" (click)="openStreetView()">
+             <svg viewBox="0 0 40 50" width="22" height="28" style="margin-top:2px;">
+                <path d="M15.4 38.8h-4a1.64 1.64 0 01-1.4-1.1l-3.1-8a.9.9 0 01-.5.1l-1.4.1a1.62 1.62 0 01-1.6-1.4L2.3 15.4l1.6-1.3a6.87 6.87 0 01-3-4.6A7.14 7.14 0 012 4 7.6 7.6 0 016.7.9 7.14 7.14 0 0112.2 2a7.28 7.28 0 012.3 9.6l2.1-.1.1 1c0 .2.1.5.1.8a2.41 2.41 0 011 1s1.9 3.2 2.8 4.9c.7 1.2 2.1 4.2 2.8 5.9a2.1 2.1 0 01-.8 2.6l-.6.4a1.63 1.63 0 01-1.5.2l-.6-.3a8.93 8.93 0 00.5 1.3 7.91 7.91 0 001.8 2.6l.6.3v4.6l-4.5-.1a7.32 7.32 0 01-2.5-1.5zm-10-19.2 3.5 9.8 2.9 7.5h1.6V35l-1.9-9.4 3.1 5.4a8.24 8.24 0 003.8 3.8h2.1v-1.4a14 14 0 01-2.2-3.1 44.55 44.55 0 01-2.2-8L14.8 16l3.2 5.6c.6 1.1 2.1 3.6 2.8 4.9l.6-.4c-.8-1.6-2.1-4.6-2.8-5.8-.9-1.7-2.8-4.9-2.8-4.9a.54.54 0 00-.4-.3l-.7-.1-.1-.7a4.33 4.33 0 00-.1-.5l-5.3.3 2.2-1.9a4.3 4.3 0 00.9-1 5.17 5.17 0 00.8-4 5.67 5.67 0 00-2.2-3.4 5.09 5.09 0 00-4-.8 5.67 5.67 0 00-3.4 2.2 5.17 5.17 0 00-.8 4 5.67 5.67 0 002.2 3.4 3.13 3.13 0 001 .5l1.6.6-3.2 2.6 1 11.5h.4z" fill="#333"/>
+                <path d="M3.35 15.9 4.45 28.4a.39.39 0 00.36.42h.14l1.4-.1a.66.66 0 00.5-.4l-.2-3.8-3.3-8.6Z" fill="#fdbf2d"/>
+                <path d="M5.2 28.8 6.3 28.7a.66.66 0 00.5-.4l-.2-3.8-1.2-3.1Z" fill="#ce592b" fill-opacity=".25"/>
+                <path d="M21.4 35.7l-3.8-1.2-2.7-7.8L12 15.5l3.4-2.9c.2 2.4 2.2 14.1 3.7 17.1 0 0 1.3 2.6 2.3 3.1zM13 27.6l-2-.3 2.5 10.1.9.4v-2.9" fill="#e5892b"/>
+                <path d="M17.8 25.4c-.4-1.5-.7-3.1-1.1-4.8-.1-.4-.1-.7-.2-1.1l-1.1-2-1.7-1.6s.9 5 2.4 7.1a19.12 19.12 0 001.7 2.4Z" style="isolation:isolate" fill="#cf572e" opacity=".6"/>
+                <path d="M14.4 37.8h-3a.43.43 0 01-.4-.4l-3-7.8-1.7-4.8-3-9 8.9-.4s2.9 11.3 4.3 14.4c1.9 4.1 3.1 4.7 5 5.8h-3.2s-4.1-1.2-5.9-7.7a.59.59 0 00-.6-.4.62.62 0 00-.3.7s.5 2.4.9 3.6a34.87 34.87 0 002 6" fill="#fdbf2d"/>
+                <path d="M15.4 12.7 12.1 15.6 3.2 16l3.3-2.7" fill="#ce592b"/>
+                <path d="M9.1 21.1 10.5 14.9 4.6 15.4" style="isolation:isolate" fill="#cf572e" opacity=".6"/>
+                <path d="M12 13.5a4.75 4.75 0 01-2.6 1.1c-1.5.3-2.9.2-2.9 0s1.1-.6 2.7-1" fill="#bb3d19"/>
+                <circle cx="7.92" cy="8.19" r="6.3" fill="#fdbf2d"/>
+                <path d="M4.7 13.6a6.21 6.21 0 008.4-1.9v-.1a8.89 8.89 0 01-8.4 2" fill="#ce592b" fill-opacity=".25"/>
+                <path d="M21.2 27.2l.6-.4a1.09 1.09 0 00.4-1.3c-.7-1.5-2.1-4.6-2.8-5.8-.9-1.7-2.8-4.9-2.8-4.9a1.6 1.6 0 00-2.17-.65l-.23.15a1.68 1.68 0 00-.4 2.1s2.3 3.9 3.1 5.3c.6 1 2.1 3.7 2.9 5.1a.94.94 0 001.24.49z" fill="#fdbf2d"/>
+                <path d="M19.4 19.8c-.9-1.7-2.8-4.9-2.8-4.9a1.6 1.6 0 00-2.17-.65l-.23.15-.3.3c1.1 1.5 2.9 3.8 3.9 5.4 1.1 1.8 2.9 5 3.8 6.7l.1-.1a1.09 1.09 0 00.4-1.3 57.67 57.67 0 00-2.7-5.6Z" fill="#ce592b" fill-opacity=".25"/>
+            </svg>
+          </button>
+        </div>
+        <div class="gm-bottom-left">
+          <img src="https://maps.gstatic.com/mapfiles/api-3/images/google_white5.png" style="filter: invert(100%); height:22px; margin-left: 5px; margin-bottom: 2px;" alt="Google">
+        </div>
+        <div class="gm-terms">
+          Map data ©2026 Google, TMap Mobility &nbsp;&nbsp;<a href="https://www.google.com/intl/en-US_US/help/terms_maps.html" target="_blank" rel="noopener">Terms</a>
         </div>
         <!-- LIVE badge -->
         <div class="track-live-badge">
