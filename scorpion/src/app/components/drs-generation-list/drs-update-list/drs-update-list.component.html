@@ -485,14 +485,26 @@
                                                             [ngClass]="{ 'border-danger': drsList.at(i).get('cboEmail')?.invalid && drsList.at(i).get('cboEmail')?.touched, 'required2': row.value.deliveredPkgs > 0}">
                                                     </div>
                                                 </td>
-
-                                                <!-- 19. Delivery Date -->
-                                                <td class="align-top">
-                                                    <app-date-time-picker controlName="DELYDATE" [maxDate]="maxDate"
+                                                <!-- [minDate]="row.value.booking_Date"  -->
+                                                     <!-- <app-date-time-picker controlName="DELYDATE" [maxDate]="maxDate"
                                                         appendTo="body" [placeholder]="'dd-mm-yyyy'"
                                                         [minDate]="row.value.booking_Date"
                                                         [disabled]="row.value.deliveredPkgs == 0"
-                                                        appFocusNext></app-date-time-picker>
+                                                        appFocusNext></app-date-time-picker> -->
+
+                                                 <td class="align-top">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control minput" #dp="bsDatepicker" bsDatepicker
+                                                            [minDate]="minDrsDate"
+                                                            [maxDate]="maxDate"
+                                                            [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' }" 
+                                                            placeholder="dd-mmm-yyyy" formControlName="DELYDATE" appFocusNext
+                                                            [attr.disabled]="row.value.deliveredPkgs == 0 ? true : null"
+                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('DELYDATE')?.invalid && drsList.at(i).get('DELYDATE')?.touched }">
+                                                        <span class="input-group-text cursor-pointer" (click)="row.value.deliveredPkgs == 0 ? null : dp.toggle()" [class.disabled-input]="row.value.deliveredPkgs == 0">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </span>
+                                                    </div>
                                                 </td>
 
                                                 <!-- 20. POD 1 -->
