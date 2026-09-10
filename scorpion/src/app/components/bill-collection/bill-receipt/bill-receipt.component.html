@@ -295,8 +295,9 @@
                   This field is required.
                 </div>
               </div>
-              <div class="col-md-3" *ngIf="bankMode === 'cheque'">
-                <label class="form-label small text-muted mb-1">Cheque Date <span class="text-danger">*</span></label>
+              <div class="col-md-3" >
+                <label class="form-label small text-muted mb-1">
+                   {{ bankMode === 'cheque' ? 'Cheque Date' : 'RTGS Date' }} <span class="text-danger">*</span></label>
                 <div class="input-group input-group-sm"
                   [ngClass]="{'border border-danger rounded': receiptForm.get('chequeDate')?.invalid && receiptForm.get('chequeDate')?.touched}">
                   <input type="text" class="form-control bg-white shadow-none" #dp="bsDatepicker" bsDatepicker
