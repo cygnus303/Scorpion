@@ -139,6 +139,34 @@ export class DRSUpdateListComponent {
     return this.drsList.controls.filter(c => !c.get('isChecked')?.value).length;
   }
 
+  get minDrsDate(): Date | undefined {
+    const d = this.DRSInformation?.drsDate || this.drsData?.drsDate;
+    if (!d) return undefined;
+
+    if (d instanceof Date) return isNaN(d.getTime()) ? undefined : d;
+
+    if (typeof d === 'string') {
+      const datePart = d.split(' ')[0];
+      if (datePart && (datePart.includes('-') || datePart.includes('/'))) {
+        const parts = datePart.split(/[-/]/);
+        // Assuming DD-MM-YYYY or DD/MM/YYYY
+        if (parts.length === 3 && parts[2].length === 4) {
+          const day = parseInt(parts[0], 10);
+          const month = parseInt(parts[1], 10) - 1;
+          const year = parseInt(parts[2], 10);
+          
+          if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+            const parsedDate = new Date(year, month, day);
+            if (!isNaN(parsedDate.getTime())) return parsedDate;
+          }
+        }
+      }
+    }
+
+    const fallback = new Date(d);
+    return isNaN(fallback.getTime()) ? undefined : fallback;
+  }
+
   getVendorType() {
     this.THCMasterService.getVendorType(this.docketService.loginUserList.LocationCode).subscribe({
       next: (response) => {
