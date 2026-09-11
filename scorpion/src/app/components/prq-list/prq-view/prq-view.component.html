@@ -105,11 +105,11 @@
                     </div>
                     <div class="info-row">
                         <span class="label">Delivery Branch</span>
-                        <span class="value">{{ prqData.DeliveryAgentLoc || '—' }}</span>
+                        <span class="value">{{ prqData.DestCd || '—' }}</span>
                     </div>
                     <div class="info-row">
                         <span class="label">ODA Category</span>
-                        <span class="value">{{ prqData.ODACategory || 'Normal' }}</span>
+                        <span class="value">{{ prqData.PincodeCategory || '-' }}</span>
                     </div>
                     <div class="info-row">
                         <span class="label">Docket No.</span>
@@ -126,10 +126,6 @@
                     <div class="info-row">
                         <span class="label">Total Weight (Kg)</span>
                         <span class="value">{{ prqData.ApproxWeight ? prqData.ApproxWeight + ' kg' : '—' }}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Total Charge Wt (Kg)</span>
-                        <span class="value">{{prqData.chargeWt || '-'}}</span>
                     </div>
                     <div class="info-row">
                         <span class="label">Service Type</span>
