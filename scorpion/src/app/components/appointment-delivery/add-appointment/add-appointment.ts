@@ -32,6 +32,7 @@ export class AddAppointment implements OnInit {
   isSaving: boolean = false;
   isDocketLoading: boolean = false;
   docketEligibilityError: string = '';
+  minAppointmentDate?: Date;
 
   appointmentForm = new FormGroup({
     entryType: new FormControl('APMT'),
@@ -74,6 +75,35 @@ export class AddAppointment implements OnInit {
 
     this.appointmentForm.get('timeFrom')?.valueChanges.subscribe(() => this.validateTimeRange());
     this.appointmentForm.get('timeTo')?.valueChanges.subscribe(() => this.validateTimeRange());
+    this.appointmentForm.get('appointmentDate')?.valueChanges.subscribe(() => this.validateAppointmentDate());
+  }
+
+  validateAppointmentDate() {
+    const apmtDateControl = this.appointmentForm.get('appointmentDate');
+    const eddStr = this.appointmentForm.get('edd')?.value;
+    const apmtDate = apmtDateControl?.value;
+
+    if (this.entryType === 'APMT' && apmtDate && eddStr) {
+      const eddDate = new Date(eddStr);
+      eddDate.setHours(0, 0, 0, 0);
+      const apmtDateObj = new Date(apmtDate);
+      apmtDateObj.setHours(0, 0, 0, 0);
+
+      if (apmtDateObj < eddDate) {
+        apmtDateControl?.setErrors({ ...apmtDateControl?.errors, eddInvalid: true });
+        apmtDateControl?.markAsTouched();
+      } else {
+        if (apmtDateControl?.hasError('eddInvalid')) {
+          const errors = { ...apmtDateControl.errors };
+          delete errors['eddInvalid'];
+          apmtDateControl.setErrors(Object.keys(errors).length ? errors : null);
+        }
+      }
+    } else if (apmtDateControl?.hasError('eddInvalid')) {
+      const errors = { ...apmtDateControl.errors };
+      delete errors['eddInvalid'];
+      apmtDateControl.setErrors(Object.keys(errors).length ? errors : null);
+    }
   }
 
   validateTimeRange() {
@@ -148,6 +178,7 @@ export class AddAppointment implements OnInit {
   submitForm() {
     if (this.entryType === 'APMT') {
       this.validateTimeRange();
+      this.validateAppointmentDate();
     }
     if (this.appointmentForm.invalid) {
       this.appointmentForm.markAllAsTouched();
@@ -290,6 +321,13 @@ export class AddAppointment implements OnInit {
                 originCode: res.originCode || '',
                 desitnationCode: res.desitnationCode || ''
               });
+
+              if (res.edd) {
+                this.minAppointmentDate = new Date(res.edd);
+              } else {
+                this.minAppointmentDate = undefined;
+              }
+              this.validateAppointmentDate();
             }
           },
           error: (err) => {
