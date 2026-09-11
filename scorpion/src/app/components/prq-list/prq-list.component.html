@@ -236,6 +236,7 @@
                                     🚫 Cancel
                                 </button>
                                  <button class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1 text-nowrap" (click)="onTrack(row)"
+                                 [disabled]="row.PRQStatus === 'Cancelled'|| row.PRQStatus === 'ARRANGED' || row.PRQStatus === 'Auto Cancelled'"
                                         style="font-size: 11px; background: #fff4e0; color: #e07b00; border: 1px solid #f5d38a;">
                                        📍 Track
                                   </button>
