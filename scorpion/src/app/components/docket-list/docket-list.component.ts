@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DocketService } from '../../shared/services/docket.service';
 import { BasicDetailService } from '../../shared/services/basic-detail.service';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { SweetAlertService } from '../../shared/services/sweet-alert.service';
 import { environment } from 'environments/environment';
 import { FormArray, FormGroup, Validators } from '@angular/forms';
@@ -21,6 +22,8 @@ export class DocketListComponent implements OnInit {
   decrypted: string = '';
   env = environment;
   public isRedirect: boolean = false;
+  public prqSuccessResult: any = null; // stores response after PRQ LR booking
+  public showPRQSuccessModal: boolean = false;
 
   public isComplitionlist!: BasePayload;
   @ViewChild(BasicDetailsComponent) basicDetailsComp!: BasicDetailsComponent;
@@ -28,7 +31,7 @@ export class DocketListComponent implements OnInit {
 
 
   constructor(
-    public docketService: DocketService, private basicDetailService: BasicDetailService, private router: Router, public apiLoading: ApiLoadingService,
+    public docketService: DocketService, private basicDetailService: BasicDetailService, private router: Router, private location: Location, public apiLoading: ApiLoadingService,
     private sweetAlertService: SweetAlertService,
   ) { }
 
@@ -48,6 +51,77 @@ export class DocketListComponent implements OnInit {
     if (currentRoute.includes("docketFinancialEdit") || currentRoute.includes("docketEditCretria")) {
       this.docketService.isComplition = true;
       this.getCompletionData();
+    }
+
+    if (currentRoute.includes("docket")) {
+      setTimeout(()=>{
+        const prqData = this.docketService.loginUserList?.prqData;
+        if (prqData) {
+          this.patchPRQData();
+        }
+      },600)
+    }
+  }
+
+
+  patchPRQData() {
+    console.log(this.docketService.loginUserList?.prqData)
+    const prqData = this.docketService.loginUserList?.prqData;
+    if (prqData) {
+      if (prqData.DeliveryPincode) {
+        this.basicDetailService.getpincodeData(prqData.DeliveryPincode).subscribe((res: any) => {
+          if (res.success && res.data && res.data.length > 0) {
+            const matchedPincode = res.data.find((p: any) => p.value === prqData.DeliveryPincode) || res.data[0];
+            
+            // Populate pincodeList so the dropdown can display the label correctly
+            this.docketService.pincodeList = [matchedPincode];
+            
+            this.docketService.basicDetailForm.patchValue({
+              destination: matchedPincode.destination,
+              pincode: matchedPincode.value
+            });
+            this.docketService.consignorForm.patchValue({ consigneePincode: matchedPincode.value });
+            this.docketService.getPincodeMasterList(matchedPincode.value);
+            
+            // Fetch Dest State Name now that destination is set
+            this.docketService.GetPincodeOrigin();
+          }
+        });
+      } else {
+        this.docketService.getpincodeData(prqData.DeliveryPincode);
+      }
+
+      // first patch
+      this.docketService.basicDetailForm.patchValue({
+        prqNo: prqData.PRQNo,
+        billingParty: prqData.CustomerCode,
+        billingName: prqData.CustomerName,
+        origin: this.docketService.loginUserList.LocationCode,
+        pincode: prqData.DeliveryPincode || null,
+      });
+      // this.docketService.loginUserList.LocationCode = originCode;
+      // this.docketService.Location= originCode;
+
+      this.docketService.getRuleDetailForDepth();
+      this.docketService.getBlockedCustomerListAPI();
+      this.docketService.getRuleDetailForProceed();
+
+      setTimeout(() => {
+        // second patch
+        this.docketService.basicDetailForm.patchValue({
+          fromCity: prqData.FromCity || null,
+          toCity: prqData.ToCity || null,
+          vehicleno: prqData.VehicleNo || null,
+        });
+
+        // Trigger city change events to fetch Origin State Name
+        if (prqData.FromCity) {
+          this.basicDetailsComp.onChangeCityListList(prqData.FromCity, 'from');
+        }
+        if (prqData.ToCity) {
+          this.basicDetailsComp.onChangeCityListList(prqData.ToCity, 'to');
+        }
+      }, 400);
     }
   }
 
@@ -383,6 +457,22 @@ export class DocketListComponent implements OnInit {
     this.docketService.consignorbuild();
     this.docketService.freightbuild();
     this.docketService.invoicebuild();
+  }
+
+  closePRQSuccess() {
+    this.showPRQSuccessModal = false;
+    this.prqSuccessResult = null;
+    this.location.back();
+  }
+
+  generateMoreLR() {
+    this.showPRQSuccessModal = false;
+    this.prqSuccessResult = null;
+    this.isRedirect = false;
+    this.isSubmitting = false;
+    // Reset forms so user can book another LR for same PRQ
+    this.resetAllForms();
+    this.patchPRQData();
   }
 
   logInvalidControls(form: FormGroup, prefix: string = ''): string[] {
@@ -771,6 +861,7 @@ export class DocketListComponent implements OnInit {
           "ISOnSubtotalorTotal": "",
           "Discount": Number(this.docketService.freightForm.value.discount) || 0,
           "TRDays": 0,
+          "IndentNo": this.docketService.basicDetailForm.value.prqNo || "",
 
         },
         wmdc: {
@@ -850,12 +941,12 @@ export class DocketListComponent implements OnInit {
       } else {
         formData.append("GSTDeclaration", existingGstDoc);
       }
-      
+
       // EwaybillInvoiceFile array
       this.docketService.invoiceRows.controls.forEach((row) => {
         const file = row.get('invoiceCopy')?.value;
         const existingName = row.get('invoiceFileName')?.value;
-        
+
         if (file instanceof File) {
           formData.append("EwaybillInvoiceFile", file, file.name);
         } else if (existingName) {
@@ -893,7 +984,14 @@ export class DocketListComponent implements OnInit {
               this.docketService.successMsg = 'Docket submitted successfully.'
               // window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N&src=angular`;
               // {btoa('angular')}
-              window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&BILLNO=${response.res.billNo}&MRSNo=${response.res.mrsNo}&APMTNO=${response.res.apmtNo}&id=${response.res.id}&IsFromBillGeneration=N&src=angular`;
+              if(!this.docketService.loginUserList?.prqData){
+                window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&BILLNO=${response.res.billNo}&MRSNo=${response.res.mrsNo}&APMTNO=${response.res.apmtNo}&id=${response.res.id}&IsFromBillGeneration=N&src=angular`;
+              } else {
+                  // PRQ flow: show in-app success modal
+                this.prqSuccessResult = response.res;
+                this.showPRQSuccessModal = true;
+                this.isSubmitting = false; // ✅ stop loader
+              }
               this.docketService.basicDetailForm.reset();
               this.docketService.freightForm.reset();
               this.docketService.invoiceform.reset();

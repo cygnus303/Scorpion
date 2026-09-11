@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-prq-view',
@@ -14,9 +14,17 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 })
 export class PrqViewComponent {
    @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
+   @ViewChild('detailsModalTemplate') detailsModalTemplate!: TemplateRef<any>;
+   
    public modalRef!: BsModalRef;
+   public detailModalRef?: BsModalRef;
+   
   public prqData: any = null;
   public isLoading: boolean = false;
+  
+  public detailList: any[] = [];
+  public isDetailLoading: boolean = false;
+  public detailType: 'eway' | 'volumetric' = 'eway';
 
   constructor(
     private modalService: BsModalService,
@@ -72,5 +80,50 @@ export class PrqViewComponent {
       case 'arranged': return 'bg-success text-white';
       default: return 'bg-secondary text-white';
     }
+  }
+
+  openDetails(type: 'eway' | 'volumetric') {
+    if (!this.prqData || !this.prqData.DocketNo) {
+      this.sweetAlertService.error("Docket No is not available for this PRQ.");
+      return;
+    }
+
+    this.detailType = type;
+    this.detailList = [];
+    this.isDetailLoading = true;
+    
+    const config: ModalOptions = {
+      class: 'modal-xl modal-dialog-centered hcc-view-modal-custom',
+      backdrop: 'static'
+    };
+    this.detailModalRef = this.modalService.show(this.detailsModalTemplate, config);
+
+    const reportId = type === 'eway' ? '285' : '286';
+    const payload = {
+      "FilterJson": {
+        "ReportId": reportId,
+        "DockNo": this.prqData.DocketNo
+      }
+    };
+
+    this.dynamicDataService.getDynamicData(payload).subscribe({
+      next: (response: any) => {
+        this.isDetailLoading = false;
+        if (response && response.Table1) {
+          this.detailList = response.Table1;
+        } else {
+          this.detailList = [];
+        }
+      },
+      error: (error: any) => {
+        this.isDetailLoading = false;
+        this.sweetAlertService.error(error?.error?.message || 'Failed to fetch details');
+      }
+    });
+  }
+
+  closeDetailModal() {
+    this.detailModalRef?.hide();
+    this.detailList = [];
   }
 }

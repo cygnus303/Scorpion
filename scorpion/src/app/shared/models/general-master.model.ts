@@ -147,6 +147,7 @@ export interface BasePayload {
   loadBy?:string;
   id?:string
   menuId?:number;
+  prqData?:any;
 }
 
 export interface StatesFromPartyCodeRepsonse {

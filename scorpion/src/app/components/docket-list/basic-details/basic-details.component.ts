@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SweetAlertService } from '../../../shared/services/sweet-alert.service';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup } from '@angular/forms';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'basic-details',
@@ -49,7 +50,8 @@ export class BasicDetailsComponent {
     private basicDetailService: BasicDetailService, public generalMasterService: GeneralMasterService,
     public commonDateService:CommonDateService, private route: ActivatedRoute, private router: Router,
     private sweetAlertService: SweetAlertService,
-    private http: HttpClient) { }
+    private http: HttpClient,
+    private location: Location) { }
 
   ngOnInit() {
     this.appoinmentDate = new Date();
@@ -128,7 +130,6 @@ export class BasicDetailsComponent {
       }
       gstCtrl?.updateValueAndValidity();
     });
-
   }
 
   callEwayBillFromParent(event: any) {
@@ -821,10 +822,6 @@ OnChangeCNoteDate(event:any){
   }
 
   onBack() {
-    if(this.docketService.loginUserList.Type === '2'|| this.docketService.loginUserList.Type === '1'){
-      this.router.navigate(['Operation/LRFinEditList']);
-    }else{
-      this.router.navigate(['Operation/docketList']);
-    }
+    this.location.back();
   }
 }

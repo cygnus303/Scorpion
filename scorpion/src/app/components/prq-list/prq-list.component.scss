@@ -69,6 +69,12 @@
         color: #99451e;
         border: 1px dotted #e79a6e;
     }
+
+    &.s-in-progress {
+    background: #eaf1ff;
+    color: #3b6fe0;
+    border: 1px dotted #879ff2;
+}
 }
 
 .custom-tooltip-wrapper {

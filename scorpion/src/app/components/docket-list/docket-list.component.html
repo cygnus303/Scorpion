@@ -46,3 +46,65 @@
     <div class="mt-3 custom-text">Submitting...</div>
   </div>
 </div>
+
+<!-- PRQ Success Modal — Exact Match UI -->
+<div *ngIf="showPRQSuccessModal"
+     class="modal d-block fade show"
+     tabindex="-1"
+     style="background: rgba(0, 0, 0, 0.5);">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 shadow" style="border-radius: 8px; overflow: hidden;">
+      
+      <!-- Header -->
+      <div class="modal-header border-0 rounded-0" style="background-color: #2b334e; color: white; padding: 12px 20px;">
+        <h6 class="modal-title mb-0 fw-normal" style="font-size: 15px;">
+          📦 Book LR &mdash; {{ docketService.loginUserList.prqData?.PRQNo }}
+        </h6>
+        <button type="button" class="btn-close btn-close-white" style="font-size: 12px;" (click)="closePRQSuccess()"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body text-center" style="padding: 40px 20px;">
+        
+        <!-- Checkmark Icon -->
+        <div class="d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 72px; height: 72px; background-color: #e6f4ea; margin-bottom: 20px;">
+          <i class="fa fa-check" style="color: #1e8e3e; font-size: 32px; font-weight: normal;"></i>
+        </div>
+        
+        <h5 class="fw-bold text-dark mb-2" style="font-size: 18px;">CNote Generated Successfully</h5>
+        
+        <p class="text-muted mb-1" style="font-size: 14px;">
+          CNote No. <strong class="text-dark">{{ prqSuccessResult?.dockNo }}</strong> has been booked for PRQ <strong class="text-dark">{{ docketService.loginUserList.prqData?.PRQNo }}</strong>.
+        </p>
+        
+        <p class="text-muted mb-4" style="font-size: 13px;">
+          Total Pkgs: {{ docketService.invoiceform.value?.totalNoOfPkgs || '0' }} | 
+          Total Actual Wt: {{ docketService.invoiceform.value?.totalActualWeight || '0' }} kg | 
+          Total: ₹{{ docketService.freightForm.value?.dktTotal | number:'1.0-0' }}
+        </p>
+
+        <!-- Green Box for All CNotes -->
+        <div class="mx-auto text-start" style="max-width: 500px; background-color: #e6f4ea; border-radius: 8px; padding: 16px 20px;">
+          <div class="fw-bold" style="color: #1e8e3e; font-size: 13px; margin-bottom: 4px;">
+            All CNotes on this PRQ (1):
+          </div>
+          <div style="color: #1e8e3e; font-size: 13px; font-weight: 500;">
+            {{ prqSuccessResult?.dockNo }} 
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-0" style="padding: 16px 24px;">
+        <button type="button" class="btn bg-white border text-dark fw-medium" style="border-radius: 6px; padding: 6px 16px; font-size: 14px;" (click)="closePRQSuccess()">
+          Close
+        </button>
+        <button type="button" class="btn text-white fw-medium" style="background-color: #1e8e3e; border-radius: 6px; padding: 6px 16px; font-size: 14px;" (click)="generateMoreLR()">
+          <i class="fa fa-plus me-1"></i> Generate More LR
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
