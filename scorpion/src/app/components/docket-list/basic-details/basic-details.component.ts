@@ -823,5 +823,10 @@ OnChangeCNoteDate(event:any){
 
   onBack() {
     this.location.back();
+    this.docketService.submitErrorMsg = '';
+    this.docketService.detailForm();
+    this.docketService.consignorbuild();
+    this.docketService.freightbuild();
+    this.docketService.invoicebuild();
   }
 }

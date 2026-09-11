@@ -32,7 +32,7 @@
                         </tr>
                         <tr *ngFor="let doc of docketHistoryList" style="border-bottom: 1px solid #f1f5f9;">
                             <td class="text-center align-middle" style="padding: 12px 10px;">
-                                <a href="javascript:void(0)" class="fw-bold text-primary text-decoration-none" (click)="openLrView(doc.DOCKNO)">{{ doc.DOCKNO }}</a>
+                                <a href="javascript:void(0)" class="fw-bold text-primary text-decoration-underline cursor-pointer" (click)="openLrView(doc.DOCKNO)">{{ doc.DOCKNO }}</a>
                             </td>
                             <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ doc.DOCKDT | date:'dd MMM yyyy' }}</td>
                             <td class="text-center align-middle" style="padding: 12px 10px; color: #475569; text-transform: uppercase;">{{ doc.FROM_LOC || doc.ORGNCD }}</td>
