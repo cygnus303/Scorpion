@@ -116,12 +116,13 @@
           <div class="col-lg-6 col-md-6 col-12">
             <label class="input-group form-label fw-semibold" >Appointment Date <span class="text-danger">*</span></label>
             <div class="position-relative d-flex align-items-center">
-              <input type="text" class="form-control pe-5" placeholder="dd-mm-yyyy" formControlName="appointmentDate" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD MMM YYYY', containerClass: 'theme-red', showWeekNumbers: false }"
+              <input type="text" class="form-control pe-5" placeholder="dd-mm-yyyy" formControlName="appointmentDate" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD MMM YYYY', containerClass: 'theme-red', showWeekNumbers: false }" [minDate]="minAppointmentDate"
                 [ngClass]="{'is-invalid': appointmentForm.get('appointmentDate')?.invalid && appointmentForm.get('appointmentDate')?.touched}">
               <i class="ri-calendar-line position-absolute end-0 me-3 text-secondary" style="pointer-events: none; font-size: 16px;"></i>
             </div>
             <div *ngIf="appointmentForm.get('appointmentDate')?.invalid && appointmentForm.get('appointmentDate')?.touched" class="text-danger mt-1" style="font-size: 11px;">
-              Appointment Date is required.
+              <span *ngIf="appointmentForm.get('appointmentDate')?.errors?.['required']">Appointment Date is required.</span>
+              <span *ngIf="appointmentForm.get('appointmentDate')?.errors?.['eddInvalid']">Appointment Date must be greater than or equal to EDD.</span>
             </div>
           </div>
           <div class="col-lg-6 col-md-6 col-12">
