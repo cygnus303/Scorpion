@@ -7,7 +7,7 @@
             class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color justify-content-between">
             <div>
                 <i class="fas fa-filter me-2"></i>
-                CNote Entry - Basic Details
+                CNote Entry - Basic Details <span *ngIf="docketService.basicDetailForm.get('prqNo')?.value"> - {{docketService.basicDetailForm.get('prqNo')?.value}}</span>
             </div>
             <button class="btn btn-light text-dark btn-sm px-3" (click)="onBack()" *ngIf="hideBackButton">Back to List</button>
         </div>
@@ -23,6 +23,14 @@
                     checked />Normal</label>
               </div>
             </div>  
+          </div>
+        </div>
+          <div class="col-md-4 form-column" *ngIf="this.docketService.loginUserList.prqData?.PRQNo">
+          <div class="form-group mb-1">
+            <label class="col-md-5">PRQ No</label>
+            <div class="col-md-7">
+              <input type="text" class="form-control" placeholder="PRQ No" formControlName="prqNo" readonly />
+            </div>
           </div>
         </div>
         <div class="col-md-4 form-column ">
@@ -44,6 +52,7 @@
             </div>
           </div>
         </div> -->
+      
       </div>
       <div class="row">
         <div class="col-md-4 form-column ">

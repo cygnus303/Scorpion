@@ -15,11 +15,13 @@ import { PrqService } from 'app/shared/services/prq.service';
 import { PrqViewComponent } from './prq-view/prq-view.component';
 import { PrqTrackComponent } from './prq-track/prq-track.component';
 import saveAs from 'file-saver';
+import { Router } from '@angular/router';
+import { DocketHistoryComponent } from './docket-history/docket-history.component';
 
 @Component({
   selector: 'app-prq-list',
   standalone: true,
-  imports: [BsDatepickerModule, CommonModule, NgSelectModule, PaginationComponent, FormsModule, AddPrqComponent,PrqViewComponent,PrqTrackComponent],
+  imports: [BsDatepickerModule, CommonModule, NgSelectModule,DocketHistoryComponent,PaginationComponent, FormsModule, AddPrqComponent,PrqViewComponent,PrqTrackComponent],
   providers: [BsModalService],
   templateUrl: './prq-list.component.html',
   styleUrl: './prq-list.component.scss'
@@ -30,6 +32,7 @@ export class PrqListComponent {
   @ViewChild('PrqViewComponent') PrqViewComponent!: PrqViewComponent;
   @ViewChild('PrqTrackComponent') PrqTrackComponent!: PrqTrackComponent;
   @ViewChild('TemplateBulkUpload') TemplateBulkUpload!: TemplateRef<any>;
+  @ViewChild('docketHistoryComponent') docketHistoryComponent!: DocketHistoryComponent;
 
   public requestCache = new Map<string, any>();
   public isLoading: boolean = false;
@@ -86,7 +89,8 @@ export class PrqListComponent {
     private sweetAlertService: SweetAlertService,
     private modalService: BsModalService,
     private exportService: ExportService,
-    private prqService: PrqService
+    private prqService: PrqService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -214,6 +218,7 @@ export class PrqListComponent {
       case 'Auto Cancelled': return 's-canc';
       case 'Assigned': return 's-hcc';
       case 'ARRANGED': return 's-billed';
+      case 'InProgress': return 's-in-progress';
       default: return '';
     }
   }
@@ -426,6 +431,27 @@ export class PrqListComponent {
         this.sweetAlertService.error('Failed to download template.');
       }
     });
+  }
+
+  openAddLR(row?: any) {
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      let user = JSON.parse(saved);
+      user.Type = '';
+      if(row) {
+        user.prqData = row;
+      } else {
+        user.prqData = null;
+      }
+      this.docketService.loginUserList = user;
+      localStorage.setItem("loginUserList", JSON.stringify(user));
+    }
+    this.router.navigate(['/docket'], { queryParams: { fromLR: 'true' } });
+  }
+
+    openDocketHistory(row: any) {
+    const indentNo = row.IndentNo || row.PRQNo;
+    this.docketHistoryComponent.showPopup(indentNo);
   }
 
 }

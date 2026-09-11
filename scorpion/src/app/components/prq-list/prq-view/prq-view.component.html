@@ -12,163 +12,294 @@
     </div>
 
     <div class="modal-body-custom" *ngIf="!isLoading && prqData">
-        <div class="detail-grid">
-            <div>
-                <div class="section-title">PRQ Details</div>
-                <table class="detail-table">
-                    <tr>
-                        <td class="label" style="width:45%">PRQ No.</td>
-                        <td class="value highlight-red">{{ prqData.PRQNo || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">PRQ Date</td>
-                        <td class="value">{{ (prqData.PRQDate | date:'dd-MMM-yyyy') || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Customer Name</td>
-                        <td class="value">{{ prqData.CustomerName || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Status</td>
-                        <td><span class="badge" [ngClass]="getStatusClass(prqData.PRQStatus)">{{ prqData.PRQStatus || '—'
-                                }}</span></td>
-                    </tr>
-                </table>
-            </div>
-            <div>
-                <div class="section-title">Shipment Details</div>
-                <table class="detail-table">
-                    <tr>
-                        <td class="label" style="width:45%">Pickup Pin Code</td>
-                        <td class="value monospace-bold">{{ prqData.PickupPincode || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label" style="width:45%">From City</td>
-                        <td class="value">{{ prqData.FromCity || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label" style="width:45%">To City</td>
-                        <td class="value">{{ prqData.ToCity || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label" style="width:45%">Docket No.</td>
-                        <td class="value monospace-bold highlight-red">{{ prqData.DocketNo || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Docket Date</td>
-                        <td class="value">{{ prqData.DocketDate || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">No. of Pkgs</td>
-                        <td class="value">{{ prqData.PKGS || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Weight</td>
-                        <td class="value">{{ prqData.ApproxWeight ? prqData.ApproxWeight + ' kg' : '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Service Type</td>
-                        <td class="value">{{ prqData.ServiceType || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Transport Mode</td>
-                        <td class="value">{{ prqData.TransitMode1 || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Cold Chain Cat.</td>
-                        <td class="value">{{ prqData.ColdChainCategory || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Temp Range</td>
-                        <td class="value">{{ prqData.TempRange || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Pickup Branch</td>
-                        <td class="value">{{ prqData.Pickup_Branch || '—' }}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+        <div class="detail-columns">
+            
+            <!-- LEFT COLUMN -->
+            <div class="column">
+                
+                <!-- PRQ DETAILS -->
+                <div class="info-card">
+                    <div class="section-title">PRQ Details</div>
+                    
+                    <div class="info-row">
+                        <span class="label">PRQ No.</span>
+                        <span class="value highlight-red">{{ prqData.PRQNo || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Pickup Date & Time</span>
+                        <span class="value">{{ (prqData.PRQDate | date:'dd MMM yyyy') || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Customer Code</span>
+                        <span class="value">{{ prqData.CustomerCode || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Customer Name</span>
+                        <span class="value">{{ prqData.CustomerName || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Status</span>
+                        <span class="value badge-status" [ngClass]="{'status-cancelled': prqData.PRQStatus === 'Cancelled' || prqData.PRQStatus === 'Auto Cancelled', 'status-completed': prqData.PRQStatus === 'Completed'}">
+                            {{ prqData.PRQStatus || '—' }}
+                        </span>
+                    </div>
+                </div>
 
-        <div class="detail-grid">
-            <div>
-                <div class="section-title">Consignor Details</div>
-                <table class="detail-table">
-                    <tr>
-                        <td class="label" style="width:40%">Name</td>
-                        <td class="value">{{ prqData.ConsignorName || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Address</td>
-                        <td class="value">{{ prqData.ConsignorAddress || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Pincode</td>
-                        <td class="value">{{ prqData.ConsignorPincode || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Contact No</td>
-                        <td class="value">{{ prqData.ConsignorContactno || '—' }}</td>
-                    </tr>
-                </table>
-            </div>
-            <div>
-                <div class="section-title">Consignee Details</div>
-                <table class="detail-table">
-                    <tr>
-                        <td class="label" style="width:40%">Name</td>
-                        <td class="value">{{ prqData.ConsigneeName || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Address</td>
-                        <td class="value">{{ prqData.ConsigneeAddress || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Pincode</td>
-                        <td class="value">{{ prqData.ConsigneePincode || '—' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Contact No</td>
-                        <td class="value">{{ prqData.ConsigneeContactno || '—' }}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+                <!-- CONSIGNOR DETAILS -->
+                <div class="info-card">
+                    <div class="section-title">Consignor Details</div>
+                    <div class="info-row">
+                        <span class="label">Name</span>
+                        <span class="value">{{ prqData.ConsignorName || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Address</span>
+                        <span class="value">{{ prqData.ConsignorAddress || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Pincode</span>
+                        <span class="value">{{ prqData.ConsignorPincode || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Contact No.</span>
+                        <span class="value">{{ prqData.ConsignorContactno || '—' }}</span>
+                    </div>
+                </div>
 
-        <div class="mb-20">
-            <div class="section-title">Eway Bill Details</div>
-            <div class="audit-grid">
-                <div><span class="label">Eway Bill No.: </span><span class="value">{{ prqData.EWayBillNo || '—'
-                        }}</span></div>
-                <div><span class="label">Eway Bill Date: </span><span class="value">{{ (prqData.EWayBillDate |
-                        date:'dd-MMM-yyyy') || '—' }}</span></div>
-                <div><span class="label">Eway Exp. Date: </span><span class="value">{{ (prqData.EWayBillExpiryDate |
-                        date:'dd-MMM-yyyy') || '—' }}</span></div>
-                <div><span class="label">Invoice No.: </span><span class="value">{{ prqData.InvoiceNo || '—' }}</span>
+                <!-- EWAY BILL DETAILS -->
+                <div class="info-card">
+                    <div class="section-title">Eway Bill Details</div>
+                    <div class="info-row">
+                        <span class="label">Eway Bill Details</span>
+                        <span class="value clickable" (click)="openDetails('eway')">View Details ↗</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Volumetric Dimensions</span>
+                        <span class="value clickable" (click)="openDetails('volumetric')">View Details ↗</span>
+                    </div>
                 </div>
-                <div><span class="label">Invoice Date: </span><span class="value">{{ (prqData.InvoiceDate |
-                        date:'dd-MMM-yyyy') || '—' }}</span></div>
-            </div>
-        </div>
 
-        <div>
-            <div class="section-title">Audit Trail</div>
-            <div class="audit-grid">
-                <div><span class="label">Generated By/Date: </span><span class="value">{{ prqData.EntryBy || '—' }} /
-                        {{ (prqData.EntryDate | date:'dd-MMM-yyyy') || '—' }}</span></div>
-                <div><span class="label">Assigned By/Date: </span><span class="value">{{ prqData.AssignedBy || '—' }}
-                        <span *ngIf="prqData.AssignDate">/ {{ prqData.AssignDate | date:'dd-MMM-yyyy' }}</span></span>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="column">
+                
+                <!-- SHIPMENT DETAILS -->
+                <div class="info-card">
+                    <div class="section-title">Shipment Details</div>
+                    <div class="info-row">
+                        <span class="label">Pickup Pin Code</span>
+                        <span class="value">{{ prqData.PickupPincode || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Pickup Branch</span>
+                        <span class="value">{{ prqData.Pickup_Branch || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">From City</span>
+                        <span class="value">{{ prqData.FromCity || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">To City</span>
+                        <span class="value">{{ prqData.ToCity || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Delivery Branch</span>
+                        <span class="value">{{ prqData.DestCd || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">ODA Category</span>
+                        <span class="value">{{ prqData.PincodeCategory || '-' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Docket No.</span>
+                        <span class="value clickable" (click)="openDocketHistory()">{{' View Details' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Docket Date</span>
+                        <span class="value">{{ (prqData.DocketDate | date:'dd MMM yyyy HH:mm') || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Total No. of Pkgs</span>
+                        <span class="value">{{ prqData.PKGS || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Total Weight (Kg)</span>
+                        <span class="value">{{ prqData.ApproxWeight ? prqData.ApproxWeight + ' kg' : '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Service Type</span>
+                        <span class="value">{{ prqData.ServiceType || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Transport Mode</span>
+                        <span class="value">{{ prqData.TransitMode1 || '—' }}</span>
+                    </div>
                 </div>
-                <div><span class="label">Arranged By/Date: </span><span class="value">{{ prqData.ArrangedBy || '—' }}
-                        <span *ngIf="prqData.ArrangedDate">/ {{ prqData.ArrangedDate  }}</span></span>
+
+                <!-- CONSIGNEE DETAILS -->
+                <div class="info-card">
+                    <div class="section-title">Consignee Details</div>
+                    <div class="info-row">
+                        <span class="label">Name</span>
+                        <span class="value">{{ prqData.ConsigneeName || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Address</span>
+                        <span class="value">{{ prqData.ConsigneeAddress || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Pincode</span>
+                        <span class="value">{{ prqData.ConsigneePincode || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Contact No.</span>
+                        <span class="value">{{ prqData.ConsigneeContactno || '—' }}</span>
+                    </div>
                 </div>
-                <div><span class="label">Cancelled By/Date: </span><span class="value">{{ prqData.CancelBy || '—' }}
-                        <span *ngIf="prqData.CancelDate">/ {{ prqData.CancelDate | date:'dd-MMM-yyyy' }}</span></span>
+
+                <!-- AUDIT TRAIL DETAILS -->
+                <div class="info-card">
+                    <div class="section-title">Audit Trail Details</div>
+                    <div class="info-row">
+                        <span class="label">Generated By</span>
+                        <span class="value">{{ prqData.EntryBy || '—' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Generated Date</span>
+                        <span class="value">{{ (prqData.EntryDate | date:'dd MMM yyyy') || '—' }}</span>
+                    </div>
+                       <div class="info-row">
+                        <span class="label">Assigned by</span>
+                        <span class="value">{{ prqData.AssignedBy || '--' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Assigned Date</span>
+                        <span class="value">{{ (prqData.AssignDate | date:'dd MMM yyyy') || '--' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Arranged By</span>
+                        <span class="value">{{ prqData.ArrangedBy || '--' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Arranged Date</span>
+                        <span class="value">{{ prqData.ArrangedDate || '--' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Cancelled By</span>
+                        <span class="value">{{ prqData.CancelBy || '--' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Cancelled Date</span>
+                        <span class="value">{{ (prqData.CancelDate | date:'dd MMM yyyy') || '--' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Cancelled Reason</span>
+                        <span class="value">{{ prqData.CancelReason || '--' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Rescheduled/Edited By</span>
+                        <span class="value">{{ prqData.UpdatedBy || '--' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Rescheduled/Edited Date</span>
+                        <span class="value">{{ (prqData.UpdateDate | date:'dd MMM yyyy') || '--' }}</span>
+                    </div>
                 </div>
-                <div [ngClass]="{'edited-trail': prqData.UpdateBy}"><span class="label">Edited By/Date: </span><span
-                        class="value">{{ prqData.UpdatedBy || '—' }} <span *ngIf="prqData.UpdateDate">/ {{ prqData.UpdateDate |
-                            date:'dd-MMM-yyyy' }}</span></span></div>
+
             </div>
         </div>
     </div>
+    
+    <div class="modal-footer-custom" *ngIf="!isLoading && prqData">
+        <button class="btn-close-custom" (click)="modalRef.hide()">Close</button>
+        </div>
 </ng-template>
+
+<ng-template #detailsModalTemplate>
+    <div class="modal-content" style="border: none !important; outline: none !important; overflow: hidden !important; box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important; padding: 0 !important; background-color: #fff !important; border-radius: 10px !important;">
+        <div class="modal-header d-flex justify-content-between align-items-center" style="background: #db3a3a; color: white !important; border: none !important; padding: 14px 20px !important; margin: 0 !important; border-radius: 0 !important; width: 100% !important;">
+            <h5 class="modal-title mb-0" style="font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 8px; color: white !important;">
+                <i class="ti ti-table"></i> {{ detailType === 'eway' ? 'Eway Bill Details' : 'Volumetric Dimensions' }} — {{ prqData?.PRQNo }}
+            </h5>
+            <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="closeDetailModal()" style="font-size: 12px; filter: invert(1) grayscale(100%) brightness(200%);"></button>
+        </div>
+        <div class="modal-body" style="padding: 24px;">
+            <p class="text-muted" style="font-size: 13px; margin-bottom: 16px;">
+                <span class="fw-bold text-dark">{{ detailList.length }}</span> 
+                {{ detailType === 'eway' ? 'Eway Bill captured against this PRQ.' : 'dimension set captured against this PRQ.' }}
+            </p>
+            
+            <div class="table-responsive custom-scroll" style="border: 1px solid #e2e8f0; border-radius: 6px;">
+                <table class="table table-sm mb-0" style="font-size: 12px; white-space: nowrap; border-collapse: collapse;">
+                    <thead style="background-color: #f8fafc; color: #64748b; border-bottom: 1px solid #e2e8f0;">
+                        <tr *ngIf="detailType === 'eway'">
+                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">DOCKET NO.</th>
+                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">EWAY BILL NO.</th>
+                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">EWAY BILL DATE</th>
+                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">EWAY EXP. DATE</th>
+                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">INV. NO.</th>
+                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">INV. DATE</th>
+                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">INV. VALUE</th>
+                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">ATTACHMENT</th>
+                        </tr>
+                        <tr *ngIf="detailType === 'volumetric'">
+                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">DOCKET NO.</th>
+                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">LENGTH (IN)</th>
+                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">BREADTH (IN)</th>
+                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">HEIGHT (IN)</th>
+                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">CFT RATIO</th>
+                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">NO. OF PKGS</th>
+                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">ACT. WT (KG)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="isDetailLoading">
+                            <td [attr.colspan]="detailType === 'eway' ? 8 : 7" class="text-center py-4">
+                                <span class="spinner-border spinner-border-sm text-danger me-2"></span> Loading...
+                            </td>
+                        </tr>
+                        <tr *ngIf="!isDetailLoading && detailList.length === 0">
+                            <td [attr.colspan]="detailType === 'eway' ? 8 : 7" class="text-center py-4 text-muted">
+                                No details found.
+                            </td>
+                        </tr>
+                        
+                        <!-- Eway Bill Rows -->
+                        <ng-container *ngIf="detailType === 'eway'">
+                            <tr *ngFor="let item of detailList" style="border-bottom: 1px solid #f1f5f9;">
+                                <td class="text-center align-middle" style="padding: 12px 10px; color: #d0021b; font-weight: 600;">{{ item.DOCKNO || item.DockNo || '—' }}</td>
+                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.EwayBillNo || item.EWAYBILLNO || '—' }}</td>
+                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ (item.EwayBillDate || item.EWAYBILLDATE | date:'dd MMM yyyy') || '—' }}</td>
+                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ (item.EwayBillExpDate || item.EWAYBILLEXPDATE | date:'dd MMM yyyy') || '—' }}</td>
+                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.InvNo || item.INVNO || '—' }}</td>
+                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ (item.InvDate || item.INVDATE | date:'dd MMM yyyy') || '—' }}</td>
+                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.InvValue || item.INVVALUE || item.EWayInvoicevalue ? '₹' + (item.InvValue || item.INVVALUE || item.EWayInvoicevalue) : '—' }}</td>
+                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.Attachment || item.ATTACHMENT || '—' }}</td>
+                            </tr>
+                        </ng-container>
+
+                        <!-- Volumetric Rows -->
+                        <ng-container *ngIf="detailType === 'volumetric'">
+                            <tr *ngFor="let item of detailList" style="border-bottom: 1px solid #f1f5f9;">
+                                <td class="text-center align-middle" style="padding: 12px 10px; color: #d0021b; font-weight: 600;">{{ item.DOCKNO || item.DockNo || '—' }}</td>
+                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.VOL_L || '—' }}</td>
+                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.VOL_B || '—' }}</td>
+                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.VOL_H || '—' }}</td>
+                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.TOT_CFT || item.vol_cft || '—' }}</td>
+                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.PKGSNO || '—' }}</td>
+                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.ACTUWT || '—' }}</td>
+                            </tr>
+                        </ng-container>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end" style="border-top: none; padding: 0 24px 24px;">
+            <button type="button" class="btn btn-outline-secondary bg-white text-dark fw-bold px-4 py-2" (click)="closeDetailModal()" style="border-color: #cbd5e1; font-size: 14px; border-radius: 6px;">Close</button>
+        </div>
+    </div>
+</ng-template>
+
+<app-docket-history #docketHistoryComponent></app-docket-history>

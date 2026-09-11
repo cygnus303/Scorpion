@@ -126,6 +126,7 @@ export class DocketService {
       isLocalNote: new FormControl(false),
       ewayBillNo: new FormControl(null),
       cNoteNo: new FormControl(null, [Validators.required]),
+      prqNo: new FormControl(null),
       pincode: new FormControl(null),
       billingName: new FormControl(null),
       origin: new FormControl(this.Location),
@@ -233,6 +234,10 @@ export class DocketService {
 
 
   freightbuild() {
+    this.freightchargingData = [];
+    this.originalCharges = [];
+    this.groupedCharges = {};
+    
     this.freightForm = new FormGroup({
       freightCharges: new FormControl(0),
       GSTPaidBy: new FormControl(),
