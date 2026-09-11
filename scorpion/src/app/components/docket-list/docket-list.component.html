@@ -68,7 +68,7 @@
         
         <!-- Checkmark Icon -->
         <div class="d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 72px; height: 72px; background-color: #e6f4ea; margin-bottom: 20px;">
-          <i class="fa fa-check" style="color: #1e8e3e; font-size: 32px; font-weight: normal;"></i>
+          <i class="fas fa-check" style="color: #1e8e3e; font-size: 32px;"></i>
         </div>
         
         <h5 class="fw-bold text-dark mb-2" style="font-size: 18px;">CNote Generated Successfully</h5>
@@ -77,11 +77,11 @@
           CNote No. <strong class="text-dark">{{ prqSuccessResult?.dockNo }}</strong> has been booked for PRQ <strong class="text-dark">{{ docketService.loginUserList.prqData?.PRQNo }}</strong>.
         </p>
         
-        <p class="text-muted mb-4" style="font-size: 13px;">
+        <!-- <p class="text-muted mb-4" style="font-size: 13px;">
           Total Pkgs: {{ docketService.invoiceform.value?.totalNoOfPkgs || '0' }} | 
           Total Actual Wt: {{ docketService.invoiceform.value?.totalActualWeight || '0' }} kg | 
           Total: ₹{{ docketService.freightForm.value?.dktTotal | number:'1.0-0' }}
-        </p>
+        </p> -->
 
         <!-- Green Box for All CNotes -->
         <div class="mx-auto text-start" style="max-width: 500px; background-color: #e6f4ea; border-radius: 8px; padding: 16px 20px;">
@@ -101,7 +101,7 @@
           Close
         </button>
         <button type="button" class="btn text-white fw-medium" style="background-color: #1e8e3e; border-radius: 6px; padding: 6px 16px; font-size: 14px;" (click)="generateMoreLR()">
-          <i class="fa fa-plus me-1"></i> Generate More LR
+          <i class="fas fa-plus me-1"></i> Generate More LR
         </button>
       </div>
 

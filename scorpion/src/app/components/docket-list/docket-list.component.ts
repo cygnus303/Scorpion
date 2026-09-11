@@ -53,7 +53,8 @@ export class DocketListComponent implements OnInit {
       this.getCompletionData();
     }
 
-    if (currentRoute.includes("docket")) {
+    if (currentRoute.endsWith("/docket")) {
+      this.resetAllForms();
       setTimeout(()=>{
         const prqData = this.docketService.loginUserList?.prqData;
         if (prqData) {
@@ -463,6 +464,8 @@ export class DocketListComponent implements OnInit {
     this.showPRQSuccessModal = false;
     this.prqSuccessResult = null;
     this.location.back();
+    this.docketService.submitErrorMsg = '';
+    this.resetAllForms();
   }
 
   generateMoreLR() {
