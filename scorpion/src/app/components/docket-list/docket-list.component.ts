@@ -475,6 +475,8 @@ export class DocketListComponent implements OnInit {
     this.isSubmitting = false;
     // Reset forms so user can book another LR for same PRQ
     this.resetAllForms();
+    this.docketService.submitErrorMsg = '';
+    window.location.reload();
     this.patchPRQData();
   }
 

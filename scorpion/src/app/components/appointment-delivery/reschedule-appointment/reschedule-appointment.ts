@@ -21,6 +21,7 @@ export class RescheduleAppointment {
   appointmentData: any = null;
   isLoading: boolean = false;
   isSaving: boolean = false;
+  eddDate?: Date;
 
   modalRef?: BsModalRef;
   private modalService = inject(BsModalService);
@@ -116,6 +117,17 @@ export class RescheduleAppointment {
           }
           let apmtDateRaw = apiData.appointmentDT || apiData.csdDate || apiData.msdDate || '';
           let parsedApmtDate = apmtDateRaw ? new Date(apmtDateRaw.split('-').reverse().join('-')) : '';
+
+          if (apiData.edd) {
+            const parts = apiData.edd.split('-');
+            if (parts.length === 3) {
+              this.eddDate = new Date(+parts[2], +parts[1] - 1, +parts[0]);
+            } else {
+              this.eddDate = undefined;
+            }
+          } else {
+            this.eddDate = undefined;
+          }
 
           this.rescheduleForm.patchValue({
             docketNo: apiData.dockno || '',
