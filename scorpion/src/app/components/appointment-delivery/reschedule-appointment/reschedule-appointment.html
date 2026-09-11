@@ -57,7 +57,7 @@
                   APPOINTMENT DATE <span class="text-danger">*</span>
                 </label>
                 <div class="position-relative d-flex align-items-center">
-                  <input type="text" class="form-control pe-5 fw-bold text-dark" placeholder="dd mmm yyyy" formControlName="appointmentDate" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD MMM YYYY', containerClass: 'theme-red', showWeekNumbers: false }" style="border-radius: 6px; border-color: #e2e8f0;"
+                  <input type="text" class="form-control pe-5 fw-bold text-dark" placeholder="dd mmm yyyy" formControlName="appointmentDate" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD MMM YYYY', containerClass: 'theme-red', showWeekNumbers: false }" [minDate]="eddDate" style="border-radius: 6px; border-color: #e2e8f0;"
                          [class.is-invalid]="rescheduleForm.get('appointmentDate')?.invalid && rescheduleForm.get('appointmentDate')?.touched">
                   <i class="ri-calendar-line position-absolute end-0 me-3 text-secondary" style="pointer-events: none; font-size: 16px;"></i>
                 </div>
