@@ -3,11 +3,12 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { DocketHistoryComponent } from '../docket-history/docket-history.component';
 
 @Component({
   selector: 'app-prq-view',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DocketHistoryComponent],
   providers: [BsModalService],
   templateUrl: './prq-view.component.html',
   styleUrl: './prq-view.component.scss'
@@ -15,6 +16,7 @@ import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 export class PrqViewComponent {
    @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
    @ViewChild('detailsModalTemplate') detailsModalTemplate!: TemplateRef<any>;
+   @ViewChild('docketHistoryComponent') docketHistoryComponent!: DocketHistoryComponent;
    
    public modalRef!: BsModalRef;
    public detailModalRef?: BsModalRef;
@@ -82,8 +84,8 @@ export class PrqViewComponent {
     }
   }
 
-  openDetails(type: 'eway' | 'volumetric') {
-    if (!this.prqData || !this.prqData.DocketNo) {
+openDetails(type: 'eway' | 'volumetric') {
+    if (!this.prqData || !this.prqData.PRQNo) {
       this.sweetAlertService.error("Docket No is not available for this PRQ.");
       return;
     }
@@ -98,11 +100,10 @@ export class PrqViewComponent {
     };
     this.detailModalRef = this.modalService.show(this.detailsModalTemplate, config);
 
-    const reportId = type === 'eway' ? '285' : '286';
     const payload = {
       "FilterJson": {
-        "ReportId": reportId,
-        "DockNo": this.prqData.DocketNo
+        "ReportId": '286',
+        "IndentNo": this.prqData.PRQNo
       }
     };
 
@@ -125,5 +126,11 @@ export class PrqViewComponent {
   closeDetailModal() {
     this.detailModalRef?.hide();
     this.detailList = [];
+  }
+
+  openDocketHistory() {
+    if (!this.prqData) return;
+    const indentNo = this.prqData.IndentNo || this.prqData.PRQNo;
+    this.docketHistoryComponent.showPopup(indentNo);
   }
 }

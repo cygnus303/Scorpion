@@ -113,7 +113,7 @@
                     </div>
                     <div class="info-row">
                         <span class="label">Docket No.</span>
-                        <span class="value clickable">{{ prqData.DocketNo ? prqData.DocketNo + ' View Details' : 'View Details' }}</span>
+                        <span class="value clickable" (click)="openDocketHistory()">{{' View Details' }}</span>
                     </div>
                     <div class="info-row">
                         <span class="label">Docket Date</span>
@@ -129,7 +129,7 @@
                     </div>
                     <div class="info-row">
                         <span class="label">Total Charge Wt (Kg)</span>
-                        <span class="value">—</span>
+                        <span class="value">{{prqData.chargeWt || '-'}}</span>
                     </div>
                     <div class="info-row">
                         <span class="label">Service Type</span>
@@ -173,12 +173,12 @@
                         <span class="label">Generated Date</span>
                         <span class="value">{{ (prqData.EntryDate | date:'dd MMM yyyy') || '—' }}</span>
                     </div>
-                    <div class="info-row">
-                        <span class="label">Assigned To</span>
-                        <span class="value">{{ prqData.AssignedTo || '--' }}</span>
+                       <div class="info-row">
+                        <span class="label">Assigned by</span>
+                        <span class="value">{{ prqData.AssignedBy || '--' }}</span>
                     </div>
                     <div class="info-row">
-                        <span class="label">Assigned Date & Time</span>
+                        <span class="label">Assigned Date</span>
                         <span class="value">{{ (prqData.AssignDate | date:'dd MMM yyyy') || '--' }}</span>
                     </div>
                     <div class="info-row">
@@ -305,3 +305,5 @@
         </div>
     </div>
 </ng-template>
+
+<app-docket-history #docketHistoryComponent></app-docket-history>
