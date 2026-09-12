@@ -74,7 +74,6 @@ export class DocketListComponent implements OnInit {
           if (res.success && res.data && res.data.length > 0) {
             const matchedPincode = res.data.find((p: any) => p.value === prqData.DeliveryPincode) || res.data[0];
 
-            // Populate pincodeList so the dropdown can display the label correctly
             this.docketService.pincodeList = [matchedPincode];
 
             this.docketService.basicDetailForm.patchValue({
@@ -84,14 +83,24 @@ export class DocketListComponent implements OnInit {
             this.docketService.consignorForm.patchValue({ consigneePincode: matchedPincode.value });
             this.docketService.getPincodeMasterList(matchedPincode.value);
             this.docketService.GetPincodeOrigin();
+
+            // Check and call getStep2Details in next tick to ensure synchronous patches (like billingParty) have finished
+            setTimeout(() => {
+              if (this.docketService.basicDetailForm.value.billingParty && this.docketService.basicDetailForm.value.destination && this.docketService.basicDetailForm.value.billingType) {
+                this.docketService.getStep2Details();
+              }
+            }, 500);
           }
         });
       } else {
         this.docketService.getpincodeData(prqData.DeliveryPincode);
       }
-
-      this.docketService.getTransportModeData(prqData.TransitModeId);
-      this.docketService.getServiceTypeData(prqData.ServiceId);
+      // this.docketService.getContentsData();
+      // this.docketService.getbusinessTypeData();
+      // this.docketService.getPackagingTypeData();
+      // this.docketService.getPickUpData('4');
+      // this.docketService.getTransportModeData(prqData.TransitModeId);
+      // this.docketService.getServiceTypeData(prqData.ServiceId);
 
       this.docketService.basicDetailForm.patchValue({
         prqNo: prqData.PRQNo,
@@ -133,6 +142,7 @@ export class DocketListComponent implements OnInit {
       this.docketService.getRuleDetailForDepth();
       this.docketService.getBlockedCustomerListAPI();
       this.docketService.getRuleDetailForProceed();
+      this.docketService.GetGSTFromTrnMode()
 
       setTimeout(() => {
         // second patch
@@ -149,16 +159,6 @@ export class DocketListComponent implements OnInit {
         if (prqData.ToCity) {
           this.basicDetailsComp.onChangeCityListList(prqData.ToCity, 'to');
         }
-
-        // if (this.docketService.invoiceRows && this.docketService.invoiceRows.length > 0) {
-        //   const firstRow = this.docketService.invoiceRows.at(0) as FormGroup;
-        //   firstRow.patchValue({
-        //     noOfPkgs: prqData.PKGS || 0,
-        //     actualWeight: prqData.ApproxWeight || 0
-        //   });
-        //   this.docketService.calculateSummary.next(true);
-        //   this.docketService.freightAndOtherChar();
-        // }
       }, 400);
     }
   }

@@ -4,6 +4,7 @@ import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { DocketHistoryComponent } from '../docket-history/docket-history.component';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-prq-view',
@@ -20,7 +21,7 @@ export class PrqViewComponent {
    
    public modalRef!: BsModalRef;
    public detailModalRef?: BsModalRef;
-   
+   public env=environment;
   public prqData: any = null;
   public isLoading: boolean = false;
   
@@ -132,5 +133,10 @@ openDetails(type: 'eway' | 'volumetric') {
     if (!this.prqData) return;
     const indentNo = this.prqData.IndentNo || this.prqData.PRQNo;
     this.docketHistoryComponent.showPopup(indentNo);
+  }
+
+  viewInvoice(item:any){
+      const baseUrl = `${this.env.liveUrl}UploadedDocumentsBAK/EwaybillInvoiceFile/Upload/${item}`; // Update folder name if needed
+      window.open(baseUrl, '_blank');
   }
 }
