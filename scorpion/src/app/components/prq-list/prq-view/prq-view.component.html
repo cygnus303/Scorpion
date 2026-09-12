@@ -269,13 +269,13 @@
                         <ng-container *ngIf="detailType === 'eway'">
                             <tr *ngFor="let item of detailList" style="border-bottom: 1px solid #f1f5f9;">
                                 <td class="text-center align-middle" style="padding: 12px 10px; color: #d0021b; font-weight: 600;">{{ item.DOCKNO || item.DockNo || '—' }}</td>
-                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.EwayBillNo || item.EWAYBILLNO || '—' }}</td>
+                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.EWayBillNo  || '—' }}</td>
                                 <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ (item.EwayBillDate || item.EWAYBILLDATE | date:'dd MMM yyyy') || '—' }}</td>
-                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ (item.EwayBillExpDate || item.EWAYBILLEXPDATE | date:'dd MMM yyyy') || '—' }}</td>
+                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ (item.EWayBillExpiredDate | date:'dd MMM yyyy') || '—' }}</td>
                                 <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.InvNo || item.INVNO || '—' }}</td>
-                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ (item.InvDate || item.INVDATE | date:'dd MMM yyyy') || '—' }}</td>
+                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ (item.EWayBillInvoiceDate | date:'dd MMM yyyy') || '—' }}</td>
                                 <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.InvValue || item.INVVALUE || item.EWayInvoicevalue ? '₹' + (item.InvValue || item.INVVALUE || item.EWayInvoicevalue) : '—' }}</td>
-                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.Attachment || item.ATTACHMENT || '—' }}</td>
+                                <td class="text-center align-middle text-primary" style="padding: 12px 10px;cursor:pointer;text-decoration:underline;" (click)="item.EwaybillInvoiceFile ? viewInvoice(item.EwaybillInvoiceFile) : '—'">{{ item.EwaybillInvoiceFile ? 'View' : '—' }}</td>
                             </tr>
                         </ng-container>
 
