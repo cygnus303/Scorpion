@@ -454,4 +454,8 @@ export class PrqListComponent {
     this.docketHistoryComponent.showPopup(indentNo);
   }
 
+    get isHQTR(): boolean {
+    return this.docketService.Location === 'HQTR';
+  }
+
 }

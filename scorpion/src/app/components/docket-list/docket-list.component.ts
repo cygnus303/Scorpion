@@ -55,12 +55,12 @@ export class DocketListComponent implements OnInit {
 
     if (currentRoute.endsWith("/docket")) {
       this.resetAllForms();
-      setTimeout(()=>{
+      setTimeout(() => {
         const prqData = this.docketService.loginUserList?.prqData;
         if (prqData) {
           this.patchPRQData();
         }
-      },600)
+      }, 600)
     }
   }
 
@@ -73,18 +73,16 @@ export class DocketListComponent implements OnInit {
         this.basicDetailService.getpincodeData(prqData.DeliveryPincode).subscribe((res: any) => {
           if (res.success && res.data && res.data.length > 0) {
             const matchedPincode = res.data.find((p: any) => p.value === prqData.DeliveryPincode) || res.data[0];
-            
+
             // Populate pincodeList so the dropdown can display the label correctly
             this.docketService.pincodeList = [matchedPincode];
-            
+
             this.docketService.basicDetailForm.patchValue({
               destination: matchedPincode.destination,
               pincode: matchedPincode.value
             });
             this.docketService.consignorForm.patchValue({ consigneePincode: matchedPincode.value });
             this.docketService.getPincodeMasterList(matchedPincode.value);
-            
-            // Fetch Dest State Name now that destination is set
             this.docketService.GetPincodeOrigin();
           }
         });
@@ -92,14 +90,43 @@ export class DocketListComponent implements OnInit {
         this.docketService.getpincodeData(prqData.DeliveryPincode);
       }
 
-      // first patch
+      this.docketService.getTransportModeData(prqData.TransitModeId);
+      this.docketService.getServiceTypeData(prqData.ServiceId);
+
       this.docketService.basicDetailForm.patchValue({
         prqNo: prqData.PRQNo,
         billingParty: prqData.CustomerCode,
+        billingType: prqData.CUSTCAT,
         billingName: prqData.CustomerName,
         origin: this.docketService.loginUserList.LocationCode,
         pincode: prqData.DeliveryPincode || null,
+        serviceType: prqData.ServiceId,
+        mode: prqData.TransitModeId,
       });
+
+      this.docketService.consignorForm.patchValue({
+        consignorMasterName: prqData.ConsignorName,
+        consignorAddress: prqData.ConsignorAddress,
+        consignorPincode: prqData.ConsignorPincode,
+        consignorMobile: prqData.ConsignorContactno,
+        consigneeMasterName: prqData.ConsigneeName,
+        consigneeAddress: prqData.ConsigneeAddress,
+        consigneePincode: prqData.ConsigneePincode,
+        consigneeMobile: prqData.ConsigneeContactno,
+      });
+
+
+      if (prqData.ConsignorPincode) {
+        this.basicDetailService.getpincodeData(prqData.ConsignorPincode).subscribe((res: any) => {
+          if (res.success && res.data && res.data.length > 0) {
+            const matchedCnor = res.data.find((p: any) => p.value === prqData.ConsignorPincode) || res.data[0];
+            const exists = this.docketService.pincodeList.find(p => p.value === matchedCnor.value);
+            if (!exists) {
+              this.docketService.pincodeList = [...this.docketService.pincodeList, matchedCnor];
+            }
+          }
+        });
+      }
       // this.docketService.loginUserList.LocationCode = originCode;
       // this.docketService.Location= originCode;
 
@@ -122,6 +149,16 @@ export class DocketListComponent implements OnInit {
         if (prqData.ToCity) {
           this.basicDetailsComp.onChangeCityListList(prqData.ToCity, 'to');
         }
+
+        // if (this.docketService.invoiceRows && this.docketService.invoiceRows.length > 0) {
+        //   const firstRow = this.docketService.invoiceRows.at(0) as FormGroup;
+        //   firstRow.patchValue({
+        //     noOfPkgs: prqData.PKGS || 0,
+        //     actualWeight: prqData.ApproxWeight || 0
+        //   });
+        //   this.docketService.calculateSummary.next(true);
+        //   this.docketService.freightAndOtherChar();
+        // }
       }, 400);
     }
   }
@@ -989,10 +1026,10 @@ export class DocketListComponent implements OnInit {
               this.docketService.successMsg = 'Docket submitted successfully.'
               // window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N&src=angular`;
               // {btoa('angular')}
-              if(!this.docketService.loginUserList?.prqData){
+              if (!this.docketService.loginUserList?.prqData) {
                 window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&BILLNO=${response.res.billNo}&MRSNo=${response.res.mrsNo}&APMTNO=${response.res.apmtNo}&id=${response.res.id}&IsFromBillGeneration=N&src=angular`;
               } else {
-                  // PRQ flow: show in-app success modal
+                // PRQ flow: show in-app success modal
                 this.prqSuccessResult = response.res;
                 this.showPRQSuccessModal = true;
                 this.isSubmitting = false; // ✅ stop loader
