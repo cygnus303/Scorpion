@@ -222,7 +222,8 @@
                                     class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3 text-nowrap" (click)="openPRQView(row.PRQNo)">
                                     <i class="fa fa-eye"></i> View
                                 </button>
-                                <button [disabled]="row.PRQStatus === 'Cancelled'|| row.PRQStatus === 'Auto Cancelled'"
+                                <button *ngIf="!isHQTR"
+                                 [disabled]="row.PRQStatus === 'Cancelled'|| row.PRQStatus === 'Auto Cancelled' || row.PRQStatus === 'ARRANGED'|| row.PRQStatus === 'Assigned'"
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success py-1 px-3 text-nowrap" (click)="openAddLR(row)" >
                                      📦 Book LR
                                 </button>

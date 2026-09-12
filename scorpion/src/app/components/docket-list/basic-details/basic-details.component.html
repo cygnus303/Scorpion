@@ -129,6 +129,8 @@
             <div class="col-md-7">
               <ng-select class="noFoundTextColor required2" appFocusNext
                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('billingType')?.invalid  && docketService.basicDetailForm.get('billingType')?.touched }"
+                [class.disabled-input]="!!this.docketService.loginUserList?.prqData?.PRQNo"
+                [readonly]="!!this.docketService.loginUserList?.prqData?.PRQNo"
                 [items]="billingTypeData" bindLabel="codeDesc" bindValue="codeId" placeholder="Billing Type"
                 formControlName="billingType" required (change)="onChangeBillingType($event)">
               </ng-select>
@@ -148,6 +150,8 @@
             <div class="col-md-7">
               <ng-select class="noFoundTextColor required2 remove-white-space" required placeholder="Billing Party" [searchable]="true"
                 [clearable]="true" (search)="getBillingPartyData($event)" appFocusNext
+                [class.disabled-input]="!!this.docketService.loginUserList?.prqData?.PRQNo"
+                [readonly]="!!this.docketService.loginUserList?.prqData?.PRQNo"
                 (change)="onChangeBillingParty($event);docketService.getBlockedCustomerList()" formControlName="billingParty"
                 [notFoundText]="notFoundTextValue" (open)="resetBillingPartyDropdown()"
                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('billingParty')?.invalid  && docketService.basicDetailForm.get('billingParty')?.touched}">
