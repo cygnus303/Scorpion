@@ -184,11 +184,11 @@ export class InvoiceDetailsComponent {
 
     if (!originState || !destState) return false;
     // Rule 1: Same state + declared >= 100000
-    if (declared >= 100000 && originState === destState && !hasInvoiceCopy) {
+    if (declared >= 100000 && originState === destState) {
       return true;
     }
     // Rule 2: Different states + declared >= 50000
-    if (declared >= 50000 && originState !== destState && !hasInvoiceCopy) {
+    if (declared >= 50000 && originState !== destState) {
       return true;
     }
     return false;
@@ -198,7 +198,7 @@ export class InvoiceDetailsComponent {
     const ewayNo = row.get('ewayBillNo')?.value;
     const hasEwayNo = ewayNo && ewayNo.toString().trim().length > 0;
     const userType = this.docketService.loginUserList?.Type?.toString();
-    
+
     if (this.isEwayRequired(row) || hasEwayNo) return true;
     if (!hasEwayNo && userType !== '1') return true;
     return false;
@@ -208,11 +208,11 @@ export class InvoiceDetailsComponent {
     const ewayNo = row.get('ewayBillNo')?.value;
     const hasEwayNo = ewayNo && ewayNo.toString().trim().length > 0;
     const userType = this.docketService.loginUserList?.Type?.toString();
-    
+
     if (!hasEwayNo && userType !== '1') {
       const minDate = new Date();
       minDate.setDate(minDate.getDate() - 15);
-      minDate.setHours(0,0,0,0);
+      minDate.setHours(0, 0, 0, 0);
       return minDate;
     }
     return undefined;
@@ -222,7 +222,7 @@ export class InvoiceDetailsComponent {
     const ewayNo = row.get('ewayBillNo')?.value;
     const hasEwayNo = ewayNo && ewayNo.toString().trim().length > 0;
     const userType = this.docketService.loginUserList?.Type?.toString();
-    
+
     if (!hasEwayNo && userType !== '1') {
       return new Date(); // Today
     }
@@ -640,11 +640,11 @@ export class InvoiceDetailsComponent {
 
       const hasInvoiceCopy = !!(row.get('invoiceCopy')?.value || row.get('invoiceFileName')?.value || row.get('invoiceFileUrl')?.value);
 
-      if (declared >= 100000 && originState && destState && originState === destState && !hasInvoiceCopy) {
+      if (declared >= 100000 && originState && destState && originState === destState) {
         requireValidators = true;
       }
 
-      if (declared >= 50000 && originState && destState && originState !== destState && !hasInvoiceCopy) {
+      if (declared >= 50000 && originState && destState && originState !== destState) {
         requireValidators = true;
       }
 
@@ -676,7 +676,7 @@ export class InvoiceDetailsComponent {
       row.get('isChangingFile')?.setValue(true);
       row.get('invoiceCopy')?.markAsTouched();
       row.get('invoiceCopy')?.updateValueAndValidity();
-      
+
       this.uploadInvoiceOCR(file, row);
     } else {
       row.patchValue({
@@ -697,7 +697,7 @@ export class InvoiceDetailsComponent {
       next: (response: any) => {
         if (response && response.success && response.data) {
           const data = response.data;
-          
+
           const hasDetails = !!(data.invoice_no || data.invoice_date || data.invoice_value);
           row.get('isOcrReadOnly')?.setValue(hasDetails);
 
@@ -705,7 +705,7 @@ export class InvoiceDetailsComponent {
           if (data.invoice_date) row.get('ewayinvoiceDate')?.setValue(new Date(data.invoice_date));
           if (data.invoice_value) row.get('declaredvalue')?.setValue(data.invoice_value);
           row.get('ewayBillNo')?.setValue(null);
-          
+
           this.sweetAlertService.success('Invoice details extracted successfully!').then(() => {
           });
         } else {
@@ -722,7 +722,7 @@ export class InvoiceDetailsComponent {
   viewFile(row: any) {
     const file = row.get('invoiceCopy')?.value;
     const url = row.get('invoiceFileUrl')?.value;
-    
+
     let viewUrl = '';
     if (file instanceof File) {
       viewUrl = URL.createObjectURL(file);
@@ -731,7 +731,7 @@ export class InvoiceDetailsComponent {
     } else if (url) {
       viewUrl = url;
     }
-    
+
     if (viewUrl) {
       window.open(viewUrl, '_blank');
     }

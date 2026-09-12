@@ -425,7 +425,7 @@
               *ngIf="docketService.invoiceform.get('totalDeclaredValue')?.invalid && docketService.invoiceform.get('totalDeclaredValue')?.touched"
               class="text-danger text-start ">
               <span *ngIf="docketService.invoiceform.get('totalDeclaredValue')?.hasError('required')">This field is required.</span>
-              <span *ngIf="docketService.invoiceform.get('totalDeclaredValue')?.hasError('max')">Total Declared Amt. should not exceed 10,00,000.</span>
+              <span *ngIf="docketService.invoiceform.get('totalDeclaredValue')?.hasError('max')">Total Declared Amt. should not exceed 100,000.</span>
             </div>
           </div>
         </div>
