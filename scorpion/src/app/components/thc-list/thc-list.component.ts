@@ -18,6 +18,7 @@ import { AddThcPopupComponent } from './add-thc-popup/add-thc-popup.component';
 import { MfViewComponent } from './mf-view/mf-view.component';
 import { HccViewComponent } from '../hcc-view/hcc-view.component';
 import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
+import { MenuAccessService } from 'app/shared/services/menu-access.service';
 
 
 @Component({
@@ -68,7 +69,7 @@ export class ThcListComponent {
   public thcData: any;
 
   constructor(private fb: FormBuilder, private docketService: DocketService, private router: Router,
-    public PRSDRSApiService: PRSDRSApiService, private exportService: ExportService, private sweetAlertService: SweetAlertService) { }
+    public PRSDRSApiService: PRSDRSApiService, private exportService: ExportService, private sweetAlertService: SweetAlertService,public menuAccessService: MenuAccessService) { }
 
 
   ngOnInit() {
@@ -82,6 +83,8 @@ export class ThcListComponent {
     }
     this.buildFilterForm();
     this.fetchData()
+
+     this.menuAccessService.loadMenuPermissions('THC1');
   }
 
 
