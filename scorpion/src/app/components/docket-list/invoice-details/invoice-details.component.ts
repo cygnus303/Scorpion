@@ -134,7 +134,7 @@ export class InvoiceDetailsComponent {
       row.get('ewayBillNo')?.setValidators([Validators.required]);
 
       const expiryVals = [Validators.required];
-      if (hasEwayNo) {
+      if (hasEwayNo  && userType !== '2') {
         expiryVals.push(pastDateValidator());
       }
       row.get('ewayBillExpiry')?.setValidators(expiryVals);
@@ -144,7 +144,7 @@ export class InvoiceDetailsComponent {
       row.get('ewayBillExpiry')?.clearValidators();
     }
 
-    if (!hasEwayNo && userType?.toString() !== '1') {
+    if (!hasEwayNo && userType?.toString() !== '2' && userType?.toString() !== '1') {
       ewayInvoiceRequired = true;
     }
 
@@ -201,7 +201,7 @@ export class InvoiceDetailsComponent {
     const userType = this.docketService.loginUserList?.Type?.toString();
 
     if (this.isEwayRequired(row) || hasEwayNo) return true;
-    if (!hasEwayNo && userType !== '1') return true;
+    if (!hasEwayNo && userType !== '2'&& userType !== '1') return true;
     return false;
   }
 
@@ -210,7 +210,7 @@ export class InvoiceDetailsComponent {
     const hasEwayNo = ewayNo && ewayNo.toString().trim().length > 0;
     const userType = this.docketService.loginUserList?.Type?.toString();
 
-    if (!hasEwayNo && userType !== '1') {
+    if (!hasEwayNo && userType?.toString() !== '2' && userType !== '1') {
       const minDate = new Date();
       minDate.setDate(minDate.getDate() - 15);
       minDate.setHours(0, 0, 0, 0);
@@ -224,7 +224,7 @@ export class InvoiceDetailsComponent {
     const hasEwayNo = ewayNo && ewayNo.toString().trim().length > 0;
     const userType = this.docketService.loginUserList?.Type?.toString();
 
-    if (!hasEwayNo && userType !== '1') {
+    if (!hasEwayNo && userType?.toString() !== '2' && userType !== '1') {
       return new Date(); // Today
     }
     return undefined;
