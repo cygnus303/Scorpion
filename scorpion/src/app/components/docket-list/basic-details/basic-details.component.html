@@ -25,7 +25,7 @@
             </div>  
           </div>
         </div>
-          <div class="col-md-4 form-column" *ngIf="this.docketService.loginUserList.prqData?.PRQNo">
+          <div class="col-md-4 form-column" *ngIf="this.docketService.loginUserList.prqData?.PRQNo|| docketService.loginUserList.Type ==='1'">
           <div class="form-group mb-1">
             <label class="col-md-5">PRQ No</label>
             <div class="col-md-7">
@@ -130,7 +130,7 @@
               <ng-select class="noFoundTextColor required2" appFocusNext
                 [ngClass]="{ 'border-danger': docketService.basicDetailForm.get('billingType')?.invalid  && docketService.basicDetailForm.get('billingType')?.touched }"
                 [class.disabled-input]="!!this.docketService.loginUserList?.prqData?.PRQNo"
-                [readonly]="!!this.docketService.loginUserList?.prqData?.PRQNo"
+                [readonly]="!!this.docketService.loginUserList?.prqData?.PRQNo "
                 [items]="billingTypeData" bindLabel="codeDesc" bindValue="codeId" placeholder="Billing Type"
                 formControlName="billingType" required (change)="onChangeBillingType($event)">
               </ng-select>
@@ -150,7 +150,7 @@
             <div class="col-md-7">
               <ng-select class="noFoundTextColor required2 remove-white-space" required placeholder="Billing Party" [searchable]="true"
                 [clearable]="true" (search)="getBillingPartyData($event)" appFocusNext
-                [class.disabled-input]="!!this.docketService.loginUserList?.prqData?.PRQNo"
+                [class.disabled-input]="!!this.docketService.loginUserList?.prqData?.PRQNo "
                 [readonly]="!!this.docketService.loginUserList?.prqData?.PRQNo"
                 (change)="onChangeBillingParty($event);docketService.getBlockedCustomerList()" formControlName="billingParty"
                 [notFoundText]="notFoundTextValue" (open)="resetBillingPartyDropdown()"

@@ -83,9 +83,9 @@
                             <input class="form-control" maxlength="12" placeholder="E-Way Bill No."
                               formControlName="ewayBillNo" type="text" (input)="getEwayBillData($event,i,true)"
                               oninput="this.value = this.value.replace(/[^0-9]/g,'');"
-                              [ngClass]="{ 'border-danger': (row.get('ewayBillNo')?.invalid && row.get('ewayBillNo')?.touched) || (isEwayRequired(row) && row.get('ewayBillNo')?.touched && !row.get('ewayBillNo')?.value),'required2': isEwayRequired(row)}">
+                              [ngClass]="{ 'border-danger': (row.get('ewayBillNo')?.invalid && row.get('ewayBillNo')?.touched) || (isEwayRequired(row) && !row.get('ewayBillNo')?.value),'required2': isEwayRequired(row)}">
                             <div
-                              *ngIf="isEwayRequired(row) && row.get('ewayBillNo')?.touched && !row.get('ewayBillNo')?.value"
+                              *ngIf="isEwayRequired(row) && !row.get('ewayBillNo')?.value"
                               class="text-danger text-start">
                               This field is required.
                             </div>

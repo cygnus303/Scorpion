@@ -261,6 +261,11 @@ export class DocketListComponent implements OnInit {
                   this.docketService.isBillingTBB = false;
                 }
               }
+              if(type === '1'){
+                this.docketService.basicDetailForm.patchValue({
+                  prqNo: basicDetail.indentNo
+                })
+              }
 
               this.basicDetailsComp.onChangeCityListList(this.docketService.basicDetailForm.get('fromCity')?.value, 'from');
               if (!basicDetail.exemptServices) {
