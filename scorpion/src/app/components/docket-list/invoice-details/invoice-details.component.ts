@@ -170,6 +170,7 @@ export class InvoiceDetailsComponent {
 
   isEwayRequired(row: AbstractControl): boolean {
     const declared = row.get('declaredvalue')?.value ?? 0;
+    const totalDeclared = this.docketService.invoiceform.get('totalDeclaredValue')?.value ?? 0;
     const originState = this.docketService.basicDetailForm.get('originState')?.value;
     const destState = this.docketService.basicDetailForm.get('destinationState')?.value;
 
@@ -183,12 +184,12 @@ export class InvoiceDetailsComponent {
     }
 
     if (!originState || !destState) return false;
-    // Rule 1: Same state + declared >= 100000
-    if (declared >= 100000 && originState === destState) {
+    // Rule 1: Same state + declared >= 100000 or totalDeclared >= 100000
+    if ((declared >= 100000 || totalDeclared >= 100000) && originState === destState) {
       return true;
     }
     // Rule 2: Different states + declared >= 50000
-    if (declared >= 50000 && originState !== destState) {
+    if ((declared >= 50000  || totalDeclared >= 100000) && originState !== destState) {
       return true;
     }
     return false;
@@ -323,7 +324,8 @@ export class InvoiceDetailsComponent {
     }, { emitEvent: false });
     this.docketService.invoiceform.get('totalDeclaredValue')?.markAsTouched();
     this.getCFTCalculation(i);
-    this.docketService.calculateChargeWeight()
+    this.docketService.calculateChargeWeight();
+    this.validateAllEwayBillFields();
   }
 
 
@@ -630,6 +632,7 @@ export class InvoiceDetailsComponent {
 
   validateAllEwayBillFields(): void {
     const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
+    const totalDeclared = this.docketService.invoiceform.get('totalDeclaredValue')?.value ?? 0;
 
     invoiceRows.controls.forEach((row) => {
       const declared = row.get('declaredvalue')?.value ?? 0;
@@ -645,6 +648,10 @@ export class InvoiceDetailsComponent {
       }
 
       if (declared >= 50000 && originState && destState && originState !== destState) {
+        requireValidators = true;
+      }
+
+      if(totalDeclared > 100000){
         requireValidators = true;
       }
 
