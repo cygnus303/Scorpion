@@ -287,8 +287,8 @@ export class DocketService {
     
     // Apply 10L validation only if Type is not '2'
     // if (this.loginUserList?.Type !== '2') {
-      this.invoiceform.get('totalDeclaredValue')?.setValidators([Validators.max(1000000)]);
-      this.invoiceform.get('totalDeclaredValue')?.updateValueAndValidity();
+      // this.invoiceform.get('totalDeclaredValue')?.setValidators([Validators.max(1000000)]);
+      // this.invoiceform.get('totalDeclaredValue')?.updateValueAndValidity();
     // }
 
     this.reIndexSrNo();
