@@ -293,7 +293,7 @@
                                 (change)="toggleMfSelection(data, $event)">
                         </td>
                         <td>
-                            <div class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;"><a>{{
+                            <div class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;" (click)="openMFView(data.tcno)"><a>{{
                                     data.tcno }}</a></div>
                         </td>
                         <td class="text-center" style="width: 120px;">

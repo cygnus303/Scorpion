@@ -45,7 +45,6 @@ export class BillReceiptComponent {
 
   selectedFile: File | null = null;
   selectedFileName: string = '';
-  billFiles: { [key: number]: File } = {};
   originalBills: any[] = [];
   receiptForm!: FormGroup;
   tdsTypes: any[] = [];
@@ -231,8 +230,7 @@ export class BillReceiptComponent {
       bankChg: new FormControl(0),
       roundOffMinus: new FormControl(0, [Validators.max(10)]),
       roundOffPlus: new FormControl(0, [Validators.max(10)]),
-      isRoundOff: new FormControl(false),
-      attachment: new FormControl('', Validators.required)
+      isRoundOff: new FormControl(false)
     });
   }
 
@@ -335,17 +333,13 @@ export class BillReceiptComponent {
     this.isSubmitted = true;
     this.receiptForm.markAllAsTouched();
 
-    if (this.receiptForm.invalid) {
+    if (this.receiptForm.invalid || !this.selectedFile) {
       const invalidFields: string[] = [];
-      let attachmentMissing = false;
       Object.keys(this.receiptForm.controls).forEach(key => {
         const control = this.receiptForm.get(key);
         if (control?.invalid) {
           if (key === 'bills' && control instanceof FormArray) {
             control.controls.forEach((billGroup, index) => {
-              if (billGroup.get('attachment')?.invalid) {
-                attachmentMissing = true;
-              }
               Object.keys((billGroup as FormGroup).controls).forEach(billKey => {
                 if (billGroup.get(billKey)?.invalid) {
                   invalidFields.push(`bills[${index}].${billKey}`);
@@ -359,8 +353,10 @@ export class BillReceiptComponent {
       });
       console.log('Validation Error: The following fields are invalid: ', invalidFields);
       
-      if (attachmentMissing) {
-        this.sweetalertService.info('Please upload the required Attachment (Proof) for the bill(s). Scroll right in the Bill Details table if needed.');
+      if (!this.selectedFile) {
+        this.sweetalertService.info('Please upload an Attachment.');
+      } else if (this.receiptForm.invalid) {
+        this.sweetalertService.info('Please fill all the required fields correctly.');
       }
       return;
     }
@@ -438,6 +434,7 @@ export class BillReceiptComponent {
     formData.append('VM.Remarks', formVal.remarks || "-");
     formData.append('VM.TransactionId', "-");
     formData.append('VM.TransactionDate', formatCustomDate(mrDateObj));
+    formData.append('VM.UploadedFile', this.selectedFile || '');
 
     bills.forEach((b: any, index: number) => {
       formData.append(`BillList[${index}].tdsded`, String(b.tds || 0));
@@ -464,12 +461,6 @@ export class BillReceiptComponent {
 
       const balanceAmt = (Number(b.pending) || 0) - (Number(b.collection) || 0);
       formData.append(`BillList[${index}].unexpded`, String(balanceAmt));
-
-      // Append the actual binary file for this row to UploadedFile
-      const file = this.billFiles[index];
-      if (file) {
-        formData.append(`BillList[${index}].UploadedFile`, file);
-      }
     });
 
     formData.append('PC.ChequeNo', formVal.chequeNo || "");
@@ -565,39 +556,6 @@ export class BillReceiptComponent {
       this.selectedFile = file;
       this.selectedFileName = file.name;
     }
-  }
-
-  billFilePreviews: { [key: number]: string | null } = {};
-
-  onBillFileSelected(event: any, index: number) {
-    const file = event.target.files[0];
-    if (file) {
-      this.billFiles[index] = file;
-      const billsFormArray = this.receiptForm.get('bills') as FormArray;
-      const billGroup = billsFormArray.at(index) as FormGroup;
-      billGroup.patchValue({ attachment: file.name }, { emitEvent: false });
-
-      // Generate preview if it's an image
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-          this.billFilePreviews[index] = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      } else {
-        this.billFilePreviews[index] = null;
-      }
-    }
-  }
-
-  removeBillFile(index: number) {
-    if (this.billFiles[index]) {
-      delete this.billFiles[index];
-    }
-    this.billFilePreviews[index] = null;
-    const billsFormArray = this.receiptForm.get('bills') as FormArray;
-    const billGroup = billsFormArray.at(index) as FormGroup;
-    billGroup.patchValue({ attachment: '' }, { emitEvent: false });
   }
 
   removeFile() {

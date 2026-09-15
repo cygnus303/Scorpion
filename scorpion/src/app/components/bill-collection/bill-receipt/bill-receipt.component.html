@@ -71,7 +71,7 @@
     <h6 class="text-danger fw-bold border-bottom border-danger pb-2 mb-3 d-flex justify-content-between align-items-center" style="font-size: 0.9rem;">
       <span>BILL DETAILS</span>
       <span *ngIf="receiptForm.get('bills')?.invalid && isSubmitted" class="text-danger fw-medium" style="font-size: 0.75rem;">
-        <i class="fas fa-exclamation-circle me-1"></i> Please complete all required fields (scroll right for Attachments 👉)
+        <i class="fas fa-exclamation-circle me-1"></i> Please complete all required fields
       </span>
     </h6>
     <div class="table-responsive mb-4 custom-scrollbar" style="max-height: 250px; overflow-y: auto; overflow-x: auto;">
@@ -96,7 +96,6 @@
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Round Off (+)</th>
             <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;display: none;">Net Recd.
               Amt.</th>
-            <th class="text-danger fw-bold py-2" style="background-color: #faebeb !important;">Attachment <span class="text-danger">*</span></th>
           </tr>
         </thead>
         <tbody formArrayName="bills">
@@ -165,54 +164,27 @@
                 [value]="getNetRecdAmt(i) | number:'1.2-2'" style="width: 100px; margin: 0 auto; border-color: #ced4da;"
                 readonly disabled>
             </td>
-            <td>
-              <!-- Default Upload State (When no file is selected) -->
-              <div class="position-relative d-flex flex-column align-items-center justify-content-center"
-                style="width: 150px; margin: 0 auto;" *ngIf="!bill.get('attachment')?.value">
-                <div class="position-relative w-100 h-100">
-                  <input type="file" class="position-absolute w-100 h-100 opacity-0 cursor-pointer" style="z-index: 2; left:0; top:0"
-                    (change)="onBillFileSelected($event, i)" title="Choose file">
-                  <button type="button"
-                    class="btn btn-outline-danger btn-sm w-100 shadow-none d-flex align-items-center justify-content-center gap-2 text-truncate"
-                    [ngClass]="{'border-danger text-danger': bill.get('attachment')?.invalid && isSubmitted}"
-                    style="font-size: 0.75rem; z-index: 1; padding: 4px 8px;" title="Upload Proof">
-                    <span class="text-truncate" style="max-width: 90px;">Upload Proof</span>
-                  </button>
-                </div>
-                <div *ngIf="bill.get('attachment')?.invalid && isSubmitted" class="text-danger mt-1 fw-bold" style="font-size: 0.75rem;">
-                  Required
-                </div>
-              </div>
-
-              <!-- Selected File State -->
-              <div *ngIf="bill.get('attachment')?.value"
-                class="d-flex flex-column align-items-center justify-content-center"
-                style="width: 150px; margin: 0 auto; gap: 4px;">
-                <!-- Small File Name Preview -->
-                <div class="d-flex align-items-center gap-2 text-muted fw-medium"
-                  style="font-size: 0.7rem; max-width: 100%;">
-                  <img *ngIf="billFilePreviews[i]" [src]="billFilePreviews[i]" class="border"
-                    style="height: 24px; width: 24px; object-fit: cover; border-radius: 4px;">
-                  <span *ngIf="!billFilePreviews[i]">📄</span>
-                  <span class="text-truncate" [title]="bill.get('attachment')?.value">{{ bill.get('attachment')?.value
-                    }}</span>
-                </div>
-                <!-- Action Buttons: Change and Remove -->
-                <div class="d-flex gap-1 w-100">
-                  <div class="position-relative flex-grow-1">
-                    <input type="file" class="position-absolute w-100 h-100 opacity-0 cursor-pointer"
-                      style="z-index: 2;" (change)="onBillFileSelected($event, i)" title="Change file">
-                    <button type="button" class="btn btn-sm btn-outline-secondary w-100 shadow-none"
-                      style="font-size: 0.65rem; padding: 2px 4px; z-index: 1;">Change</button>
-                  </div>
-                  <button type="button" class="btn btn-sm btn-outline-danger flex-grow-1 shadow-none"
-                    style="font-size: 0.65rem; padding: 2px 4px;" (click)="removeBillFile(i)">Remove</button>
-                </div>
-              </div>
-            </td>
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- Main Attachment -->
+    <div class="mb-4">
+      <label class="form-label small text-muted mb-1">Attachment <span class="text-danger">*</span></label>
+      <div class="d-flex align-items-center gap-3">
+        <input type="file" #fileInput class="form-control form-control-sm bg-white shadow-none" style="max-width: 300px;" (change)="onFileSelected($event)" accept="image/*,.pdf"
+          [ngClass]="{'border-danger': isSubmitted && !selectedFile}">
+        <div *ngIf="selectedFileName" class="d-flex align-items-center gap-2 text-muted small">
+          <span class="text-truncate fw-medium" style="max-width: 200px;" [title]="selectedFileName">{{ selectedFileName }}</span>
+          <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1" style="font-size: 0.7rem;" (click)="removeFile(); fileInput.value = ''" title="Remove file">
+            <i class="fas fa-times"></i> Remove
+          </button>
+        </div>
+      </div>
+      <div *ngIf="isSubmitted && !selectedFile" class="text-danger mt-1" style="font-size: 0.75rem;">
+        Please upload an attachment.
+      </div>
     </div>
 
     <!-- Section: COLLECTION DETAILS -->
