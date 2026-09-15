@@ -306,6 +306,9 @@ export class DocketListComponent implements OnInit {
                 invoiceRows.clear(); // Clear old rows
                 this.docketService.completiondata.listInVoice.forEach((item: any, index: number) => {
                   invoiceRows.push(this.docketService.createInvoiceRow(index));
+                  this.docketService.invoiceRows.controls[index].patchValue({
+                    invoiceCopy: item.ewaybillInvoiceFile,
+                  })
                   // this.docketService.invoiceRows.controls[index].patchValue({
                   //   srNo: item.srNo,
                   //   ewayBillNo: item.eWayBillNo,
@@ -673,7 +676,8 @@ export class DocketListComponent implements OnInit {
           pkgsno: 0,
           qty: 0,
           transportrate: 0,
-          transportation_distance: row.transportation_distance || 0
+          transportation_distance: row.transportation_distance || 0,
+          EwaybillInvoiceFile:row.invoiceCopy?.name || row.invoiceCopy || null
         };
 
         // ✅ conditionally add eWayBillExpiredDate only if eWayBillNo has value
@@ -990,17 +994,18 @@ export class DocketListComponent implements OnInit {
       }
 
       // EwaybillInvoiceFile array
-      this.docketService.invoiceRows.controls.forEach((row) => {
+      this.docketService.invoiceRows.controls.forEach((row, i) => {
         const file = row.get('invoiceCopy')?.value;
         const existingName = row.get('invoiceFileName')?.value;
 
         if (file instanceof File) {
-          formData.append("EwaybillInvoiceFile", file, file.name);
+          // encode the row number into the filename itself — e.g. "row2__actual_invoice.pdf"
+          const renamedFile = new File([file], `row${i}__${file.name}`, { type: file.type });
+          formData.append('EwaybillInvoiceFile', renamedFile, renamedFile.name);
         } else if (existingName) {
-          formData.append("EwaybillInvoiceFile", existingName);
-        } else {
-          formData.append("EwaybillInvoiceFile", "");
+          formData.append('EwaybillInvoiceFile', `row${i}__${existingName}`); // still same field, existing filename tagged too
         }
+        // no file, no existing name -> nothing appended for this row (fine, since we're not counting on position)
       });
 
       formData.append("BaseFinYear", this.docketService.loginUserList.FinYear);
