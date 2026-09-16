@@ -71,11 +71,11 @@
                     <div class="section-title">Eway Bill Details</div>
                     <div class="info-row">
                         <span class="label">Eway Bill Details</span>
-                        <span class="value clickable" (click)="openDetails('eway')">View Details ↗</span>
+                        <span class="value clickable" (click)="scrollToDocketDetails()">{{ totalEwayBills }} e-way bill{{ totalEwayBills !== 1 ? 's' : '' }} — View Details ↗</span>
                     </div>
                     <div class="info-row">
                         <span class="label">Volumetric Dimensions</span>
-                        <span class="value clickable" (click)="openDetails('volumetric')">View Details ↗</span>
+                        <span class="value clickable" (click)="scrollToDocketDetails()">{{ totalDimensions }} box row{{ totalDimensions !== 1 ? 's' : '' }} — View Details ↗</span>
                     </div>
                 </div>
 
@@ -209,97 +209,144 @@
 
             </div>
         </div>
+
+        <!-- DOCKET DETAILS SECTION -->
+        <div class="docket-details-wrapper mt-4" id="docketDetailsSection" *ngIf="groupedDocketDetails.length > 0">
+            <div class="section-title-large">
+                <span class="title-text">DOCKET DETAILS</span>
+                <span class="docket-count badge bg-light text-dark border">{{ groupedDocketDetails.length }} DOCKET{{ groupedDocketDetails.length > 1 ? 'S' : '' }}</span>
+            </div>
+
+            <div class="docket-card mb-3" *ngFor="let docket of groupedDocketDetails">
+                
+                <!-- Docket Header -->
+                <div class="docket-header d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                        <span class="docket-no">{{ docket.dockNo }}</span>
+                        <!-- You can bind actual Docket Date/Pkgs/Weight if available in the group, otherwise fallback to PRQ details if they match -->
+                        <span class="docket-badge bg-light text-muted border rounded px-2 py-1" style="font-size: 11px;" *ngIf="prqData.DocketDate">{{ (prqData.DocketDate | date:'dd MMM yyyy') || '—' }}</span>
+                        <span class="docket-badge bg-light text-muted border rounded px-2 py-1" style="font-size: 11px;">{{ prqData.PKGS || '—' }} pkgs • {{ prqData.ApproxWeight ? prqData.ApproxWeight + ' kg' : '—' }}</span>
+                        <span class="docket-badge bg-light text-muted border rounded px-2 py-1" style="font-size: 11px;">{{ prqData.Pickup_Branch?.split(' : ')[0] || '—' }} → {{ prqData.DestCd?.split(' : ')[0] || '—' }}</span>
+                    </div>
+                    <div class="docket-entered-by text-muted bg-light border rounded px-2 py-1" style="font-size: 11px;">
+                        Entered by {{ prqData.EntryBy || '—' | lowercase }}
+                    </div>
+                </div>
+
+                <!-- Invoice & Eway Bill Table -->
+                <div class="docket-table-section mt-3" *ngIf="docket.invoices.length > 0">
+                    <div class="table-subtitle">INVOICE & EWAY BILL DETAILS</div>
+                    <div class="table-responsive">
+                        <table class="table table-sm border-bottom mb-0">
+                            <thead>
+                                <tr>
+                                    <th>INVOICE NO.</th>
+                                    <th>INVOICE DATE</th>
+                                    <th>INVOICE VALUE</th>
+                                    <th>EWAY BILL NO.</th>
+                                    <th>EWAY BILL DATE</th>
+                                    <th>EWAY EXP. DATE</th>
+                                    <th>EWAY VALUE</th>
+                                    <th>ATTACHMENT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let inv of docket.invoices">
+                                    <td class="fw-bold">{{ inv.InvNo || inv.INVNO || '—' }}</td>
+                                    <td>{{ (inv.EWayBillInvoiceDate | date:'dd MMM yyyy') || '—' }}</td>
+                                    <td>{{ inv.InvValue || inv.INVVALUE || inv.EWayInvoicevalue || '—' }}</td>
+                                    <td class="fw-bold">{{ inv.EWayBillNo || '—' }}</td>
+                                    <td>{{ (inv.EwayBillDate || inv.EWAYBILLDATE | date:'dd MMM yyyy') || '—' }}</td>
+                                    <td>{{ (inv.EWayBillExpiredDate | date:'dd MMM yyyy') || '—' }}</td>
+                                    <td>{{ inv.InvValue || inv.INVVALUE || inv.EWayInvoicevalue || '—' }}</td>
+                                    <td class="text-primary text-decoration-underline" style="cursor:pointer;" (click)="inv.EwaybillInvoiceFile ? viewInvoice(inv.EwaybillInvoiceFile) : null">{{ inv.EwaybillInvoiceFile ? 'View' : '—' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Volumetric Table -->
+                <div class="docket-table-section mt-3" *ngIf="docket.dimensions.length > 0">
+                    <div class="table-subtitle">VOLUMETRIC DIMENSIONS <span class="fw-normal text-muted">(L × B × H in inches)</span></div>
+                    <div class="table-responsive">
+                        <table class="table table-sm border-bottom mb-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>PKGS</th>
+                                    <th>WEIGHT</th>
+                                    <th>L</th>
+                                    <th>B</th>
+                                    <th>H</th>
+                                    <th>TOTAL CFT</th>
+                                    <th>VOL. CFT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let dim of docket.dimensions; let i = index">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ dim.PKGSNO || '—' }}</td>
+                                    <td>{{ dim.ACTUWT ? dim.ACTUWT + ' kg' : '—' }}</td>
+                                    <td>{{ dim.VOL_L || '—' }}</td>
+                                    <td>{{ dim.VOL_B || '—' }}</td>
+                                    <td>{{ dim.VOL_H || '—' }}</td>
+                                    <td>{{ dim.TOT_CFT || dim.vol_cft || '—' }}</td>
+                                    <td>{{ dim.TOT_CFT || dim.vol_cft || '—' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- ASSIGNMENT HISTORY SECTION -->
+        <div class="docket-details-wrapper mt-4 mb-2">
+            <div class="section-title-large">
+                <span class="title-text">ASSIGNMENT HISTORY</span>
+            </div>
+            
+            <div *ngIf="isHistoryLoading" class="text-center p-4">
+                <span class="spinner-border spinner-border-sm text-danger me-2"></span> Loading history...
+            </div>
+
+            <div class="text-muted p-3" style="font-size: 13px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #f8fafc;" *ngIf="!isHistoryLoading && assignmentHistory.length === 0">
+                No delivery-agent assignments recorded for this PRQ yet.
+            </div>
+
+            <div class="table-responsive" *ngIf="!isHistoryLoading && assignmentHistory.length > 0">
+                <table class="table table-sm border-bottom mb-0">
+                    <thead style="background-color: #f8fafc; color: #64748b; font-size: 11px;">
+                        <tr>
+                            <th class="py-2 px-3 border-top-0 border-bottom">ASSIGNMENT TYPE</th>
+                            <th class="py-2 px-3 border-top-0 border-bottom">OLD AGENT</th>
+                            <th class="py-2 px-3 border-top-0 border-bottom">NEW AGENT</th>
+                            <th class="py-2 px-3 border-top-0 border-bottom">DATE & TIME</th>
+                            <th class="py-2 px-3 border-top-0 border-bottom">REMARKS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let hist of assignmentHistory">
+                            <td class="py-2 px-3 align-middle fw-bold" style="font-size: 12px; color: #1e293b;">
+                                <span class="badge" [ngClass]="{'bg-success': hist.AssignType === 'ASSIGN', 'bg-warning text-dark': hist.AssignType !== 'ASSIGN'}">{{ hist.AssignType || '—' }}</span>
+                            </td>
+                            <td class="py-2 px-3 align-middle text-muted" style="font-size: 12px;">{{ hist.OldAgentName || '—' }}</td>
+                            <td class="py-2 px-3 align-middle text-dark fw-semibold" style="font-size: 12px;">{{ hist.NewAgentName || '—' }}</td>
+                            <td class="py-2 px-3 align-middle text-muted" style="font-size: 12px;">{{ (hist.ReassignDate | date:'dd MMM yyyy, HH:mm') || '—' }}</td>
+                            <td class="py-2 px-3 align-middle text-muted" style="font-size: 12px;">{{ hist.Remarks || '—' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
     
     <div class="modal-footer-custom" *ngIf="!isLoading && prqData">
         <button class="btn-close-custom" (click)="modalRef.hide()">Close</button>
         </div>
-</ng-template>
-
-<ng-template #detailsModalTemplate>
-    <div class="modal-content" style="border: none !important; outline: none !important; overflow: hidden !important; box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important; padding: 0 !important; background-color: #fff !important; border-radius: 10px !important;">
-        <div class="modal-header d-flex justify-content-between align-items-center" style="background: #db3a3a; color: white !important; border: none !important; padding: 14px 20px !important; margin: 0 !important; border-radius: 0 !important; width: 100% !important;">
-            <h5 class="modal-title mb-0" style="font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 8px; color: white !important;">
-                <i class="ti ti-table"></i> {{ detailType === 'eway' ? 'Eway Bill Details' : 'Volumetric Dimensions' }} — {{ prqData?.PRQNo }}
-            </h5>
-            <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="closeDetailModal()" style="font-size: 12px; filter: invert(1) grayscale(100%) brightness(200%);"></button>
-        </div>
-        <div class="modal-body" style="padding: 24px;">
-            <p class="text-muted" style="font-size: 13px; margin-bottom: 16px;">
-                <span class="fw-bold text-dark">{{ detailList.length }}</span> 
-                {{ detailType === 'eway' ? 'Eway Bill captured against this PRQ.' : 'dimension set captured against this PRQ.' }}
-            </p>
-            
-            <div class="table-responsive custom-scroll" style="border: 1px solid #e2e8f0; border-radius: 6px;">
-                <table class="table table-sm mb-0" style="font-size: 12px; white-space: nowrap; border-collapse: collapse;">
-                    <thead style="background-color: #f8fafc; color: #64748b; border-bottom: 1px solid #e2e8f0;">
-                        <tr *ngIf="detailType === 'eway'">
-                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">DOCKET NO.</th>
-                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">EWAY BILL NO.</th>
-                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">EWAY BILL DATE</th>
-                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">EWAY EXP. DATE</th>
-                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">INV. NO.</th>
-                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">INV. DATE</th>
-                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">INV. VALUE</th>
-                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">ATTACHMENT</th>
-                        </tr>
-                        <tr *ngIf="detailType === 'volumetric'">
-                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">DOCKET NO.</th>
-                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">LENGTH (IN)</th>
-                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">BREADTH (IN)</th>
-                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">HEIGHT (IN)</th>
-                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">CFT RATIO</th>
-                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">NO. OF PKGS</th>
-                            <th class="text-center" style="font-weight: 700; padding: 12px 10px; border: none;">ACT. WT (KG)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngIf="isDetailLoading">
-                            <td [attr.colspan]="detailType === 'eway' ? 8 : 7" class="text-center py-4">
-                                <span class="spinner-border spinner-border-sm text-danger me-2"></span> Loading...
-                            </td>
-                        </tr>
-                        <tr *ngIf="!isDetailLoading && detailList.length === 0">
-                            <td [attr.colspan]="detailType === 'eway' ? 8 : 7" class="text-center py-4 text-muted">
-                                No details found.
-                            </td>
-                        </tr>
-                        
-                        <!-- Eway Bill Rows -->
-                        <ng-container *ngIf="detailType === 'eway'">
-                            <tr *ngFor="let item of detailList" style="border-bottom: 1px solid #f1f5f9;">
-                                <td class="text-center align-middle" style="padding: 12px 10px; color: #d0021b; font-weight: 600;">{{ item.DOCKNO || item.DockNo || '—' }}</td>
-                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.EWayBillNo  || '—' }}</td>
-                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ (item.EwayBillDate || item.EWAYBILLDATE | date:'dd MMM yyyy') || '—' }}</td>
-                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ (item.EWayBillExpiredDate | date:'dd MMM yyyy') || '—' }}</td>
-                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.InvNo || item.INVNO || '—' }}</td>
-                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ (item.EWayBillInvoiceDate | date:'dd MMM yyyy') || '—' }}</td>
-                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.InvValue || item.INVVALUE || item.EWayInvoicevalue ? '₹' + (item.InvValue || item.INVVALUE || item.EWayInvoicevalue) : '—' }}</td>
-                                <td class="text-center align-middle text-primary" style="padding: 12px 10px;cursor:pointer;text-decoration:underline;" (click)="item.EwaybillInvoiceFile ? viewInvoice(item.EwaybillInvoiceFile) : '—'">{{ item.EwaybillInvoiceFile ? 'View' : '—' }}</td>
-                            </tr>
-                        </ng-container>
-
-                        <!-- Volumetric Rows -->
-                        <ng-container *ngIf="detailType === 'volumetric'">
-                            <tr *ngFor="let item of detailList" style="border-bottom: 1px solid #f1f5f9;">
-                                <td class="text-center align-middle" style="padding: 12px 10px; color: #d0021b; font-weight: 600;">{{ item.DOCKNO || item.DockNo || '—' }}</td>
-                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.VOL_L || '—' }}</td>
-                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.VOL_B || '—' }}</td>
-                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.VOL_H || '—' }}</td>
-                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.TOT_CFT || item.vol_cft || '—' }}</td>
-                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.PKGSNO || '—' }}</td>
-                                <td class="text-center align-middle text-muted" style="padding: 12px 10px;">{{ item.ACTUWT || '—' }}</td>
-                            </tr>
-                        </ng-container>
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="modal-footer d-flex justify-content-end" style="border-top: none; padding: 0 24px 24px;">
-            <button type="button" class="btn btn-outline-secondary bg-white text-dark fw-bold px-4 py-2" (click)="closeDetailModal()" style="border-color: #cbd5e1; font-size: 14px; border-radius: 6px;">Close</button>
-        </div>
-    </div>
 </ng-template>
 
 <app-docket-history #docketHistoryComponent></app-docket-history>
