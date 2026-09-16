@@ -5,6 +5,7 @@ import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '
 import { SweetAlertService } from '../../../shared/services/sweet-alert.service';
 import { Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'invoice-details',
@@ -20,6 +21,7 @@ export class InvoiceDetailsComponent {
   private calculateSummarySubscription!: Subscription;
   private invoiceMasterMap: { [invNo: string]: number } = {};
   public minDate: Date = new Date();
+  public env = environment;
   constructor(
     public docketService: DocketService,
     public basicDetailService: BasicDetailService,
@@ -734,7 +736,7 @@ export class InvoiceDetailsComponent {
     if (file instanceof File) {
       viewUrl = URL.createObjectURL(file);
     } else if (typeof file === 'string' && file) {
-      viewUrl = file;
+      viewUrl = `${this.env.liveUrl}UploadedDocumentsBAK/EwaybillInvoiceFile/Upload/${file}`;
     } else if (url) {
       viewUrl = url;
     }
