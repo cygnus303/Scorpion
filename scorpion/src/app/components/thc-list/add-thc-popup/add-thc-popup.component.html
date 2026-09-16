@@ -513,7 +513,7 @@
             <div class="thcform-field">
               <label>Contract Amount</label>
               <input min="1" max="99999999" type="text" class="form-control text-end" formControlName="contractAmount"
-                appFocusNext [readOnly]="ThcForm.value.vendorType === 'XX1'"
+                appFocusNext [readOnly]="ThcForm.value.vendorType === 'XX1'||ThcForm.value.bidType === 'With'"
                 (blur)="calculateNetAmount();restoreIfEmpty('contractAmount')"
                 oninput="this.value = this.value.replace(/[^0-9]/g,'');" (focus)="clearZero('contractAmount')" required
                 [ngClass]="{ 'border-danger': ThcForm.get('contractAmount')?.invalid && ThcForm.get('contractAmount')?.touched }" />
