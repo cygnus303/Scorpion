@@ -3,15 +3,17 @@ import { CommonModule } from '@angular/common';
 import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { AppointmentDeliveryService } from '../../../shared/services/appointment-delivery.service';
 import { CommonService } from '../../../shared/services/common.service';
 import { SweetAlertService } from '../../../shared/services/sweet-alert.service';
 import { DocketService } from 'app/shared/services/docket.service';
+import { GeneralMasterService } from 'app/shared/services/general-master.service';
 
 @Component({
   selector: 'app-reschedule-appointment',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule],
+  imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule, NgSelectModule],
   templateUrl: './reschedule-appointment.html',
   styleUrls: ['./reschedule-appointment.scss'],
   providers: [BsModalService]
@@ -29,6 +31,7 @@ export class RescheduleAppointment {
   public commonService = inject(CommonService);
   private sweetAlertService = inject(SweetAlertService);
   public docketService = inject(DocketService);
+  public generalMasterService = inject(GeneralMasterService);
 
   formatDisplayDate(dateStr: string): string {
     if (!dateStr || !dateStr.includes('-')) return dateStr;
@@ -54,6 +57,7 @@ export class RescheduleAppointment {
     timeTo: new FormControl('', Validators.required),
     personName: new FormControl('', Validators.required),
     contactNo: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
+    reschedule: new FormControl(null, Validators.required),
     appointmentRemarks: new FormControl('')
   });
 
@@ -90,12 +94,14 @@ export class RescheduleAppointment {
     this.activeType = type;
     this.appointmentData = data;
     this.rescheduleForm.reset();
+    
+    this.generalMasterService.getReason('PRQRESCHEDULEREASON');
 
     const id = data?.appointmentNo || data?.csdNo || data?.msdNo || data?.id || '';
 
     const payload = {
       type: this.activeType,
-      id: id
+      id: id  
     };
 
     this.isLoading = true;
@@ -138,6 +144,7 @@ export class RescheduleAppointment {
             appointmentDate: parsedApmtDate as any,
             personName: apiData.custnm || apiData.csgenm || '',
             contactNo: apiData.mobileno || apiData.csgeMobile || '',
+            reschedule: apiData.reschedule || null,
             appointmentRemarks: apiData.apmtRemark || '',
             timeFrom: timeFrom,
             timeTo: timeTo
@@ -186,6 +193,7 @@ export class RescheduleAppointment {
         person: formValue.personName || "",
         mobile: formValue.contactNo || "",
         remark: formValue.appointmentRemarks || "",
+        reschedule: formValue.reschedule || "",
         fromTime: formValue.timeFrom || "",
         toTime: formValue.timeTo || "",
         apmT_Type: "E"
