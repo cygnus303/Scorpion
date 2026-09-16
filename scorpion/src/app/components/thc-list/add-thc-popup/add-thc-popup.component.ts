@@ -1101,6 +1101,7 @@ export class AddThcPopupComponent {
           driver1Name: response?.driverName || null,
           mKTVehicleNo: response?.vehicleNo || null,
           driver1MobileNo: response?.driverMobileNo || null,
+          contractAmount :response?.proposal_TripCost || 0,
         };
 
         if (this.ThcForm.get('bidType')?.value === 'With') {
