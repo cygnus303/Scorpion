@@ -245,6 +245,17 @@ export class AddThcPopupComponent {
       this.isBidRegDateReadonly = false;
       this.isBidInsDateReadonly = false;
       this.isBidFitDateReadonly = false;
+      
+      // Reset contract amount to 0 when bid type changes
+      this.ThcForm.get('contractAmount')?.setValue(0);
+      this.ThcForm.get('vendorCode')?.setValue(null);
+      this.ThcForm.get('BiddingVendor')?.setValue(null);
+      this.ThcForm.get('lorryOwnerPanNo')?.setValue(null);
+      this.ThcForm.get('driver1Name')?.setValue(null);
+      this.ThcForm.get('mKTVehicleNo')?.setValue(null);
+      this.ThcForm.get('driver1MobileNo')?.setValue(null);
+      this.calculateNetAmount();
+
       const vendorType = this.ThcForm.get('vendorType')?.value;
       const biddingVendorCtrl = this.ThcForm.get('BiddingVendor');
 
