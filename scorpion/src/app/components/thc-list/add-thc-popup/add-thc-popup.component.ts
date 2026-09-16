@@ -1114,6 +1114,7 @@ export class AddThcPopupComponent {
           driver1MobileNo: response?.driverMobileNo || null,
           contractAmount :response?.proposal_TripCost || 0,
         };
+        this.getPANnumberData(response?.vendorCode)
 
         if (this.ThcForm.get('bidType')?.value === 'With') {
           payload.vehicleNO = 'O';
