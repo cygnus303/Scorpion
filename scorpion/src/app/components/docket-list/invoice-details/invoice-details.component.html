@@ -160,7 +160,7 @@
                           </td>
                           <td class="center" style="min-width: 150px;">
                             <!-- FILE INPUT: Add / Change mode -->
-                            <ng-container *ngIf="(!row.get('isExistingFile')?.value || row.get('isChangingFile')?.value) || docketService.loginUserList.Type !== '2'">
+                            <ng-container *ngIf="(!row.get('isExistingFile')?.value || row.get('isChangingFile')?.value) ||(docketService.loginUserList.Type !== '2' && docketService.loginUserList.Type !== '1')">
                               <div class="d-flex align-items-center justify-content-center">
                                 <button type="button" class="btn btn-outline-primary btn-sm mb-0 p-1 px-2" style="cursor: pointer; white-space: nowrap;" 
                                        [class.btn-outline-danger]="row.get('invoiceCopy')?.invalid && row.get('invoiceCopy')?.touched"
@@ -179,7 +179,7 @@
                             </ng-container>
 
                             <!-- VIEW/CHANGE BUTTONS (existing file only) -->
-                            <ng-container *ngIf="row.get('isExistingFile')?.value && !row.get('isChangingFile')?.value && docketService.loginUserList.Type === '2'">
+                            <ng-container *ngIf="row.get('isExistingFile')?.value && !row.get('isChangingFile')?.value && (docketService.loginUserList.Type === '2' || docketService.loginUserList.Type === '1')">
                               <div class="d-flex align-items-center justify-content-center gap-1">
                                 <button type="button" class="btn btn-sm btn-outline-primary mb-0 p-1 px-2" (click)="viewFile(row)">
                                   View
