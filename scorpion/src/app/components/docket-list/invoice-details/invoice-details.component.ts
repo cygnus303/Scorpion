@@ -185,13 +185,14 @@ export class InvoiceDetailsComponent {
       return true;
     }
 
-    if (!originState || !destState) return false;
-    // Rule 1: Same state + declared >= 100000 or totalDeclared >= 100000
-    if ((declared >= 100000 || totalDeclared >= 100000) && originState === destState) {
+    if (declared > 100000 || totalDeclared > 100000) {
       return true;
     }
+
+    if (!originState || !destState) return false;
+
     // Rule 2: Different states + declared >= 50000
-    if ((declared >= 50000  || totalDeclared >= 100000) && originState !== destState) {
+    if ((declared >= 50000) && originState !== destState) {
       return true;
     }
     return false;
@@ -645,15 +646,9 @@ export class InvoiceDetailsComponent {
 
       const hasInvoiceCopy = !!(row.get('invoiceCopy')?.value || row.get('invoiceFileName')?.value || row.get('invoiceFileUrl')?.value);
 
-      if (declared >= 100000 && originState && destState && originState === destState) {
+      if (declared > 100000 || totalDeclared > 100000) {
         requireValidators = true;
-      }
-
-      if (declared >= 50000 && originState && destState && originState !== destState) {
-        requireValidators = true;
-      }
-
-      if(totalDeclared > 100000){
+      } else if (declared >= 50000 && originState && destState && originState !== destState) {
         requireValidators = true;
       }
 
@@ -706,13 +701,37 @@ export class InvoiceDetailsComponent {
       next: (response: any) => {
         if (response && response.success && response.data) {
           const data = response.data;
+          if (!data.invoice_value) {
+            row.patchValue({
+              invoiceCopy: null,
+              invoiceFileName: '',
+              invoiceNo: null,
+              ewayinvoiceDate: null,
+              declaredvalue: null,
+              ewayBillNo: null,
+              isOcrReadOnly: false
+            });
+            const index = (this.docketService.invoiceform.get('invoiceRows') as FormArray).controls.indexOf(row);
+            if (index > -1) {
+              this.calculateSummary(index);
+            }
+            row.get('invoiceCopy')?.updateValueAndValidity();
+            this.sweetAlertService.error('Invoice value not found in the uploaded document. Please upload a valid invoice.');
+            return;
+          }
 
           const hasDetails = !!(data.invoice_no || data.invoice_date || data.invoice_value);
           row.get('isOcrReadOnly')?.setValue(hasDetails);
 
-          if (data.invoice_no) row.get('invoiceNo')?.setValue(data.invoice_no);
-          if (data.invoice_date) row.get('ewayinvoiceDate')?.setValue(new Date(data.invoice_date));
-          if (data.invoice_value) row.get('declaredvalue')?.setValue(data.invoice_value);
+          row.get('invoiceNo')?.setValue(data.invoice_no || null);
+          row.get('ewayinvoiceDate')?.setValue(data.invoice_date ? new Date(data.invoice_date) : null);
+          if (data.invoice_value) {
+            row.get('declaredvalue')?.setValue(data.invoice_value);
+            const index = (this.docketService.invoiceform.get('invoiceRows') as FormArray).controls.indexOf(row);
+            if (index > -1) {
+              this.calculateSummary(index);
+            }
+          }
           row.get('ewayBillNo')?.setValue(null);
 
           this.sweetAlertService.success('Invoice details extracted successfully!').then(() => {
@@ -748,8 +767,6 @@ export class InvoiceDetailsComponent {
 
   changeFile(index: number, row: any) {
     row.get('isChangingFile')?.setValue(true);
-    row.get('invoiceCopy')?.setValue(null);
-    row.get('invoiceFileName')?.setValue('');
     this.openInvoiceUpload(index, row);
   }
 

@@ -190,9 +190,11 @@ export class BasicDetailsComponent {
         this.isUploading = false;
         this.showInvoiceUpload = false;
         if (response && response.success && response.data) {
-          this.autoFillForms(response.data, file);
-          this.sweetAlertService.success('Invoice details extracted successfully!').then(() => {
-          });
+          const isSuccess = this.autoFillForms(response.data, file);
+          if (isSuccess !== false) {
+            this.sweetAlertService.success('Invoice details extracted successfully!').then(() => {
+            });
+          }
         } else {
           this.sweetAlertService.error('Failed to extract invoice details.');
         }
@@ -210,12 +212,26 @@ export class BasicDetailsComponent {
       if (this.docketService.invoiceRows.length > 0) {
         const rowIndex = this.docketService.activeInvoiceRowIndex || 0;
         const row = this.docketService.invoiceRows.at(rowIndex) as FormGroup;
-        
+           if (!data.invoice_value) {
+            row.patchValue({
+              invoiceCopy: null,
+              invoiceFileName: '',
+              invoiceNo: null,
+              ewayinvoiceDate: null,
+              declaredvalue: null,
+              ewayBillNo: null,
+              isOcrReadOnly: false
+            });
+            this.docketService.calculateSummary.next(true);
+            row.get('invoiceCopy')?.updateValueAndValidity();
+            this.sweetAlertService.error('Invoice value not found in the uploaded document. Please upload a valid invoice.');
+            return false;
+          }
         const hasDetails = !!(data.invoice_no || data.invoice_date || data.invoice_value);
         row.get('isOcrReadOnly')?.setValue(hasDetails);
 
-        if (data.invoice_no) row.get('invoiceNo')?.setValue(data.invoice_no);
-        if (data.invoice_date) row.get('ewayinvoiceDate')?.setValue(new Date(data.invoice_date));
+        row.get('invoiceNo')?.setValue(data.invoice_no || null);
+        row.get('ewayinvoiceDate')?.setValue(data.invoice_date ? new Date(data.invoice_date) : null);
         if (data.invoice_value) {
           const val = data.invoice_value.toString().replace(/,/g, '');
           row.get('declaredvalue')?.setValue(val);
@@ -263,6 +279,7 @@ export class BasicDetailsComponent {
         if (cityMatch) this.docketService.consignorForm.get('consigneeCity')?.setValue(cityMatch);
       }
     }
+    return true;
   }
 
 
