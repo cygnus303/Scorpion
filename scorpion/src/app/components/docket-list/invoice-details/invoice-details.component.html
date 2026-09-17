@@ -204,7 +204,7 @@
             </div>
           </div>
         </div>
-        <h5 *ngIf="docketService.invoiceform.get('totalDeclaredValue')?.value >= 100000" class="text-danger fw-bold mb-3 text-start mt-2" style="font-size: 28px;">Total Invoice Value is greater than 1 Lakh, so please enter a valid E-Way Bill Number.</h5>
+        <h5 *ngIf="docketService.invoiceform.get('totalDeclaredValue')?.value > 100000" class="text-danger fw-bold mb-3 text-start mt-2" style="font-size: 28px;">Total Invoice Value is greater than 1 Lakh, so please enter a valid E-Way Bill Number.</h5>
       </div>
       <div class="col-md-6 col-sm-12">
         <div class="cnote-entry-container">
