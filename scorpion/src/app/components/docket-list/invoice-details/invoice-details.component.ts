@@ -185,7 +185,7 @@ export class InvoiceDetailsComponent {
       return true;
     }
 
-    if (declared >= 100000 || totalDeclared >= 100000) {
+    if (declared > 100000 || totalDeclared > 100000) {
       return true;
     }
 
@@ -646,7 +646,7 @@ export class InvoiceDetailsComponent {
 
       const hasInvoiceCopy = !!(row.get('invoiceCopy')?.value || row.get('invoiceFileName')?.value || row.get('invoiceFileUrl')?.value);
 
-      if (declared >= 100000 || totalDeclared >= 100000) {
+      if (declared > 100000 || totalDeclared > 100000) {
         requireValidators = true;
       } else if (declared >= 50000 && originState && destState && originState !== destState) {
         requireValidators = true;
