@@ -98,6 +98,7 @@ export class DocketService {
   
   // Trigger to show Invoice Upload modal in basic-details component
   triggerInvoiceUpload$ = new Subject<boolean>();
+  isFromGlobalUpload = false;
   public activeInvoiceRowIndex: number = 0;
 
   public maxDiscountLimit: number = 0;

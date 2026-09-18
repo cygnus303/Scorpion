@@ -192,8 +192,29 @@ export class BasicDetailsComponent {
         if (response && response.success && response.data) {
           const isSuccess = this.autoFillForms(response.data, file);
           if (isSuccess !== false) {
-            this.sweetAlertService.success('Invoice details extracted successfully!').then(() => {
-            });
+            let numericValue = 0;
+            if (response.data.invoice_value) {
+              const cleanVal = typeof response.data.invoice_value === 'string' ? response.data.invoice_value.replace(/,/g, '') : response.data.invoice_value;
+              numericValue = Number(cleanVal) || 0;
+            }
+
+            if (numericValue > 100000 && this.docketService.isFromGlobalUpload) {
+              this.docketService.hasConfirmedNoEwayBill = false;
+              this.sweetAlertService.info('Invoice value is more than 100,000. E-Way Bill is required.', () => {
+                setTimeout(() => {
+                  const ewayInput = document.getElementById('ewayBillInput');
+                  if (ewayInput) {
+                    ewayInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    ewayInput.focus();
+                    ewayInput.classList.add('pulse-highlight');
+                    setTimeout(() => ewayInput.classList.remove('pulse-highlight'), 3000);
+                  }
+                }, 300);
+              });
+            } else {
+              this.sweetAlertService.success('Invoice details extracted successfully!').then(() => {
+              });
+            }
           }
         } else {
           this.sweetAlertService.error('Failed to extract invoice details.');

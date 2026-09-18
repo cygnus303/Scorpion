@@ -133,7 +133,11 @@ export class InvoiceDetailsComponent {
     let ewayInvoiceRequired = false;
 
     if (requireValidators || hasEwayNo) {
-      row.get('ewayBillNo')?.setValidators([Validators.required]);
+      row.get('ewayBillNo')?.setValidators([
+        Validators.required,
+        Validators.minLength(12),
+        Validators.maxLength(12)
+      ]);
 
       const expiryVals = [Validators.required];
       if (hasEwayNo  && userType !== '2') {
@@ -196,6 +200,20 @@ export class InvoiceDetailsComponent {
       return true;
     }
     return false;
+  }
+
+  get shouldShowEwayBillWarning(): boolean {
+    const totalDeclared = this.docketService.invoiceform.get('totalDeclaredValue')?.value || 0;
+    if (totalDeclared <= 100000) return false;
+    
+    const rows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
+    if (!rows || rows.length === 0) return true;
+
+    // Show warning if ANY row is missing an E-Way Bill Number or if the control has errors (invalid)
+    return rows.controls.some(row => {
+      const rowEwayCtrl = row.get('ewayBillNo');
+      return !rowEwayCtrl?.value || rowEwayCtrl?.invalid;
+    });
   }
 
   isEwayInvoiceDateRequired(row: AbstractControl): boolean {
@@ -666,6 +684,7 @@ export class InvoiceDetailsComponent {
 
   openInvoiceUpload(index: number, row: any) {
     this.docketService.activeInvoiceRowIndex = index;
+    this.docketService.isFromGlobalUpload = false;
     this.docketService.triggerInvoiceUpload$.next(true);
   }
 
@@ -734,8 +753,8 @@ export class InvoiceDetailsComponent {
           }
           row.get('ewayBillNo')?.setValue(null);
 
-          this.sweetAlertService.success('Invoice details extracted successfully!').then(() => {
-          });
+            this.sweetAlertService.success('Invoice details extracted successfully!').then(() => {
+            });
         } else {
           this.sweetAlertService.error('Failed to extract invoice details.');
         }

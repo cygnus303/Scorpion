@@ -102,6 +102,7 @@ async handleKeydown(event: KeyboardEvent) {
 
       confirmedYes = true;
       this.docketService.hasConfirmedNoEwayBill = true;
+      this.docketService.isFromGlobalUpload = true;
       this.docketService.triggerInvoiceUpload$.next(true);
     }
         });
@@ -169,7 +170,7 @@ async handleOutsideClick(event: MouseEvent) {
   if (!target) return;
 
   // Click on ewaybill → ignore
-  if (target.getAttribute('formControlName') === 'ewayBillNo') {
+  if (target && typeof target.getAttribute === 'function' && target.getAttribute('formControlName') === 'ewayBillNo') {
     return;
   }
 
@@ -220,6 +221,7 @@ await Swal.fire({
     if (result.isConfirmed) {
       confirmedYes = true;
       this.docketService.hasConfirmedNoEwayBill = true;
+      this.docketService.isFromGlobalUpload = true;
       this.docketService.triggerInvoiceUpload$.next(true);
     }
   });
