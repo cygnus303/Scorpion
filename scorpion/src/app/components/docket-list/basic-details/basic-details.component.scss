@@ -1,6 +1,15 @@
+.pulse-highlight {
+  animation: pulse-animation 0.8s infinite alternate !important;
+  border: 2px solid #ef4444 !important;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.6) !important;
+  background-color: #fef2f2 !important;
+  transition: all 0.3s ease;
+}
 
-
-
+@keyframes pulse-animation {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.02); }
+}
 label:has(input[type='radio'][name='ani']) {
   line-height: 1.1;
   display: grid;
