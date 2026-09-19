@@ -20,6 +20,9 @@
                 <div class="col-md-7">
                   <input class="form-control GSTNo clsGST" formControlName="consignorGSTNo" (blur)="getGSTNODetails($event,'Conr')" maxlength="15" 
                     placeholder="Consignor GST No." type="text" appFocusNexts>
+                  <div *ngIf="docketService.consignorForm.get('consignorGSTNo')?.value?.length > 15" class="text-danger text-start">
+                    <small>GST No. length cannot exceed 15 characters.</small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -221,8 +224,11 @@
               <div class="form-group">
                 <label class="control-label col-md-5">Consignee GST No.</label>
                 <div class="col-md-7">
-                  <input class="form-control" formControlName="consigneeGSTNo" appFocusNexts  maxlength="15"  (input)="getGSTNODetails($event ,'Conee')"
+                  <input class="form-control" formControlName="consigneeGSTNo" appFocusNexts maxlength="15" (input)="getGSTNODetails($event ,'Conee')"
                      placeholder="Consignee GST No." type="text" >
+                  <div *ngIf="docketService.consignorForm.get('consigneeGSTNo')?.value?.length > 15" class="text-danger text-start">
+                    <small>GST No. length cannot exceed 15 characters.</small>
+                  </div>
                 </div>
               </div>
             </div>
