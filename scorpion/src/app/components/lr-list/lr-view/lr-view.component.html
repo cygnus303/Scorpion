@@ -374,6 +374,7 @@
                                 <th>EWayBill Expiry Date</th>
                                 <th>Declared Value (₹)</th>
                                 <th>Special Instructions</th>
+                                <th>Invoice Copy</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -385,6 +386,15 @@
                                 <td>{{ lrDetails?.EWayBillExpiredDate ? (parseDate(lrDetails?.EWayBillExpiredDate) | date:'dd MMM yyyy') : '—' }}</td>
                                 <td><strong>₹ {{ lrDetails?.DECLVAL | number:'1.2-2' || '0.00' }}</strong></td>
                                 <td>{{lrDetails?.Comments || '—' }}</td>
+                                <td>
+                                    <a *ngIf="lrDetails?.EwaybillInvoiceFile" [href]="env.liveUrl + 'UploadedDocumentsBAK/InvoiceCopy/Upload/' + lrDetails.EwaybillInvoiceFile" target="_blank"
+                                       class="btn btn-danger btn-sm"
+                                       style="font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 4px; box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);"
+                                       title="View Invoice Image">
+                                        <i class="fa fa-eye me-1"></i> View
+                                    </a>
+                                    <span *ngIf="!lrDetails?.EwaybillInvoiceFile">—</span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
