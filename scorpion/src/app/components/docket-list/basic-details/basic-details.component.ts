@@ -233,31 +233,26 @@ export class BasicDetailsComponent {
       if (this.docketService.invoiceRows.length > 0) {
         const rowIndex = this.docketService.activeInvoiceRowIndex || 0;
         const row = this.docketService.invoiceRows.at(rowIndex) as FormGroup;
-           if (!data.invoice_value) {
-            row.patchValue({
-              invoiceCopy: null,
-              invoiceFileName: '',
-              invoiceNo: null,
-              ewayinvoiceDate: null,
-              declaredvalue: null,
-              ewayBillNo: null,
-              isOcrReadOnly: false
-            });
-            this.docketService.calculateSummary.next(true);
-            row.get('invoiceCopy')?.updateValueAndValidity();
-            this.sweetAlertService.error('Invoice value not found in the uploaded document. Please upload a valid invoice.');
-            return false;
-          }
-        const hasDetails = !!(data.invoice_no || data.invoice_date || data.invoice_value);
-        row.get('isOcrReadOnly')?.setValue(hasDetails);
+        const hasMissingDetails = !data.invoice_value || !data.invoice_no || !data.invoice_date;
+        row.get('isOcrReadOnly')?.setValue(!hasMissingDetails);
 
         row.get('invoiceNo')?.setValue(data.invoice_no || null);
         row.get('ewayinvoiceDate')?.setValue(data.invoice_date ? new Date(data.invoice_date) : null);
+        
         if (data.invoice_value) {
           const val = data.invoice_value.toString().replace(/,/g, '');
           row.get('declaredvalue')?.setValue(val);
-          this.docketService.calculateSummary.next(true);
-          this.docketService.freightAndOtherChar();
+        } else {
+          row.get('declaredvalue')?.setValue(null);
+        }
+        
+        this.docketService.calculateSummary.next(true);
+        this.docketService.freightAndOtherChar();
+
+        if (hasMissingDetails) {
+          this.sweetAlertService.warning('Could not extract all invoice details. Please fill in the missing fields manually.');
+        } else {
+          // If you want to show success, you can do it here, or omit if autoFillForms is silent
         }
         
         if (file) {
@@ -275,10 +270,10 @@ export class BasicDetailsComponent {
 
     const rowIndex = this.docketService.activeInvoiceRowIndex || 0;
     if (this.docketService.consignorForm && rowIndex === 0) {
-      if (data.consignor_gst) this.docketService.consignorForm.get('consignorGSTNo')?.setValue(data.consignor_gst);
-      if (data.consignee_gst) this.docketService.consignorForm.get('consigneeGSTNo')?.setValue(data.consignee_gst);
-      if (data.consignor_address) this.docketService.consignorForm.get('consignorAddress')?.setValue(data.consignor_address);
-      if (data.consignee_address) this.docketService.consignorForm.get('consigneeAddress')?.setValue(data.consignee_address);
+      this.docketService.consignorForm.get('consignorGSTNo')?.setValue(data.consignor_gst || null);
+      this.docketService.consignorForm.get('consigneeGSTNo')?.setValue(data.consignee_gst || null);
+      this.docketService.consignorForm.get('consignorAddress')?.setValue(data.consignor_address || null);
+      this.docketService.consignorForm.get('consigneeAddress')?.setValue(data.consignee_address || null);
 
       if (data.consignor_city_or_pincode) {
         const pinMatch = data.consignor_city_or_pincode.match(/\d{6}/);
@@ -288,6 +283,9 @@ export class BasicDetailsComponent {
         }
         const cityMatch = data.consignor_city_or_pincode.split('-')[0]?.trim();
         if (cityMatch) this.docketService.consignorForm.get('consignorCity')?.setValue(cityMatch);
+      } else {
+        this.docketService.consignorForm.get('consignorPincode')?.setValue(null);
+        this.docketService.consignorForm.get('consignorCity')?.setValue(null);
       }
 
       if (data.consignee_city_or_pincode) {
@@ -298,6 +296,9 @@ export class BasicDetailsComponent {
         }
         const cityMatch = data.consignee_city_or_pincode.split('-')[0]?.trim();
         if (cityMatch) this.docketService.consignorForm.get('consigneeCity')?.setValue(cityMatch);
+      } else {
+        this.docketService.consignorForm.get('consigneePincode')?.setValue(null);
+        this.docketService.consignorForm.get('consigneeCity')?.setValue(null);
       }
     }
     return true;

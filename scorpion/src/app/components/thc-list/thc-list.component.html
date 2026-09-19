@@ -204,9 +204,9 @@
                             </div>
                         </td>
                         <td class="text-center" style="width: 80px;">
-                            <span class="fw-bold cursor-pointer"
-                                [ngClass]="(data.mfNo) ? 'text-primary fw-bold' : 'text-muted'"
-                                (click)="openMFPopup(data.thcNo)">{{data.mfNo ? 'View MF' :'-'}}</span>
+                            <a *ngIf="data.mfNo" class="text-primary text-decoration-underline cursor-pointer fw-bold"
+                                (click)="openMFPopup(data.thcNo)" style="font-size: 13px;">View MF</a>
+                            <span *ngIf="!data.mfNo" class="text-muted">—</span>
                         </td>
                         <td class="text-center">
                             <span class="fw-bold cursor-pointer status-badge"
@@ -244,17 +244,19 @@
                             </span>
                         </td>
                         <td class="text-center">
-                            <span class="pill-badge px-2 py-1">
-                                {{ data.routeName }}
+                            <span class="badge bg-light text-dark border border-secondary-subtle px-2 py-1" style="font-size: 11.5px; letter-spacing: 0.5px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                                {{ data.routeName || '—' }}
                             </span>
                         </td>
                         <td class="text-center">
-                            <span class="fw-bold text-primary cursor-pointer" (click)="openHccPopup(data,'L')">{{
-                                data.loadingHCCnt > 0 ?'View Hcc':'-' }}</span>
+                            <a *ngIf="data.loadingHCCnt > 0" class="text-primary text-decoration-underline cursor-pointer fw-bold"
+                               (click)="openHccPopup(data,'L')" style="font-size: 13px;">View HCC</a>
+                            <span *ngIf="!(data.loadingHCCnt > 0)" class="text-muted">—</span>
                         </td>
                         <td class="text-center">
-                            <span class="fw-bold text-primary cursor-pointer" (click)="openHccPopup(data,'U')">{{
-                                data.unloadingHCCnt > 0 ?'View Hcc':'-' }}</span>
+                            <a *ngIf="data.unloadingHCCnt > 0" class="text-primary text-decoration-underline cursor-pointer fw-bold"
+                               (click)="openHccPopup(data,'U')" style="font-size: 13px;">View HCC</a>
+                            <span *ngIf="!(data.unloadingHCCnt > 0)" class="text-muted">—</span>
                         </td>
 
                         <td class="text-center">
