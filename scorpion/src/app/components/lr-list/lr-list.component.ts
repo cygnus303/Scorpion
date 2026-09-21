@@ -303,7 +303,7 @@ export class LrListComponent {
     const saved = localStorage.getItem("loginUserList");
     if (saved) {
       let user = JSON.parse(saved);
-      user.Type = '3';
+      user.Type = '1';
       user.DocketNo = dockno;
       user.IsFromBillGeneration = "true";
       this.docketService.loginUserList = user;
