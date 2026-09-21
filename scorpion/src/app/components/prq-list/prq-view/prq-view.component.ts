@@ -92,6 +92,7 @@ export class PrqViewComponent {
     }
   }
 
+
   fetchDocketDetails(prqNo: string) {
     this.isDetailLoading = true;
     this.groupedDocketDetails = [];
@@ -108,11 +109,13 @@ export class PrqViewComponent {
       next: (response: any) => {
         this.isDetailLoading = false;
         if (response && response.Table1) {
-          this.detailList = response.Table1;
-          // Group the flattened API response by Docket No.
-          this.groupDetailsByDocket();
+          const dockets = response.Table1 || [];
+          const invoices = response.Table2 || [];
+          const dimensions = response.Table3 || [];
+          
+          this.groupDetailsByDocket(dockets, invoices, dimensions);
         } else {
-          this.detailList = [];
+          this.groupedDocketDetails = [];
         }
       },
       error: (error: any) => {
@@ -145,50 +148,22 @@ export class PrqViewComponent {
     });
   }
 
-  // This method groups the flat list of EWay/Volumetric details into a structured array
+// This method groups the list of EWay/Volumetric details into a structured array
   // where each Docket has its own list of invoices and dimensions.
-  groupDetailsByDocket() {
-    const groups: { [key: string]: any } = {};
-    this.totalEwayBills = 0;
-    this.totalDimensions = 0;
+  groupDetailsByDocket(dockets: any[], invoices: any[], dimensions: any[]) {
+    this.totalEwayBills = invoices.length;
+    this.totalDimensions = dimensions.length;
     
-    this.detailList.forEach(item => {
-      // Find the Docket number from the item object
-      const dockNo = item.DOCKNO || item.DockNo;
-      if (!dockNo) return;
-      
-      // Initialize the group for this Docket if it doesn't exist yet
-      if (!groups[dockNo]) {
-        groups[dockNo] = {
-          dockNo: dockNo,
-          indentNo: item.IndentNo,
-          invoices: [],
-          dimensions: []
-        };
-      }
-      
-      // -- INVOICE DETAILS LOGIC --
-      // Check if this item is an invoice row (has EWayBillNo or INVNO)
-      // Since the API returns flattened data (Cartesian product of invoices x dimensions), 
-      // we need to avoid adding duplicate invoice entries.
-      const invoiceExists = groups[dockNo].invoices.find((inv: any) => inv.INVNO === item.INVNO && inv.EWayBillNo === item.EWayBillNo);
-      if (!invoiceExists && (item.INVNO || item.EWayBillNo)) {
-        groups[dockNo].invoices.push(item);
-        this.totalEwayBills++;
-      }
-      
-      // -- VOLUMETRIC DETAILS LOGIC --
-      // Check if this item is a volumetric row (has VOL_L)
-      // Similarly, prevent duplicate dimension entries by checking SrNo
-      const dimensionExists = groups[dockNo].dimensions.find((dim: any) => dim.SrNo === item.SrNo);
-      if (!dimensionExists && item.VOL_L) {
-        groups[dockNo].dimensions.push(item);
-        this.totalDimensions++;
-      }
+    this.groupedDocketDetails = dockets.map(docket => {
+      const dockNo = docket.DOCKNO || docket.DockNo;
+      return {
+        dockNo: dockNo,
+        indentNo: docket.IndentNo,
+        ...docket,
+        invoices: invoices.filter((inv: any) => (inv.DOCKNO || inv.DockNo) === dockNo),
+        dimensions: dimensions.filter((dim: any) => (dim.DOCKNO || dim.DockNo) === dockNo)
+      };
     });
-    
-    // Convert the dictionary object back to an array for easier *ngFor binding in HTML
-    this.groupedDocketDetails = Object.values(groups);
   }
 
   scrollToDocketDetails() {
