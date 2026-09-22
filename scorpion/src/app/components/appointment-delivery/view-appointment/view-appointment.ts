@@ -2,6 +2,7 @@ import { Component, TemplateRef, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { AppointmentDeliveryService } from '../../../shared/services/appointment-delivery.service';
+import { DynamicDataService } from '../../../shared/services/dynamic-data.service';
 
 @Component({
   selector: 'app-view-appointment',
@@ -13,16 +14,21 @@ import { AppointmentDeliveryService } from '../../../shared/services/appointment
 export class ViewAppointment {
   @ViewChild('viewModal', { static: true }) viewModal!: TemplateRef<any>;
   @ViewChild('historyModal', { static: true }) historyModal!: TemplateRef<any>;
+  @ViewChild('rescheduleReasonModal', { static: true }) rescheduleReasonModal!: TemplateRef<any>;
 
   modalRef?: BsModalRef;
   historyModalRef?: BsModalRef;
+  rescheduleReasonModalRef?: BsModalRef;
   private modalService = inject(BsModalService);
   private appointmentService = inject(AppointmentDeliveryService);
+  private dynamicDataService = inject(DynamicDataService);
 
   item: any = null;
   activeType: string = 'APMT';
   isLoading: boolean = false;
   listData:any;
+  rescheduleHistory: any[] = [];
+  isHistoryLoading: boolean = false;
 
   formatDate(d: string): string {
     if (!d || (d.charAt(2) !== '-' && d.charAt(2) !== '/')) return d || '-';
@@ -69,6 +75,29 @@ export class ViewAppointment {
   }
 
   openHistoryModal() {
+    this.rescheduleHistory = [];
+    if (this.activeType === 'APMT' && this.item?.appointmentNo) {
+      this.isHistoryLoading = true;
+      const payload = {
+        "FilterJson": {
+          "ReportId": "387",
+          "AppointmentNo": this.item.appointmentNo
+        }
+      };
+      this.dynamicDataService.getDynamicData(payload).subscribe({
+        next: (res: any) => {
+          this.isHistoryLoading = false;
+          if (res && res.Table1) {
+            this.rescheduleHistory = res.Table1;
+          }
+        },
+        error: (err: any) => {
+          this.isHistoryLoading = false;
+          console.error('Error fetching history', err);
+        }
+      });
+    }
+
     this.historyModalRef = this.modalService.show(this.historyModal, {
       class: 'modal-md modal-dialog-centered',
       backdrop: 'static'
@@ -78,6 +107,19 @@ export class ViewAppointment {
   closeHistoryModal() {
     if (this.historyModalRef) {
       this.historyModalRef.hide();
+    }
+  }
+
+  openRescheduleReasonModal() {
+    this.rescheduleReasonModalRef = this.modalService.show(this.rescheduleReasonModal, {
+      class: 'modal-md modal-dialog-centered',
+      backdrop: 'static'
+    });
+  }
+
+  closeRescheduleReasonModal() {
+    if (this.rescheduleReasonModalRef) {
+      this.rescheduleReasonModalRef.hide();
     }
   }
 
