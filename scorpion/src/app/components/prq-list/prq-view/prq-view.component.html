@@ -258,13 +258,23 @@
                                     <td>{{ (inv.EwayBillDate || inv.EWAYBILLDATE | date:'dd MMM yyyy') || '—' }}</td>
                                     <td>{{ (inv.EWayBillExpiredDate | date:'dd MMM yyyy') || '—' }}</td>
                                     <td>{{ inv.InvValue || inv.INVVALUE || inv.EWayInvoicevalue || '—' }}</td>
-                                    <td class="text-primary text-decoration-underline" style="cursor:pointer;" (click)="inv.EwaybillInvoiceFile ? viewInvoice(inv.EwaybillInvoiceFile) : null">{{ inv.EwaybillInvoiceFile ? 'View' : '—' }}</td>
+                                    <!-- <td class="text-primary text-decoration-underline" style="cursor:pointer;" (click)="inv.EwaybillInvoiceFile ? viewInvoice(inv.EwaybillInvoiceFile) : null">{{ inv.EwaybillInvoiceFile ? 'View' : '—' }}</td> -->
+                                         <td>
+                                    <a *ngIf="inv.EwaybillInvoiceFile" [href]="env.liveUrl + 'UploadedDocumentsBAK/InvoiceCopy/Upload/' + inv.EwaybillInvoiceFile" target="_blank"
+                                       class="btn btn-danger btn-sm"
+                                       style="font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 4px; box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);"
+                                       title="View Invoice Image">
+                                        <i class="fa fa-eye me-1"></i> View
+                                    </a>
+                                    <span *ngIf="!inv.EwaybillInvoiceFile">—</span>
+                                </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
+                
                 <!-- Volumetric Table -->
                 <div class="docket-table-section mt-3" *ngIf="docket.dimensions.length > 0">
                     <div class="table-subtitle">VOLUMETRIC DIMENSIONS <span class="fw-normal text-muted">(L × B × H in inches)</span></div>
