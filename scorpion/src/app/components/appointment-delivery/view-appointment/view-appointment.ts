@@ -14,11 +14,9 @@ import { DynamicDataService } from '../../../shared/services/dynamic-data.servic
 export class ViewAppointment {
   @ViewChild('viewModal', { static: true }) viewModal!: TemplateRef<any>;
   @ViewChild('historyModal', { static: true }) historyModal!: TemplateRef<any>;
-  @ViewChild('rescheduleReasonModal', { static: true }) rescheduleReasonModal!: TemplateRef<any>;
 
   modalRef?: BsModalRef;
   historyModalRef?: BsModalRef;
-  rescheduleReasonModalRef?: BsModalRef;
   private modalService = inject(BsModalService);
   private appointmentService = inject(AppointmentDeliveryService);
   private dynamicDataService = inject(DynamicDataService);
@@ -107,19 +105,6 @@ export class ViewAppointment {
   closeHistoryModal() {
     if (this.historyModalRef) {
       this.historyModalRef.hide();
-    }
-  }
-
-  openRescheduleReasonModal() {
-    this.rescheduleReasonModalRef = this.modalService.show(this.rescheduleReasonModal, {
-      class: 'modal-md modal-dialog-centered',
-      backdrop: 'static'
-    });
-  }
-
-  closeRescheduleReasonModal() {
-    if (this.rescheduleReasonModalRef) {
-      this.rescheduleReasonModalRef.hide();
     }
   }
 
