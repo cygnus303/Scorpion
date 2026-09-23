@@ -675,9 +675,10 @@ export class InvoiceDetailsComponent {
       const ewayBillNo = row.get('ewayBillNo')?.value;
       const billingType = this.docketService.basicDetailForm.get('billingType')?.value;
       const isreferenceDKT = this.docketService.basicDetailForm.get('isreferenceDKT')?.value;
+      const type= this.docketService.loginUserList.Type;
       
 
-      if (declared < 50000 && !ewayBillNo && billingType !== 'P04' && !isreferenceDKT) {
+      if (declared < 50000 && !ewayBillNo && billingType !== 'P04' && !isreferenceDKT && type !== '2') {
         row.get('invoiceCopy')?.setValidators([Validators.required]);
       } else {
         row.get('invoiceCopy')?.clearValidators();
