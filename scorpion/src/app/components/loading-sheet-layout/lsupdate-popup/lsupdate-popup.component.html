@@ -73,7 +73,7 @@
             <div class="form-group-input">
               <label class="form-label d-flex align-items-center gap-2 fw-bold">LS Type</label>
               <ng-select class="noFoundTextColor clear-icon remove-select-color required2" placeholder="Select LS Type"
-                formControlName="lsType" notFoundText="No matches found" bindLabel="text" bindValue="value" appFocusNext appendTo="body"
+                formControlName="lsType" notFoundText="No matches found" bindLabel="ServiceType" bindValue="ServiceType" appFocusNext appendTo="body" (change)="onLsTypeChange($event)"
                 [items]="LsTypeList"
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('lsType')?.invalid  && loadingSheetService.LSForm.get('lsType')?.touched }"></ng-select>
               <div class="text-danger text-start"
@@ -86,7 +86,7 @@
                 <label class="form-label d-flex align-items-center gap-2 fw-bold">LS Transport Mode</label>
                 <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select LS Transport Mode"
                   formControlName="mF_TransportMode" notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
-                  [items]="generalMasterService.LsTransportModeData" appFocusNext
+                  [items]="generalMasterService.LsTransportModeData" 
                   [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('mF_TransportMode')?.invalid  && loadingSheetService.LSForm.get('mF_TransportMode')?.touched }"></ng-select>
                 <div class="text-danger text-start"
                   *ngIf="loadingSheetService.LSForm.get('mF_TransportMode')?.invalid && loadingSheetService.LSForm.get('mF_TransportMode')?.touched">
@@ -137,7 +137,7 @@
               <label class="form-label d-flex align-items-center gap-2 fw-bold"> Transport Mode</label>
               <ng-select class="noFoundTextColor remove-select-color" placeholder="Select Transport Mode" appFocusNext appendTo="body"
                 formControlName="transportMode" notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
-                [items]="generalMasterService.modeData"></ng-select>
+                [items]="transportModeList"></ng-select>
             </div>
           </div>
           <div class="col-2">

@@ -19,6 +19,7 @@ import { SharedModule } from 'app/shared/shared/shared.module';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.service';
 import { CustomerService } from 'app/shared/services/customer.service';
+import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 import { environment } from 'environments/environment';
 
 @Component({
@@ -49,7 +50,8 @@ export class LSUpdatePopupComponent {
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
 
-  public LsTypeList = [{ text: "LTL", value: "LTL" }, { text: "FTL", value: "FTL" }];
+  public LsTypeList: any[] = [];
+  public transportModeList: any[] = [];
   constructor(
     public loadingSheetService: LoadingSheetService,
     public generalMasterService: GeneralMasterService,
@@ -61,7 +63,8 @@ export class LSUpdatePopupComponent {
     public sweetAlertService: SweetAlertService,
     public vendorChargeHelper: VendorChargeHelperService,
     public basicDetailService: BasicDetailService, private cd: ChangeDetectorRef, private modalService: BsModalService,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    public dynamicDataService: DynamicDataService
   ) { }
 
 
@@ -112,6 +115,7 @@ export class LSUpdatePopupComponent {
   }
 
   ngOnInit() {
+    this.getLsTypeList();
     const saved = localStorage.getItem("loginUserList");
     if (saved) {
       this.docketService.loginUserList = JSON.parse(saved);
@@ -122,6 +126,46 @@ export class LSUpdatePopupComponent {
       this.docketService.Location = this.docketService.loginUserList.LocationCode;
       this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
       this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
+  }
+
+  getLsTypeList() {
+    const payload = {
+      FilterJson: {
+        ReportId: "388"
+      }
+    };
+    this.dynamicDataService.getDynamicData(payload).subscribe({
+      next: (response: any) => {
+        if (response && response.Table1) {
+          this.LsTypeList = response.Table1;
+        }
+      },
+      error: (err: any) => {
+        console.error('Error fetching LS Type list', err);
+      }
+    });
+  }
+
+  onLsTypeChange(event: any) {
+    this.loadingSheetService.LSForm.get('transportMode')?.setValue(null);
+    if (event && event.TransportModeId) {
+      this.basicDetailService.getGeneralMasterList('TRN', '', event.TransportModeId).subscribe({
+        next: (response: any) => {
+          if (response && response.success) {
+            this.transportModeList = response.data;
+          } else {
+            this.transportModeList = [];
+          }
+        },
+        error: (err: any) => {
+          console.error('Error fetching Transport Modes', err);
+          this.transportModeList = [];
+        }
+      });
+    } else {
+      // fallback to clear if no LS Type is selected
+      this.transportModeList = [];
     }
   }
 
