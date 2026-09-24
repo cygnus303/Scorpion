@@ -217,20 +217,43 @@ export class BasicDetailsComponent {
             }
           }
         } else {
-          // this.sweetAlertService.error('Failed to extract invoice details.');
-          if (this.docketService.invoiceRows.length > 0 && this.docketService.loginUserList.Type !=='2') {
-                const rowIndex = this.docketService.activeInvoiceRowIndex || 0;
-                const row = this.docketService.invoiceRows.at(rowIndex) as FormGroup;
-                row.get('isOcrReadOnly')?.setValue(false);
-             }else{
-              this.sweetAlertService.error('Failed to extract invoice details.');
-             }
+          this.sweetAlertService.error('Failed to extract invoice details.');
         }
       },
       error: (err: any) => {
         this.isUploading = false;
         console.error('OCR API error', err);
-              this.sweetAlertService.error('Failed to extract invoice details. Please try again.');
+              // this.sweetAlertService.error('Failed to extract invoice details. Please try again.');
+              if (this.docketService.invoiceRows.length > 0 && this.docketService.loginUserList.Type !=='2') {
+                const rowIndex = this.docketService.activeInvoiceRowIndex || 0;
+                const row = this.docketService.invoiceRows.at(rowIndex) as FormGroup;
+                row.get('isOcrReadOnly')?.setValue(false);
+                row.patchValue({
+                  invoiceNo: null,
+                  ewayinvoiceDate: null,
+                  declaredvalue: null,
+                  ewayBillNo: null,
+                  isOcrReadOnly: false
+                });
+            
+            if (rowIndex === 0 ) {
+              this.docketService.consignorForm.patchValue({
+                consignorGSTNo: null,
+                consigneeGSTNo: null,
+                consignorAddress: null,
+                consigneeAddress: null,
+                consignorPincode: null,
+                consignorCity: null,
+                consigneePincode: null,
+                consigneeCity: null
+              });
+            }
+
+            this.docketService.calculateSummary.next(true);
+            this.closeInvoiceUpload()
+             }else{
+              this.sweetAlertService.error('Failed to extract invoice details.');
+             }
       }
     });
   }
@@ -251,6 +274,20 @@ export class BasicDetailsComponent {
               ewayBillNo: null,
               isOcrReadOnly: false
             });
+            
+            if (rowIndex === 0 ) {
+              this.docketService.consignorForm.patchValue({
+                consignorGSTNo: null,
+                consigneeGSTNo: null,
+                consignorAddress: null,
+                consigneeAddress: null,
+                consignorPincode: null,
+                consignorCity: null,
+                consigneePincode: null,
+                consigneeCity: null
+              });
+            }
+
             this.docketService.calculateSummary.next(true);
             row.get('invoiceCopy')?.updateValueAndValidity();
             this.sweetAlertService.error('Invoice value not found in the uploaded document. Please upload a valid invoice.');
