@@ -725,35 +725,55 @@ export class InvoiceDetailsComponent {
       next: (response: any) => {
         if (response && response.success && response.data) {
           const data = response.data;
-          
-          // Set values if they exist, otherwise leave as null so user can enter manually
+          if (!data.invoice_value) {
+            row.patchValue({
+              invoiceCopy: null,
+              invoiceFileName: '',
+              invoiceNo: null,
+              ewayinvoiceDate: null,
+              declaredvalue: null,
+              ewayBillNo: null,
+              isOcrReadOnly: false
+            });
+            const index = (this.docketService.invoiceform.get('invoiceRows') as FormArray).controls.indexOf(row);
+            if (index > -1) {
+              this.calculateSummary(index);
+            }
+            row.get('invoiceCopy')?.updateValueAndValidity();
+            this.sweetAlertService.error('Invoice value not found in the uploaded document. Please upload a valid invoice.');
+            return;
+          }
+
+          const hasDetails = !!(data.invoice_no || data.invoice_date || data.invoice_value);
+          row.get('isOcrReadOnly')?.setValue(hasDetails);
+
           row.get('invoiceNo')?.setValue(data.invoice_no || null);
           row.get('ewayinvoiceDate')?.setValue(data.invoice_date ? new Date(data.invoice_date) : null);
-          row.get('declaredvalue')?.setValue(data.invoice_value || null);
+          if (data.invoice_value) {
+            row.get('declaredvalue')?.setValue(data.invoice_value);
+            const index = (this.docketService.invoiceform.get('invoiceRows') as FormArray).controls.indexOf(row);
+            if (index > -1) {
+              this.calculateSummary(index);
+            }
+          }
           row.get('ewayBillNo')?.setValue(null);
 
-          // If any important field is missing, keep fields open (editable)
-          const hasMissingDetails = !data.invoice_value || !data.invoice_no || !data.invoice_date;
-          row.get('isOcrReadOnly')?.setValue(!hasMissingDetails);
-
-          const index = (this.docketService.invoiceform.get('invoiceRows') as FormArray).controls.indexOf(row);
-          if (index > -1) {
-            this.calculateSummary(index);
-          }
-
-          if (hasMissingDetails) {
-            this.sweetAlertService.warning('Could not extract all invoice details. Please fill in the missing fields manually.');
-          } else {
-            this.sweetAlertService.success('Invoice details extracted successfully!');
-          }
+            this.sweetAlertService.success('Invoice details extracted successfully!').then(() => {});
         } else {
-          this.sweetAlertService.error('Failed to extract invoice details.');
+          // this.sweetAlertService.error('Failed to extract invoice details.');
+            if (this.docketService.invoiceRows.length > 0 && this.docketService.loginUserList.Type !=='2') {
+                const rowIndex = this.docketService.activeInvoiceRowIndex || 0;
+                const row = this.docketService.invoiceRows.at(rowIndex) as FormGroup;
+                row.get('isOcrReadOnly')?.setValue(false);
+             }else{
+              this.sweetAlertService.error('Failed to extract invoice details.');
+             }
         }
       },
       error: (err: any) => {
         console.error('OCR API error', err);
-        this.sweetAlertService.error('Failed to extract invoice details. Please try again.');
-      }
+              this.sweetAlertService.error('Failed to extract invoice details. Please try again.');
+       }
     });
   }
 
