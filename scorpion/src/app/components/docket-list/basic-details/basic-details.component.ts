@@ -266,8 +266,8 @@ export class BasicDetailsComponent {
         
            if (!data.invoice_value) {
             row.patchValue({
-              invoiceCopy: null,
-              invoiceFileName: '',
+              // invoiceCopy: null,
+              // invoiceFileName: '',
               invoiceNo: null,
               ewayinvoiceDate: null,
               declaredvalue: null,
