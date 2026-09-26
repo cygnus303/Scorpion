@@ -110,13 +110,6 @@ export class ChallanFilterComponent {
   }
 
   onSearch() {
-    if (this.docketService.loginUserList.Type === '3') {
-      const docketVal = this.challanService.filterForm.get('docketList')?.value;
-      if (!docketVal || docketVal.trim() === '') {
-        return; // stop docket loading without docket search
-      }
-    }
-
     if (this.challanService.filterForm.valid) {
       // this.router.navigate(['Operation/ChallanList'],{
       //     queryParams: {

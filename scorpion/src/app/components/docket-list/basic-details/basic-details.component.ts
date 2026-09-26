@@ -181,6 +181,20 @@ export class BasicDetailsComponent {
 
   uploadInvoiceOCR(file: File) {
     this.isUploading = true;
+    
+    // Immediately patch the file into the form row so it's not lost if the API errors
+    if (this.docketService.invoiceRows.length > 0) {
+      const rowIndex = this.docketService.activeInvoiceRowIndex || 0;
+      const row = this.docketService.invoiceRows.at(rowIndex) as FormGroup;
+      row.patchValue({
+        invoiceCopy: file,
+        invoiceFileName: file.name
+      });
+      row.get('isChangingFile')?.setValue(true);
+      row.get('invoiceCopy')?.markAsTouched();
+      row.get('invoiceCopy')?.updateValueAndValidity();
+    }
+
     const formData = new FormData();
     formData.append('api_key', 'zck096ek4f43bza1rscb');
     formData.append('file', file, file.name);
