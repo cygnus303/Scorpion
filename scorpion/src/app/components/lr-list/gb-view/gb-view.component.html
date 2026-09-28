@@ -1,0 +1,77 @@
+<ng-template #gbViewTemplate>
+    <div class="modal-content border-0 gb-modal">
+        <!-- Header -->
+        <div class="gb-header d-flex justify-content-between align-items-start">
+            <div>
+                <h5 class="m-0 text-white fw-bold" style="font-size: 15px; letter-spacing: 0.2px;">Godown Booking Details</h5>
+                <div class="mt-1" style="color: #b1c3d6; font-size: 12px;">
+                    {{ data?.gbNo || '--' }} <span class="mx-1"></span> 
+                </div>
+            </div>
+            <button type="button" class="btn-close btn-close-white" style="font-size: 11px; margin-top: 2px;" aria-label="Close" (click)="closeModal()"></button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body p-4">
+            <div class="gb-card p-4 rounded-3">
+                <div class="row gy-4">
+                    <!-- Column 1 -->
+                    <div class="col-md-4">
+                        <div class="gb-field">
+                            <label>GODOWN BOOKING NO</label>
+                            <div class="value">{{ data?.gbNo || '--' }}</div>
+                        </div>
+                        <div class="gb-field mt-4">
+                            <label>CUSTOMER</label>
+                            <div class="value">{{ data?.party_name || '--' }}</div>
+                        </div>
+                        <div class="gb-field mt-4">
+                            <label>PKGS / WEIGHT</label>
+                            <div class="value">{{ data?.pkgsno || 0 }} pkgs / {{ data?.actuwt || 0 }} kg </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div class="col-md-4">
+                        <div class="gb-field">
+                            <label>BOOKING DATE</label>
+                            <div class="value">{{ data?.dockdt ? (data.dockdt | date:'dd-MMM-yyyy') : '--' }}</div>
+                        </div>
+                        <div class="gb-field mt-4">
+                            <label>DOCKET NO</label>
+                            <div class="value">{{ data?.dockno || '--' }}</div>
+                        </div>
+                       <div class="gb-field mt-4">
+                            <label>HCC STATUS</label>
+                            <div class="value" style="font-weight: 600;">
+                                <ng-container *ngIf="data?.hcNumber">
+                                    <span class="text-success">✓ Generated &mdash;</span>
+                                    <div class="text-success mt-1" style="font-size: 11px;">{{ data.hcNumber }}</div>
+                                </ng-container>
+                                <span *ngIf="!data?.hcNumber" class="text-muted">Not generated</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 3 -->
+                    <div class="col-md-4">
+                       <div class="gb-field">
+                            <label>ORG / DEST</label>
+                            <div class="value">{{ data?.orgncd || '--' }} &rarr; {{ data?.destcd || '--' }}</div>
+                        </div>
+                        <div class="gb-field mt-4">
+                            <label>DOCKET DATE</label>
+                            <div class="value">{{ data?.dockdt ? (data.dockdt | date:'dd-MMM-yyyy') : '--' }}</div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer border-0 pt-0 pb-4 px-4 justify-content-end">
+            <button type="button" class="btn btn-outline-secondary btn-sm px-4 fw-semibold" style="border-radius: 6px;" (click)="closeModal()">Close</button>
+        </div>
+    </div>
+</ng-template>

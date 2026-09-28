@@ -6,7 +6,8 @@
                 <i class="fas fa-filter me-2"></i>
                 CNote Criteria for {{typeName}}
             </div>
-            <button class="btn btn-light text-dark btn-sm px-3" (click)="onBack()" *ngIf="hideBackButton">Back to {{typeName}} List</button>
+            <button class="btn btn-light text-dark btn-sm px-3" (click)="onBack()" *ngIf="hideBackButton">Back to
+                {{typeName}} List</button>
         </div>
         <form [formGroup]="challanService.filterForm">
             <!-- <div class="form-grid p-4">
@@ -157,8 +158,8 @@
 
             <div class="p-3">
                 <div class="row">
-                    <div class="mb-3 col">
-                        <label class="input-group ms-5 form-label fw-semibold">Date Range</label>
+                    <div class="mb-3 col text-start ps-4">
+                        <label class="form-label fw-semibold d-block">Date Range</label>
                         <!-- <div class="input-group shadow-sm rounded" (click)="dvr.toggle()">
                             <span class="input-group-text bg-white border-end-0 p-2">
                                 <i class="fas fa-calendar-alt text-dark text-secondary"></i>
@@ -170,7 +171,7 @@
                                 [bsConfig]="{ ranges: commonService.ranges,containerClass: 'theme-dark-blue', rangeInputFormat: 'MMMM D, YYYY', dateInputFormat: 'MMMM D, YYYY'}" />
                         </div> -->
                         <app-date-range-picker theme="blue"
-                            [initialFromDate]="challanService.filterForm.get('dateRange')?.value?.[0]" 
+                            [initialFromDate]="challanService.filterForm.get('dateRange')?.value?.[0]"
                             [initialToDate]="challanService.filterForm.get('dateRange')?.value?.[1]"
                             (onRangeSelect)="onDateRangeSelected($event)">
                         </app-date-range-picker>
@@ -203,14 +204,15 @@
                     </div>
                     <div class="mb-3 col" *ngIf="this.docketService.loginUserList.Type === '3'">
                         <label class="input-group form-label fw-semibold">ODA type</label>
-                         <ng-select class="noFoundTextColor clear-icon" placeholder="Select an type" formControlName="odaType"
-                                bindLabel="text" bindValue="value" (change)="onSearch()" [items]="odaTypeList"
-                                 [ngClass]="{ 'border-danger': challanService.filterForm.get('odaType')?.invalid  && challanService.filterForm.get('odaType')?.touched }" >
-                            </ng-select>
-                            <div class="text-danger text-start"
-                                *ngIf="challanService.filterForm.get('odaType')?.invalid && challanService.filterForm.get('odaType')?.touched">
-                                Please select a ODA type
-                            </div>
+                        <ng-select class="noFoundTextColor clear-icon" placeholder="Select an type"
+                            formControlName="odaType" bindLabel="text" bindValue="value" (change)="onSearch()"
+                            [items]="odaTypeList"
+                            [ngClass]="{ 'border-danger': challanService.filterForm.get('odaType')?.invalid  && challanService.filterForm.get('odaType')?.touched }">
+                        </ng-select>
+                        <div class="text-danger text-start"
+                            *ngIf="challanService.filterForm.get('odaType')?.invalid && challanService.filterForm.get('odaType')?.touched">
+                            Please select a ODA type
+                        </div>
                     </div>
                     <div class="mb-3 col-md-5">
                         <label class="input-group form-label fw-semibold">CNote No.</label>

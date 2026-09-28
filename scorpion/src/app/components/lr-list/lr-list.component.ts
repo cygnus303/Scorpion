@@ -17,16 +17,20 @@ import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { EwayBillPreviewComponent } from '../eway-bill-preview/eway-bill-preview.component';
+import { HCCDetailsComponent } from '../prs-generation-list/hcc-details/hcc-details.component';
+import { GbViewComponent } from './gb-view/gb-view.component';
 
 @Component({
   selector: 'app-lr-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent,LrViewComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent,LrViewComponent, HCCDetailsComponent, GbViewComponent],
   templateUrl: './lr-list.component.html',
   styleUrl: './lr-list.component.scss',
   providers: [BsModalService]
 })
 export class LrListComponent {
+  @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
+  @ViewChild('GbViewComponent') gbViewComponent!: GbViewComponent;
   public isLoading: boolean = false;
   public listSubscription?: Subscription;
   public LRData: any[] = [];
@@ -125,6 +129,22 @@ export class LrListComponent {
       'Cancelled':'🚫'
     };
     return icons[status] ?? '⏳';
+  }
+
+  getDeliveryTypeClass(id: any): string {
+    if (!id) return 'badge-default';
+    const val = String(id).trim();
+    switch (val) {
+      case '1': return 'badge-godown-godown';
+      case '2': return 'badge-godown-door';
+      case '3': return 'badge-door-godown';
+      case '4': return 'badge-door-door';
+      default: return 'badge-default';
+    }
+  }
+
+  openHCCModal(lr: any) {
+    this.HCCDetailsComponent.showPopup(lr, 'G');
   }
 
   private apiCache = new Map<string, any>();
@@ -407,6 +427,21 @@ openTrack(dockno: string){
         this.sweetAlertService.error('Failed to fetch E-Way Bill Details');
       }
     });
+  }
+
+  onGBNo(lr: any) {
+    this.gbViewComponent.openModal(lr);
+  }
+
+  onViewHCC(documentNo:any,hccNo:any){
+      const url = `${this.env.liveUrl}ViewPrint/ViewHCC?DocumentNo=${documentNo}&HCNo=${hccNo}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
+    }
   }
 
 }

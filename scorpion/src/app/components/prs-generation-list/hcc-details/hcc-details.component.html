@@ -24,6 +24,7 @@
                 <div class="radio-group d-flex align-items-center gap-4" *ngIf="!hasExistingHcc">
                     <label class="form-label fw-bold mb-0">Select HCC Type: </label>
                     <label class="radio-option d-flex align-items-center gap-2"
+                        *ngIf="documentType !== 'G'"
                         style="cursor:pointer; font-size: 13px;">
                         <input type="radio" name="hccType" value="Loading" [(ngModel)]="selectedHccType"
                             [disabled]="hasExistingHcc" (change)="onHccTypeChange()" style="width: 16px; height: 16px;">
@@ -247,8 +248,12 @@
             <div class="modal-footer-btns">
                 <!-- <button class="mfbtn mfbtn-download"><span class="icon">📥</span> Download XLS</button> -->
                 <button class="mfbtn mfbtn-close" (click)="modalRef.hide()">✕ Cancel</button>
-                <button class="mfbtn mfbtn-submit" [class.disabled-input]="isLoading || !lrList || lrList.length === 0"
-                    (click)="onSubmit()">✓ Submit</button>
+                <button class="mfbtn mfbtn-submit" [class.disabled-input]="isLoading || isSubmitting || !lrList || lrList.length === 0"
+                    (click)="onSubmit()" [disabled]="isSubmitting">
+                    <span *ngIf="!isSubmitting">✓ Submit</span>
+                    <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                    <span *ngIf="isSubmitting">Submitting...</span>
+                </button>
             </div>
         </div>
     </div>

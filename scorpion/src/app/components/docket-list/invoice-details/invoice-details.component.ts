@@ -521,7 +521,7 @@ export class InvoiceDetailsComponent {
                       this.docketService.getpincodeData(response.toPincode.toString())
                       this.docketService.getTransportModeData(response.transMode.toString())
                       this.docketService.basicDetailForm.patchValue({
-                        billingName: response.partyName,
+                        // billingName: response.partyName,
                         // mode: response.transMode.toString(),
                         pincode: response.toPincode.toString(),
                         // fromCity: response.fromCity,
@@ -552,7 +552,7 @@ export class InvoiceDetailsComponent {
                         this.docketService.getpincodeData(response.toPincode.toString())
                         this.docketService.getTransportModeData(response.transMode.toString())
                         this.docketService.basicDetailForm.patchValue({
-                          billingName: response.partyName,
+                          // billingName: response.partyName,
                           // mode: response.transMode.toString(),
                           pincode: response.toPincode.toString(),
                           // fromCity: response.fromCity,
