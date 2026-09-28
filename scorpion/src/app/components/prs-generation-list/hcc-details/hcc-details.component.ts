@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -26,6 +26,7 @@ export class HCCDetailsComponent {
   public hccData: any;
   public hccForm!: FormGroup;
   public isLoading: boolean = false;
+  public isSubmitting: boolean = false;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   public headerVendorList: any[] = [];
@@ -43,11 +44,11 @@ export class HCCDetailsComponent {
   isHccValid(hcc: any): boolean {
     if (hcc === null || hcc === undefined || hcc === '') return false;
     if (hcc === 'NO HCC' || hcc === 'NOHCC') return false;
-    
+
     if (!isNaN(hcc)) {
       return Number(hcc) === 0;
     }
-    
+
     return true;
   }
 
@@ -64,16 +65,18 @@ export class HCCDetailsComponent {
     );
   }
 
-  showPopup(data: any, flag: any,type?:string) {
+  showPopup(data: any, flag: any, type?: string) {
     console.log("HCC Details Data:", data);
     this.selectedHccDetails = data;
     this.isType = type || '';
     this.documentType = this.isType === 'E' ? data.DocumentType : flag;
     console.log(this.selectedHccDetails)
     // Auto-detect existing HCC type so radio shows pre-selected (disabled) state
-    if(this.isType === 'E'){
+    if (this.isType === 'E') {
       this.selectedHccType = data.ChargesType === 'U' ? 'Unloading' : 'Loading';
-    }else{
+    } else if (this.documentType === 'G') {
+      this.selectedHccType = 'Unloading';
+    } else {
       if (this.isHccValid(data.loadingNoHCCCnt) || this.isHccValid(data.loadingNoHCCCnt)) {
         this.selectedHccType = 'Unloading';
       } else if (this.isHccValid(data.unloadingNoHCCCnt) || this.isHccValid(data.unloadingNoHCCCnt)) {
@@ -86,9 +89,11 @@ export class HCCDetailsComponent {
     this.headerVendor = null;
     this.generalMasterService.getChargeTypeData();
     this.getVendorType(this.documentType);
-    if(this.isType === 'E'){
+    if (this.isType === 'E') {
       this.getHCCEditDetail(data);
-    }else{
+    } else if (this.documentType === 'G') {
+      this.populateFromLRData(data);
+    } else {
       this.getHCCDetail(data);
     }
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered hcc-view-modal-custom', backdrop: true });
@@ -178,11 +183,35 @@ export class HCCDetailsComponent {
     return group;
   }
 
+  populateFromLRData(data: any) {
+    this.isLoading = false;
+    this.hccForm.patchValue({ documentNo: data.gbNo });
+    this.lrList.clear();
+    
+    const item = {
+      lr: data.dockno,
+      lrdate: new DatePipe('en-US').transform(data.dockdt, 'dd MMM yyyy'),
+      origin: data.orgncd,
+      destination: data.destcd,
+      pkgsno: data.pkgsno || 0,
+      weight: data.actuwt || 0,
+      chargedBy: null,
+      vendorCode: null,
+      rateType: null,
+      chargeRate: null,
+      lrWiseHCCAmount: 0.00
+    };
+
+    this.lrList.push(this.createLRGroup(item));
+    
+    this.calculateTotals();
+  }
+
   getHCCDetail(data: any) {
-     const payload = {
-          hhcNo: data.drsNo || data.pdcno || data.mfNo,
-          chargesType: this.selectedHccType || 'Loading'
-      }
+    const payload = {
+      hhcNo: data.drsNo || data.pdcno || data.mfNo,
+      chargesType: this.selectedHccType || 'Loading'
+    }
     this.isLoading = true;
     this.lrList.clear();
 
@@ -433,13 +462,15 @@ export class HCCDetailsComponent {
     }
 
 
+    this.isSubmitting = true;
     this.thcMasterService.submitHCC(payload, params).subscribe({
       next: (res: any) => {
+        this.isSubmitting = false;
         if (res.success) {
           if(this.isType === 'E'){
-          this.sweetAlertService.success(`HCC No. ${formValue.hcNumber}has been edited successfully and generated new hCC number as ${res.data.hcNo}`);
+            this.sweetAlertService.success(`HCC No. ${formValue.hcNumber}has been edited successfully and generated new hCC number as ${res.data.hcNo}`);
           }else{
-          this.sweetAlertService.success(`HCC No. ${res.data.hcNo} has been generated successfully!!`);
+            this.sweetAlertService.success(`HCC No. ${res.data.hcNo} has been generated successfully!!`);
           }
           this.dataEmitter.emit()
           this.modalRef.hide();
@@ -448,6 +479,7 @@ export class HCCDetailsComponent {
         }
       },
       error: (err: any) => {
+        this.isSubmitting = false;
         console.error("Error submitting HCC", err);
         this.hccForm.markAllAsTouched();
         this.sweetAlertService.error('Error submitting HCC');
