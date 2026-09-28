@@ -1,4 +1,4 @@
-<div style="background: var(--bg);" class="p-3">
+﻿<div style="background: var(--bg);" class="p-3">
     <div class="d-flex justify-content-between align-items-center">
         <div class="page-title">
             <span class="icon">📋</span>
@@ -182,11 +182,11 @@
                                 <span class="lr-date">{{ lr.dockdt | date:'dd MMM yyyy' }}</span>
                             </div>
                         </td>
-                        <td (click)="onGBNo(lr)" class="cursor-pointer">
-                            <span class="fw-bold" style="color: #1a237e; text-decoration: underline; font-size: 12px;">{{ lr.gbNo || '--' }}</span>
+                        <td  class="cursor-pointer">
+                            <span class="fw-bold" style="color: #1a237e; text-decoration: underline; font-size: 12px;" (click)="lr.gbNo?onGBNo(lr):null">{{ lr.gbNo || '--' }}</span>
                         </td>
-                         <td (click)="onViewHCC(lr.gbNo,lr.hcNumber)" class="cursor-pointer">
-                            <span class="fw-bold" style="color: #1a237e; text-decoration: underline; font-size: 12px;">{{ lr.hcNumber || '--' }}</span>
+                         <td  class="cursor-pointer">
+                            <span class="fw-bold" style="color: #1a237e; text-decoration: underline; font-size: 12px;" (click)="lr.hcNumber?onViewHCC(lr.gbNo,lr.hcNumber):null">{{ lr.hcNumber || '--' }}</span>
                         </td>
                         <td>
                             <div class="route route-wrapper">
@@ -254,8 +254,8 @@
                                         <a><span class="pi">🔖</span> UBI Sticker Print</a>
                                     </div>
                                 </div>
-                                <button class="ab ab-hcc" (click)="openHCCModal(lr)">🏢 HCC</button>
-                                <!-- <button class="ab ab-hcc" (click)="openHCCModal(lr)" [disabled]="lr.isQuickMode === 'Q'|| lr.pickup_Dely !== '1' || lr.pickup_Dely !== '2'">🏢 HCC</button> -->
+                                <!-- <button class="ab ab-hcc" (click)="openHCCModal(lr)">🏢 HCC</button> -->
+                                <button class="ab ab-hcc" (click)="openHCCModal(lr)" [disabled]="lr.isQuickMode === 'Q'|| lr.pickup_Dely !== '1' || lr.pickup_Dely !== '2'">🏢 HCC</button>
                             </div>
                         </td>
                     </tr>
