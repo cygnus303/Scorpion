@@ -255,7 +255,8 @@
                                     </div>
                                 </div>
                                 <!-- <button class="ab ab-hcc" (click)="openHCCModal(lr)">🏢 HCC</button> -->
-                                <button class="ab ab-hcc" (click)="openHCCModal(lr)" [disabled]="lr.isQuickMode === 'Q'|| lr.pickup_Dely !== '1' || lr.pickup_Dely !== '2'">🏢 HCC</button>
+                                <button class="ab ab-hcc" (click)="openHCCModal(lr)"
+                                 [disabled]="lr.isQuickMode === 'Q' && (lr.pickup_Dely != 1 || lr.pickup_Dely != 2)&& !lr.gbNo">🏢 HCC</button>
                             </div>
                         </td>
                     </tr>
