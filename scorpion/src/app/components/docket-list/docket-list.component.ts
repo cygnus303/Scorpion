@@ -429,7 +429,7 @@ export class DocketListComponent implements OnInit {
       srNo: item.srNo,
       ewayBillNo: item.eWayBillNo,
       ewayBillExpiry: item.eWayBillExpiredDate ? new Date(item.eWayBillExpiredDate) : '01 JAN 0001',
-      ewayinvoiceDate: item.eWayBillInvoiceDate ? new Date(item.eWayBillInvoiceDate) : '01 JAN 0001',
+      ewayinvoiceDate: item.invdt ? new Date(item.invdt) : '01 JAN 0001',
       invoiceNo: item.invno,
       declaredvalue: item.declval,
       transportation_distance: item.transportation_distance
