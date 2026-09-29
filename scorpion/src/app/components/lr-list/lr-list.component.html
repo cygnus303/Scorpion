@@ -1,4 +1,4 @@
-﻿<div style="background: var(--bg);" class="p-3">
+<div style="background: var(--bg);" class="p-3">
     <div class="d-flex justify-content-between align-items-center">
         <div class="page-title">
             <span class="icon">📋</span>
@@ -255,7 +255,8 @@
                                     </div>
                                 </div>
                                 <!-- <button class="ab ab-hcc" (click)="openHCCModal(lr)">🏢 HCC</button> -->
-                                <button class="ab ab-hcc" (click)="openHCCModal(lr)" [disabled]="lr.isQuickMode === 'Q'|| lr.pickup_Dely !== '1' || lr.pickup_Dely !== '2'">🏢 HCC</button>
+                                <button class="ab ab-hcc" (click)="openHCCModal(lr)"
+                                 [disabled]="lr.ishccAllow === 'N' ? true : false">🏢 HCC</button>
                             </div>
                         </td>
                     </tr>
