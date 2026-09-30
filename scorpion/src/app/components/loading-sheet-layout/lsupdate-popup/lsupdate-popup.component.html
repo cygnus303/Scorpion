@@ -29,7 +29,7 @@
               <label class="form-label d-flex align-items-center gap-2 fw-bold"> Loading Sheet Date</label>
               <div class="input-group">
                 <input type="text" class="form-control required2" formControlName="lsDate" [class.disabled-input]="true"  placeholder="Loading Sheet Date"
-                  #dvL="bsDatepicker" bsDatepicker [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }" readonly>
+                  #dvL="bsDatepicker" bsDatepicker [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }" readonly>
                 <span class="input-group-text cursor-pointer" >
                   <i class="fa fa-calendar"></i>
                 </span>
@@ -110,7 +110,7 @@
                     [bsValue]="loadingSheetService.LSForm.value.reportrange ? loadingSheetService.LSForm.value.reportrange[0] : null"
                     (bsValueChange)="loadingSheetService.LSForm.patchValue({ reportrange: [$event, (loadingSheetService.LSForm.value.reportrange[1] < $event ? $event : loadingSheetService.LSForm.value.reportrange[1])] })"
                     [class.disabled-input]="true" appFocusNext
-                    [bsConfig]="{ dateInputFormat: 'DD MMMM YYYY', containerClass: 'theme-dark-blue' }" />
+                    [bsConfig]="{ dateInputFormat: 'DD MMM YYYY', containerClass: 'theme-dark-blue' }" />
                 </div>
 
                 <span class="fw-bold text-muted">&rarr;</span>
@@ -127,7 +127,7 @@
                     (bsValueChange)="loadingSheetService.LSForm.patchValue({ reportrange: [loadingSheetService.LSForm.value.reportrange[0], $event] })"
                     [minDate]="loadingSheetService.LSForm.value.reportrange ? loadingSheetService.LSForm.value.reportrange[0] : null"
                     [class.disabled-input]="true" appFocusNext
-                    [bsConfig]="{ dateInputFormat: 'DD MMMM YYYY', containerClass: 'theme-dark-blue' }" />
+                    [bsConfig]="{ dateInputFormat: 'DD MMM YYYY', containerClass: 'theme-dark-blue' }" />
                 </div>
               </div>
             </div>

@@ -22,7 +22,7 @@
                 <tr>
                     <td style="border: 1px solid #999; padding: 6px 10px; color: #333;">E-Way Bill Date:</td>
                     <td style="border: 1px solid #999; padding: 6px 10px; font-weight: bold;">
-                        {{ partA.eway_bill_date || ((partA.eWayBillInvoiceDate || partA.invdt) | date:'dd/MM/yyyy hh:mm a') || '' }}
+                        {{ formatDate(partA.eway_bill_date || partA.eWayBillInvoiceDate || partA.invdt) }}
                     </td>
                 </tr>
                 <tr>
@@ -34,17 +34,17 @@
                 <tr>
                     <td style="border: 1px solid #999; padding: 6px 10px; color: #333;">Valid From:</td>
                     <td style="border: 1px solid #999; padding: 6px 10px; font-weight: bold;">
-                        {{ partA.eway_bill_date || ((partA.eWayBillInvoiceDate || partA.invdt) | date:'dd/MM/yyyy hh:mm a') || '' }} [{{ partA.transportation_distance || 100 }}Kms]
+                        {{ formatDate(partA.eway_bill_date || partA.eWayBillInvoiceDate || partA.invdt) }} [{{ partA.transportation_distance || 100 }}Kms]
                     </td>
                 </tr>
                 <tr>
                     <td style="border: 1px solid #999; padding: 6px 10px; color: #333;">Valid Until:</td>
                     <td style="border: 1px solid #999; padding: 6px 10px; font-weight: bold;">
                         <ng-container *ngIf="partA.eway_bill_valid_date">
-                            {{ partA.eway_bill_valid_date }} {{ partA.extended_times > 0 ? '[ Extended ]' : '' }}
+                            {{ formatDate(partA.eway_bill_valid_date) }} {{ partA.extended_times > 0 ? '[ Extended ]' : '' }}
                         </ng-container>
                         <ng-container *ngIf="!partA.eway_bill_valid_date && partA.eWayBillExpiredDate && partA.eWayBillExpiredDate !== '1900-01-01T00:00:00'">
-                            {{ partA.eWayBillExpiredDate | date:'dd/MM/yyyy hh:mm a' }} [ Extended ]
+                            {{ formatDate(partA.eWayBillExpiredDate) }} [ Extended ]
                         </ng-container>
                         <ng-container *ngIf="!partA.eway_bill_valid_date && (!partA.eWayBillExpiredDate || partA.eWayBillExpiredDate === '1900-01-01T00:00:00')">
                             -
@@ -99,7 +99,7 @@
                 <tr>
                     <td style="border: 1px solid #999; padding: 6px 10px; color: #333;">Document Date</td>
                     <td style="border: 1px solid #999; padding: 6px 10px; font-weight: bold;">
-                        {{ partA.document_date || ((partA.invdt | date:'dd/MM/yyyy') || '') }}
+                        {{ formatDate(partA.document_date || partA.invdt) }}
                     </td>
                 </tr>
                 <tr>
@@ -154,7 +154,7 @@
                                         {{ getVehicleInfo(item) }}
                                     </td>
                                     <td style="border: 1px solid #999; border-bottom: none; padding: 6px 10px;">{{ item.place_of_consignor | uppercase }}</td>
-                                    <td style="border: 1px solid #999; border-bottom: none; padding: 6px 10px;">{{ item.vehicle_number_update_date }}</td>
+                                    <td style="border: 1px solid #999; border-bottom: none; padding: 6px 10px;">{{ formatDate(item.vehicle_number_update_date) }}</td>
                                     <td style="border: 1px solid #999; border-bottom: none; padding: 6px 10px;">{{ item.userGstin }}</td>
                                     <td style="border: 1px solid #999; border-bottom: none; padding: 6px 10px;">-</td>
                                     <td style="border: 1px solid #999; border-bottom: none; padding: 6px 10px;">-</td>
