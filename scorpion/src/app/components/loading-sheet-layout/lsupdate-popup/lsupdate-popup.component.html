@@ -100,8 +100,8 @@
               <label class="form-label d-flex align-items-center gap-2 fw-bold"> Select Date</label>
               <div class="d-flex align-items-center gap-1 flex-wrap flex-xl-nowrap">
                 <!-- From Date -->
-                <div class="input-group flex-nowrap" (click)="!isgetLoadingList && dpFrom.toggle()">
-                  <span class="input-group-text cursor-pointer px-2" (click)="dpFrom.toggle()"
+                <div class="input-group flex-nowrap" (click)="!isgetLoadingList && !this.docketService.isComplition && dpFrom.toggle()">
+                  <span class="input-group-text cursor-pointer px-2"
                     [class.disabled-input]="this.docketService.isComplition">
                     <i class="fa fa-calendar"></i>
                   </span>
@@ -116,8 +116,8 @@
                 <span class="fw-bold text-muted">&rarr;</span>
 
                 <!-- To Date -->
-                <div class="input-group flex-nowrap" (click)="!isgetLoadingList && dpTo.toggle()">
-                  <span class="input-group-text cursor-pointer px-2" (click)="dpTo.toggle()"
+                <div class="input-group flex-nowrap" (click)="!isgetLoadingList && !this.docketService.isComplition && dpTo.toggle()">
+                  <span class="input-group-text cursor-pointer px-2"
                     [class.disabled-input]="this.docketService.isComplition">
                     <i class="fa fa-calendar"></i>
                   </span>
