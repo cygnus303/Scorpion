@@ -228,7 +228,7 @@
                 <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="true"
                   #dvr="bsDatepicker" bsDatepicker formControlName="registrationDate" required
                   [ngClass]="{'border-danger':ThcForm.get('registrationDate')?.invalid &&ThcForm.get('registrationDate')?.touched}"
-                  [bsConfig]="{containerClass: 'theme-dark-blue',dateInputFormat: 'DD MMMM YYYY',maxDate: today}"
+                  [bsConfig]="{containerClass: 'theme-dark-blue',dateInputFormat: 'DD MMM YYYY',maxDate: today}"
                   (click)="!((ThcForm.value.vehicleNO && ThcForm.value.vehicleNO !== 'O') || isBidRegDateReadonly) && dvr.toggle(); $event.stopPropagation()"
                   appFocusNext />
 
@@ -250,7 +250,7 @@
                   bsDatepicker formControlName="insuranceDate" (bsValueChange)="checkInsuranceExpiry($event)"
                   [class.disabled-input]="true" required
                   [ngClass]="{'border-danger':ThcForm.get('insuranceDate')?.invalid &&ThcForm.get('insuranceDate')?.touched ||isInsuranceExpired}"
-                  [bsConfig]="{containerClass: 'theme-dark-blue',dateInputFormat: 'DD MMMM YYYY',minDate: today }"
+                  [bsConfig]="{containerClass: 'theme-dark-blue',dateInputFormat: 'DD MMM YYYY',minDate: today }"
                   appFocusNext
                   (click)="!((ThcForm.value.vehicleNO && ThcForm.value.vehicleNO !== 'O') || isBidInsDateReadonly) && ins.toggle(); $event.stopPropagation()" />
                 <span class="input-group-text cursor-pointer"
@@ -276,7 +276,7 @@
                   bsDatepicker formControlName="fitnessDate" (bsValueChange)="checkFitnessExpiry($event)"
                   [class.disabled-input]="true" required
                   [ngClass]="{'border-danger': ThcForm.get('fitnessDate')?.invalid &&ThcForm.get('fitnessDate')?.touched ||isFitnessExpired}"
-                  [bsConfig]="{containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY',minDate: today }"
+                  [bsConfig]="{containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY',minDate: today }"
                   appFocusNext
                   (click)="!((ThcForm.value.vehicleNO && ThcForm.value.vehicleNO !== 'O') || isBidFitDateReadonly) && fit.toggle(); $event.stopPropagation()" />
                 <span class="input-group-text cursor-pointer"
@@ -350,7 +350,7 @@
                 <input class="form-control required2" placeholder="Date Of Birth" type="text"
                   [class.disabled-input]="true" appFocusNext #dbv="bsDatepicker" bsDatepicker formControlName="d1_DOB"
                   [ngClass]="{ 'border-danger': ThcForm.get('d1_DOB')?.invalid  && ThcForm.get('d1_DOB')?.touched }"
-                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY',maxDate : today}"
+                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY',maxDate : today}"
                   (bsValueChange)="onChangeLicenceNumber($event)">
                 <span class="input-group-text cursor-pointer" (click)="dbv.toggle();$event.stopPropagation()">
                   <i class="fa fa-calendar"></i>
@@ -401,7 +401,7 @@
                 <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" [class.disabled-input]="true"
                   appFocusNext #lvd="bsDatepicker" bsDatepicker formControlName="driver1LicenceValDate"
                   (bsValueChange)="checkLicenseExpiry($event)"
-                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}"
+                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY', minDate: today}"
                   readonly required
                   [ngClass]="{ 'border-danger': ThcForm.get('driver1LicenceValDate')?.invalid  && ThcForm.get('driver1LicenceValDate')?.touched || isLicenseExpired}">
                 <span class="input-group-text cursor-pointer" (click)="lvd.toggle(); $event.stopPropagation()">

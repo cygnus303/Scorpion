@@ -22,7 +22,7 @@
                             <div class="input-group" (click)="dp.toggle()">
                                 <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
                                     [minDate]="commonService.minDate" [maxDate]="commonService.maxDate"
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY'}"
                                     placeholder="Enter FM Date" formControlName="FM_Date" required appFocusNext
                                     [class.disabled-input]="true">
                                 <span class="input-group-text cursor-pointer" (click)="dp.toggle()">

@@ -67,7 +67,7 @@
                     <div class="input-group" (click)="dp.toggle(); $event.stopPropagation()"
                         [ngClass]="{ 'border-danger': editForm.get('courier_Way_Bill_Date')?.invalid && editForm.get('courier_Way_Bill_Date')?.touched }">
                         <input type="text" class="form-control input-background-color" #dp="bsDatepicker" bsDatepicker
-                            [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"
+                            [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }"
                             formControlName="courier_Way_Bill_Date">
                         <span class="input-group-text cursor-pointer"><i class="fa fa-calendar"></i></span>
                     </div>

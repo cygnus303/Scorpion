@@ -198,7 +198,7 @@
                                     <input class="form-control required2" placeholder="Expected Reporting Date"
                                         type="text" appFocusNext #dve="bsDatepicker" bsDatepicker formControlName="ERD"
                                         [class.disabled-input]="true"
-                                        [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY hh:mm A'}"
+                                        [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY hh:mm A'}"
                                         readonly>
                                     <span class="input-group-text cursor-pointer" [class.disabled-input]="true">
                                         <i class="fa fa-calendar"></i>
@@ -527,11 +527,11 @@
                             <div class="col-sm-7">
                                 <div class="input-group"
                                     (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && dvr.toggle(); $event.stopPropagation()">
-                                    <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"
+                                    <input class="form-control required2" placeholder="dd MMM yyyy" type="text"
                                         [class.disabled-input]="true" #dvr="bsDatepicker" bsDatepicker
                                         formControlName="registrationDate" required
                                         [ngClass]="{'border-danger':challanService.challanForm.get('registrationDate')?.invalid && challanService.challanForm.get('registrationDate')?.touched}"
-                                        [bsConfig]="{containerClass: 'theme-dark-blue',dateInputFormat: 'DD MMMM YYYY',maxDate: today}"
+                                        [bsConfig]="{containerClass: 'theme-dark-blue',dateInputFormat: 'DD MMM YYYY',maxDate: today}"
                                         (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && dvr.toggle(); $event.stopPropagation()"
                                         appFocusNext />
 
@@ -609,7 +609,7 @@
                             <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" readonly #pvp="bsDatepicker" bsDatepicker
                                 formControlName="permitDate" (bsValueChange)="checkPermitExpiry($event)"
                                 [class.disabled-input]="true"
-                                [bsConfig]="{containerClass: 'theme-dark-blue',dateInputFormat: 'DD MMMM YYYY', minDate: today}" appFocusNext required
+                                [bsConfig]="{containerClass: 'theme-dark-blue',dateInputFormat: 'DD MMM YYYY', minDate: today}" appFocusNext required
                                  [ngClass]="{'border-danger':challanService.challanForm.get('permitDate')?.invalid &&challanService.challanForm.get('permitDate')?.touched ||isPermitExpired}"
                                 (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && pvp.toggle(); $event.stopPropagation()" />
                             <span class="input-group-text cursor-pointer"
@@ -631,12 +631,12 @@
                             <div class="col-sm-7">
                                 <div class="input-group"
                                     (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && ins.toggle(); $event.stopPropagation()">
-                                    <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" readonly
+                                    <input class="form-control required2" placeholder="dd MMM yyyy" type="text" readonly
                                         #ins="bsDatepicker" bsDatepicker formControlName="insuranceDate"
                                         (bsValueChange)="checkInsuranceExpiry($event)" [class.disabled-input]="true"
                                         required
                                         [ngClass]="{'border-danger':challanService.challanForm.get('insuranceDate')?.invalid &&challanService.challanForm.get('insuranceDate')?.touched ||isInsuranceExpired}"
-                                        [bsConfig]="{containerClass: 'theme-dark-blue',dateInputFormat: 'DD MMMM YYYY',minDate: today }"
+                                        [bsConfig]="{containerClass: 'theme-dark-blue',dateInputFormat: 'DD MMM YYYY',minDate: today }"
                                         appFocusNext
                                         (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && ins.toggle(); $event.stopPropagation()" />
                                     <span class="input-group-text cursor-pointer"
@@ -662,12 +662,12 @@
                             <div class="col-sm-7">
                                 <div class="input-group"
                                     (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && fit.toggle(); $event.stopPropagation()">
-                                    <input class="form-control required2" placeholder="dd/MM/yyyy" type="text" readonly
+                                    <input class="form-control required2" placeholder="dd MMM yyyy" type="text" readonly
                                         #fit="bsDatepicker" bsDatepicker formControlName="fitnessDate"
                                         (bsValueChange)="checkFitnessExpiry($event)" [class.disabled-input]="true"
                                         required
                                         [ngClass]="{'border-danger': challanService.challanForm.get('fitnessDate')?.invalid &&challanService.challanForm.get('fitnessDate')?.touched ||isFitnessExpired}"
-                                        [bsConfig]="{containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY',minDate: today }"
+                                        [bsConfig]="{containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY',minDate: today }"
                                         appFocusNext
                                         (click)="!(challanService.challanForm.value.vehicleNO && challanService.challanForm.value.vehicleNO !== 'O') && fit.toggle(); $event.stopPropagation()" />
                                     <span class="input-group-text cursor-pointer"
@@ -719,7 +719,7 @@
                                             [class.disabled-input]="true" appFocusNext #dbv="bsDatepicker" bsDatepicker
                                             formControlName="d1_DOB"
                                             [ngClass]="{ 'border-danger': challanService.challanForm.get('d1_DOB')?.invalid  && challanService.challanForm.get('d1_DOB')?.touched }"
-                                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY',maxDate : today}"
+                                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY',maxDate : today}"
                                             (bsValueChange)="onChangeLicenceNumber($event)">
                                         <span class="input-group-text cursor-pointer"
                                             (click)="!isFieldReadonly() && dbv.toggle();$event.stopPropagation()">
@@ -792,11 +792,11 @@
                                 <div class="col-sm-7">
                                     <div class="input-group"
                                         (click)="!isFieldReadonly() && lvd.toggle(); $event.stopPropagation()">
-                                        <input class="form-control required2" placeholder="dd/MM/yyyy" type="text"
+                                        <input class="form-control required2" placeholder="dd MMM yyyy" type="text"
                                             [class.disabled-input]="true" appFocusNext #lvd="bsDatepicker" bsDatepicker
                                             formControlName="driver1LicenceValDate"
                                             (bsValueChange)="checkLicenseExpiry($event)"
-                                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY', minDate: today}"
+                                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY', minDate: today}"
                                             readonly required
                                             [ngClass]="{ 'border-danger': challanService.challanForm.get('driver1LicenceValDate')?.invalid  && challanService.challanForm.get('driver1LicenceValDate')?.touched || isLicenseExpired}">
                                         <span class="input-group-text cursor-pointer"
@@ -1181,7 +1181,7 @@
                                         <td *ngIf="this.docketService.loginUserList.Type === '2'">{{ item.value.entryBy
                                             }} </td>
                                         <td *ngIf="this.docketService.loginUserList.Type === '3'">
-                                            {{ item.value.Arrival_Date | date :'dd-MMMM-yyyy' }} <br> 
+                                            {{ item.value.Arrival_Date | date :'dd MMM yyyy' }} <br> 
                                             {{
                                             item.value.Stock_Update_DT }}</td>
                                         <td>{{item.value.PKGSNO}} /{{item.value.PendPkgQty}} /{{item.value.ArrPkgQty}}</td>
@@ -1499,7 +1499,7 @@
                             <label class="form-label fw-semibold">Expiry Date</label>
                             <div class="input-group">
                                 <input type="text" class="form-control uppercase-none" #dp="bsDatepicker" bsDatepicker
-                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMMM YYYY'}"
+                                    [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY'}"
                                     placeholder="Expiry Date" formControlName="eWayBillExpiredDate"
                                     [class.disabled-input]="true">
                                 <span class="input-group-text cursor-pointer" (click)="dp.toggle()">

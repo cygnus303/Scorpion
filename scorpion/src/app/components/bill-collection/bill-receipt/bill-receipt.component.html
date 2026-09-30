@@ -37,7 +37,7 @@
         <label class="form-label small text-muted mb-1">MR Date</label>
         <div class="input-group input-group-sm">
           <input type="text" class="form-control bg-white shadow-none" #mrDp="bsDatepicker" bsDatepicker
-            [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }" [minDate]="minDate"
+            [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }" [minDate]="minDate"
             [maxDate]="maxDate" [class.disabled-input]="true" formControlName="mrDate" readonly
             style="border-color: #ced4da;">
           <span class="input-group-text cursor-pointer bg-white" (click)="mrDp.toggle()" style="border-color: #ced4da;">
@@ -273,7 +273,7 @@
                 <div class="input-group input-group-sm"
                   [ngClass]="{'border border-danger rounded': receiptForm.get('chequeDate')?.invalid && receiptForm.get('chequeDate')?.touched}">
                   <input type="text" class="form-control bg-white shadow-none" #dp="bsDatepicker" bsDatepicker
-                    [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMMM YYYY' }"
+                    [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }"
                     formControlName="chequeDate" placeholder="Select Date" readonly style="border-color: #ced4da;">
                   <span class="input-group-text cursor-pointer bg-white" (click)="dp.toggle()"
                     style="border-color: #ced4da;">
