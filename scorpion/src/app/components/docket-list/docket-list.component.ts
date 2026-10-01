@@ -429,7 +429,7 @@ export class DocketListComponent implements OnInit {
       srNo: item.srNo,
       ewayBillNo: item.eWayBillNo,
       ewayBillExpiry: item.eWayBillExpiredDate ? new Date(item.eWayBillExpiredDate) : '01 JAN 0001',
-      ewayinvoiceDate: item.invdt ? new Date(item.invdt) : '01 JAN 0001',
+      ewayinvoiceDate: item.eWayBillInvoiceDate ? new Date(item.eWayBillInvoiceDate) : '01 JAN 0001',
       invoiceNo: item.invno,
       declaredvalue: item.declval,
       transportation_distance: item.transportation_distance
@@ -590,13 +590,12 @@ export class DocketListComponent implements OnInit {
     if (this.docketService.basicDetailForm.valid && this.docketService.consignorForm.valid && this.docketService.invoiceform.valid && this.docketService.freightForm.valid) {
       if (this.docketService.loginUserList?.Type !== '2') {
         if (this.docketService.freightForm.contains('SCHG24')) {
-          const freightCharges = parseFloat(this.docketService.freightForm.value.freightCharges || 0);
+          const freightCharges = parseFloat(this.docketService.freightForm.get('freightCharges')?.value || 0);
           const expectedSCHG24 = parseFloat(((freightCharges * this.docketService.currentDieselPercentage) / 100).toFixed(2));
           const actualSCHG24 = parseFloat(this.docketService.freightForm.get('SCHG24')?.value || 0);
 
           if (expectedSCHG24 !== actualSCHG24) {
             this.sweetAlertService.error("Diesel charge calculation mismatch. Please wait or recalculate.");
-            // this.docketService.submitErrorMsg = 'Diesel charge calculation mismatch. Please wait or recalculate.';
             return;
           }
         }

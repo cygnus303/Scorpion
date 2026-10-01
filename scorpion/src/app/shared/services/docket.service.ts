@@ -951,7 +951,7 @@ freightAndOtherChar(){
    if (this.DieselRateSubscription) { this.DieselRateSubscription.unsubscribe(); }
     const contractId = this.step2DetailsList?.contractid;
     const dockDt = this.basicDetailForm.value.cNoteDate;
-    const freightCharges = parseFloat(this.freightForm.value.freightCharges || 0);
+    const freightCharges = parseFloat(this.freightForm.get('freightCharges')?.value || 0);
 
     if (contractId && dockDt && freightCharges > 0) {
       const data = {
@@ -970,6 +970,10 @@ freightAndOtherChar(){
               this.freightForm.patchValue({
                 SCHG24: chargeAmount
               });
+              // DynamicList payload uses camelCaseCode (schg24), so we must update it too
+              if (this.freightForm.contains('schg24')) {
+                this.freightForm.patchValue({ schg24: chargeAmount });
+              }
               this.subTotalCalculation();
             }
           }
