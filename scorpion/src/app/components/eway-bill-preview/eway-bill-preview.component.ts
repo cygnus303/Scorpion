@@ -36,7 +36,7 @@ export class EwayBillPreviewComponent implements OnInit {
   getVehicleInfo(item: any): string {
     const veh = item.vehicle_number || '';
     const docNo = (item.tripshtNo && item.tripshtNo !== 0 && item.tripshtNo !== '0') ? item.tripshtNo : '';
-    const date = item.transporter_document_date || '';
+    const date = this.formatDate(item.transporter_document_date);
     
     if (!veh && docNo && date) {
         return `& ${docNo} & ${date}`;
@@ -48,6 +48,44 @@ export class EwayBillPreviewComponent implements OnInit {
     if (date) parts.push(date);
     
     return parts.join(' & ');
+  }
+
+  formatDate(dateStr: any): string {
+    if (!dateStr) return '';
+    
+    const match = String(dateStr).match(/^(\d{2})\/(\d{2})\/(\d{4})(?: (.+))?$/);
+    if (match) {
+      const day = match[1];
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const monthIndex = parseInt(match[2], 10) - 1;
+      const year = match[3];
+      const time = match[4];
+      if (monthIndex >= 0 && monthIndex < 12) {
+        return `${day} ${monthNames[monthIndex]} ${year}${time ? ' ' + time : ''}`;
+      }
+    }
+    
+    const d = new Date(dateStr);
+    if (!isNaN(d.getTime())) {
+      const day = d.getDate().toString().padStart(2, '0');
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const month = monthNames[d.getMonth()];
+      const year = d.getFullYear();
+      
+      let timeStr = '';
+      if (String(dateStr).includes('T') || String(dateStr).match(/\d{2}:\d{2}/)) {
+        let hours = d.getHours();
+        const minutes = d.getMinutes().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        timeStr = ` ${hours.toString().padStart(2, '0')}:${minutes} ${ampm}`;
+      }
+      
+      return `${day} ${month} ${year}${timeStr}`;
+    }
+    
+    return dateStr;
   }
 
   printEWayBill() {

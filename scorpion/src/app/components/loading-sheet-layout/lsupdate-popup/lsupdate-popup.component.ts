@@ -353,7 +353,7 @@ export class LSUpdatePopupComponent {
 
   getLoadinglist() {
     const form = this.loadingSheetService.LSForm;
-    if (form.get('loadingBy')?.valid && form.get('nextStopLocation')?.valid && form.get('rateType')?.valid && form.get('mF_TransportMode')?.valid) {
+    if (form.get('loadingBy')?.valid && form.get('nextStopLocation')?.valid && form.get('rateType')?.valid ) {
       this.getDocketListForMFDetail();
       this.isgetLoadingList = true;
     } else {
@@ -362,7 +362,7 @@ export class LSUpdatePopupComponent {
       form.get('nextStopLocation')?.markAsTouched();
       form.get('rateType')?.markAsTouched();
       form.get('lsType')?.markAsTouched();
-      form.get('mF_TransportMode')?.markAsTouched();
+      // form.get('mF_TransportMode')?.markAsTouched();
     }
   }
 
