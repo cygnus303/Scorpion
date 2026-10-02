@@ -130,6 +130,15 @@ export class BasicDetailsComponent {
       }
       gstCtrl?.updateValueAndValidity();
     });
+
+    this.docketService.basicDetailForm.get('IsCODDOD')?.valueChanges.subscribe(value => {
+      if (value) {
+        const totalDeclared = this.docketService.invoiceform?.get('totalDeclaredValue')?.value || 0;
+        this.docketService.basicDetailForm.patchValue({ codCollectionAmount: totalDeclared });
+      } else {
+        this.docketService.basicDetailForm.patchValue({ codCollectionAmount: 0 });
+      }
+    });
   }
 
   callEwayBillFromParent(event: any) {
