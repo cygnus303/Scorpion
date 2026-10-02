@@ -211,7 +211,7 @@ export class DocketListComponent implements OnInit {
                 exemptServices: basicDetail.exemptServices || null,
                 isreferenceDKT: basicDetail.isReferenceDKT,
                 iscsdDelivery: basicDetail.isCSDDelivery,
-                isCODDOD: basicDetail.isCODDOD,
+                IsCODDOD: basicDetail.isCODDOD,
                 IsMAllDeliveryN: basicDetail.isMAllDelivery,
                 IsODA: basicDetail.isODA,
                 contents: basicDetail.prodcd || null,
@@ -233,7 +233,8 @@ export class DocketListComponent implements OnInit {
                 ISCounterDelivery: basicDetail.isCounterDelivery,
                 typeMovement: basicDetail.ftl_types || null,
                 vehicleno: basicDetail.vehicleNo,
-                // isDACC: basicDetail.isDACC
+                // isDACC: basicDetail.isDACC,
+                codCollectionAmount:this.docketService.completiondata?.wmdc?.codCollectionAmount
               });
               // const baseUrl = 'https://sepl.cygnux.in/UploadedDocumentsBAK/GSTDeclaration/Upload/';
               const baseUrl = `${this.env.liveUrl}UploadedDocumentsBAK/GSTDeclaration/Upload/`;
@@ -754,7 +755,7 @@ export class DocketListComponent implements OnInit {
           "privatemark": this.docketService.consignorForm.value.privateMark,
           "tpnumber": this.docketService.consignorForm.value.tpNumber,
           "trN_MOD": this.docketService.basicDetailForm.value.mode,
-          "coD_DOD": this.docketService.basicDetailForm.value.IsCODDOD === 'Y' ? true : false,
+          "coD_DOD": (this.docketService.basicDetailForm.value.IsCODDOD === 'Y' || this.docketService.basicDetailForm.value.IsCODDOD === true) ? true : false,
           "cfT_YN": this.docketService.step2DetailsList?.isVolumentric === 'Y' ? true : false,
           "dacC_YN": this.docketService.basicDetailForm.value.isDACC,
           "localCN_YN": this.docketService.basicDetailForm.value.isLocalNote ? 'Y' : 'N',
@@ -815,7 +816,7 @@ export class DocketListComponent implements OnInit {
           "gcType": "",
           "cft": this.docketService.invoiceform.value.cftTotal,
           "isVolumetric": this.docketService.basicDetailForm.value.isVolumetric,
-          "isCODDOD": this.docketService.basicDetailForm.value.isCODDOD === 'Y' ? true : false,
+          "isCODDOD": (this.docketService.basicDetailForm.value.IsCODDOD === 'Y' || this.docketService.basicDetailForm.value.IsCODDOD === true) ? true : false,
           "isODA": this.docketService.basicDetailForm.value.isODAApplicable,
           "isDACC": this.docketService.basicDetailForm.value.isDACC,
           "isLocalDocket": this.docketService.basicDetailForm.value.IsLocalDocket ? true : false,
@@ -946,6 +947,7 @@ export class DocketListComponent implements OnInit {
           "advanceAmount": 0,
           "DiscountType": this.docketService.freightForm.value.discountType,
           "discountValue": Number(this.docketService.freightForm.value.discountAmount),
+          "CODCollectionAmount": this.docketService.basicDetailForm.value.codCollectionAmount || 0,
         },
         "PC": {
           "paymentMode": "",

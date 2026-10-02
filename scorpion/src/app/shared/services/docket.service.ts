@@ -182,6 +182,7 @@ export class DocketService {
       IsODA: new FormControl(false),
       BaseCode2: new FormControl(''),
       BaseCode1: new FormControl(''),
+      codCollectionAmount: new FormControl(0),
     });
   }
 
