@@ -264,7 +264,7 @@
                         (blur)="onBlur(charge.chargeCode);
                                 docketService.subTotalCalculation();
                                 docketService.getGSTCalculation()" 
-                                [readOnly]="docketService.basicDetailForm.value.billingType === 'P04'"/>
+                                [readOnly]="docketService.basicDetailForm.value.billingType === 'P04' || (charge.chargeCode === 'SCHG12' && docketService.loginUserList.Type === '2' && docketService.basicDetailForm.get('IsCODDOD')?.value)"/>
                   <i class="bold">{{charge.operator}}</i>
                 </div>
               </div>
