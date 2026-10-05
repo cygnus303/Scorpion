@@ -6,6 +6,7 @@ import { DocketService } from 'app/shared/services/docket.service';
 import { LoadingService } from 'app/shared/services/loading.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 
 @Component({
   selector: 'default-contract',
@@ -20,13 +21,15 @@ export class DefaultContractComponent {
   public defaultContractList: any;
   private lastRequestId = 0;
   public isSubmitting:boolean=false;
+  public showDiscountFields: boolean = true;
 
   constructor(
     public docketService: DocketService,
     public basicDetailService: BasicDetailService,
     public defaultContractService: DefaultContractService,
     private sweetAlertService:SweetAlertService,
-    public apiLoading: LoadingService,private cdr: ChangeDetectorRef
+    public apiLoading: LoadingService,private cdr: ChangeDetectorRef,
+    public dynamicDataService: DynamicDataService
   ) { }
 
   ngOnInit() {
@@ -39,6 +42,7 @@ export class DefaultContractComponent {
     this.buildForm();
     this.docketService.getTransportModeData();
     this.getcontractservicecharge();
+    this.GetCustomerDetail();
     this.DefaultcontractForm.get('AppointmentDeliver')?.valueChanges.subscribe(() => {this.setAppointmentCharge()});
     this.DefaultcontractForm.get('CSDDelivery')?.valueChanges.subscribe(() => {this.setCSDDeliveryCharge()});
     this.DefaultcontractForm.get('MallDelAppl')?.valueChanges.subscribe(() => {this.setMallDeliveryCharge()});
@@ -50,6 +54,32 @@ export class DefaultContractComponent {
         this.getCFTCalculation(); 
          this.cdr.detectChanges();
       });
+    });
+  }
+
+  GetCustomerDetail() {
+    const payload = {
+      "FilterJson": {
+        ReportId: '391',
+        UserName: this.docketService?.loginUserList?.BaseUserName || '' // Using dynamic username if available, else fallback
+      }
+    };
+    
+    this.dynamicDataService.getDynamicData(payload).subscribe({
+      next: (response: any) => {
+        console.log('Dynamic API Response:', response);
+        const data = response.Table1?.[0]; 
+        
+        // Hide if UserType is "C" and PayBas is "P02" or ""
+        if (data?.UserType === 'C' && data?.PayBas === 'P02') {
+          this.showDiscountFields = false;
+        } else {
+          this.showDiscountFields = true;
+        }
+      },
+      error: (error: any) => {
+        console.error('Error in Dynamic API:', error);
+      }
     });
   }
 
