@@ -5,29 +5,40 @@
             <div>
                 <h5 class="m-0 text-white fw-bold" style="font-size: 15px; letter-spacing: 0.2px;">Godown Booking Details</h5>
                 <div class="mt-1" style="color: #b1c3d6; font-size: 12px;">
-                    {{ data?.gbNo || '--' }} <span class="mx-1"></span> 
+                    {{ GBData?.GBNo || '--' }} <span class="mx-1"></span> 
                 </div>
             </div>
             <button type="button" class="btn-close btn-close-white" style="font-size: 11px; margin-top: 2px;" aria-label="Close" (click)="closeModal()"></button>
         </div>
 
         <!-- Body -->
-        <div class="modal-body p-4">
+        <div class="modal-body p-4 position-relative" style="min-height: 250px;">
+            <!-- Loader -->
+            <div *ngIf="isLoading"
+                class="position-absolute w-100 h-100 top-0 start-0 d-flex flex-column align-items-center justify-content-center"
+                style="background-color: rgba(255, 255, 255, 0.9); z-index: 10;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="mt-2 text-muted fw-bold" style="font-size: 13px;">Fetching data...</div>
+            </div>
+
             <div class="gb-card p-4 rounded-3">
                 <div class="row gy-4">
                     <!-- Column 1 -->
                     <div class="col-md-4">
                         <div class="gb-field">
                             <label>GODOWN BOOKING NO</label>
-                            <div class="value">{{ data?.gbNo || '--' }}</div>
+                            <div class="value">{{ GBData?.GBNo || '--' }}</div>
                         </div>
                         <div class="gb-field mt-4">
                             <label>CUSTOMER</label>
-                            <div class="value">{{ data?.party_name || '--' }}</div>
+                            <div class="value">{{ GBData?.Customer || '--' }}</div>
+
                         </div>
                         <div class="gb-field mt-4">
                             <label>PKGS / WEIGHT</label>
-                            <div class="value">{{ data?.pkgsno || 0 }} pkgs / {{ data?.actuwt || 0 }} kg </div>
+                            <div class="value">{{ GBData?.Package || 0 }} pkgs / {{ GBData?.Package || 0 }} kg </div>
                         </div>
                     </div>
 
@@ -35,20 +46,20 @@
                     <div class="col-md-4">
                         <div class="gb-field">
                             <label>BOOKING DATE</label>
-                            <div class="value">{{ data?.dockdt ? (data.dockdt | date:'dd-MMM-yyyy') : '--' }}</div>
+                            <div class="value">{{ GBData?.DocketDate ? (GBData.DocketDate | date:'dd MMM yyyy') : '--' }}</div>
                         </div>
                         <div class="gb-field mt-4">
                             <label>DOCKET NO</label>
-                            <div class="value">{{ data?.dockno || '--' }}</div>
+                            <div class="value">{{ GBData?.DocketNo || '--' }}</div>
                         </div>
                        <div class="gb-field mt-4">
                             <label>HCC STATUS</label>
                             <div class="value" style="font-weight: 600;">
-                                <ng-container *ngIf="data?.hcNumber">
+                                <ng-container *ngIf="GBData?.hcNumber">
                                     <span class="text-success">✓ Generated &mdash;</span>
-                                    <div class="text-success mt-1" style="font-size: 11px;">{{ data.hcNumber }}</div>
+                                    <div class="text-success mt-1" style="font-size: 11px;">{{ GBData.hcNumber }}</div>
                                 </ng-container>
-                                <span *ngIf="!data?.hcNumber" class="text-muted">Not generated</span>
+                                <span *ngIf="!GBData?.hcNumber" class="text-muted">Not generated</span>
                             </div>
                         </div>
                     </div>
@@ -57,11 +68,11 @@
                     <div class="col-md-4">
                        <div class="gb-field">
                             <label>ORG / DEST</label>
-                            <div class="value">{{ data?.orgncd || '--' }} &rarr; {{ data?.destcd || '--' }}</div>
+                            <div class="value">{{ GBData?.FromLocation || '--' }} &rarr; {{ GBData?.ToLocation || '--' }}</div>
                         </div>
                         <div class="gb-field mt-4">
                             <label>DOCKET DATE</label>
-                            <div class="value">{{ data?.dockdt ? (data.dockdt | date:'dd-MMM-yyyy') : '--' }}</div>
+                            <div class="value">{{ GBData?.DocketDate ? (GBData.DocketDate | date:'dd MMM yyyy') : '--' }}</div>
                         </div>
                         
                     </div>

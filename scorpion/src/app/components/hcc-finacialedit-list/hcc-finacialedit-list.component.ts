@@ -14,11 +14,12 @@ import { environment } from 'environments/environment';
 import { Subject, Subscription, debounceTime } from 'rxjs';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { MenuAccessService } from 'app/shared/services/menu-access.service';
+import { GbViewComponent } from '../lr-list/gb-view/gb-view.component';
 
 @Component({
   selector: 'app-hcc-finacialedit-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, HCCDetailsComponent, HCCviewComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, HCCDetailsComponent, HCCviewComponent,GbViewComponent],
   providers: [BsModalService],
   templateUrl: './hcc-finacialedit-list.component.html',
   styleUrl: './hcc-finacialedit-list.component.scss',
@@ -26,6 +27,7 @@ import { MenuAccessService } from 'app/shared/services/menu-access.service';
 export class HccFinacialeditListComponent implements OnInit, OnDestroy {
   @ViewChild('HCCviewComponent') HCCviewComponent!: HCCviewComponent;
   @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
+  @ViewChild('GbViewComponent') gbViewComponent!: GbViewComponent;
 
   public env = environment;
   public listSubscription?: Subscription;
@@ -330,6 +332,8 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
       url = `${this.env.liveUrl}ViewPrint/ViewDRS?DocumentNo=${docNo}&src=angular`;
     } else if (docNo.startsWith('PS')) {
       url = `${this.env.liveUrl}ViewPrint/ViewPRS?DocumentNo=${docNo}&src=angular`;
+    }else if (docNo.startsWith('GB')) {
+      this.onGBNo(docNo);
     }
 
     if (url) {
@@ -340,5 +344,10 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
         popup.location.href = url;
       }
     }
+  }
+
+  
+  onGBNo(lr: any) {
+    this.gbViewComponent.openModal(lr);
   }
 }
