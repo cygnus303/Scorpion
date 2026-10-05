@@ -344,6 +344,11 @@ export class InvoiceDetailsComponent {
       finalActualWeight: +Math.max(totalActualWeight || 0, totalCubicWeight || 0).toFixed(2)
     }, { emitEvent: false });
     this.docketService.invoiceform.get('totalDeclaredValue')?.markAsTouched();
+
+    if (this.docketService.basicDetailForm.get('IsCODDOD')?.value) {
+      this.docketService.basicDetailForm.patchValue({ codCollectionAmount: +totalDeclaredValue.toFixed(2) });
+    }
+
     this.getCFTCalculation(i);
     this.docketService.calculateChargeWeight();
     this.validateAllEwayBillFields();
