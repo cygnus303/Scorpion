@@ -19,11 +19,13 @@ import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { EwayBillPreviewComponent } from '../eway-bill-preview/eway-bill-preview.component';
 import { HCCDetailsComponent } from '../prs-generation-list/hcc-details/hcc-details.component';
 import { GbViewComponent } from './gb-view/gb-view.component';
+import { StickerPrintComponent } from './sticker-print/sticker-print.component';
+import { LrPrintComponent } from './lr-print/lr-print.component';
 
 @Component({
   selector: 'app-lr-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent,LrViewComponent, HCCDetailsComponent, GbViewComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent,LrViewComponent, HCCDetailsComponent, GbViewComponent, StickerPrintComponent, LrPrintComponent],
   templateUrl: './lr-list.component.html',
   styleUrl: './lr-list.component.scss',
   providers: [BsModalService]
@@ -37,6 +39,8 @@ export class LrListComponent {
   private fetchSubject = new Subject<void>();
   public summaryData: any;
   public env = environment;
+  public selectedLrItem: any = null;
+  public isEwaybillLoading: boolean = false;
   public isCSVLoading:boolean=false;
   public statusList = [
     { label: 'All Status', value: 'All' },
@@ -66,6 +70,10 @@ export class LrListComponent {
   @ViewChild('ewayBillModal') ewayBillModal!: TemplateRef<any>;
   public ewaybillData: any[] = [];
   @ViewChild('LrViewComponent') LrViewComponent!: LrViewComponent;
+  @ViewChild('StickerPrintComponent') StickerPrintComponent!: StickerPrintComponent;
+  @ViewChild('LrPrintComponent') LrPrintComponent!: LrPrintComponent;
+  public selectedStickerLrItem: any;
+
 
 
 
@@ -381,7 +389,16 @@ openTrack(dockno: string){
     }
   }
 
-  getEwaybillData(dockno: string) {
+
+  getEwaybillData(lr: any) {
+    this.selectedLrItem = lr;
+    this.ewaybillData = []; // Clear previous data
+    this.isEwaybillLoading = true;
+    
+    // Open modal immediately
+    this.modalRef = this.modalService.show(this.ewayBillModal, { class: 'modal-xl modal-dialog-centered custom-modal' });
+    
+    const dockno = typeof lr === 'string' ? lr : lr.dockno;
     const payload = {
       "FilterJson": {
         "ReportId": "11",
@@ -389,15 +406,13 @@ openTrack(dockno: string){
       }
     }
     this.listSubscription = this.dynamicDataService.getDynamicData(payload).subscribe((response: any) => {
-      this.isLoading = false;
+      this.isEwaybillLoading = false;
       if (response?.Table1 && response.Table1.length > 0) {
         this.ewaybillData = response.Table1;
-        this.modalRef = this.modalService.show(this.ewayBillModal, { class: 'modal-lg modal-dialog-centered' });
       } else {
-        this.sweetAlertService.info('No E-Way bill data found for this docket.');
       }
     }, error => {
-      this.isLoading = false;
+      this.isEwaybillLoading = false;
       this.sweetAlertService.error('Error fetching E-Way bill data');
     });
   }
@@ -442,6 +457,15 @@ openTrack(dockno: string){
     if (popup) {
       popup.location.href = url;
     }
+  }
+
+  openStickerPrintModal(lr: any) {
+    this.selectedStickerLrItem = lr;
+    this.StickerPrintComponent.openModal(lr);
+  }
+
+  openLrPrintModal(lr: any) {
+    this.LrPrintComponent.openModal(lr);
   }
 
 }

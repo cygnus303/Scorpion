@@ -1,0 +1,203 @@
+<div class="preview-header">
+    <div class="header-title">
+        LR Print | Cnote LR-{{ lrData?.Cnote_No }}
+    </div>
+    <div class="header-actions">
+        <label class="checkbox-label" *ngFor="let copy of copies">
+            <input type="checkbox" [(ngModel)]="copy.selected"> {{ copy.name }}
+        </label>
+        <button class="btn-print-page" (click)="printPage()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path
+                    d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2H5zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z" />
+                <path
+                    d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2V7zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z" />
+            </svg>
+            Print
+        </button>
+        <button class="btn-print-page ms-2" style="margin-left: 8px;" (click)="downloadPdf()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path
+                    d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                <path
+                    d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+            </svg>
+            Download
+        </button>
+    </div>
+</div>
+
+<div class="preview-body">
+    <ng-container *ngFor="let copy of copies">
+        <div class="cnote-container" *ngIf="copy.selected"
+            style="page-break-after: always; break-after: page; margin-bottom: 20px;">
+            <table class="cnote-table">
+                <tbody>
+                    <!-- Header Rows -->
+                    <tr>
+                        <td rowspan="3" class="bg-red" style="width: 15%; text-align: center; vertical-align: middle; padding: 8px; border-right: 1px solid #fff;">
+                            <img src="/assets/img/logos/logo.png" alt="Scorpion Logo" style="max-width: 100%; max-height: 50px; filter: brightness(0) invert(1);" onerror="this.style.display='none'; this.parentNode.innerHTML='<span style=\'color:white; font-size:24px; font-weight:bold; font-style:italic;\'>Scorpion</span>'">
+                        </td>
+                        <td class="bg-red" style="width: 37%; text-align: center; font-weight: bold; font-size: 14px; padding: 6px;">
+                            SCORPION EXPRESS PVT LTD
+                        </td>
+                        <td class="text-red" style="width: 8%; font-weight: bold; padding: 4px 6px;">Date</td>
+                        <td style="width: 15%; padding: 4px 6px; font-size: 11px;">{{ lrData?.Date || '-' }}</td>
+                        <td class="text-red" style="width: 25%; text-align: center; font-weight: bold; padding: 4px 6px; font-size: 11px;">
+                            Cnote No : LR-{{ lrData?.Cnote_No || dockno }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2" style="text-align: center; vertical-align: top; padding: 8px; font-size: 10px; line-height: 1.4;">
+                            405, Shah and Nahar Industrial Estate,<br>
+                            Dr. E Moses Road, Worli Mumbai, INDIA<br>
+                            - 400 018.
+                        </td>
+                        <td class="text-red" style="font-weight: bold; padding: 4px 6px;">Origin</td>
+                        <td style="padding: 4px 6px; font-size: 11px;">{{ lrData?.Origin || '-' }}</td>
+                        <td rowspan="2" style="text-align: center; vertical-align: middle; padding: 4px;">
+                            <img *ngIf="qrCodeImageUrl" [src]="qrCodeImageUrl" alt="QR Code" style="width: 65px; height: 65px; image-rendering: crisp-edges; image-rendering: pixelated; margin: 0 auto; display: block;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-red" style="font-weight: bold; padding: 4px 6px;">Dest</td>
+                        <td style="padding: 4px 6px; font-size: 11px;">{{ lrData?.Destination || '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="font-weight: bold; font-size: 11px; padding: 4px 8px;">
+                            GST No.
+                        </td>
+                        <td style="text-align: center; padding: 4px; font-size: 11px;">
+                            LR-{{ lrData?.Cnote_No || dockno }}
+                        </td>
+                    </tr>
+                    
+                    <!-- Title Bar -->
+                    <tr>
+                        <td colspan="5" class="bg-black" style="text-align: center; padding: 4px; font-size: 12px; font-weight: bold;">
+                            CONSIGNMENT NOTE (Not a GST Invoice)
+                        </td>
+                    </tr>
+                    
+                    <!-- Billing Party -->
+                    <tr>
+                        <td colspan="5" style="padding: 0;">
+                            <table style="width: 100%; border-collapse: collapse;" class="no-border">
+                                <tr>
+                                    <td style="font-weight: bold; font-size: 11px; padding: 4px 8px;">Billing Party : {{ lrData?.Billing_Party || '-' }}</td>
+                                    <td style="text-align: center; width: 155px; border-left: 1px solid #000; padding: 4px; font-weight: bold;" class="text-red">{{ lrData?.PayType || '-' }}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Parties -->
+                    <tr>
+                        <td colspan="5" style="padding: 0;">
+                            <table class="cnote-table" style="width: 100%; border: none;">
+                                <tr>
+                                    <td class="bg-red" style="width: 3%; height: 160px; border-left: none; border-top: none; border-bottom: none; vertical-align: middle; text-align: center; padding: 0;">
+                                        <div style="font-weight: bold; font-size: 10px; line-height: 1.1; margin: 0 auto;">C<br>O<br>N<br>S<br>I<br>G<br>N<br>O<br>R</div>
+                                    </td>
+                                    <td style="width: 37%; vertical-align: top; padding: 8px; border-top: none; border-bottom: none;">
+                                        <strong>Consigner Name:</strong> {{ lrData?.Consignor_Name || '-' }}<br><br>
+                                        <strong>Address:</strong> {{ lrData?.Consignor_Add || '-' }}
+                                    </td>
+                                    <td style="width: 20%; padding: 0; text-align: center; border-top: none; border-bottom: none;">
+                                        <div class="text-red" style="padding: 4px; border-bottom: 1px solid #000;">Mode Of Transport</div>
+                                        <div style="padding: 6px; font-weight: bold; border-bottom: 1px solid #000;">{{ lrData?.Mode_Of_Transport || '-' }}</div>
+                                        <div class="text-red bg-pink" style="padding: 4px; border-bottom: 1px solid #000;">Service Type</div>
+                                        <div style="padding: 6px; font-weight: bold;">{{ lrData?.Service_Type || '-' }}</div>
+                                    </td>
+                                    <td class="bg-red" style="width: 3%; height: 160px; border-top: none; border-bottom: none; vertical-align: middle; text-align: center; padding: 0;">
+                                        <div style="font-weight: bold; font-size: 10px; line-height: 1.1; margin: 0 auto;">C<br>O<br>N<br>S<br>I<br>G<br>N<br>E<br>E</div>
+                                    </td>
+                                    <td style="width: 37%; vertical-align: top; padding: 8px; border-right: none; border-top: none; border-bottom: none;">
+                                        <strong>Consignee Name:</strong> {{ lrData?.Consignee_Name || '-' }}<br>
+                                        <strong>Address:</strong> {{ lrData?.Consignee_Add || '-' }}<br>
+                                        <ng-container *ngIf="isAlkemCustomer">
+                                            <strong>Pincode:</strong> {{ lrData?.Consignee_Pincode || '-' }}<br><br>
+                                        </ng-container>
+                                        <strong>PH. No.:</strong> {{ lrData?.Consignee_Ph || '-' }}<br>
+                                        <ng-container *ngIf="isAlkemCustomer">
+                                            <strong>Division:</strong> {{ lrData?.Consignee_Division || '-' }}
+                                        </ng-container>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Data Grid -->
+                    <tr>
+                        <td colspan="5" style="padding: 0;">
+                            <table class="cnote-table" style="width: 100%; border: none; text-align: center;">
+                                <tr class="bg-red">
+                                    <td style="border-left: none; padding: 6px 4px;">Invoice No</td>
+                                    <td>Invoice Date</td>
+                                    <td>Declared Value</td>
+                                    <td *ngIf="!isAlkemCustomer">Volumetric</td>
+                                    <td *ngIf="isAlkemCustomer">Packaging Type</td>
+                                    <td>No Of Pkgs</td>
+                                    <td>Weight in KG</td>
+                                    <td style="border-right: none;">Charges</td>
+                                </tr>
+                                <tr>
+                                    <td style="border-left: none; padding: 12px 4px;">{{ lrData?.Invoice_No || '-' }}
+                                    </td>
+                                    <td>{{ lrData?.Invoice_DT || '-' }}</td>
+                                    <td>{{ lrData?.Declared_Value || '-' }}</td>
+                                    <td *ngIf="!isAlkemCustomer">{{ lrData?.Volumetric || '-' }}</td>
+                                    <td *ngIf="isAlkemCustomer">{{ lrData?.Packaging_Type || '-' }}</td>
+                                    <td>{{ lrData?.No_Of_Pkgs || '-' }}</td>
+                                    <td>{{ lrData?.Weight_In_KG || '-' }}</td>
+                                    <td style="border-right: none; font-weight: bold;">AS PER CONTRACT</td>
+                                </tr>
+                                <tr>
+                                    <td [attr.colspan]="isAlkemCustomer ? 5 : 4"
+                                        style="text-align: left; padding: 6px; font-size: 9px; border-left: none;">
+                                        BOOKING TERMS & CONDITIONS ACCEPTED & BINDING UPON<br>ME/US. COMPANY WILL NOT BE
+                                        RESPONSIBLE FOR CURRENCY<br>& VALUABLES IF BOOKED
+                                    </td>
+                                    <td colspan="3"
+                                        style="text-align: left; padding: 6px; font-size: 9px; border-right: none;">
+                                        CONSIGNMENT RECEIVED IN GOOD CONDITION
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td [attr.colspan]="isAlkemCustomer ? 5 : 4"
+                                        style="text-align: left; padding: 6px; vertical-align: top; height: 35px; border-left: none; border-bottom: none;">
+                                        CONSIGNOR'S SIGNATURE & DATE
+                                    </td>
+                                    <td colspan="1"
+                                        style="text-align: left; padding: 6px; vertical-align: top; border-bottom: none;">
+                                        Name:</td>
+                                    <td colspan="1"
+                                        style="text-align: left; padding: 6px; vertical-align: top; border-bottom: none;">
+                                        Date:</td>
+                                    <td colspan="1"
+                                        style="padding: 0; border-right: none; border-bottom: none; vertical-align: middle;">
+                                        <div style="display: flex; justify-content: space-between; padding: 0 10px;">
+                                            <span style="font-weight: bold;">Total</span>
+                                            <span class="text-red" style="font-weight: bold;">{{ lrData?.Total_Amount || lrData?.Grand_Total || lrData?.Total || '' }}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="text-align: right; margin-top: 4px; padding-right: 4px;">
+                <div class="badge-copy">{{ copy.name }}</div>
+            </div>
+
+            <div
+                style="display: flex; justify-content: space-between; font-size: 9px; margin-top: 2px; color: #6b7280;">
+                <div>This is a computer generated Consignment Note.</div>
+                <div>Scorpion Express Pvt Ltd</div>
+            </div>
+        </div>
+    </ng-container>
+</div>

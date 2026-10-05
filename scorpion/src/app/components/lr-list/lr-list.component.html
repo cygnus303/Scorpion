@@ -1,4 +1,4 @@
-﻿<div style="background: var(--bg);" class="p-3">
+<div style="background: var(--bg);" class="p-3">
     <div class="d-flex justify-content-between align-items-center">
         <div class="page-title">
             <span class="icon">📋</span>
@@ -9,9 +9,10 @@
                 *ngIf="!isHQTR && menuAccessService.hasPermission('Add')">
                 <span class="fs-5 me-1">➕</span> Add LR
             </button>
-            <button class="btn btn-success px-4 py-2 rounded fw-bold" 
+            <button class="btn btn-success px-4 py-2 rounded fw-bold"
                 *ngIf="menuAccessService.hasPermission('Download')">
-                <span *ngIf="!isCSVLoading" (click)="onExcelDownload()"> <span class="fs-5 me-1">📥</span> Download XLS</span>
+                <span *ngIf="!isCSVLoading" (click)="onExcelDownload()"> <span class="fs-5 me-1">📥</span> Download
+                    XLS</span>
                 <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isCSVLoading">Downloading...</span>
             </button>
@@ -73,7 +74,7 @@
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🚫</div>
         </div>
 
-         <div class="summary-card px-3 py-3 c-green cursor-pointer"
+        <div class="summary-card px-3 py-3 c-green cursor-pointer"
             [class.active-card]="config.statusFilter === 'delivered'" (click)="filterByStatus('delivered')">
             <div class="card-content">
                 <div class="s-label">Delivered</div>
@@ -84,7 +85,8 @@
         </div>
 
         <div class="summary-card px-3 py-3 c-pink cursor-pointer"
-            [class.active-card]="config.statusFilter === 'At Delivery Stock'" (click)="filterByStatus('At Delivery Stock')">
+            [class.active-card]="config.statusFilter === 'At Delivery Stock'"
+            (click)="filterByStatus('At Delivery Stock')">
             <div class="card-content">
                 <div class="s-label">At Delivery Stock</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.atDeliveredStock || 0 }}</div>
@@ -128,8 +130,8 @@
             </div>
             <div class="table-toolbar">
                 <div class="search-box d-flex align-items-center"><span class="text-muted">🔍</span>
-                    <input type="text" placeholder="Search LR, Customer, Eway Bill number, Origin, Destination..." class="form-control border-0 shadow-none"
-                        style="min-width: 380px;"
+                    <input type="text" placeholder="Search LR, Customer, Eway Bill number, Origin, Destination..."
+                        class="form-control border-0 shadow-none" style="min-width: 380px;"
                         [(ngModel)]="config.searchText" (keyup)="onSearchChange()">
                 </div>
             </div>
@@ -182,11 +184,14 @@
                                 <span class="lr-date">{{ lr.dockdt | date:'dd MMM yyyy' }}</span>
                             </div>
                         </td>
-                        <td  class="cursor-pointer">
-                            <span class="fw-bold" style="color: #1a237e;  font-size: 12px;" (click)="lr.gbNo?onGBNo(lr):null">{{ lr.gbNo || '--' }}</span>
+                        <td class="cursor-pointer">
+                            <span class="fw-bold" style="color: #1a237e;  font-size: 12px;"
+                                (click)="lr.gbNo?onGBNo(lr):null">{{ lr.gbNo || '--' }}</span>
                         </td>
-                         <td  class="cursor-pointer">
-                            <span class="fw-bold" style="color: #1a237e;  font-size: 12px;" (click)="lr.hcNumber?onViewHCC(lr.gbNo,lr.hcNumber):null">{{ lr.hcNumber || '--' }}</span>
+                        <td class="cursor-pointer">
+                            <span class="fw-bold" style="color: #1a237e;  font-size: 12px;"
+                                (click)="lr.hcNumber?onViewHCC(lr.gbNo,lr.hcNumber):null">{{ lr.hcNumber || '--'
+                                }}</span>
                         </td>
                         <td>
                             <div class="route route-wrapper">
@@ -201,19 +206,26 @@
                             </div>
                         </td>
                         <td>
-                            <span [ngClass]="lr.pickdly && lr.pickdly !== '—' ? 'badge ' + getDeliveryTypeClass(lr.pickup_Dely) : 'text-muted'">
+                            <span
+                                [ngClass]="lr.pickdly && lr.pickdly !== '—' ? 'badge ' + getDeliveryTypeClass(lr.pickup_Dely) : 'text-muted'">
                                 {{ lr.pickdly || '—' }}
                             </span>
                         </td>
                         <td>
                             <div class="edd-add-cell">
-                                <div class="text-nowrap"><span class="text-muted me-1" style="font-size:9px;font-weight:700;">EDD:</span><span class="edd-ok">{{ lr.editedDate | date:'dd MMM yyyy' }}</span></div>
-                                <div class="text-nowrap"><span class="text-muted me-1" style="font-size:9px;font-weight:700;">ADD:</span><span class="add-val">{{ lr.addDate === '1900-01-01T00:00:00' ? '—' : (lr.addDate | date:'dd MMM yyyy') }}</span></div>
+                                <div class="text-nowrap"><span class="text-muted me-1"
+                                        style="font-size:9px;font-weight:700;">EDD:</span><span class="edd-ok">{{
+                                        lr.editedDate | date:'dd MMM yyyy' }}</span></div>
+                                <div class="text-nowrap"><span class="text-muted me-1"
+                                        style="font-size:9px;font-weight:700;">ADD:</span><span class="add-val">{{
+                                        lr.addDate === '1900-01-01T00:00:00' ? '—' : (lr.addDate | date:'dd MMM yyyy')
+                                        }}</span></div>
                             </div>
                         </td>
                         <td>
                             <div class="billing-party">
-                                <span class="fw-bold" style="color: #1d4ed8;">{{ lr.partY_CODE }}</span><span class="text-muted mx-1">-</span><span>{{ lr.party_name }}</span>
+                                <span class="fw-bold" style="color: #1d4ed8;">{{ lr.partY_CODE }}</span><span
+                                    class="text-muted mx-1">-</span><span>{{ lr.party_name }}</span>
                             </div>
                         </td>
                         <td>
@@ -235,17 +247,20 @@
                         </td>
                         <td>
                             <div class="action-btns text-center">
-                                <button class="ab ab-eway" (click)="getEwaybillData(lr.dockno)">🧾 E-Way No.</button>
-                                <button *ngIf="menuAccessService.hasPermission('View')" class="ab ab-view" (click)="onView(lr.dockno)">👁 View</button>
-                                <button *ngIf="!isHQTR && menuAccessService.hasPermission('Edit')" class="ab ab-edit" (click)="openQuick(lr.dockno)"
-                                    [disabled]="lr.isQuickMode!=='Q'">✏️ Quick LR Edit</button>
-                                <!-- <button class="ab ab-finedit" (click)="openEdit(lr.dockno)"
-                                    [disabled]="lr.isQuickMode==='Q'||lr.status ==='Cancelled'">💰 Fin Edit</button> -->
-                                <button *ngIf="isHQTR && menuAccessService.hasPermission('Cancel')" class="ab ab-cancel" (click)="onCancel(lr.dockno)"
-                                    [disabled]="lr.isDocketCancel==='Y'">🚫 Cancel</button>
+                                <button *ngIf="menuAccessService.hasPermission('View')" class="ab ab-view"
+                                    (click)="onView(lr.dockno)">👁 View</button>
+                                <button *ngIf="!isHQTR && menuAccessService.hasPermission('Edit')" class="ab ab-edit"
+                                    (click)="openQuick(lr.dockno)" [disabled]="lr.isQuickMode!=='Q'">✏️ Quick LR
+                                    Edit</button>
                                 <div class="track-wrap">
                                     <button class="ab ab-track" (click)="openTrack(lr.dockno)">📍 Track</button>
                                 </div>
+                                <!-- <button class="ab ab-finedit" (click)="openEdit(lr.dockno)"
+                                    [disabled]="lr.isQuickMode==='Q'||lr.status ==='Cancelled'">💰 Fin Edit</button> -->
+
+                                <button *ngIf="isHQTR && menuAccessService.hasPermission('Cancel')" class="ab ab-cancel"
+                                    (click)="onCancel(lr.dockno)" [disabled]="lr.isDocketCancel==='Y'">🚫
+                                    Cancel</button>
                                 <div class="print-wrap">
                                     <button class="ab ab-print" (click)="openPrint(lr.dockno)">🖨 Print</button>
                                     <div class="print-dropdown">
@@ -256,7 +271,17 @@
                                 </div>
                                 <!-- <button class="ab ab-hcc" (click)="openHCCModal(lr)">🏢 HCC</button> -->
                                 <button class="ab ab-hcc" (click)="openHCCModal(lr)"
-                                 [disabled]="lr.ishccAllow === 'N' ? true : false">🏢 HCC</button>
+                                    [disabled]="lr.ishccAllow === 'N' ? true : false">🏢 HCC</button>
+                                <button class="ab ab-lrprint" (click)="openLrPrintModal(lr)">📄 LR Print</button>
+                                <div
+                                    style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 4px;">
+                                    <button class="ab ab-eway m-0"
+                                        style="width: 100%; white-space: nowrap; padding: 4px 2px;"
+                                        (click)="getEwaybillData(lr)">🧾 E-Way No. / Invoice</button>
+                                    <button class="ab ab-view m-0"
+                                        style="width: 100%; white-space: nowrap; padding: 4px 2px;" (click)="openStickerPrintModal(lr)">🏷️ Sticker
+                                        Print</button>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -275,66 +300,149 @@
 <app-lr-view #LrViewComponent></app-lr-view>
 
 <ng-template #ewayBillModal>
-    <!-- Compact Modern Premium Header -->
-    <div class="modal-header border-0 py-2 px-3" style="background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); color: white; border-top-left-radius: 0.3rem; border-top-right-radius: 0.3rem; position: relative; overflow: hidden;">
-        <!-- Decorative subtle circle -->
-        <div style="position: absolute; right: -20px; top: -40px; width: 100px; height: 100px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
-        
-        <div class="d-flex align-items-center gap-2 position-relative z-1">
-            <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 32px; height: 32px; background: rgba(255,255,255,0.15); backdrop-filter: blur(4px);">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16">
-                    <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
+    <!-- Header -->
+    <div class="modal-header border-0 align-items-center"
+        style="background-color: #3b62a5; color: #ffffff; padding: 12px 20px; border-radius: 0.3rem 0.3rem 0 0;">
+        <div class="d-flex flex-column">
+            <div class="d-flex align-items-center mb-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="me-2"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm5.5 1.5v2a1 1 0 0 0 1 1h2l-3-3zM4.5 9a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7zM4 11.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z" />
                 </svg>
+                <h5 class="modal-title fw-bold m-0" style="font-size: 14px;">Eway Bill / Invoice Details</h5>
             </div>
-            <h5 class="mb-0 fw-bold" style="letter-spacing: 0.5px; font-size: 1rem;">E-Way Bill Details</h5>
+            <div *ngIf="selectedLrItem && selectedLrItem.dockno" class="fw-light"
+                style="font-size: 11px; color: #cbd5e1;">
+                LR-{{ selectedLrItem.dockno }} <span class="mx-1">|</span> {{ selectedLrItem.from_loc }} &rarr; {{
+                selectedLrItem.to_loc }} <span class="mx-1">|</span> {{ selectedLrItem.party_name }}
+            </div>
+            <div *ngIf="!selectedLrItem || !selectedLrItem.dockno" class="fw-light"
+                style="font-size: 11px; color: #cbd5e1;">
+                LR-{{ selectedLrItem }}
+            </div>
         </div>
-        <button type="button" class="btn-close btn-close-white opacity-75 position-relative z-1" (click)="modalRef.hide()" style="transition: all 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.75'"></button>
+        <button type="button" class="btn-close btn-close-white"
+            style="font-size: 10px; background-color: rgba(255,255,255,0.1); border-radius: 50%; padding: 8px;"
+            (click)="modalRef.hide()"></button>
     </div>
-    
-    <!-- Compact Body -->
-    <div class="modal-body p-1" style="background-color: #f4f7f9;">
+
+    <!-- Body -->
+    <div class="modal-body p-4" style="background-color: #ffffff;">
+        <div *ngIf="isEwaybillLoading" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="mt-2 text-muted fw-bold" style="font-size: 13px;">Loading details...</div>
+        </div>
         
-        <div class="table-responsive rounded border shadow-sm m-0" style="background-color: white;">
-            <table class="table align-middle mb-0" style="border-collapse: separate; border-spacing: 0;">
-                <thead style="background-color: #fcfdfe;">
+        <div *ngIf="!isEwaybillLoading && (!ewaybillData || ewaybillData.length === 0)" class="text-center py-5">
+            <div class="text-muted fw-bold" style="font-size: 14px;">No E-Way bill data found for this docket.</div>
+        </div>
+
+        <div *ngIf="!isEwaybillLoading && ewaybillData && ewaybillData.length > 0" class="border rounded-2" style="border-color: #e2e8f0 !important; overflow: hidden;">
+            <table class="table mb-0">
+                <thead style="background-color: #f8fafc;">
                     <tr>
-                        <th class="text-center text-muted fw-bold py-2 border-bottom" style="width: 70px; font-size: 0.75rem; text-transform: uppercase;">Sr. No.</th>
-                        <th class="text-muted fw-bold py-2 border-bottom" style="font-size: 0.75rem; text-transform: uppercase;">E-Way Bill No.</th>
-                        <th class="text-muted fw-bold py-2 border-bottom" style="font-size: 0.75rem; text-transform: uppercase;">Invoice No.</th>
+                        <th class="text-secondary fw-bold"
+                            style="font-size: 11px; padding: 12px 16px; border-bottom: 1px solid #e2e8f0; white-space: nowrap;">
+                            DOCKET NO.</th>
+                        <th class="text-secondary fw-bold"
+                            style="font-size: 11px; padding: 12px 16px; border-bottom: 1px solid #e2e8f0; white-space: nowrap;">
+                            EWAY BILL NO.</th>
+                        <th class="text-secondary fw-bold text-center"
+                            style="font-size: 11px; padding: 12px 16px; border-bottom: 1px solid #e2e8f0; white-space: nowrap;">
+                            EWAY BILL DATE</th>
+                        <th class="text-secondary fw-bold text-center"
+                            style="font-size: 11px; padding: 12px 16px; border-bottom: 1px solid #e2e8f0; white-space: nowrap;">
+                            EWAY EXP. DATE</th>
+                        <th class="text-secondary fw-bold"
+                            style="font-size: 11px; padding: 12px 16px; border-bottom: 1px solid #e2e8f0; white-space: nowrap;">
+                            INV. NO.</th>
+                        <th class="text-secondary fw-bold text-center"
+                            style="font-size: 11px; padding: 12px 16px; border-bottom: 1px solid #e2e8f0; white-space: nowrap;">
+                            INV. DATE</th>
+                        <th class="text-secondary fw-bold text-end"
+                            style="font-size: 11px; padding: 12px 16px; border-bottom: 1px solid #e2e8f0; white-space: nowrap;">
+                            INV. VALUE</th>
+                        <th class="text-secondary fw-bold text-center"
+                            style="font-size: 11px; padding: 12px 16px; border-bottom: 1px solid #e2e8f0; white-space: nowrap;">
+                            ATTACHMENT</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let item of ewaybillData; let i = index; let last = last" style="cursor: default; transition: background-color 0.2s ease;" onmouseover="this.style.backgroundColor='#f8fafd'" onmouseout="this.style.backgroundColor='transparent'">
-                        
-                        <td class="text-center py-2" [class.border-bottom-0]="last" style="border-bottom: 1px solid #f0f2f5;">
-                            <span class="d-inline-flex align-items-center justify-content-center rounded-circle fw-bold text-secondary" style="width: 24px; height: 24px; background: #f1f3f5; font-size: 0.75rem;">
-                                {{ i + 1 }}
-                            </span>
+                    <tr *ngFor="let item of ewaybillData; let last = last">
+                        <td class="fw-bold text-dark"
+                            style="font-size: 12px; padding: 14px 16px; vertical-align: middle;"
+                            [ngStyle]="{'border-bottom': last ? 'none' : '1px solid #e2e8f0'}">
+                            {{ item.DOCKNO || '--' }}
                         </td>
-                        
-                        <td class="py-2" [class.border-bottom-0]="last" style="border-bottom: 1px solid #f0f2f5;">
-                            <span *ngIf="item.EWayBillNo" (click)="downloadEWayBillPDF(item.EWayBillNo)" class="d-inline-flex align-items-center rounded-pill px-2 py-1 shadow-sm" style="background: rgba(43, 116, 224, 0.08); color: #2b74e0; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: 1px solid rgba(43, 116, 224, 0.2); transition: transform 0.1s ease;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'" title="Download E-Way Bill PDF">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-                                    <path d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm5.5 1.5v2a1 1 0 0 0 1 1h2l-3-3zM4.5 9a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7zM4 11.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z"/>
-                                </svg>
-                                {{ item.EWayBillNo }}
-                            </span>
-                            <span *ngIf="!item.EWayBillNo" class="text-muted fw-medium fs-6">—</span>
+                        <td style="font-size: 12px; padding: 14px 16px; vertical-align: middle;"
+                            [ngStyle]="{'border-bottom': last ? 'none' : '1px solid #e2e8f0'}">
+                            <div class="d-flex align-items-center">
+                                <span class="me-2"
+                                    [ngStyle]="{'cursor': item.EWayBillNo ? 'pointer' : 'default', 'color': item.EWayBillNo ? '#2b74e0' : '#212529', 'text-decoration': item.EWayBillNo ? 'underline' : 'none', 'font-weight': item.EWayBillNo ? '600' : 'normal'}"
+                                    (click)="item.EWayBillNo ? downloadEWayBillPDF(item.EWayBillNo) : null">{{
+                                    item.EWayBillNo || '--' }}</span>
+                                <span *ngIf="item.EWayBillNo" class="badge rounded-pill fw-medium"
+                                    style="background-color: #dcfce7; color: #16a34a; padding: 4px 8px; font-size: 10px; display: inline-flex; align-items: center; justify-content: center;">
+                                    <span style="font-size: 10px; font-weight: 800; margin-right: 2px;">&#10003;</span>
+                                    Valid
+                                </span>
+                            </div>
                         </td>
-                        
-                        <td class="py-2" [class.border-bottom-0]="last" style="border-bottom: 1px solid #f0f2f5;">
-                            <span *ngIf="item.INVNO" class="text-dark fw-bold" style="font-size: 0.85rem;">
-                                <span class="text-muted fw-normal me-1" style="font-size: 0.75rem;">#</span>{{ item.INVNO }}
-                            </span>
-                            <span *ngIf="!item.INVNO" class="text-muted fw-medium fs-6">—</span>
+                        <td class="text-dark text-center"
+                            style="font-size: 12px; padding: 14px 16px; vertical-align: middle;"
+                            [ngStyle]="{'border-bottom': last ? 'none' : '1px solid #e2e8f0'}">
+                            {{ (item.EWayBillInvoiceDate | date:'dd MMM yyyy') || '--' }}
                         </td>
-                        
+                        <td class="text-dark text-center"
+                            style="font-size: 12px; padding: 14px 16px; vertical-align: middle;"
+                            [ngStyle]="{'border-bottom': last ? 'none' : '1px solid #e2e8f0'}">
+                            {{ (item.EWayBillExpiredDate | date:'dd MMM yyyy') || '--' }}
+                        </td>
+                        <td class="text-dark" style="font-size: 12px; padding: 14px 16px; vertical-align: middle;"
+                            [ngStyle]="{'border-bottom': last ? 'none' : '1px solid #e2e8f0'}">
+                            {{ item.INVNO || '--' }}
+                        </td>
+                        <td class="text-dark text-center"
+                            style="font-size: 12px; padding: 14px 16px; vertical-align: middle;"
+                            [ngStyle]="{'border-bottom': last ? 'none' : '1px solid #e2e8f0'}">
+                            {{ (item.INVDT | date:'dd MMM yyyy') || '--' }}
+                        </td>
+                        <td class="fw-bold text-dark text-end"
+                            style="font-size: 12px; padding: 14px 16px; vertical-align: middle;"
+                            [ngStyle]="{'border-bottom': last ? 'none' : '1px solid #e2e8f0'}">
+                            {{ item.DECLVAL ? ('₹' + item.DECLVAL) : '--' }}
+                        </td>
+                        <td class="text-center" style="padding: 14px 16px; vertical-align: middle;"
+                            [ngStyle]="{'border-bottom': last ? 'none' : '1px solid #e2e8f0'}">
+                            <a *ngIf="item.EwaybillInvoiceFile" [href]="env.liveUrl + 'UploadedDocumentsBAK/EwaybillInvoiceFile/Upload/' + item.EwaybillInvoiceFile" target="_blank"
+                               class="btn btn-primary btn-sm"
+                               style="font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 4px; box-shadow: 0 2px 4px rgba(13, 110, 253, 0.3);"
+                               title="View Invoice Image">
+                                <i class="fa fa-eye me-1"></i> View
+                            </a>
+                            <span *ngIf="!item.EwaybillInvoiceFile" class="text-muted">--</span>
+                        </td>
+                    </tr>
+                    <tr *ngIf="!ewaybillData || ewaybillData.length === 0">
+                        <td colspan="8" class="text-center py-4 text-muted" style="font-size: 13px;">No Records Found
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
+
+    <div class="modal-footer border-0 pt-0 pb-3 px-4 justify-content-end" style="background-color: #ffffff;">
+        <button type="button" class="btn btn-outline-secondary rounded-2 fw-medium" (click)="modalRef.hide()"
+            style="font-size: 12px; padding: 4px 16px; border-color: #cbd5e1; color: #475569;">Close</button>
+    </div>
 </ng-template>
 
 <app-hcc-details #HCCDetailsComponent (dataEmitter)="fetchLRList()"></app-hcc-details>
 <app-gb-view #GbViewComponent></app-gb-view>
+<app-sticker-print #StickerPrintComponent></app-sticker-print>
+<app-lr-print #LrPrintComponent></app-lr-print>
+

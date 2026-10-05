@@ -65,4 +65,12 @@ export class LrService {
     getDocumentTracking(dockNo: string): Observable<any> {
       return this.apiHandlerService.GetLoad(`Operation/GetDocumentTracking?dockNo=${dockNo}`);
     }
+
+    getQRCodeImage(code: string): Observable<Blob> {
+      return this.apiHandlerService.DownloadFile(`Docket/GenerateQR/${code}`);
+    }
+
+    getQRCodeLabels(docketNo: string): Observable<any> {
+      return this.apiHandlerService.GetLoad(`Docket/QRCodeLabel?DocketNo=${docketNo}`);
+    }
 }
