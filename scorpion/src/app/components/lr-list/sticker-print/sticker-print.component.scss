@@ -1,0 +1,127 @@
+::ng-deep .custom-sticker-modal .modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    overflow: hidden;
+    font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.sticker-header {
+    background-color: #0b1c44;
+    color: #ffffff;
+    padding: 10px;
+}
+
+.sticker-icon-box {
+    width: 42px;
+    height: 42px;
+    background-color: #1f335b;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+}
+
+.sticker-close-btn {
+    width: 32px;
+    height: 32px;
+    background-color: #07122b;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.sticker-close-btn:hover {
+    background-color: #1a2846;
+}
+
+.sticker-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.sticker-input {
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 16px;
+    color: #111827;
+    height: 44px;
+    box-shadow: none !important;
+}
+
+.sticker-input:focus {
+    border-color: #9ca3af;
+    box-shadow: 0 0 0 1px #9ca3af !important;
+}
+
+.sticker-input[readonly] {
+    background-color: #ffffff;
+    cursor: default;
+}
+
+.divider-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: #9ca3af;
+    text-transform: uppercase;
+    background: white;
+    padding: 0 16px;
+    letter-spacing: 0.5px;
+}
+
+.alert-blue {
+    background-color: #dbeafe;
+    border-radius: 8px;
+    padding: 14px 16px;
+    color: #1e3a8a;
+    font-size: 15px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+}
+
+.btn-cancel {
+    background-color: #ef4444;
+    border: 1px solid #ef4444;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 20px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+    background-color: #dc2626;
+    border-color: #dc2626;
+}
+
+.btn-print {
+    background-color: #0b1c44;
+    border: 1px solid #0b1c44;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 20px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.btn-print:hover {
+    background-color: #1f335b;
+    border-color: #1f335b;
+}
+
+

@@ -75,6 +75,10 @@ export const ChallanRoutes: Routes = [
     canActivate: [DocketGuard]
   },
   {
+    path: 'lr-print-preview/:id',
+    loadComponent: () => import('../lr-list/lr-print-preview/lr-print-preview.component').then(m => m.LrPrintPreviewComponent),
+  },
+  {
     path: 'UNRList',
     loadComponent: () => import('../unr-list/unr-list.component').then(m => m.UNRListComponent),
   },
