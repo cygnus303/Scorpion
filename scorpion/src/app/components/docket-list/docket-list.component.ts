@@ -602,12 +602,18 @@ export class DocketListComponent implements OnInit {
         }
       }
 
-      const listCCH = this.docketService.freightchargingData.map(charge => ({
-        ChargeCode: charge.chargeCode,
-        ChargeName: charge.chargeName,
-        Operator: charge.operator,
-        ChargeAmount: Number(this.docketService.freightForm.get(charge.chargeCode)?.value || 0)
-      }));
+      const listCCH = this.docketService.freightchargingData.map(charge => {
+        let chargeAmt = Number(this.docketService.freightForm.get(charge.chargeCode)?.value || 0);
+        if (charge.chargeCode?.toUpperCase() === 'SCHG12' && this.docketService.loginUserList?.Type !== '2') {
+          chargeAmt = 0;
+        }
+        return {
+          ChargeCode: charge.chargeCode,
+          ChargeName: charge.chargeName,
+          Operator: charge.operator,
+          ChargeAmount: chargeAmt
+        };
+      });
 
       const DynamicList: any[] = [];
       Object.values(this.docketService.groupedCharges).forEach((charges: any[]) => {

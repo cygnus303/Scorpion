@@ -1876,6 +1876,11 @@ calculateChargeWeight(){
     const freightCharges = Number(this.freightForm?.get('freightCharges')?.value) || 0;
     totalSubTotal += freightCharges;
 
+    if (this.basicDetailForm?.get('IsCODDOD')?.value) {
+      const schg12Val = Number(this.freightForm?.get('SCHG12')?.value) || 0;
+      this.freightForm.patchValue({ coddodCharged: schg12Val }, { emitEvent: false });
+    }
+
     // Charges from freightForm (not old chargingData array)
     if (this.chargingData && Array.isArray(this.chargingData)) {
       this.chargingData.forEach((item: any) => {
