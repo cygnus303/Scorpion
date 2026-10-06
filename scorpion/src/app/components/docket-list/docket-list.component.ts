@@ -1044,7 +1044,7 @@ export class DocketListComponent implements OnInit {
               // window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N&src=angular`;
               // {btoa('angular')}
               if (!this.docketService.loginUserList?.prqData) {
-                window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&BILLNO=${response.res.billNo}&MRSNo=${response.res.mrsNo}&APMTNO=${response.res.apmtNo}&id=${response.res.id}&IsFromBillGeneration=N&src=angular`;
+                window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&BILLNO=${response.res.billNo}&MRSNo=${response.res.mrsNo}&APMTNO=${response.res.apmtNo}&id=${response.res.id}&GBNo=${response.res.gbNo}&IsFromBillGeneration=N&src=angular`;
               } else {
                 // PRQ flow: show in-app success modal
                 this.prqSuccessResult = response.res;
@@ -1074,7 +1074,7 @@ export class DocketListComponent implements OnInit {
               this.docketService.successMsg = 'Docket submitted successfully.'
               this.isRedirect = true;
               // window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'2'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N&src=angular`;
-              window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'2'}?DOCKNO=${response.res.dockNo}&BILLNO=${response.res.billNo}&MRSNo=${response.res.mrsNo}&APMTNO=${response.res.apmtNo}&id=${response.res.id}&IsFromBillGeneration=N&src=angular`;
+              window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'2'}?DOCKNO=${response.res.dockNo}&BILLNO=${response.res.billNo}&MRSNo=${response.res.mrsNo}&APMTNO=${response.res.apmtNo}&id=${response.res.id}&GBNo=${response.res.gbNo}&IsFromBillGeneration=N&src=angular`;
               this.docketService.basicDetailForm.reset();
               this.docketService.freightForm.reset();
               this.docketService.invoiceform.reset();
