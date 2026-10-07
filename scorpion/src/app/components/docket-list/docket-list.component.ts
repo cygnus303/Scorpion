@@ -604,7 +604,7 @@ export class DocketListComponent implements OnInit {
 
       const listCCH = this.docketService.freightchargingData.map(charge => {
         let chargeAmt = Number(this.docketService.freightForm.get(charge.chargeCode)?.value || 0);
-        if (charge.chargeCode?.toUpperCase() === 'SCHG12' && this.docketService.loginUserList?.Type !== '2') {
+        if (charge.chargeCode?.toUpperCase() === 'SCHG12' && this.docketService.loginUserList?.Type !== '2' && this.docketService.loginUserList?.Type !== '1') {
           chargeAmt = 0;
         }
         return {
