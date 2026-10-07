@@ -462,11 +462,11 @@
   </form>
 
   <div class="d-flex justify-content-end py-2 px-4 bg-light border-top gap-2">
+    <button type="button" class="mfbtn mfbtn-close shadow-sm" (click)="modalRef.hide()">✕ Close</button>
     <button type="button" class="mfbtn mfbtn-submit shadow-sm" *ngIf="isgetLoadingList" (click)="prepareLoadingSheet()" [disabled]="isSubmitting">
       <span *ngIf="!isSubmitting"><i class="fas fa-check"></i> {{this.docketService.loginUserList.Type === 'ULS' ? 'Prepare Manifest' : 'Prepare Loading Sheet'}}</span>
       <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
       <span *ngIf="isSubmitting">Saving...</span>
     </button>
-    <button type="button" class="mfbtn mfbtn-close shadow-sm" (click)="modalRef.hide()">✕ Close</button>
   </div>
 </ng-template>
