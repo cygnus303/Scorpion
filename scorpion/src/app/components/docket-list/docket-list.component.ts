@@ -224,7 +224,7 @@ export class DocketListComponent implements OnInit {
                 remarks: basicDetail.apmtRemark,
                 fromTime: basicDetail.fromTime,
                 toTime: basicDetail.toTime,
-                ewayBillNo: basicDetail.eWayBillNo ? basicDetail.eWayBillNo : this.docketService.completiondata.listInVoice[0].eWayBillNo,
+                ewayBillNo: basicDetail.eWayBillNo ? basicDetail.eWayBillNo : this.docketService.completiondata.listInVoice[0]?.eWayBillNo,
                 referenceDocket: basicDetail.referenceDocketNo,
                 isDocketPayment: basicDetail.isDKTPayment,
                 isAppointmentDelivery: basicDetail.isAppointmentDelivery,

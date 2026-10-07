@@ -250,7 +250,7 @@
                                 <button *ngIf="menuAccessService.hasPermission('View')" class="ab ab-view"
                                     (click)="onView(lr.dockno)">👁 View</button>
                                 <button *ngIf="!isHQTR && menuAccessService.hasPermission('Edit')" class="ab ab-edit"
-                                    (click)="openQuick(lr.dockno)" [disabled]="lr.isQuickMode!=='Q'">✏️ Quick LR
+                                    (click)="openQuick(lr.dockno)" [disabled]="lr.isQuickMode!=='Q'"> Quick LR
                                     Edit</button>
                                 <div class="track-wrap">
                                     <button class="ab ab-track" (click)="openTrack(lr.dockno)">📍 Track</button>
