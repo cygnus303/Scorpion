@@ -114,6 +114,7 @@ export class LoadingSheetService {
         rateError: new FormControl(''),
         PackagesLB_old: new FormControl(item.packagesLB || ''),
         WeightLB_old: new FormControl(item.weightLB || ''),
+        service_Class: new FormControl(item.service_Class || ''),
       });
 
       const initialVendorType = group.get('luVendorTyp')?.value;
