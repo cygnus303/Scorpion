@@ -43,6 +43,7 @@ export class LSUpdatePopupComponent {
   public isLoadingSheet: boolean = false;
   public today: Date = new Date();
   public isSubmitting: boolean = false;
+  public selectedServiceClass: string | null = null;
   public headerVendorList: any[] = [];
   public headerVendor: any = null;
   public rowVendorList: any[][] = [];
@@ -430,18 +431,77 @@ export class LSUpdatePopupComponent {
     const checked = event.target.checked;
     const formArray = this.loadingSheetService.docketFormArray;
 
+    let targetClass = this.selectedServiceClass;
+
+    if (checked && !targetClass) {
+       for(let group of formArray.controls) {
+         if (!group.value.message) {
+            targetClass = group.get('service_Class')?.value;
+            if (targetClass) break;
+         }
+       }
+    }
+
     formArray.controls.forEach((group: any) => {
-      if (!group.value.message) { // message wali row par checkbox nathi
-        group.get('isChecked')?.setValue(checked, { emitEvent: false });
+      if (!group.value.message) { 
+        const rowClass = group.get('service_Class')?.value;
+        if (checked && (!targetClass || rowClass === targetClass)) {
+           group.get('isChecked')?.enable({ emitEvent: false });
+           group.get('isChecked')?.setValue(true, { emitEvent: false });
+        } else if (checked) {
+           group.get('isChecked')?.setValue(false, { emitEvent: false });
+           group.get('isChecked')?.disable({ emitEvent: false });
+        } else {
+           group.get('isChecked')?.setValue(false, { emitEvent: false });
+           group.get('isChecked')?.enable({ emitEvent: false });
+        }
       }
     });
 
     this.updateSelectedCount();
   }
 
+  clearSelection() {
+    const formArray = this.loadingSheetService.docketFormArray;
+    formArray.controls.forEach((group: any) => {
+      if (!group.value.message) {
+        group.get('isChecked')?.setValue(false, { emitEvent: false });
+        group.get('isChecked')?.enable({ emitEvent: false });
+      }
+    });
+
+    // Reset select all checkbox in DOM
+    const selectAllCheckbox = document.querySelector('thead input[type="checkbox"]') as HTMLInputElement;
+    if (selectAllCheckbox) {
+      selectAllCheckbox.checked = false;
+    }
+
+    this.updateSelectedCount();
+  }
+
   updateSelectedCount() {
     const formArray = this.loadingSheetService.docketFormArray;
-    let selected = formArray.controls.filter((g: any) => g.value.isChecked);
+    let selected = formArray.controls.filter((g: any) => g.get('isChecked')?.value);
+    
+    if (selected.length > 0) {
+      this.selectedServiceClass = selected[0].get('service_Class')?.value;
+    } else {
+      this.selectedServiceClass = null;
+    }
+
+    formArray.controls.forEach((group: any) => {
+      const isCheckedControl = group.get('isChecked');
+      const rowServiceClass = group.get('service_Class')?.value;
+      
+      if (this.selectedServiceClass && this.selectedServiceClass !== rowServiceClass) {
+         isCheckedControl?.disable({ emitEvent: false });
+      } else {
+         isCheckedControl?.enable({ emitEvent: false });
+      }
+    });
+
+    console.log('Selected Service Class:', this.selectedServiceClass);
+
     this.totalDocketSelected = selected.length;
     // SUM calculation
     this.totalPkgs = selected.reduce((sum: number, row: any) => {

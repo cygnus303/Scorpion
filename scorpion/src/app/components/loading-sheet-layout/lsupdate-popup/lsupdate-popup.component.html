@@ -276,7 +276,12 @@
           <div class="docket-card-head-left">
             <span class="dch-dot"></span> {{this.docketService.loginUserList.Type === 'ULS' ?'UPDATE LOADING SHEET & PREPARE MANIFEST' : 'LIST LOADING SHEET'}}
           </div>
-          <span class="docket-count-badge">{{totalDocketSelected||0}} LR(S) SELECTED</span>
+          <div class="d-flex align-items-center gap-2">
+            <button *ngIf="totalDocketSelected > 0" class="btn btn-sm btn-light text-danger fw-bold py-0 px-2 shadow-sm" style="border: none;" (click)="clearSelection()" title="Clear Selection">
+              <i class="fas fa-times me-1"></i> Clear
+            </button>
+            <span class="docket-count-badge">{{totalDocketSelected||0}} LR(S) SELECTED</span>
+          </div>
         </div>
         <div class="p-3 bg-white">
 
@@ -361,9 +366,14 @@
                         </ng-template>
 
                         <ng-template #showCheckbox>
-                          <input type="checkbox" formControlName="isChecked"
-                            class="form-check-input checkbox-lg custom-big-checkbox" (change)="updateSelectedCount()"
-                            style="cursor: pointer;" appFocusNext />
+                          <span [style.cursor]="row.get('isChecked')?.disabled ? 'not-allowed' : 'pointer'"
+                                [title]="row.get('isChecked')?.disabled ? 'Cannot select multiple service classes' : ''"
+                                style="display: inline-block;">
+                            <input type="checkbox" formControlName="isChecked"
+                              class="form-check-input checkbox-lg custom-big-checkbox" (change)="updateSelectedCount()"
+                              [style.pointer-events]="row.get('isChecked')?.disabled ? 'none' : 'auto'"
+                              appFocusNext />
+                          </span>
                         </ng-template>
                       </td>
                       <td>
