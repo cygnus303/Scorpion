@@ -71,7 +71,7 @@ export class PRSArrivalComponent implements OnInit {
     this.getVendorType();
     this.generalMasterService.getChargeTypeData();
     this.refreshData()
-    this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
+    this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered hcc-view-modal-custom', backdrop: true });
   }
 
   getVendorType() {

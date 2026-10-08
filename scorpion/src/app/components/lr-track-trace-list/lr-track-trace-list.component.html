@@ -369,7 +369,7 @@
                             </td>
                             <!-- ACTIONS -->
                             <td class="pe-3">
-                                <div class="d-flex justify-content-start align-items-center gap-2">
+                                <div class="d-flex flex-wrap justify-content-start align-items-center gap-2">
                                     <button class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1"
                                         (click)="openPrintView(lr)"
                                         style="font-size: 11px; background: #e8f0fd; color: #1a3a6b; border: 1px solid #c5d5f5;">
@@ -384,6 +384,21 @@
                                         (click)="openMapView(lr)"
                                         style="font-size: 11px; background: #fff4e0; color: #e07b00; border: 1px solid #f5d38a;">
                                         🗺 Map
+                                    </button>
+                                    <button class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1"
+                                        (click)="openLrPrintModal(lr)"
+                                        style="font-size: 11px; background: #f3e5f5; color: #6a1b9a; border: 1px solid #d1c4e9;">
+                                        📄 LR Print
+                                    </button>
+                                    <button class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1"
+                                        (click)="getEwaybillData(lr)"
+                                        style="font-size: 11px; background: #fce4ec; color: #c62828; border: 1px solid #f8bbd0;">
+                                        🧾  E-Way No. / Invoice
+                                    </button>
+                                    <button class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1"
+                                        (click)="openStickerPrintModal(lr)"
+                                        style="font-size: 11px; background: #fff8e1; color: #f57f17; border: 1px solid #ffe082;">
+                                        🏷️ Sticker Print
                                     </button>
                                 </div>
                             </td>
@@ -410,3 +425,7 @@
 <app-lr-lifecycle-tracker #lrLifecycleTracker (viewOnMap)="openMapView($event)" (printLr)="openPrintView($event)"></app-lr-lifecycle-tracker>
 <app-live-route-map #liveRouteMap (viewLifecycle)="openTrackerView($event)"></app-live-route-map>
 <app-lr-view #LrViewComponent></app-lr-view>
+<app-sticker-print #StickerPrintComponent></app-sticker-print>
+<app-lr-print #LrPrintComponent></app-lr-print>
+
+<app-ewaybill-invoice-modal #EwaybillInvoiceModalComponent></app-ewaybill-invoice-modal>

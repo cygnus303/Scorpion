@@ -20,11 +20,12 @@ import { PRSDRSEditComponent } from './prsdrs-edit/prsdrs-edit.component';
 import { HccViewComponent } from '../hcc-view/hcc-view.component';
 import { MenuAccessService } from 'app/shared/services/menu-access.service';
 import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
+import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 
 @Component({
   selector: 'app-prs-generation-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, PRSArrivalComponent, HCCDetailsComponent, PRSDRSEditComponent, HccViewComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, PRSArrivalComponent, HCCDetailsComponent, PRSDRSEditComponent, HccViewComponent, DateRangePickerComponent],
   templateUrl: './prs-generation-list.component.html',
   styleUrl: './prs-generation-list.component.scss',
   providers: [PFMapiService, BsModalService]
@@ -127,6 +128,12 @@ export class PRSGenerationListComponent implements OnInit, OnDestroy {
   fetchData() {
     this.config.page = 1;
     this.fetchSubject.next();
+  }
+
+  onDateRangeSelected(event: { fromDate: Date, toDate: Date, rangeType: string }) {
+    this.config.fromDateStr = event.fromDate;
+    this.config.toDateStr = event.toDate;
+    this.fetchData();
   }
 
   setPage(p: number) {
