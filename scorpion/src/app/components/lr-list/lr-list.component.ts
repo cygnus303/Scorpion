@@ -21,11 +21,12 @@ import { HCCDetailsComponent } from '../prs-generation-list/hcc-details/hcc-deta
 import { GbViewComponent } from './gb-view/gb-view.component';
 import { StickerPrintComponent } from './sticker-print/sticker-print.component';
 import { LrPrintComponent } from './lr-print/lr-print.component';
+import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 
 @Component({
   selector: 'app-lr-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent,LrViewComponent, HCCDetailsComponent, GbViewComponent, StickerPrintComponent, LrPrintComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent,LrViewComponent, HCCDetailsComponent, GbViewComponent, StickerPrintComponent, LrPrintComponent, DateRangePickerComponent],
   templateUrl: './lr-list.component.html',
   styleUrl: './lr-list.component.scss',
   providers: [BsModalService]
@@ -296,6 +297,12 @@ export class LrListComponent {
   fetchData() {
     this.config.page = 1;
     this.fetchSubject.next();
+  }
+
+  onDateRangeSelected(event: { fromDate: Date, toDate: Date, rangeType: string }) {
+    this.config.fromDateStr = event.fromDate;
+    this.config.toDateStr = event.toDate;
+    this.fetchData();
   }
 
   filterByStatus(status: string) {
