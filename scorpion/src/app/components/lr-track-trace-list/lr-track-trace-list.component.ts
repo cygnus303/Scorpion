@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -17,20 +17,31 @@ import { LiveRouteMapComponent } from './live-route-map/live-route-map.component
 import { LrViewComponent } from '../lr-list/lr-view/lr-view.component';
 import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 import { environment } from 'environments/environment';
+import { EwaybillInvoiceModalComponent } from '../../shared/components/ewaybill-invoice-modal/ewaybill-invoice-modal.component';
+import { EwayBillPreviewComponent } from '../eway-bill-preview/eway-bill-preview.component';
+import { StickerPrintComponent } from '../lr-list/sticker-print/sticker-print.component';
+import { LrPrintComponent } from '../lr-list/lr-print/lr-print.component';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 
 @Component({
   selector: 'app-lr-track-trace-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, BsDatepickerModule, PaginationComponent, NgSelectModule, LrPrintViewComponent, LrLifecycleTrackerComponent, LiveRouteMapComponent, LrViewComponent, DateRangePickerComponent],
+  imports: [CommonModule, FormsModule, BsDatepickerModule, PaginationComponent, NgSelectModule, LrPrintViewComponent, LrLifecycleTrackerComponent, LiveRouteMapComponent, LrViewComponent, DateRangePickerComponent, StickerPrintComponent, LrPrintComponent, EwaybillInvoiceModalComponent],
   templateUrl: './lr-track-trace-list.component.html',
-  styleUrl: './lr-track-trace-list.component.scss'
+  styleUrl: './lr-track-trace-list.component.scss',
+  providers: [BsModalService]
 })
 export class LrTrackTraceListComponent implements OnInit, OnDestroy {
   @ViewChild('lrPrintView') lrPrintView!: LrPrintViewComponent;
   @ViewChild('lrLifecycleTracker') lrLifecycleTracker!: LrLifecycleTrackerComponent;
   @ViewChild('liveRouteMap') liveRouteMap!: LiveRouteMapComponent;
   @ViewChild('LrViewComponent') LrViewComponent!: LrViewComponent;
+  @ViewChild('StickerPrintComponent') StickerPrintComponent!: StickerPrintComponent;
+  @ViewChild('LrPrintComponent') LrPrintComponent!: LrPrintComponent;
+  @ViewChild('EwaybillInvoiceModalComponent') ewaybillInvoiceModal!: EwaybillInvoiceModalComponent;
   public env=environment;
+  public selectedStickerLrItem: any;
 
   private searchSubject = new Subject<string>();
   private fetchDataSubject = new Subject<any>();
@@ -43,6 +54,8 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
     private exportService: ExportService,
     public docketService: DocketService,
     private router: Router,
+    private modalService: BsModalService,
+    private sweetAlertService: SweetAlertService
   ) { }
   public config = {
     fromDateStr: new Date(),
@@ -470,7 +483,20 @@ export class LrTrackTraceListComponent implements OnInit, OnDestroy {
 
   onView(row: any){
     this.LrViewComponent.showPopup(row);
-}
+  }
+
+  getEwaybillData(lr: any) {
+    this.ewaybillInvoiceModal.openModal(lr);
+  }
+
+  openStickerPrintModal(lr: any) {
+    this.selectedStickerLrItem = lr;
+    this.StickerPrintComponent.openModal({ ...lr, dockno: lr.LrNumber });
+  }
+
+  openLrPrintModal(lr: any) {
+    this.LrPrintComponent.openModal({ ...lr, dockno: lr.LrNumber });
+  }
 }
 
 

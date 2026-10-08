@@ -353,7 +353,7 @@ export class LSUpdatePopupComponent {
 
   getLoadinglist() {
     const form = this.loadingSheetService.LSForm;
-    if (form.get('loadingBy')?.valid && form.get('nextStopLocation')?.valid && form.get('rateType')?.valid ) {
+    if (form.get('loadingBy')?.valid && form.get('nextStopLocation')?.valid && form.get('rateType')?.valid && form.get('lsType')?.valid) {
       this.getDocketListForMFDetail();
       this.isgetLoadingList = true;
     } else {
