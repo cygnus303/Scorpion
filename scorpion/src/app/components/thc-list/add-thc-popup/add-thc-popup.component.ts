@@ -1068,7 +1068,11 @@ export class AddThcPopupComponent {
   }
 
   getBidDetail() {
-    this.THCService.getBidDetail(this.docketService.loginUserList.LocationCode).subscribe({
+    let routeCode = this.ThcForm.get('routeCode')?.value || '';
+    if (routeCode && routeCode.includes(':')) {
+      routeCode = routeCode.split(':')[0];
+    }
+    this.THCService.getBidDetail(routeCode).subscribe({
       next: (response: any) => {
         this.bidData = response.data;
       }

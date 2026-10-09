@@ -325,7 +325,8 @@ export class DRSUpdateListComponent {
         DlyContactNo: new FormControl(item.dlyContactNo),
         invval: new FormControl(item.invval),
         dlypdcno: new FormControl(item.dlypdcno),
-        depsData: new FormControl(null)
+        depsData: new FormControl(null),
+        DRSGEN_SMS: new FormControl(item.drsgeN_SMS || item.drSGEN_SMS || item.drsgen_sms || null)
       });
 
       const initialVendorType = group.get('luVendorTyp')?.value;
@@ -1046,8 +1047,9 @@ export class DRSUpdateListComponent {
       const deliveredPkgs = Number(row.get('deliveredPkgs')?.value || 0);
       const isChecked = row.get('isChecked')?.value;
       const otpVerified = row.get('otpVerified')?.value;
+      const drsGenSms = row.get('DRSGEN_SMS')?.value;
 
-      if (isChecked && deliveredPkgs > 0 && !otpVerified) {
+      if (isChecked && deliveredPkgs > 0 && drsGenSms === 'Y' && !otpVerified) {
         hasError = true;
         row.patchValue({ otpError: 'OTP Verification is mandatory' });
       } else {
@@ -1201,7 +1203,7 @@ export class DRSUpdateListComponent {
     const drsNo = this.docketService.loginUserList.drsId;
 
     if (!otp) {
-      row.patchValue({ otpVerified: false, otpError: 'Enter OTP first' });
+      row.patchValue({ otpVerified: false, otpError: null });
       return;
     }
 
