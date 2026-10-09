@@ -556,6 +556,12 @@ export class DocketListComponent implements OnInit {
     return invalidControls;
   }
 
+  private toLocalIso(v: any): string | null {
+    if (!v) return null;
+    const d = new Date(v);
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, -1);
+  }
+
   onSubmit() {
     if (this.isSubmitting) return;
 
@@ -688,7 +694,8 @@ export class DocketListComponent implements OnInit {
 
         // ✅ conditionally add eWayBillExpiredDate only if eWayBillNo has value
         if (row.ewayBillNo) {
-          obj.EWayBillExpiredDate = row.ewayBillExpiry || null;
+          // obj.EWayBillExpiredDate = row.ewayBillExpiry || null;
+          obj.EWayBillExpiredDate = this.toLocalIso(row.ewayBillExpiry);
         }
 
         return obj;
