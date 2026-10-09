@@ -556,10 +556,19 @@ export class DocketListComponent implements OnInit {
     return invalidControls;
   }
 
-  private toLocalIso(v: any): string | null {
-    if (!v) return null;
-    const d = new Date(v);
-    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, -1);
+  // private toLocalIso(v: any): string | null {
+  //   if (!v) return null;
+  //   const d = new Date(v);
+  //   return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, -1);
+  // }
+
+  private toLocalIso(value: any): string | null {
+    if (!value) return null;
+    if (typeof value === 'string' && value.indexOf('0001') !== -1) return null; // '01 JAN 0001' = blank on edit load
+    const d = value instanceof Date ? new Date(value.getTime()) : new Date(value);
+    if (isNaN(d.getTime()) || d.getFullYear() < 1900) return null;
+    d.setHours(23, 59, 0, 0);
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 19);
   }
 
   onSubmit() {
