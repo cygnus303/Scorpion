@@ -20,13 +20,14 @@ import { HCCDetailsComponent } from '../prs-generation-list/hcc-details/hcc-deta
 import { GbViewComponent } from './gb-view/gb-view.component';
 import { StickerPrintComponent } from './sticker-print/sticker-print.component';
 import { LrPrintComponent } from './lr-print/lr-print.component';
-import { EwaybillInvoiceModalComponent } from 'app/shared/components/ewaybill-invoice-modal/ewaybill-invoice-modal.component';
 import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
+import { GdViewComponent } from './gd-view/gd-view.component';
+import { EwaybillInvoiceModalComponent } from 'app/shared/components/ewaybill-invoice-modal/ewaybill-invoice-modal.component';
 
 @Component({
   selector: 'app-lr-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent,LrViewComponent, HCCDetailsComponent, GbViewComponent, StickerPrintComponent, LrPrintComponent, EwaybillInvoiceModalComponent,DateRangePickerComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, LrViewComponent, HCCDetailsComponent, GbViewComponent, StickerPrintComponent, LrPrintComponent, EwaybillInvoiceModalComponent, DateRangePickerComponent, GdViewComponent],
   templateUrl: './lr-list.component.html',
   styleUrl: './lr-list.component.scss',
   providers: [BsModalService]
@@ -34,13 +35,14 @@ import { DateRangePickerComponent } from 'app/shared/components/date-range-picke
 export class LrListComponent {
   @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
   @ViewChild('GbViewComponent') gbViewComponent!: GbViewComponent;
+  @ViewChild('GdViewComponent') gdViewComponent!: GdViewComponent;
   public isLoading: boolean = false;
   public listSubscription?: Subscription;
   public LRData: any[] = [];
   private fetchSubject = new Subject<void>();
   public summaryData: any;
   public env = environment;
-  public isCSVLoading:boolean=false;
+  public isCSVLoading: boolean = false;
   public statusList = [
     { label: 'All Status', value: 'All' },
     { label: 'Pending for Quick Completion', value: 'pendingforQuickCompletion' },
@@ -49,7 +51,7 @@ export class LrListComponent {
     { label: 'Delivered', value: 'delivered' },
     { label: 'At Delivery Stock', value: 'At Delivery Stock' }
   ];
-    trackMenuItems = [
+  trackMenuItems = [
     { icon: '📊', label: 'Profit / Loss', type: 7 },
     { icon: '🔄', label: 'Operational Life Cycle', type: 3 },
     { icon: '💳', label: 'Financial Life Cycle', type: 4 },
@@ -119,7 +121,7 @@ export class LrListComponent {
       'Booking': 'chip-booking',
       'Delivered': 'chip-delivery',
       'At Delivery Stock': 'chip-deliveryStock',
-      'Cancelled':'chip-danger'
+      'Cancelled': 'chip-danger'
     };
     return map[status] ?? 'chip-pending';
   }
@@ -130,8 +132,8 @@ export class LrListComponent {
       'InTransit': '🚛',
       'Booking': '🏭',
       'Delivered': '🏬',
-      'At Delivery Stock':'💰',
-      'Cancelled':'🚫'
+      'At Delivery Stock': '💰',
+      'Cancelled': '🚫'
     };
     return icons[status] ?? '⏳';
   }
@@ -149,7 +151,11 @@ export class LrListComponent {
   }
 
   openHCCModal(lr: any) {
-    this.HCCDetailsComponent.showPopup(lr, 'G');
+    this.HCCDetailsComponent.showPopup(lr, 'G', 'GB');
+  }
+
+  openGDHCCModal(lr: any) {
+    this.HCCDetailsComponent.showPopup(lr, 'G', 'GD');
   }
 
   private apiCache = new Map<string, any>();
@@ -191,7 +197,7 @@ export class LrListComponent {
     });
   }
 
-  onExcelDownload(){
+  onExcelDownload() {
     this.isCSVLoading = true;
     const params = {
       startDate: this.formatDateToISO(this.config.fromDateStr),
@@ -201,7 +207,7 @@ export class LrListComponent {
       searchText: this.config.searchText || ''
     };
 
-   this.listSubscription = this.lrService.exportLRListing(params).subscribe({
+    this.listSubscription = this.lrService.exportLRListing(params).subscribe({
       next: (response: any) => {
         this.isCSVLoading = false;
         if (response && response.data) {
@@ -343,12 +349,12 @@ export class LrListComponent {
     this.router.navigate(['/docketFinancialEdit'], { queryParams: { fromLR: 'true' } });
   }
 
-onView(row: any){
+  onView(row: any) {
     this.LrViewComponent.showPopup(row);
-}
+  }
 
-openTrack(dockno: string){
-  const url = `${this.env.liveUrl}Tracking/LRLifecycleTracker?DocketNo=${dockno}&DockSf=.&src=angular`;
+  openTrack(dockno: string) {
+    const url = `${this.env.liveUrl}Tracking/LRLifecycleTracker?DocketNo=${dockno}&DockSf=.&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );
@@ -356,7 +362,7 @@ openTrack(dockno: string){
     if (popup) {
       popup.location.href = url;
     }
-}
+  }
 
   onTrackMenuClick(item: any, dockno: string) {
     this.openTrackIndex = null;
@@ -380,7 +386,7 @@ openTrack(dockno: string){
     if (popup) popup.location.href = url;
   }
 
- 
+
   openPrint(dockno: string) {
     const url = `${this.env.liveUrl}Operation/MultiDocketViewPrint?dockno=${dockno}&PrintType=5&src=angular`;
     const popup = window.open('', 'popupWindow',
@@ -401,8 +407,12 @@ openTrack(dockno: string){
     this.gbViewComponent.openModal(lr);
   }
 
-  onViewHCC(documentNo:any,hccNo:any){
-      const url = `${this.env.liveUrl}ViewPrint/ViewHCC?DocumentNo=${documentNo}&HCNo=${hccNo}&src=angular`;
+  onGDNo(lr: any) {
+    this.gdViewComponent.openModal(lr);
+  }
+
+  onViewHCC(documentNo: any, hccNo: any) {
+    const url = `${this.env.liveUrl}ViewPrint/ViewHCC?DocumentNo=${documentNo}&HCNo=${hccNo}&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );

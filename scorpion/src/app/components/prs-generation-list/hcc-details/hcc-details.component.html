@@ -24,13 +24,14 @@
                 <div class="radio-group d-flex align-items-center gap-4" *ngIf="!hasExistingHcc">
                     <label class="form-label fw-bold mb-0">Select HCC Type: </label>
                     <label class="radio-option d-flex align-items-center gap-2"
-                        *ngIf="documentType !== 'G'"
+                        *ngIf="isType !== 'GB'"
                         style="cursor:pointer; font-size: 13px;">
                         <input type="radio" name="hccType" value="Loading" [(ngModel)]="selectedHccType"
                             [disabled]="hasExistingHcc" (change)="onHccTypeChange()" style="width: 16px; height: 16px;">
                         Loading
                     </label>
                     <label class="radio-option d-flex align-items-center gap-2"
+                        *ngIf="isType !== 'GD'"
                         style="cursor:pointer; font-size: 13px;">
                         <input type="radio" name="hccType" value="Unloading" [(ngModel)]="selectedHccType"
                             [disabled]="hasExistingHcc" (change)="onHccTypeChange()" style="width: 16px; height: 16px;">

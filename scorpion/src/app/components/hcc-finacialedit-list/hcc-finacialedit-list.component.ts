@@ -15,11 +15,12 @@ import { Subject, Subscription, debounceTime } from 'rxjs';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { MenuAccessService } from 'app/shared/services/menu-access.service';
 import { GbViewComponent } from '../lr-list/gb-view/gb-view.component';
+import { GdViewComponent } from '../lr-list/gd-view/gd-view.component';
 
 @Component({
   selector: 'app-hcc-finacialedit-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, HCCDetailsComponent, HCCviewComponent,GbViewComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, HCCDetailsComponent, HCCviewComponent,GbViewComponent,GdViewComponent],
   providers: [BsModalService],
   templateUrl: './hcc-finacialedit-list.component.html',
   styleUrl: './hcc-finacialedit-list.component.scss',
@@ -28,6 +29,8 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
   @ViewChild('HCCviewComponent') HCCviewComponent!: HCCviewComponent;
   @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
   @ViewChild('GbViewComponent') gbViewComponent!: GbViewComponent;
+  @ViewChild('GdViewComponent') gdViewComponent!: GdViewComponent;
+
 
   public env = environment;
   public listSubscription?: Subscription;
@@ -334,6 +337,8 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
       url = `${this.env.liveUrl}ViewPrint/ViewPRS?DocumentNo=${docNo}&src=angular`;
     }else if (docNo.startsWith('GB')) {
       this.onGBNo(docNo);
+    }else if (docNo.startsWith('GD')) {
+      this.onGDNo(docNo);
     }
 
     if (url) {
@@ -350,4 +355,8 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
   onGBNo(lr: any) {
     this.gbViewComponent.openModal(lr);
   }
+  onGDNo(lr: any) {
+    this.gdViewComponent.openModal(lr);
+  }
+
 }

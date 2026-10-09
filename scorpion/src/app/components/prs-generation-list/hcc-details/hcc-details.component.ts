@@ -74,8 +74,10 @@ export class HCCDetailsComponent {
     // Auto-detect existing HCC type so radio shows pre-selected (disabled) state
     if (this.isType === 'E') {
       this.selectedHccType = data.ChargesType === 'U' ? 'Unloading' : 'Loading';
-    } else if (this.documentType === 'G') {
+    } else if (type === 'GB') {
       this.selectedHccType = 'Unloading';
+    } else if (type === 'GD') {
+      this.selectedHccType = 'Loading';
     } else {
       if (this.isHccValid(data.loadingNoHCCCnt) || this.isHccValid(data.loadingNoHCCCnt)) {
         this.selectedHccType = 'Unloading';
@@ -91,7 +93,7 @@ export class HCCDetailsComponent {
     this.getVendorType(this.documentType);
     if (this.isType === 'E') {
       this.getHCCEditDetail(data);
-    } else if (this.documentType === 'G') {
+    } else if (this.isType === 'GB' || this.isType === 'GD') {
       this.populateFromLRData(data);
     } else {
       this.getHCCDetail(data);
@@ -185,7 +187,10 @@ export class HCCDetailsComponent {
 
   populateFromLRData(data: any) {
     this.isLoading = false;
-    this.hccForm.patchValue({ documentNo: data.gbNo });
+    this.hccForm.patchValue({ 
+      documentNo: this.isType === 'GB' ? data.gbNo : data.gdNo ,
+      chargesType:this.selectedHccType
+    });
     this.lrList.clear();
     
     const item = {

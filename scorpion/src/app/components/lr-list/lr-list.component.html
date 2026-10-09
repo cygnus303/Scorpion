@@ -100,7 +100,7 @@
     <div>
         <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
             <div class="control-bar border-0 shadow-none mb-0">
-                  <!-- <div class="date-range-group">
+                <!-- <div class="date-range-group">
                     <span class="date-label">Date Range</span>
                     <div class="date-input-wrap" style="padding:0;">
                         <input type="text" id="dateFrom" bsDatepicker [(ngModel)]="config.fromDateStr"
@@ -120,9 +120,7 @@
                             style="position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;">📅</span>
                     </div>
                 </div> -->
-                <app-date-range-picker 
-                    [initialFromDate]="config.fromDateStr" 
-                    [initialToDate]="config.toDateStr"
+                <app-date-range-picker [initialFromDate]="config.fromDateStr" [initialToDate]="config.toDateStr"
                     (onRangeSelect)="onDateRangeSelected($event)">
                 </app-date-range-picker>
                 <div class="divider-v"></div>
@@ -148,14 +146,14 @@
                     <tr>
                         <th class="text-center">#</th>
                         <th class="text-center">LR No. / Date</th>
-                        <th class="text-center">GB No.</th>
+                        <th class="text-center">GB / GD No.</th>
                         <th class="text-center">HCC No.</th>
                         <th class="text-center">Org / Dest</th>
                         <th class="text-center">From / To City</th>
-                        <th class="text-center">Pickup / Delivery Type</th>
+                        <th class="text-center" style="white-space: normal; line-height: 1.2; width: 110px;">Pickup /<br>Delivery Type</th>
                         <th class="text-center">EDD /ADD</th>
                         <th class="text-center">Billing Party</th>
-                        <th class="text-center">Pay Base /Mode /Service</th>
+                        <th class="text-center" style="white-space: normal; line-height: 1.2; width: 110px;">Pay Base /<br>Mode / Service</th>
                         <th class="text-center">Status</th>
                         <th class="text-center">Actions</th>
                     </tr>
@@ -189,14 +187,33 @@
                                 <span class="lr-date">{{ lr.dockdt | date:'dd MMM yyyy' }}</span>
                             </div>
                         </td>
-                        <td class="cursor-pointer">
-                            <span class="fw-bold" style="color: #1a237e;  font-size: 12px;"
-                                (click)="lr.gbNo?onGBNo(lr):null">{{ lr.gbNo || '--' }}</span>
+                        <td>
+                            <div class="d-flex flex-column gap-1">
+                                <span class="fw-bold cursor-pointer" style="color: #1a237e; font-size: 12px;"
+                                    *ngIf="lr.gbNo"
+                                    (click)="onGBNo(lr)">
+                                    <span style="font-size: 9px; color: #64748b;" class="me-1">GB:</span>{{ lr.gbNo }}
+                                </span>
+                                <span class="fw-bold cursor-pointer" style="color: #b45309; font-size: 12px;"
+                                    *ngIf="lr.gdNo"
+                                    (click)="onGDNo(lr)">
+                                    <span style="font-size: 9px; color: #64748b;" class="me-1">GD:</span>{{ lr.gdNo }}
+                                </span>
+                                <span *ngIf="!lr.gbNo && !lr.gdNo">--</span>
+                            </div>
                         </td>
-                        <td class="cursor-pointer">
-                            <span class="fw-bold" style="color: #1a237e;  font-size: 12px;"
-                                (click)="lr.hcNumber?onViewHCC(lr.gbNo,lr.hcNumber):null">{{ lr.hcNumber || '--'
-                                }}</span>
+                        <td>
+                            <div class="d-flex flex-column gap-1">
+                                <span class="fw-bold cursor-pointer" style="color: #1a237e; font-size: 12px;"
+                                    (click)="lr.hcNumber ? onViewHCC(lr.gbNo, lr.hcNumber) : null">
+                                    <span *ngIf="lr.hcNumber" style="font-size: 9px; color: #64748b;" class="me-1">GB:</span>{{ lr.hcNumber || '--' }}
+                                </span>
+                                <span class="fw-bold cursor-pointer" style="color: #b45309; font-size: 12px;"
+                                    *ngIf="lr.lhcNumber"
+                                    (click)="lr.lhcNumber ? onViewHCC(lr.gdNo, lr.lhcNumber) : null">
+                                    <span style="font-size: 9px; color: #64748b;" class="me-1">GD:</span>{{ lr.lhcNumber }}
+                                </span>
+                            </div>
                         </td>
                         <td>
                             <div class="route route-wrapper">
@@ -213,7 +230,7 @@
                         <td>
                             <span
                                 [ngClass]="lr.pickdly && lr.pickdly !== '—' ? 'badge ' + getDeliveryTypeClass(lr.pickup_Dely) : 'text-muted'">
-                                {{ lr.pickdly || '—' }}
+                                {{ lr.pickdly==='DOOR PICKUP TO DOOR DELIVERY'?'Door To Door':lr.pickdly || '—' }}
                             </span>
                         </td>
                         <td>
@@ -234,15 +251,12 @@
                             </div>
                         </td>
                         <td>
-                            <div class="pay-mode">
-                                <span class="badge mb-1" [ngClass]="lr.paybas === 'Paid' ? 'badge-pp' : 'badge-tpay'">
+                            <div class="pay-mode text-center d-flex flex-column align-items-center gap-1">
+                                <span class="badge" [ngClass]="lr.paybas === 'Paid' ? 'badge-pp' : 'badge-tpay'" style="display: inline-block;">
                                     {{ lr.paybas }}
                                 </span>
-                                <div class="d-flex align-items-center gap-1">
-                                    <span class="pm-mode">{{ lr.trN_MOD }}</span>
-                                    <span class="text-muted" style="font-size:10px;">|</span>
-                                    <span class="pm-svc">{{ lr.service_Type }}</span>
-                                </div>
+                                <span class="pm-mode text-nowrap" style="font-weight: 700; color: #1a237e; font-size: 11px;">{{ lr.trN_MOD }}</span>
+                                <span class="pm-svc text-nowrap" style="font-weight: 700; color: #4338ca; font-size: 10px;">{{ lr.service_Type }}</span>
                             </div>
                         </td>
                         <td>
@@ -274,19 +288,16 @@
                                         <a><span class="pi">🔖</span> UBI Sticker Print</a>
                                     </div>
                                 </div>
-                                <!-- <button class="ab ab-hcc" (click)="openHCCModal(lr)">🏢 HCC</button> -->
                                 <button class="ab ab-hcc" (click)="openHCCModal(lr)"
-                                    [disabled]="lr.ishccAllow === 'N' ? true : false">🏢 HCC</button>
+                                    [disabled]="lr.ishccAllow === 'N' ? true : false">🏢 GB HCC</button>
+                                <button class="ab ab-gdhcc" (click)="openGDHCCModal(lr)"
+                                    [disabled]="lr.ishccAllowGD === 'N' ? true : false">📦 GD HCC</button>
                                 <button class="ab ab-lrprint" (click)="openLrPrintModal(lr)">📄 LR Print</button>
-                                <div
-                                    style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 4px;">
-                                    <button class="ab ab-eway m-0"
-                                        style="width: 100%; white-space: nowrap; padding: 4px 2px;"
-                                        (click)="getEwaybillData(lr)">🧾 E-Way No. / Invoice</button>
-                                    <button class="ab ab-view m-0"
-                                        style="width: 100%; white-space: nowrap; padding: 4px 2px;" (click)="openStickerPrintModal(lr)">🏷️ Sticker
-                                        Print</button>
-                                </div>
+                                <button class="ab ab-eway m-0" style="grid-column: span 2; white-space: nowrap;"
+                                    (click)="getEwaybillData(lr)">🧾 E-Way No. / Invoice</button>
+                                <button class="ab ab-view m-0" style="grid-column: 1 / -1; width: max-content; justify-self: center;"
+                                    (click)="openStickerPrintModal(lr)">🏷️ Sticker
+                                    Print</button>
                             </div>
                         </td>
                     </tr>
@@ -308,6 +319,6 @@
 
 <app-hcc-details #HCCDetailsComponent (dataEmitter)="fetchLRList()"></app-hcc-details>
 <app-gb-view #GbViewComponent></app-gb-view>
+<app-gd-view #GdViewComponent></app-gd-view>
 <app-sticker-print #StickerPrintComponent></app-sticker-print>
 <app-lr-print #LrPrintComponent></app-lr-print>
-

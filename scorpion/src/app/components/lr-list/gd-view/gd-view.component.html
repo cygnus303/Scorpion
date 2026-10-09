@@ -1,0 +1,97 @@
+<ng-template #gdViewModal>
+    <div class="modal-header border-0 pb-3" style="background: #1a2f53; color: white; border-radius: 5px 5px 0 0; padding: 16px 20px;">
+        <div class="d-flex align-items-center gap-3">
+            <span class="fs-4">🚚</span>
+            <div>
+                <h5 class="modal-title fw-bold mb-1" style="font-size: 16px; letter-spacing: 0.3px;">Godown Delivery Details</h5>
+                <div style="font-size: 11px; color: #94a3b8; font-weight: 500;">
+                    <ng-container *ngIf="!isLoading">{{ GDData?.GDNo || '—' }} <span class="mx-1">|</span> {{ GDData?.ToLocation || '—' }}</ng-container>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white opacity-75" aria-label="Close" (click)="closeModal()" style="font-size: 12px;"></button>
+    </div>
+    <div class="modal-body" style="background: #f1f5f9; padding: 20px; min-height: 250px; position: relative;">
+        <!-- Loading Spinner -->
+        <div *ngIf="isLoading" class="d-flex flex-column align-items-center justify-content-center h-100 position-absolute w-100 top-0 start-0 z-1" style="background: rgba(241, 245, 249, 0.8);">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="mt-2 text-muted fw-bold" style="font-size: 12px;">Fetching GD Details...</div>
+        </div>
+
+        <div class="card border-0 shadow-sm" style="border-radius: 8px; overflow: hidden;" *ngIf="!isLoading">
+            <div class="card-body p-4">
+                <div class="row gy-4">
+                    <!-- Row 1 -->
+                    <div class="col-4">
+                        <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 10px; letter-spacing: 0.5px;">GODOWN DELIVERY NO</div>
+                        <div class="fw-bold" style="font-size: 13px; color: #0f172a;">{{ GDData?.GDNo || '—' }}</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 10px; letter-spacing: 0.5px;">GODOWN DELIVERY DATE</div>
+                        <!-- Assuming docket date can be used here if GD Date is not in response, or we leave it if we don't have it -->
+                        <div class="fw-bold" style="font-size: 13px; color: #0f172a;">{{ (GDData?.DocketDate | date:'dd-MMM-yy') || '—' }}</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 10px; letter-spacing: 0.5px;">DELIVERY GODOWN</div>
+                        <div class="fw-bold" style="font-size: 13px; color: #0f172a;">{{ GDData?.ToLocation || '—' }}</div>
+                    </div>
+                    
+                    <!-- Row 2 -->
+                    <div class="col-4">
+                        <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 10px; letter-spacing: 0.5px;">ORG / DEST</div>
+                        <div class="fw-bold d-flex align-items-center gap-2" style="font-size: 13px; color: #0f172a;">
+                            {{ GDData?.FromLocation || '—' }} <span style="color: #94a3b8;">→</span> {{ GDData?.ToLocation || '—' }}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 10px; letter-spacing: 0.5px;">DELIVERY TYPE</div>
+                        <div class="fw-bold" style="font-size: 13px; color: #0f172a;">
+                            <span *ngIf="GDData?.DeliveryType?.trim() === '3'">Door-Godown</span>
+                            <span *ngIf="GDData?.DeliveryType?.trim() !== '3'">{{ GDData?.DeliveryType || '—' }}</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 10px; letter-spacing: 0.5px;">CUSTOMER</div>
+                        <div class="fw-bold text-truncate" style="font-size: 13px; color: #0f172a; max-width: 100%;" [title]="GDData?.Customer">{{ GDData?.Customer || '—' }}</div>
+                    </div>
+
+                    <!-- Row 3 -->
+                    <div class="col-4">
+                        <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 10px; letter-spacing: 0.5px;">DOCKET NO</div>
+                        <div class="fw-bold" style="font-size: 13px; color: #0f172a;">{{ GDData?.DocketNo || '—' }}</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 10px; letter-spacing: 0.5px;">DOCKET DATE</div>
+                        <div class="fw-bold" style="font-size: 13px; color: #0f172a;">{{ (GDData?.DocketDate | date:'dd-MMM-yy') || '—' }}</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 10px; letter-spacing: 0.5px;">PKGS / WEIGHT</div>
+                        <div class="fw-bold" style="font-size: 13px; color: #0f172a;">{{ GDData?.Package || 0 }} pkgs, {{ GDData?.Weight || 0 }} kg</div>
+                    </div>
+
+                    <!-- Row 4 -->
+                    <div class="col-4">
+                        <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 10px; letter-spacing: 0.5px;">HCC TYPE</div>
+                        <div class="fw-bold" style="font-size: 13px; color: #0f172a;">Loading HCC</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="text-muted text-uppercase fw-bold mb-1" style="font-size: 10px; letter-spacing: 0.5px;">HCC STATUS</div>
+                        <div class="fw-bold" style="font-size: 13px; color: #64748b;">
+                            <span *ngIf="GDData?.lhcNumber; else noHcc" style="color: #059669;">Generated ({{ GDData.lhcNumber }})</span>
+                            <ng-template #noHcc>Not generated</ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer border-0 p-3 pt-0 d-flex justify-content-end" style="background: #f1f5f9;">
+        <button type="button" class="btn btn-sm fw-bold px-4" 
+            style="background: #ffffff; color: #334155; border: 1px solid #cbd5e1; border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" 
+            (click)="closeModal()">
+            Close
+        </button>
+    </div>
+</ng-template>
