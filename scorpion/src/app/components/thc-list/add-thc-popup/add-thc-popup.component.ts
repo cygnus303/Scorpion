@@ -112,6 +112,7 @@ export class AddThcPopupComponent {
 
     this.ThcForm = this.fb.group({
       tHCDate: [this.formatDateTime(new Date())],
+      thcType: [{value: (this.selectedMfs && this.selectedMfs.length > 0) ? this.selectedMfs[0].lsType : '', disabled: true}],
       routeType: [initialRouteType, Validators.required],
       actualDeptDate: [this.formatDateTime(new Date())],
       scheduleDeptDate: [this.formatDateTime(new Date())],
@@ -1247,6 +1248,7 @@ export class AddThcPopupComponent {
           "TOCITY": "",
           "THCType": 1,
           "RouteCategory": "",
+          "ThcType": formValue.thcType || "",
           "RouteType": formValue.routeType || "",
           "RouteCode": formValue.routeCode || "",
           "RouteName": formValue.routeCode || "",

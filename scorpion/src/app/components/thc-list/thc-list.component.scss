@@ -86,3 +86,25 @@
   }
   .empty-thc-yes    { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
   .empty-thc-no     { background: #eceff1; color: #455a64; border: 1px solid #b0bec5; }
+
+  /* ── MF Type Badges ── */
+  .mf-type-badge {
+    display: inline-block;
+    padding: 1.5px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    border: 1px solid currentColor;
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+  
+  .mf-type-badge.type-ltl { color: #0284c7; background: #e0f2fe; }
+  .mf-type-badge.type-ftl { color: #16a34a; background: #dcfce7; }
+  .mf-type-badge.type-ltl-air { color: #9333ea; background: #f3e8ff; }
+  .mf-type-badge.type-ftl-cold { color: #0891b2; background: #cffafe; }
+  .mf-type-badge.type-ltl-sample { color: #d97706; background: #fef3c7; }
+  .mf-type-badge.type-ltl-ftl { color: #2563eb; background: #dbeafe; }
+  .mf-type-badge.type-ltl-cold { color: #0d9488; background: #ccfbf1; }
+  .mf-type-badge.type-ltl-ftl-cold { color: #0891b2; background: #cffafe; }
+  .mf-type-badge.type-default { color: #475569; background: #f1f5f9; }
