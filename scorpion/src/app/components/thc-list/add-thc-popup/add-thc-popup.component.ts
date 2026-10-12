@@ -1248,7 +1248,7 @@ export class AddThcPopupComponent {
           "TOCITY": "",
           "THCType": 1,
           "RouteCategory": "",
-          "ThcType": formValue.thcType || "",
+          // "ThcType": formValue.thcType || "",
           "RouteType": formValue.routeType || "",
           "RouteCode": formValue.routeCode || "",
           "RouteName": formValue.routeCode || "",
