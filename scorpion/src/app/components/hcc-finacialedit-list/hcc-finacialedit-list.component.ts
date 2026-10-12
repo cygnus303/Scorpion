@@ -335,9 +335,9 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
       url = `${this.env.liveUrl}ViewPrint/ViewDRS?DocumentNo=${docNo}&src=angular`;
     } else if (docNo.startsWith('PS')) {
       url = `${this.env.liveUrl}ViewPrint/ViewPRS?DocumentNo=${docNo}&src=angular`;
-    }else if (docNo.startsWith('GB')) {
+    }else if (docNo.startsWith('GHB')) {
       this.onGBNo(docNo);
-    }else if (docNo.startsWith('GD')) {
+    }else if (docNo.startsWith('GHD')) {
       this.onGDNo(docNo);
     }
 
