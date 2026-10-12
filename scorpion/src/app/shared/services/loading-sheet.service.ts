@@ -115,6 +115,7 @@ export class LoadingSheetService {
         PackagesLB_old: new FormControl(item.packagesLB || ''),
         WeightLB_old: new FormControl(item.weightLB || ''),
         service_Class: new FormControl(item.service_Class || ''),
+        service_ClassName: new FormControl(item.service_ClassName || ''),
       });
 
       const initialVendorType = group.get('luVendorTyp')?.value;

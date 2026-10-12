@@ -356,8 +356,11 @@
                                     style="font-size: 11px;">{{ lr.CustType }}</span>
                             </td>
                             <!-- CUSTOMER NAME -->
-                            <td><span class="fw-semibold text-dark" style="font-size: 13px; white-space: nowrap;">{{
-                                    lr.party_name }}</span></td>
+                            <td>
+                                <div class="fw-semibold text-dark" style="font-size: 12.5px; white-space: normal; line-height: 1.3; min-width: 200px; max-width: 280px; word-break: break-word;">
+                                    {{ lr.party_name }}
+                                </div>
+                            </td>
                             <td class="text-center">
                                 <span
                                     class="badge rounded-pill px-2 py-1 fw-bold d-inline-flex align-items-center gap-1 border"
@@ -370,11 +373,11 @@
                             <!-- ACTIONS -->
                             <td class="pe-3">
                                 <div class="d-flex flex-wrap justify-content-start align-items-center gap-2">
-                                    <!-- <button class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1"
+                                    <button class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1"
                                         (click)="openPrintView(lr)"
                                         style="font-size: 11px; background: #e8f0fd; color: #1a3a6b; border: 1px solid #c5d5f5;">
                                         🖨 Print
-                                    </button> -->
+                                    </button>
                                     <button class="btn btn-sm fw-bold px-2 py-1 d-inline-flex align-items-center gap-1"
                                         (click)="openTrackerView(lr.LrNumber)"
                                         style="font-size: 11px; background: #e6f7ef; color: #1a9e5c; border: 1px solid #aaddc7;">

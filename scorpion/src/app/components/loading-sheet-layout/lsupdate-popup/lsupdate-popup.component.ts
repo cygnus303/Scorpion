@@ -44,6 +44,7 @@ export class LSUpdatePopupComponent {
   public today: Date = new Date();
   public isSubmitting: boolean = false;
   public selectedServiceClass: string | null = null;
+  public selectedServiceClassName: string | null = null;
   public headerVendorList: any[] = [];
   public headerVendor: any = null;
   public rowVendorList: any[][] = [];
@@ -485,8 +486,10 @@ export class LSUpdatePopupComponent {
     
     if (selected.length > 0) {
       this.selectedServiceClass = selected[0].get('service_Class')?.value;
+      this.selectedServiceClassName = selected[0].get('service_ClassName')?.value;
     } else {
       this.selectedServiceClass = null;
+      this.selectedServiceClassName = null;
     }
 
     formArray.controls.forEach((group: any) => {
@@ -588,7 +591,7 @@ export class LSUpdatePopupComponent {
           mathadiDate: new Date(this.loadingSheetService.LSForm.value.mathadiDate).toISOString(),
           vendorCode: this.loadingSheetService.LSForm.value.vendorCode ? this.loadingSheetService.LSForm.value.vendorCode : '',
           vehno: this.loadingSheetService.LSForm.value.vehno ? this.loadingSheetService.LSForm.value.vehno : '',
-          lsType: this.loadingSheetService.LSForm.value.lsType ? this.loadingSheetService.LSForm.value.lsType : '',
+          lsType: this.selectedServiceClassName || (this.loadingSheetService.LSForm.value.lsType ? this.loadingSheetService.LSForm.value.lsType : ''),
           loadingBy: this.loadingSheetService.LSForm.value.loadingBy ? this.loadingSheetService.LSForm.value.loadingBy : '',
           nextStopLocation: this.loadingSheetService.LSForm.value.nextStopLocation ? this.loadingSheetService.LSForm.value.nextStopLocation : '',
           rateType: this.loadingSheetService.LSForm.value.rateType ? this.loadingSheetService.LSForm.value.rateType : '',

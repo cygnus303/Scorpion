@@ -117,9 +117,10 @@
                     </div>
                 </div>
                 <div class="table-toolbar d-flex align-items-center gap-3">
-                    <div class="selected-count text-primary fw-bold bg-primary-subtle px-3 py-1 rounded"
+                    <div class="selected-count text-primary fw-bold bg-primary-subtle px-3 py-1 rounded d-flex align-items-center gap-2"
                         *ngIf="THCFilterForm.get('statusFilter')?.value === 'MFPENDING' && selectedMfs.length > 0">
                         {{ selectedMfs.length }} MF Selected
+                        <span class="cursor-pointer ms-1" style="font-size: 18px; line-height: 0.8;" (click)="clearSelection()" title="Clear Selection">&times;</span>
                     </div>
                     <div class="search-box d-flex align-items-center"><span class="text-muted">🔍</span>
                         <input type="text" placeholder="Search..." class="form-control border-0 shadow-none"
@@ -128,6 +129,45 @@
                 </div>
             </div>
         </form>
+
+        <!-- MF Type Legend Strip (only for MF Pending for THC) -->
+        <div class="mf-type-legend bg-white rounded border px-3 py-2 mt-2 mb-2 d-flex align-items-center gap-3" *ngIf="!isThcListing" style="border-color: #e5e7eb !important;">
+            <div class="text-secondary fw-bold" style="font-size: 10px; letter-spacing: 0.5px;">MF TYPE &mdash; TRANSPORT MODE / SERVICE TYPE</div>
+            <div class="d-flex align-items-center gap-3 ms-auto" style="overflow-x: auto; white-space: nowrap;">
+                <div class="d-flex align-items-center gap-1">
+                    <span class="mf-type-badge type-ltl">LTL</span>
+                    <span class="text-muted" style="font-size: 9.5px; font-weight: 500;">&rarr; <span class="text-secondary" style="font-size: 12px;">&bull;</span> Road / LTL</span>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span class="mf-type-badge type-ftl">FTL</span>
+                    <span class="text-muted" style="font-size: 9.5px; font-weight: 500;">&rarr; <span class="text-secondary" style="font-size: 12px;">&bull;</span> Road / FTL</span>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span class="mf-type-badge type-ltl-ftl">LTL-FTL</span>
+                    <span class="text-muted" style="font-size: 9.5px; font-weight: 500;">&rarr; <span class="text-secondary" style="font-size: 12px;">&bull;</span> Road / FTL-LTL</span>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span class="mf-type-badge type-ltl-cold">LTL-COLD</span>
+                    <span class="text-muted" style="font-size: 9.5px; font-weight: 500;">&rarr; <span class="text-info" style="font-size: 12px;">&bull;</span> Cold Chain / LTL</span>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span class="mf-type-badge type-ftl-cold">FTL-COLD</span>
+                    <span class="text-muted" style="font-size: 9.5px; font-weight: 500;">&rarr; <span class="text-info" style="font-size: 12px;">&bull;</span> Cold Chain / FTL</span>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span class="mf-type-badge type-ltl-ftl-cold">LTL-FTL-COLD</span>
+                    <span class="text-muted" style="font-size: 9.5px; font-weight: 500;">&rarr; <span class="text-info" style="font-size: 12px;">&bull;</span> Cold Chain / FTL-LTL</span>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span class="mf-type-badge type-ltl-sample">LTL-SAMPLE</span>
+                    <span class="text-muted" style="font-size: 9.5px; font-weight: 500;">&rarr; <span class="text-warning" style="font-size: 12px;">&bull;</span> Sample / LTL</span>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span class="mf-type-badge type-ltl-air">LTL-AIR</span>
+                    <span class="text-muted" style="font-size: 9.5px; font-weight: 500;">&rarr; <span style="color: #9333ea; font-size: 12px;">&bull;</span> Air / LTL</span>
+                </div>
+            </div>
+        </div>
 
         <div class="table-wrap">
             <table class="table align-middle  data-table mb-0">
@@ -140,7 +180,7 @@
                         <th class="text-center">Is Empty THC</th>
                         <th class="text-center">Vendor Type / Name</th>
                         <th class="text-center">Vehicle No.</th>
-                        <th class="text-center">Service Type / Mode</th>
+                        <th class="text-center">THC Type / Mode</th>
                         <th class="text-center">Departure Date & Time</th>
                         <th class="text-center">Last Location</th>
                         <th class="text-center">THC Route</th>
@@ -159,7 +199,7 @@
                         <th class="text-center" style="width: 140px;">MF Branch</th>
                         <th class="text-center">Next Stop</th>
                         <th class="text-center">Transport Mode</th>
-                        <th class="text-center">Service Type</th>
+                        <th class="text-center">MF Type</th>
                         <th class="text-center">Total C-Note</th>
                         <th class="text-center">Pkgs / Wt.</th>
                     </tr>
@@ -290,9 +330,14 @@
                 <tbody *ngIf="!isLoading && mfData?.length > 0 && !isThcListing">
                     <tr *ngFor="let data of mfData; let i = index">
                         <td class="text-center text-muted fs-7">
-                            <input type="checkbox" class="form-check-input cursor-pointer"
-                                style="width: 15px; height: 15px;" [checked]="isMfSelected(data)"
-                                (change)="toggleMfSelection(data, $event)">
+                            <span [style.cursor]="isCheckboxDisabled(data) ? 'not-allowed' : 'pointer'"
+                                  [attr.title]="isCheckboxDisabled(data) ? 'Cannot select: Mismatched MF Type or Transport Mode' : null"
+                                  style="display: inline-block;">
+                                <input type="checkbox" class="form-check-input cursor-pointer"
+                                    style="width: 15px; height: 15px;" [checked]="isMfSelected(data)"
+                                    [style.pointer-events]="isCheckboxDisabled(data) ? 'none' : 'auto'"
+                                    (change)="toggleMfSelection(data, $event)">
+                            </span>
                         </td>
                         <td>
                             <div class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;" (click)="openMFView(data.tcno)"><a>{{
@@ -315,9 +360,14 @@
                             </span>
                         </td>
                         <td class="text-center cursor-pointer">
-                            <span class="px-4 py-2">
-                                {{data.lsType}}
-                            </span>
+                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                <span class="mf-type-badge mb-1" [ngClass]="getMfTypeClass(data.lsType)">
+                                    {{data.lsType}}
+                                </span>
+                                <span class="text-muted" style="font-size: 8.5px; font-weight: 500;">
+                                    Service: {{ getBaseService(data.lsType) }}
+                                </span>
+                            </div>
                         </td>
                         <td class="text-center">
                             <span class="pill-badge px-2 py-1">

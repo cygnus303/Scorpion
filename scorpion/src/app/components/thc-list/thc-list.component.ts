@@ -207,6 +207,24 @@ export class ThcListComponent {
     return true;
   }
 
+  getMfTypeClass(lsType: string): string {
+    if (!lsType) return 'type-default';
+    // Generate a CSS class name dynamically based on the text (e.g. "LTL AIR" -> "type-ltl-air")
+    return `type-${lsType.toString().toLowerCase().trim().replace(/[^a-z0-9]/g, '-')}`;
+  }
+
+  getBaseService(lsType: string): string {
+    if (!lsType) return '';
+    // Dynamically guess the base service by splitting on hyphens or spaces
+    const parts = lsType.toString().split(/[- ]+/);
+    if (parts.length >= 3) {
+      return `${parts[0]}-${parts[1]}`; // e.g. LTL-FTL-COLD -> LTL-FTL
+    } else if (parts.length === 2) {
+      return parts[0]; // e.g. LTL-AIR -> LTL
+    }
+    return lsType; // e.g. LTL -> LTL
+  }
+
   downloadExcel() {
     this.isdownload = true;
     const payload = {
@@ -339,9 +357,21 @@ export class ThcListComponent {
     if (isChecked) {
       if (this.selectedMfs.length > 0) {
         const firstMode = this.selectedMfs[0].routE_MODE;
+        const firstLsType = this.selectedMfs[0].lsType;
+
+        if (firstLsType !== data.lsType) {
+          const typeDisplay = firstLsType ? firstLsType.toUpperCase() : 'UNKNOWN';
+          const msg = `MF Type mismatch!! You have already selected ${typeDisplay} type MF(s). Please select MFs of the same MF Type only.`;
+          this.sweetAlertService.info(msg);
+          if (event && event.target) {
+            event.target.checked = false;
+          }
+          return;
+        }
+
         if (firstMode !== data.routE_MODE) {
           const modeDisplay = firstMode ? firstMode.toUpperCase() : 'UNKNOWN';
-          const msg = `Transport Mode mismatch!! You have already selected ${modeDisplay} mode MF(s).Please select MFs of the same Transport Mode only.`;
+          const msg = `Transport Mode mismatch!! You have already selected ${modeDisplay} mode MF(s). Please select MFs of the same Transport Mode only.`;
           this.sweetAlertService.info(msg);
           if (event && event.target) {
             event.target.checked = false;
@@ -355,8 +385,23 @@ export class ThcListComponent {
     }
   }
 
+  clearSelection() {
+    this.selectedMfs = [];
+  }
+
   isMfSelected(data: any): boolean {
     return this.selectedMfs.some(mf => mf.tcno === data.tcno);
+  }
+
+  isCheckboxDisabled(data: any): boolean {
+    if (this.selectedMfs.length > 0) {
+      const firstLsType = this.selectedMfs[0].lsType;
+      const firstMode = this.selectedMfs[0].routE_MODE;
+      if (firstLsType !== data.lsType || firstMode !== data.routE_MODE) {
+        return true;
+      }
+    }
+    return false;
   }
 
   get isThcListing(): boolean {
