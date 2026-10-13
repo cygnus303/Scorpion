@@ -193,13 +193,6 @@ export class DrsGenerationListComponent {
     return true;
   }
 
-  
-  isSampark(data: any): boolean {
-    if (!data) return false;
-    const val = data.isSamparkVendor;
-    return val === true ;
-  }
-
   onFilterChange() {
     this.pagination.page = 1;
     this.getDRSdetail();
