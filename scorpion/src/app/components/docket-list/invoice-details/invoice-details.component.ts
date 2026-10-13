@@ -683,7 +683,7 @@ export class InvoiceDetailsComponent {
       const type= this.docketService.loginUserList.Type;
       
 
-      if (declared < 50000 && !ewayBillNo && billingType !== 'P04' && !isreferenceDKT && type !== '2') {
+      if (declared < 50000 && !ewayBillNo && billingType !== 'P04' && type !== '2') {
         row.get('invoiceCopy')?.setValidators([Validators.required]);
       } else {
         row.get('invoiceCopy')?.clearValidators();
