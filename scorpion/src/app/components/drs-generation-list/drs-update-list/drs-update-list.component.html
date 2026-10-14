@@ -265,10 +265,10 @@
 
                                                 <!-- 2. Docket No / Date -->
                                                 <td class="align-middle">
-                                                    <div class="text-primary text-decoration-underline fw-bold mb-1">{{
-                                                        row.get('dockno')?.value }}</div>
-                                                    <div class="text-muted">{{ row.get('booking_Date')?.value |
-                                                        date:'dd MMM yyyy'}}</div>
+                                                    <div class="text-primary text-decoration-underline fw-bold mb-1">
+                                                        {{ row.value.dockno }}{{row.value.docksf }}</div>
+                                                    <div class="text-muted">
+                                                        {{ row.value.booking_Date | date:'dd MMM yyyy'}}</div>
                                                 </td>
 
                                                 <!-- 3. Org / Dest / Paybase -->
