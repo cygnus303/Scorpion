@@ -142,7 +142,7 @@
                                                 <div class="d-flex align-items-center justify-content-center gap-2">
                                                     <input class="form-check-input m-0" type="checkbox"
                                                         style="transform: scale(1.2); border-color: #0d47a1;"
-                                                        [checked]="isAllSelected()" (change)="toggleAll($event)" />
+                                                        [checked]="allSelected" (change)="toggleAll($event)" />
                                                     #
                                                 </div>
                                             </th>
@@ -249,10 +249,10 @@
                                                 <i class="fas fa-exclamation-circle me-1"></i> No Data Found
                                             </td>
                                         </tr>
-                                        <ng-container *ngFor="let row of drsList.controls; let i = index"
+                                        <ng-container *ngFor="let row of drsList.controls; let i = index; trackBy: trackByRow"
                                             [formGroupName]="i">
                                             <tr
-                                                [ngClass]="{'row-selected': row.value.isChecked, 'row-unchecked': !row.value.isChecked}">
+                                                [ngClass]="{'row-selected': row.get('isChecked')?.value, 'row-unchecked': !row.get('isChecked')?.value}">
                                                 <!-- 1. Sr.No -->
                                                 <td class="text-center align-middle">
                                                     <div class="d-flex align-items-center justify-content-center gap-2">
@@ -273,32 +273,27 @@
 
                                                 <!-- 3. Org / Dest / Paybase -->
                                                 <td class="align-middle">
-                                                    <div class="text-primary fw-bold mb-1">{{ row.value.orgncd }} &rarr;
-                                                        {{ row.value.destcd }}</div>
+                                                    <div class="text-primary fw-bold mb-1">{{ row.get('orgncd')?.value }} &rarr;
+                                                        {{ row.get('destcd')?.value }}</div>
                                                     <div class="text-muted">Pay Basis: <span
-                                                            class="text-success fw-bold">{{row.value.payBasis }}</span>
+                                                            class="text-success fw-bold">{{ row.get('payBasis')?.value }}</span>
                                                     </div>
                                                 </td>
 
                                                 <!-- 4. Billing Party / Consignee -->
                                                 <td class="align-middle">
-                                                    <div class="text-primary fw-bold mb-1">{{ row.value.csgncd }}</div>
-                                                    <div class="text-muted">{{row.value.csgecd }}</div>
+                                                    <div class="text-primary fw-bold mb-1">{{ row.get('csgncd')?.value }}</div>
+                                                    <div class="text-muted">{{ row.get('csgecd')?.value }}</div>
                                                 </td>
 
                                                 <!-- 5. Pkg Booked / Pending -->
-                                                <!-- <td class="align-middle fw-semibold">
-                                                    <div class="text-primary mb-1">{{ row.value.pkgs_Booked }}/{{row.value.pkgs_Arrived }}/{{
-                                                            row.value.pkgs_Pending }}
-                                                    </div>
-                                                </td> -->
                                                 <td class=" text-center">
                                                     <div class="d-flex justify-content-center">
-                                                        <div *ngIf="row.value.pkgs_Pending" class="text-danger"
-                                                            [ngClass]="{ 'font-large': row.value.deliveredPkgs > row.value.pkgs_Pending, '': row.value.deliveredPkgs <= row.value.pkgs_Pending }">
-                                                            {{ row.value.pkgs_Pending }} / </div>
-                                                        <div> {{ row.value.pkgs_Arrived }} / </div>
-                                                        <div>{{ row.value.pkgs_Booked }}</div>
+                                                        <div *ngIf="row.get('pkgs_Pending')?.value" class="text-danger"
+                                                            [ngClass]="{ 'font-large': (row.get('deliveredPkgs')?.value || 0) > (row.get('pkgs_Pending')?.value || 0) }">
+                                                            {{ row.get('pkgs_Pending')?.value }} / </div>
+                                                        <div> {{ row.get('pkgs_Arrived')?.value }} / </div>
+                                                        <div>{{ row.get('pkgs_Booked')?.value }}</div>
                                                     </div>
                                                 </td>
 
@@ -307,43 +302,42 @@
                                                     <input class="form-control form-control-sm text-center"
                                                         formControlName="deliveredPkgs" (input)="onDeliveredBlur(i)"
                                                         oninput="this.value = this.value.replace(/[^0-9]/g,'');"
-                                                        [ngClass]="{'border-danger': row.get('deliveredPkgs')?.hasError('maxPending')}"
-                                                        appFocusNext>
+                                                        [ngClass]="{'border-danger': row.get('deliveredPkgs')?.hasError('maxPending')}">
                                                     <div *ngIf="row.get('deliveredPkgs')?.hasError('maxPending')"
                                                         class="text-danger mt-1"
                                                         style="font-size: 11px; line-height: 1;">
-                                                        Must be &le; {{ row.value.pkgs_Pending }}
+                                                        Must be &le; {{ row.get('pkgs_Pending')?.value }}
                                                     </div>
                                                 </td>
 
                                                 <!-- 7. Part Del / Undel Reason (Combined Reason + Remarks) -->
+                                                <!-- 7. Part Del / Undel Reason (Combined Reason + Remarks) -->
                                                 <td class="align-top">
-                                                    <div *ngIf="drsList.at(i).get('showReason')?.value" class="mb-1">
+                                                    <div *ngIf="row.get('showReason')?.value" class="mb-1">
                                                         <ng-select class="noFoundTextColor required2 clear-icon mselect"
                                                             formControlName="cboReason" bindLabel="codeDesc"
                                                             bindValue="codeId" [items]="generalMasterService.reasonData"
-                                                            placeholder="Select Reason" appFocusNext appendTo="body"
-                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('cboReason')?.invalid && drsList.at(i).get('cboReason')?.touched}"></ng-select>
+                                                            placeholder="Select Reason" appendTo="body"
+                                                            [ngClass]="{ 'border-danger': row.get('cboReason')?.invalid && row.get('cboReason')?.touched}"></ng-select>
                                                         <div class="text-danger mt-1" style="font-size: 11px;"
-                                                            *ngIf="drsList.at(i).get('cboReason')?.invalid && drsList.at(i).get('cboReason')?.touched">
+                                                            *ngIf="row.get('cboReason')?.invalid && row.get('cboReason')?.touched">
                                                             Required</div>
                                                     </div>
-                                                    <div *ngIf="!drsList.at(i).get('showReason')?.value"
+                                                    <div *ngIf="!row.get('showReason')?.value"
                                                         class="text-muted text-start mb-1" style="font-size: 12px;">—
                                                     </div>
                                                     <textarea rows="1" class="form-control form-control-sm"
-                                                        formControlName="remarks" placeholder="Enter Remarks"
-                                                        appFocusNext></textarea>
+                                                        formControlName="remarks" placeholder="Enter Remarks"></textarea>
                                                 </td>
 
                                                 <!-- 8. Total Wt / Delivered Wt -->
                                                 <td class="align-middle text-center">
                                                     <div class="text-muted mb-1">
-                                                        {{row.value.pkgQty}}/{{row.value.actQty}}</div>
+                                                        {{ row.get('pkgQty')?.value }}/{{ row.get('actQty')?.value }}</div>
                                                 </td>
 
                                                 <!-- 9. Committed Dely Dt -->
-                                                <td class="align-middle text-muted">{{row.value.comm_Dely_Dt }}</td>
+                                                <td class="align-middle text-muted">{{ row.get('comm_Dely_Dt')?.value }}</td>
 
                                                 <!-- 10. HCC Vendor Type -->
                                                 <td class="align-top">
@@ -360,13 +354,10 @@
                                                     <ng-select
                                                         class="noFoundTextColor clear-icon remove-white-space mselect"
                                                         [ngClass]="{'required2': row.get('luVendorTyp')?.value !== 'XX9', 'border-danger': row.get('luVendorCode')?.hasError('required') && row.get('luVendorCode')?.touched}"
-                                                        formControlName="luVendorCode" [items]="rowVendorList[i] || []"
+                                                        formControlName="luVendorCode" [items]="rowVendorList[i] || emptyList"
                                                         bindLabel="text" bindValue="value" placeholder="Vendor"
                                                         [dropdownPosition]="'bottom'" appendTo="body"
                                                         (change)="onRowVendorCodeChange($event, i)">
-                                                        <ng-template ng-option-tmp let-item="item">
-                                                            <div class="remove-white-space-option">{{ item.text }}</div>
-                                                        </ng-template>
                                                     </ng-select>
                                                     <div class="text-danger mt-1" style="font-size: 11px;"
                                                         *ngIf="row.get('luVendorCode')?.hasError('required') && row.get('luVendorCode')?.touched">
@@ -378,10 +369,10 @@
                                                 <td class="align-top">
                                                     <ng-select class="clear-icon mselect" formControlName="ratetype"
                                                         bindLabel="codeDesc" bindValue="codeId" placeholder="Type"
-                                                        appFocusNext [items]="generalMasterService.chargeTypeData"
+                                                        [items]="generalMasterService.chargeTypeData"
                                                         appendTo="body"
                                                         [ngClass]="{'border-danger': row.get('ratetype')?.hasError('required') && row.get('ratetype')?.touched}"
-                                                        [readonly]="row.value.luVendorTyp ==='XX9' || row.value.luVendorTyp ==='XX5'"></ng-select>
+                                                        [readonly]="row.get('luVendorTyp')?.value ==='XX9' || row.get('luVendorTyp')?.value ==='XX5'"></ng-select>
                                                     <div class="text-danger mt-1" style="font-size: 11px;"
                                                         *ngIf="row.get('ratetype')?.hasError('required') && row.get('ratetype')?.touched">
                                                         Required</div>
@@ -392,13 +383,13 @@
                                                     <input type="text"
                                                         oninput="this.value = this.value.replace(/[^0-9.]/g,'');"
                                                         class="form-control form-control-sm text-center"
-                                                        formControlName="newRate" appFocusNext
-                                                        [readOnly]="row.value.luVendorTyp === 'XX5' || row.value.luVendorTyp === 'XX9'"
+                                                        formControlName="newRate"
+                                                        [readOnly]="row.get('luVendorTyp')?.value === 'XX5' || row.get('luVendorTyp')?.value === 'XX9'"
                                                         (focus)="clearNewRateOnFocus(i)" (blur)="resetNewRateOnBlur(i)"
                                                         placeholder="0.00" />
                                                     <div class="text-danger mt-1" style="font-size: 11px;"
-                                                        *ngIf="drsList.at(i).get('rateError')?.value">{{
-                                                        drsList.at(i).get('rateError')?.value }}</div>
+                                                        *ngIf="row.get('rateError')?.value">{{
+                                                        row.get('rateError')?.value }}</div>
                                                 </td>
 
                                                 <!-- 14. HCC Amt (₹)
@@ -417,12 +408,12 @@
                                                         </button>
                                                     </div>
                                                     <div class="text-success mt-1" style="font-size: 11px;"
-                                                        *ngIf="drsList.at(i).get('otpVerified')?.value">
+                                                        *ngIf="row.get('otpVerified')?.value">
                                                         <i class="fas fa-check-circle"></i> Verified
                                                     </div>
                                                     <div class="text-danger mt-1" style="font-size: 11px;"
-                                                        *ngIf="drsList.at(i).get('otpError')?.value">
-                                                        {{ drsList.at(i).get('otpError')?.value }}
+                                                        *ngIf="row.get('otpError')?.value">
+                                                        {{ row.get('otpError')?.value }}
                                                     </div>
                                                 </td>
 
@@ -433,75 +424,63 @@
                                                         formControlName="DeliveredTo" bindLabel="codeDesc"
                                                         bindValue="codeId"
                                                         [items]="generalMasterService.deliveredToData"
-                                                        placeholder="Select" appFocusNext appendTo="body"
-                                                        [readonly]="row.value.deliveredPkgs == 0"
-                                                        [ngClass]="{ 'border-danger': drsList.at(i).get('DeliveredTo')?.invalid && drsList.at(i).get('DeliveredTo')?.touched , 'required2': isRequired('DeliveredTo', i)}">
-                                                        <ng-template ng-option-tmp let-item="item">
-                                                            <div class="remove-white-space-option">{{ item.codeDesc }}
-                                                            </div>
-                                                        </ng-template>
+                                                        placeholder="Select" appendTo="body"
+                                                        [readonly]="row.get('deliveredPkgs')?.value == 0"
+                                                        [ngClass]="{ 'border-danger': row.get('DeliveredTo')?.invalid && row.get('DeliveredTo')?.touched , 'required2': isRequired('DeliveredTo', i, row)}">
                                                     </ng-select>
                                                 </td>
 
                                                 <!-- 17. Person Name -->
                                                 <td class="align-top">
-                                                    <div *ngIf="!drsList.at(i).get('showReason')?.value">
+                                                    <div *ngIf="!row.get('showReason')?.value">
                                                         <input class="form-control form-control-sm"
                                                             formControlName="DlyPerson" placeholder="Person Name"
-                                                            appFocusNext
-                                                            [readonly]="isRequired('DlyPerson', i) ? false : true || row.value.deliveredPkgs == 0"
-                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('DlyPerson')?.invalid && drsList.at(i).get('DlyPerson')?.touched ,'required2': isRequired('DlyPerson', i)}">
+                                                            [readonly]="isRequired('DlyPerson', i, row) ? false : true || row.get('deliveredPkgs')?.value == 0"
+                                                            [ngClass]="{ 'border-danger': row.get('DlyPerson')?.invalid && row.get('DlyPerson')?.touched ,'required2': isRequired('DlyPerson', i, row)}">
                                                     </div>
-                                                    <div *ngIf="drsList.at(i).get('showReason')?.value">
+                                                    <div *ngIf="row.get('showReason')?.value">
                                                         <input class="form-control form-control-sm"
-                                                            placeholder="Person Name" appFocusNext
+                                                            placeholder="Person Name"
                                                             formControlName="DELYPERSON"
-                                                            [readonly]="row.value.deliveredPkgs == 0"
-                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('DELYPERSON')?.invalid && drsList.at(i).get('DELYPERSON')?.touched, 'required2': row.value.deliveredPkgs > 0}" />
+                                                            [readonly]="row.get('deliveredPkgs')?.value == 0"
+                                                            [ngClass]="{ 'border-danger': row.get('DELYPERSON')?.invalid && row.get('DELYPERSON')?.touched, 'required2': (row.get('deliveredPkgs')?.value || 0) > 0}" />
                                                     </div>
                                                 </td>
 
                                                 <!-- 18. Contact No -->
                                                 <td class="align-top">
-                                                    <div *ngIf="!drsList.at(i).get('showReason')?.value">
+                                                    <div *ngIf="!row.get('showReason')?.value">
                                                         <input class="form-control form-control-sm"
                                                             formControlName="DlyContactNo" placeholder="Contact No"
                                                             minlength="10" maxlength="10"
                                                             oninput="this.value = this.value.replace(/[^0-9]/g,'');"
-                                                            appFocusNext
-                                                            [readonly]="isRequired('DlyContactNo', i) ? false : true || row.value.deliveredPkgs == 0"
-                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('DlyContactNo')?.invalid && drsList.at(i).get('DlyContactNo')?.touched,'required2': isRequired('DlyContactNo', i) }">
+                                                            [readonly]="isRequired('DlyContactNo', i, row) ? false : true || row.get('deliveredPkgs')?.value == 0"
+                                                            [ngClass]="{ 'border-danger': row.get('DlyContactNo')?.invalid && row.get('DlyContactNo')?.touched,'required2': isRequired('DlyContactNo', i, row) }">
                                                     </div>
-                                                    <div *ngIf="drsList.at(i).get('showReason')?.value"
+                                                    <div *ngIf="row.get('showReason')?.value"
                                                         class="d-flex flex-column gap-1">
                                                         <input class="form-control form-control-sm" maxlength="10"
                                                             formControlName="cboMobileNo" placeholder="Mobile No"
                                                             oninput="this.value = this.value.replace(/[^0-9]/g,'');"
-                                                            appFocusNext [readonly]="row.value.deliveredPkgs == 0"
-                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('cboMobileNo')?.invalid && drsList.at(i).get('cboMobileNo')?.touched, 'required2': row.value.deliveredPkgs > 0}">
+                                                            [readonly]="row.get('deliveredPkgs')?.value == 0"
+                                                            [ngClass]="{ 'border-danger': row.get('cboMobileNo')?.invalid && row.get('cboMobileNo')?.touched, 'required2': (row.get('deliveredPkgs')?.value || 0) > 0}">
                                                         <input class="form-control form-control-sm" placeholder="Email"
-                                                            appFocusNext formControlName="cboEmail"
-                                                            [readonly]="row.value.deliveredPkgs == 0"
-                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('cboEmail')?.invalid && drsList.at(i).get('cboEmail')?.touched, 'required2': row.value.deliveredPkgs > 0}">
+                                                            formControlName="cboEmail"
+                                                            [readonly]="row.get('deliveredPkgs')?.value == 0"
+                                                            [ngClass]="{ 'border-danger': row.get('cboEmail')?.invalid && row.get('cboEmail')?.touched, 'required2': (row.get('deliveredPkgs')?.value || 0) > 0}">
                                                     </div>
                                                 </td>
-                                                <!-- [minDate]="row.value.booking_Date"  -->
-                                                <!-- <app-date-time-picker controlName="DELYDATE" [maxDate]="maxDate"
-                                                        appendTo="body" [placeholder]="'dd-mm-yyyy'"
-                                                        [minDate]="row.value.booking_Date"
-                                                        [disabled]="row.value.deliveredPkgs == 0"
-                                                        appFocusNext></app-date-time-picker> -->
 
                                                 <td class="align-top">
                                                     <div class="input-group">
                                                         <input type="text" class="form-control minput" #dp="bsDatepicker" bsDatepicker
                                                             [minDate]="minDrsDate"
                                                             [maxDate]="maxDate"
-                                                            [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' }"
-                                                            placeholder="dd-mmm-yyyy" formControlName="DELYDATE" appFocusNext
-                                                            [attr.disabled]="row.value.deliveredPkgs == 0 ? true : null"
-                                                            [ngClass]="{ 'border-danger': drsList.at(i).get('DELYDATE')?.invalid && drsList.at(i).get('DELYDATE')?.touched }">
-                                                        <span class="input-group-text cursor-pointer" (click)="row.value.deliveredPkgs == 0 ? null : dp.toggle()" [class.disabled-input]="row.value.deliveredPkgs == 0">
+                                                            [bsConfig]="bsConfig" 
+                                                            placeholder="dd-mmm-yyyy" formControlName="DELYDATE"
+                                                            [attr.disabled]="row.get('deliveredPkgs')?.value == 0 ? true : null"
+                                                            [ngClass]="{ 'border-danger': row.get('DELYDATE')?.invalid && row.get('DELYDATE')?.touched }">
+                                                        <span class="input-group-text cursor-pointer" (click)="row.get('deliveredPkgs')?.value == 0 ? null : dp.toggle()" [class.disabled-input]="row.get('deliveredPkgs')?.value == 0">
                                                             <i class="fa fa-calendar"></i>
                                                         </span>
                                                     </div>
@@ -518,9 +497,9 @@
                                                     <ng-container
                                                         *ngIf="!(validatingIndex === i && validatingType === 'FRONT')">
                                                         <ng-container
-                                                            *ngIf="drsList.at(i).value.frontPreview; else frontUpload">
+                                                            *ngIf="row.get('frontPreview')?.value; else frontUpload">
                                                             <div class="d-flex flex-column gap-1">
-                                                                <img [src]="drsList.at(i).value.frontPreview"
+                                                                <img [src]="row.get('frontPreview')?.value"
                                                                     style="width:30px;height:30px;object-fit:cover;border-radius:4px;cursor:pointer"
                                                                     (click)="frontInput.click()" />
                                                                 <button type="button"
@@ -533,12 +512,12 @@
                                                             <button type="button"
                                                                 class="btn btn-light btn-sm text-primary border-primary border-dashed p-1"
                                                                 style="font-size:11px;"
-                                                                (click)="row.value.deliveredPkgs == 0 ? null : frontInput.click()"
-                                                                [disabled]="row.value.deliveredPkgs == 0">
+                                                                (click)="row.get('deliveredPkgs')?.value == 0 ? null : frontInput.click()"
+                                                                [disabled]="row.get('deliveredPkgs')?.value == 0">
                                                                 📎 Upload POD 1
                                                             </button>
                                                             <div class="text-danger mt-1" style="font-size:10px;"
-                                                                *ngIf="isPodFrontRequired(i)">Required</div>
+                                                                *ngIf="isPodFrontRequired(i, row)">Required</div>
                                                         </ng-template>
                                                     </ng-container>
                                                     <input type="file" #frontInput hidden accept="image/*"
@@ -548,9 +527,9 @@
                                                 <!-- 21. POD 2 -->
                                                 <td class="align-top">
                                                     <ng-container
-                                                        *ngIf="drsList.at(i).value.backPreview; else backUpload">
+                                                        *ngIf="row.get('backPreview')?.value; else backUpload">
                                                         <div class="d-flex flex-column gap-1">
-                                                            <img [src]="drsList.at(i).value.backPreview"
+                                                            <img [src]="row.get('backPreview')?.value"
                                                                 style="width:30px;height:30px;object-fit:cover;border-radius:4px;cursor:pointer"
                                                                 (click)="backInput.click()" />
                                                             <button type="button"
@@ -563,8 +542,8 @@
                                                         <button type="button"
                                                             class="btn btn-light btn-sm text-primary border-primary border-dashed p-1"
                                                             style="font-size:11px;"
-                                                            (click)="row.value.deliveredPkgs == 0 ? null : backInput.click()"
-                                                            [disabled]="row.value.deliveredPkgs == 0">
+                                                            (click)="row.get('deliveredPkgs')?.value == 0 ? null : backInput.click()"
+                                                            [disabled]="row.get('deliveredPkgs')?.value == 0">
                                                             📎 Upload POD 2
                                                         </button>
                                                     </ng-template>
@@ -575,13 +554,14 @@
                                                 <!-- 22. POD Quality -->
                                                 <td class="align-middle">
                                                     <div class="d-flex flex-column gap-2"
-                                                        [ngStyle]="{'pointer-events': row.value.deliveredPkgs == 0 ? 'none' : 'auto', 'opacity': row.value.deliveredPkgs == 0 ? '0.5' : '1'}">
+                                                        [class.pe-none]="row.get('deliveredPkgs')?.value == 0"
+                                                        [class.opacity-50]="row.get('deliveredPkgs')?.value == 0">
                                                         <div
                                                             class="form-check m-0 d-flex align-items-center gap-1 ps-0">
                                                             <input
                                                                 class="form-check-input text-success m-0 ms-1 me-1 border-success"
-                                                                type="radio" [name]="'badpod'+i" id="badpodNo{{ i }}"
-                                                                [value]="false" [formControl]="getRadioControl(i)"
+                                                                type="radio" id="badpodNo{{ i }}"
+                                                                [value]="false" formControlName="isBadPod"
                                                                 (change)="clearDepsData(i)">
                                                             <label class="text-success small fw-bold m-0"
                                                                 for="badpodNo{{ i }}"><i class="bi bi-check-circle"></i>
@@ -591,8 +571,8 @@
                                                             class="form-check m-0 d-flex align-items-center gap-1 ps-0">
                                                             <input
                                                                 class="form-check-input text-danger m-0 ms-1 me-1 border-danger"
-                                                                type="radio" [name]="'badpod'+i" id="badpodYes{{ i }}"
-                                                                [value]="true" [formControl]="getRadioControl(i)"
+                                                                type="radio" id="badpodYes{{ i }}"
+                                                                [value]="true" formControlName="isBadPod"
                                                                 (click)="openDeps(row.value, i)">
                                                             <label class="text-danger small fw-bold m-0"
                                                                 for="badpodYes{{ i }}"><i class="bi bi-x-circle"></i>

@@ -155,6 +155,9 @@ async handleKeydown(event: KeyboardEvent) {
 }
 @HostListener('document:click', ['$event'])
 async handleOutsideClick(event: MouseEvent) {
+  if (!event || !event.isTrusted) {
+    return;
+  }
   const currentUrl = this.router.url;
   // 🔒 Global stop after YES
   if (this.docketService.hasConfirmedNoEwayBill || this.docketService.isComplition || !currentUrl.includes('docket')) {
