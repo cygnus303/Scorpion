@@ -1,4 +1,4 @@
-import { Component, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, Output, ViewChild, NgZone, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -27,7 +27,7 @@ import { DrsUpdateDepsComponent } from './drs-update-deps/drs-update-deps.compon
   templateUrl: './drs-update-list.component.html',
   styleUrl: './drs-update-list.component.scss'
 })
-export class DRSUpdateListComponent {
+export class DRSUpdateListComponent implements AfterViewInit, OnDestroy {
   env = environment;
   public modalRef!: BsModalRef;
   public DRSSummaryForm!: FormGroup;
@@ -61,7 +61,8 @@ export class DRSUpdateListComponent {
     public THCMasterService: THCMasterService,
     private vendorChargeHelper: VendorChargeHelperService,
     public docketService: DocketService, public generalMasterService: GeneralMasterService,
-    public sweetAlertService: SweetAlertService, private modalService: BsModalService) { }
+    public sweetAlertService: SweetAlertService, private modalService: BsModalService,
+    private ngZone: NgZone) { }
 
   ngOnInit() {
     const saved = localStorage.getItem("loginUserList");
@@ -1323,4 +1324,86 @@ export class DRSUpdateListComponent {
     }
   }
 
+  repositionDropdown() {
+    const panel = document.querySelector('body > ng-dropdown-panel, .ng-dropdown-panel') as HTMLElement;
+    const openedSelect = document.querySelector('.ng-select.ng-select-opened') as HTMLElement;
+    if (!panel || !openedSelect) return;
+
+    const selectRect = openedSelect.getBoundingClientRect();
+    const parentRect = document.body.getBoundingClientRect();
+
+    // Match width of the select element exactly
+    panel.style.width = `${selectRect.width}px`;
+    panel.style.minWidth = `${selectRect.width}px`;
+    panel.style.maxWidth = `${selectRect.width}px`;
+
+    // Update horizontal position
+    panel.style.left = `${selectRect.left - parentRect.left}px`;
+
+    // Update vertical position
+    const isTop = panel.classList.contains('ng-select-top');
+    if (isTop) {
+      const offsetBottom = parentRect.bottom - selectRect.bottom;
+      panel.style.bottom = `${offsetBottom + selectRect.height}px`;
+      panel.style.top = 'auto';
+    } else {
+      const offsetTop = selectRect.top - parentRect.top;
+      panel.style.top = `${offsetTop + selectRect.height}px`;
+      panel.style.bottom = 'auto';
+    }
+
+    // Hide if scrolled completely out of the table scroll view
+    const container = document.querySelector('.custom-table-scroll');
+    if (container) {
+      const cRect = container.getBoundingClientRect();
+      if (
+        selectRect.bottom < cRect.top ||
+        selectRect.top > cRect.bottom ||
+        selectRect.right < cRect.left ||
+        selectRect.left > cRect.right
+      ) {
+        panel.style.visibility = 'hidden';
+      } else {
+        panel.style.visibility = 'visible';
+      }
+    }
+  }
+
+  private rafId: number | null = null;
+  private handleScrollReposition = (event?: Event) => {
+    // If scrolling inside the dropdown options list itself, do not interfere
+    if (event && event.target) {
+      const t = event.target as HTMLElement;
+      if (t.closest && (t.closest('.ng-dropdown-panel') || t.classList?.contains('ng-dropdown-panel-items'))) {
+        return;
+      }
+    }
+
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
+    }
+    this.rafId = requestAnimationFrame(() => {
+      this.repositionDropdown();
+    });
+  };
+
+  ngAfterViewInit() {
+    this.ngZone.runOutsideAngular(() => {
+      window.addEventListener('scroll', this.handleScrollReposition, true);
+      window.addEventListener('resize', this.handleScrollReposition);
+    });
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('scroll', this.handleScrollReposition, true);
+    window.removeEventListener('resize', this.handleScrollReposition);
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
+    }
+    if (this.otpTimeoutMap) {
+      Object.values(this.otpTimeoutMap).forEach(t => clearTimeout(t));
+    }
+  }
+
 }
+
