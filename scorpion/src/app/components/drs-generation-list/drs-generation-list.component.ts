@@ -232,23 +232,11 @@ formatDateToISO(dateVal: any): string | null {
       searchText: this.DRSFilterForm.value.searchText
     }
 
-    const cacheKey = JSON.stringify(payload);
-    if (this.requestCache.has(cacheKey)) {
-      this.isLoading = false;
-      const response = this.requestCache.get(cacheKey);
-      this.DRSData = response.data;
-      this.pagination.totalRecords = response.pagination.totalRecords;
-      this.pagination.totalPages = response.pagination.totalPages;
-      this.summaryData = response.summary;
-      return;
-    }
-
     this.isLoading = true;
 
     this.listSubscription = this.prsdrsApiService.getDRSList(payload).subscribe({
       next: (response: any) => {
         this.isLoading = false;
-        this.requestCache.set(cacheKey, response);
         this.DRSData = response.data;
         this.pagination.totalRecords = response.pagination.totalRecords;
         this.pagination.totalPages = response.pagination.totalPages;
