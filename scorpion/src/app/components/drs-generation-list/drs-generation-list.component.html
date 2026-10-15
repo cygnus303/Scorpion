@@ -6,8 +6,10 @@
         </div>
         <div class="btn-group gap-3 ms-auto">
             <!-- <button class="btn btn-outline-primary px-4 py-2 rounded" (click)="refreshFilter()">✕ Clear</button> -->
-            <button class="btn background-color fw-bold text-light px-4 py-2 rounded" (click)="onAddDRS()" *ngIf="!isHQTR && menuAccessService.hasPermission('Add')">＋ Add DRS</button>
-            <button class="btn btn-success px-4 py-2 rounded fw-bold"  [disabled]="isdownload" *ngIf="menuAccessService.hasPermission('Download')">
+            <button class="btn background-color fw-bold text-light px-4 py-2 rounded" (click)="onAddDRS()"
+                *ngIf="!isHQTR && menuAccessService.hasPermission('Add')">＋ Add DRS</button>
+            <button class="btn btn-success px-4 py-2 rounded fw-bold" [disabled]="isdownload"
+                *ngIf="menuAccessService.hasPermission('Download')">
                 <span *ngIf="!isdownload" (click)="downloadList()">📥 Download XLS</span>
                 <span *ngIf="isdownload" class="spinner-border spinner-border-sm me-2"></span>
                 <span *ngIf="isdownload">Downloading...</span>
@@ -77,7 +79,7 @@
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">🧾</div>
         </div>
 
-         <div class="summary-card px-3 py-3 c-yellow cursor-pointer"
+        <div class="summary-card px-3 py-3 c-yellow cursor-pointer"
             [class.active-card]="DRSFilterForm.get('statusFilter')?.value === 'Undelivered'"
             (click)="filterByStatus('Undelivered')">
             <div class="card-content">
@@ -113,8 +115,7 @@
                             formControlName="searchText">
 
                     </div> -->
-                    <app-date-range-picker 
-                        [initialFromDate]="DRSFilterForm.get('fromDate')?.value" 
+                    <app-date-range-picker [initialFromDate]="DRSFilterForm.get('fromDate')?.value"
                         [initialToDate]="DRSFilterForm.get('toDate')?.value"
                         (onRangeSelect)="onDateRangeSelected($event)">
                     </app-date-range-picker>
@@ -140,14 +141,15 @@
                 </div>
                 <div class="table-toolbar">
                     <div class="search-box d-flex align-items-center"><span class="text-muted">🔍</span>
-                             <input type="text" placeholder="Search..." class="form-control border-0 shadow-none" style="width:200px;"
-                          formControlName="searchText">
+                        <input type="text" placeholder="Search..." class="form-control border-0 shadow-none"
+                            style="width:200px;" formControlName="searchText">
                     </div>
                 </div>
             </div>
         </form>
 
-        <div class="table-wrap custom-table-scroll" style="overflow-x: auto; overflow-y: auto; max-height: calc(100vh - 250px); width: 100%;">
+        <div class="table-wrap custom-table-scroll"
+            style="overflow-x: auto; overflow-y: auto; max-height: calc(100vh - 250px); width: 100%;">
             <table class="table align-middle data-table mb-0" style="min-width: 1600px !important;">
                 <thead>
                     <tr>
@@ -185,7 +187,8 @@
                     <tr *ngFor="let data of DRSData; let i = index">
                         <td class="text-center text-muted fs-7">{{ i + 1 }}</td>
                         <td>
-                            <div class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;" (click)="openView(data.drsNo)"><a>{{ data.drsNo }}</a></div>
+                            <div class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;"
+                                (click)="openView(data.drsNo)"><a>{{ data.drsNo }}</a></div>
                             <div class="text-muted fs-7 mt-1">{{ data.drsDate | date:'dd MMM yyyy' }}</div>
                         </td>
                         <td class="text-center">
@@ -209,9 +212,8 @@
                         <td class="text-center fs-7">
                             <span *ngIf="!data.vendorBillNo" class="text-muted">—</span>
                             <a href="javascript:void(0)" *ngIf="data.vendorBillNo"
-                               class="text-primary fw-bold cursor-pointer"
-                               style="text-decoration: underline;"
-                               (click)="THCPDCBillView(data.bill_Url)">
+                                class="text-primary fw-bold cursor-pointer" style="text-decoration: underline;"
+                                (click)="THCPDCBillView(data.bill_Url)">
                                 {{ data.vendorBillNo }}
                             </a>
                         </td>
@@ -229,14 +231,21 @@
                                 {{ isHccValid(data.unloadingHCCNo) ? 'HCC' : 'NO HCC' }}
                             </span>
                         </td>
-                        
-                        <td class="text-center" >
-                            <div *ngIf="+data.depsNo > 0" class="d-inline-flex align-items-center justify-content-center gap-2">
-                                <span class="d-inline-flex align-items-center justify-content-center text-white bg-success rounded-1" style="width: 13px; height: 13px; font-size: 9px; font-weight: bold; line-height: 1;">✔</span>
-                                <span style="color: #1a237e; font-size: 10px !important;">{{ data.depsNo }} DEPS IDs</span>
-                                <button type="button" class="btn btn-danger btn-sm py-1 px-2 fw-bold text-white shadow-sm" style="font-size: 8px; background-color: #c00d0d; border-color: #c00d0d; border-radius: 4px; line-height: 1.2; font-family: 'IBM Plex Sans', sans-serif;" (click)="openDepsDetails(data)">View</button>
+
+                        <td class="text-center">
+                            <div *ngIf="+data.depsNo > 0"
+                                class="d-inline-flex align-items-center justify-content-center gap-2">
+                                <span
+                                    class="d-inline-flex align-items-center justify-content-center text-white bg-success rounded-1"
+                                    style="width: 13px; height: 13px; font-size: 9px; font-weight: bold; line-height: 1;">✔</span>
+                                <span style="color: #1a237e; font-size: 10px !important;">{{ data.depsNo }} DEPS
+                                    IDs</span>
+                                <button type="button"
+                                    class="btn btn-danger btn-sm py-1 px-2 fw-bold text-white shadow-sm"
+                                    style="font-size: 8px; background-color: #c00d0d; border-color: #c00d0d; border-radius: 4px; line-height: 1.2; font-family: 'IBM Plex Sans', sans-serif;"
+                                    (click)="openDepsDetails(data)">View</button>
                             </div>
-                            <div *ngIf="+data.depsNo === 0">   
+                            <div *ngIf="+data.depsNo === 0">
                                 <span class="text-muted">—</span>
                             </div>
                         </td>
@@ -258,22 +267,24 @@
                                     [disabled]="data.ispdcUpdate || data.status==='Cancelled'||data.status==='Billed' || data.IsThroughDA ===true || data.vendorType?.toUpperCase() === 'BUSINESS ASSOCIATE' ">
                                     🔄 DRS Update
                                 </button> -->
-                                 <button *ngIf="!isHQTR"
+                                <button *ngIf="!isHQTR"
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
-                                    (click)="openUpdateModal(data)"
-                                    [disabled]="!data.isUpdateDRSForPending || data.status==='Cancelled'||data.status==='Billed' || data.isThroughDA ===true || 
+                                    (click)="openUpdateModal(data)" [disabled]="!data.isUpdateDRSForPending || data.status==='Cancelled'||data.status==='Billed' || data.isThroughDA ===true || 
                                      data.vendorType?.toUpperCase() === 'BUSINESS ASSOCIATE'">
                                     🔄 DRS Update
                                 </button>
-                                <button *ngIf="!isHQTR" class="btn btn-sm bg-warning-secondary border-warning-secondary text-warning-emphasis py-1 px-3" (click)="openDeps(data, false)"
-                                [disabled]="!data.ispdcUpdate || +data.depsNo > 0">     
+                                <button *ngIf="!isHQTR"
+                                    class="btn btn-sm bg-warning-secondary border-warning-secondary text-warning-emphasis py-1 px-3"
+                                    (click)="openDeps(data, false)" [disabled]="!data.ispdcUpdate || +data.depsNo > 0">
                                     📋 DEPS
                                 </button>
-                                <button *ngIf="!isHQTR" class="btn btn-sm bg-warning-dark border-warning-dark text-warning-emphasis py-1 px-3" (click)="openDeps(data, true)"
-                                [disabled]="!data.ispdcUpdate">
+                                <button *ngIf="!isHQTR"
+                                    class="btn btn-sm bg-warning-dark border-warning-dark text-warning-emphasis py-1 px-3"
+                                    (click)="openDeps(data, true)" [disabled]="!data.ispdcUpdate">
                                     ✏️ Edit DEPS
                                 </button>
-                                <button *ngIf="!isHQTR && menuAccessService.hasPermission('Edit')" (click)="openPRSDRSEdit(data,'P')"
+                                <button *ngIf="!isHQTR && menuAccessService.hasPermission('Edit')"
+                                    (click)="openPRSDRSEdit(data,'P')"
                                     [disabled]="!data.isCancelAllow ||data.status==='Billed'||data.status==='Cancelled'"
                                     class="btn btn-sm bg-warning-subtle border-warning-subtle text-warning-emphasis py-1 px-3">
                                     ✏️ Edit
