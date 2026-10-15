@@ -310,17 +310,11 @@
 </div>
 
 <!-- UPDATE DRS MODAL -->
-<div class="modal fade show" tabindex="-1" *ngIf="showUpdateModal" style="display:block; background: rgba(0,0,0,0.5);"
-    (click)="closeModal()">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable" (click)="$event.stopPropagation()">
-        <div class="modal-content">
-            <!-- HEADER -->
-            <!-- <div class="text-white px-3 py-3 d-flex align-items-center fw-semibold background-color">
-                <i class="fas fa-list me-2"></i> Update DRS Information
-                <i class="fas fa-times ms-auto cursor-pointer" (click)="closeModal()"></i>
-            </div> -->
+<div class="modal fade show" tabindex="-1" *ngIf="showUpdateModal" style="display:block; background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-xl drs-update-modal-dialog">
+        <div class="modal-content drs-update-modal-content">
             <!-- BODY -->
-            <div class="modal-body p-0" style="padding: 0px !important;">
+            <div class="modal-body p-0 drs-update-modal-body">
                 <app-drs-update-list [drsData]="selectedDRS"
                     (dataEmitter)="handleDataEmitter($event)"></app-drs-update-list>
             </div>
