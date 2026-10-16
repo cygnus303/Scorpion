@@ -48,11 +48,14 @@
             <div class="dam-field">
               <label>Mobile Number <span class="req">*</span></label>
               <input class="form-control required2" type="text" placeholder="10-digit Mobile No." formControlName="deliveryAgentMobile"
-                required maxlength="10" pattern="[0-9]*"
+                required maxlength="10" minlength="10"
                 (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
                 [ngClass]="{ 'border-danger': dAForm.get('deliveryAgentMobile')?.invalid && dAForm.get('deliveryAgentMobile')?.touched }">
               <div class="text-danger small mt-1" *ngIf="dAForm.get('deliveryAgentMobile')?.invalid && dAForm.get('deliveryAgentMobile')?.touched">
-                This field is required.
+                <div *ngIf="dAForm.get('deliveryAgentMobile')?.hasError('required')">This field is required.</div>
+                <div *ngIf="dAForm.get('deliveryAgentMobile')?.hasError('pattern') || dAForm.get('deliveryAgentMobile')?.hasError('minlength')">
+                  Please enter a valid 10-digit Mobile Number.
+                </div>
               </div>
             </div>
 

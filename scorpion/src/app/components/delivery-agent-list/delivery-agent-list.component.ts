@@ -21,7 +21,7 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 export class DeliveryAgentListComponent {
   public totalItems!: number;
   public pageNumber: number = 1;
-  public pageSize: number = 15;
+  public pageSize: number = 10;
   public deliveryAgentsList: DeliveryAgentsListRepsonse[] = []
   public deliveryAgentByCodeList!: DeliveryAgentByCodeResponse;
   public loading: boolean = false;

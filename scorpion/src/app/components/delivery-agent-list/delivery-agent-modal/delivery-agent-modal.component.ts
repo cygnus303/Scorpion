@@ -272,8 +272,8 @@ checkLicenseExpiry(event?:any) {
   buildForm() {
     this.dAForm = new FormGroup({
       dA_Code: new FormControl(null),
-      deliveryAgentName: new FormControl(''),
-      deliveryAgentMobile: new FormControl(''),
+      deliveryAgentName: new FormControl('', Validators.required),
+      deliveryAgentMobile: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]),
       vehicleNo: new FormControl('', [ Validators.required, Validators.minLength(this.selectedDigit), Validators.maxLength(this.selectedDigit) ]),
       registrationDate: new FormControl(''),
       engineNo: new FormControl(''),
