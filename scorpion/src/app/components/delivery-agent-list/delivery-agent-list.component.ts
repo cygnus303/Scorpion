@@ -3,7 +3,7 @@ import { DeliveryAgentModalComponent } from './delivery-agent-modal/delivery-age
 import { DeliveryAgentViewComponent } from './delivery-agent-view/delivery-agent-view.component';
 import { DeliveryAgentService } from 'app/shared/services/delivery-agent.service';
 import { DeliveryAgentByCodeResponse, DeliveryAgentsListRepsonse } from 'app/shared/models/delivery-agent.model';
-import { finalize } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 import saveAs from 'file-saver';
 import lottie from 'lottie-web';
 import { defineElement } from 'lord-icon-element';
@@ -21,7 +21,7 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 export class DeliveryAgentListComponent {
   public totalItems!: number;
   public pageNumber: number = 1;
-  public pageSize: number = 15;
+  public pageSize: number = 10;
   public deliveryAgentsList: DeliveryAgentsListRepsonse[] = []
   public deliveryAgentByCodeList!: DeliveryAgentByCodeResponse;
   public loading: boolean = false;
@@ -31,9 +31,28 @@ export class DeliveryAgentListComponent {
   public showNewPassword: boolean = false;
   public showConfirmPassword: boolean = false;
   modalInstance!: Modal;
+  private listSubscription?: Subscription;
   public filters: { [key: string]: string } = {}; // Dynamic filter object
   @ViewChild('deliveryAgentPopup') deliveryAgentPopup!: DeliveryAgentModalComponent;
   @ViewChild('deliveryAgentViewPopup') deliveryAgentViewPopup!: DeliveryAgentViewComponent;
+
+  get canShowPassword(): boolean {
+    const user = this.docketService.loginUserList?.BaseUserName;
+    return ['CYGNUSTEAM', '2807', '4151', '3673', '4373'].includes(user);
+  }
+
+  get totalPages(): number {
+    return Math.ceil((this.totalItems || 0) / (this.pageSize || 15)) || 1;
+  }
+
+  getVendorTypeClass(type: string): string {
+    if (!type) return 'vt-default';
+    const t = type.toUpperCase().trim();
+    if (t.includes('BUSINESS') || t.includes('ASSOCIATE') || t === 'BA') return 'vt-ba';
+    if (t.includes('MARKET')) return 'vt-market';
+    if (t.includes('ATTACHED')) return 'vt-attached';
+    return 'vt-default';
+  }
 
   constructor(
     private deliveryAgentService: DeliveryAgentService,
@@ -61,8 +80,13 @@ export class DeliveryAgentListComponent {
   }
 
   getDeliveryAgentList(pageNumber: number = 1, pageSize: number = this.pageSize) {
+     if (this.listSubscription) {
+      this.listSubscription.unsubscribe();
+    }
+    this.pageNumber = pageNumber;
+    this.pageSize = pageSize;
     this.filters = Object.fromEntries(
-      Object.entries(this.filters).filter(([key, value]) => value !== null)
+      Object.entries(this.filters).filter(([key, value]) => value !== null && value !== '')
     );
     const data = {
       ...this.filters,
@@ -71,7 +95,7 @@ export class DeliveryAgentListComponent {
       LocCode: this.docketService.loginUserList.LocationCode
     }
     this.commonService.updateLoader(true);
-    this.deliveryAgentService.getDeliveryAgent(data).subscribe({
+    this.listSubscription =this.deliveryAgentService.getDeliveryAgent(data).subscribe({
       next: (response) => {
         if (response) {
           this.deliveryAgentsList = response.data;

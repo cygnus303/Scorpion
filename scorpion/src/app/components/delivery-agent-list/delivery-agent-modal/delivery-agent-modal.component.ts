@@ -272,8 +272,8 @@ checkLicenseExpiry(event?:any) {
   buildForm() {
     this.dAForm = new FormGroup({
       dA_Code: new FormControl(null),
-      deliveryAgentName: new FormControl(''),
-      deliveryAgentMobile: new FormControl(''),
+      deliveryAgentName: new FormControl('', Validators.required),
+      deliveryAgentMobile: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]),
       vehicleNo: new FormControl('', [ Validators.required, Validators.minLength(this.selectedDigit), Validators.maxLength(this.selectedDigit) ]),
       registrationDate: new FormControl(''),
       engineNo: new FormControl(''),
@@ -338,10 +338,22 @@ onFileSelected(event: any) {
     });
   }
 
-  getLocation(event:any){
-     const result = event.vendorbrcd?.split(",").map((x: any) => x.trim());
+  getLocation(event: any) {
+    if (!event) {
+      this.dAForm.patchValue({ location: null });
+      return;
+    }
+    const loginLocation = this.docketService.loginUserList?.LocationCode;
+    const branches: string[] = event.vendorbrcd
+      ? event.vendorbrcd.split(',').map((x: any) => x.trim()).filter((x: any) => x)
+      : [];
+
+    const matchedBranch = branches.find(
+      (b: string) => b.toUpperCase() === loginLocation?.toUpperCase()
+    );
+
     this.dAForm.patchValue({
-      location:result
+      location: matchedBranch ? [matchedBranch] : (loginLocation ? [loginLocation] : [])
     });
   }
 
