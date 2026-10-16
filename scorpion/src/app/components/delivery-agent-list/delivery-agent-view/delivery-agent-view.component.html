@@ -19,44 +19,25 @@
 
     <!-- Modal Body -->
     <div class="dav-body" *ngIf="deliveryAgentViewList">
-      <!-- Quick Info Hero Strip -->
-      <div class="dav-hero-strip mb-3">
-        <div class="dav-hero-avatar">
-          <i class="fas fa-user-circle"></i>
-        </div>
-        <div class="dav-hero-main">
-          <div class="d-flex align-items-center gap-2 flex-wrap">
-            <h4 class="dav-agent-name mb-0">{{ deliveryAgentViewList.deliveryAgentName || '—' }}</h4>
-            <span class="dav-status-pill" [ngClass]="deliveryAgentViewList.isActive ? 'active' : 'inactive'">
-              <i class="fas" [ngClass]="deliveryAgentViewList.isActive ? 'fa-check-circle' : 'fa-times-circle'"></i>
-              {{ deliveryAgentViewList.isActive ? 'Active Agent' : 'Inactive' }}
-            </span>
-          </div>
-          <div class="dav-hero-meta mt-1">
-            <span *ngIf="deliveryAgentViewList.deliveryAgentMobile">
-              <i class="fas fa-phone-alt text-danger me-1"></i> {{ deliveryAgentViewList.deliveryAgentMobile }}
-            </span>
-            <span *ngIf="deliveryAgentViewList.vehicleNo">
-              <i class="fas fa-truck text-secondary me-1"></i> {{ deliveryAgentViewList.vehicleNo }}
-            </span>
-            <span *ngIf="deliveryAgentViewList.vendor_TypeDA">
-              <i class="fas fa-building text-primary me-1"></i> {{ deliveryAgentViewList.vendor_TypeDA }}
-            </span>
-          </div>
-        </div>
-      </div>
-
       <!-- 2-Column Cards Grid -->
       <div class="row g-3">
         <!-- LEFT COLUMN: Agent & Driver & License -->
         <div class="col-lg-6 d-flex flex-column gap-3">
-          <!-- Card: Driver & Personal -->
+          <!-- Card: Delivery Agent & Driver Details -->
           <div class="dav-card">
             <div class="dav-card-header">
               <i class="fas fa-user-tie text-danger me-2"></i>
-              <span>Driver & Personal Details</span>
+              <span>Delivery Agent & Driver Details</span>
             </div>
             <div class="dav-card-body">
+              <div class="dav-info-row">
+                <span class="dav-label">Delivery Agent Code</span>
+                <span class="dav-value fw-bold text-danger">{{ deliveryAgentViewList.dA_Code || '—' }}</span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">Delivery Agent Name</span>
+                <span class="dav-value fw-bold text-dark">{{ deliveryAgentViewList.deliveryAgentName || '—' }}</span>
+              </div>
               <div class="dav-info-row">
                 <span class="dav-label">Driver Name</span>
                 <span class="dav-value">{{ deliveryAgentViewList.driverName || '—' }}</span>
