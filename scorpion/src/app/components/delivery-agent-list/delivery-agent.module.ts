@@ -9,6 +9,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { DeliveryAgentViewComponent } from './delivery-agent-view/delivery-agent-view.component';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgSelectModule } from '@ng-select/ng-select';
+import { PaginationComponent } from 'app/shared/components/pagination/pagination.component';
 
 @NgModule({
   declarations: [DeliveryAgentListComponent,DeliveryAgentModalComponent,DeliveryAgentViewComponent],
@@ -19,7 +20,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     FormsModule,
     ReactiveFormsModule,
     NgbPaginationModule,
-    NgSelectModule
+    NgSelectModule,
+    PaginationComponent
 ],
    exports: [ RouterModule ],
    schemas: [CUSTOM_ELEMENTS_SCHEMA],

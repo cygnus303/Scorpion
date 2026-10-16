@@ -1,99 +1,263 @@
 <!-- TemplateRef for modal -->
 <ng-template #templatePopup>
-   <div class="modal-header background-color text-white d-flex justify-content-between">
-    <h5 class="modal-title"><i class="fas fa-eye fa-sm text-white me-2"></i> View Delivery Agent</h5>
-    <button type="button" class="btn text-white" (click)="closePopup()"><i class="fas fa-times"></i></button>
-  </div>
-  <div class="modal-body">
-  <div class="table-container">
-    <table class="table table-bordered table-striped">
-      <tbody>
-        <tr>
-          <td style="width: 50%;"><strong>Delivery Agent Code:</strong> {{ deliveryAgentViewList.dA_Code }}</td>
-          <td><strong>Delivery Agent Name:</strong> {{ deliveryAgentViewList.deliveryAgentName }}</td>
-        </tr>
-        <tr>
-          <td><strong>Delivery Agent Mobile No.</strong> {{ deliveryAgentViewList.deliveryAgentMobile }}</td>
-          <td><strong>FTL Type:</strong> {{ deliveryAgentViewList.fTlName }}</td>
-        </tr>
-        <tr>
-          <td><strong>Vehicle No:</strong> {{ deliveryAgentViewList.vehicleNo }}</td>
-          <td><strong>Engine No:</strong> {{ deliveryAgentViewList.engineNo }}</td>
-        </tr>
-        <tr>
-          <td><strong>Registration date:</strong> {{ deliveryAgentViewList.registrationDate | date:'dd MMM yyyy'}}</td>
-          <td><strong>Chassis No: </strong> {{ deliveryAgentViewList.chassisNo }}</td>
-        </tr>
-        <tr>
-          <td><strong>RC Book No:</strong> {{ deliveryAgentViewList.rcBookNo }}</td>
-          <!-- <td><strong>Permit validity Date:</strong> {{ deliveryAgentViewList.permitValidityDate | date:'dd/MM/yyy' }}</td> -->
-          <td><strong>Insurance Validity Date:</strong> {{ deliveryAgentViewList.insuranceValidityDate  | date:'dd MMM yyyy'}}</td>
-        </tr>
-        <tr>
-          <td><strong>Fitness Validity Date:</strong> {{ deliveryAgentViewList.fitnessValidityDate | date:'dd MMM yyyy' }}</td>
-          <td><strong>Date of Birth:</strong> {{ deliveryAgentViewList.dateOfBirth | date:'dd MMM yyyy' }}</td>
-        </tr>
-        <tr>
-          <td><strong>License No:</strong> {{ deliveryAgentViewList.licenseNo }}</td>
-          <td><strong>Driver name:</strong> {{ deliveryAgentViewList.driverName }}</td>
-        </tr>
-        <tr>
-          <td><strong>Issue By RTO:</strong> {{ deliveryAgentViewList.issueByRTO }}</td>
-          <td><strong>License validity Date:</strong> {{ deliveryAgentViewList.licenseValidityDate | date:'dd MMM yyyy' }}</td>
-        </tr>
-         <tr>
-          <td><strong>Vendor Type:</strong> {{ deliveryAgentViewList.vendor_TypeDA }}</td>
-          <td><strong>Vendor Name:</strong> {{ deliveryAgentViewList.businessAssociatecode }}</td>
-        </tr>
-         <tr>
-          <td><strong>Location:</strong> {{ deliveryAgentViewList.locationName }}</td>
-          <td><strong>GPS Enabled:</strong> {{ deliveryAgentViewList.gpsEnabled===true?'Yes':'No' }}</td>
-        </tr>
-         <tr>
-          <td><strong>GPS Provider:</strong> {{ deliveryAgentViewList.gpsName }}</td>
-          <td><strong>Active Flag:</strong> {{ deliveryAgentViewList.isActive ===true?'Yes':'No'}}</td>
-        </tr>
-         <tr>
-          <td><strong>License Attachment:</strong> <a [href]="deliveryAgentViewList.licenseAttachment" target="_blank"> View Attachment</a></td>
-          <td></td>
-        </tr>
-         <!-- <tr>
-          <td><strong>Active Flag:</strong> {{ deliveryAgentViewList.isActive ===true?'Yes':'No'}}</td>
-          <td><strong>License Attachment:</strong><i class="fas fa-eye fa-sm me-2 cursor-pointer" (click)="openAttachment(Templatepod,deliveryAgentViewList)"></i> </td>
-        </tr> -->
-        <tr>
-          <td><strong>Added By:</strong> {{ deliveryAgentViewList.entryName }}</td>
-          <td><strong>Added Date:</strong> {{ deliveryAgentViewList.entryDate | date:'dd MMM yyyy' }}</td>
-        </tr>
-        <tr>
-          <td><strong>Edited  By:</strong> {{ deliveryAgentViewList.updateName}}</td>
-          <td><strong>Edited  Date:</strong> {{ deliveryAgentViewList.updatedDate | date:'dd MMM yyyy' }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  </div>
+  <div class="dav-modal-wrapper">
+    <!-- Modal Header -->
+    <div class="dav-header d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-2">
+        <div class="dav-header-icon">
+          <i class="fas fa-id-card"></i>
+        </div>
+        <div>
+          <h5 class="dav-title mb-0">Delivery Agent Details</h5>
+          <span class="dav-subtitle text-white-50">Code: <strong class="text-white">{{ deliveryAgentViewList?.dA_Code || '—' }}</strong></span>
+        </div>
+      </div>
+      <button type="button" class="dav-close-btn" (click)="closePopup()" title="Close">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
 
-  <!-- <div class="modal-footer">
-    <button class="btn btn-secondary" (click)="closePopup()">Cancel</button>
-  </div> -->
+    <!-- Modal Body -->
+    <div class="dav-body" *ngIf="deliveryAgentViewList">
+      <!-- Quick Info Hero Strip -->
+      <div class="dav-hero-strip mb-3">
+        <div class="dav-hero-avatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="dav-hero-main">
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <h4 class="dav-agent-name mb-0">{{ deliveryAgentViewList.deliveryAgentName || '—' }}</h4>
+            <span class="dav-status-pill" [ngClass]="deliveryAgentViewList.isActive ? 'active' : 'inactive'">
+              <i class="fas" [ngClass]="deliveryAgentViewList.isActive ? 'fa-check-circle' : 'fa-times-circle'"></i>
+              {{ deliveryAgentViewList.isActive ? 'Active Agent' : 'Inactive' }}
+            </span>
+          </div>
+          <div class="dav-hero-meta mt-1">
+            <span *ngIf="deliveryAgentViewList.deliveryAgentMobile">
+              <i class="fas fa-phone-alt text-danger me-1"></i> {{ deliveryAgentViewList.deliveryAgentMobile }}
+            </span>
+            <span *ngIf="deliveryAgentViewList.vehicleNo">
+              <i class="fas fa-truck text-secondary me-1"></i> {{ deliveryAgentViewList.vehicleNo }}
+            </span>
+            <span *ngIf="deliveryAgentViewList.vendor_TypeDA">
+              <i class="fas fa-building text-primary me-1"></i> {{ deliveryAgentViewList.vendor_TypeDA }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2-Column Cards Grid -->
+      <div class="row g-3">
+        <!-- LEFT COLUMN: Agent & Driver & License -->
+        <div class="col-lg-6 d-flex flex-column gap-3">
+          <!-- Card: Driver & Personal -->
+          <div class="dav-card">
+            <div class="dav-card-header">
+              <i class="fas fa-user-tie text-danger me-2"></i>
+              <span>Driver & Personal Details</span>
+            </div>
+            <div class="dav-card-body">
+              <div class="dav-info-row">
+                <span class="dav-label">Driver Name</span>
+                <span class="dav-value">{{ deliveryAgentViewList.driverName || '—' }}</span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">Date of Birth</span>
+                <span class="dav-value">{{ (deliveryAgentViewList.dateOfBirth | date:'dd MMM yyyy') || '—' }}</span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">Mobile Number</span>
+                <span class="dav-value fw-bold text-dark">{{ deliveryAgentViewList.deliveryAgentMobile || '—' }}</span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">Active Status</span>
+                <span class="dav-value">
+                  <span class="badge" [ngClass]="deliveryAgentViewList.isActive ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-danger-subtle text-danger border border-danger-subtle'">
+                    {{ deliveryAgentViewList.isActive ? 'Active' : 'Inactive' }}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card: License & RTO -->
+          <div class="dav-card">
+            <div class="dav-card-header">
+              <i class="fas fa-address-card text-danger me-2"></i>
+              <span>License & Compliance</span>
+            </div>
+            <div class="dav-card-body">
+              <div class="dav-info-row">
+                <span class="dav-label">License Number</span>
+                <span class="dav-value mono-badge">{{ deliveryAgentViewList.licenseNo || '—' }}</span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">Issued by RTO</span>
+                <span class="dav-value">{{ deliveryAgentViewList.issueByRTO || '—' }}</span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">License Validity Date</span>
+                <span class="dav-value">{{ (deliveryAgentViewList.licenseValidityDate | date:'dd MMM yyyy') || '—' }}</span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">License Document</span>
+                <span class="dav-value">
+                  <a *ngIf="deliveryAgentViewList.licenseAttachment" [href]="deliveryAgentViewList.licenseAttachment"
+                     target="_blank" class="dav-btn-attach">
+                    <i class="fas fa-paperclip me-1"></i> View Attachment
+                  </a>
+                  <span *ngIf="!deliveryAgentViewList.licenseAttachment" class="text-muted">—</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card: Audit Trail -->
+          <div class="dav-card">
+            <div class="dav-card-header">
+              <i class="fas fa-history text-danger me-2"></i>
+              <span>Audit Information</span>
+            </div>
+            <div class="dav-card-body">
+              <div class="dav-info-row">
+                <span class="dav-label">Added By</span>
+                <span class="dav-value">{{ deliveryAgentViewList.entryName || '—' }}</span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">Added Date</span>
+                <span class="dav-value">{{ (deliveryAgentViewList.entryDate | date:'dd MMM yyyy') || '—' }}</span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">Last Edited By</span>
+                <span class="dav-value">{{ deliveryAgentViewList.updateName || '—' }}</span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">Last Edited Date</span>
+                <span class="dav-value">{{ (deliveryAgentViewList.updatedDate | date:'dd MMM yyyy') || '—' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Vehicle Specs & Validity -->
+        <div class="col-lg-6 d-flex flex-column gap-3">
+          <!-- Card: Vehicle Specifications -->
+          <div class="dav-card">
+            <div class="dav-card-header">
+              <i class="fas fa-truck text-danger me-2"></i>
+              <span>Vehicle Specifications</span>
+            </div>
+            <div class="dav-card-body">
+              <div class="dav-info-row">
+                <span class="dav-label">Vehicle Number</span>
+                <span class="dav-value vehicle-plate-tag">{{ deliveryAgentViewList.vehicleNo || '—' }}</span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">FTL Type</span>
+                <span class="dav-value fw-bold text-dark">{{ deliveryAgentViewList.fTlName || '—' }}</span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">RC Book Number</span>
+                <span class="dav-value">{{ deliveryAgentViewList.rcBookNo || '—' }}</span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">Engine Number</span>
+                <span class="dav-value mono-badge">{{ deliveryAgentViewList.engineNo || '—' }}</span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">Chassis Number</span>
+                <span class="dav-value mono-badge">{{ deliveryAgentViewList.chassisNo || '—' }}</span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">Registration Date</span>
+                <span class="dav-value">{{ (deliveryAgentViewList.registrationDate | date:'dd MMM yyyy') || '—' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card: Insurance & Tracking -->
+          <div class="dav-card">
+            <div class="dav-card-header">
+              <i class="fas fa-shield-alt text-danger me-2"></i>
+              <span>Insurance & Tracking Details</span>
+            </div>
+            <div class="dav-card-body">
+              <div class="dav-info-row">
+                <span class="dav-label">Insurance Validity</span>
+                <span class="dav-value">{{ (deliveryAgentViewList.insuranceValidityDate | date:'dd MMM yyyy') || '—' }}</span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">Fitness Validity</span>
+                <span class="dav-value">{{ (deliveryAgentViewList.fitnessValidityDate | date:'dd MMM yyyy') || '—' }}</span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">GPS Enabled</span>
+                <span class="dav-value">
+                  <span class="badge" [ngClass]="deliveryAgentViewList.gpsEnabled ? 'bg-primary-subtle text-primary border border-primary-subtle' : 'bg-secondary-subtle text-secondary border border-secondary-subtle'">
+                    <i class="fas fa-satellite me-1"></i> {{ deliveryAgentViewList.gpsEnabled ? 'Yes' : 'No' }}
+                  </span>
+                </span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">GPS Provider</span>
+                <span class="dav-value">{{ deliveryAgentViewList.gpsName || '—' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card: Vendor & Branch Operations -->
+          <div class="dav-card">
+            <div class="dav-card-header">
+              <i class="fas fa-map-marked-alt text-danger me-2"></i>
+              <span>Vendor & Operational Coverage</span>
+            </div>
+            <div class="dav-card-body">
+              <div class="dav-info-row">
+                <span class="dav-label">Vendor Type</span>
+                <span class="dav-value">
+                  <span class="badge bg-light text-dark border fw-bold">{{ deliveryAgentViewList.vendor_TypeDA || '—' }}</span>
+                </span>
+              </div>
+              <div class="dav-info-row">
+                <span class="dav-label">Vendor Name / Code</span>
+                <span class="dav-value fw-bold text-dark">{{ deliveryAgentViewList.businessAssociatecode || '—' }}</span>
+              </div>
+              <div class="dav-info-row flex-column align-items-start gap-1">
+                <span class="dav-label">Assigned Locations</span>
+                <div class="dav-location-box w-100 mt-1">
+                  <i class="fas fa-map-pin text-danger me-1"></i>
+                  <span>{{ deliveryAgentViewList.locationName || '—' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="dav-footer d-flex justify-content-end align-items-center">
+      <button type="button" class="btn btn-secondary px-4 fw-semibold" (click)="closePopup()">
+        <i class="fas fa-times me-1"></i> Close
+      </button>
+    </div>
+  </div>
 </ng-template>
+
 <ng-template #Templatepod>
   <div class="modal-content">
-    <!-- <div class="modal-header bs-blue d-flex justify-content-between">
-      <h5 class="modal-title">License</h5>
-      <button type="button" class="close" aria-label="Close" (click)="modalRef.hide()">
-        <i class="fa fa-close"></i>
+    <div class="modal-header da-header-bar text-white d-flex justify-content-between align-items-center">
+      <h5 class="modal-title mb-0"><i class="fas fa-file-image me-2"></i> License Document</h5>
+      <button type="button" class="btn text-white p-0" (click)="modalRef.hide()">
+        <i class="fas fa-times"></i>
       </button>
-    </div> -->
-
-  <div class="modal-body p-2 d-flex gap-3 justify-content-center rounded align-items-center overflow-auto"
-    style="max-height: 75vh;">
-    <img *ngIf="licenseAttechmentImg?.licenseAttachment" [src]="licenseAttechmentImg.licenseAttachment" alt="License Attachment"
-      class="img-fluid object-fit-contain border rounded" style="max-height: 70vh;max-width: 45%;" />
-  </div>
-    <!-- <div class="modal-footer">
-      <button type="button" class="btn btn-danger" (click)="modalRef.hide()">Cancel</button>
-    </div> -->
+    </div>
+    <div class="modal-body p-3 d-flex justify-content-center align-items-center overflow-auto" style="max-height: 75vh;">
+      <img *ngIf="licenseAttechmentImg?.licenseAttachment" [src]="licenseAttechmentImg.licenseAttachment"
+        alt="License Attachment" class="img-fluid object-fit-contain border rounded shadow-sm" style="max-height: 70vh;" />
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modalRef.hide()">Close</button>
+    </div>
   </div>
 </ng-template>
