@@ -338,10 +338,22 @@ onFileSelected(event: any) {
     });
   }
 
-  getLocation(event:any){
-     const result = event.vendorbrcd?.split(",").map((x: any) => x.trim());
+  getLocation(event: any) {
+    if (!event) {
+      this.dAForm.patchValue({ location: null });
+      return;
+    }
+    const loginLocation = this.docketService.loginUserList?.LocationCode;
+    const branches: string[] = event.vendorbrcd
+      ? event.vendorbrcd.split(',').map((x: any) => x.trim()).filter((x: any) => x)
+      : [];
+
+    const matchedBranch = branches.find(
+      (b: string) => b.toUpperCase() === loginLocation?.toUpperCase()
+    );
+
     this.dAForm.patchValue({
-      location:result
+      location: matchedBranch ? [matchedBranch] : (loginLocation ? [loginLocation] : [])
     });
   }
 

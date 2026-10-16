@@ -1,0 +1,400 @@
+/* ── Modal Outer Container Overrides ── */
+::ng-deep .modal-dialog:has(.dam-modal-box) .modal-content,
+::ng-deep .modal-content:has(.dam-modal-box) {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.dam-modal-box {
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Modal Header (Scorpion Red) ── */
+.dam-header {
+  background: linear-gradient(135deg, #c8102e 0%, #b71c1c 100%);
+  color: #ffffff;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  border-bottom: 2px solid #8e0000;
+}
+
+.dam-header-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.dam-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+}
+
+.dam-subtitle {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.dam-close-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+  }
+}
+
+/* ── Modal Body ── */
+.dam-body {
+  background: #f8fafc;
+  padding: 16px 20px;
+  max-height: 74vh;
+  overflow-y: auto;
+  flex: 1;
+
+  /* Custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f8fafc;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+}
+
+/* ── Form Card Sections (THC & Scorpion ERP Standard) ── */
+.dam-section {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.dam-section-title {
+  background: #f1f5f9;
+  color: #b71c1c;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 9px 14px;
+  letter-spacing: 0.3px;
+  border-bottom: 1px solid #e2e8f0;
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  i {
+    font-size: 13px;
+    color: #b71c1c;
+  }
+}
+
+/* ── Grid Layout (4 Columns) ── */
+.dam-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px 16px;
+  padding: 14px;
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dam-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &.span2 {
+    grid-column: span 2;
+
+    @media (max-width: 576px) {
+      grid-column: span 1;
+    }
+  }
+
+  &.span4 {
+    grid-column: span 4;
+
+    @media (max-width: 992px) {
+      grid-column: span 2;
+    }
+
+    @media (max-width: 576px) {
+      grid-column: span 1;
+    }
+  }
+
+  label {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #5a6472;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin-bottom: 2px;
+
+    .req {
+      color: #dc2626;
+      font-weight: 700;
+    }
+  }
+
+  .form-control {
+    height: 35px;
+    font-size: 12px;
+    border: 1px solid #d0d7de;
+    border-radius: 4px;
+    color: #1e293b;
+    padding: 6px 10px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &::placeholder {
+      color: #94a3b8;
+      font-size: 11.5px;
+    }
+
+    &:focus {
+      border-color: #b71c1c;
+      box-shadow: 0 0 0 2px rgba(183, 28, 28, 0.12);
+      outline: none;
+    }
+
+    &[readonly],
+    &[disabled] {
+      background: #f1f5f9;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+  }
+
+  .input-group {
+    .form-control {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .input-group-text,
+    .btn {
+      font-size: 12px;
+      height: 35px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .date-icon-btn {
+      border: 1px solid #d0d7de;
+      border-left: none;
+      background: #f8fafc;
+      color: #64748b;
+      font-size: 12px;
+      height: 35px;
+      width: 38px;
+      cursor: pointer;
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+
+      &:hover {
+        background: #e2e8f0;
+        color: #b71c1c;
+      }
+    }
+  }
+}
+
+/* ── Required Field Marker ── */
+.required2 {
+  border-left: 2.5px solid #b71c1c !important;
+}
+
+/* ── ng-select Theme Overrides (Eliminates double border) ── */
+::ng-deep .dam-field {
+  .ng-select {
+    border: 1px solid #d0d7de !important;
+    border-radius: 4px !important;
+    background: #ffffff;
+    box-shadow: none !important;
+
+    .ng-select-container {
+      min-height: 33px !important;
+      height: 33px !important;
+      border: none !important;
+      box-shadow: none !important;
+      background: transparent !important;
+      font-size: 12px !important;
+      padding-left: 4px;
+    }
+
+    &.ng-select-opened {
+      border-color: #b71c1c !important;
+      box-shadow: 0 0 0 2px rgba(183, 28, 28, 0.12) !important;
+
+      .ng-select-container {
+        border: none !important;
+        box-shadow: none !important;
+      }
+    }
+
+    &.border-danger {
+      border-color: #dc2626 !important;
+
+      .ng-select-container {
+        border: none !important;
+        box-shadow: none !important;
+      }
+    }
+  }
+
+  .ng-select.input-height {
+    min-height: 35px !important;
+    height: auto !important;
+
+    .ng-select-container {
+      min-height: 33px !important;
+      height: auto !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+  }
+}
+
+/* ── Vehicle Digits Radio Bar ── */
+.dam-digits-bar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-top: 2px;
+}
+
+.dam-digit-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #475569;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  margin: 0;
+
+  input[type="radio"] {
+    margin: 0;
+    accent-color: #b71c1c;
+    cursor: pointer;
+    width: 14px;
+    height: 14px;
+  }
+
+  &:hover {
+    border-color: #b71c1c;
+    color: #b71c1c;
+    background: #fff5f5;
+  }
+
+  &.active {
+    border-color: #b71c1c;
+    background: #fff1f2;
+    color: #b71c1c;
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(183, 28, 28, 0.12);
+  }
+}
+
+/* ── Active Status Checkbox ── */
+.dam-status-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #16a34a;
+  border-radius: 4px;
+  border: 1.5px solid #94a3b8;
+  transition: all 0.15s ease;
+  margin: 0;
+  flex-shrink: 0;
+
+  &:checked {
+    background-color: #16a34a;
+    border-color: #16a34a;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
+    outline: none;
+  }
+}
+
+.dam-checkbox-label {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  margin-bottom: 0 !important;
+  user-select: none;
+  cursor: pointer;
+}
+
+/* ── Modal Footer ── */
+.dam-footer {
+  background: #fafbfc;
+  border-top: 1px solid #e2e8f0;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  flex-shrink: 0;
+}
