@@ -1103,7 +1103,33 @@ export class DRSUpdateListComponent implements AfterViewInit, OnDestroy {
     return hasError;
   }
 
+  formatDeliveryDate(dateVal: any): string {
+    if (!dateVal) return '';
+    const d = new Date(dateVal);
+    if (isNaN(d.getTime())) return String(dateVal);
 
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+
+    const now = new Date();
+    let hours = d.getHours();
+    let minutes = d.getMinutes();
+    let seconds = d.getSeconds();
+
+    // જો datepicker માંથી ફક્ત તારીખ પસંદ કરી હોય (00:00:00), તો કરંટ સમય લેવો
+    if (hours === 0 && minutes === 0 && seconds === 0) {
+      hours = now.getHours();
+      minutes = now.getMinutes();
+      seconds = now.getSeconds();
+    }
+
+    const hStr = String(hours).padStart(2, '0');
+    const mStr = String(minutes).padStart(2, '0');
+    const sStr = String(seconds).padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hStr}:${mStr}:${sStr}.000Z`;
+  }
 
   deliveryUpdate() {
     const DepsList: any[] = [];
@@ -1121,7 +1147,7 @@ export class DRSUpdateListComponent implements AfterViewInit, OnDestroy {
       dockno: row.dockno,
       isEnabled: row.isChecked === true,
       ratetype: row.ratetype,
-      delydate: row.DELYDATE,   // already ISO
+      delydate: this.formatDeliveryDate(row.DELYDATE),
       pkgsdelivered: Number(row.deliveredPkgs) || 0,
       pkgs_Pending: Number(row.pkgs_Pending) || 0,
       newRate: Number(row.newRate) || 0,
