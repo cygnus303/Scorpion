@@ -277,5 +277,31 @@ export class SweetAlertService {
       }
     });
   }
+
+  showLoading(title: string = 'Please wait...', message: string = ''): void {
+    this.closeDropdowns();
+    Swal.fire({
+      title: title,
+      html: message ? `<div>${message}</div>` : undefined,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showConfirmButton: false,
+      background: 'rgba(255, 255, 255, 0.9)',
+      color: '#2c3e50',
+      width: '420px',
+      didOpen: () => {
+        Swal.showLoading();
+      },
+      customClass: {
+        popup: 'glassy-info-popup',
+        title: 'glassy-info-title',
+        htmlContainer: 'glassy-info-body'
+      }
+    });
+  }
+
+  close(): void {
+    Swal.close();
+  }
 }
 

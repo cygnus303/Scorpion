@@ -309,19 +309,27 @@ export class ThcListComponent {
   }
 
   onCancelTHC(thcNo: any) {
+    this.isLoading = true;
+    this.sweetAlertService.showLoading('Cancelling...', `Please wait while THC ${thcNo} is being cancelled...`);
     const payload = {
       thcno: thcNo,
       userName: this.docketService.baseUsername
-    }
+    };
     this.PRSDRSApiService.CancelTHC(payload).subscribe({
       next: (response: any) => {
         if (response) {
           this.sweetAlertService.success(`THC ${thcNo} has been cancelled successfully.`);
           this.fetchData();
+        } else {
+          this.isLoading = false;
+          this.sweetAlertService.error('Failed to cancel THC.');
         }
       },
       error: (err: any) => {
         console.error('Error cancelling THC', err);
+        this.isLoading = false;
+        const errorMsg = err?.error?.message || err?.message || 'Error occurred while cancelling THC.';
+        this.sweetAlertService.error(errorMsg);
       }
     });
   }
