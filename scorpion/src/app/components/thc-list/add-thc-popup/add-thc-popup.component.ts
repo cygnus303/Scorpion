@@ -1425,10 +1425,30 @@ export class AddThcPopupComponent {
               this.isSubmitting = false;
               this.sweetAlertService.error(errorMsg);
             } else {
-              this.isSubmitting = false;
-              this.sweetAlertService.success(`THC ${response.data?.docno || ''} Generated Successfully!!`);
-              this.closePopup();
-              this.dataEmitter.emit();
+              const challanDonePayload = {
+                docno: response.data?.docno || '',
+                doctyp: response.data?.doctyp || 'THC',
+                tranXaction: response.data?.tranXaction || 'Successfully Generated',
+                src: 'angular',
+                baseCompanyCode: this.docketService.loginUserList?.Companycode || '',
+                companyCode: this.docketService.loginUserList?.Companycode || '',
+                baseUserName: this.docketService.loginUserList?.BaseUserName || '',
+                baseLocationCode: this.docketService.loginUserList?.LocationCode || ''
+              };
+
+              this.THCService.challanDone(challanDonePayload).subscribe({
+                next: (doneRes: any) => {
+                  this.isSubmitting = false;
+                  this.sweetAlertService.success(`THC ${response.data?.docno || ''} Generated Successfully!!`);
+                  this.closePopup();
+                  this.dataEmitter.emit();
+                },
+                error: (doneErr: any) => {
+                  console.error('Error in ChallanDone API:', doneErr);
+                  this.isSubmitting = false;
+                  this.sweetAlertService.error(doneErr?.error?.message || 'Error occurred in ChallanDone API');
+                }
+              });
             }
           } else {
             this.isSubmitting = false;

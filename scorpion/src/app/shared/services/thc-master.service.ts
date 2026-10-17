@@ -255,4 +255,8 @@ export class THCMasterService {
   resendDRSOTP(payload: any) {
     return this.apiHandlerService.Post(`Master/ResendDRSOTP`, payload);
   }
+
+  challanDone(payload: any) {
+    return this.apiHandlerService.Post(`THC/ChallanDone`, payload);
+  }
 }
