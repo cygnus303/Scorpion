@@ -44,6 +44,9 @@ export class InvoiceDetailsComponent {
     this.docketService.basicDetailForm.get('destinationState')?.valueChanges.subscribe(() => {
       this.validateAllEwayBillFields();
     });
+    this.docketService.basicDetailForm.get('exemptServices')?.valueChanges.subscribe(() => {
+      this.validateAllEwayBillFields();
+    });
 
     this.subscription = this.docketService.ewayBill$.subscribe(ewayBillNo => {
       this.getEwayBillData(ewayBillNo, 0, false);
@@ -126,13 +129,14 @@ export class InvoiceDetailsComponent {
   }
 
   setEwayRowValidators(row: AbstractControl, requireValidators: boolean) {
+    const isExempt = !!this.docketService.basicDetailForm.get('exemptServices')?.value;
     const ewayNo = row.get('ewayBillNo')?.value;
-    const hasEwayNo = ewayNo && ewayNo.toString().trim().length > 0;
+    const hasEwayNo = !isExempt && ewayNo && ewayNo.toString().trim().length > 0;
     const userType = this.docketService.loginUserList?.Type;
 
     let ewayInvoiceRequired = false;
 
-    if (requireValidators || hasEwayNo) {
+    if (!isExempt && (requireValidators || hasEwayNo)) {
       row.get('ewayBillNo')?.setValidators([
         Validators.required,
         Validators.minLength(12),
@@ -175,6 +179,11 @@ export class InvoiceDetailsComponent {
   }
 
   isEwayRequired(row: AbstractControl): boolean {
+    const isExempt = !!this.docketService.basicDetailForm.get('exemptServices')?.value;
+    if (isExempt) {
+      return false;
+    }
+
     const declared = row.get('declaredvalue')?.value ?? 0;
     const totalDeclared = this.docketService.invoiceform.get('totalDeclaredValue')?.value ?? 0;
     const originState = this.docketService.basicDetailForm.get('originState')?.value;
@@ -203,6 +212,9 @@ export class InvoiceDetailsComponent {
   }
 
   get shouldShowEwayBillWarning(): boolean {
+    const isExempt = !!this.docketService.basicDetailForm.get('exemptServices')?.value;
+    if (isExempt) return false;
+
     const totalDeclared = this.docketService.invoiceform.get('totalDeclaredValue')?.value || 0;
     if (totalDeclared <= 100000) return false;
     
@@ -659,6 +671,7 @@ export class InvoiceDetailsComponent {
   validateAllEwayBillFields(): void {
     const invoiceRows = this.docketService.invoiceform.get('invoiceRows') as FormArray;
     const totalDeclared = this.docketService.invoiceform.get('totalDeclaredValue')?.value ?? 0;
+    const isExempt = !!this.docketService.basicDetailForm.get('exemptServices')?.value;
 
     invoiceRows.controls.forEach((row) => {
       const declared = row.get('declaredvalue')?.value ?? 0;
@@ -669,10 +682,12 @@ export class InvoiceDetailsComponent {
 
       const hasInvoiceCopy = !!(row.get('invoiceCopy')?.value || row.get('invoiceFileName')?.value || row.get('invoiceFileUrl')?.value);
 
-      if (declared > 100000 || totalDeclared > 100000) {
-        requireValidators = true;
-      } else if (declared >= 50000 && originState && destState && originState !== destState) {
-        requireValidators = true;
+      if (!isExempt) {
+        if (declared > 100000 || totalDeclared > 100000) {
+          requireValidators = true;
+        } else if (declared >= 50000 && originState && destState && originState !== destState) {
+          requireValidators = true;
+        }
       }
 
       this.setEwayRowValidators(row, requireValidators);
