@@ -684,6 +684,39 @@ export class ChallanService {
 
   }
 
+  formatDateTime(dateVal: any): string | null {
+    if (!dateVal) return null;
+    let d: Date;
+    if (typeof dateVal === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateVal)) {
+      const [y, m, day] = dateVal.split('-').map(Number);
+      d = new Date(y, m - 1, day);
+    } else {
+      d = new Date(dateVal);
+    }
+    if (isNaN(d.getTime())) return null;
+
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+
+    let hours = d.getHours();
+    let minutes = d.getMinutes();
+    let seconds = d.getSeconds();
+
+    if (hours === 0 && minutes === 0 && seconds === 0) {
+      const now = new Date();
+      hours = now.getHours();
+      minutes = now.getMinutes();
+      seconds = now.getSeconds();
+    }
+
+    const hStr = String(hours).padStart(2, '0');
+    const mStr = String(minutes).padStart(2, '0');
+    const sStr = String(seconds).padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hStr}:${mStr}:${sStr}.000Z`;
+  }
+
 
   onSubmit() {
     // const DocketList = (this.avalabledocket.controls as FormGroup[]).filter((group) => group.get('isSelected')?.value).map((group) => group.value);
@@ -727,7 +760,7 @@ export class ChallanService {
       "CTH": {
         THCNO: "N/A",
         ManualTHCNo: challanForm?.manualTHCNo,
-        THCDate: challanForm?.tHCDate?.toISOString(),
+        THCDate: this.formatDateTime(challanForm?.tHCDate),
         THCBRCD: this.docketService.loginUserList.LocationCode,
         FROMCITY: challanForm?.FROMCITY ? challanForm?.FROMCITY : challanForm?.from_City,
         TOCITY: challanForm?.TOCITY ? challanForm?.TOCITY : challanForm?.to_City,
@@ -771,8 +804,8 @@ export class ChallanService {
         IsOperationallyClosebySMS: this.generateData?.cth?.isOperationallyClosebySMS ? this.generateData?.cth?.isOperationallyClosebySMS : false,
         IsEditMode: this.generateData?.cth?.isEditMode ? this.generateData?.cth?.isEditMode : false,
         SealNo: challanForm?.sealNo,
-        ActualDeptDate: challanForm?.actualDeptDate?.toISOString(),
-        ScheduleDeptDate: challanForm?.scheduleDeptDate?.toISOString(),
+        ActualDeptDate: this.formatDateTime(challanForm?.actualDeptDate),
+        ScheduleDeptDate: this.formatDateTime(challanForm?.scheduleDeptDate),
         ScheduleTime: "",
         LateDepaturereason: challanForm?.lateDepaturereason,
         IsEmpty: challanForm?.isEmpty ? true : false,
@@ -795,12 +828,12 @@ export class ChallanService {
         IsMonthlyBillAllow: challanForm?.isMonthlyBillAllow ? true : false,
         DeliveryAgent: challanForm?.deliveryAgent?.id,
         DeliveryAgentMoNo: challanForm?.deliveryAgentMoNo,
-        LoadingDate: challanForm?.loadingDate?.toISOString(),
+        LoadingDate: this.formatDateTime(challanForm?.loadingDate),
         CityRouteCode: "",
         CityRouteKM: "",
         LoadingSlipAttachment: challanForm?.loadingSlipAttachment,
         ApprovedBy: challanForm?.approvedBy,
-        ERD: new Date(challanForm?.ERD).toISOString(),
+        ERD: this.formatDateTime(challanForm?.ERD),
         DAVendor: "",
         Version: '1'
       },
@@ -838,7 +871,7 @@ export class ChallanService {
         VendName: challanForm?.VendName,
         IsMathadi: this.generateData?.isMathadi ? this.generateData?.isMathadi : false,
         MathadiSlipNo: "",
-        MathadiDate: new Date().toISOString(),
+        MathadiDate: this.formatDateTime(new Date()),
         MathadiAmt: 0,
         Is_Local_ODA_id: this.filterList ? this.filterList?.odaType : '',
         IsTDSEnabled: challanForm?.isTDSEnabled || false,
@@ -857,19 +890,19 @@ export class ChallanService {
         Driver1RTONo: challanForm?.driver1RTONo,
         Driver1Licence: challanForm?.driver1Licence,
         D1_DOB: challanForm?.d1_DOB ? this.formatDateWithoutTimezone(challanForm?.d1_DOB) : null,
-        Driver1LicenceValDate: new Date(challanForm?.driver1LicenceValDate)?.toISOString(),
+        Driver1LicenceValDate: this.formatDateTime(challanForm?.driver1LicenceValDate),
         Driver2Name: challanForm?.driver2Name,
         Driver2MobileNo: challanForm?.driver2MobileNo,
         Driver2RTONo: challanForm?.driver2RTONo,
         Driver2Licence: challanForm?.driver2Licence,
-        Driver2LicenceValDate: challanForm?.driver2LicenceValDate?.toISOString(),
+        Driver2LicenceValDate: this.formatDateTime(challanForm?.driver2LicenceValDate),
         CHASISNO: challanForm?.cHASISNO,
         ENGINENO: challanForm?.eNGINENO,
         RCBOOKNO: challanForm?.rCBOOKNO,
-        RegistrationDate: new Date(challanForm?.registrationDate)?.toISOString(),
-        FitnessDate: new Date(challanForm?.fitnessDate)?.toISOString(),
+        RegistrationDate: this.formatDateTime(challanForm?.registrationDate),
+        FitnessDate: this.formatDateTime(challanForm?.fitnessDate),
         // PermitDate:new Date(challanForm?.permitDate)?.toISOString(),
-        InsuranceDate: new Date(challanForm?.insuranceDate)?.toISOString(),
+        InsuranceDate: this.formatDateTime(challanForm?.insuranceDate),
         tabletNumber: "",
         StaffName: "",
         StaffMobileNo: "",
@@ -878,8 +911,8 @@ export class ChallanService {
         Driver: "",
       },
       "GC": {
-        FromDate: this.filterList ? new Date(this.filterList?.fromdt)?.toISOString() : '',
-        ToDate: this.filterList ? new Date(this.filterList?.todt)?.toISOString() : '',
+        FromDate: this.filterList ? (this.formatDateTime(this.filterList?.fromdt) || '') : '',
+        ToDate: this.filterList ? (this.formatDateTime(this.filterList?.todt) || '') : '',
         GCNO: '0',
         PAYBAS: this.filterList ? this.filterList?.paybas : '',
         // TRNMOD:this.filterList ? this.filterList?.trnMod : '',
