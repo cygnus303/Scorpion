@@ -294,7 +294,7 @@
                             <td class="ps-3">
                                 <a href="javascript:void(0)" class="fw-bold text-decoration-none`"
                                     style="color: #0969da; font-size: 13.5px;" (click)="onView(lr.LrNumber)">
-                                    {{ lr.LrNumber }}
+                                    {{ lr.LrNumber }}{{lr.DocketSuffix}}
                                 </a>
                             </td>
                             <td>
@@ -356,8 +356,11 @@
                                     style="font-size: 11px;">{{ lr.CustType }}</span>
                             </td>
                             <!-- CUSTOMER NAME -->
-                            <td><span class="fw-semibold text-dark" style="font-size: 13px; white-space: nowrap;">{{
-                                    lr.party_name }}</span></td>
+                            <td>
+                                <div class="fw-semibold text-dark" style="font-size: 12.5px; white-space: normal; line-height: 1.3; min-width: 200px; max-width: 280px; word-break: break-word;">
+                                    {{ lr.party_name }}
+                                </div>
+                            </td>
                             <td class="text-center">
                                 <span
                                     class="badge rounded-pill px-2 py-1 fw-bold d-inline-flex align-items-center gap-1 border"

@@ -23,7 +23,7 @@ export class DeliveryAgentViewComponent {
     if(data){
       this.deliveryAgentViewList = data;
     }
-    this.bsModalRef = this.modalService.show(this.templatePopup, {  backdrop: true, ignoreBackdropClick: false, class: 'modal-lg modal-dialog-centered' });
+    this.bsModalRef = this.modalService.show(this.templatePopup, {  backdrop: true, ignoreBackdropClick: false, class: 'modal-xl modal-dialog-centered' });
   }
 
   closePopup() {

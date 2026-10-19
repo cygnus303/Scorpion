@@ -1,123 +1,167 @@
 <div class="cnote-entry-container px-1">
-    <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold background-color">
-        <div>
-            <i class="fas fa-list me-2"></i>
-            List of Delivery Agents
+    <div class="text-white px-3 py-3 d-flex align-items-center justify-content-between fw-semibold da-header-bar">
+        <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-list me-1"></i>
+            <span>List of Delivery Agents</span>
         </div>
-        <div>
-            <button class="btn btn-light btn-sm me-2 fw-bold" (click)="deliveryAgentExport()">
-                <i class="fas fa-download"></i> Download Excel
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-light btn-sm fw-bold shadow-sm" (click)="deliveryAgentExport()">
+                <i class="fas fa-download me-1 text-secondary"></i> Download Excel
             </button>
-            <button class="btn btn-light btn-sm fw-bold" (click)="openDeliveryAgentsPopup()">
-                <i class="fas fa-user-plus"></i> Add User
+            <button class="btn btn-light btn-sm fw-bold shadow-sm" (click)="openDeliveryAgentsPopup()">
+                <i class="fas fa-user-plus me-1 text-danger"></i> Add User
             </button>
         </div>
     </div>
-    <div class="table-responsive mt-3">
-        <table class="table table-hover align-middle custom-table">
+
+    <div class="table-wrap custom-table-scroll mt-2">
+        <table class="table align-middle data-table mb-0">
             <thead>
-                <tr class="bg-light">
-                    <th>Sr. No</th>
+                <tr>
+                    <th class="text-center" style="width: 50px;">Sr. No</th>
                     <th>Delivery Agent ID</th>
                     <th>Delivery Agent Name</th>
-                    <th style="min-width: 250px; max-width: 300px; white-space: normal;">Locations</th>
+                    <th style="min-width: 200px; max-width: 280px;">Locations</th>
                     <th>Vehicle Number</th>
                     <th>License Number</th>
                     <th>Vendor Type</th>
                     <th>Vendor Name</th>
-                    <th class="text-center">Status</th>
-                    <th class="text-center">Action</th>
+                    <th class="text-center" style="width: 70px;">Status</th>
+                    <th class="text-center text-nowrap" style="min-width: 170px;">Action</th>
+                </tr>
+                <tr class="filter-row">
+                    <td class="text-center text-muted" style="font-size: 11px;">
+                        <i class="fas fa-filter text-muted opacity-50"></i>
+                    </td>
+                    <td>
+                        <input type="text" class="filter-input" placeholder="Search ID..."
+                            [(ngModel)]="filters['DA_Code']" (input)="getDeliveryAgentList()">
+                    </td>
+                    <td>
+                        <input type="text" class="filter-input" placeholder="Search Name..."
+                            [(ngModel)]="filters['DeliveryAgentName']" (input)="getDeliveryAgentList()">
+                    </td>
+                    <td style="min-width: 200px; max-width: 280px;">
+                        <input type="text" class="filter-input" placeholder="Search Location..."
+                            [(ngModel)]="filters['Location']" (input)="getDeliveryAgentList()">
+                    </td>
+                    <td>
+                        <input type="text" class="filter-input" placeholder="Vehicle No..."
+                            [(ngModel)]="filters['VehicleNo']" (input)="getDeliveryAgentList()">
+                    </td>
+                    <td>
+                        <input type="text" class="filter-input" placeholder="License No..."
+                            [(ngModel)]="filters['LicenseNo']" (input)="getDeliveryAgentList()">
+                    </td>
+                    <td>
+                        <input type="text" class="filter-input" placeholder="Vendor Type..."
+                            [(ngModel)]="filters['VendorType']" (input)="getDeliveryAgentList()">
+                    </td>
+                    <td>
+                        <input type="text" class="filter-input" placeholder="Vendor Name..."
+                            [(ngModel)]="filters['BAName']" (input)="getDeliveryAgentList()">
+                    </td>
+                    <td></td>
+                    <td></td>
                 </tr>
             </thead>
-            <tbody>
-                <tr class="bg-light">
-                    <td></td>
-                    <td><input type="text" class="form-control" [(ngModel)]="filters['DA_Code']"
-                            (input)="getDeliveryAgentList()"></td>
-                    <td><input type="text" class="form-control" [(ngModel)]="filters['DeliveryAgentName']"
-                            (input)="getDeliveryAgentList()"></td>
-                    <td style="min-width: 250px; max-width: 300px;"><input type="text" class="form-control" [(ngModel)]="filters['Location']"
-                            (input)="getDeliveryAgentList()"></td>
-                    <td><input type="text" class="form-control" [(ngModel)]="filters['VehicleNo']"
-                            (input)="getDeliveryAgentList()"></td>
-                    <td><input type="text" class="form-control" [(ngModel)]="filters['LicenseNo']"
-                            (input)="getDeliveryAgentList()"></td>
-                    <td><input type="text" class="form-control" [(ngModel)]="filters['VendorType']"
-                            (input)="getDeliveryAgentList()"></td>
-                    <td><input type="text" class="form-control" [(ngModel)]="filters['BAName']"
-                            (input)="getDeliveryAgentList()"></td>
-                    <td></td>
-                    <td></td>
+            <tbody *ngIf="loading && deliveryAgentsList.length === 0">
+                <tr>
+                    <td colspan="10" class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
+                    </td>
                 </tr>
-                <tr *ngFor="let data of deliveryAgentsList;let i=index">
-                    <td>{{data.srno}}</td>
-                    <td>{{data.dA_Code}}</td>
-                    <td>{{data.deliveryAgentName}}</td>
-                    <td style="min-width: 250px; max-width: 300px; white-space: normal; word-wrap: break-word;">{{data.location}}</td>
-                    <td>{{data.vehicleNo}}</td>
-                    <td>{{data.licenseNo}}</td>
-                    <td>{{data.vendorType}}</td>
-                    <td>{{data.baName}}</td>
-                    <td class="text-center">
-                        <!-- <ng-container *ngIf="data.isActive; else inactive">
-                            <span class="badge bg-success">Yes</span>
-                        </ng-container>
-                        <ng-template #inactive>
-                            <span class="badge bg-danger">No</span>
-                        </ng-template> -->
-                        <label class="premium-switch">
-                            <input type="checkbox" [checked]="data.isActive" (change)="onStatusChange($event, data)" />
-                            <span class="premium-slider"></span>
-                        </label>
+            </tbody>
+            <tbody *ngIf="!loading && deliveryAgentsList.length === 0">
+                <tr>
+                    <td colspan="10" class="text-center py-4 text-muted fs-5">
+                        Sorry! No Data Found
+                    </td>
+                </tr>
+            </tbody>
+            <tbody *ngIf="deliveryAgentsList.length > 0">
+                <tr *ngFor="let data of deliveryAgentsList; let i = index">
+                    <td class="text-center text-muted fs-7">{{ (pageNumber - 1) * pageSize + i + 1 }}</td>
+                    <td>
+                        <a href="javascript:void(0)" class="agent-code-link"
+                            (click)="opendeliveryAgentViewPopup(data.dA_Code)">
+                            {{ data.dA_Code }}
+                        </a>
+                    </td>
+                    <td>
+                        <span class="fw-semibold text-dark">{{ data.deliveryAgentName }}</span>
+                    </td>
+                    <td style="min-width: 200px; max-width: 280px;">
+                        <div class="location-tag" [title]="data.location">
+                            <i class="fas fa-map-marker-alt text-danger me-1"></i>
+                            <span>{{ data.location || '—' }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="vehicle-plate" *ngIf="data.vehicleNo">{{ data.vehicleNo }}</span>
+                        <span *ngIf="!data.vehicleNo" class="text-muted">—</span>
+                    </td>
+                    <td>
+                        <span class="license-no">{{ data.licenseNo || '—' }}</span>
+                    </td>
+                    <td>
+                        <span class="vtype-badge" [ngClass]="getVendorTypeClass(data.vendorType)"
+                            *ngIf="data.vendorType">
+                            {{ data.vendorType }}
+                        </span>
+                        <span *ngIf="!data.vendorType" class="text-muted">—</span>
+                    </td>
+                    <td>
+                        <span class="vendor-name-text" [title]="data.baName">{{ data.baName || '—' }}</span>
                     </td>
                     <td class="text-center">
-                        <span [class.invisible]="data.isUser"
-                            class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer me-2"
-                            (click)="!data.isUser && onCreateUser(data.dA_Code)">
-                           <i class="fas fa-user-plus"></i>
-                        </span>
-                        <span
-                            class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer me-2"
-                            (click)="opendeliveryAgentViewPopup(data.dA_Code)">
-                            <i class="fas fa-eye me-2 text-Secondary"></i> View
-                        </span>
-                        <span
-                            class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer me-2"
-                            (click)="openDeliveryAgentsPopup(data.dA_Code)">
-                            <i class="fas fa-pen me-2 text-Secondary"></i> Edit
-                        </span>
-                        <span
-                            class="d-inline-flex align-items-center text-Secondary edit-color px-2 py-1 fw-semibold edit-border cursor-pointer me-2"
-                            (click)="openResetPasswordPopup($event,data.dA_Code)">
-                            <i class="fas fa-lock me-2 text-Secondary"></i> Change Password
-                        </span>
-                        <span
-                            *ngIf="this.docketService.loginUserList.BaseUserName === 'CYGNUSTEAM'||this.docketService.loginUserList.BaseUserName === '2807'||
-                                this.docketService.loginUserList.BaseUserName === '4151' || this.docketService.loginUserList.BaseUserName === '3673' || this.docketService.loginUserList.BaseUserName === '4373' ">
-                            <i class="fas fa-eye fa-sm me-2 cursor-pointer" (click)="onshowPassword(data.dA_Code)"></i>
-                        </span>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <input type="checkbox" class="form-check-input status-checkbox" [checked]="data.isActive"
+                                (change)="onStatusChange($event, data)"
+                                title="{{ data.isActive ? 'Active' : 'Inactive' }}" />
+                        </div>
+                    </td>
+                    <td class="text-center text-nowrap">
+                        <div class="action-btn-group d-inline-flex align-items-center gap-1 text-nowrap">
+                            <button *ngIf="!data.isUser" class="da-btn da-btn-user" (click)="onCreateUser(data.dA_Code)"
+                                title="Create User">
+                                <i class="fas fa-user-plus"></i>
+                                <span>User</span>
+                            </button>
+                            <button class="da-btn da-btn-view" (click)="opendeliveryAgentViewPopup(data.dA_Code)"
+                                title="View Details">
+                                <i class="fas fa-eye"></i>
+                                <span>View</span>
+                            </button>
+                            <button class="da-btn da-btn-edit" (click)="openDeliveryAgentsPopup(data.dA_Code)"
+                                title="Edit Agent">
+                                <i class="fas fa-pen"></i>
+                                <span>Edit</span>
+                            </button>
+                            <button class="da-btn da-btn-pass" (click)="openResetPasswordPopup($event, data.dA_Code)"
+                                title="Change Password">
+                                <i class="fas fa-lock"></i>
+                                <span>Pass</span>
+                            </button>
+                            <button *ngIf="canShowPassword" class="da-btn da-btn-admin"
+                                (click)="onshowPassword(data.dA_Code)" title="Show Password">
+                                <i class="fas fa-key"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <div class="text-center border-found" *ngIf="loading && deliveryAgentsList.length === 0">
-            <lord-icon src="assets/json/system-solid-716-spinner-three-dots-loop-scale.json" trigger="loop"
-                colors="primary:#121331,secondary:#08a88a" style="width: 100px; height: 100px">
-            </lord-icon>
-        </div>
-
-        <!-- No Result Found -->
-        <div class="text-center border-found p-4" *ngIf="!loading && deliveryAgentsList.length === 0">
-            <h5 class="mt-2">Sorry! No Data Found</h5>
-        </div>
-        <div class="d-flex justify-content-end">
-            <div class="m-3 mt-2"> Showing Total Records : <strong>{{totalItems}}</strong> </div>
-            <ngb-pagination [collectionSize]="totalItems" [(page)]="pageNumber" [pageSize]="pageSize" [maxSize]="3"
-                (pageChange)="getDeliveryAgentList($event)"></ngb-pagination>
-        </div>
     </div>
-</div>
 
+    <!-- Pagination (Same as PRS) -->
+    <app-pagination [page]="pageNumber" [pageSize]="pageSize" [totalRecords]="totalItems"
+        [totalPages]="totalPages" (pageChange)="getDeliveryAgentList($event)">
+    </app-pagination>
+</div>
 
 <delivery-agent-modal #deliveryAgentPopup (dataEvent)="getDeliveryAgentList()"></delivery-agent-modal>
 <delivery-agent-view #deliveryAgentViewPopup></delivery-agent-view>
@@ -125,90 +169,92 @@
 <!-- Change Password Modal -->
 <div class="modal fade" id="showPasswordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header background-color text-white d-flex justify-content-between">
-                <h5 class="modal-title">
-                    Change Password
-                </h5>
-                <button type="button" class="btn text-white" (click)="closePopup()">
+        <div class="modal-content cp-modal-content">
+            <!-- Modal Header (Scorpion Red) -->
+            <div class="cp-header d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="cp-header-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div>
+                        <h5 class="cp-title mb-0">Change Password</h5>
+                        <span class="cp-subtitle">Set new login credentials for agent</span>
+                    </div>
+                </div>
+                <button type="button" class="cp-close-btn" (click)="closePopup()" title="Close">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body p-4">
-                <div class="mb-3">
-                    <label class="form-label fw-semibold text-secondary">Delivery Agent ID</label>
-                    <input type="text" class="form-control fw-bold bg-light" [value]="selectedDeliveryAgent" readonly disabled />
+
+            <!-- Modal Body -->
+            <div class="modal-body p-4 bg-white">
+                <!-- Delivery Agent Badge -->
+                <div class="cp-agent-badge mb-3">
+                    <div class="cp-agent-icon">
+                        <i class="fas fa-id-badge"></i>
+                    </div>
+                    <div class="cp-agent-details">
+                        <span class="cp-agent-label">Delivery Agent ID</span>
+                        <strong class="cp-agent-code">{{selectedDeliveryAgent}}</strong>
+                    </div>
                 </div>
+
+                <!-- New Password Field -->
                 <div class="mb-3">
-                    <label class="form-label fw-semibold text-secondary">New Password</label>
-                    <div class="input-group">
-                        <input [type]="showNewPassword ? 'text' : 'password'" class="form-control fw-bold text-success" [(ngModel)]="generatedPassword" placeholder="Enter new password" />
-                        <button class="btn btn-outline-secondary" type="button" (click)="showNewPassword = !showNewPassword" title="Show/Hide Password">
+                    <label class="form-label cp-field-label">New Password <span class="text-danger">*</span></label>
+                    <div class="input-group cp-input-group">
+                        <input [type]="showNewPassword ? 'text' : 'password'" class="form-control"
+                            [(ngModel)]="generatedPassword" placeholder="Enter new password" />
+                        <button class="btn cp-eye-btn" type="button"
+                            (click)="showNewPassword = !showNewPassword" title="Show/Hide Password">
                             <i class="fas" [ngClass]="showNewPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
                         </button>
                     </div>
                 </div>
+
+                <!-- Confirm Password Field -->
                 <div class="mb-3">
-                    <label class="form-label fw-semibold text-secondary">Confirm Password</label>
-                    <div class="input-group">
-                        <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control fw-bold text-success" [(ngModel)]="confirmPassword" placeholder="Enter confirm password" />
-                        <button class="btn btn-outline-secondary" type="button" (click)="showConfirmPassword = !showConfirmPassword" title="Show/Hide Password">
+                    <label class="form-label cp-field-label">Confirm Password <span class="text-danger">*</span></label>
+                    <div class="input-group cp-input-group">
+                        <input [type]="showConfirmPassword ? 'text' : 'password'"
+                            class="form-control" [(ngModel)]="confirmPassword"
+                            placeholder="Enter confirm password" />
+                        <button class="btn cp-eye-btn" type="button"
+                            (click)="showConfirmPassword = !showConfirmPassword" title="Show/Hide Password">
                             <i class="fas" [ngClass]="showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
                         </button>
                     </div>
-                    <small *ngIf="generatedPassword && confirmPassword && generatedPassword !== confirmPassword" class="text-danger fw-semibold mt-1 d-block">
+                    <small *ngIf="generatedPassword && confirmPassword && generatedPassword !== confirmPassword"
+                        class="text-danger fw-semibold mt-1 d-block">
                         <i class="fas fa-exclamation-circle me-1"></i> Password and Confirm Password do not match.
                     </small>
+                    <small *ngIf="generatedPassword && confirmPassword && generatedPassword === confirmPassword"
+                        class="text-success fw-semibold mt-1 d-block">
+                        <i class="fas fa-check-circle me-1"></i> Passwords match.
+                    </small>
                 </div>
-                <div class="alert alert-warning mb-0 py-2 px-3 d-flex align-items-center" role="alert">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    <span class="small">Are you sure you want to change the password for delivery agent <b>{{selectedDeliveryAgent}}</b>?</span>
+
+                <!-- Confirmation Alert Box -->
+                <div class="cp-notice d-flex align-items-center" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2 text-warning fs-5"></i>
+                    <span class="small text-secondary">
+                        Are you sure you want to change the password for delivery agent
+                        <strong class="text-dark">{{selectedDeliveryAgent}}</strong>?
+                    </span>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true" (click)="closePopup()">
-                    <i class="fas fa-times"></i> Close
+
+            <!-- Modal Footer -->
+            <div class="cp-footer d-flex justify-content-end align-items-center gap-2">
+                <button type="button" class="btn btn-light border px-4 py-2 fw-semibold text-secondary" (click)="closePopup()">
+                    <i class="fas fa-times me-1"></i> Close
                 </button>
-                <button class="btn btn-success" type="submit" [disabled]="!generatedPassword || !confirmPassword || generatedPassword !== confirmPassword" (click)="onSubmitPassword()">
-                    <i class="fas fa-check"></i> Confirm
+                <button class="btn btn-success px-4 py-2 fw-bold d-flex align-items-center gap-2 shadow-sm" type="button"
+                    [disabled]="!generatedPassword || !confirmPassword || generatedPassword !== confirmPassword"
+                    (click)="onSubmitPassword()">
+                    <i class="fas fa-check-circle me-1"></i> Confirm
                 </button>
             </div>
         </div>
     </div>
 </div>
-
-<!-- <div class="modal fade" id="showPasswordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-
-            <div class="modal-header background-color text-white d-flex justify-content-between">
-                <h5 class="modal-title">
-                    Reset Password
-                </h5>
-                <button type="button" class="btn text-white" (click)="closePopup()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div>
-                    <h5>
-                        <span>Password for Delivery Agent </span><b>{{selectedDeliveryAgent}}</b><span> will be the
-                        </span><b>{{generatedPassword}}</b><b id="type" hidden></b>. <br /> <br /> <span>Are you sure
-                            you want
-                            you want to reset the password for the above user?</span> <br /> <br /> <span>If yes then
-                            please press <b>"Confirm"</b> other wise kindly press "Close".</span>
-                    </h5>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true" (click)="closePopup()">
-                    <i class="fas fa-times"></i> Close
-                </button>
-                <button class="btn btn-success" type="submit" (click)="onSubmitPassword()">
-                    <i class="fas fa-check"></i> Confirm
-                </button>
-            </div>
-        </div>
-    </div>
-</div> -->

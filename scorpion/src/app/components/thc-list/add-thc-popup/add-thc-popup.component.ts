@@ -112,6 +112,7 @@ export class AddThcPopupComponent {
 
     this.ThcForm = this.fb.group({
       tHCDate: [this.formatDateTime(new Date())],
+      thcType: [{value: (this.selectedMfs && this.selectedMfs.length > 0) ? this.selectedMfs[0].lsType : '', disabled: true}],
       routeType: [initialRouteType, Validators.required],
       actualDeptDate: [this.formatDateTime(new Date())],
       scheduleDeptDate: [this.formatDateTime(new Date())],
@@ -486,6 +487,7 @@ export class AddThcPopupComponent {
     });
     // this.getTDSDetailsFromVendor(event);
     this.getVehicleFromVendorList(event);
+    this.getContractDetail();
     // if (this.ThcForm.value.vendorType === 'XX1') {
     //   // this.GetVehicleTypesForChallanFromRouteVendType()
     // } else {
@@ -587,7 +589,8 @@ export class AddThcPopupComponent {
             fitnessDate: response.data.fitnessValDt ? new Date(response.data.fitnessValDt) : null,
             openKM: response.data.startKM
           });
-          this.getVehicleCapacity(response.data.vehicle_Type)
+          this.getVehicleCapacity(response.data.vehicle_Type);
+          this.getContractDetail();
         }
       },
       error: (err) => {
@@ -771,6 +774,9 @@ export class AddThcPopupComponent {
       this.ThcForm.patchValue({
         isOverLoad: false
       })
+    }
+    if (this.ThcForm.value.vendorCode) {
+      this.getContractDetail();
     }
   }
 
@@ -961,6 +967,61 @@ export class AddThcPopupComponent {
     }
   }
 
+  getContractDetail() {
+    if (!this.ThcForm) return;
+    this.contractAmtMsg = '';
+
+    const formVal = this.ThcForm.value;
+    const vehicle = formVal.vehicleNO === 'O'
+      ? (formVal.mKTVehicleNo || '')
+      : (formVal.vehicleNO || formVal.vehicleNo || '');
+
+    const payload = {
+      thctype: '1',
+      totalWeight: Number(formVal.wtLoaded) || 0,
+      weightAdjust: 0,
+      isAllowAdhoc: false,
+      isAdhoc: false,
+      isAllowTAM: false,
+      vendorCode: formVal.vendorCode || '',
+      routeCode: formVal.routeCode || '',
+      routeMODE: formVal.routeType || '',
+      ftL_Type: formVal.fTLType || '',
+      vehicle: vehicle,
+      from_City: formVal.FROMCITY || '',
+      to_City: formVal.TOCITY || '',
+      paybas: '',
+      dockno: '',
+    };
+
+    if (payload.vendorCode && payload.vendorCode !== '') {
+      this.THCService.getContractData(payload).subscribe({
+        next: (response: any) => {
+          if (response && response.data) {
+            this.handleContractResponse(response);
+            if (!response.data.contractExpire) {
+              const contractAmt = Number(response.data.contractAmount) || 0;
+              this.ThcForm.patchValue({
+                contractAmount: contractAmt,
+                tDSOnAmount: contractAmt
+              });
+              this.calculateNetAmount();
+            } else {
+              this.ThcForm.patchValue({
+                contractAmount: 0,
+                tDSOnAmount: 0
+              });
+              this.calculateNetAmount();
+            }
+          }
+        },
+        error: (err) => {
+          console.error('Error fetching contract details:', err?.error?.message || err);
+        }
+      });
+    }
+  }
+
   calculateBalanceAmount() {
     const netAmount = Number(this.ThcForm.get('netAmount')?.value) || 0;
     const advanceAmount = Number(this.ThcForm.get('advanceAmount')?.value) || 0;
@@ -995,7 +1056,8 @@ export class AddThcPopupComponent {
       next: (response: any) => {
         this.ThcForm.patchValue({
           ERD: response.data.erD_DateTime
-        })
+        });
+        this.getContractDetail();
       },
       error: (err) => {
         console.error('Error fetching vehicle details:', err.error.message);
@@ -1068,7 +1130,11 @@ export class AddThcPopupComponent {
   }
 
   getBidDetail() {
-    this.THCService.getBidDetail(this.docketService.loginUserList.LocationCode).subscribe({
+    let routeCode = this.ThcForm.get('routeCode')?.value || '';
+    if (routeCode && routeCode.includes(':')) {
+      routeCode = routeCode.split(':')[0];
+    }
+    this.THCService.getBidDetail(routeCode).subscribe({
       next: (response: any) => {
         this.bidData = response.data;
       }
@@ -1243,6 +1309,7 @@ export class AddThcPopupComponent {
           "TOCITY": "",
           "THCType": 1,
           "RouteCategory": "",
+          // "ThcType": formValue.thcType || "",
           "RouteType": formValue.routeType || "",
           "RouteCode": formValue.routeCode || "",
           "RouteName": formValue.routeCode || "",
@@ -1358,10 +1425,30 @@ export class AddThcPopupComponent {
               this.isSubmitting = false;
               this.sweetAlertService.error(errorMsg);
             } else {
-              this.isSubmitting = false;
-              this.sweetAlertService.success(`THC ${response.data?.docno || ''} Generated Successfully!!`);
-              this.closePopup();
-              this.dataEmitter.emit();
+              const challanDonePayload = {
+                docno: response.data?.docno || '',
+                doctyp: response.data?.doctyp || 'THC',
+                tranXaction: response.data?.tranXaction || 'Successfully Generated',
+                src: 'angular',
+                baseCompanyCode: this.docketService.loginUserList?.Companycode || '',
+                companyCode: this.docketService.loginUserList?.Companycode || '',
+                baseUserName: this.docketService.loginUserList?.BaseUserName || '',
+                baseLocationCode: this.docketService.loginUserList?.LocationCode || ''
+              };
+
+              this.THCService.challanDone(challanDonePayload).subscribe({
+                next: (doneRes: any) => {
+                  this.isSubmitting = false;
+                  this.sweetAlertService.success(`THC ${response.data?.docno || ''} Generated Successfully!!`);
+                  this.closePopup();
+                  this.dataEmitter.emit();
+                },
+                error: (doneErr: any) => {
+                  console.error('Error in ChallanDone API:', doneErr);
+                  this.isSubmitting = false;
+                  this.sweetAlertService.error(doneErr?.error?.message || 'Error occurred in ChallanDone API');
+                }
+              });
             }
           } else {
             this.isSubmitting = false;

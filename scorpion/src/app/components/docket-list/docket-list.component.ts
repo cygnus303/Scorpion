@@ -556,6 +556,21 @@ export class DocketListComponent implements OnInit {
     return invalidControls;
   }
 
+  // private toLocalIso(v: any): string | null {
+  //   if (!v) return null;
+  //   const d = new Date(v);
+  //   return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, -1);
+  // }
+
+  private toLocalIso(value: any): string | null {
+    if (!value) return null;
+    if (typeof value === 'string' && value.indexOf('0001') !== -1) return null; // '01 JAN 0001' = blank on edit load
+    const d = value instanceof Date ? new Date(value.getTime()) : new Date(value);
+    if (isNaN(d.getTime()) || d.getFullYear() < 1900) return null;
+    d.setHours(23, 59, 0, 0);
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 19);
+  }
+
   onSubmit() {
     if (this.isSubmitting) return;
 
@@ -688,7 +703,8 @@ export class DocketListComponent implements OnInit {
 
         // ✅ conditionally add eWayBillExpiredDate only if eWayBillNo has value
         if (row.ewayBillNo) {
-          obj.EWayBillExpiredDate = row.ewayBillExpiry || null;
+          // obj.EWayBillExpiredDate = row.ewayBillExpiry || null;
+          obj.EWayBillExpiredDate = this.toLocalIso(row.ewayBillExpiry);
         }
 
         return obj;
@@ -1044,7 +1060,7 @@ export class DocketListComponent implements OnInit {
               // window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N&src=angular`;
               // {btoa('angular')}
               if (!this.docketService.loginUserList?.prqData) {
-                window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&BILLNO=${response.res.billNo}&MRSNo=${response.res.mrsNo}&APMTNO=${response.res.apmtNo}&id=${response.res.id}&GBNo=${response.res.gbNo}&IsFromBillGeneration=N&src=angular`;
+                window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'1'}?DOCKNO=${response.res.dockNo}&BILLNO=${response.res.billNo}&MRSNo=${response.res.mrsNo}&APMTNO=${response.res.apmtNo}&id=${response.res.id}&GBNo=${response.res.gbNo}&GDNo=${response.res.gdNo}&IsFromBillGeneration=N&src=angular`;
               } else {
                 // PRQ flow: show in-app success modal
                 this.prqSuccessResult = response.res;
@@ -1074,7 +1090,7 @@ export class DocketListComponent implements OnInit {
               this.docketService.successMsg = 'Docket submitted successfully.'
               this.isRedirect = true;
               // window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'2'}?DOCKNO=${response.res.dockNo}&IsFromBillGeneration=N&src=angular`;
-              window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'2'}?DOCKNO=${response.res.dockNo}&BILLNO=${response.res.billNo}&MRSNo=${response.res.mrsNo}&APMTNO=${response.res.apmtNo}&id=${response.res.id}&GBNo=${response.res.gbNo}&IsFromBillGeneration=N&src=angular`;
+              window.parent.location.href = `${this.env.liveUrl}Operation/DocketDone/${'2'}?DOCKNO=${response.res.dockNo}&BILLNO=${response.res.billNo}&MRSNo=${response.res.mrsNo}&APMTNO=${response.res.apmtNo}&id=${response.res.id}&GBNo=${response.res.gbNo}&GDNo=${response.res.gdNo}&IsFromBillGeneration=N&src=angular`;
               this.docketService.basicDetailForm.reset();
               this.docketService.freightForm.reset();
               this.docketService.invoiceform.reset();

@@ -276,7 +276,12 @@
           <div class="docket-card-head-left">
             <span class="dch-dot"></span> {{this.docketService.loginUserList.Type === 'ULS' ?'UPDATE LOADING SHEET & PREPARE MANIFEST' : 'LIST LOADING SHEET'}}
           </div>
-          <span class="docket-count-badge">{{totalDocketSelected||0}} LR(S) SELECTED</span>
+          <div class="d-flex align-items-center gap-2">
+            <button *ngIf="totalDocketSelected > 0" class="btn btn-sm btn-light text-danger fw-bold py-0 px-2 shadow-sm" style="border: none;" (click)="clearSelection()" title="Clear Selection">
+              <i class="fas fa-times me-1"></i> Clear
+            </button>
+            <span class="docket-count-badge">{{totalDocketSelected||0}} LR(S) SELECTED</span>
+          </div>
         </div>
         <div class="p-3 bg-white">
 
@@ -347,7 +352,9 @@
                   <ng-container *ngIf="!isLoadingSheet">
                     <tr *ngFor="let row of loadingSheetService.docketFormArray.controls; let i = index"
                       [formGroupName]="i">
-                      <td class="text-center" style="width: 40px; min-width: 40px; max-width: 150px;">
+                      <td class="text-center" style="width: 40px; min-width: 40px; max-width: 150px;"
+                          [style.cursor]="row.get('isChecked')?.disabled ? 'not-allowed' : 'default'"
+                          [attr.title]="row.get('isChecked')?.disabled ? 'Cannot select multiple LS Types' : null">
                         <ng-container *ngIf="row.value.message?.trim(); else checkError">
                           <div class="text-danger fw-semibold text-wrap" style="font-size: 11px;">{{ row.value.message
                             }}</div>
@@ -361,16 +368,22 @@
                         </ng-template>
 
                         <ng-template #showCheckbox>
-                          <input type="checkbox" formControlName="isChecked"
-                            class="form-check-input checkbox-lg custom-big-checkbox" (change)="updateSelectedCount()"
-                            style="cursor: pointer;" appFocusNext />
+                          <span style="display: inline-block;">
+                            <input type="checkbox" formControlName="isChecked"
+                              class="form-check-input checkbox-lg custom-big-checkbox" (change)="updateSelectedCount()"
+                              [style.pointer-events]="row.get('isChecked')?.disabled ? 'none' : 'auto'"
+                              appFocusNext />
+                          </span>
                         </ng-template>
                       </td>
                       <td>
                         <div class="fw-bold">{{ row.value.docketNo }}</div>
                         <div class="text-muted" style="font-size: 10.5px;">{{ row.value.docketDate }}</div>
                       </td>
-                      <td>{{ row.value.transMode }}</td>
+                      <td>
+                        <div class="fw-bold">{{ row.value.transMode }}</div>
+                        <div class="text-primary" style="font-size: 10.5px; font-weight: 600;">{{ row.value.service_ClassName }}</div>
+                      </td>
                       <td style="width: 190px; min-width: 190px; max-width: 190px;">
                         <div class="fw-bold">{{ row.value.orgCode }} - {{ row.value.reDestCode }}</div>
                         <div class="text-muted" style="font-size: 10.5px;">{{ row.value.fromTo }}</div>

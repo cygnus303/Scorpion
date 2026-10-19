@@ -1,16 +1,101 @@
-.custom-scrollbar {
-  /* Sleek custom scrollbars */
+:host {
+  display: block;
+}
+
+.drs-update-main-wrapper {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.drs-update-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.cnote-table-container {
+  display: block;
+  padding: 8px 12px;
+  background: #f1f5f9;
+}
+
+/* Custom Table Scrollbar and Sticky Header */
+.custom-table-scroll {
+  display: block;
+  width: 100%;
+  max-height: calc(80vh - 225px);
+  overflow-x: auto !important;
+  overflow-y: auto !important;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  -webkit-overflow-scrolling: touch;
+
+  /* Firefox scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f8fafc;
+
+  /* Chrome, Edge, Safari */
   &::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
   }
+
   &::-webkit-scrollbar-track {
     background: #f8fafc;
     border-radius: 4px;
   }
+
   &::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 4px;
+
+    &:hover {
+      background: #94a3b8;
+    }
+  }
+
+  table {
+    min-width: 1600px !important;
+    margin-bottom: 0;
+
+    thead.sticky-thead,
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 15;
+
+      th {
+        position: sticky;
+        top: 0;
+        z-index: 15;
+        box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.15);
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.custom-scrollbar {
+  /* Sleek custom scrollbars */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f8fafc;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f8fafc;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+
     &:hover {
       background: #94a3b8;
     }
@@ -19,13 +104,33 @@
 
 /* Shake Attention Animation */
 @keyframes shake-attention {
-  0% { transform: scale(1); }
-  10% { transform: scale(1.05) rotate(-3deg); }
-  20% { transform: scale(1.05) rotate(3deg); }
-  30% { transform: scale(1.05) rotate(-3deg); }
-  40% { transform: scale(1.05) rotate(3deg); }
-  50% { transform: scale(1) rotate(0); }
-  100% { transform: scale(1) rotate(0); }
+  0% {
+    transform: scale(1);
+  }
+
+  10% {
+    transform: scale(1.05) rotate(-3deg);
+  }
+
+  20% {
+    transform: scale(1.05) rotate(3deg);
+  }
+
+  30% {
+    transform: scale(1.05) rotate(-3deg);
+  }
+
+  40% {
+    transform: scale(1.05) rotate(3deg);
+  }
+
+  50% {
+    transform: scale(1) rotate(0);
+  }
+
+  100% {
+    transform: scale(1) rotate(0);
+  }
 }
 
 .shake-btn {
@@ -39,9 +144,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #2b3b7e;
+  background: linear-gradient(90deg, #c8102e 0%, #9b0a22 100%) !important;
   color: white;
   padding: 12px 16px;
+  border-bottom: none;
 }
 
 .modal-title {
@@ -91,7 +197,7 @@
 
 .info-chip .val {
   font-weight: 700;
-  color: #2b3b7e;
+  color: #c8102e;
 }
 
 .info-chip .val.orange {
@@ -375,4 +481,52 @@ ng-select.mselect .ng-value {
 
 .loading-overlay {
   position: absolute !important;
+}
+
+/* Ensure open dropdown stacks above subsequent rows and stays attached when scrolling */
+tbody tr:has(.ng-select-opened) {
+  position: relative;
+  z-index: 50;
+}
+
+tbody td:has(.ng-select-opened) {
+  position: relative;
+  z-index: 55;
+}
+
+thead.sticky-thead:has(.ng-select-opened),
+thead:has(.ng-select-opened),
+th:has(.ng-select-opened) {
+  z-index: 100 !important;
+}
+
+::ng-deep body>ng-dropdown-panel.ng-dropdown-panel,
+::ng-deep .ng-dropdown-panel {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
+  z-index: 99999 !important;
+
+  .ng-dropdown-panel-items {
+    max-height: 220px !important;
+
+    .ng-option {
+      white-space: normal !important;
+      word-break: break-word !important;
+      overflow-wrap: break-word !important;
+      text-overflow: unset !important;
+      overflow: visible !important;
+      line-height: 1.35 !important;
+      padding: 6px 8px !important;
+
+      .ng-option-label,
+      span,
+      div {
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+        text-overflow: unset !important;
+        overflow: visible !important;
+        display: block !important;
+      }
+    }
+  }
 }

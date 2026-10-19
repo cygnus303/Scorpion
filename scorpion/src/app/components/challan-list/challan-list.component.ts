@@ -491,7 +491,7 @@ export class ChallanListComponent {
       if (!hasMessage && isSelected) {
         selectedCount++;
         totalAmount += Number(control.get('ContractAmount')?.value) || 0;
-        totalWeight += Number(control.get('ArrWeightQty')?.value) || 0;
+        totalWeight += Number(control.get('ACTUWT')?.value) || 0;
       }
     });
 

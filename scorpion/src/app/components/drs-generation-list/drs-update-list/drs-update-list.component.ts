@@ -1,4 +1,4 @@
-import { Component, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, Output, ViewChild, NgZone, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -27,7 +27,7 @@ import { DrsUpdateDepsComponent } from './drs-update-deps/drs-update-deps.compon
   templateUrl: './drs-update-list.component.html',
   styleUrl: './drs-update-list.component.scss'
 })
-export class DRSUpdateListComponent {
+export class DRSUpdateListComponent implements AfterViewInit, OnDestroy {
   env = environment;
   public modalRef!: BsModalRef;
   public DRSSummaryForm!: FormGroup;
@@ -61,7 +61,8 @@ export class DRSUpdateListComponent {
     public THCMasterService: THCMasterService,
     private vendorChargeHelper: VendorChargeHelperService,
     public docketService: DocketService, public generalMasterService: GeneralMasterService,
-    public sweetAlertService: SweetAlertService, private modalService: BsModalService) { }
+    public sweetAlertService: SweetAlertService, private modalService: BsModalService,
+    private ngZone: NgZone) { }
 
   ngOnInit() {
     const saved = localStorage.getItem("loginUserList");
@@ -81,8 +82,9 @@ export class DRSUpdateListComponent {
     this.headerVendor = null;
     this.getVendorType();
     this.generalMasterService.getChargeTypeData();
-    this.generalMasterService.getLoadingBy()
-    this.generalMasterService.getDeliveredToData()
+    this.generalMasterService.getLoadingBy();
+    this.generalMasterService.getDeliveredToData();
+    this.updateCachedMinDrsDate();
   }
 
   buildFilterForm() {
@@ -119,37 +121,67 @@ export class DRSUpdateListComponent {
     }
   }
 
+  public readonly emptyList: any[] = [];
+  public selectedCount: number = 0;
+  public unselectedCount: number = 0;
+  public allSelected: boolean = false;
+  public readonly bsConfig = { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' };
+  private _cachedMinDrsDate: Date | undefined;
+  private lastReasonType: string = '';
+
+  trackByRow(index: number, item: any): any {
+    return item?.get?.('autoNo')?.value || item?.get?.('dockno')?.value || index;
+  }
+
+  updateCounts() {
+    const controls = this.drsList.controls;
+    const total = controls.length;
+    if (total === 0) {
+      this.selectedCount = 0;
+      this.unselectedCount = 0;
+      this.allSelected = false;
+      return;
+    }
+    let sel = 0;
+    for (let i = 0; i < total; i++) {
+      if (controls[i].get('isChecked')?.value === true) {
+        sel++;
+      }
+    }
+    this.selectedCount = sel;
+    this.unselectedCount = total - sel;
+    this.allSelected = sel === total;
+  }
+
   toggleAll(event: any) {
     const isChecked = event.target.checked;
     this.drsList.controls.forEach(control => {
-      control.get('isChecked')?.setValue(isChecked);
+      control.get('isChecked')?.setValue(isChecked, { emitEvent: false });
+      this.updateDeliveryValidators(control as FormGroup);
     });
-  }
-
-  isAllSelected(): boolean {
-    if (this.drsList.controls.length === 0) return false;
-    return this.drsList.controls.every(control => control.get('isChecked')?.value === true);
-  }
-
-  get selectedCount(): number {
-    return this.drsList.controls.filter(c => c.get('isChecked')?.value === true).length;
-  }
-
-  get unselectedCount(): number {
-    return this.drsList.controls.filter(c => !c.get('isChecked')?.value).length;
+    this.updateCounts();
   }
 
   get minDrsDate(): Date | undefined {
-    const d = this.DRSInformation?.drsDate || this.drsData?.drsDate;
-    if (!d) return undefined;
+    return this._cachedMinDrsDate;
+  }
 
-    if (d instanceof Date) return isNaN(d.getTime()) ? undefined : d;
+  updateCachedMinDrsDate() {
+    const d = this.DRSInformation?.drsDate || this.drsData?.drsDate;
+    if (!d) {
+      this._cachedMinDrsDate = undefined;
+      return;
+    }
+
+    if (d instanceof Date) {
+      this._cachedMinDrsDate = isNaN(d.getTime()) ? undefined : d;
+      return;
+    }
 
     if (typeof d === 'string') {
       const datePart = d.split(' ')[0];
       if (datePart && (datePart.includes('-') || datePart.includes('/'))) {
         const parts = datePart.split(/[-/]/);
-        // Assuming DD-MM-YYYY or DD/MM/YYYY
         if (parts.length === 3 && parts[2].length === 4) {
           const day = parseInt(parts[0], 10);
           const month = parseInt(parts[1], 10) - 1;
@@ -157,14 +189,17 @@ export class DRSUpdateListComponent {
           
           if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
             const parsedDate = new Date(year, month, day);
-            if (!isNaN(parsedDate.getTime())) return parsedDate;
+            if (!isNaN(parsedDate.getTime())) {
+              this._cachedMinDrsDate = parsedDate;
+              return;
+            }
           }
         }
       }
     }
 
     const fallback = new Date(d);
-    return isNaN(fallback.getTime()) ? undefined : fallback;
+    this._cachedMinDrsDate = isNaN(fallback.getTime()) ? undefined : fallback;
   }
 
   getVendorType() {
@@ -270,6 +305,7 @@ export class DRSUpdateListComponent {
   }
 
   createDrsRow(data: any[]) {
+    this.rowVendorList = new Array(data.length).fill(this.emptyList);
     data.forEach((item: any, index: number) => {
       const [day, month, year] = item.booking_Date.split('/');
       const formattedDate = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
@@ -325,7 +361,8 @@ export class DRSUpdateListComponent {
         DlyContactNo: new FormControl(item.dlyContactNo),
         invval: new FormControl(item.invval),
         dlypdcno: new FormControl(item.dlypdcno),
-        depsData: new FormControl(null)
+        depsData: new FormControl(null),
+        DRSGEN_SMS: new FormControl(item.drsgeN_SMS || item.drSGEN_SMS || item.drsgen_sms || null)
       });
 
       const initialVendorType = group.get('luVendorTyp')?.value;
@@ -345,6 +382,7 @@ export class DRSUpdateListComponent {
       });
       group.get('isChecked')?.valueChanges.subscribe(() => {
         this.updateDeliveryValidators(group);
+        this.updateCounts();
       });
       this.drsList.push(group);
       group.get('deliveredPkgs')?.updateValueAndValidity({ emitEvent: false });
@@ -357,6 +395,7 @@ export class DRSUpdateListComponent {
         });
       }
     });
+    this.updateCounts();
   }
 
   rowVendorList: any[][] = [];
@@ -380,7 +419,7 @@ export class DRSUpdateListComponent {
     const type = event?.codeId || event;
     const formArray = this.DRSSummaryForm.get('drsList') as FormArray;
     formArray.controls.forEach((group: any) => {
-      group.get('newRate')?.patchValue(0);
+      group.get('newRate')?.patchValue(0, { emitEvent: false });
       const vendorCodeCtrl = group.get('luVendorCode');
       const rateTypeCtrl = group.get('ratetype');
       if (type && type !== 'XX9') {
@@ -393,6 +432,7 @@ export class DRSUpdateListComponent {
       vendorCodeCtrl?.updateValueAndValidity({ emitEvent: false });
       rateTypeCtrl?.updateValueAndValidity({ emitEvent: false });
     });
+    this.updateTotalLoadingCharge();
   }
 
   onHeaderRateTypeChange(event: any) {
@@ -431,7 +471,7 @@ export class DRSUpdateListComponent {
 
     const formArray = this.DRSSummaryForm.get('drsList') as FormArray;
     const group = formArray.at(index);
-    group.get('newRate')?.patchValue(0);
+    group.get('newRate')?.patchValue(0, { emitEvent: false });
     const vendorCodeCtrl = group.get('luVendorCode');
     const rateTypeCtrl = group.get('ratetype');
     const type = event?.codeId || event;
@@ -444,6 +484,7 @@ export class DRSUpdateListComponent {
     }
     vendorCodeCtrl?.updateValueAndValidity({ emitEvent: false });
     rateTypeCtrl?.updateValueAndValidity({ emitEvent: false });
+    this.calculateCharge(group as FormGroup);
   }
 
   onRowVendorCodeChange(event: any, index: number) {
@@ -458,14 +499,12 @@ export class DRSUpdateListComponent {
     );
   }
 
-  isRequired(controlName: string, index: number): boolean {
-    const control = (this.drsList.at(index) as FormGroup).get(controlName);
-
+  isRequired(controlName: string, index?: number, row?: any): boolean {
+    const group = row || (index !== undefined ? this.drsList.controls[index] as FormGroup : null);
+    if (!group) return false;
+    const control = group.get(controlName);
     if (!control) return false;
-
-    const validator = control.validator?.({} as AbstractControl);
-
-    return validator?.['required'] ?? false;
+    return control.hasValidator ? control.hasValidator(Validators.required) : false;
   }
 
   maxPendingValidator(pendingKey: string) {
@@ -581,6 +620,7 @@ export class DRSUpdateListComponent {
       next: (response: any) => {
         this.isLoading = false;
         this.DRSInformation = response.data.drsSummary;
+        this.updateCachedMinDrsDate();
         const summaryRateType = response.data.drsSummary?.rateType;
         this.drsDeliveryList = response.data.drsDeliveryList;
         this.DRSSummaryForm.patchValue({
@@ -736,8 +776,11 @@ export class DRSUpdateListComponent {
 
 
     if (show) {
-      row.patchValue({ showReason: true, cboReason: null });
-      this.generalMasterService.getReason(reasonType);
+      row.patchValue({ showReason: true, cboReason: null }, { emitEvent: false });
+      if (!this.generalMasterService.reasonData || this.generalMasterService.reasonData.length === 0 || this.lastReasonType !== reasonType) {
+        this.lastReasonType = reasonType;
+        this.generalMasterService.getReason(reasonType);
+      }
 
       // 🔹 Apply validators ONLY when showReason = true
       row.get('cboReason')?.setValidators([Validators.required]);
@@ -751,12 +794,12 @@ export class DRSUpdateListComponent {
         ]);
       } else {
         // If 0, clear their values and they are not required
-        row.get('DELYPERSON')?.setValue(null);
-        row.get('cboEmail')?.setValue(null);
-        row.get('cboMobileNo')?.setValue(null);
-        row.get('DeliveredTo')?.setValue(null);
-        row.get('DlyPerson')?.setValue(null);
-        row.get('DlyContactNo')?.setValue(null);
+        row.get('DELYPERSON')?.setValue(null, { emitEvent: false });
+        row.get('cboEmail')?.setValue(null, { emitEvent: false });
+        row.get('cboMobileNo')?.setValue(null, { emitEvent: false });
+        row.get('DeliveredTo')?.setValue(null, { emitEvent: false });
+        row.get('DlyPerson')?.setValue(null, { emitEvent: false });
+        row.get('DlyContactNo')?.setValue(null, { emitEvent: false });
       }
     } else {
       row.patchValue({
@@ -766,14 +809,14 @@ export class DRSUpdateListComponent {
         cboEmail: null,
         cboMobileNo: null,
         remarks: null
-      });
+      }, { emitEvent: false });
     }
 
     // 🔹 Refresh validation state
-    row.get('DELYPERSON')?.updateValueAndValidity();
-    row.get('cboReason')?.updateValueAndValidity();
-    row.get('cboEmail')?.updateValueAndValidity();
-    row.get('cboMobileNo')?.updateValueAndValidity();
+    row.get('DELYPERSON')?.updateValueAndValidity({ emitEvent: false });
+    row.get('cboReason')?.updateValueAndValidity({ emitEvent: false });
+    row.get('cboEmail')?.updateValueAndValidity({ emitEvent: false });
+    row.get('cboMobileNo')?.updateValueAndValidity({ emitEvent: false });
   }
 
 
@@ -876,18 +919,19 @@ export class DRSUpdateListComponent {
     }
   }
 
-  isPodFrontRequired(index: number): boolean {
-    const row = this.drsList.at(index) as FormGroup;
+  isPodFrontRequired(index: number, row?: any): boolean {
+    const group = row || (this.drsList.controls[index] as FormGroup);
+    if (!group) return false;
 
-    const deliveredPkgs = Number(row.get('deliveredPkgs')?.value || 0);
-    const frontPreview = row.get('frontPreview')?.value;
-    const isChecked = row.get('isChecked')?.value;
+    const deliveredPkgs = Number(group.get('deliveredPkgs')?.value || 0);
+    const frontPreview = group.get('frontPreview')?.value;
+    const isChecked = group.get('isChecked')?.value;
 
     return (
       isChecked &&
       deliveredPkgs > 0 &&
       !frontPreview &&
-      (row.get('frontFiles')?.touched || this.isSubmit)
+      (group.get('frontFiles')?.touched || this.isSubmit)
     );
   }
 
@@ -1046,8 +1090,9 @@ export class DRSUpdateListComponent {
       const deliveredPkgs = Number(row.get('deliveredPkgs')?.value || 0);
       const isChecked = row.get('isChecked')?.value;
       const otpVerified = row.get('otpVerified')?.value;
+      const drsGenSms = row.get('DRSGEN_SMS')?.value;
 
-      if (isChecked && deliveredPkgs > 0 && !otpVerified) {
+      if (isChecked && deliveredPkgs > 0 && drsGenSms === 'Y' && !otpVerified) {
         hasError = true;
         row.patchValue({ otpError: 'OTP Verification is mandatory' });
       } else {
@@ -1058,7 +1103,33 @@ export class DRSUpdateListComponent {
     return hasError;
   }
 
+  formatDeliveryDate(dateVal: any): string {
+    if (!dateVal) return '';
+    const d = new Date(dateVal);
+    if (isNaN(d.getTime())) return String(dateVal);
 
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+
+    const now = new Date();
+    let hours = d.getHours();
+    let minutes = d.getMinutes();
+    let seconds = d.getSeconds();
+
+    // જો datepicker માંથી ફક્ત તારીખ પસંદ કરી હોય (00:00:00), તો કરંટ સમય લેવો
+    if (hours === 0 && minutes === 0 && seconds === 0) {
+      hours = now.getHours();
+      minutes = now.getMinutes();
+      seconds = now.getSeconds();
+    }
+
+    const hStr = String(hours).padStart(2, '0');
+    const mStr = String(minutes).padStart(2, '0');
+    const sStr = String(seconds).padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hStr}:${mStr}:${sStr}.000Z`;
+  }
 
   deliveryUpdate() {
     const DepsList: any[] = [];
@@ -1076,7 +1147,7 @@ export class DRSUpdateListComponent {
       dockno: row.dockno,
       isEnabled: row.isChecked === true,
       ratetype: row.ratetype,
-      delydate: row.DELYDATE,   // already ISO
+      delydate: this.formatDeliveryDate(row.DELYDATE),
       pkgsdelivered: Number(row.deliveredPkgs) || 0,
       pkgs_Pending: Number(row.pkgs_Pending) || 0,
       newRate: Number(row.newRate) || 0,
@@ -1201,7 +1272,7 @@ export class DRSUpdateListComponent {
     const drsNo = this.docketService.loginUserList.drsId;
 
     if (!otp) {
-      row.patchValue({ otpVerified: false, otpError: 'Enter OTP first' });
+      row.patchValue({ otpVerified: false, otpError: null });
       return;
     }
 
@@ -1279,4 +1350,86 @@ export class DRSUpdateListComponent {
     }
   }
 
+  repositionDropdown() {
+    const panel = document.querySelector('body > ng-dropdown-panel, .ng-dropdown-panel') as HTMLElement;
+    const openedSelect = document.querySelector('.ng-select.ng-select-opened') as HTMLElement;
+    if (!panel || !openedSelect) return;
+
+    const selectRect = openedSelect.getBoundingClientRect();
+    const parentRect = document.body.getBoundingClientRect();
+
+    // Match width of the select element exactly
+    panel.style.width = `${selectRect.width}px`;
+    panel.style.minWidth = `${selectRect.width}px`;
+    panel.style.maxWidth = `${selectRect.width}px`;
+
+    // Update horizontal position
+    panel.style.left = `${selectRect.left - parentRect.left}px`;
+
+    // Update vertical position
+    const isTop = panel.classList.contains('ng-select-top');
+    if (isTop) {
+      const offsetBottom = parentRect.bottom - selectRect.bottom;
+      panel.style.bottom = `${offsetBottom + selectRect.height}px`;
+      panel.style.top = 'auto';
+    } else {
+      const offsetTop = selectRect.top - parentRect.top;
+      panel.style.top = `${offsetTop + selectRect.height}px`;
+      panel.style.bottom = 'auto';
+    }
+
+    // Hide if scrolled completely out of the table scroll view
+    const container = document.querySelector('.custom-table-scroll');
+    if (container) {
+      const cRect = container.getBoundingClientRect();
+      if (
+        selectRect.bottom < cRect.top ||
+        selectRect.top > cRect.bottom ||
+        selectRect.right < cRect.left ||
+        selectRect.left > cRect.right
+      ) {
+        panel.style.visibility = 'hidden';
+      } else {
+        panel.style.visibility = 'visible';
+      }
+    }
+  }
+
+  private rafId: number | null = null;
+  private handleScrollReposition = (event?: Event) => {
+    // If scrolling inside the dropdown options list itself, do not interfere
+    if (event && event.target) {
+      const t = event.target as HTMLElement;
+      if (t.closest && (t.closest('.ng-dropdown-panel') || t.classList?.contains('ng-dropdown-panel-items'))) {
+        return;
+      }
+    }
+
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
+    }
+    this.rafId = requestAnimationFrame(() => {
+      this.repositionDropdown();
+    });
+  };
+
+  ngAfterViewInit() {
+    this.ngZone.runOutsideAngular(() => {
+      window.addEventListener('scroll', this.handleScrollReposition, true);
+      window.addEventListener('resize', this.handleScrollReposition);
+    });
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('scroll', this.handleScrollReposition, true);
+    window.removeEventListener('resize', this.handleScrollReposition);
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
+    }
+    if (this.otpTimeoutMap) {
+      Object.values(this.otpTimeoutMap).forEach(t => clearTimeout(t));
+    }
+  }
+
 }
+
