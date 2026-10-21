@@ -16,11 +16,12 @@ import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { MenuAccessService } from 'app/shared/services/menu-access.service';
 import { GbViewComponent } from '../lr-list/gb-view/gb-view.component';
 import { GdViewComponent } from '../lr-list/gd-view/gd-view.component';
+import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 
 @Component({
   selector: 'app-hcc-finacialedit-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, HCCDetailsComponent, HCCviewComponent,GbViewComponent,GdViewComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, HCCDetailsComponent, HCCviewComponent, GbViewComponent, GdViewComponent, DateRangePickerComponent],
   providers: [BsModalService],
   templateUrl: './hcc-finacialedit-list.component.html',
   styleUrl: './hcc-finacialedit-list.component.scss',
@@ -96,6 +97,12 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
   fetchData() {
     this.config.page = 1;
     this.fetchSubject.next();
+  }
+
+  onDateRangeSelected(event: { fromDate: Date, toDate: Date, rangeType: string }) {
+    this.config.fromDateStr = event.fromDate;
+    this.config.toDateStr = event.toDate;
+    this.fetchData();
   }
 
   refreshData() {
