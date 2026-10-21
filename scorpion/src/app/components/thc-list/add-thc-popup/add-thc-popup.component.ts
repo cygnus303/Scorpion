@@ -745,7 +745,7 @@ export class AddThcPopupComponent {
     let totalWeight = 0;
     if (this.selectedMfs && Array.isArray(this.selectedMfs)) {
       this.selectedMfs.forEach(item => {
-        totalWeight += Number(item.toT_ACTUWT || item.actuwt || item.ArrWeightQty || 0);
+        totalWeight += Number(item.toT_LOAD_ACTWT || 0);
       });
     }
     const roundedWeight = Number(totalWeight.toFixed(2));
@@ -1400,8 +1400,8 @@ export class AddThcPopupComponent {
         MFList: this.selectedMfs ? this.selectedMfs.map((mf: any) => ({
           TCNO: mf.tcno || "",
           TOT_DKT: mf.toT_DKT || 0,
-          TOT_LOAD_PKGS: mf.toT_PKGS || 0,
-          TOT_LOAD_ACTWT: mf.toT_ACTUWT || 0,
+          TOT_LOAD_PKGS: mf.toT_LOAD_PKGS || 0,
+          TOT_LOAD_ACTWT: mf.toT_LOAD_ACTWT || 0,
           IsEnabled: true
         })) : [],
         BaseLocationCode: this.docketService.loginUserList.LocationCode,
