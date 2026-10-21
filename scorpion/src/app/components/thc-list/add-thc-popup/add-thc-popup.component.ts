@@ -37,6 +37,7 @@ export class AddThcPopupComponent {
   public minDate: Date | undefined;
   public maxDate: Date | undefined;
   public today: Date = new Date();
+  public maxDobDate: Date = new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate());
   public isInsuranceExpired: boolean = false;
   public isFitnessExpired: boolean = false;
   public isLicenseExpired: boolean = false;

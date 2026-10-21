@@ -357,7 +357,7 @@
                 <input class="form-control required2" placeholder="Date Of Birth" type="text"
                   [class.disabled-input]="true" appFocusNext #dbv="bsDatepicker" bsDatepicker formControlName="d1_DOB"
                   [ngClass]="{ 'border-danger': ThcForm.get('d1_DOB')?.invalid  && ThcForm.get('d1_DOB')?.touched }"
-                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY',maxDate : today}"
+                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY', maxDate: maxDobDate}"
                   (bsValueChange)="onChangeLicenceNumber($event)">
                 <span class="input-group-text cursor-pointer" (click)="dbv.toggle();$event.stopPropagation()">
                   <i class="fa fa-calendar"></i>
