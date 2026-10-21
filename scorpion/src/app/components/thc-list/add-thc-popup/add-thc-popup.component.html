@@ -501,8 +501,8 @@
                     <td>{{ item.tcbr }}</td>
                     <td>{{ item.toBH_CODE }}</td>
                     <td>{{ item.toT_DKT }}</td>
-                    <td>{{ item.toT_PKGS }}</td>
-                    <td>{{ item.toT_ACTUWT }}</td>
+                    <td>{{item.toT_LOAD_PKGS}}/{{ item.toT_PKGS }}</td>
+                    <td>{{item.toT_LOAD_ACTWT}}/{{ item.toT_ACTUWT }}</td>
                   </tr>
                 </ng-container>
                 <tr *ngIf="!selectedMfs || selectedMfs.length === 0">
