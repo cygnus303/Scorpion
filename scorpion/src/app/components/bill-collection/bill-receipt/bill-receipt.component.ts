@@ -516,8 +516,9 @@ export class BillReceiptComponent {
           
           this.successModalRef = this.modalService.show(this.SuccessModalTemplate, {
             class: 'modal-dialog-centered success-modal',
-            backdrop: false,
-            keyboard: false
+            backdrop: 'static',
+            keyboard: false,
+            ignoreBackdropClick: true
           });
         } else {
           this.sweetalertService.error(msg);
