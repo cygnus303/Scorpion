@@ -300,7 +300,8 @@
                         </td>
 
                         <td class="text-center">
-                            <span class="fw-bold text-primary cursor-pointer">{{ data.billNo || '—' }}</span>
+                            <span class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;"
+                                (click)="THCPDCBillView(data.billUrl)">{{ data.billNo || '—' }}</span>
                         </td>
                         <td class="text-center">
                             <span class="pill-badge px-2 py-1 cursor-pointer" [ngClass]="getStatusClass(data.status)">{{
