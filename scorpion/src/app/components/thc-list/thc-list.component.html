@@ -298,10 +298,16 @@
                                (click)="openHccPopup(data,'U')" style="font-size: 13px;">View HCC</a>
                             <span *ngIf="!(data.unloadingHCCnt > 0)" class="text-muted">—</span>
                         </td>
-
-                        <td class="text-center">
-                            <span class="fw-bold text-primary cursor-pointer" style="text-decoration: underline;"
-                                (click)="THCPDCBillView(data.billUrl)">{{ data.billNo || '—' }}</span>
+                        
+                        <td class="text-center fs-7">
+                            <span *ngIf="!data.billNo" class="text-muted">—</span>
+                            <a href="javascript:void(0)" *ngIf="data.billNo && data.billUrl" class="text-primary fw-bold cursor-pointer"
+                                style="text-decoration: underline;" (click)="THCPDCBillView(data.billUrl); $event.stopPropagation()">
+                                {{ data.billNo }}
+                            </a>
+                            <span *ngIf="data.billNo && !data.billUrl" class="text-dark fw-bold">
+                                {{ data.billNo }}
+                            </span>
                         </td>
                         <td class="text-center">
                             <span class="pill-badge px-2 py-1 cursor-pointer" [ngClass]="getStatusClass(data.status)">{{
