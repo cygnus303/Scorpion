@@ -719,7 +719,7 @@
                                             [class.disabled-input]="true" appFocusNext #dbv="bsDatepicker" bsDatepicker
                                             formControlName="d1_DOB"
                                             [ngClass]="{ 'border-danger': challanService.challanForm.get('d1_DOB')?.invalid  && challanService.challanForm.get('d1_DOB')?.touched }"
-                                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY',maxDate : today}"
+                                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY', maxDate: maxDobDate}"
                                             (bsValueChange)="onChangeLicenceNumber($event)">
                                         <span class="input-group-text cursor-pointer"
                                             (click)="!isFieldReadonly() && dbv.toggle();$event.stopPropagation()">
@@ -1097,7 +1097,7 @@
                 </div>
                 <div class="cnote-entry-container p-3 pt-0"
                     style="max-height: 550px; overflow-y: auto; overflow-x: auto;">
-                    <div class="table-responsive-horizonta">
+                    <div class="table-responsive-horizontal">
                         <table class="table table-bordered table-striped table-condensed flip-content mb-0">
                             <thead class="sticky-top bg-light">
                                 <tr>
@@ -1118,8 +1118,8 @@
                                     <th class="p-3 fw-bolder" style="min-width: 150px;">
                                         HCC Vendor Type
                                         <ng-select class="mt-1 clear-icon" [items]="generalMasterService.loadingData"
-                                            bindLabel="codeDesc" bindValue="codeId" appendTo="body"
-                                            placeholder="Vendor Type" [dropdownPosition]="'bottom'"
+                                            bindLabel="codeDesc" bindValue="codeId" placeholder="Vendor Type"
+                                            [dropdownPosition]="'auto'"
                                             (change)="onHeaderHccVendorTypeChange($event)"></ng-select>
                                     </th>
                                     <th class="p-3 fw-bolder" style="min-width: 150px;">
@@ -1127,14 +1127,15 @@
                                         <ng-select class="mt-1 clear-icon remove-white-space" [items]="headerVendorList"
                                             bindLabel="text" bindValue="value" placeholder="Vendor"
                                             [(ngModel)]="headerVendor" [ngModelOptions]="{standalone: true}"
-                                            [dropdownPosition]="'bottom'" appendTo="body"
+                                            [dropdownPosition]="'auto'"
                                             (change)="onHeaderVendorChange($event)"></ng-select>
                                     </th>
                                     <th class="p-3 fw-bolder" style="min-width: 150px;">
                                         Rate Type
                                         <ng-select class="mt-1 clear-icon" [items]="challanService.rateTypeData"
                                             bindLabel="codeDesc" bindValue="codeId" placeholder="Rate Type"
-                                            (change)="onHeaderRateTypeChange($event)" appendTo="body"></ng-select>
+                                            [dropdownPosition]="'auto'"
+                                            (change)="onHeaderRateTypeChange($event)"></ng-select>
                                     </th>
                                     <th class="p-3 fw-bolder" *ngIf="this.docketService.loginUserList.Type === '3'">
                                         E-Way Bill No.</th>
@@ -1172,30 +1173,33 @@
                                             </ng-template>
                                         </td>
 
-                                        <td>{{ item.value.DOCKNO}}{{ item.value.DOCKSF }}<br>{{ docketService.loginUserList.Type === '3'
+                                        <td>{{ item.value.DOCKNO}}{{ item.value.DOCKSF }}<br>{{
+                                            docketService.loginUserList.Type === '3'
                                             ? item.value.ORGNCD : '' }}
                                         </td>
                                         <td>{{ item.value.PAYBAS_Str }} / {{item.value.ORGNCD}} / {{item.value.DEST_CD}}
                                         </td>
-                                        <td>{{ item.value.Bkg_Date }} <br> {{ item.value.Commited_Dely_Date | date :'dd MMM yyyy'}}</td>
+                                        <td>{{ item.value.Bkg_Date }} <br> {{ item.value.Commited_Dely_Date | date :'dd
+                                            MMM yyyy'}}</td>
                                         <td *ngIf="this.docketService.loginUserList.Type === '2'">{{ item.value.entryBy
                                             }} </td>
                                         <td *ngIf="this.docketService.loginUserList.Type === '3'">
-                                            {{ item.value.Arrival_Date | date :'dd MMM yyyy' }} <br> 
+                                            {{ item.value.Arrival_Date | date :'dd MMM yyyy' }} <br>
                                             {{
                                             item.value.Stock_Update_DT }}</td>
-                                        <td>{{item.value.PKGSNO}} /{{item.value.PendPkgQty}} /{{item.value.ArrPkgQty}}</td>
+                                        <td>{{item.value.PKGSNO}} /{{item.value.PendPkgQty}} /{{item.value.ArrPkgQty}}
+                                        </td>
                                         <td>{{ item.value.ACTUWT }}/{{ item.value.CHRGWT }}</td>
                                         <td>
                                             <ng-select class="clear-icon" [items]="generalMasterService.loadingData"
                                                 formControlName="luVendorTyp" bindLabel="codeDesc" bindValue="codeId"
-                                                appendTo="body" [dropdownPosition]="'bottom'" placeholder="Type"
+                                                [dropdownPosition]="'auto'" placeholder="Type"
                                                 (change)="onHccVendorTypeChange($event, i)">
                                             </ng-select>
                                         </td>
                                         <td>
-                                            <ng-select class="clear-icon remove-white-space" appendTo="body"
-                                                [dropdownPosition]="'bottom'" [ngClass]="{
+                                            <ng-select class="clear-icon remove-white-space"
+                                                [dropdownPosition]="'auto'" [ngClass]="{
                                                     'required2': item.get('luVendorTyp')?.value !== 'XX9',
                                                     'border-danger': item.get('luVendorCode')?.hasError('required') && item.get('luVendorCode')?.touched
                                                 }" [items]="rowVendorList[i] || []" formControlName="luVendorCode"
@@ -1209,7 +1213,7 @@
                                         </td>
 
                                         <td>
-                                            <ng-select class="required2 clear-icon" appendTo="body"
+                                            <ng-select class="required2 clear-icon" [dropdownPosition]="'auto'"
                                                 [items]="challanService.rateTypeData" formControlName="rateType"
                                                 bindLabel="codeDesc" bindValue="codeId" placeholder="Type"
                                                 [ngClass]="{'border-danger': item.get('rateType')?.hasError('required') && item.get('rateType')?.touched}"

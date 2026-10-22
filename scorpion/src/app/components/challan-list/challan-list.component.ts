@@ -35,6 +35,7 @@ export class ChallanListComponent {
   public isFitnessExpired: boolean = false;
   public isPermitExpired: boolean = false;
   public isLicenseExpired: boolean = false;
+  public maxDobDate: Date = new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate());
   public lastFetchedVehicleNo: string | null = null;
   public vehicleTypeList: VehicleTypeListResponse[] = [];
   public routeNameList: StatesFromPartyCodeRepsonse[] = [];
